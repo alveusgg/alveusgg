@@ -25,6 +25,14 @@ const config = {
 
 export default config;
 
+export const redirects = async () => [
+  {
+    source: "/",
+    destination: "/live/",
+    permanent: false,
+  },
+];
+
 export const headers = async () => [
   {
     source: "/:path*",
