@@ -6,7 +6,7 @@
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
 /** @type {import("next").NextConfig} */
-const config = {
+export default {
   reactStrictMode: true,
   swcMinify: true,
   i18n: {
@@ -21,30 +21,26 @@ const config = {
       },
     ],
   },
+  redirects: async () => [
+    {
+      source: "/",
+      destination: "/live/",
+      permanent: false,
+    },
+  ],
+  headers: async () => [
+    {
+      source: "/:path*",
+      headers: [
+        {
+          key: "X-Frame-Options",
+          value: "GOFORIT",
+        },
+        {
+          key: "Content-Security-Policy",
+          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/",
+        },
+      ],
+    },
+  ],
 };
-
-export default config;
-
-export const redirects = async () => [
-  {
-    source: "/",
-    destination: "/live/",
-    permanent: false,
-  },
-];
-
-export const headers = async () => [
-  {
-    source: "/:path*",
-    headers: [
-      {
-        key: "X-Frame-Options",
-        value: "GOFORIT",
-      },
-      {
-        key: "Content-Security-Policy",
-        value: "frame-src https://twitch.tv/",
-      },
-    ],
-  },
-];
