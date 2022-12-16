@@ -7,7 +7,7 @@ const TWITCH_MESSAGE_TIMESTAMP =
   "Twitch-Eventsub-Message-Timestamp".toLowerCase();
 const TWITCH_MESSAGE_SIGNATURE =
   "Twitch-Eventsub-Message-Signature".toLowerCase();
-const MESSAGE_TYPE = "Twitch-Eventsub-Message-Type".toLowerCase();
+const TWITCH_MESSAGE_TYPE = "Twitch-Eventsub-Message-Type".toLowerCase();
 
 // Notification message types
 const MESSAGE_TYPE_VERIFICATION = "webhook_callback_verification";
@@ -56,10 +56,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     throw Error("Twitch eventsub secret missing!");
   }
 
+  const signature = getFirstHeader(req.headers[TWITCH_MESSAGE_SIGNATURE]);
+  const messageType = getFirstHeader(req.headers[TWITCH_MESSAGE_TYPE]);
+
   const secret = process.env.TWITCH_EVENTSUB_SECRET;
   const message = getHmacMessage(req);
   const hmac = HMAC_PREFIX + getHmac(secret, message); // Signature to compare
-  const signature = getFirstHeader(req.headers[TWITCH_MESSAGE_SIGNATURE]);
 
   if (signature == undefined || !verifyMessage(hmac, signature)) {
     res.status(403).end();
@@ -71,7 +73,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   // Get JSON object from body, so you can process the message.
   const notification = JSON.parse(req.body);
 
-  if (MESSAGE_TYPE_NOTIFICATION === req.headers[MESSAGE_TYPE]) {
+  if (messageType === MESSAGE_TYPE_NOTIFICATION) {
     // TODO: Do something with the event's data.
 
     console.log(`Event type: ${notification.subscription.type}`);
@@ -81,12 +83,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     return;
   }
 
-  if (MESSAGE_TYPE_VERIFICATION === req.headers[MESSAGE_TYPE]) {
+  if (messageType === MESSAGE_TYPE_VERIFICATION) {
     res.status(200).send(notification.challenge);
     return;
   }
 
-  if (MESSAGE_TYPE_REVOCATION === req.headers[MESSAGE_TYPE]) {
+  if (messageType === MESSAGE_TYPE_REVOCATION) {
     res.status(204).end();
 
     console.log(`${notification.subscription.type} notifications revoked!`);
@@ -102,5 +104,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   res.status(204).end();
-  console.log(`Unknown message type: ${req.headers[MESSAGE_TYPE]}`);
+  console.log(`Unknown message type: ${messageType}`);
 }
