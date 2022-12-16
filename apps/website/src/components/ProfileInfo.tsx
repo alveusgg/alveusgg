@@ -7,6 +7,7 @@ export const ProfileInfo: React.FC = () => {
   if (sessionData) {
     return (
       <div className="flex items-center gap-4">
+        <span>{sessionData.user?.name}</span>
         {sessionData.user?.image && (
           <Image
             src={sessionData.user.image}
@@ -16,7 +17,6 @@ export const ProfileInfo: React.FC = () => {
             className="h-8 w-8 overflow-hidden rounded-full"
           />
         )}
-        <span>{sessionData.user?.name}</span>
       </div>
     );
   }

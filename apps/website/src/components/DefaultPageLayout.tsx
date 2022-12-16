@@ -2,7 +2,7 @@ import React from "react";
 
 type DefaultPageLayoutProps = {
   children?: React.ReactNode;
-  title: string;
+  title: string | JSX.Element;
 };
 
 const DefaultPageLayout: React.FC<DefaultPageLayoutProps> = ({
@@ -12,7 +12,7 @@ const DefaultPageLayout: React.FC<DefaultPageLayoutProps> = ({
   return (
     <div className="p-4">
       <header>
-        <h1 className="my-3 text-xl">{title}</h1>
+        <h1 className="my-3 font-serif text-3xl font-bold">{title}</h1>
       </header>
       <div>{children}</div>
     </div>

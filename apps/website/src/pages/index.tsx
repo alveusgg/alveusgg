@@ -1,20 +1,12 @@
-import { type NextPage } from "next";
-import Head from "next/head";
+export async function getStaticProps() {
+  return {
+    redirect: {
+      destination: "/live",
+      permanent: false,
+    },
+  };
+}
 
-import DefaultPageLayout from "../components/DefaultPageLayout";
-
-const Home: NextPage = () => {
-  return (
-    <>
-      <Head>
-        <title>Alveus.gg</title>
-      </Head>
-
-      <DefaultPageLayout title="Home">
-        <p>Lorem ipsum dolor sit amet</p>
-      </DefaultPageLayout>
-    </>
-  );
-};
-
-export default Home;
+export default function Home() {
+  return null;
+}

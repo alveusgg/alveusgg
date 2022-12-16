@@ -16,10 +16,27 @@ const config = {
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'static-cdn.jtvnw.net',
-      }
-    ]
-  }
+        protocol: "https",
+        hostname: "static-cdn.jtvnw.net",
+      },
+    ],
+  },
 };
+
 export default config;
+
+export const headers = async () => [
+  {
+    source: "/:path*",
+    headers: [
+      {
+        key: "X-Frame-Options",
+        value: "GOFORIT",
+      },
+      {
+        key: "Content-Security-Policy",
+        value: "frame-src https://twitch.tv/",
+      },
+    ],
+  },
+];

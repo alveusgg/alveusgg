@@ -12,13 +12,13 @@ type LayoutProps = {
 const ptSans = PT_Sans({
   subsets: ["latin"],
   variable: "--font-ptsans",
-  weight: "400",
+  weight: ["400", "700"],
 });
 
 const ptSerif = PT_Serif({
   subsets: ["latin"],
   variable: "--font-ptserif",
-  weight: "400",
+  weight: ["400", "700"],
 });
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {

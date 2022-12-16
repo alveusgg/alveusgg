@@ -42,7 +42,7 @@ export const TwitchEmbed: React.FC = () => {
       ></div>
       <div className="min-w-[300px]">
         <iframe
-          src="https://www.twitch.tv/embed/alveussanctuary/chat&parent=localhost:3000"
+          src="https://www.twitch.tv/embed/alveussanctuary/chat&parent=alveus.gg"
           height="100%"
           width="100%"
           title="Chat"

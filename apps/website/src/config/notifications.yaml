@@ -1,0 +1,14 @@
+categories: [
+  {
+    tag: "stream",
+    label: "Stream notifications",
+  },
+  {
+    tag: "vod",
+    label: "Video releases",
+  },
+  {
+    tag: "announcements",
+    label: "Other announcements",
+  },
+]

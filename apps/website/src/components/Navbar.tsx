@@ -1,6 +1,45 @@
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { ProfileInfo } from "./ProfileInfo";
+import { useRouter } from "next/router";
+import React from "react";
+import type { LinkProps } from "next/dist/client/link";
+import type { UrlObject } from "url";
+
+import IconNotificationOn from "../icons/IconNotificationOn";
+import IconNotificationOff from "../icons/IconNotificationOff";
+
+function useIsActivePath(href: UrlObject | string) {
+  const router = useRouter();
+  const currentRoute = router.pathname;
+  const url = typeof href === "string" ? href : href.href;
+  return (
+    url &&
+    (url.startsWith("#") ||
+      (url.startsWith("/") &&
+        currentRoute.replace(/\/?$/, "/").startsWith(url.replace(/\/?$/, "/"))))
+  );
+}
+
+type NavLinkProps = Omit<
+  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  keyof LinkProps
+> &
+  LinkProps & {
+    children?: React.ReactNode;
+  } & React.RefAttributes<HTMLAnchorElement>;
+const NavLink: React.FC<NavLinkProps> = (props) => {
+  const isActive = useIsActivePath(props.href);
+
+  return (
+    <Link
+      {...props}
+      className={`${isActive ? "bg-black/20" : ""} rounded-2xl px-4 py-2 ${
+        props.className || ""
+      }`}
+    />
+  );
+};
 
 export const Navbar: React.FC = () => {
   const { data: sessionData } = useSession();
@@ -11,16 +50,21 @@ export const Navbar: React.FC = () => {
       <nav className="contents">
         <ul className="flex flex-grow items-center gap-4">
           <li>
-            <Link href="/live">Live</Link>
+            <NavLink href="/live">Live</NavLink>
           </li>
           <li>
-            <Link href="/about">About</Link>
+            <NavLink href="/about">About</NavLink>
           </li>
           <li>
-            <Link href="/updates">Updates</Link>
+            <NavLink href="/updates">Updates</NavLink>
           </li>
         </ul>
       </nav>
+
+      <Link href="/updates">
+        <IconNotificationOn />
+      </Link>
+
       {sessionData ? (
         <ProfileInfo />
       ) : (
