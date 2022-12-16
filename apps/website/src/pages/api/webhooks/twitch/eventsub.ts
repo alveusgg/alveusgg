@@ -63,7 +63,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const message = getHmacMessage(req);
   const hmac = HMAC_PREFIX + getHmac(secret, message); // Signature to compare
 
+  console.log("check signatures ", { signature, hmac });
+
   if (signature == undefined || !verifyMessage(hmac, signature)) {
+    console.error("wrong signature", { signature, hmac });
     res.status(403).end();
     return;
   }
@@ -84,6 +87,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   if (messageType === MESSAGE_TYPE_VERIFICATION) {
+    console.error("verification success!");
     res.status(200).send(notification.challenge);
     return;
   }
