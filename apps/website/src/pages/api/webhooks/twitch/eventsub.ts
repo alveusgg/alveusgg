@@ -63,7 +63,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const message = getHmacMessage(req);
   const hmac = HMAC_PREFIX + getHmac(secret, message); // Signature to compare
 
-  console.log("check signatures ", { signature, hmac });
+  console.log("check signatures ", { message, signature, hmac });
 
   if (signature == undefined || !verifyMessage(hmac, signature)) {
     console.error("wrong signature", { signature, hmac });
