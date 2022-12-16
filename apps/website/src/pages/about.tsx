@@ -1,18 +1,18 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 
-import { SiteHead } from "../components/SiteHead";
+import DefaultPageLayout from "../components/DefaultPageLayout";
 
 const About: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Alveus.gg</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>About | Alveus.gg</title>
       </Head>
 
-      <SiteHead />
-      <main>About</main>
+      <DefaultPageLayout title="About">
+        <p>Lorem ipsum dolor sit amet</p>
+      </DefaultPageLayout>
     </>
   );
 };

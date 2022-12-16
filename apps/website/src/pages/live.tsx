@@ -1,18 +1,24 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 
-import { SiteHead } from "../components/SiteHead";
+import { TwitchEmbed } from "../components/TwitchEmbed";
 
 const Live: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Alveus.gg</title>
-        <link rel="icon" href="/favicon.ico" />
+        <title>Live | Alveus.gg</title>
       </Head>
 
-      <SiteHead />
-      <main>Live</main>
+      <main>
+        <header>
+          <h1 className="sr-only">Live stream</h1>
+        </header>
+
+        <div>
+          <TwitchEmbed />
+        </div>
+      </main>
     </>
   );
 };
