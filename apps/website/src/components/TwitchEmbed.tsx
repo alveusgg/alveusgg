@@ -1,16 +1,17 @@
 import Script from "next/script";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 
 export const TwitchEmbed: React.FC = () => {
   const id = useId();
   const [scriptLoaded, setScriptLoaded] = useState(false);
+  const statusRef = useRef<null | "active">(null);
 
   useEffect(() => {
-    console.log("embed effect", { scriptLoaded });
-
-    if (!scriptLoaded) {
+    if (!("Twitch" in window) || statusRef.current === "active") {
       return;
     }
+
+    statusRef.current = "active";
 
     // https://dev.twitch.tv/docs/embed/everything
     const embed = new Twitch.Embed(`twitch-embed-${id}`, {
@@ -19,7 +20,7 @@ export const TwitchEmbed: React.FC = () => {
       channel: "alveussanctuary",
       // collection: { video: "124085610", collection: "GMEgKwTQpRQwyA" },
       // video: "", time: "0h0m0s",
-      layout: "video", // "video-with-chat"|"channel"
+      layout: "video-with-chat", // "video-with-chat"|"channel"
       allowfullscreen: true,
       autoplay: true,
       muted: false,
@@ -40,9 +41,10 @@ export const TwitchEmbed: React.FC = () => {
         className="h-[calc(100vh-100px)] flex-grow"
         id={`twitch-embed-${id}`}
       ></div>
+      {/*
       <div className="min-w-[300px]">
         <iframe
-          src="https://www.twitch.tv/embed/alveussanctuary/chat&parent=alveus.gg&parent=www.alveus.gg"
+          src="https://www.twitch.tv/embed/alveussanctuary/chat?parent=www.alveus.gg&parent=localhost"
           height="100%"
           width="100%"
           title="Chat"
@@ -50,6 +52,7 @@ export const TwitchEmbed: React.FC = () => {
           sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox allow-modals"
         ></iframe>
       </div>
+      */}
       <Script
         src="https://embed.twitch.tv/embed/v1.js"
         strategy="lazyOnload"
