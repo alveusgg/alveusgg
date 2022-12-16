@@ -17,10 +17,11 @@ export const serverSchema = z.object({
     // Since NextAuth.js automatically uses the VERCEL_URL if present.
     (str) => process.env.VERCEL_URL ?? str,
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string() : z.string().url(),
+    process.env.VERCEL ? z.string() : z.string().url()
   ),
   TWITCH_CLIENT_ID: z.string(),
   TWITCH_CLIENT_SECRET: z.string(),
+  TWITCH_EVENTSUB_SECRET: z.string(),
   ONESIGNAL_REST_API_KEY: z.string(),
 });
 
@@ -43,6 +44,7 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_ONESIGNAL_APP_ID: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
-  NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID: process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID,
+  NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID:
+    process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID,
   NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN: process.env.NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN,
 };
