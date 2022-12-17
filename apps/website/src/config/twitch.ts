@@ -1,7 +1,4 @@
 import { z } from "zod";
-import { formatErrors } from "../env/client.mjs";
-
-import configYaml from "./twitch.yaml";
 
 export type TwitchConfig = z.infer<typeof twitchConfigSchema>;
 const twitchConfigSchema = z.object({
@@ -17,23 +14,32 @@ const twitchConfigSchema = z.object({
   ),
 });
 
-let config: TwitchConfig;
+const config: TwitchConfig = {
+  channels: {
+    maya: {
+      id: "235835559",
+      label: "Maya",
+      notifications: {
+        live: true,
+      },
+    },
+    alveussanctuary: {
+      id: "636587384",
+      label: "AlveusSanctuary",
+      notifications: {
+        live: false,
+      },
+    },
+    pjeweb: {
+      id: "60734874",
+      label: "pjeweb",
+      notifications: {
+        live: true,
+      },
+    },
+  },
+};
 
 export async function getTwitchConfig() {
-  if (config) {
-    return config;
-  }
-
-  const _config = twitchConfigSchema.safeParse(configYaml);
-
-  if (!_config.success) {
-    console.error(
-      "❌ Invalid twitch config:\n",
-      ...formatErrors(_config.error.format())
-    );
-    throw new Error("Invalid twitch config");
-  }
-
-  config = _config.data;
-  return _config.data;
+  return config;
 }
