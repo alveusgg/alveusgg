@@ -1,7 +1,7 @@
-import { readFile } from "node:fs/promises";
-import YAML from "yaml";
 import { z } from "zod";
 import { formatErrors } from "../env/client.mjs";
+
+import configYaml from "./twitch.yaml";
 
 export type TwitchConfig = z.infer<typeof twitchConfigSchema>;
 const twitchConfigSchema = z.object({
@@ -24,13 +24,7 @@ export async function getTwitchConfig() {
     return config;
   }
 
-  const _config = twitchConfigSchema.safeParse(
-    YAML.parse(
-      await readFile("src/config/twitch.yaml", {
-        encoding: "utf-8",
-      })
-    )
-  );
+  const _config = twitchConfigSchema.safeParse(configYaml);
 
   if (!_config.success) {
     console.error(

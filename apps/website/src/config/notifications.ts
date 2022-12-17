@@ -1,14 +1,16 @@
-import { readFile } from "node:fs/promises";
-import YAML from "yaml";
 import { z } from "zod";
-import {formatErrors} from "../env/client.mjs";
+import { formatErrors } from "../env/client.mjs";
+
+import configYaml from "./notifcations.yaml";
 
 export type NotificationsConfig = z.infer<typeof notificationsConfigSchema>;
 const notificationsConfigSchema = z.object({
-  categories: z.array(z.object({
-    tag: z.string(),
-    label: z.string(),
-  }))
+  categories: z.array(
+    z.object({
+      tag: z.string(),
+      label: z.string(),
+    })
+  ),
 });
 
 let config: NotificationsConfig;
@@ -18,14 +20,12 @@ export async function getNotificationsConfig() {
     return config;
   }
 
-  const _config = notificationsConfigSchema.safeParse(YAML.parse(await readFile("src/config/notifications.yaml", {
-    encoding: "utf-8",
-  })));
+  const _config = notificationsConfigSchema.safeParse(configYaml);
 
   if (!_config.success) {
     console.error(
-        "❌ Invalid notifications config:\n",
-        ...formatErrors(_config.error.format())
+      "❌ Invalid notifications config:\n",
+      ...formatErrors(_config.error.format())
     );
     throw new Error("Invalid notifications config");
   }
