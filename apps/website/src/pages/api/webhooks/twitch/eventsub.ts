@@ -67,15 +67,10 @@ export default async function handler(
   const message = getHmacMessageHeader(req) + requestBody;
   const hmac = HMAC_PREFIX + getHmac(secret, message); // Signature to compare
 
-  console.log("check signatures ", { message, signature, hmac });
-
   if (signature == undefined || !verifyMessage(hmac, signature)) {
-    console.error("wrong signature", { signature, hmac });
     res.status(403).end();
     return;
   }
-
-  console.log("signatures match");
 
   // Get JSON object from body, so you can process the message.
   const notification = JSON.parse(requestBody);

@@ -22,6 +22,7 @@ export const serverSchema = z.object({
   TWITCH_CLIENT_ID: z.string(),
   TWITCH_CLIENT_SECRET: z.string(),
   TWITCH_EVENTSUB_SECRET: z.string(),
+  TWITCH_EVENTSUB_CALLBACK: z.string(),
   ONESIGNAL_REST_API_KEY: z.string(),
 });
 

@@ -1,9 +1,8 @@
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useReducer, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import OneSignal from "react-onesignal";
 
 import type { NotificationConfig } from "../pages/updates";
-import { useRouter } from "next/router";
 
 const categorySlidedownTextOptions = {
   actionMessage:

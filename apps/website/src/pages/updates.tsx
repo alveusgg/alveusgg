@@ -1,28 +1,22 @@
-import { readFile } from "node:fs/promises";
-
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-import YAML from "yaml";
+import DinkDonk from "../../public/dinkdonk.gif";
 
+import { getNotificationsConfig } from "../config/notifications";
 import DefaultPageLayout from "../components/DefaultPageLayout";
 import { Notifications } from "../components/Notifications";
-import DinkDonk from "../../public/dinkdonk.gif";
 
 export type NotificationConfig = {
   categories?: Array<{ tag: string; label: string }>;
 };
 
-export const getStaticProps: GetStaticProps = async (context) => {
-  const configStr = await readFile("src/config/notifications.yaml", {
-    encoding: "utf-8",
-  });
-
+export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {
-      notificationConfig: YAML.parse(configStr) as NotificationConfig,
+      notificationConfig: await getNotificationsConfig(),
     },
   };
 };
