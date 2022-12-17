@@ -1,5 +1,6 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
+import getRawBody from "raw-body";
 
 // Notification request headers
 const TWITCH_MESSAGE_ID = "Twitch-Eventsub-Message-Id".toLowerCase();
@@ -25,12 +26,12 @@ function getFirstHeader(header: string | string[] | undefined) {
 }
 
 // Build the message used to get the HMAC.
-function getHmacMessage(request: NextApiRequest) {
+function getHmacMessageHeader(request: NextApiRequest) {
   const messageId = getFirstHeader(request.headers[TWITCH_MESSAGE_ID]) || "";
   const messageTimestamp =
     getFirstHeader(request.headers[TWITCH_MESSAGE_TIMESTAMP]) || "";
 
-  return messageId + messageTimestamp + request.body;
+  return messageId + messageTimestamp;
 }
 
 // Get the HMAC.
@@ -45,13 +46,14 @@ function verifyMessage(hmac: string, verifySignature: string) {
 
 export const config = {
   api: {
-    bodyParser: {
-      sizeLimit: "5mb",
-    },
+    bodyParser: false,
   },
 };
 
-export default function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (process.env.TWITCH_EVENTSUB_SECRET === undefined) {
     throw Error("Twitch eventsub secret missing!");
   }
@@ -60,7 +62,9 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   const messageType = getFirstHeader(req.headers[TWITCH_MESSAGE_TYPE]);
 
   const secret = process.env.TWITCH_EVENTSUB_SECRET;
-  const message = getHmacMessage(req);
+
+  const requestBody = await getRawBody(req, { encoding: "utf-8" });
+  const message = getHmacMessageHeader(req) + requestBody;
   const hmac = HMAC_PREFIX + getHmac(secret, message); // Signature to compare
 
   console.log("check signatures ", { message, signature, hmac });
@@ -74,7 +78,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log("signatures match");
 
   // Get JSON object from body, so you can process the message.
-  const notification = JSON.parse(req.body);
+  const notification = JSON.parse(requestBody);
 
   if (messageType === MESSAGE_TYPE_NOTIFICATION) {
     // TODO: Do something with the event's data.
