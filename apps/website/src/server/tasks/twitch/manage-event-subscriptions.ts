@@ -38,6 +38,7 @@ async function updateSubscriptionsForChannel(
   const failedSubs = [];
   for (const sub of data) {
     if (
+      sub.type !== type ||
       sub.transport.method !== "webhook" ||
       sub.transport.callback !== twitchEventSubCallback
     ) {
