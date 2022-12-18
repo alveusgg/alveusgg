@@ -15,4 +15,12 @@
     .onesignal-customlink-container .onesignal-customlink-subscribe.onesignal-reset {
         @apply bg-red-800 !important;
     }
+
+    details > summary {
+        list-style: none;
+    }
+
+    details > summary::-webkit-details-marker {
+        display: none;
+    }
 }
