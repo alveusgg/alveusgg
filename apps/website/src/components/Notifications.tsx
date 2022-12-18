@@ -39,6 +39,7 @@ async function initializeNotifications(
     serviceWorkerParam: {
       scope: "/push/onesignal/",
     },
+    persistNotification: true,
     autoResubscribe: true,
     // Your other init options here
     promptOptions: {

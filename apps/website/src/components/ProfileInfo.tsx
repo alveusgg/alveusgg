@@ -1,13 +1,20 @@
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import React from "react";
 
-export const ProfileInfo: React.FC = () => {
+export const ProfileInfo: React.FC<{ full?: boolean }> = ({ full = false }) => {
   const { data: sessionData } = useSession();
 
   if (sessionData) {
     return (
-      <div className="flex items-center gap-4">
-        <span>{sessionData.user?.name}</span>
+      <div
+        className={`flex items-center gap-4 ${
+          full ? "w-full justify-between" : ""
+        }`}
+      >
+        <span className={`${full ? "" : "hidden md:block"}`}>
+          {sessionData.user?.name}
+        </span>
         {sessionData.user?.image && (
           <Image
             src={sessionData.user.image}

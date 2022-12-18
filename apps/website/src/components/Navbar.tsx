@@ -47,34 +47,36 @@ export const Navbar: React.FC = () => {
 
   return (
     <header className="min-h-10 flex w-full items-stretch gap-4 bg-alveus-gray px-2 text-white">
-      <Link href="/" className="flex items-center px-4">
+      <Link href="/" className="flex items-center px-2 md:px-4">
         <span>ALVEUS.gg</span>
       </Link>
 
-      <nav className="flex flex-grow p-1 px-4 py-2">
+      <nav className="flex flex-grow px-1 py-2 md:px-2">
         <ul className="flex flex-grow items-center gap-4">
           <li>
             <NavLink href="/live" className="flex">
               Live
             </NavLink>
           </li>
-          <li>
+          <li className="hidden md:block">
             <NavLink href="/about">About Alveus</NavLink>
           </li>
         </ul>
 
         <NavLink className="flex gap-2 bg-alveus-green" href="/updates">
           <IconNotificationOn />
-          Updates
+          <span className="hidden md:block">Updates</span>
         </NavLink>
       </nav>
 
       {sessionData ? (
-        <details className="relative open:bg-black/10">
+        <details className="relative open:bg-black/10 hover:bg-black/20">
           <summary className="marker-none flex h-full cursor-pointer select-none appearance-none items-center px-4 before:hidden">
             <ProfileInfo />
           </summary>
-          <div className="absolute top-full right-0 z-20 -mt-0.5 w-[200px] rounded bg-alveus-gray p-4 shadow-lg">
+          <div className="absolute top-full right-0 z-20 -mt-0.5 flex w-[200px] flex-col gap-4 rounded bg-alveus-gray p-4 shadow-lg">
+            <ProfileInfo full={true} />
+
             <button className="w-full text-left" onClick={() => signOut()}>
               Log out
             </button>
@@ -82,7 +84,7 @@ export const Navbar: React.FC = () => {
         </details>
       ) : (
         <button
-          className="rounded-full bg-white/10 px-5 py-2 font-semibold text-white no-underline transition hover:bg-white/20"
+          className="px-5 font-semibold text-white no-underline transition hover:bg-black/20"
           onClick={() => signIn()}
         >
           Sign in

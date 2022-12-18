@@ -76,7 +76,7 @@ function Ambassador({
   return (
     <article
       key={ambassador.name}
-      className="w-full rounded-2xl bg-alveus-green px-6 py-4 text-white shadow-xl md:w-1/2 lg:w-1/3 xl:w-1/5"
+      className="w-[300px] max-w-full rounded-xl bg-alveus-green px-6 py-4 text-white shadow-xl"
     >
       <h3 className="text-bold mb-3 font-serif text-3xl">{ambassador.name}</h3>
 
