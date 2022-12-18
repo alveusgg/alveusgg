@@ -1,10 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-
-import { updateSubscriptions } from "../../../server/tasks/manage-twitch-subscriptions";
-
-async function runScheduledTasks() {
-  await updateSubscriptions();
-}
+import { runScheduledTasks } from "../../../server/tasks/scheduler";
 
 export default async function handler(
   req: NextApiRequest,

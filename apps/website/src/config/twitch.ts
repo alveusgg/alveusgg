@@ -9,6 +9,8 @@ const twitchConfigSchema = z.object({
       label: z.string(),
       notifications: z.object({
         live: z.boolean().optional(),
+        streamTitleChange: z.boolean().optional(),
+        streamCategoryChange: z.boolean().optional(),
       }),
     })
   ),
@@ -21,13 +23,17 @@ const config: TwitchConfig = {
       label: "Maya",
       notifications: {
         live: true,
+        streamTitleChange: true,
+        streamCategoryChange: true,
       },
     },
     alveussanctuary: {
       id: "636587384",
       label: "AlveusSanctuary",
       notifications: {
-        live: false,
+        live: false, // always live anyway
+        streamTitleChange: true,
+        streamCategoryChange: true,
       },
     },
     pjeweb: {
@@ -35,6 +41,17 @@ const config: TwitchConfig = {
       label: "pjeweb",
       notifications: {
         live: true,
+        streamTitleChange: true,
+        streamCategoryChange: true,
+      },
+    },
+    alveusgg: {
+      id: "858050963",
+      label: "AlveusGG",
+      notifications: {
+        live: true,
+        streamTitleChange: true,
+        streamCategoryChange: true,
       },
     },
   },

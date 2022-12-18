@@ -1,11 +1,10 @@
-import { getTwitchConfig } from "../../config/twitch";
-import { getClientCredentialsAccessToken } from "../../utils/oauth2";
+import { getTwitchConfig } from "../../../config/twitch";
 import {
   createSubscription,
   getSubscriptions,
   getSubscriptionsForUser,
   removeSubscription,
-} from "../../utils/twitch-event-sub";
+} from "../../../utils/twitch-api";
 
 /*
   Notes:
@@ -27,14 +26,12 @@ const subscriptionsStatusToCleanUp = [
 async function updateSubscriptionsForChannel(
   id: string,
   type: string,
-  clientId: string,
-  accessToken: string,
   twitchEventSubCallback: string,
   twitchEventSubSecret: string
 ) {
   let isEnabled = false;
   let isPending = false;
-  const { data } = await getSubscriptionsForUser(clientId, accessToken, id);
+  const { data } = await getSubscriptionsForUser(id);
 
   const enabledSubs = [];
   const pendingSubs = [];
@@ -74,9 +71,9 @@ async function updateSubscriptionsForChannel(
 
   const totalRemoved = (
     await Promise.allSettled(
-      [...enabledSubs, ...pendingSubs, ...failedSubs].map(async (sub) => {
-        return await removeSubscription(clientId, accessToken, sub.id);
-      })
+      [...enabledSubs, ...pendingSubs, ...failedSubs].map(
+        async (sub) => await removeSubscription(sub.id)
+      )
     )
   ).reduce((count, removed) => (removed ? count + 1 : count), 0);
 
@@ -84,8 +81,6 @@ async function updateSubscriptionsForChannel(
 
   if (!isEnabled && !isPending) {
     const created = await createSubscription(
-      clientId,
-      accessToken,
       type,
       String(id),
       twitchEventSubCallback,
@@ -107,8 +102,6 @@ async function updateSubscriptionsForChannel(
 }
 
 async function updateSubscriptionsForChannels(
-  clientId: string,
-  accessToken: string,
   twitchEventSubCallback: string,
   twitchEventSubSecret: string
 ) {
@@ -123,16 +116,26 @@ async function updateSubscriptionsForChannels(
     await updateSubscriptionsForChannel(
       String(channelConfig.id),
       "channel.update",
-      clientId,
-      accessToken,
+      twitchEventSubCallback,
+      twitchEventSubSecret
+    );
+    await updateSubscriptionsForChannel(
+      String(channelConfig.id),
+      "stream.online",
+      twitchEventSubCallback,
+      twitchEventSubSecret
+    );
+    await updateSubscriptionsForChannel(
+      String(channelConfig.id),
+      "stream.offline",
       twitchEventSubCallback,
       twitchEventSubSecret
     );
   }
 }
 
-async function checkSubscriptions(clientId: string, accessToken: string) {
-  const subscriptions = await getSubscriptions(clientId, accessToken);
+async function checkSubscriptions() {
+  const subscriptions = await getSubscriptions();
 
   console.info("Twitch Event Sub: Stats", {
     total: subscriptions.total,
@@ -147,14 +150,10 @@ async function checkSubscriptions(clientId: string, accessToken: string) {
 }
 
 export async function updateSubscriptions() {
-  const clientId = process.env.TWITCH_CLIENT_ID;
-  const clientSecret = process.env.TWITCH_CLIENT_SECRET;
   const twitchEventSubCallback = process.env.TWITCH_EVENTSUB_CALLBACK;
   const twitchEventSubSecret = process.env.TWITCH_EVENTSUB_SECRET;
 
   if (
-    clientId === undefined ||
-    clientSecret === undefined ||
     twitchEventSubCallback === undefined ||
     twitchEventSubSecret === undefined
   ) {
@@ -163,21 +162,9 @@ export async function updateSubscriptions() {
     );
   }
 
-  const accessToken = await getClientCredentialsAccessToken(
-    "twitch",
-    clientId,
-    clientSecret
-  );
-  if (accessToken === undefined) {
-    console.error("Twitch Event Sub: Could not obtain OAuth access token!");
-    return;
-  }
-
   try {
-    await checkSubscriptions(clientId, accessToken);
+    await checkSubscriptions();
     await updateSubscriptionsForChannels(
-      clientId,
-      accessToken,
       twitchEventSubCallback,
       twitchEventSubSecret
     );

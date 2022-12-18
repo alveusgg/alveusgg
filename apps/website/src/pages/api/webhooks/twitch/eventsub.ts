@@ -1,6 +1,11 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
+import { z } from "zod";
+import { prisma } from "../../../../server/db/client";
+
+const SERVICE_TWITCH = "twitch";
+const EVENT_SOURCE_SUB = "event-sub";
 
 // Notification request headers
 const TWITCH_MESSAGE_ID = "Twitch-Eventsub-Message-Id".toLowerCase();
@@ -17,6 +22,32 @@ const MESSAGE_TYPE_REVOCATION = "revocation";
 
 // Prepend this string to the HMAC that's created from the message
 const HMAC_PREFIX = "sha256=";
+
+const channelUpdateNotificationEventSchema = z.object({
+  broadcaster_user_id: z.string(),
+  broadcaster_user_login: z.string(),
+  broadcaster_user_name: z.string(),
+  title: z.string(),
+  language: z.string(),
+  category_id: z.string(),
+  category_name: z.string(),
+  is_mature: z.boolean(),
+});
+
+const streamOnlineStatusEventSchema = z.object({
+  id: z.string(),
+  broadcaster_user_id: z.string(),
+  broadcaster_user_login: z.string(),
+  broadcaster_user_name: z.string(),
+  type: z.string(),
+  started_at: z.string().datetime({ precision: 3 }),
+});
+
+const streamOfflineStatusEventSchema = z.object({
+  broadcaster_user_id: z.string(),
+  broadcaster_user_login: z.string(),
+  broadcaster_user_name: z.string(),
+});
 
 function getFirstHeader(header: string | string[] | undefined) {
   if (header === undefined || typeof header === "string") {
@@ -75,18 +106,7 @@ export default async function handler(
   // Get JSON object from body, so you can process the message.
   const notification = JSON.parse(requestBody);
 
-  if (messageType === MESSAGE_TYPE_NOTIFICATION) {
-    // TODO: Do something with the event's data.
-
-    console.log(`Event type: ${notification.subscription.type}`);
-    console.log(JSON.stringify(notification.event, null, 4));
-
-    res.status(204).end();
-    return;
-  }
-
   if (messageType === MESSAGE_TYPE_VERIFICATION) {
-    console.error("verification success!");
     res.status(200).send(notification.challenge);
     return;
   }
@@ -103,6 +123,64 @@ export default async function handler(
         4
       )}`
     );
+    return;
+  }
+
+  if (messageType === MESSAGE_TYPE_NOTIFICATION) {
+    // TODO: Do something with the event's data.
+
+    console.log(`Event type: ${notification.subscription.type}`);
+    console.log(JSON.stringify(notification.event, null, 4));
+
+    switch (notification.subscription.type) {
+      case "channel.update":
+        {
+          const data = channelUpdateNotificationEventSchema.parse(
+            notification.event
+          );
+
+          await prisma.channelUpdateEvent.create({
+            data: {
+              service: SERVICE_TWITCH,
+              category_name: data.category_name,
+              category_id: data.category_id,
+              title: data.title,
+              channel: data.broadcaster_user_id,
+              source: EVENT_SOURCE_SUB,
+            },
+          });
+        }
+        break;
+      case "stream.online":
+        {
+          const data = streamOnlineStatusEventSchema.parse(notification.event);
+          await prisma.streamStatusEvent.create({
+            data: {
+              service: SERVICE_TWITCH,
+              channel: data.broadcaster_user_id,
+              online: true,
+              source: EVENT_SOURCE_SUB,
+              startedAt: data.started_at,
+            },
+          });
+        }
+        break;
+      case "stream.offline":
+        {
+          const data = streamOfflineStatusEventSchema.parse(notification.event);
+          await prisma.streamStatusEvent.create({
+            data: {
+              service: SERVICE_TWITCH,
+              channel: data.broadcaster_user_id,
+              online: false,
+              source: EVENT_SOURCE_SUB,
+            },
+          });
+        }
+        break;
+    }
+
+    res.status(204).end();
     return;
   }
 

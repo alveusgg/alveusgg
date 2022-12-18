@@ -21,17 +21,39 @@ model ClientAccessToken {
   client_id     String
   access_token  String
   refresh_token String?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
   expiresAt     DateTime?
 
   @@unique([service, client_id])
 }
 
-model Example {
-  id        String   @id @default(cuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model TaskExecutionEvent {
+  id         String   @id @default(cuid())
+  task       String
+  startedAt  DateTime @default(now())
+  finishedAt DateTime
+}
+
+model ChannelUpdateEvent {
+  id            String   @id @default(cuid())
+  service       String
+  channel       String
+  title         String
+  category_id   String
+  category_name String
+  source        String
+  createdAt     DateTime @default(now())
+}
+
+model StreamStatusEvent {
+  id        String    @id @default(cuid())
+  service   String
+  channel   String
+  online    Boolean
+  source    String
+  createdAt DateTime  @default(now())
+  startedAt DateTime?
 }
 
 // Necessary for Next auth
