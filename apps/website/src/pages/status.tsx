@@ -1,7 +1,6 @@
 import type { InferGetStaticPropsType } from "next";
 import { type NextPage } from "next";
 import Head from "next/head";
-import { ChannelUpdateEvent } from "@prisma/client";
 
 import DefaultPageLayout from "../components/DefaultPageLayout";
 
