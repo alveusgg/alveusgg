@@ -26,6 +26,7 @@ export const serverSchema = z.object({
   ONESIGNAL_REST_API_KEY: z.string(),
   ONESIGNAL_APP_ID: z.string(),
   ACTION_API_SECRET: z.string(),
+  SUPER_USER_IDS: z.string(),
 });
 
 /**

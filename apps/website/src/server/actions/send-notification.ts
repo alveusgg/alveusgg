@@ -1,5 +1,6 @@
 import * as OneSignal from "@onesignal/node-onesignal";
 import { getNotificationTags } from "../../config/notifications";
+import { env } from "../../env/server.mjs";
 
 export async function sendNotification(data: {
   tag: string;
@@ -7,8 +8,8 @@ export async function sendNotification(data: {
   url: string;
   heading?: string;
 }) {
-  const appKey = process.env.ONESIGNAL_REST_API_KEY;
-  const appId = process.env.ONESIGNAL_APP_ID;
+  const appKey = env.ONESIGNAL_REST_API_KEY;
+  const appId = env.ONESIGNAL_APP_ID;
 
   if (appKey === undefined) {
     throw Error("OneSignal API Key missing!");

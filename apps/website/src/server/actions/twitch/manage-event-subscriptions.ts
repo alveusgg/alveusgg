@@ -5,6 +5,7 @@ import {
   getSubscriptionsForUser,
   removeSubscription,
 } from "../../../utils/twitch-api";
+import { env } from "../../../env/server.mjs";
 
 /*
   Notes:
@@ -102,10 +103,9 @@ async function updateSubscriptionsForChannel(
   return isEnabled ? "enabled" : isPending ? "pending" : null;
 }
 
-async function updateSubscriptionsForChannels(
-  twitchEventSubCallback: string,
-  twitchEventSubSecret: string
-) {
+async function updateSubscriptionsForChannels() {
+  const twitchEventSubCallback = env.TWITCH_EVENTSUB_CALLBACK;
+  const twitchEventSubSecret = env.TWITCH_EVENTSUB_SECRET;
   const twitchConfig = await getTwitchConfig();
 
   for (const key in twitchConfig.channels) {
@@ -151,24 +151,9 @@ async function checkSubscriptions() {
 }
 
 export async function updateSubscriptions() {
-  const twitchEventSubCallback = process.env.TWITCH_EVENTSUB_CALLBACK;
-  const twitchEventSubSecret = process.env.TWITCH_EVENTSUB_SECRET;
-
-  if (
-    twitchEventSubCallback === undefined ||
-    twitchEventSubSecret === undefined
-  ) {
-    throw Error(
-      "Twitch Event Sub: Client id, client secret, event sub callback url or event sub secret missing!"
-    );
-  }
-
   try {
     await checkSubscriptions();
-    await updateSubscriptionsForChannels(
-      twitchEventSubCallback,
-      twitchEventSubSecret
-    );
+    await updateSubscriptionsForChannels();
   } catch (error) {
     console.error("Twitch Event Sub: Error!", error);
   }

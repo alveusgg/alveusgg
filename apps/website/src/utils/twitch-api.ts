@@ -4,6 +4,7 @@ import {
   ExpiredAccessTokenError,
   getClientCredentialsAccessToken,
 } from "./oauth2";
+import { env } from "../env/server.mjs";
 
 export type AuthHeaders = {
   "Client-Id": string;
@@ -17,14 +18,8 @@ async function getAuthHeaders() {
     return authHeaders;
   }
 
-  const clientId = process.env.TWITCH_CLIENT_ID;
-  const clientSecret = process.env.TWITCH_CLIENT_SECRET;
-
-  if (clientId === undefined || clientSecret === undefined) {
-    throw Error(
-      "Twitch API: Client id, client secret, event sub callback url or event sub secret missing!"
-    );
-  }
+  const clientId = env.TWITCH_CLIENT_ID;
+  const clientSecret = env.TWITCH_CLIENT_SECRET;
 
   const accessToken = await getClientCredentialsAccessToken(
     "twitch",

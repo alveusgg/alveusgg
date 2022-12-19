@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import OneSignal from "react-onesignal";
 
 import type { NotificationConfig } from "../pages/updates";
+import { env } from "../env/server.mjs";
 
 const categorySlidedownTextOptions = {
   actionMessage:
@@ -20,7 +21,7 @@ async function initializeNotifications(
   userId: string,
   config: NotificationConfig
 ) {
-  if (!process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID) {
+  if (!env.NEXT_PUBLIC_ONESIGNAL_APP_ID) {
     console.error(
       "Cannot show notifications prompt. NEXT_PUBLIC_ONESIGNAL_APP_ID is not set!"
     );
@@ -28,10 +29,10 @@ async function initializeNotifications(
   }
 
   await OneSignal.init({
-    allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
-    subdomain: process.env.NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN || undefined,
-    appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
-    safari_web_id: process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID,
+    allowLocalhostAsSecureOrigin: env.NODE_ENV === "development",
+    subdomain: env.NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN,
+    appId: env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
+    safari_web_id: env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID,
     notifyButton: {
       enable: false,
     },

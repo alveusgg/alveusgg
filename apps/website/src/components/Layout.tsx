@@ -9,7 +9,7 @@ type LayoutProps = {
   children?: React.ReactNode;
 };
 
-const assetVersion = "2022-12-19";
+const assetVersion = "2022-12-19-2";
 
 const ptSans = PT_Sans({
   subsets: ["latin"],

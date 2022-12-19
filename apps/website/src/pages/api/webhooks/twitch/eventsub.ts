@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
 import { z } from "zod";
 import { prisma } from "../../../../server/db/client";
+import { env } from "../../../../env/server.mjs";
 
 const SERVICE_TWITCH = "twitch";
 const EVENT_SOURCE_SUB = "event-sub";
@@ -85,14 +86,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (process.env.TWITCH_EVENTSUB_SECRET === undefined) {
-    throw Error("Twitch eventsub secret missing!");
-  }
-
   const signature = getFirstHeader(req.headers[TWITCH_MESSAGE_SIGNATURE]);
   const messageType = getFirstHeader(req.headers[TWITCH_MESSAGE_TYPE]);
 
-  const secret = process.env.TWITCH_EVENTSUB_SECRET;
+  const secret = env.TWITCH_EVENTSUB_SECRET;
 
   const requestBody = await getRawBody(req, { encoding: "utf-8" });
   const message = getHmacMessageHeader(req) + requestBody;
@@ -150,6 +147,12 @@ export default async function handler(
             },
           });
         }
+        break;
+      case "channel.moderator.add":
+        // TODO: Implement https://github.com/pjeweb/alveusgg/issues/36
+        break;
+      case "channel.moderator.remove":
+        // TODO: Implement https://github.com/pjeweb/alveusgg/issues/36
         break;
       case "stream.online":
         {

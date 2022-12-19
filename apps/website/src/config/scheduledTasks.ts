@@ -2,6 +2,7 @@ import { z } from "zod";
 
 import { updateSubscriptions } from "../server/actions/twitch/manage-event-subscriptions";
 import { checkLiveStatus } from "../server/actions/twitch/check-live-status";
+import { syncRoles } from "../server/actions/twitch/sync-roles";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 
@@ -29,6 +30,13 @@ const scheduledTasksConfigSchema = z.object({
 
 const config: ScheduledTasksConfig = {
   tasks: [
+    {
+      id: "twitch.syncRoles",
+      task: syncRoles,
+      label: "Twitch: Synchronize User Roles",
+      startDateTime: new Date(2022, 11, 18, 0, 6, 0),
+      interval: { hours: 1 },
+    },
     {
       id: "twitch.updateEventSubscriptions",
       task: updateSubscriptions,
