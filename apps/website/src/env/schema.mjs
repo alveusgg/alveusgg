@@ -25,6 +25,7 @@ export const serverSchema = z.object({
   TWITCH_EVENTSUB_CALLBACK: z.string(),
   ONESIGNAL_REST_API_KEY: z.string(),
   ONESIGNAL_APP_ID: z.string(),
+  ACTION_API_SECRET: z.string(),
 });
 
 /**

@@ -1,6 +1,8 @@
 import { z } from "zod";
+import { notEmpty } from "../utils/helpers";
 
 export type NotificationsConfig = z.infer<typeof notificationsConfigSchema>;
+
 const notificationsConfigSchema = z.object({
   categories: z.array(
     z.object({
@@ -26,6 +28,11 @@ const config: NotificationsConfig = {
     },
   ],
 };
+
+export async function getNotificationTags() {
+  const config = await getNotificationsConfig();
+  return config.categories.map(({ tag }) => tag).filter(notEmpty);
+}
 
 export async function getNotificationsConfig() {
   return config;

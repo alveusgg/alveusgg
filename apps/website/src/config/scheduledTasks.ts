@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { updateSubscriptions } from "../server/tasks/twitch/manage-event-subscriptions";
-import { checkLiveStatus } from "../server/tasks/twitch/check-live-status";
+import { updateSubscriptions } from "../server/actions/twitch/manage-event-subscriptions";
+import { checkLiveStatus } from "../server/actions/twitch/check-live-status";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 

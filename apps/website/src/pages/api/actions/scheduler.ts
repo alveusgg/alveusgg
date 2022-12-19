@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { runScheduledTasks } from "../../../server/tasks/scheduler";
+import { runScheduledTasks } from "../../../server/actions/scheduler";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,7 +9,7 @@ export default async function handler(
     try {
       const { authorization } = req.headers;
 
-      if (authorization === `Bearer ${process.env.CRON_SCHEDULER_API_SECRET}`) {
+      if (authorization === `Bearer ${process.env.ACTION_API_SECRET}`) {
         await runScheduledTasks();
         res.status(200).json({ success: true });
       } else {
