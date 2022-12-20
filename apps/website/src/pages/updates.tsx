@@ -9,10 +9,6 @@ import { getNotificationsConfig } from "../config/notifications";
 import DefaultPageLayout from "../components/DefaultPageLayout";
 import { Notifications } from "../components/Notifications";
 
-export type NotificationConfig = {
-  categories?: Array<{ tag: string; label: string }>;
-};
-
 export const getStaticProps: GetStaticProps = async () => {
   return {
     props: {

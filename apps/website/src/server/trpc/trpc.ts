@@ -2,6 +2,7 @@ import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 import { type Context } from "./context";
+import { checkIsSuperUser } from "../../utils/auth";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -37,3 +38,24 @@ const isAuthed = t.middleware(({ ctx, next }) => {
  * Protected procedure
  **/
 export const protectedProcedure = t.procedure.use(isAuthed);
+
+/**
+ * Reusable middleware to ensure
+ * users are logged with superuser privileges
+ */
+const isAuthedSuperUser = t.middleware(({ ctx, next }) => {
+  if (!ctx.session || !checkIsSuperUser(ctx.session)) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+    },
+  });
+});
+
+/**
+ * Protected procedure
+ **/
+export const superUserProcedure = t.procedure.use(isAuthedSuperUser);

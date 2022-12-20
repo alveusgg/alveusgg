@@ -1,9 +1,7 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import OneSignal from "react-onesignal";
-
-import type { NotificationConfig } from "../pages/updates";
-import { env } from "../env/server.mjs";
+import type { NotificationsConfig } from "../config/notifications";
 
 const categorySlidedownTextOptions = {
   actionMessage:
@@ -19,9 +17,9 @@ const categorySlidedownTextOptions = {
 
 async function initializeNotifications(
   userId: string,
-  config: NotificationConfig
+  config: NotificationsConfig
 ) {
-  if (!env.NEXT_PUBLIC_ONESIGNAL_APP_ID) {
+  if (!process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID) {
     console.error(
       "Cannot show notifications prompt. NEXT_PUBLIC_ONESIGNAL_APP_ID is not set!"
     );
@@ -29,10 +27,10 @@ async function initializeNotifications(
   }
 
   await OneSignal.init({
-    allowLocalhostAsSecureOrigin: env.NODE_ENV === "development",
-    subdomain: env.NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN,
-    appId: env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
-    safari_web_id: env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID,
+    allowLocalhostAsSecureOrigin: process.env.NODE_ENV === "development",
+    subdomain: process.env.NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN,
+    appId: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
+    safari_web_id: process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID,
     notifyButton: {
       enable: false,
     },
@@ -91,7 +89,7 @@ async function showPrompt(slidedownPromptOptions: any) {
   });
 }
 
-export const Notifications: React.FC<{ config: NotificationConfig }> = ({
+export const Notifications: React.FC<{ config: NotificationsConfig }> = ({
   config,
 }) => {
   const [isSubscribed, setIsSubscribed] = useState(false);
