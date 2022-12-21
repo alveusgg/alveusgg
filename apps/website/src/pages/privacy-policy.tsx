@@ -62,7 +62,7 @@ const Home: NextPage = () => {
 
         <p>We use the information we collect in various ways, including to:</p>
 
-        <ul>
+        <ul className="list-disc pl-6">
           <li>Provide, operate, and maintain our website</li>
           <li>Improve, personalize, and expand our website</li>
           <li>Understand and analyze how you use our website</li>
