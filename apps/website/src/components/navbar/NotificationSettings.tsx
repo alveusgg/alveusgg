@@ -55,19 +55,21 @@ const getNotificationsPermission = () =>
 
 const sWR: Promise<ServiceWorkerRegistration> = new Promise(
   (resolve, reject) => {
-    navigator.serviceWorker
-      .register(SW_PATH, {
-        type: "module",
-        updateViaCache: "none",
-      })
-      .then((registration) => {
-        console.info("push service worker registered", registration);
-        resolve(registration);
-      })
-      .catch(() => {
-        console.error("error registering push service worker");
-        reject();
-      });
+    typeof navigator !== "undefined" &&
+      "serviceWorker" in navigator &&
+      navigator.serviceWorker
+        .register(SW_PATH, {
+          type: "module",
+          updateViaCache: "none",
+        })
+        .then((registration) => {
+          console.info("push service worker registered", registration);
+          resolve(registration);
+        })
+        .catch(() => {
+          console.error("error registering push service worker");
+          reject();
+        });
   }
 );
 
