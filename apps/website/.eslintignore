@@ -1,1 +1,3 @@
 public/
+push-sw.tsup.config.ts
+src/AlveusPushWorker.ts
