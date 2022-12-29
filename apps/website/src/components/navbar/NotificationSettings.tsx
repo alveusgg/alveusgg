@@ -55,7 +55,7 @@ const getNotificationsPermission = () =>
 
 const sWR: Promise<ServiceWorkerRegistration> = new Promise(
   (resolve, reject) => {
-    window.navigator.serviceWorker
+    navigator.serviceWorker
       .register(SW_PATH, {
         type: "module",
         updateViaCache: "none",
@@ -186,6 +186,7 @@ export const NotificationSettings: React.FC = () => {
     queryFn: async () => {
       return await sWR;
     },
+    enabled: typeof window !== "undefined",
   });
 
   const subscriptionQuery = useQuery({
@@ -195,6 +196,7 @@ export const NotificationSettings: React.FC = () => {
         return await getSubscription();
       }
     },
+    enabled: typeof window !== "undefined",
   });
 
   const config = trpc.notificationsConfig.getConfiguration.useQuery();
@@ -207,6 +209,7 @@ export const NotificationSettings: React.FC = () => {
     },
     {
       enabled:
+        typeof window !== "undefined" &&
         subscriptionQuery.status === "success" &&
         subscriptionQuery.data?.endpoint !== undefined,
     }
