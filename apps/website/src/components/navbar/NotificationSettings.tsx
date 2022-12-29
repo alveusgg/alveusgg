@@ -53,13 +53,6 @@ const isNotificationsSupported =
 const getNotificationsPermission = () =>
   isNotificationsSupported && Notification.permission;
 
-const notificationsGranted = () => getNotificationsPermission() === "granted";
-
-console.log("Browser support", {
-  isNotificationsSupported,
-  isNotificationsAllowed: notificationsGranted(),
-});
-
 const sWR: Promise<ServiceWorkerRegistration> = new Promise(
   (resolve, reject) => {
     window.navigator.serviceWorker
