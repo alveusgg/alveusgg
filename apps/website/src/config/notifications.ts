@@ -4,6 +4,7 @@ import { notEmpty } from "../utils/helpers";
 export type NotificationsConfig = z.infer<typeof notificationsConfigSchema>;
 
 const notificationsConfigSchema = z.object({
+  defaultTags: z.record(z.string(), z.string()),
   categories: z.array(
     z.object({
       tag: z.string(),
@@ -13,6 +14,11 @@ const notificationsConfigSchema = z.object({
 });
 
 const config: NotificationsConfig = {
+  defaultTags: {
+    stream: "1",
+    vod: "1",
+    announcements: "1",
+  },
   categories: [
     {
       tag: "stream",

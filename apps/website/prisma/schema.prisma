@@ -2,16 +2,13 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["ReferentialIntegrity"]
 }
 
 datasource db {
   provider          = "mysql"
   relationMode      = "prisma"
-  // NOTE: When using postgresql, mysql or sqlserver, uncomment the @db.Text annotations in model Account below
-  // Further reading:
-  // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
-  // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
   url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
@@ -84,13 +81,15 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  accounts      Account[]
-  sessions      Session[]
+  id                 String             @id @default(cuid())
+  name               String?
+  email              String?            @unique
+  emailVerified      DateTime?
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  pushSubscriptions  PushSubscription[]
+  notificationPushes NotificationPush[]
 }
 
 model VerificationToken {
@@ -99,4 +98,67 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Notification {
+  id          String                 @id @default(cuid())
+  message     String
+  ttl         Int
+  title       String?
+  imageUrl    String?
+  callapseId  String?
+  scheduledAt DateTime?
+  topic       String?
+  categories  NotificationCategory[]
+  pushes      NotificationPush[]
+}
+
+model NotificationCategory {
+  notificationId String
+  name           String
+  notification   Notification @relation(fields: [notificationId], references: [id])
+
+  @@unique([notificationId, name])
+}
+
+model NotificationPush {
+  notificationId String
+  subscriptionId String
+  userId         String?
+  attempts       Int?
+  clickedAt      DateTime?
+  failedAt       DateTime?
+  deliveredAt    DateTime?
+  user           User?            @relation(fields: [userId], references: [id])
+  notification   Notification     @relation(fields: [notificationId], references: [id])
+  subscription   PushSubscription @relation(fields: [subscriptionId], references: [id])
+
+  @@unique([notificationId, subscriptionId])
+}
+
+// FIXME: Endpoint URLs could be up to 2048 chars, which would be 8192 bytes with utf8mb4 (4 bytes per char),
+//        but innodb unique index keys may only be up to 3072 bytes which would be 768 characters so we round
+//        down to 720. So far Endpoint URLS have been less than 256 chars. So that _should_ not collide.
+model PushSubscription {
+  id        String                @id @default(cuid())
+  userId    String?
+  endpoint  String                @db.VarChar(720) // ^ see FIXME above
+  p256dh    String?
+  auth      String?
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+  user      User?                 @relation(fields: [userId], references: [id])
+  tags      PushSubscriptionTag[]
+  pushes    NotificationPush[]
+
+  @@unique([endpoint])
+}
+
+model PushSubscriptionTag {
+  subscriptionId String
+  name           String
+  value          String
+  subscription   PushSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+  @@unique([subscriptionId, name])
 }

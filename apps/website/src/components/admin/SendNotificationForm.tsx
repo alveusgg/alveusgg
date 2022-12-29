@@ -1,6 +1,7 @@
+import { useRef } from "react";
+
 import type { NotificationsConfig } from "../../config/notifications";
 import { trpc } from "../../utils/trpc";
-import { useRef } from "react";
 
 export const SendNotificationForm: React.FC<{
   notificationConfig: NotificationsConfig;

@@ -174,11 +174,11 @@ export const Notifications: React.FC<{ config: NotificationsConfig }> = ({
     <>
       <h2 className="my-4 text-lg">Your subscription status</h2>
       {isSubscribed && tags && config.categories ? (
-        <div className="max-w-[400px] overflow-hidden  rounded-lg border border-alveus-gray">
+        <div className="max-w-[400px] overflow-hidden  rounded-lg border border-gray-600">
           <table className="w-full">
             {config.categories?.map((category) => (
               <tr
-                className="border-t border-alveus-gray first:border-t-0"
+                className="border-t border-gray-600 first:border-t-0"
                 key={category.tag}
               >
                 <th className="p-2 text-left">{category.label}</th>

@@ -1,3 +1,5 @@
+import i18nConfig from "./next-i18next.config.mjs";
+
 // @ts-check
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
@@ -6,13 +8,10 @@
 !process.env.SKIP_ENV_VALIDATION && (await import("./src/env/server.mjs"));
 
 /** @type {import("next").NextConfig} */
-export default {
+const config = {
   reactStrictMode: true,
   swcMinify: true,
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
+  i18n: i18nConfig.i18n,
   images: {
     remotePatterns: [
       {
@@ -48,11 +47,33 @@ export default {
     },
   ],
   webpack: (config, options) => {
-    //config.module.rules.push({
-    //  test: /\.ya?ml/,
-    //  use: "yaml-loader",
-    //});
+    //const baseEntry = config.entry;
+    //const baseOutputFilename = config.output.filename;
+    //
+    //config.entry = async () => {
+    //  console.log({ baseEntry });
+    //  const res = await baseEntry();
+    //
+    //  return {
+    //    ...res,
+    //  };
+    //};
+
+    // @ ts-ignore
+    //config.output.filename = (chunkInfo) => {
+    //  if (chunkInfo.chunk.name === "AlveusPushWorker.js") {
+    //    return "static/push/alveus/AlveusPushWorker.js";
+    //  }
+    //
+    //  if (typeof baseOutputFilename === "function") {
+    //    return baseOutputFilename(chunkInfo);
+    //  }
+    //
+    //  return baseOutputFilename;
+    //};
 
     return config;
   },
 };
+
+export default config;
