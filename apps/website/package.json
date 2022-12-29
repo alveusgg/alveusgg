@@ -7,7 +7,7 @@
     "build:push-sw": "tsup --config push-sw.tsup.config.ts",
     "dev:next": "next dev",
     "dev:push-sw": "tsup --watch --config push-sw.tsup.config.ts",
-    "build": "run-p build:*",
+    "build": "run-s build:next build:push-sw",
     "dev": "run-p dev:*",
     "postinstall": "prisma generate",
     "lint": "next lint",
