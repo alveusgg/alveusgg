@@ -23,7 +23,7 @@ export const pushSubscriptionRouter = router({
   getStatus: publicProcedure
     .input(selectionSchema)
     .query(async ({ ctx, input }) =>
-      prisma?.pushSubscription.findFirst({
+      ctx.prisma.pushSubscription.findFirst({
         select: {
           tags: true,
           userId: true,
@@ -38,12 +38,12 @@ export const pushSubscriptionRouter = router({
   register: publicProcedure
     .input(baseRegistrationSchema)
     .mutation(async ({ ctx, input }) => {
-      const exists = await prisma?.pushSubscription.findFirst({
+      const exists = await ctx.prisma.pushSubscription.findFirst({
         where: { endpoint: input.endpoint },
       });
 
       if (exists) {
-        await prisma?.pushSubscription.update({
+        await ctx.prisma.pushSubscription.update({
           where: { endpoint: input.endpoint },
           data: {
             userId: ctx.session?.user?.id,
@@ -53,7 +53,7 @@ export const pushSubscriptionRouter = router({
         });
       } else {
         const config = await getNotificationsConfig();
-        await prisma?.pushSubscription.create({
+        await ctx.prisma.pushSubscription.create({
           data: {
             endpoint: input.endpoint,
             userId: ctx.session?.user?.id,
@@ -77,7 +77,7 @@ export const pushSubscriptionRouter = router({
   setTags: publicProcedure
     .input(tagsSchema)
     .mutation(async ({ ctx, input }) => {
-      await prisma?.pushSubscription.update({
+      await ctx.prisma.pushSubscription.update({
         where: { endpoint: input.endpoint },
         data: {
           tags: {
@@ -98,8 +98,8 @@ export const pushSubscriptionRouter = router({
 
   unregister: publicProcedure
     .input(selectionSchema)
-    .mutation(async ({ input }) => {
-      await prisma?.pushSubscription.delete({
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.pushSubscription.delete({
         where: { endpoint: input.endpoint },
       });
     }),
@@ -108,8 +108,8 @@ export const pushSubscriptionRouter = router({
     .input(
       selectionSchema.and(z.object({ newSubscription: baseRegistrationSchema }))
     )
-    .mutation(async ({ input }) => {
-      await prisma?.pushSubscription.update({
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.pushSubscription.update({
         where: { endpoint: input.endpoint },
         data: input.newSubscription,
       });
