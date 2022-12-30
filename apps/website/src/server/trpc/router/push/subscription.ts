@@ -38,11 +38,12 @@ export const pushSubscriptionRouter = router({
   register: publicProcedure
     .input(baseRegistrationSchema)
     .mutation(async ({ ctx, input }) => {
-      const exists = await ctx.prisma.pushSubscription.findFirst({
+      const subscription = await ctx.prisma.pushSubscription.findFirst({
         where: { endpoint: input.endpoint },
+        select: { id: true },
       });
 
-      if (exists) {
+      if (subscription) {
         await ctx.prisma.pushSubscription.update({
           where: { endpoint: input.endpoint },
           data: {
@@ -77,22 +78,29 @@ export const pushSubscriptionRouter = router({
   setTags: publicProcedure
     .input(tagsSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.pushSubscription.update({
+      const subscription = await ctx.prisma.pushSubscription.findFirst({
         where: { endpoint: input.endpoint },
-        data: {
-          tags: {
-            // delete only tag values for the tags in input if they already exist
-            deleteMany: {
-              name: { in: Object.keys(input.tags) },
-            },
-            createMany: {
-              data: Object.entries(input.tags).map(([name, value]) => ({
-                name,
-                value,
-              })),
-            },
-          },
+        select: { id: true },
+      });
+
+      if (!subscription) {
+        throw Error("Subscription does not exist!");
+      }
+
+      await ctx.prisma.pushSubscriptionTag.deleteMany({
+        where: {
+          subscriptionId: subscription.id,
+          name: { in: Object.keys(input.tags) },
         },
+      });
+
+      await ctx.prisma.pushSubscriptionTag.createMany({
+        data: Object.entries(input.tags).map(([name, value]) => ({
+          subscriptionId: subscription.id,
+          name,
+          value,
+        })),
+        skipDuplicates: true,
       });
     }),
 

@@ -28,6 +28,7 @@
     "@trpc/server": "^10.7.0",
     "date-fns": "^2.29.3",
     "i18next": "^22.4.6",
+    "lodash": "^4.17.21",
     "luxon": "^3.1.1",
     "maplibre-gl": "^2.4.0",
     "next": "13.0.6",
@@ -48,6 +49,7 @@
   "devDependencies": {
     "@babel/core": "^7.20.7",
     "@types/geojson": "^7946.0.10",
+    "@types/lodash": "^4.14.191",
     "@types/luxon": "^3.1.0",
     "@types/node": "^18.11.17",
     "@types/oauth": "^0.9.1",

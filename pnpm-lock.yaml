@@ -51,6 +51,7 @@ importers:
       '@trpc/react-query': ^10.7.0
       '@trpc/server': ^10.7.0
       '@types/geojson': ^7946.0.10
+      '@types/lodash': ^4.14.191
       '@types/luxon': ^3.1.0
       '@types/node': ^18.11.17
       '@types/oauth': ^0.9.1
@@ -64,6 +65,7 @@ importers:
       eslint: ^8.30.0
       eslint-config-next: 13.0.6
       i18next: ^22.4.6
+      lodash: ^4.17.21
       luxon: ^3.1.1
       maplibre-gl: ^2.4.0
       next: 13.0.6
@@ -104,6 +106,7 @@ importers:
       '@trpc/server': 10.7.0
       date-fns: 2.29.3
       i18next: 22.4.6
+      lodash: 4.17.21
       luxon: 3.1.1
       maplibre-gl: 2.4.0
       next: 13.0.6_7xlrwlvvs7cv2obrs6a5y6oxxq
@@ -123,6 +126,7 @@ importers:
     devDependencies:
       '@babel/core': 7.20.7
       '@types/geojson': 7946.0.10
+      '@types/lodash': 4.14.191
       '@types/luxon': 3.1.0
       '@types/node': 18.11.17
       '@types/oauth': 0.9.1
@@ -1872,6 +1876,10 @@ packages:
 
   /@types/json5/0.0.29:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
+    dev: true
+
+  /@types/lodash/4.14.191:
+    resolution: {integrity: sha512-BdZ5BCCvho3EIXw6wUCXHe7rS53AIDPLE+JzwgT+OsJk53oBfbSmZZ7CX4VaRoN78N+TJpFi9QPlfIVNmJYWxQ==}
     dev: true
 
   /@types/luxon/3.1.0:

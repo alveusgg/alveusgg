@@ -1,18 +1,12 @@
-import type { FormEvent } from "react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import type { ChangeEvent, FormEvent } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import debounce from "lodash/debounce";
 
 import { trpc } from "../../utils/trpc";
 import { typeSafeObjectKeys } from "../../utils/helpers";
 
 const SW_PATH = "/push/alveus/AlveusPushWorker.js";
-
-type UidOption = boolean | { value: string; signature?: string };
-type TagsOption = { tags?: Array<string>; replaceTags?: Array<string> };
-
-type Options = TagsOption & {
-  uid?: UidOption;
-};
 
 const notificationHelp = {
   "Chrome/Android": {
@@ -50,13 +44,12 @@ const notificationHelp = {
 const isNotificationsSupported =
   typeof window !== "undefined" && "Notification" in window;
 
-const getNotificationsPermission = () =>
-  isNotificationsSupported && Notification.permission;
+const isServiceWorkersSupported =
+  typeof navigator !== "undefined" && "serviceWorker" in navigator;
 
-const sWR: Promise<ServiceWorkerRegistration> = new Promise(
-  (resolve, reject) => {
-    typeof navigator !== "undefined" &&
-      "serviceWorker" in navigator &&
+const pushServiceWorkerRegistration: Promise<ServiceWorkerRegistration> =
+  new Promise((resolve, reject) => {
+    if (isServiceWorkersSupported) {
       navigator.serviceWorker
         .register(SW_PATH, {
           type: "module",
@@ -70,11 +63,14 @@ const sWR: Promise<ServiceWorkerRegistration> = new Promise(
           console.error("error registering push service worker");
           reject();
         });
-  }
-);
+    } else {
+      console.log("service workers are not supported");
+      reject();
+    }
+  });
 
 async function getSubscription() {
-  const registration = await sWR;
+  const registration = await pushServiceWorkerRegistration;
   if (!("pushManager" in registration)) {
     console.log("Push not supported!");
     return null;
@@ -103,95 +99,10 @@ async function getSubscription() {
   return null;
 }
 
-//async function setSubscriptionUid(options: UidOption) {
-//  const subscription = await getSubscription();
-//  if (subscription === null) return;
-//
-//  await sendSubscriptionToServer(subscription, options, undefined, true);
-//}
-//
-//async function setSubscriptionTags(replaceTags: TagsOption["replaceTags"]) {
-//  const subscription = await getSubscription();
-//  if (subscription === null) return;
-//
-//  await sendSubscriptionToServer(
-//    subscription,
-//    undefined,
-//    { replaceTags },
-//    true
-//  );
-//}
-//
-//async function getSubscriptionStatus(options: Options = {}) {
-//  if (Notification.permission === "denied") {
-//    return false;
-//  }
-//
-//  const subscription = await getSubscription();
-//  if (subscription) {
-//    const status = await getSubscriptionFromServer(subscription);
-//    if (status) {
-//      return {
-//        tags: status.tags,
-//        uid: status.uid,
-//      };
-//    }
-//  }
-//
-//  return false;
-//}
-//
-//async function subscribe(options: Options = {}) {
-//  if (Notification.permission === "denied") {
-//    return false;
-//  }
-//
-//  try {
-//    const subscription = await (
-//      await sWR
-//    ).pushManager.subscribe({
-//      userVisibleOnly: true,
-//      applicationServerKey: applicationServerKey,
-//    });
-//
-//    if (subscription === null) {
-//      return false;
-//    }
-//
-//    await sendSubscriptionToServer(subscription, options.uid, {
-//      tags: options.tags,
-//    });
-//    return true;
-//  } catch (error) {
-//    console.log(error);
-//    return false;
-//  }
-//}
-//
-//async function unsubscribe(options: Options = {}) {
-//  const subscription = await getSubscription();
-//  if (subscription === null) {
-//    return;
-//  }
-//
-//  await removeSubscriptionFromServer(subscription, options.uid, {
-//    tags: options.tags,
-//  });
-//}
-
-export const NotificationSettings: React.FC = () => {
-  const notificationsPermission = getNotificationsPermission();
-  const tags = null;
-
-  const swrQuery = useQuery({
-    queryKey: ["alveus-push-swr"],
-    queryFn: async () => {
-      return await sWR;
-    },
-    enabled: typeof window !== "undefined",
-  });
-
-  const subscriptionQuery = useQuery({
+function usePushSubscription(
+  notificationsPermission: NotificationPermission | false
+) {
+  const clientSubQuery = useQuery({
     queryKey: ["alveus-push-subscription", notificationsPermission],
     queryFn: async () => {
       if (notificationsPermission === "granted") {
@@ -199,70 +110,95 @@ export const NotificationSettings: React.FC = () => {
       }
     },
     enabled: typeof window !== "undefined",
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });
 
-  const config = trpc.notificationsConfig.getConfiguration.useQuery();
-  const register = trpc.pushSubscription.register.useMutation();
-  const subscriptionStatus = trpc.pushSubscription.getStatus.useQuery(
+  const serverQuery = trpc.pushSubscription.getStatus.useQuery(
     {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      endpoint: subscriptionQuery.data?.endpoint,
+      endpoint: clientSubQuery.data?.endpoint as string,
     },
     {
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
       enabled:
         typeof window !== "undefined" &&
-        subscriptionQuery.status === "success" &&
-        subscriptionQuery.data?.endpoint !== undefined,
+        clientSubQuery.status === "success" &&
+        clientSubQuery.data?.endpoint !== undefined,
     }
   );
 
+  const utils = trpc.useContext();
+  const register = trpc.pushSubscription.register.useMutation();
   useEffect(() => {
-    const isClientSubscribed =
-      subscriptionQuery.status === "success" &&
-      subscriptionQuery.data?.endpoint;
-    const isServerRegistered =
-      subscriptionStatus.status === "success" &&
-      subscriptionStatus.data !== null;
-
+    const isClientSubscriptionReady =
+      clientSubQuery.status === "success" && clientSubQuery.data?.endpoint;
+    const isNotRegistered =
+      serverQuery.status === "error" ||
+      (serverQuery.status === "success" && serverQuery.data === null);
     if (
-      isClientSubscribed &&
-      !isServerRegistered &&
+      isClientSubscriptionReady &&
+      isNotRegistered &&
       register.isIdle &&
-      subscriptionQuery.data
+      clientSubQuery.data
     ) {
       register.mutate({
-        endpoint: subscriptionQuery.data.endpoint,
-        p256dh: subscriptionQuery.data.toJSON().keys?.auth,
-        auth: subscriptionQuery.data.toJSON().keys?.p256dh,
+        endpoint: clientSubQuery.data.endpoint,
+        p256dh: clientSubQuery.data.toJSON().keys?.auth,
+        auth: clientSubQuery.data.toJSON().keys?.p256dh,
       });
     }
   }, [
     register,
-    subscriptionQuery.data,
-    subscriptionQuery.status,
-    subscriptionStatus.data,
-    subscriptionStatus.status,
+    clientSubQuery.data,
+    clientSubQuery.status,
+    serverQuery.data,
+    serverQuery.status,
+    utils.pushSubscription.getStatus,
   ]);
 
-  console.log(
-    "AlveusNotifications",
-    subscriptionQuery.status,
-    subscriptionQuery.data,
-    subscriptionStatus.status
-  );
+  return {
+    endpoint: clientSubQuery.data?.endpoint,
+    isRegistered: serverQuery.status === "success" && serverQuery.data,
+    tags: useMemo(
+      (): Record<string, string> =>
+        Object.fromEntries(
+          serverQuery.data?.tags.map(({ name, value }) => [name, value]) || []
+        ),
+      [serverQuery.data?.tags]
+    ),
+  };
+}
 
+function usePushServiceWorker() {
+  return useQuery({
+    queryKey: ["alveus-push-swr"],
+    queryFn: async () => {
+      return await pushServiceWorkerRegistration;
+    },
+    enabled: typeof window !== "undefined",
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  }).data;
+}
+
+export const NotificationSettings: React.FC = () => {
+  const [notificationsPermission, setNotificationPermission] = useState(
+    () => isNotificationsSupported && Notification.permission
+  );
   const [error, setError] = useState<string | null>(null);
 
-  const formRef = useRef<HTMLFormElement>(null);
-  const setTagsMutation = trpc.pushSubscription.setTags.useMutation({});
-
+  const swr = usePushServiceWorker();
   const handleSubscribeClick = useCallback(() => {
     // TODO Subscribe
     Notification.requestPermission().then((permission) => {
+      setNotificationPermission(permission);
+
       // If the user accepts, let's create a notification
       if (permission === "granted") {
-        const swr = swrQuery.data;
         if (swr) {
           swr.showNotification("Welcome!", {
             body: "Push notifications are set up.",
@@ -278,51 +214,72 @@ export const NotificationSettings: React.FC = () => {
         );
       }
     });
-  }, [swrQuery.data]);
+  }, [swr]);
 
+  const { endpoint, tags, isRegistered } = usePushSubscription(
+    notificationsPermission
+  );
+  const config = trpc.notificationsConfig.getConfiguration.useQuery(undefined, {
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+  });
+  const setTagsMutation = trpc.pushSubscription.setTags.useMutation();
   const showSettings =
     isNotificationsSupported && config.data?.categories.length;
   const enableSettings =
-    showSettings &&
-    notificationsPermission === "granted" &&
-    subscriptionStatus.status === "success";
-
-  const handlePreferencesChange = async (event: Event | FormEvent) => {
-    const formEl = formRef.current;
-
-    event.preventDefault();
-
-    if (!enableSettings || !formEl) {
-      return;
-    }
-
-    const data = new FormData(formEl);
-    const tags: Record<string, string> = {};
-    config.data?.categories.forEach(({ tag }) => {
-      tags[tag] = String(data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0");
-    });
-
-    if (subscriptionQuery.data?.endpoint) {
-      setTagsMutation.mutate({
-        endpoint: subscriptionQuery.data?.endpoint,
-        tags: tags,
+    showSettings && notificationsPermission === "granted" && isRegistered;
+  const utils = trpc.useContext();
+  const handlePreferencesChange = useCallback(
+    async (data: FormData) => {
+      const tags: Record<string, string> = {};
+      config.data?.categories.forEach(({ tag }) => {
+        tags[tag] = String(
+          data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0"
+        );
       });
-    }
 
-    return;
-  };
+      if (endpoint) {
+        setTagsMutation.mutate({
+          endpoint: endpoint,
+          tags: tags,
+        });
+        await utils.pushSubscription.getStatus.invalidate({ endpoint });
+      }
+    },
+    [
+      config.data?.categories,
+      endpoint,
+      setTagsMutation,
+      utils.pushSubscription.getStatus,
+    ]
+  );
 
-  useEffect(() => {
-    if (formRef.current) {
-      const formEl = formRef.current;
+  const submitHandler = useCallback(
+    async (event: FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (enableSettings && event.currentTarget) {
+        await handlePreferencesChange(new FormData(event.currentTarget));
+      }
+    },
+    [enableSettings, handlePreferencesChange]
+  );
 
-      formEl.addEventListener("change", (e) => handlePreferencesChange(e));
+  const debouncedHandlePreferencesChange = useMemo(
+    () => debounce(handlePreferencesChange, 200),
+    [handlePreferencesChange]
+  );
 
-      return () => {
-        formEl.removeEventListener("change", (e) => handlePreferencesChange(e));
-      };
-    }
-  });
+  const handleChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      if (enableSettings && event.currentTarget.form) {
+        debouncedHandlePreferencesChange(
+          new FormData(event.currentTarget.form)
+        );
+      }
+    },
+    [debouncedHandlePreferencesChange, enableSettings]
+  );
 
   return (
     <>
@@ -386,8 +343,7 @@ export const NotificationSettings: React.FC = () => {
 
       {showSettings && (
         <form
-          ref={formRef}
-          onSubmit={handlePreferencesChange}
+          onSubmit={submitHandler}
           className={
             enableSettings
               ? ""
@@ -403,11 +359,15 @@ export const NotificationSettings: React.FC = () => {
                   <input
                     id={`tag-${category.tag}`}
                     name={`tag-${category.tag}`}
+                    key={`tag-${category.tag}-${endpoint}-${isRegistered}`}
                     value="1"
-                    defaultChecked={tags?.[category.tag] === "1"}
+                    defaultChecked={
+                      enableSettings ? tags[category.tag] === "1" : true
+                    }
                     type="checkbox"
                     disabled={!enableSettings}
                     className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded border-gray-300"
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="ml-2 text-sm">
