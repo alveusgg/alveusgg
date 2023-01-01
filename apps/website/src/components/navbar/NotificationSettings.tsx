@@ -47,7 +47,7 @@ const isNotificationsSupported =
 const isServiceWorkersSupported =
   typeof navigator !== "undefined" && "serviceWorker" in navigator;
 
-const pushServiceWorkerRegistration: Promise<ServiceWorkerRegistration> =
+const pushServiceWorkerRegistration: Promise<ServiceWorkerRegistration | null> =
   new Promise((resolve, reject) => {
     if (isServiceWorkersSupported) {
       navigator.serviceWorker
@@ -61,17 +61,17 @@ const pushServiceWorkerRegistration: Promise<ServiceWorkerRegistration> =
         })
         .catch(() => {
           console.error("error registering push service worker");
-          reject();
+          reject(null);
         });
     } else {
       console.log("service workers are not supported");
-      reject();
+      resolve(null);
     }
   });
 
 async function getSubscription() {
   const registration = await pushServiceWorkerRegistration;
-  if (!("pushManager" in registration)) {
+  if (!registration || !("pushManager" in registration)) {
     console.log("Push not supported!");
     return null;
   }
