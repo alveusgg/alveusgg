@@ -1,16 +1,16 @@
 import Image from "next/image";
 import React from "react";
-import { type Ambassador } from "../../utils/data";
+import { type Facility } from "../../utils/data";
 
-export const AmbassadorCard: React.FC<{
-  ambassador: Ambassador;
+export const FacilityCard: React.FC<{
+  facility: Facility;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-}> = ({ ambassador, onClick }) => {
-  const mainImage = ambassador.images?.[0];
+}> = ({ facility, onClick }) => {
+  const mainImage = facility.images?.[0];
 
   return (
     <a
-      href={ambassador.links?.website || "#"}
+      href={facility.links?.website || "#"}
       target="_blank"
       rel="noreferrer"
       className="group/card flex h-full w-full flex-shrink-0 flex-col overflow-hidden rounded-xl bg-alveus-green shadow-lg transition-transform hover:scale-110"
@@ -27,10 +27,7 @@ export const AmbassadorCard: React.FC<{
       )}
 
       <div className="flex flex-col justify-end overflow-auto p-2 leading-tight text-white">
-        <h3 className="text-bold mb-1 font-serif text-xl">{ambassador.name}</h3>
-        <p className="text-bold font-sans text-base leading-tight text-gray-400">
-          {ambassador.species}
-        </p>
+        <h3 className="text-bold mb-1 font-serif text-xl">{facility.label}</h3>
       </div>
     </a>
   );

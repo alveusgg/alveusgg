@@ -1,13 +1,15 @@
 import Head from "next/head";
 import { type InferGetStaticPropsType, type NextPage } from "next";
-import React from "react";
+import React, { useReducer } from "react";
 
-import { notEmpty } from "../utils/helpers";
-import { type Cam, getAllData } from "../utils/data";
+import { getAllData } from "../utils/data";
 import DefaultPageLayout from "../components/DefaultPageLayout";
 import { Headline } from "../components/shared/Headline";
-import { AmbassadorCard } from "../components/about/AmbassadorCard";
 import { Map } from "../components/about/Map";
+import { Ambassadors } from "../components/about/Ambassadors";
+import { InfoDetails } from "../components/about/InfoDetails";
+import { Enclosures } from "../components/about/Enclosures";
+import { Facilities } from "../components/about/Facilities";
 
 export type AboutPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -17,23 +19,44 @@ export async function getStaticProps() {
   };
 }
 
-function Cam({ cam }: { cam: Cam }) {
-  return (
-    <article className="relative h-[200px] w-[200px] max-w-full flex-shrink-0 overflow-hidden rounded-xl bg-alveus-green shadow-xl">
-      <div className="absolute inset-0 z-10 flex flex-col overflow-auto px-6 py-4 text-white">
-        <h3 className="text-bold mb-3 font-serif text-lg">{cam.command}</h3>
-      </div>
-    </article>
-  );
-}
+type SelectionState = {
+  selection?: {
+    type: "ambassador" | "enclosure" | "facility";
+    name: string;
+  };
+};
+
+type SelectAction = {
+  type: "select";
+  payload: SelectionState["selection"];
+};
+
+export type SelectionAction = SelectAction;
+
+const reducer = (state: SelectionState, action: SelectionAction) => {
+  switch (action.type) {
+    case "select":
+      return {
+        ...state,
+        selection: action.payload,
+      };
+  }
+
+  return state;
+};
 
 const AboutPage: NextPage<AboutPageProps> = ({
   ambassadors,
-  cams,
   facilities,
   enclosures,
   mapData,
 }) => {
+  const [selectionState, dispatchSelection] = useReducer(reducer, {});
+  const selectedAmbassador =
+    (selectionState.selection?.type === "ambassador" &&
+      ambassadors[selectionState.selection.name]) ||
+    null;
+
   return (
     <>
       <Head>
@@ -47,6 +70,7 @@ const AboutPage: NextPage<AboutPageProps> = ({
           facilities={facilities}
           enclosures={enclosures}
           mapData={mapData}
+          dispatchSelection={dispatchSelection}
         />
 
         <Headline>
@@ -59,37 +83,64 @@ const AboutPage: NextPage<AboutPageProps> = ({
           </a>
         </Headline>
 
-        <div className="-mx-4 overflow-x-auto overflow-y-hidden p-4">
+        <div className="-mx-4 overflow-x-auto overflow-y-hidden">
           <section className="flex w-full gap-5">
-            {ambassadors &&
-              Object.keys(ambassadors)
-                .filter(notEmpty)
-                .map((name) => {
-                  const data = ambassadors[name];
-                  return (
-                    data && <AmbassadorCard key={name} ambassador={data} />
-                  );
-                })}
-
-            <div className="block w-5">&nbsp;</div>
+            <Ambassadors
+              ambassadors={ambassadors}
+              setSelectedAmbassadorName={(name: string | null) =>
+                dispatchSelection({
+                  type: "select",
+                  payload: name ? { type: "ambassador", name } : undefined,
+                })
+              }
+            />
           </section>
         </div>
 
-        <Headline>Live cams</Headline>
-        <div className="-mx-4 overflow-x-auto overflow-y-hidden p-4">
-          <section className="flex w-full gap-5">
-            {cams &&
-              Object.keys(cams)
-                .filter(notEmpty)
-                .map((name) => {
-                  const data = cams[name];
-                  return data && <Cam key={name} cam={data} />;
-                })}
+        <div className="-mx-4 overflow-hidden px-4 md:flex md:flex-row md:gap-10">
+          <div className="md:w-[calc(50%-2rem)]">
+            <Headline>Enclosures</Headline>
 
-            <div className="block w-5">&nbsp;</div>
-          </section>
+            <div className="-mx-4 overflow-x-auto overflow-y-hidden">
+              <section className="flex w-full gap-5">
+                <Enclosures
+                  enclosures={enclosures}
+                  setSelectedEnclosureName={(name: string | null) =>
+                    dispatchSelection({
+                      type: "select",
+                      payload: name ? { type: "enclosure", name } : undefined,
+                    })
+                  }
+                />
+              </section>
+            </div>
+          </div>
+          <div className="border-black/20 pl-10 md:w-[calc(50%-2rem)] md:border-l">
+            <Headline>Facilities</Headline>
+
+            <div className="-mx-4 overflow-x-auto overflow-y-hidden">
+              <section className="flex w-full gap-5">
+                <Facilities
+                  facilities={facilities}
+                  setSelectedFacilityName={(name: string | null) =>
+                    dispatchSelection({
+                      type: "select",
+                      payload: name ? { type: "facility", name } : undefined,
+                    })
+                  }
+                />
+              </section>
+            </div>
+          </div>
         </div>
       </DefaultPageLayout>
+
+      <InfoDetails
+        ambassador={selectedAmbassador}
+        requestClose={() =>
+          dispatchSelection({ type: "select", payload: undefined })
+        }
+      />
     </>
   );
 };

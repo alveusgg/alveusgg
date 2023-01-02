@@ -11,13 +11,13 @@ type LayoutProps = {
 
 const assetVersion = "2022-12-19-2";
 
-const ptSans = PT_Sans({
+export const ptSans = PT_Sans({
   subsets: ["latin"],
   variable: "--font-ptsans",
   weight: ["400", "700"],
 });
 
-const ptSerif = PT_Serif({
+export const ptSerif = PT_Serif({
   subsets: ["latin"],
   variable: "--font-ptserif",
   weight: ["400", "700"],

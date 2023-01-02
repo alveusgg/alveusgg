@@ -4,6 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "swiper/css";
+@import "swiper/css/a11y";
+@import "swiper/css/effect-coverflow";
+@import "swiper/css/mousewheel";
+@import "swiper/css/navigation";
+@import "swiper/css/scrollbar";
 
 @layer components {
     .onesignal-customlink-container {

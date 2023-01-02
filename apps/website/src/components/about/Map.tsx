@@ -1,27 +1,34 @@
 import type { Feature, FeatureCollection } from "geojson";
 import React, { useEffect, useMemo } from "react";
 import * as ml from "maplibre-gl";
+
 import { notEmpty } from "../../utils/helpers";
-import type { AboutPageProps } from "../../pages/about";
+import type { AboutPageProps, SelectionAction } from "../../pages/about";
 
 type MapProps = Pick<
   AboutPageProps,
   "ambassadors" | "facilities" | "enclosures" | "mapData"
->;
+> & {
+  dispatchSelection: (action: SelectionAction) => void;
+};
+
+type MapArgs = {
+  mapData: FeatureCollection;
+  onClick: (feature: Feature) => void;
+};
 
 export const Map: React.FC<MapProps> = ({
   ambassadors,
   facilities,
   enclosures,
   mapData,
+  dispatchSelection,
 }) => {
-  const mergedMapData = useMemo(() => {
+  const mapArgs = useMemo(() => {
     const knownAmbassadors = Object.keys(ambassadors).filter(notEmpty);
     const knownFacilities = Object.keys(facilities).filter(notEmpty);
     const knownEnclosures = Object.keys(enclosures).filter(notEmpty);
     if (mapData) {
-      const mergedMapData = { ...mapData };
-
       mapData.features = mapData.features.map((feature) => {
         if (!feature.properties) {
           return feature;
@@ -36,7 +43,7 @@ export const Map: React.FC<MapProps> = ({
               labels.push(ambassadors[ambassadorName]?.name);
             }
           });
-
+          feature.properties.names = names;
           feature.properties.label = labels.filter(notEmpty).join(", ");
         } else if (type === "facility" && knownFacilities.includes(name)) {
           feature.properties.label = facilities[name]?.label;
@@ -47,17 +54,40 @@ export const Map: React.FC<MapProps> = ({
         return feature;
       });
 
-      return mergedMapData;
+      return {
+        mapData: mapData,
+        onClick: (feature: Feature) => {
+          const props = feature.properties;
+          if (!props) {
+            return;
+          }
+
+          console.log("Clicked on feature", feature);
+          if (
+            props.name &&
+            props.type &&
+            ["ambassador", "facility", "enclosure"].includes(props.type)
+          ) {
+            dispatchSelection({
+              type: "select",
+              payload: {
+                type: props.type,
+                name: props.name,
+              },
+            });
+          }
+        },
+      };
     }
 
     return null;
   }, [ambassadors, enclosures, facilities, mapData]);
 
   useEffect(() => {
-    if (mergedMapData) {
-      return setupMap(mergedMapData);
+    if (mapArgs) {
+      return setupMap(mapArgs);
     }
-  }, [mergedMapData]);
+  }, [mapArgs]);
 
   return (
     <div
@@ -67,7 +97,7 @@ export const Map: React.FC<MapProps> = ({
   );
 };
 
-function setupMap(mapData: FeatureCollection) {
+function setupMap({ mapData, onClick }: MapArgs) {
   const map = new ml.Map({
     container: "map",
     style: {
@@ -263,7 +293,7 @@ function setupMap(mapData: FeatureCollection) {
       markerEl.className = "w-0 h-0 cursor-pointer group/marker hover:z-20";
 
       markerEl.addEventListener("click", () => {
-        console.log(`Clicked on ${props.name} (${type})`);
+        onClick(marker);
       });
 
       const labelEl = document.createElement("div");

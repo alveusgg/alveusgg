@@ -22,6 +22,10 @@ const config = {
         protocol: "https",
         hostname: "www.alveussanctuary.org",
       },
+      {
+        protocol: "https",
+        hostname: "alveusgg.github.io",
+      },
     ],
   },
   redirects: async () => [

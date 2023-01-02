@@ -43,21 +43,30 @@ export const ambassadorSchema = z.object({
 
 export const ambassadorsSchema = z.record(z.string(), ambassadorSchema);
 
-export const facilitySchema = z.object({
+const commonFacilityAndEnclosureSchema = z.object({
   label: z.string(),
+  costToBuild: z.string().optional(),
+  sponsoredBy: z.string().optional(),
   links: linksSchema.optional(),
   images: imagesSchema.optional(),
+  ambassadors: z.array(z.string()).optional(),
+  nonAmbassadors: z.array(z.string()).optional(),
+  cams: z.array(z.string()).optional(),
 });
+
+export const facilitySchema = commonFacilityAndEnclosureSchema.and(
+  z.object({
+    enclosures: z.array(z.string()).optional(),
+  })
+);
 
 export const facilitiesSchema = z.record(z.string(), facilitySchema);
 
-export const enclosureSchema = z.object({
-  label: z.string(),
-  cams: z.array(z.string()).optional(),
-  facilities: z.array(z.string()).optional(),
-  ambassadors: z.array(z.string()).optional(),
-  nonAmbassadors: z.array(z.string()).optional(),
-});
+export const enclosureSchema = commonFacilityAndEnclosureSchema.and(
+  z.object({
+    facilities: z.array(z.string()).optional(),
+  })
+);
 
 export const enclosuresSchema = z.record(z.string(), enclosureSchema);
 
@@ -68,6 +77,8 @@ export const camSchema = z.object({
   facilities: z.array(z.string()).optional(),
   ambassadors: z.array(z.string()).optional(),
   nonAmbassadors: z.array(z.string()).optional(),
+  links: linksSchema.optional(),
+  images: imagesSchema.optional(),
 });
 
 export const camsSchema = z.record(z.string(), camSchema);
