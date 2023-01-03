@@ -1,8 +1,4 @@
-@import "https://unpkg.com/maplibre-gl@2.4.0/dist/maplibre-gl.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "maplibre-gl/dist/maplibre-gl.css";
 
 @import "swiper/css";
 @import "swiper/css/a11y";
@@ -10,6 +6,10 @@
 @import "swiper/css/mousewheel";
 @import "swiper/css/navigation";
 @import "swiper/css/scrollbar";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer components {
     .onesignal-customlink-container {
