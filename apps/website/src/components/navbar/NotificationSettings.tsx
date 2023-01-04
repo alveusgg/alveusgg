@@ -44,6 +44,9 @@ const notificationHelp = {
 const isNotificationsSupported =
   typeof window !== "undefined" && "Notification" in window;
 
+const isWebPushSupported =
+  typeof window !== "undefined" && "PushManager" in window;
+
 const isServiceWorkersSupported =
   typeof navigator !== "undefined" && "serviceWorker" in navigator;
 
@@ -288,7 +291,7 @@ export const NotificationSettings: React.FC = () => {
         are uploaded or the Alveus team has any other announcements to make!
       </p>
 
-      {!isNotificationsSupported && (
+      {(!isNotificationsSupported || !isWebPushSupported) && (
         <p className="rounded-lg bg-red-100 p-4 leading-tight text-red-800">
           Your browser does not support notifications! You can join Discord or
           Follow Twitter instead!
@@ -301,44 +304,48 @@ export const NotificationSettings: React.FC = () => {
         </p>
       )}
 
-      {isNotificationsSupported && notificationsPermission === "denied" && (
-        <div className="rounded-lg bg-red-100 p-4 leading-tight text-red-800">
-          <p>
-            Notification permission was denied. You will have to enable
-            notifications for this website in your browser settings to receive
-            push notifications.
-          </p>
+      {isWebPushSupported &&
+        isNotificationsSupported &&
+        notificationsPermission === "denied" && (
+          <div className="rounded-lg bg-red-100 p-4 leading-tight text-red-800">
+            <p>
+              Notification permission was denied. You will have to enable
+              notifications for this website in your browser settings to receive
+              push notifications.
+            </p>
 
-          <p>Find help for your browser:</p>
-          <ul className="py-2">
-            {typeSafeObjectKeys(notificationHelp).map((key) => (
-              <li
-                key={key}
-                className="border-t border-red-600 py-2 first:border-t-0"
-              >
-                <a
-                  href={notificationHelp[key].link}
-                  rel="noreferrer help external"
-                  target="_blank"
-                  className="underline"
+            <p>Find help for your browser:</p>
+            <ul className="py-2">
+              {typeSafeObjectKeys(notificationHelp).map((key) => (
+                <li
+                  key={key}
+                  className="border-t border-red-600 py-2 first:border-t-0"
                 >
-                  {notificationHelp[key].label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+                  <a
+                    href={notificationHelp[key].link}
+                    rel="noreferrer help external"
+                    target="_blank"
+                    className="underline"
+                  >
+                    {notificationHelp[key].label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
-      {isNotificationsSupported && notificationsPermission !== "granted" && (
-        <button
-          type="button"
-          onClick={handleSubscribeClick}
-          className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 font-medium text-gray-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:text-sm"
-        >
-          Enable push notifications
-        </button>
-      )}
+      {isWebPushSupported &&
+        isNotificationsSupported &&
+        notificationsPermission !== "granted" && (
+          <button
+            type="button"
+            onClick={handleSubscribeClick}
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-blue-100 px-4 py-2 font-medium text-gray-700 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:text-sm"
+          >
+            Enable push notifications
+          </button>
+        )}
 
       {showSettings && (
         <form
