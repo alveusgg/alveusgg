@@ -5,6 +5,9 @@
 # testing
 /coverage
 
+# service worker
+/public/push/alveus/*
+
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
