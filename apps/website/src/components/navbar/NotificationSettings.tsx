@@ -71,12 +71,11 @@ const pushServiceWorkerRegistration: Promise<ServiceWorkerRegistration | null> =
 
 async function getSubscription() {
   const registration = await pushServiceWorkerRegistration;
-  if (!registration || !("pushManager" in registration)) {
+  const pushManager = registration?.pushManager;
+  if (!pushManager) {
     console.log("Push not supported!");
     return null;
   }
-
-  const pushManager = registration.pushManager;
 
   const subscription = await pushManager.getSubscription();
   if (subscription) {

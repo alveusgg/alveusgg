@@ -107,7 +107,7 @@ self.addEventListener("pushsubscriptionchange", function (_event) {
 
   if (oldEndpoint && newEndpoint) {
     event.waitUntil(
-      trpc.pushSubscriptionRouter.updateRegistration.mutate({
+      trpc.pushSubscription.updateRegistration.mutate({
         endpoint: oldEndpoint,
         newSubscription: {
           endpoint: newEndpoint,
@@ -118,7 +118,7 @@ self.addEventListener("pushsubscriptionchange", function (_event) {
     );
   } else if (newEndpoint) {
     event.waitUntil(
-      trpc.pushSubscriptionRouter.register.mutate({
+      trpc.pushSubscription.register.mutate({
         endpoint: newEndpoint,
         p256dh: newP256dh,
         auth: newAuth,

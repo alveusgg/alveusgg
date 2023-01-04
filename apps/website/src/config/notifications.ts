@@ -9,6 +9,8 @@ const notificationsConfigSchema = z.object({
     z.object({
       tag: z.string(),
       label: z.string(),
+      ttl: z.number(),
+      urgency: z.enum(["high", "normal", "low", "very-low"]),
     })
   ),
 });
@@ -23,14 +25,20 @@ const config: NotificationsConfig = {
     {
       tag: "stream",
       label: "Stream notifications",
+      ttl: 30 * 60, // 30 minutes
+      urgency: "high",
     },
     {
       tag: "vod",
       label: "Video releases",
+      ttl: 5 * 24 * 60 * 60, // 5 days
+      urgency: "normal",
     },
     {
       tag: "announcements",
       label: "Other announcements",
+      ttl: 5 * 24 * 60 * 60, // 5 days
+      urgency: "normal",
     },
   ],
 };
