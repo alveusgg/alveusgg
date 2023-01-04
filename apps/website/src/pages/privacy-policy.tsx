@@ -210,15 +210,6 @@ const Home: NextPage = () => {
           </li>
           <li>
             <a
-              href="https://onesignal.com/privacy_policy"
-              rel="noreferrer"
-              target="_blank"
-            >
-              OneSignal (Push notifications)
-            </a>
-          </li>
-          <li>
-            <a
               href="https://vercel.com/legal/privacy-policy"
               rel="noreferrer"
               target="_blank"
@@ -226,7 +217,6 @@ const Home: NextPage = () => {
               Vercel (Hosting provider)
             </a>
           </li>
-
           <li>
             <a
               href="https://planetscale.com/legal/privacy"

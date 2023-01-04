@@ -12,18 +12,6 @@
 @tailwind utilities;
 
 @layer components {
-    .onesignal-customlink-container {
-        @apply min-h-0 !important;
-    }
-
-    .onesignal-customlink-container .onesignal-customlink-subscribe {
-        @apply font-sans bg-alveus-green text-white opacity-100 text-base px-4 px-4 py-2 rounded !important;
-    }
-
-    .onesignal-customlink-container .onesignal-customlink-subscribe.onesignal-reset {
-        @apply bg-red-800 !important;
-    }
-
     details > summary {
         list-style: none;
     }

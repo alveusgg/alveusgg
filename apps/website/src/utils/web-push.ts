@@ -9,17 +9,30 @@ type PushNotificationBase64Url = {
   keys?: { p256dh: string; auth: string };
 };
 
+type AdditionalHeaderName =
+  | "Topic"
+  | "Urgency"
+  | Exclude<
+      string,
+      | "TTL"
+      | "Content-Length"
+      | "Content-Type"
+      | "Content-Encoding"
+      | "Authorization"
+    >;
+
 type PushRequestOptions = {
   vapidDetails: {
     subject: string;
     publicKey: string;
     privateKey: string;
   };
-  headers?: Record<Exclude<string, "TTL">, string>;
+  headers?: Record<AdditionalHeaderName, string>;
   TTL?: number;
 };
 
-type HttpsPushRequestOptions = PushRequestOptions & WebPushHttpsRequestOptions;
+type HttpsPushRequestOptions = PushRequestOptions &
+  Pick<WebPushHttpsRequestOptions, "agent" | "timeout">;
 
 const DEFAULT_TTL = 4 * 7 * 24 * 60 * 60; // seconds
 

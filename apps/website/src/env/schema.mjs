@@ -23,8 +23,6 @@ export const serverSchema = z.object({
   TWITCH_CLIENT_SECRET: z.string(),
   TWITCH_EVENTSUB_SECRET: z.string(),
   TWITCH_EVENTSUB_CALLBACK: z.string(),
-  ONESIGNAL_REST_API_KEY: z.string(),
-  ONESIGNAL_APP_ID: z.string(),
   ACTION_API_SECRET: z.string(),
   SUPER_USER_IDS: z.string(),
   WEB_PUSH_VAPID_PRIVATE_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
@@ -37,9 +35,6 @@ export const serverSchema = z.object({
  * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
  */
 export const clientSchema = z.object({
-  NEXT_PUBLIC_ONESIGNAL_APP_ID: z.string(),
-  NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID: z.string(),
-  NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN: z.string().nullable(),
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
 });
 
@@ -50,10 +45,6 @@ export const clientSchema = z.object({
  * @type {{ [k in keyof z.infer<typeof clientSchema>]: z.infer<typeof clientSchema>[k] | undefined }}
  */
 export const clientEnv = {
-  NEXT_PUBLIC_ONESIGNAL_APP_ID: process.env.NEXT_PUBLIC_ONESIGNAL_APP_ID,
-  NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID:
-    process.env.NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID,
-  NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN: process.env.NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN,
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
 };
