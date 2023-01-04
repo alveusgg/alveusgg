@@ -3,11 +3,10 @@ import parse from "date-fns/parse";
 import Image from "next/image";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { GlobeAltIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
-import type { Ambassador } from "../../../utils/data";
+import type { Ambassador, Enclosures } from "../../../utils/data";
+import type { SelectionAction } from "../../../pages/about";
 import { dateFormatter } from "../InfoDetails";
 import { DefinitionItem } from "./DefinitionItem";
-import type { SelectionAction } from "../../../pages/about";
-import type { Enclosures } from "../../../utils/data";
 
 export const AmbassadorContent: React.FC<{
   enclosures: Enclosures;

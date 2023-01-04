@@ -1,7 +1,7 @@
 import React from "react";
-import type { Enclosure } from "../../../utils/data";
 import Image from "next/image";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import type { Enclosure } from "../../../utils/data";
 import { DefinitionItem } from "./DefinitionItem";
 
 export const EnclosureContent: React.FC<{

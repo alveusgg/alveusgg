@@ -1,11 +1,6 @@
 import React from "react";
 import type { Ambassador } from "../../../utils/data";
-import parse from "date-fns/parse";
 import Image from "next/image";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { PlusIcon } from "@heroicons/react/20/solid";
-import { DefinitionItem } from "./DefinitionItem";
-import { dateFormatter } from "../InfoDetails";
 import type { SelectionAction } from "../../../pages/about";
 
 export const AmbassadorsContent: React.FC<{

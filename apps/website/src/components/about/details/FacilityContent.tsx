@@ -1,9 +1,8 @@
 import React from "react";
-import type { Facility } from "../../../utils/data";
 import Image from "next/image";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import type { Facility } from "../../../utils/data";
 import { DefinitionItem } from "./DefinitionItem";
-
 export const FacilityContent: React.FC<{
   facility: Facility;
 }> = ({ facility }) => {

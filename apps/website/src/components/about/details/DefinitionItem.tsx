@@ -1,5 +1,4 @@
 import React from "react";
-
 export const DefinitionItem: React.FC<{
   term: string | JSX.Element;
   children: React.ReactNode;
