@@ -1,4 +1,4 @@
-export function base64url(base64: string) {
+export function isBase64UrlEncoded(base64: string) {
   return /^[A-Za-z0-9\-_]+$/.test(base64);
 }
 

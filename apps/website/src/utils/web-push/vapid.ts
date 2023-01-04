@@ -1,30 +1,23 @@
 import * as jws from "jws";
 import forge from "node-forge";
 
-import { base64url } from "../base64url";
+import { isBase64UrlEncoded, decode } from "../base64url";
 
 // Default expiration in seconds
 const DEFAULT_EXPIRATION_SECONDS = 12 * 60 * 60;
-// Maximum expiration is 24 hours according. (See VAPID spec)
+
+// Maximum expiration is 24 hours according to VAPID spec
 const MAX_EXPIRATION_SECONDS = 24 * 60 * 60;
-export type SupportedContentEncoding = "aesgcm" | "aes128gcm";
-export const AES_GCM: SupportedContentEncoding = "aesgcm";
-export const AES_128_GCM: SupportedContentEncoding = "aes128gcm";
+
+function padKeyBuffer(privateKeyBuffer: Buffer, size: number) {
+  const padding = Buffer.alloc(size - privateKeyBuffer.length);
+  padding.fill(0);
+  return Buffer.concat([padding, privateKeyBuffer]);
+}
 
 function toPEM(privateKey: string, publicKey: string) {
-  let privateKeyBuffer = Buffer.from(privateKey, "base64url");
-  let publicKeyBuffer = Buffer.from(publicKey, "base64url");
-
-  // Occasionally the keys will not be padded to the correct length resulting
-  // in errors, hence this padding.
-  // See https://github.com/web-push-libs/web-push/issues/295 for history.
-  const padding = Buffer.alloc(32 - privateKeyBuffer.length);
-  padding.fill(0);
-  privateKeyBuffer = Buffer.concat([padding, privateKeyBuffer]);
-
-  const pubPadding = Buffer.alloc(66 - publicKeyBuffer.length);
-  pubPadding.fill(0);
-  publicKeyBuffer = Buffer.concat([pubPadding, publicKeyBuffer]);
+  const privateKeyBuffer = padKeyBuffer(decode(privateKey), 32);
+  const publicKeyBuffer = padKeyBuffer(decode(publicKey), 66);
 
   const oidAsn = forge.asn1.create(
     forge.asn1.Class.UNIVERSAL,
@@ -73,7 +66,7 @@ function toPEM(privateKey: string, publicKey: string) {
   );
 }
 
-function validateSubject(subject: string) {
+function checkSubject(subject: string) {
   if (subject.length === 0) {
     throw new Error(
       `The subject value must be a string containing a URL or mailto: address. ${subject}`
@@ -88,51 +81,33 @@ function validateSubject(subject: string) {
   }
 }
 
-function validatePublicKey(publicKey: string) {
-  if (!base64url(publicKey)) {
-    throw new Error(
-      'Vapid public key must be a URL safe Base 64 (without "=")'
-    );
+function checkPublicKey(publicKey: string) {
+  if (!isBase64UrlEncoded(publicKey)) {
+    throw new Error("Vapid public key must be base64url");
   }
 
-  if (Buffer.from(publicKey, "base64url").length !== 65) {
+  if (decode(publicKey).length !== 65) {
     throw new Error("Vapid public key should be 65 bytes long when decoded.");
   }
 }
 
-function validatePrivateKey(privateKey: string) {
-  if (!base64url(privateKey)) {
-    throw new Error(
-      'Vapid private key must be a URL safe Base 64 (without "=")'
-    );
+function checkPrivateKey(privateKey: string) {
+  if (!isBase64UrlEncoded(privateKey)) {
+    throw new Error("Vapid private key must be base64url");
   }
 
-  if (Buffer.from(privateKey, "base64url").length !== 32) {
+  if (decode(privateKey).length !== 32) {
     throw new Error("Vapid private key should be 32 bytes long when decoded.");
   }
 }
 
-/**
- * Given the number of seconds calculates
- * the expiration in the future by adding the passed `numSeconds`
- * with the current seconds from Unix Epoch
- *
- * @param {Number} numSeconds Number of seconds to be added
- * @return {Number} Future expiration in seconds
- */
-function getFutureExpirationTimestamp(numSeconds: number) {
-  const futureExp = new Date();
-  futureExp.setSeconds(futureExp.getSeconds() + numSeconds);
-  return Math.floor(futureExp.getTime() / 1000);
+function getFutureTimestamp(seconds: number) {
+  const date = new Date();
+  date.setSeconds(date.getSeconds() + seconds);
+  return Math.floor(date.getTime() / 1000);
 }
 
-/**
- * Validates the Expiration Header based on the VAPID Spec
- * Throws error of type `Error` if the expiration is not validated
- *
- * @param {Number} expiration Expiration seconds from Epoch to be validated
- */
-function validateExpiration(expiration: number) {
+function checkExpiration(expiration: number) {
   if (!Number.isInteger(expiration)) {
     throw new Error("`expiration` value must be a number");
   }
@@ -141,36 +116,18 @@ function validateExpiration(expiration: number) {
     throw new Error("`expiration` must be a positive integer");
   }
 
-  // Roughly checks the time of expiration, since the max expiration can be ahead
-  // of the time than at the moment the expiration was generated
-  const maxExpirationTimestamp = getFutureExpirationTimestamp(
-    MAX_EXPIRATION_SECONDS
-  );
+  const maxExpirationTimestamp = getFutureTimestamp(MAX_EXPIRATION_SECONDS);
 
   if (expiration >= maxExpirationTimestamp) {
     throw new Error("`expiration` value is greater than maximum of 24 hours");
   }
 }
 
-/**
- * This method takes the required VAPID parameters and returns the required
- * header to be added to a Web Push Protocol Request.
- * @param  {string} audience        This must be the origin of the push service.
- * @param  {string} subject         This should be a URL or a 'mailto:' email
- * address.
- * @param  {string} publicKey       The VAPID public key.
- * @param  {string} privateKey      The VAPID private key.
- * @param  {string} contentEncoding The contentEncoding type.
- * @param  {number} [expiration]    The expiration of the VAPID JWT (integer).
- * @return {Object}                 Returns an Object with the Authorization and
- * 'Crypto-Key' values to be used as headers.
- */
-export function getVapidHeaders(
+export function getVapidAuthorizationString(
   audience: string,
   subject: string,
   publicKey: string,
   privateKey: string,
-  contentEncoding: string,
   expiration?: number
 ) {
   if (audience.length === 0) {
@@ -184,17 +141,15 @@ export function getVapidHeaders(
     throw new Error(`VAPID audience is not a url. ${audience}`);
   }
 
-  validateSubject(subject);
-  validatePublicKey(publicKey);
-  validatePrivateKey(privateKey);
+  checkSubject(subject);
+  checkPublicKey(publicKey);
+  checkPrivateKey(privateKey);
 
   if (expiration) {
-    validateExpiration(expiration);
+    checkExpiration(expiration);
   } else {
-    expiration = getFutureExpirationTimestamp(DEFAULT_EXPIRATION_SECONDS);
+    expiration = getFutureTimestamp(DEFAULT_EXPIRATION_SECONDS);
   }
-
-  const pem = toPEM(privateKey, publicKey);
 
   const jwt = jws.sign({
     header: {
@@ -206,21 +161,8 @@ export function getVapidHeaders(
       exp: expiration,
       sub: subject,
     },
-    privateKey: pem,
+    privateKey: toPEM(privateKey, publicKey),
   });
 
-  if (contentEncoding === AES_128_GCM) {
-    return {
-      Authorization: `vapid t=${jwt}, k=${publicKey}`,
-    };
-  }
-
-  if (contentEncoding === AES_GCM) {
-    return {
-      Authorization: `WebPush ${jwt}`,
-      "Crypto-Key": `p256ecdsa=${publicKey}`,
-    };
-  }
-
-  throw new Error("Unsupported encoding type specified.");
+  return `vapid t=${jwt}, k=${publicKey}`;
 }

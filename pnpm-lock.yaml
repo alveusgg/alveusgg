@@ -66,7 +66,6 @@ importers:
       date-fns: ^2.29.3
       eslint: ^8.30.0
       eslint-config-next: 13.0.6
-      http_ece: ^1.1.0
       i18next: ^22.4.6
       jws: ^4.0.0
       lodash: ^4.17.21
@@ -112,7 +111,6 @@ importers:
       '@trpc/react-query': 10.7.0_x4ie6nhblo2vtx2aafrgzlfqy4
       '@trpc/server': 10.7.0
       date-fns: 2.29.3
-      http_ece: 1.1.0
       i18next: 22.4.6
       jws: 4.0.0
       lodash: 4.17.21
@@ -4128,13 +4126,6 @@ packages:
       toidentifier: 1.0.1
     dev: false
 
-  /http_ece/1.1.0:
-    resolution: {integrity: sha512-bptAfCDdPJxOs5zYSe7Y3lpr772s1G346R4Td5LgRUeCwIGpCGDUTJxRrhTNcAXbx37spge0kWEIH7QAYWNTlA==}
-    engines: {node: '>=4'}
-    dependencies:
-      urlsafe-base64: 1.0.0
-    dev: false
-
   /human-signals/2.1.0:
     resolution: {integrity: sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==}
     engines: {node: '>=10.17.0'}
@@ -6409,10 +6400,6 @@ packages:
     dependencies:
       querystringify: 2.2.0
       requires-port: 1.0.0
-    dev: false
-
-  /urlsafe-base64/1.0.0:
-    resolution: {integrity: sha512-RtuPeMy7c1UrHwproMZN9gN6kiZ0SvJwRaEzwZY0j9MypEkFqyBaKv176jvlPtg58Zh36bOkS0NFABXMHvvGCA==}
     dev: false
 
   /use-sync-external-store/1.2.0_react@18.2.0:
