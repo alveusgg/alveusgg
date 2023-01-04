@@ -21,10 +21,10 @@ function HMAC_hash(key: Buffer, input: Buffer) {
 }
 
 function HKDF_expand(prk: Buffer, info: Buffer, l: number) {
-  const counterBuffer = new Buffer(1);
+  const counterBuffer = Buffer.alloc(1);
 
-  let output = new Buffer(0);
-  let T = new Buffer(0);
+  let output = Buffer.alloc(0);
+  let T = Buffer.alloc(0);
   let counter = 0;
   while (output.length < l) {
     counterBuffer.writeUIntBE(++counter, 0, 1);
@@ -71,7 +71,7 @@ function deriveKeyAndNonce(params: {
 }
 
 function generateNonce(base: Buffer, counter: number) {
-  const nonce = new Buffer(base);
+  const nonce = Buffer.from(base);
   const m = nonce.readUIntBE(nonce.length - 6, 6);
   const x =
     ((m ^ counter) & 0xffffff) +
@@ -92,7 +92,7 @@ function encryptRecord(
   const gcm = createCipheriv("aes-128-gcm", key.key, nonce);
 
   const ciphertext = [];
-  const padding = new Buffer(pad + PAD_SIZE);
+  const padding = Buffer.alloc(pad + PAD_SIZE);
   padding.fill(0);
 
   ciphertext.push(gcm.update(buffer));
@@ -109,7 +109,7 @@ function encryptRecord(
 }
 
 function writeHeader(keyid: Buffer, rs: number, salt: Buffer | Uint8Array) {
-  const ints = new Buffer(5);
+  const ints = Buffer.alloc(5);
   ints.writeUIntBE(rs, 0, 4);
   ints.writeUIntBE(keyid.length, 4, 1);
   return Buffer.concat([salt, ints, keyid]);
