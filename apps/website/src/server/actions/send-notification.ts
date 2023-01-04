@@ -79,7 +79,6 @@ export async function sendNotification(data: {
           TTL: tagConfig.ttl, // 30 minutes
           headers: {
             Urgency: tagConfig.urgency,
-            Topic: data.tag,
           },
           vapidDetails: {
             subject: env.WEB_PUSH_VAPID_SUBJECT,
