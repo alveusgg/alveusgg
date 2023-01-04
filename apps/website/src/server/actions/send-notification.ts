@@ -88,13 +88,9 @@ export async function sendNotification(data: {
           },
         }
       );
-      console.info("Sent push", {
-        endpoint: subscription.endpoint,
-        status: res.statusCode,
-        body: res.body,
-      });
+      //console.info(`Sent push (${res.statusCode}) ${subscription.endpoint}`);
     } catch (e) {
-      console.error("Could not send push", e);
+      console.error(`Could not send push ${subscription.endpoint}`, e);
     }
   }
 }
