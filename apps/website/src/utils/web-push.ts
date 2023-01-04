@@ -74,7 +74,7 @@ function generateRequestDetails(
         currentVapidDetails.privateKey
       ),
     },
-    body: body.toString(),
+    body: body,
   };
 }
 
