@@ -3,13 +3,18 @@ import React, { useEffect, useMemo } from "react";
 import * as ml from "maplibre-gl";
 
 import { notEmpty } from "../../utils/helpers";
-import type { AboutPageProps, SelectionAction } from "../../pages/about";
+import type {
+  AboutPageProps,
+  SelectionAction,
+  SelectionState,
+} from "../../pages/about";
 
 type MapProps = Pick<
   AboutPageProps,
   "ambassadors" | "facilities" | "enclosures" | "mapData"
 > & {
   dispatchSelection: (action: SelectionAction) => void;
+  selectionState: SelectionState;
 };
 
 type MapArgs = {
@@ -17,11 +22,16 @@ type MapArgs = {
   onClick: (feature: Feature) => void;
 };
 
+function getAmbassadorNames(name: string) {
+  return name.split("_").filter(notEmpty);
+}
+
 export const Map: React.FC<MapProps> = ({
   ambassadors,
   facilities,
   enclosures,
   mapData,
+  selectionState,
   dispatchSelection,
 }) => {
   const mapArgs = useMemo(() => {
@@ -36,7 +46,7 @@ export const Map: React.FC<MapProps> = ({
 
         const { type, name } = feature.properties;
         if (type === "ambassador") {
-          const names = `${name}`.split("_").filter(notEmpty);
+          const names = getAmbassadorNames(name);
           const labels: Array<string | undefined> = [];
           names.forEach((ambassadorName) => {
             if (knownAmbassadors.includes(ambassadorName)) {
@@ -68,20 +78,33 @@ export const Map: React.FC<MapProps> = ({
             props.type &&
             ["ambassador", "facility", "enclosure"].includes(props.type)
           ) {
-            dispatchSelection({
-              type: "select",
-              payload: {
-                type: props.type,
-                name: props.name,
-              },
-            });
+            if (
+              props.type === "ambassador" &&
+              getAmbassadorNames(props.name).length > 1
+            ) {
+              dispatchSelection({
+                type: "select",
+                payload: {
+                  type: "ambassadors",
+                  names: getAmbassadorNames(props.name),
+                },
+              });
+            } else {
+              dispatchSelection({
+                type: "select",
+                payload: {
+                  type: props.type,
+                  name: props.name,
+                },
+              });
+            }
           }
         },
       };
     }
 
     return null;
-  }, [ambassadors, enclosures, facilities, mapData]);
+  }, [ambassadors, dispatchSelection, enclosures, facilities, mapData]);
 
   useEffect(() => {
     if (mapArgs) {

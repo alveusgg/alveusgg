@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar, Navigation, EffectCoverflow } from "swiper";
+import { Scrollbar, Navigation, Keyboard } from "swiper";
 import React from "react";
 
 export const CardSwiper: React.FC<{
@@ -15,7 +15,8 @@ export const CardSwiper: React.FC<{
       }}
       grabCursor={true}
       navigation={true}
-      modules={[EffectCoverflow, Navigation, Scrollbar]}
+      keyboard={true}
+      modules={[Keyboard, Navigation, Scrollbar]}
       spaceBetween={10}
       slidesPerView="auto"
       coverflowEffect={{

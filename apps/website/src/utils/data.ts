@@ -1,7 +1,6 @@
 import { z } from "zod";
 import fetch from "node-fetch";
 import type { FeatureCollection } from "geojson";
-import { notEmpty } from "./helpers";
 
 export type Ambassador = z.infer<typeof ambassadorSchema>;
 export type Ambassadors = z.infer<typeof ambassadorsSchema>;
@@ -19,6 +18,9 @@ const imageSchema = z.object({
   url: z.string().url(),
   alt: z.string().optional(),
   label: z.string().optional(),
+  width: z.number().optional(),
+  height: z.number().optional(),
+  type: z.string().optional(),
 });
 
 const imagesSchema = z.array(imageSchema);
@@ -39,6 +41,8 @@ export const ambassadorSchema = z.object({
   conservationMission: z.string(),
   links: linksSchema.optional(),
   images: imagesSchema.optional(),
+  facility: z.string().or(z.null()).optional(),
+  enclosure: z.string().or(z.null()).optional(),
 });
 
 export const ambassadorsSchema = z.record(z.string(), ambassadorSchema);

@@ -19,11 +19,13 @@ export async function getStaticProps() {
   };
 }
 
-type SelectionState = {
-  selection?: {
-    type: "ambassador" | "enclosure" | "facility";
-    name: string;
-  };
+export type SelectionState = {
+  selection?:
+    | {
+        type: "ambassador" | "enclosure" | "facility";
+        name: string;
+      }
+    | { type: "ambassadors"; names: Array<string> };
 };
 
 type SelectAction = {
@@ -52,10 +54,6 @@ const AboutPage: NextPage<AboutPageProps> = ({
   mapData,
 }) => {
   const [selectionState, dispatchSelection] = useReducer(reducer, {});
-  const selectedAmbassador =
-    (selectionState.selection?.type === "ambassador" &&
-      ambassadors[selectionState.selection.name]) ||
-    null;
 
   return (
     <>
@@ -70,6 +68,7 @@ const AboutPage: NextPage<AboutPageProps> = ({
           facilities={facilities}
           enclosures={enclosures}
           mapData={mapData}
+          selectionState={selectionState}
           dispatchSelection={dispatchSelection}
         />
 
@@ -115,7 +114,7 @@ const AboutPage: NextPage<AboutPageProps> = ({
               </section>
             </div>
           </div>
-          <div className="border-black/20 pl-10 md:w-[calc(50%-2rem)] md:border-l">
+          <div className="md:w-[calc(50%-2rem)] md:border-l md:border-black/20 md:pl-10">
             <Headline>Facilities</Headline>
 
             <div className="-mx-4 overflow-x-auto overflow-y-hidden">
@@ -136,10 +135,11 @@ const AboutPage: NextPage<AboutPageProps> = ({
       </DefaultPageLayout>
 
       <InfoDetails
-        ambassador={selectedAmbassador}
-        requestClose={() =>
-          dispatchSelection({ type: "select", payload: undefined })
-        }
+        ambassadors={ambassadors}
+        facilities={facilities}
+        enclosures={enclosures}
+        selection={selectionState}
+        dispatchSelection={dispatchSelection}
       />
     </>
   );

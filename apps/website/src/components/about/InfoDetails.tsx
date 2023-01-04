@@ -1,208 +1,93 @@
 import { Dialog, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { PlusIcon } from "@heroicons/react/20/solid";
-import Image from "next/image";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import parse from "date-fns/parse";
 
-import type { Ambassador } from "../../utils/data";
+import type { Ambassadors, Enclosures, Facilities } from "../../utils/data";
 import { ptSans, ptSerif } from "../Layout";
+import type { SelectionAction, SelectionState } from "../../pages/about";
+import { AmbassadorContent } from "./details/AmbassadorContent";
+import { EnclosureContent } from "./details/EnclosureContent";
+import { FacilityContent } from "./details/FacilityContent";
+import { notEmpty } from "../../utils/helpers";
+import { AmbassadorsContent } from "./details/AmbassadorsContent";
 
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
+export const dateFormatter = new Intl.DateTimeFormat("en-US", {
   year: "numeric",
   month: "long",
   day: "numeric",
 });
 
-const DefinitionItem: React.FC<{
-  term: string | JSX.Element;
-  children: React.ReactNode;
-}> = ({ term, children }) => (
-  <div className="flex justify-between py-3 text-sm font-medium">
-    <dt className="text-gray-500">{term}</dt>
-    <dd className="text-gray-900">{children}</dd>
-  </div>
-);
-const Content: React.FC<{
-  ambassador: Ambassador;
-}> = ({ ambassador }) => {
-  const dateOfBirth = ambassador?.dateOfBirth
-    ? parse(ambassador.dateOfBirth, "yyyy-mm-dd", new Date())
-    : null;
-
-  return (
-    <div className="h-full overflow-y-auto bg-white p-8">
-      <div className="space-y-6 pb-16">
-        <div>
-          {ambassador.images?.[0] && (
-            <div className="block w-full overflow-hidden rounded-lg">
-              <Image
-                width={800}
-                height={400}
-                src={ambassador.images[0].url}
-                alt={ambassador.images[0].alt || ""}
-                className="h-auto max-h-[80vh] w-full object-cover"
-              />
-            </div>
-          )}
-          <div className="mt-4 flex items-start justify-between">
-            <div>
-              <h2 className="font-serif text-lg font-medium text-gray-900">
-                {ambassador.name}
-              </h2>
-              <p className="text-sm font-medium text-gray-500">
-                {ambassador.species} ({ambassador.scientificName})
-              </p>
-            </div>
-
-            {/*
-              <button
-                type="button"
-                className="focus:ring-indigo-500 ml-4 flex h-8 w-8 items-center justify-center rounded-full bg-white text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2"
-              >
-                <HeartIcon
-                  className="h-6 w-6"
-                  aria-hidden="true"
-                />
-                <span className="sr-only">Favorite</span>
-              </button>
-              */}
-          </div>
-        </div>
-        <div>
-          <h3 className="font-serif font-medium text-gray-900">Information</h3>
-          <dl className="mt-2 divide-y divide-gray-200 border-t border-b border-gray-200">
-            <DefinitionItem term="Species">
-              {ambassador.scientificName} ({ambassador.species})
-            </DefinitionItem>
-            <DefinitionItem term="Sex">{ambassador.sex}</DefinitionItem>
-            <DefinitionItem term="Age">
-              {dateOfBirth ? formatDistanceToNow(dateOfBirth) : "Unknown"}
-            </DefinitionItem>
-            <DefinitionItem term="Birthday">
-              {dateOfBirth ? dateFormatter.format(dateOfBirth) : "Unknown"}
-            </DefinitionItem>
-            <DefinitionItem term="IUCN Status">
-              {ambassador.iucnStatus}
-            </DefinitionItem>
-          </dl>
-        </div>
-        <div>
-          <h3 className="font-medium text-gray-900">Story</h3>
-          <div className="mt-2 flex items-center justify-between">
-            <p className="text-sm text-gray-500">{ambassador.story}</p>
-          </div>
-        </div>
-        <div>
-          <h3 className="font-serif font-medium text-gray-900">
-            Conservation Missing
-          </h3>
-          <div className="mt-2 flex items-center justify-between">
-            <p className="text-sm text-gray-500">
-              {ambassador.conservationMission}
-            </p>
-          </div>
-        </div>
-        {ambassador.links?.website && (
-          <div>
-            <h3 className="font-serif font-medium text-gray-900">See also</h3>
-            <a
-              href={ambassador.links?.website}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Show profile on website
-            </a>
-          </div>
-        )}
-        <div>
-          <h3 className="font-serif font-medium text-gray-900">See also</h3>
-          <ul
-            role="list"
-            className="mt-2 divide-y divide-gray-200 border-t border-b border-gray-200"
-          >
-            <li className="flex items-center justify-between py-3">
-              <div className="flex items-center">
-                <img
-                  src="https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=3&w=1024&h=1024&q=80"
-                  alt=""
-                  className="h-8 w-8 rounded-full"
-                />
-                <p className="ml-4 text-sm font-medium text-gray-900">
-                  Aimee Douglas
-                </p>
-              </div>
-              <button
-                type="button"
-                className="text-indigo-600 hover:text-indigo-500 focus:ring-indigo-500 ml-6 rounded-md bg-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2"
-              >
-                Remove
-                <span className="sr-only"> Aimee Douglas</span>
-              </button>
-            </li>
-            <li className="flex items-center justify-between py-3">
-              <div className="flex items-center">
-                <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixqx=oilqXxSqey&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt=""
-                  className="h-8 w-8 rounded-full"
-                />
-                <p className="ml-4 text-sm font-medium text-gray-900">
-                  Andrea McMillan
-                </p>
-              </div>
-              <button
-                type="button"
-                className="text-indigo-600 hover:text-indigo-500 focus:ring-indigo-500 ml-6 rounded-md bg-white text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2"
-              >
-                Remove
-                <span className="sr-only"> Andrea McMillan</span>
-              </button>
-            </li>
-            <li className="flex items-center justify-between py-2">
-              <button
-                type="button"
-                className="focus:ring-indigo-500 group -ml-1 flex items-center rounded-md bg-white p-1 focus:outline-none focus:ring-2"
-              >
-                <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-dashed border-gray-300 text-gray-400">
-                  <PlusIcon className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <span className="text-indigo-600 group-hover:text-indigo-500 ml-4 text-sm font-medium">
-                  Share
-                </span>
-              </button>
-            </li>
-          </ul>
-        </div>
-        <div className="flex">
-          <button
-            type="button"
-            className="focus:ring-indigo-500 ml-3 flex-1 rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            className="focus:ring-indigo-500 ml-3 flex-1 rounded-md border border-gray-300 bg-white py-2 px-4 text-sm font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2"
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
-
 export const InfoDetails: React.FC<{
-  ambassador?: Ambassador | null;
-  requestClose: () => void;
-}> = ({ ambassador = null, requestClose }) => {
+  ambassadors: Ambassadors;
+  enclosures: Enclosures;
+  facilities: Facilities;
+  selection: SelectionState;
+  dispatchSelection: (action: SelectionAction) => void;
+}> = ({
+  ambassadors,
+  enclosures,
+  facilities,
+  selection,
+  dispatchSelection,
+}) => {
+  let showDetails = false;
+  let content = null;
+  switch (selection?.selection?.type) {
+    case "ambassadors": {
+      const selectedAmbassadors = selection.selection.names
+        .map((name) => ambassadors[name] && [name, ambassadors[name]])
+        .filter(notEmpty);
+      if (selectedAmbassadors) {
+        showDetails = true;
+        content = (
+          <AmbassadorsContent
+            ambassadors={Object.fromEntries(selectedAmbassadors)}
+            dispatchSelection={dispatchSelection}
+          />
+        );
+      }
+      break;
+    }
+    case "ambassador": {
+      const ambassador = ambassadors[selection.selection.name];
+      if (ambassador) {
+        showDetails = true;
+        content = (
+          <AmbassadorContent
+            ambassador={ambassador}
+            enclosures={enclosures}
+            dispatchSelection={dispatchSelection}
+          />
+        );
+      }
+      break;
+    }
+    case "enclosure": {
+      const enclosure = enclosures[selection.selection.name];
+      if (enclosure) {
+        showDetails = true;
+        content = <EnclosureContent enclosure={enclosure} />;
+      }
+      break;
+    }
+    case "facility": {
+      const facility = facilities[selection.selection.name];
+      if (facility) {
+        showDetails = true;
+        content = <FacilityContent facility={facility} />;
+      }
+      break;
+    }
+  }
+
+  const requestClose = () =>
+    dispatchSelection({ type: "select", payload: undefined });
+
   return (
-    <Transition.Root show={ambassador !== null} as={Fragment}>
+    <Transition.Root show={showDetails} as={Fragment}>
       <Dialog
         as="div"
-        className={`relative z-10 ${ptSans.variable} ${ptSerif.variable} font-sans`}
+        className={`relative z-30 ${ptSans.variable} ${ptSerif.variable} font-sans`}
         onClose={requestClose}
       >
         <Transition.Child
@@ -251,7 +136,7 @@ export const InfoDetails: React.FC<{
                     </div>
                   </Transition.Child>
 
-                  {ambassador && <Content ambassador={ambassador} />}
+                  {content}
                 </Dialog.Panel>
               </Transition.Child>
             </div>
