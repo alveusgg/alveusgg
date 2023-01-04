@@ -41,7 +41,7 @@ const streamOnlineStatusEventSchema = z.object({
   broadcaster_user_login: z.string(),
   broadcaster_user_name: z.string(),
   type: z.string(),
-  started_at: z.string().datetime({ precision: 3 }),
+  started_at: z.string().datetime(),
 });
 
 const streamOfflineStatusEventSchema = z.object({
