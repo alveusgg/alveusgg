@@ -41,7 +41,7 @@ export const SendNotificationForm: React.FC<{
         <strong>Category:</strong>
         <br />
 
-        <select name="tag" required>
+        <select name="tag" required defaultValue="announcements">
           <option></option>
           {notificationConfig.categories.map(({ tag, label }) => (
             <option key={tag} value={tag}>
@@ -59,6 +59,7 @@ export const SendNotificationForm: React.FC<{
           type="text"
           minLength={1}
           maxLength={100}
+          defaultValue="Alveus announcement"
           required
         />
       </label>
@@ -68,9 +69,9 @@ export const SendNotificationForm: React.FC<{
         <br />
         <textarea
           name="text"
-          placeholder="Text"
           minLength={2}
           maxLength={200}
+          defaultValue="Example content"
           required
         />
       </label>
@@ -81,7 +82,7 @@ export const SendNotificationForm: React.FC<{
         <input
           name="url"
           type="url"
-          placeholder="https://www.twitch.tv/AlveusSanctuary"
+          defaultValue="https://www.twitch.tv/AlveusSanctuary"
           required
         />
       </label>

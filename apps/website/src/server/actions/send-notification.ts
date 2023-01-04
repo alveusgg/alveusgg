@@ -1,6 +1,8 @@
-import * as OneSignal from "@onesignal/node-onesignal";
 import { getNotificationTags } from "../../config/notifications";
 import { env } from "../../env/server.mjs";
+
+import { prisma } from "../db/client";
+import { sendWebPushNotification } from "../../utils/web-push";
 
 export async function sendNotification(data: {
   tag: string;
@@ -8,53 +10,82 @@ export async function sendNotification(data: {
   url: string;
   heading?: string;
 }) {
-  const appKey = env.ONESIGNAL_REST_API_KEY;
-  const appId = env.ONESIGNAL_APP_ID;
-
-  if (appKey === undefined) {
-    throw Error("OneSignal API Key missing!");
-  }
-  if (appId === undefined) {
-    throw Error("OneSignal APP id missing!");
-  }
-
   const allowedTags = await getNotificationTags();
   if (!allowedTags.includes(data.tag)) {
     throw Error("Notification tag unknown!");
   }
 
-  const configuration = OneSignal.createConfiguration({
-    authMethods: {
-      app_key: {
-        tokenProvider: {
-          getToken: () => appKey,
+  // TODO: Retry (exponential backoff)
+  // TODO: Handle rejections/failures -> remove subscription from DB
+  // TODO: Save notification and pushes to DB
+  // TODO: Batch pushes
+  const subscriptions = await prisma.pushSubscription.findMany({
+    where: {
+      p256dh: { not: { equals: null } },
+      auth: { not: { equals: null } },
+      tags: {
+        some: {
+          name: data.tag,
+          value: "1",
         },
       },
-      user_key: undefined,
     },
   });
-  console.log(configuration.authMethods.app_key);
-  const client = new OneSignal.DefaultApi(configuration);
 
-  const notification = new OneSignal.Notification();
-  notification.app_id = appId;
-  notification.filters = [
-    { field: "tag", key: data.tag, relation: "=", value: "1" },
-  ];
-  notification.chrome_web_icon = "https://www.alveus.gg/apple-touch-icon.png";
-  notification.chrome_web_badge =
-    "https://www.alveus.gg/notification-badge.png";
-  notification.chrome_web_image =
-    "https://static-cdn.jtvnw.net/jtv_user_pictures/4384f6c4-6608-48f4-b3a7-36d0eb6efbd3-profile_image-300x300.png";
+  for (const subscription of subscriptions) {
+    if (!subscription.p256dh || !subscription.auth) {
+      continue;
+    }
 
-  notification.contents = {
-    en: data.text,
-  };
-
-  notification.headings = {
-    en: data.heading || data.text,
-  };
-
-  const { id } = await client.createNotification(notification);
-  return id;
+    try {
+      const res = await sendWebPushNotification(
+        {
+          endpoint: subscription.endpoint,
+          keys: {
+            p256dh: subscription.p256dh,
+            auth: subscription.auth,
+          },
+        },
+        JSON.stringify({
+          title: data.heading,
+          options: {
+            body: data.text,
+            dir: "ltr", // TODO: Configurable?
+            lang: "en", // TODO: Configurable?
+            renotify: true,
+            requireInteraction: true,
+            silent: false,
+            tag: data.tag,
+            //data: {},
+            // TODO: Configurable:
+            icon: `https://alveus.gg/apple-touch-icon.png`,
+            image:
+              "https://i.ytimg.com/vi/7DvtjAqmWl8/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBqtYOnWwXm31edNmHBy8cOtsTpDg",
+            badge: `https://alveus.gg/notification-badge.png`,
+            actions: [
+              {
+                title: "Go to website",
+                action: "live",
+                icon: `https://alveus.gg/notification-badge.png`,
+              },
+            ],
+          },
+        }),
+        {
+          vapidDetails: {
+            subject: env.WEB_PUSH_VAPID_SUBJECT,
+            privateKey: env.WEB_PUSH_VAPID_PRIVATE_KEY,
+            publicKey: env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
+          },
+        }
+      );
+      console.info("Sent push", {
+        endpoint: subscription.endpoint,
+        status: res.statusCode,
+        body: res.body,
+      });
+    } catch (e) {
+      console.error("Could not send push", e);
+    }
+  }
 }

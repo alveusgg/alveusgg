@@ -27,6 +27,8 @@ export const serverSchema = z.object({
   ONESIGNAL_APP_ID: z.string(),
   ACTION_API_SECRET: z.string(),
   SUPER_USER_IDS: z.string(),
+  WEB_PUSH_VAPID_PRIVATE_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
+  WEB_PUSH_VAPID_SUBJECT: z.string(),
 });
 
 /**
@@ -38,7 +40,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_ONESIGNAL_APP_ID: z.string(),
   NEXT_PUBLIC_ONESIGNAL_SAFARI_WEB_ID: z.string(),
   NEXT_PUBLIC_ONESIGNAL_SUBDOMAIN: z.string().nullable(),
-  NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string(),
+  NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
 });
 
 /**
