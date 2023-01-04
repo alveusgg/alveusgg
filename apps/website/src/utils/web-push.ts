@@ -213,10 +213,6 @@ export function sendWebPushNotification(
 
   return new Promise<NotificationResponse>((resolve, reject) => {
     const httpsOptions: RequestOptions = {};
-    const urlParts = new URL(requestDetails.endpoint);
-    httpsOptions.hostname = urlParts.hostname;
-    httpsOptions.port = urlParts.port;
-    httpsOptions.path = urlParts.pathname;
 
     httpsOptions.headers = requestDetails.headers;
     httpsOptions.method = requestDetails.method;
@@ -227,35 +223,39 @@ export function sendWebPushNotification(
 
     httpsOptions.agent = requestDetails.agent;
 
-    const pushRequest = https.request(httpsOptions, (pushResponse) => {
-      let responseText = "";
+    const pushRequest = https.request(
+      requestDetails.endpoint,
+      httpsOptions,
+      (pushResponse) => {
+        let responseText = "";
 
-      pushResponse.on("data", (chunk) => {
-        responseText += chunk;
-      });
+        pushResponse.on("data", (chunk) => {
+          responseText += chunk;
+        });
 
-      pushResponse.on("end", () => {
-        if (
-          pushResponse.statusCode &&
-          (pushResponse.statusCode < 200 || pushResponse.statusCode > 299)
-        ) {
-          reject(
-            new Error(
-              "Received unexpected response code " +
-                pushResponse.statusCode +
-                " - " +
-                responseText
-            )
-          );
-        } else {
-          resolve({
-            statusCode: pushResponse.statusCode,
-            body: responseText,
-            headers: pushResponse.headers,
-          });
-        }
-      });
-    });
+        pushResponse.on("end", () => {
+          if (
+            pushResponse.statusCode &&
+            (pushResponse.statusCode < 200 || pushResponse.statusCode > 299)
+          ) {
+            reject(
+              new Error(
+                "Received unexpected response code " +
+                  pushResponse.statusCode +
+                  " - " +
+                  responseText
+              )
+            );
+          } else {
+            resolve({
+              statusCode: pushResponse.statusCode,
+              body: responseText,
+              headers: pushResponse.headers,
+            });
+          }
+        });
+      }
+    );
 
     if (requestDetails.timeout) {
       pushRequest.on("timeout", () => {
