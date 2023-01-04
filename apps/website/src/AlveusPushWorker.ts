@@ -25,6 +25,10 @@ type PushSubscriptionChangeEvent = Event & {
   newSubscription?: PushSubscription;
 };
 
+self.addEventListener("install", (event) => {
+  console.log("check push support registration", self.registration.pushManager);
+});
+
 self.addEventListener("push", async function (event) {
   console.log("on push");
 
