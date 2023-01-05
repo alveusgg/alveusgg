@@ -1,6 +1,7 @@
 import { Popover, Transition } from "@headlessui/react";
-import IconNotificationOn from "../../icons/IconNotificationOn";
 import React, { Fragment } from "react";
+
+import IconNotificationOn from "../../icons/IconNotificationOn";
 import { NotificationSettings } from "./NotificationSettings";
 
 export const NotificationsButton = () => {
