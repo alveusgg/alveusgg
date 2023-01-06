@@ -5,7 +5,7 @@
 
 import { trpc } from "./trpc";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const SW_PATH = "/push/alveus/AlveusPushWorker.js";
 
@@ -96,6 +96,8 @@ export function usePushSubscription(
     }
   );
 
+  const [tags, setTags] = useState<Record<string, string> | null>(null);
+
   const queryClient = useQueryClient();
   const utils = trpc.useContext();
   const register = trpc.pushSubscription.register.useMutation({
@@ -107,6 +109,42 @@ export function usePushSubscription(
       }
     },
   });
+
+  const setTagsMutation = trpc.pushSubscription.setTags.useMutation({
+    onMutate: async ({ endpoint, tags: newTags }) => {
+      setTags(newTags); // optimistic update
+      const statusKey = trpc.pushSubscription.getStatus.getQueryKey({
+        endpoint,
+      });
+      const previous = queryClient.getQueryData(statusKey);
+      await queryClient.cancelQueries(statusKey);
+      return { previous };
+    },
+    onError: () => {
+      setTags(null); // roll back
+    },
+    onSettled: async () => {
+      if (endpoint) {
+        const statusKey = trpc.pushSubscription.getStatus.getQueryKey({
+          endpoint,
+        });
+        await queryClient.invalidateQueries({ queryKey: statusKey });
+      }
+    },
+  });
+
+  const updateTags = useCallback(
+    async (tags: Record<string, string>) => {
+      if (endpoint) {
+        setTagsMutation.mutate({
+          endpoint: endpoint,
+          tags: tags,
+        });
+        await utils.pushSubscription.getStatus.invalidate({ endpoint });
+      }
+    },
+    [endpoint, setTagsMutation, utils.pushSubscription.getStatus]
+  );
 
   useEffect(() => {
     const isClientSubscriptionReady =
@@ -141,12 +179,14 @@ export function usePushSubscription(
     isRegistered:
       serverQuery.status === "success" && serverQuery.data !== undefined,
     tags: useMemo(
-      (): Record<string, string> =>
+      () =>
+        tags ||
         Object.fromEntries(
           serverQuery.data?.tags.map(({ name, value }) => [name, value]) || []
         ),
-      [serverQuery.data?.tags]
+      [serverQuery.data?.tags, tags]
     ),
+    updateTags,
   };
 }
 

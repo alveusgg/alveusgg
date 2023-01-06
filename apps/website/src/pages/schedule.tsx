@@ -5,6 +5,7 @@ import Head from "next/head";
 import DefaultPageLayout from "../components/DefaultPageLayout";
 import { Headline } from "../components/shared/Headline";
 import { ShowCard } from "../components/schedule/ShowCard";
+import { LinkBox, LinkBoxSocials } from "../components/shared/LinkBox";
 
 export type SchedulePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -18,11 +19,13 @@ const SchedulePage: NextPage<SchedulePageProps> = ({}) => {
   return (
     <>
       <Head>
-        <title>Stream Schedule | Alveus.gg</title>
+        <title>Schedule | Alveus.gg</title>
       </Head>
 
-      <DefaultPageLayout title="Stream Schedule">
-        <div className="-mx-4 grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4 bg-black/50 p-4">
+      <DefaultPageLayout title="Schedule">
+        <Headline>Weekly stream schedule</Headline>
+
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-4">
           <ShowCard
             {...{
               name: "Mondays with Ella",
@@ -56,6 +59,18 @@ const SchedulePage: NextPage<SchedulePageProps> = ({}) => {
             }}
           />
         </div>
+
+        <Headline>Stay Updated!</Headline>
+
+        <p className="mb-4">
+          You can use the new notification service (see top right) to get
+          updates and follow @alveussanctuary on all social platforms to keep up
+          to date!
+        </p>
+
+        <LinkBox>
+          <LinkBoxSocials />
+        </LinkBox>
       </DefaultPageLayout>
     </>
   );

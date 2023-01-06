@@ -15,6 +15,10 @@ const config = {
   images: {
     remotePatterns: [
       {
+        protocol: "http",
+        hostname: "openweathermap.org",
+      },
+      {
         protocol: "https",
         hostname: "static-cdn.jtvnw.net",
       },
@@ -25,6 +29,10 @@ const config = {
       {
         protocol: "https",
         hostname: "alveusgg.github.io",
+      },
+      {
+        protocol: "https",
+        hostname: "raw.githubusercontent.com",
       },
     ],
   },

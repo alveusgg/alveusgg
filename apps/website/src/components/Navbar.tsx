@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import React, { Fragment } from "react";
 import type { LinkProps } from "next/dist/client/link";
 import type { UrlObject } from "url";
@@ -57,11 +58,12 @@ export const Navbar: React.FC = () => {
               {/* Mobile menu button */}
               <Disclosure.Button
                 className="
-                  inline-flex items-center justify-center
-                  rounded-md p-2
-                  text-gray-200
-                  hover:bg-gray-900 hover:text-white
-                  focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500
+                  inline-flex
+                  items-center justify-center rounded-md
+                  p-2 text-gray-200
+                  hover:bg-gray-900
+                  hover:text-white focus:outline-none
+                  focus:ring-2 focus:ring-inset focus:ring-blue-500 md:hidden
                   "
               >
                 <span className="sr-only">Open main menu</span>
@@ -74,10 +76,51 @@ export const Navbar: React.FC = () => {
             </div>
 
             <Link href="/" className="flex items-center px-1 md:px-2">
-              <span>ALVEUS.gg</span>
+              <Image
+                src="/icon.png"
+                width="40"
+                height="40"
+                className="overflow-hidden rounded"
+                alt="Alveus.gg"
+              />
             </Link>
 
-            <div className="flex-grow" />
+            <div className="hidden flex-grow md:flex">
+              <ul className="flex gap-1 lg:gap-4">
+                <li>
+                  <NavLink href="/live">Live</NavLink>
+                </li>
+                <li>
+                  <NavLink href="/explore">Explore</NavLink>
+                </li>
+                <li>
+                  <NavLink href="/schedule">Schedule</NavLink>
+                </li>
+              </ul>
+              <div className="flex-grow" />
+              <ul className="flex gap-1 lg:gap-4">
+                <li>
+                  <NavLink
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://www.alveussanctuary.org/donate/"
+                  >
+                    Donate
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://www.alveussanctuary.org/merch-store/"
+                  >
+                    Merch
+                  </NavLink>
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex-grow md:hidden" />
 
             <NotificationsButton />
 
@@ -88,7 +131,7 @@ export const Navbar: React.FC = () => {
               >
                 <Popover.Button
                   as="div"
-                  className="flex h-full cursor-pointer select-none appearance-none items-center self-stretch px-4 before:hidden"
+                  className="flex h-full cursor-pointer select-none appearance-none items-center self-stretch px-2 before:hidden"
                 >
                   <span className="sr-only">Open user menu</span>
                   <ProfileInfo />
@@ -136,8 +179,23 @@ export const Navbar: React.FC = () => {
                   </Disclosure.Button>
                 </li>
                 <li>
-                  <Disclosure.Button as={NavLink} href="/about">
-                    About Alveus
+                  <Disclosure.Button as={NavLink} href="/schedule">
+                    Schedule
+                  </Disclosure.Button>
+                </li>
+                <li>
+                  <Disclosure.Button as={NavLink} href="/explore">
+                    Explore
+                  </Disclosure.Button>
+                </li>
+                <li>
+                  <Disclosure.Button as={NavLink} href="/explore">
+                    Donate
+                  </Disclosure.Button>
+                </li>
+                <li>
+                  <Disclosure.Button as={NavLink} href="/explore">
+                    Merch
                   </Disclosure.Button>
                 </li>
               </ul>

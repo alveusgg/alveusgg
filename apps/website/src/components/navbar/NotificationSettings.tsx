@@ -13,10 +13,10 @@ export const NotificationSettings: React.FC = () => {
 
   return (
     <>
-      <h2 className="text-lg font-bold">Notification settings</h2>
+      <h2 className="text-lg font-bold">Stay Updated!</h2>
       <p className="leading-tight">
-        Get notified when exciting Alveus stream content takes place, new videos
-        are uploaded or the Alveus team has any other announcements to make!
+        Get notified when stream content takes place, new videos are released or
+        the Alveus team has any other announcements to make!
       </p>
 
       {!isNotificationsSupported || !isWebPushSupported ? (

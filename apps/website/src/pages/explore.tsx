@@ -10,6 +10,7 @@ import { Ambassadors } from "../components/about/Ambassadors";
 import { InfoDetails } from "../components/about/InfoDetails";
 import { Enclosures } from "../components/about/Enclosures";
 import { Facilities } from "../components/about/Facilities";
+import { LinkBox } from "../components/shared/LinkBox";
 
 export type AboutPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -58,10 +59,10 @@ const AboutPage: NextPage<AboutPageProps> = ({
   return (
     <>
       <Head>
-        <title>About Alveus | Alveus.gg</title>
+        <title>Explore Alveus | Alveus.gg</title>
       </Head>
 
-      <DefaultPageLayout title="About Alveus">
+      <DefaultPageLayout title="Explore Alveus">
         <Headline>Map of Alveus</Headline>
         <Map
           ambassadors={ambassadors}
@@ -72,35 +73,21 @@ const AboutPage: NextPage<AboutPageProps> = ({
           dispatchSelection={dispatchSelection}
         />
 
-        <Headline>
-          Ambassadors{" "}
-          <a
-            className="ml-5 font-sans text-base font-normal uppercase opacity-60"
-            href="https://www.alveussanctuary.org/ambassadors/"
-          >
-            See all
-          </a>
-        </Headline>
-
-        <div className="-mx-4 overflow-x-auto overflow-y-hidden">
-          <section className="flex w-full gap-5">
-            <Ambassadors
-              ambassadors={ambassadors}
-              setSelectedAmbassadorName={(name: string | null) =>
-                dispatchSelection({
-                  type: "select",
-                  payload: name ? { type: "ambassador", name } : undefined,
-                })
-              }
-            />
-          </section>
-        </div>
+        <Ambassadors
+          ambassadors={ambassadors}
+          setSelectedAmbassadorName={(name: string | null) =>
+            dispatchSelection({
+              type: "select",
+              payload: name ? { type: "ambassador", name } : undefined,
+            })
+          }
+        />
 
         <div className="-mx-4 overflow-hidden px-4 md:flex md:flex-row md:gap-10">
           <div className="md:w-[calc(50%-2rem)]">
             <Headline>Enclosures</Headline>
 
-            <div className="-mx-4 overflow-x-auto overflow-y-hidden">
+            <div className="-mx-4 -mt-2 overflow-x-auto overflow-y-hidden">
               <section className="flex w-full gap-5">
                 <Enclosures
                   enclosures={enclosures}
@@ -117,7 +104,7 @@ const AboutPage: NextPage<AboutPageProps> = ({
           <div className="md:w-[calc(50%-2rem)] md:border-l md:border-black/20 md:pl-10">
             <Headline>Facilities</Headline>
 
-            <div className="-mx-4 overflow-x-auto overflow-y-hidden">
+            <div className="-mx-4 -mt-2 overflow-x-auto overflow-y-hidden">
               <section className="flex w-full gap-5">
                 <Facilities
                   facilities={facilities}
@@ -132,6 +119,31 @@ const AboutPage: NextPage<AboutPageProps> = ({
             </div>
           </div>
         </div>
+
+        <Headline>Learn more</Headline>
+
+        <LinkBox>
+          <LinkBox.Link href="https://www.alveussanctuary.org/about-alveus/">
+            About Alveus
+          </LinkBox.Link>
+          <LinkBox.Link href="https://www.alveussanctuary.org/about-maya/">
+            About Maya Higa
+          </LinkBox.Link>
+          <LinkBox.Link href="https://www.alveussanctuary.org/advisory-board/">
+            Advisory Board
+          </LinkBox.Link>
+          <LinkBox.Link href="https://www.alveussanctuary.org/board-of-directors/">
+            Board of Directors
+          </LinkBox.Link>
+          <LinkBox.Link href="https://www.alveussanctuary.org/staff/">
+            Staff
+          </LinkBox.Link>
+          <LinkBox.Link href="https://www.alveussanctuary.org/alveus-annual-report/">
+            Annual Reports
+          </LinkBox.Link>
+        </LinkBox>
+
+        <div className="mb-24"></div>
       </DefaultPageLayout>
 
       <InfoDetails

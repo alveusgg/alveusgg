@@ -15,9 +15,9 @@ export const NotificationCategoryCheckbox: React.FC<{
         <input
           id={`tag-${tag}`}
           name={`tag-${tag}`}
-          key={`tag-${tag}-${endpoint}-${isRegistered}`}
+          key={`${isRegistered}-${tag}-${endpoint}`}
           value="1"
-          defaultChecked={enabled ? tags[tag] === "1" : true}
+          checked={enabled && tags ? tags[tag] === "1" : true}
           type="checkbox"
           disabled={!enabled}
           className="text-indigo-600 focus:ring-indigo-500 h-4 w-4 rounded border-gray-300"

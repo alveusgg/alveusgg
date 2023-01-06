@@ -1,7 +1,7 @@
 import React from "react";
 import type { Ambassador } from "../../../utils/data";
 import Image from "next/image";
-import type { SelectionAction } from "../../../pages/about";
+import type { SelectionAction } from "../../../pages/explore";
 
 export const AmbassadorsContent: React.FC<{
   ambassadors: Record<string, Ambassador>;

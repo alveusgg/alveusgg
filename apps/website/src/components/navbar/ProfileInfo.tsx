@@ -4,20 +4,19 @@ import React from "react";
 
 export const ProfileInfo: React.FC<{ full?: boolean }> = ({ full = false }) => {
   const { data: sessionData } = useSession();
+  const user = sessionData?.user;
 
-  if (sessionData) {
+  if (user) {
     return (
       <div
         className={`flex items-center gap-4 ${
           full ? "w-full justify-between" : ""
         }`}
       >
-        <span className={`${full ? "" : "hidden md:block"}`}>
-          {sessionData.user?.name}
-        </span>
-        {sessionData.user?.image && (
+        {full && <span>{user.name}</span>}
+        {user.image && (
           <Image
-            src={sessionData.user.image}
+            src={user.image}
             alt=""
             width="150"
             height="150"

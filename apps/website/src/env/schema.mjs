@@ -27,6 +27,9 @@ export const serverSchema = z.object({
   SUPER_USER_IDS: z.string(),
   WEB_PUSH_VAPID_PRIVATE_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
   WEB_PUSH_VAPID_SUBJECT: z.string(),
+  OPEN_WEATHER_MAP_API_KEY: z.string().optional(),
+  OPEN_WEATHER_MAP_API_LAT: z.string().optional(),
+  OPEN_WEATHER_MAP_API_LON: z.string().optional(),
 });
 
 /**
@@ -36,6 +39,7 @@ export const serverSchema = z.object({
  */
 export const clientSchema = z.object({
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
+  NEXT_PUBLIC_COOKIEBOT_ID: z.string().optional(),
 });
 
 /**

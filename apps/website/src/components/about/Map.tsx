@@ -7,7 +7,7 @@ import type {
   AboutPageProps,
   SelectionAction,
   SelectionState,
-} from "../../pages/about";
+} from "../../pages/explore";
 
 type MapProps = Pick<
   AboutPageProps,
@@ -329,25 +329,27 @@ function setupMap({ mapData, onClick }: MapArgs) {
 
       const iconEl = document.createElement("div");
       iconEl.className =
-        "absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-12 h-12 bg-contain transition-transform " +
+        "absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 bg-contain transition-transform " +
         "group-[.zoom-16]/map:scale-50 group-[.zoom-17]/map:scale-75 group-[.zoom-18]/map:scale-90 group-hover/marker:!scale-110";
 
       if (type === "ambassador" && props.size !== "small") {
         iconEl.className += " w-12 h-12";
         labelEl.className += " mt-6";
+      } else if (type === "ambassador") {
+        iconEl.className += " w-6 h-6";
+        labelEl.className += " mt-4";
       } else {
+        iconEl.style.backgroundImage = `url(/assets/icons/location.png)`;
         iconEl.className += " w-6 h-6";
         labelEl.className += " mt-4";
       }
 
-      markerEl.append(iconEl);
-      markerEl.append(labelEl);
-
       if (type === "ambassador" || type === "nonAmbassador") {
         iconEl.style.backgroundImage = `url(/assets/icons/${marker.properties?.name}.png)`;
-      } else {
-        iconEl.style.backgroundImage = `url(/assets/icons/location.png)`;
       }
+
+      markerEl.append(iconEl);
+      markerEl.append(labelEl);
 
       new ml.Marker(markerEl)
         .setLngLat(marker.geometry.coordinates as [number, number])

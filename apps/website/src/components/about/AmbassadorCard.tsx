@@ -3,9 +3,10 @@ import React from "react";
 import { type Ambassador } from "../../utils/data";
 
 export const AmbassadorCard: React.FC<{
+  layout?: "small" | "full";
   ambassador: Ambassador;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
-}> = ({ ambassador, onClick }) => {
+}> = ({ layout = "full", ambassador, onClick }) => {
   const mainImage = ambassador.images?.[0];
 
   return (
@@ -28,9 +29,11 @@ export const AmbassadorCard: React.FC<{
 
       <div className="flex flex-col justify-end overflow-auto p-2 leading-tight text-white">
         <h3 className="text-bold mb-1 font-serif text-xl">{ambassador.name}</h3>
-        <p className="text-bold font-sans text-base leading-tight text-gray-400">
-          {ambassador.species}
-        </p>
+        {layout === "full" && (
+          <p className="text-bold font-sans text-base leading-tight text-gray-400">
+            {ambassador.species}
+          </p>
+        )}
       </div>
     </a>
   );

@@ -2,11 +2,16 @@ import React from "react";
 import parse from "date-fns/parse";
 import Image from "next/image";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
-import { GlobeAltIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
+import {
+  GlobeAltIcon,
+  PlayCircleIcon,
+  LinkIcon,
+} from "@heroicons/react/24/outline";
 import type { Ambassador, Enclosures } from "../../../utils/data";
-import type { SelectionAction } from "../../../pages/about";
+import type { SelectionAction } from "../../../pages/explore";
 import { dateFormatter } from "../InfoDetails";
 import { DefinitionItem } from "./DefinitionItem";
+import Link from "next/link";
 
 export const AmbassadorContent: React.FC<{
   enclosures: Enclosures;
@@ -60,7 +65,20 @@ export const AmbassadorContent: React.FC<{
               {dateOfBirth ? dateFormatter.format(dateOfBirth) : "Unknown"}
             </DefinitionItem>
             <DefinitionItem term="IUCN Status">
-              {ambassador.iucnStatus}
+              {ambassador.links?.iucn ? (
+                <Link
+                  className="flex items-center gap-2 underline"
+                  href={ambassador.links?.iucn}
+                  target="_blank"
+                  rel="noreferrer"
+                  title={`Show IUCN Red List entry for ${ambassador.species}`}
+                >
+                  <LinkIcon className="h-4 w-4" />
+                  {ambassador.iucnStatus}
+                </Link>
+              ) : (
+                ambassador.iucnStatus
+              )}
             </DefinitionItem>
           </dl>
         </div>

@@ -11,7 +11,7 @@ import { NotificationCategoryCheckbox } from "./NotificationCategoryCheckbox";
 export const NotificationSettingsForm: React.FC<{
   notificationPermission: NotificationPermission | false;
 }> = ({ notificationPermission }) => {
-  const { endpoint, tags, isRegistered } = usePushSubscription(
+  const { endpoint, tags, isRegistered, updateTags } = usePushSubscription(
     notificationPermission
   );
   const config = trpc.notificationsConfig.getConfiguration.useQuery(undefined, {
@@ -19,9 +19,7 @@ export const NotificationSettingsForm: React.FC<{
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
-  const setTagsMutation = trpc.pushSubscription.setTags.useMutation();
   const enableSettings = notificationPermission === "granted" && isRegistered;
-  const utils = trpc.useContext();
   const handlePreferencesChange = useCallback(
     async (data: FormData) => {
       const tags: Record<string, string> = {};
@@ -30,21 +28,9 @@ export const NotificationSettingsForm: React.FC<{
           data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0"
         );
       });
-
-      if (endpoint) {
-        setTagsMutation.mutate({
-          endpoint: endpoint,
-          tags: tags,
-        });
-        await utils.pushSubscription.getStatus.invalidate({ endpoint });
-      }
+      await updateTags(tags);
     },
-    [
-      config.data?.categories,
-      endpoint,
-      setTagsMutation,
-      utils.pushSubscription.getStatus,
-    ]
+    [config.data?.categories, updateTags]
   );
 
   const submitHandler = useCallback(

@@ -4,7 +4,7 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import type { Ambassadors, Enclosures, Facilities } from "../../utils/data";
 import { ptSans, ptSerif } from "../Layout";
-import type { SelectionAction, SelectionState } from "../../pages/about";
+import type { SelectionAction, SelectionState } from "../../pages/explore";
 import { AmbassadorContent } from "./details/AmbassadorContent";
 import { EnclosureContent } from "./details/EnclosureContent";
 import { FacilityContent } from "./details/FacilityContent";

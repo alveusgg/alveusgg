@@ -64,6 +64,7 @@ importers:
       react-dom: 18.2.0
       react-i18next: ^12.1.1
       sharp: ^0.31.3
+      simple-icons: ^8.2.0
       superjson: 1.12.1
       swiper: ^8.4.5
       tailwindcss: ^3.2.4
@@ -102,6 +103,7 @@ importers:
       react-dom: 18.2.0_react@18.2.0
       react-i18next: 12.1.1_25zoxyjt3sfdpelgxivbzvmrha
       sharp: 0.31.3
+      simple-icons: 8.2.0
       superjson: 1.12.1
       swiper: 8.4.5
       zod: 3.20.2
@@ -5527,6 +5529,11 @@ packages:
       decompress-response: 6.0.0
       once: 1.4.0
       simple-concat: 1.0.1
+    dev: false
+
+  /simple-icons/8.2.0:
+    resolution: {integrity: sha512-W4awmfHa4a+XF3iPS0MEIM6KF+iUgkCaf3/ISRq5UWhdiYxAs4uvF8eQ/RsDsau1/Z540otcvq9AKoPuUZqvog==}
+    engines: {node: '>=0.12.18'}
     dev: false
 
   /simple-swizzle/0.2.2:

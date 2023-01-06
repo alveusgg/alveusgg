@@ -44,6 +44,7 @@
     "react-dom": "18.2.0",
     "react-i18next": "^12.1.1",
     "sharp": "^0.31.3",
+    "simple-icons": "^8.2.0",
     "superjson": "1.12.1",
     "swiper": "^8.4.5",
     "zod": "^3.20.2"

@@ -30,7 +30,7 @@ export const ShowCard: React.FC<ShowCardProps> = ({
         className="aspect-square object-contain"
       />
       <div className="w-full border-t py-4 text-center text-2xl font-bold leading-loose">
-        {timeSlotCT} <abbr title="Central Time (Austin, Texa)">CT</abbr>
+        {timeSlotCT} <abbr title="Central Time (Austin, Texas)">CT</abbr>
         <br />
         <span className="font-normal text-gray-500">Local: </span>
         <LocalWeekdayTimeSlot

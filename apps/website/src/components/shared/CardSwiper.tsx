@@ -9,7 +9,7 @@ export const CardSwiper: React.FC<{
 }> = ({ cards, className = "", slideClasses = "" }) => {
   return (
     <Swiper
-      className={className}
+      className={`${className} mx-0`}
       scrollbar={{
         hide: true,
       }}
@@ -19,13 +19,8 @@ export const CardSwiper: React.FC<{
       modules={[Keyboard, Navigation, Scrollbar]}
       spaceBetween={10}
       slidesPerView="auto"
-      coverflowEffect={{
-        rotate: 50,
-        stretch: 0,
-        depth: 100,
-        modifier: 1,
-        slideShadows: true,
-      }}
+      centerInsufficientSlides={false}
+      centeredSlides={false}
     >
       {cards.map((card, index) => {
         return (

@@ -10,6 +10,13 @@ export const EnclosureContent: React.FC<{
   return (
     <div className="h-full overflow-y-auto bg-white p-8">
       <div className="space-y-6 pb-16">
+        <div className="mb-4 flex items-start justify-between">
+          <div>
+            <h2 className="font-serif text-lg font-medium text-gray-900">
+              {enclosure.label}
+            </h2>
+          </div>
+        </div>
         <div>
           {enclosure.images?.[0] && (
             <div className="block w-full overflow-hidden rounded-lg">
@@ -22,13 +29,6 @@ export const EnclosureContent: React.FC<{
               />
             </div>
           )}
-          <div className="mt-4 flex items-start justify-between">
-            <div>
-              <h2 className="font-serif text-lg font-medium text-gray-900">
-                {enclosure.label}
-              </h2>
-            </div>
-          </div>
         </div>
         <div>
           <h3 className="font-serif font-medium text-gray-900">Information</h3>
