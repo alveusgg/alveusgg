@@ -1,10 +1,10 @@
 import React from "react";
 import { PT_Sans, PT_Serif } from "@next/font/google";
+import Head from "next/head";
 
+import { env } from "../env/client.mjs";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
-import Head from "next/head";
-import { env } from "../env/client.mjs";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -57,15 +57,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <meta name="msapplication-TileColor" content="#636a60" />
         <meta name="theme-color" content="#ffffff" />
 
-        {env.NEXT_PUBLIC_COOKIEBOT_ID && (
-          /* eslint-disable-next-line @next/next/no-sync-scripts */
-          <script
-            id="Cookiebot"
-            src="https://consent.cookiebot.com/uc.js"
-            data-cbid={env.NEXT_PUBLIC_COOKIEBOT_ID}
-            data-blockingmode="auto"
-          />
-        )}
+        {env.NEXT_PUBLIC_NODE_ENV === "production" &&
+          env.NEXT_PUBLIC_COOKIEBOT_ID && (
+            /* eslint-disable-next-line @next/next/no-sync-scripts */
+            <script
+              id="Cookiebot"
+              src="https://consent.cookiebot.com/uc.js"
+              data-cbid={env.NEXT_PUBLIC_COOKIEBOT_ID}
+              data-blockingmode="auto"
+            />
+          )}
       </Head>
 
       <div

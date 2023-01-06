@@ -17,14 +17,6 @@ export const Footer: React.FC = () => {
         <li className="text-gray-500">
           Made by pjeweb, not affiliated with Alveus Sanctuary Inc.
         </li>
-
-        {env.NEXT_PUBLIC_COOKIEBOT_ID && (
-          <script
-            id="CookieDeclaration"
-            src={`https://consent.cookiebot.com/${env.NEXT_PUBLIC_COOKIEBOT_ID}/cd.js`}
-            async
-          />
-        )}
       </ul>
     </footer>
   );

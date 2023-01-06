@@ -3,15 +3,26 @@ import Head from "next/head";
 
 import DefaultPageLayout from "../components/DefaultPageLayout";
 import { Headline } from "../components/shared/Headline";
+import { env } from "../env/client.mjs";
+import React from "react";
 
 const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Privacy Policy - Alveus.gg</title>
+        <title>Contact / Privacy Policy - Alveus.gg</title>
       </Head>
 
-      <DefaultPageLayout title="Privacy Policy for Alveus.gg">
+      <DefaultPageLayout title="Contact / Privacy Policy">
+        <Headline>Contact</Headline>
+
+        <p>
+          You can contact me via email:{" "}
+          <a href="mailto:admin@alveus.gg">admin@alveus.gg</a>
+        </p>
+
+        <Headline>Privacy Policy for Alveus.gg</Headline>
+
         <p>
           At Alveus.gg, accessible from https://www.alveus.gg/, one of our main
           priorities is the privacy of our visitors. This Privacy Policy
@@ -92,47 +103,24 @@ const Home: NextPage = () => {
           demographic information.
         </p>
 
-        <Headline>Cookies and Web Beacons</Headline>
+        <Headline>Cookies</Headline>
 
-        <p>
-          Like any other website, Alveus.gg uses &quot;cookies&quot;. These
-          cookies are used to store information including visitors&apos;
-          preferences, and the pages on the website that the visitor accessed or
-          visited. The information is used to optimize the users&apos;
-          experience by customizing our web page content based on visitors&apos;
-          browser type and/or other information.
-        </p>
-
-        <Headline>Advertising Partners Privacy Policies</Headline>
-
-        <p>
-          You may consult this list to find the Privacy Policy for each of the
-          advertising partners of Alveus.gg.
-        </p>
-
-        <p>
-          Third-party ad servers or ad networks uses technologies like cookies,
-          JavaScript, or Web Beacons that are used in their respective
-          advertisements and links that appear on Alveus.gg, which are sent
-          directly to users&apos; browser. They automatically receive your IP
-          address when this occurs. These technologies are used to measure the
-          effectiveness of their advertising campaigns and/or to personalize the
-          advertising content that you see on websites that you visit.
-        </p>
-
-        <p>
-          Note that Alveus.gg has no access to or control over these cookies
-          that are used by third-party advertisers.
-        </p>
+        {env.NEXT_PUBLIC_COOKIEBOT_ID && (
+          <script
+            id="CookieDeclaration"
+            src={`https://consent.cookiebot.com/${env.NEXT_PUBLIC_COOKIEBOT_ID}/cd.js`}
+            async
+          />
+        )}
 
         <Headline>Third Party Privacy Policies</Headline>
 
         <p>
-          Alveus.gg&apos;s Privacy Policy does not apply to other advertisers or
-          websites. Thus, we are advising you to consult the respective Privacy
-          Policies of these third-party ad servers for more detailed
-          information. It may include their practices and instructions about how
-          to opt-out of certain options.{" "}
+          Alveus.gg&apos;s Privacy Policy does not apply to other websites.
+          Thus, we are advising you to consult the respective Privacy Policies
+          of these third-party servers for more detailed information. It may
+          include their practices and instructions about how to opt-out of
+          certain options.
         </p>
 
         <p>
@@ -141,6 +129,36 @@ const Home: NextPage = () => {
           with specific web browsers, it can be found at the browsers&apos;
           respective websites.
         </p>
+
+        <ul className="my-2 ml-8 list-disc">
+          <li>
+            <a
+              href="https://www.twitch.tv/p/en/legal/privacy-notice/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Twitch (Video and Chat embed and Authentication)
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://vercel.com/legal/privacy-policy"
+              rel="noreferrer"
+              target="_blank"
+            >
+              Vercel (Hosting provider)
+            </a>
+          </li>
+          <li>
+            <a
+              href="https://planetscale.com/legal/privacy"
+              rel="noreferrer"
+              target="_blank"
+            >
+              PlanetScale (Database provider)
+            </a>
+          </li>
+        </ul>
 
         <Headline>GDPR Data Protection Rights</Headline>
 
@@ -196,37 +214,6 @@ const Home: NextPage = () => {
           encourage you to contact us immediately and we will do our best
           efforts to promptly remove such information from our records.
         </p>
-
-        <Headline>Privacy Policies for the used Services</Headline>
-        <ul className="ml-8 list-disc">
-          <li>
-            <a
-              href="https://www.twitch.tv/p/en/legal/privacy-notice/"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Twitch (Video and Chat embed and Authentication)
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://vercel.com/legal/privacy-policy"
-              rel="noreferrer"
-              target="_blank"
-            >
-              Vercel (Hosting provider)
-            </a>
-          </li>
-          <li>
-            <a
-              href="https://planetscale.com/legal/privacy"
-              rel="noreferrer"
-              target="_blank"
-            >
-              PlanetScale (Database provider)
-            </a>
-          </li>
-        </ul>
       </DefaultPageLayout>
     </>
   );
