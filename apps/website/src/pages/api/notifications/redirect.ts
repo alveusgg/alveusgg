@@ -12,7 +12,7 @@ export default async function handler(
     return;
   }
 
-  const url = new URL(req.url);
+  const url = new URL(req.url, "https://localhost/"); // FIXME: Trick JS to parse the partial URL /api/...
   const params = url.searchParams;
 
   //const tag = params.get('notification_tag');
