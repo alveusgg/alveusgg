@@ -105,6 +105,7 @@ model Notification {
   message     String
   ttl         Int
   title       String?
+  linkUrl     String?
   imageUrl    String?
   callapseId  String?
   scheduledAt DateTime?

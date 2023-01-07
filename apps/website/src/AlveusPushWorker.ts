@@ -32,7 +32,6 @@ self.addEventListener("install", (event) => {
 self.addEventListener("push", async function (event) {
   console.log("on push");
 
-  let isSent = false;
   if (event.data) {
     try {
       const notification = event.data.json();
@@ -42,38 +41,7 @@ self.addEventListener("push", async function (event) {
           notification.options
         )
       );
-      isSent = true;
     } catch (e) {}
-  }
-
-  if (!isSent) {
-    const title = "Alveus.gg";
-
-    event.waitUntil(
-      self.registration.showNotification(title, {
-        body: "Test notification body",
-        data: {
-          foo: "bar",
-        },
-        dir: "ltr",
-        lang: "en",
-        renotify: true,
-        requireInteraction: true,
-        silent: false,
-        tag: "stream",
-        icon: `${getBaseUrl()}/apple-touch-icon.png`,
-        image:
-          "https://i.ytimg.com/vi/7DvtjAqmWl8/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBqtYOnWwXm31edNmHBy8cOtsTpDg",
-        badge: `${getBaseUrl()}/notification-badge.png`,
-        actions: [
-          {
-            title: "Go to website",
-            action: "live",
-            icon: `${getBaseUrl()}/notification-badge.png`,
-          },
-        ],
-      })
-    );
   }
 });
 
@@ -81,9 +49,11 @@ self.addEventListener("notificationclick", function (event) {
   console.log("on notificationclick", event);
   event.notification.close();
 
-  const targetUrl = `${getBaseUrl()}/api/notifications/${
+  const targetUrl = `${getBaseUrl()}/api/notifications/redirect?notification_tag=${
     event.notification.tag
-  }/redirect?notification_action=${event.action || "default"}`;
+  }&notification_action=${event.action || "default"}&notification_id=${
+    event.notification.data.notificationId
+  }&subscription_id=${event.notification.data.subscriptionId}`;
 
   event.waitUntil(clients.openWindow(targetUrl));
 });
