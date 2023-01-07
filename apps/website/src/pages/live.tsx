@@ -92,12 +92,18 @@ const Live: NextPage<LivePageProps> = ({ weatherData, ambassadors }) => {
             </div>
             <div className="order-3 flex flex-1 flex-col gap-4 p-4">
               <p>
-                <strong>!hat</strong> Try and get the hat onto the ambassador by
-                donating at least $1 or cheering 100 bits while using !hat in
-                your message. A subscription gives 3 hats
+                <Link
+                  rel="noreferrer"
+                  target="_blank"
+                  href="https://streamelements.com/alveussanctuary/tip"
+                >
+                  <strong>Donate</strong> live via StreamElements
+                </Link>
               </p>
               <p>
-                <strong>Donate</strong> live via StreamElements
+                <strong>!hat</strong> Try and get the hat onto the ambassador by
+                donating at least $1 or cheering 100 bits while using !hat in
+                your message. A subscription gives 3 hats.
               </p>
             </div>
           </div>
