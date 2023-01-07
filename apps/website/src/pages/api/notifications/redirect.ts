@@ -7,8 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   if (!req.url) {
-    res.send(404);
-    res.redirect("/");
+    res.redirect(404, "/");
     return;
   }
 
@@ -21,8 +20,7 @@ export default async function handler(
   const subscriptionId = params.get("subscription_id");
 
   if (!notificationId) {
-    res.send(404);
-    res.redirect("/");
+    res.redirect(404, "/");
     return;
   }
 
@@ -31,8 +29,7 @@ export default async function handler(
     where: { id: notificationId },
   });
   if (notification) {
-    res.send(303);
-    res.redirect(notification.linkUrl || "/");
+    res.redirect(303, notification.linkUrl || "/");
   }
 
   // Track click if possible
