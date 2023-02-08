@@ -24,6 +24,12 @@ Main ideas:
 
 This project uses pnpm workspaces. The main app is the website package, see https://github.com/alveusgg/alveusgg/blob/main/apps/website/README.md
 
+## Systems overview
+
+For a more complete overview see: #9
+
+![alveusgg-infra](https://user-images.githubusercontent.com/684458/217618231-6fb9078d-8d77-4c64-9b92-c2ebe8e58c3c.png)
+
 ## How to contribute
 
 TODO
