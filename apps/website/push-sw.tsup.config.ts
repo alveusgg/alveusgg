@@ -21,8 +21,8 @@ export default defineConfig((options) => ({
   esbuildOptions(options, context) {
     options.define = {
       "process.env.VAPID_PUBLIC_KEY": JSON.stringify(vapidPublicB64),
-      "process.env.PORT": JSON.stringify(process.env.PORT),
-      "process.env.VERCEL_URL": JSON.stringify(process.env.VERCEL_URL),
+      "process.env.PORT": JSON.stringify(process.env.PORT ?? 3000),
+      "process.env.VERCEL_URL": JSON.stringify(process.env.VERCEL_URL ?? 'localhost'),
       ...Object.fromEntries(
         Object.entries(env).map(([key, value]) => {
           return [`process.env.${key}`, JSON.stringify(value)];
