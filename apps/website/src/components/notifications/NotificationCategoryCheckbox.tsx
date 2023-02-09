@@ -26,7 +26,7 @@ export const NotificationCategoryCheckbox: React.FC<{
       </div>
 
       <div className="ml-2 text-sm">
-        <label htmlFor={`tag-${tag}`} className="font-medium text-gray-200">
+        <label htmlFor={`tag-${tag}`} className="font-medium">
           {label}
         </label>
       </div>
