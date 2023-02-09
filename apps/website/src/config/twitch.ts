@@ -22,9 +22,9 @@ const config: TwitchConfig = {
       id: "235835559",
       label: "Maya",
       notifications: {
-        live: true,
-        streamTitleChange: true,
-        streamCategoryChange: true,
+        live: false,
+        streamTitleChange: false,
+        streamCategoryChange: false,
       },
     },
     alveussanctuary: {
