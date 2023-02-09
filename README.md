@@ -49,12 +49,15 @@ TODO
 
 0. Install Node.js v16 and pnpm
 1. Install dependencies: `pnpm install`
-2. Copy `apps/website/.env.example` to `apps/website/.env`
+2. Create a [Planetscale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
+3. Copy `apps/website/.env.example` to `apps/website/.env`
+    - Fill the Prisma section with the database info (DSN)
     - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
     - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
     - You may define priveleged user once they have signed in in the `SUPER_USER_IDS` variable
-3. Start the dev server: `pnpm run -r dev`
-4. The website should be running at `http://localhost:3000/` (open in browser)
+4. Push the database schema to the new database using `npx prisma db push`.
+4. Start the dev server: `pnpm run -r dev`
+5. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Also see [T3 Stack](https://create.t3.gg/)
 - Use `npx prisma studio` to view your database
@@ -65,12 +68,13 @@ TODO
 
 The stack should work on any Node.js server or Next.js capable hoster and any MySQL server, but is only tested on Vercel (and Planetscale) for now.
 
-1. Create a twitch extension (see getting started)
-2. Create a [Planetscale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
+1. Create a twitch extension (see Getting started above)
+2. Set up a database (see Getting started above)
 3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see Getting started above)
-4. Get your own domain (optional)
-5. Create a vercel account (free)
-6. Create a new vercel project with these settings:
+4. Push the database schema to the new database using `npx prisma db push`.
+5. Get your own domain (optional)
+6. Create a vercel account
+7. Create a new vercel project with these settings:
     - *General*:
         - *Framework Preset*: `Next.js`, leave the other build/dev settings on the default option
         - *Root directory*: `apps/website`
