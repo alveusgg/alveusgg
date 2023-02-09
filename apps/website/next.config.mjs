@@ -1,3 +1,4 @@
+import { withSuperjson } from "next-superjson";
 import i18nConfig from "./next-i18next.config.mjs";
 
 // @ts-check
@@ -88,4 +89,4 @@ const config = {
   },
 };
 
-export default config;
+export default withSuperjson()(config);
