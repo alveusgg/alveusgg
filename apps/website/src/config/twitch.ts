@@ -57,6 +57,19 @@ const config: TwitchConfig = {
   },
 };
 
+export async function getChannelConfigById() {
+  const twitchConfig = await getTwitchConfig();
+  const channelConfigById: Record<string, TwitchConfig["channels"][string]> =
+    {};
+  for (const channelName in twitchConfig.channels) {
+    const channelConfig = twitchConfig.channels[channelName];
+    if (channelConfig) {
+      channelConfigById[channelConfig.id] = channelConfig;
+    }
+  }
+  return channelConfigById;
+}
+
 export async function getTwitchConfig() {
   return config;
 }

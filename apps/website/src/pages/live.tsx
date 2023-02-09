@@ -1,6 +1,6 @@
 import React from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
-import Link from "next/link";
+//import Link from "next/link";
 import Head from "next/head";
 import { GlobeAltIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
@@ -15,27 +15,27 @@ import {
   LinkBoxIcon,
   LinkBoxSocials,
 } from "../components/shared/LinkBox";
-import { CardSwiper } from "../components/shared/CardSwiper";
-import { AmbassadorCard } from "../components/about/AmbassadorCard";
-import { getAmbassadorsData } from "../utils/data";
-import { WeatherInfo } from "../components/WeatherInfo";
-import { TimeInfo } from "../components/TimeInfo";
-import { getWeatherData } from "../utils/weather-data";
+//import { getAmbassadorsData } from "../utils/data";
+//import { CardSwiper } from "../components/shared/CardSwiper";
+//import { AmbassadorCard } from "../components/about/AmbassadorCard";
+//import { WeatherInfo } from "../components/WeatherInfo";
+//import { TimeInfo } from "../components/TimeInfo";
+//import { getWeatherData } from "../utils/weather-data";
 
 export async function getStaticProps() {
-  const ambassadors = await getAmbassadorsData();
-  const weatherData = await getWeatherData();
+  //const ambassadors = await getAmbassadorsData();
+  //const weatherData = await getWeatherData();
 
   return {
-    props: { weatherData, ambassadors },
-    revalidate: weatherData ? 15 * 60 : undefined,
+    props: { /*weatherData, ambassadors */ },
+    //revalidate: weatherData ? 15 * 60 : undefined,
   };
 }
 
 export type LivePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
-const Live: NextPage<LivePageProps> = ({ weatherData, ambassadors }) => {
-  const currentAmbassadors = ["tico", "miley", "mia", "siren"];
+const Live: NextPage<LivePageProps> = ({ /* weatherData, ambassadors */ }) => {
+  //const currentAmbassadors = ["tico", "miley", "mia", "siren"];
 
   return (
     <>
@@ -51,6 +51,7 @@ const Live: NextPage<LivePageProps> = ({ weatherData, ambassadors }) => {
         <div>
           <TwitchEmbed />
 
+          {/*
           <div className="flex flex-col border-t border-t-black bg-gray-900 text-white md:flex-row">
             <div className="order-2 flex flex-shrink-0 flex-col justify-center p-2 md:order-1 md:border-r">
               <p className="mb-2 w-full text-center text-xl">
@@ -107,6 +108,7 @@ const Live: NextPage<LivePageProps> = ({ weatherData, ambassadors }) => {
               </p>
             </div>
           </div>
+          */}
 
           <div className="border-t border-t-black px-5 pb-12">
             <Headline>Links</Headline>

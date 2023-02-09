@@ -62,6 +62,7 @@ export async function getStaticProps() {
     props: {
       channelData,
     },
+    revalidate: 60,
   };
 }
 
