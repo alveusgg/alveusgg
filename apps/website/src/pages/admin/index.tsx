@@ -8,15 +8,38 @@ import { checkIsSuperUser } from "../../utils/auth";
 import { Headline } from "../../components/shared/Headline";
 import { getNotificationsConfig } from "../../config/notifications";
 import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
+import { getChannelConfigById, getTwitchConfig } from "../../config/twitch";
+import { getSubscriptions } from "../../utils/twitch-api";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
   if (checkIsSuperUser(session)) {
+    const twitchConfig = await getTwitchConfig();
+    const notificationConfig = await getNotificationsConfig();
+    const twitchEventSubs = await getSubscriptions();
+    const channelConfigById = await getChannelConfigById();
+
+    twitchEventSubs.data.sort((a, b) => {
+      const idA = a.condition.broadcaster_user_id;
+      const idB = b.condition.broadcaster_user_id;
+
+      if (idA < idB) {
+        return -1;
+      }
+      if (idA > idB) {
+        return 1;
+      }
+      return 0;
+    });
+
     return {
       props: {
         authorized: true,
         superUser: true,
-        notificationConfig: await getNotificationsConfig(),
+        twitchConfig,
+        notificationConfig,
+        twitchEventSubs,
+        channelConfigById,
       },
     };
   }
@@ -27,7 +50,10 @@ export async function getServerSideProps(context: NextPageContext) {
 }
 
 const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
+  twitchConfig,
   notificationConfig,
+  twitchEventSubs,
+  channelConfigById,
 }) => {
   return (
     <>
@@ -36,23 +62,77 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
       </Head>
 
       <DefaultPageLayout title="Admin">
-        <Headline>Actions</Headline>
+        <Headline>Send a notification</Headline>
 
-        <h3>Send a notification</h3>
-        <SendNotificationForm notificationConfig={notificationConfig} />
+        <div className="my-4 max-w-[500px] rounded-lg border bg-white p-4 shadow-xl">
+          <SendNotificationForm notificationConfig={notificationConfig} />
+        </div>
 
-        <p>Run actions manually …</p>
+        <div className="w-full gap-4 md:flex md:flex-row">
+          <div className="flex-1">
+            <Headline>Monitored Twitch Channels</Headline>
+            <ul>
+              {Object.keys(twitchConfig.channels).map((name) => {
+                const channelConfig = twitchConfig.channels[name];
+                if (!channelConfig) return null;
 
-        <hr />
-
-        <Headline>Twitch Channels</Headline>
-        <p>Manage twitch channels …</p>
-
-        <Headline>Discord Webhooks</Headline>
-        <p>Add discord channel webhooks to post notification messages …</p>
+                return (
+                  <li
+                    key={name}
+                    className="my-4 rounded-lg border bg-white p-4 shadow-xl"
+                  >
+                    <div className="font-bold">
+                      {channelConfig.label} #{channelConfig.id}
+                    </div>
+                    <div>
+                      Notifications:
+                      <ul>
+                        <li>
+                          {channelConfig.notifications.live ? "✓" : "·"} Going
+                          Live
+                        </li>
+                        <li>
+                          {channelConfig.notifications.streamCategoryChange
+                            ? "✓"
+                            : "·"}{" "}
+                          Category changed
+                        </li>
+                        <li>
+                          {channelConfig.notifications.streamTitleChange
+                            ? "✓"
+                            : "·"}{" "}
+                          Title changed
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+          <div className="flex-1">
+            <Headline>Active Twitch Event Subscriptions</Headline>
+            <ul>
+              {twitchEventSubs.data.map((sub) => {
+                return (
+                  <li
+                    key={sub.id}
+                    className="my-4 rounded-lg border bg-white p-4 shadow-xl"
+                  >
+                    <div className="font-bold">
+                      {channelConfigById[sub.condition.broadcaster_user_id]
+                        ?.label || ""}{" "}
+                      #{sub.condition.broadcaster_user_id} {sub.type}
+                    </div>
+                    <div>{sub.status}</div>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        </div>
       </DefaultPageLayout>
     </>
   );
 };
-
 export default Admin;

@@ -37,57 +37,69 @@ export const SendNotificationForm: React.FC<{
         <p className="text-red-800">ERROR: Could not send the notification!</p>
       )}
 
-      <label className="block">
-        <strong>Category:</strong>
-        <br />
+      <div className="flex flex-col gap-5">
+        <label>
+          <strong className="mb-0.5 block font-normal">Category:</strong>
+          <select
+            name="tag"
+            required
+            defaultValue="announcements"
+            className="w-full border p-1 px-2"
+          >
+            <option></option>
+            {notificationConfig.categories.map(({ tag, label }) => (
+              <option key={tag} value={tag}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
 
-        <select name="tag" required defaultValue="announcements">
-          <option></option>
-          {notificationConfig.categories.map(({ tag, label }) => (
-            <option key={tag} value={tag}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+        <label>
+          <strong className="mb-0.5 block font-normal">Heading:</strong>
+          <input
+            name="heading"
+            type="text"
+            minLength={1}
+            maxLength={100}
+            defaultValue="Alveus announcement"
+            required
+            className="w-full border p-1 px-2"
+          />
+        </label>
 
-      <label className="block">
-        <strong>Heading:</strong>
-        <br />
-        <input
-          name="heading"
-          type="text"
-          minLength={1}
-          maxLength={100}
-          defaultValue="Alveus announcement"
-          required
-        />
-      </label>
+        <label>
+          <strong className="mb-0.5 block font-normal">Text:</strong>
+          <textarea
+            name="text"
+            minLength={2}
+            maxLength={200}
+            defaultValue="Example content"
+            required
+            className="w-full border p-1 px-2"
+          />
+        </label>
 
-      <label className="block">
-        <strong>Text:</strong>
-        <br />
-        <textarea
-          name="text"
-          minLength={2}
-          maxLength={200}
-          defaultValue="Example content"
-          required
-        />
-      </label>
+        <label>
+          <strong className="mb-0.5 block font-normal">Link:</strong>
+          <input
+            name="url"
+            type="url"
+            defaultValue="https://www.twitch.tv/AlveusSanctuary"
+            required
+            className="w-full border p-1 px-2"
+          />
+        </label>
 
-      <label className="block">
-        <strong>Link:</strong>
-        <br />
-        <input
-          name="url"
-          type="url"
-          defaultValue="https://www.twitch.tv/AlveusSanctuary"
-          required
-        />
-      </label>
-
-      <button type="submit">Send notification</button>
+        <div className="flex flex-row justify-end">
+          <button
+            type="submit"
+            className="rounded-full bg-gray-800 p-2 px-4 text-white"
+          >
+            Send notification
+          </button>
+        </div>
+      </div>
     </form>
   );
 };
