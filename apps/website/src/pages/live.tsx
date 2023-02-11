@@ -2,19 +2,19 @@ import React from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 //import Link from "next/link";
 import Head from "next/head";
-import { GlobeAltIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+//import { GlobeAltIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
-import paypalIcon from "simple-icons/icons/paypal.svg";
-import amazonIcon from "simple-icons/icons/amazon.svg";
-import twitchIcon from "simple-icons/icons/twitch.svg";
+//import paypalIcon from "simple-icons/icons/paypal.svg";
+//import amazonIcon from "simple-icons/icons/amazon.svg";
+//import twitchIcon from "simple-icons/icons/twitch.svg";
 
-import { TwitchEmbed } from "../../components/TwitchEmbed";
-import { Headline } from "../../components/shared/Headline";
-import {
-  LinkBox,
-  LinkBoxIcon,
-  LinkBoxSocials,
-} from "../../components/shared/LinkBox";
+import { TwitchEmbed } from "../components/TwitchEmbed";
+//import { Headline } from "../components/shared/Headline";
+//import {
+//  LinkBox,
+//  LinkBoxIcon,
+//  LinkBoxSocials,
+//} from "../components/shared/LinkBox";
 //import { getAmbassadorsData } from "../utils/data";
 //import { CardSwiper } from "../components/shared/CardSwiper";
 //import { AmbassadorCard } from "../components/explore/AmbassadorCard";
@@ -114,7 +114,6 @@ const Live: NextPage<LivePageProps> = (
               </p>
             </div>
           </div>
-          */}
 
           <div className="border-t border-t-black px-5 pb-12">
             <Headline>Links</Headline>
@@ -160,6 +159,7 @@ const Live: NextPage<LivePageProps> = (
               </p>
             </div>
           </div>
+          */}
         </div>
       </main>
     </>
