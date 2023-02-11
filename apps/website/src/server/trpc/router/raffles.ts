@@ -61,6 +61,8 @@ export const rafflesRouter = router({
         data: {
           raffle: { connect: { id: raffle.id } },
           user: { connect: { id: userId } },
+          givenName: input.givenName,
+          familyName: input.familyName,
           mailingAddress: {
             create: {
               addressLine1: input.addressLine1,

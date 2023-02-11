@@ -199,6 +199,8 @@ model RaffleEntry {
   raffleId         String
   userId           String
   mailingAddressId String @unique
+  givenName        String
+  familyName       String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
