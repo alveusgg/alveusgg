@@ -2,11 +2,11 @@ import type { InferGetStaticPropsType } from "next";
 import { type NextPage } from "next";
 import Head from "next/head";
 
-import DefaultPageLayout from "../components/DefaultPageLayout";
+import DefaultPageLayout from "../../components/DefaultPageLayout";
 
 import React from "react";
-import { getTwitchConfig } from "../config/twitch";
-import { prisma } from "../server/db/client";
+import { getTwitchConfig } from "../../config/twitch";
+import { prisma } from "../../server/db/client";
 
 export async function getStaticProps() {
   const twitchConfig = await getTwitchConfig();

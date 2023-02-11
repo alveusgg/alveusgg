@@ -8,13 +8,13 @@ import paypalIcon from "simple-icons/icons/paypal.svg";
 import amazonIcon from "simple-icons/icons/amazon.svg";
 import twitchIcon from "simple-icons/icons/twitch.svg";
 
-import { TwitchEmbed } from "../components/TwitchEmbed";
-import { Headline } from "../components/shared/Headline";
+import { TwitchEmbed } from "../../components/TwitchEmbed";
+import { Headline } from "../../components/shared/Headline";
 import {
   LinkBox,
   LinkBoxIcon,
   LinkBoxSocials,
-} from "../components/shared/LinkBox";
+} from "../../components/shared/LinkBox";
 //import { getAmbassadorsData } from "../utils/data";
 //import { CardSwiper } from "../components/shared/CardSwiper";
 //import { AmbassadorCard } from "../components/about/AmbassadorCard";
@@ -27,14 +27,20 @@ export async function getStaticProps() {
   //const weatherData = await getWeatherData();
 
   return {
-    props: { /*weatherData, ambassadors */ },
+    props: {
+      /*weatherData, ambassadors */
+    },
     //revalidate: weatherData ? 15 * 60 : undefined,
   };
 }
 
 export type LivePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
-const Live: NextPage<LivePageProps> = ({ /* weatherData, ambassadors */ }) => {
+const Live: NextPage<LivePageProps> = (
+  {
+    /* weatherData, ambassadors */
+  }
+) => {
   //const currentAmbassadors = ["tico", "miley", "mia", "siren"];
 
   return (

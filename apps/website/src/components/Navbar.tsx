@@ -9,7 +9,7 @@ import { Disclosure, Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { ProfileInfo } from "./navbar/ProfileInfo";
-import { NotificationsButton } from "./navbar/NotificationsButton";
+//import { NotificationsButton } from "./navbar/NotificationsButton";
 
 function useIsActivePath(href: UrlObject | string) {
   const router = useRouter();
@@ -127,7 +127,7 @@ export const Navbar: React.FC = () => {
 
             <div className="flex-grow md:hidden" />
 
-            <NotificationsButton />
+            {/*  <NotificationsButton /> */}
 
             {sessionData ? (
               <Popover
@@ -184,6 +184,11 @@ export const Navbar: React.FC = () => {
                   </Disclosure.Button>
                 </li>
                 {/*
+                <li>
+                  <Disclosure.Button as={NavLink} href="/live">
+                    Live
+                  </Disclosure.Button>
+                </li>
                 <li>
                   <Disclosure.Button as={NavLink} href="/schedule">
                     Schedule

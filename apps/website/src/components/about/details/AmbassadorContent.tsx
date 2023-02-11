@@ -8,7 +8,7 @@ import {
   LinkIcon,
 } from "@heroicons/react/24/outline";
 import type { Ambassador, Enclosures } from "../../../utils/data";
-import type { SelectionAction } from "../../../pages/explore";
+import type { SelectionAction } from "../../../pages/wip/explore";
 import { dateFormatter } from "../InfoDetails";
 import { DefinitionItem } from "./DefinitionItem";
 import Link from "next/link";

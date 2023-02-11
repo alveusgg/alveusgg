@@ -2,15 +2,15 @@ import Head from "next/head";
 import { type InferGetStaticPropsType, type NextPage } from "next";
 import React, { useReducer } from "react";
 
-import { getAllData } from "../utils/data";
-import DefaultPageLayout from "../components/DefaultPageLayout";
-import { Headline } from "../components/shared/Headline";
-import { Map } from "../components/about/Map";
-import { Ambassadors } from "../components/about/Ambassadors";
-import { InfoDetails } from "../components/about/InfoDetails";
-import { Enclosures } from "../components/about/Enclosures";
-import { Facilities } from "../components/about/Facilities";
-import { LinkBox } from "../components/shared/LinkBox";
+import { getAllData } from "../../utils/data";
+import DefaultPageLayout from "../../components/DefaultPageLayout";
+import { Headline } from "../../components/shared/Headline";
+import { Map } from "../../components/about/Map";
+import { Ambassadors } from "../../components/about/Ambassadors";
+import { InfoDetails } from "../../components/about/InfoDetails";
+import { Enclosures } from "../../components/about/Enclosures";
+import { Facilities } from "../../components/about/Facilities";
+import { LinkBox } from "../../components/shared/LinkBox";
 
 export type AboutPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 

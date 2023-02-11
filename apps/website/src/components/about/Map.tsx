@@ -7,7 +7,7 @@ import type {
   AboutPageProps,
   SelectionAction,
   SelectionState,
-} from "../../pages/explore";
+} from "../../pages/wip/explore";
 
 type MapProps = Pick<
   AboutPageProps,
@@ -31,7 +31,7 @@ export const Map: React.FC<MapProps> = ({
   facilities,
   enclosures,
   mapData,
-  selectionState,
+  //selectionState,
   dispatchSelection,
 }) => {
   const mapArgs = useMemo(() => {

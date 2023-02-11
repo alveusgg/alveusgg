@@ -3,12 +3,12 @@ import Head from "next/head";
 import type { Prisma } from "@prisma/client";
 import type { PromiseReturnType } from "@prisma/client/scripts/default-index";
 
-import DefaultPageLayout from "../components/DefaultPageLayout";
-import { NotificationSettings } from "../components/notifications/NotificationSettings";
-import { Headline } from "../components/shared/Headline";
-import { getChannelConfigById } from "../config/twitch";
-import { prisma } from "../server/db/client";
-import { LocalTime } from "../components/shared/LocalTime";
+import DefaultPageLayout from "../../components/DefaultPageLayout";
+import { NotificationSettings } from "../../components/notifications/NotificationSettings";
+import { Headline } from "../../components/shared/Headline";
+import { getChannelConfigById } from "../../config/twitch";
+import { prisma } from "../../server/db/client";
+import { LocalTime } from "../../components/shared/LocalTime";
 
 async function getChannelUpdates() {
   return await prisma.channelUpdateEvent.findMany({

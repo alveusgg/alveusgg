@@ -2,10 +2,10 @@ import React from "react";
 import { type InferGetStaticPropsType, type NextPage } from "next";
 import Head from "next/head";
 
-import DefaultPageLayout from "../components/DefaultPageLayout";
-import { Headline } from "../components/shared/Headline";
-import { ShowCard } from "../components/schedule/ShowCard";
-import { LinkBox, LinkBoxSocials } from "../components/shared/LinkBox";
+import DefaultPageLayout from "../../components/DefaultPageLayout";
+import { Headline } from "../../components/shared/Headline";
+import { ShowCard } from "../../components/schedule/ShowCard";
+import { LinkBox, LinkBoxSocials } from "../../components/shared/LinkBox";
 
 export type SchedulePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
