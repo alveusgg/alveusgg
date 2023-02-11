@@ -57,6 +57,7 @@ const AboutAlveusPage: NextPage = () => {
     <>
       <Head>
         <title>About Alveus | Alveus.gg</title>
+        <meta name="robots" content="noindex" />
       </Head>
 
       <Section dark className="py-24">
