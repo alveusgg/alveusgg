@@ -8,6 +8,50 @@ import mayaImage from "../../assets/maya.png";
 import leafRightImage1 from "../../assets/floral/leaf-right-1.png"
 import leafRightImage2 from "../../assets/floral/leaf-right-2.png"
 import leafLeftImage1 from "../../assets/floral/leaf-left-1.png"
+import IconCalendar from "../../icons/IconCalendar"
+
+const experience = [
+  {
+    date: 'August, 2015',
+    text: 'Level 3 certification in Parelli Natural Horsemanship',
+  },
+  {
+    date: 'June, 2016',
+    text: 'County 4-H All Star Ambassador',
+  },
+  {
+    date: 'June, 2018',
+    text: 'Outreach Education and Exotic Animal Husbandry intern at Zoo to You Conservation Ambassadors',
+  },
+  {
+    date: 'January, 2019',
+    text: 'Outreach Education and Exotic Animal Husbandry intern at Charles Paddock Zoo',
+  },
+  {
+    date: 'February, 2019',
+    text: 'Falconry license issued by the Department of Fish and Wildlife',
+  },
+  {
+    date: 'June, 2019',
+    text: 'Education and Husbandry intern at Free Flight Exotic Bird Sanctuary',
+  },
+  {
+    date: 'June, 2020',
+    text: 'Graduated from California Polytechnic University at San Luis Obispo (earning Bachelor of Science in Agricultural Education and Communication)',
+  },
+  {
+    date: 'October, 2020 – Present',
+    text: 'Board of Directors for a wildlife rehabilitation center in Central Texas (role focused on raptor rehabilitation and husbandry)',
+  },
+  {
+    date: 'February, 2021',
+    text: 'Founded Alveus Sanctuary',
+  },
+  {
+    date: 'March, 2021 – Present',
+    text: 'Governing board of Make a Wish Foundation in Central and South Texas',
+  },
+];
 
 const AboutMayaPage: NextPage = () => {
   return (
@@ -96,11 +140,51 @@ const AboutMayaPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section className="text-center">
-        <Heading level={2} className="text-5xl text-alveus-green">
+      <Section >
+        <Heading level={2} className="text-5xl text-alveus-green text-center">
           Maya&apos;s Experience
         </Heading>
-        {/* TODO: Timeline */}
+
+        <div className="relative z-0 max-w-6xl mx-auto mt-16">
+          <div className="absolute -z-10 left-5 md:left-1/2 -translate-x-1/2 w-1 h-full bg-alveus-green" />
+          <ol>
+            {experience.map((item, idx) => (
+              <li key={item.date} className="flex items-start my-4 relative">
+                <div className={`absolute inline-block left-5 ${idx % 2 ? 'md:left-1/2' : 'md:left-auto md:right-1/2'}`}>
+                  <div className={`
+                  hidden
+                  md:block
+                  border-solid border-y-transparent border-y-[1rem] mt-1
+                  ${idx % 2
+                    ? 'border-r-alveus-green border-r-[1rem] border-l-0 ml-6'
+                    : 'border-l-alveus-green border-l-[1rem] border-r-0 mr-6'}`} />
+                  <div className={`
+                  md:hidden
+                  border-solid border-y-transparent border-y-[1rem] mt-1
+                  border-r-alveus-green border-r-[1rem] border-l-0 ml-6`} />
+                </div>
+                <div className="bg-alveus-green text-alveus-tan p-3 rounded-full">
+                  <IconCalendar size={16} />
+                </div>
+                <div className={`basis-1/2 px-4 pt-2 hidden md:block ${idx % 2 ? 'md:order-first' : 'md:order-last'}`}>
+                  <p className={`text-md text-alveus-green-500 ${idx % 2 ? 'text-right' : 'text-left'}`}>
+                    {item.date}
+                  </p>
+                </div>
+                <div className={`basis-full md:basis-1/2 px-4 ${idx % 2 ? 'md:order-last' : 'md:order-first'}`}>
+                  <div className="text-md p-6 bg-alveus-green text-alveus-tan rounded-lg">
+                    <p className="mb-4 md:hidden">
+                      {item.date}
+                    </p>
+                    <p>
+                      {item.text}
+                    </p>
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
       </Section>
     </>
   );
