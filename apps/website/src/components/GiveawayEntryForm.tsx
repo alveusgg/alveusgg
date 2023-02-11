@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
-import type { Raffle, RaffleEntry } from "@prisma/client";
+import type { Giveaway, GiveawayEntry } from "@prisma/client";
 import Link from "next/link";
 
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
@@ -25,7 +25,7 @@ export const Icon: React.FC<{ src: string; alt?: string }> = ({
   alt = "",
 }) => <Image className="h-8 w-8" src={src} alt={alt} />;
 
-const RaffleCheck: React.FC<{
+const GiveawayCheck: React.FC<{
   name: string;
   label: string;
   children: React.ReactNode;
@@ -40,7 +40,7 @@ const RaffleCheck: React.FC<{
     setTimeout(() => setIsClicked(true), 1000);
   }, []);
 
-  const id = `raffle-req-${name}`;
+  const id = `giveaway-req-${name}`;
   const containerClasses =
     "flex flex-row rounded border border-gray-200 bg-white shadow-xl";
   const disabled = needsToBeClicked && !isClicked;
@@ -86,21 +86,21 @@ const RaffleCheck: React.FC<{
   }
 };
 
-export const RaffleEntryForm: React.FC<{
-  raffle: Raffle;
-  existingEntry: RaffleEntry | null;
-}> = ({ raffle, existingEntry }) => {
+export const GiveawayEntryForm: React.FC<{
+  giveaway: Giveaway;
+  existingEntry: GiveawayEntry | null;
+}> = ({ giveaway, existingEntry }) => {
   const { data: session } = useSession();
 
-  const enterRaffle = trpc.raffles.enterRaffle.useMutation();
+  const enterGiveaway = trpc.giveaways.enterGiveaway.useMutation();
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const data = new FormData(e.currentTarget);
-      enterRaffle.mutate({
-        raffleId: raffle.id,
+      enterGiveaway.mutate({
+        giveawayId: giveaway.id,
         givenName: String(data.get("given-name")),
         familyName: String(data.get("family-name")),
         addressLine1: String(data.get("address-line1")),
@@ -111,14 +111,14 @@ export const RaffleEntryForm: React.FC<{
         postalCode: String(data.get("postal-code")),
       });
     },
-    [enterRaffle, raffle.id]
+    [enterGiveaway, giveaway.id]
   );
 
   if (!session?.user?.id) {
     return (
       <div className="rounded-lg bg-white p-2 shadow-xl">
         <p className="mb-4">
-          You need to be logged in with Twitch to enter the raffle.
+          You need to be logged in with Twitch to enter the giveaway.
         </p>
 
         <button
@@ -132,10 +132,10 @@ export const RaffleEntryForm: React.FC<{
     );
   }
 
-  if (enterRaffle.isSuccess) {
+  if (enterGiveaway.isSuccess) {
     return (
       <div className="rounded-lg bg-green-100 p-2 shadow-xl">
-        You have been successfully entered in the raffle! Good luck!
+        You have been successfully entered in the giveaway! Good luck!
       </div>
     );
   }
@@ -143,23 +143,26 @@ export const RaffleEntryForm: React.FC<{
   if (existingEntry) {
     return (
       <div className="rounded-lg bg-green-100 p-2 shadow-xl">
-        You already are entered in this raffle! Good luck!
+        You already are entered in this giveaway! Good luck!
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      {enterRaffle.error && (
+      {enterGiveaway.error && (
         <div className="rounded-lg bg-red-200 p-2 text-red-900 shadow-xl">
-          Error: {enterRaffle.error.message}
+          Error: {enterGiveaway.error.message}
         </div>
       )}
 
       <Headline>Steps to enter</Headline>
 
       <div className="flex flex-col gap-5">
-        <RaffleCheck name="twitter" label="Follow @AlveusSanctuary on Twitter">
+        <GiveawayCheck
+          name="twitter"
+          label="Follow @AlveusSanctuary on Twitter"
+        >
           <Icon src={twitterIcon} />
           <span>
             Follow{" "}
@@ -172,9 +175,9 @@ export const RaffleEntryForm: React.FC<{
               @AlveusSanctuary on Twitter
             </Link>
           </span>
-        </RaffleCheck>
+        </GiveawayCheck>
 
-        <RaffleCheck
+        <GiveawayCheck
           name="yt-main"
           label="Subscribe to AlveusSanctuary on YouTube"
         >
@@ -190,9 +193,9 @@ export const RaffleEntryForm: React.FC<{
               AlveusSanctuary on YouTube
             </Link>
           </span>
-        </RaffleCheck>
+        </GiveawayCheck>
 
-        <RaffleCheck
+        <GiveawayCheck
           name="yt-clips"
           label="Subscribe to AlveusSanctuaryHighlights on YouTube"
         >
@@ -208,9 +211,9 @@ export const RaffleEntryForm: React.FC<{
               AlveusSanctuaryHighlights on YouTube
             </Link>
           </span>
-        </RaffleCheck>
+        </GiveawayCheck>
 
-        <RaffleCheck name="ig" label="Follow @alveussanctuary on Instagram">
+        <GiveawayCheck name="ig" label="Follow @alveussanctuary on Instagram">
           <Icon src={instagramIcon} />
           <span>
             Follow{" "}
@@ -223,9 +226,9 @@ export const RaffleEntryForm: React.FC<{
               @alveussanctuary on Instagram
             </Link>
           </span>
-        </RaffleCheck>
+        </GiveawayCheck>
 
-        <RaffleCheck name="tiktok" label="Follow @alveussanctuary on TikTok">
+        <GiveawayCheck name="tiktok" label="Follow @alveussanctuary on TikTok">
           <Icon src={tiktokIcon} />
           <span>
             Follow{" "}
@@ -238,16 +241,16 @@ export const RaffleEntryForm: React.FC<{
               @alveussanctuary on TikTok
             </Link>
           </span>
-        </RaffleCheck>
+        </GiveawayCheck>
 
-        <RaffleCheck
+        <GiveawayCheck
           name="website"
           url="https://alveussanctuary.org/"
           label="Visit our Website"
         >
           <GlobeAltIcon className="h-8 w-8" />
           <span>Visit our Website</span>
-        </RaffleCheck>
+        </GiveawayCheck>
       </div>
 
       <Headline>Enter your details</Headline>
@@ -395,7 +398,7 @@ export const RaffleEntryForm: React.FC<{
             I agree to the{" "}
             <Link
               className="underline"
-              href={`/raffles/${raffle.slug || raffle.id}/rules`}
+              href={`/giveaways/${giveaway.slug || giveaway.id}/rules`}
               target="_blank"
             >
               Official Rules
@@ -408,7 +411,7 @@ export const RaffleEntryForm: React.FC<{
         <button
           type="submit"
           className="block w-full rounded-lg bg-gray-600 p-4 text-white"
-          disabled={enterRaffle.isLoading}
+          disabled={enterGiveaway.isLoading}
         >
           Enter to Win
         </button>

@@ -1,17 +1,17 @@
 import Head from "next/head";
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
-import type { Raffle } from "@prisma/client";
+import type { Giveaway } from "@prisma/client";
 import React from "react";
 import { prisma } from "../../server/db/client";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
 
-export type RafflesPageProps = InferGetStaticPropsType<typeof getStaticProps>;
+export type GiveawaysPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export const getStaticProps: GetStaticProps<{
-  raffles: Raffle[];
+  giveaways: Giveaway[];
 }> = async () => {
   const now = new Date().toISOString();
-  const raffles = await prisma.raffle.findMany({
+  const giveaways = await prisma.giveaway.findMany({
     where: {
       active: true,
       startAt: { lt: now },
@@ -20,23 +20,26 @@ export const getStaticProps: GetStaticProps<{
   });
 
   return {
-    props: { raffles },
+    props: { giveaways },
     revalidate: 60,
   };
 };
 
-const RafflesPage: NextPage<RafflesPageProps> = ({ raffles }) => {
+const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
   return (
     <>
       <Head>
-        <title>Alveus Raffles | Alveus.gg</title>
+        <title>Alveus Giveaways | Alveus.gg</title>
       </Head>
 
-      <DefaultPageLayout title="Raffles">
-        {raffles.map((raffle) => {
+      <DefaultPageLayout title="Giveaways">
+        {giveaways.map((giveaway) => {
           return (
-            <a href={`/raffles/${raffle.slug || raffle.id}`} key={raffle.id}>
-              {raffle.label} &rarr;
+            <a
+              href={`/giveaways/${giveaway.slug || giveaway.id}`}
+              key={giveaway.id}
+            >
+              {giveaway.label} &rarr;
             </a>
           );
         })}
@@ -45,4 +48,4 @@ const RafflesPage: NextPage<RafflesPageProps> = ({ raffles }) => {
   );
 };
 
-export default RafflesPage;
+export default GiveawaysPage;

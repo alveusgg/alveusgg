@@ -7,25 +7,25 @@ import { trpc } from "../../utils/trpc";
 import { Headline } from "../shared/Headline";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
-type RaffleWithCount = RouterOutput["adminRaffles"]["getRaffles"][number];
+type GiveawayWithCount = RouterOutput["adminGiveaways"]["getGiveaways"][number];
 
 const nf = new Intl.NumberFormat();
 
-const Raffle: React.FC<{ raffle: RaffleWithCount }> = ({ raffle }) => {
+const Giveaway: React.FC<{ giveaway: GiveawayWithCount }> = ({ giveaway }) => {
   const handleToggle = () => {
     // TODO
   };
 
   return (
     <tr className="border-b border-gray-700">
-      <td className="p-1">{raffle.active ? "✅" : "❌"}</td>
+      <td className="p-1">{giveaway.active ? "✅" : "❌"}</td>
       <td className="p-1">
         <div className="flex flex-col gap-0.5">
-          <div className="text-xl">{raffle.label}</div>
+          <div className="text-xl">{giveaway.label}</div>
           <div>
             <Link
               className="underline"
-              href={`/raffles/${raffle.slug || raffle.id}`}
+              href={`/giveaways/${giveaway.slug || giveaway.id}`}
               target="_blank"
             >
               Show entry form &rarr;
@@ -34,17 +34,17 @@ const Raffle: React.FC<{ raffle: RaffleWithCount }> = ({ raffle }) => {
         </div>
       </td>
       <td className="p-1 text-right tabular-nums">
-        {nf.format(raffle._count.entries)}
+        {nf.format(giveaway._count.entries)}
       </td>
       <td className="p-1">
         <button
           className="mx-0.5 inline-block rounded-full bg-gray-600 py-0.5 px-2 text-white"
           onClick={handleToggle}
         >
-          {raffle.active ? "Close" : "Open"}
+          {giveaway.active ? "Close" : "Open"}
         </button>
         <Link
-          href={`/api/raffles/${raffle.id}/export-entries`}
+          href={`/api/giveaways/${giveaway.id}/export-entries`}
           className="mx-0.5 inline-block rounded-full bg-gray-600 py-0.5 px-2 text-white"
         >
           &dArr; CSV
@@ -54,12 +54,12 @@ const Raffle: React.FC<{ raffle: RaffleWithCount }> = ({ raffle }) => {
   );
 };
 
-export const Raffles: React.FC = () => {
-  const raffles = trpc.adminRaffles.getRaffles.useQuery();
+export const Giveaways: React.FC = () => {
+  const giveaways = trpc.adminGiveaways.getGiveaways.useQuery();
 
   return (
     <>
-      <Headline>Raffles</Headline>
+      <Headline>Giveaways</Headline>
 
       <div className="my-4 rounded-lg border bg-white p-4 shadow-xl">
         <table className="w-full">
@@ -72,13 +72,13 @@ export const Raffles: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {raffles.data?.map((raffle) => (
-              <Raffle key={raffle.id} raffle={raffle} />
+            {giveaways.data?.map((giveaway) => (
+              <Giveaway key={giveaway.id} giveaway={giveaway} />
             ))}
           </tbody>
         </table>
 
-        <form className="mt-10">TODO: Add new raffles …</form>
+        <form className="mt-10">TODO: Add new giveaways …</form>
       </div>
     </>
   );

@@ -90,7 +90,7 @@ model User {
   sessions           Session[]
   pushSubscriptions  PushSubscription[]
   notificationPushes NotificationPush[]
-  RaffleEntry        RaffleEntry[]
+  GiveawayEntry      GiveawayEntry[]
 }
 
 model VerificationToken {
@@ -174,12 +174,12 @@ model MailingAddress {
   state        String
   postalCode   String
 
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  raffleEntry RaffleEntry?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  giveawayEntry GiveawayEntry?
 }
 
-model Raffle {
+model Giveaway {
   id      String    @id @default(cuid())
   label   String
   slug    String?
@@ -190,12 +190,12 @@ model Raffle {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  entries RaffleEntry[]
+  entries GiveawayEntry[]
 }
 
-model RaffleEntry {
+model GiveawayEntry {
   id               String @id @default(cuid())
-  raffleId         String
+  giveawayId       String
   userId           String
   mailingAddressId String @unique
   givenName        String
@@ -204,9 +204,9 @@ model RaffleEntry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  raffle         Raffle         @relation(fields: [raffleId], references: [id])
+  giveaway       Giveaway       @relation(fields: [giveawayId], references: [id])
   user           User           @relation(fields: [userId], references: [id])
   mailingAddress MailingAddress @relation(fields: [mailingAddressId], references: [id])
 
-  @@unique([raffleId, userId])
+  @@unique([giveawayId, userId])
 }

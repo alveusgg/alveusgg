@@ -5,9 +5,9 @@ import { getServerAuthSession } from "../../../../server/common/get-server-auth-
 import { prisma } from "../../../../server/db/client";
 import { checkIsSuperUser } from "../../../../utils/auth";
 
-type RaffleEntryCsvExportRow = string[];
+type GiveawayEntryCsvExportRow = string[];
 
-const exportRaffleEntries = async (
+const exportGiveawayEntries = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
@@ -19,9 +19,9 @@ const exportRaffleEntries = async (
     return;
   }
 
-  const entries = await prisma.raffleEntry.findMany({
+  const entries = await prisma.giveawayEntry.findMany({
     where: {
-      raffleId: String(req.query.raffleId),
+      giveawayId: String(req.query.giveawayId),
     },
     include: {
       mailingAddress: true,
@@ -29,9 +29,9 @@ const exportRaffleEntries = async (
     },
   });
 
-  const rows: RaffleEntryCsvExportRow[] = entries.map((entry) => {
+  const rows: GiveawayEntryCsvExportRow[] = entries.map((entry) => {
     return [
-      entry.raffleId,
+      entry.giveawayId,
       entry.id,
       entry.createdAt.toISOString(),
       String(entry.user.name),
@@ -48,7 +48,7 @@ const exportRaffleEntries = async (
   });
 
   rows.unshift([
-    "raffleId",
+    "giveawayId",
     "id",
     "date",
     "username",
@@ -68,8 +68,11 @@ const exportRaffleEntries = async (
   res
     .status(200)
     .setHeader("Content-Type", "text/csv")
-    .setHeader("Content-Disposition", `attachment; filename=raffle-entries.csv`)
+    .setHeader(
+      "Content-Disposition",
+      `attachment; filename=giveaway-entries.csv`
+    )
     .send(csv);
 };
 
-export default exportRaffleEntries;
+export default exportGiveawayEntries;

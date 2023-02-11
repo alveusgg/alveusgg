@@ -10,7 +10,7 @@ import { getSubscriptions } from "../../utils/twitch-api";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
 import { Headline } from "../../components/shared/Headline";
 import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
-import { Raffles } from "../../components/admin/Raffles";
+import { Giveaways } from "../../components/admin/Giveaways";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -65,7 +65,7 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
       <DefaultPageLayout title="Admin">
         <div className="w-full gap-4 md:flex md:flex-row">
           <div className="flex-1">
-            <Raffles />
+            <Giveaways />
           </div>
           <div className="flex-1">
             <Headline>ALPHA Send a notification</Headline>
