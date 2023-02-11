@@ -1,4 +1,5 @@
 import React from "react";
+import Heading from "./content/Heading"
 
 export type DefaultPageLayoutProps = {
   children?: React.ReactNode;
@@ -11,8 +12,8 @@ const DefaultPageLayout: React.FC<DefaultPageLayoutProps> = ({
 }) => {
   return (
     <div className="p-4">
-      <header>
-        <h1 className="my-3 font-serif text-3xl font-bold">{title}</h1>
+      <header className="container mx-auto">
+        <Heading className="my-3 text-3xl">{title}</Heading>
       </header>
       <div>{children}</div>
     </div>

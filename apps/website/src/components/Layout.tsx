@@ -70,7 +70,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </Head>
 
       <div
-        className={`flex h-full min-h-[100vh] flex-col bg-gray-300 ${ptSans.variable} ${ptSerif.variable} font-sans`}
+        className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${ptSans.variable} ${ptSerif.variable} font-sans`}
       >
         <Navbar />
         <main className="flex-grow">{children}</main>
