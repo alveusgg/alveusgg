@@ -78,42 +78,80 @@ const AboutAlveusPage: NextPage = () => {
         <title>About Alveus | Alveus.gg</title>
       </Head>
 
-      <section>
-        <h1>About Alveus Sanctuary</h1>
-        <p>
-          Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a
-          virtual education center facility to provide permanent homes to non-releasable exotic animals.
-        </p>
+      <section className="py-16 bg-alveus-green text-alveus-tan">
+        <div className="container mx-auto px-4">
+          <h1 className="my-2 font-serif text-3xl font-bold">
+            About Alveus Sanctuary
+          </h1>
+          <p className="text-lg">
+            Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a
+            virtual education center facility to provide permanent homes to non-releasable exotic animals.
+          </p>
+        </div>
       </section>
 
-      <section>
-        <h2>Watch the Launch Video</h2>
-        <p>The Start of it all!</p>
-        <p>Find out more about Alveus and our aims here.</p>
-        {/* TODO: Lightbox */}
-        <a href="https://www.youtube.com/watch?v=jXTqWIc--jo" target="_blank" rel="noreferrer">Watch the Video</a>
-      </section>
+      <section className="py-16 bg-alveus-tan text-alveus-green-900">
+        <div className="container mx-auto px-4">
+          <div className="flex flex-wrap items-center">
+            <div className="basis-full md:basis-1/2">
+              {/* TODO: Image */}
+            </div>
 
-      <section>
-        <h2>Why Twitch.tv</h2>
-        <p>
-          Twitch offers our guests the opportunity to connect with viewers from around the globe.
-          Here are some statistics that represent Twitch and it&apos;s users:
-        </p>
-
-        <ul>
-          {Object.entries(stats).map(([ key, stat ]) => (
-            <li key={key}>
-              <a href={stat.source} target="_blank" rel="noreferrer">
-                <span>{stat.title}</span>
-                <span>{stat.value}</span>
-                <span>{stat.caption}</span>
+            <div className="basis-full md:basis-1/2">
+              <h2 className="my-2 font-serif text-3xl font-bold">
+                Watch the Launch Video
+              </h2>
+              <p className="my-2 font-serif text-lg font-bold italic">
+                The Start of it all!
+              </p>
+              <p className="my-4 text-lg">
+                Find out more about Alveus and our aims here.
+              </p>
+              {/* TODO: Lightbox */}
+              <a
+                className="inline-block text-xl hover:bg-alveus-green hover:text-alveus-tan transition-colors px-6 py-4 rounded-full border-2 border-alveus-green"
+                href="https://www.youtube.com/watch?v=jXTqWIc--jo"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Watch the Video
               </a>
-            </li>
-          ))}
-        </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <p>Click each box for source.</p>
+      <section className="py-16 bg-alveus-green text-alveus-tan">
+        <div className="container mx-auto px-4">
+          <h2 className="my-2 font-serif text-3xl font-bold text-center">
+            Why Twitch.tv
+          </h2>
+          <p className="text-center">
+            Twitch offers our guests the opportunity to connect with viewers from around the globe.
+            Here are some statistics that represent Twitch and it&apos;s users:
+          </p>
+
+          <ul className="mt-6 md:mt-12 mb-2 md:mx-32 flex flex-wrap justify-center">
+            {Object.entries(stats).map(([ key, stat ]) => (
+              <li key={key} className="basis-full md:basis-1/3 py-4 md:px-4">
+                <a
+                  className="h-full flex flex-col justify-center bg-alveus-green-900 px-6 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
+                  href={stat.source}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <p className="text-xl text-center font-bold">{stat.title}</p>
+                  <p className="my-4 text-3xl text-center font-extrabold">{stat.value}</p>
+                  <p className="text-center">{stat.caption}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-center">
+            Click each box for source.
+          </p>
+        </div>
       </section>
 
       <section>
