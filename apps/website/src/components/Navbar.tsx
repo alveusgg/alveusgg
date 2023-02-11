@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { Fragment } from "react";
+import React, { Fragment, useMemo } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link, { type LinkProps } from "next/link";
 import { Disclosure, Popover, Transition } from "@headlessui/react";
@@ -16,15 +16,17 @@ type NavLinkProps = Omit<
   LinkProps & {
     children?: React.ReactNode;
   } & React.RefAttributes<HTMLAnchorElement>;
-const NavLink: React.FC<NavLinkProps> = (props) => {
-  const isActive = useIsActivePath(props.href);
+const NavLinkClasses = "rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30";
+const NavLink: React.FC<NavLinkProps> = ({ href, className, ...props}) => {
+  const isActive = useIsActivePath(href);
+  const classes = useMemo(() => [NavLinkClasses, isActive && "bg-black/20", className].filter(Boolean).join(" "),
+    [ isActive, className ]);
 
   return (
     <Link
+      href={href}
+      className={classes}
       {...props}
-      className={`rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30 ${
-        props.className || ""
-      } ${isActive ? "bg-black/20" : ""}`}
     />
   );
 };
@@ -156,7 +158,8 @@ export const Navbar: React.FC = () => {
               </Popover>
             ) : (
               <button
-                className="self-stretch px-5 font-semibold text-white no-underline transition hover:bg-black/20"
+                className={`${NavLinkClasses} font-semibold`}
+                type="button"
                 onClick={() => signIn("twitch")}
               >
                 Log in
