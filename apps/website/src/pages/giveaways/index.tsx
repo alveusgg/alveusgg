@@ -14,6 +14,7 @@ export const getStaticProps: GetStaticProps<{
   const giveaways = await prisma.giveaway.findMany({
     where: {
       active: true,
+      showInLists: true,
       startAt: { lt: now },
       OR: [{ endAt: null }, { endAt: { gt: now } }],
     },

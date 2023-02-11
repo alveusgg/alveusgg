@@ -188,6 +188,8 @@ model Giveaway {
   startAt            DateTime  @default(now())
   endAt              DateTime?
   outgoingWebhookUrl String?   @db.VarChar(720)
+  showInLists        Boolean   @default(true)
+  config             String    @default("") @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

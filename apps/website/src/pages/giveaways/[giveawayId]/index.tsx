@@ -11,11 +11,25 @@ import type { Giveaway, GiveawayEntry } from "@prisma/client";
 import { prisma } from "../../../server/db/client";
 
 import DefaultPageLayout from "../../../components/DefaultPageLayout";
-import { GiveawayEntryForm } from "../../../components/GiveawayEntryForm";
+import { GiveawayEntryForm } from "../../../components/giveaway/GiveawayEntryForm";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
+
+async function findActiveGiveaway(giveawaySlugOrId: string) {
+  const now = new Date();
+  return await prisma.giveaway.findFirst({
+    where: {
+      active: true,
+      startAt: { lt: now },
+      AND: [
+        { OR: [{ endAt: null }, { endAt: { gt: now } }] },
+        { OR: [{ id: giveawaySlugOrId }, { slug: giveawaySlugOrId }] },
+      ],
+    },
+  });
+}
 
 export const getServerSideProps: GetServerSideProps<{
   giveaway: Giveaway;
@@ -30,11 +44,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   // Find the giveaway
-  const giveaway = await prisma.giveaway.findFirst({
-    where: {
-      OR: [{ id: giveawaySlugOrId }, { slug: giveawaySlugOrId }],
-    },
-  });
+  const giveaway = await findActiveGiveaway(giveawaySlugOrId);
   if (!giveaway) {
     return {
       notFound: true,
