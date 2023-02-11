@@ -4,8 +4,8 @@ This is a work-in-progress community page around the Alveus Sanctuary twitch str
 currently hosted at https://www.alveus.gg/.
 
 Main ideas:
-- Content focused hub for viewers (new and old) independent of the platforms (twitch/youtube/instagram), while the official 
-    website can be the official presentation of the Sanctuary not only towards viewer but also industry and other 
+- Content focused hub for viewers (new and old) independent of the platforms (twitch/youtube/instagram), while the official
+    website can be the official presentation of the Sanctuary not only towards viewer but also industry and other
     interested parties.
 - Possible Features:
   - Notifications for on-stream and off-stream content (stream segment changes, video releases, ig posts). #1
@@ -38,10 +38,9 @@ TODO
 
 TODO
 
-### Prerequisites 
+### Prerequisites
 
-1. Create a [twitch extension](https://dev.twitch.tv/console/extensions/create), note down your Client ID and Client Secret
-    - TODO: Set up OAuth callback
+1. Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
 2. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) and [Cookiebot keys](https://www.cookiebot.com/) if you want those
 
 
