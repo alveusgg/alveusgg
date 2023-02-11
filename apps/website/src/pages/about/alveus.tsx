@@ -1,6 +1,10 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import React from "react"
+import Section from "../../components/content/Section"
+import Heading from "../../components/content/Heading"
+import Socials from "../../components/content/Socials"
+import IconTwitch from "../../icons/IconTwitch"
 
 const stats = {
   averageTime: {
@@ -48,29 +52,6 @@ const views = {
   se: { name: 'Sweden', value: 2 },
 };
 
-const socials = {
-  instagram: {
-    link: "https://www.instagram.com/alveussanctuary",
-    title: "Instagram"
-  },
-  tiktok: {
-    link: "https://www.tiktok.com/@alveussanctuary",
-    title: "TikTok",
-  },
-  twitter: {
-    link: "https://twitter.com/AlveusSanctuary",
-    title: "Twitter",
-  },
-  twitch: {
-    link: "https://twitch.tv/alveussanctuary",
-    title: "Twitch.tv",
-  },
-  youtube: {
-    link: "https://www.youtube.com/c/AlveusSanctuary",
-    title: "YouTube",
-  },
-};
-
 const AboutAlveusPage: NextPage = () => {
   return (
     <>
@@ -78,137 +59,132 @@ const AboutAlveusPage: NextPage = () => {
         <title>About Alveus | Alveus.gg</title>
       </Head>
 
-      <section className="py-16 bg-alveus-green text-alveus-tan">
-        <div className="container mx-auto px-4">
-          <h1 className="my-2 font-serif text-3xl font-bold">
-            About Alveus Sanctuary
-          </h1>
-          <p className="text-lg">
-            Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a
-            virtual education center facility to provide permanent homes to non-releasable exotic animals.
-          </p>
+      <Section dark className="py-24">
+        <Heading level={1}>
+          About Alveus Sanctuary
+        </Heading>
+        <p className="text-lg">
+          Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a
+          virtual education center facility to provide permanent homes to non-releasable exotic animals.
+        </p>
+      </Section>
+
+      <Section>
+        <div className="flex flex-wrap-reverse items-center">
+          <div className="basis-full md:basis-1/2">
+            {/* TODO: Image */}
+          </div>
+
+          <div className="basis-full md:basis-1/2">
+            <Heading level={2}>
+              Watch the Launch Video
+            </Heading>
+            <p className="my-2 font-serif text-lg font-bold italic">
+              The Start of it all!
+            </p>
+            <p className="my-4 text-lg">
+              Find out more about Alveus and our aims here.
+            </p>
+            {/* TODO: Lightbox */}
+            <a
+              className="inline-block text-xl hover:bg-alveus-green hover:text-alveus-tan transition-colors px-6 py-4 rounded-full border-2 border-alveus-green"
+              href="https://www.youtube.com/watch?v=jXTqWIc--jo"
+              target="_blank"
+              rel="noreferrer"
+            >
+              Watch the Video
+            </a>
+          </div>
         </div>
-      </section>
+      </Section>
 
-      <section className="py-16 bg-alveus-tan text-alveus-green-900">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-wrap items-center">
-            <div className="basis-full md:basis-1/2">
-              {/* TODO: Image */}
-            </div>
+      <Section dark className="text-center">
+        <Heading level={2}>
+          Why Twitch.tv
+        </Heading>
+        <p>
+          Twitch offers our guests the opportunity to connect with viewers from around the globe.
+          Here are some statistics that represent Twitch and it&apos;s users:
+        </p>
 
-            <div className="basis-full md:basis-1/2">
-              <h2 className="my-2 font-serif text-3xl font-bold">
-                Watch the Launch Video
-              </h2>
-              <p className="my-2 font-serif text-lg font-bold italic">
-                The Start of it all!
-              </p>
-              <p className="my-4 text-lg">
-                Find out more about Alveus and our aims here.
-              </p>
-              {/* TODO: Lightbox */}
+        <ul className="mt-6 md:mt-12 mb-2 flex flex-wrap justify-center">
+          {Object.entries(stats).map(([ key, stat ]) => (
+            <li key={key} className="basis-full md:basis-1/3 py-4 md:px-4">
               <a
-                className="inline-block text-xl hover:bg-alveus-green hover:text-alveus-tan transition-colors px-6 py-4 rounded-full border-2 border-alveus-green"
-                href="https://www.youtube.com/watch?v=jXTqWIc--jo"
+                className="h-full flex flex-col justify-center bg-alveus-green-900 px-6 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
+                href={stat.source}
                 target="_blank"
                 rel="noreferrer"
               >
-                Watch the Video
+                <p className="text-xl text-center font-bold">{stat.title}</p>
+                <p className="my-4 text-3xl text-center font-extrabold">{stat.value}</p>
+                <p className="text-center">{stat.caption}</p>
               </a>
-            </div>
-          </div>
-        </div>
-      </section>
+            </li>
+          ))}
+        </ul>
 
-      <section className="py-16 bg-alveus-green text-alveus-tan">
-        <div className="container mx-auto px-4">
-          <h2 className="my-2 font-serif text-3xl font-bold text-center">
-            Why Twitch.tv
-          </h2>
-          <p className="text-center">
-            Twitch offers our guests the opportunity to connect with viewers from around the globe.
-            Here are some statistics that represent Twitch and it&apos;s users:
-          </p>
+        <p>
+          Click each box for source.
+        </p>
+      </Section>
 
-          <ul className="mt-6 md:mt-12 mb-2 md:mx-32 flex flex-wrap justify-center">
-            {Object.entries(stats).map(([ key, stat ]) => (
-              <li key={key} className="basis-full md:basis-1/3 py-4 md:px-4">
-                <a
-                  className="h-full flex flex-col justify-center bg-alveus-green-900 px-6 py-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
-                  href={stat.source}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <p className="text-xl text-center font-bold">{stat.title}</p>
-                  <p className="my-4 text-3xl text-center font-extrabold">{stat.value}</p>
-                  <p className="text-center">{stat.caption}</p>
-                </a>
-              </li>
-            ))}
-          </ul>
+      <Section>
+        <Heading level={2} className="text-center">
+          Views By Country
+        </Heading>
 
-          <p className="text-center">
-            Click each box for source.
-          </p>
-        </div>
-      </section>
-
-      <section>
-        <h2>Views By Country</h2>
-
-        <ul>
+        <ul className="mt-6 mb-3 flex flex-wrap justify-center">
           {Object.entries(views).map(([ key, country ]) => (
-            <li key={key}>
+            <li key={key} className="basis-full md:basis-1/2 py-2 md:px-4">
               <p>{country.name}</p>
-              <div className="w-full bg-gray-200 rounded-full dark:bg-gray-700">
+              <div className="w-full bg-alveus-green rounded-full overflow-clip">
                 <div
-                  className="bg-blue-600 text-xs font-medium text-blue-100 text-center p-0.5 leading-none rounded-full"
+                  className="bg-alveus-green-900 text-xs text-alveus-tan text-right py-2 leading-none"
                   style={{ width: `${country.value}%` }}
                 >
-                  {country.value}
-                  %
+                  <span className="px-3">
+                    {country.value}
+                    %
+                  </span>
                 </div>
               </div>
             </li>
           ))}
         </ul>
 
-        <p>
+        <p className="text-center text-xs text-gray-500">
           (Source:
           {' '}
-          <a href="https://www.similarweb.com/website/twitch.tv" target="_blank" rel="noreferrer">
+          <a
+            className="text-red-600 hover:text-blue-600 transition-colors"
+            href="https://www.similarweb.com/website/twitch.tv"
+            target="_blank"
+            rel="noreferrer"
+          >
             SimilarWeb
           </a>
           )
         </p>
-      </section>
+      </Section>
 
-      <section>
-        <p>1,000,000 Dollars Raised</p>
-        <p>Using Twitch!</p>
-      </section>
+      <Section dark className="py-24" containerClassName="flex flex-col items-center">
+        <p className="my-2 font-serif text-7xl font-bold">1,000,000 Dollars Raised</p>
+        <p className="my-2 font-serif text-4xl font-bold">Using Twitch!</p>
+        <IconTwitch size={64} className="mt-6 hover:text-alveus-green-900 transition-colors" />
+      </Section>
 
-      <section>
-        <h2>Our Collaborations</h2>
-        <p>We work with other content creators to educate our combined audiences!</p>
+      <Section className="text-center">
+        <Heading level={2}>
+          Our Collaborations
+        </Heading>
+        <p>
+          We work with other content creators to educate our combined audiences!
+        </p>
         {/* TODO: YouTube embeds */}
-      </section>
+      </Section>
 
-      <section>
-        <h2>Stay Updated!</h2>
-        <p>follow @alveussanctuary on all social platforms to keep up to date!</p>
-
-        <ul>
-          {Object.entries(socials).map(([ key, social ]) => (
-            <li key={key}>
-              <a href={social.link} target="_blank" rel="noreferrer">
-                <span>{social.title}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
+      <Socials />
     </>
   );
 };

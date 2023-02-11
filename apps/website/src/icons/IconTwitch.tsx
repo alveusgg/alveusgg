@@ -1,17 +1,23 @@
-export default function IconTwitch() {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-    >
-      <path
-        d="M2.149 0l-1.612 4.119v16.836h5.731v3.045h3.224l3.045-3.045h4.657l6.269-6.269v-14.686h-21.314zm19.164 13.612l-3.582 3.582h-5.731l-3.045 3.045v-3.045h-4.836v-15.045h17.194v11.463zm-3.582-7.343v6.262h-2.149v-6.262h2.149zm-5.731 0v6.262h-2.149v-6.262h2.149z"
-        fill="currentColor"
-        fillRule="evenodd"
-        clipRule="evenodd"
-      />
-    </svg>
-  );
-}
+import React from "react"
+
+type IconProps = {
+  size?: number;
+  className?: string;
+};
+
+const IconTwitch: React.FC<IconProps> = ({ size = 24, className }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width={size}
+    height={size}
+    viewBox="0 0 512 512"
+    className={className}
+  >
+    <path
+      fill="currentColor"
+      d="M391.17,103.47H352.54v109.7h38.63ZM285,103H246.37V212.75H285ZM120.83,0,24.31,91.42V420.58H140.14V512l96.53-91.42h77.25L487.69,256V0ZM449.07,237.75l-77.22,73.12H294.61l-67.6,64v-64H140.14V36.58H449.07Z"
+    />
+  </svg>
+);
+
+export default IconTwitch;
