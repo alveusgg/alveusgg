@@ -3,13 +3,14 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import { getSession } from "next-auth/react";
 
-import DefaultPageLayout from "../../components/DefaultPageLayout";
-import { checkIsSuperUser } from "../../utils/auth";
-import { Headline } from "../../components/shared/Headline";
 import { getNotificationsConfig } from "../../config/notifications";
-import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
 import { getChannelConfigById, getTwitchConfig } from "../../config/twitch";
+import { checkIsSuperUser } from "../../utils/auth";
 import { getSubscriptions } from "../../utils/twitch-api";
+import DefaultPageLayout from "../../components/DefaultPageLayout";
+import { Headline } from "../../components/shared/Headline";
+import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
+import { Raffles } from "../../components/admin/Raffles";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -62,10 +63,17 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
       </Head>
 
       <DefaultPageLayout title="Admin">
-        <Headline>Send a notification</Headline>
+        <div className="w-full gap-4 md:flex md:flex-row">
+          <div className="flex-1">
+            <Raffles />
+          </div>
+          <div className="flex-1">
+            <Headline>ALPHA Send a notification</Headline>
 
-        <div className="my-4 max-w-[500px] rounded-lg border bg-white p-4 shadow-xl">
-          <SendNotificationForm notificationConfig={notificationConfig} />
+            <div className="my-4 max-w-[500px] rounded-lg border bg-white p-4 shadow-xl">
+              <SendNotificationForm notificationConfig={notificationConfig} />
+            </div>
+          </div>
         </div>
 
         <div className="w-full gap-4 md:flex md:flex-row">

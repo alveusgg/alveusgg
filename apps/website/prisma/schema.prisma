@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["ReferentialIntegrity"]
+  previewFeatures = []
 }
 
 datasource db {
@@ -90,6 +90,7 @@ model User {
   sessions           Session[]
   pushSubscriptions  PushSubscription[]
   notificationPushes NotificationPush[]
+  RaffleEntry        RaffleEntry[]
 }
 
 model VerificationToken {
@@ -162,4 +163,49 @@ model PushSubscriptionTag {
   subscription   PushSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   @@unique([subscriptionId, name])
+}
+
+model MailingAddress {
+  id           String @id @default(cuid())
+  country      String
+  addressLine1 String
+  addressLine2 String
+  city         String
+  state        String
+  postalCode   String
+
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  raffleEntry RaffleEntry?
+}
+
+model Raffle {
+  id    String @id @default(cuid())
+  label String
+
+  active Boolean @default(false)
+
+  startAt DateTime  @default(now())
+  endAt   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entries RaffleEntry[]
+}
+
+model RaffleEntry {
+  id               String @id @default(cuid())
+  raffleId         String
+  userId           String
+  mailingAddressId String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  raffle         Raffle         @relation(fields: [raffleId], references: [id])
+  user           User           @relation(fields: [userId], references: [id])
+  mailingAddress MailingAddress @relation(fields: [mailingAddressId], references: [id])
+
+  @@unique([raffleId, userId])
 }

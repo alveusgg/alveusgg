@@ -88,12 +88,15 @@ export const Navbar: React.FC = () => {
             <div className="hidden flex-grow md:flex">
               <ul className="flex gap-1 lg:gap-4">
                 <li>
+                  <NavLink href="/raffles">Raffles</NavLink>
+                </li>
+                {/*
+                <li>
                   <NavLink href="/updates">Updates</NavLink>
                 </li>
                 <li>
                   <NavLink href="/live">Live</NavLink>
                 </li>
-                {/*
                 <li>
                   <NavLink href="/explore">Explore</NavLink>
                 </li>
@@ -179,8 +182,8 @@ export const Navbar: React.FC = () => {
             <div className="space-y-1 pt-2 pb-4">
               <ul className="flex flex-col gap-4">
                 <li>
-                  <Disclosure.Button as={NavLink} href="/live">
-                    Live
+                  <Disclosure.Button as={NavLink} href="/raffles">
+                    Raffles
                   </Disclosure.Button>
                 </li>
                 {/*
