@@ -5,11 +5,11 @@ import React, { useReducer } from "react";
 import { getAllData } from "../../utils/data";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
 import { Headline } from "../../components/shared/Headline";
-import { Map } from "../../components/about/Map";
-import { Ambassadors } from "../../components/about/Ambassadors";
-import { InfoDetails } from "../../components/about/InfoDetails";
-import { Enclosures } from "../../components/about/Enclosures";
-import { Facilities } from "../../components/about/Facilities";
+import { Map } from "../../components/explore/Map";
+import { Ambassadors } from "../../components/explore/Ambassadors";
+import { InfoDetails } from "../../components/explore/InfoDetails";
+import { Enclosures } from "../../components/explore/Enclosures";
+import { Facilities } from "../../components/explore/Facilities";
 import { LinkBox } from "../../components/shared/LinkBox";
 
 export type AboutPageProps = InferGetStaticPropsType<typeof getStaticProps>;
