@@ -25,7 +25,7 @@ const Raffle: React.FC<{ raffle: RaffleWithCount }> = ({ raffle }) => {
           <div>
             <Link
               className="underline"
-              href={`/raffles/${raffle.id}`}
+              href={`/raffles/${raffle.slug || raffle.id}`}
               target="_blank"
             >
               Show entry form &rarr;

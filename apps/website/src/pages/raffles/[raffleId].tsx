@@ -22,8 +22,8 @@ export const getServerSideProps: GetServerSideProps<{
   existingEntry: RaffleEntry | null;
 }> = async (context) => {
   // Check params
-  const raffleId = context.params?.raffleId;
-  if (typeof raffleId !== "string") {
+  const raffleSlugOrId = context.params?.raffleId;
+  if (typeof raffleSlugOrId !== "string") {
     return {
       notFound: true,
     };
@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps<{
   // Find the raffle
   const raffle = await prisma.raffle.findFirst({
     where: {
-      id: raffleId,
+      OR: [{ id: raffleSlugOrId }, { slug: raffleSlugOrId }],
     },
   });
   if (!raffle) {
@@ -49,7 +49,7 @@ export const getServerSideProps: GetServerSideProps<{
       where: {
         raffleId_userId: {
           userId: session.user.id,
-          raffleId: raffleId,
+          raffleId: raffle.id,
         },
       },
     });

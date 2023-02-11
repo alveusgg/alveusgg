@@ -35,7 +35,7 @@ const RafflesPage: NextPage<RafflesPageProps> = ({ raffles }) => {
       <DefaultPageLayout title="Raffles">
         {raffles.map((raffle) => {
           return (
-            <a href={`/raffles/${raffle.id}`} key={raffle.id}>
+            <a href={`/raffles/${raffle.slug || raffle.id}`} key={raffle.id}>
               {raffle.label} &rarr;
             </a>
           );

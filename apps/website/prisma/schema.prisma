@@ -180,11 +180,10 @@ model MailingAddress {
 }
 
 model Raffle {
-  id    String @id @default(cuid())
-  label String
-
-  active Boolean @default(false)
-
+  id      String    @id @default(cuid())
+  label   String
+  slug    String?
+  active  Boolean   @default(false)
   startAt DateTime  @default(now())
   endAt   DateTime?
 
