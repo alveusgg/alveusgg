@@ -5,13 +5,14 @@ import type { Raffle, RaffleEntry } from "@prisma/client";
 
 import twitterIcon from "simple-icons/icons/twitter.svg";
 import youtubeIcon from "simple-icons/icons/youtube.svg";
-//import twitchIcon from "simple-icons/icons/twitch.svg";
+import twitchIcon from "simple-icons/icons/twitch.svg";
 //import instagramIcon from "simple-icons/icons/instagram.svg";
 //import tiktokIcon from "simple-icons/icons/tiktok.svg";
 
 import { trpc } from "../utils/trpc";
 
 import { Headline } from "./shared/Headline";
+import IconTwitch from "../icons/IconTwitch";
 
 export const Icon: React.FC<{ src: string; alt?: string }> = ({
   src,
@@ -46,13 +47,16 @@ export const RaffleEntryForm: React.FC<{
   if (!session?.user?.id) {
     return (
       <div className="rounded-lg bg-white p-2 shadow-xl">
-        <p>You need to be logged in with Twitch to enter the raffle.</p>
+        <p className="mb-4">
+          You need to be logged in with Twitch to enter the raffle.
+        </p>
 
         <button
-          className="px-5 font-semibold text-white no-underline transition hover:bg-black/20"
+          className="flex w-full flex-row justify-center gap-2 rounded-xl bg-[#6441a5] p-3 text-center font-semibold text-white no-underline"
           onClick={() => signIn("twitch")}
         >
-          Log in
+          <IconTwitch />
+          <span>Log in</span>
         </button>
       </div>
     );
