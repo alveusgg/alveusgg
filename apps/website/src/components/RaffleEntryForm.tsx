@@ -1,15 +1,21 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import Image from "next/image";
 import { signIn, useSession } from "next-auth/react";
 import type { Raffle, RaffleEntry } from "@prisma/client";
+import Link from "next/link";
 
+import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import twitterIcon from "simple-icons/icons/twitter.svg";
 import youtubeIcon from "simple-icons/icons/youtube.svg";
-import twitchIcon from "simple-icons/icons/twitch.svg";
-//import instagramIcon from "simple-icons/icons/instagram.svg";
-//import tiktokIcon from "simple-icons/icons/tiktok.svg";
+import instagramIcon from "simple-icons/icons/instagram.svg";
+import tiktokIcon from "simple-icons/icons/tiktok.svg";
 
 import { trpc } from "../utils/trpc";
+import {
+  DEFAULT_COUNTRY_CODE,
+  commonCountries,
+  otherCountries,
+} from "../utils/countries";
 
 import { Headline } from "./shared/Headline";
 import IconTwitch from "../icons/IconTwitch";
@@ -18,6 +24,67 @@ export const Icon: React.FC<{ src: string; alt?: string }> = ({
   src,
   alt = "",
 }) => <Image className="h-8 w-8" src={src} alt={alt} />;
+
+const RaffleCheck: React.FC<{
+  name: string;
+  label: string;
+  children: React.ReactNode;
+  url?: string;
+}> = ({ name, label, children, url }) => {
+  const [isClicked, setIsClicked] = useState(false);
+
+  const needsToBeClicked = url !== undefined;
+
+  const handleClick = useCallback(() => {
+    // Wait at least 2 seconds before allowing to check the checkmark
+    setTimeout(() => setIsClicked(true), 1000);
+  }, []);
+
+  const id = `raffle-req-${name}`;
+  const containerClasses =
+    "flex flex-row rounded border border-gray-200 bg-white shadow-xl";
+  const disabled = needsToBeClicked && !isClicked;
+  const content = (
+    <>
+      <span className="flex flex-1 flex-row items-center gap-5 p-5">
+        {children}
+      </span>
+      <label
+        htmlFor={id}
+        className={`flex flex-row items-center ${
+          disabled ? "bg-gray-200" : "bg-white"
+        }  px-5`}
+      >
+        <span className="sr-only">{label}</span>
+        <input
+          id={id}
+          name={`req-${name}`}
+          value="yes"
+          type="checkbox"
+          disabled={disabled}
+          defaultChecked={needsToBeClicked && isClicked}
+          required={true}
+        />
+      </label>
+    </>
+  );
+
+  if (needsToBeClicked) {
+    return (
+      <Link
+        rel="noreferrer"
+        target="_blank"
+        onClick={handleClick}
+        href={url}
+        className={`${containerClasses} underline`}
+      >
+        {content}
+      </Link>
+    );
+  } else {
+    return <div className={containerClasses}>{content}</div>;
+  }
+};
 
 export const RaffleEntryForm: React.FC<{
   raffle: Raffle;
@@ -38,7 +105,10 @@ export const RaffleEntryForm: React.FC<{
         familyName: String(data.get("family-name")),
         addressLine1: String(data.get("address-line1")),
         addressLine2: String(data.get("address-line2")),
-        // country, state, postal code etc.
+        country: String(data.get("country")),
+        state: String(data.get("state")),
+        city: String(data.get("city")),
+        postalCode: String(data.get("postal-code")),
       });
     },
     [enterRaffle, raffle.id]
@@ -89,56 +159,95 @@ export const RaffleEntryForm: React.FC<{
       <Headline>Steps to enter</Headline>
 
       <div className="flex flex-col gap-5">
-        <div className="flex flex-row rounded border border-gray-200 bg-white p-5 shadow-xl">
-          <label
-            htmlFor="raffle-req-twitter"
-            className="flex flex-1 flex-row items-center gap-5"
-          >
-            <Icon src={twitterIcon} />
-            <span>Follow @AlveusSanctuary on Twitter</span>
-          </label>
-          <input
-            id="raffle-req-twitter"
-            name="req-twitter"
-            value="yes"
-            type="checkbox"
-            required={true}
-          />
-        </div>
+        <RaffleCheck name="twitter" label="Follow @AlveusSanctuary on Twitter">
+          <Icon src={twitterIcon} />
+          <span>
+            Follow{" "}
+            <Link
+              className="underline"
+              href="https://twitter.com/AlveusSanctuary"
+              rel="noreferrer"
+              target="_blank"
+            >
+              @AlveusSanctuary on Twitter
+            </Link>
+          </span>
+        </RaffleCheck>
 
-        <div className="flex flex-row rounded border border-gray-200 bg-white p-5 shadow-xl">
-          <label
-            htmlFor="raffle-req-yt-main"
-            className="flex flex-1 flex-row items-center gap-5"
-          >
-            <Icon src={youtubeIcon} />
-            <span>Subscribe to AlveusSanctuary on YouTube</span>
-          </label>
-          <input
-            id="raffle-req-yt-main"
-            name="req-yt-main"
-            value="yes"
-            type="checkbox"
-            required={true}
-          />
-        </div>
+        <RaffleCheck
+          name="yt-main"
+          label="Subscribe to AlveusSanctuary on YouTube"
+        >
+          <Icon src={youtubeIcon} />
+          <span>
+            Subscribe to{" "}
+            <Link
+              className="underline"
+              href="https://www.youtube.com/alveussanctuary?sub_confirmation=1"
+              rel="noreferrer"
+              target="_blank"
+            >
+              AlveusSanctuary on YouTube
+            </Link>
+          </span>
+        </RaffleCheck>
 
-        <div className="flex flex-row rounded border border-gray-200 bg-white p-5 shadow-xl">
-          <label
-            htmlFor="raffle-req-yt-clips"
-            className="flex flex-1 flex-row items-center gap-5"
-          >
-            <Icon src={youtubeIcon} />
-            <span>Subscribe to @AlveusSanctuaryHighlights on YouTube</span>
-          </label>
-          <input
-            id="raffle-req-yt-clips"
-            name="req-yt-clips"
-            value="yes"
-            type="checkbox"
-            required={true}
-          />
-        </div>
+        <RaffleCheck
+          name="yt-clips"
+          label="Subscribe to AlveusSanctuaryHighlights on YouTube"
+        >
+          <Icon src={youtubeIcon} />
+          <span>
+            Subscribe to{" "}
+            <Link
+              className="underline"
+              href="https://www.youtube.com/@alveussanctuaryhighlights?sub_confirmation=1"
+              rel="noreferrer"
+              target="_blank"
+            >
+              AlveusSanctuaryHighlights on YouTube
+            </Link>
+          </span>
+        </RaffleCheck>
+
+        <RaffleCheck name="ig" label="Follow @alveussanctuary on Instagram">
+          <Icon src={instagramIcon} />
+          <span>
+            Follow{" "}
+            <Link
+              className="underline"
+              href="https://www.instagram.com/alveussanctuary/"
+              rel="noreferrer"
+              target="_blank"
+            >
+              @alveussanctuary on Instagram
+            </Link>
+          </span>
+        </RaffleCheck>
+
+        <RaffleCheck name="tiktok" label="Follow @alveussanctuary on TikTok">
+          <Icon src={tiktokIcon} />
+          <span>
+            Follow{" "}
+            <Link
+              className="underline"
+              href="https://www.tiktok.com/@alveussanctuary"
+              rel="noreferrer"
+              target="_blank"
+            >
+              @alveussanctuary on TikTok
+            </Link>
+          </span>
+        </RaffleCheck>
+
+        <RaffleCheck
+          name="website"
+          url="https://alveussanctuary.org/"
+          label="Visit our Website"
+        >
+          <GlobeAltIcon className="h-8 w-8" />
+          <span>Visit our Website</span>
+        </RaffleCheck>
       </div>
 
       <Headline>Enter your details</Headline>
@@ -175,10 +284,10 @@ export const RaffleEntryForm: React.FC<{
         </div>
       </fieldset>
 
-      <fieldset className="mt-5">
+      <fieldset className="mt-3">
         <legend className="mb-2 font-bold">Shipping address</legend>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-2">
           <label className="flex-1">
             Street Address
             <br />
@@ -200,14 +309,102 @@ export const RaffleEntryForm: React.FC<{
               name="address-line2"
               type="text"
               autoComplete="address-line2"
+            />
+          </label>
+        </div>
+
+        <div className="mt-3 flex flex-col gap-5 md:flex-row">
+          <label className="flex-1">
+            City
+            <br />
+            <input
+              className="w-full rounded-sm border border-gray-700 bg-white p-1"
+              name="city"
+              type="text"
+              autoComplete="address-level2"
+              required={true}
+              minLength={1}
+            />
+          </label>
+
+          <label className="flex-1">
+            ZIP / Postal Code
+            <br />
+            <input
+              className="w-full rounded-sm border border-gray-700 bg-white p-1"
+              name="postal-code"
+              type="text"
+              autoComplete="postal-code"
               required={true}
               minLength={1}
             />
           </label>
         </div>
+
+        <div className="mt-3 flex flex-col gap-5 md:flex-row">
+          <label className="flex-1">
+            State / Province / Region
+            <br />
+            <input
+              className="w-full rounded-sm border border-gray-700 bg-white p-1"
+              name="state"
+              type="text"
+              autoComplete="address-level1"
+              required={true}
+              minLength={1}
+            />
+          </label>
+
+          <label className="flex-1">
+            Country
+            <br />
+            <select
+              className="w-full rounded-sm border border-gray-700 bg-white p-1"
+              name="country"
+              autoComplete="country"
+              required={true}
+            >
+              <optgroup>
+                {commonCountries.map((country) => (
+                  <option
+                    key={country.code}
+                    value={country.code}
+                    defaultChecked={country.code === DEFAULT_COUNTRY_CODE}
+                  >
+                    {country.name}
+                  </option>
+                ))}
+              </optgroup>
+              <optgroup>
+                {otherCountries.map((country) => (
+                  <option key={country.code} value={country.code}>
+                    {country.name}
+                  </option>
+                ))}
+              </optgroup>
+            </select>
+          </label>
+        </div>
       </fieldset>
 
-      <div className="mt-5">
+      <fieldset className="mt-3">
+        <legend className="mb-2 font-bold">Rules</legend>
+        <label className="flex flex-row gap-3">
+          <input type="checkbox" required={true} />
+          <span>
+            I agree to the{" "}
+            <Link
+              className="underline"
+              href={`/raffles/${raffle.slug || raffle.id}/rules`}
+              target="_blank"
+            >
+              Official Rules
+            </Link>
+          </span>
+        </label>
+      </fieldset>
+
+      <div className="mt-7">
         <button
           type="submit"
           className="block w-full rounded-lg bg-gray-600 p-4 text-white"

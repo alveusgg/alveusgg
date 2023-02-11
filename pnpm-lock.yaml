@@ -25,6 +25,7 @@ importers:
       '@trpc/next': ^10.10.0
       '@trpc/react-query': ^10.10.0
       '@trpc/server': ^10.10.0
+      '@types/country-list': ^2.1.1
       '@types/geojson': ^7946.0.10
       '@types/jws': ^3.2.5
       '@types/lodash': ^4.14.191
@@ -38,6 +39,7 @@ importers:
       '@typescript-eslint/eslint-plugin': ^5.51.0
       '@typescript-eslint/parser': ^5.51.0
       autoprefixer: ^10.4.13
+      country-list: ^2.3.0
       csv-stringify: ^6.2.4
       date-fns: ^2.29.3
       eslint: ^8.33.0
@@ -86,6 +88,7 @@ importers:
       '@trpc/next': 10.10.0_kbkd76tlfcuvwudsxc7zs57mfe
       '@trpc/react-query': 10.10.0_5mhyv2iryamqlilh5gtjpyz23q
       '@trpc/server': 10.10.0
+      country-list: 2.3.0
       csv-stringify: 6.2.4
       date-fns: 2.29.3
       i18next: 22.4.9
@@ -113,6 +116,7 @@ importers:
       zod: 3.20.6
     devDependencies:
       '@babel/core': 7.20.12
+      '@types/country-list': 2.1.1
       '@types/geojson': 7946.0.10
       '@types/jws': 3.2.5
       '@types/lodash': 4.14.191
@@ -1980,6 +1984,10 @@ packages:
     resolution: {integrity: sha512-tCTqcqBT+3nebYFTHtwM877qo5xQPtVlptxKdUzMVWleWT4lFTL4oddk45qVURToci2iMbVJjd4jQU9y9/XwlQ==}
     dev: false
 
+  /@types/country-list/2.1.1:
+    resolution: {integrity: sha512-maNkQzgLbyoi5mwwAL0KCb6l5/rn02N9y/CIBf4AYPrJ0pU2AvUTQ5LOw6GA4AAPrtiL44LWiwXzybUAUUYA3Q==}
+    dev: true
+
   /@types/eslint-scope/3.7.4:
     resolution: {integrity: sha512-9K4zoImiZc3HlIp6AVUDE4CWYx22a+lhSZMYNpbjW04+YF0KWj4pJXnEMjdnFTiQibFFmElcsasJXDbdI/EPhA==}
     dependencies:
@@ -2846,6 +2854,10 @@ packages:
   /core-js/3.27.2:
     resolution: {integrity: sha512-9ashVQskuh5AZEZ1JdQWp1GqSoC1e1G87MzRqg2gIfVAQ7Qn9K+uFj8EcniUFA4P2NLZfV+TOlX1SzoKfo+s7w==}
     requiresBuild: true
+    dev: false
+
+  /country-list/2.3.0:
+    resolution: {integrity: sha512-qZk66RlmQm7fQjMYWku1AyjlKPogjPEorAZJG88owPExoPV8EsyCcuFLvO2afTXHEhi9liVOoyd+5A6ZS5QwaA==}
     dev: false
 
   /cross-spawn/6.0.5:

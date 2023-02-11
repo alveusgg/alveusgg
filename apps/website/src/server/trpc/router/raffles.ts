@@ -1,17 +1,19 @@
-import { router, protectedProcedure } from "../trpc";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-export type RaffleEntry = z.infer<typeof raffleEntrySchema>;
+import { isValidCountryCode } from "../../../utils/countries";
+import { router, protectedProcedure } from "../trpc";
 
 export const raffleEntrySchema = z.object({
-  raffleId: z.string(),
-  givenName: z.string(),
-  familyName: z.string(),
-  addressLine1: z.string(),
-  addressLine2: z.string(),
-  // country, state, postal code etc.
-  // TODO: check if country is in country list?!
+  raffleId: z.string().cuid(),
+  givenName: z.string().min(1),
+  familyName: z.string().min(1),
+  addressLine1: z.string().min(1),
+  addressLine2: z.string(), // second address line may be empty
+  postalCode: z.string().min(1),
+  city: z.string().min(1),
+  country: z.custom<string>(isValidCountryCode),
+  state: z.string(), // state may be left empty
 });
 
 export const rafflesRouter = router({
@@ -67,10 +69,10 @@ export const rafflesRouter = router({
             create: {
               addressLine1: input.addressLine1,
               addressLine2: input.addressLine2,
-              city: "Austin", // TODO
-              state: "Texas", // TODO
-              postalCode: "1234", // TODO
-              country: "USA", // TODO
+              city: input.city,
+              state: input.state,
+              postalCode: input.postalCode,
+              country: input.country,
             },
           },
         },
