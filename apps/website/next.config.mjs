@@ -43,6 +43,31 @@ const config = {
       destination: "/live/",
       permanent: false,
     },
+    {
+      source: "/smile",
+      destination: "https://smile.amazon.com/ch/86-1772907",
+      permanent: true,
+    },
+    {
+      source: "/merch",
+      destination: "https://merch.streamelements.com/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/plushies",
+      destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/wishlist",
+      destination: "https://smile.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
+      permanent: true,
+    },
+    {
+      source: "/paypal",
+      destination: "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
+      permanent: true,
+    },
   ],
   headers: async () => [
     {

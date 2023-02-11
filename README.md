@@ -4,8 +4,8 @@ This is a work-in-progress community page around the Alveus Sanctuary twitch str
 currently hosted at https://www.alveus.gg/.
 
 Main ideas:
-- Content focused hub for viewers (new and old) independent of the platforms (twitch/youtube/instagram), while the official 
-    website can be the official presentation of the Sanctuary not only towards viewer but also industry and other 
+- Content focused hub for viewers (new and old) independent of the platforms (twitch/youtube/instagram), while the official
+    website can be the official presentation of the Sanctuary not only towards viewer but also industry and other
     interested parties.
 - Possible Features:
   - Notifications for on-stream and off-stream content (stream segment changes, video releases, ig posts). #1
@@ -38,26 +38,25 @@ TODO
 
 TODO
 
-### Prerequisites 
+### Prerequisites
 
-1. Create a [twitch extension](https://dev.twitch.tv/console/extensions/create), note down your Client ID and Client Secret
-    - TODO: Set up OAuth callback
+1. Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
 2. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) and [Cookiebot keys](https://www.cookiebot.com/) if you want those
 
 
 ### Local development
 
-0. Install Node.js v16 and pnpm
-1. Install dependencies: `pnpm install`
-2. Create a [Planetscale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
-3. Copy `apps/website/.env.example` to `apps/website/.env`
+1. Install Node.js v16 and pnpm
+2. Install dependencies: `pnpm install`
+3. Create a [Planetscale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
+4. Copy `apps/website/.env.example` to `apps/website/.env`
     - Fill the Prisma section with the database info (DSN)
     - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
     - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
-    - You may define priveleged user once they have signed in in the `SUPER_USER_IDS` variable
-4. Push the database schema to the new database using `npx prisma db push`.
-4. Start the dev server: `pnpm run -r dev`
-5. The website should be running at `http://localhost:3000/` (open in browser)
+    - You may define privileged user once they have signed in via the `SUPER_USER_IDS` variable
+5. Push the database schema to the new database using `npx prisma db push` from within `apps/website`.
+6. Start the dev server: `pnpm run -r dev`
+7. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Also see [T3 Stack](https://create.t3.gg/)
 - Use `npx prisma studio` to view your database

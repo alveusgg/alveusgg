@@ -3,7 +3,7 @@ import React, { Fragment } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import type { Ambassadors, Enclosures, Facilities } from "../../utils/data";
-import { ptSans, ptSerif } from "../Layout";
+import { ptSans, ptSerif } from "../layout/Layout";
 import type { SelectionAction, SelectionState } from "../../pages/wip/explore";
 import { AmbassadorContent } from "./details/AmbassadorContent";
 import { EnclosureContent } from "./details/EnclosureContent";

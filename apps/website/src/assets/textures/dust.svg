@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 5000 5000">
+  <defs>
+    <path d="M225,223C233,215 245,211 257,214C267,238 271,253 274,279L219,270L225,223z" id="P0"></path>
+    <path d="M253,262L239,244L252,238L261,256L253,262z" id="P1"></path>
+    <path d="M224,240Q247,208 274,235Q291,258 265,274C254,264 251,265 243,277L224,240z" id="P2"></path>
+    <path d="M240,234L266,240L265,262L236,263L240,234z" id="P3"></path>
+    <path d="M262,280Q219,287 218,248L221,236C245,232 261,235 282,250C282,262 275,273 262,280z" id="P4"></path>
+    <path d="M264,252L245,263L237,246L261,242L264,252z" id="P5"></path>
+  </defs>
+  <g id="group" fill="#FFF">
+    <use x="-131" y="217" href="#P0"></use>
+    <use x="-209" y="1911" href="#P3"></use>
+    <use x="-60" y="2853" href="#P4"></use>
+    <use x="-91" y="3976" href="#P0"></use>
+    <use x="237" y="4855" href="#P4"></use>
+    <use x="2164" y="697" href="#P5"></use>
+    <use x="1527" y="1220" href="#P5"></use>
+    <use x="1495" y="2530" href="#P3"></use>
+    <use x="2269" y="3538" href="#P3"></use>
+    <use x="1401" y="4904" href="#P4"></use>
+    <use x="3272" y="-37" href="#P4"></use>
+    <use x="2822" y="1867" href="#P0"></use>
+    <use x="3461" y="2868" href="#P4"></use>
+    <use x="3166" y="3644" href="#P5"></use>
+    <use x="2860" y="4890" href="#P5"></use>
+    <use x="4832" y="-196" href="#P1"></use>
+    <use x="3940" y="1135" href="#P5"></use>
+    <use x="5083" y="2668" href="#P5"></use>
+    <use x="3938" y="3222" href="#P4"></use>
+    <use x="5168" y="5054" href="#P0"></use>
+  </g>
+</svg>

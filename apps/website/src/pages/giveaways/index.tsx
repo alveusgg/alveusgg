@@ -4,6 +4,9 @@ import type { Giveaway } from "@prisma/client";
 import React from "react";
 import { prisma } from "../../server/db/client";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
+import Section from "../../components/content/Section"
+import Heading from "../../components/content/Heading"
+import Link from "next/link"
 
 export type GiveawaysPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -33,18 +36,28 @@ const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
         <title>Alveus Giveaways | Alveus.gg</title>
       </Head>
 
-      <DefaultPageLayout title="Giveaways">
-        {giveaways.map((giveaway) => {
-          return (
-            <a
-              href={`/giveaways/${giveaway.slug || giveaway.id}`}
-              key={giveaway.id}
-            >
-              {giveaway.label} &rarr;
-            </a>
-          );
-        })}
-      </DefaultPageLayout>
+      <Section className="flex-grow">
+        <header>
+          <Heading className="my-3 text-3xl">Giveaways</Heading>
+        </header>
+
+        <ul>
+          {giveaways.map(giveaway => (
+            <li key={giveaway.id}>
+              <Link
+                className="group hover:text-alveus-green transition-colors"
+                href={`/giveaways/${giveaway.slug || giveaway.id}`}
+              >
+                {giveaway.label}
+                {' '}
+                <span className="inline-block group-hover:translate-x-1 transition-transform">
+                  &rarr;
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </Section>
     </>
   );
 };

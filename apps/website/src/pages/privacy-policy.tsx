@@ -1,10 +1,11 @@
 import { type NextPage } from "next";
 import Head from "next/head";
-
-import DefaultPageLayout from "../components/DefaultPageLayout";
-import { Headline } from "../components/shared/Headline";
-import { env } from "../env/client.mjs";
 import React from "react";
+
+import { env } from "../env/client.mjs";
+import { Headline } from "../components/shared/Headline";
+import Section from "../components/content/Section";
+import Heading from "../components/content/Heading";
 
 const Home: NextPage = () => {
   return (
@@ -13,7 +14,11 @@ const Home: NextPage = () => {
         <title>Contact / Privacy Policy - Alveus.gg</title>
       </Head>
 
-      <DefaultPageLayout title="Contact / Privacy Policy">
+      <Section className="flex-grow">
+        <header>
+          <Heading className="my-3 text-3xl">Contact / Privacy Policy</Heading>
+        </header>
+
         <Headline>Contact</Headline>
 
         <p>
@@ -214,7 +219,7 @@ const Home: NextPage = () => {
           encourage you to contact us immediately and we will do our best
           efforts to promptly remove such information from our records.
         </p>
-      </DefaultPageLayout>
+      </Section>
     </>
   );
 };

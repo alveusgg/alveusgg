@@ -2,9 +2,9 @@ import React from "react";
 import { PT_Sans, PT_Serif } from "@next/font/google";
 import Head from "next/head";
 
-import { env } from "../env/client.mjs";
-import { Navbar } from "./Navbar";
-import { Footer } from "./Footer";
+import { env } from "../../env/client.mjs";
+import { Navbar } from "./navbar/Navbar";
+import { Footer } from "./footer/Footer";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -70,10 +70,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </Head>
 
       <div
-        className={`flex h-full min-h-[100vh] flex-col bg-gray-300 ${ptSans.variable} ${ptSerif.variable} font-sans`}
+        className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${ptSans.variable} ${ptSerif.variable} font-sans`}
       >
         <Navbar />
-        <main className="flex-grow">{children}</main>
+        <main className="flex flex-col flex-grow z-0">{children}</main>
         <Footer />
       </div>
     </>

@@ -17,7 +17,7 @@ import {
 } from "../../components/shared/LinkBox";
 //import { getAmbassadorsData } from "../utils/data";
 //import { CardSwiper } from "../components/shared/CardSwiper";
-//import { AmbassadorCard } from "../components/about/AmbassadorCard";
+//import { AmbassadorCard } from "../components/explore/AmbassadorCard";
 //import { WeatherInfo } from "../components/WeatherInfo";
 //import { TimeInfo } from "../components/TimeInfo";
 //import { getWeatherData } from "../utils/weather-data";

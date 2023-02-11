@@ -7,8 +7,8 @@ import type {
 import Head from "next/head";
 import type { Giveaway } from "@prisma/client";
 
-import DefaultPageLayout from "../../../components/DefaultPageLayout";
-import { Headline } from "../../../components/shared/Headline";
+import Heading from "../../../components/content/Heading";
+import Section from "../../../components/content/Section";
 import { prisma } from "../../../server/db/client";
 
 async function findActiveGiveaway(giveawaySlugOrId: string) {
@@ -56,25 +56,26 @@ export const getServerSideProps: GetServerSideProps<{
 const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway }) => (
   <>
     <Head>
-      <title>{`Rules ${giveaway.label} | Alveus.gg`}</title>
+      <title>{`Rules - ${giveaway.label} | Alveus.gg`}</title>
     </Head>
 
-    <DefaultPageLayout title={giveaway.label}>
-      <div className="max-w-[500px]">
-        <Headline>Rules</Headline>
-        <p>
-          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-          nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
-          sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
-          rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
-          ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-          sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
-          dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam
-          et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
-          takimata sanctus est Lorem ipsum dolor sit amet.
-        </p>
-      </div>
-    </DefaultPageLayout>
+    <Section className="flex-grow" containerClassName="max-w-lg">
+      <header>
+        <Heading className="my-3 text-3xl">Rules - {giveaway.label}</Heading>
+      </header>
+
+      <p>
+        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+        eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam
+        voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+        clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit
+        amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
+        nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+        sed diam voluptua. At vero eos et accusam et justo duo dolores et ea
+        rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem
+        ipsum dolor sit amet.
+      </p>
+    </Section>
   </>
 );
 
