@@ -10,8 +10,9 @@ import type { Giveaway, GiveawayEntry } from "@prisma/client";
 
 import { prisma } from "../../../server/db/client";
 
-import DefaultPageLayout from "../../../components/DefaultPageLayout";
 import { GiveawayEntryForm } from "../../../components/giveaway/GiveawayEntryForm";
+import Heading from "../../../components/content/Heading";
+import Section from "../../../components/content/Section";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -79,11 +80,13 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({
       <title>{`${giveaway.label} | Alveus.gg`}</title>
     </Head>
 
-    <DefaultPageLayout title={giveaway.label}>
-      <div className="max-w-[500px]">
-        <GiveawayEntryForm giveaway={giveaway} existingEntry={existingEntry} />
-      </div>
-    </DefaultPageLayout>
+    <Section className="flex-grow" containerClassName="max-w-lg">
+      <header>
+        <Heading className="my-3 text-3xl">{giveaway.label}</Heading>
+      </header>
+
+      <GiveawayEntryForm giveaway={giveaway} existingEntry={existingEntry} />
+    </Section>
   </>
 );
 
