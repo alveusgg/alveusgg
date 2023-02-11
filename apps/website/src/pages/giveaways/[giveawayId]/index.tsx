@@ -8,10 +8,10 @@ import Head from "next/head";
 import { getSession } from "next-auth/react";
 import type { Giveaway, GiveawayEntry } from "@prisma/client";
 
-import { prisma } from "../../server/db/client";
+import { prisma } from "../../../server/db/client";
 
-import DefaultPageLayout from "../../components/DefaultPageLayout";
-import { GiveawayEntryForm } from "../../components/GiveawayEntryForm";
+import DefaultPageLayout from "../../../components/DefaultPageLayout";
+import { GiveawayEntryForm } from "../../../components/GiveawayEntryForm";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -63,23 +63,18 @@ export const getServerSideProps: GetServerSideProps<{
 const GiveawayPage: NextPage<GiveawayPageProps> = ({
   giveaway,
   existingEntry,
-}) => {
-  return (
-    <>
-      <Head>
-        <title>Alveus Giveaway {giveaway.label} | Alveus.gg</title>
-      </Head>
+}) => (
+  <>
+    <Head>
+      <title>{`${giveaway.label} | Alveus.gg`}</title>
+    </Head>
 
-      <DefaultPageLayout title={giveaway.label}>
-        <div className="max-w-[500px]">
-          <GiveawayEntryForm
-            giveaway={giveaway}
-            existingEntry={existingEntry}
-          />
-        </div>
-      </DefaultPageLayout>
-    </>
-  );
-};
+    <DefaultPageLayout title={giveaway.label}>
+      <div className="max-w-[500px]">
+        <GiveawayEntryForm giveaway={giveaway} existingEntry={existingEntry} />
+      </div>
+    </DefaultPageLayout>
+  </>
+);
 
 export default GiveawayPage;
