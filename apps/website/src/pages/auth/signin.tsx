@@ -5,7 +5,7 @@ import type {
 } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { getProviders, getSession, signIn, useSession } from "next-auth/react";
+import { getProviders, getSession, signIn } from "next-auth/react";
 import { useTranslation } from "next-i18next";
 import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
@@ -13,7 +13,6 @@ import { XCircleIcon } from "@heroicons/react/20/solid";
 
 import nextI18nConfig from "../../../next-i18next.config.mjs";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
-import { Headline } from "../../components/shared/Headline";
 
 export type SigninPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
