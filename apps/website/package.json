@@ -11,7 +11,8 @@
     "dev": "run-p dev:*",
     "postinstall": "prisma generate",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "vercel-build": "prisma generate && prisma migrate deploy && pnpm run build"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.10",
