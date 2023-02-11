@@ -6,6 +6,7 @@ import IconInstagram from "../../icons/IconInstagram"
 import IconTikTok from "../../icons/IconTikTok"
 import IconTwitter from "../../icons/IconTwitter"
 import IconYouTube from "../../icons/IconYouTube"
+import socialsImage from "../../assets/socials.png"
 
 const socials = {
   instagram: {
@@ -36,13 +37,14 @@ const socials = {
 };
 
 const Socials = () => (
-  <Section dark>
+  <Section dark className="pb-0">
     <div className="flex flex-wrap-reverse items-center">
-      <div className="basis-full md:basis-1/2">
-        {/* TODO: Image */}
+      <div className="basis-full md:basis-1/2 md:px-32">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={socialsImage.src} alt="" className="w-full" />
       </div>
 
-      <div className="basis-full md:basis-1/2">
+      <div className="basis-full md:basis-1/2 pb-16 md:py-4">
         <Heading level={2}>
           Stay Updated!
         </Heading>

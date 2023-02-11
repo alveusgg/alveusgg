@@ -184,8 +184,6 @@ const AboutAlveusPage: NextPage = () => {
         </p>
         {/* TODO: YouTube embeds */}
       </Section>
-
-      <Socials />
     </>
   );
 };
