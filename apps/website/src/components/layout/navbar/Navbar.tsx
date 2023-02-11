@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
   return (
     <Disclosure
       as="header"
-      className="relative bg-gray-800 text-white shadow-md"
+      className="relative bg-gray-800 text-white shadow-md z-10"
     >
       {({ open }) => (
         <>

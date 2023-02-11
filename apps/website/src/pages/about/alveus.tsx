@@ -5,7 +5,10 @@ import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
 import IconTwitch from "../../icons/IconTwitch"
 import mayaImage from "../../assets/maya.png";
-import maya from "./maya"
+import leafRightImage1 from "../../assets/floral/leaf-right-1.png"
+import leafRightImage2 from "../../assets/floral/leaf-right-2.png"
+import leafLeftImage1 from "../../assets/floral/leaf-left-1.png"
+import leafLeftImage2 from "../../assets/floral/leaf-left-2.png"
 
 const stats = {
   averageTime: {
@@ -61,49 +64,69 @@ const AboutAlveusPage: NextPage = () => {
         <meta name="robots" content="noindex" />
       </Head>
 
-      <Section dark className="py-24">
-        <Heading level={1}>
-          About Alveus Sanctuary
-        </Heading>
-        <p className="text-lg">
-          Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a
-          virtual education center facility to provide permanent homes to non-releasable exotic animals.
-        </p>
-      </Section>
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={leafRightImage1.src}
+          alt=""
+          className="hidden lg:block absolute z-10 -bottom-24 right-0 w-1/2 max-w-md"
+        />
 
-      <Section>
-        <div className="flex flex-wrap-reverse items-center">
-          <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pr-8">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={mayaImage.src}
-              alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-              className="w-full max-w-lg mx-auto"
-            />
-          </div>
-
-          <div className="basis-full md:basis-1/2">
-            <Heading level={2}>
-              Watch the Launch Video
+        <Section dark className="py-24">
+          <div className="w-full lg:w-3/5">
+            <Heading level={1}>
+              About Alveus Sanctuary
             </Heading>
-            <p className="my-2 font-serif text-lg font-bold italic">
-              The Start of it all!
+            <p className="text-lg">
+              Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a
+              virtual education center facility to provide permanent homes to non-releasable exotic animals.
             </p>
-            <p className="my-4 text-lg">
-              Find out more about Alveus and our aims here.
-            </p>
-            {/* TODO: Lightbox */}
-            <a
-              className="inline-block text-xl hover:bg-alveus-green hover:text-alveus-tan transition-colors px-6 py-4 rounded-full border-2 border-alveus-green"
-              href="https://www.youtube.com/watch?v=jXTqWIc--jo"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Watch the Video
-            </a>
           </div>
-        </div>
-      </Section>
+        </Section>
+      </div>
+
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={leafLeftImage1.src}
+          alt=""
+          className="hidden lg:block absolute z-10 -bottom-24 left w-1/2 max-w-[12rem]"
+        />
+
+        <Section>
+          <div className="flex flex-wrap-reverse items-center">
+            <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pr-8">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={mayaImage.src}
+                alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
+                className="w-full max-w-lg mx-auto"
+              />
+            </div>
+
+            <div className="basis-full md:basis-1/2">
+              <Heading level={2}>
+                Watch the Launch Video
+              </Heading>
+              <p className="my-2 font-serif text-lg font-bold italic">
+                The Start of it all!
+              </p>
+              <p className="my-4 text-lg">
+                Find out more about Alveus and our aims here.
+              </p>
+              {/* TODO: Lightbox */}
+              <a
+                className="inline-block text-xl hover:bg-alveus-green hover:text-alveus-tan transition-colors px-6 py-4 rounded-full border-2 border-alveus-green"
+                href="https://www.youtube.com/watch?v=jXTqWIc--jo"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Watch the Video
+              </a>
+            </div>
+          </div>
+        </Section>
+      </div>
 
       <Section dark className="text-center">
         <Heading level={2}>
@@ -136,50 +159,68 @@ const AboutAlveusPage: NextPage = () => {
         </p>
       </Section>
 
-      <Section>
-        <Heading level={2} className="text-center">
-          Views By Country
-        </Heading>
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={leafRightImage2.src}
+          alt=""
+          className="hidden lg:block absolute z-10 -top-24 right-0 w-1/2 max-w-[12rem]"
+        />
 
-        <ul className="mt-6 mb-3 flex flex-wrap justify-center">
-          {Object.entries(views).map(([ key, country ]) => (
-            <li key={key} className="basis-full md:basis-1/2 py-2 md:px-4">
-              <p>{country.name}</p>
-              <div className="w-full bg-alveus-green rounded-full overflow-clip">
-                <div
-                  className="bg-alveus-green-900 text-xs text-alveus-tan text-right py-2 leading-none"
-                  style={{ width: `${country.value}%` }}
-                >
-                  <span className="px-3">
-                    {country.value}
-                    %
-                  </span>
+        <Section>
+          <Heading level={2} className="text-center">
+            Views By Country
+          </Heading>
+
+          <ul className="mt-6 mb-3 flex flex-wrap justify-center">
+            {Object.entries(views).map(([ key, country ]) => (
+              <li key={key} className="basis-full md:basis-1/2 py-2 md:px-4">
+                <p>{country.name}</p>
+                <div className="w-full bg-alveus-green rounded-full overflow-clip">
+                  <div
+                    className="bg-alveus-green-900 text-xs text-alveus-tan text-right py-2 leading-none"
+                    style={{ width: `${country.value}%` }}
+                  >
+                    <span className="px-3">
+                      {country.value}
+                      %
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
 
-        <p className="text-center text-xs text-gray-500">
-          (Source:
-          {' '}
-          <a
-            className="text-red-600 hover:text-blue-600 transition-colors"
-            href="https://www.similarweb.com/website/twitch.tv"
-            target="_blank"
-            rel="noreferrer"
-          >
-            SimilarWeb
-          </a>
-          )
-        </p>
-      </Section>
+          <p className="text-center text-xs text-gray-500">
+            (Source:
+            {' '}
+            <a
+              className="text-red-600 hover:text-blue-600 transition-colors"
+              href="https://www.similarweb.com/website/twitch.tv"
+              target="_blank"
+              rel="noreferrer"
+            >
+              SimilarWeb
+            </a>
+            )
+          </p>
+        </Section>
+      </div>
 
-      <Section dark className="py-24" containerClassName="flex flex-col items-center">
-        <p className="my-2 font-serif text-7xl font-bold">1,000,000 Dollars Raised</p>
-        <p className="my-2 font-serif text-4xl font-bold">Using Twitch!</p>
-        <IconTwitch size={64} className="mt-6 hover:text-alveus-green-900 transition-colors" />
-      </Section>
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={leafLeftImage2.src}
+          alt=""
+          className="hidden lg:block absolute z-10 -bottom-24 left w-1/2 max-w-[12rem]"
+        />
+
+        <Section dark className="py-24" containerClassName="flex flex-col items-center">
+          <p className="my-2 font-serif text-7xl font-bold">1,000,000 Dollars Raised</p>
+          <p className="my-2 font-serif text-4xl font-bold">Using Twitch!</p>
+          <IconTwitch size={64} className="mt-6 hover:text-alveus-green-900 transition-colors" />
+        </Section>
+      </div>
 
       <Section className="text-center">
         <Heading level={2}>
