@@ -16,19 +16,19 @@ type NavLinkProps = Omit<
   LinkProps & {
     children?: React.ReactNode;
   } & React.RefAttributes<HTMLAnchorElement>;
-const NavLinkClasses = "rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30";
-const NavLink: React.FC<NavLinkProps> = ({ href, className, ...props}) => {
+const NavLinkClasses =
+  "rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30";
+const NavLink: React.FC<NavLinkProps> = ({ href, className, ...props }) => {
   const isActive = useIsActivePath(href);
-  const classes = useMemo(() => [NavLinkClasses, isActive && "bg-black/20", className].filter(Boolean).join(" "),
-    [ isActive, className ]);
-
-  return (
-    <Link
-      href={href}
-      className={classes}
-      {...props}
-    />
+  const classes = useMemo(
+    () =>
+      [NavLinkClasses, isActive && "bg-black/20", className]
+        .filter(Boolean)
+        .join(" "),
+    [isActive, className]
   );
+
+  return <Link href={href} className={classes} {...props} />;
 };
 
 export const Navbar: React.FC = () => {
@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
   return (
     <Disclosure
       as="header"
-      className="relative bg-gray-800 text-white shadow-md z-10"
+      className="relative z-10 bg-gray-800 text-white shadow-md"
     >
       {({ open }) => (
         <>
@@ -76,14 +76,14 @@ export const Navbar: React.FC = () => {
             <div className="hidden flex-grow md:flex">
               <ul className="flex gap-1 lg:gap-4">
                 <li>
+                  <NavLink href="/live">Live</NavLink>
+                </li>
+                <li>
                   <NavLink href="/giveaways">Giveaways</NavLink>
                 </li>
                 {/*
                 <li>
                   <NavLink href="/updates">Updates</NavLink>
-                </li>
-                <li>
-                  <NavLink href="/live">Live</NavLink>
                 </li>
                 <li>
                   <NavLink href="/explore">Explore</NavLink>
@@ -171,16 +171,16 @@ export const Navbar: React.FC = () => {
             <div className="space-y-1 pt-2 pb-4">
               <ul className="flex flex-col gap-4">
                 <li>
+                  <Disclosure.Button as={NavLink} href="/live">
+                    Live
+                  </Disclosure.Button>
+                </li>
+                <li>
                   <Disclosure.Button as={NavLink} href="/giveaways">
                     Giveaways
                   </Disclosure.Button>
                 </li>
                 {/*
-                <li>
-                  <Disclosure.Button as={NavLink} href="/live">
-                    Live
-                  </Disclosure.Button>
-                </li>
                 <li>
                   <Disclosure.Button as={NavLink} href="/schedule">
                     Schedule
