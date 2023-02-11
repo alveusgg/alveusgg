@@ -6,13 +6,26 @@ import type {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getProviders, getSession, signIn } from "next-auth/react";
-import { useTranslation } from "next-i18next";
-import { serverSideTranslations } from "next-i18next/serverSideTranslations";
 
 import { XCircleIcon } from "@heroicons/react/20/solid";
 
-import nextI18nConfig from "../../../next-i18next.config.mjs";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
+
+const errorMessages: Record<string, string> = {
+  default: "Unable to sign in.",
+  signin: "Try signing in with a different account.",
+  oauthsignin: "Try signing in with a different account.",
+  oauthcallback: "Try signing in with a different account.",
+  oauthcreateaccount: "Try signing in with a different account.",
+  emailcreateaccount: "Try signing in with a different account.",
+  callback: "Try signing in with a different account.",
+  oauthaccountnotlinked:
+    "To confirm your identity, sign in with the same account you used originally.",
+  emailsignin: "The e-mail could not be sent.",
+  credentialssignin:
+    "Sign in failed. Check the details you provided are correct.",
+  sessionrequired: "Please sign in to access this page.",
+};
 
 export type SigninPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -34,11 +47,6 @@ export const getServerSideProps: GetServerSideProps<{
 
   return {
     props: {
-      ...(await serverSideTranslations(
-        context.locale || "en",
-        ["auth"],
-        nextI18nConfig
-      )),
       providers: await getProviders(),
     },
   };
@@ -53,10 +61,9 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
       ? router.query.callbackUrl
       : undefined;
 
-  const { t } = useTranslation("auth");
   const error =
-    errorType &&
-    t([`signin.error.${errorType.toLowerCase()}`, "signin.error.default"]);
+    (errorType && errorMessages[errorType.toLowerCase()]) ||
+    errorMessages["default"];
 
   return (
     <DefaultPageLayout title="Sign in">

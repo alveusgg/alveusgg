@@ -1,5 +1,4 @@
 import { withSuperjson } from "next-superjson";
-import i18nConfig from "./next-i18next.config.mjs";
 
 // @ts-check
 /**
@@ -12,7 +11,6 @@ import i18nConfig from "./next-i18next.config.mjs";
 const config = {
   reactStrictMode: true,
   swcMinify: true,
-  i18n: i18nConfig.i18n,
   images: {
     remotePatterns: [
       {
@@ -66,6 +64,32 @@ const config = {
     {
       source: "/paypal",
       destination: "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
+      permanent: true,
+    },
+    {
+      source: "/smile",
+      destination: "https://smile.amazon.com/ch/86-1772907",
+      permanent: true,
+    },
+    {
+      source: "/merch",
+      destination: "https://merch.streamelements.com/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/plushies",
+      destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/wishlist",
+      destination: "https://smile.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
+      permanent: true,
+    },
+    {
+      source: "/paypal",
+      destination:
+        "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
       permanent: true,
     },
   ],
