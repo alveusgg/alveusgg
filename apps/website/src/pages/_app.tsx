@@ -1,9 +1,6 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { appWithTranslation } from "next-i18next";
-
-import nextI18nConfig from "../../next-i18next.config.mjs";
 
 import { trpc } from "../utils/trpc";
 
@@ -23,6 +20,4 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   );
 };
 
-export default trpc.withTRPC(
-  appWithTranslation(AlveusGgWebsiteApp, nextI18nConfig)
-);
+export default trpc.withTRPC(AlveusGgWebsiteApp);
