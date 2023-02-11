@@ -15,7 +15,7 @@ const People: React.FC<PeopleProps> = ({ people, sideBySide = false }) => (
   <ul className={`flex flex-wrap ${sideBySide ? "md:justify-center md:items-start" : ""}`}>
     {Object.entries(people).map(([ key, person ]) => (
       <li key={key} className={`basis-full flex flex-col text-center items-center ${sideBySide ? "md:basis-1/2" : "md:flex-row md:text-left"}`}>
-        <div className={`flex-shrink-0 p-4 mx-auto max-w-md ${sideBySide ? "" : "md:w-1/3"}`}>
+        <div className={`flex-shrink-0 p-4 mx-auto max-w-sm w-full ${sideBySide ? "" : "md:max-w-md md:w-1/3"}`}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={person.image} alt="" className="w-full aspect-square object-cover rounded-2xl" />
         </div>
