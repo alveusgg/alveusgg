@@ -3,6 +3,7 @@ import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 import Head from "next/head";
 import { getSession } from "next-auth/react";
 import type { GiveawayEntry, User, OutgoingWebhook } from "@prisma/client";
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
 import { checkIsSuperUser } from "../../utils/auth";
 import { trpc } from "../../utils/trpc";
@@ -52,17 +53,28 @@ const OutgoingWebhookFeedEntry: React.FC<{
     }
   }
 
+  const lastAttemptWasSuccessful =
+    item.deliveredAt && (!item.failedAt || item.deliveredAt > item.failedAt);
+
   return (
     <details className="flex flex-col gap-4 py-2">
       <summary className="flex cursor-pointer flex-row gap-3">
         <span
           className="cursor-help"
           title={
-            item.deliveredAt?.toISOString() ||
-            `${item.attempts} attempts, last: ${item.failedAt?.toISOString()}`
+            `${item.attempts} attempts, ` +
+            (lastAttemptWasSuccessful
+              ? `last success: ${item.deliveredAt?.toISOString()}`
+              : `last failure: ${item.failedAt?.toISOString()}`)
           }
         >
-          {item.deliveredAt ? "✅" : `❌`}
+          {retryOutgoingWebhook.isLoading ? (
+            <ArrowPathIcon className="h-5 w-5 animate-spin" />
+          ) : lastAttemptWasSuccessful ? (
+            "✅"
+          ) : (
+            `❌`
+          )}
         </span>
         <span className="tabular-nums">
           <LocalTime dateTime={item.createdAt} />
@@ -128,6 +140,23 @@ const ActivityFeed: NextPage<
                   </Fragment>
                 ))}
               </ul>
+
+              <div className="mt-5">
+                <button
+                  className="block w-full rounded-lg border border-gray-700 p-2"
+                  onClick={() => outgoingWebhooks.fetchNextPage()}
+                  disabled={
+                    !outgoingWebhooks.hasNextPage ||
+                    outgoingWebhooks.isFetchingNextPage
+                  }
+                >
+                  {outgoingWebhooks.isFetchingNextPage
+                    ? "Loading more..."
+                    : outgoingWebhooks.hasNextPage
+                    ? "Load more"
+                    : "- End -"}
+                </button>
+              </div>
             </div>
           </header>
         </section>
