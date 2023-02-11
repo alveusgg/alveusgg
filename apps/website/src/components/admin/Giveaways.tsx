@@ -1,5 +1,6 @@
 import type { inferRouterOutputs } from "@trpc/server";
 import Link from "next/link";
+import { useCallback } from "react";
 
 import type { AppRouter } from "../../server/trpc/router/_app";
 import { trpc } from "../../utils/trpc";
@@ -12,9 +13,39 @@ type GiveawayWithCount = RouterOutput["adminGiveaways"]["getGiveaways"][number];
 const nf = new Intl.NumberFormat();
 
 const Giveaway: React.FC<{ giveaway: GiveawayWithCount }> = ({ giveaway }) => {
-  const handleToggle = () => {
-    // TODO
-  };
+  const utils = trpc.useContext();
+  const toggleGiveawayStatus =
+    trpc.adminGiveaways.toggleGiveawayStatus.useMutation({
+      onSuccess: async () => {
+        await utils.adminGiveaways.getGiveaways.invalidate();
+      },
+    });
+
+  const handleToggle = useCallback(() => {
+    toggleGiveawayStatus.mutate({ id: giveaway.id, active: !giveaway.active });
+  }, [giveaway.active, giveaway.id, toggleGiveawayStatus]);
+
+  const updateGiveawayOutgoingWebhookUrl =
+    trpc.adminGiveaways.updateGiveawayOutgoingWebhookUrl.useMutation({
+      onSuccess: async () => {
+        await utils.adminGiveaways.getGiveaways.invalidate();
+      },
+    });
+
+  const handleWebhookUrl = useCallback(() => {
+    const oldUrl = giveaway.outgoingWebhookUrl;
+    const newUrl = window.prompt("Webhook URL", String(oldUrl));
+    if (newUrl !== null && newUrl !== oldUrl) {
+      updateGiveawayOutgoingWebhookUrl.mutate({
+        id: giveaway.id,
+        outgoingWebhookUrl: newUrl,
+      });
+    }
+  }, [
+    giveaway.outgoingWebhookUrl,
+    giveaway.id,
+    updateGiveawayOutgoingWebhookUrl,
+  ]);
 
   return (
     <tr className="border-b border-gray-700">
@@ -22,14 +53,17 @@ const Giveaway: React.FC<{ giveaway: GiveawayWithCount }> = ({ giveaway }) => {
       <td className="p-1">
         <div className="flex flex-col gap-0.5">
           <div className="text-xl">{giveaway.label}</div>
-          <div>
+          <div className="flex flex-col gap-1">
             <Link
               className="underline"
               href={`/giveaways/${giveaway.slug || giveaway.id}`}
               target="_blank"
             >
-              Show entry form &rarr;
+              Public Link: {giveaway.slug || giveaway.id}
             </Link>
+            <button type="button" onClick={handleWebhookUrl}>
+              Webhook URL: {giveaway.outgoingWebhookUrl}
+            </button>
           </div>
         </div>
       </td>
