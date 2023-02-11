@@ -2,9 +2,9 @@ import React from "react";
 import { PT_Sans, PT_Serif } from "@next/font/google";
 import Head from "next/head";
 
-import { env } from "../env/client.mjs";
-import { Navbar } from "./Navbar";
-import { Footer } from "./Footer";
+import { env } from "../../env/client.mjs";
+import { Navbar } from "./navbar/Navbar";
+import { Footer } from "./footer/Footer";
 
 type LayoutProps = {
   children?: React.ReactNode;

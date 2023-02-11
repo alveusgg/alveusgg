@@ -3,8 +3,9 @@ import Head from "next/head"
 import React from "react"
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
-import Socials from "../../components/content/Socials"
 import IconTwitch from "../../icons/IconTwitch"
+import mayaImage from "../../assets/maya.png";
+import maya from "./maya"
 
 const stats = {
   averageTime: {
@@ -72,8 +73,13 @@ const AboutAlveusPage: NextPage = () => {
 
       <Section>
         <div className="flex flex-wrap-reverse items-center">
-          <div className="basis-full md:basis-1/2">
-            {/* TODO: Image */}
+          <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pr-8">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={mayaImage.src}
+              alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
+              className="w-full max-w-lg mx-auto"
+            />
           </div>
 
           <div className="basis-full md:basis-1/2">

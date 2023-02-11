@@ -1,12 +1,12 @@
-import Section from "./Section"
+import Section from "../../content/Section"
 import React from "react"
-import Heading from "./Heading"
-import IconTwitch from "../../icons/IconTwitch"
-import IconInstagram from "../../icons/IconInstagram"
-import IconTikTok from "../../icons/IconTikTok"
-import IconTwitter from "../../icons/IconTwitter"
-import IconYouTube from "../../icons/IconYouTube"
-import socialsImage from "../../assets/socials.png"
+import Heading from "../../content/Heading"
+import IconTwitch from "../../../icons/IconTwitch"
+import IconInstagram from "../../../icons/IconInstagram"
+import IconTikTok from "../../../icons/IconTikTok"
+import IconTwitter from "../../../icons/IconTwitter"
+import IconYouTube from "../../../icons/IconYouTube"
+import socialsImage from "../../../assets/socials.png"
 
 const socials = {
   instagram: {
@@ -39,9 +39,13 @@ const socials = {
 const Socials = () => (
   <Section dark className="pb-0">
     <div className="flex flex-wrap-reverse items-center">
-      <div className="basis-full md:basis-1/2 md:px-32">
+      <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pr-8">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={socialsImage.src} alt="" className="w-full" />
+        <img
+          src={socialsImage.src}
+          alt="TikTok screenshot showing Georgie the frog, and a second photo baby Stompy the emu on a scale"
+          className="w-full max-w-lg mx-auto"
+        />
       </div>
 
       <div className="basis-full md:basis-1/2 pb-16 md:py-4">

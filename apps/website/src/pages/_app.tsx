@@ -8,7 +8,7 @@ import nextI18nConfig from "../../next-i18next.config.mjs";
 import { trpc } from "../utils/trpc";
 
 import "../styles/globals.css";
-import Layout from "../components/Layout";
+import Layout from "../components/layout/Layout";
 
 const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   Component,

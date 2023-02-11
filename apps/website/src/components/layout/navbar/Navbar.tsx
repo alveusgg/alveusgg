@@ -5,9 +5,9 @@ import Link, { type LinkProps } from "next/link";
 import { Disclosure, Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { ProfileInfo } from "./navbar/ProfileInfo";
-import { useIsActivePath } from "./shared/hooks/useIsActivePath";
-//import { NotificationsButton } from "./navbar/NotificationsButton";
+import { ProfileInfo } from "./ProfileInfo";
+import { useIsActivePath } from "../../shared/hooks/useIsActivePath";
+//import { NotificationsButton } from "./NotificationsButton";
 
 type NavLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,

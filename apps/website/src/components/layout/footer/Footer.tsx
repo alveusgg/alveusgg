@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import Socials from "./content/Socials"
+import Socials from "./Socials"
 
 export const Footer: React.FC = () => {
   return (
@@ -20,7 +20,7 @@ export const Footer: React.FC = () => {
             <li className="basis-full md:basis-1/3 p-2 md:text-center">
               <Link
                 className="underline decoration-gray-400 hover:text-gray-300 transition-colors"
-                href="/privacy-policy"
+                href="/apps/website/src/pages/privacy-policy"
               >
                 Privacy Policy
               </Link>
