@@ -91,6 +91,7 @@ model User {
   pushSubscriptions  PushSubscription[]
   notificationPushes NotificationPush[]
   GiveawayEntry      GiveawayEntry[]
+  OutgoingWebhook    OutgoingWebhook[]
 }
 
 model VerificationToken {
@@ -180,12 +181,13 @@ model MailingAddress {
 }
 
 model Giveaway {
-  id      String    @id @default(cuid())
-  label   String
-  slug    String?
-  active  Boolean   @default(false)
-  startAt DateTime  @default(now())
-  endAt   DateTime?
+  id                 String    @id @default(cuid())
+  label              String
+  slug               String?
+  active             Boolean   @default(false)
+  startAt            DateTime  @default(now())
+  endAt              DateTime?
+  outgoingWebhookUrl String?   @db.VarChar(720)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -194,19 +196,36 @@ model Giveaway {
 }
 
 model GiveawayEntry {
-  id               String @id @default(cuid())
-  giveawayId       String
-  userId           String
-  mailingAddressId String @unique
-  givenName        String
-  familyName       String
+  id                String  @id @default(cuid())
+  giveawayId        String
+  userId            String
+  mailingAddressId  String  @unique
+  outgoingWebhookId String? @unique
+  givenName         String
+  familyName        String
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  giveaway       Giveaway       @relation(fields: [giveawayId], references: [id])
-  user           User           @relation(fields: [userId], references: [id])
-  mailingAddress MailingAddress @relation(fields: [mailingAddressId], references: [id])
+  giveaway        Giveaway         @relation(fields: [giveawayId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+  mailingAddress  MailingAddress   @relation(fields: [mailingAddressId], references: [id])
+  outgoingWebhook OutgoingWebhook? @relation(fields: [outgoingWebhookId], references: [id])
 
   @@unique([giveawayId, userId])
+}
+
+model OutgoingWebhook {
+  id          String    @id @default(cuid())
+  type        String
+  url         String    @db.VarChar(720)
+  body        String    @db.Text
+  userId      String?
+  attempts    Int?
+  createdAt   DateTime  @default(now())
+  failedAt    DateTime?
+  deliveredAt DateTime?
+
+  user          User?          @relation(fields: [userId], references: [id])
+  giveawayEntry GiveawayEntry?
 }

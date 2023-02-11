@@ -1,6 +1,6 @@
 import React from "react";
 
-type DefaultPageLayoutProps = {
+export type DefaultPageLayoutProps = {
   children?: React.ReactNode;
   title: string | JSX.Element;
 };

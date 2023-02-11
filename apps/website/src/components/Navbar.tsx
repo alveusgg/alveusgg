@@ -1,27 +1,13 @@
-import Link from "next/link";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import Image from "next/image";
 import React, { Fragment } from "react";
-import type { LinkProps } from "next/dist/client/link";
-import type { UrlObject } from "url";
+import { signIn, signOut, useSession } from "next-auth/react";
+import Link, { type LinkProps } from "next/link";
 import { Disclosure, Popover, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import { ProfileInfo } from "./navbar/ProfileInfo";
+import { useIsActivePath } from "./shared/hooks/useIsActivePath";
 //import { NotificationsButton } from "./navbar/NotificationsButton";
-
-function useIsActivePath(href: UrlObject | string) {
-  const router = useRouter();
-  const currentRoute = router.pathname;
-  const url = typeof href === "string" ? href : href.href;
-  return (
-    url &&
-    (url.startsWith("#") ||
-      (url.startsWith("/") &&
-        currentRoute.replace(/\/?$/, "/").startsWith(url.replace(/\/?$/, "/"))))
-  );
-}
 
 type NavLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,

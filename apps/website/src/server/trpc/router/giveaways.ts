@@ -2,6 +2,10 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 import { isValidCountryCode } from "../../../utils/countries";
+import {
+  type OutgoingWebhookType,
+  triggerOutgoingWebhook,
+} from "../../actions/outgoing-webhooks";
 import { router, protectedProcedure } from "../trpc";
 
 export const giveawayEntrySchema = z.object({
@@ -59,7 +63,10 @@ export const giveawaysRouter = router({
       }
 
       // Insert entry
-      await ctx.prisma.giveawayEntry.create({
+      const entry = await ctx.prisma.giveawayEntry.create({
+        include: {
+          user: true,
+        },
         data: {
           giveaway: { connect: { id: giveaway.id } },
           user: { connect: { id: userId } },
@@ -78,6 +85,35 @@ export const giveawaysRouter = router({
         },
       });
 
-      // TODO: Call webhook
+      if (giveaway.outgoingWebhookUrl) {
+        try {
+          // Trigger webhook
+          const webhook = await triggerOutgoingWebhook({
+            url: giveaway.outgoingWebhookUrl,
+            type: "giveaway-entry",
+            userId,
+            body: JSON.stringify({
+              type: "giveaway-entry" as OutgoingWebhookType,
+              data: {
+                id: entry.id,
+                giveawayId: entry.giveawayId,
+                username: entry.user.name,
+                email: entry.user.email,
+                createdAt: entry.createdAt,
+              },
+            }),
+          });
+
+          // connect the outgoing webhook to the entry
+          await ctx.prisma.giveawayEntry.update({
+            where: { id: webhook.id },
+            data: {
+              outgoingWebhook: { connect: { id: webhook.id } },
+            },
+          });
+        } catch (e) {
+          // ignore failed outgoing webhooks for now
+        }
+      }
     }),
 });
