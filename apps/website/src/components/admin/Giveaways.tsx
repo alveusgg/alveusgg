@@ -34,7 +34,7 @@ const Giveaway: React.FC<{ giveaway: GiveawayWithCount }> = ({ giveaway }) => {
 
   const handleWebhookUrl = useCallback(() => {
     const oldUrl = giveaway.outgoingWebhookUrl;
-    const newUrl = window.prompt("Webhook URL", String(oldUrl));
+    const newUrl = window.prompt("Webhook URL", oldUrl || "");
     if (newUrl !== null && newUrl !== oldUrl) {
       updateGiveawayOutgoingWebhookUrl.mutate({
         id: giveaway.id,
@@ -61,8 +61,12 @@ const Giveaway: React.FC<{ giveaway: GiveawayWithCount }> = ({ giveaway }) => {
             >
               Public Link: {giveaway.slug || giveaway.id}
             </Link>
-            <button type="button" onClick={handleWebhookUrl}>
-              Webhook URL: {giveaway.outgoingWebhookUrl}
+            <button
+              type="button"
+              className="text-left"
+              onClick={handleWebhookUrl}
+            >
+              Webhook URL: {giveaway.outgoingWebhookUrl || "-/-"}
             </button>
           </div>
         </div>
