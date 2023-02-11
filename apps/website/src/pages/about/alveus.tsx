@@ -222,7 +222,7 @@ const AboutAlveusPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section className="text-center">
+      <Section className="text-center flex-grow">
         <Heading level={2}>
           Our Collaborations
         </Heading>

@@ -140,7 +140,7 @@ const AboutMayaPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section >
+      <Section className="flex-grow">
         <Heading level={2} className="text-5xl text-alveus-green text-center">
           Maya&apos;s Experience
         </Heading>
