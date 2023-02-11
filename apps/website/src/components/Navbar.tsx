@@ -170,7 +170,7 @@ export const Navbar: React.FC = () => {
               </Popover>
             ) : (
               <button
-                className="px-5 font-semibold text-white no-underline transition hover:bg-black/20"
+                className="self-stretch px-5 font-semibold text-white no-underline transition hover:bg-black/20"
                 onClick={() => signIn("twitch")}
               >
                 Log in
