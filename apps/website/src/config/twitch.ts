@@ -16,7 +16,7 @@ const twitchConfigSchema = z.object({
   ),
 });
 
-const config: TwitchConfig = {
+const config = {
   channels: {
     maya: {
       id: "235835559",
@@ -55,10 +55,10 @@ const config: TwitchConfig = {
       },
     },
   },
-};
+} satisfies TwitchConfig;
 
 export async function getChannelConfigById() {
-  const twitchConfig = await getTwitchConfig();
+  const twitchConfig: TwitchConfig = await getTwitchConfig();
   const channelConfigById: Record<string, TwitchConfig["channels"][string]> =
     {};
   for (const channelName in twitchConfig.channels) {
