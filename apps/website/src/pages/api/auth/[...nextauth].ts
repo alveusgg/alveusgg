@@ -6,6 +6,8 @@ import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { env } from "../../../env/server.mjs";
 import { prisma } from "../../../server/db/client";
 
+const adapter = PrismaAdapter(prisma);
+
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
@@ -15,10 +17,42 @@ export const authOptions: NextAuthOptions = {
       }
       return session;
     },
+    async signIn({ user, account }) {
+      if (user && account) {
+        try {
+          const userFromDatabase = await adapter.getUser(user.id);
+
+          if (userFromDatabase) {
+            await prisma.account.update({
+              where: {
+                provider_providerAccountId: {
+                  provider: account.provider,
+                  providerAccountId: account.providerAccountId,
+                },
+              },
+              data: {
+                access_token: account.access_token,
+                expires_at: account.expires_at,
+                id_token: account.id_token,
+                refresh_token: account.refresh_token,
+                session_state: account.session_state,
+                scope: account.scope,
+              },
+            });
+          }
+        } catch (err) {
+          if (err instanceof Error) {
+            console.error(err.message);
+          }
+        }
+      }
+
+      return true;
+    },
   },
-  // Configure one or more authentication providers
-  adapter: PrismaAdapter(prisma),
+  adapter,
   providers: [
+    // Configure one or more authentication providers
     TwitchProvider({
       clientId: env.TWITCH_CLIENT_ID,
       clientSecret: env.TWITCH_CLIENT_SECRET,
