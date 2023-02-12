@@ -251,7 +251,9 @@ export async function getUserChannelsFollowed(
   }
 
   const response = await fetch(
-    `https://api.twitch.tv/channels/followed?${new URLSearchParams(params)}`,
+    `https://api.twitch.tv/helix/channels/followed?${new URLSearchParams(
+      params
+    )}`,
     {
       method: "GET",
       headers: {
@@ -267,7 +269,7 @@ export async function getUserChannelsFollowed(
   const json = await response.json();
   if (response.status !== 200) {
     console.error(json);
-    throw new Error("Could not get streams!");
+    throw new Error("Could not get channel follows status!");
   }
 
   return await channelsFollowedResponseSchema.parseAsync(json);
