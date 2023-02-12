@@ -38,6 +38,17 @@ async function getApplicationAuthHeaders() {
   return authHeaders;
 }
 
+async function getUserAuthHeaders(userAccessToken: string) {
+  const clientId = env.TWITCH_CLIENT_ID;
+
+  authHeaders = {
+    "Client-Id": clientId,
+    Authorization: `Bearer ${userAccessToken}`,
+  };
+
+  return authHeaders;
+}
+
 const paginationSchema = z.object({ cursor: z.string().optional() });
 
 const subscriptionsResponseSchema = z.object({
@@ -213,4 +224,72 @@ export async function getStreamsForChannels(channelIds: Array<string>) {
   }
 
   return await streamsResponseSchema.parseAsync(json);
+}
+
+const channelsFollowedResponseSchema = z.object({
+  total: z.number(),
+  data: z.array(
+    z.object({
+      broadcaster_id: z.string(),
+      broadcaster_login: z.string(),
+      broadcaster_name: z.string(),
+      followed_at: z.string(),
+    })
+  ),
+  pagination: paginationSchema,
+});
+
+export async function getUserChannelsFollowed(
+  userAccessToken: string,
+  userId: string,
+  broadcasterId?: string
+) {
+  const params = [["user_id", userId]];
+
+  if (broadcasterId) {
+    params.push(["broadcaster_id", broadcasterId]);
+  }
+
+  const response = await fetch(
+    `https://api.twitch.tv/helix/channels/followed?${new URLSearchParams(
+      params
+    )}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    }
+  );
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get channel follows status!");
+  }
+
+  return await channelsFollowedResponseSchema.parseAsync(json);
+}
+
+export async function getUserFollowsBroadcaster(
+  userAccessToken: string,
+  userId: string,
+  broadcasterId: string
+) {
+  try {
+    const res = await getUserChannelsFollowed(
+      userAccessToken,
+      userId,
+      broadcasterId
+    );
+    if (res.total > 0) {
+      return true;
+    }
+  } catch (e) {}
+
+  return false;
 }
