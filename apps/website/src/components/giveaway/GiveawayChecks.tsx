@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
+import twitchIcon from "simple-icons/icons/twitch.svg";
 import twitterIcon from "simple-icons/icons/twitter.svg";
 import youtubeIcon from "simple-icons/icons/youtube.svg";
 import instagramIcon from "simple-icons/icons/instagram.svg";
@@ -28,7 +29,6 @@ const GiveawayCheck: React.FC<{
     setTimeout(() => setIsClicked(true), 1000);
   }, []);
 
-  const id = `giveaway-req-${name}`;
   const containerClasses =
     "flex flex-row rounded border border-gray-200 bg-white shadow-xl";
   const disabled = needsToBeClicked && !isClicked;
@@ -38,14 +38,12 @@ const GiveawayCheck: React.FC<{
         {children}
       </span>
       <label
-        htmlFor={id}
         className={`flex flex-row items-center ${
           disabled ? "bg-gray-200" : "bg-white"
         }  px-5`}
       >
         <span className="sr-only">{label}</span>
         <input
-          id={id}
           name={`req-${name}`}
           value="yes"
           type="checkbox"
@@ -76,91 +74,55 @@ const GiveawayCheck: React.FC<{
 
 export const GiveawayChecks: React.FC = () => (
   <div className="flex flex-col gap-5">
-    <GiveawayCheck name="twitter" label="Follow @AlveusSanctuary on Twitter">
+    <GiveawayCheck
+      name="twitter"
+      label="Follow AlveusSanctuary on Twitch"
+      url="https://twitch.tv/AlveusSanctuary"
+    >
+      <Icon src={twitchIcon} />
+      <span>Follow AlveusSanctuary on Twitch</span>
+    </GiveawayCheck>
+
+    <GiveawayCheck
+      name="twitter"
+      label="Follow @AlveusSanctuary on Twitter"
+      url="https://twitter.com/AlveusSanctuary"
+    >
       <Icon src={twitterIcon} />
-      <span>
-        Follow{" "}
-        <Link
-          className="underline"
-          href="https://twitter.com/AlveusSanctuary"
-          rel="noreferrer"
-          target="_blank"
-        >
-          @AlveusSanctuary on Twitter
-        </Link>
-      </span>
+      <span>Follow @AlveusSanctuary on Twitter</span>
     </GiveawayCheck>
 
     <GiveawayCheck
       name="yt-main"
       label="Subscribe to AlveusSanctuary on YouTube"
+      url="https://www.youtube.com/alveussanctuary?sub_confirmation=1"
     >
       <Icon src={youtubeIcon} />
-      <span>
-        Subscribe to{" "}
-        <Link
-          className="underline"
-          href="https://www.youtube.com/alveussanctuary?sub_confirmation=1"
-          rel="noreferrer"
-          target="_blank"
-        >
-          AlveusSanctuary on YouTube
-        </Link>
-      </span>
+      <span>Subscribe to AlveusSanctuary on YouTube</span>
     </GiveawayCheck>
 
     <GiveawayCheck
-      name="yt-clips"
-      label="Subscribe to AlveusSanctuaryHighlights on YouTube"
+      name="ig"
+      label="Follow @alveussanctuary on Instagram"
+      url="https://www.instagram.com/alveussanctuary/"
     >
-      <Icon src={youtubeIcon} />
-      <span>
-        Subscribe to{" "}
-        <Link
-          className="underline"
-          href="https://www.youtube.com/@alveussanctuaryhighlights?sub_confirmation=1"
-          rel="noreferrer"
-          target="_blank"
-        >
-          AlveusSanctuaryHighlights on YouTube
-        </Link>
-      </span>
-    </GiveawayCheck>
-
-    <GiveawayCheck name="ig" label="Follow @alveussanctuary on Instagram">
       <Icon src={instagramIcon} />
-      <span>
-        Follow{" "}
-        <Link
-          className="underline"
-          href="https://www.instagram.com/alveussanctuary/"
-          rel="noreferrer"
-          target="_blank"
-        >
-          @alveussanctuary on Instagram
-        </Link>
-      </span>
+      <span>Follow @alveussanctuary on Instagram</span>
     </GiveawayCheck>
 
-    <GiveawayCheck name="tiktok" label="Follow @alveussanctuary on TikTok">
+    <GiveawayCheck
+      name="tiktok"
+      label="Follow @alveussanctuary on TikTok"
+      url="https://www.tiktok.com/@alveussanctuary"
+    >
       <Icon src={tiktokIcon} />
-      <span>
-        Follow{" "}
-        <Link
-          className="underline"
-          href="https://www.tiktok.com/@alveussanctuary"
-          rel="noreferrer"
-          target="_blank"
-        >
-          @alveussanctuary on TikTok
-        </Link>
-      </span>
+      <span>Follow @alveussanctuary on TikTok</span>
     </GiveawayCheck>
 
     <GiveawayCheck
       name="website"
-      url="https://alveussanctuary.org/"
       label="Visit our Website"
+      url="https://alveussanctuary.org/"
     >
       <GlobeAltIcon className="h-8 w-8" />
       <span>Visit our Website</span>
