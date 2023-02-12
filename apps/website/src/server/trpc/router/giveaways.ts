@@ -160,7 +160,7 @@ export const giveawaysRouter = router({
 
           // connect the outgoing webhook to the entry
           await ctx.prisma.giveawayEntry.update({
-            where: { id: webhook.id },
+            where: { id: entry.id },
             data: {
               outgoingWebhook: { connect: { id: webhook.id } },
             },
