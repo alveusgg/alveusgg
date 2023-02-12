@@ -4,6 +4,7 @@ import Head from "next/head";
 import { getSession } from "next-auth/react";
 
 import { getNotificationsConfig } from "../../config/notifications";
+import type { TwitchConfig } from "../../config/twitch";
 import { getChannelConfigById, getTwitchConfig } from "../../config/twitch";
 import { checkIsSuperUser } from "../../utils/auth";
 import { getSubscriptions } from "../../utils/twitch-api";
@@ -11,12 +12,12 @@ import { Headline } from "../../components/shared/Headline";
 import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
 import { Giveaways } from "../../components/admin/Giveaways";
 import { AdminPageLayout } from "../../components/admin/AdminPageLayout";
-import React from "react"
+import React from "react";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
   if (checkIsSuperUser(session)) {
-    const twitchConfig = await getTwitchConfig();
+    const twitchConfig: TwitchConfig = await getTwitchConfig();
     const notificationConfig = await getNotificationsConfig();
     const twitchEventSubs = await getSubscriptions();
     const channelConfigById = await getChannelConfigById();
@@ -64,7 +65,7 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <AdminPageLayout title="Dashboard">
         <div className="w-full gap-4 md:flex md:flex-row">
