@@ -10,7 +10,7 @@ import People from "../../components/content/People"
 
 const staff = {
   connor: {
-    image: connorObrienImage.src,
+    image: connorObrienImage,
     name: 'Connor O\'Brien',
     title: 'Operations Manager',
     description: <>
@@ -27,7 +27,7 @@ const staff = {
     </>,
   },
   kayla: {
-    image: kaylaJacksonImage.src,
+    image: kaylaJacksonImage,
     name: 'Kayla Jackson',
     title: 'Animal Care & Training Manager',
     description: <>
@@ -44,7 +44,7 @@ const staff = {
     </>,
   },
   ella: {
-    image: ellaRocksImage.src,
+    image: ellaRocksImage,
     name: 'Ella Rocks',
     title: 'Animal Care Coordinator',
     description: <>

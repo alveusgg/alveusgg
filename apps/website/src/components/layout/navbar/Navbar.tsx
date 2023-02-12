@@ -9,6 +9,7 @@ import { useIsActivePath } from "../../shared/hooks/useIsActivePath";
 import logoImage from "../../../assets/logo.png";
 import socials from "../../shared/data/socials"
 import IconAmazon from "../../../icons/IconAmazon"
+import Image from "next/image"
 //import { NotificationsButton } from "./NotificationsButton";
 
 const utilities = {
@@ -56,11 +57,10 @@ export const Navbar: React.FC = () => {
           <div className="container mx-auto flex gap-4 p-2">
             {/* Logo */}
             <Link href="/" className="flex items-center px-1 md:px-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={logoImage.src}
+              <Image
+                src={logoImage}
                 alt=""
-                className="h-10 lg:h-28 lg:mt-6"
+                className="w-auto h-10 lg:h-28 lg:mt-6"
               />
             </Link>
 

@@ -3,16 +3,16 @@ import React from "react"
 import Heading from "../../content/Heading"
 import socialsImage from "../../../assets/socials.png"
 import socials from "../../shared/data/socials"
+import Image from "next/image"
 
 const Socials = () => (
   <Section dark className="pb-0">
     <div className="flex flex-wrap-reverse items-center">
       <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pr-8">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={socialsImage.src}
+        <Image
+          src={socialsImage}
           alt="TikTok screenshot showing Georgie the frog, and a second photo baby Stompy the emu on a scale"
-          className="w-full max-w-lg mx-auto"
+          className="w-full h-auto max-w-lg mx-auto"
         />
       </div>
 

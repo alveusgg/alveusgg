@@ -10,7 +10,7 @@ import People from "../../components/content/People"
 
 const directors = {
   maya: {
-    image: mayaHigaImage.src,
+    image: mayaHigaImage,
     name: 'Maya Higa',
     title: 'Board Member',
     description: <>
@@ -33,7 +33,7 @@ const directors = {
     </>,
   },
   joe: {
-    image: joeSiegristImage.src,
+    image: joeSiegristImage,
     name: 'Joe Siegrist',
     title: 'Board Member',
     description: <>
@@ -48,7 +48,7 @@ const directors = {
     </>,
   },
   joel: {
-    image: joelPierreImage.src,
+    image: joelPierreImage,
     name: 'Joel Pierre',
     title: 'Board Member',
     description: <>
