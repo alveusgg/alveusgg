@@ -36,9 +36,9 @@ export const TwitchEmbed: React.FC = () => {
   }, [id, scriptLoaded]);
 
   return (
-    <div className="relative flex h-[calc(100vh-100px)] bg-black twitchSideBySide:h-auto twitchSideBySide:max-h-[80vh] twitchSideBySide:min-h-[500px]">
+    <div className="relative flex h-[calc(100vh-100px)] bg-black twitchSideBySide:h-auto twitchSideBySide:max-h-[80vh] twitchSideBySide:min-h-[500px] twitchSideBySide:flex-1">
       <div className="w-[calc(100%-340px)]">
-        <div className="user-select-none pointer-events-none relative z-20 twitchSideBySide:pt-[56.25%]"></div>
+        <div className="user-select-none pointer-events-none relative z-20 h-full twitchSideBySide:pt-[56.25%]"></div>
       </div>
       <div className="absolute inset-0" id={`twitch-embed-${id}`}></div>
       {/*

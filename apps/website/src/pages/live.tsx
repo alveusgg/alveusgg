@@ -49,12 +49,12 @@ const Live: NextPage<LivePageProps> = (
         <title>Alveus.gg</title>
       </Head>
 
-      <main>
+      <div className="flex flex-1 flex-col">
         <header className="sr-only">
           <h1>Live stream</h1>
         </header>
 
-        <div>
+        <div className="flex flex-1 flex-col">
           <TwitchEmbed />
 
           {/*
@@ -161,7 +161,7 @@ const Live: NextPage<LivePageProps> = (
           </div>
           */}
         </div>
-      </main>
+      </div>
     </>
   );
 };
