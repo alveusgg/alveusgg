@@ -75,8 +75,6 @@ export const GiveawayEntryShippingAddressFieldset: React.FC = () => {
               name="state"
               type="text"
               autoComplete="address-level1"
-              required={true}
-              minLength={1}
             />
           </label>
 
