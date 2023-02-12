@@ -1,3 +1,4 @@
+import type { TwitchConfig } from "../../../config/twitch";
 import { getTwitchConfig } from "../../../config/twitch";
 import {
   createSubscription,
@@ -106,7 +107,7 @@ async function updateSubscriptionsForChannel(
 async function updateSubscriptionsForChannels() {
   const twitchEventSubCallback = env.TWITCH_EVENTSUB_CALLBACK;
   const twitchEventSubSecret = env.TWITCH_EVENTSUB_SECRET;
-  const twitchConfig = await getTwitchConfig();
+  const twitchConfig: TwitchConfig = await getTwitchConfig();
 
   for (const key in twitchConfig.channels) {
     const channelConfig = twitchConfig.channels[key];

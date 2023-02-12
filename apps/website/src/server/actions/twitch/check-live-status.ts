@@ -1,3 +1,4 @@
+import type { TwitchConfig } from "../../../config/twitch";
 import { getTwitchConfig } from "../../../config/twitch";
 import type { StreamsResponse } from "../../../utils/twitch-api";
 import { getStreamsForChannels } from "../../../utils/twitch-api";
@@ -90,7 +91,7 @@ async function checkChannelForUpdates(
 }
 
 async function checkLiveStatusForChannels() {
-  const twitchConfig = await getTwitchConfig();
+  const twitchConfig: TwitchConfig = await getTwitchConfig();
   const channelIds = [];
 
   for (const key in twitchConfig.channels) {

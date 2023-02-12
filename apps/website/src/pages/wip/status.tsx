@@ -1,15 +1,13 @@
-import type { InferGetStaticPropsType } from "next";
-import { type NextPage } from "next";
+import React from "react";
+import type { InferGetStaticPropsType, NextPage } from "next";
 import Head from "next/head";
 
+import { getTwitchConfig, type TwitchConfig } from "../../config/twitch";
+import { prisma } from "../../server/db/client";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
 
-import React from "react";
-import { getTwitchConfig } from "../../config/twitch";
-import { prisma } from "../../server/db/client";
-
 export async function getStaticProps() {
-  const twitchConfig = await getTwitchConfig();
+  const twitchConfig: TwitchConfig = await getTwitchConfig();
 
   const channelData: Array<{
     id: string;
