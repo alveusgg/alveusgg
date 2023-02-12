@@ -50,7 +50,7 @@ export const Navbar: React.FC = () => {
   return (
     <Disclosure
       as="header"
-      className="relative z-10 bg-alveus-green-900 lg:bg-transparent text-white"
+      className="relative z-20 bg-alveus-green-900 lg:bg-transparent text-white"
     >
       {({ open }) => (
         <>

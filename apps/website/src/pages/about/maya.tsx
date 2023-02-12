@@ -110,11 +110,11 @@ const AboutMayaPage: NextPage = () => {
               <Image
                 src={mayaImage}
                 alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-                className="w-full h-auto max-w-lg mx-auto"
+                className="w-full h-auto max-w-lg ml-auto"
               />
             </div>
 
-            <div className="basis-full md:basis-1/2">
+            <div className="basis-full md:basis-1/2 md:px-4">
               <p className="my-2 font-serif text-4xl text-alveus-green text-center font-bold">
                 <span>&ldquo;</span>
                 I love the natural world with my whole heart and entire being.
