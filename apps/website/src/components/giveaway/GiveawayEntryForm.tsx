@@ -1,9 +1,9 @@
-import { z } from "zod";
 import React, { useCallback } from "react";
 import { signIn, useSession } from "next-auth/react";
 import type { Giveaway, GiveawayEntry } from "@prisma/client";
 import Link from "next/link";
 
+import { calcGiveawayConfig } from "../../utils/giveaways";
 import { trpc } from "../../utils/trpc";
 import IconTwitch from "../../icons/IconTwitch";
 import { Headline } from "../shared/Headline";
@@ -12,12 +12,6 @@ import { GiveawayChecks } from "./GiveawayChecks";
 import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
 import { GiveawayEntryContactFieldset } from "./GiveawayEntryContactFieldset";
-
-type GiveawayConfig = z.infer<typeof giveawayConfigSchema>;
-
-const giveawayConfigSchema = z.object({
-  checks: z.boolean().optional(),
-});
 
 export const GiveawayEntryForm: React.FC<{
   giveaway: Giveaway;
@@ -82,20 +76,7 @@ export const GiveawayEntryForm: React.FC<{
     );
   }
 
-  let config: GiveawayConfig = { checks: true };
-  if (giveaway.config) {
-    const parsedConfig = giveawayConfigSchema.safeParse(
-      JSON.parse(giveaway.config)
-    );
-
-    console.log({ parsedConfig });
-    if (parsedConfig.success) {
-      config = {
-        ...config,
-        ...parsedConfig.data,
-      };
-    }
-  }
+  const config = calcGiveawayConfig(giveaway.config);
 
   return (
     <form onSubmit={handleSubmit}>
