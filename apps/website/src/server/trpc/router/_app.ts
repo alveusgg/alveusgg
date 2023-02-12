@@ -6,15 +6,17 @@ import { notificationsConfigRouter } from "./notificationsConfig";
 import { giveawaysRouter } from "./giveaways";
 import { adminGiveawaysRouter } from "./admin/giveaways";
 import { adminActivityFeedRouter } from "./admin/activity-feed";
+import { adminTwitchRouter } from "./admin/twitch";
 
 export const appRouter = router({
   auth: authRouter,
   adminAction: adminActionRouter,
-  adminGiveaways: adminGiveawaysRouter,
   adminActivityFeed: adminActivityFeedRouter,
-  pushSubscription: pushSubscriptionRouter,
-  notificationsConfig: notificationsConfigRouter,
+  adminGiveaways: adminGiveawaysRouter,
+  adminTwitch: adminTwitchRouter,
   giveaways: giveawaysRouter,
+  notificationsConfig: notificationsConfigRouter,
+  pushSubscription: pushSubscriptionRouter,
 });
 
 // export type definition of API

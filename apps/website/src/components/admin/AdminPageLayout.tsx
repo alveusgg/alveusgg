@@ -34,10 +34,13 @@ export const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
 }) => {
   return (
     <DefaultPageLayout title={`Admin / ${title}`} {...props}>
-      <nav className="my-4 flex flex-row gap-4">
-        <NavLink href="/admin/dashboard">Dashboard</NavLink>
-        <NavLink href="/admin/activity-feed">Activity Feed</NavLink>
-      </nav>
+      <div className="container mx-auto">
+        <nav className="my-4 flex flex-row gap-4">
+          <NavLink href="/admin/dashboard">Dashboard</NavLink>
+          <NavLink href="/admin/activity-feed">Activity Feed</NavLink>
+          <NavLink href="/admin/twitch">Twitch</NavLink>
+        </nav>
+      </div>
 
       {children}
     </DefaultPageLayout>
