@@ -203,6 +203,7 @@ model GiveawayEntry {
   userId            String
   mailingAddressId  String  @unique
   outgoingWebhookId String? @unique
+  email             String?
   givenName         String
   familyName        String
 

@@ -11,6 +11,7 @@ import { Headline } from "../shared/Headline";
 import { GiveawayChecks } from "./GiveawayChecks";
 import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
+import { GiveawayEntryContactFieldset } from "./GiveawayEntryContactFieldset";
 
 type GiveawayConfig = z.infer<typeof giveawayConfigSchema>;
 
@@ -33,6 +34,7 @@ export const GiveawayEntryForm: React.FC<{
       const data = new FormData(e.currentTarget);
       enterGiveaway.mutate({
         giveawayId: giveaway.id,
+        email: String(data.get("email")),
         givenName: String(data.get("given-name")),
         familyName: String(data.get("family-name")),
         addressLine1: String(data.get("address-line1")),
@@ -111,25 +113,31 @@ export const GiveawayEntryForm: React.FC<{
       )}
 
       <Headline>Enter your details</Headline>
-      <GiveawayEntryNameFieldset />
-      <GiveawayEntryShippingAddressFieldset />
 
-      <fieldset className="mt-3">
-        <legend className="mb-2 font-bold">Rules</legend>
-        <label className="flex flex-row gap-3">
-          <input type="checkbox" required={true} />
-          <span>
-            I agree to the{" "}
-            <Link
-              className="underline"
-              href={`/giveaways/${giveaway.slug || giveaway.id}/rules`}
-              target="_blank"
-            >
-              Official Rules
-            </Link>
-          </span>
-        </label>
-      </fieldset>
+      <div className="flex flex-col gap-4">
+        <GiveawayEntryNameFieldset />
+        <GiveawayEntryContactFieldset
+          defaultEmailAddress={session.user.email || undefined}
+        />
+        <GiveawayEntryShippingAddressFieldset />
+
+        <fieldset>
+          <legend className="mb-2 font-bold">Rules</legend>
+          <label className="flex flex-row gap-3">
+            <input type="checkbox" required={true} />
+            <span>
+              I agree to the{" "}
+              <Link
+                className="underline"
+                href={`/giveaways/${giveaway.slug || giveaway.id}/rules`}
+                target="_blank"
+              >
+                Official Rules
+              </Link>
+            </span>
+          </label>
+        </fieldset>
+      </div>
 
       <div className="mt-7">
         <button

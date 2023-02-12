@@ -12,6 +12,7 @@ export const giveawayEntrySchema = z.object({
   giveawayId: z.string().cuid(),
   givenName: z.string().min(1),
   familyName: z.string().min(1),
+  email: z.string().email(),
   addressLine1: z.string().min(1),
   addressLine2: z.string(), // second address line may be empty
   postalCode: z.string().min(1),
@@ -70,6 +71,7 @@ export const giveawaysRouter = router({
         data: {
           giveaway: { connect: { id: giveaway.id } },
           user: { connect: { id: userId } },
+          email: input.email,
           givenName: input.givenName,
           familyName: input.familyName,
           mailingAddress: {
