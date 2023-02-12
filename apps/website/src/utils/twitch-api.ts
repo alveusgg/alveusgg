@@ -13,7 +13,7 @@ export type AuthHeaders = {
 
 let authHeaders: AuthHeaders | null = null;
 
-async function getAuthHeaders() {
+async function getApplicationAuthHeaders() {
   if (authHeaders !== null) {
     return authHeaders;
   }
@@ -92,7 +92,7 @@ export async function getSubscriptions() {
     {
       method: "GET",
       headers: {
-        ...(await getAuthHeaders()),
+        ...(await getApplicationAuthHeaders()),
       },
     }
   );
@@ -113,7 +113,7 @@ export async function removeSubscription(id: string) {
     {
       method: "DELETE",
       headers: {
-        ...(await getAuthHeaders()),
+        ...(await getApplicationAuthHeaders()),
       },
     }
   );
@@ -138,7 +138,7 @@ export async function createSubscription(
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        ...(await getAuthHeaders()),
+        ...(await getApplicationAuthHeaders()),
       },
       body: JSON.stringify({
         type: type,
@@ -171,7 +171,7 @@ export async function getSubscriptionsForUser(userId: string) {
     {
       method: "GET",
       headers: {
-        ...(await getAuthHeaders()),
+        ...(await getApplicationAuthHeaders()),
       },
     }
   );
@@ -197,7 +197,7 @@ export async function getStreamsForChannels(channelIds: Array<string>) {
     {
       method: "GET",
       headers: {
-        ...(await getAuthHeaders()),
+        ...(await getApplicationAuthHeaders()),
       },
     }
   );
