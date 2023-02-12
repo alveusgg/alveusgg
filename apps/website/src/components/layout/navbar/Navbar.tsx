@@ -168,37 +168,57 @@ export const Navbar: React.FC = () => {
           </div>
 
           <Disclosure.Panel>
-            <div className="space-y-1 pt-2 pb-4">
+            <div className="space-y-1 p-2 pb-4">
               <ul className="flex flex-col gap-4">
                 <li>
-                  <Disclosure.Button as={NavLink} href="/live">
+                  <Disclosure.Button
+                    as={NavLink}
+                    href="/live"
+                    className="w-full"
+                  >
                     Live
                   </Disclosure.Button>
                 </li>
                 <li>
-                  <Disclosure.Button as={NavLink} href="/giveaways">
+                  <Disclosure.Button
+                    as={NavLink}
+                    href="/giveaways"
+                    className="w-full"
+                  >
                     Giveaways
                   </Disclosure.Button>
                 </li>
                 {/*
                 <li>
-                  <Disclosure.Button as={NavLink} href="/schedule">
+                  <Disclosure.Button as={NavLink} href="/schedule" className"w-full>
                     Schedule
                   </Disclosure.Button>
                 </li>
                 <li>
-                  <Disclosure.Button as={NavLink} href="/explore">
+                  <Disclosure.Button as={NavLink} href="/explore" className"w-full>
                     Explore
                   </Disclosure.Button>
                 </li>
                 */}
                 <li>
-                  <Disclosure.Button as={NavLink} href="/explore">
+                  <Disclosure.Button
+                    as={NavLink}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://www.alveussanctuary.org/donate/"
+                    className="w-full"
+                  >
                     Donate
                   </Disclosure.Button>
                 </li>
                 <li>
-                  <Disclosure.Button as={NavLink} href="/explore">
+                  <Disclosure.Button
+                    as={NavLink}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                    href="https://www.alveussanctuary.org/merch-store/"
+                    className="w-full"
+                  >
                     Merch
                   </Disclosure.Button>
                 </li>
