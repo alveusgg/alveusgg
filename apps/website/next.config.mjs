@@ -37,11 +37,6 @@ const config = {
   },
   redirects: async () => [
     {
-      source: "/",
-      destination: "/live/",
-      permanent: false,
-    },
-    {
       source: "/smile",
       destination: "https://smile.amazon.com/ch/86-1772907",
       permanent: true,
