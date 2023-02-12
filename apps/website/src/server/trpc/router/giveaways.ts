@@ -1,6 +1,9 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
+import { getTwitchConfig, type TwitchConfig } from "../../../config/twitch";
+import { calcGiveawayConfig } from "../../../utils/giveaways";
+import { getUserFollowsBroadcaster } from "../../../utils/twitch-api";
 import { isValidCountryCode } from "../../../utils/countries";
 import {
   type OutgoingWebhookType,
@@ -20,6 +23,23 @@ export const giveawayEntrySchema = z.object({
   country: z.custom<string>(isValidCountryCode),
   state: z.string(), // state may be left empty
 });
+
+async function checkFollowsChannel(
+  channelConfig: TwitchConfig["channels"][string],
+  twitchAccount: { access_token: string; providerAccountId: string }
+) {
+  const isFollowing = await getUserFollowsBroadcaster(
+    twitchAccount.access_token,
+    twitchAccount.providerAccountId,
+    channelConfig.id
+  );
+  if (!isFollowing) {
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Your connected Twitch account does not follow ${channelConfig.label}!`,
+    });
+  }
+}
 
 export const giveawaysRouter = router({
   enterGiveaway: protectedProcedure
@@ -60,6 +80,38 @@ export const giveawaysRouter = router({
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "entry already submitted",
+        });
+      }
+
+      // Check if twitch account is connected
+      const twitchAccount = await ctx.prisma.account.findFirst({
+        select: {
+          providerAccountId: true,
+          access_token: true,
+        },
+        where: {
+          userId,
+          provider: "twitch",
+        },
+      });
+      const accessToken = twitchAccount?.access_token;
+      if (!accessToken) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User is not connected to a Twitch account!",
+        });
+      }
+
+      // Perform server side checks if required
+      const config = calcGiveawayConfig(giveaway.config);
+      if (config.checks) {
+        // TODO: Make the giveaway config granular. Right now the channel follow check is hard-coded here:
+        // NOTE: Does not work, twitch removed API access :(
+        const channelConfig = (await getTwitchConfig()).channels
+          .alveussanctuary;
+        await checkFollowsChannel(channelConfig, {
+          access_token: accessToken,
+          providerAccountId: twitchAccount.providerAccountId,
         });
       }
 
