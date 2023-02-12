@@ -14,6 +14,10 @@ const Home: NextPage = () => {
         <title>Contact / Privacy Policy - Alveus.gg</title>
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
+      {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <header>
           <Heading className="my-3 text-3xl">Contact / Privacy Policy</Heading>

@@ -3,7 +3,6 @@ import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import type { Giveaway } from "@prisma/client";
 import React from "react";
 import { prisma } from "../../server/db/client";
-import DefaultPageLayout from "../../components/DefaultPageLayout";
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
 import Link from "next/link"
@@ -36,6 +35,10 @@ const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
         <title>Alveus Giveaways | Alveus.gg</title>
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
+      {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <header>
           <Heading className="my-3 text-3xl">Giveaways</Heading>

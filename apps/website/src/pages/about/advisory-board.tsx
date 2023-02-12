@@ -14,7 +14,7 @@ import People from "../../components/content/People"
 
 const advisors = {
   samantha: {
-    image: samanthaJacksonImage.src,
+    image: samanthaJacksonImage,
     name: 'Samantha Jackson',
     title: 'Advisory Board Member',
     description: <>
@@ -31,7 +31,7 @@ const advisors = {
     </>,
   },
   michele: {
-    image: micheleRaffinImage.src,
+    image: micheleRaffinImage,
     name: 'Michele Raffin',
     title: 'Advisory Board Member',
     description: <>
@@ -47,7 +47,7 @@ const advisors = {
     </>,
   },
   ellie: {
-    image: ellieArmstrongImage.src,
+    image: ellieArmstrongImage,
     name: 'Ellie Armstrong',
     title: 'Advisory Board Member',
     description: <>
@@ -72,7 +72,7 @@ const advisors = {
     </>,
   },
   synack: {
-    image: synackImage.src,
+    image: synackImage,
     name: 'Synack',
     title: 'Advisory Board Member',
     description: <>
@@ -86,7 +86,7 @@ const advisors = {
     </>,
   },
   anita: {
-    image: anitaYeattesImage.src,
+    image: anitaYeattesImage,
     name: 'Anita Yeattes',
     title: 'Advisory Board Member',
     description: <>
@@ -98,7 +98,7 @@ const advisors = {
     </>,
   },
   sebastian: {
-    image: sebastianEcheverriImage.src,
+    image: sebastianEcheverriImage,
     name: 'Sebastian Echeverri',
     title: 'Advisory Board Member',
     description: <>
@@ -114,7 +114,7 @@ const advisors = {
     </>,
   },
   allison: {
-    image: allisonJohnsonImage.src,
+    image: allisonJohnsonImage,
     name: 'Dr. Allison Johnson',
     title: 'Advisory Board Member',
     description: <>
@@ -137,12 +137,16 @@ const AboutAdvisoryBoardPage: NextPage = () => {
         <meta name="robots" content="noindex" />
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
       <Section dark className="py-8">
         <Heading className="text-center">
           Alveus Advisory Board
         </Heading>
       </Section>
 
+      {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <People people={advisors} sideBySide />
       </Section>

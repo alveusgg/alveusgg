@@ -10,7 +10,7 @@ import People from "../../components/content/People"
 
 const staff = {
   connor: {
-    image: connorObrienImage.src,
+    image: connorObrienImage,
     name: 'Connor O\'Brien',
     title: 'Operations Manager',
     description: <>
@@ -27,7 +27,7 @@ const staff = {
     </>,
   },
   kayla: {
-    image: kaylaJacksonImage.src,
+    image: kaylaJacksonImage,
     name: 'Kayla Jackson',
     title: 'Animal Care & Training Manager',
     description: <>
@@ -44,7 +44,7 @@ const staff = {
     </>,
   },
   ella: {
-    image: ellaRocksImage.src,
+    image: ellaRocksImage,
     name: 'Ella Rocks',
     title: 'Animal Care Coordinator',
     description: <>
@@ -71,12 +71,16 @@ const AboutStaffPage: NextPage = () => {
         <meta name="robots" content="noindex" />
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
       <Section dark className="py-8">
         <Heading className="text-center">
           Alveus Staff
         </Heading>
       </Section>
 
+      {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <People people={staff} />
       </Section>

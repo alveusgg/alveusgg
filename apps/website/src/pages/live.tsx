@@ -49,6 +49,9 @@ const Live: NextPage<LivePageProps> = (
         <title>Alveus.gg</title>
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
       <div className="flex flex-1 flex-col">
         <header className="sr-only">
           <h1>Live stream</h1>

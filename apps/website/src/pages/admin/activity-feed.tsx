@@ -115,6 +115,9 @@ const ActivityFeed: NextPage<
         <title>Activity Feed | Alveus.gg</title>
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
       <AdminPageLayout title="Activity Feed">
         <section>
           <header>
