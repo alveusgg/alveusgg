@@ -5,25 +5,25 @@ import IconTwitch from "../../../icons/IconTwitch"
 import IconYouTube from "../../../icons/IconYouTube"
 
 const socials = {
+  twitch: {
+    link: "https://twitch.tv/alveussanctuary",
+    title: "Twitch.tv",
+    icon: IconTwitch,
+  },
   instagram: {
     link: "https://www.instagram.com/alveussanctuary",
     title: "Instagram",
     icon: IconInstagram,
-  },
-  tiktok: {
-    link: "https://www.tiktok.com/@alveussanctuary",
-    title: "TikTok",
-    icon: IconTikTok,
   },
   twitter: {
     link: "https://twitter.com/AlveusSanctuary",
     title: "Twitter",
     icon: IconTwitter,
   },
-  twitch: {
-    link: "https://twitch.tv/alveussanctuary",
-    title: "Twitch.tv",
-    icon: IconTwitch,
+  tiktok: {
+    link: "https://www.tiktok.com/@alveussanctuary",
+    title: "TikTok",
+    icon: IconTikTok,
   },
   youtube: {
     link: "https://www.youtube.com/c/AlveusSanctuary",

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { Fragment, useMemo } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link, { type LinkProps } from "next/link";
@@ -9,7 +8,17 @@ import { ProfileInfo } from "./ProfileInfo";
 import { useIsActivePath } from "../../shared/hooks/useIsActivePath";
 import logoImage from "../../../assets/logo.png";
 import socials from "../../shared/data/socials"
+import IconAmazon from "../../../icons/IconAmazon"
 //import { NotificationsButton } from "./NotificationsButton";
+
+const utilities = {
+  amazon: {
+    link: "/wishlist",
+    title: "Amazon Wishlist",
+    icon: IconAmazon,
+  },
+  ...socials,
+};
 
 type NavLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -59,15 +68,15 @@ export const Navbar: React.FC = () => {
             <div className="hidden lg:flex flex-col flex-grow gap-2">
               <div className="flex items-center gap-4">
                 <ul className="flex flex-grow items-center justify-end gap-4">
-                  {Object.entries(socials).map(([ key, social ]) => (
+                  {Object.entries(utilities).map(([ key, link ]) => (
                     <li key={key}>
                       <a
                         className="block text-white hover:text-alveus-green bg-transparent hover:bg-white transition-colors p-2 rounded-xl"
-                        href={social.link}
+                        href={link.link}
                         target="_blank"
                         rel="noreferrer"
                       >
-                        <social.icon size={24} />
+                        <link.icon size={24} />
                       </a>
                     </li>
                   ))}
