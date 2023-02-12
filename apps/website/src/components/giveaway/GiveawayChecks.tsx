@@ -24,11 +24,9 @@ const GiveawayCheck: React.FC<{
 
   const needsToBeClicked = url !== undefined;
 
-  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
-    if (e.currentTarget === e.target) {
-      // Wait at least 2 seconds before allowing to check the checkmark
-      setTimeout(() => setIsClicked(true), 1000);
-    }
+  const handleClick = useCallback(() => {
+    // Wait at least 2 seconds before allowing to check the checkmark
+    setTimeout(() => setIsClicked(true), 1000);
   }, []);
 
   const containerClasses =
