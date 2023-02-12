@@ -4,6 +4,40 @@ import Heading from "../components/content/Heading"
 import Script from "next/script"
 import { useEffect, useId, useRef, useState } from "react"
 import Link from "next/link"
+import sirenImage from  "../assets/hero/siren.png"
+import mileyImage from  "../assets/hero/miley.png"
+import ticoImage from  "../assets/hero/tico.png"
+import miaImage from  "../assets/hero/mia.png"
+import noodleImage from  "../assets/hero/noodle.png"
+import nuggetImage from  "../assets/hero/nugget.png"
+import Slideshow from "../components/content/Slideshow"
+
+const slides = [
+  {
+    src: sirenImage,
+    alt: "Siren",
+  },
+  {
+    src: mileyImage,
+    alt: "Miley",
+  },
+  {
+    src: ticoImage,
+    alt: "Tico",
+  },
+  {
+    src: miaImage,
+    alt: "Mia",
+  },
+  {
+    src: noodleImage,
+    alt: "Noodle",
+  },
+  {
+    src: nuggetImage,
+    alt: "Nugget",
+  },
+];
 
 const Home: NextPage = () => {
   const twitchEmbedId = useId();
@@ -47,11 +81,14 @@ const Home: NextPage = () => {
       </Head>
 
       {/* Hero, offset to be navbar background */}
-      <div className="min-h-[90vh] lg:-mt-40 flex flex-col relative z-0">
-        <div className="absolute inset-0 bg-alveus-green -z-10" />
+      <div className="min-h-[95vh] lg:-mt-40 flex flex-col relative z-0">
+        <div className="absolute inset-0 bg-alveus-green -z-10">
+          <Slideshow images={slides} />
+          <div className="absolute inset-0 bg-black bg-opacity-50" />
+        </div>
 
         <div className="container mx-auto lg:pt-40 flex flex-wrap flex-grow items-center text-white">
-          <div className="basis-full lg:basis-1/2 pt-8 lg:pt-0 px-4">
+          <div className="basis-full lg:basis-1/2 p-4">
             <Heading className="text-5xl">
               Educating the
               {' '}
@@ -66,13 +103,13 @@ const Home: NextPage = () => {
 
             <div className="flex flex-wrap gap-4 mt-8">
               <Link
-                className="inline-block text-lg hover:bg-alveus-tan hover:text-alveus-green transition-colors px-4 py-2 rounded-full border-2 border-white"
+                className="inline-block text-lg px-4 py-2 rounded-full border-2 border-white hover:bg-alveus-tan hover:text-alveus-green hover:border-alveus-tan transition-colors"
                 href="https://www.alveussanctuary.org/ambassadors/"
               >
                 Meet the Ambassadors
               </Link>
               <Link
-                className="inline-block text-lg hover:bg-alveus-tan hover:text-alveus-green transition-colors px-4 py-2 rounded-full border-2 border-white"
+                className="inline-block text-lg px-4 py-2 rounded-full border-2 border-white hover:bg-alveus-tan hover:text-alveus-green hover:border-alveus-tan transition-colors"
                 href="/live"
               >
                 Watch Live
@@ -80,8 +117,8 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="basis-full lg:basis-1/2 pt-8 lg:pt-0 px-4">
-            <Link href="/live">
+          <div className="basis-full lg:basis-1/2 p-4">
+            <Link className="block rounded-2xl shadow-xl hover:shadow-2xl transition-shadow" href="/live">
               <div
                 className={`w-full h-auto aspect-video rounded-2xl overflow-clip ${twitchEmbedPlaying ? "pointer-events-none" : ""}`}
                 id={`twitch-embed-${twitchEmbedId}`}
