@@ -71,12 +71,16 @@ const AboutBoardOfDirectorsPage: NextPage = () => {
         <meta name="robots" content="noindex" />
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
       <Section dark className="py-8">
         <Heading className="text-center">
           Alveus Board of Directors
         </Heading>
       </Section>
 
+      {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <People people={directors} sideBySide />
       </Section>

@@ -11,6 +11,7 @@ import { Headline } from "../../components/shared/Headline";
 import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
 import { Giveaways } from "../../components/admin/Giveaways";
 import { AdminPageLayout } from "../../components/admin/AdminPageLayout";
+import React from "react"
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -61,6 +62,9 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
       <Head>
         <title>Admin Dashboard | Alveus.gg</title>
       </Head>
+
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
 
       <AdminPageLayout title="Dashboard">
         <div className="w-full gap-4 md:flex md:flex-row">

@@ -9,6 +9,9 @@ const AboutAnnualReport2021Page: NextPage = () => {
         <title>2021-2022 Annual Report | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
+
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
     </>
   )
 };

@@ -64,6 +64,9 @@ const AboutAlveusPage: NextPage = () => {
         <meta name="robots" content="noindex" />
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
       <div className="relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -222,6 +225,7 @@ const AboutAlveusPage: NextPage = () => {
         </Section>
       </div>
 
+      {/* Grow the last section to cover the page */}
       <Section className="text-center flex-grow">
         <Heading level={2}>
           Our Collaborations

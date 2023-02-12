@@ -61,6 +61,9 @@ const AboutMayaPage: NextPage = () => {
         <meta name="robots" content="noindex" />
       </Head>
 
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
       <div className="relative">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
@@ -140,6 +143,7 @@ const AboutMayaPage: NextPage = () => {
         </Section>
       </div>
 
+      {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <Heading level={2} className="text-5xl text-alveus-green text-center">
           Maya&apos;s Experience

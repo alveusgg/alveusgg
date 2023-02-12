@@ -10,6 +10,10 @@ import { getProviders, getSession, signIn } from "next-auth/react";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 
 import DefaultPageLayout from "../../components/DefaultPageLayout";
+import React from "react"
+import Section from "../../components/content/Section"
+import Heading from "../../components/content/Heading"
+import Head from "next/head"
 
 const errorMessages: Record<string, string> = {
   default: "Unable to sign in.",
@@ -66,8 +70,18 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
     errorMessages["default"];
 
   return (
-    <DefaultPageLayout title="Sign in">
-      <>
+    <>
+      <Head>
+        <title>Sign In | Alveus.gg</title>
+      </Head>
+
+      {/* Nav background */}
+      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+
+      {/* Grow the last section to cover the page */}
+      <Section className="flex-grow">
+        <Heading className="my-3 text-3xl">Sign in</Heading>
+
         {error && (
           <div className="mb-6 rounded-md bg-red-50 p-4">
             <div className="flex">
@@ -109,8 +123,8 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
                 </button>
               </div>
             ))}
-      </>
-    </DefaultPageLayout>
+      </Section>
+    </>
   );
 };
 
