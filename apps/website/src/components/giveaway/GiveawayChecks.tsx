@@ -24,14 +24,25 @@ const GiveawayCheck: React.FC<{
 
   const needsToBeClicked = url !== undefined;
 
-  const handleClick = useCallback(() => {
-    // Wait at least 2 seconds before allowing to check the checkmark
-    setTimeout(() => setIsClicked(true), 1000);
+  const handleClick = useCallback((e: React.MouseEvent<HTMLAnchorElement>) => {
+    if (e.currentTarget === e.target) {
+      // Wait at least 2 seconds before allowing to check the checkmark
+      setTimeout(() => setIsClicked(true), 1000);
+    }
   }, []);
 
   const containerClasses =
     "flex flex-row rounded border border-gray-200 bg-white shadow-xl";
   const disabled = needsToBeClicked && !isClicked;
+  const handleCheckboxClick = useCallback(
+    (e: React.MouseEvent<HTMLInputElement>) => {
+      if (disabled) {
+        e.preventDefault();
+      }
+    },
+    [disabled]
+  );
+
   const content = (
     <>
       <span className="flex flex-1 flex-row items-center gap-5 p-5">
@@ -39,7 +50,7 @@ const GiveawayCheck: React.FC<{
       </span>
       <label
         className={`flex flex-row items-center ${
-          disabled ? "bg-gray-200" : "bg-white"
+          disabled ? "pointer-events-none bg-gray-200" : "bg-white"
         }  px-5`}
       >
         <span className="sr-only">{label}</span>
@@ -47,7 +58,7 @@ const GiveawayCheck: React.FC<{
           name={`req-${name}`}
           value="yes"
           type="checkbox"
-          disabled={disabled}
+          onClick={handleCheckboxClick}
           defaultChecked={needsToBeClicked && isClicked}
           required={true}
         />
