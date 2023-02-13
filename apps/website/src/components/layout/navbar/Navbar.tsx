@@ -84,7 +84,7 @@ export const Navbar: React.FC = () => {
               </div>
               <div className="flex items-center gap-4 pt-2 border-t border-white">
                 <Link href="/" className="text-3xl font-serif font-bold">
-                  Alveus
+                  Alveus.gg
                 </Link>
                 <ul className="flex flex-grow items-center justify-end">
                   <li>
@@ -179,7 +179,7 @@ export const Navbar: React.FC = () => {
             {/* Mobile menu */}
             <div className="flex lg:hidden items-center justify-center flex-grow">
               <Link href="/" className="text-3xl font-serif font-bold">
-                Alveus
+                Alveus.gg
               </Link>
             </div>
             <div className="flex lg:hidden items-center">
