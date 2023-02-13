@@ -1,6 +1,44 @@
 import React from "react";
 import Link from "next/link";
 import Socials from "./Socials";
+import IconGitHub from "../../../icons/IconGitHub";
+
+const footerLinkClasses =
+  "underline decoration-gray-600 underline-offset-2 transition-colors hover:text-gray-300";
+
+const credits =
+  /* prettier-ignore */ <>
+  Original design by
+  {" "}
+  <Link
+    className={footerLinkClasses}
+    href="https://chanelrooh.com"
+    target="_blank"
+  >
+    Chanelrooh
+  </Link>
+  {", "}
+  <br/>
+  built by the
+  {" "}
+  <Link
+    className={footerLinkClasses}
+    href="https://github.com/alveusgg"
+    rel="noreferrer"
+    target="_blank"
+  >
+    <IconGitHub
+      size={16}
+      className="mr-1 inline-block"
+    />
+    Alveus.gg team
+  </Link>
+  {" "}
+  and community
+  {", "}
+  <br/>
+  supported by the Alveus team.
+</>;
 
 export const Footer: React.FC = () => {
   return (
@@ -11,23 +49,16 @@ export const Footer: React.FC = () => {
         <div className="container mx-auto">
           <ul className="flex flex-wrap items-center justify-between">
             <li className="basis-full p-2 md:basis-1/3">
-              <p>
-                Built by the Alveus.gg team and community,
-                <br />
-                supported by the Alveus team.
-              </p>
+              <p>{credits}</p>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-center">
-              <Link
-                className="underline decoration-gray-400 transition-colors hover:text-gray-300"
-                href="/privacy-policy"
-              >
+              <Link className={footerLinkClasses} href="/privacy-policy">
                 Privacy Policy
               </Link>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-right">
               <Link
-                className="underline decoration-gray-400 transition-colors hover:text-gray-300"
+                className={footerLinkClasses}
                 href="https://www.alveussanctuary.org"
                 target="_blank"
                 rel="noreferrer"
