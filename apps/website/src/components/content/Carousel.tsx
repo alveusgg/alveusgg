@@ -14,7 +14,7 @@ type CarouselProps = {
 const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
   // Allow the user to scroll to the next/previous image
   const ref = useRef<HTMLDivElement>(null);
-  const last = useRef<{ from: number, to: number } | null>(null);
+  const last = useRef<{ left: number, right: number } | null>(null);
   const move = useCallback((direction: "left" | "right") => {
     const { current } = ref;
     if (!current || !current.children[0]) return;
@@ -34,13 +34,13 @@ const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
     const listener = () => {
       if (Math.round(current.scrollLeft) === offset) {
         current.removeEventListener("scroll", listener);
-        last.current = { from: current.scrollLeft, to: current.scrollLeft };
+        last.current = { left: current.scrollLeft, right: current.scrollLeft };
       }
     };
     current.addEventListener("scroll", listener);
 
     // Scroll to the new offset
-    last.current = { from: Math.min(current.scrollLeft, offset), to: Math.max(current.scrollLeft, offset) }
+    last.current = { left: Math.min(current.scrollLeft, offset), right: Math.max(current.scrollLeft, offset) }
     current.scrollBy({
       left: offset - current.scrollLeft,
       behavior: "smooth",
@@ -68,12 +68,12 @@ const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
     const { width } = current.children[0].getBoundingClientRect();
 
     // If we've moved the half a width to the left of the last from/to, we've scrolled
-    if (last.current && current.scrollLeft < last.current.from - width / 2) interacted();
-    if (last.current && current.scrollLeft > last.current.to + width / 2) interacted();
+    if (last.current && current.scrollLeft < last.current.left - width / 2) interacted();
+    if (last.current && current.scrollLeft > last.current.right + width / 2) interacted();
 
     // Check if we're at the start or end of the scroll
-    if (current.scrollLeft === 0) setState("start");
-    else if (current.scrollLeft + current.clientWidth === current.scrollWidth) setState("end");
+    if (current.scrollLeft <= 0) setState("start");
+    else if (current.scrollLeft + current.clientWidth >= current.scrollWidth) setState("end");
     else setState("scrolling");
   }, [ interacted ]);
 
