@@ -12,11 +12,48 @@
 @tailwind utilities;
 
 @layer components {
-    details > summary {
-        list-style: none;
-    }
+  details > summary {
+    list-style: none;
+  }
 
-    details > summary::-webkit-details-marker {
-        display: none;
-    }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Some basic styles for user generated HTML */
+  .alveus-ugc {
+  }
+
+  .alveus-ugc h1,
+  .alveus-ugc h2,
+  .alveus-ugc h3 {
+    @apply font-bold my-3 text-xl;
+  }
+
+  .alveus-ugc h4 {
+    @apply font-bold my-3 text-lg;
+  }
+
+  .alveus-ugc h5,
+  .alveus-ugc h6 {
+    @apply font-bold my-3;
+  }
+
+  .alveus-ugc p,
+  .alveus-ugc ul,
+  .alveus-ugc ol {
+    @apply my-3;
+  }
+
+  .alveus-ugc ul {
+    @apply ml-7 list-disc;
+  }
+
+  .alveus-ugc ol {
+    @apply ml-7 list-decimal;
+  }
+
+  .alveus-ugc li {
+    @apply my-1;
+  }
 }

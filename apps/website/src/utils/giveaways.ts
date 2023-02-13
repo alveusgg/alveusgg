@@ -3,6 +3,9 @@ import { z } from "zod";
 export type GiveawayConfig = z.infer<typeof giveawayConfigSchema>;
 export const giveawayConfigSchema = z.object({
   checks: z.boolean().optional(),
+  introHTML: z.string().optional(),
+  rulesHTML: z.string().optional(),
+  submitButtonText: z.string().optional(),
 });
 export const getDefaultGiveawayConfig = () =>
   ({ checks: true } satisfies GiveawayConfig);

@@ -1,7 +1,6 @@
 import React, { useCallback } from "react";
 import { signIn, useSession } from "next-auth/react";
 import type { Giveaway, GiveawayEntry } from "@prisma/client";
-import Link from "next/link";
 
 import { calcGiveawayConfig } from "../../utils/giveaways";
 import { trpc } from "../../utils/trpc";
@@ -12,6 +11,7 @@ import { GiveawayChecks } from "./GiveawayChecks";
 import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
 import { GiveawayEntryContactFieldset } from "./GiveawayEntryContactFieldset";
+import { GiveawayEntryRulesFieldset } from "./GiveawayEntryRulesFieldset";
 
 export const GiveawayEntryForm: React.FC<{
   giveaway: Giveaway;
@@ -80,6 +80,13 @@ export const GiveawayEntryForm: React.FC<{
 
   return (
     <form onSubmit={handleSubmit}>
+      {config.introHTML && (
+        <p
+          className="alveus-ugc my-3 text-lg"
+          dangerouslySetInnerHTML={{ __html: config.introHTML }}
+        />
+      )}
+
       {enterGiveaway.error && (
         <div className="rounded-lg bg-red-200 p-2 text-red-900 shadow-xl">
           Error: {enterGiveaway.error.message}
@@ -101,23 +108,7 @@ export const GiveawayEntryForm: React.FC<{
           defaultEmailAddress={session.user.email || undefined}
         />
         <GiveawayEntryShippingAddressFieldset />
-
-        <fieldset>
-          <legend className="mb-2 font-bold">Rules</legend>
-          <label className="flex flex-row gap-3">
-            <input type="checkbox" required={true} />
-            <span>
-              I agree to the{" "}
-              <Link
-                className="underline"
-                href={`/giveaways/${giveaway.slug || giveaway.id}/rules`}
-                target="_blank"
-              >
-                Official Rules
-              </Link>
-            </span>
-          </label>
-        </fieldset>
+        {config.rulesHTML && <GiveawayEntryRulesFieldset giveaway={giveaway} />}
       </div>
 
       <div className="mt-7">
@@ -126,7 +117,7 @@ export const GiveawayEntryForm: React.FC<{
           className="block w-full rounded-lg bg-gray-600 p-4 text-white"
           disabled={enterGiveaway.isLoading}
         >
-          Enter to Win
+          {config.submitButtonText || "Enter to Win"}
         </button>
       </div>
     </form>
