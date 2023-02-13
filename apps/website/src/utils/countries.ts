@@ -1,5 +1,6 @@
 import type { Country } from "country-list";
 import {
+  overwrite,
   getData as getCountries,
   getName as getCountryName,
 } from "country-list";
@@ -7,6 +8,17 @@ import {
 export { getName as getCountryName } from "country-list";
 
 export const DEFAULT_COUNTRY_CODE = "US";
+
+overwrite([
+  {
+    code: "TW",
+    name: "Taiwan",
+  },
+  {
+    code: "GB",
+    name: "United Kingdom",
+  },
+]);
 
 export const allCountries = getCountries();
 export const commonCountryCodes = ["US", "CA", "GB", "DE"];
