@@ -4,6 +4,8 @@ import {
   getName as getCountryName,
 } from "country-list";
 
+export { getName as getCountryName } from "country-list";
+
 export const DEFAULT_COUNTRY_CODE = "US";
 
 export const allCountries = getCountries();

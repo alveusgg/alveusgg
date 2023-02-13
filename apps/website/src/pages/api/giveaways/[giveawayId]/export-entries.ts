@@ -4,6 +4,7 @@ import { stringify } from "csv-stringify/sync";
 import { getServerAuthSession } from "../../../../server/common/get-server-auth-session";
 import { prisma } from "../../../../server/db/client";
 import { checkIsSuperUser } from "../../../../utils/auth";
+import { getCountryName } from "../../../../utils/countries";
 
 type GiveawayEntryCsvExportRow = string[];
 
@@ -45,6 +46,7 @@ const exportGiveawayEntries = async (
       entry.mailingAddress.city,
       entry.mailingAddress.state,
       entry.mailingAddress.country,
+      getCountryName(entry.mailingAddress.country) || "-",
     ];
   });
 
@@ -62,6 +64,7 @@ const exportGiveawayEntries = async (
     "postalCode",
     "city",
     "state",
+    "countryCode",
     "country",
   ]);
 
