@@ -259,6 +259,32 @@ export const Navbar: React.FC = () => {
                     Merch
                   </Disclosure.Button>
                 </li>
+                {sessionData ? (
+                  <li>
+                    <div className="border-t my-3 w-full"></div>
+
+                    <div className="px-5 py-3">
+                      <ProfileInfo full />
+                    </div>
+
+                    <Disclosure.Button
+                      className={`${NavLinkClasses} text-left w-full`}
+                      onClick={() => signOut()}
+                    >
+                      Log out
+                    </Disclosure.Button>
+                  </li>
+                ) : (
+                  <li>
+                    <Disclosure.Button
+                      className={`${NavLinkClasses} font-semibold text-left w-full`}
+                      type="button"
+                      onClick={() => signIn("twitch")}
+                    >
+                      Sign In
+                    </Disclosure.Button>
+                  </li>
+                )}
               </ul>
             </div>
           </Disclosure.Panel>
