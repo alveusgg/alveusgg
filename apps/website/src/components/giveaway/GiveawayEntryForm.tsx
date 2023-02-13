@@ -45,9 +45,7 @@ export const GiveawayEntryForm: React.FC<{
   if (!session?.user?.id) {
     return (
       <div className="rounded-lg bg-white p-2 shadow-xl">
-        <p className="mb-4">
-          You need to be logged in with Twitch to enter the giveaway.
-        </p>
+        <p className="mb-4">You need to be logged in with Twitch to enter.</p>
 
         <button
           className="flex w-full flex-row justify-center gap-2 rounded-xl bg-[#6441a5] p-3 text-center font-semibold text-white no-underline"
@@ -63,7 +61,7 @@ export const GiveawayEntryForm: React.FC<{
   if (enterGiveaway.isSuccess) {
     return (
       <div className="rounded-lg bg-green-100 p-2 shadow-xl">
-        You have been successfully entered in the giveaway! Good luck!
+        Your entry was successful!
       </div>
     );
   }
@@ -71,7 +69,7 @@ export const GiveawayEntryForm: React.FC<{
   if (existingEntry) {
     return (
       <div className="rounded-lg bg-green-100 p-2 shadow-xl">
-        You already are entered in this giveaway! Good luck!
+        You are already entered!
       </div>
     );
   }

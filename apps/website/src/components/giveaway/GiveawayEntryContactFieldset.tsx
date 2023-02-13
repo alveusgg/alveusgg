@@ -8,7 +8,7 @@ export const GiveawayEntryContactFieldset: React.FC<{
 
     <div className="flex flex-col gap-5 md:flex-row">
       <label className="flex-1">
-        Email address:
+        Email address
         <br />
         <input
           className="w-full rounded-sm border border-gray-700 bg-white p-1"
