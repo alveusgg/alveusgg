@@ -1,6 +1,6 @@
 import type { ImageProps } from "next/image"
 import Image from "next/image"
-import { type CSSProperties, useId, useMemo } from "react"
+import React, { type CSSProperties, useId, useMemo } from "react"
 
 type SlideshowProps = {
   images: {

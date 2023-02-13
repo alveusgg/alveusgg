@@ -4,23 +4,31 @@ import Heading from "../components/content/Heading"
 import Script from "next/script"
 import React, { useEffect, useId, useRef, useState } from "react"
 import Link from "next/link"
+import Slideshow from "../components/content/Slideshow"
+import Image from "next/image"
+import Section from "../components/content/Section"
+import IconAmazon from "../icons/IconAmazon"
+import IconPayPal from "../icons/IconPayPal"
+import IconEmail from "../icons/IconEmail"
+
+import mayaImage from "../assets/maya.png"
 import sirenImage from  "../assets/hero/siren.png"
 import mileyImage from  "../assets/hero/miley.png"
 import ticoImage from  "../assets/hero/tico.png"
 import miaImage from  "../assets/hero/mia.png"
 import noodleImage from  "../assets/hero/noodle.png"
 import nuggetImage from  "../assets/hero/nugget.png"
-import Slideshow from "../components/content/Slideshow"
-import Image from "next/image"
-import mayaImage from "../assets/maya.png"
-import Section from "../components/content/Section"
-import IconAmazon from "../icons/IconAmazon"
-import IconPayPal from "../icons/IconPayPal"
-import IconEmail from "../icons/IconEmail"
 import leafLeftImage3 from "../assets/floral/leaf-left-3.png"
 import leafRightImage1 from "../assets/floral/leaf-right-1.png"
 import leafRightImage2 from "../assets/floral/leaf-right-2.png"
 import leafLeftImage1 from "../assets/floral/leaf-left-1.png"
+import caseMerchImage from "../assets/merch/biodegradable-iphone-case-iphone-11-pro-max-case-on-phone.png"
+import toteMerchImage from "../assets/merch/large-eco-tote-oyster-front.png"
+import tshirtMerchImage from "../assets/merch/organic-cotton-t-shirt-dress-black-front.png"
+import croptopMerchImage from "../assets/merch/organic-crop-top-black-front.png"
+import beanieMerchImage from "../assets/merch/organic-ribbed-beanie-black-front.png"
+import hoodieMerchImage from "../assets/merch/unisex-essential-eco-hoodie-white-front.png"
+import Carousel from "../components/content/Carousel"
 
 const slides = [
   {
@@ -46,6 +54,33 @@ const slides = [
   {
     src: nuggetImage,
     alt: "Nugget",
+  },
+];
+
+const merch = [
+  {
+    src: hoodieMerchImage,
+    alt: "Unisex Essential Echo Hoodie (White)",
+  },
+  {
+    src: caseMerchImage,
+    alt: "Biodegradable iPhone Case (iPhone 11 Pro Max)",
+  },
+  {
+    src: tshirtMerchImage,
+    alt: "Organic Cotton T-Shirt Dress (Black)",
+  },
+  {
+    src: croptopMerchImage,
+    alt: "Organic Crop Top (Black)",
+  },
+  {
+    src: toteMerchImage,
+    alt: "Large Eco Tote (Oyster)",
+  },
+  {
+    src: beanieMerchImage,
+    alt: "Organic Ribbed Beanie (Black)",
   },
 ];
 
@@ -261,8 +296,8 @@ const Home: NextPage = () => {
 
         <Section dark>
           <div className="flex flex-wrap items-center">
-            <div className="basis-full md:basis-1/2">
-              {/* TODO: Carousel */}
+            <div className="basis-full max-w-full md:basis-1/2 md:max-w-1/2">
+              <Carousel images={merch} />
             </div>
 
             <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pl-8">
