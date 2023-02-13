@@ -5,11 +5,12 @@ import { getTwitchConfig, type TwitchConfig } from "../../../config/twitch";
 import { calcGiveawayConfig } from "../../../utils/giveaways";
 import { getUserFollowsBroadcaster } from "../../../utils/twitch-api";
 import { isValidCountryCode } from "../../../utils/countries";
+import { prisma } from "../../db/client";
 import {
   type OutgoingWebhookType,
   triggerOutgoingWebhook,
 } from "../../actions/outgoing-webhooks";
-import { router, protectedProcedure } from "../trpc";
+import { router, protectedProcedure, publicProcedure } from "../trpc";
 
 export const giveawayEntrySchema = z.object({
   giveawayId: z.string().cuid(),
@@ -41,25 +42,57 @@ async function checkFollowsChannel(
   }
 }
 
+async function findActiveGiveaway(giveawaySlugOrId: string) {
+  const now = new Date();
+  return await prisma.giveaway.findFirst({
+    where: {
+      active: true,
+      startAt: { lt: now },
+      AND: [
+        { OR: [{ endAt: null }, { endAt: { gt: now } }] },
+        { OR: [{ id: giveawaySlugOrId }, { slug: giveawaySlugOrId }] },
+      ],
+    },
+  });
+}
+
 export const giveawaysRouter = router({
+  getGiveaway: publicProcedure
+    .input(
+      z.object({
+        giveawaySlugOrId: z.string(),
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      // Find the giveaway
+      const giveaway = await findActiveGiveaway(input.giveawaySlugOrId);
+      if (!giveaway) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // Require active session or redirect to log in
+      let existingEntry = null;
+      if (ctx.session?.user?.id) {
+        existingEntry = await prisma.giveawayEntry.findUnique({
+          where: {
+            giveawayId_userId: {
+              userId: ctx.session.user.id,
+              giveawayId: giveaway.id,
+            },
+          },
+        });
+      }
+
+      return { giveaway, existingEntry };
+    }),
+
   enterGiveaway: protectedProcedure
     .input(giveawayEntrySchema)
     .mutation(async ({ ctx, input }) => {
       // Find giveaway
-      const giveaway = await ctx.prisma.giveaway.findUnique({
-        where: {
-          id: input.giveawayId,
-        },
-      });
+      const giveaway = await findActiveGiveaway(input.giveawayId);
 
-      const now = new Date();
-      if (
-        !giveaway ||
-        // Check giveaway is still active:
-        !giveaway.active ||
-        giveaway.startAt > now ||
-        (giveaway.endAt && giveaway.endAt < now)
-      ) {
+      if (!giveaway) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "giveaway not found",
