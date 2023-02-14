@@ -1,7 +1,8 @@
 import React, { useCallback } from "react";
 import { signIn, useSession } from "next-auth/react";
-import type { Giveaway, GiveawayEntry } from "@prisma/client";
+import type { Giveaway } from "@prisma/client";
 
+import type { GiveawayEntryWithAddress } from "../../pages/giveaways/[giveawayId]";
 import { calcGiveawayConfig } from "../../utils/giveaways";
 import { trpc } from "../../utils/trpc";
 import IconTwitch from "../../icons/IconTwitch";
@@ -12,10 +13,11 @@ import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAdd
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
 import { GiveawayEntryContactFieldset } from "./GiveawayEntryContactFieldset";
 import { GiveawayEntryRulesFieldset } from "./GiveawayEntryRulesFieldset";
+import { getCountryName } from "../../utils/countries";
 
 export const GiveawayEntryForm: React.FC<{
   giveaway: Giveaway;
-  existingEntry: GiveawayEntry | null;
+  existingEntry: GiveawayEntryWithAddress | null;
 }> = ({ giveaway, existingEntry }) => {
   const { data: session } = useSession();
 
@@ -68,9 +70,37 @@ export const GiveawayEntryForm: React.FC<{
 
   if (existingEntry) {
     return (
-      <div className="rounded-lg bg-green-100 p-2 shadow-xl">
-        You are already entered!
-      </div>
+      <>
+        <div className="rounded-lg bg-green-100 p-2 shadow-xl">
+          You are already entered!
+          <br />
+        </div>
+
+        <Headline>Check your data</Headline>
+        <p className="my-2">
+          Username: {session.user.name}
+          <br />
+          Email: {existingEntry.email}
+          <br />
+          Name: {existingEntry.givenName} {existingEntry.familyName}
+        </p>
+        <p className="my-2">
+          <strong>Shipping address:</strong>
+          <br />
+          Street address: {existingEntry.mailingAddress.addressLine1}
+          <br />
+          Second address line:{" "}
+          {existingEntry.mailingAddress.addressLine2 || "-"}
+          <br />
+          City: {existingEntry.mailingAddress.city}
+          <br />
+          State / Province / Region: {existingEntry.mailingAddress.state}
+          <br />
+          Postal code/ZIP: {existingEntry.mailingAddress.postalCode}
+          <br />
+          Country: {getCountryName(existingEntry.mailingAddress.country)}
+        </p>
+      </>
     );
   }
 

@@ -6,7 +6,7 @@ import type {
 } from "next";
 import Head from "next/head";
 import { getSession } from "next-auth/react";
-import type { Giveaway, GiveawayEntry } from "@prisma/client";
+import type { Giveaway, GiveawayEntry, MailingAddress } from "@prisma/client";
 
 import { prisma } from "../../../server/db/client";
 
@@ -32,9 +32,13 @@ async function findActiveGiveaway(giveawaySlugOrId: string) {
   });
 }
 
+export type GiveawayEntryWithAddress = GiveawayEntry & {
+  mailingAddress: MailingAddress;
+};
+
 export const getServerSideProps: GetServerSideProps<{
   giveaway: Giveaway;
-  existingEntry: GiveawayEntry | null;
+  existingEntry: GiveawayEntryWithAddress | null;
 }> = async (context) => {
   // Check params
   const giveawaySlugOrId = context.params?.giveawayId;
@@ -53,7 +57,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   // Require active session or redirect to log in
-  let existingEntry = null;
+  let existingEntry: GiveawayEntryWithAddress | null = null;
   const session = await getSession(context);
   if (session?.user?.id) {
     existingEntry = await prisma.giveawayEntry.findUnique({
@@ -62,6 +66,9 @@ export const getServerSideProps: GetServerSideProps<{
           userId: session.user.id,
           giveawayId: giveaway.id,
         },
+      },
+      include: {
+        mailingAddress: true,
       },
     });
   }
@@ -81,7 +88,7 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({
     </Head>
 
     {/* Nav background */}
-    <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+    <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
     {/* Grow the last section to cover the page */}
     <Section className="flex-grow" containerClassName="max-w-lg">
