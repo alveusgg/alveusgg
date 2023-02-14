@@ -101,11 +101,11 @@ const AboutAlveusPage: NextPage = () => {
               <Image
                 src={mayaImage}
                 alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-                className="w-full h-auto max-w-lg mx-auto"
+                className="w-full h-auto max-w-lg ml-auto"
               />
             </div>
 
-            <div className="basis-full md:basis-1/2">
+            <div className="basis-full md:basis-1/2 md:px-4">
               <Heading level={2}>
                 Watch the Launch Video
               </Heading>

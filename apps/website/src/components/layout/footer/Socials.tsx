@@ -6,7 +6,7 @@ import socials from "../../shared/data/socials"
 import Image from "next/image"
 
 const Socials = () => (
-  <Section dark className="pb-0">
+  <Section dark className="z-0 pb-0">
     <div className="flex flex-wrap-reverse items-center">
       <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pr-8">
         <Image

@@ -11,6 +11,19 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar-none {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  }
+
+  .scrollbar-none::-webkit-scrollbar { /* Safari and Chrome */
+    width: 0;
+    height: 0;
+    display: none;
+  }
+}
+
 @layer components {
   details > summary {
     list-style: none;
