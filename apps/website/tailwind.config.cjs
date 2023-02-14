@@ -87,6 +87,9 @@ module.exports = {
       screens: {
         twitchSideBySide: "681px",
       },
+      maxWidth: {
+        '1/2': '50%',
+      },
     },
   },
   plugins: [],

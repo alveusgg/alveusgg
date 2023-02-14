@@ -71,10 +71,67 @@ const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
     if (last.current && current.scrollLeft < last.current.left - width / 2) interacted();
     if (last.current && current.scrollLeft > last.current.right + width / 2) interacted();
 
-    // Check if we're at the start or end of the scroll
-    if (current.scrollLeft <= 0) setState("start");
-    else if (current.scrollLeft + current.clientWidth >= current.scrollWidth) setState("end");
+    // If we're less than half a width from the start, we're at the start
+    if (current.scrollLeft < width / 2) setState("start");
+    // If we're less than half a width from the end, we're at the end
+    else if (current.scrollLeft > current.scrollWidth - current.clientWidth - width / 2) setState("end");
+    // Otherwise, we're scrolling
     else setState("scrolling");
+  }, [ interacted ]);
+
+  // Allow the user to drag to scroll
+  const drag = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
+    const { current } = ref;
+    if (!current) return;
+
+    // Get the current scroll/mouse position
+    const pos = {
+      left: current.scrollLeft,
+      top: current.scrollTop,
+      x: event.clientX,
+      y: event.clientY,
+    };
+
+    const move = (e: MouseEvent) => {
+      // Check how far we've moved
+      const dx = e.clientX - pos.x;
+      const dy = e.clientY - pos.y;
+
+      // Scroll the element
+      current.scrollTop = pos.top - dy;
+      current.scrollLeft = pos.left - dx;
+
+      // If we've moved the mouse, we've interacted
+      if (dx !== 0 || dy !== 0) interacted();
+    };
+    document.addEventListener("mousemove", move);
+
+    const up = () => {
+      // Remove the handlers
+      document.removeEventListener("mousemove", move);
+      document.removeEventListener("mouseup", up);
+
+      // Avoid sharp snapping
+      if (current.children[0]) {
+        const { width, height } = current.children[0].getBoundingClientRect();
+        const dx = current.scrollLeft % width;
+        const dy = current.scrollTop % height;
+        current.scrollBy({
+          left: dx < width / 2 ? -dx : width - dx,
+          top: dy < height / 2 ? -dy : height - dy,
+          behavior: "smooth",
+        });
+      }
+
+      // Reset the cursor and snapping
+      current.style.removeProperty("cursor");
+      current.style.removeProperty("scroll-snap-type");
+    };
+    document.addEventListener("mouseup", up);
+
+    // Switch the cursor and disable scroll snapping
+    current.style.cursor = "grabbing";
+    current.style.scrollSnapType = "none";
   }, [ interacted ]);
 
   // Run the auto scroll if requested, and not paused
@@ -101,15 +158,17 @@ const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
       </button>
 
       <div
-        className="flex flex-nowrap flex-grow overflow-x-auto snap-mandatory snap-x scrollbar-none"
+        className="flex flex-nowrap flex-grow overflow-x-auto snap-mandatory snap-x scrollbar-none select-none cursor-grab"
         ref={ref}
         onScroll={scrolled}
+        onMouseDown={drag}
       >
         {images.map((image, index) => (
           <div key={index} className="basis-full md:basis-1/3 flex-shrink-0 p-8 snap-center">
             <Image
               src={image.src}
               alt={image.alt}
+              draggable={false}
               className="w-full h-auto max-w-[10rem] mx-auto"
             />
           </div>
