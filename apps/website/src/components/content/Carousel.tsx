@@ -1,17 +1,13 @@
-import Image, { type ImageProps } from "next/image"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import IconAngleLeft from "../../icons/IconAngleLeft"
 import IconAngleRight from "../../icons/IconAngleRight"
 
 type CarouselProps = {
-  images: {
-    src: ImageProps["src"],
-    alt: string,
-  }[],
+  items: Record<string, React.ReactNode>,
   auto?: number | null,
 };
 
-const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
+const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000 }) => {
   // Allow the user to scroll to the next/previous image
   const ref = useRef<HTMLDivElement>(null);
   const last = useRef<{ left: number, right: number } | null>(null);
@@ -59,7 +55,7 @@ const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
   }, [ auto ]);
 
   // When we've scrolled, track if we've hit the start or end (and pause auto-scroll if it was the user)
-  const [ state, setState ] = useState<"start" | "scrolling" | "end">("start");
+  const [ state, setState ] = useState<"none" | "start" | "scrolling" | "end">("start");
   const scrolled = useCallback(() => {
     const { current } = ref;
     if (!current || !current.children[0]) return;
@@ -71,13 +67,21 @@ const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
     if (last.current && current.scrollLeft < last.current.left - width / 2) interacted();
     if (last.current && current.scrollLeft > last.current.right + width / 2) interacted();
 
-    // If we're less than half a width from the start, we're at the start
-    if (current.scrollLeft < width / 2) setState("start");
-    // If we're less than half a width from the end, we're at the end
-    else if (current.scrollLeft > current.scrollWidth - current.clientWidth - width / 2) setState("end");
-    // Otherwise, we're scrolling
+    // Check how close we are to the ends
+    const nearLeft = current.scrollLeft < width / 2;
+    const nearRight = current.scrollLeft > current.scrollWidth - current.clientWidth - width / 2;
+
+    // Update our scroll state
+    if (nearLeft && nearRight) setState("none");
+    else if (nearLeft) setState("start");
+    else if (nearRight) setState("end");
     else setState("scrolling");
   }, [ interacted ]);
+
+  // Run the scroll handler on load to check our current state
+  useEffect(() => {
+    scrolled();
+  }, [ scrolled ]);
 
   // Allow the user to drag to scroll
   const drag = useCallback((event: React.MouseEvent<HTMLDivElement>) => {
@@ -148,38 +152,33 @@ const Carousel: React.FC<CarouselProps> = ({ images, auto = 2000 }) => {
   return (
     <div className="flex flex-nowrap">
       <button
-        className="flex-shrink-0 p-1 group cursor-pointer disabled:cursor-default"
+        className={`flex-shrink-0 p-1 group cursor-pointer disabled:cursor-default ${state === "none" ? "hidden" : ""}`}
         type="button"
         onClick={() => { interacted(); move("left"); }}
-        disabled={state === "start"}
+        disabled={state === "start" || state === "none"}
       >
         <span className="sr-only">Previous</span>
         <IconAngleLeft className="group-disabled:opacity-20 transition-opacity" size={24} />
       </button>
 
       <div
-        className="flex flex-nowrap flex-grow overflow-x-auto snap-mandatory snap-x scrollbar-none select-none cursor-grab"
+        className={`flex flex-nowrap flex-grow overflow-x-auto snap-mandatory snap-x scrollbar-none ${state !== "none" ? "cursor-grab" : ""}`}
         ref={ref}
         onScroll={scrolled}
-        onMouseDown={drag}
+        onMouseDown={state === "none" ? undefined : drag}
       >
-        {images.map((image, index) => (
-          <div key={index} className="basis-full md:basis-1/3 flex-shrink-0 p-8 snap-center">
-            <Image
-              src={image.src}
-              alt={image.alt}
-              draggable={false}
-              className="w-full h-auto max-w-[10rem] mx-auto"
-            />
+        {Object.entries(items).map(([ key, item ]) => (
+          <div key={key} className="basis-full md:basis-1/3 flex-shrink-0 p-8 snap-center" draggable={false}>
+            {item}
           </div>
         ))}
       </div>
 
       <button
-        className="flex-shrink-0 p-1 group cursor-pointer disabled:cursor-default"
+        className={`flex-shrink-0 p-1 group cursor-pointer disabled:cursor-default ${state === "none" ? "hidden" : ""}`}
         type="button"
         onClick={() => { interacted(); move("right"); }}
-        disabled={state === "end"}
+        disabled={state === "end" || state === "none"}
       >
         <span className="sr-only">Next</span>
         <IconAngleRight className="group-disabled:opacity-20 transition-opacity" size={24} />

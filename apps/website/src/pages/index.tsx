@@ -12,12 +12,15 @@ import IconPayPal from "../icons/IconPayPal"
 import IconEmail from "../icons/IconEmail"
 
 import mayaImage from "../assets/maya.png"
-import sirenImage from  "../assets/hero/siren.png"
-import mileyImage from  "../assets/hero/miley.png"
-import ticoImage from  "../assets/hero/tico.png"
-import miaImage from  "../assets/hero/mia.png"
-import noodleImage from  "../assets/hero/noodle.png"
-import nuggetImage from  "../assets/hero/nugget.png"
+import sirenHeroImage from  "../assets/hero/siren.png"
+import mileyHeroImage from  "../assets/hero/miley.png"
+import ticoHeroImage from  "../assets/hero/tico.png"
+import miaHeroImage from  "../assets/hero/mia.png"
+import noodleHeroImage from  "../assets/hero/noodle.png"
+import nuggetHeroImage from  "../assets/hero/nugget.png"
+import moominImage from "../assets/ambassadors/moomin.jpg"
+import georgieImage from "../assets/ambassadors/georgie.jpg"
+import stompyImage from "../assets/ambassadors/stompy.jpg"
 import leafLeftImage3 from "../assets/floral/leaf-left-3.png"
 import leafRightImage1 from "../assets/floral/leaf-right-1.png"
 import leafRightImage2 from "../assets/floral/leaf-right-2.png"
@@ -32,57 +35,107 @@ import Carousel from "../components/content/Carousel"
 
 const slides = [
   {
-    src: sirenImage,
+    src: sirenHeroImage,
     alt: "Siren",
   },
   {
-    src: mileyImage,
+    src: mileyHeroImage,
     alt: "Miley",
   },
   {
-    src: ticoImage,
+    src: ticoHeroImage,
     alt: "Tico",
   },
   {
-    src: miaImage,
+    src: miaHeroImage,
     alt: "Mia",
   },
   {
-    src: noodleImage,
+    src: noodleHeroImage,
     alt: "Noodle",
   },
   {
-    src: nuggetImage,
+    src: nuggetHeroImage,
     alt: "Nugget",
   },
 ];
 
-const merch = [
-  {
+const ambassadors = Object.entries({
+  moomin: {
+    src: moominImage,
+    alt: "Moomin",
+    title: "Moomin is Movin' In!",
+    description: "He is an ambassador for how the fur trade has affected his species and many others.",
+    link: "https://www.alveussanctuary.org/ambassadors/moomin/",
+  },
+  georgie: {
+    src: georgieImage,
+    alt: "Georgie",
+    title: "Georgie!",
+    description: "He is here to teach all about threats to his species and to amphibians worldwide.",
+    link: "https://www.alveussanctuary.org/ambassadors/georgie/",
+  },
+  stompy: {
+    src: stompyImage,
+    alt: "Stompy",
+    title: "Stompy!",
+    description: "He is an ambassador for how the exotic meat trade & use of animal products in cosmetics has affected his species and many others.",
+    link: "https://www.alveussanctuary.org/ambassadors/stompy/",
+  },
+})
+  .reduce((obj, [ key, { src, alt, title, description, link } ]) => ({
+    ...obj,
+    [key]: (<Link
+      href={link}
+      draggable={false}
+      className="hover:text-alveus-green transition-colors"
+    >
+      <Image
+        src={src}
+        alt={alt}
+        draggable={false}
+        className="w-full h-auto aspect-square object-cover max-w-[10rem] mx-auto rounded-xl"
+      />
+      <Heading level={4} className="text-center text-xl">{title}</Heading>
+      <p className="text-center">{description}</p>
+    </Link>)
+  }), {});
+
+const merch = Object.entries({
+  hoodie: {
     src: hoodieMerchImage,
     alt: "Unisex Essential Echo Hoodie (White)",
   },
-  {
+  case: {
     src: caseMerchImage,
     alt: "Biodegradable iPhone Case (iPhone 11 Pro Max)",
   },
-  {
+  tshirt: {
     src: tshirtMerchImage,
     alt: "Organic Cotton T-Shirt Dress (Black)",
   },
-  {
+  croptop: {
     src: croptopMerchImage,
     alt: "Organic Crop Top (Black)",
   },
-  {
+  tote: {
     src: toteMerchImage,
     alt: "Large Eco Tote (Oyster)",
   },
-  {
+  beanie: {
     src: beanieMerchImage,
     alt: "Organic Ribbed Beanie (Black)",
   },
-];
+})
+  .reduce((obj, [ key, { src, alt } ]) => ({
+    ...obj,
+    [key]: (<Image
+      src={src}
+      alt={alt}
+      draggable={false}
+      className="w-full h-auto max-w-[10rem] mx-auto"
+    />)
+  }), {});
 
 const help = {
   donate: {
@@ -253,7 +306,7 @@ const Home: NextPage = () => {
 
       <Section>
         <div className="flex flex-wrap items-center">
-          <div className="basis-full md:basis-2/3">
+          <div className="basis-full max-w-full md:basis-2/3 md:max-w-2/3">
             <div className="flex flex-wrap items-center justify-between">
               <Heading level={2}>
                 Ambassadors:
@@ -266,7 +319,7 @@ const Home: NextPage = () => {
               </Link>
             </div>
 
-            {/* TODO: Carousel */}
+            <Carousel items={ambassadors} auto={10000} />
           </div>
 
           <div className="basis-full md:basis-1/3 pt-8 md:pt-0 md:px-16">
@@ -297,7 +350,7 @@ const Home: NextPage = () => {
         <Section dark>
           <div className="flex flex-wrap items-center">
             <div className="basis-full max-w-full md:basis-1/2 md:max-w-1/2">
-              <Carousel images={merch} />
+              <Carousel items={merch} />
             </div>
 
             <div className="basis-full md:basis-1/2 pt-8 md:pt-0 md:pl-8">
