@@ -67,7 +67,7 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway }) => {
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow" containerClassName="max-w-lg">
+      <Section className="flex-grow">
         <header>
           <Heading className="my-3 text-3xl">Rules - {giveaway.label}</Heading>
         </header>
