@@ -1,11 +1,11 @@
-import Head from "next/head";
-import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
-import type { Giveaway } from "@prisma/client";
 import React from "react";
+import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import type { Giveaway } from "@prisma/client";
 import { prisma } from "../../server/db/client";
-import Section from "../../components/content/Section"
-import Heading from "../../components/content/Heading"
-import Link from "next/link"
+import Section from "../../components/content/Section";
+import Heading from "../../components/content/Heading";
 
 export type GiveawaysPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -36,7 +36,7 @@ const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
@@ -44,22 +44,25 @@ const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
           <Heading className="my-3 text-3xl">Giveaways</Heading>
         </header>
 
-        <ul>
-          {giveaways.map(giveaway => (
-            <li key={giveaway.id}>
-              <Link
-                className="group hover:text-alveus-green transition-colors"
-                href={`/giveaways/${giveaway.slug || giveaway.id}`}
-              >
-                {giveaway.label}
-                {' '}
-                <span className="inline-block group-hover:translate-x-1 transition-transform">
-                  &rarr;
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        {giveaways.length ? (
+          <ul>
+            {giveaways.map((giveaway) => (
+              <li key={giveaway.id}>
+                <Link
+                  className="group transition-colors hover:text-alveus-green"
+                  href={`/giveaways/${giveaway.slug || giveaway.id}`}
+                >
+                  {giveaway.label}{" "}
+                  <span className="inline-block transition-transform group-hover:translate-x-1">
+                    &rarr;
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>There are currently no open giveaways.</p>
+        )}
       </Section>
     </>
   );
