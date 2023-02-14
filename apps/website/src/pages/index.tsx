@@ -164,7 +164,7 @@ const Home: NextPage = () => {
   const [ twitchEmbedLoaded, setTwitchEmbedLoaded ] = useState(false);
   const [ twitchEmbedPlaying, setTwitchEmbedPlaying ] = useState(false);
   useEffect(() => {
-    if (!twitchEmbedLoaded) {
+    if (!twitchEmbedLoaded || typeof Twitch === "undefined") {
       if (typeof Twitch !== "undefined") setTwitchEmbedLoaded(true);
       return;
     }
