@@ -1,97 +1,57 @@
 import React from "react";
-import type {
-  NextPage,
-  InferGetServerSidePropsType,
-  GetServerSideProps,
-} from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
-import { getSession } from "next-auth/react";
-import type { Giveaway, GiveawayEntry } from "@prisma/client";
-
-import { prisma } from "../../../server/db/client";
+import { useRouter } from "next/router";
 
 import { GiveawayEntryForm } from "../../../components/giveaway/GiveawayEntryForm";
 import Heading from "../../../components/content/Heading";
 import Section from "../../../components/content/Section";
+import { trpc } from "../../../utils/trpc";
+import { TRPCError } from "@trpc/server";
 
-export type GiveawayPageProps = InferGetServerSidePropsType<
-  typeof getServerSideProps
->;
-
-async function findActiveGiveaway(giveawaySlugOrId: string) {
-  const now = new Date();
-  return await prisma.giveaway.findFirst({
-    where: {
-      active: true,
-      startAt: { lt: now },
-      AND: [
-        { OR: [{ endAt: null }, { endAt: { gt: now } }] },
-        { OR: [{ id: giveawaySlugOrId }, { slug: giveawaySlugOrId }] },
-      ],
+const GiveawayPage: NextPage = () => {
+  const query = useRouter().query;
+  const data = trpc.giveaways.getGiveaway.useQuery(
+    {
+      giveawaySlugOrId: String(query.giveawayId),
     },
-  });
-}
+    { enabled: query.giveawayId !== undefined }
+  );
+  const giveaway = data.data?.giveaway;
+  const existingEntry = data.data?.existingEntry;
 
-export const getServerSideProps: GetServerSideProps<{
-  giveaway: Giveaway;
-  existingEntry: GiveawayEntry | null;
-}> = async (context) => {
-  // Check params
-  const giveawaySlugOrId = context.params?.giveawayId;
-  if (typeof giveawaySlugOrId !== "string") {
-    return {
-      notFound: true,
-    };
-  }
+  return (
+    <>
+      <Head>
+        <title>{`${
+          data.data?.giveaway.label || "Alveus Giveaway"
+        } | Alveus.gg`}</title>
+      </Head>
 
-  // Find the giveaway
-  const giveaway = await findActiveGiveaway(giveawaySlugOrId);
-  if (!giveaway) {
-    return {
-      notFound: true,
-    };
-  }
+      {/* Nav background */}
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-  // Require active session or redirect to log in
-  let existingEntry = null;
-  const session = await getSession(context);
-  if (session?.user?.id) {
-    existingEntry = await prisma.giveawayEntry.findUnique({
-      where: {
-        giveawayId_userId: {
-          userId: session.user.id,
-          giveawayId: giveaway.id,
-        },
-      },
-    });
-  }
+      {/* Grow the last section to cover the page */}
+      <Section className="flex-grow" containerClassName="max-w-lg">
+        <header>
+          <Heading className="my-3 text-3xl">{giveaway?.label}</Heading>
+        </header>
 
-  return {
-    props: { giveaway, existingEntry },
-  };
+        {data.isLoading && <p>Loading …</p>}
+        {data.isError &&
+          (data.error instanceof TRPCError && data.error.code === "NOT_FOUND"
+            ? "Giveaway not found!"
+            : "Error loading giveaway.")}
+
+        {giveaway && existingEntry && (
+          <GiveawayEntryForm
+            giveaway={giveaway}
+            existingEntry={existingEntry}
+          />
+        )}
+      </Section>
+    </>
+  );
 };
-
-const GiveawayPage: NextPage<GiveawayPageProps> = ({
-  giveaway,
-  existingEntry,
-}) => (
-  <>
-    <Head>
-      <title>{`${giveaway.label} | Alveus.gg`}</title>
-    </Head>
-
-    {/* Nav background */}
-    <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
-
-    {/* Grow the last section to cover the page */}
-    <Section className="flex-grow" containerClassName="max-w-lg">
-      <header>
-        <Heading className="my-3 text-3xl">{giveaway.label}</Heading>
-      </header>
-
-      <GiveawayEntryForm giveaway={giveaway} existingEntry={existingEntry} />
-    </Section>
-  </>
-);
 
 export default GiveawayPage;
