@@ -1,5 +1,4 @@
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import React from "react";
 
 export const ProfileInfo: React.FC<{ full?: boolean }> = ({ full = false }) => {
@@ -15,11 +14,12 @@ export const ProfileInfo: React.FC<{ full?: boolean }> = ({ full = false }) => {
       >
         {full && <span>{user.name}</span>}
         {user.image && (
-          <Image
+          // NOTE: Profile avatars make little sense to be optimized as they are only
+          //       shown to the user and are probably already cached in their browser
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
             src={user.image}
             alt=""
-            width="150"
-            height="150"
             className="h-8 w-8 overflow-hidden rounded-full"
           />
         )}
