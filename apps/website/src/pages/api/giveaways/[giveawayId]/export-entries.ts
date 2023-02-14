@@ -77,7 +77,7 @@ const exportGiveawayEntries = async (
       "Content-Disposition",
       `attachment; filename=giveaway-entries.csv`
     )
-    .send(csv);
+    .send("\ufeff" + csv); // add utf-8 BOM for Excel to correctly open the CSV
 };
 
 export default exportGiveawayEntries;
