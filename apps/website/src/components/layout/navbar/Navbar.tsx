@@ -202,10 +202,11 @@ export const Navbar: React.FC = () => {
                                 >
                                   {Object.entries((link as NavStructureDropdown).dropdown).map(([ key, link ]) => (
                                     <Menu.Item as="li" key={key}>
-                                      {({ active }) => (
+                                      {({ active, close }) => (
                                         <NavLink
                                           href={link.link}
                                           className={`min-w-max w-full ${active ? NavLinkClassesActive : ""}`}
+                                          onClick={close}
                                         >
                                           {link.title}
                                         </NavLink>
@@ -262,11 +263,11 @@ export const Navbar: React.FC = () => {
                             </Menu.Item>
 
                             <Menu.Item>
-                              {({ active }) => (
+                              {({ active, close }) => (
                                 <button
                                   className={`text-left ${NavLinkClasses} ${active ? NavLinkClassesActive : ""}`}
                                   type="button"
-                                  onClick={() => signOut()}
+                                  onClick={() => { close(); signOut(); }}
                                 >
                                   Log Out
                                 </button>
