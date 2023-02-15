@@ -2,15 +2,16 @@ import React, { Fragment, useMemo } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link, { type LinkProps } from "next/link";
 import Image from "next/image"
-import { Disclosure, Menu, Popover, Transition } from "@headlessui/react"
+import { Disclosure, Menu, Transition } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { ProfileInfo } from "./ProfileInfo";
+import { ProfileInfo, ProfileInfoImage } from "./ProfileInfo"
 import { useIsActivePath } from "../../shared/hooks/useIsActivePath";
 import logoImage from "../../../assets/logo.png";
 import socials from "../../shared/data/socials"
 import IconAmazon from "../../../icons/IconAmazon"
 import IconAngleDown from "../../../icons/IconAngleDown"
+import IconSignIn from "../../../icons/IconSignIn"
 //import { NotificationsButton } from "./NotificationsButton";
 
 type NavLinkProps = Omit<
@@ -22,7 +23,7 @@ type NavLinkProps = Omit<
   } & React.RefAttributes<HTMLAnchorElement>;
 
 const NavDropdownClasses = "absolute top-full right-0 z-30 mt-2 min-w-[10rem] flex flex-col rounded bg-alveus-green-900 p-2 shadow-lg";
-const NavLinkClasses = "block px-5 py-3 border-b-2 border-transparent hover:border-white transition-colors";
+const NavLinkClasses = "block px-5 py-3 h-full border-b-2 border-transparent hover:border-white transition-colors";
 const NavLinkClassesActive = "border-white";
 
 const NavLink: React.FC<NavLinkProps> = ({ href, className, ...props }) => {
@@ -162,7 +163,7 @@ export const Navbar: React.FC = () => {
                 <Link href="/" className="text-3xl font-serif font-bold">
                   Alveus.gg
                 </Link>
-                <ul className="flex flex-grow items-center justify-end">
+                <ul className="flex flex-grow justify-end">
                   {Object.entries(structure).map(([ key, link ]) => (
                     <li key={key}>
                       {(link as NavStructureLink).link && (
@@ -228,17 +229,17 @@ export const Navbar: React.FC = () => {
                   {/* User menu */}
                   <li>
                     {sessionData ? (
-                      <Popover
+                      <Menu
                         as="div"
-                        className="relative"
+                        className="relative h-full flex items-center"
                       >
-                        <Popover.Button
+                        <Menu.Button
                           as="div"
-                          className="mx-5 rounded-full border-2 border-transparent hover:border-white aria-expanded:border-white transition-colors cursor-pointer select-none appearance-none"
+                          className="mx-4 rounded-full border-2 border-transparent hover:border-white aria-expanded:border-white transition-colors cursor-pointer select-none appearance-none"
                         >
                           <span className="sr-only">Open user menu</span>
-                          <ProfileInfo />
-                        </Popover.Button>
+                          <ProfileInfoImage />
+                        </Menu.Button>
 
                         <Transition
                           as={Fragment}
@@ -249,29 +250,40 @@ export const Navbar: React.FC = () => {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Popover.Panel className={NavDropdownClasses}>
-                            <div className="px-5 py-3">
-                              <ProfileInfo full />
-                            </div>
+                          <Menu.Items className={NavDropdownClasses}>
+                            <Menu.Item disabled>
+                              <div className="px-5 py-3">
+                                <ProfileInfo full />
+                              </div>
+                            </Menu.Item>
 
-                            <div className="border-t opacity-30"></div>
+                            <Menu.Item disabled>
+                              <div className="border-t opacity-30"></div>
+                            </Menu.Item>
 
-                            <button
-                              className={`${NavLinkClasses} text-left`}
-                              onClick={() => signOut()}
-                            >
-                              Log out
-                            </button>
-                          </Popover.Panel>
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  className={`text-left ${NavLinkClasses} ${active ? NavLinkClassesActive : ""}`}
+                                  type="button"
+                                  onClick={() => signOut()}
+                                >
+                                  Log out
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </Menu.Items>
                         </Transition>
-                      </Popover>
+                      </Menu>
                     ) : (
                       <button
                         className={NavLinkClasses}
                         type="button"
                         onClick={() => signIn("twitch")}
+                        title="Sign in"
                       >
-                        Sign In
+                        <span className="sr-only">Sign in</span>
+                        <IconSignIn size={20} className="mx-1" />
                       </button>
                     )}
                   </li>
