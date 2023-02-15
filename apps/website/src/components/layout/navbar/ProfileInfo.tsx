@@ -7,11 +7,7 @@ export const ProfileInfo: React.FC<{ full?: boolean }> = ({ full = false }) => {
 
   if (user) {
     return (
-      <div
-        className={`flex items-center gap-4 ${
-          full ? "w-full justify-between" : ""
-        }`}
-      >
+      <div className={`flex items-center gap-4 ${full ? "min-w-max w-full justify-between" : ""}`}>
         {full && <span>{user.name}</span>}
         {user.image && (
           // NOTE: Profile avatars make little sense to be optimized as they are only

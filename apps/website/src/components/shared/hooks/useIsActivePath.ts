@@ -8,7 +8,8 @@ export function useIsActivePath(href: UrlObject | string) {
   return (
     url &&
     (url.startsWith("#") ||
-      (url.startsWith("/") &&
+      currentRoute === url ||
+      (url !== "/" && url.startsWith("/") &&
         currentRoute.replace(/\/?$/, "/").startsWith(url.replace(/\/?$/, "/"))))
   );
 }
