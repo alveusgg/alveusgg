@@ -1,25 +1,18 @@
 import React, { Fragment, useMemo } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link, { type LinkProps } from "next/link";
-import { Disclosure, Popover, Transition } from "@headlessui/react";
+import Image from "next/image"
+import { Disclosure, Menu, Transition } from "@headlessui/react"
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { ProfileInfo } from "./ProfileInfo";
+import { ProfileInfo, ProfileInfoImage } from "./ProfileInfo"
 import { useIsActivePath } from "../../shared/hooks/useIsActivePath";
 import logoImage from "../../../assets/logo.png";
 import socials from "../../shared/data/socials"
 import IconAmazon from "../../../icons/IconAmazon"
-import Image from "next/image"
+import IconAngleDown from "../../../icons/IconAngleDown"
+import IconSignIn from "../../../icons/IconSignIn"
 //import { NotificationsButton } from "./NotificationsButton";
-
-const utilities = {
-  amazon: {
-    link: "/wishlist",
-    title: "Amazon Wishlist",
-    icon: IconAmazon,
-  },
-  ...socials,
-};
 
 type NavLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -29,19 +22,103 @@ type NavLinkProps = Omit<
     children?: React.ReactNode;
   } & React.RefAttributes<HTMLAnchorElement>;
 
-const NavLinkClasses = "block px-5 py-3 border-b-2 border-transparent hover:border-white transition-colors";
+const NavDropdownClasses = "absolute top-full right-0 z-30 mt-2 min-w-[10rem] flex flex-col rounded bg-alveus-green-900 p-2 shadow-lg";
+const NavLinkClasses = "block px-5 py-3 h-full border-b-2 border-transparent hover:border-white transition-colors";
+const NavLinkClassesActive = "border-white";
 
 const NavLink: React.FC<NavLinkProps> = ({ href, className, ...props }) => {
   const isActive = useIsActivePath(href);
   const classes = useMemo(
     () =>
-      [NavLinkClasses, isActive && "border-white", className]
+      [NavLinkClasses, isActive && NavLinkClassesActive, className]
         .filter(Boolean)
         .join(" "),
     [isActive, className]
   );
 
   return <Link href={href} className={classes} {...props} />;
+};
+
+type NavStructureLink = {
+  title: string,
+  link: string,
+};
+
+type NavStructureDropdown = {
+  title: string,
+  dropdown: {
+    [key: string]: NavStructureLink,
+  },
+};
+
+type NavStructure = {
+  [key: string]: NavStructureLink | NavStructureDropdown,
+};
+
+const structure: NavStructure = {
+  home: {
+    title: "Home",
+    link: "/",
+  },
+  live: {
+    title: "Live",
+    link: "/live",
+  },
+  explore: {
+    title: "Explore",
+    dropdown: {
+      live: {
+        title: "Ambassadors",
+        link: "https://www.alveussanctuary.org/ambassadors/",
+      },
+      showAndTell: {
+        title: "Show and Tell",
+        link: "https://www.alveussanctuary.org/show-and-tell/",
+      },
+    },
+  },
+  about: {
+    title: "About",
+    dropdown: {
+      alveus: {
+        title: "Alveus",
+        link: "/about/alveus",
+      },
+      maya: {
+        title: "Maya",
+        link: "/about/maya",
+      },
+      staff: {
+        title: "Staff",
+        link: "/about/staff",
+      },
+      advisoryBoard: {
+        title: "Advisory Board",
+        link: "/about/advisory-board",
+      },
+      boardOfDirectors: {
+        title: "Board of Directors",
+        link: "/about/board-of-directors",
+      },
+    },
+  },
+  donate: {
+    title: "Donate",
+    link: "https://www.alveussanctuary.org/donate/",
+  },
+  merch: {
+    title: "Merch",
+    link: "https://www.alveussanctuary.org/merch-store/",
+  },
+};
+
+const utilities = {
+  amazon: {
+    link: "/wishlist",
+    title: "Amazon Wishlist",
+    icon: IconAmazon,
+  },
+  ...socials,
 };
 
 export const Navbar: React.FC = () => {
@@ -86,58 +163,84 @@ export const Navbar: React.FC = () => {
                 <Link href="/" className="text-3xl font-serif font-bold">
                   Alveus.gg
                 </Link>
-                <ul className="flex flex-grow items-center justify-end">
-                  <li>
-                    <NavLink href="/live">Live</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/giveaways">Giveaways</NavLink>
-                  </li>
-                  {/*
-                  <li>
-                    <NavLink href="/updates">Updates</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/explore">Explore</NavLink>
-                  </li>
-                  <li>
-                    <NavLink href="/schedule">Schedule</NavLink>
-                  </li>
-                  */}
-                  <li>
-                    <NavLink
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      href="https://www.alveussanctuary.org/donate/"
-                    >
-                      Donate
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      rel="noopener noreferrer"
-                      target="_blank"
-                      href="https://www.alveussanctuary.org/merch-store/"
-                    >
-                      Merch
-                    </NavLink>
-                  </li>
+                <ul className="flex flex-grow justify-end">
+                  {Object.entries(structure).map(([ key, link ]) => (
+                    <li key={key}>
+                      {(link as NavStructureLink).link && (
+                        <NavLink href={(link as NavStructureLink).link}>{link.title}</NavLink>
+                      )}
+                      {(link as NavStructureDropdown).dropdown && (
+                        <Menu as="div" className="relative">
+                          {({ open }) => (
+                            <>
+                              <Menu.Button
+                                className={[
+                                  NavLinkClasses,
+                                  open && NavLinkClassesActive,
+                                  "flex items-center gap-2"
+                                ].filter(Boolean).join(" ")}
+                              >
+                                {link.title}
+                                <IconAngleDown
+                                  size={16}
+                                  className={`${open ? "translate-y-1" : "translate-y-0.5"} transition-transform`}
+                                />
+                              </Menu.Button>
+
+                              <Transition
+                                as={Fragment}
+                                enter="transition ease-out duration-200"
+                                enterFrom="transform opacity-0 scale-95"
+                                enterTo="transform opacity-100 scale-100"
+                                leave="transition ease-in duration-75"
+                                leaveFrom="transform opacity-100 scale-100"
+                                leaveTo="transform opacity-0 scale-95"
+                              >
+                                <Menu.Items
+                                  as="ul"
+                                  className={NavDropdownClasses}
+                                >
+                                  {Object.entries((link as NavStructureDropdown).dropdown).map(([ key, link ]) => (
+                                    <Menu.Item as="li" key={key}>
+                                      {({ active, close }) => (
+                                        <NavLink
+                                          href={link.link}
+                                          className={`min-w-max w-full ${active ? NavLinkClassesActive : ""}`}
+                                          onClick={close}
+                                        >
+                                          {link.title}
+                                        </NavLink>
+                                      )}
+                                    </Menu.Item>
+                                  ))}
+                                </Menu.Items>
+                              </Transition>
+                            </>
+                          )}
+                        </Menu>
+                      )}
+                    </li>
+                  ))}
+
+                  {/* Notifications toggle */}
                   {/*<li>*/}
                   {/*  <NotificationsButton />*/}
                   {/*</li>*/}
+
+                  {/* User menu */}
                   <li>
                     {sessionData ? (
-                      <Popover
+                      <Menu
                         as="div"
-                        className="relative"
+                        className="relative h-full flex items-center"
                       >
-                        <Popover.Button
+                        <Menu.Button
                           as="div"
-                          className="mx-5 rounded-full border-2 border-transparent hover:border-white aria-expanded:border-white transition-colors cursor-pointer select-none appearance-none"
+                          className="mx-4 rounded-full border-2 border-transparent hover:border-white aria-expanded:border-white transition-colors cursor-pointer select-none appearance-none"
                         >
                           <span className="sr-only">Open user menu</span>
-                          <ProfileInfo />
-                        </Popover.Button>
+                          <ProfileInfoImage />
+                        </Menu.Button>
 
                         <Transition
                           as={Fragment}
@@ -148,27 +251,40 @@ export const Navbar: React.FC = () => {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Popover.Panel className="absolute top-full right-0 z-30 mt-2 flex w-48 flex-col gap-4 rounded bg-gray-700 p-4 shadow-lg">
-                            <ProfileInfo full />
+                          <Menu.Items className={NavDropdownClasses}>
+                            <Menu.Item disabled>
+                              <div className="px-5 py-3">
+                                <ProfileInfo full />
+                              </div>
+                            </Menu.Item>
 
-                            <div className="border-t"></div>
+                            <Menu.Item disabled>
+                              <div className="border-t opacity-30"></div>
+                            </Menu.Item>
 
-                            <button
-                              className="w-full text-left"
-                              onClick={() => signOut()}
-                            >
-                              Log out
-                            </button>
-                          </Popover.Panel>
+                            <Menu.Item>
+                              {({ active, close }) => (
+                                <button
+                                  className={`text-left ${NavLinkClasses} ${active ? NavLinkClassesActive : ""}`}
+                                  type="button"
+                                  onClick={() => { close(); signOut(); }}
+                                >
+                                  Log Out
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </Menu.Items>
                         </Transition>
-                      </Popover>
+                      </Menu>
                     ) : (
                       <button
-                        className={`${NavLinkClasses} font-semibold`}
+                        className={NavLinkClasses}
                         type="button"
                         onClick={() => signIn("twitch")}
+                        title="Sign in"
                       >
-                        Sign In
+                        <span className="sr-only">Sign in</span>
+                        <IconSignIn size={20} className="mx-1" />
                       </button>
                     )}
                   </li>
@@ -176,7 +292,7 @@ export const Navbar: React.FC = () => {
               </div>
             </div>
 
-            {/* Mobile menu */}
+            {/* Mobile menu toggle */}
             <div className="flex lg:hidden items-center justify-center flex-grow">
               <Link href="/" className="text-3xl font-serif font-bold">
                 Alveus.gg
@@ -206,62 +322,45 @@ export const Navbar: React.FC = () => {
           {/* Mobile menu */}
           <Disclosure.Panel>
             <div className="space-y-1 p-2 pb-4">
-              <ul className="flex flex-col gap-4">
-                <li>
-                  <Disclosure.Button
-                    as={NavLink}
-                    href="/live"
-                    className="w-full"
-                  >
-                    Live
-                  </Disclosure.Button>
-                </li>
-                <li>
-                  <Disclosure.Button
-                    as={NavLink}
-                    href="/giveaways"
-                    className="w-full"
-                  >
-                    Giveaways
-                  </Disclosure.Button>
-                </li>
-                {/*
-                <li>
-                  <Disclosure.Button as={NavLink} href="/schedule" className"w-full>
-                    Schedule
-                  </Disclosure.Button>
-                </li>
-                <li>
-                  <Disclosure.Button as={NavLink} href="/explore" className"w-full>
-                    Explore
-                  </Disclosure.Button>
-                </li>
-                */}
-                <li>
-                  <Disclosure.Button
-                    as={NavLink}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href="https://www.alveussanctuary.org/donate/"
-                    className="w-full"
-                  >
-                    Donate
-                  </Disclosure.Button>
-                </li>
-                <li>
-                  <Disclosure.Button
-                    as={NavLink}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                    href="https://www.alveussanctuary.org/merch-store/"
-                    className="w-full"
-                  >
-                    Merch
-                  </Disclosure.Button>
-                </li>
+              <ul className="flex flex-col">
+                {Object.entries(structure).map(([ key, link ]) => (
+                  <li key={key}>
+                    {(link as NavStructureLink).link && (
+                      <Disclosure.Button
+                        as={NavLink}
+                        href={(link as NavStructureLink).link}
+                        className="w-full"
+                      >
+                        {link.title}
+                      </Disclosure.Button>
+                    )}
+                    {(link as NavStructureDropdown).dropdown && (
+                      <>
+                        <p className="px-5 py-3 opacity-80">
+                          {link.title}
+                        </p>
+                        <ul className="ml-4">
+                          {Object.entries((link as NavStructureDropdown).dropdown).map(([ key, link ]) => (
+                            <li key={key}>
+                              <Disclosure.Button
+                                as={NavLink}
+                                href={(link as NavStructureLink).link}
+                                className="w-full"
+                              >
+                                {link.title}
+                              </Disclosure.Button>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
+                    )}
+                  </li>
+                ))}
+
+                {/* User menu */}
                 {sessionData ? (
                   <li>
-                    <div className="border-t my-3 w-full"></div>
+                    <div className="border-t opacity-30 my-3 w-full"></div>
 
                     <div className="px-5 py-3">
                       <ProfileInfo full />
@@ -271,13 +370,13 @@ export const Navbar: React.FC = () => {
                       className={`${NavLinkClasses} text-left w-full`}
                       onClick={() => signOut()}
                     >
-                      Log out
+                      Log Out
                     </Disclosure.Button>
                   </li>
                 ) : (
                   <li>
                     <Disclosure.Button
-                      className={`${NavLinkClasses} font-semibold text-left w-full`}
+                      className={`${NavLinkClasses} text-left w-full`}
                       type="button"
                       onClick={() => signIn("twitch")}
                     >
