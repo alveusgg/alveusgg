@@ -268,7 +268,7 @@ export const Navbar: React.FC = () => {
                                   type="button"
                                   onClick={() => signOut()}
                                 >
-                                  Log out
+                                  Log Out
                                 </button>
                               )}
                             </Menu.Item>
@@ -321,7 +321,7 @@ export const Navbar: React.FC = () => {
           {/* Mobile menu */}
           <Disclosure.Panel>
             <div className="space-y-1 p-2 pb-4">
-              <ul className="flex flex-col gap-4">
+              <ul className="flex flex-col">
                 {Object.entries(structure).map(([ key, link ]) => (
                   <li key={key}>
                     {(link as NavStructureLink).link && (
@@ -334,7 +334,24 @@ export const Navbar: React.FC = () => {
                       </Disclosure.Button>
                     )}
                     {(link as NavStructureDropdown).dropdown && (
-                      <></>
+                      <>
+                        <p className="px-5 py-3 opacity-80">
+                          {link.title}
+                        </p>
+                        <ul className="ml-4">
+                          {Object.entries((link as NavStructureDropdown).dropdown).map(([ key, link ]) => (
+                            <li key={key}>
+                              <Disclosure.Button
+                                as={NavLink}
+                                href={(link as NavStructureLink).link}
+                                className="w-full"
+                              >
+                                {link.title}
+                              </Disclosure.Button>
+                            </li>
+                          ))}
+                        </ul>
+                      </>
                     )}
                   </li>
                 ))}
@@ -342,7 +359,7 @@ export const Navbar: React.FC = () => {
                 {/* User menu */}
                 {sessionData ? (
                   <li>
-                    <div className="border-t my-3 w-full"></div>
+                    <div className="border-t opacity-30 my-3 w-full"></div>
 
                     <div className="px-5 py-3">
                       <ProfileInfo full />
@@ -352,13 +369,13 @@ export const Navbar: React.FC = () => {
                       className={`${NavLinkClasses} text-left w-full`}
                       onClick={() => signOut()}
                     >
-                      Log out
+                      Log Out
                     </Disclosure.Button>
                   </li>
                 ) : (
                   <li>
                     <Disclosure.Button
-                      className={`${NavLinkClasses} font-semibold text-left w-full`}
+                      className={`${NavLinkClasses} text-left w-full`}
                       type="button"
                       onClick={() => signIn("twitch")}
                     >
