@@ -1,5 +1,5 @@
-import type { InferGetStaticPropsType, NextPageContext } from "next";
-import { type NextPage } from "next";
+import React from "react";
+import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 import Head from "next/head";
 import { getSession } from "next-auth/react";
 
@@ -12,7 +12,6 @@ import { Headline } from "../../components/shared/Headline";
 import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
 import { Giveaways } from "../../components/admin/Giveaways";
 import { AdminPageLayout } from "../../components/admin/AdminPageLayout";
-import React from "react";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
