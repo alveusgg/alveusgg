@@ -1,19 +1,21 @@
 import React, { useCallback } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import type { Giveaway } from "@prisma/client";
 
 import type { GiveawayEntryWithAddress } from "../../pages/giveaways/[giveawayId]";
 import { calcGiveawayConfig } from "../../utils/giveaways";
 import { trpc } from "../../utils/trpc";
-import IconTwitch from "../../icons/IconTwitch";
-import { Headline } from "../shared/Headline";
+import { getCountryName } from "../../utils/countries";
 
+import { LoginWithTwitchButton } from "../shared/LoginWithTwitchButton";
+import { Headline } from "../shared/Headline";
+import { Button } from "../shared/Button";
+import { MessageBox } from "../shared/MessageBox";
 import { GiveawayChecks } from "./GiveawayChecks";
 import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
 import { GiveawayEntryContactFieldset } from "./GiveawayEntryContactFieldset";
 import { GiveawayEntryRulesFieldset } from "./GiveawayEntryRulesFieldset";
-import { getCountryName } from "../../utils/countries";
 
 export const GiveawayEntryForm: React.FC<{
   giveaway: Giveaway;
@@ -46,35 +48,24 @@ export const GiveawayEntryForm: React.FC<{
 
   if (!session?.user?.id) {
     return (
-      <div className="rounded-lg bg-white p-2 shadow-xl">
+      <MessageBox>
         <p className="mb-4">You need to be logged in with Twitch to enter.</p>
 
-        <button
-          className="flex w-full flex-row justify-center gap-2 rounded-xl bg-[#6441a5] p-3 text-center font-semibold text-white no-underline"
-          onClick={() => signIn("twitch")}
-        >
-          <IconTwitch />
-          <span>Log in</span>
-        </button>
-      </div>
+        <LoginWithTwitchButton />
+      </MessageBox>
     );
   }
 
   if (enterGiveaway.isSuccess) {
     return (
-      <div className="rounded-lg bg-green-100 p-2 shadow-xl">
-        Your entry was successful!
-      </div>
+      <MessageBox variant="success">Your entry was successful!</MessageBox>
     );
   }
 
   if (existingEntry) {
     return (
       <>
-        <div className="rounded-lg bg-green-100 p-2 shadow-xl">
-          You are already entered!
-          <br />
-        </div>
+        <MessageBox variant="success">You are already entered!</MessageBox>
 
         <Headline>Check your data</Headline>
         <p className="my-2">
@@ -116,9 +107,9 @@ export const GiveawayEntryForm: React.FC<{
       )}
 
       {enterGiveaway.error && (
-        <div className="rounded-lg bg-red-200 p-2 text-red-900 shadow-xl">
+        <MessageBox variant="failure">
           Error: {enterGiveaway.error.message}
-        </div>
+        </MessageBox>
       )}
 
       {config.checks && (
@@ -140,13 +131,9 @@ export const GiveawayEntryForm: React.FC<{
       </div>
 
       <div className="mt-7">
-        <button
-          type="submit"
-          className="block w-full rounded-lg bg-gray-600 p-4 text-white"
-          disabled={enterGiveaway.isLoading}
-        >
+        <Button type="submit" disabled={enterGiveaway.isLoading}>
           {config.submitButtonText || "Enter to Win"}
-        </button>
+        </Button>
       </div>
     </form>
   );
