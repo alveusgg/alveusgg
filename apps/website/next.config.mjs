@@ -36,6 +36,38 @@ const config = {
     ],
   },
   redirects: async () => [
+    // WordPress route redirects
+    {
+      source: "/about-alveus",
+      destination: "/about/alveus",
+      permanent: true,
+    },
+    {
+      source: "/about-maya",
+      destination: "/about/maya",
+      permanent: true,
+    },
+    {
+      source: "/advisory-board",
+      destination: "/about/advisory-board",
+      permanent: true,
+    },
+    {
+      source: "/board-of-directors",
+      destination: "/about/board-of-directors",
+      permanent: true,
+    },
+    {
+      source: "/staff",
+      destination: "/about/staff",
+      permanent: true,
+    },
+    {
+      source: "/alveus-annual-report",
+      destination: "/about/annual-reports",
+      permanent: true,
+    },
+    // External redirects
     {
       source: "/smile",
       destination: "https://smile.amazon.com/ch/86-1772907",
