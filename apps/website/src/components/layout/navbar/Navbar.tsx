@@ -109,7 +109,7 @@ const structure: NavStructure = {
   },
   merch: {
     title: "Merch",
-    link: "https://www.alveussanctuary.org/merch-store/",
+    link: "/merch-store",
   },
 };
 
