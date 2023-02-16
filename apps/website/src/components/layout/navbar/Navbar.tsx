@@ -105,7 +105,7 @@ const structure: NavStructure = {
   },
   donate: {
     title: "Donate",
-    link: "https://www.alveussanctuary.org/donate/",
+    link: "/donate",
   },
   merch: {
     title: "Merch",

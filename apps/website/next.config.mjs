@@ -73,7 +73,7 @@ const config = {
         },
         {
           key: "Content-Security-Policy",
-          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/",
+          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/ https://tgbwidget.com/",
         },
       ],
     },
