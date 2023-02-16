@@ -1,6 +1,6 @@
-import { prisma } from "../server/db/client";
 import { OAuth2 } from "oauth";
 import fetch from "node-fetch";
+import { prisma } from "../server/db/client";
 
 export class ExpiredAccessTokenError extends Error {}
 

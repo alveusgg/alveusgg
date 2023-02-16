@@ -13,8 +13,6 @@ import { SendNotificationForm } from "../../components/admin/SendNotificationFor
 import { Giveaways } from "../../components/admin/Giveaways";
 import { AdminPageLayout } from "../../components/admin/AdminPageLayout";
 
-//
-
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
   if (checkIsSuperUser(session)) {

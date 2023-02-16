@@ -1,3 +1,4 @@
+import React from "react";
 import type {
   GetServerSideProps,
   InferGetServerSidePropsType,
@@ -5,13 +6,12 @@ import type {
 } from "next";
 import { useRouter } from "next/router";
 import { getProviders, getSession } from "next-auth/react";
+import Head from "next/head";
 
 import { XCircleIcon } from "@heroicons/react/20/solid";
 
-import React from "react";
 import Section from "../../components/content/Section";
 import Heading from "../../components/content/Heading";
-import Head from "next/head";
 import { LoginWithTwitchButton } from "../../components/shared/LoginWithTwitchButton";
 
 const errorMessages: Record<string, string> = {

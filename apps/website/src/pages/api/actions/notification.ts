@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { sendNotification } from "../../../server/actions/send-notification";
 import { z } from "zod";
+import { sendNotification } from "../../../server/actions/send-notification";
 import { env } from "../../../env/server.mjs";
 
 const notificationRequestBodySchema = z.object({

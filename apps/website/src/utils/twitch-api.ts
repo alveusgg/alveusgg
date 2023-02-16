@@ -1,10 +1,10 @@
 import { z } from "zod";
 import fetch from "node-fetch";
+import { env } from "../env/server.mjs";
 import {
   ExpiredAccessTokenError,
   getClientCredentialsAccessToken,
 } from "./oauth2";
-import { env } from "../env/server.mjs";
 
 export type AuthHeaders = {
   "Client-Id": string;

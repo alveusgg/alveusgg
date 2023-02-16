@@ -1,8 +1,8 @@
 import React from "react";
+import Link, { type LinkProps } from "next/link";
 import DefaultPageLayout, {
   type DefaultPageLayoutProps,
 } from "../DefaultPageLayout";
-import Link, { type LinkProps } from "next/link";
 import { useIsActivePath } from "../shared/hooks/useIsActivePath";
 
 export type AdminPageLayoutProps = DefaultPageLayoutProps;
