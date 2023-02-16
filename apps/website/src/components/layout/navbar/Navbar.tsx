@@ -101,6 +101,10 @@ const structure: NavStructure = {
         title: "Board of Directors",
         link: "/about/board-of-directors",
       },
+      annualReports: {
+        title: "Annual Reports",
+        link: "/about/annual-reports",
+      },
     },
   },
   donate: {
