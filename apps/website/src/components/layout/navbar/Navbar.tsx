@@ -23,8 +23,9 @@ type NavLinkProps = Omit<
   } & React.RefAttributes<HTMLAnchorElement>;
 
 const NavDropdownClasses = "absolute top-full right-0 z-30 mt-2 min-w-[10rem] flex flex-col rounded bg-alveus-green-900 p-2 shadow-lg";
-const NavLinkClasses = "block px-5 py-3 h-full border-b-2 border-transparent hover:border-white transition-colors";
-const NavLinkClassesActive = "border-white";
+const NavLinkClassesActive = "bg-alveus-green lg:border-white lg:bg-transparent";
+const NavLinkClassesHover = "hover:bg-alveus-green hover:lg:border-white hover:lg:bg-transparent";
+const NavLinkClasses = `block px-5 py-3 h-full border-b-2 border-transparent ${NavLinkClassesHover} transition-colors`;
 
 const NavLink: React.FC<NavLinkProps> = ({ href, className, ...props }) => {
   const isActive = useIsActivePath(href);
@@ -321,7 +322,7 @@ export const Navbar: React.FC = () => {
 
           {/* Mobile menu */}
           <Disclosure.Panel>
-            <div className="space-y-1 p-2 pb-4">
+            <div className="lg:hidden space-y-1 p-2 pb-4">
               <ul className="flex flex-col">
                 {Object.entries(structure).map(([ key, link ]) => (
                   <li key={key}>
