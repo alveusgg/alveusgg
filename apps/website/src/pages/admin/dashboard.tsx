@@ -7,7 +7,7 @@ import { getNotificationsConfig } from "../../config/notifications";
 import type { TwitchConfig } from "../../config/twitch";
 import { getChannelConfigById, getTwitchConfig } from "../../config/twitch";
 import { checkIsSuperUser } from "../../utils/auth";
-import { getSubscriptions } from "../../utils/twitch-api";
+//import { getSubscriptions } from "../../utils/twitch-api";
 import { Headline } from "../../components/shared/Headline";
 import { SendNotificationForm } from "../../components/admin/SendNotificationForm";
 import { Giveaways } from "../../components/admin/Giveaways";
@@ -19,9 +19,10 @@ export async function getServerSideProps(context: NextPageContext) {
   if (checkIsSuperUser(session)) {
     const twitchConfig: TwitchConfig = await getTwitchConfig();
     const notificationConfig = await getNotificationsConfig();
-    const twitchEventSubs = await getSubscriptions();
+    //const twitchEventSubs = await getSubscriptions();
     const channelConfigById = await getChannelConfigById();
 
+    /*
     twitchEventSubs.data.sort((a, b) => {
       const idA = a.condition.broadcaster_user_id;
       const idB = b.condition.broadcaster_user_id;
@@ -34,6 +35,7 @@ export async function getServerSideProps(context: NextPageContext) {
       }
       return 0;
     });
+    */
 
     return {
       props: {
@@ -41,7 +43,7 @@ export async function getServerSideProps(context: NextPageContext) {
         superUser: true,
         twitchConfig,
         notificationConfig,
-        twitchEventSubs,
+        //twitchEventSubs,
         channelConfigById,
       },
     };
@@ -55,7 +57,7 @@ export async function getServerSideProps(context: NextPageContext) {
 const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
   twitchConfig,
   notificationConfig,
-  twitchEventSubs,
+  //twitchEventSubs,
   channelConfigById,
 }) => {
   return (
@@ -123,6 +125,7 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
               })}
             </ul>
           </div>
+          {/*
           <div className="flex-1">
             <Headline>Active Twitch Event Subscriptions</Headline>
             <ul>
@@ -143,6 +146,7 @@ const Admin: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
               })}
             </ul>
           </div>
+          */}
         </div>
       </AdminPageLayout>
     </>
