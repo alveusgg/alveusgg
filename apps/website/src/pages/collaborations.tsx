@@ -60,7 +60,7 @@ export const CollaborationsSection: NextPage<CollaborationsSectionProps> = ({ it
     <>
       {Object.entries(items).map(([ key, value ]) => (
         <div key={key} className="mx-auto basis-full md:basis-1/2 py-8 md:px-8 flex flex-col items-center">
-          <Heading level={3} className="flex gap-8 items-end">
+          <Heading level={3} className="flex flex-wrap gap-x-8 gap-y-2 items-end justify-center">
             {value.name}
             <small className="text-xl text-alveus-green-600">
               {value.date}
