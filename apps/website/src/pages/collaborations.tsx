@@ -55,7 +55,7 @@ type CollaborationsSectionProps = {
   items: Record<string, { name: string, date: string, youtube: string }>,
 };
 
-export const CollaborationsSection: NextPage<CollaborationsSectionProps> = ({ items }) => {
+export const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({ items }) => {
   return (
     <>
       {Object.entries(items).map(([ key, value ]) => (
