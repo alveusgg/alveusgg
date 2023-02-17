@@ -22,7 +22,7 @@
     "paths": {
       "@/*": ["./src/*"],
       "photoswipe/lightbox": [
-        "./node_modules/photoswipe/dist/types/photoswipe.d.ts"
+        "./node_modules/photoswipe/dist/types/lightbox/lightbox.d.ts"
       ]
     }
   },

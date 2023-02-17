@@ -70,6 +70,7 @@ model Account {
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
+  @@index([userId], name: "Account_userId")
 }
 
 model Session {
@@ -78,6 +79,8 @@ model Session {
   userId       String
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], name: "Session_userId")
 }
 
 model User {
@@ -92,6 +95,7 @@ model User {
   notificationPushes NotificationPush[]
   giveawayEntries    GiveawayEntry[]
   outgoingWebhooks   OutgoingWebhook[]
+  showAndTellEntries ShowAndTellEntry[]
   roles              UserRole[]
 }
 
@@ -147,6 +151,8 @@ model NotificationPush {
   subscription   PushSubscription @relation(fields: [subscriptionId], references: [id])
 
   @@unique([notificationId, subscriptionId])
+  @@index([userId], name: "NotificationPush_userId")
+  @@index([subscriptionId], name: "NotificationPush_subscriptionId")
 }
 
 // FIXME: Endpoint URLs could be up to 2048 chars, which would be 8192 bytes with utf8mb4 (4 bytes per char),
@@ -165,6 +171,7 @@ model PushSubscription {
   pushes    NotificationPush[]
 
   @@unique([endpoint])
+  @@index([userId], name: "PushSubscription_userId")
 }
 
 model PushSubscriptionTag {
@@ -226,6 +233,7 @@ model GiveawayEntry {
   outgoingWebhook OutgoingWebhook? @relation(fields: [outgoingWebhookId], references: [id])
 
   @@unique([giveawayId, userId])
+  @@index([userId], name: "GiveawayEntry_userId")
 }
 
 model OutgoingWebhook {
@@ -241,4 +249,88 @@ model OutgoingWebhook {
 
   user          User?          @relation(fields: [userId], references: [id])
   giveawayEntry GiveawayEntry?
+
+  @@index([userId], name: "OutgoingWebhook_userId")
+}
+
+model LinkAttachment {
+  id              String @id @default(cuid())
+  type            String
+  name            String
+  title           String
+  alternativeText String
+  caption         String
+  description     String
+  url             String
+
+  showAndTellEntryAttachment ShowAndTellEntryLinkAttachment?
+}
+
+model ShowAndTellEntry {
+  id             String    @id @default(cuid())
+  userId         String?
+  title          String
+  text           String    @db.Text
+  displayName    String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @default(now())
+  approvedAt     DateTime?
+  deletedAt      DateTime?
+  seenOnStreamAt DateTime?
+
+  attachments ShowAndTellEntryLinkAttachment[]
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId], name: "ShowAndTellEntry_userId")
+}
+
+model ShowAndTellEntryLinkAttachment {
+  id                String           @id @default(cuid())
+  entryId           String
+  attachmentType    String
+  linkAttachmentId  String?          @unique
+  imageAttachmentId String?          @unique
+  entry             ShowAndTellEntry @relation(fields: [entryId], references: [id])
+  linkAttachment    LinkAttachment?  @relation(fields: [linkAttachmentId], references: [id])
+  imageAttachment   ImageAttachment? @relation(fields: [imageAttachmentId], references: [id])
+
+  @@index([entryId], name: "ShowAndTellEntryLinkAttachment_entryId")
+}
+
+model FileStorageObject {
+  id         String    @id @default(cuid())
+  key        String    @unique
+  name       String
+  type       String
+  prefix     String
+  acl        String
+  createdAt  DateTime  @default(now())
+  uploadedAt DateTime?
+  deletedAt  DateTime?
+  expiresAt  DateTime?
+
+  imageAttachment ImageAttachment?
+  imageMetadata   ImageMetadata?
+}
+
+model ImageMetadata {
+  mimeType            String
+  width               Int
+  height              Int
+  fileStorageObjectId String            @unique
+  fileStorageObject   FileStorageObject @relation(fields: [fileStorageObjectId], references: [id])
+}
+
+model ImageAttachment {
+  id                             String                          @id @default(cuid())
+  name                           String
+  title                          String
+  alternativeText                String
+  caption                        String
+  description                    String
+  url                            String
+  fileStorageObjectId            String                          @unique
+  fileStorageObject              FileStorageObject               @relation(fields: [fileStorageObjectId], references: [id])
+  showAndTellEntryLinkAttachment ShowAndTellEntryLinkAttachment?
 }

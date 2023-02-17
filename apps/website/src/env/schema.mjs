@@ -30,6 +30,12 @@ export const serverSchema = z.object({
   OPEN_WEATHER_MAP_API_KEY: z.string().optional(),
   OPEN_WEATHER_MAP_API_LAT: z.string().optional(),
   OPEN_WEATHER_MAP_API_LON: z.string().optional(),
+  FILE_STORAGE_CDN_URL: z.string().optional(),
+  FILE_STORAGE_ENDPOINT: z.string(),
+  FILE_STORAGE_KEY: z.string(),
+  FILE_STORAGE_REGION: z.string(),
+  FILE_STORAGE_SECRET: z.string(),
+  FILE_STORAGE_BUCKET: z.string(),
 });
 
 /**

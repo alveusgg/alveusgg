@@ -22,6 +22,11 @@ const menuItems = [
     permission: permissions.manageGiveaways,
   },
   {
+    label: "Show & Tell",
+    href: "/admin/show-and-tell",
+    permission: permissions.manageShowAndTell,
+  },
+  {
     label: "Activity Feed",
     href: "/admin/activity-feed",
     permission: permissions.viewActivityFeed,
