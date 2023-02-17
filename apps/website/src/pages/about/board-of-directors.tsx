@@ -1,12 +1,14 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import React from "react"
+
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
+import People from "../../components/content/People"
+
 import mayaHigaImage from "../../assets/people/maya-higa.jpg"
 import joeSiegristImage from "../../assets/people/joe-siegrist.jpg"
 import joelPierreImage from "../../assets/people/joel-pierre.jpg"
-import People from "../../components/content/People"
 
 const directors = {
   maya: {

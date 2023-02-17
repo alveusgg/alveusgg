@@ -1,15 +1,17 @@
 import { type NextPage } from "next"
 import Head from "next/head"
+import Image from "next/image"
 import React from "react"
+
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
 import IconTwitch from "../../icons/IconTwitch"
-import mayaImage from "../../assets/maya.png";
+import IconCalendar from "../../icons/IconCalendar"
+
+import mayaImage from "../../assets/maya.png"
 import leafRightImage1 from "../../assets/floral/leaf-right-1.png"
 import leafRightImage2 from "../../assets/floral/leaf-right-2.png"
 import leafLeftImage1 from "../../assets/floral/leaf-left-1.png"
-import IconCalendar from "../../icons/IconCalendar"
-import Image from "next/image"
 
 const experience = [
   {
@@ -101,7 +103,7 @@ const AboutMayaPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="hidden lg:block absolute z-10 -bottom-24 left w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
+          className="hidden lg:block absolute z-10 -bottom-24 left-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
         />
 
         <Section>

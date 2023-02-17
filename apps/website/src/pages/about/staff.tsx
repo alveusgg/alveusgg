@@ -1,12 +1,14 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import React from "react"
+
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
+import People from "../../components/content/People"
+
 import connorObrienImage from "../../assets/people/connor-obrien.jpg"
 import kaylaJacksonImage from "../../assets/people/kayla-jackson.jpg"
 import ellaRocksImage from "../../assets/people/ella-rocks.jpg"
-import People from "../../components/content/People"
 
 const staff = {
   connor: {

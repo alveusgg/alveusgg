@@ -1,12 +1,14 @@
 import type { NextPage } from "next"
 import Head from "next/head"
-import Heading from "../components/content/Heading"
 import Script from "next/script"
-import React, { useEffect, useId, useRef, useState } from "react"
 import Link from "next/link"
-import Slideshow from "../components/content/Slideshow"
 import Image from "next/image"
+import React, { useEffect, useId, useRef, useState } from "react"
+
+import Heading from "../components/content/Heading"
+import Slideshow from "../components/content/Slideshow"
 import Section from "../components/content/Section"
+import Carousel from "../components/content/Carousel"
 import IconAmazon from "../icons/IconAmazon"
 import IconPayPal from "../icons/IconPayPal"
 import IconEmail from "../icons/IconEmail"
@@ -31,7 +33,6 @@ import tshirtMerchImage from "../assets/merch/organic-cotton-t-shirt-dress-black
 import croptopMerchImage from "../assets/merch/organic-crop-top-black-front.png"
 import beanieMerchImage from "../assets/merch/organic-ribbed-beanie-black-front.png"
 import hoodieMerchImage from "../assets/merch/unisex-essential-eco-hoodie-white-front.png"
-import Carousel from "../components/content/Carousel"
 
 const slides = [
   {
@@ -260,7 +261,7 @@ const Home: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="hidden lg:block absolute z-10 -bottom-24 left w-1/2 h-auto max-w-[16rem] select-none pointer-events-none"
+          className="hidden lg:block absolute z-10 -bottom-24 left-0 w-1/2 h-auto max-w-[16rem] select-none pointer-events-none"
         />
 
         <Section dark>
@@ -395,7 +396,7 @@ const Home: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="hidden lg:block absolute z-10 -bottom-48 left w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
+          className="hidden lg:block absolute z-10 -bottom-48 left-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
         />
 
         <Section className="flex-grow">

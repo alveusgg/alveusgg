@@ -3,8 +3,10 @@ import Head from "next/head"
 import Link from "next/link"
 import Image from "next/image"
 import React from "react"
+
 import Section from "../components/content/Section"
 import Heading from "../components/content/Heading"
+
 import merchStoreImage from "../assets/merch/store.png"
 import merchGeorgieImage from "../assets/merch/georgie-plush.jpg"
 import merchStompyImage from "../assets/merch/stompy-plush.jpg"

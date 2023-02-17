@@ -2,6 +2,7 @@ import { type NextPage } from "next"
 import Head from "next/head"
 import Link from "next/link"
 import React from "react"
+
 import Section from "../components/content/Section"
 import Heading from "../components/content/Heading"
 import IconAmazon from "../icons/IconAmazon"

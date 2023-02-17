@@ -1,11 +1,13 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import Image from "next/image"
+import Link from "next/link"
 import React from "react"
+
 import Section from "../../../components/content/Section"
 import Heading from "../../../components/content/Heading"
+
 import report2021Image from "../../../assets/reports/2021.png"
-import Link from "next/link"
 
 const AboutAnnualReport2021Page: NextPage = () => {
   return (

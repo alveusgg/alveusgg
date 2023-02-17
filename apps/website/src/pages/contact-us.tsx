@@ -1,6 +1,7 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import React from "react"
+
 import Section from "../components/content/Section"
 import Heading from "../components/content/Heading"
 import socials from "../components/shared/data/socials"
