@@ -105,7 +105,7 @@ const config = {
         },
         {
           key: "Content-Security-Policy",
-          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/ https://tgbwidget.com/",
+          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/ https://tgbwidget.com/ https://www.youtube-nocookie.com/",
         },
       ],
     },

@@ -76,6 +76,10 @@ const structure: NavStructure = {
         title: "Show and Tell",
         link: "https://www.alveussanctuary.org/show-and-tell/",
       },
+      collaborations: {
+        title: "Collaborations",
+        link: "/collaborations",
+      },
     },
   },
   about: {
