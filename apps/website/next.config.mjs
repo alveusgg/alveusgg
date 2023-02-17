@@ -36,6 +36,38 @@ const config = {
     ],
   },
   redirects: async () => [
+    // WordPress route redirects
+    {
+      source: "/about-alveus",
+      destination: "/about/alveus",
+      permanent: true,
+    },
+    {
+      source: "/about-maya",
+      destination: "/about/maya",
+      permanent: true,
+    },
+    {
+      source: "/advisory-board",
+      destination: "/about/advisory-board",
+      permanent: true,
+    },
+    {
+      source: "/board-of-directors",
+      destination: "/about/board-of-directors",
+      permanent: true,
+    },
+    {
+      source: "/staff",
+      destination: "/about/staff",
+      permanent: true,
+    },
+    {
+      source: "/alveus-annual-report",
+      destination: "/about/annual-reports",
+      permanent: true,
+    },
+    // External redirects
     {
       source: "/smile",
       destination: "https://smile.amazon.com/ch/86-1772907",
@@ -73,7 +105,7 @@ const config = {
         },
         {
           key: "Content-Security-Policy",
-          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/",
+          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/ https://tgbwidget.com/ https://www.youtube-nocookie.com/",
         },
       ],
     },

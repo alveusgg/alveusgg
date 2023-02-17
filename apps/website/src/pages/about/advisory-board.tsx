@@ -1,8 +1,11 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import React from "react"
+
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
+import People from "../../components/content/People"
+
 import samanthaJacksonImage from "../../assets/people/samantha-jackson.png"
 import micheleRaffinImage from "../../assets/people/michele-raffin.png"
 import ellieArmstrongImage from "../../assets/people/ellie-armstrong.png"
@@ -10,7 +13,6 @@ import synackImage from "../../assets/people/synack.png"
 import anitaYeattesImage from "../../assets/people/anita-yeattes.png"
 import sebastianEcheverriImage from "../../assets/people/sebastian-echeverri.png"
 import allisonJohnsonImage from "../../assets/people/allison-johnson.jpg"
-import People from "../../components/content/People"
 
 const advisors = {
   samantha: {

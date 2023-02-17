@@ -1,15 +1,19 @@
 import { type NextPage } from "next"
 import Head from "next/head"
-import React from "react"
+import Image from "next/image"
+import Link from "next/link"
+import React, { useMemo } from "react"
+
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
 import IconTwitch from "../../icons/IconTwitch"
-import mayaImage from "../../assets/maya.png";
+import { collaborations, CollaborationsSection } from "../collaborations"
+
+import mayaImage from "../../assets/maya.png"
 import leafRightImage1 from "../../assets/floral/leaf-right-1.png"
 import leafRightImage2 from "../../assets/floral/leaf-right-2.png"
 import leafLeftImage1 from "../../assets/floral/leaf-left-1.png"
 import leafLeftImage2 from "../../assets/floral/leaf-left-2.png"
-import Image from "next/image"
 
 const stats = {
   averageTime: {
@@ -58,6 +62,8 @@ const views = {
 };
 
 const AboutAlveusPage: NextPage = () => {
+  const collaborationHighlight = useMemo(() => Object.fromEntries(Object.entries(collaborations).slice(0, 1)), []);
+
   return (
     <>
       <Head>
@@ -81,8 +87,8 @@ const AboutAlveusPage: NextPage = () => {
               About Alveus Sanctuary
             </Heading>
             <p className="text-lg">
-              Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a
-              virtual education center facility to provide permanent homes to non-releasable exotic animals.
+              Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and
+              as a virtual education center facility to provide permanent homes to non-releasable exotic animals.
             </p>
           </div>
         </Section>
@@ -92,7 +98,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="hidden lg:block absolute z-10 -bottom-24 left w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
+          className="hidden lg:block absolute z-10 -bottom-24 left-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
         />
 
         <Section>
@@ -211,7 +217,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="hidden lg:block absolute z-10 -bottom-24 left w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
+          className="hidden lg:block absolute z-10 -bottom-24 left-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
         />
 
         <Section dark className="py-24" containerClassName="flex flex-col items-center">
@@ -229,7 +235,15 @@ const AboutAlveusPage: NextPage = () => {
         <p>
           We work with other content creators to educate our combined audiences!
         </p>
-        {/* TODO: YouTube embeds */}
+
+        <CollaborationsSection items={collaborationHighlight} />
+
+        <Link
+          href="/collaborations"
+          className="inline-block mt-4 text-xl hover:bg-alveus-green hover:text-alveus-tan transition-colors px-6 py-4 rounded-full border-2 border-alveus-green"
+        >
+          Explore More
+        </Link>
       </Section>
     </>
   );

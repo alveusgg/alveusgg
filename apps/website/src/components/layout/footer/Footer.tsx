@@ -52,9 +52,18 @@ export const Footer: React.FC = () => {
               <p>{credits}</p>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-center">
-              <Link className={footerLinkClasses} href="/privacy-policy">
-                Privacy Policy
-              </Link>
+              <ul className="flex flex-col md:items-center gap-1">
+                <li>
+                  <Link className={footerLinkClasses} href="/contact-us">
+                    Contact Us
+                  </Link>
+                </li>
+                <li>
+                  <Link className={footerLinkClasses} href="/privacy-policy">
+                    Privacy Policy
+                  </Link>
+                </li>
+              </ul>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-right">
               <Link
