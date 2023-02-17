@@ -52,7 +52,7 @@ export const Footer: React.FC = () => {
               <p>{credits}</p>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-center">
-              <ul className="flex flex-col items-center gap-1">
+              <ul className="flex flex-col md:items-center gap-1">
                 <li>
                   <Link className={footerLinkClasses} href="/contact-us">
                     Contact Us

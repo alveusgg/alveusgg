@@ -154,7 +154,7 @@ const help = {
   contact: {
     icon: IconEmail,
     title: "Offer Help",
-    link: "https://www.alveussanctuary.org/contact-us/",
+    link: "/contact-us",
     external: false,
   },
 };
@@ -333,7 +333,7 @@ const Home: NextPage = () => {
             </p>
             <Link
               className="inline-block text-xl px-6 py-2 rounded-full border-2 border-alveus-green hover:bg-alveus-green hover:text-alveus-tan transition-colors"
-              href="https://www.alveussanctuary.org/donate/"
+              href="/donate"
             >
               Donate!
             </Link>
