@@ -12,6 +12,7 @@ import Carousel from "../components/content/Carousel"
 import IconAmazon from "../icons/IconAmazon"
 import IconPayPal from "../icons/IconPayPal"
 import IconEmail from "../icons/IconEmail"
+import ambassadors from "../config/ambassadors"
 
 import mayaImage from "../assets/maya.png"
 import sirenHeroImage from  "../assets/hero/siren.png"
@@ -20,9 +21,6 @@ import ticoHeroImage from  "../assets/hero/tico.png"
 import miaHeroImage from  "../assets/hero/mia.png"
 import noodleHeroImage from  "../assets/hero/noodle.png"
 import nuggetHeroImage from  "../assets/hero/nugget.png"
-import moominImage from "../assets/ambassadors/moomin.jpg"
-import georgieImage from "../assets/ambassadors/georgie.jpg"
-import stompyImage from "../assets/ambassadors/stompy.jpg"
 import leafLeftImage3 from "../assets/floral/leaf-left-3.png"
 import leafRightImage1 from "../assets/floral/leaf-right-1.png"
 import leafRightImage2 from "../assets/floral/leaf-right-2.png"
@@ -61,44 +59,23 @@ const slides = [
   },
 ];
 
-const ambassadors = Object.entries({
-  moomin: {
-    src: moominImage,
-    alt: "Moomin",
-    title: "Moomin is Movin' In!",
-    description: "He is an ambassador for how the fur trade has affected his species and many others.",
-    link: "https://www.alveussanctuary.org/ambassadors/moomin/",
-  },
-  georgie: {
-    src: georgieImage,
-    alt: "Georgie",
-    title: "Georgie!",
-    description: "He is here to teach all about threats to his species and to amphibians worldwide.",
-    link: "https://www.alveussanctuary.org/ambassadors/georgie/",
-  },
-  stompy: {
-    src: stompyImage,
-    alt: "Stompy",
-    title: "Stompy!",
-    description: "He is an ambassador for how the exotic meat trade & use of animal products in cosmetics has affected his species and many others.",
-    link: "https://www.alveussanctuary.org/ambassadors/stompy/",
-  },
-})
-  .reduce((obj, [ key, { src, alt, title, description, link } ]) => ({
+const featuredAmbassadors = Object.entries(ambassadors)
+  .filter(([ , { images, homepage } ]) => images[0] && homepage)
+  .reduce((obj, [ key, { images, homepage } ]) => ({
     ...obj,
     [key]: (<Link
-      href={link}
+      href={`/ambassadors/${key}`}
       draggable={false}
       className="hover:text-alveus-green transition-colors"
     >
       <Image
-        src={src}
-        alt={alt}
+        src={images[0]?.src || ''}
+        alt={images[0]?.alt || ''}
         draggable={false}
         className="w-full h-auto aspect-square object-cover max-w-[10rem] mx-auto rounded-xl"
       />
-      <Heading level={4} className="text-center text-xl">{title}</Heading>
-      <p className="text-center">{description}</p>
+      <Heading level={4} className="text-center text-xl">{homepage?.title}</Heading>
+      <p className="text-center">{homepage?.description}</p>
     </Link>)
   }), {});
 
@@ -320,7 +297,7 @@ const Home: NextPage = () => {
               </Link>
             </div>
 
-            <Carousel items={ambassadors} auto={10000} />
+            <Carousel items={featuredAmbassadors} auto={10000} />
           </div>
 
           <div className="basis-full md:basis-1/3 pt-8 md:pt-0 md:px-16">
