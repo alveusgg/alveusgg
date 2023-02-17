@@ -51,7 +51,7 @@ const experience = [
     text: 'Founded Alveus Sanctuary',
   },
   {
-    date: 'March, 2021 – Present',
+    date: 'March, 2021 – March, 2022',
     text: 'Governing board of Make a Wish Foundation in Central and South Texas',
   },
 ];
