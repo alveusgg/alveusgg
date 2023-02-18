@@ -197,10 +197,10 @@ const ambassadors: Record<string, Ambassador> = {
     species: "American Crow",
     scientific: "Corvus brachyrhynchos",
     sex: "Male",
-    birth: "2022",
-    arrival: null, // TODO: Site says 2021-08, but if it was born in 2022 that doesn't make sense
+    birth: "2021",
+    arrival: "2021-08",
     iucn: "LC",
-    story: "Coconut was brought into a wildife rehab center as a baby. He imprinted during the rehab process and then was deemed non-releasable.",
+    story: "Coconut was brought into a wildlife rehab center as a baby. He imprinted during the rehab process and then was deemed non-releasable.",
     mission: "He is an ambassador for educating people on the misconceptions that wildlife face as well as human-wildlife conflict.",
     images: [
       { src: coconutImage, alt: "Coconut the American Crow" },
@@ -422,7 +422,7 @@ const ambassadors: Record<string, Ambassador> = {
   },
   barbaraBakedBean: {
     name: "Barbara / Baked Bean",
-    species: "Madagascar Hissing Cockroach",
+    species: "Madagascar Hissing Cockroaches",
     scientific: "Gromphadorhina portentosa",
     sex: null,
     birth: "2022",
