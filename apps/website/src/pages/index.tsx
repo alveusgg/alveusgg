@@ -31,6 +31,7 @@ import tshirtMerchImage from "../assets/merch/organic-cotton-t-shirt-dress-black
 import croptopMerchImage from "../assets/merch/organic-crop-top-black-front.png"
 import beanieMerchImage from "../assets/merch/organic-ribbed-beanie-black-front.png"
 import hoodieMerchImage from "../assets/merch/unisex-essential-eco-hoodie-white-front.png"
+import { camelToKebab } from "../utils/string-case"
 
 const slides = [
   {
@@ -64,7 +65,7 @@ const featuredAmbassadors = Object.entries(ambassadors)
   .reduce((obj, [ key, { images, homepage } ]) => ({
     ...obj,
     [key]: (<Link
-      href={`/ambassadors/${key}`}
+      href={`/ambassadors/${camelToKebab(key)}`}
       draggable={false}
       className="hover:text-alveus-green transition-colors"
     >

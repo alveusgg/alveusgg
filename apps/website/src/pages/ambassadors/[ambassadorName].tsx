@@ -6,6 +6,7 @@ import React from "react"
 import ambassadors, { type Ambassador, iucnFlags, iucnStatuses } from "../../config/ambassadors"
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
+import { camelToKebab, kebabToCamel } from "../../utils/string-case"
 
 const parseIucnStatus = (rawStatus: string): string => {
   const [ status, flag ] = rawStatus.split("/");
@@ -38,8 +39,8 @@ type AmbassadorPageProps = {
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: Object.keys(ambassadors).map((ambassadorName) => ({
-      params: { ambassadorName },
+    paths: Object.keys(ambassadors).map(slug => ({
+      params: { ambassadorName: camelToKebab(slug) },
     })),
     fallback: false,
   };
@@ -49,7 +50,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (contex
   const ambassadorName = context.params?.ambassadorName;
   if (typeof ambassadorName !== "string") return { notFound: true };
 
-  const ambassador = ambassadors[ambassadorName];
+  const ambassador = ambassadors[kebabToCamel(ambassadorName)];
   if (!ambassador) return { notFound: true };
 
   return {
