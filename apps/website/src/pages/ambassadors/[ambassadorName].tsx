@@ -90,7 +90,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
             </div>
 
             <div className="flex flex-wrap">
-              <div className="basis-full md:basis-1/2 py-2 md:px-2">
+              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
                 <Heading level={2}>IUCN Status:</Heading>
 
                 <div className="ml-4">
@@ -98,7 +98,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 </div>
               </div>
 
-              <div className="basis-full md:basis-1/2 py-2 md:px-2">
+              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
                 <Heading level={2}>Species:</Heading>
 
                 <div className="ml-4">
@@ -107,7 +107,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 </div>
               </div>
 
-              <div className="basis-full md:basis-1/2 py-2 md:px-2">
+              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
                 <Heading level={2}>Sex:</Heading>
 
                 <div className="ml-4">
@@ -115,7 +115,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 </div>
               </div>
 
-              <div className="basis-full md:basis-1/2 py-2 md:px-2">
+              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
                 <Heading level={2}>Date of Birth:</Heading>
 
                 <div className="ml-4">
@@ -123,7 +123,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 </div>
               </div>
 
-              <div className="basis-full md:basis-1/2 py-2 md:px-2">
+              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
                 <Heading level={2}>Arrived at Alveus:</Heading>
 
                 <div className="ml-4">
