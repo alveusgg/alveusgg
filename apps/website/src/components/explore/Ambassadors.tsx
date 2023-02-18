@@ -6,11 +6,11 @@ import { notEmpty } from "../../utils/helpers";
 import type {
   Ambassador,
   Ambassadors as AmbassadorsData,
-} from "../../utils/data";
+} from "../../server/utils/data";
 
 import { CardSwiper } from "../shared/CardSwiper";
-import { AmbassadorCard } from "./AmbassadorCard";
 import { Headline } from "../shared/Headline";
+import { AmbassadorCard } from "./AmbassadorCard";
 
 export const Ambassadors: React.FC<{
   ambassadors: AmbassadorsData;

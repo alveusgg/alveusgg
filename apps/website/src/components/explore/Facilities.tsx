@@ -1,6 +1,6 @@
 import { CardSwiper } from "../shared/CardSwiper";
 import { notEmpty } from "../../utils/helpers";
-import type { Facilities as FacilitiesData } from "../../utils/data";
+import type { Facilities as FacilitiesData } from "../../server/utils/data";
 import { FacilityCard } from "./FacilityCard";
 
 export const Facilities: React.FC<{

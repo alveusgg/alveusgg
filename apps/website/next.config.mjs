@@ -14,22 +14,27 @@ const config = {
   swcMinify: true,
   images: {
     remotePatterns: [
+      // OpenWeatherMap
       {
         protocol: "http",
         hostname: "openweathermap.org",
       },
+      // Twitch CDN (profile images etc.)
       {
         protocol: "https",
         hostname: "static-cdn.jtvnw.net",
       },
+      // Original Website
       {
         protocol: "https",
         hostname: "www.alveussanctuary.org",
       },
+      // GitHub Pages
       {
         protocol: "https",
         hostname: "alveusgg.github.io",
       },
+      // GitHub Raw
       {
         protocol: "https",
         hostname: "raw.githubusercontent.com",
@@ -39,23 +44,23 @@ const config = {
   redirects: async () => [
     // Renaming redirects
     {
-      source: '/ambassadors/smokey-oak-millipede',
-      destination: '/ambassadors/hank-mr-mctrain',
+      source: "/ambassadors/smokey-oak-millipede",
+      destination: "/ambassadors/hank-mr-mctrain",
       permanent: false,
     },
     {
-      source: '/ambassadors/madagascar-hissing-cockroach',
-      destination: '/ambassadors/barbara-baked-bean',
+      source: "/ambassadors/madagascar-hissing-cockroach",
+      destination: "/ambassadors/barbara-baked-bean",
       permanent: false,
     },
     {
-      source: '/ambassadors/zebra-isopods',
-      destination: '/ambassadors/marty',
+      source: "/ambassadors/zebra-isopods",
+      destination: "/ambassadors/marty",
       permanent: false,
     },
     {
-      source: '/ambassadors/rubber-ducky-isopods',
-      destination: '/ambassadors/ducky',
+      source: "/ambassadors/rubber-ducky-isopods",
+      destination: "/ambassadors/ducky",
       permanent: false,
     },
     // WordPress route redirects
@@ -127,7 +132,8 @@ const config = {
         },
         {
           key: "Content-Security-Policy",
-          value: "frame-src https://embed.twitch.tv/ https://www.twitch.tv/ https://tgbwidget.com/ https://www.youtube-nocookie.com/",
+          value:
+            "frame-src https://embed.twitch.tv/ https://www.twitch.tv/ https://tgbwidget.com/ https://www.youtube-nocookie.com/",
         },
       ],
     },
@@ -136,16 +142,18 @@ const config = {
     // Add a custom loader for videos
     config.module.rules.push({
       test: /\.mp4$/,
-      use: [{
-        loader: resolve('./src/build/video-loader.cjs'),
-        // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L1907-L1912
-        // and https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L2489-L2490
-        options: {
-          isServer: !!options.isServer,
-          isDevelopment: !!options.dev,
-          assetPrefix: options.config.assetPrefix || '',
+      use: [
+        {
+          loader: resolve("./src/build/video-loader.cjs"),
+          // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L1907-L1912
+          // and https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L2489-L2490
+          options: {
+            isServer: !!options.isServer,
+            isDevelopment: !!options.dev,
+            assetPrefix: options.config.assetPrefix || "",
+          },
         },
-      }],
+      ],
     });
 
     //const baseEntry = config.entry;

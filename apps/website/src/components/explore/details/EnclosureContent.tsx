@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import type { Enclosure } from "../../../utils/data";
+import type { Enclosure } from "../../../server/utils/data";
 import { DefinitionItem } from "./DefinitionItem";
 
 export const EnclosureContent: React.FC<{

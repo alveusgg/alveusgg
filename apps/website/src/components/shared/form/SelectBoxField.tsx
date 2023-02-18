@@ -1,8 +1,9 @@
-import React, { type SelectHTMLAttributes } from "react";
+import React, { type ReactNode, type SelectHTMLAttributes } from "react";
 import { useField, type AriaFieldProps } from "react-aria";
 
 type SelectBoxFieldProps = SelectHTMLAttributes<HTMLSelectElement> &
   AriaFieldProps & {
+    children?: ReactNode;
     label: string;
     className?: string;
   };
@@ -17,6 +18,8 @@ export function SelectBoxField(props: SelectBoxFieldProps) {
       <select
         className="w-full rounded-sm border border-gray-700 bg-white p-1"
         {...fieldProps}
+        value={props.value}
+        onChange={props.onChange}
       >
         {props.children}
       </select>

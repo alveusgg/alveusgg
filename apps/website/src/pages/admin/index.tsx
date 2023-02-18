@@ -1,25 +1,22 @@
-import type { GetServerSideProps, NextPage } from "next";
-import { getSession } from "next-auth/react";
+import type { NextPage, NextPageContext } from "next";
+import { getAdminSSP } from "@/server/utils/admin";
+import { permissions } from "@/config/permissions";
 
-import { checkIsSuperUser } from "../../utils/auth";
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-  if (checkIsSuperUser(session)) {
-    return {
-      redirect: {
-        destination: "/admin/dashboard",
-        permanent: false,
-      },
-    };
+export async function getServerSideProps(context: NextPageContext) {
+  const adminProps = await getAdminSSP(context, permissions.viewDashboard);
+  if (!adminProps) {
+    return { notFound: true };
   }
 
   return {
-    notFound: true,
+    redirect: {
+      destination: "/admin/dashboard",
+      permanent: false,
+    },
   };
-};
+}
 
-const Admin: NextPage = () => {
+const AdminIndexPage: NextPage = () => {
   return null;
 };
-export default Admin;
+export default AdminIndexPage;

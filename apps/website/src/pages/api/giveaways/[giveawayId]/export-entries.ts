@@ -3,7 +3,7 @@ import { stringify } from "csv-stringify/sync";
 
 import { getServerAuthSession } from "../../../../server/common/get-server-auth-session";
 import { prisma } from "../../../../server/db/client";
-import { checkIsSuperUser } from "../../../../utils/auth";
+import { checkIsSuperUserSession } from "../../../../server/utils/auth";
 import { getCountryName } from "../../../../utils/countries";
 
 type GiveawayEntryCsvExportRow = string[];
@@ -13,7 +13,7 @@ const exportGiveawayEntries = async (
   res: NextApiResponse
 ) => {
   const session = await getServerAuthSession({ req, res });
-  const isSuperUser = checkIsSuperUser(session);
+  const isSuperUser = checkIsSuperUserSession(session);
 
   if (!isSuperUser) {
     res.status(401).json({ success: false });

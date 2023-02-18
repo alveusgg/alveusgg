@@ -1,6 +1,6 @@
 import { CardSwiper } from "../shared/CardSwiper";
 import { notEmpty } from "../../utils/helpers";
-import type { Enclosures as EnclosuresData } from "../../utils/data";
+import type { Enclosures as EnclosuresData } from "../../server/utils/data";
 import { EnclosureCard } from "./EnclosureCard";
 
 export const Enclosures: React.FC<{

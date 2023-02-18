@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 
-import type { Facility } from "../../../utils/data";
+import type { Facility } from "../../../server/utils/data";
 import { DefinitionItem } from "./DefinitionItem";
 
 export const FacilityContent: React.FC<{

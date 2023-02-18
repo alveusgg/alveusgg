@@ -2,7 +2,7 @@ import Head from "next/head";
 import { type InferGetStaticPropsType, type NextPage } from "next";
 import React, { useReducer } from "react";
 
-import { getAllData } from "../../utils/data";
+import { getAllData } from "../../server/utils/data";
 import DefaultPageLayout from "../../components/DefaultPageLayout";
 import { Headline } from "../../components/shared/Headline";
 import { Map } from "../../components/explore/Map";

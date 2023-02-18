@@ -2,24 +2,31 @@ import { type ReactNode } from "react";
 
 type MessageBoxProps = {
   children: ReactNode | ReactNode[];
+  className?: string;
   variant?: "default" | "success" | "warning" | "failure";
 };
 
-export function MessageBox({ variant = "default", children }: MessageBoxProps) {
-  let classes = "bg-white";
+export function MessageBox({
+  variant = "default",
+  className = "",
+  children,
+}: MessageBoxProps) {
+  let variantClasses = "bg-white";
   switch (variant) {
     case "success":
-      classes = "bg-green-100";
+      variantClasses = "bg-green-100";
       break;
     case "warning":
-      classes = "bg-yellow-200";
+      variantClasses = "bg-yellow-200";
       break;
     case "failure":
-      classes = "bg-red-200 text-red-900";
+      variantClasses = "bg-red-200 text-red-900";
       break;
   }
 
   return (
-    <div className={`rounded-lg ${classes} p-2 shadow-xl`}>{children}</div>
+    <div className={`rounded-lg ${variantClasses} p-2 shadow-xl ${className}`}>
+      {children}
+    </div>
   );
 }

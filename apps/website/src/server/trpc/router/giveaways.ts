@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { getTwitchConfig, type TwitchConfig } from "../../../config/twitch";
 import { calcGiveawayConfig } from "../../../utils/giveaways";
-import { getUserFollowsBroadcaster } from "../../../utils/twitch-api";
+import { getUserFollowsBroadcaster } from "../../utils/twitch-api";
 import { isValidCountryCode } from "../../../utils/countries";
 import {
   type OutgoingWebhookType,

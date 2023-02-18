@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import type { WeatherData } from "../utils/weather-data";
+import type { WeatherData } from "../server/utils/weather-data";
 
 function convertFahrenheitToCelsius(degrees: number) {
   return (5 / 9) * (degrees - 32);
