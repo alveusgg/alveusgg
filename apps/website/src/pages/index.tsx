@@ -203,7 +203,7 @@ const Home: NextPage = () => {
             <div className="flex flex-wrap gap-4 mt-8">
               <Link
                 className="inline-block text-lg px-4 py-2 rounded-full border-2 border-white hover:bg-alveus-tan hover:text-alveus-green hover:border-alveus-tan transition-colors"
-                href="https://www.alveussanctuary.org/ambassadors/"
+                href="/ambassadors"
               >
                 Meet the Ambassadors
               </Link>
@@ -292,7 +292,7 @@ const Home: NextPage = () => {
               </Heading>
               <Link
                 className="inline-block text-lg uppercase text-alveus-green-900 hover:text-alveus-green transition-colors"
-                href="https://www.alveussanctuary.org/ambassadors/"
+                href="/ambassadors"
               >
                 See all
               </Link>
