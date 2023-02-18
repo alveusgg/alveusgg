@@ -60,7 +60,7 @@ const slides = [
 ];
 
 const featuredAmbassadors = Object.entries(ambassadors)
-  .filter(([ , { images, homepage } ]) => images[0] && homepage)
+  .filter(([ , { homepage } ]) => !!homepage)
   .reduce((obj, [ key, { images, homepage } ]) => ({
     ...obj,
     [key]: (<Link
@@ -69,8 +69,8 @@ const featuredAmbassadors = Object.entries(ambassadors)
       className="hover:text-alveus-green transition-colors"
     >
       <Image
-        src={images[0]?.src || ''}
-        alt={images[0]?.alt || ''}
+        src={images[0].src}
+        alt={images[0].alt}
         draggable={false}
         className="w-full h-auto aspect-square object-cover max-w-[10rem] mx-auto rounded-xl"
       />

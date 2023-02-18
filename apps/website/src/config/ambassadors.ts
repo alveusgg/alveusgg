@@ -8,24 +8,45 @@ type OneToNine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 type ZeroToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 type DateStringYear = `19${ZeroToNine}${ZeroToNine}` | `20${ZeroToNine}${ZeroToNine}`
 type DateStringMonth = `0${OneToNine}` | `1${0 | 1 | 2}`
+type DateStringYearMonth = `${DateStringYear}-${DateStringMonth}`
 type DateStringDay = `${0}${OneToNine}` | `${1 | 2}${ZeroToNine}` | `3${0 | 1}`
-type DateString = `${DateStringYear}-${DateStringMonth}-${DateStringDay}`
+type DateString = `${DateStringYearMonth}-${DateStringDay}`
 
-type IUCN = "EX" | "EW" | "CR" | "EN" | "VU" | "NT" | "LC" | "DD" | "NE"
-type IUCNStatus = IUCN | `${IUCN}/decreasing`
+export const iucnStatuses = {
+  EX: "Extinct",
+  EW: "Extinct in the Wild",
+  CR: "Critically Endangered",
+  EN: "Endangered",
+  VU: "Vulnerable",
+  NT: "Near Threatened",
+  LC: "Least Concern",
+  DD: "Data Deficient",
+  NE: "Not Evaluated",
+};
+
+export const iucnFlags = {
+  decreasing: "with decreasing population trend",
+};
+
+type IUCNStatuses = keyof typeof iucnStatuses
+type ICUNFlags = keyof typeof iucnFlags
+type IUCNStatus = IUCNStatuses | `${IUCNStatuses}/${ICUNFlags}`
+
+type Image = { src: ImageProps["src"], alt: string }
 
 type Nullable<T> = T | null
 
-type Ambassador = {
+export type Ambassador = {
   name: string
   species: string
   scientific: string
   sex: Nullable<"Male" | "Female">
-  dob: Nullable<DateString>
+  birth: Nullable<DateStringYear | DateStringYearMonth | DateString>
+  arrival: Nullable<DateStringYear | DateStringYearMonth | DateString>
   iucn: IUCNStatus
   story: string
   mission: string
-  images: { src: ImageProps["src"], alt: string }[]
+  images: [Image, ...Image[]]
   homepage: Nullable<{ title: string, description: string }>
 };
 
@@ -35,7 +56,8 @@ const ambassadors: Record<string, Ambassador> = {
     species: "Chinchilla",
     scientific: "Chinchilla lanigera",
     sex: "Male",
-    dob: "2021-05-13",
+    birth: "2017",
+    arrival: "2021-04",
     iucn: "EN/decreasing",
     story: "Rehomed from a local pet owner.",
     mission: "He is an ambassador for the exploitation of wildlife in the fur trade.",
@@ -52,7 +74,8 @@ const ambassadors: Record<string, Ambassador> = {
     species: "African Bullfrog",
     scientific: "Pyxicephalus adspersus",
     sex: "Male",
-    dob: null,
+    birth: "2021",
+    arrival: "2021-04",
     iucn: "LC/decreasing",
     story: "Georgie was part of an educational program at a zoo and was rehomed to Alveus.",
     mission: "He is an ambassador for the wildlife trade and how chytrid fungus is affecting amphibian species worldwide.",
@@ -69,7 +92,8 @@ const ambassadors: Record<string, Ambassador> = {
     species: "Emu",
     scientific: "Dromaius novaehollandiae",
     sex: "Male",
-    dob: "2021-02-14",
+    birth: "2021-02-14",
+    arrival: "2021-04",
     iucn: "LC",
     story: "Stompy was hatched in captivity and Maya hand was raised to be the first Alveus ambassador.",
     mission: "Stopping exotic meat trade, traditional medicine, and over exploitation of animal products in cosmetics.",
