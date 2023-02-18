@@ -43,7 +43,7 @@ const experience = [
     text: 'Graduated from California Polytechnic University at San Luis Obispo (earning Bachelor of Science in Agricultural Education and Communication)',
   },
   {
-    date: 'October, 2020 – Present',
+    date: 'October, 2020 – October, 2021',
     text: 'Board of Directors for a wildlife rehabilitation center in Central Texas (role focused on raptor rehabilitation and husbandry)',
   },
   {
