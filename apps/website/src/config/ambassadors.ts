@@ -4,36 +4,133 @@ import stompyImage1 from "../assets/ambassadors/stompy/01.jpg"
 import stompyImage2 from "../assets/ambassadors/stompy/02.jpg"
 import stompyImage3 from "../assets/ambassadors/stompy/03.jpg"
 import stompyImage4 from "../assets/ambassadors/stompy/04.jpg"
+import stompyImage5 from "../assets/ambassadors/stompy/05.jpg"
+import stompyImage6 from "../assets/ambassadors/stompy/06.jpg"
+
 import georgieImage1 from "../assets/ambassadors/georgie/01.jpg"
+import georgieImage2 from "../assets/ambassadors/georgie/02.jpg"
+import georgieImage3 from "../assets/ambassadors/georgie/03.jpg"
+import georgieImage4 from "../assets/ambassadors/georgie/04.png"
+import georgieImage5 from "../assets/ambassadors/georgie/05.jpg"
+
 import ticoImage1 from "../assets/ambassadors/tico/01.jpg"
+import ticoImage2 from "../assets/ambassadors/tico/02.jpg"
+import ticoImage3 from "../assets/ambassadors/tico/03.jpg"
+
 import mileyImage1 from "../assets/ambassadors/miley/01.jpg"
+import mileyImage2 from "../assets/ambassadors/miley/02.jpg"
+import mileyImage3 from "../assets/ambassadors/miley/03.jpg"
+import mileyImage4 from "../assets/ambassadors/miley/04.jpg"
+
 import miaImage1 from "../assets/ambassadors/mia/01.jpg"
+import miaImage2 from "../assets/ambassadors/mia/02.jpg"
+import miaImage3 from "../assets/ambassadors/mia/03.jpg"
+import miaImage4 from "../assets/ambassadors/mia/04.jpg"
+import miaImage5 from "../assets/ambassadors/mia/05.jpg"
+
 import sirenImage1 from "../assets/ambassadors/siren/01.jpg"
-import abbottImage1 from "../assets/ambassadors/abbott/01.png"
+import sirenImage2 from "../assets/ambassadors/siren/02.jpg"
+import sirenImage3 from "../assets/ambassadors/siren/03.jpg"
+import sirenImage4 from "../assets/ambassadors/siren/04.jpg"
+import sirenImage5 from "../assets/ambassadors/siren/05.jpg"
+import sirenImage6 from "../assets/ambassadors/siren/06.jpg"
+import sirenImage7 from "../assets/ambassadors/siren/07.jpg"
+
+import abbottImage1 from "../assets/ambassadors/abbott/01.jpg"
+import abbottImage2 from "../assets/ambassadors/abbott/02.jpg"
+import abbottImage3 from "../assets/ambassadors/abbott/03.png"
+
 import coconutImage1 from "../assets/ambassadors/coconut/01.png"
+import coconutImage2 from "../assets/ambassadors/coconut/02.jpg"
+
 import oliverImage1 from "../assets/ambassadors/oliver/01.jpg"
+import oliverImage2 from "../assets/ambassadors/oliver/02.jpg"
+import oliverImage3 from "../assets/ambassadors/oliver/03.jpg"
+
 import nuggetImage1 from "../assets/ambassadors/nugget/01.jpg"
+import nuggetImage2 from "../assets/ambassadors/nugget/02.jpg"
+import nuggetImage3 from "../assets/ambassadors/nugget/03.jpg"
+
 import henriettaImage1 from "../assets/ambassadors/henrietta/01.jpg"
+import henriettaImage2 from "../assets/ambassadors/henrietta/02.jpg"
+
 import henriqueImage1 from "../assets/ambassadors/henrique/01.jpg"
+import henriqueImage2 from "../assets/ambassadors/henrique/02.jpg"
+
 import noodleImage1 from "../assets/ambassadors/noodle/01.jpg"
+import noodleImage2 from "../assets/ambassadors/noodle/02.jpg"
+import noodleImage3 from "../assets/ambassadors/noodle/03.jpg"
+import noodleImage4 from "../assets/ambassadors/noodle/04.jpg"
+
 import patchyImage1 from "../assets/ambassadors/patchy/01.png"
+import patchyImage2 from "../assets/ambassadors/patchy/02.jpg"
+
 import fennImage1 from "../assets/ambassadors/fenn/01.jpg"
+import fennImage2 from "../assets/ambassadors/fenn/02.jpg"
+import fennImage3 from "../assets/ambassadors/fenn/03.jpg"
+import fennImage4 from "../assets/ambassadors/fenn/04.jpg"
+import fennImage5 from "../assets/ambassadors/fenn/05.jpg"
+
 import reedImage1 from "../assets/ambassadors/reed/01.jpg"
+import reedImage2 from "../assets/ambassadors/reed/02.jpg"
+import reedImage3 from "../assets/ambassadors/reed/03.jpg"
+import reedImage4 from "../assets/ambassadors/reed/04.jpg"
+import reedImage5 from "../assets/ambassadors/reed/05.jpg"
+
 import serranoImage1 from "../assets/ambassadors/serrano/01.jpg"
+import serranoImage2 from "../assets/ambassadors/serrano/02.jpg"
+import serranoImage3 from "../assets/ambassadors/serrano/03.jpg"
+
 import jalapenoImage1 from "../assets/ambassadors/jalapeno/01.jpg"
+import jalapenoImage2 from "../assets/ambassadors/jalapeno/02.jpg"
+import jalapenoImage3 from "../assets/ambassadors/jalapeno/03.jpg"
+import jalapenoImage4 from "../assets/ambassadors/jalapeno/04.png"
+import jalapenoImage5 from "../assets/ambassadors/jalapeno/05.jpg"
+
 import snorkImage1 from "../assets/ambassadors/snork/01.jpg"
+import snorkImage2 from "../assets/ambassadors/snork/02.jpg"
+
 import moominImage1 from "../assets/ambassadors/moomin/01.jpg"
+import moominImage2 from "../assets/ambassadors/moomin/02.jpg"
+
 import winnieImage1 from "../assets/ambassadors/winnie/01.jpg"
+import winnieImage2 from "../assets/ambassadors/winnie/02.jpg"
+import winnieImage3 from "../assets/ambassadors/winnie/03.jpg"
+import winnieImage4 from "../assets/ambassadors/winnie/04.jpg"
+
 import hankImage1 from "../assets/ambassadors/hank/01.jpg"
+import hankImage2 from "../assets/ambassadors/hank/02.jpg"
+import hankImage3 from "../assets/ambassadors/hank/03.jpg"
+
 import cockroachesImage1 from "../assets/ambassadors/cockroaches/01.jpg"
+import cockroachesImage2 from "../assets/ambassadors/cockroaches/02.jpg"
+import cockroachesImage3 from "../assets/ambassadors/cockroaches/03.jpg"
+
 import martyImage1 from "../assets/ambassadors/marty/01.jpg"
+import martyImage2 from "../assets/ambassadors/marty/02.jpg"
+import martyImage3 from "../assets/ambassadors/marty/03.jpg"
+
 import duckyImage1 from "../assets/ambassadors/ducky/01.jpg"
+import duckyImage2 from "../assets/ambassadors/ducky/02.jpg"
+
 import bbImage1 from "../assets/ambassadors/bb/01.jpg"
+import bbImage2 from "../assets/ambassadors/bb/02.jpg"
+
 import toasterImage1 from "../assets/ambassadors/toaster/01.jpg"
+import toasterImage2 from "../assets/ambassadors/toaster/02.jpg"
+import toasterImage3 from "../assets/ambassadors/toaster/03.jpg"
+
 import tortelliniImage1 from "../assets/ambassadors/tortellini/01.jpg"
+import tortelliniImage2 from "../assets/ambassadors/tortellini/02.jpg"
+
 import puppyImage1 from "../assets/ambassadors/puppy/01.jpg"
+
 import chipsImage1 from "../assets/ambassadors/chips/01.jpg"
+import chipsImage2 from "../assets/ambassadors/chips/02.jpg"
+
 import nillaImage1 from "../assets/ambassadors/nilla/01.jpg"
+import nillaImage2 from "../assets/ambassadors/nilla/02.jpg"
+
 import momoImage1 from "../assets/ambassadors/momo/01.jpg"
 import appaImage1 from "../assets/ambassadors/appa/01.jpg"
 
@@ -99,6 +196,8 @@ const ambassadors: Record<string, Ambassador> = {
       { src: stompyImage2, alt: "Stompy the Emu" },
       { src: stompyImage3, alt: "Stompy the Emu" },
       { src: stompyImage4, alt: "Stompy the Emu" },
+      { src: stompyImage5, alt: "Stompy the Emu" },
+      { src: stompyImage6, alt: "Stompy the Emu" },
     ],
     homepage: {
       title: "Stompy!",
@@ -117,6 +216,10 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for the wildlife trade and how chytrid fungus is affecting amphibian species worldwide.",
     images: [
       { src: georgieImage1, alt: "Georgie the African Bullfrog" },
+      { src: georgieImage2, alt: "Georgie the African Bullfrog" },
+      { src: georgieImage3, alt: "Georgie the African Bullfrog" },
+      { src: georgieImage4, alt: "Georgie the African Bullfrog" },
+      { src: georgieImage5, alt: "Georgie the African Bullfrog" },
     ],
     homepage: {
       title: "Georgie!",
@@ -135,6 +238,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
     images: [
       { src: ticoImage1, alt: "Tico the Blue and Gold Macaw" },
+      { src: ticoImage2, alt: "Tico the Blue and Gold Macaw" },
+      { src: ticoImage3, alt: "Tico the Blue and Gold Macaw" },
     ],
     homepage: null,
   },
@@ -150,6 +255,9 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
     images: [
       { src: mileyImage1, alt: "Miley the Catalina Macaw" },
+      { src: mileyImage2, alt: "Miley the Catalina Macaw" },
+      { src: mileyImage3, alt: "Miley the Catalina Macaw" },
+      { src: mileyImage4, alt: "Miley the Catalina Macaw" },
     ],
     homepage: null,
   },
@@ -165,6 +273,10 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
     images: [
       { src: miaImage1, alt: "Mia the African Grey" },
+      { src: miaImage2, alt: "Mia the African Grey" },
+      { src: miaImage3, alt: "Mia the African Grey" },
+      { src: miaImage4, alt: "Mia the African Grey" },
+      { src: miaImage5, alt: "Mia the African Grey" },
     ],
     homepage: null,
   },
@@ -180,6 +292,12 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for how the pet trade has affected her parrot species and many others around the world.",
     images: [
       { src: sirenImage1, alt: "Siren the Blue-fronted Amazon" },
+      { src: sirenImage2, alt: "Siren the Blue-fronted Amazon" },
+      { src: sirenImage3, alt: "Siren the Blue-fronted Amazon" },
+      { src: sirenImage4, alt: "Siren the Blue-fronted Amazon" },
+      { src: sirenImage5, alt: "Siren the Blue-fronted Amazon" },
+      { src: sirenImage6, alt: "Siren the Blue-fronted Amazon" },
+      { src: sirenImage7, alt: "Siren the Blue-fronted Amazon" },
     ],
     homepage: null,
   },
@@ -195,6 +313,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for educating people on the misconceptions that wildlife face as well as human-wildlife conflict.",
     images: [
       { src: abbottImage1, alt: "Abbott the American Crow" },
+      { src: abbottImage2, alt: "Abbott the American Crow" },
+      { src: abbottImage3, alt: "Abbott the American Crow" },
     ],
     homepage: null,
   },
@@ -210,6 +330,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for educating people on the misconceptions that wildlife face as well as human-wildlife conflict.",
     images: [
       { src: coconutImage1, alt: "Coconut the American Crow" },
+      { src: coconutImage2, alt: "Coconut the American Crow" },
     ],
     homepage: null,
   },
@@ -225,6 +346,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
     images: [
       { src: oliverImage1, alt: "Oliver the Olive Egger Chicken" },
+      { src: oliverImage2, alt: "Oliver the Olive Egger Chicken" },
+      { src: oliverImage3, alt: "Oliver the Olive Egger Chicken" },
     ],
     homepage: null,
   },
@@ -240,6 +363,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
     images: [
       { src: nuggetImage1, alt: "Nugget the Ameraucana Chicken" },
+      { src: nuggetImage2, alt: "Nugget the Ameraucana Chicken" },
+      { src: nuggetImage3, alt: "Nugget the Ameraucana Chicken" },
     ],
     homepage: null,
   },
@@ -255,6 +380,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
     images: [
       { src: henriettaImage1, alt: "Henrietta the Jersey Giant Chicken" },
+      { src: henriettaImage2, alt: "Henrietta the Jersey Giant Chicken" },
     ],
     homepage: null,
   },
@@ -270,6 +396,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
     images: [
       { src: henriqueImage1, alt: "Henrique the Half Drak Brahma, Half Saipan Chicken" },
+      { src: henriqueImage2, alt: "Henrique the Half Drak Brahma, Half Saipan Chicken" },
     ],
     homepage: null,
   },
@@ -285,6 +412,9 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for how the pet trade and habitat loss has affected hers and many other reptile species worldwide.",
     images: [
       { src: noodleImage1, alt: "Noodle the Carpet Python" },
+      { src: noodleImage2, alt: "Noodle the Carpet Python" },
+      { src: noodleImage3, alt: "Noodle the Carpet Python" },
+      { src: noodleImage4, alt: "Noodle the Carpet Python" },
     ],
     homepage: null,
   },
@@ -300,6 +430,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for how the pet trade and habitat loss has affected his and many other reptile species worldwide.",
     images: [
       { src: patchyImage1, alt: "Patchy the Ball Python" },
+      { src: patchyImage2, alt: "Patchy the Ball Python" },
     ],
     homepage: null,
   },
@@ -315,6 +446,10 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for the exploitation of wildlife in the pet trade and the fur trade.",
     images: [
       { src: fennImage1, alt: "Fenn the European Red Fox" },
+      { src: fennImage2, alt: "Fenn the European Red Fox" },
+      { src: fennImage3, alt: "Fenn the European Red Fox" },
+      { src: fennImage4, alt: "Fenn the European Red Fox" },
+      { src: fennImage5, alt: "Fenn the European Red Fox" },
     ],
     homepage: null,
   },
@@ -330,6 +465,10 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for the exploitation of wildlife in the pet trade and the fur trade.",
     images: [
       { src: reedImage1, alt: "Reed the European Red Fox" },
+      { src: reedImage2, alt: "Reed the European Red Fox" },
+      { src: reedImage3, alt: "Reed the European Red Fox" },
+      { src: reedImage4, alt: "Reed the European Red Fox" },
+      { src: reedImage5, alt: "Reed the European Red Fox" },
     ],
     homepage: null,
   },
@@ -345,6 +484,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "Serrano is an ambassador for the wildlife trade and use of wild animals in traditional medicine.",
     images: [
       { src: serranoImage1, alt: "Serrano the Domestic Donkey" },
+      { src: serranoImage2, alt: "Serrano the Domestic Donkey" },
+      { src: serranoImage3, alt: "Serrano the Domestic Donkey" },
     ],
     homepage: null,
   },
@@ -360,6 +501,10 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "Jalapeño is an ambassador for the wildlife trade and use of wild animals in traditional medicine.",
     images: [
       { src: jalapenoImage1, alt: "Jalapeño the Domestic Donkey" },
+      { src: jalapenoImage2, alt: "Jalapeño the Domestic Donkey" },
+      { src: jalapenoImage3, alt: "Jalapeño the Domestic Donkey" },
+      { src: jalapenoImage4, alt: "Jalapeño the Domestic Donkey" },
+      { src: jalapenoImage5, alt: "Jalapeño the Domestic Donkey" },
     ],
     homepage: null,
   },
@@ -375,6 +520,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for the exploitation of wildlife in the fur trade.",
     images: [
       { src: snorkImage1, alt: "Snork the Chinchilla" },
+      { src: snorkImage2, alt: "Snork the Chinchilla" },
     ],
     homepage: null,
   },
@@ -390,6 +536,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for the exploitation of wildlife in the fur trade.",
     images: [
       { src: moominImage1, alt: "Moomin the Chinchilla" },
+      { src: moominImage2, alt: "Moomin the Chinchilla" },
     ],
     homepage: {
       title: "Moomin is Movin' In!",
@@ -408,6 +555,9 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassador for the beef industry and how people can use their consumer choice to impact the environment in a positive way.",
     images: [
       { src: winnieImage1, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage2, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage3, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage4, alt: "Winnie the Red Angus Beef Cow" },
     ],
     homepage: null,
   },
@@ -423,6 +573,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for the importance of invertebrates and the misconceptions they face.",
     images: [
       { src: hankImage1, alt: "Hank the Smokey Ghost Millipede" },
+      { src: hankImage2, alt: "Hank the Smokey Ghost Millipede" },
+      { src: hankImage3, alt: "Hank the Smokey Ghost Millipede" },
     ],
     homepage: null,
   },
@@ -437,7 +589,9 @@ const ambassadors: Record<string, Ambassador> = {
     story: "Our cockroach colony was started with 7 roaches that were part of an educational colony at a school in Pennsylvania.",
     mission: "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
     images: [
-      { src: cockroachesImage1, alt: "Barbara the Madagascar Hissing Cockroach" },
+      { src: cockroachesImage1, alt: "Barbara / Baked Bean the Madagascar Hissing Cockroaches" },
+      { src: cockroachesImage2, alt: "Barbara / Baked Bean the Madagascar Hissing Cockroaches" },
+      { src: cockroachesImage3, alt: "Barbara / Baked Bean the Madagascar Hissing Cockroaches" },
     ],
     homepage: null,
   },
@@ -453,6 +607,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
     images: [
       { src: martyImage1, alt: "Marty the Zebra Isopods" },
+      { src: martyImage2, alt: "Marty the Zebra Isopods" },
+      { src: martyImage3, alt: "Marty the Zebra Isopods" },
     ],
     homepage: null,
   },
@@ -468,6 +624,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
     images: [
       { src: duckyImage1, alt: "Ducky the Rubber Ducky Isopods" },
+      { src: duckyImage2, alt: "Ducky the Rubber Ducky Isopods" },
     ],
     homepage: null,
   },
@@ -483,6 +640,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "They are ambassadors for the importance of invertebrates and the misconceptions they face.",
     images: [
       { src: bbImage1, alt: "BB the Spanish Orange Isopods" },
+      { src: bbImage2, alt: "BB the Spanish Orange Isopods" },
     ],
     homepage: null,
   },
@@ -498,6 +656,8 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for how human development and invasive species can affect natural habitats and native species.",
     images: [
       { src: toasterImage1, alt: "Toaster Strudel the Blue-tounged Skink" },
+      { src: toasterImage2, alt: "Toaster Strudel the Blue-tounged Skink" },
+      { src: toasterImage3, alt: "Toaster Strudel the Blue-tounged Skink" },
     ],
     homepage: null,
   },
@@ -513,6 +673,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "He is an ambassador for the importance of invertebrates and the misconceptions they face.",
     images: [
       { src: tortelliniImage1, alt: "Tortellini the Emperor Scorpion" },
+      { src: tortelliniImage2, alt: "Tortellini the Emperor Scorpion" },
     ],
     homepage: null,
   },
@@ -543,6 +704,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassadors for how rodenticide use and outdoor cats affect all levels of wildlife.",
     images: [
       { src: chipsImage1, alt: "Chips Ahoy the Rat" },
+      { src: chipsImage2, alt: "Chips Ahoy the Rat" },
     ],
     homepage: null,
   },
@@ -558,6 +720,7 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "She is an ambassadors for how rodenticide use and outdoor cats affect all levels of wildlife.",
     images: [
       { src: nillaImage1, alt: "Nilla Wafer the Rat" },
+      { src: nillaImage2, alt: "Nilla Wafer the Rat" },
     ],
     homepage: null,
   },
