@@ -1,6 +1,9 @@
 import type { ImageProps } from "next/image"
 
 import stompyImage1 from "../assets/ambassadors/stompy/01.jpg"
+import stompyImage2 from "../assets/ambassadors/stompy/02.jpg"
+import stompyImage3 from "../assets/ambassadors/stompy/03.jpg"
+import stompyImage4 from "../assets/ambassadors/stompy/04.jpg"
 import georgieImage1 from "../assets/ambassadors/georgie/01.jpg"
 import ticoImage1 from "../assets/ambassadors/tico/01.jpg"
 import mileyImage1 from "../assets/ambassadors/miley/01.jpg"
@@ -93,6 +96,9 @@ const ambassadors: Record<string, Ambassador> = {
     mission: "Stopping exotic meat trade, traditional medicine, and over exploitation of animal products in cosmetics.",
     images: [
       { src: stompyImage1, alt: "Stompy the Emu" },
+      { src: stompyImage2, alt: "Stompy the Emu" },
+      { src: stompyImage3, alt: "Stompy the Emu" },
+      { src: stompyImage4, alt: "Stompy the Emu" },
     ],
     homepage: {
       title: "Stompy!",

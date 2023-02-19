@@ -298,7 +298,7 @@ const Home: NextPage = () => {
               </Link>
             </div>
 
-            <Carousel items={featuredAmbassadors} auto={10000} />
+            <Carousel items={featuredAmbassadors} auto={10000} className="mt-4" />
           </div>
 
           <div className="basis-full md:basis-1/3 pt-8 md:pt-0 md:px-16">

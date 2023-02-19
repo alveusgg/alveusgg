@@ -1,11 +1,12 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next"
 import Image from "next/image"
 import Head from "next/head"
-import React from "react"
+import React, { useMemo } from "react"
 
 import ambassadors, { type Ambassador, iucnFlags, iucnStatuses } from "../../config/ambassadors"
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
+import Carousel from "../../components/content/Carousel"
 import { camelToKebab, kebabToCamel } from "../../utils/string-case"
 
 const parseIucnStatus = (rawStatus: string): string => {
@@ -61,10 +62,22 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (contex
 };
 
 const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
+  const carousel = useMemo(() => ambassador.images.reduce((obj, { src, alt }) => ({
+    ...obj,
+    [typeof src === "string" ? src : ('src' in src ? src.src : src.default.src)]: (
+      <Image
+        src={src}
+        alt={alt}
+        draggable={false}
+        className="object-cover w-full h-auto aspect-square rounded-xl"
+      />
+    ),
+  }), {}), [ ambassador ]);
+
   return (
     <>
       <Head>
-        <title>{ambassador.name} | Ambassadors | Alveus.gg</title>
+        <title>{`${ambassador.name} | Ambassadors | Alveus.gg`}</title>
         <meta name="robots" content="noindex" />
       </Head>
 
@@ -81,7 +94,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
 
           <div className="basis-full md:basis-1/2" />
 
-          <div className="basis-full md:basis-1/2 py-4 md:p-8 flex flex-col">
+          <div className="basis-full md:basis-1/2 md:max-w-1/2 py-4 md:p-8 flex flex-col">
             <Heading className="text-5xl">{ambassador.name}</Heading>
 
             <div className="text-xl my-2">
@@ -131,6 +144,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 </div>
               </div>
             </div>
+
+            <Carousel
+              items={carousel}
+              auto={null}
+              className="mt-8"
+              basis="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+            />
           </div>
         </Section>
       </div>

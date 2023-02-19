@@ -5,9 +5,11 @@ import IconAngleRight from "../../icons/IconAngleRight"
 type CarouselProps = {
   items: Record<string, React.ReactNode>,
   auto?: number | null,
+  className?: string,
+  basis?: string,
 };
 
-const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000 }) => {
+const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000, className = "", basis = "basis-full md:basis-1/3 p-4" }) => {
   // Allow the user to scroll to the next/previous image
   const ref = useRef<HTMLDivElement>(null);
   const last = useRef<{ left: number, right: number } | null>(null);
@@ -21,10 +23,10 @@ const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000 }) => {
     // Determine the new scroll offset
     let offset = Math.round(current.scrollLeft + (width * (direction === "left" ? -1 : 1)));
 
-    // If we're at the start, scroll to the end
-    if (offset < 0) offset = Math.round(current.scrollWidth - current.clientWidth);
-    // If we're at the end, scroll back to the start
-    else if (offset > current.scrollWidth - current.clientWidth) offset = 0;
+    // If we're half a width before the start, scroll to the end
+    if (offset < -(width / 2)) offset = Math.round(current.scrollWidth - current.clientWidth);
+    // If we're half a width after the end, scroll to the start
+    else if (offset > current.scrollWidth - current.clientWidth + (width / 2)) offset = 0;
 
     // Bind a scroll listener, so we know when we've reached the new offset
     const listener = () => {
@@ -64,8 +66,8 @@ const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000 }) => {
     const { width } = current.children[0].getBoundingClientRect();
 
     // If we've moved the half a width to the left of the last from/to, we've scrolled
-    if (last.current && current.scrollLeft < last.current.left - width / 2) interacted();
-    if (last.current && current.scrollLeft > last.current.right + width / 2) interacted();
+    if (last.current && current.scrollLeft < last.current.left - (width / 2)) interacted();
+    if (last.current && current.scrollLeft > last.current.right + (width / 2)) interacted();
 
     // Check how close we are to the ends
     const nearLeft = current.scrollLeft < width / 2;
@@ -150,7 +152,7 @@ const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000 }) => {
   }, [ auto, paused, move ]);
 
   return (
-    <div className="flex flex-nowrap">
+    <div className={[ 'flex flex-nowrap', className ].filter(Boolean).join(' ')}>
       <button
         className={`flex-shrink-0 p-1 group cursor-pointer disabled:cursor-default ${state === "none" ? "hidden" : ""}`}
         type="button"
@@ -168,7 +170,7 @@ const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000 }) => {
         onMouseDown={state === "none" ? undefined : drag}
       >
         {Object.entries(items).map(([ key, item ]) => (
-          <div key={key} className="basis-full md:basis-1/3 flex-shrink-0 p-8 snap-center" draggable={false}>
+          <div key={key} className={`${basis} flex-shrink-0 snap-start`} draggable={false}>
             {item}
           </div>
         ))}
