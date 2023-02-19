@@ -1,7 +1,8 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next"
 import Image from "next/image"
 import Head from "next/head"
-import React, { useMemo } from "react"
+import PhotoSwipeLightbox from "photoswipe/lightbox";
+import React, { useEffect, useId, useMemo } from "react"
 
 import ambassadors, { type Ambassador, iucnFlags, iucnStatuses } from "../../config/ambassadors"
 import Section from "../../components/content/Section"
@@ -62,17 +63,45 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (contex
 };
 
 const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
-  const carousel = useMemo(() => ambassador.images.reduce((obj, { src, alt }) => ({
-    ...obj,
-    [typeof src === "string" ? src : ('src' in src ? src.src : src.default.src)]: (
-      <Image
-        src={src}
-        alt={alt}
-        draggable={false}
-        className="object-cover w-full h-auto aspect-square rounded-xl"
-      />
-    ),
-  }), {}), [ ambassador ]);
+  const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
+  useEffect(() => {
+    const lightbox = new PhotoSwipeLightbox({
+      gallery: `#${photoswipe}`,
+      children: "a",
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      pswpModule: () => import("photoswipe"),
+    });
+    lightbox.init();
+
+    return () => { lightbox.destroy(); };
+  }, [ photoswipe ]);
+
+  const carousel = useMemo(() => ambassador.images.reduce((obj, { src, alt }) => {
+    const srcObj = typeof src === "object" ? ('default' in src ? src.default : src) : null;
+    const srcLink = srcObj ? srcObj.src : (src as string);
+    return {
+      ...obj,
+      [srcLink]: (
+        <a
+          href={srcLink}
+          target="_blank"
+          rel="noreferrer"
+          draggable={false}
+          data-pswp-width={srcObj ? srcObj.width : undefined}
+          data-pswp-height={srcObj ? srcObj.height : undefined}
+        >
+          <Image
+            src={src}
+            alt={alt}
+            draggable={false}
+            width={300}
+            className="object-cover w-full h-auto aspect-square rounded-xl"
+          />
+        </a>
+      ),
+    };
+  }, {}), [ ambassador ]);
 
   return (
     <>
@@ -145,12 +174,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
               </div>
             </div>
 
-            <Carousel
-              items={carousel}
-              auto={null}
-              className="mt-8"
-              basis="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
-            />
+            <div className="mt-8 pswp-gallery" id={photoswipe}>
+              <Carousel
+                items={carousel}
+                auto={null}
+                basis="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+              />
+            </div>
           </div>
         </Section>
       </div>

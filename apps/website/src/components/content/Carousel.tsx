@@ -108,7 +108,12 @@ const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000, className = "",
       current.scrollLeft = pos.left - dx;
 
       // If we've moved the mouse, we've interacted
-      if (dx !== 0 || dy !== 0) interacted();
+      if (dx !== 0 || dy !== 0) {
+        interacted();
+
+        // Disable pointer events on the children
+        for (const child of current.children) (child as HTMLDivElement).style.pointerEvents = "none";
+      }
     };
     document.addEventListener("mousemove", move);
 
@@ -132,6 +137,9 @@ const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000, className = "",
       // Reset the cursor and snapping
       current.style.removeProperty("cursor");
       current.style.removeProperty("scroll-snap-type");
+
+      // Re-enable pointer events on the children
+      for (const child of current.children) (child as HTMLDivElement).style.removeProperty("pointer-events");
     };
     document.addEventListener("mouseup", up);
 
