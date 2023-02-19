@@ -12,6 +12,7 @@ import Carousel from "../components/content/Carousel"
 import IconAmazon from "../icons/IconAmazon"
 import IconPayPal from "../icons/IconPayPal"
 import IconEmail from "../icons/IconEmail"
+import ambassadors from "../config/ambassadors"
 
 import mayaImage from "../assets/maya.png"
 import sirenHeroImage from  "../assets/hero/siren.png"
@@ -20,9 +21,6 @@ import ticoHeroImage from  "../assets/hero/tico.png"
 import miaHeroImage from  "../assets/hero/mia.png"
 import noodleHeroImage from  "../assets/hero/noodle.png"
 import nuggetHeroImage from  "../assets/hero/nugget.png"
-import moominImage from "../assets/ambassadors/moomin.jpg"
-import georgieImage from "../assets/ambassadors/georgie.jpg"
-import stompyImage from "../assets/ambassadors/stompy.jpg"
 import leafLeftImage3 from "../assets/floral/leaf-left-3.png"
 import leafRightImage1 from "../assets/floral/leaf-right-1.png"
 import leafRightImage2 from "../assets/floral/leaf-right-2.png"
@@ -33,6 +31,7 @@ import tshirtMerchImage from "../assets/merch/organic-cotton-t-shirt-dress-black
 import croptopMerchImage from "../assets/merch/organic-crop-top-black-front.png"
 import beanieMerchImage from "../assets/merch/organic-ribbed-beanie-black-front.png"
 import hoodieMerchImage from "../assets/merch/unisex-essential-eco-hoodie-white-front.png"
+import { camelToKebab } from "../utils/string-case"
 
 const slides = [
   {
@@ -61,44 +60,24 @@ const slides = [
   },
 ];
 
-const ambassadors = Object.entries({
-  moomin: {
-    src: moominImage,
-    alt: "Moomin",
-    title: "Moomin is Movin' In!",
-    description: "He is an ambassador for how the fur trade has affected his species and many others.",
-    link: "https://www.alveussanctuary.org/ambassadors/moomin/",
-  },
-  georgie: {
-    src: georgieImage,
-    alt: "Georgie",
-    title: "Georgie!",
-    description: "He is here to teach all about threats to his species and to amphibians worldwide.",
-    link: "https://www.alveussanctuary.org/ambassadors/georgie/",
-  },
-  stompy: {
-    src: stompyImage,
-    alt: "Stompy",
-    title: "Stompy!",
-    description: "He is an ambassador for how the exotic meat trade & use of animal products in cosmetics has affected his species and many others.",
-    link: "https://www.alveussanctuary.org/ambassadors/stompy/",
-  },
-})
-  .reduce((obj, [ key, { src, alt, title, description, link } ]) => ({
+const featuredAmbassadors = Object.entries(ambassadors)
+  .filter(([ , { homepage } ]) => !!homepage)
+  .reduce((obj, [ key, { images, homepage } ]) => ({
     ...obj,
     [key]: (<Link
-      href={link}
+      href={`/ambassadors/${camelToKebab(key)}`}
       draggable={false}
       className="hover:text-alveus-green transition-colors"
     >
       <Image
-        src={src}
-        alt={alt}
+        src={images[0].src}
+        alt={images[0].alt}
         draggable={false}
+        width={200}
         className="w-full h-auto aspect-square object-cover max-w-[10rem] mx-auto rounded-xl"
       />
-      <Heading level={4} className="text-center text-xl">{title}</Heading>
-      <p className="text-center">{description}</p>
+      <Heading level={4} className="text-center text-xl">{homepage?.title}</Heading>
+      <p className="text-center">{homepage?.description}</p>
     </Link>)
   }), {});
 
@@ -134,6 +113,7 @@ const merch = Object.entries({
       src={src}
       alt={alt}
       draggable={false}
+      width={200}
       className="w-full h-auto max-w-[10rem] mx-auto"
     />)
   }), {});
@@ -225,7 +205,7 @@ const Home: NextPage = () => {
             <div className="flex flex-wrap gap-4 mt-8">
               <Link
                 className="inline-block text-lg px-4 py-2 rounded-full border-2 border-white hover:bg-alveus-tan hover:text-alveus-green hover:border-alveus-tan transition-colors"
-                href="https://www.alveussanctuary.org/ambassadors/"
+                href="/ambassadors"
               >
                 Meet the Ambassadors
               </Link>
@@ -307,23 +287,28 @@ const Home: NextPage = () => {
 
       <Section>
         <div className="flex flex-wrap items-center">
-          <div className="basis-full max-w-full md:basis-2/3 md:max-w-2/3">
+          <div className="basis-full max-w-full md:basis-1/2 md:max-w-1/2 xl:basis-2/3 xl:max-w-2/3">
             <div className="flex flex-wrap items-center justify-between">
               <Heading level={2}>
                 Ambassadors:
               </Heading>
               <Link
                 className="inline-block text-lg uppercase text-alveus-green-900 hover:text-alveus-green transition-colors"
-                href="https://www.alveussanctuary.org/ambassadors/"
+                href="/ambassadors"
               >
                 See all
               </Link>
             </div>
 
-            <Carousel items={ambassadors} auto={10000} />
+            <Carousel
+              items={featuredAmbassadors}
+              auto={10000}
+              className="mt-4"
+              basis="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+            />
           </div>
 
-          <div className="basis-full md:basis-1/3 pt-8 md:pt-0 md:px-16">
+          <div className="basis-full md:basis-1/2 xl:basis-1/3 pt-8 md:pt-0 md:px-16">
             <Heading level={3}>
               Do you want to support these animals?
             </Heading>

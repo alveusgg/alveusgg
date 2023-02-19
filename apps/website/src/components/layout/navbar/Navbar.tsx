@@ -70,7 +70,7 @@ const structure: NavStructure = {
     dropdown: {
       live: {
         title: "Ambassadors",
-        link: "https://www.alveussanctuary.org/ambassadors/",
+        link: "/ambassadors",
       },
       showAndTell: {
         title: "Show and Tell",

@@ -36,6 +36,27 @@ const config = {
     ],
   },
   redirects: async () => [
+    // Renaming redirects
+    {
+      source: '/ambassadors/smokey-oak-millipede',
+      destination: '/ambassadors/hank-mr-mctrain',
+      permanent: false,
+    },
+    {
+      source: '/ambassadors/madagascar-hissing-cockroach',
+      destination: '/ambassadors/barbara-baked-bean',
+      permanent: false,
+    },
+    {
+      source: '/ambassadors/zebra-isopods',
+      destination: '/ambassadors/marty',
+      permanent: false,
+    },
+    {
+      source: '/ambassadors/rubber-ducky-isopods',
+      destination: '/ambassadors/ducky',
+      permanent: false,
+    },
     // WordPress route redirects
     {
       source: "/about-alveus",

@@ -92,6 +92,18 @@ module.exports = {
         '1/2': '50%',
         '2/3': '66.666667%',
       },
+      aspectRatio: {
+        '4/3': '4 / 3',
+      },
+      saturate: {
+        110: '1.1',
+      },
+      contrast: {
+        115: '1.15',
+      },
+      transitionProperty: {
+        'filter': 'filter',
+      },
     },
   },
   plugins: [],

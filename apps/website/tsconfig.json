@@ -14,7 +14,8 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "noUncheckedIndexedAccess": true
+    "noUncheckedIndexedAccess": true,
+    "paths": { "photoswipe/lightbox": ["./node_modules/photoswipe/dist/types/photoswipe.d.ts"] }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
   "exclude": ["node_modules", "src/AlveusPushWorker.ts", "push-sw.tsup.config.ts", "tsup-env.ts"]
