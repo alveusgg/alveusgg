@@ -79,6 +79,7 @@ const AmbassadorsPage: NextPage = () => {
                 <Image
                   src={images[0].src}
                   alt={images[0].alt}
+                  width={700}
                   className="w-full h-auto aspect-4/3 object-cover rounded-xl group-hover:saturate-110 group-hover:brightness-105 group-hover:contrast-115 transition-filter"
                 />
                 <Heading

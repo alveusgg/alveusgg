@@ -73,6 +73,7 @@ const featuredAmbassadors = Object.entries(ambassadors)
         src={images[0].src}
         alt={images[0].alt}
         draggable={false}
+        width={200}
         className="w-full h-auto aspect-square object-cover max-w-[10rem] mx-auto rounded-xl"
       />
       <Heading level={4} className="text-center text-xl">{homepage?.title}</Heading>
@@ -112,6 +113,7 @@ const merch = Object.entries({
       src={src}
       alt={alt}
       draggable={false}
+      width={200}
       className="w-full h-auto max-w-[10rem] mx-auto"
     />)
   }), {});
@@ -285,7 +287,7 @@ const Home: NextPage = () => {
 
       <Section>
         <div className="flex flex-wrap items-center">
-          <div className="basis-full max-w-full md:basis-2/3 md:max-w-2/3">
+          <div className="basis-full max-w-full md:basis-1/2 md:max-w-1/2 xl:basis-2/3 xl:max-w-2/3">
             <div className="flex flex-wrap items-center justify-between">
               <Heading level={2}>
                 Ambassadors:
@@ -298,10 +300,15 @@ const Home: NextPage = () => {
               </Link>
             </div>
 
-            <Carousel items={featuredAmbassadors} auto={10000} className="mt-4" />
+            <Carousel
+              items={featuredAmbassadors}
+              auto={10000}
+              className="mt-4"
+              basis="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+            />
           </div>
 
-          <div className="basis-full md:basis-1/3 pt-8 md:pt-0 md:px-16">
+          <div className="basis-full md:basis-1/2 xl:basis-1/3 pt-8 md:pt-0 md:px-16">
             <Heading level={3}>
               Do you want to support these animals?
             </Heading>

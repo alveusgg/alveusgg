@@ -9,7 +9,7 @@ type CarouselProps = {
   basis?: string,
 };
 
-const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000, className = "", basis = "basis-full md:basis-1/3 p-4" }) => {
+const Carousel: React.FC<CarouselProps> = ({ items, auto = 2000, className = "", basis = "basis-full sm:basis-1/2 lg:basis-1/3 p-4" }) => {
   // Allow the user to scroll to the next/previous image
   const ref = useRef<HTMLDivElement>(null);
   const last = useRef<{ left: number, right: number } | null>(null);
