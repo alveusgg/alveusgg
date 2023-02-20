@@ -1,13 +1,11 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import Image from "next/image"
-import Link from "next/link"
-import React, { useMemo } from "react"
+import React from "react"
 
 import Section from "../../components/content/Section"
 import Heading from "../../components/content/Heading"
 import IconTwitch from "../../icons/IconTwitch"
-import { collaborations, CollaborationsSection } from "../collaborations"
 
 import mayaImage from "../../assets/maya.png"
 import leafRightImage1 from "../../assets/floral/leaf-right-1.png"
@@ -62,8 +60,6 @@ const views = {
 };
 
 const AboutAlveusPage: NextPage = () => {
-  const collaborationHighlight = useMemo(() => Object.fromEntries(Object.entries(collaborations).slice(0, 1)), []);
-
   return (
     <>
       <Head>
@@ -213,38 +209,20 @@ const AboutAlveusPage: NextPage = () => {
         </Section>
       </div>
 
-      <div className="relative">
+      {/* Grow the last section to cover the page */}
+      <div className="relative flex flex-col flex-grow">
         <Image
           src={leafLeftImage2}
           alt=""
           className="hidden lg:block absolute z-10 -bottom-24 left-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
         />
 
-        <Section dark className="py-24" containerClassName="flex flex-col items-center">
+        <Section dark className="flex-grow py-24" containerClassName="flex flex-col items-center">
           <p className="my-2 font-serif text-7xl font-bold">1,000,000 Dollars Raised</p>
           <p className="my-2 font-serif text-4xl font-bold">Using Twitch!</p>
           <IconTwitch size={64} className="mt-6 hover:text-alveus-green-900 transition-colors" />
         </Section>
       </div>
-
-      {/* Grow the last section to cover the page */}
-      <Section className="text-center flex-grow">
-        <Heading level={2}>
-          Our Collaborations
-        </Heading>
-        <p>
-          We work with other content creators to educate our combined audiences!
-        </p>
-
-        <CollaborationsSection items={collaborationHighlight} />
-
-        <Link
-          href="/collaborations"
-          className="inline-block mt-4 text-xl hover:bg-alveus-green hover:text-alveus-tan transition-colors px-6 py-4 rounded-full border-2 border-alveus-green"
-        >
-          Explore More
-        </Link>
-      </Section>
     </>
   );
 };
