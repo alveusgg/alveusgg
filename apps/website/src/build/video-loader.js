@@ -132,8 +132,8 @@ const videoPoster = ({ context, format }, { width = undefined, height = undefine
   videoResized({ context, format }, { extension: 'png', width, height }, [ '-an', '-vframes 1' ]);
 
 const defaultTypes = [
-  // Heavily compressed h264 720p video (no audio)
-  { size: 720, type: 'mp4', args: [ '-an', '-vcodec libx264', '-crf 25' ] },
+  // Heavily compressed h264 720p30 video (no audio)
+  { size: 720, type: 'mp4', args: [ '-an', '-vcodec libx264', '-filter:v fps=30', '-b:v 1200k' ] },
 ];
 
 const videoLoader = async (context, content) => {
