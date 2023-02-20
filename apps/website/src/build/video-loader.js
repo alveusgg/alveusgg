@@ -1,9 +1,11 @@
-const { interpolateName } = require("loader-utils");
 const { tmpdir } = require("os");
 const { randomBytes } = require("crypto");
 const { join } = require("path");
 const { exec: exexSync } = require("child_process");
 const { readFile, unlink } = require("fs/promises");
+const { interpolateName } = require("loader-utils");
+const ffmpeg = require("@ffmpeg-installer/ffmpeg");
+const ffprobe = require("@ffprobe-installer/ffprobe");
 
 const exec = command => new Promise((resolve, reject) => {
   exexSync(command, (error, stdout, stderr) => {
@@ -28,7 +30,7 @@ const fileType = async buffer => {
  */
 const videoRaw = async ({ context, format, content }) => {
   // Use ffprobe to get the height
-  const { stdout } = await exec(`ffprobe -v error -select_streams v:0 -show_entries stream=height -of json ${context.resourcePath}`);
+  const { stdout } = await exec(`${ffprobe.path} -v error -select_streams v:0 -show_entries stream=height -of json ${context.resourcePath}`);
   const { height } = JSON.parse(stdout).streams[0];
 
   // Use file-type to get the mime type
@@ -91,7 +93,7 @@ const videoResized = async (
   const scale = width || height ? scaleFilter(width, height) : '';
 
   // Use ffmpeg to change the size to what is requested
-  const command = `ffmpeg -i ${context.resourcePath} ${[ scale, ...args ].filter(Boolean).join(' ')} -n ${tmpFile}`;
+  const command = `${ffmpeg.path} -i ${context.resourcePath} ${[ scale, ...args ].filter(Boolean).join(' ')} -n ${tmpFile}`;
   await exec(command).catch(({ error, stdout, stderr }) => {
     console.error('ffmpeg command failed:', command);
     console.error('stdout:', stdout);
