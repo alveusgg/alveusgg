@@ -1,8 +1,7 @@
 import { type NextPage } from "next"
 import Head from "next/head"
-import Link from "next/link"
 import Image from "next/image"
-import React, { useMemo } from "react"
+import React from "react"
 
 import Section from "../components/content/Section"
 import Heading from "../components/content/Heading"
@@ -82,9 +81,6 @@ export const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({ it
 };
 
 const CollaborationsPage: NextPage = () => {
-  const highlight = useMemo(() => Object.fromEntries(Object.entries(collaborations).slice(0, 1)), []);
-  const rest = useMemo(() => Object.fromEntries(Object.entries(collaborations).slice(1)), []);
-
   return (
     <>
       <Head>
@@ -101,6 +97,11 @@ const CollaborationsPage: NextPage = () => {
           alt=""
           className="hidden lg:block absolute z-10 -bottom-24 right-0 w-1/2 h-auto max-w-md select-none pointer-events-none"
         />
+        <Image
+          src={leafLeftImage3}
+          alt=""
+          className="hidden lg:block absolute z-10 -bottom-40 left-0 w-1/2 h-auto max-w-[16rem] select-none pointer-events-none"
+        />
 
         <Section dark className="py-24">
           <div className="w-full lg:w-3/5">
@@ -113,39 +114,6 @@ const CollaborationsPage: NextPage = () => {
         </Section>
       </div>
 
-      <div className="relative">
-        <Image
-          src={leafLeftImage3}
-          alt=""
-          className="hidden lg:block absolute z-10 -bottom-24 left-0 w-1/2 h-auto max-w-[16rem] select-none pointer-events-none"
-        />
-
-        <Section containerClassName="flex flex-wrap">
-          <CollaborationsSection items={highlight} />
-        </Section>
-      </div>
-
-      <Section dark containerClassName="flex flex-wrap items-center">
-        <div className="basis-full md:basis-2/3 py-4 md:px-4 flex flex-col gap-4">
-          <Heading level={2}>What is Alveus?</Heading>
-          <p className="text-lg">
-            Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as
-            a virtual education center facility to provide permanent homes to non-releasable exotic animals. These
-            animals function as ambassadors so viewers can watch their journeys, get to know the animals and gain an
-            appreciation for their species.
-          </p>
-        </div>
-
-        <div className="basis-full md:basis-1/3 py-4 md:px-4 flex flex-col items-center">
-          <Link
-            href="/about/alveus"
-            className="text-xl px-6 py-4 rounded-full border-2 border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green transition-colors"
-          >
-            About Alveus Sanctuary
-          </Link>
-        </div>
-      </Section>
-
       {/* Grow the last section to cover the page */}
       <div className="flex flex-col flex-grow relative">
         <Image
@@ -156,12 +124,11 @@ const CollaborationsPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="hidden lg:block absolute z-10 -top-24 right-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
+          className="hidden lg:block absolute z-10 -bottom-48 right-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
         />
 
-
         <Section className="flex-grow" containerClassName="flex flex-wrap">
-          <CollaborationsSection items={rest} />
+          <CollaborationsSection items={collaborations} />
         </Section>
       </div>
     </>
