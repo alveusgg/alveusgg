@@ -69,6 +69,8 @@
     "autoprefixer": "^10.4.13",
     "eslint": "^8.33.0",
     "eslint-config-next": "13.1.1",
+    "file-type": "^18.2.1",
+    "loader-utils": "^3.2.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.21",
     "prettier": "^2.8.4",
