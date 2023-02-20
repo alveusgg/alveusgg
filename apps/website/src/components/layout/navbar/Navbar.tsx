@@ -80,6 +80,10 @@ const structure: NavStructure = {
         title: "Collaborations",
         link: "/collaborations",
       },
+      events: {
+        title: "Events",
+        link: "/events",
+      },
     },
   },
   about: {
