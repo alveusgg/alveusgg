@@ -1,6 +1,7 @@
 import { type NextPage } from "next"
 import Head from "next/head"
 import Image from "next/image"
+import Link from "next/link"
 import React from "react"
 
 import Section from "../components/content/Section"
@@ -11,36 +12,38 @@ import leafRightImage2 from "../assets/floral/leaf-right-2.png"
 import leafLeftImage3 from "../assets/floral/leaf-left-3.png"
 import leafLeftImage1 from "../assets/floral/leaf-left-1.png"
 
-export const collaborations = {
+const collaborations = {
   alinity: {
     name: "Alinity",
     date: "9th February 2023",
-    youtube: "https://www.youtube.com/watch?v=qJpZzDMotmc",
+    video: "https://www.youtube.com/watch?v=qJpZzDMotmc",
+    vod: "https://www.youtube.com/watch?v=XHTEs94Cf4s&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
   },
   connorEatsPants: {
     name: "ConnorEatsPants",
     date: "25th January 2023",
-    youtube: "https://www.youtube.com/watch?v=SMEyEfVlzlM", // TODO: This is an Alveus Highlights video
+    video: "https://www.youtube.com/watch?v=SMEyEfVlzlM",
   },
   botezSisters: {
     name: "The Botez Sisters",
     date: "30th August 2022",
-    youtube: "https://www.youtube.com/watch?v=GqjlZSn-n40", // TODO: This is a Maya Daily video
+    video: "https://www.youtube.com/watch?v=QgvNy11kU6E",
   },
   knut: {
     name: "Knut",
     date: "9th August 2022",
-    youtube: "https://www.youtube.com/watch?v=-Qn6m6SxAME", // TODO: This is a Maya Daily video
+    video: "https://www.youtube.com/watch?v=lFhFx6kf2E4",
   },
   moistCr1tikal: {
     name: "MoistCr1TiKaL",
     date: "30th April 2022",
-    youtube: "https://www.youtube.com/watch?v=pb7MR59s1Z0",
+    video: "https://www.youtube.com/watch?v=pb7MR59s1Z0",
+    vod: "https://www.youtube.com/watch?v=x-OPvwjGHEU&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
   },
   jackManifold: {
     name: "Jack Manifold",
     date: "22nd April 2022",
-    youtube: "https://www.youtube.com/watch?v=jzyxhnODe2g",
+    video: "https://www.youtube.com/watch?v=jzyxhnODe2g",
   },
 };
 
@@ -51,10 +54,10 @@ const parseYouTubeUrl = (url: string) => {
 };
 
 type CollaborationsSectionProps = {
-  items: Record<string, { name: string, date: string, youtube: string }>,
+  items: Record<string, Optional<{ name: string, date: string, video: string, vod: string }, 'vod'>>,
 };
 
-export const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({ items }) => {
+const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({ items }) => {
   return (
     <>
       {Object.entries(items).map(([ key, value ]) => (
@@ -67,13 +70,24 @@ export const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({ it
           </Heading>
 
           <iframe
-            src={`https://www.youtube-nocookie.com/embed/${parseYouTubeUrl(value.youtube)}`}
+            src={`https://www.youtube-nocookie.com/embed/${parseYouTubeUrl(value.video)}?modestbranding=1`}
             title="YouTube video player"
             frameBorder="0"
             allow="encrypted-media"
             allowFullScreen
             className="mx-auto w-full max-w-2xl aspect-video rounded-2xl shadow-xl"
           />
+
+          {value.vod && (
+            <Link
+              href={value.vod}
+              target="_blank"
+              rel="noreferrer"
+              className="mt-2 text-alveus-green-600 hover:underline"
+            >
+              (Full stream VoD)
+            </Link>
+          )}
         </div>
       ))}
     </>
