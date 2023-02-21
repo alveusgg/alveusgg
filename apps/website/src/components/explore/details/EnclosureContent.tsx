@@ -1,6 +1,5 @@
 import React from "react";
 import Image from "next/image";
-import { PlusIcon } from "@heroicons/react/20/solid";
 import type { Enclosure } from "../../../utils/data";
 import { DefinitionItem } from "./DefinitionItem";
 
