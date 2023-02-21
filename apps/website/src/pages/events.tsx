@@ -5,6 +5,7 @@ import React from "react"
 
 import Section from "../components/content/Section"
 import Heading from "../components/content/Heading"
+import Video from "../components/content/Video"
 
 import valentines2023Video from "../assets/events/valentines-2023.mp4"
 import artAuction2022Video from "../assets/events/art-auction-2022.mp4"
@@ -130,18 +131,15 @@ const EventsPage: NextPage = () => {
           {Object.entries(events).map(([ key, event ], idx) => (
             <div key={key} className="flex flex-wrap-reverse">
               <div className="mx-auto basis-full lg:basis-1/2 py-8 md:px-8 flex flex-col">
-                <video
+                <Video
                   className="my-auto w-full aspect-video rounded-xl"
                   poster={event.video.poster}
+                  sources={event.video.sources}
                   autoPlay
                   loop
                   muted
                   playsInline
-                >
-                  {event.video.sources.map(source => (
-                    <source key={source.src} src={source.src} type={source.type} />
-                  ))}
-                </video>
+                />
               </div>
 
               <div className={`mx-auto basis-full lg:basis-1/2 py-8 lg:px-8 flex flex-col ${idx % 2 ? 'lg:order-first' : ''}`}>
