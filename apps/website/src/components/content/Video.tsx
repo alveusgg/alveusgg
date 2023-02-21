@@ -1,18 +1,18 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback, useState } from "react";
 
 type VideoProps = {
-  autoPlay?: boolean
-  loop?: boolean
-  muted?: boolean
-  playsInline?: boolean
-  className?: string
-  poster?: string
+  autoPlay?: boolean;
+  loop?: boolean;
+  muted?: boolean;
+  playsInline?: boolean;
+  className?: string;
+  poster?: string;
   sources: {
-    src: string
-    type: string
-  }[]
-  threshold?: number
-}
+    src: string;
+    type: string;
+  }[];
+  threshold?: number;
+};
 
 const Video: React.FC<VideoProps> = ({
   autoPlay = false,
@@ -24,20 +24,24 @@ const Video: React.FC<VideoProps> = ({
   sources,
   threshold = 0.1,
 }) => {
-  const [ seen, setSeen ] = useState(false);
-  const ref = useCallback((node: HTMLVideoElement) => {
-    if (!node || seen) return;
-    const observer = new IntersectionObserver(entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setSeen(true);
-          observer.disconnect();
-          console.log(node);
-        }
-      });
-    }, { threshold });
-    observer.observe(node);
-  }, [ seen, threshold ]);
+  const [seen, setSeen] = useState(false);
+  const ref = useCallback(
+    (node: HTMLVideoElement) => {
+      if (!node || seen) return;
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            setSeen(true);
+            observer.disconnect();
+          });
+        },
+        { threshold }
+      );
+      observer.observe(node);
+    },
+    [seen, threshold]
+  );
 
   return (
     <video
@@ -49,9 +53,10 @@ const Video: React.FC<VideoProps> = ({
       poster={poster}
       ref={ref}
     >
-      {seen && sources.map(source => (
-        <source key={source.src} src={source.src} type={source.type} />
-      ))}
+      {seen &&
+        sources.map((source) => (
+          <source key={source.src} src={source.src} type={source.type} />
+        ))}
     </video>
   );
 };

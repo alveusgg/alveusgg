@@ -7,15 +7,16 @@ const { interpolateName } = require("loader-utils");
 const ffmpeg = require("@ffmpeg-installer/ffmpeg");
 const ffprobe = require("@ffprobe-installer/ffprobe");
 
-const exec = command => new Promise((resolve, reject) => {
-  execSync(command, (error, stdout, stderr) => {
-    if (error) reject({ error, stdout, stderr });
-    else resolve({ stdout, stderr });
+const exec = (command) =>
+  new Promise((resolve, reject) => {
+    execSync(command, (error, stdout, stderr) => {
+      if (error) reject({ error, stdout, stderr });
+      else resolve({ stdout, stderr });
+    });
   });
-});
 
 let fileTypeCache;
-const fileType = async buffer => {
+const fileType = async (buffer) => {
   if (!fileTypeCache) fileTypeCache = await import("file-type");
   return fileTypeCache.fileTypeFromBuffer(buffer);
 };
@@ -30,18 +31,16 @@ const fileType = async buffer => {
  */
 const videoRaw = async ({ context, format, content }) => {
   // Use ffprobe to get the height
-  const { stdout } = await exec(`${ffprobe.path} -v error -select_streams v:0 -show_entries stream=height -of json ${context.resourcePath}`);
+  const { stdout } = await exec(
+    `${ffprobe.path} -v error -select_streams v:0 -show_entries stream=height -of json ${context.resourcePath}`
+  );
   const { height } = JSON.parse(stdout).streams[0];
 
   // Use file-type to get the mime type
   const { mime } = await fileType(content);
 
   // Get the formatted name
-  const interpolatedName = interpolateName(
-    context,
-    format,
-    { content }
-  );
+  const interpolatedName = interpolateName(context, format, { content });
 
   return {
     name: interpolatedName,
@@ -61,10 +60,16 @@ const videoRaw = async ({ context, format, content }) => {
  * @return {`-filter:v "scale=${string}:${string}"`}
  */
 const scaleFilter = (width = undefined, height = undefined) => {
-  if (width === undefined && height === undefined) throw new Error('One of width or height must be set');
-  const widthFilter = `w=${width ? Math.round(Number(width) / 2) * 2 : "trunc(oh*a/2)*2"}`;
-  const heightFilter = `h=${height ? Math.round(Number(height) / 2) * 2 : "trunc(ow/a/2)*2"}`;
-  return `-filter:v "scale=${widthFilter}:${heightFilter}"`;
+  if (width === undefined && height === undefined)
+    throw new Error("One of width or height must be set");
+
+  const widthFilter = width
+    ? Math.round(Number(width) / 2) * 2
+    : "trunc(oh*a/2)*2";
+  const heightFilter = height
+    ? Math.round(Number(height) / 2) * 2
+    : "trunc(ow/a/2)*2";
+  return `-filter:v "scale=w=${widthFilter}:h=${heightFilter}"`;
 };
 
 /**
@@ -81,23 +86,38 @@ const scaleFilter = (width = undefined, height = undefined) => {
 const videoResized = async (
   { context, format },
   { extension = undefined, width = undefined, height = undefined },
-  args = [],
+  args = []
 ) => {
   // Get the original extension
-  const originalExtension = interpolateName(context, '[ext]', { context: context.rootContext });
+  const originalExtension = interpolateName(context, "[ext]", {
+    context: context.rootContext,
+  });
 
   // Get a temporary file that we're outputting to
-  const tmpFile = join(tmpdir(), `${randomBytes(16).toString('hex')}.${extension || originalExtension}`);
+  const tmpFile = join(
+    tmpdir(),
+    `${randomBytes(16).toString("hex")}.${extension || originalExtension}`
+  );
 
   // Determine the scale filter
-  const scale = width || height ? scaleFilter(width, height) : '';
+  const scale = width || height ? scaleFilter(width, height) : "";
 
   // Use ffmpeg to change the size to what is requested
-  const command = `${ffmpeg.path} -i ${context.resourcePath} ${[ scale, ...args ].filter(Boolean).join(' ')} -n ${tmpFile}`;
+  const command = [
+    ffmpeg.path,
+    "-i",
+    context.resourcePath,
+    scale,
+    ...args,
+    "-n",
+    tmpFile,
+  ]
+    .filter(Boolean)
+    .join(" ");
   await exec(command).catch(({ error, stdout, stderr }) => {
-    console.error('ffmpeg command failed:', command);
-    console.error('stdout:', stdout);
-    console.error('stderr:', stderr);
+    console.error("ffmpeg command failed:", command);
+    console.error("stdout:", stdout);
+    console.error("stderr:", stderr);
     throw error;
   });
 
@@ -106,11 +126,16 @@ const videoResized = async (
   await unlink(tmpFile);
 
   // Get the original name
-  const name = interpolateName(context, '[name]', { context: context.rootContext });
+  const name = interpolateName(context, "[name]", {
+    context: context.rootContext,
+  });
 
   // Get the output name
-  const interpolatedName = interpolateName(context, format, { context: context.rootContext, content: resized })
-    .replace(`${name}.`, `${name}-${width || ''}x${height || ''}.`)
+  const interpolatedName = interpolateName(context, format, {
+    context: context.rootContext,
+    content: resized,
+  })
+    .replace(`${name}.`, `${name}-${width || ""}x${height || ""}.`)
     .replace(`.${originalExtension}`, `.${extension || originalExtension}`);
 
   return {
@@ -128,12 +153,22 @@ const videoResized = async (
  * @param {number} [height] Optional height for the filter
  * @return {Promise<{ name: string, content: Buffer }>}
  */
-const videoPoster = ({ context, format }, { width = undefined, height = undefined }) =>
-  videoResized({ context, format }, { extension: 'png', width, height }, [ '-an', '-vframes 1' ]);
+const videoPoster = (
+  { context, format },
+  { width = undefined, height = undefined }
+) =>
+  videoResized({ context, format }, { extension: "png", width, height }, [
+    "-an",
+    "-vframes 1",
+  ]);
 
 const defaultTypes = [
   // Heavily compressed h264 720p30 video (no audio)
-  { size: 720, type: 'mp4', args: [ '-an', '-vcodec libx264', '-filter:v fps=30', '-b:v 1200k' ] },
+  {
+    size: 720,
+    type: "mp4",
+    args: ["-an", "-vcodec libx264", "-filter:v fps=30", "-b:v 1200k"],
+  },
 ];
 
 const videoLoader = async (context, content) => {
@@ -143,9 +178,13 @@ const videoLoader = async (context, content) => {
   const base = `${options.assetPrefix}/_next`;
 
   // Create the context and objects to track the files
-  const ctx = { context, format: "/static/media/[name].[hash:8].[ext]", content };
+  const ctx = {
+    context,
+    format: "/static/media/[name].[hash:8].[ext]",
+    content,
+  };
   const files = [];
-  const obj = { poster: '', sources: [] };
+  const obj = { poster: "", sources: [] };
 
   // Expose the first frame as a poster at 720p
   const poster = await videoPoster(ctx, { height: 720 });
@@ -155,26 +194,34 @@ const videoLoader = async (context, content) => {
   if (!options.isDevelopment) {
     // When not in development mode, process the video
     for (const { size, type, args } of defaultTypes) {
-      const video = await videoResized(ctx, { height: size, extension: type }, args);
+      const video = await videoResized(
+        ctx,
+        { height: size, extension: type },
+        args
+      );
       files.push(video);
-      obj.sources.push({ src: `${base}${video.name}`, size, type: `video/${type}` });
+      obj.sources.push({
+        src: `${base}${video.name}`,
+        size,
+        type: `video/${type}`,
+      });
     }
   } else {
     // Otherwise, just expose the original video
     const raw = await videoRaw(ctx);
     files.push(raw);
-    obj.sources.push({ src: `${base}${raw.name}`, size: raw.height, type: raw.type });
+    obj.sources.push({
+      src: `${base}${raw.name}`,
+      size: raw.height,
+      type: raw.type,
+    });
   }
 
   // Emit the files
   // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack/loaders/next-image-loader/index.ts#L66-L74
   // We don't emit for the server as videos are considered traceable and this breaks things (see https://github.com/vercel/next.js/pull/41554/files)
   if (!options.isServer) {
-    files.forEach(({ name, content }) => context.emitFile(
-      name,
-      content,
-      null,
-    ));
+    files.forEach(({ name, content }) => context.emitFile(name, content, null));
   }
 
   // Return the object with the paths
@@ -183,7 +230,9 @@ const videoLoader = async (context, content) => {
 
 module.exports = function (content) {
   const callback = this.async();
-  videoLoader(this, content).then(res => callback(null, res)).catch(callback);
+  videoLoader(this, content)
+    .then((res) => callback(null, res))
+    .catch(callback);
 };
 
 module.exports.raw = true;

@@ -13,6 +13,6 @@ interface Video {
 
 declare const Video: Video;
 
-declare module '*.mp4' {
+declare module "*.mp4" {
   export default Video;
 }

@@ -1,19 +1,19 @@
-import { type NextPage } from "next"
-import Head from "next/head"
-import Image from "next/image"
-import React from "react"
+import { type NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import React from "react";
 
-import Section from "../components/content/Section"
-import Heading from "../components/content/Heading"
-import Video from "../components/content/Video"
+import Section from "../components/content/Section";
+import Heading from "../components/content/Heading";
+import Video from "../components/content/Video";
 
-import valentines2023Video from "../assets/events/valentines-2023.mp4"
-import artAuction2022Video from "../assets/events/art-auction-2022.mp4"
-import halloween2021Video from "../assets/events/halloween-2021.mp4"
-import fundathon2021Video from "../assets/events/fundathon-2021.mp4"
+import valentines2023Video from "../assets/events/valentines-2023.mp4";
+import artAuction2022Video from "../assets/events/art-auction-2022.mp4";
+import halloween2021Video from "../assets/events/halloween-2021.mp4";
+import fundathon2021Video from "../assets/events/fundathon-2021.mp4";
 
-import leafRightImage1 from "../assets/floral/leaf-right-1.png"
-import leafLeftImage1 from "../assets/floral/leaf-left-1.png"
+import leafRightImage1 from "../assets/floral/leaf-right-1.png";
+import leafLeftImage1 from "../assets/floral/leaf-left-1.png";
 
 export const events = {
   valentines2023: {
@@ -123,40 +123,41 @@ const EventsPage: NextPage = () => {
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <div className="relative">
         <Image
           src={leafRightImage1}
           alt=""
-          className="hidden lg:block absolute z-10 -bottom-24 right-0 w-1/2 h-auto max-w-md select-none pointer-events-none"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block"
         />
 
         <Section dark className="py-24">
           <div className="w-full lg:w-3/5">
             <Heading>Our Events</Heading>
             <p className="text-lg">
-              We host one-off fundraising events to increase awareness of our conservation missions and to encourage
-              donations to support Alveus.
+              We host one-off fundraising events to increase awareness of our
+              conservation missions and to encourage donations to support
+              Alveus.
             </p>
           </div>
         </Section>
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="flex flex-col flex-grow relative">
+      <div className="relative flex flex-grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="hidden lg:block absolute z-10 -bottom-24 left-0 w-1/2 h-auto max-w-[12rem] select-none pointer-events-none"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
         <Section className="flex-grow">
-          {Object.entries(events).map(([ key, event ], idx) => (
+          {Object.entries(events).map(([key, event], idx) => (
             <div key={key} className="flex flex-wrap-reverse">
-              <div className="mx-auto basis-full lg:basis-1/2 py-8 md:px-8 flex flex-col">
+              <div className="mx-auto flex basis-full flex-col py-8 md:px-8 lg:basis-1/2">
                 <Video
-                  className="my-auto w-full aspect-video rounded-xl"
+                  className="my-auto aspect-video w-full rounded-xl"
                   poster={event.video.poster}
                   sources={event.video.sources}
                   autoPlay
@@ -166,22 +167,31 @@ const EventsPage: NextPage = () => {
                 />
               </div>
 
-              <div className={`mx-auto basis-full lg:basis-1/2 py-8 lg:px-8 flex flex-col ${idx % 2 ? 'lg:order-first' : ''}`}>
-                <Heading level={2} className="text-center text-4xl flex flex-wrap gap-x-8 gap-y-2 items-end justify-center">
+              <div
+                className={`mx-auto flex basis-full flex-col py-8 lg:basis-1/2 lg:px-8 ${
+                  idx % 2 ? "lg:order-first" : ""
+                }`}
+              >
+                <Heading
+                  level={2}
+                  className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center text-4xl"
+                >
                   {event.name}
                   <small className="text-xl text-alveus-green-600">
                     {event.date}
                   </small>
                 </Heading>
 
-                <div className="my-auto py-2 flex flex-wrap">
-                  {Object.entries(event.stats).map(([ key, stat ]) => (
+                <div className="my-auto flex flex-wrap py-2">
+                  {Object.entries(event.stats).map(([key, stat]) => (
                     <div
                       key={key}
-                      className="text-center mx-auto basis-full sm:basis-1/2 py-2 lg:px-2"
+                      className="mx-auto basis-full py-2 text-center sm:basis-1/2 lg:px-2"
                     >
                       <p className="text-3xl font-bold">{stat.stat}</p>
-                      <p className="text-xl text-alveus-green-700">{stat.title}</p>
+                      <p className="text-xl text-alveus-green-700">
+                        {stat.title}
+                      </p>
                     </div>
                   ))}
                 </div>
