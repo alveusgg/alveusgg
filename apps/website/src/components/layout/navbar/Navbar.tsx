@@ -153,6 +153,7 @@ export const Navbar: React.FC = () => {
               <Image
                 src={logoImage}
                 alt=""
+                height={120}
                 className="h-10 w-auto lg:mt-6 lg:h-28"
               />
             </Link>
