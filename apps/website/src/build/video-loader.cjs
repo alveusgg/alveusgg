@@ -1,14 +1,14 @@
 const { tmpdir } = require("os");
 const { randomBytes } = require("crypto");
 const { join } = require("path");
-const { exec: exexSync } = require("child_process");
+const { exec: execSync } = require("child_process");
 const { readFile, unlink } = require("fs/promises");
 const { interpolateName } = require("loader-utils");
 const ffmpeg = require("@ffmpeg-installer/ffmpeg");
 const ffprobe = require("@ffprobe-installer/ffprobe");
 
 const exec = command => new Promise((resolve, reject) => {
-  exexSync(command, (error, stdout, stderr) => {
+  execSync(command, (error, stdout, stderr) => {
     if (error) reject({ error, stdout, stderr });
     else resolve({ stdout, stderr });
   });

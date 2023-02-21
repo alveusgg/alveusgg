@@ -137,7 +137,7 @@ const config = {
     config.module.rules.push({
       test: /\.mp4$/,
       use: [{
-        loader: resolve('./src/build/video-loader.js'),
+        loader: resolve('./src/build/video-loader.cjs'),
         // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L1907-L1912
         // and https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L2489-L2490
         options: {
