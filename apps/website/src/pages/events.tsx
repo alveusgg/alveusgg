@@ -10,6 +10,7 @@ import Video from "../components/content/Video"
 import valentines2023Video from "../assets/events/valentines-2023.mp4"
 import artAuction2022Video from "../assets/events/art-auction-2022.mp4"
 import halloween2021Video from "../assets/events/halloween-2021.mp4"
+import fundathon2021Video from "../assets/events/fundathon-2021.mp4"
 
 import leafRightImage1 from "../assets/floral/leaf-right-1.png"
 import leafLeftImage1 from "../assets/floral/leaf-left-1.png"
@@ -85,6 +86,29 @@ export const events = {
       viewers: {
         title: "Peak viewers on the stream",
         stat: "93,000",
+      },
+    },
+  },
+  fundathon2021: {
+    name: "Fund-a-thon 2021",
+    date: "10th February 2021",
+    video: fundathon2021Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$573,004",
+      },
+      uniqueDonors: {
+        title: "Unique donors during the broadcast",
+        stat: "3,904",
+      },
+      leaves: {
+        title: "Engraved leaves on the donator trees",
+        stat: "2,455",
+      },
+      viewers: {
+        title: "Peak viewers on the stream",
+        stat: "82,000",
       },
     },
   },
