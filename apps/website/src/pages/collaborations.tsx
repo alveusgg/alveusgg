@@ -15,33 +15,39 @@ import leafLeftImage1 from "../assets/floral/leaf-left-1.png"
 const collaborations = {
   alinity: {
     name: "Alinity",
+    link: "https://www.twitch.tv/alinity",
     date: "9th February 2023",
     video: "https://www.youtube.com/watch?v=qJpZzDMotmc",
     vod: "https://www.youtube.com/watch?v=XHTEs94Cf4s&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
   },
   connorEatsPants: {
     name: "ConnorEatsPants",
+    link: "https://www.twitch.tv/connoreatspants",
     date: "25th January 2023",
     video: "https://www.youtube.com/watch?v=SMEyEfVlzlM",
   },
   botezSisters: {
     name: "The Botez Sisters",
+    link: "https://www.twitch.tv/botezlive",
     date: "30th August 2022",
     video: "https://www.youtube.com/watch?v=QgvNy11kU6E",
   },
   knut: {
     name: "Knut",
+    link: "https://www.twitch.tv/knut",
     date: "9th August 2022",
     video: "https://www.youtube.com/watch?v=lFhFx6kf2E4",
   },
   moistCr1tikal: {
     name: "MoistCr1TiKaL",
+    link: "https://www.twitch.tv/moistcr1tikal",
     date: "30th April 2022",
     video: "https://www.youtube.com/watch?v=pb7MR59s1Z0",
     vod: "https://www.youtube.com/watch?v=x-OPvwjGHEU&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
   },
   jackManifold: {
     name: "Jack Manifold",
+    link: "https://www.twitch.tv/jackmanifoldtv",
     date: "22nd April 2022",
     video: "https://www.youtube.com/watch?v=jzyxhnODe2g",
   },
@@ -54,7 +60,7 @@ const parseYouTubeUrl = (url: string) => {
 };
 
 type CollaborationsSectionProps = {
-  items: Record<string, Optional<{ name: string, date: string, video: string, vod: string }, 'vod'>>,
+  items: Record<string, Optional<{ name: string, link: string, date: string, video: string, vod: string }, 'vod'>>,
 };
 
 const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({ items }) => {
@@ -62,8 +68,15 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({ items }) 
     <>
       {Object.entries(items).map(([ key, value ]) => (
         <div key={key} className="mx-auto basis-full md:basis-1/2 py-8 md:px-8 flex flex-col items-center">
-          <Heading level={3} className="flex flex-wrap gap-x-8 gap-y-2 items-end justify-center">
-            {value.name}
+          <Heading level={2} className="flex flex-wrap gap-x-8 gap-y-2 items-end justify-center">
+            <Link
+              href={value.link}
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-alveus-green-600 hover:underline"
+            >
+              {value.name}
+            </Link>
             <small className="text-xl text-alveus-green-600">
               {value.date}
             </small>
