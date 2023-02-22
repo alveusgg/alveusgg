@@ -115,7 +115,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
               href={value.vod}
               target="_blank"
               rel="noreferrer"
-              className="mt-2 text-alveus-green-600 hover:underline"
+              className="mt-2 text-alveus-green-700 hover:underline"
             >
               (Full stream VoD)
             </Link>
