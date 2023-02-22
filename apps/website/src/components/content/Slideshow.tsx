@@ -120,7 +120,7 @@ const Slideshow: React.FC<SlideshowProps> = ({
           <Image
             src={src}
             alt={alt}
-            placeholder={idx === 0 ? "blur" : "empty"}
+            placeholder="blur"
             className="h-full w-full object-cover"
             style={{
               animation: `${animation.duration.total}ms slideshow-${id}-image infinite`,
