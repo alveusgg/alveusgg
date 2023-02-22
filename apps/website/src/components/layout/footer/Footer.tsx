@@ -45,14 +45,14 @@ export const Footer: React.FC = () => {
     <>
       <Socials />
 
-      <footer className="bg-gray-800 py-4 px-2 text-gray-500 md:py-2 md:px-0">
+      <footer className="bg-gray-800 py-4 px-2 text-gray-400 md:py-2 md:px-0">
         <div className="container mx-auto">
           <ul className="flex flex-wrap items-center justify-between">
             <li className="basis-full p-2 md:basis-1/3">
               <p>{credits}</p>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-center">
-              <ul className="flex flex-col md:items-center gap-1">
+              <ul className="flex flex-col gap-1 md:items-center">
                 <li>
                   <Link className={footerLinkClasses} href="/contact-us">
                     Contact Us
