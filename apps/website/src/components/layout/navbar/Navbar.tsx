@@ -71,13 +71,13 @@ const structure: NavStructure = {
     title: "Live",
     link: "/live",
   },
+  ambassadors: {
+    title: "Ambassadors",
+    link: "/ambassadors",
+  },
   explore: {
     title: "Explore",
     dropdown: {
-      live: {
-        title: "Ambassadors",
-        link: "/ambassadors",
-      },
       showAndTell: {
         title: "Show and Tell",
         link: "https://www.alveussanctuary.org/show-and-tell/",
