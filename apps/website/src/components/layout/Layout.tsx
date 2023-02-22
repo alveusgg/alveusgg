@@ -10,8 +10,6 @@ type LayoutProps = {
   children?: React.ReactNode;
 };
 
-const assetVersion = "2022-12-19-2";
-
 export const ptSans = PT_Sans({
   subsets: ["latin"],
   variable: "--font-ptsans",
@@ -31,31 +29,27 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href={`/apple-touch-icon.png?v=${assetVersion}`}
+          href="/apple-touch-icon.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href={`/favicon-32x32.png?v=${assetVersion}`}
+          href="/favicon-32x32.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href={`/favicon-16x16.png?v=${assetVersion}`}
+          href="/favicon-16x16.png"
         />
-        <link rel="manifest" href={`/site.webmanifest?v=${assetVersion}`} />
-        <link
-          rel="mask-icon"
-          href={`/safari-pinned-tab.svg?v=${assetVersion}`}
-          color="#636a60"
-        />
-        <link rel="shortcut icon" href={`/favicon.ico?v=${assetVersion}`} />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#636a60" />
+        <link rel="shortcut icon" href="/favicon.ico" />
         <meta name="apple-mobile-web-app-title" content="Alveus.gg" />
         <meta name="application-name" content="Alveus.gg" />
         <meta name="msapplication-TileColor" content="#636a60" />
-        <meta name="theme-color" content="#ffffff" />
+        <meta name="theme-color" content="#636a60" />
 
         {env.NEXT_PUBLIC_NODE_ENV === "production" &&
           env.NEXT_PUBLIC_COOKIEBOT_ID && (
@@ -73,7 +67,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${ptSans.variable} ${ptSerif.variable} font-sans`}
       >
         <Navbar />
-        <main className="flex flex-col flex-grow z-10">{children}</main>
+        <main className="z-10 flex flex-grow flex-col">{children}</main>
         <Footer />
       </div>
     </>
