@@ -5,13 +5,16 @@ import Image from "next/image";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { ProfileInfo, ProfileInfoImage } from "./ProfileInfo";
 import { useIsActivePath } from "../../shared/hooks/useIsActivePath";
-import logoImage from "../../../assets/logo.png";
 import socials from "../../shared/data/socials";
+
+import logoImage from "../../../assets/logo.png";
+
 import IconAmazon from "../../../icons/IconAmazon";
 import IconAngleDown from "../../../icons/IconAngleDown";
 import IconSignIn from "../../../icons/IconSignIn";
+
+import { ProfileInfo, ProfileInfoImage } from "./ProfileInfo";
 //import { NotificationsButton } from "./NotificationsButton";
 
 type NavLinkProps = Omit<
@@ -149,7 +152,11 @@ export const Navbar: React.FC = () => {
         <>
           <div className="container mx-auto flex gap-4 p-2">
             {/* Logo */}
-            <Link href="/" className="flex items-center px-1 md:px-2">
+            <Link
+              href="/"
+              className="flex items-center px-1 md:px-2"
+              aria-label="Alveus.gg"
+            >
               <Image
                 src={logoImage}
                 alt=""
@@ -169,6 +176,7 @@ export const Navbar: React.FC = () => {
                         href={link.link}
                         target="_blank"
                         rel="noreferrer"
+                        aria-label={link.title}
                       >
                         <link.icon size={24} />
                       </a>
