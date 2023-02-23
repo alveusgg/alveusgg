@@ -24,7 +24,8 @@ const collaborations = {
     name: "ConnorEatsPants",
     link: "https://www.twitch.tv/connoreatspants",
     date: "25th January 2023",
-    video: "https://www.youtube.com/watch?v=SMEyEfVlzlM",
+    video: "https://www.youtube.com/watch?v=nC8qlK3k96Q",
+    vod: "https://www.youtube.com/watch?v=SMEyEfVlzlM&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
   },
   botezSisters: {
     name: "The Botez Sisters",
@@ -114,7 +115,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
               href={value.vod}
               target="_blank"
               rel="noreferrer"
-              className="mt-2 text-alveus-green-600 hover:underline"
+              className="mt-2 text-alveus-green-700 hover:underline"
             >
               (Full stream VoD)
             </Link>

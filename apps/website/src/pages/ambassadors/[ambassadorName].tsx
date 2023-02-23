@@ -1,32 +1,44 @@
-import type { GetStaticPaths, GetStaticProps, NextPage } from "next"
-import Image from "next/image"
-import Head from "next/head"
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import Image from "next/image";
+import Head from "next/head";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import React, { useEffect, useId, useMemo } from "react"
+import React, { useEffect, useId, useMemo } from "react";
 
-import ambassadors, { type Ambassador, iucnFlags, iucnStatuses } from "../../config/ambassadors"
-import Section from "../../components/content/Section"
-import Heading from "../../components/content/Heading"
-import Carousel from "../../components/content/Carousel"
-import { camelToKebab, kebabToCamel } from "../../utils/string-case"
+import ambassadors, {
+  type Ambassador,
+  iucnFlags,
+  iucnStatuses,
+} from "../../config/ambassadors";
+import Section from "../../components/content/Section";
+import Heading from "../../components/content/Heading";
+import Carousel from "../../components/content/Carousel";
+import { camelToKebab, kebabToCamel } from "../../utils/string-case";
 
 const parseIucnStatus = (rawStatus: string): string => {
-  const [ status, flag ] = rawStatus.split("/");
+  const [status, flag] = rawStatus.split("/");
 
-  if (!Object.prototype.hasOwnProperty.call(iucnStatuses, (status as PropertyKey)))
+  if (
+    !Object.prototype.hasOwnProperty.call(iucnStatuses, status as PropertyKey)
+  )
     throw new Error(`Invalid IUCN status: ${status}`);
-  if (!flag) return iucnStatuses[(status as keyof typeof iucnStatuses)];
+  if (!flag) return iucnStatuses[status as keyof typeof iucnStatuses];
 
-  if (!Object.prototype.hasOwnProperty.call(iucnFlags, (flag as PropertyKey)))
+  if (!Object.prototype.hasOwnProperty.call(iucnFlags, flag as PropertyKey))
     throw new Error(`Invalid IUCN flag: ${flag}`);
-  return `${iucnStatuses[(status as keyof typeof iucnStatuses)]} ${iucnFlags[(flag as keyof typeof iucnFlags)]}`;
+  return `${iucnStatuses[status as keyof typeof iucnStatuses]} ${
+    iucnFlags[flag as keyof typeof iucnFlags]
+  }`;
 };
 
 const parseDate = (date: string | null): string => {
   if (!date) return "Unknown";
 
-  const [ year, month, day ] = date.split("-");
-  const parsed = new Date(Number(year), Number(month || 1) - 1, Number(day || 1));
+  const [year, month, day] = date.split("-");
+  const parsed = new Date(
+    Number(year),
+    Number(month || 1) - 1,
+    Number(day || 1)
+  );
 
   return parsed.toLocaleDateString("en-US", {
     year: "numeric",
@@ -41,14 +53,16 @@ type AmbassadorPageProps = {
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: Object.keys(ambassadors).map(slug => ({
+    paths: Object.keys(ambassadors).map((slug) => ({
       params: { ambassadorName: camelToKebab(slug) },
     })),
     fallback: false,
   };
 };
 
-export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (context) => {
+export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
+  context
+) => {
   const ambassadorName = context.params?.ambassadorName;
   if (typeof ambassadorName !== "string") return { notFound: true };
 
@@ -75,34 +89,45 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
     });
     lightbox.init();
 
-    return () => { lightbox.destroy(); };
-  }, [ photoswipe ]);
-
-  const carousel = useMemo(() => ambassador.images.reduce((obj, { src, alt }) => {
-    const srcObj = typeof src === "object" ? ('default' in src ? src.default : src) : null;
-    const srcLink = srcObj ? srcObj.src : (src as string);
-    return {
-      ...obj,
-      [srcLink]: (
-        <a
-          href={srcLink}
-          target="_blank"
-          rel="noreferrer"
-          draggable={false}
-          data-pswp-width={srcObj ? srcObj.width : undefined}
-          data-pswp-height={srcObj ? srcObj.height : undefined}
-        >
-          <Image
-            src={src}
-            alt={alt}
-            draggable={false}
-            width={300}
-            className="object-cover w-full h-auto aspect-square rounded-xl"
-          />
-        </a>
-      ),
+    return () => {
+      lightbox.destroy();
     };
-  }, {}), [ ambassador ]);
+  }, [photoswipe]);
+
+  const carousel = useMemo(
+    () =>
+      ambassador.images.reduce((obj, { src, alt }) => {
+        const srcObj =
+          typeof src === "object"
+            ? "default" in src
+              ? src.default
+              : src
+            : null;
+        const srcLink = srcObj ? srcObj.src : (src as string);
+        return {
+          ...obj,
+          [srcLink]: (
+            <a
+              href={srcLink}
+              target="_blank"
+              rel="noreferrer"
+              draggable={false}
+              data-pswp-width={srcObj ? srcObj.width : undefined}
+              data-pswp-height={srcObj ? srcObj.height : undefined}
+            >
+              <Image
+                src={src}
+                alt={alt}
+                draggable={false}
+                width={300}
+                className="aspect-square h-auto w-full rounded-xl object-cover"
+              />
+            </a>
+          ),
+        };
+      }, {}),
+    [ambassador]
+  );
 
   return (
     <>
@@ -112,28 +137,32 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <div className="relative">
-        <Section className="pt-64 md:pt-0 min-h-[85vh]" containerClassName="flex flex-wrap">
+        <Section
+          className="min-h-[85vh] pt-64 md:pt-0"
+          containerClassName="flex flex-wrap"
+        >
           <Image
             src={ambassador.images[0].src}
             alt={ambassador.images[0].alt}
-            className="absolute inset-x-0 top-0 md:bottom-0 object-cover w-full h-64 md:w-1/2 md:h-full"
+            placeholder="blur"
+            className="absolute inset-x-0 top-0 h-64 w-full object-cover md:bottom-0 md:h-full md:w-1/2"
           />
 
           <div className="basis-full md:basis-1/2" />
 
-          <div className="basis-full md:basis-1/2 md:max-w-1/2 py-4 md:p-8 flex flex-col">
+          <div className="flex basis-full flex-col py-4 md:max-w-1/2 md:basis-1/2 md:p-8">
             <Heading className="text-5xl">{ambassador.name}</Heading>
 
-            <div className="text-xl my-2">
+            <div className="my-2 text-xl">
               <p className="my-2">{ambassador.story}</p>
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
             <div className="flex flex-wrap">
-              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
+              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
                 <Heading level={2}>IUCN Status:</Heading>
 
                 <div className="ml-4">
@@ -141,24 +170,26 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 </div>
               </div>
 
-              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
+              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
                 <Heading level={2}>Species:</Heading>
 
                 <div className="ml-4">
                   <p className="text-xl">{ambassador.species}</p>
-                  <p className="text-xl text-alveus-green-600">{ambassador.scientific}</p>
+                  <p className="text-xl italic text-alveus-green-700">
+                    {ambassador.scientific}
+                  </p>
                 </div>
               </div>
 
-              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
+              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
                 <Heading level={2}>Sex:</Heading>
 
                 <div className="ml-4">
-                  <p className="text-xl">{ambassador.sex || 'Unknown'}</p>
+                  <p className="text-xl">{ambassador.sex || "Unknown"}</p>
                 </div>
               </div>
 
-              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
+              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
                 <Heading level={2}>Date of Birth:</Heading>
 
                 <div className="ml-4">
@@ -166,7 +197,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 </div>
               </div>
 
-              <div className="basis-full lg:basis-1/2 py-2 lg:px-2">
+              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
                 <Heading level={2}>Arrived at Alveus:</Heading>
 
                 <div className="ml-4">
@@ -175,7 +206,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
               </div>
             </div>
 
-            <div className="mt-8 pswp-gallery" id={photoswipe}>
+            <div className="pswp-gallery mt-8" id={photoswipe}>
               <Carousel
                 items={carousel}
                 auto={null}
