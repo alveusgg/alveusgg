@@ -9,10 +9,9 @@ import youtubeIcon from "simple-icons/icons/youtube.svg";
 import instagramIcon from "simple-icons/icons/instagram.svg";
 import tiktokIcon from "simple-icons/icons/tiktok.svg";
 
-export const Icon: React.FC<{ src: string; alt?: string }> = ({
-  src,
-  alt = "",
-}) => <Image className="h-8 w-8" src={src} alt={alt} />;
+const Icon: React.FC<{ src: string; alt?: string }> = ({ src, alt = "" }) => (
+  <Image className="h-8 w-8" src={src} alt={alt} />
+);
 
 const GiveawayCheck: React.FC<{
   name: string;

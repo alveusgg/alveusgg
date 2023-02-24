@@ -1,11 +1,9 @@
 @import "maplibre-gl/dist/maplibre-gl.css";
 
-@import "swiper/css";
-@import "swiper/css/a11y";
-@import "swiper/css/effect-coverflow";
-@import "swiper/css/mousewheel";
-@import "swiper/css/navigation";
-@import "swiper/css/scrollbar";
+@import "swiper/swiper.scss";
+@import "swiper/modules/a11y/a11y.scss";
+@import "swiper/modules/navigation/navigation.scss";
+@import "swiper/modules/scrollbar/scrollbar.scss";
 
 @import "photoswipe/dist/photoswipe.css";
 
@@ -16,7 +14,7 @@
 @layer utilities {
   .scrollbar-none {
     scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none;  /* Internet Explorer 10+ */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
 
   .scrollbar-none::-webkit-scrollbar { /* Safari and Chrome */
@@ -37,38 +35,44 @@
 
   /* Some basic styles for user generated HTML */
   .alveus-ugc {
+    h1,
+    h2,
+    h3 {
+      @apply font-bold my-3 text-xl;
+    }
+
+    h4 {
+      @apply font-bold my-3 text-lg;
+    }
+
+    h5,
+    h6 {
+      @apply font-bold my-3;
+    }
+
+    p,
+    ul,
+    ol {
+      @apply my-3;
+    }
+
+    ul {
+      @apply ml-7 list-disc;
+    }
+
+    ol {
+      @apply ml-7 list-decimal;
+    }
+
+    li {
+      @apply my-1;
+    }
   }
 
-  .alveus-ugc h1,
-  .alveus-ugc h2,
-  .alveus-ugc h3 {
-    @apply font-bold my-3 text-xl;
-  }
-
-  .alveus-ugc h4 {
-    @apply font-bold my-3 text-lg;
-  }
-
-  .alveus-ugc h5,
-  .alveus-ugc h6 {
-    @apply font-bold my-3;
-  }
-
-  .alveus-ugc p,
-  .alveus-ugc ul,
-  .alveus-ugc ol {
-    @apply my-3;
-  }
-
-  .alveus-ugc ul {
-    @apply ml-7 list-disc;
-  }
-
-  .alveus-ugc ol {
-    @apply ml-7 list-decimal;
-  }
-
-  .alveus-ugc li {
-    @apply my-1;
+  /* Rich text editor (Quill.js) */
+  .alveus-rte {
+    .ql-editor {
+      min-height: 400px;
+    }
   }
 }

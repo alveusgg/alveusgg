@@ -1,19 +1,18 @@
+import React from "react";
 import type {
   GetServerSideProps,
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
-import { getProviders, getSession, signIn } from "next-auth/react";
+import { getProviders, getSession } from "next-auth/react";
+import Head from "next/head";
 
 import { XCircleIcon } from "@heroicons/react/20/solid";
 
-import DefaultPageLayout from "../../components/DefaultPageLayout";
-import React from "react"
-import Section from "../../components/content/Section"
-import Heading from "../../components/content/Heading"
-import Head from "next/head"
+import Section from "../../components/content/Section";
+import Heading from "../../components/content/Heading";
+import { LoginWithTwitchButton } from "../../components/shared/LoginWithTwitchButton";
 
 const errorMessages: Record<string, string> = {
   default: "Unable to sign in.",
@@ -76,7 +75,7 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
@@ -103,26 +102,7 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
           </div>
         )}
 
-        {providers &&
-          Object.values(providers)
-            .filter(({ type }) => type === "oauth")
-            .map((provider) => (
-              <div key={provider.id}>
-                <button
-                  type="button"
-                  className="rounded border bg-white p-5"
-                  onClick={() => signIn(provider.id, { callbackUrl })}
-                >
-                  <Image
-                    src={`/assets/auth-provider-logos/${provider.id}.svg`}
-                    width={50}
-                    height={50}
-                    alt=""
-                  />
-                  <span>Sign in with {provider.name}</span>
-                </button>
-              </div>
-            ))}
+        <LoginWithTwitchButton callbackUrl={callbackUrl} />
       </Section>
     </>
   );

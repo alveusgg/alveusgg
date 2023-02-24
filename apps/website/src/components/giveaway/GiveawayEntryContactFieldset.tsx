@@ -1,25 +1,19 @@
 import React from "react";
+import { Fieldset } from "../shared/form/Fieldset";
+import { TextField } from "../shared/form/TextField";
 
 export const GiveawayEntryContactFieldset: React.FC<{
   defaultEmailAddress?: string;
 }> = ({ defaultEmailAddress }) => (
-  <fieldset>
-    <legend className="mb-2 font-bold">Contact</legend>
-
-    <div className="flex flex-col gap-5 md:flex-row">
-      <label className="flex-1">
-        Email address
-        <br />
-        <input
-          className="w-full rounded-sm border border-gray-700 bg-white p-1"
-          name="email"
-          type="email"
-          autoComplete="email"
-          required={true}
-          defaultValue={defaultEmailAddress}
-          minLength={3}
-        />
-      </label>
-    </div>
-  </fieldset>
+  <Fieldset legend="Contact">
+    <TextField
+      label="Email address"
+      name="email"
+      type="email"
+      autoComplete="email"
+      isRequired={true}
+      defaultValue={defaultEmailAddress}
+      minLength={3}
+    />
+  </Fieldset>
 );

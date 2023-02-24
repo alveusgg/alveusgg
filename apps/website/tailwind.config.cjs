@@ -79,6 +79,9 @@ module.exports = {
       },
     },
     extend: {
+      animation: {
+        "spin-slow": "spin 3s linear infinite",
+      },
       fontFamily: {
         sans: ["var(--font-ptsans)", ...fontFamily.sans],
         serif: ["var(--font-ptserif)", ...fontFamily.serif],
@@ -87,21 +90,21 @@ module.exports = {
         twitchSideBySide: "681px",
       },
       maxWidth: {
-        '1/3': '33.333333%',
-        '1/2': '50%',
-        '2/3': '66.666667%',
+        "1/3": "33.333333%",
+        "1/2": "50%",
+        "2/3": "66.666667%",
       },
       aspectRatio: {
-        '4/3': '4 / 3',
+        "4/3": "4 / 3",
       },
       saturate: {
-        110: '1.1',
+        110: "1.1",
       },
       contrast: {
-        115: '1.15',
+        115: "1.15",
       },
       transitionProperty: {
-        'filter': 'filter',
+        filter: "filter",
       },
     },
   },

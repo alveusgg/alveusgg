@@ -1,6 +1,6 @@
 import React from "react";
-import type { Ambassador } from "../../../utils/data";
 import Image from "next/image";
+import type { Ambassador } from "../../../server/utils/data";
 import type { SelectionAction } from "../../../pages/wip/explore";
 
 export const AmbassadorsContent: React.FC<{

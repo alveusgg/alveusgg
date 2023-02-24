@@ -1,10 +1,10 @@
 import { z } from "zod";
 import fetch from "node-fetch";
+import { env } from "../../env/server.mjs";
 import {
   ExpiredAccessTokenError,
   getClientCredentialsAccessToken,
 } from "./oauth2";
-import { env } from "../env/server.mjs";
 
 export type AuthHeaders = {
   "Client-Id": string;
@@ -51,23 +51,23 @@ async function getUserAuthHeaders(userAccessToken: string) {
 
 const paginationSchema = z.object({ cursor: z.string().optional() });
 
+export const subscriptionSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  type: z.string(),
+  version: z.string(),
+  condition: z.object({ broadcaster_user_id: z.string() }),
+  created_at: z.string(),
+  transport: z.object({
+    method: z.string(),
+    callback: z.string().optional(),
+  }),
+  cost: z.number(),
+});
+
 const subscriptionsResponseSchema = z.object({
   total: z.number(),
-  data: z.array(
-    z.object({
-      id: z.string(),
-      status: z.string(),
-      type: z.string(),
-      version: z.string(),
-      condition: z.object({ broadcaster_user_id: z.string() }),
-      created_at: z.string(),
-      transport: z.object({
-        method: z.string(),
-        callback: z.string().optional(),
-      }),
-      cost: z.number(),
-    })
-  ),
+  data: z.array(subscriptionSchema),
   max_total_cost: z.number(),
   total_cost: z.number(),
   pagination: paginationSchema,

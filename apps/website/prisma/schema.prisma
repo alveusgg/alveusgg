@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = []
+  previewFeatures = ["fieldReference", "fullTextSearch"]
 }
 
 datasource db {
@@ -90,8 +90,9 @@ model User {
   sessions           Session[]
   pushSubscriptions  PushSubscription[]
   notificationPushes NotificationPush[]
-  GiveawayEntry      GiveawayEntry[]
-  OutgoingWebhook    OutgoingWebhook[]
+  giveawayEntries    GiveawayEntry[]
+  outgoingWebhooks   OutgoingWebhook[]
+  roles              UserRole[]
 }
 
 model VerificationToken {
@@ -100,6 +101,15 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model UserRole {
+  id     String @id @default(cuid())
+  userId String
+  role   String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, role])
 }
 
 model Notification {

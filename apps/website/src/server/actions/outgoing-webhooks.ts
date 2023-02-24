@@ -1,6 +1,6 @@
 import fetch from "node-fetch";
-import { prisma } from "../db/client";
 import type { OutgoingWebhook } from "@prisma/client";
+import { prisma } from "../db/client";
 
 export type OutgoingWebhookType = "giveaway-entry" | "unknown";
 

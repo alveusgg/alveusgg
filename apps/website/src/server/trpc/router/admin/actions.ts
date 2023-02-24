@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { router, superUserProcedure } from "../../trpc";
-import { sendNotification } from "../../../actions/send-notification";
-import { env } from "../../../../env/server.mjs";
+import { router, superUserProcedure } from "@/server/trpc/trpc";
+import { sendNotification } from "@/server/actions/send-notification";
+import { env } from "@/env/server.mjs";
 
 const actionSchema = z.discriminatedUnion("action", [
   z.object({

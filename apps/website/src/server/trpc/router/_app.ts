@@ -6,12 +6,14 @@ import { notificationsConfigRouter } from "./notificationsConfig";
 import { giveawaysRouter } from "./giveaways";
 import { adminGiveawaysRouter } from "./admin/giveaways";
 import { adminActivityFeedRouter } from "./admin/activity-feed";
+import { adminUsersRouter } from "./admin/users";
 
 export const appRouter = router({
   auth: authRouter,
   adminAction: adminActionRouter,
   adminGiveaways: adminGiveawaysRouter,
   adminActivityFeed: adminActivityFeedRouter,
+  adminUsersRouter: adminUsersRouter,
   pushSubscription: pushSubscriptionRouter,
   notificationsConfig: notificationsConfigRouter,
   giveaways: giveawaysRouter,

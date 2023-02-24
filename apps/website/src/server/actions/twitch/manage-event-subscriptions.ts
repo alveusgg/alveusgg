@@ -5,7 +5,7 @@ import {
   getSubscriptions,
   getSubscriptionsForUser,
   removeSubscription,
-} from "../../../utils/twitch-api";
+} from "../../utils/twitch-api";
 import { env } from "../../../env/server.mjs";
 
 /*

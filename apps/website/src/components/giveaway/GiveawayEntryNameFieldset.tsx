@@ -1,35 +1,28 @@
 import React from "react";
+import { TextField } from "../shared/form/TextField";
+import { FieldGroup } from "../shared/form/FieldGroup";
+import { Fieldset } from "../shared/form/Fieldset";
 
-export const GiveawayEntryNameFieldset: React.FC = () => (
-  <fieldset>
-    <legend className="mb-2 font-bold">Name</legend>
-
-    <div className="flex flex-col gap-5 md:flex-row">
-      <label className="flex-1">
-        First name
-        <br />
-        <input
-          className="w-full rounded-sm border border-gray-700 bg-white p-1"
+export function GiveawayEntryNameFieldset() {
+  return (
+    <Fieldset legend="Name">
+      <FieldGroup>
+        <TextField
+          label="First name"
           name="given-name"
-          type="text"
           autoComplete="given-name"
-          required={true}
+          isRequired={true}
           minLength={1}
         />
-      </label>
 
-      <label className="flex-1">
-        Last name
-        <br />
-        <input
-          className="w-full rounded-sm border border-gray-700 bg-white p-1"
+        <TextField
+          label="Last name"
           name="family-name"
-          type="text"
           autoComplete="family-name"
-          required={true}
+          isRequired={true}
           minLength={1}
         />
-      </label>
-    </div>
-  </fieldset>
-);
+      </FieldGroup>
+    </Fieldset>
+  );
+}

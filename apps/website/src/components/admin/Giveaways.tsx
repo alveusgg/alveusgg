@@ -4,8 +4,10 @@ import { useCallback } from "react";
 
 import type { AppRouter } from "../../server/trpc/router/_app";
 import { trpc } from "../../utils/trpc";
+import { Button, LinkButton } from "../shared/Button";
 
-import { Headline } from "../shared/Headline";
+import { Headline } from "./Headline";
+import { Panel } from "./Panel";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type GiveawayWithCount = RouterOutput["adminGiveaways"]["getGiveaways"][number];
@@ -74,19 +76,17 @@ const Giveaway: React.FC<{ giveaway: GiveawayWithCount }> = ({ giveaway }) => {
       <td className="p-1 text-right tabular-nums">
         {nf.format(giveaway._count.entries)}
       </td>
-      <td className="p-1">
-        <button
-          className="mx-0.5 inline-block rounded-full bg-gray-600 py-0.5 px-2 text-white"
-          onClick={handleToggle}
-        >
+      <td className="flex w-[40px] flex-row flex-wrap gap-2 p-1">
+        <Button size="small" width="auto" onClick={handleToggle}>
           {giveaway.active ? "Close" : "Open"}
-        </button>
-        <Link
+        </Button>
+        <LinkButton
+          size="small"
+          width="auto"
           href={`/api/giveaways/${giveaway.id}/export-entries`}
-          className="mx-0.5 inline-block rounded-full bg-gray-600 py-0.5 px-2 text-white"
         >
-          &dArr; CSV
-        </Link>
+          &dArr;&nbsp;CSV
+        </LinkButton>
       </td>
     </tr>
   );
@@ -99,7 +99,7 @@ export const Giveaways: React.FC = () => {
     <>
       <Headline>Giveaways</Headline>
 
-      <div className="my-4 rounded-lg border bg-white p-4 shadow-xl">
+      <Panel>
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-700">
@@ -117,7 +117,7 @@ export const Giveaways: React.FC = () => {
         </table>
 
         <form className="mt-10">TODO: Add new giveaways …</form>
-      </div>
+      </Panel>
     </>
   );
 };

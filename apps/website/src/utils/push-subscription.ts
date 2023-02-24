@@ -3,9 +3,9 @@
  * TODO: Check expirationTime?
  */
 
-import { trpc } from "./trpc";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { trpc } from "./trpc";
 
 const SW_PATH = "/push/alveus/AlveusPushWorker.js";
 

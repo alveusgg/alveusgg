@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import { type Facility } from "../../utils/data";
+import { type Facility } from "../../server/utils/data";
 
 export const FacilityCard: React.FC<{
   facility: Facility;

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import React from "react";
-import { type Ambassador } from "../../utils/data";
+import { type Ambassador } from "../../server/utils/data";
 
 export const AmbassadorCard: React.FC<{
   layout?: "small" | "full";

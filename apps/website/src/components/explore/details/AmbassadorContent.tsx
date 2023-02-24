@@ -7,11 +7,11 @@ import {
   PlayCircleIcon,
   LinkIcon,
 } from "@heroicons/react/24/outline";
-import type { Ambassador, Enclosures } from "../../../utils/data";
+import Link from "next/link";
+import type { Ambassador, Enclosures } from "../../../server/utils/data";
 import type { SelectionAction } from "../../../pages/wip/explore";
 import { dateFormatter } from "../InfoDetails";
 import { DefinitionItem } from "./DefinitionItem";
-import Link from "next/link";
 
 export const AmbassadorContent: React.FC<{
   enclosures: Enclosures;

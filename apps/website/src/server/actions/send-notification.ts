@@ -1,5 +1,5 @@
 import { getNotificationsConfig } from "../../config/notifications";
-import { sendWebPushNotification } from "../../utils/web-push";
+import { sendWebPushNotification } from "../utils/web-push";
 import { env } from "../../env/server.mjs";
 
 import { prisma } from "../db/client";
