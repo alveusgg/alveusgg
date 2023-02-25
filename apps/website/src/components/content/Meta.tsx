@@ -3,7 +3,7 @@ import defaultLoader from "next/dist/shared/lib/image-loader";
 import { type ImageConfigComplete } from "next/dist/shared/lib/image-config";
 import React from "react";
 
-import logoImage from "../../assets/logo.png";
+import headerImage from "../../assets/header.jpg";
 
 // Get our base URL, which will either be specifically set, or from Vercel for preview deployments
 const BASE_URL = (
@@ -28,14 +28,17 @@ const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
   // Based on https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L23-L25
   // and https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L743-L748
   // and https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L191-L193
-  const imageConfig = process.env.__NEXT_IMAGE_OPTS as never as ImageConfigComplete
-  const imageSizes = [ ...imageConfig.deviceSizes, ...imageConfig.imageSizes ];
+  const imageConfig = process.env
+    .__NEXT_IMAGE_OPTS as never as ImageConfigComplete;
+  const imageSizes = [...imageConfig.deviceSizes, ...imageConfig.imageSizes];
   const computedImage =
     BASE_URL +
     defaultLoader({
-      src: image || logoImage.src,
-      width: imageSizes.find((w) => w >= 512) || imageSizes[imageSizes.length - 1] || 0,
-      quality: 75,
+      src: image || headerImage.src,
+      width:
+        imageSizes.find((w) => w >= 1200) ||
+        imageSizes[imageSizes.length - 1] ||
+        0,
       config: imageConfig,
     });
 
