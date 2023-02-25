@@ -27,13 +27,16 @@ const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
 
   // Based on https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L23-L25
   // and https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L743-L748
+  // and https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L191-L193
+  const imageConfig = process.env.__NEXT_IMAGE_OPTS as never as ImageConfigComplete
+  const imageSizes = [ ...imageConfig.deviceSizes, ...imageConfig.imageSizes ];
   const computedImage =
     BASE_URL +
     defaultLoader({
       src: image || logoImage.src,
-      width: 512,
+      width: imageSizes.find((w) => w >= 512) || imageSizes[imageSizes.length - 1] || 0,
       quality: 75,
-      config: process.env.__NEXT_IMAGE_OPTS as never as ImageConfigComplete,
+      config: imageConfig,
     });
 
   return (
