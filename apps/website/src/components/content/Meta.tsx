@@ -3,7 +3,7 @@ import defaultLoader from "next/dist/shared/lib/image-loader";
 import { type ImageConfigComplete } from "next/dist/shared/lib/image-config";
 import React from "react";
 
-import headerImage from "../../assets/header.jpg";
+import headerImage from "../../assets/header.png";
 
 // Get our base URL, which will either be specifically set, or from Vercel for preview deployments
 const BASE_URL = (
