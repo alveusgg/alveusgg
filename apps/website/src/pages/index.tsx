@@ -188,7 +188,6 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 

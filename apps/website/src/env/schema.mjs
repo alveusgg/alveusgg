@@ -15,9 +15,9 @@ export const serverSchema = z.object({
   NEXTAUTH_URL: z.preprocess(
     // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
     // Since NextAuth.js automatically uses the VERCEL_URL if present.
-    (str) => process.env.VERCEL_URL ?? str,
+    (str) => process.env.VERCEL_URL || str,
     // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.VERCEL ? z.string() : z.string().url()
+    process.env.VERCEL_URL ? z.string() : z.string().url()
   ),
   TWITCH_CLIENT_ID: z.string(),
   TWITCH_CLIENT_SECRET: z.string(),
@@ -41,6 +41,12 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_NODE_ENV: z
     .enum(["development", "test", "production"])
     .optional(),
+  NEXT_PUBLIC_BASE_URL: z.preprocess(
+    // If there is a VERCEL_URL set, use that like NextAuth.js does
+    (str) => process.env.NEXT_PUBLIC_VERCEL_URL || str,
+    // VERCEL_URL doesn't include `https` so it cant be validated as a URL
+    process.env.NEXT_PUBLIC_VERCEL_URL ? z.string() : z.string().url()
+  ),
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
   NEXT_PUBLIC_COOKIEBOT_ID: z.string().optional(),
 });
@@ -53,6 +59,7 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV ?? "development",
+  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
   NEXT_PUBLIC_COOKIEBOT_ID: process.env.NEXT_PUBLIC_COOKIEBOT_ID,
