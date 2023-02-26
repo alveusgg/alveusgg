@@ -1,10 +1,11 @@
 import React from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
-import Head from "next/head";
 
-import { getTwitchConfig, type TwitchConfig } from "../../config/twitch";
-import { prisma } from "../../server/db/client";
-import DefaultPageLayout from "../../components/DefaultPageLayout";
+import { getTwitchConfig, type TwitchConfig } from "@/config/twitch";
+import { prisma } from "@/server/db/client";
+
+import DefaultPageLayout from "@/components/DefaultPageLayout";
+import Meta from "@/components/content/Meta";
 
 export async function getStaticProps() {
   const twitchConfig: TwitchConfig = await getTwitchConfig();
@@ -69,9 +70,7 @@ const AmbassadorsPage: NextPage<
 > = ({ channelData }) => {
   return (
     <>
-      <Head>
-        <title>Status | Alveus.gg</title>
-      </Head>
+      <Meta title="Status" />
 
       <DefaultPageLayout title="Streams">
         <section className="flex flex-wrap gap-4">

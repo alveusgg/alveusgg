@@ -1,16 +1,17 @@
-import Head from "next/head";
 import { type InferGetStaticPropsType, type NextPage } from "next";
 import React, { useReducer } from "react";
 
-import { getAllData } from "../../server/utils/data";
-import DefaultPageLayout from "../../components/DefaultPageLayout";
-import { Headline } from "../../components/shared/Headline";
-import { Map } from "../../components/explore/Map";
-import { Ambassadors } from "../../components/explore/Ambassadors";
-import { InfoDetails } from "../../components/explore/InfoDetails";
-import { Enclosures } from "../../components/explore/Enclosures";
-import { Facilities } from "../../components/explore/Facilities";
-import { LinkBox } from "../../components/shared/LinkBox";
+import { getAllData } from "@/server/utils/data";
+
+import DefaultPageLayout from "@/components/DefaultPageLayout";
+import { Headline } from "@/components/shared/Headline";
+import { Map } from "@/components/explore/Map";
+import { Ambassadors } from "@/components/explore/Ambassadors";
+import { InfoDetails } from "@/components/explore/InfoDetails";
+import { Enclosures } from "@/components/explore/Enclosures";
+import { Facilities } from "@/components/explore/Facilities";
+import { LinkBox } from "@/components/shared/LinkBox";
+import Meta from "@/components/content/Meta";
 
 export type AboutPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -58,9 +59,7 @@ const AboutPage: NextPage<AboutPageProps> = ({
 
   return (
     <>
-      <Head>
-        <title>Explore Alveus | Alveus.gg</title>
-      </Head>
+      <Meta title="Explore Alveus" />
 
       <DefaultPageLayout title="Explore Alveus">
         <Headline>Map of Alveus</Headline>
