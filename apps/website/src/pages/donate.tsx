@@ -1,60 +1,69 @@
-import { type NextPage } from "next"
-import Head from "next/head"
-import Link from "next/link"
-import React from "react"
+import { type NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import React from "react";
 
-import Section from "../components/content/Section"
-import Heading from "../components/content/Heading"
-import IconAmazon from "../icons/IconAmazon"
-import IconPayPal from "../icons/IconPayPal"
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+
+import IconAmazon from "@/icons/IconAmazon";
+import IconPayPal from "@/icons/IconPayPal";
 
 const links = {
   wishlist: {
     icon: IconAmazon,
     title: "Amazon Wishlist",
     link: "/wishlist",
-    description: "Donate specific items we are in need of at Alveus through our Amazon Wishlist.",
+    description:
+      "Donate specific items we are in need of at Alveus through our Amazon Wishlist.",
   },
   paypal: {
     icon: IconPayPal,
     title: "PayPal",
     link: "/paypal",
-    description: "Donate via credit/debit card, bank account or PayPal funds directly to Alveus.",
+    description:
+      "Donate via credit/debit card, bank account or PayPal funds directly to Alveus.",
   },
 };
 
 const DonatePage: NextPage = () => {
   return (
     <>
+      <Meta
+        title="Donate"
+        description="Help Alveus carry on its mission to inspire online audiences to engage in conservation efforts while providing high-quality animal care to our ambassadors."
+      />
+
       <Head>
-        <title>Donate | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section dark>
         <Heading>Donate</Heading>
         <p>
-          Help Alveus carry on its mission to inspire online audiences to engage in conservation efforts while providing
-          high-quality animal care to our ambassadors.
+          Help Alveus carry on its mission to inspire online audiences to engage
+          in conservation efforts while providing high-quality animal care to
+          our ambassadors.
         </p>
       </Section>
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow" containerClassName="flex flex-wrap">
-        <div className="basis-full md:basis-1/2 py-4 md:px-4 flex flex-col gap-8">
-          {Object.entries(links).map(([ key, link ]) => (
+        <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
+          {Object.entries(links).map(([key, link]) => (
             <Link
               key={key}
               href={link.link}
               target="_blank"
               rel="noreferrer"
-              className="group rounded-xl p-4 bg-alveus-green text-alveus-tan shadow-xl hover:shadow-2xl hover:scale-105 transition-shadow transition-transform"
+              className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition-shadow transition-transform hover:scale-105 hover:shadow-2xl"
             >
-              <div className="flex items-center gap-4 mb-1">
-                <div className="block border-2 border-alveus-tan text-alveus-green group-hover:text-alveus-tan bg-alveus-tan group-hover:bg-alveus-green transition-colors p-2 rounded-xl">
+              <div className="mb-1 flex items-center gap-4">
+                <div className="block rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
                   <link.icon size={24} />
                 </div>
                 <Heading level={2}>{link.title}</Heading>
@@ -64,8 +73,13 @@ const DonatePage: NextPage = () => {
           ))}
         </div>
 
-        <div className="basis-full md:basis-1/2 py-4 md:px-4 flex flex-col items-center gap-8">
-          <iframe src="https://tgbwidget.com/?charityID=861772907" width="100%" height="604px" frameBorder="0" />
+        <div className="flex basis-full flex-col items-center gap-8 py-4 md:basis-1/2 md:px-4">
+          <iframe
+            src="https://tgbwidget.com/?charityID=861772907"
+            width="100%"
+            height="604px"
+            frameBorder="0"
+          />
         </div>
       </Section>
     </>

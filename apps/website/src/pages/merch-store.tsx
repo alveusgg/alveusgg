@@ -1,15 +1,16 @@
-import { type NextPage } from "next"
-import Head from "next/head"
-import Link from "next/link"
-import Image from "next/image"
-import React from "react"
+import { type NextPage } from "next";
+import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
+import React from "react";
 
-import Section from "../components/content/Section"
-import Heading from "../components/content/Heading"
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 
-import merchStoreImage from "../assets/merch/store.png"
-import merchGeorgieImage from "../assets/merch/georgie-plush.jpg"
-import merchStompyImage from "../assets/merch/stompy-plush.jpg"
+import merchStoreImage from "@/assets/merch/store.png";
+import merchGeorgieImage from "@/assets/merch/georgie-plush.jpg";
+import merchStompyImage from "@/assets/merch/stompy-plush.jpg";
 
 const merch = [
   {
@@ -36,24 +37,37 @@ const merch = [
 const MerchStorePage: NextPage = () => {
   return (
     <>
+      <Meta
+        title="Merch"
+        description="Grab yourself some Alveus merch, like a hoodie or t-shirt, or check out the Alveus Georgie and Stompy plushies! ALL of the proceeds go directly into Alveus and the support & care of our educational ambassadors!"
+      />
+
       <Head>
-        <title>Merch | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section dark>
         <Heading>Merch</Heading>
-        <p>ALL of the proceeds go directly into Alveus and the support & care of our educational ambassadors!</p>
+        <p>
+          ALL of the proceeds go directly into Alveus and the support & care of
+          our educational ambassadors!
+        </p>
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow" containerClassName="flex flex-wrap items-center">
+      <Section
+        className="flex-grow"
+        containerClassName="flex flex-wrap items-center"
+      >
         {merch.map((items, idx) => (
-          <div key={idx} className="basis-full md:basis-1/2 p-4 flex flex-col items-center gap-8">
-            {Object.entries(items).map(([ key, item ]) => (
+          <div
+            key={idx}
+            className="flex basis-full flex-col items-center gap-8 p-4 md:basis-1/2"
+          >
+            {Object.entries(items).map(([key, item]) => (
               <Link
                 key={key}
                 href={item.link}
@@ -64,11 +78,11 @@ const MerchStorePage: NextPage = () => {
                 <Image
                   src={item.image}
                   alt=""
-                  className="max-w-lg w-full h-auto rounded-2xl shadow-xl group-hover:shadow-2xl group-hover:scale-105 transition-shadow transition-transform"
+                  className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition-shadow transition-transform group-hover:scale-105 group-hover:shadow-2xl"
                 />
                 <Heading
                   level={2}
-                  className="mt-4 text-4xl text-center text-alveus-green group-hover:text-alveus-green-800 transition-colors"
+                  className="mt-4 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
                 >
                   {item.title}
                 </Heading>

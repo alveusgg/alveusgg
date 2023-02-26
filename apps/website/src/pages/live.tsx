@@ -1,14 +1,14 @@
 import React from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 //import Link from "next/link";
-import Head from "next/head";
 //import { GlobeAltIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
 //import paypalIcon from "simple-icons/icons/paypal.svg";
 //import amazonIcon from "simple-icons/icons/amazon.svg";
 //import twitchIcon from "simple-icons/icons/twitch.svg";
 
-import { TwitchEmbed } from "../components/TwitchEmbed";
+import { TwitchEmbed } from "@/components/TwitchEmbed";
+import Meta from "@/components/content/Meta";
 //import { Headline } from "../components/shared/Headline";
 //import {
 //  LinkBox,
@@ -45,12 +45,13 @@ const Live: NextPage<LivePageProps> = (
 
   return (
     <>
-      <Head>
-        <title>Alveus.gg</title>
-      </Head>
+      <Meta
+        title="Live"
+        description="Watch Alveus live on Twitch and learn more about our ambassadors."
+      />
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <div className="flex flex-1 flex-col">
         <header className="sr-only">

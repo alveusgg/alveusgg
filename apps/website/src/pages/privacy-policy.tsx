@@ -1,21 +1,22 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import React from "react";
 
-import { env } from "../env/client.mjs";
-import { Headline } from "../components/shared/Headline";
-import Section from "../components/content/Section";
-import Heading from "../components/content/Heading";
+import { env } from "@/env/client.mjs";
+import { Headline } from "@/components/shared/Headline";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 
 const Home: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>Contact / Privacy Policy - Alveus.gg</title>
-      </Head>
+      <Meta
+        title="Contact / Privacy Policy"
+        description="At Alveus.gg, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Alveus.gg and how we use it."
+      />
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
@@ -33,7 +34,7 @@ const Home: NextPage = () => {
         <Headline>Privacy Policy for Alveus.gg</Headline>
 
         <p>
-          At Alveus.gg, accessible from https://www.alveus.gg/, one of our main
+          At Alveus.gg, accessible from https://alveus.gg/, one of our main
           priorities is the privacy of our visitors. This Privacy Policy
           document contains types of information that is collected and recorded
           by Alveus.gg and how we use it.

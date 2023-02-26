@@ -3,17 +3,18 @@ import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 
-import Section from "../components/content/Section";
-import Heading from "../components/content/Heading";
-import Video from "../components/content/Video";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Video from "@/components/content/Video";
+import Meta from "@/components/content/Meta";
 
-import valentines2023Video from "../assets/events/valentines-2023.mp4";
-import artAuction2022Video from "../assets/events/art-auction-2022.mp4";
-import halloween2021Video from "../assets/events/halloween-2021.mp4";
-import fundathon2021Video from "../assets/events/fundathon-2021.mp4";
+import valentines2023Video from "@/assets/events/valentines-2023.mp4";
+import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
+import halloween2021Video from "@/assets/events/halloween-2021.mp4";
+import fundathon2021Video from "@/assets/events/fundathon-2021.mp4";
 
-import leafRightImage1 from "../assets/floral/leaf-right-1.png";
-import leafLeftImage1 from "../assets/floral/leaf-left-1.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
 export const events = {
   valentines2023: {
@@ -117,8 +118,12 @@ export const events = {
 const EventsPage: NextPage = () => {
   return (
     <>
+      <Meta
+        title="Events"
+        description="We host one-off fundraising events to increase awareness of our conservation missions and to encourage donations to support Alveus."
+      />
+
       <Head>
-        <title>Events | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 
