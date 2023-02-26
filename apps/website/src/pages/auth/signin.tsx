@@ -13,6 +13,7 @@ import { XCircleIcon } from "@heroicons/react/20/solid";
 import Section from "../../components/content/Section";
 import Heading from "../../components/content/Heading";
 import { LoginWithTwitchButton } from "../../components/shared/LoginWithTwitchButton";
+import Meta from "@/components/content/Meta";
 
 const errorMessages: Record<string, string> = {
   default: "Unable to sign in.",
@@ -70,9 +71,7 @@ const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
 
   return (
     <>
-      <Head>
-        <title>Sign In | Alveus.gg</title>
-      </Head>
+      <Meta title="Sign In" description="Sign in to your account." />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

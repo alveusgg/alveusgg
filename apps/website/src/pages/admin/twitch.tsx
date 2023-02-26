@@ -1,17 +1,18 @@
 import React from "react";
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
-import Head from "next/head";
-
 import type { z } from "zod";
+
 import type { TwitchConfig } from "@/config/twitch";
 import { getChannelConfigById, getTwitchConfig } from "@/config/twitch";
 import type { subscriptionSchema } from "@/server/utils/twitch-api";
 import { getSubscriptions } from "@/server/utils/twitch-api";
 import { getAdminSSP } from "@/server/utils/admin";
+import { permissions } from "@/config/permissions";
+
 import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
-import { permissions } from "@/config/permissions";
+import Meta from "@/components/content/Meta";
 
 type Subscription = z.infer<typeof subscriptionSchema>;
 
@@ -54,9 +55,7 @@ const AdminTwitchPage: NextPage<
 > = ({ menuItems, twitchConfig, twitchEventSubs, channelConfigById }) => {
   return (
     <>
-      <Head>
-        <title>Twitch Admin | Alveus.gg</title>
-      </Head>
+      <Meta title="Twitch | Admin" />
 
       <AdminPageLayout title="Dashboard" menuItems={menuItems}>
         <Headline>Active Twitch Event Subscriptions</Headline>

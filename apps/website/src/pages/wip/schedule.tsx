@@ -1,11 +1,11 @@
 import React from "react";
 import { type InferGetStaticPropsType, type NextPage } from "next";
-import Head from "next/head";
 
-import DefaultPageLayout from "../../components/DefaultPageLayout";
-import { Headline } from "../../components/shared/Headline";
-import { ShowCard } from "../../components/schedule/ShowCard";
-import { LinkBox, LinkBoxSocials } from "../../components/shared/LinkBox";
+import DefaultPageLayout from "@/components/DefaultPageLayout";
+import { Headline } from "@/components/shared/Headline";
+import { ShowCard } from "@/components/schedule/ShowCard";
+import { LinkBox, LinkBoxSocials } from "@/components/shared/LinkBox";
+import Meta from "@/components/content/Meta";
 
 export type SchedulePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -18,9 +18,7 @@ export async function getStaticProps() {
 const SchedulePage: NextPage<SchedulePageProps> = ({}) => {
   return (
     <>
-      <Head>
-        <title>Schedule | Alveus.gg</title>
-      </Head>
+      <Meta title="Schedule" />
 
       <DefaultPageLayout title="Schedule">
         <Headline>Weekly stream schedule</Headline>

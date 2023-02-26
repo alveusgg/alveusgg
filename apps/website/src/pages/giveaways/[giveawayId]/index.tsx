@@ -4,15 +4,15 @@ import type {
   InferGetServerSidePropsType,
   GetServerSideProps,
 } from "next";
-import Head from "next/head";
 import { getSession } from "next-auth/react";
+
 import type { Giveaway, GiveawayEntry, MailingAddress } from "@prisma/client";
+import { prisma } from "@/server/db/client";
 
-import { prisma } from "../../../server/db/client";
-
-import { GiveawayEntryForm } from "../../../components/giveaway/GiveawayEntryForm";
-import Heading from "../../../components/content/Heading";
-import Section from "../../../components/content/Section";
+import { GiveawayEntryForm } from "@/components/giveaway/GiveawayEntryForm";
+import Heading from "@/components/content/Heading";
+import Section from "@/components/content/Section";
+import Meta from "@/components/content/Meta";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -83,9 +83,10 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({
   existingEntry,
 }) => (
   <>
-    <Head>
-      <title>{`${giveaway.label} | Alveus.gg`}</title>
-    </Head>
+    <Meta
+      title={`${giveaway.label} | Giveaways`}
+      description={`Check out the ${giveaway.label} giveaway at Alveus.`}
+    />
 
     {/* Nav background */}
     <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

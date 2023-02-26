@@ -1,19 +1,20 @@
 import { type NextPage } from "next";
-import Head from "next/head";
+import React from "react";
 
-import React from "react"
-import Section from "../components/content/Section"
-import Heading from "../components/content/Heading"
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 
 const NotFound: NextPage = () => {
   return (
     <>
-      <Head>
-        <title>404 - Page Not Found | Alveus.gg</title>
-      </Head>
+      <Meta
+        title="404 - Page Not Found"
+        description="The page you are looking could not be found."
+      />
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">

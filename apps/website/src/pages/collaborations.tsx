@@ -4,13 +4,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import Section from "../components/content/Section";
-import Heading from "../components/content/Heading";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 
-import leafRightImage1 from "../assets/floral/leaf-right-1.png";
-import leafRightImage2 from "../assets/floral/leaf-right-2.png";
-import leafLeftImage3 from "../assets/floral/leaf-left-3.png";
-import leafLeftImage1 from "../assets/floral/leaf-left-1.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
 const collaborations = {
   alinity: {
@@ -129,8 +130,12 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
 const CollaborationsPage: NextPage = () => {
   return (
     <>
+      <Meta
+        title="Collaborations"
+        description="We work with other content creators to educate our combined audiences, introducing them to the educational ambassadors at Alveus and their conservation missions."
+      />
+
       <Head>
-        <title>Collaborations | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 

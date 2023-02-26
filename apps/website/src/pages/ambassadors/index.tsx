@@ -4,21 +4,26 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
-import ambassadors from "../../config/ambassadors";
-import Section from "../../components/content/Section";
-import Heading from "../../components/content/Heading";
-import { camelToKebab } from "../../utils/string-case";
+import ambassadors from "@/config/ambassadors";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import { camelToKebab } from "@/utils/string-case";
 
-import leafRightImage1 from "../../assets/floral/leaf-right-1.png";
-import leafLeftImage1 from "../../assets/floral/leaf-left-1.png";
-import leafRightImage2 from "../../assets/floral/leaf-right-2.png";
-import leafLeftImage2 from "../../assets/floral/leaf-left-2.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
 const AmbassadorsPage: NextPage = () => {
   return (
     <>
+      <Meta
+        title="Ambassadors"
+        description="Alveus Ambassadors are animals whose role includes handling and/or training by staff or volunteers for interaction with the public and in support of institutional education and conservation goals."
+      />
+
       <Head>
-        <title>Ambassadors | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 

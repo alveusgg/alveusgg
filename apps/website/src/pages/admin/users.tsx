@@ -1,22 +1,23 @@
 import React, { useCallback, useId, useState } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
-import Head from "next/head";
 
 import { MinusCircleIcon } from "@heroicons/react/24/outline";
+
 import { trpc } from "@/utils/trpc";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 import { getAdminSSP } from "@/server/utils/admin";
+import { permissions } from "@/config/permissions";
+import type { UserRole } from "@/config/user-roles";
+import { userRoles } from "@/config/user-roles";
+
 import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
-import { permissions } from "@/config/permissions";
 import { Button } from "@/components/shared/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
-import type { UserRole } from "@/config/user-roles";
-import { userRoles } from "@/config/user-roles";
-import { typeSafeObjectKeys } from "@/utils/helpers";
 import { MessageBox } from "@/components/shared/MessageBox";
-import { checkIsSuperUserId } from "@/server/utils/auth";
+import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(
@@ -65,9 +66,7 @@ const AdminUsersPage: NextPage<
 
   return (
     <>
-      <Head>
-        <title>Admin Users & Roles | Alveus.gg</title>
-      </Head>
+      <Meta title="Users & Roles | Admin" />
 
       <AdminPageLayout title="Users & Roles" menuItems={menuItems}>
         <Headline>Assign new role</Headline>

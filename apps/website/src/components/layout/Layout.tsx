@@ -5,6 +5,7 @@ import Head from "next/head";
 import { env } from "../../env/client.mjs";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
+import Meta from "@/components/content/Meta";
 
 type LayoutProps = {
   children?: React.ReactNode;
@@ -25,6 +26,8 @@ export const ptSerif = PT_Serif({
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
+      <Meta />
+
       <Head>
         <link
           rel="apple-touch-icon"

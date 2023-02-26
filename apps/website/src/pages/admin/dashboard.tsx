@@ -1,11 +1,12 @@
 import React from "react";
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
-import Head from "next/head";
 
 import { getAdminSSP } from "@/server/utils/admin";
+import { permissions } from "@/config/permissions";
+
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
-import { permissions } from "@/config/permissions";
+import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.viewDashboard);
@@ -21,9 +22,7 @@ const AdminDashboardPage: NextPage<
 > = ({ menuItems }) => {
   return (
     <>
-      <Head>
-        <title>Admin Dashboard | Alveus.gg</title>
-      </Head>
+      <Meta title="Admin" />
 
       <AdminPageLayout title="Dashboard" menuItems={menuItems}>
         <Panel>TODO: Add something useful here</Panel>

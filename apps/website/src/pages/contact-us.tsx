@@ -1,30 +1,35 @@
-import { type NextPage } from "next"
-import Head from "next/head"
-import React from "react"
+import { type NextPage } from "next";
+import Head from "next/head";
+import React from "react";
 
-import Section from "../components/content/Section"
-import Heading from "../components/content/Heading"
-import socials from "../components/shared/data/socials"
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import socials from "@/components/shared/data/socials";
 
 const ContactUsPage: NextPage = () => {
   return (
     <>
+      <Meta
+        title="Contact Us"
+        description="Contact us for any questions or concerns you may have. We are not openly hiring."
+      />
+
       <Head>
-        <title>Contact Us | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
       <Section
-        className="flex-grow min-h-[85vh] flex items-center"
+        className="flex min-h-[85vh] flex-grow items-center"
         containerClassName="flex flex-col items-center text-center text-alveus-green"
       >
         <Heading className="text-6xl">Contact Us</Heading>
 
-        <p className="text-xl font-semibold my-3">
+        <p className="my-3 text-xl font-semibold">
           <a href="mailto:maya@alveussanctuary.org" className="hover:underline">
             maya@alveussanctuary.org
           </a>
@@ -33,13 +38,13 @@ const ContactUsPage: NextPage = () => {
         <p>You can send in a resume to maya@alveussanctuary.org.</p>
         <p>You will be put on a list for future reference.</p>
 
-        <p className="text-xl font-semibold my-3">We are not openly hiring.</p>
+        <p className="my-3 text-xl font-semibold">We are not openly hiring.</p>
 
-        <ul className="flex flex-wrap gap-4 my-3">
-          {Object.entries(socials).map(([ key, social ]) => (
+        <ul className="my-3 flex flex-wrap gap-4">
+          {Object.entries(socials).map(([key, social]) => (
             <li key={key}>
               <a
-                className="block text-alveus-tan hover:text-alveus-green bg-alveus-green hover:bg-alveus-tan transition-colors p-3 rounded-2xl"
+                className="block rounded-2xl bg-alveus-green p-3 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
                 href={social.link}
                 target="_blank"
                 rel="noreferrer"
