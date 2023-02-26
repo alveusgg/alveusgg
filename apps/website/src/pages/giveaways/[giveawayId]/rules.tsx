@@ -4,13 +4,14 @@ import type {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
-import Head from "next/head";
-import type { Giveaway } from "@prisma/client";
 
-import Heading from "../../../components/content/Heading";
-import Section from "../../../components/content/Section";
-import { prisma } from "../../../server/db/client";
-import { calcGiveawayConfig } from "../../../utils/giveaways";
+import type { Giveaway } from "@prisma/client";
+import { prisma } from "@/server/db/client";
+
+import Heading from "@/components/content/Heading";
+import Section from "@/components/content/Section";
+import Meta from "@/components/content/Meta";
+import { calcGiveawayConfig } from "@/utils/giveaways";
 
 async function findActiveGiveaway(giveawaySlugOrId: string) {
   const now = new Date();
@@ -59,9 +60,10 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway }) => {
 
   return (
     <>
-      <Head>
-        <title>{`Rules - ${giveaway.label} | Alveus.gg`}</title>
-      </Head>
+      <Meta
+        title={`Rules | ${giveaway.label} | Giveaways`}
+        description={`Rules for the ${giveaway.label} giveaway at Alveus.`}
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

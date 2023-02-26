@@ -3,15 +3,16 @@ import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 
-import Section from "../../components/content/Section";
-import Heading from "../../components/content/Heading";
-import IconTwitch from "../../icons/IconTwitch";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import IconTwitch from "@/icons/IconTwitch";
 
-import mayaImage from "../../assets/maya.png";
-import leafRightImage1 from "../../assets/floral/leaf-right-1.png";
-import leafRightImage2 from "../../assets/floral/leaf-right-2.png";
-import leafLeftImage1 from "../../assets/floral/leaf-left-1.png";
-import leafLeftImage2 from "../../assets/floral/leaf-left-2.png";
+import mayaImage from "@/assets/maya.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
 const stats = {
   averageTime: {
@@ -63,8 +64,12 @@ const views = {
 const AboutAlveusPage: NextPage = () => {
   return (
     <>
+      <Meta
+        title="About Alveus"
+        description="Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a virtual education center facility to provide permanent homes to non-releasable exotic animals."
+      />
+
       <Head>
-        <title>About Alveus | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 

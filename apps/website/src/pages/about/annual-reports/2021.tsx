@@ -1,30 +1,38 @@
-import { type NextPage } from "next"
-import Head from "next/head"
-import Image from "next/image"
-import Link from "next/link"
-import React from "react"
+import { type NextPage } from "next";
+import Head from "next/head";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 
-import Section from "../../../components/content/Section"
-import Heading from "../../../components/content/Heading"
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 
-import report2021Image from "../../../assets/reports/2021.png"
+import report2021Image from "@/assets/reports/2021.png";
 
 const AboutAnnualReport2021Page: NextPage = () => {
   return (
     <>
+      <Meta
+        title="2021 | Annual Reports"
+        description="Read through the 2021 Annual Report published by Alveus."
+      />
+
       <Head>
-        <title>2021 Annual Report | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 
       {/* Nav background */}
-      <div className="hidden lg:block bg-alveus-green-900 h-40 -mt-40" />
+      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark containerClassName="flex flex-wrap gap-4 justify-between items-end">
+      <Section
+        dark
+        containerClassName="flex flex-wrap gap-4 justify-between items-end"
+      >
         <Heading>2012 Annual Report</Heading>
         <Link
           href="/about/annual-reports"
-          className="text-md px-4 py-2 rounded-full border-2 border-white hover:bg-alveus-tan hover:text-alveus-green hover:border-alveus-tan transition-colors"
+          className="text-md rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
         >
           Explore other reports
         </Link>
@@ -36,11 +44,11 @@ const AboutAnnualReport2021Page: NextPage = () => {
           src={report2021Image}
           quality={100}
           alt=""
-          className="mx-auto w-full max-w-[700px] h-auto"
+          className="mx-auto h-auto w-full max-w-[700px]"
         />
       </Section>
     </>
-  )
+  );
 };
 
 export default AboutAnnualReport2021Page;

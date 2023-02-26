@@ -1,11 +1,13 @@
 import React from "react";
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
-import Head from "next/head";
 import Link from "next/link";
+
 import type { Giveaway } from "@prisma/client";
-import { prisma } from "../../server/db/client";
-import Section from "../../components/content/Section";
-import Heading from "../../components/content/Heading";
+import { prisma } from "@/server/db/client";
+
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 
 export type GiveawaysPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
@@ -31,9 +33,10 @@ export const getStaticProps: GetStaticProps<{
 const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
   return (
     <>
-      <Head>
-        <title>Alveus Giveaways | Alveus.gg</title>
-      </Head>
+      <Meta
+        title="Giveaways"
+        description="Check out the latest giveaways at Alveus."
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

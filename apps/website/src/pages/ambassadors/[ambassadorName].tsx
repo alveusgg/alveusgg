@@ -8,11 +8,12 @@ import ambassadors, {
   type Ambassador,
   iucnFlags,
   iucnStatuses,
-} from "../../config/ambassadors";
-import Section from "../../components/content/Section";
-import Heading from "../../components/content/Heading";
-import Carousel from "../../components/content/Carousel";
-import { camelToKebab, kebabToCamel } from "../../utils/string-case";
+} from "@/config/ambassadors";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Carousel from "@/components/content/Carousel";
+import Meta from "@/components/content/Meta";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
 const parseIucnStatus = (rawStatus: string): string => {
   const [status, flag] = rawStatus.split("/");
@@ -131,8 +132,19 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
 
   return (
     <>
+      <Meta
+        title={`${ambassador.name} | Ambassadors`}
+        description={ambassador.story}
+        image={
+          typeof ambassador.images[0].src === "string"
+            ? ambassador.images[0].src
+            : "default" in ambassador.images[0].src
+            ? ambassador.images[0].src.default.src
+            : ambassador.images[0].src.src
+        }
+      />
+
       <Head>
-        <title>{`${ambassador.name} | Ambassadors | Alveus.gg`}</title>
         <meta name="robots" content="noindex" />
       </Head>
 
