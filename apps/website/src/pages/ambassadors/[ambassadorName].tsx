@@ -134,7 +134,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
     <>
       <Meta
         title={`${ambassador.name} | Ambassadors`}
-        description={ambassador.story}
+        description={`${ambassador.name} is an Alveus Ambassador. ${ambassador.story} ${ambassador.mission}`}
         image={
           typeof ambassador.images[0].src === "string"
             ? ambassador.images[0].src
