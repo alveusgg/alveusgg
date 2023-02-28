@@ -14,6 +14,12 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
 const collaborations = {
+  ludwig: {
+    name: "Ludwig",
+    link: "https://www.youtube.com/@ludwig",
+    date: "25th February 2023",
+    video: "https://www.youtube.com/watch?v=vuLMTU8QHAU",
+  },
   alinity: {
     name: "Alinity",
     link: "https://www.twitch.tv/alinity",
