@@ -1,19 +1,17 @@
 import React from "react";
 import type {
-  GetServerSideProps,
   InferGetServerSidePropsType,
   NextPage,
+  NextPageContext,
 } from "next";
 import { useRouter } from "next/router";
-import { getProviders, getSession } from "next-auth/react";
-import Head from "next/head";
-
+import { getSession } from "next-auth/react";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 
-import Section from "../../components/content/Section";
-import Heading from "../../components/content/Heading";
-import { LoginWithTwitchButton } from "../../components/shared/LoginWithTwitchButton";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 
 const errorMessages: Record<string, string> = {
   default: "Unable to sign in.",
@@ -35,9 +33,7 @@ export type SigninPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
 
-export const getServerSideProps: GetServerSideProps<{
-  providers: Awaited<ReturnType<typeof getProviders>>;
-}> = async (context) => {
+export const getServerSideProps = async (context: NextPageContext) => {
   const session = await getSession(context);
 
   if (session?.user?.id) {
@@ -49,14 +45,10 @@ export const getServerSideProps: GetServerSideProps<{
     };
   }
 
-  return {
-    props: {
-      providers: await getProviders(),
-    },
-  };
+  return { props: {} };
 };
 
-const SigninPage: NextPage<SigninPageProps> = ({ providers }) => {
+const SigninPage: NextPage<SigninPageProps> = () => {
   const router = useRouter();
   const errorType =
     typeof router.query.error === "string" ? router.query.error : undefined;

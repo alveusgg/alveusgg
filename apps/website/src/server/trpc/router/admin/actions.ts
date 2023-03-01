@@ -16,7 +16,7 @@ const actionSchema = z.discriminatedUnion("action", [
 export const adminActionRouter = router({
   runAction: superUserProcedure
     .input(actionSchema)
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       try {
         switch (input.action) {
           case "sendNotification":
