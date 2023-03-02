@@ -1,10 +1,8 @@
-import add from "date-fns/add";
-import isPast from "date-fns/isPast";
+import { add, isPast } from "date-fns";
 
-import type { ScheduledTasksConfig } from "../../config/scheduledTasks";
-import { getScheduledTasksConfig } from "../../config/scheduledTasks";
-
-import { prisma } from "../db/client";
+import type { ScheduledTasksConfig } from "@/config/scheduledTasks";
+import { getScheduledTasksConfig } from "@/config/scheduledTasks";
+import { prisma } from "@/server/db/client";
 
 type TaskConfig = ScheduledTasksConfig["tasks"][number];
 

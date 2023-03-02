@@ -406,21 +406,26 @@ export const Navbar: React.FC = () => {
                       <ProfileInfo full />
                     </div>
 
-                    <Disclosure.Button
-                      className={`${NavLinkClasses} w-full text-left`}
-                      onClick={() => signOut()}
-                    >
-                      Log Out
+                    <Disclosure.Button as={Fragment}>
+                      <button
+                        className={`${NavLinkClasses} w-full text-left`}
+                        type="button"
+                        onClick={() => signOut()}
+                      >
+                        Log Out
+                      </button>
                     </Disclosure.Button>
                   </li>
                 ) : (
                   <li>
-                    <Disclosure.Button
-                      className={`${NavLinkClasses} w-full text-left`}
-                      type="button"
-                      onClick={() => signIn("twitch")}
-                    >
-                      Sign In
+                    <Disclosure.Button as={Fragment}>
+                      <button
+                        className={`${NavLinkClasses} w-full text-left`}
+                        type="button"
+                        onClick={() => signIn("twitch")}
+                      >
+                        Sign In
+                      </button>
                     </Disclosure.Button>
                   </li>
                 )}

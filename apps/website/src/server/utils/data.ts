@@ -117,7 +117,7 @@ export async function getMapData() {
   let mapData: FeatureCollection | null = null;
   try {
     const mapRes = await fetch("https://alveusgg.github.io/data/map.geojson");
-    mapData = (await mapRes.json()) as any; // TODO: parse geojson with zod?
+    mapData = (await mapRes.json()) as unknown as FeatureCollection | null; // TODO: parse geojson with zod?
   } catch (e) {}
 
   return mapData;

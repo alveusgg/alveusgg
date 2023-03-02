@@ -1,17 +1,16 @@
 import React from "react";
-import parse from "date-fns/parse";
+import { parse, formatDistanceToNow } from "date-fns";
 import Image from "next/image";
-import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import {
   GlobeAltIcon,
   PlayCircleIcon,
   LinkIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-import type { Ambassador, Enclosures } from "../../../server/utils/data";
-import type { SelectionAction } from "../../../pages/wip/explore";
 import { dateFormatter } from "../InfoDetails";
 import { DefinitionItem } from "./DefinitionItem";
+import type { Ambassador, Enclosures } from "@/server/utils/data";
+import type { SelectionAction } from "@/pages/wip/explore";
 
 export const AmbassadorContent: React.FC<{
   enclosures: Enclosures;
