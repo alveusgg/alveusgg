@@ -29,7 +29,7 @@ const AboutAnnualReport2021Page: NextPage = () => {
         dark
         containerClassName="flex flex-wrap gap-4 justify-between items-end"
       >
-        <Heading>2012 Annual Report</Heading>
+        <Heading>2021 Annual Report</Heading>
         <Link
           href="/about/annual-reports"
           className="text-md rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
