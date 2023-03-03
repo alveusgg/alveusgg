@@ -1,19 +1,7 @@
 # Alveus community website
 
-This is a work-in-progress community page around the Alveus Sanctuary twitch stream and related content. The page is
-currently hosted at https://www.alveus.gg/.
-
-Main ideas:
-- Content focused hub for viewers (new and old) independent of the platforms (twitch/youtube/instagram), while the official
-    website can be the official presentation of the Sanctuary not only towards viewer but also industry and other
-    interested parties.
-- Possible Features:
-  - Notifications for on-stream and off-stream content (stream segment changes, video releases, ig posts). #1
-  - Let viewers explore alveus online with content about the ambassadors and facilities, structuring and linking existing content.
-  - Schedule of planned content and events.
-- Could be a platform for user-interactions with the Sanctuary like feeding ambassadors for donations etc.
-- Could be a backend for other applications like the twitch extension.
-
+This is a work-in-progress website for the Alveus Sanctuary non-profit.
+The page is currently hosted at https://alveus.gg/.
 
 ## See also
 
@@ -22,7 +10,34 @@ Main ideas:
 
 ## Tech stack
 
-This project uses pnpm workspaces. The main app is the website package, see https://github.com/alveusgg/alveusgg/blob/main/apps/website/README.md
+This project uses pnpm workspaces. The main app is the website package (`apps/website`), which is a Next.js app.
+
+For development:
+
+- node v16
+- pnpm 7 with workspaces
+- prettier (code formatting)
+- eslint (code linting)
+
+Website stack (based on [T3 Stack](https://create.t3.gg/)):
+
+- typescript
+- next.js (framework)
+- trpc (typesafe api)
+- prisma (database orm)
+- auth.js aka next-auth (auth via OAuth)
+- tailwindcss (styling)
+
+Hosting (production):
+
+- planetscale (mysql database)
+- vercel (serverless hosting)
+- Digital Ocean Spaces (S3-compatible storage)
+
+# External  APIs
+
+- Twitch OAuth (application)
+- Twitch EventSub/Helix
 
 ## Systems overview
 
@@ -36,13 +51,13 @@ TODO
 
 ## How to develop / Getting started
 
-TODO
-
 ### Prerequisites
 
 1. Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
-2. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) and [Cookiebot keys](https://www.cookiebot.com/) if you want those
-
+2. Set up some S3-compatible storage for file uploads:
+   - locally (e.g. [Minio](https://min.io/) or [Localstack](https://localstack.cloud/))
+   - online (e.g. [Digital Ocean Spaces](https://www.digitalocean.com/products/spaces/),  [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
+3. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) and [Cookiebot](https://www.cookiebot.com/) keys if you want those
 
 ### Local development
 
@@ -51,6 +66,7 @@ TODO
 3. Create a [Planetscale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
 4. Copy `apps/website/.env.example` to `apps/website/.env`
     - Fill the Prisma section with the database info (DSN)
+    - Fill in the S3 section with your S3-compatible storage info
     - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
     - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
     - You may define privileged user once they have signed in via the `SUPER_USER_IDS` variable
@@ -65,7 +81,8 @@ TODO
 
 ### Website
 
-The stack should work on any Node.js server or Next.js capable hoster and any MySQL server, but is only tested on Vercel (and Planetscale) for now.
+The stack should work on any Node.js server or Next.js capable hosting provider and any MySQL server,
+but has only been tested on Vercel (and Planetscale) for now.
 
 1. Create a twitch extension (see Getting started above)
 2. Set up a database (see Getting started above)
@@ -82,9 +99,6 @@ The stack should work on any Node.js server or Next.js capable hoster and any My
     - *Git*: connect your git repo
     - *Environment Variables*: Copy paste your `apps/website/.env.production` into the first Key field (yes you can simply copy-paste everything at once)
 
-### Server
-
-TODO
 
 
 
