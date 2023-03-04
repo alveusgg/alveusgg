@@ -148,6 +148,10 @@ const config = {
           key: "Content-Security-Policy",
           value:
             "frame-src 'self' " +
+            // Allow vercel preview helper (if not in production):
+            (["development", "preview"].includes(process.env.VERCEL_ENV)
+              ? "https://vercel.live/ "
+              : "") +
             // Twitch embeds:
             "https://embed.twitch.tv/ https://www.twitch.tv/ " +
             // The Giving Block (crypto donations):
