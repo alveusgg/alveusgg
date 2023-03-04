@@ -32,7 +32,7 @@ Hosting (production):
 
 - planetscale (mysql database)
 - vercel (serverless hosting)
-- Digital Ocean Spaces (S3-compatible storage)
+- DigitalOcean Spaces (S3-compatible storage)
 
 # External  APIs
 
@@ -56,7 +56,7 @@ TODO
 1. Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
 2. Set up some S3-compatible storage for file uploads:
    - locally (e.g. [Minio](https://min.io/) or [Localstack](https://localstack.cloud/))
-   - online (e.g. [Digital Ocean Spaces](https://www.digitalocean.com/products/spaces/),  [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
+   - online (e.g. [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
 3. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) and [Cookiebot](https://www.cookiebot.com/) keys if you want those
 
 ### Local development
