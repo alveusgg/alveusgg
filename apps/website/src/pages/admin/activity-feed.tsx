@@ -10,6 +10,7 @@ import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
 import { OutgoingWebhookFeedEntry } from "@/components/admin/activity-feed/outgoing-webhook-feed-entry";
 import Meta from "@/components/content/Meta";
+import IconLoading from "@/icons/IconLoading";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageGiveaways);
@@ -64,11 +65,15 @@ const AdminActivityFeedPage: NextPage<
                 outgoingWebhooks.isFetchingNextPage
               }
             >
-              {outgoingWebhooks.isFetchingNextPage
-                ? "Loading more..."
-                : outgoingWebhooks.hasNextPage
-                ? "Load more"
-                : "- End -"}
+              {outgoingWebhooks.isFetchingNextPage ? (
+                <>
+                  <IconLoading size={20} /> Loading...
+                </>
+              ) : outgoingWebhooks.hasNextPage ? (
+                "Load more"
+              ) : (
+                "- End -"
+              )}
             </button>
           </div>
         </Panel>

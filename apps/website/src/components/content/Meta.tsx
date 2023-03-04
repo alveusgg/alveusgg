@@ -1,16 +1,8 @@
 import Head from "next/head";
-import defaultLoader from "next/dist/shared/lib/image-loader";
-import { type ImageConfigComplete } from "next/dist/shared/lib/image-config";
 import React from "react";
 
-import headerImage from "../../assets/header.png";
-
-// Get our base URL, which will either be specifically set, or from Vercel for preview deployments
-const BASE_URL = (
-  process.env.NEXT_PUBLIC_VERCEL_URL
-    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_BASE_URL || ""
-).replace(/\/$/, "");
+import headerImage from "@/assets/header.png";
+import { createImageUrl, getImageSizes } from "@/utils/image";
 
 type MetaProps = {
   title?: string;
@@ -25,22 +17,14 @@ const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
   const computedTitle = title ? `${title} | ${defaultTitle}` : defaultTitle;
   const computedDescription = description || defaultDescription;
 
-  // Based on https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L23-L25
-  // and https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L743-L748
-  // and https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L191-L193
-  const imageConfig = process.env
-    .__NEXT_IMAGE_OPTS as never as ImageConfigComplete;
-  const imageSizes = [...imageConfig.deviceSizes, ...imageConfig.imageSizes];
-  const computedImage =
-    BASE_URL +
-    defaultLoader({
-      src: image || headerImage.src,
-      width:
-        imageSizes.find((w) => w >= 1200) ||
-        imageSizes[imageSizes.length - 1] ||
-        0,
-      config: imageConfig,
-    });
+  const imageSizes = getImageSizes();
+  const computedImage = createImageUrl({
+    src: image || headerImage.src,
+    width:
+      imageSizes.find((w) => w >= 1200) ||
+      imageSizes[imageSizes.length - 1] ||
+      0,
+  });
 
   return (
     <Head>

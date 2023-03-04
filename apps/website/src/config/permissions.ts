@@ -14,6 +14,9 @@ export const permissions = {
   viewActivityFeed: {
     requiresSuperUser: true,
   },
+  manageShowAndTell: {
+    requiredRole: "showAndTell",
+  },
   manageGiveaways: {
     requiredRole: "giveaways",
   },

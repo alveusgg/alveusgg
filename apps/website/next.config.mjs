@@ -24,10 +24,24 @@ const config = {
         protocol: "https",
         hostname: "static-cdn.jtvnw.net",
       },
+      // YouTube Thumbnails
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
+      },
       // Original Website
       {
         protocol: "https",
         hostname: "www.alveussanctuary.org",
+      },
+      // CDN (S3/DigitalOcean Spaces)
+      {
+        protocol: "https",
+        hostname: "files.alveus.site",
+      },
+      {
+        protocol: "https",
+        hostname: "alveus-files.nyc3.cdn.digitaloceanspaces.com",
       },
       // GitHub Pages
       {
@@ -133,7 +147,21 @@ const config = {
         {
           key: "Content-Security-Policy",
           value:
-            "frame-src https://embed.twitch.tv/ https://www.twitch.tv/ https://tgbwidget.com/ https://www.youtube-nocookie.com/",
+            "frame-src 'self' " +
+            // Allow vercel preview helper (if not in production):
+            (["development", "preview"].includes(process.env.VERCEL_ENV)
+              ? "https://vercel.live/ "
+              : "") +
+            // Twitch embeds:
+            "https://embed.twitch.tv/ https://www.twitch.tv/ " +
+            // The Giving Block (crypto donations):
+            "https://tgbwidget.com/ " +
+            // YouTube embeds:
+            "https://www.youtube-nocookie.com/ " +
+            // Imgur embeds:
+            //"http://imgur.com/ https://imgur.com/ https://imgur.io/ " +
+            // Streamable embeds:
+            "https://streamable.com/",
         },
       ],
     },

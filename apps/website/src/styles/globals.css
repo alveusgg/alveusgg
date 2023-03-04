@@ -34,7 +34,10 @@
   }
 
   /* Some basic styles for user generated HTML */
-  .alveus-ugc {
+  .alveus-ugc,
+  .alveus-rte .ql-editor {
+    @apply font-sans text-base;
+
     h1,
     h2,
     h3 {
@@ -57,22 +60,54 @@
     }
 
     ul {
-      @apply ml-7 list-disc;
+      @apply pl-0 ml-7 list-disc;
     }
 
     ol {
-      @apply ml-7 list-decimal;
+      @apply pl-0 ml-7 list-decimal;
     }
 
     li {
       @apply my-1;
     }
+
+    a[href] {
+      @apply text-blue-500 underline after:content-['_\2192'];
+    }
   }
 
   /* Rich text editor (Quill.js) */
   .alveus-rte {
+    @apply w-full rounded-sm border border-gray-700;
+
     .ql-editor {
-      min-height: 400px;
+      padding: 0 20px;
+      min-height: 200px;
     }
+
+    .ql-toolbar.ql-snow {
+      @apply flex flex-row;
+
+      .ql-formats:last-child {
+        margin-left: auto;
+        margin-right: 0;
+      }
+    }
+  }
+
+  .alveus-sat-pswp {
+    @apply w-[80%] overflow-hidden;
+
+    .pswp__alveus-caption {
+      @apply text-lg;
+    }
+  }
+}
+
+.pswp {
+  @apply font-sans;
+
+  &__alveus-caption {
+    @apply absolute empty:hidden bottom-0 left-1/2 -translate-x-1/2 w-fit max-w-[calc(100%-80px)] bg-black/80 text-white leading-tight p-4;
   }
 }

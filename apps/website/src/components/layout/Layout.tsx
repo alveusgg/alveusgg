@@ -1,10 +1,10 @@
 import React from "react";
-import { PT_Sans, PT_Serif } from "@next/font/google";
+import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
-
-import { env } from "../../env/client.mjs";
+import { useRouter } from "next/router";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
+import { env } from "@/env/client.mjs";
 import Meta from "@/components/content/Meta";
 
 type LayoutProps = {
@@ -24,6 +24,11 @@ export const ptSerif = PT_Serif({
 });
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const router = useRouter();
+  if (router.pathname.endsWith("/attachment")) {
+    return <>{children}</>;
+  }
+
   return (
     <>
       <Meta />
@@ -67,10 +72,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       </Head>
 
       <div
+        id="app"
         className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${ptSans.variable} ${ptSerif.variable} font-sans`}
       >
         <Navbar />
-        <main className="z-10 flex flex-grow flex-col">{children}</main>
+        <main className="flex flex-grow flex-col">{children}</main>
         <Footer />
       </div>
     </>

@@ -80,7 +80,7 @@ const structure: NavStructure = {
     dropdown: {
       showAndTell: {
         title: "Show and Tell",
-        link: "https://www.alveussanctuary.org/show-and-tell/",
+        link: "/show-and-tell",
       },
       collaborations: {
         title: "Collaborations",

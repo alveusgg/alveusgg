@@ -14,6 +14,7 @@ import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 
 const parseIucnStatus = (rawStatus: string): string => {
   const [status, flag] = rawStatus.split("/");
@@ -81,6 +82,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
+      ...getDefaultPhotoswipeLightboxOptions(),
       gallery: `#${photoswipe}`,
       children: "a",
       showHideAnimationType: "fade",
@@ -222,7 +224,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
               <Carousel
                 items={carousel}
                 auto={null}
-                basis="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+                itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
               />
             </div>
           </div>

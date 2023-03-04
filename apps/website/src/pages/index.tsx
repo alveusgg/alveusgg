@@ -317,7 +317,7 @@ const Home: NextPage = () => {
               items={featuredAmbassadors}
               auto={10000}
               className="mt-4"
-              basis="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+              itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
             />
           </div>
 
