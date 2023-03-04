@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
-import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-upload";
+import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { getEntityStatus } from "@/utils/entity-helpers";
 
 const MAX_IMAGES = 12;

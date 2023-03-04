@@ -20,6 +20,13 @@ let __client: S3Client;
 
 function getS3Client() {
   if (!__client) {
+    if (env.FILE_STORAGE_ENDPOINT === "")
+      throw new Error("File storage: FILE_STORAGE_ENDPOINT is not set");
+    if (env.FILE_STORAGE_KEY === "")
+      throw new Error("File storage: FILE_STORAGE_KEY is not set");
+    if (env.FILE_STORAGE_SECRET === "")
+      throw new Error("File storage: FILE_STORAGE_SECRET is not set");
+
     __client = new S3Client({
       forcePathStyle: false,
       endpoint: env.FILE_STORAGE_ENDPOINT,
@@ -45,6 +52,7 @@ export async function deleteFileStorageObject(key: string) {
     );
     return true;
   } catch (err) {
+    console.error("Failed to delete file storage object", key, err);
     return false;
   }
 }

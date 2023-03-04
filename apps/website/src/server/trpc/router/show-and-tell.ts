@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createFileStorageUpload } from "@/server/utils/file-upload";
+import { createFileStorageUpload } from "@/server/utils/file-storage";
 import {
   protectedProcedure,
   publicProcedure,
