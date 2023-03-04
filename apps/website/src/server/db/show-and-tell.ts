@@ -5,6 +5,7 @@ import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { getEntityStatus } from "@/utils/entity-helpers";
+import { notEmpty } from "@/utils/helpers";
 
 const MAX_IMAGES = 12;
 
@@ -259,7 +260,24 @@ export async function removeApprovalFromPost(
 }
 
 export async function deletePost(id: string, authorUserId?: string) {
-  return await prisma.showAndTellEntry.deleteMany({
-    where: { id, user: authorUserId ? { id: authorUserId } : undefined },
-  });
+  const post = await getPostById(id, authorUserId);
+  if (!post) return false;
+
+  return await Promise.allSettled([
+    prisma.showAndTellEntry.delete({ where: { id: post.id } }),
+    prisma.imageAttachment.deleteMany({
+      where: {
+        id: {
+          in: post.attachments.map((a) => a.imageAttachmentId).filter(notEmpty),
+        },
+      },
+    }),
+    prisma.linkAttachment.deleteMany({
+      where: {
+        id: {
+          in: post.attachments.map((a) => a.linkAttachmentId).filter(notEmpty),
+        },
+      },
+    }),
+  ]);
 }
