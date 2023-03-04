@@ -92,7 +92,6 @@ export const ShowAndTellEntry = forwardRef<
     >
       {isPresentationView && featureImageUrl && (
         <div className="absolute top-0 z-0 h-full w-full overflow-hidden rounded-xl">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <Image
             loading="lazy"
             width={1920}
