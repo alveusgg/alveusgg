@@ -45,7 +45,7 @@ export function getViewUrlForFileStorageObjectKey(key: string) {
   return new URL(key, env.FILE_STORAGE_CDN_URL || getBucketUrl());
 }
 
-export async function deleteFileStorageObject(key: string) {
+async function sendDeleteObjectCommand(key: string) {
   try {
     await getS3Client().send(
       new DeleteObjectCommand({ Bucket: env.FILE_STORAGE_BUCKET, Key: key })
@@ -55,6 +55,22 @@ export async function deleteFileStorageObject(key: string) {
     console.error("Failed to delete file storage object", key, err);
     return false;
   }
+}
+
+export async function deleteFileStorageObject(id: string) {
+  const data = await prisma.fileStorageObject.findUniqueOrThrow({
+    where: { id },
+  });
+
+  const deleted = await sendDeleteObjectCommand(data.key);
+  if (!deleted) throw new Error("Failed to delete file storage object");
+
+  await prisma.fileStorageObject.update({
+    where: { id },
+    data: {
+      deletedAt: new Date(),
+    },
+  });
 }
 
 export async function createFileStorageUpload({
@@ -122,15 +138,7 @@ export async function checkAndFixUploadedImageFileStorageObject(id: string) {
   const metaData = await probeImageMeta(url);
 
   if (!metaData || metaData.mimeType !== data.type) {
-    await Promise.allSettled([
-      deleteFileStorageObject(data.key),
-      prisma.fileStorageObject.update({
-        where: { id },
-        data: {
-          deletedAt: new Date(),
-        },
-      }),
-    ]);
+    await deleteFileStorageObject(data.id);
     return { error: "Invalid image" };
   }
 

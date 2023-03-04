@@ -1,5 +1,9 @@
 import { z } from "zod";
-import { createFileStorageUpload } from "@/server/utils/file-storage";
+import { TRPCError } from "@trpc/server";
+import {
+  createFileStorageUpload,
+  deleteFileStorageObject,
+} from "@/server/utils/file-storage";
 import {
   protectedProcedure,
   publicProcedure,
@@ -9,6 +13,7 @@ import {
 import {
   createPost,
   deletePost,
+  getPostById,
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
@@ -17,6 +22,7 @@ import {
 } from "@/server/db/show-and-tell";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { env } from "@/env/server.mjs";
+import { notEmpty } from "@/utils/helpers";
 
 const uploadPrefix = "show-and-tell/";
 
@@ -81,9 +87,21 @@ export const showAndTellRouter = router({
 
   delete: protectedProcedure
     .input(z.string().cuid())
-    .mutation(
-      async ({ ctx, input }) => await deletePost(input, ctx.session.user.id)
-    ),
+    .mutation(async ({ ctx, input }) => {
+      const post = await getPostById(input, ctx.session.user.id);
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
+
+      await Promise.allSettled([
+        deletePost(post.id, ctx.session.user.id),
+        // Delete all file attachments
+        ...post.attachments
+          .map(({ imageAttachment }) => imageAttachment?.fileStorageObject?.id)
+          .filter(notEmpty)
+          .map((id) => deleteFileStorageObject(id)),
+      ]);
+    }),
 
   getMyEntry: protectedProcedure
     .input(z.string().cuid())

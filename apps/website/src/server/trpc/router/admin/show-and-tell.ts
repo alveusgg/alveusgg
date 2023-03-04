@@ -14,6 +14,8 @@ import {
   getPostById,
 } from "@/server/db/show-and-tell";
 import { permissions } from "@/config/permissions";
+import { deleteFileStorageObject } from "@/server/utils/file-storage";
+import { notEmpty } from "@/utils/helpers";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageShowAndTell)
@@ -44,7 +46,14 @@ export const adminShowAndTellRouter = router({
         throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
       }
 
-      return await deletePost(post.id);
+      await Promise.allSettled([
+        deletePost(post.id),
+        // Delete all file attachments
+        ...post.attachments
+          .map(({ imageAttachment }) => imageAttachment?.fileStorageObject?.id)
+          .filter(notEmpty)
+          .map((id) => deleteFileStorageObject(id)),
+      ]);
     }),
 
   getEntries: permittedProcedure
