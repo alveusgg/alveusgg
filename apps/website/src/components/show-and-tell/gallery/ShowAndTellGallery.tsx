@@ -170,7 +170,7 @@ export function ShowAndTellGallery({
               width={600}
               height={600}
               draggable={false}
-              className="pointer-events-none max-h-[40vh] w-auto select-none object-cover"
+              className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto select-none object-cover"
               src={imageAttachment.url}
               alt={imageAttachment.alternativeText}
             />
