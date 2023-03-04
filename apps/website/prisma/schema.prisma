@@ -263,7 +263,7 @@ model LinkAttachment {
   description     String
   url             String
 
-  showAndTellEntryAttachment ShowAndTellEntryLinkAttachment?
+  showAndTellEntryAttachment ShowAndTellEntryAttachment?
 }
 
 model ShowAndTellEntry {
@@ -278,24 +278,24 @@ model ShowAndTellEntry {
   deletedAt      DateTime?
   seenOnStreamAt DateTime?
 
-  attachments ShowAndTellEntryLinkAttachment[]
-
-  user User? @relation(fields: [userId], references: [id])
+  attachments ShowAndTellEntryAttachment[]
+  user        User?                        @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "ShowAndTellEntry_userId")
 }
 
-model ShowAndTellEntryLinkAttachment {
-  id                String           @id @default(cuid())
+model ShowAndTellEntryAttachment {
+  id                String  @id @default(cuid())
   entryId           String
   attachmentType    String
-  linkAttachmentId  String?          @unique
-  imageAttachmentId String?          @unique
-  entry             ShowAndTellEntry @relation(fields: [entryId], references: [id])
-  linkAttachment    LinkAttachment?  @relation(fields: [linkAttachmentId], references: [id])
-  imageAttachment   ImageAttachment? @relation(fields: [imageAttachmentId], references: [id])
+  linkAttachmentId  String? @unique
+  imageAttachmentId String? @unique
 
-  @@index([entryId], name: "ShowAndTellEntryLinkAttachment_entryId")
+  entry           ShowAndTellEntry @relation(fields: [entryId], references: [id])
+  linkAttachment  LinkAttachment?  @relation(fields: [linkAttachmentId], references: [id])
+  imageAttachment ImageAttachment? @relation(fields: [imageAttachmentId], references: [id])
+
+  @@index([entryId], name: "ShowAndTellEntryAttachment_entryId")
 }
 
 model FileStorageObject {
@@ -318,19 +318,21 @@ model ImageMetadata {
   mimeType            String
   width               Int
   height              Int
-  fileStorageObjectId String            @unique
-  fileStorageObject   FileStorageObject @relation(fields: [fileStorageObjectId], references: [id])
+  fileStorageObjectId String @unique
+
+  fileStorageObject FileStorageObject @relation(fields: [fileStorageObjectId], references: [id])
 }
 
 model ImageAttachment {
-  id                             String                          @id @default(cuid())
-  name                           String
-  title                          String
-  alternativeText                String
-  caption                        String
-  description                    String
-  url                            String
-  fileStorageObjectId            String                          @unique
-  fileStorageObject              FileStorageObject               @relation(fields: [fileStorageObjectId], references: [id])
-  showAndTellEntryLinkAttachment ShowAndTellEntryLinkAttachment?
+  id                  String @id @default(cuid())
+  name                String
+  title               String
+  alternativeText     String
+  caption             String
+  description         String
+  url                 String
+  fileStorageObjectId String @unique
+
+  fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id])
+  showAndTellEntryAttachment ShowAndTellEntryAttachment?
 }

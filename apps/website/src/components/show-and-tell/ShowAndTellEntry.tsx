@@ -5,7 +5,7 @@ import type {
   ImageMetadata,
   LinkAttachment,
   ShowAndTellEntry as ShowAndTellEntryModel,
-  ShowAndTellEntryLinkAttachment,
+  ShowAndTellEntryAttachment,
 } from "@prisma/client";
 import Image from "next/image";
 import { parseVideoUrl } from "@/utils/video-urls";
@@ -15,7 +15,7 @@ import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTe
 
 export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
   attachments: Array<
-    ShowAndTellEntryLinkAttachment & {
+    ShowAndTellEntryAttachment & {
       linkAttachment: LinkAttachment | null;
       imageAttachment:
         | (ImageAttachment & {
