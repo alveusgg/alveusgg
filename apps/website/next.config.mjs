@@ -43,6 +43,10 @@ const config = {
         protocol: "https",
         hostname: "alveus-files.nyc3.cdn.digitaloceanspaces.com",
       },
+      {
+        protocol: "https",
+        hostname: "alveus.nyc3.cdn.digitaloceanspaces.com",
+      },
       // GitHub Pages
       {
         protocol: "https",
