@@ -35,8 +35,6 @@
   ],
   "exclude": [
     "node_modules",
-    "src/AlveusPushWorker.ts",
-    "push-sw.tsup.config.ts",
-    "tsup-env.ts"
+    "src/sw"
   ]
 }

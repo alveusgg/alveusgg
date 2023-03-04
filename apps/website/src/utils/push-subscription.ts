@@ -7,7 +7,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { trpc } from "./trpc";
 
-const SW_PATH = "/push/alveus/AlveusPushWorker.js";
+const SW_PATH = "/push/alveus/PushServiceWorker.js";
 
 export const isNotificationsSupported =
   typeof window !== "undefined" && "Notification" in window;

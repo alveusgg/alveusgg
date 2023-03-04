@@ -3,7 +3,7 @@ declare const self: ServiceWorkerGlobalScope;
 import { createTRPCProxyClient, httpBatchLink } from "@trpc/client";
 import superjson from "superjson";
 
-import { type AppRouter } from "./server/trpc/router/_app";
+import { type AppRouter } from "../server/trpc/router/_app";
 
 const getBaseUrl = () => {
   if (process.env.VERCEL_URL) return `https://www.alveus.gg`;

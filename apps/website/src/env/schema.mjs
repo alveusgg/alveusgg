@@ -47,12 +47,7 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_NODE_ENV: z
     .enum(["development", "test", "production"])
     .optional(),
-  NEXT_PUBLIC_BASE_URL: z.preprocess(
-    // If there is a VERCEL_URL set, use that like NextAuth.js does
-    (str) => process.env.NEXT_PUBLIC_VERCEL_URL || str,
-    // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-    process.env.NEXT_PUBLIC_VERCEL_URL ? z.string() : z.string().url()
-  ),
+  NEXT_PUBLIC_BASE_URL: z.string().url(),
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
   NEXT_PUBLIC_COOKIEBOT_ID: z.string().optional(),
 });
@@ -65,7 +60,10 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV ?? "development",
-  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL,
+  // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
+  NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_VERCEL_URL
+    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
+    : process.env.NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
   NEXT_PUBLIC_COOKIEBOT_ID: process.env.NEXT_PUBLIC_COOKIEBOT_ID,
