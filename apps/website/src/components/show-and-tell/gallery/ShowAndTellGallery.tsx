@@ -12,6 +12,7 @@ import {
   videoPlatformConfigs,
 } from "@/utils/video-urls";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { createImageUrl } from "@/utils/image";
 
 export function ShowAndTellGallery({
   lightboxParent,
@@ -150,9 +151,11 @@ export function ShowAndTellGallery({
         <a
           key={`image-${i}`}
           draggable="false"
-          href={`/_next/image?url=${encodeURIComponent(
-            imageAttachment.url
-          )}&w=1920&h=1080&q=90`}
+          href={createImageUrl({
+            src: imageAttachment.url,
+            width: 1920,
+            quality: 90,
+          })}
           data-pswp-type="image"
           data-pswp-width={
             imageAttachment.fileStorageObject?.imageMetadata?.width || 1920
