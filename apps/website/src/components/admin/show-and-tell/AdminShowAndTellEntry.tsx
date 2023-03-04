@@ -1,7 +1,7 @@
 import React from "react";
 import type { ShowAndTellEntry, User } from "@prisma/client";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { LocalTime } from "../../shared/LocalTime";
+import { LocalDateTime } from "../../shared/LocalDateTime";
 import { Button, dangerButtonClasses, LinkButton } from "../../shared/Button";
 
 type ShowAndTellEntryWithUser = ShowAndTellEntry & { user: User | null };
@@ -22,10 +22,10 @@ export function AdminShowAndTellEntry({ entry }: AdminShowAndTellEntryProps) {
       </td>
       <td className={`${cellClasses} font-semibold`}>{entry.title || "n/a"}</td>
       <td className={`${cellClasses}`}>
-        <LocalTime dateTime={entry.createdAt} />
+        <LocalDateTime dateTime={entry.createdAt} />
         <br />
         {Number(entry.createdAt) !== Number(entry.updatedAt) && (
-          <LocalTime dateTime={entry.updatedAt} />
+          <LocalDateTime dateTime={entry.updatedAt} />
         )}
       </td>
       <td className={`${cellClasses} flex flex-col gap-1`}>

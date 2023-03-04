@@ -15,7 +15,7 @@ import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntr
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import { LocalTime } from "@/components/shared/LocalTime";
+import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import {
   approveButtonClasses,
   Button,
@@ -92,13 +92,13 @@ const AdminReviewShowAndTellPage: NextPage<
                   <em>Anonymous</em>
                 )}
                 <br />
-                Submitted: <LocalTime dateTime={entry.createdAt} />
+                Submitted: <LocalDateTime dateTime={entry.createdAt} />
                 <br />
-                Last updated: <LocalTime dateTime={entry.updatedAt} />
+                Last updated: <LocalDateTime dateTime={entry.updatedAt} />
                 <br />
                 {entry.approvedAt && (
                   <>
-                    Approved at: <LocalTime dateTime={entry.approvedAt} />
+                    Approved at: <LocalDateTime dateTime={entry.approvedAt} />
                   </>
                 )}
               </div>

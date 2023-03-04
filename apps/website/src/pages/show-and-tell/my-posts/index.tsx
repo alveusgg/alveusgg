@@ -13,7 +13,7 @@ import {
   LinkButton,
   dangerButtonClasses,
 } from "@/components/shared/Button";
-import { LocalTime } from "@/components/shared/LocalTime";
+import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { getEntityStatus } from "@/utils/entity-helpers";
 
@@ -138,14 +138,14 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               : "Review pending"}
                           </td>
                           <td className={`${cellClasses}`}>
-                            <LocalTime dateTime={entry.createdAt} />
+                            <LocalDateTime dateTime={entry.createdAt} />
                             {entry.updatedAt &&
                               String(entry.updatedAt) !==
                                 String(entry.createdAt) && (
                                 <>
                                   <br />
                                   {" ("}
-                                  <LocalTime dateTime={entry.updatedAt} />
+                                  <LocalDateTime dateTime={entry.updatedAt} />
                                   {")"}
                                 </>
                               )}

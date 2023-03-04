@@ -9,7 +9,7 @@ import { prisma } from "@/server/db/client";
 import DefaultPageLayout from "@/components/DefaultPageLayout";
 import { NotificationSettings } from "@/components/notifications/NotificationSettings";
 import { Headline } from "@/components/shared/Headline";
-import { LocalTime } from "@/components/shared/LocalTime";
+import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import Meta from "@/components/content/Meta";
 
 async function getChannelUpdates() {
@@ -57,7 +57,7 @@ const Updates: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               key={update.id}
               className="text-grey-500 flex flex-row gap-4 border-b border-b-gray-700 p-5"
             >
-              <LocalTime dateTime={update.createdAt} />
+              <LocalDateTime dateTime={update.createdAt} />
               <span>{channelConfigById[update.channel]?.label}</span>
               <div className="flex flex-col">
                 <span className="text-xl">{update.title}</span>

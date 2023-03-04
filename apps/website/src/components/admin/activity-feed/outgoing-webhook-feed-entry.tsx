@@ -2,7 +2,7 @@ import React from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import type { GiveawayEntry, OutgoingWebhook, User } from "@prisma/client";
 import { trpc } from "../../../utils/trpc";
-import { LocalTime } from "../../shared/LocalTime";
+import { LocalDateTime } from "../../shared/LocalDateTime";
 
 type OutgoingWebhookWithGiveawayEntry = OutgoingWebhook & {
   user: User | null;
@@ -53,7 +53,7 @@ export const OutgoingWebhookFeedEntry: React.FC<{
           )}
         </span>
         <span className="tabular-nums">
-          <LocalTime dateTime={item.createdAt} />
+          <LocalDateTime dateTime={item.createdAt} />
         </span>
         <span className="flex-1 font-bold">{label}</span>
 

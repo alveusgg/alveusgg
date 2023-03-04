@@ -1,24 +1,21 @@
 import React, { useEffect, useRef } from "react";
+import { formatDateUTC } from "@/utils/datetime";
 
-const defaultLocale = "en-US";
-const dtfOptions = {
+const dtf = new Intl.DateTimeFormat(undefined, {
   day: "2-digit",
   month: "2-digit",
   year: "2-digit",
-} satisfies Intl.DateTimeFormatOptions;
-const isomorphicDtf = new Intl.DateTimeFormat(defaultLocale, dtfOptions);
-const clientDtf = new Intl.DateTimeFormat(undefined, dtfOptions);
+});
 
 export const LocalDate: React.FC<{ dateTime: Date }> = ({ dateTime }) => {
   const localDateRef = useRef<HTMLDivElement>(null);
-
-  const initialValue = isomorphicDtf.format(dateTime);
+  const initialDate = formatDateUTC(dateTime);
 
   useEffect(() => {
     if (localDateRef.current) {
-      localDateRef.current.textContent = clientDtf.format(dateTime);
+      localDateRef.current.textContent = dtf.format(dateTime);
     }
   }, [dateTime]);
 
-  return <span ref={localDateRef}>{initialValue}</span>;
+  return <span ref={localDateRef}>{initialDate}</span>;
 };
