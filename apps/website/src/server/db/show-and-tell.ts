@@ -23,7 +23,6 @@ export const withAttachments = {
 
 export const whereApproved = {
   approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt },
-  deletedAt: null,
 };
 
 const attachmentSchema = z.object({
@@ -151,6 +150,19 @@ export async function createPost(
   });
 }
 
+export async function getPostById(id: string, authorUserId?: string) {
+  return prisma.showAndTellEntry.findFirst({
+    include: {
+      ...withAttachments.include,
+      user: true,
+    },
+    where: {
+      userId: authorUserId,
+      id,
+    },
+  });
+}
+
 export async function updatePost(
   input: ShowAndTellUpdateInput,
   authorUserId?: string,
@@ -162,7 +174,6 @@ export async function updatePost(
     where: {
       id: input.id,
       userId: authorUserId,
-      deletedAt: null,
     },
     include: { attachments: true },
   });
@@ -248,19 +259,7 @@ export async function removeApprovalFromPost(
 }
 
 export async function deletePost(id: string, authorUserId?: string) {
-  return await prisma.showAndTellEntry.updateMany({
+  return await prisma.showAndTellEntry.deleteMany({
     where: { id, user: authorUserId ? { id: authorUserId } : undefined },
-    data: {
-      deletedAt: new Date(),
-    },
-  });
-}
-
-export async function restorePost(id: string, authorUserId?: string) {
-  return await prisma.showAndTellEntry.updateMany({
-    where: { id, user: authorUserId ? { id: authorUserId } : undefined },
-    data: {
-      deletedAt: null,
-    },
   });
 }

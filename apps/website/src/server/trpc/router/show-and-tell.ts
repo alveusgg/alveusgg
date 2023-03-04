@@ -72,7 +72,6 @@ export const showAndTellRouter = router({
       ...withAttachments,
       where: {
         userId: ctx.session.user.id,
-        deletedAt: null,
       },
       orderBy: {
         createdAt: "desc",
@@ -94,7 +93,6 @@ export const showAndTellRouter = router({
         where: {
           userId: ctx.session.user.id,
           id: input,
-          deletedAt: null,
         },
       })
     ),

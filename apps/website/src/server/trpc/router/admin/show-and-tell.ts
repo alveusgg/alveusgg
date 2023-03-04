@@ -1,17 +1,17 @@
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
 import {
-  withAttachments,
   showAndTellUpdateInputSchema,
   updatePost,
   approvePost,
   removeApprovalFromPost,
   deletePost,
-  restorePost,
+  getPostById,
 } from "@/server/db/show-and-tell";
 import { permissions } from "@/config/permissions";
 
@@ -22,17 +22,7 @@ const permittedProcedure = protectedProcedure.use(
 export const adminShowAndTellRouter = router({
   getEntry: permittedProcedure
     .input(z.string().cuid())
-    .query(({ ctx, input }) =>
-      ctx.prisma.showAndTellEntry.findFirst({
-        include: {
-          ...withAttachments.include,
-          user: true,
-        },
-        where: {
-          id: input,
-        },
-      })
-    ),
+    .query(({ input }) => getPostById(input)),
 
   review: permittedProcedure
     .input(showAndTellUpdateInputSchema)
@@ -48,11 +38,14 @@ export const adminShowAndTellRouter = router({
 
   delete: permittedProcedure
     .input(z.string().cuid())
-    .mutation(async ({ input }) => await deletePost(input)),
+    .mutation(async ({ input }) => {
+      const post = await getPostById(input);
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
 
-  restore: permittedProcedure
-    .input(z.string().cuid())
-    .mutation(async ({ input }) => await restorePost(input)),
+      return await deletePost(post.id);
+    }),
 
   getEntries: permittedProcedure
     .input(

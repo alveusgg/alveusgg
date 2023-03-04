@@ -275,7 +275,6 @@ model ShowAndTellEntry {
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @default(now())
   approvedAt     DateTime?
-  deletedAt      DateTime?
   seenOnStreamAt DateTime?
 
   attachments ShowAndTellEntryAttachment[]
@@ -291,9 +290,9 @@ model ShowAndTellEntryAttachment {
   linkAttachmentId  String? @unique
   imageAttachmentId String? @unique
 
-  entry           ShowAndTellEntry @relation(fields: [entryId], references: [id])
-  linkAttachment  LinkAttachment?  @relation(fields: [linkAttachmentId], references: [id])
-  imageAttachment ImageAttachment? @relation(fields: [imageAttachmentId], references: [id])
+  entry           ShowAndTellEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  linkAttachment  LinkAttachment?  @relation(fields: [linkAttachmentId], references: [id], onDelete: Cascade)
+  imageAttachment ImageAttachment? @relation(fields: [imageAttachmentId], references: [id], onDelete: Cascade)
 
   @@index([entryId], name: "ShowAndTellEntryAttachment_entryId")
 }
@@ -333,6 +332,6 @@ model ImageAttachment {
   url                 String
   fileStorageObjectId String @unique
 
-  fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id])
+  fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
   showAndTellEntryAttachment ShowAndTellEntryAttachment?
 }

@@ -36,7 +36,6 @@ export const getStaticProps = async () => {
   const entries = await prisma.showAndTellEntry.findMany({
     where: {
       approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt },
-      deletedAt: null,
     },
     orderBy: { approvedAt: "desc" },
     include: {

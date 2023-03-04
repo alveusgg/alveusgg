@@ -3,7 +3,6 @@ import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import {
-  ArrowUturnLeftIcon,
   CheckCircleIcon,
   MinusIcon,
   TrashIcon,
@@ -45,11 +44,6 @@ const AdminReviewShowAndTellPage: NextPage<
     },
   });
   const approveMutation = trpc.adminShowAndTell.approve.useMutation({
-    onSettled: async () => {
-      await getEntry.refetch();
-    },
-  });
-  const restoreMutation = trpc.adminShowAndTell.restore.useMutation({
     onSettled: async () => {
       await getEntry.refetch();
     },
@@ -120,7 +114,7 @@ const AdminReviewShowAndTellPage: NextPage<
                     Remove approval
                   </Button>
                 )}
-                {(status === "pendingApproval" || status === "deleted") && (
+                {status === "pendingApproval" && (
                   <Button
                     size="small"
                     className={approveButtonClasses}
@@ -130,27 +124,15 @@ const AdminReviewShowAndTellPage: NextPage<
                     Approve
                   </Button>
                 )}
-                {status !== "deleted" && (
-                  <Button
-                    size="small"
-                    className={dangerButtonClasses}
-                    confirmationMessage="Please confirm deletion!"
-                    onClick={() => deleteMutation.mutate(entry.id)}
-                  >
-                    <TrashIcon className="h-4 w-4" />
-                    Delete
-                  </Button>
-                )}
-                {status === "deleted" && (
-                  <Button
-                    size="small"
-                    className={dangerButtonClasses}
-                    onClick={() => restoreMutation.mutate(entry.id)}
-                  >
-                    <ArrowUturnLeftIcon className="h-4 w-4" />
-                    Restore
-                  </Button>
-                )}
+                <Button
+                  size="small"
+                  className={dangerButtonClasses}
+                  confirmationMessage="Please confirm deletion!"
+                  onClick={() => deleteMutation.mutate(entry.id)}
+                >
+                  <TrashIcon className="h-4 w-4" />
+                  Delete
+                </Button>
               </div>
             </div>
           )}
