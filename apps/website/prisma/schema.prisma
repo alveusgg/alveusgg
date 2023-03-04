@@ -26,10 +26,10 @@ model ClientAccessToken {
 }
 
 model TaskExecutionEvent {
-  id         String   @id @default(cuid())
+  id         String    @id @default(cuid())
   task       String
-  startedAt  DateTime @default(now())
-  finishedAt DateTime
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
 }
 
 model ChannelUpdateEvent {
