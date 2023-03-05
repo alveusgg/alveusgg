@@ -30,8 +30,8 @@ export type ShowAndTellPageProps = InferGetStaticPropsType<
 
 const entriesPerPage = 10;
 
-// We pre-render the first page of entries using SSR with revalidation
-// and then use client-side rendering to update the data and fetch more entries on demand
+// We pre-render the first page of entries using SSR and then use client-side rendering to
+// update the data and fetch more entries on demand
 export const getStaticProps = async () => {
   const entries = await prisma.showAndTellEntry.findMany({
     where: {
@@ -56,7 +56,6 @@ export const getStaticProps = async () => {
       entries,
       nextCursor,
     },
-    revalidate: 60,
   };
 };
 
