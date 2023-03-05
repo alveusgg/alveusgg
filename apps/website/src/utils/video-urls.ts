@@ -24,7 +24,8 @@ export const videoPlatformConfigs = {
     label: "Streamable",
     replacement: (id: string) => `https://streamable.com/${id}`,
     example: "https://streamable.com/a40ywf",
-    regex: /(?:https?:)?(?:\/\/)?(?:www\.)?streamable\.com\/([a-z0-9]+)/i,
+    regex:
+      /(?:https?:)?(?:\/\/)?(?:www\.)?streamable\.com\/(?:o\/)?([a-z0-9]+)/i,
     normalizedRegex: /https:\/\/streamable\.com\/([a-z0-9]+)/,
     embedUrl: (id: string) => `https://streamable.com/e/${id}`,
   },
