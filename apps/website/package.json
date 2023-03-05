@@ -4,11 +4,12 @@
   "private": true,
   "scripts": {
     "build:next": "next build",
-    "build:push-sw": "tsup --config push-sw.tsup.config.ts",
+    "build:push-sw": "tsup --config sw.tsup.config.ts",
+    "build:manifest": "node ./build-scripts/create-manifest.mjs",
     "dev:next": "next dev",
-    "dev:push-sw": "tsup --watch --config push-sw.tsup.config.ts",
-    "build": "run-s build:next build:push-sw",
-    "dev": "run-p dev:*",
+    "dev:push-sw": "tsup --watch --config sw.tsup.config.ts",
+    "build": "run-s build:next build:push-sw build:manifest",
+    "dev": "run-p build:manifest dev:*",
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start"

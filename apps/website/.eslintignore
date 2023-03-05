@@ -1,4 +1,2 @@
 public/
-push-sw.tsup.config.ts
-tsup-env.ts
-src/AlveusPushWorker.ts
+src/sw/

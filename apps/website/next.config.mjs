@@ -74,6 +74,12 @@ const config = {
     ],
   },
   redirects: async () => [
+    // Redirect progressive web app view to home page
+    {
+      source: "/homescreen",
+      destination: "/",
+      permanent: false,
+    },
     // Renaming redirects
     {
       source: "/ambassadors/smokey-oak-millipede",
@@ -190,7 +196,7 @@ const config = {
       test: /\.mp4$/,
       use: [
         {
-          loader: resolve("./src/build/video-loader.cjs"),
+          loader: resolve("./build-scripts/video-loader.cjs"),
           // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L1907-L1912
           // and https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack-config.ts#L2489-L2490
           options: {
@@ -201,31 +207,6 @@ const config = {
         },
       ],
     });
-
-    //const baseEntry = config.entry;
-    //const baseOutputFilename = config.output.filename;
-    //
-    //config.entry = async () => {
-    //  console.log({ baseEntry });
-    //  const res = await baseEntry();
-    //
-    //  return {
-    //    ...res,
-    //  };
-    //};
-
-    // @ ts-ignore
-    //config.output.filename = (chunkInfo) => {
-    //  if (chunkInfo.chunk.name === "AlveusPushWorker.js") {
-    //    return "static/push/alveus/AlveusPushWorker.js";
-    //  }
-    //
-    //  if (typeof baseOutputFilename === "function") {
-    //    return baseOutputFilename(chunkInfo);
-    //  }
-    //
-    //  return baseOutputFilename;
-    //};
 
     return config;
   },

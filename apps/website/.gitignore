@@ -5,7 +5,9 @@
 # testing
 /coverage
 
-# service worker
+# generated assets (web manifest, service worker)
+/public/site.webmanifest
+/public/RootServiceWorker.js*
 /public/push/alveus/*
 
 # database
