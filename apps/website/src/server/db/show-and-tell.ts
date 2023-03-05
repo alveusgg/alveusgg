@@ -133,7 +133,8 @@ function createVideoAttachments(videoLinks: Array<VideoLink>) {
 
 export async function createPost(
   input: ShowAndTellSubmitInput,
-  authorUserId?: string
+  authorUserId?: string,
+  importAt?: Date
 ) {
   const text = sanitizeUserHtml(input.text);
   const newImages = await createImageAttachments(input.imageAttachments.create);
@@ -142,6 +143,13 @@ export async function createPost(
   // TODO: Webhook? Notify mods?
   return await prisma.showAndTellEntry.create({
     data: {
+      ...(importAt
+        ? {
+            createdAt: importAt,
+            updatedAt: importAt,
+            approvedAt: importAt,
+          }
+        : {}),
       user: authorUserId ? { connect: { id: authorUserId } } : undefined,
       displayName: input.displayName,
       title: input.title,
