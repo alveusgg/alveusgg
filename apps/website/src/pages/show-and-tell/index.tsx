@@ -197,6 +197,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               <ShowAndTellEntry
                 entry={entry}
                 isPresentationView={isPresentationView}
+                showPermalink={true}
                 key={entry.id}
                 ref={registerObserveElement}
               />
