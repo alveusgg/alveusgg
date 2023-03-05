@@ -6,6 +6,7 @@ import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+import { env } from "@/env/server.mjs";
 
 const MAX_IMAGES = 12;
 
@@ -81,20 +82,32 @@ export const showAndTellUpdateInputSchema = showAndTellSharedInputSchema.and(
   })
 );
 
-const createLinkAttachmentForVideoUrl = (videoUrl: string, idx: number) => ({
-  attachmentType: "video",
-  linkAttachment: {
-    create: {
-      type: parseVideoUrl(videoUrl)?.platform || "video",
-      url: videoUrl,
-      title: `Video ${idx + 1}`,
-      name: `Video ${idx + 1}`,
-      caption: "",
-      alternativeText: "",
-      description: "",
+async function revalidateCache(postId?: string) {
+  const url = new URL(
+    `${env.NEXT_PUBLIC_BASE_URL}/api/show-and-tell/revalidate`
+  );
+  url.searchParams.set("secret", env.ACTION_API_SECRET);
+  if (postId) url.searchParams.set("postId", postId);
+
+  return await fetch(url);
+}
+
+function createLinkAttachmentForVideoUrl(videoUrl: string, idx: number) {
+  return {
+    attachmentType: "video",
+    linkAttachment: {
+      create: {
+        type: parseVideoUrl(videoUrl)?.platform || "video",
+        url: videoUrl,
+        title: `Video ${idx + 1}`,
+        name: `Video ${idx + 1}`,
+        caption: "",
+        alternativeText: "",
+        description: "",
+      },
     },
-  },
-});
+  };
+}
 
 async function createImageAttachment(attachment: CreateImageAttachment) {
   const { error } = await checkAndFixUploadedImageFileStorageObject(
@@ -133,15 +146,23 @@ function createVideoAttachments(videoLinks: Array<VideoLink>) {
 
 export async function createPost(
   input: ShowAndTellSubmitInput,
-  authorUserId?: string
+  authorUserId?: string,
+  importAt?: Date
 ) {
   const text = sanitizeUserHtml(input.text);
   const newImages = await createImageAttachments(input.imageAttachments.create);
   const newVideos = createVideoAttachments(input.videoLinks);
 
   // TODO: Webhook? Notify mods?
-  return await prisma.showAndTellEntry.create({
+  const res = await prisma.showAndTellEntry.create({
     data: {
+      ...(importAt
+        ? {
+            createdAt: importAt,
+            updatedAt: importAt,
+            approvedAt: importAt,
+          }
+        : {}),
       user: authorUserId ? { connect: { id: authorUserId } } : undefined,
       displayName: input.displayName,
       title: input.title,
@@ -149,15 +170,25 @@ export async function createPost(
       attachments: { create: [...newImages, ...newVideos] },
     },
   });
+  await revalidateCache(res.id);
+  return res;
 }
 
-export async function getPostById(id: string, authorUserId?: string) {
+export async function getPostById(
+  id: string,
+  authorUserId?: string,
+  filter?: "published"
+) {
   return prisma.showAndTellEntry.findFirst({
     include: {
       ...withAttachments.include,
       user: true,
     },
     where: {
+      approvedAt:
+        filter === "published"
+          ? { gte: prisma.showAndTellEntry.fields.updatedAt }
+          : undefined,
       userId: authorUserId,
       id,
     },
@@ -197,7 +228,7 @@ export async function updatePost(
   const wasApproved = getEntityStatus(existingEntry) === "approved";
 
   // TODO: Webhook? Notify mods?
-  return await Promise.allSettled([
+  await Promise.allSettled([
     prisma.showAndTellEntry.update({
       where: {
         id: input.id,
@@ -236,34 +267,37 @@ export async function updatePost(
       })
     ),
   ]);
+  await revalidateCache(input.id);
 }
 
 export async function approvePost(id: string, authorUserId?: string) {
-  return await prisma.showAndTellEntry.updateMany({
+  await prisma.showAndTellEntry.updateMany({
     where: { id, user: authorUserId ? { id: authorUserId } : undefined },
     data: {
       approvedAt: new Date(),
     },
   });
+  await revalidateCache(id);
 }
 
 export async function removeApprovalFromPost(
   id: string,
   authorUserId?: string
 ) {
-  return await prisma.showAndTellEntry.updateMany({
+  await prisma.showAndTellEntry.updateMany({
     where: { id, user: authorUserId ? { id: authorUserId } : undefined },
     data: {
       approvedAt: null,
     },
   });
+  await revalidateCache(id);
 }
 
 export async function deletePost(id: string, authorUserId?: string) {
   const post = await getPostById(id, authorUserId);
   if (!post) return false;
 
-  return await Promise.allSettled([
+  await Promise.allSettled([
     prisma.showAndTellEntry.delete({ where: { id: post.id } }),
     prisma.imageAttachment.deleteMany({
       where: {
@@ -280,4 +314,5 @@ export async function deletePost(id: string, authorUserId?: string) {
       },
     }),
   ]);
+  await revalidateCache(id);
 }

@@ -8,6 +8,7 @@ import type {
   ShowAndTellEntryAttachment,
 } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
 import { parseVideoUrl } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { LocalDate } from "@/components/shared/LocalDate";
@@ -31,12 +32,16 @@ export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
 type ShowAndTellEntryProps = {
   entry: ShowAndTellEntryWithAttachments;
   isPresentationView: boolean;
+  showPermalink?: boolean;
 };
 
 export const ShowAndTellEntry = forwardRef<
   HTMLElement | null,
   ShowAndTellEntryProps
->(function ShowAndTellEntry({ entry, isPresentationView }, forwardedRef) {
+>(function ShowAndTellEntry(
+  { entry, isPresentationView, showPermalink = false },
+  forwardedRef
+) {
   const wrapperRef = useRef<HTMLElement | null>(null);
   const imageAttachments = entry.attachments
     .filter(({ attachmentType }) => attachmentType === "image")
@@ -70,6 +75,35 @@ export const ShowAndTellEntry = forwardRef<
       }
     },
     [forwardedRef]
+  );
+
+  const header = (
+    <header
+      className={`p-4 drop-shadow-xl ${
+        isPresentationView ? "" : "text-center"
+      }`}
+    >
+      <h2
+        className={`mb-3 font-serif ${
+          isPresentationView ? "text-6xl" : "text-4xl"
+        }`}
+      >
+        {entry.title}
+      </h2>
+
+      <p
+        className={` ${
+          isPresentationView
+            ? "text-4xl text-alveus-tan-200"
+            : "text-2xl text-alveus-green"
+        }`}
+      >
+        <span className="mr-1 italic">by </span>
+        {entry.displayName}
+        {" — "}
+        <LocalDate dateTime={entry.createdAt} />
+      </p>
+    </header>
   );
 
   return (
@@ -110,30 +144,11 @@ export const ShowAndTellEntry = forwardRef<
             : ""
         }`}
       >
-        <header
-          className={`p-4 drop-shadow-xl ${
-            isPresentationView ? "" : "text-center"
-          }`}
-        >
-          <h2
-            className={`mb-3 font-serif ${
-              isPresentationView ? "text-6xl" : "text-4xl"
-            }`}
-          >
-            {entry.title}
-          </h2>
-
-          <p
-            className={` ${
-              isPresentationView
-                ? "text-4xl text-alveus-tan-200"
-                : "text-2xl text-alveus-green"
-            }`}
-          >
-            <span className="mr-1 italic">by </span>
-            {entry.displayName} &mdash; <LocalDate dateTime={entry.createdAt} />
-          </p>
-        </header>
+        {showPermalink ? (
+          <Link href={`/show-and-tell/posts/${entry.id}`}>{header}</Link>
+        ) : (
+          header
+        )}
 
         <ShowAndTellGallery
           lightboxParent={isPresentationView ? wrapperRef.current : null}
