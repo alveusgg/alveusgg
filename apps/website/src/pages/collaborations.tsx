@@ -2,18 +2,17 @@ import { type NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useId } from "react";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
+import React from "react";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import YouTubeLightbox from "@/components/content/YouTubeLightbox";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 
 const collaborations = {
   ludwig: {
@@ -63,14 +62,6 @@ const collaborations = {
   },
 };
 
-const parseYouTubeUrl = (url: string) => {
-  const match = url.match(
-    /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/
-  );
-  if (!match) throw new Error(`Invalid YouTube URL: ${url}`);
-  return match[1];
-};
-
 type CollaborationsSectionProps = {
   items: Record<
     string,
@@ -84,138 +75,57 @@ type CollaborationsSectionProps = {
 const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
   items,
 }) => {
-  const photoswipeId = `photoswipe-${useId().replace(/\W/g, "")}`;
-  useEffect(() => {
-    const lightbox = new PhotoSwipeLightbox({
-      ...getDefaultPhotoswipeLightboxOptions(),
-      gallery: `#${photoswipeId}`,
-      mainClass: `pswp--${photoswipeId}`,
-      children: "a[data-lightbox]",
-      showHideAnimationType: "fade",
-      loop: false,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      pswpModule: () => import("photoswipe"),
-    });
-
-    // Expose the iframe url
-    lightbox.addFilter("itemData", (itemData) => ({
-      ...itemData,
-      iframeUrl: itemData.element?.querySelector("iframe")?.src,
-    }));
-
-    // Create the lightbox iframe
-    lightbox.on("contentLoad", (e) => {
-      const { content } = e;
-      if (!content.data.iframeUrl) return;
-
-      // Prevent the default content load
-      e.preventDefault();
-
-      // Create our content element
-      content.element = document.createElement("div");
-      content.element.className =
-        "pointer-events-none flex items-center justify-center h-full w-full p-0 md:p-4 lg:p-8";
-
-      // Create our iframe
-      const iframe = document.createElement("iframe");
-      iframe.src = content.data.iframeUrl;
-      iframe.referrerPolicy = "no-referrer";
-      iframe.allow = "encrypted-media";
-      iframe.className = "pointer-events-auto aspect-video w-full";
-      iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
-
-      // Register the photoswipe load bindings
-      iframe.addEventListener("load", () => {
-        content.onLoaded();
-      });
-      iframe.addEventListener("error", () => {
-        content.onError();
-      });
-
-      // Append the iframe
-      content.element.appendChild(iframe);
-    });
-
-    lightbox.init();
-    return () => {
-      lightbox.destroy();
-    };
-  }, [photoswipeId]);
-
   return (
-    <>
-      <style>
-        {`
-.pswp--${photoswipeId} {
-    container-type: size;
-    container-name: photoswipe-${photoswipeId};
-}
-
-@container photoswipe-${photoswipeId} (aspect-ratio > 16/9) {
-  .pswp--${photoswipeId} .pswp__item iframe {
-    width: auto;
-    height: 100%;
-  }
-}
-`}
-      </style>
-      <div id={photoswipeId} className="flex flex-wrap">
-        {Object.entries(items).map(([key, value]) => (
-          <div
-            key={key}
-            className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:basis-1/2 md:px-8"
-          >
-            <Heading
-              level={2}
-              className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
+    <YouTubeLightbox className="flex flex-wrap">
+      {({ Trigger, Preview, parse }) => (
+        <>
+          {Object.entries(items).map(([key, value]) => (
+            <div
+              key={key}
+              className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:basis-1/2 md:px-8"
             >
-              <Link
-                href={value.link}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:text-alveus-green-600 hover:underline"
+              <Heading
+                level={2}
+                className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
               >
-                {value.name}
-              </Link>
-              <small className="text-xl text-alveus-green-600">
-                {value.date}
-              </small>
-            </Heading>
+                <Link
+                  href={value.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-alveus-green-600 hover:underline"
+                >
+                  {value.name}
+                </Link>
+                <small className="text-xl text-alveus-green-600">
+                  {value.date}
+                </small>
+              </Heading>
 
-            <a
-              href={value.video}
-              target="_blank"
-              rel="noreferrer"
-              data-lightbox=""
-              className="w-full max-w-2xl"
-            >
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${parseYouTubeUrl(
-                  value.video
-                )}?modestbranding=1`}
-                referrerPolicy="no-referrer"
-                allow="encrypted-media"
-                sandbox="allow-same-origin allow-scripts"
-                loading="lazy"
-                className="pointer-events-none aspect-video w-full rounded-2xl shadow-xl"
-              />
-            </a>
-
-            {value.vod && (
-              <Link
-                href={value.vod}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-2 text-alveus-green-700 hover:underline"
+              <Trigger
+                videoId={parse(value.video)}
+                className="w-full max-w-2xl"
               >
-                (Full stream VoD)
-              </Link>
-            )}
-          </div>
-        ))}
-      </div>
-    </>
+                <Preview
+                  videoId={parse(value.video)}
+                  className="w-full rounded-2xl shadow-xl"
+                />
+              </Trigger>
+
+              {value.vod && (
+                <Link
+                  href={value.vod}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 text-alveus-green-700 hover:underline"
+                >
+                  (Full stream VoD)
+                </Link>
+              )}
+            </div>
+          ))}
+        </>
+      )}
+    </YouTubeLightbox>
   );
 };
 
