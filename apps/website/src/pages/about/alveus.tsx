@@ -6,6 +6,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import YouTubeLightbox from "@/components/content/YouTubeLightbox";
 import IconTwitch from "@/icons/IconTwitch";
 
 import mayaImage from "@/assets/maya.png";
@@ -121,15 +122,16 @@ const AboutAlveusPage: NextPage = () => {
               <p className="my-4 text-lg">
                 Find out more about Alveus and our aims here.
               </p>
-              {/* TODO: Lightbox */}
-              <a
-                className="inline-block rounded-full border-2 border-alveus-green px-6 py-4 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-                href="https://www.youtube.com/watch?v=jXTqWIc--jo"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Watch the Video
-              </a>
+              <YouTubeLightbox>
+                {({ Trigger }) => (
+                  <Trigger
+                    videoId="jXTqWIc--jo"
+                    className="inline-block rounded-full border-2 border-alveus-green px-6 py-4 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                  >
+                    Watch the Video
+                  </Trigger>
+                )}
+              </YouTubeLightbox>
             </div>
           </div>
         </Section>

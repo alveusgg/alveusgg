@@ -1,8 +1,23 @@
 import React, { useEffect, useId, useMemo } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 
-const parse = (url: string) => {
+import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { camelToKebab } from "@/utils/string-case";
+
+const iframeSrc = (id: string) =>
+  `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
+    id
+  )}?modestbranding=1`;
+
+const iframeAttrs: Partial<React.IframeHTMLAttributes<HTMLIFrameElement>> = {
+  referrerPolicy: "no-referrer",
+  allow: "encrypted-media",
+  sandbox: "allow-same-origin allow-scripts",
+  loading: "lazy",
+  className: "aspect-video w-full rounded-2xl shadow-xl bg-alveus-green-800",
+};
+
+const parseUrl = (url: string) => {
   const match = url.match(
     /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/
   );
@@ -28,7 +43,7 @@ const getTrigger = (id: string) => {
         target="_blank"
         rel="noreferrer"
         className={className}
-        {...{ [`data-lightbox-${id}`]: "" }}
+        {...{ [`data-lightbox-${id}`]: videoId }}
       >
         {children}
       </a>
@@ -45,24 +60,19 @@ type PreviewProps = {
 const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
   return (
     <iframe
-      src={`https://www.youtube-nocookie.com/embed/${encodeURIComponent(
-        videoId
-      )}?modestbranding=1`}
-      referrerPolicy="no-referrer"
-      allow="encrypted-media"
-      sandbox="allow-same-origin allow-scripts"
-      loading="lazy"
-      className={
-        "pointer-events-none aspect-video" + (className ? " " + className : "")
-      }
+      src={iframeSrc(videoId)}
+      {...iframeAttrs}
+      className={["pointer-events-none", iframeAttrs.className, className]
+        .filter(Boolean)
+        .join(" ")}
     />
   );
 };
 
 type YouTubeLightboxCtxProps = {
-  Trigger: React.FC<TriggerProps>;
-  Preview: React.FC<PreviewProps>;
-  parse: (url: string) => string;
+  Trigger: ReturnType<typeof getTrigger>;
+  Preview: typeof Preview;
+  parseUrl: typeof parseUrl;
   id: string;
 };
 
@@ -86,21 +96,22 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
       children: `a[data-lightbox-${photoswipeId}]`,
       showHideAnimationType: "fade",
       loop: false,
+      preloaderDelay: 0,
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       pswpModule: () => import("photoswipe"),
     });
 
-    // Expose the iframe url
+    // Expose the video id
     lightbox.addFilter("itemData", (itemData) => ({
       ...itemData,
-      iframeUrl: itemData.element?.querySelector("iframe")?.src,
+      videoId: itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`),
     }));
 
     // Create the lightbox iframe
     lightbox.on("contentLoad", (e) => {
       const { content } = e;
-      if (!content.data.iframeUrl) return;
+      if (!content.data.videoId) return;
 
       // Prevent the default content load
       e.preventDefault();
@@ -112,11 +123,11 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
 
       // Create our iframe
       const iframe = document.createElement("iframe");
-      iframe.src = content.data.iframeUrl;
-      iframe.referrerPolicy = "no-referrer";
-      iframe.allow = "encrypted-media";
-      iframe.className = "pointer-events-auto aspect-video w-full";
-      iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
+      iframe.src = iframeSrc(content.data.videoId);
+      Object.entries(iframeAttrs).forEach(([key, value]) => {
+        iframe.setAttribute(camelToKebab(key), value);
+      });
+      iframe.className = `pointer-events-auto ${iframeAttrs.className}`;
 
       // Register the photoswipe load bindings
       iframe.addEventListener("load", () => {
@@ -141,7 +152,7 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
     () => ({
       Trigger: getTrigger(photoswipeId),
       Preview,
-      parse,
+      parseUrl,
       id: photoswipeId,
     }),
     [photoswipeId]
@@ -166,8 +177,12 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
           // Ensure we retain the aspect ratio of the video
           __html: `
 .pswp--${photoswipeId} {
-    container-type: size;
-    container-name: photoswipe-${photoswipeId};
+  container-type: size;
+  container-name: photoswipe-${photoswipeId};
+}
+
+.pswp--${photoswipeId} .pswp__img--placeholder {
+  display: none;
 }
 
 @container photoswipe-${photoswipeId} (aspect-ratio > 16/9) {
