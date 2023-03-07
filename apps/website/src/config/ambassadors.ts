@@ -231,7 +231,10 @@ const ambassadors: Record<string, Ambassador> = {
       { src: georgieImage4, alt: "Georgie the African Bullfrog" },
       { src: georgieImage5, alt: "Georgie the African Bullfrog" },
     ],
-    clips: [],
+    clips: [
+      { id: "NlHmTLHHcKg", caption: "Georgie Actually Does A Backflip" },
+      { id: "FDxRdgTBO14", caption: "Georgie Takes A Tumble" },
+    ],
     homepage: {
       title: "Georgie!",
       description:

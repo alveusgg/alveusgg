@@ -15,6 +15,8 @@ import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import Link from "next/link";
+import YouTubeLightbox from "@/components/content/YouTubeLightbox";
 
 const parseIucnStatus = (rawStatus: string): string => {
   const [status, flag] = rawStatus.split("/");
@@ -230,6 +232,38 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
           </div>
         </Section>
       </div>
+
+      {ambassador.clips.length > 0 && (
+        <Section dark>
+          <Heading level={2} className="text-center text-4xl">
+            {ambassador.name}
+            &apos;s Highlights
+          </Heading>
+
+          <YouTubeLightbox id="highlights" className="flex flex-wrap">
+            {({ Trigger, Preview }) => (
+              <>
+                {ambassador.clips.map(({ id, caption }) => (
+                  <div
+                    key={id}
+                    className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
+                  >
+                    <Trigger
+                      videoId={id}
+                      caption={caption}
+                      className="w-full max-w-2xl"
+                    >
+                      <Preview videoId={id} />
+                    </Trigger>
+
+                    <p className="mt-2 text-center text-xl">{caption}</p>
+                  </div>
+                ))}
+              </>
+            )}
+          </YouTubeLightbox>
+        </Section>
+      )}
     </>
   );
 };

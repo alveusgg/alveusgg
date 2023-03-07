@@ -84,7 +84,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
           {Object.entries(items).map(([key, value]) => (
             <div
               key={key}
-              className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:basis-1/2 md:px-8"
+              className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
             >
               <Heading
                 level={2}
