@@ -14,62 +14,64 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
-const collaborations = {
+type Collaboration = {
+  name: string;
+  link: string;
+  date: string;
+  videoId: string;
+  vodId?: string;
+};
+
+const collaborations: Record<string, Collaboration> = {
   ludwig: {
     name: "Ludwig",
     link: "https://www.youtube.com/@ludwig",
     date: "25th February 2023",
-    video: "https://www.youtube.com/watch?v=vuLMTU8QHAU",
+    videoId: "vuLMTU8QHAU",
   },
   alinity: {
     name: "Alinity",
     link: "https://www.twitch.tv/alinity",
     date: "9th February 2023",
-    video: "https://www.youtube.com/watch?v=qJpZzDMotmc",
-    vod: "https://www.youtube.com/watch?v=XHTEs94Cf4s&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
+    videoId: "qJpZzDMotmc",
+    vodId: "XHTEs94Cf4s",
   },
   connorEatsPants: {
     name: "ConnorEatsPants",
     link: "https://www.twitch.tv/connoreatspants",
     date: "25th January 2023",
-    video: "https://www.youtube.com/watch?v=nC8qlK3k96Q",
-    vod: "https://www.youtube.com/watch?v=SMEyEfVlzlM&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
+    videoId: "nC8qlK3k96Q",
+    vodId: "SMEyEfVlzlM",
   },
   botezSisters: {
     name: "The Botez Sisters",
     link: "https://www.twitch.tv/botezlive",
     date: "30th August 2022",
-    video: "https://www.youtube.com/watch?v=QgvNy11kU6E",
+    videoId: "QgvNy11kU6E",
   },
   knut: {
     name: "Knut",
     link: "https://www.twitch.tv/knut",
     date: "9th August 2022",
-    video: "https://www.youtube.com/watch?v=lFhFx6kf2E4",
+    videoId: "lFhFx6kf2E4",
   },
   moistCr1tikal: {
     name: "MoistCr1TiKaL",
     link: "https://www.twitch.tv/moistcr1tikal",
     date: "30th April 2022",
-    video: "https://www.youtube.com/watch?v=pb7MR59s1Z0",
-    vod: "https://www.youtube.com/watch?v=x-OPvwjGHEU&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
+    videoId: "pb7MR59s1Z0",
+    vodId: "x-OPvwjGHEU",
   },
   jackManifold: {
     name: "Jack Manifold",
     link: "https://www.twitch.tv/jackmanifoldtv",
     date: "22nd April 2022",
-    video: "https://www.youtube.com/watch?v=jzyxhnODe2g",
+    videoId: "jzyxhnODe2g",
   },
 };
 
 type CollaborationsSectionProps = {
-  items: Record<
-    string,
-    Optional<
-      { name: string; link: string; date: string; video: string; vod: string },
-      "vod"
-    >
-  >;
+  items: Record<string, Collaboration>;
 };
 
 const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
@@ -77,7 +79,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
 }) => {
   return (
     <YouTubeLightbox id="collaborations" className="flex flex-wrap">
-      {({ Trigger, Preview, parseUrl }) => (
+      {({ Trigger, Preview }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
             <div
@@ -102,16 +104,16 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
               </Heading>
 
               <Trigger
-                videoId={parseUrl(value.video)}
+                videoId={value.videoId}
                 caption={`${value.name}: ${value.date}`}
                 className="w-full max-w-2xl"
               >
-                <Preview videoId={parseUrl(value.video)} />
+                <Preview videoId={value.videoId} />
               </Trigger>
 
-              {value.vod && (
+              {value.vodId && (
                 <Link
-                  href={value.vod}
+                  href={`https://www.youtube.com/watch?v=${value.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
                   target="_blank"
                   rel="noreferrer"
                   className="mt-2 text-alveus-green-700 hover:underline"
