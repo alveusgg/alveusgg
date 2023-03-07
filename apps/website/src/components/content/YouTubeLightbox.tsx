@@ -148,7 +148,13 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
       Object.entries(iframeAttrs).forEach(([key, value]) => {
         iframe.setAttribute(camelToKebab(key), value);
       });
-      iframe.className = `pointer-events-auto ${iframeAttrs.class}`;
+      iframe.className = ["pointer-events-auto", iframe.className]
+        .filter(Boolean)
+        .join(" ");
+
+      // Allow full-screen for the iframe
+      iframe.allowFullscreen = true;
+      iframe.allow = ["fullscreen", iframe.allow].filter(Boolean).join("; ");
 
       // Register the photoswipe load bindings
       iframe.addEventListener("load", () => {
