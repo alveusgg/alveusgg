@@ -18,6 +18,14 @@ const iframeAttrs: HTMLAttributes = {
   class: "aspect-video w-full rounded-2xl shadow-xl bg-alveus-green-800",
 };
 
+const safeJsonParse = (str: string) => {
+  try {
+    return JSON.parse(str);
+  } catch {
+    return null;
+  }
+};
+
 const parseUrl = (url: string) => {
   const match = url.match(
     /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/
@@ -28,6 +36,7 @@ const parseUrl = (url: string) => {
 
 type TriggerProps = {
   videoId: string;
+  caption?: string;
   className?: string;
   children: React.ReactNode;
 };
@@ -35,6 +44,7 @@ type TriggerProps = {
 const getTrigger = (id: string) => {
   const Trigger: React.FC<TriggerProps> = ({
     videoId,
+    caption,
     className,
     children,
   }) => {
@@ -44,7 +54,7 @@ const getTrigger = (id: string) => {
         target="_blank"
         rel="noreferrer"
         className={className}
-        {...{ [`data-lightbox-${id}`]: videoId }}
+        {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
       >
         {children}
       </a>
@@ -78,6 +88,7 @@ type YouTubeLightboxCtxProps = {
 };
 
 type YouTubeLightboxProps = {
+  id?: string;
   className?: string;
   children:
     | React.ReactNode
@@ -85,10 +96,12 @@ type YouTubeLightboxProps = {
 };
 
 const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
+  id,
   className,
   children,
 }) => {
-  const photoswipeId = `photoswipe-${useId().replace(/\W/g, "").toLowerCase()}`;
+  const defaultId = useId().replace(/\W/g, "").toLowerCase();
+  const photoswipeId = `photoswipe-${id || defaultId}`;
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
       ...getDefaultPhotoswipeLightboxOptions(),
@@ -106,13 +119,15 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
     // Expose the video id
     lightbox.addFilter("itemData", (itemData) => ({
       ...itemData,
-      videoId: itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`),
+      youTube: safeJsonParse(
+        itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`) || ""
+      ),
     }));
 
     // Create the lightbox iframe
     lightbox.on("contentLoad", (e) => {
       const { content } = e;
-      if (!content.data.videoId) return;
+      if (!content.data.youTube?.videoId) return;
 
       // Prevent the default content load
       e.preventDefault();
@@ -120,11 +135,16 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
       // Create our content element
       content.element = document.createElement("div");
       content.element.className =
-        "pointer-events-none flex items-center justify-center h-full w-full p-0 md:p-4 lg:p-8";
+        "pointer-events-none flex flex-col items-center h-full w-full p-0 md:p-4 lg:p-8";
+
+      // Create our video wrapper
+      const wrapper = document.createElement("div");
+      wrapper.className = `flex items-center justify-center h-full w-full pswp--${photoswipeId}-wrapper`;
+      content.element.appendChild(wrapper);
 
       // Create our iframe
       const iframe = document.createElement("iframe");
-      iframe.src = iframeSrc(content.data.videoId);
+      iframe.src = iframeSrc(content.data.youTube.videoId);
       Object.entries(iframeAttrs).forEach(([key, value]) => {
         iframe.setAttribute(camelToKebab(key), value);
       });
@@ -139,7 +159,15 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
       });
 
       // Append the iframe
-      content.element.appendChild(iframe);
+      wrapper.appendChild(iframe);
+
+      // If we have a caption, add it
+      if (content.data.youTube.caption) {
+        const caption = document.createElement("div");
+        caption.className = "text-alveus-tan text-xl my-4 md:mb-0 lg:mt-8";
+        caption.innerHTML = content.data.youTube.caption;
+        content.element.appendChild(caption);
+      }
     });
 
     lightbox.init();
@@ -175,19 +203,20 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
     <>
       <style
         dangerouslySetInnerHTML={{
+          // Hide the placeholder overlay
           // Ensure we retain the aspect ratio of the video
           __html: `
-.pswp--${photoswipeId} {
-  container-type: size;
-  container-name: photoswipe-${photoswipeId};
-}
-
 .pswp--${photoswipeId} .pswp__img--placeholder {
   display: none;
 }
 
+.pswp--${photoswipeId} .pswp__item[aria-hidden="false"] .pswp--${photoswipeId}-wrapper {
+  container-type: size;
+  container-name: photoswipe-${photoswipeId};
+}
+
 @container photoswipe-${photoswipeId} (aspect-ratio > 16/9) {
-  .pswp--${photoswipeId} .pswp__item iframe {
+  .pswp--${photoswipeId} .pswp__item[aria-hidden="false"] .pswp--${photoswipeId}-wrapper iframe {
     width: auto;
     height: 100%;
   }

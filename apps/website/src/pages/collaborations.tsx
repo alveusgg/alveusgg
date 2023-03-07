@@ -76,7 +76,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
   items,
 }) => {
   return (
-    <YouTubeLightbox className="flex flex-wrap">
+    <YouTubeLightbox id="collaborations" className="flex flex-wrap">
       {({ Trigger, Preview, parseUrl }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
@@ -103,6 +103,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
 
               <Trigger
                 videoId={parseUrl(value.video)}
+                caption={`${value.name}: ${value.date}`}
                 className="w-full max-w-2xl"
               >
                 <Preview videoId={parseUrl(value.video)} />
