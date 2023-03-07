@@ -3,18 +3,19 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
+import { type HTMLAttributes, htmlToReact } from "@/utils/attrs";
 
 const iframeSrc = (id: string) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
     id
   )}?modestbranding=1`;
 
-const iframeAttrs: Partial<React.IframeHTMLAttributes<HTMLIFrameElement>> = {
-  referrerPolicy: "no-referrer",
+const iframeAttrs: HTMLAttributes = {
+  referrerpolicy: "no-referrer",
   allow: "encrypted-media",
   sandbox: "allow-same-origin allow-scripts",
   loading: "lazy",
-  className: "aspect-video w-full rounded-2xl shadow-xl bg-alveus-green-800",
+  class: "aspect-video w-full rounded-2xl shadow-xl bg-alveus-green-800",
 };
 
 const parseUrl = (url: string) => {
@@ -61,8 +62,8 @@ const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
   return (
     <iframe
       src={iframeSrc(videoId)}
-      {...iframeAttrs}
-      className={["pointer-events-none", iframeAttrs.className, className]
+      {...htmlToReact(iframeAttrs)}
+      className={["pointer-events-none", iframeAttrs.class, className]
         .filter(Boolean)
         .join(" ")}
     />
@@ -87,7 +88,7 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
   className,
   children,
 }) => {
-  const photoswipeId = `photoswipe-${useId().replace(/\W/g, "")}`;
+  const photoswipeId = `photoswipe-${useId().replace(/\W/g, "").toLowerCase()}`;
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
       ...getDefaultPhotoswipeLightboxOptions(),
@@ -127,7 +128,7 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
       Object.entries(iframeAttrs).forEach(([key, value]) => {
         iframe.setAttribute(camelToKebab(key), value);
       });
-      iframe.className = `pointer-events-auto ${iframeAttrs.className}`;
+      iframe.className = `pointer-events-auto ${iframeAttrs.class}`;
 
       // Register the photoswipe load bindings
       iframe.addEventListener("load", () => {

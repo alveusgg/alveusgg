@@ -77,6 +77,7 @@ importers:
       raw-body: ^2.5.2
       react: 18.2.0
       react-aria: ^3.23.1
+      react-attr-converter: ^0.3.1
       react-dom: 18.2.0
       react-quill: ^2.0.0
       react-stately: ^3.21.0
@@ -124,6 +125,7 @@ importers:
       raw-body: 2.5.2
       react: 18.2.0
       react-aria: 3.23.1_biqbaboplfbrettd7655fr4n2y
+      react-attr-converter: 0.3.1
       react-dom: 18.2.0_react@18.2.0
       react-quill: 2.0.0_biqbaboplfbrettd7655fr4n2y
       react-stately: 3.21.0_react@18.2.0
@@ -6987,6 +6989,10 @@ packages:
       '@react-aria/visually-hidden': 3.7.0_react@18.2.0
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
+    dev: false
+
+  /react-attr-converter/0.3.1:
+    resolution: {integrity: sha512-dSxo2Mn6Zx4HajeCeQNLefwEO4kNtV/0E682R1+ZTyFRPqxDa5zYb5qM/ocqw9Bxr/kFQO0IUiqdV7wdHw+Cdg==}
     dev: false
 
   /react-dom/18.2.0_react@18.2.0:
