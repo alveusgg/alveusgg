@@ -23,28 +23,49 @@ type NavLinkProps = Omit<
 > &
   LinkProps & {
     children?: React.ReactNode;
+    variant?: "main" | "sub";
   } & React.RefAttributes<HTMLAnchorElement>;
 
-const NavDropdownClasses =
-  "absolute top-full right-0 z-30 mt-2 min-w-[10rem] flex flex-col rounded bg-alveus-green-900 p-2 shadow-lg";
-const NavLinkClassesActive =
-  "bg-alveus-green lg:border-white lg:bg-transparent";
-const NavLinkClassesHover =
-  "hover:bg-alveus-green hover:lg:border-white hover:lg:bg-transparent";
-const NavLinkClasses = `block px-5 py-3 h-full border-b-2 border-transparent ${NavLinkClassesHover} transition-colors`;
+const dropdownClasses =
+  "absolute top-full right-0 z-30 mt-1 min-w-[10rem] flex flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg";
 
-const NavLink: React.FC<NavLinkProps> = ({ href, className, ...props }) => {
+const navLinkClasses = `block px-5 h-full transition-colors`;
+const navLinkClassesMain = `${navLinkClasses} py-3 border-b-2 border-transparent hover:lg:border-white `;
+const navLinkClassesMainActive = "lg:border-white";
+const navLinkClassesSub = `${navLinkClasses} py-2 hover:bg-alveus-tan/20 rounded`;
+const navLinkClassesSubActive = "bg-alveus-tan/10";
+
+const NavLink: React.FC<NavLinkProps> = ({
+  href,
+  variant = "border",
+  className,
+  ...props
+}) => {
   const isActive = useIsActivePath(href);
   const classes = useMemo(
     () =>
-      [NavLinkClasses, isActive && NavLinkClassesActive, className]
+      [
+        // base classes
+        variant === "main" ? navLinkClassesMain : navLinkClassesSub,
+        // active classes
+        isActive &&
+          (variant === "main"
+            ? navLinkClassesMainActive
+            : navLinkClassesSubActive),
+        // custom classes
+        className,
+      ]
         .filter(Boolean)
         .join(" "),
-    [isActive, className]
+    [variant, isActive, className]
   );
 
   return <Link href={href} className={classes} {...props} />;
 };
+
+const NavLinkSub: React.FC<NavLinkProps> = (props) => (
+  <NavLink variant="sub" {...props} />
+);
 
 type NavStructureLink = {
   title: string;
@@ -191,19 +212,16 @@ export const Navbar: React.FC = () => {
                 <ul className="flex flex-grow justify-end">
                   {Object.entries(structure).map(([key, link]) => (
                     <li key={key}>
-                      {(link as NavStructureLink).link && (
-                        <NavLink href={(link as NavStructureLink).link}>
-                          {link.title}
-                        </NavLink>
-                      )}
-                      {(link as NavStructureDropdown).dropdown && (
+                      {"link" in link ? (
+                        <NavLink href={link.link}>{link.title}</NavLink>
+                      ) : (
                         <Menu as="div" className="relative">
                           {({ open }) => (
                             <>
                               <Menu.Button
                                 className={[
-                                  NavLinkClasses,
-                                  open && NavLinkClassesActive,
+                                  navLinkClassesMain,
+                                  open && navLinkClassesMain,
                                   "flex items-center gap-2",
                                 ]
                                   .filter(Boolean)
@@ -227,27 +245,22 @@ export const Navbar: React.FC = () => {
                                 leaveFrom="transform opacity-100 scale-100"
                                 leaveTo="transform opacity-0 scale-95"
                               >
-                                <Menu.Items
-                                  as="ul"
-                                  className={NavDropdownClasses}
-                                >
-                                  {Object.entries(
-                                    (link as NavStructureDropdown).dropdown
-                                  ).map(([key, link]) => (
-                                    <Menu.Item as="li" key={key}>
-                                      {({ active, close }) => (
-                                        <NavLink
-                                          href={link.link}
-                                          className={`w-full min-w-max ${
-                                            active ? NavLinkClassesActive : ""
-                                          }`}
-                                          onClick={close}
-                                        >
-                                          {link.title}
-                                        </NavLink>
-                                      )}
-                                    </Menu.Item>
-                                  ))}
+                                <Menu.Items as="ul" className={dropdownClasses}>
+                                  {Object.entries(link.dropdown).map(
+                                    ([key, link]) => (
+                                      <Menu.Item as="li" key={key}>
+                                        {({ close }) => (
+                                          <NavLinkSub
+                                            href={link.link}
+                                            className="w-full min-w-max"
+                                            onClick={close}
+                                          >
+                                            {link.title}
+                                          </NavLinkSub>
+                                        )}
+                                      </Menu.Item>
+                                    )
+                                  )}
                                 </Menu.Items>
                               </Transition>
                             </>
@@ -286,7 +299,7 @@ export const Navbar: React.FC = () => {
                           leaveFrom="transform opacity-100 scale-100"
                           leaveTo="transform opacity-0 scale-95"
                         >
-                          <Menu.Items className={NavDropdownClasses}>
+                          <Menu.Items className={dropdownClasses}>
                             <Menu.Item disabled>
                               <div className="px-5 py-3">
                                 <ProfileInfo full />
@@ -298,15 +311,13 @@ export const Navbar: React.FC = () => {
                             </Menu.Item>
 
                             <Menu.Item>
-                              {({ active, close }) => (
+                              {({ close }) => (
                                 <button
-                                  className={`text-left ${NavLinkClasses} ${
-                                    active ? NavLinkClassesActive : ""
-                                  }`}
+                                  className={`text-left ${navLinkClassesSub}`}
                                   type="button"
-                                  onClick={() => {
+                                  onClick={async () => {
                                     close();
-                                    signOut();
+                                    await signOut();
                                   }}
                                 >
                                   Log Out
@@ -318,7 +329,7 @@ export const Navbar: React.FC = () => {
                       </Menu>
                     ) : (
                       <button
-                        className={NavLinkClasses}
+                        className={navLinkClassesSub}
                         type="button"
                         onClick={() => signIn("twitch")}
                         title="Sign in"
@@ -365,26 +376,23 @@ export const Navbar: React.FC = () => {
               <ul className="flex flex-col">
                 {Object.entries(structure).map(([key, link]) => (
                   <li key={key}>
-                    {(link as NavStructureLink).link && (
+                    {"link" in link ? (
                       <Disclosure.Button
-                        as={NavLink}
-                        href={(link as NavStructureLink).link}
+                        as={NavLinkSub}
+                        href={link.link}
                         className="w-full"
                       >
                         {link.title}
                       </Disclosure.Button>
-                    )}
-                    {(link as NavStructureDropdown).dropdown && (
+                    ) : (
                       <>
                         <p className="px-5 py-3 opacity-80">{link.title}</p>
                         <ul className="ml-4">
-                          {Object.entries(
-                            (link as NavStructureDropdown).dropdown
-                          ).map(([key, link]) => (
+                          {Object.entries(link.dropdown).map(([key, link]) => (
                             <li key={key}>
                               <Disclosure.Button
-                                as={NavLink}
-                                href={(link as NavStructureLink).link}
+                                as={NavLinkSub}
+                                href={link.link}
                                 className="w-full"
                               >
                                 {link.title}
@@ -408,7 +416,7 @@ export const Navbar: React.FC = () => {
 
                     <Disclosure.Button as={Fragment}>
                       <button
-                        className={`${NavLinkClasses} w-full text-left`}
+                        className={`${navLinkClassesSub} w-full text-left`}
                         type="button"
                         onClick={() => signOut()}
                       >
@@ -420,7 +428,7 @@ export const Navbar: React.FC = () => {
                   <li>
                     <Disclosure.Button as={Fragment}>
                       <button
-                        className={`${NavLinkClasses} w-full text-left`}
+                        className={`${navLinkClassesSub} w-full text-left`}
                         type="button"
                         onClick={() => signIn("twitch")}
                       >
