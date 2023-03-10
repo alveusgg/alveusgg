@@ -247,7 +247,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit flex-col gap-2">
             <div className="flex flex-row gap-2">
               <Button
-                className="bg-white"
+                className="bg-white shadow-lg"
                 onClick={() =>
                   currentEntryElementRef.current?.previousElementSibling?.scrollIntoView(
                     { behavior: "smooth", block: "start" }
@@ -258,7 +258,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 <span className="sr-only">Previous Post</span>
               </Button>
               <Button
-                className="bg-white"
+                className="bg-white shadow-lg"
                 onClick={() =>
                   currentEntryElementRef.current?.nextElementSibling?.scrollIntoView(
                     { behavior: "smooth", block: "start" }
