@@ -18,7 +18,7 @@ const Socials = () => (
   <Section dark className="z-0 pb-0">
     <div className="flex flex-wrap-reverse items-center">
       <div className="basis-full md:basis-1/2 md:pt-0 md:pr-8">
-        <div className="relative mx-auto -mt-10 aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden">
+        <div className="relative mx-auto aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden md:-mt-10">
           <Link
             href="https://www.instagram.com/p/CoIq_hvOxiQ/"
             rel="noreferrer"
@@ -60,7 +60,7 @@ const Socials = () => (
         </div>
       </div>
 
-      <div className="basis-full pt-8 pb-16 md:basis-1/2 md:py-4">
+      <div className="basis-full pb-16 md:basis-1/2 md:py-4">
         <Heading level={2}>Stay Updated!</Heading>
 
         <p className="my-4">
