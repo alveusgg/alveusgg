@@ -37,7 +37,7 @@ const navLinkClassesSubActive = "bg-alveus-tan/10";
 
 const NavLink: React.FC<NavLinkProps> = ({
   href,
-  variant = "border",
+  variant = "main",
   className,
   ...props
 }) => {
@@ -329,7 +329,7 @@ export const Navbar: React.FC = () => {
                       </Menu>
                     ) : (
                       <button
-                        className={navLinkClassesSub}
+                        className={navLinkClassesMain}
                         type="button"
                         onClick={() => signIn("twitch")}
                         title="Sign in"
