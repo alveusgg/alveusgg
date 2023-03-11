@@ -396,7 +396,7 @@ const ambassadors: Record<string, Ambassador> = {
     scientific: "Gallus gallus domesticus",
     sex: "Male",
     birth: "2022",
-    arrival: "2022-05",
+    arrival: "2021-06",
     iucn: "NE",
     story: "Oliver was put in the reject/return cage at a local feed store.",
     mission:
