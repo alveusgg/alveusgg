@@ -1,21 +1,24 @@
 import React, { useEffect, useRef } from "react";
-import { formatDateUTC } from "@/utils/datetime";
+import {
+  dateFormatterLong,
+  dateFormatterShort,
+  formatDateUTC,
+} from "@/utils/datetime";
 
-const dtf = new Intl.DateTimeFormat(undefined, {
-  day: "2-digit",
-  month: "2-digit",
-  year: "2-digit",
-});
-
-export const LocalDate: React.FC<{ dateTime: Date }> = ({ dateTime }) => {
+export const LocalDate: React.FC<{
+  dateTime: Date;
+  format?: "short" | "long";
+}> = ({ dateTime, format = "short" }) => {
   const localDateRef = useRef<HTMLDivElement>(null);
-  const initialDate = formatDateUTC(dateTime);
+  const initialDate = formatDateUTC(dateTime, format);
 
   useEffect(() => {
     if (localDateRef.current) {
-      localDateRef.current.textContent = dtf.format(dateTime);
+      localDateRef.current.textContent = (
+        format === "short" ? dateFormatterShort : dateFormatterLong
+      ).format(dateTime);
     }
-  }, [dateTime]);
+  }, [dateTime, format]);
 
   return <span ref={localDateRef}>{initialDate}</span>;
 };

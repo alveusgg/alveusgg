@@ -138,14 +138,20 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               : "Review pending"}
                           </td>
                           <td className={`${cellClasses}`}>
-                            <LocalDateTime dateTime={entry.createdAt} />
+                            <LocalDateTime
+                              dateTime={entry.createdAt}
+                              format="long"
+                            />
                             {entry.updatedAt &&
                               String(entry.updatedAt) !==
                                 String(entry.createdAt) && (
                                 <>
                                   <br />
                                   {" ("}
-                                  <LocalDateTime dateTime={entry.updatedAt} />
+                                  <LocalDateTime
+                                    dateTime={entry.updatedAt}
+                                    format="long"
+                                  />
                                   {")"}
                                 </>
                               )}

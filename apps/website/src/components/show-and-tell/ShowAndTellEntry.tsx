@@ -101,7 +101,7 @@ export const ShowAndTellEntry = forwardRef<
         <span className="mr-1 italic">by </span>
         {entry.displayName}
         {" — "}
-        <LocalDate dateTime={entry.createdAt} />
+        <LocalDate dateTime={entry.createdAt} format="long" />
       </p>
     </header>
   );
