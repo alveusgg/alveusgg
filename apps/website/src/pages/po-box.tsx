@@ -11,8 +11,8 @@ const POBoxPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="P.O. Box"
-        description="Want to send something to Alveus, perhaps a gift to support the ambassadors? Here's our P.O. Box."
+        title="PO Box"
+        description="Want to send something to Alveus, perhaps a gift to support the ambassadors? Here's our PO Box."
       />
 
       <Head>
@@ -27,13 +27,13 @@ const POBoxPage: NextPage = () => {
         className="flex min-h-[85vh] flex-grow items-center"
         containerClassName="flex flex-col items-center text-center text-alveus-green"
       >
-        <Heading className="text-6xl">P.O. Box</Heading>
+        <Heading className="text-6xl">PO Box</Heading>
 
         <p className="my-3 text-xl font-semibold">
           500 E Whitestone Blvd #2350, Cedar Park, TX 78613
         </p>
 
-        <p>Use our P.O. Box to send things to Alveus.</p>
+        <p>Use our PO Box to send things to Alveus.</p>
         <p>Perhaps a gift to support the ambassadors?</p>
 
         <p className="my-3 text-xl font-semibold">

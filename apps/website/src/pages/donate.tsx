@@ -30,11 +30,11 @@ const links = {
   },
   poBox: {
     icon: IconBox,
-    title: "P.O. Box",
+    title: "PO Box",
     link: "/po-box",
     external: false,
     description:
-      "Send something to Alveus via our P.O. Box. Perhaps a gift to support the ambassadors?",
+      "Send something to Alveus via our PO Box. Perhaps a gift to support the ambassadors?",
   },
 };
 
