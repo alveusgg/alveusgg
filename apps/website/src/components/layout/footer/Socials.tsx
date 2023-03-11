@@ -3,7 +3,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 
-import reelVideo from "@/assets/socials/gerogie-reel-clip.mp4";
+import reelVideo from "@/assets/socials/gerogie-reel-clip.mp4?quality=low";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTwitter from "@/icons/IconTwitter";
