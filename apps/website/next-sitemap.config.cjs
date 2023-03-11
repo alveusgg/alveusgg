@@ -15,6 +15,8 @@ module.exports = {
     "/admin/*",
     "/wip",
     "/wip/*",
+    "/giveaways",
+    "/giveaways/*",
     "/show-and-tell/*",
   ],
   // TODO: Transform to apply proper priority to pages
@@ -27,7 +29,7 @@ module.exports = {
         disallow:
           process.env.NEXT_PUBLIC_NOINDEX === "true"
             ? ["/"]
-            : ["/api/", "/auth/", "/admin/", "/wip/"],
+            : ["/api/", "/auth/", "/admin/", "/wip/", "/giveaways/"],
       },
     ],
   },
