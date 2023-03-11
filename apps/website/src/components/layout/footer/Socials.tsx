@@ -23,7 +23,7 @@ const Socials = () => (
             href="https://www.instagram.com/p/CoIq_hvOxiQ/"
             rel="noreferrer"
             target="_blank"
-            className="absolute top-[5%] left-[8%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 drop-shadow-2xl transition-transform duration-150 hover:scale-[1.02]"
+            className="absolute top-[5%] left-[8%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-[1.02]"
           >
             <Video
               {...reelVideo}
@@ -42,7 +42,7 @@ const Socials = () => (
             href="https://twitter.com/AlveusSanctuary/status/1627138286140461063/"
             rel="noreferrer"
             target="_blank"
-            className="absolute top-[23%] right-[3%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 drop-shadow-lg transition-transform duration-150 hover:scale-[1.02]"
+            className="absolute top-[23%] right-[3%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-[1.02]"
           >
             <Image
               {...pic}
