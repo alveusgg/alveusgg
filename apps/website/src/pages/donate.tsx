@@ -9,12 +9,14 @@ import Meta from "@/components/content/Meta";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
+import IconBox from "@/icons/IconBox";
 
 const links = {
   wishlist: {
     icon: IconAmazon,
     title: "Amazon Wishlist",
     link: "/wishlist",
+    external: true,
     description:
       "Donate specific items we are in need of at Alveus through our Amazon Wishlist.",
   },
@@ -22,8 +24,17 @@ const links = {
     icon: IconPayPal,
     title: "PayPal",
     link: "/paypal",
+    external: true,
     description:
       "Donate via credit/debit card, bank account or PayPal funds directly to Alveus.",
+  },
+  poBox: {
+    icon: IconBox,
+    title: "P.O. Box",
+    link: "/po-box",
+    external: false,
+    description:
+      "Send something to Alveus via our P.O. Box. Perhaps a gift to support the ambassadors?",
   },
 };
 
@@ -58,8 +69,9 @@ const DonatePage: NextPage = () => {
             <Link
               key={key}
               href={link.link}
-              target="_blank"
-              rel="noreferrer"
+              {...(link.external
+                ? { target: "_blank", rel: "noreferrer" }
+                : {})}
               className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition-shadow transition-transform hover:scale-105 hover:shadow-2xl"
             >
               <div className="mb-1 flex items-center gap-4">
