@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import React from "react";
 
 import Section from "@/components/content/Section";
@@ -90,10 +89,6 @@ const AboutStaffPage: NextPage = () => {
   return (
     <>
       <Meta title="Alveus Staff" description="Meet the Alveus staff." />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

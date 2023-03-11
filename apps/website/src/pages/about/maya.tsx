@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 
@@ -64,10 +63,6 @@ const AboutMayaPage: NextPage = () => {
         title="About Maya"
         description="Maya Higa is one of the top female streamers on Twitch and a rising star on YouTube. Maya founded Alveus Sanctuary, a non-profit exotic animal sanctuary and virtual education center in central Texas and raised more than $500,000 during her first fundraising stream thanks to her amazing community and fellow streamers."
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

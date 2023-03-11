@@ -24,7 +24,10 @@ module.exports = {
     policies: [
       {
         userAgent: "*",
-        disallow: ["/api/", "/auth/", "/admin/", "/wip/"],
+        disallow:
+          process.env.NEXT_PUBLIC_NOINDEX === "true"
+            ? ["/"]
+            : ["/api/", "/auth/", "/admin/", "/wip/"],
       },
     ],
   },

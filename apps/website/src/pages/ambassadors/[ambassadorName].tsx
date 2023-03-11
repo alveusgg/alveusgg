@@ -1,6 +1,5 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import Head from "next/head";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import React, { useEffect, useId, useMemo } from "react";
 
@@ -9,14 +8,15 @@ import ambassadors, {
   iucnFlags,
   iucnStatuses,
 } from "@/config/ambassadors";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
+import YouTubeLightbox from "@/components/content/YouTubeLightbox";
+
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
-import Link from "next/link";
-import YouTubeLightbox from "@/components/content/YouTubeLightbox";
 
 const parseIucnStatus = (rawStatus: string): string => {
   const [status, flag] = rawStatus.split("/");
@@ -147,10 +147,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
             : ambassador.images[0].src.src
         }
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

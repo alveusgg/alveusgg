@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 
@@ -122,10 +121,6 @@ const EventsPage: NextPage = () => {
         title="Events"
         description="We host one-off fundraising events to increase awareness of our conservation missions and to encourage donations to support Alveus."
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

@@ -1,5 +1,4 @@
 import type { NextPage } from "next";
-import Head from "next/head";
 import Script from "next/script";
 import Link from "next/link";
 import Image from "next/image";
@@ -188,10 +187,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
-
       {/* Hero, offset to be navbar background */}
       <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
         <div className="absolute inset-0 -z-10 bg-alveus-green">
