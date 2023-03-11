@@ -140,7 +140,7 @@ const config = {
     },
     {
       source: "/merch",
-      destination: "https://merch.streamelements.com/alveussanctuary",
+      destination: "https://alveussanctuary.myshopify.com/",
       permanent: true,
     },
     {

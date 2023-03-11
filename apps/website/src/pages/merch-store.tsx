@@ -17,7 +17,7 @@ const merch = [
     store: {
       image: merchStoreImage,
       title: "Merch Store",
-      link: "https://merch.streamelements.com/alveussanctuary",
+      link: "/merch",
     },
   },
   {
