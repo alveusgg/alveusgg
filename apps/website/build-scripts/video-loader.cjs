@@ -162,20 +162,53 @@ const videoPoster = (
     "-vframes 1",
   ]);
 
-const defaultTypes = [
-  // Heavily compressed h264 720p30 video (no audio)
-  {
-    size: 720,
-    type: "mp4",
-    args: ["-an", "-vcodec libx264", "-filter:v fps=30", "-b:v 1200k"],
-  },
-];
+/**
+ * Get the requested quality from the resource query, or the default options
+ *
+ * @param {Object} options Webpack loader options
+ * @param {string} query Resource query
+ * @return {?string}
+ */
+const getQuality = (options, query) => {
+  if (typeof query === "string" && query[0] === "?") {
+    const params = new URLSearchParams(query.slice(1));
+    const quality = params.get("quality");
+    if (typeof quality === "string") return quality;
+  }
+
+  return typeof options.quality === "string" ? options.quality : null;
+};
+
+const defaultTypes = {
+  high: [
+    // Heavily compressed h264 720p30 video (no audio)
+    {
+      size: 720,
+      type: "mp4",
+      args: ["-an", "-vcodec libx264", "-filter:v fps=30", "-b:v 1200k"],
+    },
+  ],
+  low: [
+    // Heavily compressed h264 540p24 video (no audio)
+    {
+      size: 540,
+      type: "mp4",
+      args: ["-an", "-vcodec libx264", "-filter:v fps=24", "-b:v 800k"],
+    },
+  ],
+};
 
 const videoLoader = async (context, content) => {
   // Get the prefix for the output files
   // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack/loaders/next-image-loader/index.ts#L25
   const options = context.getOptions();
   const base = `${options.assetPrefix}/_next`;
+
+  // Get the quality
+  const quality =
+    getQuality(options, context.resourceQuery) || Object.keys(defaultTypes)[0];
+  if (!Object.keys(defaultTypes).includes(quality))
+    throw new Error(`Invalid quality: ${quality}`);
 
   // Create the context and objects to track the files
   const ctx = {
@@ -193,7 +226,7 @@ const videoLoader = async (context, content) => {
 
   if (!options.isDevelopment) {
     // When not in development mode, process the video
-    for (const { size, type, args } of defaultTypes) {
+    for (const { size, type, args } of defaultTypes[quality]) {
       const video = await videoResized(
         ctx,
         { height: size, extension: type },
