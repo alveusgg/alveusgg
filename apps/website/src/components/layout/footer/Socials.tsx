@@ -26,7 +26,8 @@ const Socials = () => (
             className="absolute top-[5%] left-[8%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-[1.02]"
           >
             <Video
-              {...reelVideo}
+              sources={reelVideo.sources}
+              poster={reelVideo.poster}
               className="absolute inset-0"
               autoPlay
               loop
@@ -45,7 +46,7 @@ const Socials = () => (
             className="absolute top-[23%] right-[3%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-[1.02]"
           >
             <Image
-              {...pic}
+              src={pic}
               width={400}
               height={400}
               loading="lazy"
