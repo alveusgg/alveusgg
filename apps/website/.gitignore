@@ -9,6 +9,8 @@
 /public/site.webmanifest
 /public/RootServiceWorker.js*
 /public/push/alveus/*
+/public/robots.txt
+/public/sitemap.xml
 
 # database
 /prisma/db.sqlite
