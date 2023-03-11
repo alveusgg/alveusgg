@@ -1,4 +1,4 @@
-import React, { useEffect, useId, useMemo } from "react";
+import React, { cloneElement, useEffect, useId, useMemo } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
@@ -196,11 +196,9 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
   // Allow children to be functions that receive the context
   const childrenToRender = useMemo(
     () =>
-      (Array.isArray(children) ? children : [children]).map((child) => {
-        if (typeof child === "function") {
-          return child(ctx);
-        }
-        return child;
+      (Array.isArray(children) ? children : [children]).map((child, index) => {
+        const element = typeof child === "function" ? child(ctx) : child;
+        return cloneElement(element, { key: index });
       }),
     [children, ctx]
   );
