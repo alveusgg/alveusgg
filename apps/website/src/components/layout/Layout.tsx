@@ -54,8 +54,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <link rel="manifest" href="/site.webmanifest" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#636a60" />
         <link rel="shortcut icon" href="/favicon.ico" />
-        <meta name="apple-mobile-web-app-title" content="Alveus.gg" />
-        <meta name="application-name" content="Alveus.gg" />
+        <meta name="apple-mobile-web-app-title" content="Alveus Sanctuary" />
+        <meta name="application-name" content="Alveus Sanctuary" />
         <meta name="msapplication-TileColor" content="#636a60" />
         <meta name="theme-color" content="#636a60" />
 

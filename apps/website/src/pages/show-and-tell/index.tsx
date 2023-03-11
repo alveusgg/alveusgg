@@ -1,7 +1,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import Head from "next/head";
 import Link from "next/link";
 import {
   ArrowDownIcon,
@@ -23,6 +22,7 @@ import { trpc } from "@/utils/trpc";
 import IconLoading from "@/icons/IconLoading";
 import { useOnToggleNativeFullscreen } from "@/components/shared/hooks/useOnToggleNativeFullscreen";
 import { useIntersectionObserver } from "@/components/shared/hooks/useIntersectionObserver";
+import Meta from "@/components/content/Meta";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -154,9 +154,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
   return (
     <>
-      <Head>
-        <title>Show and Tell | Alveus.gg</title>
-      </Head>
+      <Meta title="Show and Tell" />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
