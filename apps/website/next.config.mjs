@@ -134,13 +134,8 @@ const config = {
     },
     // External redirects
     {
-      source: "/smile",
-      destination: "https://smile.amazon.com/ch/86-1772907",
-      permanent: true,
-    },
-    {
       source: "/merch",
-      destination: "https://merch.streamelements.com/alveussanctuary",
+      destination: "https://alveussanctuary.myshopify.com/",
       permanent: true,
     },
     {
