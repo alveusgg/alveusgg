@@ -205,7 +205,16 @@ const ambassadors: Record<string, Ambassador> = {
       { src: stompyImage5, alt: "Stompy the Emu" },
       { src: stompyImage6, alt: "Stompy the Emu" },
     ],
-    clips: [],
+    clips: [
+      {
+        id: "fsADzOeGHDI",
+        caption: "Stompy Enjoying Scritches From Kayla",
+      },
+      {
+        id: "8UVfWxKvIc8",
+        caption: "Stompy Running In The Pasture",
+      },
+    ],
     homepage: {
       title: "Stompy!",
       description:
@@ -232,8 +241,11 @@ const ambassadors: Record<string, Ambassador> = {
       { src: georgieImage5, alt: "Georgie the African Bullfrog" },
     ],
     clips: [
+      { id: "4WpuyhCXTTs", caption: "Georgie's Journey At Alveus" },
+      { id: "YNHssqn1O40", caption: "Georgie Gets Fed By ConnorEatsPants" },
+      { id: "pjfNXZxmQ2M", caption: "Georgie Poops In His New Enclosure" },
       { id: "NlHmTLHHcKg", caption: "Georgie Actually Does A Backflip" },
-      { id: "FDxRdgTBO14", caption: "Georgie Takes A Tumble" },
+      { id: "_kt-VaruYJo", caption: "Georgie Goes For A Swim" },
     ],
     homepage: {
       title: "Georgie!",
@@ -258,7 +270,7 @@ const ambassadors: Record<string, Ambassador> = {
       { src: ticoImage2, alt: "Tico the Blue and Gold Macaw" },
       { src: ticoImage3, alt: "Tico the Blue and Gold Macaw" },
     ],
-    clips: [],
+    clips: [{ id: "du1TIuJ6BAk", caption: "Tico Dancing With Kayla" }],
     homepage: null,
   },
   miley: {
@@ -301,7 +313,11 @@ const ambassadors: Record<string, Ambassador> = {
       { src: miaImage4, alt: "Mia the African Grey" },
       { src: miaImage5, alt: "Mia the African Grey" },
     ],
-    clips: [],
+    clips: [
+      { id: "nIw-qTRT5Nc", caption: "Mia Dances With Connor" },
+      { id: "KRJy_nR1u5k", caption: "Mia Walks Around The Aviary" },
+      { id: "5ETmZ7oafo4", caption: "Mia Makes A Car Alarm Sound" },
+    ],
     homepage: null,
   },
   siren: {
@@ -325,7 +341,12 @@ const ambassadors: Record<string, Ambassador> = {
       { src: sirenImage6, alt: "Siren the Blue-fronted Amazon" },
       { src: sirenImage7, alt: "Siren the Blue-fronted Amazon" },
     ],
-    clips: [],
+    clips: [
+      { id: "ociryM83xIo", caption: "Siren Is Given Enrichment" }, // This is a Maya clip
+      { id: "ynv06rC9aHM", caption: "Siren Talks, Sings, And More" },
+      { id: "LqpK1DhBH-E", caption: "Siren Sings A Song" },
+      { id: "0foatCEQ5vk", caption: "Siren Has A Conversation" },
+    ],
     homepage: null,
   },
   abbott: {
@@ -345,7 +366,9 @@ const ambassadors: Record<string, Ambassador> = {
       { src: abbottImage2, alt: "Abbott the American Crow" },
       { src: abbottImage3, alt: "Abbott the American Crow" },
     ],
-    clips: [],
+    clips: [
+      { id: "GqvK9m6yoBQ", caption: "Abbott Explores His New Enrichment" },
+    ],
     homepage: null,
   },
   coconut: {
@@ -466,7 +489,13 @@ const ambassadors: Record<string, Ambassador> = {
       { src: noodleImage3, alt: "Noodle the Carpet Python" },
       { src: noodleImage4, alt: "Noodle the Carpet Python" },
     ],
-    clips: [],
+    clips: [
+      {
+        id: "SU3b-ndBZ7M",
+        caption: "Noodle Discovers Gravity While Exploring Her Enclosure",
+      },
+      { id: "H5g9i75AQS4", caption: "Noodle Yawns On Stream" },
+    ],
     homepage: null,
   },
   patchy: {
@@ -507,7 +536,9 @@ const ambassadors: Record<string, Ambassador> = {
       { src: fennImage4, alt: "Fenn the European Red Fox" },
       { src: fennImage5, alt: "Fenn the European Red Fox" },
     ],
-    clips: [],
+    clips: [
+      { id: "670RYU2Xw98", caption: "Fenn Digs Up A Friend In The Enclosure" },
+    ],
     homepage: null,
   },
   reed: {
@@ -529,7 +560,9 @@ const ambassadors: Record<string, Ambassador> = {
       { src: reedImage4, alt: "Reed the European Red Fox" },
       { src: reedImage5, alt: "Reed the European Red Fox" },
     ],
-    clips: [],
+    clips: [
+      { id: "ClWtgsoWta0", caption: "Reed Gets Weighed With Target Training" },
+    ],
     homepage: null,
   },
   serrano: {
@@ -548,7 +581,9 @@ const ambassadors: Record<string, Ambassador> = {
       { src: serranoImage2, alt: "Serrano the Domestic Donkey" },
       { src: serranoImage3, alt: "Serrano the Domestic Donkey" },
     ],
-    clips: [],
+    clips: [
+      { id: "81Zrv7veNMY", caption: "The Donkeys Play With A Ball At Night" },
+    ],
     homepage: null,
   },
   jalapeno: {
@@ -569,7 +604,9 @@ const ambassadors: Record<string, Ambassador> = {
       { src: jalapenoImage4, alt: "Jalapeño the Domestic Donkey" },
       { src: jalapenoImage5, alt: "Jalapeño the Domestic Donkey" },
     ],
-    clips: [],
+    clips: [
+      { id: "81Zrv7veNMY", caption: "The Donkeys Play With A Ball At Night" },
+    ],
     homepage: null,
   },
   snork: {
@@ -588,7 +625,7 @@ const ambassadors: Record<string, Ambassador> = {
       { src: snorkImage1, alt: "Snork the Chinchilla" },
       { src: snorkImage2, alt: "Snork the Chinchilla" },
     ],
-    clips: [],
+    clips: [{ id: "djDIUl2c0v8", caption: "Moomin Steals A Stick From Snork" }],
     homepage: null,
   },
   moomin: {
@@ -606,7 +643,7 @@ const ambassadors: Record<string, Ambassador> = {
       { src: moominImage1, alt: "Moomin the Chinchilla" },
       { src: moominImage2, alt: "Moomin the Chinchilla" },
     ],
-    clips: [],
+    clips: [{ id: "djDIUl2c0v8", caption: "Moomin Steals A Stick From Snork" }],
     homepage: {
       title: "Moomin is Movin' In!",
       description:
@@ -630,7 +667,10 @@ const ambassadors: Record<string, Ambassador> = {
       { src: winnieImage3, alt: "Winnie the Red Angus Beef Cow" },
       { src: winnieImage4, alt: "Winnie the Red Angus Beef Cow" },
     ],
-    clips: [],
+    clips: [
+      { id: "FKU7-u5-L24", caption: "Winnie Causes Chaos In The Grain Stall" },
+      { id: "qWDd5nnWSuI", caption: "Winnie's First Day On Stream" },
+    ],
     homepage: null,
   },
   hankMrMctrain: {
@@ -650,7 +690,10 @@ const ambassadors: Record<string, Ambassador> = {
       { src: hankImage2, alt: "Hank the Smokey Ghost Millipede" },
       { src: hankImage3, alt: "Hank the Smokey Ghost Millipede" },
     ],
-    clips: [],
+    clips: [
+      { id: "eUOJbijrsCk", caption: "Hank Says Hi To Stream" },
+      { id: "D-KMGuj3NfY", caption: "Hank Poops While Being Introduced" },
+    ],
     homepage: null,
   },
   barbaraBakedBean: {
@@ -810,7 +853,7 @@ const ambassadors: Record<string, Ambassador> = {
       { src: chipsImage1, alt: "Chips Ahoy the Rat" },
       { src: chipsImage2, alt: "Chips Ahoy the Rat" },
     ],
-    clips: [],
+    clips: [{ id: "C2Ob-gQ_9os", caption: "Target Training With The Rats" }],
     homepage: null,
   },
   nillaWafer: {
@@ -829,7 +872,7 @@ const ambassadors: Record<string, Ambassador> = {
       { src: nillaImage1, alt: "Nilla Wafer the Rat" },
       { src: nillaImage2, alt: "Nilla Wafer the Rat" },
     ],
-    clips: [],
+    clips: [{ id: "C2Ob-gQ_9os", caption: "Target Training With The Rats" }],
     homepage: null,
   },
   momo: {
