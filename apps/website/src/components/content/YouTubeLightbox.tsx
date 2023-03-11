@@ -41,7 +41,7 @@ type TriggerProps = {
   children: React.ReactNode;
 };
 
-const getTrigger = (id: string) => {
+const createTrigger = (id: string) => {
   const Trigger: React.FC<TriggerProps> = ({
     videoId,
     caption,
@@ -81,7 +81,7 @@ const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
 };
 
 type YouTubeLightboxCtxProps = {
-  Trigger: ReturnType<typeof getTrigger>;
+  Trigger: ReturnType<typeof createTrigger>;
   Preview: typeof Preview;
   parseUrl: typeof parseUrl;
   id: string;
@@ -185,7 +185,7 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
   // Expose the nested components
   const ctx: YouTubeLightboxCtxProps = useMemo(
     () => ({
-      Trigger: getTrigger(photoswipeId),
+      Trigger: createTrigger(photoswipeId),
       Preview,
       parseUrl,
       id: photoswipeId,
