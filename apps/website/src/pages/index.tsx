@@ -9,6 +9,7 @@ import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
+import YouTubeLightbox from "@/components/content/YouTubeLightbox";
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
 import IconEmail from "@/icons/IconEmail";
@@ -278,15 +279,16 @@ const Home: NextPage = () => {
                 participate in education programs. Combining platforms this way
                 maximizes the impact for spreading conservation messages.
               </p>
-              {/* TODO: Lightbox */}
-              <a
-                className="inline-block rounded-full border-2 border-alveus-tan px-6 py-4 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                href="https://www.youtube.com/watch?v=jXTqWIc--jo"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Watch the Video
-              </a>
+              <YouTubeLightbox>
+                {({ Trigger }) => (
+                  <Trigger
+                    videoId="jXTqWIc--jo"
+                    className="inline-block rounded-full border-2 border-alveus-tan px-6 py-4 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
+                  >
+                    Watch the Video
+                  </Trigger>
+                )}
+              </YouTubeLightbox>
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">

@@ -7,129 +7,125 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import YouTubeLightbox from "@/components/content/YouTubeLightbox";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
-const collaborations = {
+type Collaboration = {
+  name: string;
+  link: string;
+  date: string;
+  videoId: string;
+  vodId?: string;
+};
+
+const collaborations: Record<string, Collaboration> = {
   ludwig: {
     name: "Ludwig",
     link: "https://www.youtube.com/@ludwig",
     date: "25th February 2023",
-    video: "https://www.youtube.com/watch?v=vuLMTU8QHAU",
+    videoId: "vuLMTU8QHAU",
   },
   alinity: {
     name: "Alinity",
     link: "https://www.twitch.tv/alinity",
     date: "9th February 2023",
-    video: "https://www.youtube.com/watch?v=qJpZzDMotmc",
-    vod: "https://www.youtube.com/watch?v=XHTEs94Cf4s&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
+    videoId: "qJpZzDMotmc",
+    vodId: "XHTEs94Cf4s",
   },
   connorEatsPants: {
     name: "ConnorEatsPants",
     link: "https://www.twitch.tv/connoreatspants",
     date: "25th January 2023",
-    video: "https://www.youtube.com/watch?v=nC8qlK3k96Q",
-    vod: "https://www.youtube.com/watch?v=SMEyEfVlzlM&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
+    videoId: "nC8qlK3k96Q",
+    vodId: "SMEyEfVlzlM",
   },
   botezSisters: {
     name: "The Botez Sisters",
     link: "https://www.twitch.tv/botezlive",
     date: "30th August 2022",
-    video: "https://www.youtube.com/watch?v=QgvNy11kU6E",
+    videoId: "QgvNy11kU6E",
   },
   knut: {
     name: "Knut",
     link: "https://www.twitch.tv/knut",
     date: "9th August 2022",
-    video: "https://www.youtube.com/watch?v=lFhFx6kf2E4",
+    videoId: "lFhFx6kf2E4",
   },
   moistCr1tikal: {
     name: "MoistCr1TiKaL",
     link: "https://www.twitch.tv/moistcr1tikal",
     date: "30th April 2022",
-    video: "https://www.youtube.com/watch?v=pb7MR59s1Z0",
-    vod: "https://www.youtube.com/watch?v=x-OPvwjGHEU&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3",
+    videoId: "pb7MR59s1Z0",
+    vodId: "x-OPvwjGHEU",
   },
   jackManifold: {
     name: "Jack Manifold",
     link: "https://www.twitch.tv/jackmanifoldtv",
     date: "22nd April 2022",
-    video: "https://www.youtube.com/watch?v=jzyxhnODe2g",
+    videoId: "jzyxhnODe2g",
   },
 };
 
-const parseYouTubeUrl = (url: string) => {
-  const match = url.match(
-    /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/
-  );
-  if (!match) throw new Error(`Invalid YouTube URL: ${url}`);
-  return match[1];
-};
-
 type CollaborationsSectionProps = {
-  items: Record<
-    string,
-    Optional<
-      { name: string; link: string; date: string; video: string; vod: string },
-      "vod"
-    >
-  >;
+  items: Record<string, Collaboration>;
 };
 
 const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
   items,
 }) => {
   return (
-    <>
-      {Object.entries(items).map(([key, value]) => (
-        <div
-          key={key}
-          className="mx-auto flex basis-full flex-col items-center py-8 md:basis-1/2 md:px-8"
-        >
-          <Heading
-            level={2}
-            className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
-          >
-            <Link
-              href={value.link}
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-alveus-green-600 hover:underline"
+    <YouTubeLightbox id="collaborations" className="flex flex-wrap">
+      {({ Trigger, Preview }) => (
+        <>
+          {Object.entries(items).map(([key, value]) => (
+            <div
+              key={key}
+              className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
             >
-              {value.name}
-            </Link>
-            <small className="text-xl text-alveus-green-600">
-              {value.date}
-            </small>
-          </Heading>
+              <Heading
+                level={2}
+                className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
+              >
+                <Link
+                  href={value.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-alveus-green-600 hover:underline"
+                >
+                  {value.name}
+                </Link>
+                <small className="text-xl text-alveus-green-600">
+                  {value.date}
+                </small>
+              </Heading>
 
-          <iframe
-            src={`https://www.youtube-nocookie.com/embed/${parseYouTubeUrl(
-              value.video
-            )}?modestbranding=1`}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="encrypted-media"
-            allowFullScreen
-            className="mx-auto aspect-video w-full max-w-2xl rounded-2xl shadow-xl"
-          />
+              <Trigger
+                videoId={value.videoId}
+                caption={`${value.name}: ${value.date}`}
+                className="w-full max-w-2xl"
+              >
+                <Preview videoId={value.videoId} />
+              </Trigger>
 
-          {value.vod && (
-            <Link
-              href={value.vod}
-              target="_blank"
-              rel="noreferrer"
-              className="mt-2 text-alveus-green-700 hover:underline"
-            >
-              (Full stream VoD)
-            </Link>
-          )}
-        </div>
-      ))}
-    </>
+              {value.vodId && (
+                <Link
+                  href={`https://www.youtube.com/watch?v=${value.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-2 text-alveus-green-700 hover:underline"
+                >
+                  (Full stream VoD)
+                </Link>
+              )}
+            </div>
+          ))}
+        </>
+      )}
+    </YouTubeLightbox>
   );
 };
 
@@ -185,7 +181,7 @@ const CollaborationsPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-48 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section className="flex-grow" containerClassName="flex flex-wrap">
+        <Section className="flex-grow">
           <CollaborationsSection items={collaborations} />
         </Section>
       </div>
