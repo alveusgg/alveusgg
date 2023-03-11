@@ -53,7 +53,7 @@ const POBoxPage: NextPage = () => {
           <li>
             <Link
               className="rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-              href="/donate"
+              href="/contact-us"
             >
               Contact Us
             </Link>
