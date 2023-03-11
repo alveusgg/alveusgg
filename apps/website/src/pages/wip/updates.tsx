@@ -57,7 +57,7 @@ const Updates: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               key={update.id}
               className="text-grey-500 flex flex-row gap-4 border-b border-b-gray-700 p-5"
             >
-              <LocalDateTime dateTime={update.createdAt} />
+              <LocalDateTime dateTime={update.createdAt} format="long" />
               <span>{channelConfigById[update.channel]?.label}</span>
               <div className="flex flex-col">
                 <span className="text-xl">{update.title}</span>
