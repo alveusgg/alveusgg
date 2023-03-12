@@ -1,9 +1,17 @@
-import React, { cloneElement, useEffect, useId, useMemo } from "react";
+import React, {
+  cloneElement,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
-import { type HTMLAttributes, htmlToReact } from "@/utils/attrs";
+import { type HTMLAttributes } from "@/utils/attrs";
+import IconYouTube from "@/icons/IconYouTube";
 
 const iframeSrc = (id: string) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
@@ -53,7 +61,7 @@ const createTrigger = (id: string) => {
         href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
         target="_blank"
         rel="noreferrer"
-        className={className}
+        className={["group/trigger", className].filter(Boolean).join(" ")}
         {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
       >
         {children}
@@ -68,15 +76,46 @@ type PreviewProps = {
   className?: string;
 };
 
+const imgSrc = (id: string, type: string) =>
+  `https://img.youtube.com/vi/${encodeURIComponent(id)}/${encodeURIComponent(
+    type
+  )}.jpg`;
+
 const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
+  // Handle falling back to hq if there isn't a maxres image
+  const [type, setType] = useState<"maxresdefault" | "hqdefault">(
+    "maxresdefault"
+  );
+  const onLoad = useCallback(
+    (e: React.SyntheticEvent<HTMLImageElement>) => {
+      if (type === "maxresdefault" && e.currentTarget.naturalWidth <= 120) {
+        setType("hqdefault");
+      }
+    },
+    [type]
+  );
+
   return (
-    <iframe
-      src={iframeSrc(videoId)}
-      {...htmlToReact(iframeAttrs)}
-      className={["pointer-events-none", iframeAttrs.class, className]
-        .filter(Boolean)
-        .join(" ")}
-    />
+    <div className="relative aspect-video w-full">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={imgSrc(videoId, type)}
+        onLoad={onLoad}
+        alt=""
+        loading="lazy"
+        className={[
+          "pointer-events-none object-cover",
+          iframeAttrs.class,
+          className,
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      />
+      <IconYouTube
+        size={80}
+        className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition-colors transition-transform group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
+      />
+    </div>
   );
 };
 
