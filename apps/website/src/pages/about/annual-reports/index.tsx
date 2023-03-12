@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import React from "react";
 
@@ -22,10 +21,6 @@ const AnnualReportsPage: NextPage = () => {
         title="Annual Reports"
         description="Read through the reports published each year on the current status of Alveus and its mission."
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

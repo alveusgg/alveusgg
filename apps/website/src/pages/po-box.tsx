@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import React from "react";
 
@@ -14,10 +13,6 @@ const POBoxPage: NextPage = () => {
         title="PO Box"
         description="Want to send something to Alveus, perhaps a gift to support the ambassadors? Here's our PO Box."
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

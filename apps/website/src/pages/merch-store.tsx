@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import Link from "next/link";
 import Image from "next/image";
 import React from "react";
@@ -41,10 +40,6 @@ const MerchStorePage: NextPage = () => {
         title="Merch"
         description="Grab yourself some Alveus merch, like a hoodie or t-shirt, or check out the Alveus Georgie and Stompy plushies! ALL of the proceeds go directly into Alveus and the support & care of our educational ambassadors!"
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

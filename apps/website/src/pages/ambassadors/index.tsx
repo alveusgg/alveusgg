@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -22,10 +21,6 @@ const AmbassadorsPage: NextPage = () => {
         title="Ambassadors"
         description="Alveus Ambassadors are animals whose role includes handling and/or training by staff or volunteers for interaction with the public and in support of institutional education and conservation goals."
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

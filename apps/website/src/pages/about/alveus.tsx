@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import Image from "next/image";
 import React from "react";
 
@@ -69,10 +68,6 @@ const AboutAlveusPage: NextPage = () => {
         title="About Alveus"
         description="Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a virtual education center facility to provide permanent homes to non-releasable exotic animals."
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

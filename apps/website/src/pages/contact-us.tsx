@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Head from "next/head";
 import React from "react";
 
 import Section from "@/components/content/Section";
@@ -14,10 +13,6 @@ const ContactUsPage: NextPage = () => {
         title="Contact Us"
         description="Contact us for any questions or concerns you may have. We are not openly hiring."
       />
-
-      <Head>
-        <meta name="robots" content="noindex" />
-      </Head>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

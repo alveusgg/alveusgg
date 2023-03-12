@@ -60,6 +60,9 @@ const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
         content={computedDescription}
       />
       <meta key="twitter:image" name="twitter:image" content={computedImage} />
+      {process.env.NEXT_PUBLIC_NOINDEX === "true" && (
+        <meta key="robots" name="robots" content="noindex" />
+      )}
     </Head>
   );
 };
