@@ -1,12 +1,12 @@
 import React from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
-import Head from "next/head";
 
 import { getAdminSSP } from "@/server/utils/admin";
 import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { AdminShowAndTellEntriesPanel } from "@/components/admin/show-and-tell/AdminShowAndTellEntriesPanel";
 import { permissions } from "@/config/permissions";
+import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
@@ -18,9 +18,7 @@ const AdminShowAndTellPage: NextPage<
 > = ({ menuItems }) => {
   return (
     <>
-      <Head>
-        <title>Admin Show and Tell | Alveus.gg</title>
-      </Head>
+      <Meta title="Admin Show and Tell" />
 
       <AdminPageLayout title="Show and Tell" menuItems={menuItems}>
         <Headline>Submission pending approval</Headline>

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useSession } from "next-auth/react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -8,6 +7,7 @@ import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton
 import { Button, secondaryButtonClasses } from "@/components/shared/Button";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+import Meta from "@/components/content/Meta";
 
 const ShowAndTellSubmitPage: NextPage = () => {
   const session = useSession();
@@ -17,9 +17,7 @@ const ShowAndTellSubmitPage: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Submit - Show and Tell | Alveus.gg</title>
-      </Head>
+      <Meta title="Submit - Show and Tell" />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

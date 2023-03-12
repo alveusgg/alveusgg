@@ -1,7 +1,7 @@
 import React from "react";
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
+import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import { trpc } from "@/utils/trpc";
@@ -18,9 +18,7 @@ const EditShowAndTellPage: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Edit Post - Show and Tell | Alveus.gg</title>
-      </Head>
+      <Meta title="Edit Post - Show and Tell" />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

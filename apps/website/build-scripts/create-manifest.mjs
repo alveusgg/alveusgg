@@ -3,8 +3,8 @@ import "./env.mjs";
 import { env } from "../src/env/client.mjs";
 
 const manifest = {
-  name: "Alveus.gg",
-  short_name: "Alveus.gg",
+  name: "Alveus Sanctuary",
+  short_name: "Alveus Sanctuary",
   icons: [
     {
       src: "/android-chrome-192x192.png",

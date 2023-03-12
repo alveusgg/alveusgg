@@ -176,7 +176,7 @@ export const Navbar: React.FC = () => {
             <Link
               href="/"
               className="flex items-center px-1 md:px-2"
-              aria-label="Alveus.gg"
+              aria-label="Alveus Sanctuary Inc."
             >
               <Image
                 src={logoImage}
@@ -207,7 +207,7 @@ export const Navbar: React.FC = () => {
               </div>
               <div className="flex items-center gap-4 border-t border-white pt-2">
                 <Link href="/" className="font-serif text-3xl font-bold">
-                  Alveus.gg
+                  Alveus
                 </Link>
                 <ul className="flex flex-grow justify-end">
                   {Object.entries(structure).map(([key, link]) => (
@@ -346,7 +346,7 @@ export const Navbar: React.FC = () => {
             {/* Mobile menu toggle */}
             <div className="flex flex-grow items-center justify-center lg:hidden">
               <Link href="/" className="font-serif text-3xl font-bold">
-                Alveus.gg
+                Alveus
               </Link>
             </div>
             <div className="flex items-center lg:hidden">
