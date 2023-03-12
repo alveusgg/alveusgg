@@ -35,6 +35,16 @@ const ContactUsPage: NextPage = () => {
 
         <p className="my-3 text-xl font-semibold">We are not openly hiring.</p>
 
+        <p className="my-3 text-xl font-semibold">
+          For business inquiries: <br />
+          <a
+            href="mailto:TeamAlveus@unitedtalent.com"
+            className="hover:underline"
+          >
+            TeamAlveus@unitedtalent.com
+          </a>
+        </p>
+
         <ul className="my-3 flex flex-wrap gap-4">
           {Object.entries(socials).map(([key, social]) => (
             <li key={key}>
