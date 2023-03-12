@@ -12,6 +12,8 @@ import {
   removeApprovalFromPost,
   deletePost,
   getPostById,
+  markPostAsSeen,
+  unmarkPostAsSeen,
 } from "@/server/db/show-and-tell";
 import { permissions } from "@/config/permissions";
 import { deleteFileStorageObject } from "@/server/utils/file-storage";
@@ -37,6 +39,18 @@ export const adminShowAndTellRouter = router({
   removeApproval: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ input }) => await removeApprovalFromPost(input)),
+
+  markAsSeen: permittedProcedure
+    .input(
+      z.object({ id: z.string().cuid(), retroactive: z.boolean().optional() })
+    )
+    .mutation(
+      async ({ input }) => await markPostAsSeen(input.id, input.retroactive)
+    ),
+
+  unmarkAsSeen: permittedProcedure
+    .input(z.object({ id: z.string().cuid() }))
+    .mutation(async ({ input }) => await unmarkPostAsSeen(input.id)),
 
   delete: permittedProcedure
     .input(z.string().cuid())
@@ -93,7 +107,7 @@ export const adminShowAndTellRouter = router({
               }
             : {},
         orderBy: {
-          createdAt: "desc",
+          approvedAt: "desc",
         },
         include: {
           user: true,
