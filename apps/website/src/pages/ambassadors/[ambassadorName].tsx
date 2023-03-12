@@ -15,7 +15,6 @@ import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
-import Link from "next/link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
 const parseIucnStatus = (rawStatus: string): string => {
@@ -87,10 +86,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
       ...getDefaultPhotoswipeLightboxOptions(),
       gallery: `#${photoswipe}`,
       children: "a",
-      showHideAnimationType: "fade",
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      pswpModule: () => import("photoswipe"),
+      loop: true,
     });
     lightbox.init();
 
