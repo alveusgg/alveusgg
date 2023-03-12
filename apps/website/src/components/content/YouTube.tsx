@@ -34,7 +34,7 @@ const safeJsonParse = (str: string) => {
   }
 };
 
-const parseUrl = (url: string) => {
+export const parseUrl = (url: string) => {
   const match = url.match(
     /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/
   );
@@ -81,7 +81,7 @@ const imgSrc = (id: string, type: string) =>
     type
   )}.jpg`;
 
-const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
+export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
   // Handle falling back to hq if there isn't a maxres image
   const [type, setType] = useState<"maxresdefault" | "hqdefault">(
     "maxresdefault"
@@ -119,22 +119,21 @@ const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
   );
 };
 
-type YouTubeLightboxCtxProps = {
+type LightboxCtxProps = {
   Trigger: ReturnType<typeof createTrigger>;
-  Preview: typeof Preview;
   parseUrl: typeof parseUrl;
   id: string;
 };
 
-type YouTubeLightboxProps = {
+type LightboxProps = {
   id?: string;
   className?: string;
   children:
     | React.ReactNode
-    | ((ctx: YouTubeLightboxCtxProps) => React.ReactNode);
+    | ((ctx: LightboxCtxProps) => React.ReactNode);
 };
 
-const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
+export const Lightbox: React.FC<LightboxProps> = ({
   id,
   className,
   children,
@@ -222,10 +221,9 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
   }, [photoswipeId]);
 
   // Expose the nested components
-  const ctx: YouTubeLightboxCtxProps = useMemo(
+  const ctx: LightboxCtxProps = useMemo(
     () => ({
       Trigger: createTrigger(photoswipeId),
-      Preview,
       parseUrl,
       id: photoswipeId,
     }),
@@ -273,5 +271,3 @@ const YouTubeLightbox: React.FC<YouTubeLightboxProps> = ({
     </>
   );
 };
-
-export default YouTubeLightbox;
