@@ -5,7 +5,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import YouTubeLightbox from "@/components/content/YouTubeLightbox";
+import { Lightbox } from "@/components/content/YouTube";
 import IconTwitch from "@/icons/IconTwitch";
 
 import mayaImage from "@/assets/maya.png";
@@ -117,7 +117,7 @@ const AboutAlveusPage: NextPage = () => {
               <p className="my-4 text-lg">
                 Find out more about Alveus and our aims here.
               </p>
-              <YouTubeLightbox>
+              <Lightbox>
                 {({ Trigger }) => (
                   <Trigger
                     videoId="jXTqWIc--jo"
@@ -126,7 +126,7 @@ const AboutAlveusPage: NextPage = () => {
                     Watch the Video
                   </Trigger>
                 )}
-              </YouTubeLightbox>
+              </Lightbox>
             </div>
           </div>
         </Section>

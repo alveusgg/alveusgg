@@ -6,7 +6,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import YouTubeLightbox from "@/components/content/YouTubeLightbox";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -77,8 +77,8 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
   items,
 }) => {
   return (
-    <YouTubeLightbox id="collaborations" className="flex flex-wrap">
-      {({ Trigger, Preview }) => (
+    <Lightbox id="collaborations" className="flex flex-wrap">
+      {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
             <div
@@ -124,7 +124,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
           ))}
         </>
       )}
-    </YouTubeLightbox>
+    </Lightbox>
   );
 };
 

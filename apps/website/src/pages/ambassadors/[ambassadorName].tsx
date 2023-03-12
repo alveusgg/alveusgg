@@ -13,7 +13,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
-import YouTubeLightbox from "@/components/content/YouTubeLightbox";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
@@ -236,8 +236,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
             &apos;s Highlights
           </Heading>
 
-          <YouTubeLightbox id="highlights" className="flex flex-wrap">
-            {({ Trigger, Preview }) => (
+          <Lightbox id="highlights" className="flex flex-wrap">
+            {({ Trigger }) => (
               <>
                 {ambassador.clips.map(({ id, caption }) => (
                   <div
@@ -257,7 +257,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 ))}
               </>
             )}
-          </YouTubeLightbox>
+          </Lightbox>
         </Section>
       )}
     </>

@@ -8,7 +8,7 @@ import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
-import YouTubeLightbox from "@/components/content/YouTubeLightbox";
+import { Lightbox } from "@/components/content/YouTube";
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
 import IconEmail from "@/icons/IconEmail";
@@ -274,7 +274,7 @@ const Home: NextPage = () => {
                 participate in education programs. Combining platforms this way
                 maximizes the impact for spreading conservation messages.
               </p>
-              <YouTubeLightbox>
+              <Lightbox>
                 {({ Trigger }) => (
                   <Trigger
                     videoId="jXTqWIc--jo"
@@ -283,7 +283,7 @@ const Home: NextPage = () => {
                     Watch the Video
                   </Trigger>
                 )}
-              </YouTubeLightbox>
+              </Lightbox>
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
