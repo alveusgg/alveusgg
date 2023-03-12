@@ -230,11 +230,11 @@ export function ShowAndTellGallery({
           let handleClick: MouseEventHandler<HTMLAnchorElement> | undefined =
             undefined;
           if ("embedUrl" in videoPlatformConfigs[parsedVideoUrl.platform]) {
+            const lightboxIndex = countItemsInPhotoswipe++;
             handleClick = (e) => {
               e.preventDefault();
-              openLightBox(countItemsInPhotoswipe - 1);
+              openLightBox(lightboxIndex);
             };
-            countItemsInPhotoswipe++;
           }
 
           return (
