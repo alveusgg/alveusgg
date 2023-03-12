@@ -16,7 +16,7 @@ import Meta from "@/components/content/Meta";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import Link from "next/link";
-import YouTubeLightbox from "@/components/content/YouTubeLightbox";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 const parseIucnStatus = (rawStatus: string): string => {
   const [status, flag] = rawStatus.split("/");
@@ -240,8 +240,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
             &apos;s Highlights
           </Heading>
 
-          <YouTubeLightbox id="highlights" className="flex flex-wrap">
-            {({ Trigger, Preview }) => (
+          <Lightbox id="highlights" className="flex flex-wrap">
+            {({ Trigger }) => (
               <>
                 {ambassador.clips.map(({ id, caption }) => (
                   <div
@@ -261,7 +261,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 ))}
               </>
             )}
-          </YouTubeLightbox>
+          </Lightbox>
         </Section>
       )}
     </>
