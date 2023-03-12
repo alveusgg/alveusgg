@@ -191,7 +191,7 @@ const Home: NextPage = () => {
       <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
         <div className="absolute inset-0 -z-10 bg-alveus-green">
           <Slideshow images={slides} />
-          <div className="absolute inset-0 bg-black bg-opacity-50" />
+          <div className="absolute inset-0 bg-black opacity-50" />
         </div>
 
         <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:pt-40">
