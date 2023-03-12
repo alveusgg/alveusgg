@@ -139,7 +139,7 @@ const AdminReviewShowAndTellPage: NextPage<
         {entry && (
           <>
             <Headline>Review or edit post:</Headline>
-            <Panel>
+            <Panel lightMode>
               <ShowAndTellEntryForm
                 action="review"
                 entry={entry}

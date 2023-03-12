@@ -45,13 +45,13 @@ export const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
 
       <div
         {...props}
-        className="flex min-h-[calc(100vh-400px)] flex-col border-b bg-gray-800 text-gray-200"
+        className="flex min-h-[calc(100vh-400px)] flex-col border-b border-black bg-gray-800 text-gray-200"
       >
-        <h1 className="border-b bg-gray-900 p-4 text-xl font-semibold">
+        <h1 className="border-b border-black bg-gray-900 p-4 text-xl font-semibold">
           Admin / {title}
         </h1>
         <div className="flex flex-1 flex-row">
-          <nav className="w-[200px] border-r p-3">
+          <nav className="w-[200px] border-r border-black p-3">
             <ul className="justify-stretch flex flex-col gap-1">
               {menuItems.map(({ href, label }) => (
                 <NavLink key={href} href={href}>
