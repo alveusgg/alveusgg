@@ -13,6 +13,7 @@ import { parseVideoUrl } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { LocalDate } from "@/components/shared/LocalDate";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
+import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 
 export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
   attachments: Array<
@@ -79,10 +80,12 @@ export const ShowAndTellEntry = forwardRef<
 
   const header = (
     <header
-      className={`p-4 drop-shadow-xl ${
+      className={`p-4 px-10 drop-shadow-xl ${
         isPresentationView ? "" : "text-center"
       }`}
     >
+      {entry.seenOnStreamAt && <SeenOnStreamBadge />}
+
       <h2
         className={`mb-3 font-serif ${
           isPresentationView ? "text-6xl" : "text-4xl"
@@ -113,7 +116,7 @@ export const ShowAndTellEntry = forwardRef<
         "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 " +
         (isPresentationView
           ? "h-[calc(100vh-6em)] h-[calc(100svh-6em)] w-[80%] select-none snap-center overflow-hidden bg-alveus-green text-white shadow-xl"
-          : "min-h-[70vh] min-h-[70svh] justify-center border-t border-alveus-green first:border-t-0")
+          : "min-h-[70vh] min-h-[70svh] justify-center border-t border-alveus-green/50 first:border-t-0")
       }
       onClick={(e) => {
         if (isPresentationView)
@@ -144,11 +147,12 @@ export const ShowAndTellEntry = forwardRef<
             : ""
         }`}
       >
-        {showPermalink ? (
+        {/* showPermalink ? (
           <Link href={`/show-and-tell/posts/${entry.id}`}>{header}</Link>
         ) : (
           header
-        )}
+        ) */}
+        {header}
 
         <ShowAndTellGallery
           lightboxParent={isPresentationView ? wrapperRef.current : null}

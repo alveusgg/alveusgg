@@ -2,10 +2,11 @@ import type { LinkAttachment } from "@prisma/client";
 import React from "react";
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
+import { Preview } from "@/components/content/YouTube";
 
 type VideoThumbnailProps = {
   videoAttachment: LinkAttachment;
-  showIframeThumbnail?: boolean;
+  showPreview?: boolean;
   openInLightbox?: boolean;
   linkAttributes?: Record<string, unknown> &
     React.AnchorHTMLAttributes<HTMLAnchorElement>;
@@ -14,7 +15,7 @@ type VideoThumbnailProps = {
 export function VideoItem({
   videoAttachment,
   openInLightbox = false,
-  showIframeThumbnail = false,
+  showPreview = false,
   linkAttributes = {},
 }: VideoThumbnailProps) {
   const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
@@ -38,7 +39,13 @@ export function VideoItem({
   }
 
   let content: JSX.Element;
-  if (showIframeThumbnail && urlEmbed) {
+  if (showPreview && platform === "youtube") {
+    content = (
+      <div className="max-w-2xl">
+        <Preview videoId={id} />
+      </div>
+    );
+  } else if (showPreview && urlEmbed) {
     content = (
       <iframe
         allowFullScreen
@@ -56,7 +63,7 @@ export function VideoItem({
       <div
         className={
           "flex w-fit flex-col items-center justify-center rounded-lg text-center text-black " +
-          (showIframeThumbnail
+          (showPreview
             ? "gap-2 bg-white p-4 shadow-xl"
             : "gap-0.5 bg-white/60 p-2 text-sm shadow-lg")
         }
@@ -65,9 +72,9 @@ export function VideoItem({
           platform={videoPlatformConfig.key}
           className="h-5 w-5"
         />
-        {showIframeThumbnail && "Open "}
+        {showPreview && "Open "}
         {videoPlatformConfig.label}
-        {showIframeThumbnail && " in tab."}
+        {showPreview && " in tab."}
       </div>
     );
   }

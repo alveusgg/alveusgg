@@ -87,10 +87,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
       ...getDefaultPhotoswipeLightboxOptions(),
       gallery: `#${photoswipe}`,
       children: "a",
-      showHideAnimationType: "fade",
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      pswpModule: () => import("photoswipe"),
+      loop: true,
     });
     lightbox.init();
 
