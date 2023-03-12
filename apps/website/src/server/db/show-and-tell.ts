@@ -82,12 +82,21 @@ export const showAndTellUpdateInputSchema = showAndTellSharedInputSchema.and(
   })
 );
 
-async function revalidateCache(postId?: string) {
+async function revalidateCache(postIdOrIds?: string | string[]) {
   const url = new URL(
     `${env.NEXT_PUBLIC_BASE_URL}/api/show-and-tell/revalidate`
   );
   url.searchParams.set("secret", env.ACTION_API_SECRET);
-  if (postId) url.searchParams.set("postId", postId);
+
+  if (postIdOrIds) {
+    if (typeof postIdOrIds === "string") {
+      url.searchParams.set("postId", postIdOrIds);
+    } else {
+      postIdOrIds.forEach((postId) =>
+        url.searchParams.append("postId", postId)
+      );
+    }
+  }
 
   return await fetch(url);
 }
@@ -291,6 +300,52 @@ export async function removeApprovalFromPost(
     },
   });
   await revalidateCache(id);
+}
+
+export async function markPostAsSeen(id: string, retroactive = false) {
+  if (!retroactive) {
+    await prisma.showAndTellEntry.update({
+      where: { id },
+      data: {
+        seenOnStreamAt: new Date(),
+      },
+    });
+    await revalidateCache(id);
+    return;
+  }
+
+  const entry = await prisma.showAndTellEntry.findUniqueOrThrow({
+    select: { approvedAt: true },
+    where: { id },
+  });
+  if (!entry.approvedAt) return;
+
+  const ids = (
+    await prisma.showAndTellEntry.findMany({
+      select: { id: true },
+      where: {
+        AND: [whereApproved, { approvedAt: { lte: entry.approvedAt } }],
+      },
+    })
+  ).map((e) => e.id);
+  await prisma.showAndTellEntry.updateMany({
+    where: { id: { in: [id, ...ids] } },
+    data: { seenOnStreamAt: new Date() },
+  });
+
+  await revalidateCache([id, ...ids]);
+  return;
+}
+
+export async function unmarkPostAsSeen(id: string) {
+  await prisma.showAndTellEntry.update({
+    where: { id },
+    data: {
+      seenOnStreamAt: null,
+    },
+  });
+  await revalidateCache(id);
+  return;
 }
 
 export async function deletePost(id: string, authorUserId?: string) {

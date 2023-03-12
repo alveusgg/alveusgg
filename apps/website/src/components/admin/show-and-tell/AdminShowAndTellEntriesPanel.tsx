@@ -1,13 +1,18 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useCallback } from "react";
+import type { inferRouterOutputs } from "@trpc/server";
 import { Panel } from "../Panel";
-import { trpc } from "../../../utils/trpc";
-import { Button } from "../../shared/Button";
 import { AdminShowAndTellEntry } from "./AdminShowAndTellEntry";
+import { trpc } from "@/utils/trpc";
+import { Button } from "@/components/shared/Button";
 import IconLoading from "@/icons/IconLoading";
+import type { AppRouter } from "@/server/trpc/router/_app";
 
 type AdminShowAndTellEntriesPanelProps = {
   filter: "pendingApproval" | "approved";
 };
+
+type RouterOutput = inferRouterOutputs<AppRouter>;
+type Entry = RouterOutput["adminShowAndTell"]["getEntries"]["items"][number];
 
 export function AdminShowAndTellEntriesPanel({
   filter,
@@ -17,6 +22,26 @@ export function AdminShowAndTellEntriesPanel({
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     }
+  );
+
+  const markAsSeen = trpc.adminShowAndTell.markAsSeen.useMutation({
+    onSettled: () => entries.refetch(),
+  });
+  const handleMarkAsSeen = useCallback(
+    (entry: Entry, retroactive = false) => {
+      markAsSeen.mutate({ id: entry.id, retroactive });
+    },
+    [markAsSeen]
+  );
+
+  const unmarkAsSeen = trpc.adminShowAndTell.unmarkAsSeen.useMutation({
+    onSettled: () => entries.refetch(),
+  });
+  const handleUnmarkAsSeen = useCallback(
+    (entry: Entry) => {
+      unmarkAsSeen.mutate({ id: entry.id });
+    },
+    [unmarkAsSeen]
   );
 
   const canLoadMore = entries.hasNextPage && !entries.isFetchingNextPage;
@@ -40,6 +65,9 @@ export function AdminShowAndTellEntriesPanel({
                   Created/Updated
                 </th>
                 <th scope="col" className="text-left">
+                  Seen
+                </th>
+                <th scope="col" className="text-left">
                   Actions
                 </th>
               </tr>
@@ -48,7 +76,12 @@ export function AdminShowAndTellEntriesPanel({
               {entries.data?.pages.map((page) => (
                 <Fragment key={page.nextCursor}>
                   {page.items.map((entry) => (
-                    <AdminShowAndTellEntry key={entry.id} entry={entry} />
+                    <AdminShowAndTellEntry
+                      key={entry.id}
+                      entry={entry}
+                      markSeen={handleMarkAsSeen}
+                      unmarkSeen={handleUnmarkAsSeen}
+                    />
                   ))}
                 </Fragment>
               ))}

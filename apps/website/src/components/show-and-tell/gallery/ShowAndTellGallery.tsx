@@ -39,11 +39,6 @@ export function ShowAndTellGallery({
       ...defaultConfig,
       gallery: `#${photoswipeId}`,
       children: "a[data-pswp-type]",
-      showHideAnimationType: "fade",
-      loop: false,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      pswpModule: () => import("photoswipe"),
       appendToEl: lightboxParent || defaultConfig.appendToEl,
       mainClass: lightboxParent ? "alveus-sat-pswp" : undefined,
       padding: {
@@ -72,9 +67,15 @@ export function ShowAndTellGallery({
 
         content.element = document.createElement("div");
         content.element.className =
-          "pointer-events-none flex items-center h-full " +
+          "pointer-events-none flex flex-col items-center h-full p-0 md:p-4 lg:p-8 " +
           (lightboxParent ? "w-[80%] mr-[20%]" : "w-[calc(100%-80px)]");
 
+        // Create our video wrapper
+        const wrapper = document.createElement("div");
+        wrapper.className = `flex items-center justify-center h-full w-full pswp--${photoswipeId}-wrapper`;
+        content.element.appendChild(wrapper);
+
+        // Create our iframe
         const iframe = document.createElement("iframe");
         iframe.allowFullscreen = true;
         iframe.referrerPolicy = "no-referrer";
@@ -83,7 +84,17 @@ export function ShowAndTellGallery({
         iframe.draggable = false;
         iframe.className = `pointer-events-auto w-[calc(100%-80px)] mx-auto aspect-video select-none`;
         iframe.src = content.data.iframeUrl;
-        content.element.appendChild(iframe);
+
+        // Register the photoswipe load bindings
+        iframe.addEventListener("load", () => {
+          content.onLoaded();
+        });
+        iframe.addEventListener("error", () => {
+          content.onError();
+        });
+
+        // Append the iframe
+        wrapper.appendChild(iframe);
       }
     });
 
@@ -135,7 +146,7 @@ export function ShowAndTellGallery({
         <VideoItem
           key={`image-${i}`}
           videoAttachment={videoAttachment}
-          showIframeThumbnail
+          showPreview
           openInLightbox
           linkAttributes={{
             className:
@@ -219,11 +230,11 @@ export function ShowAndTellGallery({
           let handleClick: MouseEventHandler<HTMLAnchorElement> | undefined =
             undefined;
           if ("embedUrl" in videoPlatformConfigs[parsedVideoUrl.platform]) {
+            const lightboxIndex = countItemsInPhotoswipe++;
             handleClick = (e) => {
               e.preventDefault();
-              openLightBox(countItemsInPhotoswipe - 1);
+              openLightBox(lightboxIndex);
             };
-            countItemsInPhotoswipe++;
           }
 
           return (

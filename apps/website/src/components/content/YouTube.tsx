@@ -128,9 +128,7 @@ type LightboxCtxProps = {
 type LightboxProps = {
   id?: string;
   className?: string;
-  children:
-    | React.ReactNode
-    | ((ctx: LightboxCtxProps) => React.ReactNode);
+  children: React.ReactNode | ((ctx: LightboxCtxProps) => React.ReactNode);
 };
 
 export const Lightbox: React.FC<LightboxProps> = ({
@@ -146,12 +144,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
       gallery: `#${photoswipeId}`,
       mainClass: `pswp--${photoswipeId}`,
       children: `a[data-lightbox-${photoswipeId}]`,
-      showHideAnimationType: "fade",
-      loop: false,
       preloaderDelay: 0,
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      pswpModule: () => import("photoswipe"),
     });
 
     // Expose the video id
