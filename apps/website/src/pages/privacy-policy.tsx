@@ -12,7 +12,7 @@ const Home: NextPage = () => {
     <>
       <Meta
         title="Contact / Privacy Policy"
-        description="At Alveus.gg, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Alveus.gg and how we use it."
+        description="At Alveus Sanctuary Inc., one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Alveus Sanctuary Inc. and how we use it."
       />
 
       {/* Nav background */}
@@ -31,13 +31,14 @@ const Home: NextPage = () => {
           <a href="mailto:admin@alveus.gg">admin@alveus.gg</a>
         </p>
 
-        <Headline>Privacy Policy for Alveus.gg</Headline>
+        <Headline>Privacy Policy for alveussanctuary.org</Headline>
 
         <p>
-          At Alveus.gg, accessible from https://alveus.gg/, one of our main
-          priorities is the privacy of our visitors. This Privacy Policy
-          document contains types of information that is collected and recorded
-          by Alveus.gg and how we use it.
+          At Alveus Sanctuary Inc., accessible from
+          https://alveussanctuary.org/, one of our main priorities is the
+          privacy of our visitors. This Privacy Policy document contains types
+          of information that is collected and recorded by Alveus Sanctuary Inc.
+          and how we use it.
         </p>
 
         <p>
@@ -48,9 +49,9 @@ const Home: NextPage = () => {
         <p>
           This Privacy Policy applies only to our online activities and is valid
           for visitors to our website with regards to the information that they
-          shared and/or collect in Alveus.gg. This policy is not applicable to
-          any information collected offline or via channels other than this
-          website.
+          shared and/or collect in alveussanctuary.org. This policy is not
+          applicable to any information collected offline or via channels other
+          than this website.
         </p>
 
         <Headline>Consent</Headline>
@@ -101,16 +102,16 @@ const Home: NextPage = () => {
         <Headline>Log Files</Headline>
 
         <p>
-          Alveus.gg follows a standard procedure of using log files. These files
-          log visitors when they visit websites. All hosting companies do this
-          and a part of hosting services&apos; analytics. The information
-          collected by log files include internet protocol (IP) addresses,
-          browser type, Internet Service Provider (ISP), date and time stamp,
-          referring/exit pages, and possibly the number of clicks. These are not
-          linked to any information that is personally identifiable. The purpose
-          of the information is for analyzing trends, administering the site,
-          tracking users&apos; movement on the website, and gathering
-          demographic information.
+          alveussanctuary.org follows a standard procedure of using log files.
+          These files log visitors when they visit websites. All hosting
+          companies do this and a part of hosting services&apos; analytics. The
+          information collected by log files include internet protocol (IP)
+          addresses, browser type, Internet Service Provider (ISP), date and
+          time stamp, referring/exit pages, and possibly the number of clicks.
+          These are not linked to any information that is personally
+          identifiable. The purpose of the information is for analyzing trends,
+          administering the site, tracking users&apos; movement on the website,
+          and gathering demographic information.
         </p>
 
         <Headline>Cookies</Headline>
@@ -126,11 +127,11 @@ const Home: NextPage = () => {
         <Headline>Third Party Privacy Policies</Headline>
 
         <p>
-          Alveus.gg&apos;s Privacy Policy does not apply to other websites.
-          Thus, we are advising you to consult the respective Privacy Policies
-          of these third-party servers for more detailed information. It may
-          include their practices and instructions about how to opt-out of
-          certain options.
+          Alveus Sanctuary Inc.&apos;s Privacy Policy does not apply to other
+          websites. Thus, we are advising you to consult the respective Privacy
+          Policies of these third-party servers for more detailed information.
+          It may include their practices and instructions about how to opt-out
+          of certain options.
         </p>
 
         <p>
@@ -218,11 +219,12 @@ const Home: NextPage = () => {
         </p>
 
         <p>
-          Alveus.gg does not knowingly collect any Personal Identifiable
-          Information from children under the age of 13. If you think that your
-          child provided this kind of information on our website, we strongly
-          encourage you to contact us immediately and we will do our best
-          efforts to promptly remove such information from our records.
+          Alveus Sanctuary Inc. does not knowingly collect any Personal
+          Identifiable Information from children under the age of 13. If you
+          think that your child provided this kind of information on our
+          website, we strongly encourage you to contact us immediately and we
+          will do our best efforts to promptly remove such information from our
+          records.
         </p>
       </Section>
     </>

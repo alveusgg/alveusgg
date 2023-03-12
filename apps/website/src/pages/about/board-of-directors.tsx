@@ -91,7 +91,6 @@ const AboutBoardOfDirectorsPage: NextPage = () => {
         description="Meet the Alveus Board of Directors."
       />
       <Head>
-        <title>Board of Directors | Alveus.gg</title>
         <meta name="robots" content="noindex" />
       </Head>
 

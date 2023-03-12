@@ -1,6 +1,5 @@
 import React from "react";
 import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
-import Head from "next/head";
 import { useRouter } from "next/router";
 import {
   CheckCircleIcon,
@@ -23,6 +22,7 @@ import {
   defaultButtonClasses,
 } from "@/components/shared/Button";
 import { permissions } from "@/config/permissions";
+import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
@@ -60,9 +60,7 @@ const AdminReviewShowAndTellPage: NextPage<
 
   return (
     <>
-      <Head>
-        <title>Review submission - Admin Show and Tell | Alveus.gg</title>
-      </Head>
+      <Meta title="Review submission - Admin Show and Tell" />
 
       <AdminPageLayout title="Show and Tell" menuItems={menuItems}>
         <Headline>Submission</Headline>

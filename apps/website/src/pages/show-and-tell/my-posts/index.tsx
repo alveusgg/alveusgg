@@ -1,6 +1,5 @@
 import React from "react";
 import type { NextPage } from "next";
-import Head from "next/head";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
@@ -16,6 +15,7 @@ import {
 import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { getEntityStatus } from "@/utils/entity-helpers";
+import Meta from "@/components/content/Meta";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 
@@ -30,9 +30,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Your Posts - Show and Tell | Alveus.gg</title>
-      </Head>
+      <Meta title="Your Posts - Show and Tell" />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
