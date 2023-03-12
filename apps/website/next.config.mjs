@@ -207,6 +207,9 @@ const config = {
 
     return config;
   },
+  experimental: {
+    scrollRestoration: true,
+  },
 };
 
 export default withSuperjson()(config);

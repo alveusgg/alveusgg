@@ -150,7 +150,7 @@ const advisors = {
   },
   allison: {
     image: allisonJohnsonImage,
-    name: "Dr. Allison Johnson",
+    name: "Allison Johnson",
     title: "Advisory Board Member",
     description: (
       <>

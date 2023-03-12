@@ -194,7 +194,7 @@ const ambassadors: Record<string, Ambassador> = {
     arrival: "2021-04",
     iucn: "LC",
     story:
-      "Stompy was hatched in captivity and Maya hand was raised to be the first Alveus ambassador.",
+      "Stompy was hatched in captivity and was hand raised by Maya to be the first Alveus ambassador.",
     mission:
       "Stopping exotic meat trade, traditional medicine, and over exploitation of animal products in cosmetics.",
     images: [
