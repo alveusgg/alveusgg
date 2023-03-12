@@ -20,7 +20,7 @@ export const LocalDateTime: React.FC<{
         format === "short" ? dateTimeFormatterShort : dateTimeFormatterLong
       ).format(dateTime);
     }
-  }, [dateTime]);
+  }, [dateTime, format]);
 
   return (
     <span ref={ref}>
