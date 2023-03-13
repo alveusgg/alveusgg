@@ -135,7 +135,7 @@ const config = {
     // External redirects
     {
       source: "/merch",
-      destination: "https://alveussanctuary.myshopify.com/",
+      destination: "https://alveussanctuary.myshopify.com",
       permanent: true,
     },
     {
@@ -152,6 +152,11 @@ const config = {
       source: "/paypal",
       destination:
         "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
+      permanent: true,
+    },
+    {
+      source: "/socials",
+      destination: "https://bio.link/alveussanctuary",
       permanent: true,
     },
   ],
