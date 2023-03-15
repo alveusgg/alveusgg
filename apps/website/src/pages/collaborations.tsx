@@ -26,7 +26,8 @@ const collaborations: Record<string, Collaboration> = {
     name: "Ludwig",
     link: "https://www.youtube.com/@ludwig",
     date: "25th February 2023",
-    videoId: "vuLMTU8QHAU",
+    videoId: "po1jytjDu4E",
+    vodId: "vuLMTU8QHAU",
   },
   alinity: {
     name: "Alinity",
