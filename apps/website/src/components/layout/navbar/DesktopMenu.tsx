@@ -6,6 +6,7 @@ import {
   mainNavStructure,
   utilityNavStructure,
 } from "@/config/main-nav-structure";
+import { checkRolesGivePermission, permissions } from "@/config/permissions";
 import {
   NavLink,
   navLinkClassesMain,
@@ -40,6 +41,12 @@ DropdownMenuItems.displayName = "DropdownMenuItems";
 
 export function DesktopMenu() {
   const { data: sessionData } = useSession();
+
+  const user = sessionData?.user;
+  const showAdminLink =
+    user &&
+    (user.isSuperUser ||
+      checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
   return (
     <div className="hidden flex-grow flex-col gap-2 lg:flex">
@@ -135,6 +142,18 @@ export function DesktopMenu() {
                       <ProfileInfo full />
                     </div>
                   </Menu.Item>
+
+                  <Menu.Item disabled>
+                    <div className="border-t opacity-30"></div>
+                  </Menu.Item>
+
+                  {showAdminLink && (
+                    <Menu.Item>
+                      <Link className="px-5 py-3" href="/admin/dashboard">
+                        Admin
+                      </Link>
+                    </Menu.Item>
+                  )}
 
                   <Menu.Item disabled>
                     <div className="border-t opacity-30"></div>

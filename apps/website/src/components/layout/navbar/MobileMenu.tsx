@@ -3,10 +3,17 @@ import React, { Fragment } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { navLinkClassesSub, NavLinkSub } from "./NavLink";
 import { mainNavStructure } from "@/config/main-nav-structure";
+import { checkRolesGivePermission, permissions } from "@/config/permissions";
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 
 export function MobileMenu() {
   const { data: sessionData } = useSession();
+
+  const user = sessionData?.user;
+  const showAdminLink =
+    user &&
+    (user.isSuperUser ||
+      checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
   return (
     <Disclosure.Panel>
@@ -45,23 +52,38 @@ export function MobileMenu() {
 
           {/* User menu */}
           {sessionData ? (
-            <li>
-              <div className="my-3 w-full border-t opacity-30"></div>
+            <>
+              {showAdminLink && (
+                <li>
+                  <div className="my-3 w-full border-t opacity-30"></div>
 
-              <div className="px-5 py-3">
-                <ProfileInfo full />
-              </div>
+                  <Disclosure.Button
+                    as={NavLinkSub}
+                    className="px-5 py-3"
+                    href="/admin/dashboard"
+                  >
+                    Admin
+                  </Disclosure.Button>
+                </li>
+              )}
+              <li>
+                <div className="my-3 w-full border-t opacity-30"></div>
 
-              <Disclosure.Button as={Fragment}>
-                <button
-                  className={`${navLinkClassesSub} w-full text-left`}
-                  type="button"
-                  onClick={() => signOut()}
-                >
-                  Log Out
-                </button>
-              </Disclosure.Button>
-            </li>
+                <div className="px-5 py-3">
+                  <ProfileInfo full />
+                </div>
+
+                <Disclosure.Button as={Fragment}>
+                  <button
+                    className={`${navLinkClassesSub} w-full text-left`}
+                    type="button"
+                    onClick={() => signOut()}
+                  >
+                    Log Out
+                  </button>
+                </Disclosure.Button>
+              </li>
+            </>
           ) : (
             <li>
               <Disclosure.Button as={Fragment}>
