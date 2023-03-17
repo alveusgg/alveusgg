@@ -74,7 +74,7 @@ export function AdminShowAndTellEntriesPanel({
             </thead>
             <tbody>
               {entries.data?.pages.map((page) => (
-                <Fragment key={page.nextCursor}>
+                <Fragment key={page.nextCursor || "default"}>
                   {page.items.map((entry) => (
                     <AdminShowAndTellEntry
                       key={entry.id}
