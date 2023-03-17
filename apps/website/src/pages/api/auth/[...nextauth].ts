@@ -3,17 +3,21 @@ import TwitchProvider from "next-auth/providers/twitch";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-import { env } from "../../../env/server.mjs";
-import { prisma } from "../../../server/db/client";
+import { env } from "@/env/server.mjs";
+import { prisma } from "@/server/db/client";
+import { getRolesForUser } from "@/server/db/users";
+import { checkIsSuperUserId } from "@/server/utils/auth";
 
 const adapter = PrismaAdapter(prisma);
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    session({ session, user }) {
+    async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id;
+        session.user.isSuperUser = checkIsSuperUserId(user.id);
+        session.user.roles = await getRolesForUser(user.id);
       }
       return session;
     },
