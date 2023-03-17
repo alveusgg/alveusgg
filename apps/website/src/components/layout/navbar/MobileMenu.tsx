@@ -1,0 +1,82 @@
+import { Disclosure } from "@headlessui/react";
+import React, { Fragment } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { navLinkClassesSub, NavLinkSub } from "./NavLink";
+import { mainNavStructure } from "@/config/main-nav-structure";
+import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
+
+export function MobileMenu() {
+  const { data: sessionData } = useSession();
+
+  return (
+    <Disclosure.Panel>
+      <div className="space-y-1 p-2 pb-4 lg:hidden">
+        <ul className="flex flex-col">
+          {Object.entries(mainNavStructure).map(([key, link]) => (
+            <li key={key}>
+              {"link" in link ? (
+                <Disclosure.Button
+                  as={NavLinkSub}
+                  href={link.link}
+                  className="w-full"
+                >
+                  {link.title}
+                </Disclosure.Button>
+              ) : (
+                <>
+                  <p className="px-5 py-3 opacity-80">{link.title}</p>
+                  <ul className="ml-4">
+                    {Object.entries(link.dropdown).map(([key, link]) => (
+                      <li key={key}>
+                        <Disclosure.Button
+                          as={NavLinkSub}
+                          href={link.link}
+                          className="w-full"
+                        >
+                          {link.title}
+                        </Disclosure.Button>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              )}
+            </li>
+          ))}
+
+          {/* User menu */}
+          {sessionData ? (
+            <li>
+              <div className="my-3 w-full border-t opacity-30"></div>
+
+              <div className="px-5 py-3">
+                <ProfileInfo full />
+              </div>
+
+              <Disclosure.Button as={Fragment}>
+                <button
+                  className={`${navLinkClassesSub} w-full text-left`}
+                  type="button"
+                  onClick={() => signOut()}
+                >
+                  Log Out
+                </button>
+              </Disclosure.Button>
+            </li>
+          ) : (
+            <li>
+              <Disclosure.Button as={Fragment}>
+                <button
+                  className={`${navLinkClassesSub} w-full text-left`}
+                  type="button"
+                  onClick={() => signIn("twitch")}
+                >
+                  Sign In
+                </button>
+              </Disclosure.Button>
+            </li>
+          )}
+        </ul>
+      </div>
+    </Disclosure.Panel>
+  );
+}
