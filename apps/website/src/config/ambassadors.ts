@@ -51,9 +51,6 @@ import nuggetImage1 from "../assets/ambassadors/nugget/01.jpg";
 import nuggetImage2 from "../assets/ambassadors/nugget/02.jpg";
 import nuggetImage3 from "../assets/ambassadors/nugget/03.jpg";
 
-import henriettaImage1 from "../assets/ambassadors/henrietta/01.jpg";
-import henriettaImage2 from "../assets/ambassadors/henrietta/02.jpg";
-
 import henriqueImage1 from "../assets/ambassadors/henrique/01.jpg";
 import henriqueImage2 from "../assets/ambassadors/henrique/02.jpg";
 
@@ -428,24 +425,6 @@ const ambassadors: Record<string, Ambassador> = {
       { src: nuggetImage1, alt: "Nugget the Ameraucana Chicken" },
       { src: nuggetImage2, alt: "Nugget the Ameraucana Chicken" },
       { src: nuggetImage3, alt: "Nugget the Ameraucana Chicken" },
-    ],
-    clips: [],
-    homepage: null,
-  },
-  henrietta: {
-    name: "Henrietta",
-    species: "Jersey Giant Chicken",
-    scientific: "Gallus gallus domesticus",
-    sex: "Female",
-    birth: "2019",
-    arrival: null,
-    iucn: "NE",
-    story: "Henrietta was rehomed from a local farm.",
-    mission:
-      "She is an ambassador for the agricultural industry and how people can use consumer choice to impact the environment in a positive way.",
-    images: [
-      { src: henriettaImage1, alt: "Henrietta the Jersey Giant Chicken" },
-      { src: henriettaImage2, alt: "Henrietta the Jersey Giant Chicken" },
     ],
     clips: [],
     homepage: null,
