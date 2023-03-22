@@ -97,6 +97,9 @@ import winnieImage1 from "../assets/ambassadors/winnie/01.jpg";
 import winnieImage2 from "../assets/ambassadors/winnie/02.jpg";
 import winnieImage3 from "../assets/ambassadors/winnie/03.jpg";
 import winnieImage4 from "../assets/ambassadors/winnie/04.jpg";
+import winnieImage5 from "../assets/ambassadors/winnie/05.jpg";
+import winnieImage6 from "../assets/ambassadors/winnie/06.jpg";
+import winnieImage7 from "../assets/ambassadors/winnie/07.jpg";
 
 import hankImage1 from "../assets/ambassadors/hank/01.jpg";
 import hankImage2 from "../assets/ambassadors/hank/02.jpg";
@@ -666,6 +669,9 @@ const ambassadors: Record<string, Ambassador> = {
       { src: winnieImage2, alt: "Winnie the Red Angus Beef Cow" },
       { src: winnieImage3, alt: "Winnie the Red Angus Beef Cow" },
       { src: winnieImage4, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage5, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage6, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage7, alt: "Winnie the Red Angus Beef Cow" },
     ],
     clips: [
       { id: "FKU7-u5-L24", caption: "Winnie Causes Chaos In The Grain Stall" },
