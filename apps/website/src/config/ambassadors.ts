@@ -54,6 +54,14 @@ import nuggetImage3 from "../assets/ambassadors/nugget/03.jpg";
 import henriqueImage1 from "../assets/ambassadors/henrique/01.jpg";
 import henriqueImage2 from "../assets/ambassadors/henrique/02.jpg";
 
+import winnieImage1 from "../assets/ambassadors/winnie/01.jpg";
+import winnieImage2 from "../assets/ambassadors/winnie/02.jpg";
+import winnieImage3 from "../assets/ambassadors/winnie/03.jpg";
+import winnieImage4 from "../assets/ambassadors/winnie/04.jpg";
+import winnieImage5 from "../assets/ambassadors/winnie/05.jpg";
+import winnieImage6 from "../assets/ambassadors/winnie/06.jpg";
+import winnieImage7 from "../assets/ambassadors/winnie/07.jpg";
+
 import noodleImage1 from "../assets/ambassadors/noodle/01.jpg";
 import noodleImage2 from "../assets/ambassadors/noodle/02.jpg";
 import noodleImage3 from "../assets/ambassadors/noodle/03.jpg";
@@ -89,14 +97,6 @@ import snorkImage2 from "../assets/ambassadors/snork/02.jpg";
 
 import moominImage1 from "../assets/ambassadors/moomin/01.jpg";
 import moominImage2 from "../assets/ambassadors/moomin/02.jpg";
-
-import winnieImage1 from "../assets/ambassadors/winnie/01.jpg";
-import winnieImage2 from "../assets/ambassadors/winnie/02.jpg";
-import winnieImage3 from "../assets/ambassadors/winnie/03.jpg";
-import winnieImage4 from "../assets/ambassadors/winnie/04.jpg";
-import winnieImage5 from "../assets/ambassadors/winnie/05.jpg";
-import winnieImage6 from "../assets/ambassadors/winnie/06.jpg";
-import winnieImage7 from "../assets/ambassadors/winnie/07.jpg";
 
 import hankImage1 from "../assets/ambassadors/hank/01.jpg";
 import hankImage2 from "../assets/ambassadors/hank/02.jpg";
@@ -453,6 +453,32 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
   },
+  winnieTheMoo: {
+    name: "Winnie (The Moo)",
+    species: "Red Angus Beef Cow",
+    scientific: "Bos (primigenius) taurus",
+    sex: "Female",
+    birth: "2022-03-22",
+    arrival: "2022-04",
+    iucn: "NE",
+    story: "Winnie came from a cattle operation in Oklahoma.",
+    mission:
+      "She is an ambassador for the beef industry and how people can use their consumer choice to impact the environment in a positive way.",
+    images: [
+      { src: winnieImage1, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage2, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage3, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage4, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage5, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage6, alt: "Winnie the Red Angus Beef Cow" },
+      { src: winnieImage7, alt: "Winnie the Red Angus Beef Cow" },
+    ],
+    clips: [
+      { id: "FKU7-u5-L24", caption: "Winnie Causes Chaos In The Grain Stall" },
+      { id: "qWDd5nnWSuI", caption: "Winnie's First Day On Stream" },
+    ],
+    homepage: null,
+  },
   noodle: {
     name: "Noodle",
     species: "Carpet Python",
@@ -631,32 +657,6 @@ const ambassadors: Record<string, Ambassador> = {
       description:
         "He is an ambassador for how the fur trade has affected his species and many others.",
     },
-  },
-  winnieTheMoo: {
-    name: "Winnie (The Moo)",
-    species: "Red Angus Beef Cow",
-    scientific: "Bos (primigenius) taurus",
-    sex: "Female",
-    birth: "2022-03-22",
-    arrival: "2022-04",
-    iucn: "NE",
-    story: "Winnie came from a cattle operation in Oklahoma.",
-    mission:
-      "She is an ambassador for the beef industry and how people can use their consumer choice to impact the environment in a positive way.",
-    images: [
-      { src: winnieImage1, alt: "Winnie the Red Angus Beef Cow" },
-      { src: winnieImage2, alt: "Winnie the Red Angus Beef Cow" },
-      { src: winnieImage3, alt: "Winnie the Red Angus Beef Cow" },
-      { src: winnieImage4, alt: "Winnie the Red Angus Beef Cow" },
-      { src: winnieImage5, alt: "Winnie the Red Angus Beef Cow" },
-      { src: winnieImage6, alt: "Winnie the Red Angus Beef Cow" },
-      { src: winnieImage7, alt: "Winnie the Red Angus Beef Cow" },
-    ],
-    clips: [
-      { id: "FKU7-u5-L24", caption: "Winnie Causes Chaos In The Grain Stall" },
-      { id: "qWDd5nnWSuI", caption: "Winnie's First Day On Stream" },
-    ],
-    homepage: null,
   },
   hankMrMctrain: {
     name: "Hank (The Tank) Mr. McTrain",
