@@ -27,7 +27,7 @@ const merch: { store: MerchItem; plushies: Record<string, MerchItem> } = {
     winniePlush: {
       image: merchWinnieImage,
       title: "Winnie Plush",
-      soon: "March 22nd",
+      link: "https://youtooz.com/products/winnie-plush-9-inch",
     },
     georgiePlush: {
       image: merchGeorgieImage,
