@@ -1,6 +1,4 @@
 import type { UserRole } from "./user-roles";
-import { checkIsSuperUserId } from "@/server/utils/auth";
-import { getRolesForUser } from "@/server/db/users";
 
 export type PermissionConfig = {
   requiredRole?: UserRole;
@@ -38,26 +36,4 @@ export function checkRolesGivePermission(
   return permissionConfig.requiredRole
     ? roles.includes(permissionConfig.requiredRole)
     : false;
-}
-
-export async function checkPermissions(
-  permissionConfig: PermissionConfig,
-  userId?: string
-) {
-  if (!userId) {
-    return false;
-  }
-
-  const isSuperUser = checkIsSuperUserId(userId);
-  if (isSuperUser) {
-    return true;
-  }
-
-  if (!permissionConfig.requiresSuperUser && permissionConfig.requiredRole) {
-    return (await getRolesForUser(userId)).includes(
-      permissionConfig.requiredRole
-    );
-  }
-
-  return false;
 }

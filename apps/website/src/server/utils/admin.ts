@@ -1,13 +1,9 @@
 import { getSession } from "next-auth/react";
 import type { NextPageContext } from "next";
-import { checkIsSuperUserSession } from "@/server/utils/auth";
 import type { PermissionConfig } from "@/config/permissions";
-import {
-  checkPermissions,
-  checkRolesGivePermission,
-  permissions,
-} from "@/config/permissions";
+import { checkRolesGivePermission, permissions } from "@/config/permissions";
 import { notEmpty } from "@/utils/helpers";
+import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 import { getRolesForUser } from "@/server/db/users";
 
 const menuItems = [

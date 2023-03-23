@@ -17,7 +17,7 @@ export function TextField(props: TextFieldProps) {
       <label {...labelProps}>{props.label}</label>
       <br />
       <input
-        className="w-full rounded-sm border border-gray-700 bg-white p-1"
+        className="w-full rounded-sm border border-gray-700 bg-white p-1 text-black"
         {...inputProps}
         list={props.list}
         required={props.isRequired}
