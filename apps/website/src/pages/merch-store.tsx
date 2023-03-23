@@ -8,9 +8,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
 import merchStoreImage from "@/assets/merch/store.png";
-import merchWinnieImage from "@/assets/merch/winnie-plush.png";
-import merchGeorgieImage from "@/assets/merch/georgie-plush.jpg";
-import merchStompyImage from "@/assets/merch/stompy-plush.jpg";
+import ambassadors from "@/config/ambassadors";
 
 type MerchItem = {
   image: StaticImageData;
@@ -23,31 +21,35 @@ const merch: { store: MerchItem; plushies: Record<string, MerchItem> } = {
     title: "Merch Store",
     link: "/merch",
   },
-  plushies: {
-    winniePlush: {
-      image: merchWinnieImage,
-      title: "Winnie Plush",
-      link: "https://youtooz.com/products/winnie-plush-9-inch",
-    },
-    georgiePlush: {
-      image: merchGeorgieImage,
-      title: "Georgie Plush",
-      link: "https://youtooz.com/products/georgie-plush-9-inch",
-    },
-    stompyPlush: {
-      image: merchStompyImage,
-      title: "Stompy Plush",
-      link: "https://youtooz.com/products/stompy-plush-9-inch",
-    },
-  },
+  plushies: Object.entries(ambassadors).reduce(
+    (acc, [key, ambassador]) =>
+      ambassador.plush
+        ? {
+            ...acc,
+            [key]: {
+              image: ambassador.plush.image,
+              title: `${ambassador.name} Plush`,
+              ...("link" in ambassador.plush
+                ? { link: ambassador.plush.link }
+                : { soon: ambassador.plush.soon }),
+            },
+          }
+        : acc,
+    {}
+  ),
 };
 
 type MerchItemProps = {
   item: MerchItem;
+  hideTitle?: boolean;
   className?: string;
 };
 
-const MerchItem: React.FC<MerchItemProps> = ({ item, className }) => {
+const MerchItem: React.FC<MerchItemProps> = ({
+  item,
+  hideTitle = false,
+  className = null,
+}) => {
   return "link" in item ? (
     <Link
       href={item.link}
@@ -57,15 +59,18 @@ const MerchItem: React.FC<MerchItemProps> = ({ item, className }) => {
     >
       <Image
         src={item.image}
-        alt=""
+        width={512}
+        alt={hideTitle ? item.title : ""}
         className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition-shadow transition-transform group-hover:scale-105 group-hover:shadow-2xl"
       />
-      <Heading
-        level={2}
-        className="mt-4 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
-      >
-        {item.title}
-      </Heading>
+      {!hideTitle && (
+        <Heading
+          level={2}
+          className="mt-4 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
+        >
+          {item.title}
+        </Heading>
+      )}
     </Link>
   ) : (
     <div
@@ -74,7 +79,8 @@ const MerchItem: React.FC<MerchItemProps> = ({ item, className }) => {
       <div className="relative">
         <Image
           src={item.image}
-          alt=""
+          width={512}
+          alt={hideTitle ? item.title : ""}
           className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition-shadow transition-transform group-hover:scale-105 group-hover:shadow-2xl"
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition-all group-hover:scale-105 group-hover:opacity-100">
@@ -82,12 +88,14 @@ const MerchItem: React.FC<MerchItemProps> = ({ item, className }) => {
           <p className="text-2xl">{item.soon}</p>
         </div>
       </div>
-      <Heading
-        level={2}
-        className="mt-4 mb-0 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
-      >
-        {item.title}
-      </Heading>
+      {!hideTitle && (
+        <Heading
+          level={2}
+          className="mt-4 mb-0 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
+        >
+          {item.title}
+        </Heading>
+      )}
     </div>
   );
 };
@@ -116,7 +124,7 @@ const MerchStorePage: NextPage = () => {
         className="flex-grow"
         containerClassName="flex flex-wrap items-start"
       >
-        <div className="flex basis-full flex-wrap justify-center gap-8 px-4 py-2 md:basis-1/2 lg:basis-1/3">
+        <div className="flex basis-full flex-wrap justify-center gap-8 p-4 md:basis-1/2 lg:basis-1/3">
           <MerchItem item={merch.store} />
         </div>
 
@@ -124,9 +132,9 @@ const MerchStorePage: NextPage = () => {
           {Object.entries(merch.plushies).map(([key, item]) => (
             <div
               key={key}
-              className="flex basis-full justify-center px-4 py-2 lg:basis-1/2"
+              className="flex basis-full justify-center p-4 lg:basis-1/2"
             >
-              <MerchItem item={item} />
+              <MerchItem item={item} hideTitle />
             </div>
           ))}
         </div>

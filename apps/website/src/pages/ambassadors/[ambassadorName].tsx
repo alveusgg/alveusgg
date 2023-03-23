@@ -1,5 +1,6 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import React, { useEffect, useId, useMemo } from "react";
 
@@ -153,12 +154,14 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
           className="min-h-[85vh] pt-64 md:pt-0"
           containerClassName="flex flex-wrap"
         >
-          <Image
-            src={ambassador.images[0].src}
-            alt={ambassador.images[0].alt}
-            placeholder="blur"
-            className="absolute inset-x-0 top-0 h-64 w-full object-cover md:bottom-0 md:h-full md:w-1/2"
-          />
+          <div className="absolute inset-x-0 top-0 h-64 w-full md:bottom-0 md:h-full md:w-1/2">
+            <Image
+              src={ambassador.images[0].src}
+              alt={ambassador.images[0].alt}
+              placeholder="blur"
+              className="absolute inset-x-0 top-0 h-full w-full object-cover md:sticky md:h-screen md:max-h-full"
+            />
+          </div>
 
           <div className="basis-full md:basis-1/2" />
 
@@ -222,6 +225,22 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
               />
             </div>
+
+            {ambassador.plush && "link" in ambassador.plush && (
+              <Link
+                href={ambassador.plush.link}
+                target="_blank"
+                rel="noreferrer"
+                className="group mx-auto mt-12 -mb-8"
+              >
+                <Image
+                  src={ambassador.plush.image}
+                  width={512}
+                  alt={`${ambassador.name} Plush`}
+                  className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition-shadow transition-transform group-hover:scale-105 group-hover:shadow-2xl"
+                />
+              </Link>
+            )}
           </div>
         </Section>
       </div>

@@ -6,12 +6,14 @@ import stompyImage3 from "../assets/ambassadors/stompy/03.jpg";
 import stompyImage4 from "../assets/ambassadors/stompy/04.jpg";
 import stompyImage5 from "../assets/ambassadors/stompy/05.jpg";
 import stompyImage6 from "../assets/ambassadors/stompy/06.jpg";
+import stompyImageMerch from "../assets/merch/stompy-plush.jpg";
 
 import georgieImage1 from "../assets/ambassadors/georgie/01.jpg";
 import georgieImage2 from "../assets/ambassadors/georgie/02.jpg";
 import georgieImage3 from "../assets/ambassadors/georgie/03.jpg";
 import georgieImage4 from "../assets/ambassadors/georgie/04.png";
 import georgieImage5 from "../assets/ambassadors/georgie/05.jpg";
+import georgieImageMerch from "../assets/merch/georgie-plush.jpg";
 
 import ticoImage1 from "../assets/ambassadors/tico/01.jpg";
 import ticoImage2 from "../assets/ambassadors/tico/02.jpg";
@@ -61,6 +63,7 @@ import winnieImage4 from "../assets/ambassadors/winnie/04.jpg";
 import winnieImage5 from "../assets/ambassadors/winnie/05.jpg";
 import winnieImage6 from "../assets/ambassadors/winnie/06.jpg";
 import winnieImage7 from "../assets/ambassadors/winnie/07.jpg";
+import winnieImageMerch from "../assets/merch/winnie-plush.png";
 
 import noodleImage1 from "../assets/ambassadors/noodle/01.jpg";
 import noodleImage2 from "../assets/ambassadors/noodle/02.jpg";
@@ -182,6 +185,9 @@ export type Ambassador = {
   images: [Image, ...Image[]];
   clips: Clip[];
   homepage: Nullable<{ title: string; description: string }>;
+  plush: Nullable<
+    { image: ImageProps["src"] } & ({ link: string } | { soon: string })
+  >;
 };
 
 const ambassadors: Record<string, Ambassador> = {
@@ -220,6 +226,10 @@ const ambassadors: Record<string, Ambassador> = {
       description:
         "He is an ambassador for how the exotic meat trade & use of animal products in cosmetics has affected his species and many others.",
     },
+    plush: {
+      image: stompyImageMerch,
+      link: "https://youtooz.com/products/stompy-plush-9-inch",
+    },
   },
   georgie: {
     name: "Georgie",
@@ -252,6 +262,10 @@ const ambassadors: Record<string, Ambassador> = {
       description:
         "He is here to teach all about threats to his species and to amphibians worldwide.",
     },
+    plush: {
+      image: georgieImageMerch,
+      link: "https://youtooz.com/products/georgie-plush-9-inch",
+    },
   },
   tico: {
     name: "Tico",
@@ -272,6 +286,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [{ id: "du1TIuJ6BAk", caption: "Tico Dancing With Kayla" }],
     homepage: null,
+    plush: null,
   },
   miley: {
     name: "Miley",
@@ -293,6 +308,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   mia: {
     name: "Mia",
@@ -319,6 +335,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "5ETmZ7oafo4", caption: "Mia Makes A Car Alarm Sound" },
     ],
     homepage: null,
+    plush: null,
   },
   siren: {
     name: "Siren",
@@ -348,6 +365,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "0foatCEQ5vk", caption: "Siren Has A Conversation" },
     ],
     homepage: null,
+    plush: null,
   },
   abbott: {
     name: "Abbott",
@@ -370,6 +388,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "GqvK9m6yoBQ", caption: "Abbott Explores His New Enrichment" },
     ],
     homepage: null,
+    plush: null,
   },
   coconut: {
     name: "Coconut",
@@ -389,6 +408,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   oliver: {
     name: "Oliver",
@@ -408,6 +428,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   nugget: {
     name: "Nugget",
@@ -428,6 +449,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   henrique: {
     name: "Henrique",
@@ -452,6 +474,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   winnieTheMoo: {
     name: "Winnie (The Moo)",
@@ -478,6 +501,10 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "qWDd5nnWSuI", caption: "Winnie's First Day On Stream" },
     ],
     homepage: null,
+    plush: {
+      image: winnieImageMerch,
+      link: "https://youtooz.com/products/winnie-plush-9-inch",
+    },
   },
   noodle: {
     name: "Noodle",
@@ -505,6 +532,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "H5g9i75AQS4", caption: "Noodle Yawns On Stream" },
     ],
     homepage: null,
+    plush: null,
   },
   patchy: {
     name: "Patchy",
@@ -524,6 +552,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   fenn: {
     name: "Fenn",
@@ -548,6 +577,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "670RYU2Xw98", caption: "Fenn Digs Up A Friend In The Enclosure" },
     ],
     homepage: null,
+    plush: null,
   },
   reed: {
     name: "Reed",
@@ -572,6 +602,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "ClWtgsoWta0", caption: "Reed Gets Weighed With Target Training" },
     ],
     homepage: null,
+    plush: null,
   },
   serrano: {
     name: "Serrano",
@@ -593,6 +624,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "81Zrv7veNMY", caption: "The Donkeys Play With A Ball At Night" },
     ],
     homepage: null,
+    plush: null,
   },
   jalapeno: {
     name: "Jalapeño",
@@ -616,6 +648,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "81Zrv7veNMY", caption: "The Donkeys Play With A Ball At Night" },
     ],
     homepage: null,
+    plush: null,
   },
   snork: {
     name: "Snork",
@@ -635,6 +668,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [{ id: "djDIUl2c0v8", caption: "Moomin Steals A Stick From Snork" }],
     homepage: null,
+    plush: null,
   },
   moomin: {
     name: "Moomin",
@@ -657,6 +691,7 @@ const ambassadors: Record<string, Ambassador> = {
       description:
         "He is an ambassador for how the fur trade has affected his species and many others.",
     },
+    plush: null,
   },
   hankMrMctrain: {
     name: "Hank (The Tank) Mr. McTrain",
@@ -680,6 +715,7 @@ const ambassadors: Record<string, Ambassador> = {
       { id: "D-KMGuj3NfY", caption: "Hank Poops While Being Introduced" },
     ],
     homepage: null,
+    plush: null,
   },
   barbaraBakedBean: {
     name: "Barbara / Baked Bean",
@@ -709,6 +745,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   marty: {
     name: "Marty",
@@ -728,6 +765,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   ducky: {
     name: "Ducky",
@@ -747,6 +785,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   bb: {
     name: "BB",
@@ -766,6 +805,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   toasterStrudel: {
     name: "Toaster Strudel",
@@ -786,6 +826,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   tortellini: {
     name: "Tortellini",
@@ -805,6 +846,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [],
     homepage: null,
+    plush: null,
   },
   puppy: {
     name: "Puppy",
@@ -821,6 +863,7 @@ const ambassadors: Record<string, Ambassador> = {
     images: [{ src: puppyImage1, alt: "Puppy the Emperor Scorpion" }],
     clips: [],
     homepage: null,
+    plush: null,
   },
   chipsAhoy: {
     name: "Chips Ahoy",
@@ -840,6 +883,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [{ id: "C2Ob-gQ_9os", caption: "Target Training With The Rats" }],
     homepage: null,
+    plush: null,
   },
   nillaWafer: {
     name: "Nilla Wafer",
@@ -859,6 +903,7 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     clips: [{ id: "C2Ob-gQ_9os", caption: "Target Training With The Rats" }],
     homepage: null,
+    plush: null,
   },
   momo: {
     name: "Momo",
@@ -875,6 +920,7 @@ const ambassadors: Record<string, Ambassador> = {
     images: [{ src: momoImage1, alt: "Momo the Black Tufted Marmoset" }],
     clips: [],
     homepage: null,
+    plush: null,
   },
   appa: {
     name: "Appa",
@@ -891,6 +937,7 @@ const ambassadors: Record<string, Ambassador> = {
     images: [{ src: appaImage1, alt: "Appa the Common Marmoset" }],
     clips: [],
     homepage: null,
+    plush: null,
   },
 };
 
