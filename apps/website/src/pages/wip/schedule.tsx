@@ -4,7 +4,6 @@ import { type InferGetStaticPropsType, type NextPage } from "next";
 import DefaultPageLayout from "@/components/DefaultPageLayout";
 import { Headline } from "@/components/shared/Headline";
 import { ShowCard } from "@/components/schedule/ShowCard";
-import { LinkBox, LinkBoxSocials } from "@/components/shared/LinkBox";
 import Meta from "@/components/content/Meta";
 
 export type SchedulePageProps = InferGetStaticPropsType<typeof getStaticProps>;
@@ -65,10 +64,6 @@ const SchedulePage: NextPage<SchedulePageProps> = ({}) => {
           updates and follow @alveussanctuary on all social platforms to keep up
           to date!
         </p>
-
-        <LinkBox>
-          <LinkBoxSocials />
-        </LinkBox>
       </DefaultPageLayout>
     </>
   );
