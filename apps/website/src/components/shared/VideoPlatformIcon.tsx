@@ -1,11 +1,10 @@
 import React from "react";
-import Image from "next/image";
-import youtubeIcon from "simple-icons/icons/youtube.svg";
-import imgurIcon from "simple-icons/icons/imgur.svg";
 import { VideoCameraIcon } from "@heroicons/react/20/solid";
-import streamableIcon from "@/assets/icons/streamable.svg";
+import IconStreamable from "@/icons/IconStreamable";
+import IconImgur from "@/icons/IconImgur";
 
 import type { videoPlatformConfigs } from "@/utils/video-urls";
+import IconYouTube from "@/icons/IconYouTube";
 
 export function VideoPlatformIcon({
   platform,
@@ -18,12 +17,12 @@ export function VideoPlatformIcon({
 }) {
   switch (platform) {
     case "youtube":
-      return <Image alt={alt} {...props} src={youtubeIcon} />;
+      return <IconYouTube alt={alt} {...props} />;
     case "streamable":
-      return <Image alt={alt} {...props} src={streamableIcon} />;
+      return <IconStreamable alt={alt} {...props} />;
     case "imgur":
     case "imgurGallery":
-      return <Image alt={alt} {...props} src={imgurIcon} />;
+      return <IconImgur alt={alt} {...props} />;
     default:
       return <VideoCameraIcon {...props} />;
   }
