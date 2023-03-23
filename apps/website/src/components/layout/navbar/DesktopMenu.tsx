@@ -149,9 +149,9 @@ export function DesktopMenu() {
 
                   {showAdminLink && (
                     <Menu.Item>
-                      <Link className="px-5 py-3" href="/admin/dashboard">
+                      <NavLinkSub className="px-5 py-3" href="/admin/dashboard">
                         Admin
-                      </Link>
+                      </NavLinkSub>
                     </Menu.Item>
                   )}
 
