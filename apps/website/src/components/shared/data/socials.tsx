@@ -1,8 +1,8 @@
-import IconInstagram from "../../../icons/IconInstagram"
-import IconTikTok from "../../../icons/IconTikTok"
-import IconTwitter from "../../../icons/IconTwitter"
-import IconTwitch from "../../../icons/IconTwitch"
-import IconYouTube from "../../../icons/IconYouTube"
+import IconInstagram from "@/icons/IconInstagram";
+import IconTikTok from "@/icons/IconTikTok";
+import IconTwitter from "@/icons/IconTwitter";
+import IconTwitch from "@/icons/IconTwitch";
+import IconYouTube from "@/icons/IconYouTube";
 
 const socials = {
   twitch: {
