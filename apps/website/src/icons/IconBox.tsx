@@ -3,15 +3,17 @@ import React from "react";
 type IconProps = {
   size?: number;
   className?: string;
+  alt?: string;
 };
 
-const IconBox: React.FC<IconProps> = ({ size = 24, className }) => (
+const IconBox: React.FC<IconProps> = ({ size = 24, className, alt }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     viewBox="0 0 640 512"
     className={className}
+    aria-label={alt}
   >
     <path
       fill="currentColor"

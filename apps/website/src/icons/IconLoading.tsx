@@ -3,15 +3,21 @@ import React from "react";
 type IconProps = {
   size?: number;
   className?: string;
+  alt?: string;
 };
 
-const IconLoading: React.FC<IconProps> = ({ size = 24, className = "" }) => (
+const IconLoading: React.FC<IconProps> = ({
+  size = 24,
+  className = "",
+  alt,
+}) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}
     height={size}
     viewBox="0 0 24 24"
     className={`animate-spin-slow ${className}`}
+    aria-label={alt}
   >
     <circle
       className="opacity-25"
