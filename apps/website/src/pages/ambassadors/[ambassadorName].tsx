@@ -9,12 +9,14 @@ import ambassadors, {
   iucnFlags,
   iucnStatuses,
 } from "@/config/ambassadors";
+import animalQuest from "@/assets/animal-quest.png";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
 import { Lightbox, Preview } from "@/components/content/YouTube";
+import IconYouTube from "@/icons/IconYouTube";
 
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
@@ -165,7 +167,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
 
           <div className="basis-full md:basis-1/2" />
 
-          <div className="flex basis-full flex-col py-4 md:max-w-1/2 md:basis-1/2 md:p-8">
+          <div className="flex basis-full flex-col py-4 md:max-w-1/2 md:basis-1/2 md:px-8 md:pt-8">
             <Heading className="text-5xl">{ambassador.name}</Heading>
 
             <div className="my-2 text-xl">
@@ -231,13 +233,48 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                 href={ambassador.plush.link}
                 target="_blank"
                 rel="noreferrer"
-                className="group mx-auto mt-12 -mb-8"
+                className="group mx-auto mt-12"
               >
                 <Image
                   src={ambassador.plush.image}
                   width={512}
                   alt={`${ambassador.name} Plush`}
-                  className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition-shadow transition-transform group-hover:scale-105 group-hover:shadow-2xl"
+                  className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition-all group-hover:scale-105 group-hover:shadow-2xl"
+                />
+              </Link>
+            )}
+
+            {ambassador.animalQuest && (
+              <Link
+                href={ambassador.animalQuest.link}
+                target="_blank"
+                rel="noreferrer"
+                className="group relative z-0 mt-12 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan py-4 px-6 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
+              >
+                <Image
+                  src={animalQuest}
+                  alt=""
+                  className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
+                />
+
+                <div>
+                  <Heading
+                    level={2}
+                    className="transition-colors group-hover:text-alveus-green-800"
+                  >
+                    Learn more about {ambassador.name}
+                    <br className="hidden sm:block md:hidden xl:block" /> on
+                    Animal Quest
+                  </Heading>
+                  <p className="text-xl text-alveus-green-800">
+                    Animal Quest Ep. {ambassador.animalQuest.episode}:{" "}
+                    {ambassador.animalQuest.edition}
+                  </p>
+                </div>
+
+                <IconYouTube
+                  size={48}
+                  className="shrink-0 transition-colors group-hover:text-alveus-green-600"
                 />
               </Link>
             )}
