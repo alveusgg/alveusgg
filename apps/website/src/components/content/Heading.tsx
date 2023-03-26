@@ -4,12 +4,14 @@ type HeadingProps = {
   children?: React.ReactNode;
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   className?: string;
+  id?: string;
 };
 
 const Heading: React.FC<HeadingProps> = ({
   children,
   level = 1,
   className,
+  id,
 }) => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
   const headingClass = useMemo(
@@ -26,7 +28,11 @@ const Heading: React.FC<HeadingProps> = ({
     [className]
   );
 
-  return <Tag className={headingClass}>{children}</Tag>;
+  return (
+    <Tag className={headingClass} id={id}>
+      {children}
+    </Tag>
+  );
 };
 
 export default Heading;

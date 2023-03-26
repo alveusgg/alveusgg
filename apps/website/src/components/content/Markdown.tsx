@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import Link from "next/link";
-import ReactMarkdown, { type Components } from "react-markdown";
+import ReactMarkdown, { type Components, type Options } from "react-markdown";
+import headingId from "remark-heading-id";
 
 import Heading from "@/components/content/Heading";
 
@@ -11,24 +12,24 @@ type MarkdownProps = {
 const Markdown: React.FC<MarkdownProps> = ({ content }) => {
   const components: Components = useMemo(
     () => ({
-      h1: ({ children }) => (
-        <Heading level={1} className="text-5xl">
-          {children}
+      h1: ({ children, id }) => (
+        <Heading level={1} className="text-5xl" id={id}>
+          {id ? <Link href={`#${id}`}>{children}</Link> : children}
         </Heading>
       ),
-      h2: ({ children }) => (
-        <Heading level={2} className="mt-8">
-          {children}
+      h2: ({ children, id }) => (
+        <Heading level={2} className="mt-8" id={id}>
+          {id ? <Link href={`#${id}`}>{children}</Link> : children}
         </Heading>
       ),
-      h3: ({ children }) => (
-        <Heading level={3} className="mt-4 text-2xl">
-          {children}
+      h3: ({ children, id }) => (
+        <Heading level={3} className="mt-4 text-2xl" id={id}>
+          {id ? <Link href={`#${id}`}>{children}</Link> : children}
         </Heading>
       ),
-      h4: ({ children }) => (
-        <Heading level={4} className="text-xl">
-          {children}
+      h4: ({ children, id }) => (
+        <Heading level={4} className="text-xl" id={id}>
+          {id ? <Link href={`#${id}`}>{children}</Link> : children}
         </Heading>
       ),
       ul: ({ children }) => <ul className="my-2 ml-8 list-disc">{children}</ul>,
@@ -49,7 +50,13 @@ const Markdown: React.FC<MarkdownProps> = ({ content }) => {
     []
   );
 
-  return <ReactMarkdown components={components}>{content}</ReactMarkdown>;
+  const plugins: Options["remarkPlugins"] = useMemo(() => [headingId], []);
+
+  return (
+    <ReactMarkdown components={components} remarkPlugins={plugins}>
+      {content}
+    </ReactMarkdown>
+  );
 };
 
 export default Markdown;

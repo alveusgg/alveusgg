@@ -5,7 +5,7 @@ This Website collects some Personal Data from its Users.
 This document has [a section dedicated to Californian consumers and their privacy rights](#california_info).
 This document can be printed for reference by using the print command in the settings of any browser.
 
-## Owner and Data Controller
+## Owner and Data Controller {#owner_of_the_data}
 
 Alveus Sanctuary
 
@@ -23,7 +23,7 @@ Any use of Cookies – or of other tracking tools – by this Website or by the 
 
 Users are responsible for any third-party Personal Data obtained, published or shared through this Website and confirm that they have the third party’s consent to provide the Data to the Owner.
 
-## Mode and place of processing the Data
+## Mode and place of processing the Data {#place_of_processing}
 
 ### Methods of processing
 
@@ -65,13 +65,13 @@ The Owner may be allowed to retain Personal Data for a longer period whenever th
 
 Once the retention period expires, Personal Data shall be deleted. Therefore, the right to access, the right to erasure, the right to rectification and the right to data portability cannot be enforced after expiration of the retention period.
 
-## The purposes of processing
+## The purposes of processing {#use_collected_data}
 
 The Data concerning the User is collected to allow the Owner to provide its Service, comply with its legal obligations, respond to enforcement requests, protect its rights and interests (or those of its Users or third parties), detect any malicious or fraudulent activity, as well as the following: Analytics, Traffic optimization and distribution and Displaying content from external platforms.
 
 For specific information about the Personal Data used for each purpose, the User may refer to the section “Detailed information on the processing of Personal Data”.
 
-## Detailed information on the processing of Personal Data
+## Detailed information on the processing of Personal Data {#data_processing_detailed_info}
 
 Personal Data is collected for the following purposes and using the following services:
 
@@ -141,7 +141,7 @@ Personal Data is collected for the following purposes and using the following se
   This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers
 
 
-## The rights of Users
+## The rights of Users {#rights_subjects}
 
 Users may exercise certain rights regarding their Data processed by the Owner.
 
@@ -166,7 +166,7 @@ Users must know that, however, should their Personal Data be processed for direc
 
 Any requests to exercise User rights can be directed to the Owner through the contact details provided in this document. These requests can be exercised free of charge and will be addressed by the Owner as early as possible and always within one month.
 
-## Additional information about Data collection and processing
+## Additional information about Data collection and processing {#further_data_processing_info}
 
 ### Legal action
 
@@ -196,7 +196,7 @@ The Owner reserves the right to make changes to this privacy policy at any time 
 
 Should the changes affect processing activities performed on the basis of the User’s consent, the Owner shall collect new consent from the User, where required.
 
-## Information for Californian consumers
+## Information for Californian consumers {#california_info}
 
 This part of the document integrates with and supplements the information contained in the rest of the privacy policy and is provided by the business running this Website and, if the case may be, its parent, subsidiaries and affiliates (for the purposes of this section referred to collectively as “we”, “us”, “our”).
 
