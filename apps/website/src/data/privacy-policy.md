@@ -97,18 +97,6 @@ Personal Data is collected for the following purposes and using the following se
   This type of service allows you to view content hosted on external platforms directly from the pages of this Website and interact with them.
   This type of service might still collect web traffic data for the pages where the service is installed, even when Users do not use it.
 
-  #### Google Fonts
-
-  Google Fonts is a typeface visualization service provided by Google LLC or by Google Ireland Limited, depending on the location this Website is accessed from, that allows this Website to incorporate content of this kind on its pages.
-
-  Personal Data collected: Usage Data; various types of Data as specified in the privacy policy of the service.
-
-  Place of processing: United States – [Privacy Policy](https://policies.google.com/privacy); Ireland – [Privacy Policy](https://policies.google.com/privacy). Privacy Shield participant.
-
-  Category of personal data collected according to CCPA: internet information.
-
-  This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
-
   #### YouTube video widget
 
   YouTube is a video content visualization service provided by Google LLC or by Google Ireland Limited, depending on the location this Website is accessed from, that allows this Website to incorporate content of this kind on its pages.
@@ -121,20 +109,32 @@ Personal Data is collected for the following purposes and using the following se
 
   This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
 
+  #### Twitch stream widget
+
+  Twitch is a video streaming service provided by Twitch Interactive, Inc, a subsidiary of Amazon.com, Inc. that allows this Website to incorporate content of this kind on its pages.
+
+  Personal Data collected: Cookies; Usage Data.
+
+  Place of processing: United States – [Privacy Policy](https://www.twitch.tv/p/en/legal/privacy-notice/)
+
+  Category of personal data collected according to CCPA: internet information.
+
+  This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
+
 - ### Traffic optimization and distribution
 
   This type of service allows this Website to distribute their content using servers located across different countries and to optimize their performance.
   Which Personal Data are processed depends on the characteristics and the way these services are implemented. Their function is to filter communications between this Website and the User’s browser.
   Considering the widespread distribution of this system, it is difficult to determine the locations to which the contents that may contain Personal Information of the User are transferred.
 
-  #### Cloudflare (Cloudflare Inc.)
+  #### Vercel (Vercel Inc.)
 
-  Cloudflare is a traffic optimization and distribution service provided by Cloudflare Inc.
-  The way Cloudflare is integrated means that it filters all the traffic through this Website, i.e., communication between this Website and the User’s browser, while also allowing analytical data from this Website to be collected.
+  Vercel is a website host and distribution service provided by Vercel Inc.
+  The way Vercel is integrated means that it processes all the traffic to this Website, i.e., communication between this Website and the User’s browser, while also allowing analytical data from this Website to be collected.
 
   Personal Data collected: Cookies; various types of Data as specified in the privacy policy of the service.
 
-  Place of processing: United States – [Privacy Policy](https://www.cloudflare.com/privacypolicy/).
+  Place of processing: United States – [Privacy Policy](https://vercel.com/legal/privacy-policy).
 
   Category of personal data collected according to CCPA: internet information.
 
@@ -353,4 +353,4 @@ This privacy statement has been prepared based on provisions of multiple legisla
 
 This privacy policy relates solely to this Website, if not stated otherwise within this document.
 
-Latest update: May 1st, 2021
+Latest update: March 26th, 2023
