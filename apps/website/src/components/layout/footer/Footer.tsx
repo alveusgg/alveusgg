@@ -66,14 +66,10 @@ export const Footer: React.FC = () => {
               </ul>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-right">
-              <Link
-                className={footerLinkClasses}
-                href="https://www.alveussanctuary.org"
-                target="_blank"
-                rel="noreferrer"
-              >
-                alveussanctuary.org
-              </Link>
+              <p>
+                Copyright &copy; {new Date().getFullYear()} Alveus Sanctuary.
+                <br /> All rights reserved
+              </p>
             </li>
           </ul>
         </div>
