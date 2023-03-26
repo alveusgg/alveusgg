@@ -51,6 +51,7 @@
     "react-aria": "^3.23.1",
     "react-attr-converter": "^0.3.1",
     "react-dom": "18.2.0",
+    "react-markdown": "^8.0.6",
     "react-quill": "^2.0.0",
     "react-stately": "^3.21.0",
     "react-textarea-autosize": "^8.4.1",

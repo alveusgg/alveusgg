@@ -16,7 +16,9 @@ const Heading: React.FC<HeadingProps> = ({
     () =>
       [
         !/\bmy-\d+\b/.test(className || "") && "my-2",
-        "font-serif text-3xl font-bold",
+        !/\btext-(xs|sm|base|lg|[2-6]?xl)\b/.test(className || "") &&
+          "text-3xl",
+        "font-serif font-bold",
         className,
       ]
         .filter(Boolean)
