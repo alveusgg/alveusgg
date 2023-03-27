@@ -1,8 +1,8 @@
-import { knownPushServicesRegex } from "./web-push/known-push-services";
-import { getVapidAuthorizationString } from "./web-push/vapid";
-import { encryptContent } from "./web-push/content-encryption";
-import type { WebPushHttpsRequestOptions } from "./web-push/https-transport";
-import { requestHttps } from "./web-push/https-transport";
+import { knownPushServicesRegex } from "./known-push-services";
+import { getVapidAuthorizationString } from "./vapid";
+import { encryptContent } from "./content-encryption";
+import type { WebPushHttpsRequestOptions } from "./https-transport";
+import { requestHttps } from "./https-transport";
 
 type PushNotificationBase64Url = {
   endpoint: string;
@@ -32,9 +32,10 @@ type PushRequestOptions = {
 };
 
 type HttpsPushRequestOptions = PushRequestOptions &
-  Pick<WebPushHttpsRequestOptions, "agent" | "timeout">;
+  Pick<WebPushHttpsRequestOptions, "timeout">;
 
-const DEFAULT_TTL = 4 * 7 * 24 * 60 * 60; // seconds
+export const WEB_PUSH_MAX_TTL = 4 * 7 * 24 * 60 * 60; // 4 weeks in seconds
+const DEFAULT_TTL = WEB_PUSH_MAX_TTL;
 
 function generateRequestDetails(
   subscription: PushNotificationBase64Url,
@@ -96,16 +97,16 @@ export async function sendWebPushNotification(
   payload: string | Buffer | null,
   options: HttpsPushRequestOptions
 ) {
+  console.log("SEND WEB PUSH NOTIFICATION PAYLOAD", payload);
+
   const { endpoint, body, headers } = generateRequestDetails(
     subscription,
     payload,
     options
   );
 
-  // TODO: Support fetch instead of node https?
   return await requestHttps(endpoint, body, {
     headers: headers,
     timeout: options.timeout,
-    agent: options.agent,
   });
 }

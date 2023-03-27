@@ -2,11 +2,10 @@ import type { ChangeEvent, FormEvent } from "react";
 import { useCallback, useMemo } from "react";
 import debounce from "lodash/debounce";
 
-import { trpc } from "../../utils/trpc";
-import { usePushSubscription } from "../../utils/push-subscription";
 import type { NotificationPermission } from "./NotificationPermission";
-import { ErrorMessage } from "./NotificationPermission";
 import { NotificationCategoryCheckbox } from "./NotificationCategoryCheckbox";
+import { usePushSubscription } from "@/utils/push-subscription";
+import { notificationCategories } from "@/config/notifications";
 
 export const NotificationSettingsForm: React.FC<{
   notificationPermission: NotificationPermission | false;
@@ -14,23 +13,18 @@ export const NotificationSettingsForm: React.FC<{
   const { endpoint, tags, isRegistered, updateTags } = usePushSubscription(
     notificationPermission
   );
-  const config = trpc.notificationsConfig.getConfiguration.useQuery(undefined, {
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-  });
   const enableSettings = notificationPermission === "granted" && isRegistered;
   const handlePreferencesChange = useCallback(
     async (data: FormData) => {
       const tags: Record<string, string> = {};
-      config.data?.categories.forEach(({ tag }) => {
+      notificationCategories.forEach(({ tag }) => {
         tags[tag] = String(
           data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0"
         );
       });
       await updateTags(tags);
     },
-    [config.data?.categories, updateTags]
+    [updateTags]
   );
 
   const submitHandler = useCallback(
@@ -59,15 +53,7 @@ export const NotificationSettingsForm: React.FC<{
     [debouncedHandlePreferencesChange, enableSettings]
   );
 
-  if (config.isLoading) {
-    return <p>Loading settings …</p>;
-  }
-
-  if (config.isError) {
-    return <ErrorMessage>Error loading settings</ErrorMessage>;
-  }
-
-  if (!endpoint || !config.data?.categories.length) {
+  if (!endpoint) {
     return null;
   }
 
@@ -87,7 +73,7 @@ export const NotificationSettingsForm: React.FC<{
           <p>Setting up notifications …</p>
         )}
 
-        {config.data?.categories.map((category) => (
+        {notificationCategories.map((category) => (
           <NotificationCategoryCheckbox
             key={category.tag}
             tag={category.tag}

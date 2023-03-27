@@ -3,7 +3,6 @@ import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/config/permissions";
-import { getNotificationsConfig } from "@/config/notifications";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
@@ -20,13 +19,12 @@ export async function getServerSideProps(context: NextPageContext) {
     return { notFound: true };
   }
 
-  const notificationConfig = await getNotificationsConfig();
-  return { props: { ...adminProps, notificationConfig } };
+  return { props: { ...adminProps } };
 }
 
 const AdminNotificationsPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({ menuItems, notificationConfig }) => {
+> = ({ menuItems }) => {
   return (
     <>
       <Meta title="Notifications | Admin" />
@@ -37,7 +35,7 @@ const AdminNotificationsPage: NextPage<
           <span className="font-semibold text-red">alpha</span>
         </Headline>
         <Panel>
-          <SendNotificationForm notificationConfig={notificationConfig} />
+          <SendNotificationForm />
         </Panel>
       </AdminPageLayout>
     </>

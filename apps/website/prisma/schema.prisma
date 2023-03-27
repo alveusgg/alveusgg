@@ -116,42 +116,50 @@ model UserRole {
   @@unique([userId, role])
 }
 
-model Notification {
-  id          String                 @id @default(cuid())
-  message     String
-  ttl         Int
-  title       String?
-  linkUrl     String?
-  imageUrl    String?
-  callapseId  String?
-  scheduledAt DateTime?
-  topic       String?
-  categories  NotificationCategory[]
-  pushes      NotificationPush[]
+enum NotificationUrgency {
+  VERY_LOW
+  LOW
+  NORMAL
+  HIGH
 }
 
-model NotificationCategory {
-  notificationId String
-  name           String
-  notification   Notification @relation(fields: [notificationId], references: [id])
+model Notification {
+  id        String              @id @default(cuid())
+  message   String
+  createdAt DateTime            @default(now())
+  expiresAt DateTime
+  title     String?
+  linkUrl   String?
+  imageUrl  String?
+  tag       String?
+  urgency   NotificationUrgency @default(NORMAL)
+  pushes    NotificationPush[]
+}
 
-  @@unique([notificationId, name])
+enum NotificationPushProcessingStatus {
+  PENDING
+  IN_PROGRESS
+  DONE
 }
 
 model NotificationPush {
-  notificationId String
-  subscriptionId String
-  userId         String?
-  attempts       Int?
-  clickedAt      DateTime?
-  failedAt       DateTime?
-  deliveredAt    DateTime?
-  user           User?            @relation(fields: [userId], references: [id])
-  notification   Notification     @relation(fields: [notificationId], references: [id])
-  subscription   PushSubscription @relation(fields: [subscriptionId], references: [id])
+  notificationId   String
+  subscriptionId   String
+  userId           String?
+  processingStatus NotificationPushProcessingStatus @default(PENDING)
+  attempts         Int?
+  createdAt        DateTime                         @default(now())
+  expiresAt        DateTime
+  clickedAt        DateTime?
+  failedAt         DateTime?
+  deliveredAt      DateTime?
+  user             User?                            @relation(fields: [userId], references: [id])
+  notification     Notification                     @relation(fields: [notificationId], references: [id])
+  subscription     PushSubscription                 @relation(fields: [subscriptionId], references: [id])
 
   @@unique([notificationId, subscriptionId])
   @@index([userId], name: "NotificationPush_userId")
+  @@index([processingStatus], name: "NotificationPush_processingStatus")
   @@index([subscriptionId], name: "NotificationPush_subscriptionId")
 }
 

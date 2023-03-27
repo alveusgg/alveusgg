@@ -1,7 +1,7 @@
 import type { ECDH } from "crypto";
 import { createHmac, createCipheriv, createECDH, randomBytes } from "crypto";
 
-import { decode } from "../../../utils/base64url";
+import { decode } from "@/utils/base64url";
 
 const PAD_SIZE = 1;
 const TAG_LENGTH = 16;
@@ -152,7 +152,7 @@ export function encryptContent(
     // Pad so that at least one data byte is in a block.
     let recordPad = Math.min(rs - overhead - 1, pad);
     if (pad > 0 && recordPad === 0) {
-      ++recordPad; // Deal with perverse case of rs=overhead+1 with padding.
+      recordPad += 1; // Deal with perverse case of rs=overhead+1 with padding.
     }
     pad -= recordPad;
 

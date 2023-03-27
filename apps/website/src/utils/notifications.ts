@@ -1,3 +1,38 @@
+import { z } from "zod";
+
+export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
+export type NotificationOptionsData = z.infer<typeof notificationOptionsSchema>;
+
+if ({} as NotificationOptionsData satisfies NotificationOptions) {
+  // Weird test to make sure that the types are compatible
+}
+
+export const notificationOptionsSchema = z.object({
+  //actions?: NotificationAction[];
+  badge: z.string().url(),
+  body: z.string(),
+  data: z.object({
+    notificationId: z.string().cuid(),
+    subscriptionId: z.string().cuid(),
+  }),
+  dir: z.enum(["ltr", "rtl", "auto"]),
+  icon: z.string().url().optional(),
+  image: z.string().url().optional(),
+  lang: z.string().length(2).optional(),
+  renotify: z.boolean().optional(),
+  requireInteraction: z.boolean().optional(),
+  silent: z.boolean().optional(),
+  tag: z.string(),
+  timestamp: z.number().optional(),
+  vibrate: z.number().or(z.array(z.number())).optional(),
+});
+
+export const notificationPayloadSchema = z.object({
+  title: z.string(),
+  options: notificationOptionsSchema,
+});
+
+// TODO: Add iOS Safari
 export const notificationHelpEntries = {
   "Chrome/Android": {
     label: "Google Chrome on Android",
@@ -50,9 +85,13 @@ export function sendWelcomeNotification(
   // If the user accepts, let's create a notification
   if (permission === "granted") {
     if (swr) {
-      swr.showNotification("Welcome!", {
-        body: "Push notifications are set up.",
-      });
+      swr
+        .showNotification("Welcome!", {
+          body: "Push notifications are set up.",
+        })
+        .then(() => {
+          // ignore
+        });
     } else {
       new Notification("Welcome!", {
         body: "Notifications are set up.",

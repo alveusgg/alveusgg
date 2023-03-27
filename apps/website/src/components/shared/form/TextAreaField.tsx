@@ -25,7 +25,7 @@ export function TextAreaField(props: TextAreaFieldProps) {
       <TextareaAutosize
         className={`h-[calc(1em+0.5rem)] min-h-[calc(1em+0.5rem)] w-full resize-none resize-y rounded-sm border border-gray-700 bg-white p-1 ${
           props.inputClassName || ""
-        }`}
+        } text-black`}
         {...textareaProps}
         ref={ref}
       />

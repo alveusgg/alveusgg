@@ -36,6 +36,8 @@ export const serverSchema = z.object({
   FILE_STORAGE_REGION: z.string(),
   FILE_STORAGE_SECRET: z.string(),
   FILE_STORAGE_BUCKET: z.string(),
+  UPSTASH_QSTASH_URL: z.string().url().optional(),
+  UPSTASH_QSTASH_KEY: z.string().optional(),
 });
 
 /**
@@ -47,7 +49,10 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_NODE_ENV: z
     .enum(["development", "test", "production"])
     .optional(),
-  NEXT_PUBLIC_BASE_URL: z.string().url(),
+  NEXT_PUBLIC_BASE_URL: z
+    .string()
+    .url()
+    .refine((url) => !url.endsWith("/")),
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
   NEXT_PUBLIC_COOKIEBOT_ID: z.string().optional(),
   NEXT_PUBLIC_NOINDEX: z.string().optional(),

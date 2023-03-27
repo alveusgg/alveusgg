@@ -1,7 +1,7 @@
 import * as jws from "jws";
 import forge from "node-forge";
 
-import { isBase64UrlEncoded, decode } from "../../../utils/base64url";
+import { isBase64UrlEncoded, decode } from "@/utils/base64url";
 
 // Default expiration in seconds
 const DEFAULT_EXPIRATION_SECONDS = 12 * 60 * 60;
@@ -23,6 +23,7 @@ function toPEM(privateKey: string, publicKey: string) {
     forge.asn1.Class.UNIVERSAL,
     forge.asn1.Type.OID,
     false,
+    // prime256v1 = iso(1) member-body(2) us(840) ansi-x962(10045) curves(3) prime(1) prime256v1(7)
     forge.asn1.oidToDer("1.2.840.10045.3.1.7").getBytes()
   );
   const keyAsn = forge.asn1.create(

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { router, superUserProcedure } from "@/server/trpc/trpc";
-import { sendNotification } from "@/server/actions/send-notification";
+import { createNotification } from "@/server/actions/create-notification";
 import { env } from "@/env/server.mjs";
 
 const actionSchema = z.discriminatedUnion("action", [
@@ -20,7 +20,7 @@ export const adminActionRouter = router({
       try {
         switch (input.action) {
           case "sendNotification":
-            await sendNotification({
+            await createNotification({
               tag: input.tag,
               text: input.text,
               heading: input.heading,

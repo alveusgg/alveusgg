@@ -2,7 +2,6 @@ import { router } from "../trpc";
 import { authRouter } from "./auth";
 import { adminActionRouter } from "./admin/actions";
 import { pushSubscriptionRouter } from "./push/subscription";
-import { notificationsConfigRouter } from "./notificationsConfig";
 import { giveawaysRouter } from "./giveaways";
 import { adminGiveawaysRouter } from "./admin/giveaways";
 import { adminActivityFeedRouter } from "./admin/activity-feed";
@@ -18,7 +17,6 @@ export const appRouter = router({
   adminShowAndTell: adminShowAndTellRouter,
   adminUsersRouter: adminUsersRouter,
   pushSubscription: pushSubscriptionRouter,
-  notificationsConfig: notificationsConfigRouter,
   showAndTell: showAndTellRouter,
   giveaways: giveawaysRouter,
 });

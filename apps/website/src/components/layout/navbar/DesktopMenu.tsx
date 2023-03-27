@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import React, { Fragment } from "react";
+import { NotificationsButton } from "./NotificationsButton";
 import {
   mainNavStructure,
   utilityNavStructure,
@@ -65,64 +66,13 @@ export function DesktopMenu() {
               </a>
             </li>
           ))}
-        </ul>
-      </div>
-      <div className="flex items-center gap-4 border-t border-white pt-2">
-        <Link href="/" className="font-serif text-3xl font-bold">
-          Alveus
-        </Link>
-        <ul className="flex flex-grow justify-end">
-          {Object.entries(mainNavStructure).map(([key, link]) => (
-            <li key={key}>
-              {"link" in link ? (
-                <NavLink href={link.link}>{link.title}</NavLink>
-              ) : (
-                <Menu as="div" className="relative">
-                  {({ open }) => (
-                    <>
-                      <Menu.Button
-                        className={[
-                          navLinkClassesMain,
-                          "flex items-center gap-2",
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                      >
-                        {link.title}
-                        <IconAngleDown
-                          size={16}
-                          className={`${
-                            open ? "translate-y-1" : "translate-y-0.5"
-                          } transition-transform`}
-                        />
-                      </Menu.Button>
-
-                      <DropdownMenuItems>
-                        {Object.entries(link.dropdown).map(([key, link]) => (
-                          <Menu.Item as="li" key={key}>
-                            {({ close }) => (
-                              <NavLinkSub
-                                href={link.link}
-                                className="w-full min-w-max"
-                                onClick={close}
-                              >
-                                {link.title}
-                              </NavLinkSub>
-                            )}
-                          </Menu.Item>
-                        ))}
-                      </DropdownMenuItems>
-                    </>
-                  )}
-                </Menu>
-              )}
-            </li>
-          ))}
 
           {/* Notifications toggle */}
-          {/*<li>*/}
-          {/*  <NotificationsButton />*/}
-          {/*</li>*/}
+          <li className="flex gap-4">
+            <div className="border-l border-white"></div>
+
+            <NotificationsButton />
+          </li>
 
           {/* User menu */}
           <li>
@@ -130,7 +80,7 @@ export function DesktopMenu() {
               <Menu as="div" className="relative flex h-full items-center">
                 <Menu.Button
                   as="button"
-                  className="mx-4 cursor-pointer select-none appearance-none rounded-full border-2 border-transparent transition-colors hover:border-white aria-expanded:border-white"
+                  className="mx-1 cursor-pointer select-none appearance-none rounded-full border-2 border-transparent transition-colors hover:border-white aria-expanded:border-white"
                 >
                   <span className="sr-only">Open user menu</span>
                   <ProfileInfoImage />
@@ -187,6 +137,59 @@ export function DesktopMenu() {
               </button>
             )}
           </li>
+        </ul>
+      </div>
+      <div className="flex items-center gap-4 border-t border-white pt-2">
+        <Link href="/" className="font-serif text-3xl font-bold">
+          Alveus
+        </Link>
+        <ul className="flex flex-grow justify-end">
+          {Object.entries(mainNavStructure).map(([key, link]) => (
+            <li key={key}>
+              {"link" in link ? (
+                <NavLink href={link.link}>{link.title}</NavLink>
+              ) : (
+                <Menu as="div" className="relative">
+                  {({ open }) => (
+                    <>
+                      <Menu.Button
+                        className={[
+                          navLinkClassesMain,
+                          "flex items-center gap-2",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      >
+                        {link.title}
+                        <IconAngleDown
+                          size={16}
+                          className={`${
+                            open ? "translate-y-1" : "translate-y-0.5"
+                          } transition-transform`}
+                        />
+                      </Menu.Button>
+
+                      <DropdownMenuItems>
+                        {Object.entries(link.dropdown).map(([key, link]) => (
+                          <Menu.Item as="li" key={key}>
+                            {({ close }) => (
+                              <NavLinkSub
+                                href={link.link}
+                                className="w-full min-w-max"
+                                onClick={close}
+                              >
+                                {link.title}
+                              </NavLinkSub>
+                            )}
+                          </Menu.Item>
+                        ))}
+                      </DropdownMenuItems>
+                    </>
+                  )}
+                </Menu>
+              )}
+            </li>
+          ))}
         </ul>
       </div>
     </div>
