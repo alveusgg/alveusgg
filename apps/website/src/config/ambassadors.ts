@@ -836,7 +836,11 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
+    animalQuest: {
+      link: "https://www.twitch.tv/videos/1778305921?t=00h01m44s",
+      episode: 14,
+      edition: "Madagascar Hissing Cockroach Edition",
+    },
   },
   marty: {
     name: "Marty",
