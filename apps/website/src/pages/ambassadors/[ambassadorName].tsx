@@ -262,9 +262,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                     level={2}
                     className="transition-colors group-hover:text-alveus-green-800"
                   >
-                    Learn more about {ambassador.name}
-                    <br className="hidden sm:block md:hidden xl:block" /> on
-                    Animal Quest
+                    Learn more about {ambassador.name} on{" "}
+                    <span className="min-[320px]:whitespace-nowrap">
+                      Animal Quest
+                    </span>
                   </Heading>
                   <p className="text-xl text-alveus-green-800">
                     Animal Quest Ep. {ambassador.animalQuest.episode}:{" "}
