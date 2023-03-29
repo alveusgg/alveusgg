@@ -9,7 +9,13 @@ import ambassadors, {
   iucnFlags,
   iucnStatuses,
 } from "@/data/ambassadors";
-import animalQuest from "@/assets/animal-quest.png";
+
+import {
+  getAmbassadorEpisode,
+  type AnimalQuestWithEpisode,
+} from "@/data/animal-quest";
+
+import animalQuestImage from "@/assets/animal-quest.png";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -56,6 +62,7 @@ const parseDate = (date: string | null): string => {
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
+  animalQuest?: AnimalQuestWithEpisode;
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -73,17 +80,22 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   const ambassadorName = context.params?.ambassadorName;
   if (typeof ambassadorName !== "string") return { notFound: true };
 
-  const ambassador = ambassadors[kebabToCamel(ambassadorName)];
+  const ambassadorKey = kebabToCamel(ambassadorName);
+  const ambassador = ambassadors[ambassadorKey];
   if (!ambassador) return { notFound: true };
 
   return {
     props: {
       ambassador,
+      animalQuest: getAmbassadorEpisode(ambassadorKey),
     },
   };
 };
 
-const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
+const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
+  ambassador,
+  animalQuest,
+}) => {
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
@@ -244,15 +256,15 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
               </Link>
             )}
 
-            {ambassador.animalQuest && (
+            {animalQuest && (
               <Link
-                href={ambassador.animalQuest.link}
+                href={animalQuest.link}
                 target="_blank"
                 rel="noreferrer"
                 className="group relative z-0 mt-12 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan py-4 px-6 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
               >
                 <Image
-                  src={animalQuest}
+                  src={animalQuestImage}
                   alt=""
                   className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
                 />
@@ -268,8 +280,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({ ambassador }) => {
                     </span>
                   </Heading>
                   <p className="text-xl text-alveus-green-800">
-                    Animal Quest Ep. {ambassador.animalQuest.episode}:{" "}
-                    {ambassador.animalQuest.edition}
+                    Animal Quest Ep. {animalQuest.episode}:{" "}
+                    {animalQuest.edition}
                   </p>
                 </div>
 
