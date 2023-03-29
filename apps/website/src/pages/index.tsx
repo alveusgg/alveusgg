@@ -12,7 +12,7 @@ import { Lightbox } from "@/components/content/YouTube";
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
 import IconEmail from "@/icons/IconEmail";
-import ambassadors from "@/config/ambassadors";
+import ambassadors from "@/data/ambassadors";
 import { camelToKebab } from "@/utils/string-case";
 
 import mayaImage from "@/assets/maya.png";

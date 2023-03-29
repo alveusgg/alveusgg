@@ -8,7 +8,7 @@ import ambassadors, {
   type Ambassador,
   iucnFlags,
   iucnStatuses,
-} from "@/config/ambassadors";
+} from "@/data/ambassadors";
 import animalQuest from "@/assets/animal-quest.png";
 
 import Section from "@/components/content/Section";

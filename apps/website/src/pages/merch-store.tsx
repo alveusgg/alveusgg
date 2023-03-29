@@ -8,7 +8,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
 import merchStoreImage from "@/assets/merch/store.png";
-import ambassadors from "@/config/ambassadors";
+import ambassadors from "@/data/ambassadors";
 
 type MerchItem = {
   image: StaticImageData;
