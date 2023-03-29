@@ -137,6 +137,8 @@ import nillaImage2 from "../assets/ambassadors/nilla/02.jpg";
 import momoImage1 from "../assets/ambassadors/momo/01.jpg";
 import appaImage1 from "../assets/ambassadors/appa/01.jpg";
 
+import { typeSafeObjectKeys } from "@/utils/helpers";
+
 type OneToNine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type ZeroToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type DateStringYear =
@@ -172,6 +174,10 @@ type Clip = { id: string; caption: string };
 
 type Nullable<T> = T | null;
 
+export type AmbassadorsData = Record<string, Ambassador>;
+
+export type AmbassadorKey = keyof typeof ambassadors;
+
 export type Ambassador = {
   name: string;
   species: string;
@@ -190,7 +196,7 @@ export type Ambassador = {
   >;
 };
 
-const ambassadors: Record<string, Ambassador> = {
+const ambassadors = {
   stompy: {
     name: "Stompy",
     species: "Emu",
@@ -939,6 +945,12 @@ const ambassadors: Record<string, Ambassador> = {
     homepage: null,
     plush: null,
   },
-} as const;
+} as const satisfies AmbassadorsData;
 
-export default ambassadors;
+export const ambassadorKeys = typeSafeObjectKeys(ambassadors);
+
+export const isAmbassadorKey = (str: string): str is AmbassadorKey =>
+  ambassadorKeys.includes(str as AmbassadorKey);
+
+const ambassadorsData: AmbassadorsData = ambassadors;
+export default ambassadorsData;

@@ -1,11 +1,10 @@
-import type ambassadors from "@/data/ambassadors";
-
-type Ambassadors = keyof typeof ambassadors;
+import type { AmbassadorKey } from "@/data/ambassadors";
+import { isAmbassadorKey } from "@/data/ambassadors";
 
 export type AnimalQuest = {
   link: string;
   edition: string;
-  ambassadors: Readonly<Ambassadors[]>;
+  ambassadors: Readonly<AmbassadorKey[]>;
 };
 
 const animalQuest: Readonly<AnimalQuest[]> = [
@@ -86,8 +85,10 @@ export type AnimalQuestWithEpisode = AnimalQuest & {
 };
 
 export const getAmbassadorEpisode = (
-  ambassador: Ambassadors
+  ambassador: AmbassadorKey | string
 ): AnimalQuestWithEpisode | undefined => {
+  if (!isAmbassadorKey(ambassador)) return undefined;
+
   for (const [index, quest] of animalQuest.entries()) {
     if (quest.ambassadors.includes(ambassador)) {
       return { ...quest, episode: index + 1 };
