@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { formatDateUTC } from "@/utils/datetime";
+
 import animalQuest, { type AnimalQuestWithEpisode } from "@/data/animal-quest";
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
 
@@ -10,7 +12,6 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -26,28 +27,27 @@ type AnimalQuestSectionProps = {
 
 const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
   return (
-    <>
+    <div className="flex flex-wrap">
       {items.map((episode) => (
         <div
           key={episode.episode}
-          className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
+          className="mx-auto flex basis-full flex-col items-start justify-start py-8 md:px-8 lg:basis-1/2"
         >
-          <Heading
-            level={2}
-            className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
-          >
+          <Heading level={2}>
             <Link
               href={episode.link}
               target="_blank"
               rel="noreferrer"
               className="hover:text-alveus-green-600 hover:underline"
             >
-              Episode {episode.episode}: {episode.edition}
+              <span className="block text-lg">Episode {episode.episode}: </span>
+              {episode.edition}
             </Link>
           </Heading>
+          <p>Broadcast: {formatDateUTC(episode.broadcast, "long")}</p>
         </div>
       ))}
-    </>
+    </div>
   );
 };
 
