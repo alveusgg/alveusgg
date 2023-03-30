@@ -33,6 +33,10 @@ export const mainNavStructure: NavStructure = {
   explore: {
     title: "Explore",
     dropdown: {
+      animalQuest: {
+        title: "Animal Quest",
+        link: "/animal-quest",
+      },
       showAndTell: {
         title: "Show and Tell",
         link: "/show-and-tell",

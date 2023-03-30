@@ -1,5 +1,4 @@
-import type { AmbassadorKey } from "@/data/ambassadors";
-import { isAmbassadorKey } from "@/data/ambassadors";
+import { isAmbassadorKey, type AmbassadorKey } from "@/data/ambassadors";
 
 export type AnimalQuest = {
   link: string;
