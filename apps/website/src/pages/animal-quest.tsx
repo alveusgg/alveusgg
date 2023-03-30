@@ -4,6 +4,7 @@ import Link from "next/link";
 import React from "react";
 
 import animalQuest, { type AnimalQuestWithEpisode } from "@/data/animal-quest";
+import animalQuestLogo from "@/assets/animal-quest/logo.png";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -41,7 +42,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               rel="noreferrer"
               className="hover:text-alveus-green-600 hover:underline"
             >
-              Animal Quest Ep. {episode.episode}: {episode.edition}
+              Episode {episode.episode}: {episode.edition}
             </Link>
           </Heading>
         </div>
@@ -63,18 +64,17 @@ const AnimalQuestPage: NextPage = () => {
 
       <div className="relative">
         <Image
-          src={leafRightImage1}
-          alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block"
-        />
-        <Image
           src={leafLeftImage3}
           alt=""
           className="pointer-events-none absolute -bottom-40 left-0 z-10 hidden h-auto w-1/2 max-w-[16rem] select-none lg:block"
         />
 
-        <Section dark className="py-24">
-          <div className="w-full lg:w-3/5">
+        <Section
+          dark
+          className="py-0"
+          containerClassName="flex flex-wrap-reverse items-center justify-between"
+        >
+          <div className="w-full pb-16 pt-4 md:w-3/5 md:py-24">
             <Heading>Animal Quest</Heading>
             <p className="text-lg">
               Learn about different animals, their risks and what you can do to
@@ -82,6 +82,12 @@ const AnimalQuestPage: NextPage = () => {
               is hosted live by Maya with a focus on a specific animal.
             </p>
           </div>
+
+          <Image
+            src={animalQuestLogo}
+            alt=""
+            className="mx-auto w-full max-w-xl p-4 pt-8 md:mx-0 md:w-2/5 md:pt-4"
+          />
         </Section>
       </div>
 

@@ -15,7 +15,7 @@ import {
   type AnimalQuestWithEpisode,
 } from "@/data/animal-quest";
 
-import animalQuestImage from "@/assets/animal-quest.png";
+import animalQuestImage from "@/assets/animal-quest/full.png";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
