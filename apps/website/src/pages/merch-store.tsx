@@ -8,7 +8,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
 import merchStoreImage from "@/assets/merch/store.png";
-import ambassadors from "@/data/ambassadors";
+import ambassadors, { type AmbassadorsData } from "@/data/ambassadors";
 
 type MerchItem = {
   image: StaticImageData;
@@ -21,7 +21,7 @@ const merch: { store: MerchItem; plushies: Record<string, MerchItem> } = {
     title: "Merch Store",
     link: "/merch",
   },
-  plushies: Object.entries(ambassadors).reduce(
+  plushies: Object.entries(ambassadors as AmbassadorsData).reduce(
     (acc, [key, ambassador]) =>
       ambassador.plush
         ? {
