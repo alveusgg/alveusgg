@@ -56,7 +56,7 @@ const AnimalQuestPage: NextPage = () => {
     <>
       <Meta
         title="Animal Quest"
-        description="Learn about different animals, their risks and what you can do to help them through the Animal Quest livestream series."
+        description="Learn about the ambassadors at Alveus through the Animal Quest series, hosted by Maya Higa."
       />
 
       {/* Nav background */}
@@ -77,9 +77,10 @@ const AnimalQuestPage: NextPage = () => {
           <div className="w-full pb-16 pt-4 md:w-3/5 md:py-24">
             <Heading>Animal Quest</Heading>
             <p className="text-lg">
-              Learn about different animals, their risks and what you can do to
-              help them through the Animal Quest livestream series. Each episode
-              is hosted live by Maya with a focus on a specific animal.
+              Learn about the ambassadors at Alveus through the Animal Quest
+              series, hosted by Maya Higa. Each episode introduces you to a new
+              ambassador and their importance to the environment, the risks they
+              face and what you can do to help them.
             </p>
           </div>
 
