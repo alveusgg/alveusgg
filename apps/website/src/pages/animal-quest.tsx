@@ -18,10 +18,12 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
-const episodes: AnimalQuestWithEpisode[] = animalQuest.map((episode, idx) => ({
-  ...episode,
-  episode: idx + 1,
-}));
+const episodes: AnimalQuestWithEpisode[] = animalQuest
+  .map((episode, idx) => ({
+    ...episode,
+    episode: idx + 1,
+  }))
+  .reverse();
 
 type AnimalQuestSectionProps = {
   items: AnimalQuestWithEpisode[];
