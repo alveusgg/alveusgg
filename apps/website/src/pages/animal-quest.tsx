@@ -1,16 +1,18 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { Fragment } from "react";
 
 import { formatDateUTC } from "@/utils/datetime";
 
 import animalQuest, { type AnimalQuestWithEpisode } from "@/data/animal-quest";
-import animalQuestLogo from "@/assets/animal-quest/logo.png";
+import ambassadors from "@/data/ambassadors";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+
+import animalQuestLogo from "@/assets/animal-quest/logo.png";
 
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -38,13 +40,35 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               href={episode.link}
               target="_blank"
               rel="noreferrer"
-              className="hover:text-alveus-green-600 hover:underline"
+              className="group hover:text-alveus-green-600"
             >
               <span className="block text-lg">Episode {episode.episode}: </span>
-              {episode.edition}
+              <span className="block group-hover:underline">
+                {episode.edition}
+              </span>
             </Link>
           </Heading>
           <p>Broadcast: {formatDateUTC(episode.broadcast, "long")}</p>
+          {episode.ambassadors.length > 0 && (
+            <p>
+              Featuring:{" "}
+              {episode.ambassadors.map((ambassador, idx) => (
+                <Fragment key={ambassador}>
+                  <Link
+                    href={`/ambassadors/${ambassador}`}
+                    className="text-alveus-green-600 hover:underline"
+                  >
+                    {ambassadors[ambassador].name}
+                  </Link>
+                  {idx < episode.ambassadors.length - 2 && ", "}
+                  {idx === episode.ambassadors.length - 2 &&
+                    episode.ambassadors.length > 2 &&
+                    ","}
+                  {idx === episode.ambassadors.length - 2 && " and "}
+                </Fragment>
+              ))}
+            </p>
+          )}
         </div>
       ))}
     </div>

@@ -6,6 +6,7 @@ import React, { useEffect, useId, useMemo } from "react";
 
 import ambassadors, {
   type Ambassador,
+  isAmbassadorKey,
   iucnFlags,
   iucnStatuses,
 } from "@/data/ambassadors";
@@ -81,12 +82,11 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   if (typeof ambassadorName !== "string") return { notFound: true };
 
   const ambassadorKey = kebabToCamel(ambassadorName);
-  const ambassador = ambassadors[ambassadorKey];
-  if (!ambassador) return { notFound: true };
+  if (!isAmbassadorKey(ambassadorKey)) return { notFound: true };
 
   return {
     props: {
-      ambassador,
+      ambassador: ambassadors[ambassadorKey],
       animalQuest: getAmbassadorEpisode(ambassadorKey),
     },
   };
