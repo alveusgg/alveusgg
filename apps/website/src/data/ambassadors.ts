@@ -952,5 +952,4 @@ export const ambassadorKeys = typeSafeObjectKeys(ambassadors);
 export const isAmbassadorKey = (str: string): str is AmbassadorKey =>
   ambassadorKeys.includes(str as AmbassadorKey);
 
-const ambassadorsData: AmbassadorsData = ambassadors;
-export default ambassadorsData;
+export default ambassadors;
