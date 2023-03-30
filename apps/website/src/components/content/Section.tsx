@@ -21,7 +21,7 @@ const Section: React.FC<SectionProps> = ({
   const sectionClass = useMemo(
     () =>
       [
-        "py-16",
+        !/\bpy-\d+\b/.test(className || "") && "py-16",
         offsetParent && "relative z-0",
         dark && "bg-alveus-green text-alveus-tan",
         !dark && "bg-alveus-tan text-alveus-green-900",
