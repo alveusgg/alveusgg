@@ -44,7 +44,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             href={episode.link}
             target="_blank"
             rel="noreferrer"
-            className="group flex flex-wrap items-end justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
+            className="group flex items-end justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
           >
             <Heading level={2} className="my-0 mb-1.5">
               <span className="block text-lg">Episode {episode.episode}: </span>
