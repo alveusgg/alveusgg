@@ -137,6 +137,8 @@ import nillaImage2 from "../assets/ambassadors/nilla/02.jpg";
 import momoImage1 from "../assets/ambassadors/momo/01.jpg";
 import appaImage1 from "../assets/ambassadors/appa/01.jpg";
 
+import type { IUCNStatus } from "./iucn";
+
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
 type OneToNine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
@@ -148,27 +150,6 @@ type DateStringMonth = `0${OneToNine}` | `1${0 | 1 | 2}`;
 type DateStringYearMonth = `${DateStringYear}-${DateStringMonth}`;
 type DateStringDay = `${0}${OneToNine}` | `${1 | 2}${ZeroToNine}` | `3${0 | 1}`;
 type DateString = `${DateStringYearMonth}-${DateStringDay}`;
-
-export const iucnStatuses = {
-  EX: "Extinct",
-  EW: "Extinct in the Wild",
-  CR: "Critically Endangered",
-  EN: "Endangered",
-  VU: "Vulnerable",
-  NT: "Near Threatened",
-  LC: "Least Concern",
-  DD: "Data Deficient",
-  NE: "Not Evaluated",
-};
-
-export const iucnFlags = {
-  increasing: "with increasing population trend",
-  decreasing: "with decreasing population trend",
-};
-
-type IUCNStatuses = keyof typeof iucnStatuses;
-type ICUNFlags = keyof typeof iucnFlags;
-type IUCNStatus = IUCNStatuses | `${IUCNStatuses}/${ICUNFlags}`;
 
 type Image = { src: ImageProps["src"]; alt: string };
 type Clip = { id: string; caption: string };
