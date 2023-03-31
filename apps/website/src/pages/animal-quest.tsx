@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { Fragment } from "react";
 
 import { formatDateUTC } from "@/utils/datetime";
+import { camelToKebab } from "@/utils/string-case";
 
 import animalQuest, { type AnimalQuestWithEpisode } from "@/data/animal-quest";
 import ambassadors from "@/data/ambassadors";
@@ -11,6 +12,7 @@ import ambassadors from "@/data/ambassadors";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import IconYouTube from "@/icons/IconYouTube";
 
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
 import animalQuestFull from "@/assets/animal-quest/full.png";
@@ -18,7 +20,6 @@ import animalQuestFull from "@/assets/animal-quest/full.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import IconYouTube from "@/icons/IconYouTube";
 
 const episodes: AnimalQuestWithEpisode[] = animalQuest
   .map((episode, idx) => ({
@@ -64,7 +65,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               {episode.ambassadors.map((ambassador, idx) => (
                 <Fragment key={ambassador}>
                   <Link
-                    href={`/ambassadors/${ambassador}`}
+                    href={`/ambassadors/${camelToKebab(ambassador)}`}
                     className="text-alveus-green-600 hover:underline"
                   >
                     {ambassadors[ambassador].name}
