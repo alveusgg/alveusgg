@@ -13,6 +13,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
+import animalQuestFull from "@/assets/animal-quest/full.png";
 
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -89,6 +90,7 @@ const AnimalQuestPage: NextPage = () => {
       <Meta
         title="Animal Quest"
         description="Learn about the ambassadors at Alveus through Animal Quest, a series hosted by Maya Higa."
+        image={animalQuestFull.src}
       />
 
       {/* Nav background */}
