@@ -7,13 +7,11 @@ import React, { useEffect, useId, useMemo } from "react";
 import ambassadors, {
   type Ambassador,
   isAmbassadorKey,
-  iucnFlags,
-  iucnStatuses,
 } from "@/data/ambassadors";
-
+import { getIUCNStatus } from "@/data/iucn";
 import {
-  getAmbassadorEpisode,
   type AnimalQuestWithEpisode,
+  getAmbassadorEpisode,
 } from "@/data/animal-quest";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
@@ -27,22 +25,6 @@ import IconYouTube from "@/icons/IconYouTube";
 
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
-
-const parseIucnStatus = (rawStatus: string): string => {
-  const [status, flag] = rawStatus.split("/");
-
-  if (
-    !Object.prototype.hasOwnProperty.call(iucnStatuses, status as PropertyKey)
-  )
-    throw new Error(`Invalid IUCN status: ${status}`);
-  if (!flag) return iucnStatuses[status as keyof typeof iucnStatuses];
-
-  if (!Object.prototype.hasOwnProperty.call(iucnFlags, flag as PropertyKey))
-    throw new Error(`Invalid IUCN flag: ${flag}`);
-  return `${iucnStatuses[status as keyof typeof iucnStatuses]} ${
-    iucnFlags[flag as keyof typeof iucnFlags]
-  }`;
-};
 
 const parseDate = (date: string | null): string => {
   if (!date) return "Unknown";
@@ -192,7 +174,20 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <Heading level={2}>IUCN Status:</Heading>
 
                 <div className="ml-4">
-                  <p className="text-xl">{parseIucnStatus(ambassador.iucn)}</p>
+                  <p className="text-xl">
+                    {ambassador.iucn.id ? (
+                      <Link
+                        href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${ambassador.iucn.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-alveus-green-600 hover:underline"
+                      >
+                        {getIUCNStatus(ambassador.iucn.status)}
+                      </Link>
+                    ) : (
+                      getIUCNStatus(ambassador.iucn.status)
+                    )}
+                  </p>
                 </div>
               </div>
 
