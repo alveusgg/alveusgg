@@ -107,6 +107,15 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model ExtensionStatus {
+  channelId String
+  extension String
+  data      String   @db.Text
+  updatedAt DateTime @default(now())
+
+  @@unique([channelId, extension])
+}
+
 model UserRole {
   id     String @id @default(cuid())
   userId String

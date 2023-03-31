@@ -38,6 +38,11 @@ const menuItems = [
     permission: permissions.manageUsersAndRoles,
   },
   {
+    label: "Extension Status",
+    href: "/admin/extension-status",
+    permission: permissions.manageExtensionStatus,
+  },
+  {
     label: "Twitch API",
     href: "/admin/twitch",
     permission: permissions.manageTwitchApi,

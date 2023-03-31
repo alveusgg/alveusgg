@@ -23,6 +23,7 @@ importers:
       '@next-auth/prisma-adapter': ^1.0.5
       '@next/env': ^13.2.4
       '@paralleldrive/cuid2': ^2.2.0
+      '@planetscale/database': ^1.6.0
       '@prisma/client': ^4.12.0
       '@tanstack/react-query': ^4.28.0
       '@trpc/client': ^10.18.0
@@ -98,6 +99,7 @@ importers:
       '@next-auth/prisma-adapter': 1.0.5_gpg6dgjko2tfickallol6oguta
       '@next/env': 13.2.4
       '@paralleldrive/cuid2': 2.2.0
+      '@planetscale/database': 1.6.0
       '@prisma/client': 4.12.0_prisma@4.12.0
       '@tanstack/react-query': 4.28.0_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.18.0_@trpc+server@10.18.0
@@ -2080,6 +2082,11 @@ packages:
       tiny-glob: 0.2.9
       tslib: 2.5.0
     dev: true
+
+  /@planetscale/database/1.6.0:
+    resolution: {integrity: sha512-eb02567S706Xme/nVwx+EN/wyoHhHBXl1a7+67R/Xm91myEpLn0vZNl58TvLZztBxje4gga16lc8dLt0elNrJA==}
+    engines: {node: '>=16'}
+    dev: false
 
   /@prisma/client/4.12.0_prisma@4.12.0:
     resolution: {integrity: sha512-j9/ighfWwux97J2dS15nqhl60tYoH8V0IuSsgZDb6bCFcQD3fXbXmxjYC8GHhIgOk3lB7Pq+8CwElz2MiDpsSg==}
