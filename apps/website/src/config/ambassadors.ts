@@ -403,7 +403,7 @@ const ambassadors: Record<string, Ambassador> = {
     species: "American Crow",
     scientific: "Corvus brachyrhynchos",
     sex: "Male",
-    birth: "2021",
+    birth: "2020-05",
     arrival: "2021-08",
     iucn: "LC",
     story:
