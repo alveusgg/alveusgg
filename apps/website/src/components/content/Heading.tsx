@@ -1,4 +1,4 @@
-import React, { useMemo } from "react"
+import React, { useMemo } from "react";
 
 type HeadingProps = {
   children?: React.ReactNode;
@@ -6,18 +6,25 @@ type HeadingProps = {
   className?: string;
 };
 
-const Heading: React.FC<HeadingProps> = ({ children, level = 1, className }) => {
+const Heading: React.FC<HeadingProps> = ({
+  children,
+  level = 1,
+  className,
+}) => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
-  const headingClass = useMemo(() => [
-    'my-2 font-serif text-3xl font-bold',
-    className,
-  ].filter(Boolean).join(' '), [ className ]);
-
-  return (
-    <Tag className={headingClass}>
-      {children}
-    </Tag>
+  const headingClass = useMemo(
+    () =>
+      [
+        !/\bmy-\d+\b/.test(className || "") && "my-2",
+        "font-serif text-3xl font-bold",
+        className,
+      ]
+        .filter(Boolean)
+        .join(" "),
+    [className]
   );
+
+  return <Tag className={headingClass}>{children}</Tag>;
 };
 
 export default Heading;

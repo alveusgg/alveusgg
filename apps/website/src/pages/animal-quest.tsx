@@ -17,6 +17,7 @@ import animalQuestLogo from "@/assets/animal-quest/logo.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import IconYouTube from "@/icons/IconYouTube";
 
 const episodes: AnimalQuestWithEpisode[] = animalQuest
   .map((episode, idx) => ({
@@ -35,25 +36,30 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
       {items.map((episode) => (
         <div
           key={episode.episode}
-          className="mx-auto flex basis-full flex-col items-start justify-start py-8 md:px-8 lg:basis-1/2"
+          className="mx-auto basis-full py-8 md:px-8 lg:basis-1/2"
         >
-          <Heading level={2}>
-            <Link
-              href={episode.link}
-              target="_blank"
-              rel="noreferrer"
-              className="group hover:text-alveus-green-600"
-            >
+          <Link
+            href={episode.link}
+            target="_blank"
+            rel="noreferrer"
+            className="group flex flex-wrap items-end justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
+          >
+            <Heading level={2} className="my-0 mb-1.5">
               <span className="block text-lg">Episode {episode.episode}: </span>
               <span className="block group-hover:underline">
                 {episode.edition}
               </span>
-            </Link>
-          </Heading>
-          <p>Broadcast: {formatDateUTC(episode.broadcast, "long")}</p>
+            </Heading>
+
+            <IconYouTube size={48} className="shrink-0" />
+          </Link>
+          <p className="text-lg">
+            <span className="text-base opacity-80">Broadcast: </span>
+            {formatDateUTC(episode.broadcast, "long")}
+          </p>
           {episode.ambassadors.length > 0 && (
-            <p>
-              Featuring:{" "}
+            <p className="text-lg">
+              <span className="text-base opacity-80">Featuring: </span>
               {episode.ambassadors.map((ambassador, idx) => (
                 <Fragment key={ambassador}>
                   <Link
