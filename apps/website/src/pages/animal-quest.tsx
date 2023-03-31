@@ -120,6 +120,7 @@ const AnimalQuestPage: NextPage = () => {
 
           <Image
             src={animalQuestLogo}
+            width={576}
             alt=""
             className="mx-auto w-full max-w-xl p-4 pt-8 md:mx-0 md:w-2/5 md:pt-4"
           />
