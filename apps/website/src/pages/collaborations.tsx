@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
+import { formatDateUTC } from "@/utils/datetime";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -16,71 +18,71 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 type Collaboration = {
   name: string;
   link: string;
-  date: string;
+  date: Date;
   videoId: string;
   vodId?: string;
 };
 
-const collaborations: Record<string, Collaboration> = {
+const collaborations = {
   pointCrow: {
     name: "PointCrow",
     link: "https://www.twitch.tv/pointcrow",
-    date: "24th March 2023",
+    date: new Date("2023-03-24"),
     videoId: "Qz1Iniho9-g",
   },
   russel: {
     name: "Russel",
     link: "https://www.twitch.tv/russel",
-    date: "20th March 2023",
+    date: new Date("2023-03-20"),
     videoId: "OUaYjkkLeFQ",
   },
   ludwig: {
     name: "Ludwig",
     link: "https://www.youtube.com/@ludwig",
-    date: "25th February 2023",
+    date: new Date("2023-02-25"),
     videoId: "po1jytjDu4E",
     vodId: "vuLMTU8QHAU",
   },
   alinity: {
     name: "Alinity",
     link: "https://www.twitch.tv/alinity",
-    date: "9th February 2023",
+    date: new Date("2023-02-09"),
     videoId: "qJpZzDMotmc",
     vodId: "XHTEs94Cf4s",
   },
   connorEatsPants: {
     name: "ConnorEatsPants",
     link: "https://www.twitch.tv/connoreatspants",
-    date: "25th January 2023",
+    date: new Date("2023-01-25"),
     videoId: "nC8qlK3k96Q",
     vodId: "SMEyEfVlzlM",
   },
   botezSisters: {
     name: "The Botez Sisters",
     link: "https://www.twitch.tv/botezlive",
-    date: "30th August 2022",
+    date: new Date("2022-08-30"),
     videoId: "QgvNy11kU6E",
   },
   knut: {
     name: "Knut",
     link: "https://www.twitch.tv/knut",
-    date: "9th August 2022",
+    date: new Date("2022-08-09"),
     videoId: "lFhFx6kf2E4",
   },
   moistCr1tikal: {
     name: "MoistCr1TiKaL",
     link: "https://www.twitch.tv/moistcr1tikal",
-    date: "30th April 2022",
+    date: new Date("2022-04-30"),
     videoId: "pb7MR59s1Z0",
     vodId: "x-OPvwjGHEU",
   },
   jackManifold: {
     name: "Jack Manifold",
     link: "https://www.twitch.tv/jackmanifoldtv",
-    date: "22nd April 2022",
+    date: new Date("2022-04-22"),
     videoId: "jzyxhnODe2g",
   },
-};
+} as const satisfies Record<string, Collaboration>;
 
 type CollaborationsSectionProps = {
   items: Record<string, Collaboration>;
@@ -111,7 +113,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
                   {value.name}
                 </Link>
                 <small className="text-xl text-alveus-green-600">
-                  {value.date}
+                  {formatDateUTC(value.date, "long")}
                 </small>
               </Heading>
 
