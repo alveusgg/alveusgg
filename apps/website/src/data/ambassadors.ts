@@ -137,6 +137,8 @@ import nillaImage2 from "../assets/ambassadors/nilla/02.jpg";
 import momoImage1 from "../assets/ambassadors/momo/01.jpg";
 import appaImage1 from "../assets/ambassadors/appa/01.jpg";
 
+import { typeSafeObjectKeys } from "@/utils/helpers";
+
 type OneToNine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type ZeroToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type DateStringYear =
@@ -172,6 +174,10 @@ type Clip = { id: string; caption: string };
 
 type Nullable<T> = T | null;
 
+export type AmbassadorsData = Record<string, Ambassador>;
+
+export type AmbassadorKey = keyof typeof ambassadors;
+
 export type Ambassador = {
   name: string;
   species: string;
@@ -182,16 +188,15 @@ export type Ambassador = {
   iucn: IUCNStatus;
   story: string;
   mission: string;
-  images: [Image, ...Image[]];
-  clips: Clip[];
+  images: Readonly<[Image, ...Image[]]>;
+  clips: Readonly<Clip[]>;
   homepage: Nullable<{ title: string; description: string }>;
   plush: Nullable<
     { image: ImageProps["src"] } & ({ link: string } | { soon: string })
   >;
-  animalQuest: Nullable<{ link: string; episode: number; edition: string }>;
 };
 
-const ambassadors: Record<string, Ambassador> = {
+const ambassadors = {
   stompy: {
     name: "Stompy",
     species: "Emu",
@@ -231,11 +236,6 @@ const ambassadors: Record<string, Ambassador> = {
       image: stompyImageMerch,
       link: "https://youtooz.com/products/stompy-plush-9-inch",
     },
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1180894968?t=00h00m27s",
-      episode: 2,
-      edition: "Emu Edition",
-    },
   },
   georgie: {
     name: "Georgie",
@@ -272,11 +272,6 @@ const ambassadors: Record<string, Ambassador> = {
       image: georgieImageMerch,
       link: "https://youtooz.com/products/georgie-plush-9-inch",
     },
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1252271923?t=00h00m59s",
-      episode: 4,
-      edition: "African Bullfrog Edition",
-    },
   },
   tico: {
     name: "Tico",
@@ -298,11 +293,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [{ id: "du1TIuJ6BAk", caption: "Tico Dancing With Kayla" }],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1517729157?t=00h04m26s",
-      episode: 9,
-      edition: "Blue and Gold Macaw Edition",
-    },
   },
   miley: {
     name: "Miley",
@@ -325,11 +315,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1551847402?t=00h04m50s",
-      episode: 10,
-      edition: "Catalina Macaw Edition",
-    },
   },
   mia: {
     name: "Mia",
@@ -357,11 +342,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1311168738?t=00h04m48s",
-      episode: 8,
-      edition: "African Grey Edition",
-    },
   },
   siren: {
     name: "Siren",
@@ -392,11 +372,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1456976498?t=00h00m22s",
-      episode: 7,
-      edition: "Blue-fronted Amazon Edition",
-    },
   },
   abbott: {
     name: "Abbott",
@@ -420,11 +395,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1732218911?t=00h15m24s",
-      episode: 12,
-      edition: "Crow Edition",
-    },
   },
   coconut: {
     name: "Coconut",
@@ -445,11 +415,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1732218911?t=00h15m24s",
-      episode: 12,
-      edition: "Crow Edition",
-    },
   },
   oliver: {
     name: "Oliver",
@@ -470,11 +435,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1122488911?t=00h02m03s",
-      episode: 1,
-      edition: "Chicken Edition",
-    },
   },
   nugget: {
     name: "Nugget",
@@ -496,11 +456,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1122488911?t=00h02m03s",
-      episode: 1,
-      edition: "Chicken Edition",
-    },
   },
   henrique: {
     name: "Henrique",
@@ -526,11 +481,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1122488911?t=00h02m03s",
-      episode: 1,
-      edition: "Chicken Edition",
-    },
   },
   winnieTheMoo: {
     name: "Winnie (The Moo)",
@@ -561,7 +511,6 @@ const ambassadors: Record<string, Ambassador> = {
       image: winnieImageMerch,
       link: "https://youtooz.com/products/winnie-plush-9-inch",
     },
-    animalQuest: null,
   },
   noodle: {
     name: "Noodle",
@@ -590,11 +539,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1226537529?t=00h00m21s",
-      episode: 3,
-      edition: "Snake Edition",
-    },
   },
   patchy: {
     name: "Patchy",
@@ -615,11 +559,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1226537529?t=00h00m21s",
-      episode: 3,
-      edition: "Snake Edition",
-    },
   },
   fenn: {
     name: "Fenn",
@@ -645,7 +584,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   reed: {
     name: "Reed",
@@ -671,7 +609,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   serrano: {
     name: "Serrano",
@@ -694,11 +631,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1290623454?t=00h03m48s",
-      episode: 5,
-      edition: "Donkey Edition",
-    },
   },
   jalapeno: {
     name: "Jalapeño",
@@ -723,11 +655,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1290623454?t=00h03m48s",
-      episode: 5,
-      edition: "Donkey Edition",
-    },
   },
   snork: {
     name: "Snork",
@@ -748,11 +675,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [{ id: "djDIUl2c0v8", caption: "Moomin Steals A Stick From Snork" }],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1579522727?t=00h06m10s",
-      episode: 11,
-      edition: "Chinchilla Edition",
-    },
   },
   moomin: {
     name: "Moomin",
@@ -776,11 +698,6 @@ const ambassadors: Record<string, Ambassador> = {
         "He is an ambassador for how the fur trade has affected his species and many others.",
     },
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1579522727?t=00h06m10s",
-      episode: 11,
-      edition: "Chinchilla Edition",
-    },
   },
   hankMrMctrain: {
     name: "Hank (The Tank) Mr. McTrain",
@@ -805,7 +722,6 @@ const ambassadors: Record<string, Ambassador> = {
     ],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   barbaraBakedBean: {
     name: "Barbara / Baked Bean",
@@ -836,11 +752,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1778305921?t=00h01m44s",
-      episode: 14,
-      edition: "Madagascar Hissing Cockroach Edition",
-    },
   },
   marty: {
     name: "Marty",
@@ -861,7 +772,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   ducky: {
     name: "Ducky",
@@ -882,7 +792,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   bb: {
     name: "BB",
@@ -903,7 +812,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   toasterStrudel: {
     name: "Toaster Strudel",
@@ -925,11 +833,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: {
-      link: "https://www.twitch.tv/videos/1732218911?t=00h15m24s",
-      episode: 13,
-      edition: "Blue-tounged Skink Edition",
-    },
   },
   tortellini: {
     name: "Tortellini",
@@ -950,7 +853,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   puppy: {
     name: "Puppy",
@@ -968,7 +870,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   chipsAhoy: {
     name: "Chips Ahoy",
@@ -989,7 +890,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [{ id: "C2Ob-gQ_9os", caption: "Target Training With The Rats" }],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   nillaWafer: {
     name: "Nilla Wafer",
@@ -1010,7 +910,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [{ id: "C2Ob-gQ_9os", caption: "Target Training With The Rats" }],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   momo: {
     name: "Momo",
@@ -1028,7 +927,6 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
   appa: {
     name: "Appa",
@@ -1046,8 +944,12 @@ const ambassadors: Record<string, Ambassador> = {
     clips: [],
     homepage: null,
     plush: null,
-    animalQuest: null,
   },
-};
+} as const satisfies AmbassadorsData;
+
+export const ambassadorKeys = typeSafeObjectKeys(ambassadors);
+
+export const isAmbassadorKey = (str: string): str is AmbassadorKey =>
+  ambassadorKeys.includes(str as AmbassadorKey);
 
 export default ambassadors;

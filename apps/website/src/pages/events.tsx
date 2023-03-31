@@ -2,9 +2,11 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import React from "react";
 
+import { formatDateUTC } from "@/utils/datetime";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import Video from "@/components/content/Video";
+import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
 
 import valentines2023Video from "@/assets/events/valentines-2023.mp4";
@@ -15,10 +17,17 @@ import fundathon2021Video from "@/assets/events/fundathon-2021.mp4";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
-export const events = {
+type Event = {
+  name: string;
+  date: Date;
+  video: Video;
+  stats: Record<string, { title: string; stat: string }>;
+};
+
+const events = {
   valentines2023: {
     name: "Valentine's Day 2023",
-    date: "14th February 2023",
+    date: new Date("2023-02-14"),
     video: valentines2023Video,
     stats: {
       totalDonations: {
@@ -41,7 +50,7 @@ export const events = {
   },
   artAuction2022: {
     name: "Art Auction 2022",
-    date: "22nd April 2022",
+    date: new Date("2022-04-22"),
     video: artAuction2022Video,
     stats: {
       totalDonations: {
@@ -64,7 +73,7 @@ export const events = {
   },
   halloween2021: {
     name: "Halloween 2021",
-    date: "31st October 2021",
+    date: new Date("2021-10-31"),
     video: halloween2021Video,
     stats: {
       totalDonations: {
@@ -91,7 +100,7 @@ export const events = {
   },
   fundathon2021: {
     name: "Fund-a-thon 2021",
-    date: "10th February 2021",
+    date: new Date("2021-02-10"),
     video: fundathon2021Video,
     stats: {
       totalDonations: {
@@ -112,7 +121,7 @@ export const events = {
       },
     },
   },
-};
+} as const satisfies Record<string, Event>;
 
 const EventsPage: NextPage = () => {
   return (
@@ -156,7 +165,7 @@ const EventsPage: NextPage = () => {
           {Object.entries(events).map(([key, event], idx) => (
             <div key={key} className="flex flex-wrap-reverse">
               <div className="mx-auto flex basis-full flex-col py-8 md:px-8 lg:basis-1/2">
-                <Video
+                <VideoPlayer
                   className="my-auto aspect-video w-full rounded-xl"
                   poster={event.video.poster}
                   sources={event.video.sources}
@@ -178,7 +187,7 @@ const EventsPage: NextPage = () => {
                 >
                   {event.name}
                   <small className="text-xl text-alveus-green-600">
-                    {event.date}
+                    {formatDateUTC(event.date, "long")}
                   </small>
                 </Heading>
 
