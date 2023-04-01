@@ -37,6 +37,7 @@ const AboutAnnualReport2021Page: NextPage = () => {
       <Section className="flex-grow">
         <Image
           src={report2021Image}
+          placeholder="blur"
           quality={100}
           alt=""
           className="mx-auto h-auto w-full max-w-[700px]"
