@@ -200,6 +200,12 @@ const config = {
       ],
     });
 
+    // Load markdown files as strings
+    config.module.rules.push({
+      test: /\.md$/,
+      type: "asset/source",
+    });
+
     return config;
   },
   experimental: {

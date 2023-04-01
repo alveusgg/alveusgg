@@ -3,12 +3,13 @@ import Link from "next/link";
 import Image, { type StaticImageData } from "next/image";
 import React from "react";
 
+import ambassadors, { type AmbassadorsData } from "@/data/ambassadors";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
 import merchStoreImage from "@/assets/merch/store.png";
-import ambassadors, { type AmbassadorsData } from "@/data/ambassadors";
 
 type MerchItem = {
   image: StaticImageData;

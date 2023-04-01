@@ -24,3 +24,8 @@ declare module "*.mp4?quality=high" {
 declare module "*.mp4?quality=low" {
   export default Video;
 }
+
+declare module "*.md" {
+  const content: string;
+  export default content;
+}
