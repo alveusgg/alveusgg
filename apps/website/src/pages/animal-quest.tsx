@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import React, { Fragment } from "react";
 
 import { formatDateUTC } from "@/utils/datetime";
@@ -12,6 +11,7 @@ import ambassadors from "@/data/ambassadors";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import IconYouTube from "@/icons/IconYouTube";
 
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
@@ -42,9 +42,9 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
         >
           <Link
             href={episode.link}
-            target="_blank"
-            rel="noreferrer"
             className="group flex items-end justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
+            external
+            custom
           >
             <Heading level={2} className="my-0 mb-1.5">
               <span className="block text-lg">Episode {episode.episode}: </span>
@@ -64,10 +64,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               <span className="text-base opacity-80">Featuring: </span>
               {episode.ambassadors.map((ambassador, idx) => (
                 <Fragment key={ambassador}>
-                  <Link
-                    href={`/ambassadors/${camelToKebab(ambassador)}`}
-                    className="text-alveus-green-600 hover:underline"
-                  >
+                  <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
                     {ambassadors[ambassador].name}
                   </Link>
                   {idx < episode.ambassadors.length - 2 && ", "}
