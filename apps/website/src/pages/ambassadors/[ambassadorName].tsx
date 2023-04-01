@@ -1,6 +1,5 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import React, { useEffect, useId, useMemo } from "react";
 
@@ -20,6 +19,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import IconYouTube from "@/icons/IconYouTube";
 
@@ -178,9 +178,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     {ambassador.iucn.id ? (
                       <Link
                         href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${ambassador.iucn.id}`}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-alveus-green-600 hover:underline"
+                        external
                       >
                         {getIUCNStatus(ambassador.iucn.status)}
                       </Link>
@@ -238,9 +236,9 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             {ambassador.plush && "link" in ambassador.plush && (
               <Link
                 href={ambassador.plush.link}
-                target="_blank"
-                rel="noreferrer"
                 className="group mx-auto mt-12"
+                external
+                custom
               >
                 <Image
                   src={ambassador.plush.image}
@@ -254,9 +252,9 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             {animalQuest && (
               <Link
                 href={animalQuest.link}
-                target="_blank"
-                rel="noreferrer"
                 className="group relative z-0 mt-12 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan py-4 px-6 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
+                external
+                custom
               >
                 <Image
                   src={animalQuestImage}

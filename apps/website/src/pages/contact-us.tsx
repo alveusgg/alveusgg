@@ -4,6 +4,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import socials from "@/components/shared/data/socials";
 
 const ContactUsPage: NextPage = () => {
@@ -25,9 +26,9 @@ const ContactUsPage: NextPage = () => {
         <Heading className="text-6xl">Contact Us</Heading>
 
         <p className="my-3 text-xl font-semibold">
-          <a href="mailto:maya@alveussanctuary.org" className="hover:underline">
+          <Link href="mailto:maya@alveussanctuary.org">
             maya@alveussanctuary.org
-          </a>
+          </Link>
         </p>
 
         <p>You can send in a resume to maya@alveussanctuary.org.</p>
@@ -37,12 +38,9 @@ const ContactUsPage: NextPage = () => {
 
         <p className="my-3 text-xl font-semibold">
           For business inquiries: <br />
-          <a
-            href="mailto:TeamAlveus@unitedtalent.com"
-            className="hover:underline"
-          >
+          <Link href="mailto:TeamAlveus@unitedtalent.com">
             TeamAlveus@unitedtalent.com
-          </a>
+          </Link>
         </p>
 
         <ul className="my-3 flex flex-wrap gap-4">

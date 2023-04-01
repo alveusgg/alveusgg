@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import React from "react";
 
 import { formatDateUTC } from "@/utils/datetime";
@@ -8,6 +7,7 @@ import { formatDateUTC } from "@/utils/datetime";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
@@ -106,9 +106,9 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
               >
                 <Link
                   href={value.link}
-                  target="_blank"
-                  rel="noreferrer"
                   className="hover:text-alveus-green-600 hover:underline"
+                  external
+                  custom
                 >
                   {value.name}
                 </Link>
@@ -126,14 +126,16 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
               </Trigger>
 
               {value.vodId && (
-                <Link
-                  href={`https://www.youtube.com/watch?v=${value.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="mt-2 text-alveus-green-700 hover:underline"
-                >
-                  (Full stream VoD)
-                </Link>
+                <p className="mt-2">
+                  (
+                  <Link
+                    href={`https://www.youtube.com/watch?v=${value.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
+                    external
+                  >
+                    Full stream VoD
+                  </Link>
+                  )
+                </p>
               )}
             </div>
           ))}

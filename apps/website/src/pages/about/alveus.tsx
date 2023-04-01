@@ -5,6 +5,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import { Lightbox } from "@/components/content/YouTube";
 import IconTwitch from "@/icons/IconTwitch";
 
@@ -143,18 +144,18 @@ const AboutAlveusPage: NextPage = () => {
         <ul className="mt-6 mb-2 flex flex-wrap justify-center md:mt-12">
           {Object.entries(stats).map(([key, stat]) => (
             <li key={key} className="basis-full py-4 md:basis-1/3 md:px-4">
-              <a
-                className="flex h-full flex-col justify-center rounded-2xl bg-alveus-green-900 px-6 py-6 shadow-lg transition-shadow hover:shadow-xl"
+              <Link
                 href={stat.source}
-                target="_blank"
-                rel="noreferrer"
+                className="flex h-full flex-col justify-center rounded-2xl bg-alveus-green-900 px-6 py-6 shadow-lg transition-shadow hover:shadow-xl"
+                external
+                custom
               >
                 <p className="text-center text-xl font-bold">{stat.title}</p>
                 <p className="my-4 text-center text-3xl font-extrabold">
                   {stat.value}
                 </p>
                 <p className="text-center">{stat.caption}</p>
-              </a>
+              </Link>
             </li>
           ))}
         </ul>
@@ -192,14 +193,9 @@ const AboutAlveusPage: NextPage = () => {
 
           <p className="text-center text-xs text-gray-500">
             (Source:{" "}
-            <a
-              className="text-red-600 transition-colors hover:text-blue-600"
-              href="https://www.similarweb.com/website/twitch.tv"
-              target="_blank"
-              rel="noreferrer"
-            >
+            <Link href="https://www.similarweb.com/website/twitch.tv" external>
               SimilarWeb
-            </a>
+            </Link>
             )
           </p>
         </Section>
