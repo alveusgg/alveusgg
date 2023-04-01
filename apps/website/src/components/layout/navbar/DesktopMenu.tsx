@@ -2,23 +2,26 @@ import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import React, { Fragment } from "react";
+
 import {
   mainNavStructure,
   utilityNavStructure,
 } from "@/config/main-nav-structure";
 import { checkRolesGivePermission, permissions } from "@/config/permissions";
+
 import {
   NavLink,
   navLinkClassesMain,
   navLinkClassesSub,
   NavLinkSub,
 } from "@/components/layout/navbar/NavLink";
-import IconAngleDown from "@/icons/IconAngleDown";
 import {
   ProfileInfo,
   ProfileInfoImage,
 } from "@/components/layout/navbar/ProfileInfo";
+
 import IconSignIn from "@/icons/IconSignIn";
+import IconAngleDown from "@/icons/IconAngleDown";
 
 const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
   <Transition

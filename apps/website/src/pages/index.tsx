@@ -1,31 +1,35 @@
 import type { NextPage } from "next";
-import Script from "next/script";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useId, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+
+import ambassadors from "@/data/ambassadors";
+import { camelToKebab } from "@/utils/string-case";
 
 import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
+
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
 import IconEmail from "@/icons/IconEmail";
-import ambassadors from "@/data/ambassadors";
-import { camelToKebab } from "@/utils/string-case";
 
 import mayaImage from "@/assets/maya.png";
+
 import sirenHeroImage from "@/assets/hero/siren.png";
 import mileyHeroImage from "@/assets/hero/miley.png";
 import ticoHeroImage from "@/assets/hero/tico.png";
 import miaHeroImage from "@/assets/hero/mia.png";
 import noodleHeroImage from "@/assets/hero/noodle.png";
 import nuggetHeroImage from "@/assets/hero/nugget.png";
+
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+
 import caseMerchImage from "@/assets/merch/biodegradable-iphone-case-iphone-11-pro-max-case-on-phone.png";
 import toteMerchImage from "@/assets/merch/large-eco-tote-oyster-front.png";
 import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-front.png";
@@ -150,40 +154,26 @@ const help = {
   },
 };
 
+const getTwitchEmbed = (channel: string, location: Location | URL): string => {
+  const url = new URL("https://embed.twitch.tv");
+  url.searchParams.set("channel", channel);
+  url.searchParams.set("parent", location.hostname);
+  url.searchParams.set("referer", location.href);
+  url.searchParams.set("autoplay", "true");
+  url.searchParams.set("muted", "true");
+  url.searchParams.set("allowfullscreen", "false");
+  url.searchParams.set("layout", "video");
+  url.searchParams.set("width", "100%");
+  url.searchParams.set("height", "100%");
+  return url.toString();
+};
+
 const Home: NextPage = () => {
-  const twitchEmbedId = useId();
-  const twitchEmbedRef = useRef<HTMLDivElement>(null);
-  const [twitchEmbedLoaded, setTwitchEmbedLoaded] = useState(false);
-  const [twitchEmbedPlaying, setTwitchEmbedPlaying] = useState(false);
+  const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
+
   useEffect(() => {
-    if (!twitchEmbedLoaded || typeof Twitch === "undefined") {
-      if (typeof Twitch !== "undefined") setTwitchEmbedLoaded(true);
-      return;
-    }
-    if (!twitchEmbedRef.current) return;
-
-    // Reset the embed (fixes dev hot reload)
-    twitchEmbedRef.current.innerHTML = "";
-
-    // Load the embed from Twitch
-    // https://dev.twitch.tv/docs/embed/everything
-    const embed = new Twitch.Embed(`twitch-embed-${twitchEmbedId}`, {
-      width: "100%",
-      height: "100%",
-      channel: "alveussanctuary",
-      layout: "video",
-      allowfullscreen: false,
-      autoplay: true,
-      muted: true,
-    });
-
-    // Track when playing, as we disable pointer events on the embed
-    embed.addEventListener(Twitch.Embed.VIDEO_PLAY, () => {
-      const player = embed.getPlayer();
-      console.log("The video is playing", player);
-      setTwitchEmbedPlaying(true);
-    });
-  }, [twitchEmbedId, twitchEmbedLoaded]);
+    setTwitchEmbed(getTwitchEmbed("alveussanctuary", window.location));
+  }, []);
 
   return (
     <>
@@ -224,18 +214,21 @@ const Home: NextPage = () => {
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            <Link
-              className="block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
-              href="/live"
-            >
-              <div
-                className={`aspect-video h-auto w-full overflow-clip rounded-2xl ${
-                  twitchEmbedPlaying ? "pointer-events-none" : ""
-                }`}
-                id={`twitch-embed-${twitchEmbedId}`}
-                ref={twitchEmbedRef}
-              />
-            </Link>
+            {twitchEmbed && (
+              <Link
+                className="block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
+                href="/live"
+              >
+                <iframe
+                  src={twitchEmbed}
+                  title="Twitch livestream"
+                  referrerPolicy="no-referrer"
+                  allow="autoplay; encrypted-media"
+                  sandbox="allow-same-origin allow-scripts"
+                  className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
+                ></iframe>
+              </Link>
+            )}
           </div>
         </div>
       </div>
@@ -420,12 +413,6 @@ const Home: NextPage = () => {
           </div>
         </Section>
       </div>
-
-      <Script
-        src="https://embed.twitch.tv/embed/v1.js"
-        strategy="lazyOnload"
-        onLoad={() => setTwitchEmbedLoaded(true)}
-      />
     </>
   );
 };

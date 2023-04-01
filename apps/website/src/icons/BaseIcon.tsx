@@ -19,7 +19,7 @@ export function BaseIcon({
 }: BaseIconProps) {
   return (
     <svg
-      role="image"
+      role="img"
       xmlns="http://www.w3.org/2000/svg"
       aria-label={alt}
       width={size}
