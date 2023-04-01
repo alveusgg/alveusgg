@@ -29,6 +29,7 @@ const Socials = () => (
               sources={reelVideo.sources}
               poster={reelVideo.poster}
               className="absolute inset-0"
+              title="A video of Georgie, Alveus' African Bullfrog, on Instagram"
               autoPlay
               loop
               muted
@@ -50,7 +51,7 @@ const Socials = () => (
               width={400}
               height={400}
               loading="lazy"
-              alt="A picture of Winnie the Moo, Alveus' red angus cow, on Twitter"
+              alt="A picture of Winnie the Moo, Alveus' Red Angus cow, on Twitter"
               className="absolute inset-0"
             />
             <IconTwitter

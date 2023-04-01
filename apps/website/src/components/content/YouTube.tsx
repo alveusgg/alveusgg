@@ -19,6 +19,7 @@ const iframeSrc = (id: string) =>
   )}?modestbranding=1`;
 
 const iframeAttrs: HTMLAttributes = {
+  title: "YouTube video",
   referrerpolicy: "no-referrer",
   allow: "encrypted-media",
   sandbox: "allow-same-origin allow-scripts",

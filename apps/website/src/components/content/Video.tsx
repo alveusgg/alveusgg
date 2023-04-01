@@ -8,6 +8,7 @@ type VideoProps = {
   muted?: boolean;
   playsInline?: boolean;
   className?: string;
+  title?: string;
   poster?: string;
   sources: {
     src: string;
@@ -22,6 +23,7 @@ const Video: React.FC<VideoProps> = ({
   muted = false,
   playsInline = false,
   className = "",
+  title,
   poster,
   sources,
   threshold = 0.1,
@@ -54,6 +56,7 @@ const Video: React.FC<VideoProps> = ({
       muted={muted}
       playsInline={playsInline}
       className={className}
+      title={title}
       poster={computedPoster}
       ref={ref}
     >

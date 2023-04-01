@@ -221,8 +221,9 @@ const Home: NextPage = () => {
               >
                 <iframe
                   src={twitchEmbed}
+                  title="Twitch livestream"
                   referrerPolicy="no-referrer"
-                  allow="encrypted-media"
+                  allow="autoplay; encrypted-media"
                   sandbox="allow-same-origin allow-scripts"
                   className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
                 ></iframe>
