@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
-import Link from "next/link";
 import ReactMarkdown, { type Components, type Options } from "react-markdown";
 import headingId from "remark-heading-id";
 
 import Heading, { type HeadingProps } from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 
 const MarkdownHeading: React.FC<HeadingProps> = ({
   level,
@@ -16,7 +16,13 @@ const MarkdownHeading: React.FC<HeadingProps> = ({
     className={[className, "break-words"].filter(Boolean).join(" ")}
     id={id}
   >
-    {id ? <Link href={`#${id}`}>{children}</Link> : children}
+    {id ? (
+      <Link href={`#${id}`} custom>
+        {children}
+      </Link>
+    ) : (
+      children
+    )}
   </Heading>
 );
 
@@ -58,18 +64,14 @@ const Markdown: React.FC<MarkdownProps> = ({ content }) => {
         </MarkdownHeading>
       ),
       ul: ({ children }) => <ul className="my-2 ml-8 list-disc">{children}</ul>,
-      a: ({ children, href }) => {
-        const isExternal = href && /^(https?:)?\/\//.test(href);
-        return (
-          <Link
-            href={href || ""}
-            {...(isExternal ? { target: "_blank", rel: "noreferrer" } : {})}
-            className="text-red-600 transition-colors hover:text-blue-600 hover:underline"
-          >
-            {children}
-          </Link>
-        );
-      },
+      a: ({ children, href }) => (
+        <Link
+          href={href || ""}
+          external={!!href && /^(https?:)?\/\//.test(href)}
+        >
+          {children}
+        </Link>
+      ),
       p: ({ children }) => <p className="my-2">{children}</p>,
     }),
     []
