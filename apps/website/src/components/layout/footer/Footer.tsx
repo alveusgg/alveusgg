@@ -68,7 +68,7 @@ export const Footer: React.FC = () => {
             <li className="basis-full p-2 md:basis-1/3 md:text-right">
               <p>
                 Copyright &copy; {new Date().getFullYear()} Alveus Sanctuary.
-                <br /> All rights reserved
+                <br /> All rights reserved.
               </p>
             </li>
           </ul>
