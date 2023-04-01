@@ -154,7 +154,7 @@ const help = {
   },
 };
 
-const getTwitchEmbed = (channel: string, location: URL): string => {
+const getTwitchEmbed = (channel: string, location: Location | URL): string => {
   const url = new URL("https://embed.twitch.tv");
   url.searchParams.set("channel", channel);
   url.searchParams.set("parent", location.hostname);
@@ -172,9 +172,7 @@ const Home: NextPage = () => {
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
 
   useEffect(() => {
-    setTwitchEmbed(
-      getTwitchEmbed("alveussanctuary", new URL(window.location.href))
-    );
+    setTwitchEmbed(getTwitchEmbed("alveussanctuary", window.location));
   }, []);
 
   return (
