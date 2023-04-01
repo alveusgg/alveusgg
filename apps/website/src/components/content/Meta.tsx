@@ -2,13 +2,17 @@ import Head from "next/head";
 import React from "react";
 
 import headerImage from "@/assets/header.png";
-import { createImageUrl, getImageSizes } from "@/utils/image";
+import { createImageUrl } from "@/utils/image";
+import { env } from "@/env/client.mjs";
 
 type MetaProps = {
   title?: string;
   description?: string;
   image?: string;
 };
+
+// Get our base URL, which will either be specifically set, or from Vercel for preview deployments
+const BASE_URL = env.NEXT_PUBLIC_BASE_URL.replace(/\/$/, "");
 
 const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
   const defaultTitle = "Alveus Sanctuary";
@@ -17,14 +21,13 @@ const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
   const computedTitle = title ? `${title} | ${defaultTitle}` : defaultTitle;
   const computedDescription = description || defaultDescription;
 
-  const imageSizes = getImageSizes();
-  const computedImage = createImageUrl({
-    src: image || headerImage.src,
-    width:
-      imageSizes.find((w) => w >= 1200) ||
-      imageSizes[imageSizes.length - 1] ||
-      0,
-  });
+  // Use the Next.js image loader, and use an absolute URL
+  const computedImage =
+    BASE_URL +
+    createImageUrl({
+      src: image || headerImage.src,
+      width: 1200,
+    });
 
   return (
     <Head>
@@ -60,7 +63,7 @@ const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
         content={computedDescription}
       />
       <meta key="twitter:image" name="twitter:image" content={computedImage} />
-      {process.env.NEXT_PUBLIC_NOINDEX === "true" && (
+      {env.NEXT_PUBLIC_NOINDEX === "true" && (
         <meta key="robots" name="robots" content="noindex" />
       )}
     </Head>

@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from "react";
 
+import { createImageUrl } from "@/utils/image";
+
 type VideoProps = {
   autoPlay?: boolean;
   loop?: boolean;
@@ -43,6 +45,8 @@ const Video: React.FC<VideoProps> = ({
     [seen, threshold]
   );
 
+  const computedPoster = poster && createImageUrl({ src: poster, width: 512 });
+
   return (
     <video
       autoPlay={autoPlay}
@@ -50,7 +54,7 @@ const Video: React.FC<VideoProps> = ({
       muted={muted}
       playsInline={playsInline}
       className={className}
-      poster={poster}
+      poster={computedPoster}
       ref={ref}
     >
       {seen &&
