@@ -22,13 +22,13 @@ export const mainNavStructure: NavStructure = {
     title: "Home",
     link: "/",
   },
-  live: {
-    title: "Live",
-    link: "/live",
-  },
   ambassadors: {
     title: "Ambassadors",
     link: "/ambassadors",
+  },
+  showAndTell: {
+    title: "Show and Tell",
+    link: "/show-and-tell",
   },
   explore: {
     title: "Explore",
@@ -36,10 +36,6 @@ export const mainNavStructure: NavStructure = {
       animalQuest: {
         title: "Animal Quest",
         link: "/animal-quest",
-      },
-      showAndTell: {
-        title: "Show and Tell",
-        link: "/show-and-tell",
       },
       collaborations: {
         title: "Collaborations",

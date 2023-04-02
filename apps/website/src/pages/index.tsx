@@ -204,7 +204,10 @@ const Home: NextPage = () => {
               </Link>
               <Link
                 className="inline-block rounded-full border-2 border-white px-4 py-2 text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-                href="/live"
+                href="https://twitch.tv/alveussanctuary"
+                target="_blank"
+                rel="noreferrer"
+                title="Watch Live on Twitch.tv"
               >
                 Watch Live
               </Link>
@@ -215,7 +218,10 @@ const Home: NextPage = () => {
             {twitchEmbed && (
               <Link
                 className="block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
-                href="/live"
+                href="https://twitch.tv/alveussanctuary"
+                target="_blank"
+                rel="noreferrer"
+                title="Watch Live on Twitch.tv"
               >
                 <iframe
                   src={twitchEmbed}
@@ -232,7 +238,7 @@ const Home: NextPage = () => {
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute -top-64 right-0 bottom-0 z-10 hidden h-auto w-1/2 max-w-lg select-none overflow-clip lg:block">
+        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-lg select-none overflow-clip lg:block">
           <Image
             src={leafRightImage1}
             alt=""
@@ -277,7 +283,7 @@ const Home: NextPage = () => {
               </Lightbox>
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Image
                 src={mayaImage}
                 alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
@@ -339,7 +345,7 @@ const Home: NextPage = () => {
               <Carousel items={merch} />
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Heading level={2}>New Merch Available!</Heading>
               <p className="my-4">
                 An official merchandise line composed from Recycled, Organic, or
