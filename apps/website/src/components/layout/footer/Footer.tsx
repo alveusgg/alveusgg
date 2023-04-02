@@ -1,6 +1,9 @@
-import React from "react";
+import React, { useMemo } from "react";
 import Link from "next/link";
-import IconGitHub from "../../../icons/IconGitHub";
+import { useRouter } from "next/router";
+
+import IconGitHub from "@/icons/IconGitHub";
+
 import Socials from "./Socials";
 
 const footerLinkClasses =
@@ -41,9 +44,15 @@ const credits =
 </>;
 
 export const Footer: React.FC = () => {
+  const router = useRouter();
+  const isAdmin = useMemo(
+    () => router.pathname === "/admin" || router.pathname.startsWith("/admin/"),
+    [router.pathname]
+  );
+
   return (
     <>
-      <Socials />
+      {!isAdmin && <Socials />}
 
       <footer className="bg-gray-800 py-4 px-2 text-gray-400 md:py-2 md:px-0">
         <div className="container mx-auto">

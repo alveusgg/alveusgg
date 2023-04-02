@@ -45,7 +45,7 @@ export const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
 
       <div
         {...props}
-        className="flex min-h-[calc(100vh-400px)] flex-col border-b border-black bg-gray-800 text-gray-200"
+        className="flex flex-grow flex-col border-b border-black bg-gray-800 text-gray-200"
       >
         <h1 className="border-b border-black bg-gray-900 p-4 text-xl font-semibold">
           Admin / {title}
