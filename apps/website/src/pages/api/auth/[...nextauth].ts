@@ -13,13 +13,16 @@ const adapter = PrismaAdapter(prisma);
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id;
-        session.user.isSuperUser = checkIsSuperUserId(user.id);
-        session.user.roles = await getRolesForUser(user.id);
-      }
-      return session;
+    session: async function ({ session, user }) {
+      return {
+        ...session,
+        user: session.user && {
+          ...session.user,
+          id: user.id,
+          isSuperUser: checkIsSuperUserId(user.id),
+          roles: await getRolesForUser(user.id),
+        },
+      };
     },
     async signIn({ user, account }) {
       if (user && account) {
