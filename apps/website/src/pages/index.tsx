@@ -240,6 +240,9 @@ const Home: NextPage = () => {
               <Link
                 className="inline-block rounded-full border-2 border-white px-4 py-2 text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
                 href="/live"
+                target="_blank"
+                rel="noreferrer"
+                title="Watch Live on Twitch.tv"
               >
                 Watch Live
               </Link>
@@ -264,6 +267,9 @@ const Home: NextPage = () => {
                 <Link
                   className="absolute inset-0 z-10 block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
                   href="/live"
+                  target="_blank"
+                  rel="noreferrer"
+                  title="Watch Live on Twitch.tv"
                 >
                   <iframe
                     src={twitchEmbed}

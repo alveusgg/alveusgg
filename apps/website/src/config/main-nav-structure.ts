@@ -4,6 +4,7 @@ import socials from "@/components/shared/data/socials";
 export type NavStructureLink = {
   title: string;
   link: string;
+  isExternal?: boolean;
 };
 
 export type NavStructureDropdown = {
@@ -25,6 +26,7 @@ export const mainNavStructure: NavStructure = {
   live: {
     title: "Live",
     link: "/live",
+    isExternal: true,
   },
   ambassadors: {
     title: "Ambassadors",

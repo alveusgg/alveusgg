@@ -154,6 +154,11 @@ const config = {
       destination: "https://bio.link/alveussanctuary",
       permanent: true,
     },
+    {
+      source: "/live",
+      destination: "https://twitch.tv/alveussanctuary",
+      permanent: false,
+    },
   ],
   headers: async () => [
     {
