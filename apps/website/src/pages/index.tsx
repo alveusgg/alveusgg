@@ -154,15 +154,13 @@ const help = {
   },
 };
 
-const getTwitchEmbed = (channel: string, location: Location | URL): string => {
-  const url = new URL("https://embed.twitch.tv");
+const getTwitchEmbed = (channel: string, parent: string): string => {
+  const url = new URL("https://player.twitch.tv");
   url.searchParams.set("channel", channel);
-  url.searchParams.set("parent", location.hostname);
-  url.searchParams.set("referer", location.href);
+  url.searchParams.set("parent", parent);
   url.searchParams.set("autoplay", "true");
   url.searchParams.set("muted", "true");
   url.searchParams.set("allowfullscreen", "false");
-  url.searchParams.set("layout", "video");
   url.searchParams.set("width", "100%");
   url.searchParams.set("height", "100%");
   return url.toString();
@@ -172,7 +170,7 @@ const Home: NextPage = () => {
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
 
   useEffect(() => {
-    setTwitchEmbed(getTwitchEmbed("alveussanctuary", window.location));
+    setTwitchEmbed(getTwitchEmbed("alveussanctuary", window.location.hostname));
   }, []);
 
   return (

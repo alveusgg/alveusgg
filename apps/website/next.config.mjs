@@ -167,7 +167,7 @@ const config = {
               ? "https://vercel.live/ "
               : "") +
             // Twitch embeds:
-            "https://embed.twitch.tv/ https://www.twitch.tv/ " +
+            "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/ " +
             // The Giving Block (crypto donations):
             "https://tgbwidget.com/ " +
             // YouTube embeds:
