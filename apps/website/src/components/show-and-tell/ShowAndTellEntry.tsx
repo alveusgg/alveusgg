@@ -8,7 +8,6 @@ import type {
   ShowAndTellEntryAttachment,
 } from "@prisma/client";
 import Image from "next/image";
-import Link from "next/link";
 import { parseVideoUrl } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { LocalDate } from "@/components/shared/LocalDate";
@@ -40,7 +39,11 @@ export const ShowAndTellEntry = forwardRef<
   HTMLElement | null,
   ShowAndTellEntryProps
 >(function ShowAndTellEntry(
-  { entry, isPresentationView, showPermalink = false },
+  {
+    entry,
+    isPresentationView,
+    //showPermalink = false,
+  },
   forwardedRef
 ) {
   const wrapperRef = useRef<HTMLElement | null>(null);
@@ -115,8 +118,8 @@ export const ShowAndTellEntry = forwardRef<
       className={
         "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 " +
         (isPresentationView
-          ? "h-[calc(100vh-6em)] h-[calc(100svh-6em)] w-[80%] select-none snap-center overflow-hidden bg-alveus-green text-white shadow-xl"
-          : "min-h-[70vh] min-h-[70svh] justify-center border-t border-alveus-green/50 first:border-t-0")
+          ? "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] select-none snap-center overflow-hidden bg-alveus-green text-white shadow-xl"
+          : "min-h-[70svh] min-h-[70vh] justify-center border-t border-alveus-green/50 first:border-t-0")
       }
       onClick={(e) => {
         if (isPresentationView)
@@ -167,7 +170,7 @@ export const ShowAndTellEntry = forwardRef<
             }`}
           >
             <div
-              className="alveus-ugc hyphens-auto max-w-[1100px] leading-relaxed md:text-lg xl:text-2xl"
+              className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl"
               dangerouslySetInnerHTML={{ __html: entry.text }}
             />
           </div>
