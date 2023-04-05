@@ -24,6 +24,12 @@ type Collaboration = {
 };
 
 const collaborations = {
+  yungJeff: {
+    name: "YungJeff",
+    link: "https://twitter.com/YUNGJEFF",
+    date: new Date("2023-04-04"),
+    videoId: "BXOEWQZ8C_Y",
+  },
   pointCrow: {
     name: "PointCrow",
     link: "https://www.twitch.tv/pointcrow",
