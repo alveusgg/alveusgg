@@ -58,20 +58,20 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
   );
 
   useEffect(() => {
-    const consent = localStorage.getItem("consent");
-    if (consent) {
-      try {
+    try {
+      const consent = localStorage.getItem("consent");
+      if (consent) {
         const parsed = JSON.parse(consent);
         setConsent(
           parseConsent(
             typeof parsed === "object" && parsed !== null ? parsed : {}
           )
         );
-      } catch {
-        // Ignore
-      } finally {
-        setConsentLoaded(true);
       }
+    } catch {
+      // Ignore
+    } finally {
+      setConsentLoaded(true);
     }
   }, []);
 
