@@ -40,6 +40,12 @@ export type ConsentContext = Readonly<{
   updateConsent: (consent: Partial<Consent>) => void;
 }>;
 
+declare global {
+  interface Window {
+    consent: ConsentContext | undefined;
+  }
+}
+
 const Context = createContext<ConsentContext | undefined>(undefined);
 
 export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
@@ -77,6 +83,13 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
     () => Object.freeze({ consent, updateConsent }),
     [consent, updateConsent]
   );
+
+  useEffect(() => {
+    window.consent = value;
+    return () => {
+      window.consent = undefined;
+    };
+  }, [value]);
 
   return <Context.Provider value={value}>{children}</Context.Provider>;
 };
