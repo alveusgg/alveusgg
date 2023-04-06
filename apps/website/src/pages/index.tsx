@@ -36,6 +36,7 @@ import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-
 import croptopMerchImage from "@/assets/merch/organic-crop-top-black-front.png";
 import beanieMerchImage from "@/assets/merch/organic-ribbed-beanie-black-front.png";
 import hoodieMerchImage from "@/assets/merch/unisex-essential-eco-hoodie-white-front.png";
+import { useConsent } from "@/hooks/consent";
 
 const slides = [
   {
@@ -167,11 +168,16 @@ const getTwitchEmbed = (channel: string, parent: string): string => {
 };
 
 const Home: NextPage = () => {
+  const { consent } = useConsent();
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
 
   useEffect(() => {
-    setTwitchEmbed(getTwitchEmbed("alveussanctuary", window.location.hostname));
-  }, []);
+    setTwitchEmbed(
+      consent.twitch
+        ? getTwitchEmbed("alveussanctuary", window.location.hostname)
+        : null
+    );
+  }, [consent]);
 
   return (
     <>
@@ -232,7 +238,7 @@ const Home: NextPage = () => {
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute -top-64 right-0 bottom-0 z-10 hidden h-auto w-1/2 max-w-lg select-none overflow-clip lg:block">
+        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-lg select-none overflow-clip lg:block">
           <Image
             src={leafRightImage1}
             alt=""
@@ -277,7 +283,7 @@ const Home: NextPage = () => {
               </Lightbox>
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Image
                 src={mayaImage}
                 alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
@@ -339,7 +345,7 @@ const Home: NextPage = () => {
               <Carousel items={merch} />
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Heading level={2}>New Merch Available!</Heading>
               <p className="my-4">
                 An official merchandise line composed from Recycled, Organic, or
