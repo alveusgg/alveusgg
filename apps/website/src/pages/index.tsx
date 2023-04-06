@@ -1,7 +1,12 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import {
+  type MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import ambassadors from "@/data/ambassadors";
 import { camelToKebab } from "@/utils/string-case";
@@ -168,7 +173,7 @@ const getTwitchEmbed = (channel: string, parent: string): string => {
 };
 
 const Home: NextPage = () => {
-  const { consent } = useConsent();
+  const { consent, updateConsent, consentLoaded } = useConsent();
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
 
   useEffect(() => {
@@ -178,6 +183,14 @@ const Home: NextPage = () => {
         : null
     );
   }, [consent]);
+
+  const twitchConsent = useCallback<MouseEventHandler<HTMLButtonElement>>(
+    (e) => {
+      e.preventDefault();
+      updateConsent({ twitch: true });
+    },
+    [updateConsent]
+  );
 
   return (
     <>
@@ -218,21 +231,35 @@ const Home: NextPage = () => {
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            {twitchEmbed && (
-              <Link
-                className="block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
-                href="/live"
-              >
-                <iframe
-                  src={twitchEmbed}
-                  title="Twitch livestream"
-                  referrerPolicy="no-referrer"
-                  allow="autoplay; encrypted-media"
-                  sandbox="allow-same-origin allow-scripts"
-                  className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
-                ></iframe>
-              </Link>
-            )}
+            <div className="relative z-0 flex aspect-video h-auto w-full flex-col items-center justify-center gap-6 rounded-2xl">
+              <p className="text-2xl">Loading live cam feed...</p>
+
+              {consentLoaded && !consent.twitch && (
+                <button
+                  type="button"
+                  onClick={twitchConsent}
+                  className="rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+                >
+                  Consent to loading Twitch.tv
+                </button>
+              )}
+
+              {twitchEmbed && (
+                <Link
+                  className="absolute inset-0 z-10 block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
+                  href="/live"
+                >
+                  <iframe
+                    src={twitchEmbed}
+                    title="Twitch livestream"
+                    referrerPolicy="no-referrer"
+                    allow="autoplay; encrypted-media"
+                    sandbox="allow-same-origin allow-scripts"
+                    className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
+                  ></iframe>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>

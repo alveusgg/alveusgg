@@ -38,6 +38,7 @@ const parseConsent = (
 export type ConsentContext = Readonly<{
   consent: Consent;
   updateConsent: (consent: Partial<Consent>) => void;
+  consentLoaded: boolean;
 }>;
 
 declare global {
@@ -51,6 +52,7 @@ const Context = createContext<ConsentContext | undefined>(undefined);
 export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
+  const [consentLoaded, setConsentLoaded] = useState(false);
   const [consent, setConsent] = useState<Consent>(
     Object.freeze(defaultConsent)
   );
@@ -67,6 +69,8 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
         );
       } catch {
         // Ignore
+      } finally {
+        setConsentLoaded(true);
       }
     }
   }, []);
@@ -80,8 +84,8 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const value = useMemo<ConsentContext>(
-    () => Object.freeze({ consent, updateConsent }),
-    [consent, updateConsent]
+    () => Object.freeze({ consent, updateConsent, consentLoaded }),
+    [consent, updateConsent, consentLoaded]
   );
 
   useEffect(() => {
