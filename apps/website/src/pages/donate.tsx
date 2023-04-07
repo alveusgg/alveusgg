@@ -8,6 +8,7 @@ import Meta from "@/components/content/Meta";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
+import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
 
 const links = {
@@ -26,6 +27,14 @@ const links = {
     external: true,
     description:
       "Donate via credit/debit card, bank account or PayPal funds directly to Alveus.",
+  },
+  givingBlock: {
+    icon: IconBitcoin,
+    title: "The Giving Block",
+    link: "/giving-block",
+    external: true,
+    description:
+      "Donate cryptocurrency, stocks or via card to Alveus using The Giving Block.",
   },
   poBox: {
     icon: IconBox,
@@ -59,15 +68,14 @@ const DonatePage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow" containerClassName="flex flex-wrap">
-        <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
-          {Object.entries(links).map(([key, link]) => (
+        {Object.entries(links).map(([key, link]) => (
+          <div key={key} className="basis-full p-4 lg:basis-1/2">
             <Link
-              key={key}
               href={link.link}
               {...(link.external
                 ? { target: "_blank", rel: "noreferrer" }
                 : {})}
-              className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition-shadow transition-transform hover:scale-105 hover:shadow-2xl"
+              className="group block h-full rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-105 hover:shadow-2xl"
             >
               <div className="mb-1 flex items-center gap-4">
                 <div className="block rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
@@ -77,17 +85,8 @@ const DonatePage: NextPage = () => {
               </div>
               <p>{link.description}</p>
             </Link>
-          ))}
-        </div>
-
-        <div className="flex basis-full flex-col items-center gap-8 py-4 md:basis-1/2 md:px-4">
-          <iframe
-            src="https://tgbwidget.com/?charityID=861772907"
-            width="100%"
-            height="604px"
-            frameBorder="0"
-          />
-        </div>
+          </div>
+        ))}
       </Section>
     </>
   );

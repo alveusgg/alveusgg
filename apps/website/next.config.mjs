@@ -145,6 +145,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/giving-block",
+      destination: "https://thegivingblock.com/donate/alveus-sanctuary/",
+      permanent: true,
+    },
+    {
       source: "/socials",
       destination: "https://bio.link/alveussanctuary",
       permanent: true,
@@ -168,8 +173,6 @@ const config = {
                 "https://vercel.live/",
               // Twitch embeds:
               "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
-              // The Giving Block (crypto donations):
-              "https://tgbwidget.com/",
               // YouTube embeds:
               "https://www.youtube-nocookie.com/",
               // Imgur embeds:
