@@ -75,23 +75,6 @@ For specific information about the Personal Data used for each purpose, the User
 
 Personal Data is collected for the following purposes and using the following services:
 
-- ### Analytics
-
-  The services contained in this section enable the Owner to monitor and analyze web traffic and can be used to keep track of User behavior.
-
-  #### Google Analytics
-
-  Google Analytics is a web analysis service provided by Google LLC or by Google Ireland Limited, depending on the location this Website is accessed from, (“Google”). Google utilizes the Data collected to track and examine the use of this Website, to prepare reports on its activities and share them with other Google services.
-  Google may use the Data collected to contextualize and personalize the ads of its own advertising network.
-
-  Personal Data collected: Cookies; Usage Data.
-
-  Place of processing: United States – [Privacy Policy](https://policies.google.com/privacy) – [Opt Out](https://tools.google.com/dlpage/gaoptout?hl=en); Ireland – [Privacy Policy](https://policies.google.com/privacy) – [Opt Out](https://tools.google.com/dlpage/gaoptout?hl=en). Privacy Shield participant.
-
-  Category of personal data collected according to CCPA: internet information.
-
-  This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
-
 - ### Displaying content from external platforms
 
   This type of service allows you to view content hosted on external platforms directly from the pages of this Website and interact with them.
