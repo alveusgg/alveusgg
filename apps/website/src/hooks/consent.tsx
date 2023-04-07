@@ -266,7 +266,7 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
     if (raw) {
       const parsed = safeJSONParse(raw);
       if (isPartialConsent(parsed)) {
-        setConsent((prev: Consent) => ({ ...prev, ...parsed }));
+        setConsent((prev: Consent) => Object.freeze({ ...prev, ...parsed }));
         setInteracted(true);
         setLoaded(true);
         return;
@@ -279,7 +279,7 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
   const update = useCallback((consent: Partial<Consent>) => {
     setConsent((prev: Consent) => {
       localStorage.setItem("consent", JSON.stringify({ ...prev, ...consent }));
-      return { ...prev, ...consent };
+      return Object.freeze({ ...prev, ...consent });
     });
     setInteracted(true);
   }, []);
