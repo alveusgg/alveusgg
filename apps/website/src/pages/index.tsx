@@ -10,6 +10,7 @@ import {
 
 import ambassadors from "@/data/ambassadors";
 import { camelToKebab } from "@/utils/string-case";
+import { useConsent } from "@/hooks/consent";
 
 import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
@@ -41,7 +42,6 @@ import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-
 import croptopMerchImage from "@/assets/merch/organic-crop-top-black-front.png";
 import beanieMerchImage from "@/assets/merch/organic-ribbed-beanie-black-front.png";
 import hoodieMerchImage from "@/assets/merch/unisex-essential-eco-hoodie-white-front.png";
-import { useConsent } from "@/hooks/consent";
 
 const slides = [
   {
@@ -173,7 +173,11 @@ const getTwitchEmbed = (channel: string, parent: string): string => {
 };
 
 const Home: NextPage = () => {
-  const { consent, updateConsent, consentLoaded } = useConsent();
+  const {
+    consent,
+    update: updateConsent,
+    loaded: consentLoaded,
+  } = useConsent();
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
 
   useEffect(() => {
