@@ -22,6 +22,8 @@ export const ptSerif = PT_Serif({
   weight: ["400", "700"],
 });
 
+export const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
+
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
   if (router.pathname.endsWith("/attachment")) {
@@ -61,7 +63,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 
       <div
         id="app"
-        className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${ptSans.variable} ${ptSerif.variable} font-sans`}
+        className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${fonts}`}
       >
         <Navbar />
         <main className="flex flex-grow flex-col">{children}</main>

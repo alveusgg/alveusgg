@@ -13,7 +13,7 @@ import { Dialog } from "@headlessui/react";
 import { safeJSONParse } from "@/utils/helpers";
 
 import Heading from "@/components/content/Heading";
-import { ptSans, ptSerif } from "@/components/layout/Layout";
+import { fonts } from "@/components/layout/Layout";
 import IconCross from "@/icons/IconCross";
 
 type ConsentData = {
@@ -145,7 +145,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
         open={open}
         onClose={close}
         initialFocus={allowAllRef}
-        className={`relative z-50 ${ptSans.variable} ${ptSerif.variable}`} // Include fonts as this is portal'd
+        className={`relative z-50 ${fonts}`} // Include fonts as this is portal'd
       >
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
