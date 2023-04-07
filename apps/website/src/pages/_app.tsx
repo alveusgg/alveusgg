@@ -6,10 +6,10 @@ import { SSRProvider } from "react-aria";
 import { trpc } from "@/utils/trpc";
 import "@/styles/globals.css";
 import Layout from "@/components/layout/Layout";
-import registerServiceWorker from "@/utils/sw";
+import { unregisterServiceWorker } from "@/utils/sw";
 import { ConsentProvider } from "@/hooks/consent";
 
-registerServiceWorker("/RootServiceWorker.js");
+unregisterServiceWorker("/RootServiceWorker.js");
 
 const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   Component,

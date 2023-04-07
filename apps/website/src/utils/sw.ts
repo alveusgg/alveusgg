@@ -1,4 +1,4 @@
-export default function registerServiceWorker(path: string, scope = "/") {
+export function registerServiceWorker(path: string, scope = "/") {
   if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
     navigator.serviceWorker
       .register(path, {
@@ -10,5 +10,15 @@ export default function registerServiceWorker(path: string, scope = "/") {
           registration.scope
         );
       });
+  }
+}
+
+export function unregisterServiceWorker(path: string, scope = "/") {
+  if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
+    navigator.serviceWorker.getRegistration(scope).then((registration) => {
+      if (registration) {
+        registration.unregister();
+      }
+    });
   }
 }

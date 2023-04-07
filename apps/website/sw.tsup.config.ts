@@ -10,7 +10,7 @@ const vapidPublicB64 = Buffer.from(
 export default defineConfig((options) => ({
   entry: {
     "push/alveus/PushServiceWorker": "src/sw/PushServiceWorker.ts",
-    RootServiceWorker: "src/sw/RootServiceWorker.ts",
+    //RootServiceWorker: "src/sw/RootServiceWorker.ts",
   },
   splitting: false,
   sourcemap: true,
