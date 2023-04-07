@@ -183,7 +183,7 @@ const config = {
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
               // Streamable embeds:
-              "https://streamable.com/",
+              //"https://streamable.com/",
             ]
               .filter(Boolean)
               .join(" ") + ";",
