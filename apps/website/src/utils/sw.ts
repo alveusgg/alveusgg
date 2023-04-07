@@ -13,7 +13,7 @@ export function registerServiceWorker(path: string, scope = "/") {
   }
 }
 
-export function unregisterServiceWorker(path: string, scope = "/") {
+export function unregisterServiceWorker(scope = "/") {
   if (typeof navigator !== "undefined" && "serviceWorker" in navigator) {
     navigator.serviceWorker.getRegistration(scope).then((registration) => {
       if (registration) {

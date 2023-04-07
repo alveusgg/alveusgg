@@ -9,7 +9,7 @@ import Layout from "@/components/layout/Layout";
 import { unregisterServiceWorker } from "@/utils/sw";
 import { ConsentProvider } from "@/hooks/consent";
 
-unregisterServiceWorker("/RootServiceWorker.js");
+unregisterServiceWorker();
 
 const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   Component,
