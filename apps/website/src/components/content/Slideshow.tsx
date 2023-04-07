@@ -99,12 +99,15 @@ const Slideshow: React.FC<SlideshowProps> = ({
           __html: [
             `@keyframes slideshow-${id}-container { ${animation.keyframes.container} }`,
             `@keyframes slideshow-${id}-image { ${animation.keyframes.image} }`,
+            `.slideshow-${id}-container { animation: ${animation.duration.total}ms slideshow-${id}-container infinite; will-change: opacity, z-index; }`,
+            `.slideshow-${id}-container img { animation: ${animation.duration.total}ms slideshow-${id}-image infinite; transform: scale(${scale.from}); will-change: transform; }`,
+            `@media (prefers-reduced-motion) { .slideshow-${id}-container img { animation: none !important; } }`,
           ].join("\n"),
         }}
       />
       {images.map(({ src, alt }, idx) => (
         <div
-          className="absolute inset-0 z-0 overflow-clip opacity-0"
+          className={`absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`}
           key={
             typeof src === "string"
               ? src
@@ -113,7 +116,6 @@ const Slideshow: React.FC<SlideshowProps> = ({
               : src.src
           }
           style={{
-            animation: `${animation.duration.total}ms slideshow-${id}-container infinite`,
             animationDelay: `${idx * animation.duration.offset}ms`,
           }}
         >
@@ -124,7 +126,6 @@ const Slideshow: React.FC<SlideshowProps> = ({
             placeholder="blur"
             className="h-full w-full object-cover"
             style={{
-              animation: `${animation.duration.total}ms slideshow-${id}-image infinite`,
               animationDelay: `${idx * animation.duration.offset}ms`,
             }}
           />
