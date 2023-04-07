@@ -4,7 +4,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
-import { env } from "@/env/client.mjs";
 import Meta from "@/components/content/Meta";
 
 type LayoutProps = {
@@ -58,17 +57,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <meta name="application-name" content="Alveus Sanctuary" />
         <meta name="msapplication-TileColor" content="#636a60" />
         <meta name="theme-color" content="#636a60" />
-
-        {env.NEXT_PUBLIC_NODE_ENV === "production" &&
-          env.NEXT_PUBLIC_COOKIEBOT_ID && (
-            /* eslint-disable-next-line @next/next/no-sync-scripts */
-            <script
-              id="Cookiebot"
-              src="https://consent.cookiebot.com/uc.js"
-              data-cbid={env.NEXT_PUBLIC_COOKIEBOT_ID}
-              data-blockingmode="auto"
-            />
-          )}
       </Head>
 
       <div
