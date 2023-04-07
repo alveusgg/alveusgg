@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import type { AnchorHTMLAttributes, ReactNode } from "react";
-import React, { Fragment } from "react";
+import React, { Children, cloneElement, forwardRef, Fragment } from "react";
 
 import {
   mainNavStructure,
@@ -36,12 +35,21 @@ const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
   >
     <Menu.Items
       as="ul"
-      className="absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg"
+      className="group absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg"
       {...props}
     />
   </Transition>
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
+
+const DropdownMenuItem: React.FC<{ children: React.ReactElement }> = forwardRef(
+  ({ children, ...props }, ref) => (
+    <li {...props}>
+      {Children.map(children, (child) => cloneElement(child, { ref }))}
+    </li>
+  )
+);
+DropdownMenuItem.displayName = "DropdownMenuItem";
 
 export function DesktopMenu() {
   const { data: sessionData } = useSession();
@@ -178,11 +186,17 @@ export function DesktopMenu() {
 
                       <DropdownMenuItems>
                         {Object.entries(link.dropdown).map(([key, link]) => (
-                          <Menu.Item as="li" key={key}>
-                            {({ close }) => (
+                          <Menu.Item as={DropdownMenuItem} key={key}>
+                            {({ close, active }) => (
                               <NavLinkSub
                                 href={link.link}
-                                className="w-full min-w-max"
+                                className={[
+                                  active &&
+                                    "outline-blue-500 group-focus-visible:outline",
+                                  "w-full min-w-max",
+                                ]
+                                  .filter(Boolean)
+                                  .join(" ")}
                                 onClick={close}
                               >
                                 {link.title}
