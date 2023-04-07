@@ -6,6 +6,7 @@ import IconExternal from "@/icons/IconExternal";
 type LinkProps = {
   href: string;
   children: React.ReactNode;
+  onClick?: () => void;
   className?: string;
   external?: boolean;
   custom?: boolean;
@@ -14,12 +15,14 @@ type LinkProps = {
 const Link: React.FC<LinkProps> = ({
   href,
   children,
+  onClick,
   className,
   external = false,
   custom = false,
 }) => {
   const props = {
     href,
+    onClick,
     className: [
       !custom &&
         "text-red-600 transition-colors hover:text-blue-600 hover:underline",

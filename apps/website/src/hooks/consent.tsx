@@ -8,27 +8,32 @@ import React, {
   forwardRef,
   useRef,
 } from "react";
+import { useRouter } from "next/router";
 import { Dialog } from "@headlessui/react";
 
 import { safeJSONParse } from "@/utils/helpers";
 
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 import { fonts } from "@/components/layout/Layout";
 import IconCross from "@/icons/IconCross";
 
 type ConsentData = {
   name: string;
   description: string;
+  privacy: string;
 };
 
 const consentData = {
   twitch: {
     name: "Twitch.tv",
     description: "Embedded livestreams from Twitch.tv",
+    privacy: "https://www.twitch.tv/p/en/legal/privacy-policy/",
   },
   youtube: {
     name: "YouTube",
     description: "Embedded videos from YouTube.com",
+    privacy: "https://policies.google.com/privacy",
   },
 } as const satisfies Record<string, ConsentData>;
 
@@ -95,6 +100,7 @@ ConsentButton.displayName = "ConsentButton";
 
 const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
   const { consent, update, reset, loaded, interacted } = context;
+  const router = useRouter();
 
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), []);
@@ -113,11 +119,12 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
     }
 
     // If the user hasn't interacted, and this is the first run, show the dialog
-    if (hasInteracted === null) {
+    // But, don't show it if the user is on the privacy page
+    if (hasInteracted === null && router.pathname !== "/privacy-policy") {
       setHasInteracted(false);
       setOpen(true);
     }
-  }, [loaded, open, interacted, hasInteracted]);
+  }, [loaded, open, interacted, hasInteracted, router.pathname]);
 
   // Allow all consent values to be updated at once
   const updateAll = useCallback(
@@ -150,7 +157,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan p-4 pt-0 shadow-2xl">
+          <Dialog.Panel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan px-4 shadow-2xl">
             <Dialog.Title
               as={Heading}
               level={2}
@@ -188,6 +195,10 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                     <p>{data.name}</p>
                     <p className="text-sm text-alveus-green">
                       {data.description}
+                      {" — "}
+                      <Link href={data.privacy} external>
+                        Privacy Policy
+                      </Link>
                     </p>
                   </div>
 
@@ -223,8 +234,17 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
               ))}
             </div>
 
-            <div className="sticky bottom-0 z-0 -mx-4 mt-8 bg-alveus-tan px-4">
-              <div className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-8 bg-gradient-to-b from-alveus-tan/0 to-alveus-tan" />
+            <p className="mt-6">
+              You can find out more about how we, and third parties, use your
+              data in our{" "}
+              <Link href="/privacy-policy" onClick={close}>
+                Privacy Policy
+              </Link>
+              .
+            </p>
+
+            <div className="sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4">
+              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-gradient-to-b from-alveus-tan/0 to-alveus-tan" />
 
               <div className="flex flex-wrap gap-2 sm:flex-nowrap">
                 {hasInteracted && (
