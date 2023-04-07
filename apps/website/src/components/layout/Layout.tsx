@@ -4,7 +4,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
-import { env } from "@/env/client.mjs";
 import Meta from "@/components/content/Meta";
 
 type LayoutProps = {
@@ -22,6 +21,8 @@ export const ptSerif = PT_Serif({
   variable: "--font-ptserif",
   weight: ["400", "700"],
 });
+
+export const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
@@ -58,22 +59,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         <meta name="application-name" content="Alveus Sanctuary" />
         <meta name="msapplication-TileColor" content="#636a60" />
         <meta name="theme-color" content="#636a60" />
-
-        {env.NEXT_PUBLIC_NODE_ENV === "production" &&
-          env.NEXT_PUBLIC_COOKIEBOT_ID && (
-            /* eslint-disable-next-line @next/next/no-sync-scripts */
-            <script
-              id="Cookiebot"
-              src="https://consent.cookiebot.com/uc.js"
-              data-cbid={env.NEXT_PUBLIC_COOKIEBOT_ID}
-              data-blockingmode="auto"
-            />
-          )}
       </Head>
 
       <div
         id="app"
-        className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${ptSans.variable} ${ptSerif.variable} font-sans`}
+        className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${fonts}`}
       >
         <Navbar />
         <main className="flex flex-grow flex-col">{children}</main>

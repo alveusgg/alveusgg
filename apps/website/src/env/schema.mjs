@@ -49,7 +49,6 @@ export const clientSchema = z.object({
     .optional(),
   NEXT_PUBLIC_BASE_URL: z.string().url(),
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
-  NEXT_PUBLIC_COOKIEBOT_ID: z.string().optional(),
   NEXT_PUBLIC_NOINDEX: z.string().optional(),
 });
 
@@ -67,6 +66,5 @@ export const clientEnv = {
     : process.env.NEXT_PUBLIC_BASE_URL,
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
-  NEXT_PUBLIC_COOKIEBOT_ID: process.env.NEXT_PUBLIC_COOKIEBOT_ID,
   NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
 };

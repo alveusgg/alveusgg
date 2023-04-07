@@ -161,23 +161,24 @@ const config = {
         {
           key: "Content-Security-Policy",
           value:
-            "frame-src 'self' " +
-            // Allow vercel preview helper (if not in production):
-            (["development", "preview"].includes(process.env.VERCEL_ENV)
-              ? "https://vercel.live/ "
-              : "") +
-            // Twitch embeds:
-            "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/ " +
-            // The Giving Block (crypto donations):
-            "https://tgbwidget.com/ " +
-            // YouTube embeds:
-            "https://www.youtube-nocookie.com/ " +
-            // Imgur embeds:
-            //"http://imgur.com/ https://imgur.com/ https://imgur.io/ " +
-            // Streamable embeds:
-            "https://streamable.com/ " +
-            // Consent
-            "https://consentcdn.cookiebot.com/",
+            [
+              "frame-src 'self'",
+              // Allow vercel preview helper (if not in production):
+              ["development", "preview"].includes(process.env.VERCEL_ENV) &&
+                "https://vercel.live/",
+              // Twitch embeds:
+              "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
+              // The Giving Block (crypto donations):
+              "https://tgbwidget.com/",
+              // YouTube embeds:
+              "https://www.youtube-nocookie.com/",
+              // Imgur embeds:
+              //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
+              // Streamable embeds:
+              "https://streamable.com/",
+            ]
+              .filter(Boolean)
+              .join(" ") + ";",
         },
       ],
     },

@@ -1,10 +1,17 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import {
+  type MouseEventHandler,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 
 import ambassadors from "@/data/ambassadors";
 import { camelToKebab } from "@/utils/string-case";
+import { useConsent } from "@/hooks/consent";
+import usePrefersReducedMotion from "@/hooks/motion";
 
 import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
@@ -154,11 +161,15 @@ const help = {
   },
 };
 
-const getTwitchEmbed = (channel: string, parent: string): string => {
+const getTwitchEmbed = (
+  channel: string,
+  parent: string,
+  autoPlay = true
+): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("channel", channel);
   url.searchParams.set("parent", parent);
-  url.searchParams.set("autoplay", "true");
+  url.searchParams.set("autoplay", autoPlay.toString());
   url.searchParams.set("muted", "true");
   url.searchParams.set("allowfullscreen", "false");
   url.searchParams.set("width", "100%");
@@ -167,11 +178,35 @@ const getTwitchEmbed = (channel: string, parent: string): string => {
 };
 
 const Home: NextPage = () => {
+  const reducedMotion = usePrefersReducedMotion();
+
+  const {
+    consent,
+    update: updateConsent,
+    loaded: consentLoaded,
+  } = useConsent();
+
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
 
   useEffect(() => {
-    setTwitchEmbed(getTwitchEmbed("alveussanctuary", window.location.hostname));
-  }, []);
+    setTwitchEmbed(
+      consent.twitch
+        ? getTwitchEmbed(
+            "alveussanctuary",
+            window.location.hostname,
+            !reducedMotion
+          )
+        : null
+    );
+  }, [consent, reducedMotion]);
+
+  const twitchConsent = useCallback<MouseEventHandler<HTMLButtonElement>>(
+    (e) => {
+      e.preventDefault();
+      updateConsent({ twitch: true });
+    },
+    [updateConsent]
+  );
 
   return (
     <>
@@ -212,27 +247,41 @@ const Home: NextPage = () => {
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            {twitchEmbed && (
-              <Link
-                className="block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
-                href="/live"
-              >
-                <iframe
-                  src={twitchEmbed}
-                  title="Twitch livestream"
-                  referrerPolicy="no-referrer"
-                  allow="autoplay; encrypted-media"
-                  sandbox="allow-same-origin allow-scripts"
-                  className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
-                ></iframe>
-              </Link>
-            )}
+            <div className="relative z-0 flex aspect-video h-auto w-full flex-col items-center justify-center gap-6 rounded-2xl">
+              <p className="text-2xl">Loading live cam feed...</p>
+
+              {consentLoaded && !consent.twitch && (
+                <button
+                  type="button"
+                  onClick={twitchConsent}
+                  className="rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+                >
+                  Consent to loading Twitch.tv
+                </button>
+              )}
+
+              {twitchEmbed && (
+                <Link
+                  className="absolute inset-0 z-10 block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
+                  href="/live"
+                >
+                  <iframe
+                    src={twitchEmbed}
+                    title="Twitch livestream"
+                    referrerPolicy="no-referrer"
+                    allow="autoplay; encrypted-media"
+                    sandbox="allow-same-origin allow-scripts"
+                    className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
+                  ></iframe>
+                </Link>
+              )}
+            </div>
           </div>
         </div>
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute -top-64 right-0 bottom-0 z-10 hidden h-auto w-1/2 max-w-lg select-none overflow-clip lg:block">
+        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-lg select-none overflow-clip lg:block">
           <Image
             src={leafRightImage1}
             alt=""
@@ -277,7 +326,7 @@ const Home: NextPage = () => {
               </Lightbox>
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Image
                 src={mayaImage}
                 alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
@@ -339,7 +388,7 @@ const Home: NextPage = () => {
               <Carousel items={merch} />
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Heading level={2}>New Merch Available!</Heading>
               <p className="my-4">
                 An official merchandise line composed from Recycled, Organic, or
