@@ -10,6 +10,7 @@ type NavLinkProps = Omit<
   LinkProps & {
     children?: React.ReactNode;
     variant?: "main" | "sub";
+    isExternal?: boolean;
   } & React.RefAttributes<HTMLAnchorElement>;
 
 export const navLinkClasses = `block px-5 h-full transition-colors`;
@@ -21,6 +22,7 @@ export const navLinkClassesSubActive = "bg-alveus-tan/10";
 export const NavLink: React.FC<NavLinkProps> = ({
   href,
   variant = "main",
+  isExternal = false,
   className,
   ...props
 }) => {
@@ -43,7 +45,19 @@ export const NavLink: React.FC<NavLinkProps> = ({
     [variant, isActive, className]
   );
 
-  return <Link href={href} className={classes} {...props} />;
+  return (
+    <Link
+      href={href}
+      className={classes}
+      {...(isExternal
+        ? {
+            target: "_blank",
+            rel: "noreferrer",
+          }
+        : {})}
+      {...props}
+    />
+  );
 };
 
 export const NavLinkSub: React.FC<NavLinkProps> = (props) => (
