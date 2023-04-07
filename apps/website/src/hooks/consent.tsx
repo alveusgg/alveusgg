@@ -79,7 +79,7 @@ const ConsentButton: React.FC<{
   <button
     type="button"
     className={[
-      "basis-full rounded-lg bg-alveus-green p-4 font-bold text-alveus-tan",
+      "basis-full rounded-lg bg-alveus-green px-4 py-3 font-bold text-alveus-tan lg:py-4",
       disabled
         ? "bg-alveus-green-300"
         : "bg-alveus-green transition-colors hover:bg-alveus-green-900",
@@ -181,7 +181,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
               which third-party content you would like to allow on our website:
             </Dialog.Description>
 
-            <div className="my-6 flex flex-col gap-y-2">
+            <div className="mt-4 flex flex-col gap-y-2">
               {Object.entries(consentData).map(([key, data]) => (
                 <label key={key} className="flex items-center">
                   <div className="flex-grow">
@@ -223,18 +223,25 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
               ))}
             </div>
 
-            <div className="flex flex-wrap gap-2 sm:flex-nowrap">
-              {hasInteracted && (
-                <ConsentButton onClick={reset} disabled={!interacted}>
-                  Reset consent
+            <div className="sticky bottom-0 z-0 -mx-4 mt-8 bg-alveus-tan px-4">
+              <div className="pointer-events-none absolute inset-x-0 -top-8 -z-10 h-8 bg-gradient-to-b from-alveus-tan/0 to-alveus-tan" />
+
+              <div className="flex flex-wrap gap-2 sm:flex-nowrap">
+                {hasInteracted && (
+                  <ConsentButton onClick={reset} disabled={!interacted}>
+                    Reset consent
+                  </ConsentButton>
+                )}
+                <ConsentButton onClick={() => updateAll(false)}>
+                  Deny all
                 </ConsentButton>
-              )}
-              <ConsentButton onClick={() => updateAll(false)}>
-                Deny all
-              </ConsentButton>
-              <ConsentButton onClick={() => updateAll(true)} ref={allowAllRef}>
-                Allow all
-              </ConsentButton>
+                <ConsentButton
+                  onClick={() => updateAll(true)}
+                  ref={allowAllRef}
+                >
+                  Allow all
+                </ConsentButton>
+              </div>
             </div>
           </Dialog.Panel>
         </div>
