@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { forwardRef, useMemo } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
@@ -19,47 +19,49 @@ export const navLinkClassesMainActive = "lg:border-white";
 export const navLinkClassesSub = `${navLinkClasses} py-2 hover:bg-alveus-tan/20 rounded`;
 export const navLinkClassesSubActive = "bg-alveus-tan/10";
 
-export const NavLink: React.FC<NavLinkProps> = ({
-  href,
-  variant = "main",
-  isExternal = false,
-  className,
-  ...props
-}) => {
-  const isActive = useIsActivePath(href);
-  const classes = useMemo(
-    () =>
-      [
-        // base classes
-        variant === "main" ? navLinkClassesMain : navLinkClassesSub,
-        // active classes
-        isActive &&
-          (variant === "main"
-            ? navLinkClassesMainActive
-            : navLinkClassesSubActive),
-        // custom classes
-        className,
-      ]
-        .filter(Boolean)
-        .join(" "),
-    [variant, isActive, className]
-  );
+export const NavLink: React.FC<NavLinkProps> = forwardRef(
+  (
+    { href, variant = "main", isExternal = false, className, ...props },
+    ref
+  ) => {
+    const isActive = useIsActivePath(href);
+    const classes = useMemo(
+      () =>
+        [
+          // base classes
+          variant === "main" ? navLinkClassesMain : navLinkClassesSub,
+          // active classes
+          isActive &&
+            (variant === "main"
+              ? navLinkClassesMainActive
+              : navLinkClassesSubActive),
+          // custom classes
+          className,
+        ]
+          .filter(Boolean)
+          .join(" "),
+      [variant, isActive, className]
+    );
 
-  return (
-    <Link
-      href={href}
-      className={classes}
-      {...(isExternal
-        ? {
-            target: "_blank",
-            rel: "noreferrer",
-          }
-        : {})}
-      {...props}
-    />
-  );
-};
-
-export const NavLinkSub: React.FC<NavLinkProps> = (props) => (
-  <NavLink variant="sub" {...props} />
+    return (
+      <Link
+        href={href}
+        className={classes}
+        {...(isExternal
+          ? {
+              target: "_blank",
+              rel: "noreferrer",
+            }
+          : {})}
+        {...props}
+        ref={ref}
+      />
+    );
+  }
 );
+NavLink.displayName = "NavLink";
+
+export const NavLinkSub: React.FC<NavLinkProps> = forwardRef((props, ref) => (
+  <NavLink variant="sub" {...props} ref={ref} />
+));
+NavLinkSub.displayName = "NavLinkSub";
