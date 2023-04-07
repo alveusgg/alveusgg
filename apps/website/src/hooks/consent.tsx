@@ -191,12 +191,19 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                     </p>
                   </div>
 
+                  <input
+                    type="checkbox"
+                    checked={consent[key as ConsentKeys]}
+                    onChange={(e) => update({ [key]: e.target.checked })}
+                    className="peer sr-only"
+                  />
+
                   <div
                     className={[
                       consent[key as ConsentKeys]
                         ? "bg-alveus-green"
                         : "bg-alveus-green-300",
-                      "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner transition-colors",
+                      "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline",
                     ]
                       .filter(Boolean)
                       .join(" ")}
@@ -212,13 +219,6 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                         .join(" ")}
                     />
                   </div>
-
-                  <input
-                    type="checkbox"
-                    checked={consent[key as ConsentKeys]}
-                    onChange={(e) => update({ [key]: e.target.checked })}
-                    className="hidden"
-                  />
                 </label>
               ))}
             </div>
