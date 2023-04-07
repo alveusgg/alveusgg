@@ -242,7 +242,6 @@ const Home: NextPage = () => {
                 href="/live"
                 target="_blank"
                 rel="noreferrer"
-                title="Watch Live on Twitch.tv"
               >
                 Watch Live
               </Link>
@@ -269,7 +268,6 @@ const Home: NextPage = () => {
                   href="/live"
                   target="_blank"
                   rel="noreferrer"
-                  title="Watch Live on Twitch.tv"
                 >
                   <iframe
                     src={twitchEmbed}
