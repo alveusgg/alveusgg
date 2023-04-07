@@ -11,6 +11,9 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
 import { type HTMLAttributes } from "@/utils/attrs";
+
+import { useConsent } from "@/hooks/consent";
+
 import IconYouTube from "@/icons/IconYouTube";
 
 const iframeSrc = (id: string) =>
@@ -137,6 +140,8 @@ export const Lightbox: React.FC<LightboxProps> = ({
   className,
   children,
 }) => {
+  const { update: updateConsent } = useConsent();
+
   const defaultId = useId().replace(/\W/g, "").toLowerCase();
   const photoswipeId = `photoswipe-${id || defaultId}`;
   useEffect(() => {
@@ -163,6 +168,9 @@ export const Lightbox: React.FC<LightboxProps> = ({
 
       // Prevent the default content load
       e.preventDefault();
+
+      // Ensure the user has consented to YouTube
+      updateConsent({ youtube: true });
 
       // Create our content element
       content.element = document.createElement("div");
@@ -212,7 +220,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
     return () => {
       lightbox.destroy();
     };
-  }, [photoswipeId]);
+  }, [photoswipeId, updateConsent]);
 
   // Expose the nested components
   const ctx: LightboxCtxProps = useMemo(
