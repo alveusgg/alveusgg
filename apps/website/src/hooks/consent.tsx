@@ -168,8 +168,8 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                 type="button"
                 onClick={close}
                 className="-mr-2 flex-shrink-0 p-2 transition-colors hover:text-alveus-green"
+                title="Close"
               >
-                <span className="sr-only">Close</span>
                 <IconCross />
               </button>
             </Dialog.Title>
@@ -244,9 +244,8 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
         type="button"
         className="group fixed bottom-4 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-alveus-tan shadow transition-shadow hover:shadow-lg"
         onClick={() => setOpen(true)}
+        title="Manage consent"
       >
-        <span className="sr-only">Manage consent</span>
-
         <div
           className={[
             open && "bg-alveus-green",
