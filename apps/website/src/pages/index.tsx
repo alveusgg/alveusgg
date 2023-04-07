@@ -11,6 +11,7 @@ import {
 import ambassadors from "@/data/ambassadors";
 import { camelToKebab } from "@/utils/string-case";
 import { useConsent } from "@/hooks/consent";
+import usePrefersReducedMotion from "@/hooks/motion";
 
 import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
@@ -160,11 +161,15 @@ const help = {
   },
 };
 
-const getTwitchEmbed = (channel: string, parent: string): string => {
+const getTwitchEmbed = (
+  channel: string,
+  parent: string,
+  autoPlay = true
+): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("channel", channel);
   url.searchParams.set("parent", parent);
-  url.searchParams.set("autoplay", "true");
+  url.searchParams.set("autoplay", autoPlay.toString());
   url.searchParams.set("muted", "true");
   url.searchParams.set("allowfullscreen", "false");
   url.searchParams.set("width", "100%");
@@ -173,20 +178,27 @@ const getTwitchEmbed = (channel: string, parent: string): string => {
 };
 
 const Home: NextPage = () => {
+  const reducedMotion = usePrefersReducedMotion();
+
   const {
     consent,
     update: updateConsent,
     loaded: consentLoaded,
   } = useConsent();
+
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
 
   useEffect(() => {
     setTwitchEmbed(
       consent.twitch
-        ? getTwitchEmbed("alveussanctuary", window.location.hostname)
+        ? getTwitchEmbed(
+            "alveussanctuary",
+            window.location.hostname,
+            !reducedMotion
+          )
         : null
     );
-  }, [consent]);
+  }, [consent, reducedMotion]);
 
   const twitchConsent = useCallback<MouseEventHandler<HTMLButtonElement>>(
     (e) => {
