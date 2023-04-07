@@ -89,7 +89,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
           <div className="flex-grow">
             <Link
               href={episode.link}
-              className="group flex items-end justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
+              className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
               external
               custom
             >
@@ -103,7 +103,10 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                 </span>
               </Heading>
 
-              <IconYouTube size={48} className="hidden shrink-0 lg:block" />
+              <IconYouTube
+                size={48}
+                className="mt-6 hidden shrink-0 lg:block"
+              />
             </Link>
             <p className="text-lg">
               <span className="text-base opacity-80">Broadcast: </span>
