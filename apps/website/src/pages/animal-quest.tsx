@@ -38,9 +38,9 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
       {items.map((episode) => (
         <div
           key={episode.episode}
-          className="mx-auto flex basis-full flex-wrap items-center gap-4 py-8 sm:flex-nowrap md:px-8 xl:basis-1/2"
+          className="mx-auto flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
         >
-          <div className="relative flex-shrink-0 rounded-full bg-alveus-tan">
+          <div className="relative order-last flex-shrink-0 rounded-full bg-alveus-tan lg:order-first">
             <Image
               src={
                 episode.ambassadors.length > 0
@@ -51,7 +51,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               alt=""
               className={[
                 episode.ambassadors.length === 0 && "opacity-10",
-                "h-32 w-32 rounded-full object-cover shadow",
+                "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32",
               ]
                 .filter(Boolean)
                 .join(" ")}
@@ -68,7 +68,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                   ].images[0].src
                 }
                 alt=""
-                className="absolute -bottom-2 -right-2 h-16 w-16 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)]"
+                className="absolute -bottom-2 -right-2 hidden h-12 w-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
                 width={256}
               />
             )}
@@ -80,7 +80,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                     .src
                 }
                 alt=""
-                className="absolute -bottom-2 -left-2 h-16 w-16 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)]"
+                className="absolute -bottom-2 -left-2 hidden h-12 w-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
                 width={256}
               />
             )}
@@ -94,7 +94,8 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               custom
             >
               <Heading level={2} className="my-0 mb-1.5">
-                <span className="block text-lg">
+                <span className="flex items-center gap-2 text-lg">
+                  <IconYouTube size={24} className="lg:hidden" />
                   Episode {episode.episode}:{" "}
                 </span>
                 <span className="block group-hover:underline">
@@ -102,7 +103,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                 </span>
               </Heading>
 
-              <IconYouTube size={48} className="shrink-0" />
+              <IconYouTube size={48} className="hidden shrink-0 lg:block" />
             </Link>
             <p className="text-lg">
               <span className="text-base opacity-80">Broadcast: </span>
