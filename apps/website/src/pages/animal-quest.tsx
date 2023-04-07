@@ -6,7 +6,7 @@ import { formatDateUTC } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
 
 import animalQuest, { type AnimalQuestWithEpisode } from "@/data/animal-quest";
-import ambassadors from "@/data/ambassadors";
+import ambassadors, { type AmbassadorKey } from "@/data/ambassadors";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -38,44 +38,98 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
       {items.map((episode) => (
         <div
           key={episode.episode}
-          className="mx-auto basis-full py-8 md:px-8 lg:basis-1/2"
+          className="mx-auto flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
         >
-          <Link
-            href={episode.link}
-            className="group flex items-end justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
-            external
-            custom
-          >
-            <Heading level={2} className="my-0 mb-1.5">
-              <span className="block text-lg">Episode {episode.episode}: </span>
-              <span className="block group-hover:underline">
-                {episode.edition}
-              </span>
-            </Heading>
+          <div className="relative order-last flex-shrink-0 rounded-full bg-alveus-tan lg:order-first">
+            <Image
+              src={
+                episode.ambassadors.length > 0
+                  ? ambassadors[episode.ambassadors[0] as AmbassadorKey]
+                      .images[0].src
+                  : animalQuestFull
+              }
+              alt=""
+              className={[
+                episode.ambassadors.length === 0 && "opacity-10",
+                "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32",
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              width={256}
+            />
 
-            <IconYouTube size={48} className="shrink-0" />
-          </Link>
-          <p className="text-lg">
-            <span className="text-base opacity-80">Broadcast: </span>
-            {formatDateUTC(episode.broadcast, "long")}
-          </p>
-          {episode.ambassadors.length > 0 && (
+            {episode.ambassadors.length > 1 && (
+              <Image
+                src={
+                  ambassadors[
+                    episode.ambassadors[
+                      episode.ambassadors.length > 2 ? 2 : 1
+                    ] as AmbassadorKey
+                  ].images[0].src
+                }
+                alt=""
+                className="absolute -bottom-2 -right-2 hidden h-12 w-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                width={256}
+              />
+            )}
+
+            {episode.ambassadors.length > 2 && (
+              <Image
+                src={
+                  ambassadors[episode.ambassadors[1] as AmbassadorKey].images[0]
+                    .src
+                }
+                alt=""
+                className="absolute -bottom-2 -left-2 hidden h-12 w-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                width={256}
+              />
+            )}
+          </div>
+
+          <div className="flex-grow">
+            <Link
+              href={episode.link}
+              className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
+              external
+              custom
+            >
+              <Heading level={2} className="my-0 mb-1.5">
+                <span className="flex items-center gap-2 text-lg">
+                  <IconYouTube size={24} className="lg:hidden" />
+                  Episode {episode.episode}:{" "}
+                </span>
+                <span className="block group-hover:underline">
+                  {episode.edition}
+                </span>
+              </Heading>
+
+              <IconYouTube
+                size={48}
+                className="mt-6 hidden shrink-0 lg:block"
+              />
+            </Link>
             <p className="text-lg">
-              <span className="text-base opacity-80">Featuring: </span>
-              {episode.ambassadors.map((ambassador, idx) => (
-                <Fragment key={ambassador}>
-                  <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
-                    {ambassadors[ambassador].name}
-                  </Link>
-                  {idx < episode.ambassadors.length - 2 && ", "}
-                  {idx === episode.ambassadors.length - 2 &&
-                    episode.ambassadors.length > 2 &&
-                    ","}
-                  {idx === episode.ambassadors.length - 2 && " and "}
-                </Fragment>
-              ))}
+              <span className="text-base opacity-80">Broadcast: </span>
+              {formatDateUTC(episode.broadcast, "long")}
             </p>
-          )}
+            {episode.ambassadors.length > 0 && (
+              <p className="text-lg">
+                <span className="text-base opacity-80">Featuring: </span>
+                {episode.ambassadors.map((ambassador, idx) => (
+                  <Fragment key={ambassador}>
+                    <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
+                      {ambassadors[ambassador].name}
+                    </Link>
+                    {idx < episode.ambassadors.length - 2 && ", "}
+                    {idx === episode.ambassadors.length - 2 &&
+                      episode.ambassadors.length > 2 &&
+                      ","}
+                    {idx === episode.ambassadors.length - 2 && " and "}
+                  </Fragment>
+                ))}
+              </p>
+            )}
+          </div>
         </div>
       ))}
     </div>
