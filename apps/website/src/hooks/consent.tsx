@@ -14,6 +14,7 @@ import { safeJSONParse } from "@/utils/helpers";
 
 import Heading from "@/components/content/Heading";
 import { ptSans, ptSerif } from "@/components/layout/Layout";
+import IconCross from "@/icons/IconCross";
 
 type ConsentData = {
   name: string;
@@ -149,14 +150,28 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan p-4 shadow-2xl">
-            <Dialog.Title as={Heading} level={2}>
-              {!hasInteracted && (
-                <small className="block text-lg leading-snug text-alveus-green">
-                  Welcome to Alveus
-                </small>
-              )}
-              Consent Management
+          <Dialog.Panel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan p-4 pt-0 shadow-2xl">
+            <Dialog.Title
+              as={Heading}
+              level={2}
+              className="flex items-start gap-2"
+            >
+              <div className="my-2 flex-grow">
+                {!hasInteracted && (
+                  <small className="block text-lg leading-snug text-alveus-green">
+                    Welcome to Alveus
+                  </small>
+                )}
+                Consent Management
+              </div>
+              <button
+                type="button"
+                onClick={close}
+                className="-mr-2 flex-shrink-0 p-2 transition-colors hover:text-alveus-green"
+              >
+                <span className="sr-only">Close</span>
+                <IconCross />
+              </button>
             </Dialog.Title>
 
             <Dialog.Description>
