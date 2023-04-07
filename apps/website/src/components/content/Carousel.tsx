@@ -1,6 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import IconAngleLeft from "../../icons/IconAngleLeft";
-import IconAngleRight from "../../icons/IconAngleRight";
+
+import usePrefersReducedMotion from "@/hooks/motion";
+
+import IconAngleLeft from "@/icons/IconAngleLeft";
+import IconAngleRight from "@/icons/IconAngleRight";
 
 type CarouselProps = {
   id?: string;
@@ -19,6 +22,8 @@ const Carousel: React.FC<CarouselProps> = ({
   wrapperClassName = "",
   itemClassName = "basis-full sm:basis-1/2 lg:basis-1/3 p-4",
 }) => {
+  const reducedMotion = usePrefersReducedMotion();
+
   // Allow the user to scroll to the next/previous image
   const ref = useRef<HTMLDivElement>(null);
   const last = useRef<{ left: number; right: number } | null>(null);
@@ -175,16 +180,16 @@ const Carousel: React.FC<CarouselProps> = ({
     [interacted]
   );
 
-  // Run the auto scroll if requested, and not paused
+  // Run the auto scroll if requested, and not paused, and not preferring reduced motion
   useEffect(() => {
-    if (!auto || paused) return;
+    if (!auto || paused || reducedMotion) return;
 
     const interval = setInterval(() => {
       if (!ref.current) return;
       move("right");
     }, auto);
     return () => clearInterval(interval);
-  }, [auto, paused, move]);
+  }, [auto, paused, move, reducedMotion]);
 
   return (
     <div
