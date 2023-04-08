@@ -75,7 +75,7 @@ const animalQuest: Readonly<AnimalQuest[]> = [
     ambassadors: ["snork", "moomin"],
   },
   {
-    link: "https://www.twitch.tv/videos/1732218911?t=00h15m24s",
+    link: "https://www.twitch.tv/videos/1699499673?t=00h16m41s",
     edition: "Crow Edition",
     broadcast: new Date("2023-01-04"),
     ambassadors: ["abbott", "coconut"],
