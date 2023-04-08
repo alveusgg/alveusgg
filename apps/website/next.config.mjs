@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import { withSuperjson } from "next-superjson";
+import ambassadorSlugs from "./ambassador-slugs.json" assert { type: "json" };
 
 // @ts-check
 /**
@@ -179,6 +180,11 @@ const config = {
       destination: "https://twitch.tv/alveussanctuary",
       permanent: false,
     },
+    ...ambassadorSlugs.map((slug) => ({
+      source: `/${slug}`,
+      destination: `/ambassadors/${slug}`,
+      permanent: false,
+    })),
   ],
   headers: async () => [
     {
