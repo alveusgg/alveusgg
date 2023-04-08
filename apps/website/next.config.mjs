@@ -1,5 +1,6 @@
 import { resolve } from "path";
 import { withSuperjson } from "next-superjson";
+import ambassadorSlugs from "./ambassador-slugs.json" assert { type: "json" };
 
 // @ts-check
 /**
@@ -155,10 +156,35 @@ const config = {
       permanent: true,
     },
     {
+      source: "/instagram",
+      destination: "https://www.instagram.com/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/twitter",
+      destination: "https://twitter.com/AlveusSanctuary",
+      permanent: true,
+    },
+    {
+      source: "/youtube",
+      destination: "https://www.youtube.com/AlveusSanctuary",
+      permanent: true,
+    },
+    {
+      source: "/tiktok",
+      destination: "https://www.tiktok.com/@alveussanctuary",
+      permanent: true,
+    },
+    {
       source: "/live",
       destination: "https://twitch.tv/alveussanctuary",
       permanent: false,
     },
+    ...ambassadorSlugs.map((slug) => ({
+      source: `/${slug}`,
+      destination: `/ambassadors/${slug}`,
+      permanent: false,
+    })),
   ],
   headers: async () => [
     {

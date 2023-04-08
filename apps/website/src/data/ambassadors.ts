@@ -139,8 +139,6 @@ import appaImage1 from "../assets/ambassadors/appa/01.jpg";
 
 import type { IUCNStatus } from "./iucn";
 
-import { typeSafeObjectKeys } from "@/utils/helpers";
-
 type OneToNine = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type ZeroToNine = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
 type DateStringYear =
@@ -1028,7 +1026,7 @@ const ambassadors = {
   },
 } as const satisfies AmbassadorsData;
 
-export const ambassadorKeys = typeSafeObjectKeys(ambassadors);
+export const ambassadorKeys = Object.keys(ambassadors) as AmbassadorKey[];
 
 export const isAmbassadorKey = (str: string): str is AmbassadorKey =>
   ambassadorKeys.includes(str as AmbassadorKey);
