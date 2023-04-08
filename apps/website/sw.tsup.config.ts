@@ -29,9 +29,9 @@ export default defineConfig((options) => ({
         process.env.VERCEL_URL ?? "localhost"
       ),
       ...Object.fromEntries(
-        Object.entries(env).map(([key, value]) => {
-          return [`process.env.${key}`, JSON.stringify(value)];
-        })
+        Object.entries(env)
+          .filter(([, value]) => value !== undefined)
+          .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)])
       ),
     };
   },
