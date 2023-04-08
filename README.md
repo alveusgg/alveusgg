@@ -1,11 +1,10 @@
-# Alveus community website
+# Alveus Sanctuary website
 
-This is a work-in-progress website for the Alveus Sanctuary non-profit.
-The page is currently hosted at https://alveus.gg/.
+This is the community-built, open-source website for Alveus Sanctuary.
+You can access the site at https://alveussanctuary.org/ (or https://alveus.gg/).
 
 ## See also
 
-- Alveus Sanctuary (official website): https://alveussanctuary.org/
 - Twitch extension: https://github.com/abdullahmorrison/AlveusTwitchExtension
 
 ## Tech stack
@@ -34,7 +33,7 @@ Hosting (production):
 - vercel (serverless hosting)
 - DigitalOcean Spaces (S3-compatible storage)
 
-# External  APIs
+# External APIs
 
 - Twitch OAuth (application)
 - Twitch EventSub/Helix
