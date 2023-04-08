@@ -29,12 +29,12 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block"
         />
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-48 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-[10rem] -rotate-45 select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -55,7 +55,7 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-80 right-0 z-10 hidden h-auto w-1/2 max-w-[16rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
         />
         <Image
           src={leafLeftImage2}
@@ -64,7 +64,7 @@ const AmbassadorsPage: NextPage = () => {
         />
 
         <Section className="flex-grow pt-0" containerClassName="flex flex-wrap">
-          <p className="mt-8 mb-4 basis-full text-center text-xl font-semibold">
+          <p className="mb-4 mt-8 basis-full text-center text-xl font-semibold">
             Click each ambassador for information and highlights!
           </p>
 
@@ -87,7 +87,7 @@ const AmbassadorsPage: NextPage = () => {
                   />
                   <Heading
                     level={2}
-                    className="mt-2 mb-0 text-center transition-colors group-hover:text-alveus-green-700"
+                    className="mb-0 mt-2 text-center transition-colors group-hover:text-alveus-green-700"
                   >
                     {name}
                   </Heading>
