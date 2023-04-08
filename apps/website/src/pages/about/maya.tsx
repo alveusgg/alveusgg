@@ -12,6 +12,7 @@ import mayaImage from "@/assets/maya.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
 const experience = [
   {
@@ -71,7 +72,7 @@ const AboutMayaPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-8 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block xl:max-w-lg"
         />
 
         <Section dark className="py-24">
@@ -100,12 +101,12 @@ const AboutMayaPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
         />
 
         <Section>
           <div className="flex flex-wrap-reverse items-center">
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pr-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
               <Image
                 src={mayaImage}
                 alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
@@ -129,7 +130,7 @@ const AboutMayaPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -top-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
         <Section
@@ -137,7 +138,7 @@ const AboutMayaPage: NextPage = () => {
           className="py-24"
           containerClassName="flex flex-col items-center"
         >
-          <p className="my-2 font-serif text-7xl font-bold">
+          <p className="my-2 text-center font-serif text-7xl font-bold">
             Maya raised over $1,000,000
           </p>
           <p className="my-2 font-serif text-4xl font-bold">Using Twitch!</p>
@@ -149,70 +150,78 @@ const AboutMayaPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
-        <Heading level={2} className="text-center text-5xl text-alveus-green">
-          Maya&apos;s Experience
-        </Heading>
+      <div className="relative flex flex-grow flex-col">
+        <Image
+          src={leafLeftImage3}
+          alt=""
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+        />
 
-        <div className="relative z-0 mx-auto mt-16 max-w-6xl">
-          <div className="absolute left-5 -z-10 h-full w-1 -translate-x-1/2 bg-alveus-green md:left-1/2" />
-          <ol>
-            {experience.map((item, idx) => (
-              <li key={item.date} className="relative my-4 flex items-start">
-                <div
-                  className={`absolute left-5 inline-block ${
-                    idx % 2 ? "md:left-1/2" : "md:left-auto md:right-1/2"
-                  }`}
-                >
+        <Section className="flex-grow">
+          <Heading level={2} className="text-center text-5xl text-alveus-green">
+            Maya&apos;s Experience
+          </Heading>
+
+          <div className="relative z-0 mx-auto mt-16 max-w-6xl">
+            <div className="absolute left-5 -z-10 h-full w-1 -translate-x-1/2 bg-alveus-green md:left-1/2" />
+            <ol>
+              {experience.map((item, idx) => (
+                <li key={item.date} className="relative my-4 flex items-start">
                   <div
-                    className={`
-                  mt-1
-                  hidden
-                  border-y-[1rem] border-solid border-y-transparent md:block
-                  ${
-                    idx % 2
-                      ? "ml-6 border-r-[1rem] border-l-0 border-r-alveus-green"
-                      : "mr-6 border-l-[1rem] border-r-0 border-l-alveus-green"
-                  }`}
-                  />
-                  <div
-                    className={`
-                  mt-1
-                  ml-6 border-y-[1rem] border-r-[1rem] border-l-0
-                  border-solid border-y-transparent border-r-alveus-green md:hidden`}
-                  />
-                </div>
-                <div className="rounded-full bg-alveus-green p-3 text-alveus-tan">
-                  <IconCalendar size={16} />
-                </div>
-                <div
-                  className={`hidden basis-1/2 px-4 pt-2 md:block ${
-                    idx % 2 ? "md:order-first" : "md:order-last"
-                  }`}
-                >
-                  <p
-                    className={`text-md text-alveus-green-500 ${
-                      idx % 2 ? "text-right" : "text-left"
+                    className={`absolute left-5 inline-block ${
+                      idx % 2 ? "md:left-1/2" : "md:left-auto md:right-1/2"
                     }`}
                   >
-                    {item.date}
-                  </p>
-                </div>
-                <div
-                  className={`basis-full px-4 md:basis-1/2 ${
-                    idx % 2 ? "md:order-last" : "md:order-first"
-                  }`}
-                >
-                  <div className="text-md rounded-lg bg-alveus-green p-6 text-alveus-tan">
-                    <p className="mb-4 md:hidden">{item.date}</p>
-                    <p>{item.text}</p>
+                    <div
+                      className={`
+                    mt-1
+                    hidden
+                    border-y-[1rem] border-solid border-y-transparent md:block
+                    ${
+                      idx % 2
+                        ? "ml-6 border-l-0 border-r-[1rem] border-r-alveus-green"
+                        : "mr-6 border-l-[1rem] border-r-0 border-l-alveus-green"
+                    }`}
+                    />
+                    <div
+                      className={`
+                    ml-6
+                    mt-1 border-y-[1rem] border-l-0 border-r-[1rem]
+                    border-solid border-y-transparent border-r-alveus-green md:hidden`}
+                    />
                   </div>
-                </div>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </Section>
+                  <div className="rounded-full bg-alveus-green p-3 text-alveus-tan">
+                    <IconCalendar size={16} />
+                  </div>
+                  <div
+                    className={`hidden basis-1/2 px-4 pt-2 md:block ${
+                      idx % 2 ? "md:order-first" : "md:order-last"
+                    }`}
+                  >
+                    <p
+                      className={`text-md text-alveus-green-500 ${
+                        idx % 2 ? "text-right" : "text-left"
+                      }`}
+                    >
+                      {item.date}
+                    </p>
+                  </div>
+                  <div
+                    className={`basis-full px-4 md:basis-1/2 ${
+                      idx % 2 ? "md:order-last" : "md:order-first"
+                    }`}
+                  >
+                    <div className="text-md rounded-lg bg-alveus-green p-6 text-alveus-tan">
+                      <p className="mb-4 md:hidden">{item.date}</p>
+                      <p>{item.text}</p>
+                    </div>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </Section>
+      </div>
     </>
   );
 };

@@ -77,7 +77,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -97,12 +97,12 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
         />
 
         <Section>
           <div className="flex flex-wrap-reverse items-center">
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pr-8">
+            <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
               <Image
                 src={mayaImage}
                 alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
@@ -141,7 +141,7 @@ const AboutAlveusPage: NextPage = () => {
           it&apos;s users:
         </p>
 
-        <ul className="mt-6 mb-2 flex flex-wrap justify-center md:mt-12">
+        <ul className="mb-2 mt-6 flex flex-wrap justify-center md:mt-12">
           {Object.entries(stats).map(([key, stat]) => (
             <li key={key} className="basis-full py-4 md:basis-1/3 md:px-4">
               <Link
@@ -175,7 +175,7 @@ const AboutAlveusPage: NextPage = () => {
             Views By Country
           </Heading>
 
-          <ul className="mt-6 mb-3 flex flex-wrap justify-center">
+          <ul className="mb-3 mt-6 flex flex-wrap justify-center">
             {Object.entries(views).map(([key, country]) => (
               <li key={key} className="basis-full py-2 md:basis-1/2 md:px-4">
                 <p>{country.name}</p>
