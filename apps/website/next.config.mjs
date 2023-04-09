@@ -176,6 +176,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/twitch",
+      destination: "https://twitch.tv/alveussanctuary",
+      permanent: true,
+    },
+    {
       source: "/live",
       destination: "https://twitch.tv/alveussanctuary",
       permanent: false,
