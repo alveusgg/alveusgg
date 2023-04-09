@@ -205,6 +205,10 @@ const ambassadors = {
     ],
     clips: [
       {
+        id: "GsBRS13e8mY",
+        caption: "Stompy's Story At Alveus",
+      },
+      {
         id: "fsADzOeGHDI",
         caption: "Stompy Enjoying Scritches From Kayla",
       },

@@ -214,7 +214,7 @@ const AboutAlveusPage: NextPage = () => {
           className="flex-grow py-24"
           containerClassName="flex flex-col items-center"
         >
-          <p className="my-2 font-serif text-7xl font-bold">
+          <p className="my-2 text-center font-serif text-7xl font-bold">
             1,000,000 Dollars Raised
           </p>
           <p className="my-2 font-serif text-4xl font-bold">Using Twitch!</p>
