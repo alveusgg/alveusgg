@@ -151,6 +151,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/github",
+      destination: "https://github.com/alveusgg",
+      permanent: true,
+    },
+    {
       source: "/socials",
       destination: "https://bio.link/alveussanctuary",
       permanent: true,
