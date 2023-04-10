@@ -2,16 +2,16 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import React, { Fragment } from "react";
 
-import { formatDateUTC } from "@/utils/datetime";
-import { camelToKebab } from "@/utils/string-case";
-
 import animalQuest, {
   type AnimalQuestWithEpisode,
-} from "@/data/shared/src/animal-quest";
+} from "@alveusgg/data/src/animal-quest";
 import ambassadors, {
   type AmbassadorKey,
-} from "@/data/shared/src/ambassadors/core";
-import { getAmbassadorImages } from "@/data/shared/src/ambassadors/images";
+} from "@alveusgg/data/src/ambassadors/core";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+
+import { formatDateUTC } from "@/utils/datetime";
+import { camelToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";

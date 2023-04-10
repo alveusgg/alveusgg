@@ -8,11 +8,11 @@ import {
   useState,
 } from "react";
 
-import { ambassadorEntries } from "@/data/shared/src/ambassadors/core";
+import { ambassadorEntries } from "@alveusgg/data/src/ambassadors/core";
 import {
   getAmbassadorImages,
   type AmbassadorImages,
-} from "@/data/shared/src/ambassadors/images";
+} from "@alveusgg/data/src/ambassadors/images";
 
 import { camelToKebab } from "@/utils/string-case";
 import { useConsent } from "@/hooks/consent";

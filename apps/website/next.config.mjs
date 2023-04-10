@@ -253,6 +253,7 @@ const config = {
 
     return config;
   },
+  transpilePackages: ["@alveusgg/data"],
   experimental: {
     scrollRestoration: true,
   },

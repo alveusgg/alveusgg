@@ -6,11 +6,11 @@ import React from "react";
 import {
   ambassadorEntries,
   type AmbassadorKey,
-} from "@/data/shared/src/ambassadors/core";
+} from "@alveusgg/data/src/ambassadors/core";
 import {
   getAmbassadorMerchImage,
   type AmbassadorImage,
-} from "@/data/shared/src/ambassadors/images";
+} from "@alveusgg/data/src/ambassadors/images";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";

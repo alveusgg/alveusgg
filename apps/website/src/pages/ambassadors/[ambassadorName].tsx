@@ -6,18 +6,18 @@ import React, { useEffect, useId, useMemo } from "react";
 import ambassadors, {
   isAmbassadorKey,
   type Ambassador,
-} from "@/data/shared/src/ambassadors/core";
+} from "@alveusgg/data/src/ambassadors/core";
 import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
   type AmbassadorImage,
   type AmbassadorImages,
-} from "@/data/shared/src/ambassadors/images";
+} from "@alveusgg/data/src/ambassadors/images";
 import {
   type AnimalQuestWithEpisode,
   getAmbassadorEpisode,
-} from "@/data/shared/src/animal-quest";
-import { getIUCNStatus } from "@/data/shared/src/iucn";
+} from "@alveusgg/data/src/animal-quest";
+import { getIUCNStatus } from "@alveusgg/data/src/iucn";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
 

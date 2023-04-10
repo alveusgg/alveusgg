@@ -6,7 +6,9 @@ import React, { useMemo } from "react";
 import ambassadors, {
   ambassadorKeys,
   type AmbassadorKey,
-} from "@/data/shared/src/ambassadors/core";
+} from "@alveusgg/data/src/ambassadors/core";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -16,7 +18,6 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
-import { getAmbassadorImages } from "@/data/shared/src/ambassadors/images";
 
 const AmbassadorItem: React.FC<{ ambassador: AmbassadorKey }> = ({
   ambassador,

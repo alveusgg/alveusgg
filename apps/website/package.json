@@ -1,5 +1,5 @@
 {
-  "name": "alveusgg-website",
+  "name": "@alveusgg/alveusgg-website",
   "version": "0.1.0",
   "private": true,
   "repository": {
@@ -20,12 +20,13 @@
     "build": "run-s build:next build:next-sitemap build:push-sw build:manifest",
     "dev": "run-p build:manifest dev:*",
     "postinstall:prisma": "prisma generate",
-    "postinstall:shared-data": "node ./build-scripts/shared-data.mjs",
+    "postinstall:ambassador-slugs": "node ./build-scripts/ambassador-slugs.mjs",
     "postinstall": "run-p postinstall:*",
     "lint": "next lint",
     "start": "next start"
   },
   "dependencies": {
+    "@alveusgg/data": "github:alveusgg/data",
     "@aws-sdk/client-s3": "^3.304.0",
     "@aws-sdk/s3-request-presigner": "^3.304.0",
     "@headlessui/react": "^1.7.13",
