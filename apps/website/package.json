@@ -11,17 +11,16 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "scripts": {
-    "build:ambassador-slugs": "esbuild ./build-scripts/ambassador-slugs.ts --loader:.png=empty --loader:.jpg=empty --bundle --platform=node --format=cjs | node",
     "build:next": "next build",
     "build:next-sitemap": "next-sitemap --config next-sitemap.config.cjs",
     "build:push-sw": "tsup --config sw.tsup.config.ts",
     "build:manifest": "node ./build-scripts/create-manifest.mjs",
     "dev:next": "next dev",
     "dev:push-sw": "tsup --watch --config sw.tsup.config.ts",
-    "build": "run-s build:ambassador-slugs build:next build:next-sitemap build:push-sw build:manifest",
-    "dev": "npm run build:ambassador-slugs && run-p build:manifest dev:*",
+    "build": "run-s build:next build:next-sitemap build:push-sw build:manifest",
+    "dev": "run-p build:manifest dev:*",
     "postinstall:prisma": "prisma generate",
-    "postinstall:shared-data": "rimraf src/data/shared && git clone --depth 1 --single-branch --branch https://github.com/alveusgg/data src/data/shared",
+    "postinstall:shared-data": "node ./build-scripts/shared-data.mjs",
     "postinstall": "run-p postinstall:*",
     "lint": "next lint",
     "start": "next start"
@@ -105,7 +104,6 @@
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.6",
     "prisma": "^4.12.0",
-    "rimraf": "^5.0.0",
     "tailwindcss": "^3.3.1",
     "tsup": "^6.7.0",
     "typescript": "^5.0.3",

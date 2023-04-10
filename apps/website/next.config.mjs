@@ -1,6 +1,6 @@
 import { resolve } from "path";
 import { withSuperjson } from "next-superjson";
-import ambassadorSlugs from "./ambassador-slugs.json" assert { type: "json" };
+import ambassadorSlugs from "./src/data/ambassador-slugs.json" assert { type: "json" };
 
 // @ts-check
 /**

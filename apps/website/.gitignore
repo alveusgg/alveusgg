@@ -11,10 +11,10 @@
 /public/push/alveus/*
 /public/robots.txt
 /public/sitemap.xml
-ambassador-slugs.json
 
 # shared data
 /src/data/shared
+/src/data/ambassador-slugs.json
 
 # database
 /prisma/db.sqlite
