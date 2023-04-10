@@ -258,12 +258,14 @@ export function ShowAndTellEntryForm({
                       <TextAreaField
                         name={`image[${fileReference.id}][caption]`}
                         label="Caption"
+                        maxLength={200}
                         inputClassName="h-10"
                         defaultValue={initialData?.caption}
                       />
                       <TextAreaField
                         name={`image[${fileReference.id}][alternativeText]`}
                         label="Alternative Text"
+                        maxLength={300}
                         defaultValue={initialData?.alternativeText}
                       />
                     </div>
