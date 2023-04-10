@@ -30,8 +30,8 @@ export const whereApproved = {
 const attachmentSchema = z.object({
   url: z.string().url(),
   title: z.string().max(100),
-  caption: z.string().max(100),
-  description: z.string().max(100),
+  caption: z.string().max(200),
+  description: z.string().max(200),
   alternativeText: z.string().max(300),
 });
 
