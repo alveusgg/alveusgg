@@ -1,5 +1,15 @@
 {
   "name": "alveusgg-server",
+  "version": "0.1.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alveusgg/alveusgg.git",
+    "directory": "apps/server"
+  },
+  "bugs": {
+    "url": "https://github.com/alveusgg/alveusgg/issues"
+  },
   "dependencies": {
     "tmi.js": "^1.8.5"
   }

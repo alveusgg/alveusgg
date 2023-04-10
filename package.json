@@ -1,12 +1,20 @@
 {
   "name": "alveusgg",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {
-  },
+  "version": "0.1.0",
+  "private": true,
   "workspaces": [
-    "app/website"
+    "apps/*"
   ],
-  "keywords": [],
-  "author": ""
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alveusgg/alveusgg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alveusgg/alveusgg/issues"
+  },
+  "engines": {
+    "node": "^16",
+    "pnpm": "^7"
+  },
+  "packageManager": "pnpm@7.27.0"
 }
