@@ -8,7 +8,12 @@ import {
   useState,
 } from "react";
 
-import ambassadors from "@/data/ambassadors";
+import { ambassadorEntries } from "@/data/shared/src/ambassadors/core";
+import {
+  getAmbassadorImages,
+  type AmbassadorImages,
+} from "@/data/shared/src/ambassadors/images";
+
 import { camelToKebab } from "@/utils/string-case";
 import { useConsent } from "@/hooks/consent";
 import usePrefersReducedMotion from "@/hooks/motion";
@@ -71,10 +76,11 @@ const slides = [
   },
 ];
 
-const featuredAmbassadors = Object.entries(ambassadors)
+const featuredAmbassadors = ambassadorEntries
   .filter(([, { homepage }]) => !!homepage)
-  .reduce(
-    (obj, [key, { images, homepage }]) => ({
+  .reduce((obj, [key, { homepage }]) => {
+    const images = getAmbassadorImages(key) as AmbassadorImages;
+    return {
       ...obj,
       [key]: (
         <Link
@@ -95,9 +101,8 @@ const featuredAmbassadors = Object.entries(ambassadors)
           <p className="text-center">{homepage?.description}</p>
         </Link>
       ),
-    }),
-    {}
-  );
+    };
+  }, {});
 
 const merch = Object.entries({
   hoodie: {

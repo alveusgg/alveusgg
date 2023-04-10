@@ -13,6 +13,9 @@
 /public/sitemap.xml
 ambassador-slugs.json
 
+# shared data
+/src/data/shared
+
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal

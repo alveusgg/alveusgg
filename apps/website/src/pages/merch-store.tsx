@@ -3,7 +3,14 @@ import Link from "next/link";
 import Image, { type StaticImageData } from "next/image";
 import React from "react";
 
-import ambassadors, { type AmbassadorsData } from "@/data/ambassadors";
+import {
+  ambassadorEntries,
+  type AmbassadorKey,
+} from "@/data/shared/src/ambassadors/core";
+import {
+  getAmbassadorMerchImage,
+  type AmbassadorImage,
+} from "@/data/shared/src/ambassadors/images";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -16,19 +23,26 @@ type MerchItem = {
   title: string;
 } & ({ link: string } | { soon: string });
 
-const merch: { store: MerchItem; plushies: Record<string, MerchItem> } = {
+type MerchData = {
+  store: MerchItem;
+  plushies: Partial<{
+    [key in AmbassadorKey]: MerchItem;
+  }>;
+};
+
+const merch: MerchData = {
   store: {
     image: merchStoreImage,
     title: "Merch Store",
     link: "/merch",
   },
-  plushies: Object.entries(ambassadors as AmbassadorsData).reduce(
+  plushies: ambassadorEntries.reduce<MerchData["plushies"]>(
     (acc, [key, ambassador]) =>
       ambassador.plush
         ? {
             ...acc,
             [key]: {
-              image: ambassador.plush.image,
+              image: (getAmbassadorMerchImage(key) as AmbassadorImage).src,
               title: `${ambassador.name} Plush`,
               ...("link" in ambassador.plush
                 ? { link: ambassador.plush.link }
@@ -92,7 +106,7 @@ const MerchItem: React.FC<MerchItemProps> = ({
       {!hideTitle && (
         <Heading
           level={2}
-          className="mt-4 mb-0 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
+          className="mb-0 mt-4 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
         >
           {item.title}
         </Heading>

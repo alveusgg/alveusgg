@@ -4,14 +4,20 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 import React, { useEffect, useId, useMemo } from "react";
 
 import ambassadors, {
-  type Ambassador,
   isAmbassadorKey,
-} from "@/data/ambassadors";
-import { getIUCNStatus } from "@/data/iucn";
+  type Ambassador,
+} from "@/data/shared/src/ambassadors/core";
+import {
+  getAmbassadorImages,
+  getAmbassadorMerchImage,
+  type AmbassadorImage,
+  type AmbassadorImages,
+} from "@/data/shared/src/ambassadors/images";
 import {
   type AnimalQuestWithEpisode,
   getAmbassadorEpisode,
-} from "@/data/animal-quest";
+} from "@/data/shared/src/animal-quest";
+import { getIUCNStatus } from "@/data/shared/src/iucn";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
 
@@ -45,6 +51,8 @@ const parseDate = (date: string | null): string => {
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
+  images: AmbassadorImages;
+  merchImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithEpisode;
 };
 
@@ -69,6 +77,8 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   return {
     props: {
       ambassador: ambassadors[ambassadorKey],
+      images: getAmbassadorImages(ambassadorKey),
+      merchImage: getAmbassadorMerchImage(ambassadorKey),
       animalQuest: getAmbassadorEpisode(ambassadorKey),
     },
   };
@@ -76,6 +86,8 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
 
 const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   ambassador,
+  images,
+  merchImage,
   animalQuest,
 }) => {
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
@@ -95,24 +107,17 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
   const carousel = useMemo(
     () =>
-      ambassador.images.reduce((obj, { src, alt }) => {
-        const srcObj =
-          typeof src === "object"
-            ? "default" in src
-              ? src.default
-              : src
-            : null;
-        const srcLink = srcObj ? srcObj.src : (src as string);
+      images.reduce((obj, { src, alt }) => {
         return {
           ...obj,
-          [srcLink]: (
+          [src.src]: (
             <a
-              href={srcLink}
+              href={src.src}
               target="_blank"
               rel="noreferrer"
               draggable={false}
-              data-pswp-width={srcObj ? srcObj.width : undefined}
-              data-pswp-height={srcObj ? srcObj.height : undefined}
+              data-pswp-width={src.width}
+              data-pswp-height={src.height}
             >
               <Image
                 src={src}
@@ -125,7 +130,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           ),
         };
       }, {}),
-    [ambassador]
+    [images]
   );
 
   return (
@@ -133,13 +138,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
       <Meta
         title={`${ambassador.name} | Ambassadors`}
         description={`${ambassador.name} is an Alveus Ambassador. ${ambassador.story} ${ambassador.mission}`}
-        image={
-          typeof ambassador.images[0].src === "string"
-            ? ambassador.images[0].src
-            : "default" in ambassador.images[0].src
-            ? ambassador.images[0].src.default.src
-            : ambassador.images[0].src.src
-        }
+        image={images[0].src.src}
       />
 
       {/* Nav background */}
@@ -152,8 +151,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         >
           <div className="absolute inset-x-0 top-0 h-64 w-full md:bottom-0 md:h-full md:w-1/2">
             <Image
-              src={ambassador.images[0].src}
-              alt={ambassador.images[0].alt}
+              src={images[0].src}
+              alt={images[0].alt}
               placeholder="blur"
               className="absolute inset-x-0 top-0 h-full w-full object-cover md:sticky md:h-screen md:max-h-full"
             />
@@ -233,7 +232,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               />
             </div>
 
-            {ambassador.plush && "link" in ambassador.plush && (
+            {ambassador.plush && "link" in ambassador.plush && merchImage && (
               <Link
                 href={ambassador.plush.link}
                 className="group mx-auto mt-12"
@@ -241,7 +240,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 custom
               >
                 <Image
-                  src={ambassador.plush.image}
+                  src={merchImage.src}
                   width={512}
                   alt={`${ambassador.name} Plush`}
                   className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition-all group-hover:scale-105 group-hover:shadow-2xl"
@@ -252,7 +251,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             {animalQuest && (
               <Link
                 href={animalQuest.link}
-                className="group relative z-0 mt-12 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan py-4 px-6 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
+                className="group relative z-0 mt-12 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
                 external
                 custom
               >

@@ -1,9 +1,12 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 
-import ambassadors from "@/data/ambassadors";
+import ambassadors, {
+  ambassadorKeys,
+  type AmbassadorKey,
+} from "@/data/shared/src/ambassadors/core";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -13,6 +16,37 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import { getAmbassadorImages } from "@/data/shared/src/ambassadors/images";
+
+const AmbassadorItem: React.FC<{ ambassador: AmbassadorKey }> = ({
+  ambassador,
+}) => {
+  const data = useMemo(() => ambassadors[ambassador], [ambassador]);
+  const images = useMemo(() => getAmbassadorImages(ambassador), [ambassador]);
+
+  return (
+    <div className="basis-full py-4 md:basis-1/2 md:px-4 lg:basis-1/4">
+      <Link href={`/ambassadors/${camelToKebab(ambassador)}`} className="group">
+        <Image
+          src={images[0].src}
+          alt={images[0].alt}
+          placeholder="blur"
+          width={700}
+          className="aspect-4/3 h-auto w-full rounded-xl object-cover transition-filter group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110"
+        />
+        <Heading
+          level={2}
+          className="mb-0 mt-2 text-center transition-colors group-hover:text-alveus-green-700"
+        >
+          {data.name}
+        </Heading>
+        <p className="text-center text-xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400">
+          {data.species}
+        </p>
+      </Link>
+    </div>
+  );
+};
 
 const AmbassadorsPage: NextPage = () => {
   return (
@@ -68,36 +102,9 @@ const AmbassadorsPage: NextPage = () => {
             Click each ambassador for information and highlights!
           </p>
 
-          {Object.entries(ambassadors).map(
-            ([key, { name, species, images }]) => (
-              <div
-                key={key}
-                className="basis-full py-4 md:basis-1/2 md:px-4 lg:basis-1/4"
-              >
-                <Link
-                  href={`/ambassadors/${camelToKebab(key)}`}
-                  className="group"
-                >
-                  <Image
-                    src={images[0].src}
-                    alt={images[0].alt}
-                    placeholder="blur"
-                    width={700}
-                    className="aspect-4/3 h-auto w-full rounded-xl object-cover transition-filter group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110"
-                  />
-                  <Heading
-                    level={2}
-                    className="mb-0 mt-2 text-center transition-colors group-hover:text-alveus-green-700"
-                  >
-                    {name}
-                  </Heading>
-                  <p className="text-center text-xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400">
-                    {species}
-                  </p>
-                </Link>
-              </div>
-            )
-          )}
+          {ambassadorKeys.map((key) => (
+            <AmbassadorItem key={key} ambassador={key} />
+          ))}
         </Section>
       </div>
     </>

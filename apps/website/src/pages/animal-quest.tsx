@@ -5,8 +5,13 @@ import React, { Fragment } from "react";
 import { formatDateUTC } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
 
-import animalQuest, { type AnimalQuestWithEpisode } from "@/data/animal-quest";
-import ambassadors, { type AmbassadorKey } from "@/data/ambassadors";
+import animalQuest, {
+  type AnimalQuestWithEpisode,
+} from "@/data/shared/src/animal-quest";
+import ambassadors, {
+  type AmbassadorKey,
+} from "@/data/shared/src/ambassadors/core";
+import { getAmbassadorImages } from "@/data/shared/src/ambassadors/images";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -44,8 +49,9 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             <Image
               src={
                 episode.ambassadors.length > 0
-                  ? ambassadors[episode.ambassadors[0] as AmbassadorKey]
-                      .images[0].src
+                  ? getAmbassadorImages(
+                      episode.ambassadors[0] as AmbassadorKey
+                    )[0].src
                   : animalQuestFull
               }
               alt=""
@@ -61,11 +67,11 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             {episode.ambassadors.length > 1 && (
               <Image
                 src={
-                  ambassadors[
+                  getAmbassadorImages(
                     episode.ambassadors[
                       episode.ambassadors.length > 2 ? 2 : 1
                     ] as AmbassadorKey
-                  ].images[0].src
+                  )[0].src
                 }
                 alt=""
                 className="absolute -bottom-2 -right-2 hidden h-12 w-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
@@ -76,8 +82,9 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             {episode.ambassadors.length > 2 && (
               <Image
                 src={
-                  ambassadors[episode.ambassadors[1] as AmbassadorKey].images[0]
-                    .src
+                  getAmbassadorImages(
+                    episode.ambassadors[1] as AmbassadorKey
+                  )[0].src
                 }
                 alt=""
                 className="absolute -bottom-2 -left-2 hidden h-12 w-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
