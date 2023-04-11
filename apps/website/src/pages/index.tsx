@@ -8,11 +8,8 @@ import {
   useState,
 } from "react";
 
-import { ambassadorEntries } from "@alveusgg/data/src/ambassadors/core";
-import {
-  getAmbassadorImages,
-  type AmbassadorImages,
-} from "@alveusgg/data/src/ambassadors/images";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { camelToKebab } from "@/utils/string-case";
 import { useConsent } from "@/hooks/consent";
@@ -48,6 +45,7 @@ import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-
 import croptopMerchImage from "@/assets/merch/organic-crop-top-black-front.png";
 import beanieMerchImage from "@/assets/merch/organic-ribbed-beanie-black-front.png";
 import hoodieMerchImage from "@/assets/merch/unisex-essential-eco-hoodie-white-front.png";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 
 const slides = [
   {
@@ -76,10 +74,10 @@ const slides = [
   },
 ];
 
-const featuredAmbassadors = ambassadorEntries
+const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
   .filter(([, { homepage }]) => !!homepage)
   .reduce((obj, [key, { homepage }]) => {
-    const images = getAmbassadorImages(key) as AmbassadorImages;
+    const images = getAmbassadorImages(key);
     return {
       ...obj,
       [key]: (

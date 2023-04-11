@@ -3,14 +3,18 @@ import Link from "next/link";
 import Image, { type StaticImageData } from "next/image";
 import React from "react";
 
-import {
-  ambassadorEntries,
-  type AmbassadorKey,
-} from "@alveusgg/data/src/ambassadors/core";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import {
   getAmbassadorMerchImage,
-  type AmbassadorImage,
+  isAmbassadorWithPlushKey,
+  type AmbassadorWithPlushKey,
+  type AmbassadorWithPlush,
 } from "@alveusgg/data/src/ambassadors/images";
+
+import {
+  typeSafeObjectEntries,
+  typeSafeObjectFromEntries,
+} from "@/utils/helpers";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -25,9 +29,9 @@ type MerchItem = {
 
 type MerchData = {
   store: MerchItem;
-  plushies: Partial<{
-    [key in AmbassadorKey]: MerchItem;
-  }>;
+  plushies: {
+    [key in AmbassadorWithPlushKey]: MerchItem;
+  };
 };
 
 const merch: MerchData = {
@@ -36,21 +40,21 @@ const merch: MerchData = {
     title: "Merch Store",
     link: "/merch",
   },
-  plushies: ambassadorEntries.reduce<MerchData["plushies"]>(
-    (acc, [key, ambassador]) =>
-      ambassador.plush
-        ? {
-            ...acc,
-            [key]: {
-              image: (getAmbassadorMerchImage(key) as AmbassadorImage).src,
-              title: `${ambassador.name} Plush`,
-              ...("link" in ambassador.plush
-                ? { link: ambassador.plush.link }
-                : { soon: ambassador.plush.soon }),
-            },
-          }
-        : acc,
-    {}
+  plushies: typeSafeObjectFromEntries(
+    (
+      typeSafeObjectEntries(ambassadors).filter(([key]) =>
+        isAmbassadorWithPlushKey(key)
+      ) as [AmbassadorWithPlushKey, AmbassadorWithPlush][]
+    ).map(([key, ambassador]) => [
+      key,
+      {
+        image: getAmbassadorMerchImage(key).src,
+        title: `${ambassador.name} Plush`,
+        ...("link" in ambassador.plush
+          ? { link: ambassador.plush.link }
+          : { soon: ambassador.plush.soon }),
+      },
+    ])
   ),
 };
 

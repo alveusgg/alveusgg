@@ -4,7 +4,6 @@ import Link from "next/link";
 import React, { useMemo } from "react";
 
 import ambassadors, {
-  ambassadorKeys,
   type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
@@ -13,6 +12,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import { camelToKebab } from "@/utils/string-case";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -103,7 +103,7 @@ const AmbassadorsPage: NextPage = () => {
             Click each ambassador for information and highlights!
           </p>
 
-          {ambassadorKeys.map((key) => (
+          {typeSafeObjectKeys(ambassadors).map((key) => (
             <AmbassadorItem key={key} ambassador={key} />
           ))}
         </Section>
