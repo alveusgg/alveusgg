@@ -3,7 +3,18 @@ import Link from "next/link";
 import Image, { type StaticImageData } from "next/image";
 import React from "react";
 
-import ambassadors, { type AmbassadorsData } from "@/data/ambassadors";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import {
+  getAmbassadorMerchImage,
+  isAmbassadorWithPlushKey,
+  type AmbassadorWithPlushKey,
+  type AmbassadorWithPlush,
+} from "@alveusgg/data/src/ambassadors/images";
+
+import {
+  typeSafeObjectEntries,
+  typeSafeObjectFromEntries,
+} from "@/utils/helpers";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -16,27 +27,34 @@ type MerchItem = {
   title: string;
 } & ({ link: string } | { soon: string });
 
-const merch: { store: MerchItem; plushies: Record<string, MerchItem> } = {
+type MerchData = {
+  store: MerchItem;
+  plushies: {
+    [key in AmbassadorWithPlushKey]: MerchItem;
+  };
+};
+
+const merch: MerchData = {
   store: {
     image: merchStoreImage,
     title: "Merch Store",
     link: "/merch",
   },
-  plushies: Object.entries(ambassadors as AmbassadorsData).reduce(
-    (acc, [key, ambassador]) =>
-      ambassador.plush
-        ? {
-            ...acc,
-            [key]: {
-              image: ambassador.plush.image,
-              title: `${ambassador.name} Plush`,
-              ...("link" in ambassador.plush
-                ? { link: ambassador.plush.link }
-                : { soon: ambassador.plush.soon }),
-            },
-          }
-        : acc,
-    {}
+  plushies: typeSafeObjectFromEntries(
+    (
+      typeSafeObjectEntries(ambassadors).filter(([key]) =>
+        isAmbassadorWithPlushKey(key)
+      ) as [AmbassadorWithPlushKey, AmbassadorWithPlush][]
+    ).map(([key, ambassador]) => [
+      key,
+      {
+        image: getAmbassadorMerchImage(key).src,
+        title: `${ambassador.name} Plush`,
+        ...("link" in ambassador.plush
+          ? { link: ambassador.plush.link }
+          : { soon: ambassador.plush.soon }),
+      },
+    ])
   ),
 };
 
@@ -92,7 +110,7 @@ const MerchItem: React.FC<MerchItemProps> = ({
       {!hideTitle && (
         <Heading
           level={2}
-          className="mt-4 mb-0 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
+          className="mb-0 mt-4 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
         >
           {item.title}
         </Heading>
