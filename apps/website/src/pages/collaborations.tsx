@@ -24,6 +24,12 @@ type Collaboration = {
 };
 
 const collaborations = {
+  dareon: {
+    name: "Dareon",
+    link: "https://www.twitch.tv/dareon",
+    date: new Date("2023-04-11"),
+    videoId: "RCzMJs9uDSI",
+  },
   yungJeff: {
     name: "YungJeff",
     link: "https://twitter.com/YUNGJEFF",
