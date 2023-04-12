@@ -18,6 +18,7 @@ export function SelectBoxField(props: SelectBoxFieldProps) {
       <select
         className="w-full rounded-sm border border-gray-700 bg-white p-1 text-black"
         {...fieldProps}
+        name={props.name}
         value={props.value}
         onChange={props.onChange}
       >
