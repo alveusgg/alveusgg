@@ -7,30 +7,16 @@ import type {
 import { getSession } from "next-auth/react";
 
 import type { Giveaway, GiveawayEntry, MailingAddress } from "@prisma/client";
-import { prisma } from "@/server/db/client";
 
 import { GiveawayEntryForm } from "@/components/giveaway/GiveawayEntryForm";
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
+import { findActiveGiveaway, getGiveawayEntry } from "@/server/db/giveaways";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
-
-async function findActiveGiveaway(giveawaySlugOrId: string) {
-  const now = new Date();
-  return await prisma.giveaway.findFirst({
-    where: {
-      active: true,
-      startAt: { lt: now },
-      AND: [
-        { OR: [{ endAt: null }, { endAt: { gt: now } }] },
-        { OR: [{ id: giveawaySlugOrId }, { slug: giveawaySlugOrId }] },
-      ],
-    },
-  });
-}
 
 export type GiveawayEntryWithAddress = GiveawayEntry & {
   mailingAddress: MailingAddress;
@@ -60,17 +46,7 @@ export const getServerSideProps: GetServerSideProps<{
   let existingEntry: GiveawayEntryWithAddress | null = null;
   const session = await getSession(context);
   if (session?.user?.id) {
-    existingEntry = await prisma.giveawayEntry.findUnique({
-      where: {
-        giveawayId_userId: {
-          userId: session.user.id,
-          giveawayId: giveaway.id,
-        },
-      },
-      include: {
-        mailingAddress: true,
-      },
-    });
+    existingEntry = await getGiveawayEntry(session.user.id, giveaway.id);
   }
 
   return {

@@ -1,8 +1,32 @@
 import { z } from "zod";
-import { router, superUserProcedure } from "../../trpc";
+import {
+  createCheckPermissionMiddleware,
+  protectedProcedure,
+  router,
+  superUserProcedure,
+} from "@/server/trpc/trpc";
+import { permissions } from "@/config/permissions";
+
+const permittedProcedure = protectedProcedure.use(
+  createCheckPermissionMiddleware(permissions.manageGiveaways)
+);
 
 export const adminGiveawaysRouter = router({
-  getGiveaways: superUserProcedure.query(async ({ ctx }) =>
+  createGiveaway: permittedProcedure
+    .input(z.object({}))
+    .mutation(async ({ ctx, input }) => {
+      await ctx.prisma.giveaway.create({
+        data: {
+          active: false,
+          slug: "",
+          config: "{}",
+          showInLists: false,
+          label: "",
+        },
+      });
+    }),
+
+  getGiveaways: permittedProcedure.query(async ({ ctx }) =>
     ctx.prisma.giveaway.findMany({
       include: {
         _count: {
@@ -11,7 +35,7 @@ export const adminGiveawaysRouter = router({
       },
     })
   ),
-  toggleGiveawayStatus: superUserProcedure
+  toggleGiveawayStatus: permittedProcedure
     .input(
       z.object({
         id: z.string().cuid(),
@@ -28,7 +52,7 @@ export const adminGiveawaysRouter = router({
         },
       });
     }),
-  updateGiveawayOutgoingWebhookUrl: superUserProcedure
+  updateGiveawayOutgoingWebhookUrl: permittedProcedure
     .input(
       z.object({
         id: z.string().cuid(),

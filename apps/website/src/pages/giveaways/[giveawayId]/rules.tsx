@@ -6,26 +6,12 @@ import type {
 } from "next";
 
 import type { Giveaway } from "@prisma/client";
-import { prisma } from "@/server/db/client";
 
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
 import { calcGiveawayConfig } from "@/utils/giveaways";
-
-async function findActiveGiveaway(giveawaySlugOrId: string) {
-  const now = new Date();
-  return await prisma.giveaway.findFirst({
-    where: {
-      active: true,
-      startAt: { lt: now },
-      AND: [
-        { OR: [{ endAt: null }, { endAt: { gt: now } }] },
-        { OR: [{ id: giveawaySlugOrId }, { slug: giveawaySlugOrId }] },
-      ],
-    },
-  });
-}
+import { findActiveGiveaway } from "@/server/db/giveaways";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps

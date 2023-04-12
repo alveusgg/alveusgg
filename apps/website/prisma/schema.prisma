@@ -191,6 +191,7 @@ model MailingAddress {
   city         String
   state        String
   postalCode   String
+  salt         String @db.Char(32)
 
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
@@ -223,6 +224,7 @@ model GiveawayEntry {
   email             String?
   givenName         String
   familyName        String
+  salt              String  @db.Char(32)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

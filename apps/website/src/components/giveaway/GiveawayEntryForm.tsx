@@ -2,20 +2,21 @@ import React, { useCallback } from "react";
 import { useSession } from "next-auth/react";
 import type { Giveaway } from "@prisma/client";
 
-import type { GiveawayEntryWithAddress } from "../../pages/giveaways/[giveawayId]";
-import { calcGiveawayConfig } from "../../utils/giveaways";
-import { trpc } from "../../utils/trpc";
-import { getCountryName } from "../../utils/countries";
-
-import { LoginWithTwitchButton } from "../shared/LoginWithTwitchButton";
-import { Headline } from "../shared/Headline";
-import { Button } from "../shared/Button";
-import { MessageBox } from "../shared/MessageBox";
 import { GiveawayChecks } from "./GiveawayChecks";
 import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
 import { GiveawayEntryContactFieldset } from "./GiveawayEntryContactFieldset";
 import { GiveawayEntryRulesFieldset } from "./GiveawayEntryRulesFieldset";
+
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { Headline } from "@/components/shared/Headline";
+import { Button } from "@/components/shared/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
+
+import { getCountryName } from "@/utils/countries";
+import { trpc } from "@/utils/trpc";
+import { calcGiveawayConfig } from "@/utils/giveaways";
+import type { GiveawayEntryWithAddress } from "@/pages/giveaways/[giveawayId]";
 
 export const GiveawayEntryForm: React.FC<{
   giveaway: Giveaway;
