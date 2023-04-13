@@ -32,13 +32,15 @@ const exportGiveawayEntries = async (
       entry.givenName,
       entry.familyName,
       entry.email || "",
-      entry.mailingAddress.addressLine1,
-      entry.mailingAddress.addressLine2,
-      entry.mailingAddress.postalCode,
-      entry.mailingAddress.city,
-      entry.mailingAddress.state,
-      entry.mailingAddress.country,
-      getCountryName(entry.mailingAddress.country) || "-",
+      entry.mailingAddress?.addressLine1 || "",
+      entry.mailingAddress?.addressLine2 || "",
+      entry.mailingAddress?.postalCode || "",
+      entry.mailingAddress?.city || "",
+      entry.mailingAddress?.state || "",
+      entry.mailingAddress?.country || "",
+      (entry.mailingAddress?.country &&
+        getCountryName(entry.mailingAddress.country)) ||
+        "",
     ];
   });
 

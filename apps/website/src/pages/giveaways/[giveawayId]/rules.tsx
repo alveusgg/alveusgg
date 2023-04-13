@@ -12,6 +12,7 @@ import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
 import { calcGiveawayConfig } from "@/utils/giveaways";
 import { findActiveGiveaway } from "@/server/db/giveaways";
+import Markdown from "@/components/content/Markdown";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -19,6 +20,7 @@ export type GiveawayPageProps = InferGetServerSidePropsType<
 
 export const getServerSideProps: GetServerSideProps<{
   giveaway: Giveaway;
+  rules: string;
 }> = async (context) => {
   // Check params
   const giveawaySlugOrId = context.params?.giveawayId;
@@ -36,14 +38,19 @@ export const getServerSideProps: GetServerSideProps<{
     };
   }
 
+  const config = calcGiveawayConfig(giveaway.config);
+  if (!config.rules) {
+    return {
+      notFound: true,
+    };
+  }
+
   return {
-    props: { giveaway },
+    props: { giveaway, rules: config.rules },
   };
 };
 
-const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway }) => {
-  const config = calcGiveawayConfig(giveaway.config);
-
+const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway, rules }) => {
   return (
     <>
       <Meta
@@ -60,10 +67,7 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway }) => {
           <Heading className="my-3 text-3xl">Rules - {giveaway.label}</Heading>
         </header>
 
-        <div
-          className="alveus-ugc"
-          dangerouslySetInnerHTML={{ __html: config.rulesHTML || "…" }}
-        />
+        <Markdown content={rules} />
       </Section>
     </>
   );

@@ -3,28 +3,88 @@ import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
-  superUserProcedure,
 } from "@/server/trpc/trpc";
 import { permissions } from "@/config/permissions";
+import {
+  createGiveaway,
+  editGiveaway,
+  giveawaySchema,
+} from "@/server/db/giveaways";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageGiveaways)
 );
 
 export const adminGiveawaysRouter = router({
-  createGiveaway: permittedProcedure
-    .input(z.object({}))
-    .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.giveaway.create({
-        data: {
-          active: false,
-          slug: "",
-          config: "{}",
-          showInLists: false,
-          label: "",
-        },
-      });
+  createOrEditGiveaway: permittedProcedure
+    .input(
+      z
+        .discriminatedUnion("action", [
+          z.object({ action: z.literal("create") }),
+          z.object({ action: z.literal("edit"), id: z.string().cuid() }),
+        ])
+        .and(giveawaySchema)
+    )
+    .mutation(async ({ input }) => {
+      switch (input.action) {
+        case "create": {
+          const { action: _, ...data } = input;
+          await createGiveaway(data);
+          break;
+        }
+        case "edit": {
+          const { action: _, ...data } = input;
+          await editGiveaway(data);
+          break;
+        }
+      }
     }),
+
+  deleteGiveaway: permittedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input: id }) =>
+      ctx.prisma.giveaway.delete({ where: { id } })
+    ),
+
+  purgeGiveawayEntries: permittedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input: id }) =>
+      ctx.prisma.giveawayEntry.deleteMany({
+        where: {
+          giveawayId: id,
+        },
+      })
+    ),
+
+  anonymizeGiveawayEntries: permittedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ ctx, input: id }) =>
+      Promise.all([
+        ctx.prisma.giveawayEntry.updateMany({
+          where: {
+            giveawayId: id,
+          },
+          data: {
+            familyName: "",
+            givenName: "",
+            email: "",
+          },
+        }),
+        ctx.prisma.mailingAddress.deleteMany({
+          where: {
+            giveawayEntry: {
+              giveawayId: id,
+            },
+          },
+        }),
+      ])
+    ),
+
+  getGiveaway: permittedProcedure
+    .input(z.string().cuid())
+    .query(async ({ ctx, input: id }) =>
+      ctx.prisma.giveaway.findUnique({ where: { id } })
+    ),
 
   getGiveaways: permittedProcedure.query(async ({ ctx }) =>
     ctx.prisma.giveaway.findMany({
@@ -35,6 +95,7 @@ export const adminGiveawaysRouter = router({
       },
     })
   ),
+
   toggleGiveawayStatus: permittedProcedure
     .input(
       z.object({
@@ -52,6 +113,7 @@ export const adminGiveawaysRouter = router({
         },
       });
     }),
+
   updateGiveawayOutgoingWebhookUrl: permittedProcedure
     .input(
       z.object({

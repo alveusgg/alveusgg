@@ -19,7 +19,7 @@ export type GiveawayPageProps = InferGetServerSidePropsType<
 >;
 
 export type GiveawayEntryWithAddress = GiveawayEntry & {
-  mailingAddress: MailingAddress;
+  mailingAddress: MailingAddress | null;
 };
 
 export const getServerSideProps: GetServerSideProps<{
