@@ -1,0 +1,4 @@
+Contact: mailto:opensource@alveussanctuary.org
+Policy: https://github.com/alveusgg/alveusgg/blob/main/SECURITY.md
+Expires: 2024-01-31T04:00:00.000Z
+Preferred-Languages: en
