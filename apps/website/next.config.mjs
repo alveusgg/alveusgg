@@ -123,6 +123,17 @@ const config = {
       destination: "/about/annual-reports",
       permanent: true,
     },
+    // Internal redirects
+    {
+      source: "/security.txt",
+      destination: "/.well-known/security.txt",
+      permanent: true,
+    },
+    ...ambassadorSlugs.map((slug) => ({
+      source: `/${slug}`,
+      destination: `/ambassadors/${slug}`,
+      permanent: false,
+    })),
     // External redirects
     {
       source: "/merch",
@@ -190,11 +201,6 @@ const config = {
       destination: "https://twitch.tv/alveussanctuary",
       permanent: false,
     },
-    ...ambassadorSlugs.map((slug) => ({
-      source: `/${slug}`,
-      destination: `/ambassadors/${slug}`,
-      permanent: false,
-    })),
   ],
   headers: async () => [
     {
