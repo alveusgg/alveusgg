@@ -233,7 +233,15 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <Heading level={2}>Enclosure:</Heading>
 
                 <div className="ml-4">
-                  <p className="text-xl">{enclosure.name}</p>
+                  <p className="text-xl">
+                    <Link
+                      href={`/ambassadors#enclosures:${camelToKebab(
+                        ambassador.enclosure
+                      )}`}
+                    >
+                      {enclosure.name}
+                    </Link>
+                  </p>
                 </div>
               </div>
             </div>
