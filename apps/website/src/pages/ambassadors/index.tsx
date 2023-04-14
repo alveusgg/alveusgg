@@ -105,7 +105,11 @@ const AmbassadorEnclosure: React.FC<{
       >
         {data.name}
       </Heading>
-      <AmbassadorItems ambassadors={ambassadors} className="ml-8" level={3} />
+      <AmbassadorItems
+        ambassadors={ambassadors}
+        className="md:ml-8"
+        level={3}
+      />
     </div>
   );
 };
@@ -214,8 +218,8 @@ const AmbassadorsPage: NextPage = () => {
 
         <Section className="flex-grow pt-0">
           <div className="my-4 flex flex-col items-center gap-4">
-            <div className="border-b border-alveus-green text-center text-xl font-semibold">
-              <ul className="-mb-px flex flex-wrap">
+            <div className="border-b border-alveus-green/50 text-center text-xl font-semibold">
+              <ul className="flex flex-wrap items-end justify-center">
                 {typeSafeObjectEntries(tabs).map(([key, val]) => (
                   <li key={key} className="mx-4">
                     <button
@@ -225,16 +229,23 @@ const AmbassadorsPage: NextPage = () => {
                         setActive(null);
                       }}
                       className={[
-                        "inline-block rounded-t-lg border-b-2 p-4 hover:border-alveus-green-500 hover:text-alveus-green-500",
-                        tab === key
-                          ? "border-alveus-green-700 text-alveus-green-700"
-                          : "border-transparent",
+                        "group relative inline-block p-4 transition-colors hover:border-alveus-green-500 hover:text-alveus-green-500",
+                        tab === key && "text-alveus-green-700",
                       ]
                         .filter(Boolean)
                         .join(" ")}
                       aria-current={tab === key ? "page" : undefined}
                     >
                       {val}
+
+                      <div
+                        className={[
+                          "absolute inset-x-0 -bottom-0.5 h-1 w-full rounded-sm transition-colors group-hover:bg-alveus-green-500",
+                          tab === key && "bg-alveus-green-700",
+                        ]
+                          .filter(Boolean)
+                          .join(" ")}
+                      />
                     </button>
                   </li>
                 ))}
@@ -250,14 +261,17 @@ const AmbassadorsPage: NextPage = () => {
             <AmbassadorItems ambassadors={typeSafeObjectKeys(ambassadors)} />
           )}
 
-          {tab === "enclosures" &&
-            typeSafeObjectKeys(ambassadorsByEnclosure).map((key) => (
-              <AmbassadorEnclosure
-                key={key}
-                enclosure={key}
-                active={key === active}
-              />
-            ))}
+          {tab === "enclosures" && (
+            <div className="flex flex-col gap-12">
+              {typeSafeObjectKeys(ambassadorsByEnclosure).map((key) => (
+                <AmbassadorEnclosure
+                  key={key}
+                  enclosure={key}
+                  active={key === active}
+                />
+              ))}
+            </div>
+          )}
         </Section>
       </div>
     </>
