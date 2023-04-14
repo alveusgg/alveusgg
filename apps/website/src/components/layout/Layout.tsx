@@ -1,7 +1,6 @@
 import React from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
@@ -25,11 +24,6 @@ export const ptSerif = PT_Serif({
 export const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const router = useRouter();
-  if (router.pathname.endsWith("/attachment")) {
-    return <>{children}</>;
-  }
-
   return (
     <>
       <Meta />
