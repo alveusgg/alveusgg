@@ -2,6 +2,7 @@
   "name": "@alveusgg/alveusgg-website",
   "version": "0.1.0",
   "private": true,
+  "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alveusgg/alveusgg.git",
