@@ -16,7 +16,15 @@
         "caughtErrorsIgnorePattern": "^_"
       }
     ],
-    "import/order": "warn"
+    "import/order": ["warn", {
+      "pathGroups": [
+        {
+          "pattern": "@/**",
+          "group": "external",
+          "position": "after"
+        }
+      ]
+    }]
   },
   "settings": {
     "import/resolver": {
