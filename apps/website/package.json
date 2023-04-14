@@ -27,7 +27,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@alveusgg/data": "github:alveusgg/data",
+    "@alveusgg/data": "github:alveusgg/data#MattIPv4/enclosures",
     "@aws-sdk/client-s3": "^3.304.0",
     "@aws-sdk/s3-request-presigner": "^3.304.0",
     "@headlessui/react": "^1.7.13",
