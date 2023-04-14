@@ -5,7 +5,10 @@ import { useTextField } from "react-aria";
 export type TextFieldProps = AriaTextFieldOptions<"input"> & {
   label: string;
   className?: string;
+  inputClassName?: string;
   list?: string;
+  prefix?: React.ReactNode;
+  suffix?: React.ReactNode;
 };
 
 export function TextField(props: TextFieldProps) {
@@ -13,16 +16,21 @@ export function TextField(props: TextFieldProps) {
   const { labelProps, inputProps } = useTextField(props, ref);
 
   return (
-    <div className={`flex-1 ${props.className || ""}`}>
+    <div className={props.className || "flex-1"}>
       <label {...labelProps}>{props.label}</label>
-      <br />
-      <input
-        className="w-full rounded-sm border border-gray-700 bg-white p-1 text-black"
-        {...inputProps}
-        list={props.list}
-        required={props.isRequired}
-        ref={ref}
-      />
+      <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
+        {props.prefix}
+        <input
+          className={`w-full flex-1 bg-white p-1 px-2 text-black ${
+            props.inputClassName || ""
+          }`}
+          {...inputProps}
+          list={props.list}
+          required={props.isRequired}
+          ref={ref}
+        />
+        {props.suffix}
+      </div>
     </div>
   );
 }
