@@ -1,9 +1,9 @@
 import React, { useCallback, useId, useReducer, useRef, useState } from "react";
 import { ArrowUpOnSquareStackIcon } from "@heroicons/react/20/solid";
+import { fileToBase64 } from "@/utils/files";
 import { Button, defaultButtonClasses } from "../Button";
 import { MessageBox } from "../MessageBox";
 import { useFileDragAndDrop } from "../hooks/useFileDragAndDrop";
-import { fileToBase64 } from "@/utils/files";
 
 export type FileReference =
   | SavedFileReference

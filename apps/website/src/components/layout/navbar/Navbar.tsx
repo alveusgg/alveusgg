@@ -4,8 +4,7 @@ import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import logoImage from "../../../assets/logo.png";
-
+import logoImage from "@/assets/logo.png";
 import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
 import { DesktopMenu } from "@/components/layout/navbar/DesktopMenu";
 //import { NotificationsButton } from "./NotificationsButton";

@@ -1,9 +1,9 @@
 import type { ReactNode } from "react";
 import React from "react";
 import { ExclamationTriangleIcon, TrashIcon } from "@heroicons/react/20/solid";
-import type { FileReference } from "./UploadAttachmentsField";
 import IconLoading from "@/icons/IconLoading";
 import { Button } from "@/components/shared/Button";
+import type { FileReference } from "./UploadAttachmentsField";
 
 export function ImageUploadAttachment({
   removeFileReference,

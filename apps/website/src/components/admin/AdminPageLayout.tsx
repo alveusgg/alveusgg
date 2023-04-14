@@ -1,7 +1,7 @@
 import React from "react";
 import Link, { type LinkProps } from "next/link";
+import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
 import { type DefaultPageLayoutProps } from "../DefaultPageLayout";
-import { useIsActivePath } from "../shared/hooks/useIsActivePath";
 
 export type AdminMenuItem = {
   label: string;
@@ -52,7 +52,7 @@ export const AdminPageLayout: React.FC<AdminPageLayoutProps> = ({
         </h1>
         <div className="flex flex-1 flex-row">
           <nav className="w-[200px] border-r border-black p-3">
-            <ul className="justify-stretch flex flex-col gap-1">
+            <ul className="flex flex-col justify-stretch gap-1">
               {menuItems.map(({ href, label }) => (
                 <NavLink key={href} href={href}>
                   {label}

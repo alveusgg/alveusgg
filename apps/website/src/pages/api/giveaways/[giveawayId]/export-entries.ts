@@ -1,10 +1,10 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { stringify } from "csv-stringify/sync";
 
-import { getServerAuthSession } from "../../../../server/common/get-server-auth-session";
-import { prisma } from "../../../../server/db/client";
-import { checkIsSuperUserSession } from "../../../../server/utils/auth";
-import { getCountryName } from "../../../../utils/countries";
+import { getServerAuthSession } from "@/server/common/get-server-auth-session";
+import { prisma } from "@/server/db/client";
+import { checkIsSuperUserSession } from "@/server/utils/auth";
+import { getCountryName } from "@/utils/countries";
 
 type GiveawayEntryCsvExportRow = string[];
 

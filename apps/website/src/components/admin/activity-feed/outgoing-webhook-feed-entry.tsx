@@ -1,8 +1,8 @@
 import React from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import type { GiveawayEntry, OutgoingWebhook, User } from "@prisma/client";
-import { trpc } from "../../../utils/trpc";
-import { LocalDateTime } from "../../shared/LocalDateTime";
+import { trpc } from "@/utils/trpc";
+import { LocalDateTime } from "@/components/shared/LocalDateTime";
 
 type OutgoingWebhookWithGiveawayEntry = OutgoingWebhook & {
   user: User | null;

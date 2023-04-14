@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { getNotificationsConfig } from "../../../../config/notifications";
-import { knownPushServicesRegex } from "../../../utils/web-push/known-push-services";
-import { publicProcedure, router } from "../../trpc";
+import { getNotificationsConfig } from "@/config/notifications";
+import { knownPushServicesRegex } from "@/server/utils/web-push/known-push-services";
+import { publicProcedure, router } from "@/server/trpc/trpc";
 
 const baseRegistrationSchema = z.object({
   endpoint: z.string().regex(knownPushServicesRegex),

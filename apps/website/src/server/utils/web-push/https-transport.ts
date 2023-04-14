@@ -1,6 +1,6 @@
-import type { RequestOptions } from "https";
-import type { IncomingHttpHeaders } from "http";
-import { request } from "https";
+import type { RequestOptions } from "node:https";
+import type { IncomingHttpHeaders } from "node:http";
+import { request } from "node:https";
 
 type NotificationResponse = {
   statusCode?: number;
