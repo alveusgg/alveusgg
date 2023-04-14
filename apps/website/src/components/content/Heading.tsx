@@ -1,10 +1,13 @@
 import React, { useMemo } from "react";
 
+import Link from "@/components/content/Link";
+
 export type HeadingProps = {
   children?: React.ReactNode;
   level?: 1 | 2 | 3 | 4 | 5 | 6;
   className?: string;
   id?: string;
+  link?: boolean;
 };
 
 const Heading: React.FC<HeadingProps> = ({
@@ -12,6 +15,7 @@ const Heading: React.FC<HeadingProps> = ({
   level = 1,
   className,
   id,
+  link = false,
 }) => {
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
   const headingClass = useMemo(
@@ -30,7 +34,13 @@ const Heading: React.FC<HeadingProps> = ({
 
   return (
     <Tag className={headingClass} id={id}>
-      {children}
+      {id && link ? (
+        <Link href={`#${id}`} custom>
+          {children}
+        </Link>
+      ) : (
+        children
+      )}
     </Tag>
   );
 };

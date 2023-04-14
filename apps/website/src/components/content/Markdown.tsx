@@ -15,14 +15,9 @@ const MarkdownHeading: React.FC<HeadingProps> = ({
     level={level}
     className={[className, "break-words"].filter(Boolean).join(" ")}
     id={id}
+    link
   >
-    {id ? (
-      <Link href={`#${id}`} custom>
-        {children}
-      </Link>
-    ) : (
-      children
-    )}
+    {children}
   </Heading>
 );
 

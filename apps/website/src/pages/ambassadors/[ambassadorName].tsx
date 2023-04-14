@@ -17,6 +17,7 @@ import {
   type AnimalQuestWithEpisode,
   getAmbassadorEpisode,
 } from "@alveusgg/data/src/animal-quest";
+import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
@@ -51,6 +52,7 @@ const parseDate = (date: string | null): string => {
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
+  enclosure: Enclosure;
   images: AmbassadorImages;
   merchImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithEpisode;
@@ -74,9 +76,12 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   const ambassadorKey = kebabToCamel(ambassadorName);
   if (!isAmbassadorKey(ambassadorKey)) return { notFound: true };
 
+  const ambassador = ambassadors[ambassadorKey];
+
   return {
     props: {
-      ambassador: ambassadors[ambassadorKey],
+      ambassador,
+      enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
       animalQuest: getAmbassadorEpisode(ambassadorKey),
@@ -86,6 +91,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
 
 const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   ambassador,
+  enclosure,
   images,
   merchImage,
   animalQuest,
@@ -168,7 +174,18 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <div className="flex flex-wrap">
+            <div className="mb-4 flex flex-wrap">
+              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
+                <Heading level={2}>Species:</Heading>
+
+                <div className="ml-4">
+                  <p className="text-xl">{ambassador.species}</p>
+                  <p className="text-xl italic text-alveus-green-700">
+                    {ambassador.scientific}
+                  </p>
+                </div>
+              </div>
+
               <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
                 <Heading level={2}>IUCN Status:</Heading>
 
@@ -184,17 +201,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     ) : (
                       getIUCNStatus(ambassador.iucn.status)
                     )}
-                  </p>
-                </div>
-              </div>
-
-              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>Species:</Heading>
-
-                <div className="ml-4">
-                  <p className="text-xl">{ambassador.species}</p>
-                  <p className="text-xl italic text-alveus-green-700">
-                    {ambassador.scientific}
                   </p>
                 </div>
               </div>
@@ -222,36 +228,28 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   <p className="text-xl">{parseDate(ambassador.arrival)}</p>
                 </div>
               </div>
-            </div>
 
-            <div className="pswp-gallery mt-8" id={photoswipe}>
-              <Carousel
-                items={carousel}
-                auto={null}
-                itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
-              />
-            </div>
+              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
+                <Heading level={2}>Enclosure:</Heading>
 
-            {ambassador.plush && "link" in ambassador.plush && merchImage && (
-              <Link
-                href={ambassador.plush.link}
-                className="group mx-auto mt-12"
-                external
-                custom
-              >
-                <Image
-                  src={merchImage.src}
-                  width={512}
-                  alt={`${ambassador.name} Plush`}
-                  className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition-all group-hover:scale-105 group-hover:shadow-2xl"
-                />
-              </Link>
-            )}
+                <div className="ml-4">
+                  <p className="text-xl">
+                    <Link
+                      href={`/ambassadors#enclosures:${camelToKebab(
+                        ambassador.enclosure
+                      )}`}
+                    >
+                      {enclosure.name}
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </div>
 
             {animalQuest && (
               <Link
                 href={animalQuest.link}
-                className="group relative z-0 mt-12 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
+                className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
                 external
                 custom
               >
@@ -281,6 +279,30 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <IconYouTube
                   size={48}
                   className="shrink-0 transition-colors group-hover:text-alveus-green-600"
+                />
+              </Link>
+            )}
+
+            <div className="pswp-gallery my-6" id={photoswipe}>
+              <Carousel
+                items={carousel}
+                auto={null}
+                itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+              />
+            </div>
+
+            {ambassador.plush && "link" in ambassador.plush && merchImage && (
+              <Link
+                href={ambassador.plush.link}
+                className="group mx-auto my-6"
+                external
+                custom
+              >
+                <Image
+                  src={merchImage.src}
+                  width={512}
+                  alt={`${ambassador.name} Plush`}
+                  className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition-all group-hover:scale-105 group-hover:shadow-2xl"
                 />
               </Link>
             )}
