@@ -1,12 +1,12 @@
-import type { TwitchConfig } from "../../../config/twitch";
-import { getTwitchConfig } from "../../../config/twitch";
+import type { TwitchConfig } from "@/config/twitch";
+import { getTwitchConfig } from "@/config/twitch";
+import { env } from "@/env/server.mjs";
 import {
   createSubscription,
   getSubscriptions,
   getSubscriptionsForUser,
   removeSubscription,
 } from "../../utils/twitch-api";
-import { env } from "../../../env/server.mjs";
 
 /*
   Notes:

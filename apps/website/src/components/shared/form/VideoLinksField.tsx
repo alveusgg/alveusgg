@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
 import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
+import { parseVideoUrl } from "@/utils/video-urls";
 import { Button, defaultButtonClasses, disabledButtonClasses } from "../Button";
 import { MessageBox } from "../MessageBox";
 import { VideoPlatformIcon } from "../VideoPlatformIcon";
 import type { TextAreaFieldProps } from "./TextAreaField";
 import { TextAreaField } from "./TextAreaField";
-import { parseVideoUrl } from "@/utils/video-urls";
 
 type VideoUrlFieldProps = Omit<
   TextAreaFieldProps,

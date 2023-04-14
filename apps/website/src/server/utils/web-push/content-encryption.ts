@@ -1,7 +1,12 @@
-import type { ECDH } from "crypto";
-import { createHmac, createCipheriv, createECDH, randomBytes } from "crypto";
+import type { ECDH } from "node:crypto";
+import {
+  createHmac,
+  createCipheriv,
+  createECDH,
+  randomBytes,
+} from "node:crypto";
 
-import { decode } from "../../../utils/base64url";
+import { decode } from "@/utils/base64url";
 
 const PAD_SIZE = 1;
 const TAG_LENGTH = 16;

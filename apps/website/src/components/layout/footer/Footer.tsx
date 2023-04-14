@@ -2,9 +2,8 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-import Socials from "./Socials";
-
 import IconGitHub from "@/icons/IconGitHub";
+import Socials from "./Socials";
 
 const footerLinkClasses =
   "underline decoration-gray-600 underline-offset-2 transition-colors hover:text-gray-300";

@@ -2,9 +2,9 @@ import React from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
-import Meta from "@/components/content/Meta";
 
 type LayoutProps = {
   children?: React.ReactNode;

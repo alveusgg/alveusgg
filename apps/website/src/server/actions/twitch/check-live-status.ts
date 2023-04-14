@@ -1,5 +1,5 @@
-import type { TwitchConfig } from "../../../config/twitch";
-import { getTwitchConfig } from "../../../config/twitch";
+import type { TwitchConfig } from "@/config/twitch";
+import { getTwitchConfig } from "@/config/twitch";
 import type { StreamsResponse } from "../../utils/twitch-api";
 import { getStreamsForChannels } from "../../utils/twitch-api";
 import { prisma } from "../../db/client";

@@ -1,4 +1,4 @@
-import { getNotificationsConfig } from "../../../config/notifications";
+import { getNotificationsConfig } from "@/config/notifications";
 import { publicProcedure, router } from "../trpc";
 
 export const notificationsConfigRouter = router({

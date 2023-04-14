@@ -2,8 +2,8 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
 import { z } from "zod";
-import { prisma } from "../../../../server/db/client";
-import { env } from "../../../../env/server.mjs";
+import { prisma } from "@/server/db/client";
+import { env } from "@/env/server.mjs";
 
 const SERVICE_TWITCH = "twitch";
 const EVENT_SOURCE_SUB = "event-sub";

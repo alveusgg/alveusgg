@@ -1,3 +1,4 @@
+import { adminUsersRouter } from "@/server/trpc/router/admin/users";
 import { router } from "../trpc";
 import { authRouter } from "./auth";
 import { adminActionRouter } from "./admin/actions";
@@ -8,7 +9,6 @@ import { adminGiveawaysRouter } from "./admin/giveaways";
 import { adminActivityFeedRouter } from "./admin/activity-feed";
 import { showAndTellRouter } from "./show-and-tell";
 import { adminShowAndTellRouter } from "./admin/show-and-tell";
-import { adminUsersRouter } from "@/server/trpc/router/admin/users";
 
 export const appRouter = router({
   auth: authRouter,

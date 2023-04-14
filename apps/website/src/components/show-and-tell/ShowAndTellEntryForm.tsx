@@ -1,6 +1,11 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
+import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
+import { trpc } from "@/utils/trpc";
+import { notEmpty } from "@/utils/helpers";
+import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
+import IconLoading from "@/icons/IconLoading";
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
 import { RichTextField } from "../shared/form/RichTextField";
@@ -17,11 +22,6 @@ import {
   useVideoLinksData,
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
-import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
-import { trpc } from "@/utils/trpc";
-import { notEmpty } from "@/utils/helpers";
-import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
-import IconLoading from "@/icons/IconLoading";
 
 export const allowedFileTypes = [
   "image/png",

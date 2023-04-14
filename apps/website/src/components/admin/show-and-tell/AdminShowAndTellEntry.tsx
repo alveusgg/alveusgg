@@ -2,6 +2,8 @@ import React from "react";
 import type { ShowAndTellEntry, User } from "@prisma/client";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ArrowDownIcon, CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
+import { getEntityStatus } from "@/utils/entity-helpers";
+import { formatDateUTC } from "@/utils/datetime";
 import { LocalDateTime } from "../../shared/LocalDateTime";
 import {
   Button,
@@ -9,8 +11,6 @@ import {
   LinkButton,
   secondaryButtonClasses,
 } from "../../shared/Button";
-import { getEntityStatus } from "@/utils/entity-helpers";
-import { formatDateUTC } from "@/utils/datetime";
 
 type ShowAndTellEntryWithUser = ShowAndTellEntry & { user: User | null };
 

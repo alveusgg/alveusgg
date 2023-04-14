@@ -1,7 +1,7 @@
 import * as jws from "jws";
 import forge from "node-forge";
 
-import { isBase64UrlEncoded, decode } from "../../../utils/base64url";
+import { isBase64UrlEncoded, decode } from "@/utils/base64url";
 
 // Default expiration in seconds
 const DEFAULT_EXPIRATION_SECONDS = 12 * 60 * 60;
