@@ -169,7 +169,7 @@ const AmbassadorsPage: NextPage = () => {
 
     const updated = url.toString();
     if (current !== updated) window.history.pushState({}, "", updated);
-  }, [tab]);
+  }, [checked, tab, active]);
 
   return (
     <>
