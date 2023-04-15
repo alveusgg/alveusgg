@@ -55,6 +55,61 @@ test("decrypt", async () => {
   expect(decrypted).toEqual("hello");
 });
 
+test("decrypting empty value should not fail", async () => {
+  let failed = false;
+  let decrypted;
+  try {
+    const salt = decodeSalt("nqjSIYuP82Tle4YCJCelDg==");
+    const encrypted = "";
+
+    const key = await createSaltedEncryptionKey(salt);
+    expect(key).toBeDefined();
+
+    decrypted = await decrypt(encrypted, key);
+  } catch (e) {
+    failed = true;
+  }
+
+  expect(failed).toBe(false);
+  expect(decrypted).toBe("");
+});
+
+test("decrypting empty value with allowEmpty=false should fail", async () => {
+  await expect(async () => {
+    const salt = decodeSalt("nqjSIYuP82Tle4YCJCelDg==");
+    const encrypted = "";
+
+    const key = await createSaltedEncryptionKey(salt);
+    expect(key).toBeDefined();
+
+    await decrypt(encrypted, key, { allowEmpty: false });
+  }).rejects.toThrow();
+});
+
+test("decrypting with invalid salt should fail", async () => {
+  await expect(async () => {
+    const salt = decodeSalt("this is not correct");
+    const encrypted = "zH9R26HtTiw/Tkbfc1ZLh44XxlMhwORBiHn2OG04zVuL";
+
+    const key = await createSaltedEncryptionKey(salt);
+    expect(key).toBeDefined();
+
+    await decrypt(encrypted, key);
+  }).rejects.toThrow();
+});
+
+test("decrypting with invalid encryption should fail", async () => {
+  await expect(async () => {
+    const salt = decodeSalt("nqjSIYuP82Tle4YCJCelDg==");
+    const encrypted = "this should be encrypted";
+
+    const key = await createSaltedEncryptionKey(salt);
+    expect(key).toBeDefined();
+
+    await decrypt(encrypted, key);
+  }).rejects.toThrow();
+});
+
 test("encrypt/decrypt end-to-end", async () => {
   const key = await createSaltedEncryptionKey(await generateSalt());
   const decrypted = await decrypt(await encrypt("hello", key), key);

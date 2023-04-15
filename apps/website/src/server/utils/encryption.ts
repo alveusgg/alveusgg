@@ -100,18 +100,23 @@ export async function encrypt(
 
 export async function decrypt(
   encryptedText: string,
-  saltedEncryptionKey: CryptoKey
+  saltedEncryptionKey: CryptoKey,
+  { allowEmpty = true } = {}
 ) {
-  if (encryptedText === "") {
+  if (allowEmpty && encryptedText === "") {
     return "";
   }
 
+  if (encryptedText.length <= IV_LENGTH + 1) {
+    throw new Error("Invalid encryption");
+  }
+
+  const encryptedBuffer = base64Decode(encryptedText);
+
+  const iv = encryptedBuffer.slice(0, IV_LENGTH);
+  const cipherText = encryptedBuffer.slice(IV_LENGTH);
+
   try {
-    const encryptedBuffer = base64Decode(encryptedText);
-
-    const iv = encryptedBuffer.slice(0, IV_LENGTH);
-    const cipherText = encryptedBuffer.slice(IV_LENGTH);
-
     const decryptedBuffer = await crypto.subtle.decrypt(
       { name: ENCRYPTION_ALGORITHM_NAME, iv, tagLength: 128 },
       saltedEncryptionKey,
@@ -119,6 +124,6 @@ export async function decrypt(
     );
     return decoder.decode(decryptedBuffer);
   } catch (e) {
-    return "";
+    throw new Error("Could not decrypt"); // Re-throw with a more generic error message to avoid leaking information
   }
 }

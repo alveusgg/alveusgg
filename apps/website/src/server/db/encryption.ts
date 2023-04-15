@@ -25,11 +25,15 @@ export async function decryptRecord<
   const result = Object.assign({}, input);
   for (const fieldName of fields) {
     const encryptedValue = input[fieldName];
-    if (typeof encryptedValue === "string") {
+    if (typeof encryptedValue !== "string") {
+      throw new Error(`Cannot decrypt non-string value for field ${fieldName}`);
+    }
+
+    try {
       const decrypted = await decrypt(encryptedValue, key);
-      if (decrypted) {
-        result[fieldName] = decrypted as (typeof result)[typeof fieldName];
-      }
+      result[fieldName] = decrypted as (typeof result)[typeof fieldName];
+    } catch (e) {
+      throw new Error("Could not decrypt record"); // Re-throw with a more generic error message to avoid leaking information
     }
   }
 
@@ -49,12 +53,12 @@ export async function encryptRecord<
 
   for (const fieldName of fields) {
     const value = input[fieldName];
-    if (typeof value === "string") {
-      const encrypted = await encrypt(value, key);
-      if (encrypted) {
-        result[fieldName] = encrypted as (typeof result)[typeof fieldName];
-      }
+    if (typeof value !== "string") {
+      throw new Error(`Cannot encrypt non-string value for field ${fieldName}`);
     }
+
+    const encrypted = await encrypt(value, key);
+    result[fieldName] = encrypted as (typeof result)[typeof fieldName];
   }
 
   return result;
