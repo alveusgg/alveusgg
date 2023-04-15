@@ -5,14 +5,14 @@ import type {
   GetServerSideProps,
 } from "next";
 import { getSession } from "next-auth/react";
-
 import type { Giveaway, GiveawayEntry, MailingAddress } from "@prisma/client";
 
+import { findActiveGiveaway, getGiveawayEntry } from "@/server/db/giveaways";
 import { GiveawayEntryForm } from "@/components/giveaway/GiveawayEntryForm";
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
-import { findActiveGiveaway, getGiveawayEntry } from "@/server/db/giveaways";
+import { MessageBox } from "@/components/shared/MessageBox";
 
 export type GiveawayPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
@@ -22,10 +22,12 @@ export type GiveawayEntryWithAddress = GiveawayEntry & {
   mailingAddress: MailingAddress | null;
 };
 
-export const getServerSideProps: GetServerSideProps<{
-  giveaway: Giveaway;
-  existingEntry: GiveawayEntryWithAddress | null;
-}> = async (context) => {
+export const getServerSideProps: GetServerSideProps<
+  { giveaway: Giveaway } & (
+    | { error: string }
+    | { existingEntry: GiveawayEntryWithAddress | null }
+  )
+> = async (context) => {
   // Check params
   const giveawaySlugOrId = context.params?.giveawayId;
   if (typeof giveawaySlugOrId !== "string") {
@@ -46,7 +48,13 @@ export const getServerSideProps: GetServerSideProps<{
   let existingEntry: GiveawayEntryWithAddress | null = null;
   const session = await getSession(context);
   if (session?.user?.id) {
-    existingEntry = await getGiveawayEntry(session.user.id, giveaway.id);
+    try {
+      existingEntry = await getGiveawayEntry(session.user.id, giveaway.id);
+    } catch (e) {
+      return {
+        props: { giveaway, error: "Unknown error" },
+      };
+    }
   }
 
   return {
@@ -54,10 +62,7 @@ export const getServerSideProps: GetServerSideProps<{
   };
 };
 
-const GiveawayPage: NextPage<GiveawayPageProps> = ({
-  giveaway,
-  existingEntry,
-}) => (
+const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway, ...props }) => (
   <>
     <Meta
       title={`${giveaway.label} | Giveaways`}
@@ -73,7 +78,14 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({
         <Heading className="my-3 text-3xl">{giveaway.label}</Heading>
       </header>
 
-      <GiveawayEntryForm giveaway={giveaway} existingEntry={existingEntry} />
+      {"error" in props ? (
+        <MessageBox variant="failure">{props.error}</MessageBox>
+      ) : (
+        <GiveawayEntryForm
+          giveaway={giveaway}
+          existingEntry={props.existingEntry}
+        />
+      )}
     </Section>
   </>
 );
