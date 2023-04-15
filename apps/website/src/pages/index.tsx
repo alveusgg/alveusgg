@@ -11,6 +11,7 @@ import {
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
+import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 import { useConsent } from "@/hooks/consent";
 import usePrefersReducedMotion from "@/hooks/motion";
@@ -20,6 +21,7 @@ import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
+import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
@@ -45,7 +47,6 @@ import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-
 import croptopMerchImage from "@/assets/merch/organic-crop-top-black-front.png";
 import beanieMerchImage from "@/assets/merch/organic-ribbed-beanie-black-front.png";
 import hoodieMerchImage from "@/assets/merch/unisex-essential-eco-hoodie-white-front.png";
-import { typeSafeObjectEntries } from "@/utils/helpers";
 
 const slides = [
   {
@@ -84,19 +85,21 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
         <Link
           href={`/ambassadors/${camelToKebab(key)}`}
           draggable={false}
-          className="transition-colors hover:text-alveus-green"
+          className="group hover:text-alveus-green"
         >
           <Image
             src={images[0].src}
             alt={images[0].alt}
             draggable={false}
             width={200}
-            className="mx-auto aspect-square h-auto w-full max-w-[10rem] rounded-xl object-cover"
+            className={`mx-auto aspect-square h-auto w-full max-w-[10rem] rounded-xl object-cover ${ambassadorImageHover}`}
           />
-          <Heading level={3} className="text-center text-xl">
+          <Heading level={3} className="text-center text-xl transition-colors">
             {homepage?.title}
           </Heading>
-          <p className="text-center">{homepage?.description}</p>
+          <p className="text-center transition-colors">
+            {homepage?.description}
+          </p>
         </Link>
       ),
     };
@@ -267,7 +270,7 @@ const Home: NextPage = () => {
 
               {twitchEmbed && (
                 <Link
-                  className="absolute inset-0 z-10 block rounded-2xl shadow-xl transition-shadow hover:shadow-2xl"
+                  className="absolute inset-0 z-10 block rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
                   href="/live"
                   target="_blank"
                   rel="noreferrer"

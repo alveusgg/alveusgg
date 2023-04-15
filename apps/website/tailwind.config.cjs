@@ -106,6 +106,9 @@ module.exports = {
       transitionProperty: {
         filter: "filter",
       },
+      scale: {
+        102: "1.02",
+      },
     },
   },
   plugins: [],

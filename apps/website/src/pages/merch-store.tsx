@@ -80,12 +80,12 @@ const MerchItem: React.FC<MerchItemProps> = ({
         src={item.image}
         width={512}
         alt={hideTitle ? item.title : ""}
-        className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition-shadow transition-transform group-hover:scale-105 group-hover:shadow-2xl"
+        className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
       />
       {!hideTitle && (
         <Heading
           level={2}
-          className="mt-4 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
+          className="mt-4 text-center text-4xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400"
         >
           {item.title}
         </Heading>
@@ -100,9 +100,9 @@ const MerchItem: React.FC<MerchItemProps> = ({
           src={item.image}
           width={512}
           alt={hideTitle ? item.title : ""}
-          className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition-shadow transition-transform group-hover:scale-105 group-hover:shadow-2xl"
+          className="h-auto w-full max-w-lg rounded-2xl shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
         />
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition-all group-hover:scale-105 group-hover:opacity-100">
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition group-hover:scale-102 group-hover:opacity-100">
           <p className="text-3xl">Coming Soon</p>
           <p className="text-2xl">{item.soon}</p>
         </div>
@@ -110,7 +110,7 @@ const MerchItem: React.FC<MerchItemProps> = ({
       {!hideTitle && (
         <Heading
           level={2}
-          className="mb-0 mt-4 text-center text-4xl text-alveus-green transition-colors group-hover:text-alveus-green-800"
+          className="mb-0 mt-4 text-center text-4xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400"
         >
           {item.title}
         </Heading>

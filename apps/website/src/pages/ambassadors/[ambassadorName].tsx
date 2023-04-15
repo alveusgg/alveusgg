@@ -249,7 +249,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             {animalQuest && (
               <Link
                 href={animalQuest.link}
-                className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition-all hover:scale-105 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
+                className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
                 external
                 custom
               >
@@ -302,7 +302,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   src={merchImage.src}
                   width={512}
                   alt={`${ambassador.name} Plush`}
-                  className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition-all group-hover:scale-105 group-hover:shadow-2xl"
+                  className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
                 />
               </Link>
             )}

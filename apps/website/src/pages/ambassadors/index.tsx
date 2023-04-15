@@ -34,6 +34,9 @@ const ambassadorsByEnclosure = Object.entries(
   {}
 );
 
+export const ambassadorImageHover =
+  "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
+
 const AmbassadorItem: React.FC<{
   ambassador: AmbassadorKey;
   level?: React.ComponentProps<typeof Heading>["level"];
@@ -49,7 +52,7 @@ const AmbassadorItem: React.FC<{
           alt={images[0].alt}
           placeholder="blur"
           width={700}
-          className="aspect-4/3 h-auto w-full rounded-xl object-cover transition-filter group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110"
+          className={`aspect-4/3 h-auto w-full rounded-xl object-cover ${ambassadorImageHover}`}
         />
         <Heading
           level={level}
@@ -166,7 +169,7 @@ const AmbassadorsPage: NextPage = () => {
 
     const updated = url.toString();
     if (current !== updated) window.history.pushState({}, "", updated);
-  }, [tab]);
+  }, [checked, tab, active]);
 
   return (
     <>
