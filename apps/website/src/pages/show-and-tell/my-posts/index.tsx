@@ -2,7 +2,7 @@ import React from "react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import { trpc } from "@/utils/trpc";
@@ -11,6 +11,7 @@ import {
   Button,
   LinkButton,
   dangerButtonClasses,
+  secondaryButtonClasses,
 } from "@/components/shared/Button";
 import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
@@ -53,7 +54,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <header>
-          <Heading level={2}>Your posts</Heading>
+          <Heading level={2}>Your Show and Tell submissions</Heading>
         </header>
 
         {session?.status !== "authenticated" && (
@@ -164,6 +165,15 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                             >
                               <PencilIcon className="h-5 w-5" />
                               Edit
+                            </LinkButton>
+                            <LinkButton
+                              width="auto"
+                              size="small"
+                              className={secondaryButtonClasses}
+                              href={`/show-and-tell/my-posts/${entry.id}/preview`}
+                            >
+                              <EyeIcon className="h-5 w-5" />
+                              Preview
                             </LinkButton>
                             <Button
                               width="auto"

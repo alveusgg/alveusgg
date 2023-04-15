@@ -1,6 +1,6 @@
 import React from "react";
 import type { ShowAndTellEntry, User } from "@prisma/client";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ArrowDownIcon, CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { formatDateUTC } from "@/utils/datetime";
@@ -18,6 +18,7 @@ type AdminShowAndTellEntryProps = {
   entry: ShowAndTellEntryWithUser;
   markSeen: (entry: ShowAndTellEntryWithUser, retroactive?: boolean) => void;
   unmarkSeen: (entry: ShowAndTellEntryWithUser) => void;
+  deletePost: (entry: ShowAndTellEntryWithUser) => void;
 };
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
@@ -26,6 +27,7 @@ export function AdminShowAndTellEntry({
   entry,
   markSeen,
   unmarkSeen,
+  deletePost,
 }: AdminShowAndTellEntryProps) {
   const status = getEntityStatus(entry);
 
@@ -59,24 +61,16 @@ export function AdminShowAndTellEntry({
           <div className="flex flex-col gap-1">
             <Button
               size="small"
-              className={
-                entry.seenOnStreamAt === null
-                  ? secondaryButtonClasses
-                  : dangerButtonClasses
-              }
+              className={secondaryButtonClasses}
               onClick={() => markSeen(entry)}
               title="Mark post as seen on stream"
             >
-              <PlusIcon className="h-5 w-5" />
+              <PlusIcon className="h-5 w-5" /> Seen
             </Button>
 
             <Button
               size="small"
-              className={
-                entry.seenOnStreamAt === null
-                  ? secondaryButtonClasses
-                  : dangerButtonClasses
-              }
+              className={secondaryButtonClasses}
               onClick={() => {
                 if (confirm("Mark all posts until here as seen on stream?")) {
                   markSeen(entry, true);
@@ -84,7 +78,7 @@ export function AdminShowAndTellEntry({
               }}
               title="Mark all posts until here as seen on stream"
             >
-              <ArrowDownIcon className="h-5 w-5" />
+              <ArrowDownIcon className="h-5 w-5" /> All
             </Button>
           </div>
         )}
@@ -92,22 +86,31 @@ export function AdminShowAndTellEntry({
       </td>
       <td className={`${cellClasses} flex flex-col gap-1`}>
         <LinkButton
-          width="auto"
           size="small"
           href={`/admin/show-and-tell/review/${entry.id}`}
         >
           <PencilIcon className="h-5 w-5" />
           Review
         </LinkButton>
-        <Button
-          width="auto"
-          size="small"
-          className={dangerButtonClasses}
-          confirmationMessage="Please confirm deletion!"
-        >
-          <TrashIcon className="h-5 w-5" />
-          Delete
-        </Button>
+        <div className="flex gap-1">
+          <LinkButton
+            size="small"
+            className={secondaryButtonClasses}
+            href={`/admin/show-and-tell/review/${entry.id}/preview`}
+          >
+            <EyeIcon className="h-5 w-5" />
+            Preview
+          </LinkButton>
+          <Button
+            size="small"
+            className={dangerButtonClasses}
+            confirmationMessage="Please confirm deletion!"
+            onClick={() => deletePost(entry)}
+          >
+            <TrashIcon className="h-5 w-5" />
+            Delete
+          </Button>
+        </div>
       </td>
     </tr>
   );

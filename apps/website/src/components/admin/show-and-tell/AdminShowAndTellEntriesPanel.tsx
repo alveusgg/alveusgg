@@ -24,6 +24,16 @@ export function AdminShowAndTellEntriesPanel({
     }
   );
 
+  const deletePost = trpc.adminShowAndTell.delete.useMutation({
+    onSettled: () => entries.refetch(),
+  });
+  const handleDeletePost = useCallback(
+    (entry: Entry) => {
+      deletePost.mutate(entry.id);
+    },
+    [deletePost]
+  );
+
   const markAsSeen = trpc.adminShowAndTell.markAsSeen.useMutation({
     onSettled: () => entries.refetch(),
   });
@@ -81,6 +91,7 @@ export function AdminShowAndTellEntriesPanel({
                       entry={entry}
                       markSeen={handleMarkAsSeen}
                       unmarkSeen={handleUnmarkAsSeen}
+                      deletePost={handleDeletePost}
                     />
                   ))}
                 </Fragment>
