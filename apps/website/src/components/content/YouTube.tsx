@@ -108,7 +108,7 @@ export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
         alt=""
         loading="lazy"
         className={[
-          "pointer-events-none object-cover",
+          "pointer-events-none object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
           iframeAttrs.class,
           className,
         ]
@@ -117,7 +117,7 @@ export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
       />
       <IconYouTube
         size={80}
-        className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition-colors transition-transform group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
+        className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
       />
     </div>
   );

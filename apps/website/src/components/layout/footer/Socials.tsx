@@ -28,7 +28,7 @@ const Socials: React.FC = () => {
               href="https://www.instagram.com/p/CoIq_hvOxiQ/"
               rel="noreferrer"
               target="_blank"
-              className="absolute left-[8%] top-[5%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-[1.02]"
+              className="hover:scale-102 absolute left-[8%] top-[5%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150"
             >
               <Video
                 sources={reelVideo.sources}
@@ -49,7 +49,7 @@ const Socials: React.FC = () => {
               href="https://twitter.com/AlveusSanctuary/status/1627138286140461063/"
               rel="noreferrer"
               target="_blank"
-              className="absolute right-[3%] top-[23%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-[1.02]"
+              className="hover:scale-102 absolute right-[3%] top-[23%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150"
             >
               <Image
                 src={pic}

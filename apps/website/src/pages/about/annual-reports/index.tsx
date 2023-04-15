@@ -40,7 +40,7 @@ const AnnualReportsPage: NextPage = () => {
             <Link
               key={key}
               href={report.link}
-              className="group flex items-center justify-between gap-2 rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition-shadow transition-transform hover:scale-105 hover:shadow-2xl"
+              className="group flex items-center justify-between gap-2 rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-102 hover:shadow-2xl"
             >
               <Heading level={2} className="my-0">
                 {report.title}
