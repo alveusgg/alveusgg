@@ -9,19 +9,19 @@ type LayoutProps = {
   children?: React.ReactNode;
 };
 
-export const ptSans = PT_Sans({
+const ptSans = PT_Sans({
   subsets: ["latin"],
   variable: "--font-ptsans",
   weight: ["400", "700"],
 });
 
-export const ptSerif = PT_Serif({
+const ptSerif = PT_Serif({
   subsets: ["latin"],
   variable: "--font-ptserif",
   weight: ["400", "700"],
 });
 
-export const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
+const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   // Add fonts to body for portals that do not attach to #app
