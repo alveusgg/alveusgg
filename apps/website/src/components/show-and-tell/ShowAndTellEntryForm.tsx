@@ -267,17 +267,24 @@ export function ShowAndTellEntryForm({
                     {...props}
                     fileReference={fileReference}
                   >
-                    <div>
+                    <div className="flex flex-col gap-3">
                       <TextAreaField
                         name={`image[${fileReference.id}][caption]`}
-                        label="Caption"
+                        label={<strong className="font-bold">Caption</strong>}
                         maxLength={200}
-                        inputClassName="h-10"
                         defaultValue={initialData?.caption}
                       />
                       <TextAreaField
                         name={`image[${fileReference.id}][alternativeText]`}
-                        label="Alternative Text"
+                        label={
+                          <span className="text-gray-600">
+                            Optional description
+                            <br />
+                            <em className="text-sm">
+                              visible to screen readers only
+                            </em>
+                          </span>
+                        }
                         maxLength={300}
                         defaultValue={initialData?.alternativeText}
                       />
