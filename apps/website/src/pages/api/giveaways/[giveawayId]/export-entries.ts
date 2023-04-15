@@ -1,10 +1,10 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 import { stringify } from "csv-stringify/sync";
 
-import { getServerAuthSession } from "@/server/common/get-server-auth-session";
-import { prisma } from "@/server/db/client";
-import { checkIsSuperUserSession } from "@/server/utils/auth";
 import { getCountryName } from "@/utils/countries";
+import { getServerAuthSession } from "@/server/common/get-server-auth-session";
+import { checkIsSuperUserSession } from "@/server/utils/auth";
+import { getAllEntriesForGiveaway } from "@/server/db/giveaways";
 
 type GiveawayEntryCsvExportRow = string[];
 
@@ -20,15 +20,7 @@ const exportGiveawayEntries = async (
     return;
   }
 
-  const entries = await prisma.giveawayEntry.findMany({
-    where: {
-      giveawayId: String(req.query.giveawayId),
-    },
-    include: {
-      mailingAddress: true,
-      user: true,
-    },
-  });
+  const entries = await getAllEntriesForGiveaway(String(req.query.giveawayId));
 
   const rows: GiveawayEntryCsvExportRow[] = entries.map((entry) => {
     return [
@@ -40,13 +32,15 @@ const exportGiveawayEntries = async (
       entry.givenName,
       entry.familyName,
       entry.email || "",
-      entry.mailingAddress.addressLine1,
-      entry.mailingAddress.addressLine2,
-      entry.mailingAddress.postalCode,
-      entry.mailingAddress.city,
-      entry.mailingAddress.state,
-      entry.mailingAddress.country,
-      getCountryName(entry.mailingAddress.country) || "-",
+      entry.mailingAddress?.addressLine1 || "",
+      entry.mailingAddress?.addressLine2 || "",
+      entry.mailingAddress?.postalCode || "",
+      entry.mailingAddress?.city || "",
+      entry.mailingAddress?.state || "",
+      entry.mailingAddress?.country || "",
+      (entry.mailingAddress?.country &&
+        getCountryName(entry.mailingAddress.country)) ||
+        "",
     ];
   });
 

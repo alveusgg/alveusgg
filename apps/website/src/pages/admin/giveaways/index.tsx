@@ -4,7 +4,7 @@ import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/config/permissions";
 
-import { Giveaways } from "@/components/admin/Giveaways";
+import { Giveaways } from "@/components/admin/giveaways/Giveaways";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import Meta from "@/components/content/Meta";
 

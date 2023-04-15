@@ -11,13 +11,13 @@ export function MessageBox({
   className = "",
   children,
 }: MessageBoxProps) {
-  let variantClasses = "bg-white";
+  let variantClasses = "bg-white text-black";
   switch (variant) {
     case "success":
-      variantClasses = "bg-green-100";
+      variantClasses = "bg-green-100 text-black";
       break;
     case "warning":
-      variantClasses = "bg-yellow-200";
+      variantClasses = "bg-yellow-200 text-black";
       break;
     case "failure":
       variantClasses = "bg-red-200 text-red-900";

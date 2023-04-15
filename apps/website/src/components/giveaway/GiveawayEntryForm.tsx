@@ -2,15 +2,17 @@ import React, { useCallback } from "react";
 import { useSession } from "next-auth/react";
 import type { Giveaway } from "@prisma/client";
 
-import type { GiveawayEntryWithAddress } from "../../pages/giveaways/[giveawayId]";
-import { calcGiveawayConfig } from "../../utils/giveaways";
-import { trpc } from "../../utils/trpc";
-import { getCountryName } from "../../utils/countries";
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { Headline } from "@/components/shared/Headline";
+import { Button } from "@/components/shared/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
 
-import { LoginWithTwitchButton } from "../shared/LoginWithTwitchButton";
-import { Headline } from "../shared/Headline";
-import { Button } from "../shared/Button";
-import { MessageBox } from "../shared/MessageBox";
+import { getCountryName } from "@/utils/countries";
+import { trpc } from "@/utils/trpc";
+import { calcGiveawayConfig } from "@/utils/giveaways";
+import type { GiveawayEntryWithAddress } from "@/pages/giveaways/[giveawayId]";
+import Markdown from "@/components/content/Markdown";
+
 import { GiveawayChecks } from "./GiveawayChecks";
 import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
@@ -78,18 +80,20 @@ export const GiveawayEntryForm: React.FC<{
         <p className="my-2">
           <strong>Shipping address:</strong>
           <br />
-          Street address: {existingEntry.mailingAddress.addressLine1}
+          Street address: {existingEntry.mailingAddress?.addressLine1}
           <br />
           Second address line:{" "}
-          {existingEntry.mailingAddress.addressLine2 || "-"}
+          {existingEntry.mailingAddress?.addressLine2 || "-"}
           <br />
-          City: {existingEntry.mailingAddress.city}
+          City: {existingEntry.mailingAddress?.city}
           <br />
-          State / Province / Region: {existingEntry.mailingAddress.state}
+          State / Province / Region: {existingEntry.mailingAddress?.state}
           <br />
-          Postal code/ZIP: {existingEntry.mailingAddress.postalCode}
+          Postal code/ZIP: {existingEntry.mailingAddress?.postalCode}
           <br />
-          Country: {getCountryName(existingEntry.mailingAddress.country)}
+          Country:{" "}
+          {existingEntry.mailingAddress?.country &&
+            getCountryName(existingEntry.mailingAddress?.country)}
         </p>
       </>
     );
@@ -99,12 +103,7 @@ export const GiveawayEntryForm: React.FC<{
 
   return (
     <form onSubmit={handleSubmit}>
-      {config.introHTML && (
-        <p
-          className="alveus-ugc my-3 text-lg"
-          dangerouslySetInnerHTML={{ __html: config.introHTML }}
-        />
-      )}
+      {config.intro && <Markdown content={config.intro} />}
 
       {enterGiveaway.error && (
         <MessageBox variant="failure">
@@ -127,7 +126,7 @@ export const GiveawayEntryForm: React.FC<{
           defaultEmailAddress={session.user.email || undefined}
         />
         <GiveawayEntryShippingAddressFieldset />
-        {config.rulesHTML && <GiveawayEntryRulesFieldset giveaway={giveaway} />}
+        {config.rules && <GiveawayEntryRulesFieldset giveaway={giveaway} />}
       </div>
 
       <div className="mt-7">

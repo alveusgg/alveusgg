@@ -1,28 +1,21 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { getTwitchConfig, type TwitchConfig } from "../../../config/twitch";
-import { calcGiveawayConfig } from "../../../utils/giveaways";
-import { getUserFollowsBroadcaster } from "../../utils/twitch-api";
-import { isValidCountryCode } from "../../../utils/countries";
+import { getTwitchConfig, type TwitchConfig } from "@/config/twitch";
+import { calcGiveawayConfig } from "@/utils/giveaways";
+import { getUserFollowsBroadcaster } from "@/server/utils/twitch-api";
 import {
   type OutgoingWebhookType,
   triggerOutgoingWebhook,
-} from "../../actions/outgoing-webhooks";
-import { router, protectedProcedure } from "../trpc";
+} from "@/server/actions/outgoing-webhooks";
+import { router, protectedProcedure } from "@/server/trpc/trpc";
+import { createEntry, giveawayEntrySchema } from "@/server/db/giveaways";
 
-export const giveawayEntrySchema = z.object({
-  giveawayId: z.string().cuid(),
-  givenName: z.string().min(1),
-  familyName: z.string().min(1),
-  email: z.string().email(),
-  addressLine1: z.string().min(1),
-  addressLine2: z.string(), // second address line may be empty
-  postalCode: z.string().min(1),
-  city: z.string().min(1),
-  country: z.custom<string>(isValidCountryCode),
-  state: z.string(), // state may be left empty
-});
+export const createGiveawayEntrySchema = giveawayEntrySchema.and(
+  z.object({
+    giveawayId: z.string().cuid(),
+  })
+);
 
 async function checkFollowsChannel(
   channelConfig: TwitchConfig["channels"][string],
@@ -43,7 +36,7 @@ async function checkFollowsChannel(
 
 export const giveawaysRouter = router({
   enterGiveaway: protectedProcedure
-    .input(giveawayEntrySchema)
+    .input(createGiveawayEntrySchema)
     .mutation(async ({ ctx, input }) => {
       // Find giveaway
       const giveaway = await ctx.prisma.giveaway.findUnique({
@@ -69,6 +62,9 @@ export const giveawaysRouter = router({
       const userId = ctx.session.user.id;
       // Check use has not entered already
       const existingEntry = await ctx.prisma.giveawayEntry.findUnique({
+        select: {
+          id: true,
+        },
         where: {
           giveawayId_userId: {
             giveawayId: giveaway.id,
@@ -116,28 +112,7 @@ export const giveawaysRouter = router({
       }
 
       // Insert entry
-      const entry = await ctx.prisma.giveawayEntry.create({
-        include: {
-          user: true,
-        },
-        data: {
-          giveaway: { connect: { id: giveaway.id } },
-          user: { connect: { id: userId } },
-          email: input.email,
-          givenName: input.givenName,
-          familyName: input.familyName,
-          mailingAddress: {
-            create: {
-              addressLine1: input.addressLine1,
-              addressLine2: input.addressLine2,
-              city: input.city,
-              state: input.state,
-              postalCode: input.postalCode,
-              country: input.country,
-            },
-          },
-        },
-      });
+      const entry = await createEntry(userId, giveaway.id, input);
 
       if (giveaway.outgoingWebhookUrl) {
         try {
@@ -150,7 +125,7 @@ export const giveawaysRouter = router({
               type: "giveaway-entry" as OutgoingWebhookType,
               data: {
                 id: entry.id,
-                giveawayId: entry.giveawayId,
+                giveawayId: giveaway.id,
                 username: entry.user.name,
                 email: entry.user.email,
                 createdAt: entry.createdAt,

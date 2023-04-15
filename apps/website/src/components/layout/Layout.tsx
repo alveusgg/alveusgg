@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
-import { useRouter } from "next/router";
 import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
@@ -10,25 +9,25 @@ type LayoutProps = {
   children?: React.ReactNode;
 };
 
-export const ptSans = PT_Sans({
+const ptSans = PT_Sans({
   subsets: ["latin"],
   variable: "--font-ptsans",
   weight: ["400", "700"],
 });
 
-export const ptSerif = PT_Serif({
+const ptSerif = PT_Serif({
   subsets: ["latin"],
   variable: "--font-ptserif",
   weight: ["400", "700"],
 });
 
-export const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
+const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const router = useRouter();
-  if (router.pathname.endsWith("/attachment")) {
-    return <>{children}</>;
-  }
+  // Add fonts to body for portals that do not attach to #app
+  useEffect(() => {
+    document.body.classList.add(...fonts.split(" "));
+  }, []);
 
   return (
     <>

@@ -289,7 +289,9 @@ export async function getUserFollowsBroadcaster(
     if (res.total > 0) {
       return true;
     }
-  } catch (e) {}
+  } catch (e) {
+    console.error(e);
+  }
 
   return false;
 }

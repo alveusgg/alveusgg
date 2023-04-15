@@ -59,6 +59,9 @@ const Markdown: React.FC<MarkdownProps> = ({ content }) => {
         </MarkdownHeading>
       ),
       ul: ({ children }) => <ul className="my-2 ml-8 list-disc">{children}</ul>,
+      ol: ({ children }) => (
+        <ol className="my-2 ml-8 list-decimal">{children}</ol>
+      ),
       a: ({ children, href }) => (
         <Link
           href={href || ""}

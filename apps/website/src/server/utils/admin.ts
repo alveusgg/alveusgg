@@ -1,5 +1,5 @@
 import { getSession } from "next-auth/react";
-import type { NextPageContext } from "next";
+import type { GetSessionParams } from "next-auth/react";
 import type { PermissionConfig } from "@/config/permissions";
 import { checkRolesGivePermission, permissions } from "@/config/permissions";
 import { notEmpty } from "@/utils/helpers";
@@ -40,7 +40,7 @@ const menuItems = [
 ];
 
 export async function getAdminSSP(
-  context: NextPageContext,
+  context: GetSessionParams,
   permission: PermissionConfig
 ) {
   const session = await getSession(context);
