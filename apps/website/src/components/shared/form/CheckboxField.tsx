@@ -12,8 +12,10 @@ export function CheckboxField(props: CheckboxFieldProps) {
   const { inputProps } = useCheckbox(props, state, ref);
 
   return (
-    <label className="flex flex-row gap-3">
-      <input {...inputProps} ref={ref} />
+    <label className="flex flex-row items-start gap-3">
+      <span className="block pt-0.5">
+        <input {...inputProps} ref={ref} />
+      </span>
       <span>{props.children}</span>
     </label>
   );

@@ -13,6 +13,7 @@ import { calcGiveawayConfig } from "@/utils/giveaways";
 import type { GiveawayEntryWithAddress } from "@/pages/giveaways/[giveawayId]";
 import Markdown from "@/components/content/Markdown";
 
+import { GiveawayEntryConsentFieldset } from "@/components/giveaway/GiveawayEntryConsentFieldset";
 import { GiveawayChecks } from "./GiveawayChecks";
 import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
 import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
@@ -127,6 +128,8 @@ export const GiveawayEntryForm: React.FC<{
         />
         <GiveawayEntryShippingAddressFieldset />
         {config.rules && <GiveawayEntryRulesFieldset giveaway={giveaway} />}
+
+        <GiveawayEntryConsentFieldset />
       </div>
 
       <div className="mt-7">
