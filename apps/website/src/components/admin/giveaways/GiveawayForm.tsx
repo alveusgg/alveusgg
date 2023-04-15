@@ -35,9 +35,6 @@ export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
   const router = useRouter();
   const submit = trpc.adminGiveaways.createOrEditGiveaway.useMutation();
 
-  const [intro, setIntro] = useState("");
-  const [rules, setRules] = useState("");
-
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -94,7 +91,8 @@ export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
   );
 
   const defaultConfig = calcGiveawayConfig(giveaway?.config);
-
+  const [intro, setIntro] = useState(defaultConfig.intro || "");
+  const [rules, setRules] = useState(defaultConfig.rules || "");
   const [label, setLabel] = useState(giveaway?.label || "");
 
   return (

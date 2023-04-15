@@ -27,6 +27,7 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
         pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
         className="w-full rounded-sm border border-gray-700 bg-white p-1 text-black"
         {...fieldProps}
+        defaultValue={props.defaultValue}
         name={props.name}
         value={props.value}
         onChange={props.onChange}
