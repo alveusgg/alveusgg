@@ -34,6 +34,11 @@ export const consentData = {
     description: "Embedded videos from YouTube.com",
     privacy: "https://policies.google.com/privacy",
   },
+  givingBlock: {
+    name: "The Giving Block",
+    description: "Embedded donation widget from The Giving Block",
+    privacy: "https://thegivingblock.com/about/privacy-policy/",
+  },
 } as const satisfies Record<string, ConsentData>;
 
 export type ConsentKey = keyof typeof consentData;
