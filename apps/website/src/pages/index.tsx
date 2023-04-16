@@ -1,19 +1,13 @@
 import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import {
-  type MouseEventHandler,
-  useCallback,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
-import { useConsent } from "@/hooks/consent";
 import usePrefersReducedMotion from "@/hooks/motion";
 
 import Heading from "@/components/content/Heading";
@@ -21,6 +15,7 @@ import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
+import Consent from "@/components/Consent";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import IconAmazon from "@/icons/IconAmazon";
@@ -186,33 +181,16 @@ const getTwitchEmbed = (
 const Home: NextPage = () => {
   const reducedMotion = usePrefersReducedMotion();
 
-  const {
-    consent,
-    update: updateConsent,
-    loaded: consentLoaded,
-  } = useConsent();
-
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
-
   useEffect(() => {
     setTwitchEmbed(
-      consent.twitch
-        ? getTwitchEmbed(
-            "alveussanctuary",
-            window.location.hostname,
-            !reducedMotion
-          )
-        : null
+      getTwitchEmbed(
+        "alveussanctuary",
+        window.location.hostname,
+        !reducedMotion
+      )
     );
-  }, [consent, reducedMotion]);
-
-  const twitchConsent = useCallback<MouseEventHandler<HTMLButtonElement>>(
-    (e) => {
-      e.preventDefault();
-      updateConsent({ twitch: true });
-    },
-    [updateConsent]
-  );
+  }, [reducedMotion]);
 
   return (
     <>
@@ -255,22 +233,14 @@ const Home: NextPage = () => {
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            <div className="relative z-0 flex aspect-video h-auto w-full flex-col items-center justify-center gap-6 rounded-2xl">
-              <p className="text-2xl">Loading live cam feed...</p>
-
-              {consentLoaded && !consent.twitch && (
-                <button
-                  type="button"
-                  onClick={twitchConsent}
-                  className="rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-                >
-                  Consent to loading Twitch.tv
-                </button>
-              )}
-
+            <Consent
+              item="live cam feed"
+              consent="twitch"
+              className="aspect-video h-auto w-full rounded-2xl"
+            >
               {twitchEmbed && (
                 <Link
-                  className="absolute inset-0 z-10 block rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
+                  className="block h-full w-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
                   href="/live"
                   target="_blank"
                   rel="noreferrer"
@@ -286,7 +256,7 @@ const Home: NextPage = () => {
                   ></iframe>
                 </Link>
               )}
-            </div>
+            </Consent>
           </div>
         </div>
       </div>
