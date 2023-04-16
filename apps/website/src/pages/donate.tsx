@@ -81,16 +81,16 @@ const DonatePage: NextPage = () => {
           ))}
         </div>
 
-        <div className="flex h-[640px] basis-full flex-col items-center gap-8 py-4 md:basis-1/2 md:px-4">
+        <div className="flex basis-full flex-col items-center gap-8 py-4 md:basis-1/2 md:px-4">
           <Consent
             item="donation widget"
             consent="givingBlock"
-            className="h-full w-full"
+            className="w-full"
           >
             <iframe
               src="https://tgbwidget.com/?charityID=861772907"
               width="100%"
-              height="100%"
+              height="604px"
               frameBorder="0"
             />
           </Consent>
