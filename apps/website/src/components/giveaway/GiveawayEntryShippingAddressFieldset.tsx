@@ -4,7 +4,8 @@ import {
   DEFAULT_COUNTRY_CODE,
   commonCountries,
   otherCountries,
-} from "../../utils/countries";
+} from "@/utils/countries";
+
 import { Fieldset } from "../shared/form/Fieldset";
 import { FieldGroup } from "../shared/form/FieldGroup";
 import { TextField } from "../shared/form/TextField";
