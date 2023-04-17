@@ -14,6 +14,8 @@ import { createEntry, giveawayEntrySchema } from "@/server/db/giveaways";
 export const createGiveawayEntrySchema = giveawayEntrySchema.and(
   z.object({
     giveawayId: z.string().cuid(),
+    acceptRules: z.boolean().optional(),
+    acceptPrivacy: z.boolean(),
   })
 );
 
@@ -54,8 +56,23 @@ export const giveawaysRouter = router({
         (giveaway.endAt && giveaway.endAt < now)
       ) {
         throw new TRPCError({
-          code: "BAD_REQUEST",
+          code: "NOT_FOUND",
           message: "giveaway not found",
+        });
+      }
+
+      if (input.acceptPrivacy !== true) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "consent for privacy policy not given",
+        });
+      }
+
+      const config = calcGiveawayConfig(giveaway.config);
+      if (config.hasRules && input.acceptRules !== true) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "rules not accepted",
         });
       }
 
@@ -99,7 +116,6 @@ export const giveawaysRouter = router({
       }
 
       // Perform server side checks if required
-      const config = calcGiveawayConfig(giveaway.config);
       if (config.checks) {
         // TODO: Make the giveaway config granular. Right now the channel follow check is hard-coded here:
         // NOTE: Does not work, twitch removed API access :(

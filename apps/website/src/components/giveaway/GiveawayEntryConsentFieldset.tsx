@@ -7,7 +7,7 @@ import { CheckboxField } from "../shared/form/CheckboxField";
 export function GiveawayEntryConsentFieldset() {
   return (
     <Fieldset legend="Data processing">
-      <CheckboxField isRequired={true}>
+      <CheckboxField isRequired={true} name="acceptPrivacy" value="yes">
         I have read and accept the{" "}
         <Link className="underline" href="/privacy-policy" external>
           Privacy Policy
