@@ -14,7 +14,7 @@ export function CheckboxField(props: CheckboxFieldProps) {
   return (
     <label className="flex flex-row items-start gap-3">
       <span className="block pt-0.5">
-        <input {...inputProps} ref={ref} />
+        <input {...inputProps} ref={ref} required={props.isRequired} />
       </span>
       <span>{props.children}</span>
     </label>
