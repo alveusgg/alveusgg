@@ -129,6 +129,11 @@ const config = {
       destination: "/.well-known/security.txt",
       permanent: true,
     },
+    {
+      source: "/collabs",
+      destination: "/collaborations",
+      permanent: true,
+    },
     ...ambassadorSlugs.map((slug) => ({
       source: `/${slug}`,
       destination: `/ambassadors/${slug}`,

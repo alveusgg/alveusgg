@@ -131,7 +131,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
 
               <Trigger
                 videoId={value.videoId}
-                caption={`${value.name}: ${value.date}`}
+                caption={`${value.name}: ${formatDateUTC(value.date, "long")}`}
                 className="w-full max-w-2xl"
               >
                 <Preview videoId={value.videoId} />
