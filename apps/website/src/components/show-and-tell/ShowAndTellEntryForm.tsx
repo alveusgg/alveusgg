@@ -1,11 +1,14 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 import { trpc } from "@/utils/trpc";
 import { notEmpty } from "@/utils/helpers";
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import IconLoading from "@/icons/IconLoading";
+import { getEntityStatus } from "@/utils/entity-helpers";
+
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
 import { RichTextField } from "../shared/form/RichTextField";
@@ -190,8 +193,18 @@ export function ShowAndTellEntryForm({
     );
   }
 
+  const wasApproved = entry && getEntityStatus(entry) === "approved";
+
   return (
     <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
+      {action === "update" && wasApproved && (
+        <MessageBox variant="warning" className="my-4 flex items-center gap-2">
+          <ExclamationTriangleIcon className="h-6 w-6 text-yellow-900" />
+          You are modifying a previously approved post. Upon submitting your
+          edits, the post will be unpublished until the changes have been
+          reviewed and approved.
+        </MessageBox>
+      )}
       {error && <MessageBox variant="failure">{error}</MessageBox>}
       {successMessage && (
         <MessageBox variant="success">{successMessage}</MessageBox>
@@ -254,17 +267,24 @@ export function ShowAndTellEntryForm({
                     {...props}
                     fileReference={fileReference}
                   >
-                    <div>
+                    <div className="flex flex-col gap-3">
                       <TextAreaField
                         name={`image[${fileReference.id}][caption]`}
-                        label="Caption"
+                        label={<strong className="font-bold">Caption</strong>}
                         maxLength={200}
-                        inputClassName="h-10"
                         defaultValue={initialData?.caption}
                       />
                       <TextAreaField
                         name={`image[${fileReference.id}][alternativeText]`}
-                        label="Alternative Text"
+                        label={
+                          <span className="text-gray-600">
+                            Optional description
+                            <br />
+                            <em className="text-sm">
+                              visible to screen readers only
+                            </em>
+                          </span>
+                        }
                         maxLength={300}
                         defaultValue={initialData?.alternativeText}
                       />
@@ -290,6 +310,8 @@ export function ShowAndTellEntryForm({
             </>
           ) : action === "create" ? (
             "Submit for review"
+          ) : action === "update" && wasApproved ? (
+            "Submit changes for review"
           ) : (
             "Save changes"
           )}
