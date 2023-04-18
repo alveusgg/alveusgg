@@ -5,7 +5,7 @@ import type {
   GetServerSideProps,
 } from "next";
 import { getSession } from "next-auth/react";
-import type { Giveaway, GiveawayEntry, MailingAddress } from "@prisma/client";
+import type { Form, FormEntry, MailingAddress } from "@prisma/client";
 
 import { findActiveForm, getFormEntry } from "@/server/db/forms";
 import { EntryForm } from "@/components/forms/EntryForm";
@@ -18,14 +18,14 @@ export type FormPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
 
-export type GiveawayEntryWithAddress = GiveawayEntry & {
+export type FormEntryWithAddress = FormEntry & {
   mailingAddress: MailingAddress | null;
 };
 
 export const getServerSideProps: GetServerSideProps<
-  { form: Giveaway } & (
+  { form: Form } & (
     | { error: string }
-    | { existingEntry: GiveawayEntryWithAddress | null }
+    | { existingEntry: FormEntryWithAddress | null }
   )
 > = async (context) => {
   // Check params
@@ -45,12 +45,13 @@ export const getServerSideProps: GetServerSideProps<
   }
 
   // Require active session or redirect to log in
-  let existingEntry: GiveawayEntryWithAddress | null = null;
+  let existingEntry: FormEntryWithAddress | null = null;
   const session = await getSession(context);
   if (session?.user?.id) {
     try {
       existingEntry = await getFormEntry(session.user.id, form.id);
     } catch (e) {
+      console.error(e);
       return {
         props: { form, error: "Unknown error" },
       };

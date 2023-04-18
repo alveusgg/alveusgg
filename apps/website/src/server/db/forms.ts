@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 import { isValidCountryCode } from "@/utils/countries";
 import { prisma } from "@/server/db/client";
 import { decryptRecord, encryptRecord } from "@/server/db/encryption";
-import type { GiveawayEntryWithAddress } from "@/pages/forms/[formId]";
+import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
 import { formConfigSchema } from "@/utils/forms";
 import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
 
@@ -34,7 +34,7 @@ export const existingFormSchema = formSchema.and(
   })
 );
 
-async function decryptFormEntryWithAddress<T extends GiveawayEntryWithAddress>(
+async function decryptFormEntryWithAddress<T extends FormEntryWithAddress>(
   entry: T
 ) {
   const res = await decryptRecord(entry, entryEncryptFields);
@@ -60,7 +60,7 @@ export const formEntrySchema = z.object({
 
 export async function findActiveForm(formSlugOrId: string) {
   const now = new Date();
-  return await prisma.giveaway.findFirst({
+  return await prisma.form.findFirst({
     where: {
       active: true,
       startAt: { lt: now },
@@ -73,11 +73,11 @@ export async function findActiveForm(formSlugOrId: string) {
 }
 
 export async function getFormEntry(userId: string, formId: string) {
-  const data = await prisma.giveawayEntry.findUnique({
+  const data = await prisma.formEntry.findUnique({
     where: {
-      giveawayId_userId: {
+      formId_userId: {
+        formId,
         userId,
-        giveawayId: formId,
       },
     },
     include: {
@@ -97,7 +97,7 @@ export async function createEntry(
   formId: string,
   input: z.infer<typeof formEntrySchema>
 ) {
-  return prisma.giveawayEntry.create({
+  return prisma.formEntry.create({
     select: {
       id: true,
       createdAt: true,
@@ -111,7 +111,7 @@ export async function createEntry(
         },
         entryEncryptFields
       )),
-      giveaway: { connect: { id: formId } },
+      form: { connect: { id: formId } },
       user: { connect: { id: userId } },
       email: input.email,
       mailingAddress: {
@@ -132,9 +132,9 @@ export async function createEntry(
 }
 
 export async function getAllEntriesForForm(formId: string) {
-  const entries = await prisma.giveawayEntry.findMany({
+  const entries = await prisma.formEntry.findMany({
     where: {
-      giveawayId: formId,
+      formId: formId,
     },
     include: {
       mailingAddress: true,
@@ -149,7 +149,7 @@ export async function getAllEntriesForForm(formId: string) {
 
 export async function createForm(input: z.infer<typeof formSchema>) {
   const slug = convertToSlug(input.slug || input.label);
-  const existingFormWithSlug = await prisma.giveaway.findFirst({
+  const existingFormWithSlug = await prisma.form.findFirst({
     where: { slug },
   });
   if (existingFormWithSlug)
@@ -158,14 +158,14 @@ export async function createForm(input: z.infer<typeof formSchema>) {
       message: "Slug already exists",
     });
 
-  return await prisma.giveaway.create({
+  return await prisma.form.create({
     data: { ...input, slug, config: JSON.stringify(input.config) },
   });
 }
 
 export async function editForm(input: z.infer<typeof existingFormSchema>) {
   const slug = convertToSlug(input.slug || input.label);
-  const existingFormWithSlug = await prisma.giveaway.findFirst({
+  const existingFormWithSlug = await prisma.form.findFirst({
     where: { slug, id: { not: input.id } },
   });
   if (existingFormWithSlug)
@@ -175,7 +175,7 @@ export async function editForm(input: z.infer<typeof existingFormSchema>) {
     });
 
   const { id, config, ...data } = input;
-  return await prisma.giveaway.update({
+  return await prisma.form.update({
     where: { id: id },
     data: { ...data, slug, config: JSON.stringify(config) },
   });

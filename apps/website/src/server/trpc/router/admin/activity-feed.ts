@@ -23,7 +23,7 @@ export const adminActivityFeedRouter = router({
         },
         include: {
           user: true,
-          giveawayEntry: true,
+          formEntry: true,
         },
       });
 

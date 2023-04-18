@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useSession } from "next-auth/react";
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { Headline } from "@/components/shared/Headline";
@@ -11,7 +11,7 @@ import { getCountryName } from "@/utils/countries";
 import { trpc } from "@/utils/trpc";
 import { calcFormConfig } from "@/utils/forms";
 import Markdown from "@/components/content/Markdown";
-import type { GiveawayEntryWithAddress } from "@/pages/forms/[formId]";
+import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
 
 import { ConsentFieldset } from "@/components/forms/ConsentFieldset";
 
@@ -22,8 +22,8 @@ import { ContactFieldset } from "./ContactFieldset";
 import { EntryRulesFieldset } from "./EntryRulesFieldset";
 
 export const EntryForm: React.FC<{
-  form: Giveaway;
-  existingEntry: GiveawayEntryWithAddress | null;
+  form: Form;
+  existingEntry: FormEntryWithAddress | null;
 }> = ({ form, existingEntry }) => {
   const { data: session } = useSession();
 

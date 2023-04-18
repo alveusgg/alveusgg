@@ -41,7 +41,7 @@ export const formsRouter = router({
     .input(createFormEntrySchema)
     .mutation(async ({ ctx, input }) => {
       // Find form
-      const form = await ctx.prisma.giveaway.findUnique({
+      const form = await ctx.prisma.form.findUnique({
         where: {
           id: input.formId,
         },
@@ -78,13 +78,13 @@ export const formsRouter = router({
 
       const userId = ctx.session.user.id;
       // Check use has not entered already
-      const existingEntry = await ctx.prisma.giveawayEntry.findUnique({
+      const existingEntry = await ctx.prisma.formEntry.findUnique({
         select: {
           id: true,
         },
         where: {
-          giveawayId_userId: {
-            giveawayId: form.id,
+          formId_userId: {
+            formId: form.id,
             userId,
           },
         },
@@ -150,7 +150,7 @@ export const formsRouter = router({
           });
 
           // connect the outgoing webhook to the entry
-          await ctx.prisma.giveawayEntry.update({
+          await ctx.prisma.formEntry.update({
             where: { id: entry.id },
             data: {
               outgoingWebhook: { connect: { id: webhook.id } },

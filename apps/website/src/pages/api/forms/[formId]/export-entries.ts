@@ -21,7 +21,7 @@ const exportFormEntries = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const rows: FormEntryCsvExportRow[] = entries.map((entry) => {
     return [
-      entry.giveawayId,
+      entry.formId,
       entry.id,
       entry.createdAt.toISOString(),
       String(entry.user.name),

@@ -1,7 +1,7 @@
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 import { useRouter } from "next/router";
 
 import { env } from "@/env/client.mjs";
@@ -28,7 +28,7 @@ import { MessageBox } from "@/components/shared/MessageBox";
 
 type FormFormProps = {
   action: "create" | "edit";
-  form?: Giveaway;
+  form?: Form;
 };
 
 export function FormForm({ action, form }: FormFormProps) {

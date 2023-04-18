@@ -5,7 +5,7 @@ import type {
   NextPage,
 } from "next";
 
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
@@ -19,7 +19,7 @@ export type FormPageProps = InferGetServerSidePropsType<
 >;
 
 export const getServerSideProps: GetServerSideProps<{
-  form: Giveaway;
+  form: Form;
   rules: string;
 }> = async (context) => {
   // Check params

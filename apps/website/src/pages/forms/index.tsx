@@ -2,7 +2,7 @@ import React from "react";
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 import { prisma } from "@/server/db/client";
 
 import Section from "@/components/content/Section";
@@ -12,10 +12,10 @@ import Meta from "@/components/content/Meta";
 export type FormsPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export const getStaticProps: GetStaticProps<{
-  forms: Giveaway[];
+  forms: Form[];
 }> = async () => {
   const now = new Date().toISOString();
-  const forms = await prisma.giveaway.findMany({
+  const forms = await prisma.form.findMany({
     where: {
       active: true,
       showInLists: true,

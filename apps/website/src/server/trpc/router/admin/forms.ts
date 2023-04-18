@@ -39,15 +39,15 @@ export const adminFormsRouter = router({
   deleteForm: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
-      ctx.prisma.giveaway.delete({ where: { id } })
+      ctx.prisma.form.delete({ where: { id } })
     ),
 
   purgeFormEntries: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
-      ctx.prisma.giveawayEntry.deleteMany({
+      ctx.prisma.formEntry.deleteMany({
         where: {
-          giveawayId: id,
+          formId: id,
         },
       })
     ),
@@ -56,9 +56,9 @@ export const adminFormsRouter = router({
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
       Promise.all([
-        ctx.prisma.giveawayEntry.updateMany({
+        ctx.prisma.formEntry.updateMany({
           where: {
-            giveawayId: id,
+            formId: id,
           },
           data: {
             familyName: "",
@@ -68,8 +68,8 @@ export const adminFormsRouter = router({
         }),
         ctx.prisma.mailingAddress.deleteMany({
           where: {
-            giveawayEntry: {
-              giveawayId: id,
+            formEntry: {
+              formId: id,
             },
           },
         }),
@@ -79,11 +79,11 @@ export const adminFormsRouter = router({
   getForm: permittedProcedure
     .input(z.string().cuid())
     .query(async ({ ctx, input: id }) =>
-      ctx.prisma.giveaway.findUnique({ where: { id } })
+      ctx.prisma.form.findUnique({ where: { id } })
     ),
 
   getForms: permittedProcedure.query(async ({ ctx }) =>
-    ctx.prisma.giveaway.findMany({
+    ctx.prisma.form.findMany({
       include: {
         _count: {
           select: { entries: true },
@@ -100,7 +100,7 @@ export const adminFormsRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.giveaway.update({
+      await ctx.prisma.form.update({
         where: {
           id: input.id,
         },
@@ -119,7 +119,7 @@ export const adminFormsRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       await Promise.all([
-        ctx.prisma.giveaway.update({
+        ctx.prisma.form.update({
           where: {
             id: input.id,
           },
