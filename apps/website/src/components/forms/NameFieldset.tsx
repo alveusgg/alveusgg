@@ -4,7 +4,7 @@ import { TextField } from "../shared/form/TextField";
 import { FieldGroup } from "../shared/form/FieldGroup";
 import { Fieldset } from "../shared/form/Fieldset";
 
-export function GiveawayEntryNameFieldset() {
+export function NameFieldset() {
   return (
     <Fieldset legend="Name">
       <FieldGroup>

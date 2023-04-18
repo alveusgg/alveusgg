@@ -10,19 +10,19 @@ import { permissions } from "@/config/permissions";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import Meta from "@/components/content/Meta";
-import { GiveawayForm } from "@/components/admin/giveaways/GiveawayForm";
+import { FormForm } from "@/components/admin/forms/FormForm";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageGiveaways);
+  const adminProps = await getAdminSSP(context, permissions.manageForms);
   if (!adminProps) {
     return { notFound: true };
   }
 
-  const id = context.params?.giveawayId;
+  const id = context.params?.formId;
   if (!id) {
     return { notFound: true };
   }
@@ -30,26 +30,26 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       ...adminProps,
-      giveawayId: String(id),
+      formId: String(id),
     },
   };
 }
 
-const AdminEditGiveawayPage: NextPage<
+const AdminEditFormPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({ menuItems, giveawayId }) => {
-  const giveaway = trpc.adminGiveaways.getGiveaway.useQuery(giveawayId);
+> = ({ menuItems, formId }) => {
+  const form = trpc.adminForms.getForm.useQuery(formId);
 
   return (
     <>
-      <Meta title="Edit Giveaway | Admin" />
+      <Meta title="Edit Form | Admin" />
 
-      <AdminPageLayout title="Edit Giveaway" menuItems={menuItems}>
-        <Headline>Create new Giveaway</Headline>
+      <AdminPageLayout title="Edit Form" menuItems={menuItems}>
+        <Headline>Create new Form</Headline>
 
         <Panel>
-          {giveaway.data ? (
-            <GiveawayForm action="edit" giveaway={giveaway.data} />
+          {form.data ? (
+            <FormForm action="edit" form={form.data} />
           ) : (
             <MessageBox>Loading …</MessageBox>
           )}
@@ -58,4 +58,4 @@ const AdminEditGiveawayPage: NextPage<
     </>
   );
 };
-export default AdminEditGiveawayPage;
+export default AdminEditFormPage;

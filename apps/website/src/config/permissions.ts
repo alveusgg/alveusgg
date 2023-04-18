@@ -15,8 +15,8 @@ export const permissions = {
   manageShowAndTell: {
     requiredRole: "showAndTell",
   },
-  manageGiveaways: {
-    requiredRole: "giveaways",
+  manageForms: {
+    requiredRole: "forms",
   },
   manageTwitchApi: {
     requiresSuperUser: true,

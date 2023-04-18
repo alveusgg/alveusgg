@@ -11,7 +11,7 @@ import { FieldGroup } from "../shared/form/FieldGroup";
 import { TextField } from "../shared/form/TextField";
 import { SelectBoxField } from "../shared/form/SelectBoxField";
 
-export const GiveawayEntryShippingAddressFieldset: React.FC = () => {
+export const ShippingAddressFieldset: React.FC = () => {
   return (
     <Fieldset legend="Shipping address">
       <FieldGroup>

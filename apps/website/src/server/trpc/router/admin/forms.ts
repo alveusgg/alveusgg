@@ -5,48 +5,44 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import { permissions } from "@/config/permissions";
-import {
-  createGiveaway,
-  editGiveaway,
-  giveawaySchema,
-} from "@/server/db/giveaways";
+import { createForm, editForm, formSchema } from "@/server/db/forms";
 
 const permittedProcedure = protectedProcedure.use(
-  createCheckPermissionMiddleware(permissions.manageGiveaways)
+  createCheckPermissionMiddleware(permissions.manageForms)
 );
 
-export const adminGiveawaysRouter = router({
-  createOrEditGiveaway: permittedProcedure
+export const adminFormsRouter = router({
+  createOrEditForm: permittedProcedure
     .input(
       z
         .discriminatedUnion("action", [
           z.object({ action: z.literal("create") }),
           z.object({ action: z.literal("edit"), id: z.string().cuid() }),
         ])
-        .and(giveawaySchema)
+        .and(formSchema)
     )
     .mutation(async ({ input }) => {
       switch (input.action) {
         case "create": {
           const { action: _, ...data } = input;
-          await createGiveaway(data);
+          await createForm(data);
           break;
         }
         case "edit": {
           const { action: _, ...data } = input;
-          await editGiveaway(data);
+          await editForm(data);
           break;
         }
       }
     }),
 
-  deleteGiveaway: permittedProcedure
+  deleteForm: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
       ctx.prisma.giveaway.delete({ where: { id } })
     ),
 
-  purgeGiveawayEntries: permittedProcedure
+  purgeFormEntries: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
       ctx.prisma.giveawayEntry.deleteMany({
@@ -56,7 +52,7 @@ export const adminGiveawaysRouter = router({
       })
     ),
 
-  anonymizeGiveawayEntries: permittedProcedure
+  anonymizeFormEntries: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
       Promise.all([
@@ -80,13 +76,13 @@ export const adminGiveawaysRouter = router({
       ])
     ),
 
-  getGiveaway: permittedProcedure
+  getForm: permittedProcedure
     .input(z.string().cuid())
     .query(async ({ ctx, input: id }) =>
       ctx.prisma.giveaway.findUnique({ where: { id } })
     ),
 
-  getGiveaways: permittedProcedure.query(async ({ ctx }) =>
+  getForms: permittedProcedure.query(async ({ ctx }) =>
     ctx.prisma.giveaway.findMany({
       include: {
         _count: {
@@ -96,7 +92,7 @@ export const adminGiveawaysRouter = router({
     })
   ),
 
-  toggleGiveawayStatus: permittedProcedure
+  toggleFormStatus: permittedProcedure
     .input(
       z.object({
         id: z.string().cuid(),
@@ -114,7 +110,7 @@ export const adminGiveawaysRouter = router({
       });
     }),
 
-  updateGiveawayOutgoingWebhookUrl: permittedProcedure
+  updateFormOutgoingWebhookUrl: permittedProcedure
     .input(
       z.object({
         id: z.string().cuid(),
@@ -133,7 +129,7 @@ export const adminGiveawaysRouter = router({
         }),
         ctx.prisma.outgoingWebhook.updateMany({
           where: {
-            type: "giveaway-entry",
+            type: "form-entry",
           },
           data: {
             url: input.outgoingWebhookUrl,

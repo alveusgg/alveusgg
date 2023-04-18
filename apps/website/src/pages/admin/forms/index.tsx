@@ -4,14 +4,12 @@ import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/config/permissions";
 
+import { Forms } from "@/components/admin/forms/Forms";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import Meta from "@/components/content/Meta";
-import { GiveawayForm } from "@/components/admin/giveaways/GiveawayForm";
-import { Headline } from "@/components/admin/Headline";
-import { Panel } from "@/components/admin/Panel";
 
 export async function getServerSideProps(context: NextPageContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageGiveaways);
+  const adminProps = await getAdminSSP(context, permissions.manageForms);
   if (!adminProps) {
     return { notFound: true };
   }
@@ -19,21 +17,17 @@ export async function getServerSideProps(context: NextPageContext) {
   return { props: adminProps };
 }
 
-const AdminGiveawaysPage: NextPage<
+const AdminFormsPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
 > = ({ menuItems }) => {
   return (
     <>
-      <Meta title="Create Giveaway | Admin" />
+      <Meta title="Forms | Admin" />
 
-      <AdminPageLayout title="Create Giveaway" menuItems={menuItems}>
-        <Headline>Create new Giveaway</Headline>
-
-        <Panel>
-          <GiveawayForm action="create" />
-        </Panel>
+      <AdminPageLayout title="Forms" menuItems={menuItems}>
+        <Forms />
       </AdminPageLayout>
     </>
   );
 };
-export default AdminGiveawaysPage;
+export default AdminFormsPage;

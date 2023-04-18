@@ -22,9 +22,9 @@ export const OutgoingWebhookFeedEntry: React.FC<{
       },
     });
 
-  if (item.type === "giveaway-entry") {
+  if (item.type === "form-entry") {
     {
-      label = "Giveaway entry: " + item.user?.name;
+      label = "Form entry: " + item.user?.name;
       details = <div>User #{item.user?.name}</div>;
     }
   }
