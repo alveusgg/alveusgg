@@ -39,7 +39,7 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   const config = calcGiveawayConfig(giveaway.config);
-  if (!config.rules) {
+  if (!config.hasRules || !config.rules) {
     return {
       notFound: true,
     };

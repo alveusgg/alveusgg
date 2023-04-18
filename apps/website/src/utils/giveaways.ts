@@ -1,6 +1,8 @@
 import { z } from "zod";
 
-export type GiveawayConfig = z.infer<typeof giveawayConfigSchema>;
+export type CalculatedGiveawayConfig = z.infer<typeof giveawayConfigSchema> & {
+  hasRules: boolean;
+};
 
 export const giveawayConfigSchema = z.object({
   checks: z.boolean().optional(),
@@ -10,19 +12,20 @@ export const giveawayConfigSchema = z.object({
 });
 
 export const getDefaultGiveawayConfig = () =>
-  ({ checks: true } satisfies GiveawayConfig);
+  ({ checks: true, hasRules: false } satisfies CalculatedGiveawayConfig);
 
-export function calcGiveawayConfig(config?: string) {
-  let mergedConfig: GiveawayConfig = getDefaultGiveawayConfig();
-  if (config) {
-    const parsedConfig = giveawayConfigSchema.safeParse(JSON.parse(config));
+export function calcGiveawayConfig(giveawayConfig?: string) {
+  const config: CalculatedGiveawayConfig = getDefaultGiveawayConfig();
+  if (giveawayConfig) {
+    const parsedConfig = giveawayConfigSchema.safeParse(
+      JSON.parse(giveawayConfig)
+    );
     if (parsedConfig.success) {
-      mergedConfig = {
-        ...mergedConfig,
-        ...parsedConfig.data,
-      };
+      Object.assign(config, parsedConfig.data);
     }
   }
 
-  return mergedConfig;
+  config.hasRules = (config.rules && config.rules.trim() !== "") || false;
+
+  return config;
 }

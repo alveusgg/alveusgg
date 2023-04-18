@@ -26,6 +26,7 @@ export const GiveawayEntryForm: React.FC<{
 }> = ({ giveaway, existingEntry }) => {
   const { data: session } = useSession();
 
+  const config = calcGiveawayConfig(giveaway.config);
   const enterGiveaway = trpc.giveaways.enterGiveaway.useMutation();
 
   const handleSubmit = useCallback(
@@ -44,9 +45,13 @@ export const GiveawayEntryForm: React.FC<{
         state: String(data.get("state")),
         city: String(data.get("city")),
         postalCode: String(data.get("postal-code")),
+        acceptRules: config.hasRules
+          ? String(data.get("acceptRules")) === "yes"
+          : undefined,
+        acceptPrivacy: String(data.get("acceptPrivacy")) === "yes",
       });
     },
-    [enterGiveaway, giveaway.id]
+    [config.hasRules, enterGiveaway, giveaway.id]
   );
 
   if (!session?.user?.id) {
@@ -100,8 +105,6 @@ export const GiveawayEntryForm: React.FC<{
     );
   }
 
-  const config = calcGiveawayConfig(giveaway.config);
-
   return (
     <form onSubmit={handleSubmit}>
       {config.intro && <Markdown content={config.intro} />}
@@ -127,7 +130,7 @@ export const GiveawayEntryForm: React.FC<{
           defaultEmailAddress={session.user.email || undefined}
         />
         <GiveawayEntryShippingAddressFieldset />
-        {config.rules && <GiveawayEntryRulesFieldset giveaway={giveaway} />}
+        {config.hasRules && <GiveawayEntryRulesFieldset giveaway={giveaway} />}
 
         <GiveawayEntryConsentFieldset />
       </div>

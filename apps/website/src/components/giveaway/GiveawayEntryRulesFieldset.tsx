@@ -14,7 +14,7 @@ export function GiveawayEntryRulesFieldset({
 }: GiveawayEntryRulesFieldsetProps) {
   return (
     <Fieldset legend="Rules">
-      <CheckboxField isRequired={true}>
+      <CheckboxField isRequired={true} name="acceptRules" value="yes">
         I agree to the{" "}
         <Link
           className="underline"
