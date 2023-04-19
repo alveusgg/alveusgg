@@ -227,6 +227,8 @@ const config = {
               "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
               // YouTube embeds:
               "https://www.youtube-nocookie.com/",
+              // The Giving Block (crypto donations):
+              "https://tgbwidget.com/",
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
               // Streamable embeds:

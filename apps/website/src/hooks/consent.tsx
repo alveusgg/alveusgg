@@ -23,7 +23,7 @@ type ConsentData = {
   privacy: string;
 };
 
-const consentData = {
+export const consentData = {
   twitch: {
     name: "Twitch.tv",
     description: "Embedded livestreams from Twitch.tv",
@@ -34,12 +34,17 @@ const consentData = {
     description: "Embedded videos from YouTube.com",
     privacy: "https://policies.google.com/privacy",
   },
+  givingBlock: {
+    name: "The Giving Block",
+    description: "Embedded donation widget from The Giving Block",
+    privacy: "https://thegivingblock.com/about/privacy-policy/",
+  },
 } as const satisfies Record<string, ConsentData>;
 
-type ConsentKeys = keyof typeof consentData;
+export type ConsentKey = keyof typeof consentData;
 
 type Consent = Readonly<{
-  [K in ConsentKeys]: boolean;
+  [K in ConsentKey]: boolean;
 }>;
 
 const defaultConsent = Object.freeze(
@@ -48,6 +53,9 @@ const defaultConsent = Object.freeze(
     {} as Consent
   )
 ) as Consent;
+
+export const consentExplainer =
+  "may set cookies on your device, or store your IP address, to personalise content and analyze traffic";
 
 const isPartialConsent = (val: unknown): val is Partial<Consent> =>
   typeof val === "object" &&
@@ -182,9 +190,9 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
 
             <Dialog.Description>
               We embed some third-party content on our website, and need your
-              consent to do so. These third parties may set cookies on your
-              device to personalise content and analyze traffic. Please select
-              which third-party content you would like to allow on our website:
+              consent to do so. These third parties {consentExplainer}. Please
+              select which third-party content you would like to allow on our
+              website:
             </Dialog.Description>
 
             <div className="mt-4 flex flex-col gap-y-2">
@@ -203,14 +211,14 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
 
                   <input
                     type="checkbox"
-                    checked={consent[key as ConsentKeys]}
+                    checked={consent[key as ConsentKey]}
                     onChange={(e) => update({ [key]: e.target.checked })}
                     className="peer sr-only"
                   />
 
                   <div
                     className={[
-                      consent[key as ConsentKeys]
+                      consent[key as ConsentKey]
                         ? "bg-alveus-green"
                         : "bg-alveus-green-300",
                       "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline",
@@ -220,7 +228,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                   >
                     <span
                       className={[
-                        consent[key as ConsentKeys]
+                        consent[key as ConsentKey]
                           ? "translate-x-6"
                           : "translate-x-1",
                         "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform",
