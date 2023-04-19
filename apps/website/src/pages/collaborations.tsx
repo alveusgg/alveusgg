@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 
 import { formatDateUTC } from "@/utils/datetime";
+import { camelToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -23,7 +24,15 @@ type Collaboration = {
   vodId?: string;
 };
 
+type Collaborations = Record<string, Collaboration>;
+
 const collaborations = {
+  graycen: {
+    name: "Graycen",
+    link: "https://www.twitch.tv/graycen",
+    date: new Date("2023-04-18"),
+    videoId: "M3WBnThqRkg",
+  },
   dareon: {
     name: "Dareon",
     link: "https://www.twitch.tv/dareon",
@@ -94,10 +103,26 @@ const collaborations = {
     date: new Date("2022-04-22"),
     videoId: "jzyxhnODe2g",
   },
-} as const satisfies Record<string, Collaboration>;
+} as const satisfies Collaborations;
+
+const collaborationsByYear: { year: number; collaborations: Collaborations }[] =
+  Object.entries(
+    Object.entries(collaborations).reduce<Record<string, Collaborations>>(
+      (acc, [key, value]) => ({
+        ...acc,
+        [value.date.getUTCFullYear()]: {
+          ...(acc[value.date.getUTCFullYear()] || {}),
+          [key]: value,
+        },
+      }),
+      {}
+    )
+  )
+    .map(([year, collaborations]) => ({ year: Number(year), collaborations }))
+    .sort((a, b) => b.year - a.year);
 
 type CollaborationsSectionProps = {
-  items: Record<string, Collaboration>;
+  items: Collaborations;
 };
 
 const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
@@ -115,6 +140,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
               <Heading
                 level={2}
                 className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
+                id={camelToKebab(key)}
               >
                 <Link
                   href={value.link}
@@ -125,7 +151,9 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
                   {value.name}
                 </Link>
                 <small className="text-xl text-alveus-green-600">
-                  {formatDateUTC(value.date, "long")}
+                  <Link href={`#${camelToKebab(key)}`} custom>
+                    {formatDateUTC(value.date, "long")}
+                  </Link>
                 </small>
               </Heading>
 
@@ -206,7 +234,24 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          <CollaborationsSection items={collaborations} />
+          {collaborationsByYear.map(({ year, collaborations }, idx) => (
+            <div key={year}>
+              <Heading
+                level={-1}
+                className={[
+                  "alveus-green-800 border-b-2 border-alveus-green-500 pb-8 text-4xl",
+                  idx === 0 && "sr-only",
+                ]
+                  .filter(Boolean)
+                  .join(" ")}
+                id={year.toString()}
+                link
+              >
+                {year}
+              </Heading>
+              <CollaborationsSection items={collaborations} />
+            </div>
+          ))}
         </Section>
       </div>
     </>
