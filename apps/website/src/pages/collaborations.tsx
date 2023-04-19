@@ -3,6 +3,7 @@ import Image from "next/image";
 import React from "react";
 
 import { formatDateUTC } from "@/utils/datetime";
+import { camelToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -139,6 +140,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
               <Heading
                 level={2}
                 className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
+                id={camelToKebab(key)}
               >
                 <Link
                   href={value.link}
@@ -149,7 +151,9 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
                   {value.name}
                 </Link>
                 <small className="text-xl text-alveus-green-600">
-                  {formatDateUTC(value.date, "long")}
+                  <Link href={`#${camelToKebab(key)}`} custom>
+                    {formatDateUTC(value.date, "long")}
+                  </Link>
                 </small>
               </Heading>
 
