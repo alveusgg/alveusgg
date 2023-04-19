@@ -4,7 +4,7 @@ import Link from "@/components/content/Link";
 
 export type HeadingProps = {
   children?: React.ReactNode;
-  level?: 1 | 2 | 3 | 4 | 5 | 6;
+  level?: 1 | 2 | 3 | 4 | 5 | 6 | -1;
   className?: string;
   id?: string;
   link?: boolean;
@@ -17,7 +17,7 @@ const Heading: React.FC<HeadingProps> = ({
   id,
   link = false,
 }) => {
-  const Tag = `h${level}` as keyof JSX.IntrinsicElements;
+  const Tag = level === -1 ? "p" : (`h${level}` as keyof JSX.IntrinsicElements);
   const headingClass = useMemo(
     () =>
       [
