@@ -1,24 +1,22 @@
 import React from "react";
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 import Link from "next/link";
 
 import { Fieldset } from "../shared/form/Fieldset";
 import { CheckboxField } from "../shared/form/CheckboxField";
 
-type GiveawayEntryRulesFieldsetProps = {
-  giveaway: Giveaway;
+type EntryRulesFieldsetProps = {
+  form: Form;
 };
 
-export function GiveawayEntryRulesFieldset({
-  giveaway,
-}: GiveawayEntryRulesFieldsetProps) {
+export function EntryRulesFieldset({ form }: EntryRulesFieldsetProps) {
   return (
     <Fieldset legend="Rules">
       <CheckboxField isRequired={true} name="acceptRules" value="yes">
         I agree to the{" "}
         <Link
           className="underline"
-          href={`/giveaways/${giveaway.slug || giveaway.id}/rules`}
+          href={`/forms/${form.slug || form.id}/rules`}
           target="_blank"
         >
           Official Rules

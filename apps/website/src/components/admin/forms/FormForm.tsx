@@ -1,20 +1,20 @@
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 import { useRouter } from "next/router";
 
 import { env } from "@/env/client.mjs";
 
 import { trpc } from "@/utils/trpc";
-import { calcGiveawayConfig } from "@/utils/giveaways";
+import { calcFormConfig } from "@/utils/forms";
 import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
 
-import type { GiveawayData } from "@/server/db/giveaways";
+import { type FormSchema } from "@/server/db/forms";
 
 import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import Markdown from "@/components/content/Markdown";
@@ -26,14 +26,14 @@ import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
 import { MessageBox } from "@/components/shared/MessageBox";
 
-type GiveawayFormProps = {
+type FormFormProps = {
   action: "create" | "edit";
-  giveaway?: Giveaway;
+  form?: Form;
 };
 
-export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
+export function FormForm({ action, form }: FormFormProps) {
   const router = useRouter();
-  const submit = trpc.adminGiveaways.createOrEditGiveaway.useMutation();
+  const submit = trpc.adminForms.createOrEditForm.useMutation();
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -41,7 +41,7 @@ export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
 
       const formData = new FormData(event.currentTarget);
 
-      const mutationData: GiveawayData = {
+      const mutationData: FormSchema = {
         label: String(formData.get("label")),
         config: {
           checks: formData.get("checks") === "true",
@@ -74,26 +74,26 @@ export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
       }
 
       if (action === "edit") {
-        if (!giveaway) return;
-        submit.mutate({ action: "edit", id: giveaway.id, ...mutationData });
+        if (!form) return;
+        submit.mutate({ action: "edit", id: form.id, ...mutationData });
       } else {
         submit.mutate(
           { action: "create", ...mutationData },
           {
             onSuccess: async () => {
-              await router.push(`/admin/giveaways`);
+              await router.push(`/admin/forms`);
             },
           }
         );
       }
     },
-    [action, giveaway, router, submit]
+    [action, form, router, submit]
   );
 
-  const defaultConfig = calcGiveawayConfig(giveaway?.config);
+  const defaultConfig = calcFormConfig(form?.config);
   const [intro, setIntro] = useState(defaultConfig.intro || "");
   const [rules, setRules] = useState(defaultConfig.rules || "");
-  const [label, setLabel] = useState(giveaway?.label || "");
+  const [label, setLabel] = useState(form?.label || "");
 
   return (
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
@@ -103,10 +103,10 @@ export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
         </MessageBox>
       )}
       {submit.isSuccess && (
-        <MessageBox variant="success">Giveaway updated!</MessageBox>
+        <MessageBox variant="success">Form updated!</MessageBox>
       )}
 
-      <Fieldset legend="Giveaway">
+      <Fieldset legend="Form">
         <TextField
           label="Name"
           name="label"
@@ -118,11 +118,11 @@ export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
           name="slug"
           pattern={SLUG_PATTERN}
           inputMode="url"
-          defaultValue={giveaway?.slug || ""}
+          defaultValue={form?.slug || ""}
           inputClassName="font-mono"
           placeholder={convertToSlug(label)}
           prefix={
-            <div className="cursor-default select-none pl-2 font-mono">{`${env.NEXT_PUBLIC_BASE_URL}/giveaways/`}</div>
+            <div className="cursor-default select-none pl-2 font-mono">{`${env.NEXT_PUBLIC_BASE_URL}/forms/`}</div>
           }
         />
       </Fieldset>
@@ -152,12 +152,12 @@ export function GiveawayForm({ action, giveaway }: GiveawayFormProps) {
           <LocalDateTimeField
             label="Start (Central Time)"
             name="startAt"
-            defaultValue={utcToInputValueDatetimeLocal(giveaway?.startAt)}
+            defaultValue={utcToInputValueDatetimeLocal(form?.startAt)}
           />
           <LocalDateTimeField
             label="End (Central Time)"
             name="endAt"
-            defaultValue={utcToInputValueDatetimeLocal(giveaway?.endAt)}
+            defaultValue={utcToInputValueDatetimeLocal(form?.endAt)}
           />
         </FieldGroup>
       </Fieldset>

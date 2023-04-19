@@ -5,64 +5,60 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import { permissions } from "@/config/permissions";
-import {
-  createGiveaway,
-  editGiveaway,
-  giveawaySchema,
-} from "@/server/db/giveaways";
+import { createForm, editForm, formSchema } from "@/server/db/forms";
 
 const permittedProcedure = protectedProcedure.use(
-  createCheckPermissionMiddleware(permissions.manageGiveaways)
+  createCheckPermissionMiddleware(permissions.manageForms)
 );
 
-export const adminGiveawaysRouter = router({
-  createOrEditGiveaway: permittedProcedure
+export const adminFormsRouter = router({
+  createOrEditForm: permittedProcedure
     .input(
       z
         .discriminatedUnion("action", [
           z.object({ action: z.literal("create") }),
           z.object({ action: z.literal("edit"), id: z.string().cuid() }),
         ])
-        .and(giveawaySchema)
+        .and(formSchema)
     )
     .mutation(async ({ input }) => {
       switch (input.action) {
         case "create": {
           const { action: _, ...data } = input;
-          await createGiveaway(data);
+          await createForm(data);
           break;
         }
         case "edit": {
           const { action: _, ...data } = input;
-          await editGiveaway(data);
+          await editForm(data);
           break;
         }
       }
     }),
 
-  deleteGiveaway: permittedProcedure
+  deleteForm: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
-      ctx.prisma.giveaway.delete({ where: { id } })
+      ctx.prisma.form.delete({ where: { id } })
     ),
 
-  purgeGiveawayEntries: permittedProcedure
+  purgeFormEntries: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
-      ctx.prisma.giveawayEntry.deleteMany({
+      ctx.prisma.formEntry.deleteMany({
         where: {
-          giveawayId: id,
+          formId: id,
         },
       })
     ),
 
-  anonymizeGiveawayEntries: permittedProcedure
+  anonymizeFormEntries: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
       Promise.all([
-        ctx.prisma.giveawayEntry.updateMany({
+        ctx.prisma.formEntry.updateMany({
           where: {
-            giveawayId: id,
+            formId: id,
           },
           data: {
             familyName: "",
@@ -72,22 +68,22 @@ export const adminGiveawaysRouter = router({
         }),
         ctx.prisma.mailingAddress.deleteMany({
           where: {
-            giveawayEntry: {
-              giveawayId: id,
+            formEntry: {
+              formId: id,
             },
           },
         }),
       ])
     ),
 
-  getGiveaway: permittedProcedure
+  getForm: permittedProcedure
     .input(z.string().cuid())
     .query(async ({ ctx, input: id }) =>
-      ctx.prisma.giveaway.findUnique({ where: { id } })
+      ctx.prisma.form.findUnique({ where: { id } })
     ),
 
-  getGiveaways: permittedProcedure.query(async ({ ctx }) =>
-    ctx.prisma.giveaway.findMany({
+  getForms: permittedProcedure.query(async ({ ctx }) =>
+    ctx.prisma.form.findMany({
       include: {
         _count: {
           select: { entries: true },
@@ -96,7 +92,7 @@ export const adminGiveawaysRouter = router({
     })
   ),
 
-  toggleGiveawayStatus: permittedProcedure
+  toggleFormStatus: permittedProcedure
     .input(
       z.object({
         id: z.string().cuid(),
@@ -104,7 +100,7 @@ export const adminGiveawaysRouter = router({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.giveaway.update({
+      await ctx.prisma.form.update({
         where: {
           id: input.id,
         },
@@ -114,7 +110,7 @@ export const adminGiveawaysRouter = router({
       });
     }),
 
-  updateGiveawayOutgoingWebhookUrl: permittedProcedure
+  updateFormOutgoingWebhookUrl: permittedProcedure
     .input(
       z.object({
         id: z.string().cuid(),
@@ -123,7 +119,7 @@ export const adminGiveawaysRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       await Promise.all([
-        ctx.prisma.giveaway.update({
+        ctx.prisma.form.update({
           where: {
             id: input.id,
           },
@@ -133,7 +129,7 @@ export const adminGiveawaysRouter = router({
         }),
         ctx.prisma.outgoingWebhook.updateMany({
           where: {
-            type: "giveaway-entry",
+            type: "form-entry",
           },
           data: {
             url: input.outgoingWebhookUrl,

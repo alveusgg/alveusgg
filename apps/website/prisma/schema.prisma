@@ -93,7 +93,7 @@ model User {
   sessions           Session[]
   pushSubscriptions  PushSubscription[]
   notificationPushes NotificationPush[]
-  giveawayEntries    GiveawayEntry[]
+  formEntries        FormEntry[]
   outgoingWebhooks   OutgoingWebhook[]
   showAndTellEntries ShowAndTellEntry[]
   roles              UserRole[]
@@ -193,12 +193,12 @@ model MailingAddress {
   postalCode   String
   salt         String @db.Char(32)
 
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @updatedAt
-  giveawayEntry GiveawayEntry?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  formEntry FormEntry?
 }
 
-model Giveaway {
+model Form {
   id                 String    @id @default(cuid())
   label              String
   slug               String?
@@ -212,14 +212,14 @@ model Giveaway {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  entries GiveawayEntry[]
+  entries FormEntry[]
 
   @@unique([slug])
 }
 
-model GiveawayEntry {
+model FormEntry {
   id                String  @id @default(cuid())
-  giveawayId        String
+  formId            String
   userId            String
   mailingAddressId  String? @unique
   outgoingWebhookId String? @unique
@@ -231,13 +231,13 @@ model GiveawayEntry {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  giveaway        Giveaway         @relation(fields: [giveawayId], references: [id])
+  form            Form             @relation(fields: [formId], references: [id])
   user            User             @relation(fields: [userId], references: [id])
   mailingAddress  MailingAddress?  @relation(fields: [mailingAddressId], references: [id])
   outgoingWebhook OutgoingWebhook? @relation(fields: [outgoingWebhookId], references: [id])
 
-  @@unique([giveawayId, userId])
-  @@index([userId], name: "GiveawayEntry_userId")
+  @@unique([formId, userId])
+  @@index([userId], name: "FormEntry_userId")
 }
 
 model OutgoingWebhook {
@@ -251,8 +251,8 @@ model OutgoingWebhook {
   failedAt    DateTime?
   deliveredAt DateTime?
 
-  user          User?          @relation(fields: [userId], references: [id])
-  giveawayEntry GiveawayEntry?
+  user      User?      @relation(fields: [userId], references: [id])
+  formEntry FormEntry?
 
   @@index([userId], name: "OutgoingWebhook_userId")
 }

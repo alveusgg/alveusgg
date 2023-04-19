@@ -24,61 +24,55 @@ import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
-type GiveawayWithCount = RouterOutput["adminGiveaways"]["getGiveaways"][number];
+type FormWithCount = RouterOutput["adminForms"]["getForms"][number];
 
 const nf = new Intl.NumberFormat();
 
-type GiveawayProps = {
-  giveaway: GiveawayWithCount;
+type FormProps = {
+  form: FormWithCount;
   onError: (error: string) => void;
   onUpdate: () => void;
 };
 
-function Giveaway({ giveaway, onError, onUpdate }: GiveawayProps) {
-  const deleteMutation = trpc.adminGiveaways.deleteGiveaway.useMutation({
+function Form({ form, onError, onUpdate }: FormProps) {
+  const deleteMutation = trpc.adminForms.deleteForm.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
-  const purgeEntriesMutation =
-    trpc.adminGiveaways.purgeGiveawayEntries.useMutation({
+  const purgeEntriesMutation = trpc.adminForms.purgeFormEntries.useMutation({
+    onError: (error) => onError(error.message),
+    onSettled: () => onUpdate(),
+  });
+  const anonymizeFormEntriesMutation =
+    trpc.adminForms.anonymizeFormEntries.useMutation({
       onError: (error) => onError(error.message),
       onSettled: () => onUpdate(),
     });
-  const anonymizeGiveawayEntriesMutation =
-    trpc.adminGiveaways.anonymizeGiveawayEntries.useMutation({
-      onError: (error) => onError(error.message),
-      onSettled: () => onUpdate(),
-    });
-  const toggleGiveawayStatus =
-    trpc.adminGiveaways.toggleGiveawayStatus.useMutation({
-      onError: (error) => onError(error.message),
-      onSettled: () => onUpdate(),
-    });
+  const toggleFormStatus = trpc.adminForms.toggleFormStatus.useMutation({
+    onError: (error) => onError(error.message),
+    onSettled: () => onUpdate(),
+  });
 
   const handleToggle = useCallback(() => {
-    toggleGiveawayStatus.mutate({ id: giveaway.id, active: !giveaway.active });
-  }, [giveaway.active, giveaway.id, toggleGiveawayStatus]);
+    toggleFormStatus.mutate({ id: form.id, active: !form.active });
+  }, [form.active, form.id, toggleFormStatus]);
 
-  const updateGiveawayOutgoingWebhookUrl =
-    trpc.adminGiveaways.updateGiveawayOutgoingWebhookUrl.useMutation({
+  const updateFormOutgoingWebhookUrl =
+    trpc.adminForms.updateFormOutgoingWebhookUrl.useMutation({
       onError: (error) => onError(error.message),
       onSettled: () => onUpdate(),
     });
 
   const handleWebhookUrl = useCallback(() => {
-    const oldUrl = giveaway.outgoingWebhookUrl;
+    const oldUrl = form.outgoingWebhookUrl;
     const newUrl = window.prompt("Webhook URL", oldUrl || "");
     if (newUrl !== null && newUrl !== oldUrl) {
-      updateGiveawayOutgoingWebhookUrl.mutate({
-        id: giveaway.id,
+      updateFormOutgoingWebhookUrl.mutate({
+        id: form.id,
         outgoingWebhookUrl: newUrl,
       });
     }
-  }, [
-    giveaway.outgoingWebhookUrl,
-    giveaway.id,
-    updateGiveawayOutgoingWebhookUrl,
-  ]);
+  }, [form.outgoingWebhookUrl, form.id, updateFormOutgoingWebhookUrl]);
 
   return (
     <>
@@ -88,52 +82,48 @@ function Giveaway({ giveaway, onError, onUpdate }: GiveawayProps) {
             size="small"
             width="auto"
             onClick={handleToggle}
-            title={giveaway.active ? "close giveaway" : "open giveaway"}
+            title={form.active ? "close form" : "open form"}
           >
-            {giveaway.active ? "✅" : "❌"}
+            {form.active ? "✅" : "❌"}
             <span className="sr-only">
-              {giveaway.active ? "is open" : "is closed"}
+              {form.active ? "is open" : "is closed"}
             </span>
           </Button>
         </td>
         <td className="w-1/2 p-1">
           <div className="flex flex-col gap-0.5">
-            <div className="text-xl">{giveaway.label}</div>
+            <div className="text-xl">{form.label}</div>
             <div className="flex flex-col gap-1">
               <Link
                 className="underline"
-                href={`/giveaways/${giveaway.slug || giveaway.id}`}
+                href={`/forms/${form.slug || form.id}`}
                 target="_blank"
               >
-                Public Link: {giveaway.slug || giveaway.id}
+                Public Link: {form.slug || form.id}
               </Link>
               <button
                 type="button"
                 className="text-left"
                 onClick={handleWebhookUrl}
               >
-                Webhook URL: {giveaway.outgoingWebhookUrl || "-/-"}
+                Webhook URL: {form.outgoingWebhookUrl || "-/-"}
               </button>
             </div>
           </div>
         </td>
         <td className="p-1 px-4 text-right tabular-nums">
-          {nf.format(giveaway._count.entries)}
+          {nf.format(form._count.entries)}
         </td>
         <td className="p-1 tabular-nums">
-          <LocalDateTime dateTime={giveaway.startAt} />
+          <LocalDateTime dateTime={form.startAt} />
           <br />
-          {giveaway.endAt ? (
-            <LocalDateTime dateTime={giveaway.endAt} />
-          ) : (
-            "(open end)"
-          )}
+          {form.endAt ? <LocalDateTime dateTime={form.endAt} /> : "(open end)"}
         </td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton
             size="small"
             width="auto"
-            href={`/admin/giveaways/${giveaway.id}/edit`}
+            href={`/admin/forms/${form.id}/edit`}
           >
             <PencilIcon className="h-4 w-4" />
             Edit
@@ -142,7 +132,7 @@ function Giveaway({ giveaway, onError, onUpdate }: GiveawayProps) {
             size="small"
             width="auto"
             className={secondaryButtonClasses}
-            href={`/api/giveaways/${giveaway.id}/export-entries`}
+            href={`/api/forms/${form.id}/export-entries`}
           >
             <ArrowDownTrayIcon className="h-4 w-4" />
             CSV
@@ -159,7 +149,7 @@ function Giveaway({ giveaway, onError, onUpdate }: GiveawayProps) {
                   size="small"
                   className={dangerButtonClasses}
                   confirmationMessage="Please confirm deletion!"
-                  onClick={() => deleteMutation.mutate(giveaway.id)}
+                  onClick={() => deleteMutation.mutate(form.id)}
                 >
                   <TrashIcon className="h-4 w-4" />
                   Delete
@@ -170,9 +160,7 @@ function Giveaway({ giveaway, onError, onUpdate }: GiveawayProps) {
                   size="small"
                   className={dangerButtonClasses}
                   confirmationMessage="Please confirm removing all PII from entries!"
-                  onClick={() =>
-                    anonymizeGiveawayEntriesMutation.mutate(giveaway.id)
-                  }
+                  onClick={() => anonymizeFormEntriesMutation.mutate(form.id)}
                 >
                   Remove PII
                 </Button>
@@ -182,7 +170,7 @@ function Giveaway({ giveaway, onError, onUpdate }: GiveawayProps) {
                   size="small"
                   className={dangerButtonClasses}
                   confirmationMessage="Please confirm purging all entries!"
-                  onClick={() => purgeEntriesMutation.mutate(giveaway.id)}
+                  onClick={() => purgeEntriesMutation.mutate(form.id)}
                 >
                   Purge entries
                 </Button>
@@ -195,13 +183,13 @@ function Giveaway({ giveaway, onError, onUpdate }: GiveawayProps) {
   );
 }
 
-export function Giveaways() {
+export function Forms() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const giveaways = trpc.adminGiveaways.getGiveaways.useQuery();
+  const forms = trpc.adminForms.getForms.useQuery();
 
   return (
     <>
-      <Headline>Giveaways</Headline>
+      <Headline>Forms</Headline>
 
       {errorMessage && (
         <ModalDialog
@@ -224,20 +212,20 @@ export function Giveaways() {
             </tr>
           </thead>
           <tbody>
-            {giveaways.data?.map((giveaway) => (
-              <Giveaway
-                key={giveaway.id}
-                giveaway={giveaway}
+            {forms.data?.map((form) => (
+              <Form
+                key={form.id}
+                form={form}
                 onError={(err) => setErrorMessage(err)}
-                onUpdate={() => giveaways.refetch()}
+                onUpdate={() => forms.refetch()}
               />
             ))}
           </tbody>
         </table>
 
         <div className="mt-4 flex">
-          <LinkButton href="/admin/giveaways/create" size="small" width="auto">
-            + Create Giveaway
+          <LinkButton href="/admin/forms/create" size="small" width="auto">
+            + Create Form
           </LinkButton>
         </div>
       </Panel>

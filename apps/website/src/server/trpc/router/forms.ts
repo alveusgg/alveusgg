@@ -2,18 +2,18 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 import { getTwitchConfig, type TwitchConfig } from "@/config/twitch";
-import { calcGiveawayConfig } from "@/utils/giveaways";
+import { calcFormConfig } from "@/utils/forms";
 import { getUserFollowsBroadcaster } from "@/server/utils/twitch-api";
 import {
   type OutgoingWebhookType,
   triggerOutgoingWebhook,
 } from "@/server/actions/outgoing-webhooks";
 import { router, protectedProcedure } from "@/server/trpc/trpc";
-import { createEntry, giveawayEntrySchema } from "@/server/db/giveaways";
+import { createEntry, formEntrySchema } from "@/server/db/forms";
 
-export const createGiveawayEntrySchema = giveawayEntrySchema.and(
+export const createFormEntrySchema = formEntrySchema.and(
   z.object({
-    giveawayId: z.string().cuid(),
+    formId: z.string().cuid(),
     acceptRules: z.boolean().optional(),
     acceptPrivacy: z.boolean(),
   })
@@ -36,28 +36,28 @@ async function checkFollowsChannel(
   }
 }
 
-export const giveawaysRouter = router({
-  enterGiveaway: protectedProcedure
-    .input(createGiveawayEntrySchema)
+export const formsRouter = router({
+  enterForm: protectedProcedure
+    .input(createFormEntrySchema)
     .mutation(async ({ ctx, input }) => {
-      // Find giveaway
-      const giveaway = await ctx.prisma.giveaway.findUnique({
+      // Find form
+      const form = await ctx.prisma.form.findUnique({
         where: {
-          id: input.giveawayId,
+          id: input.formId,
         },
       });
 
       const now = new Date();
       if (
-        !giveaway ||
-        // Check giveaway is still active:
-        !giveaway.active ||
-        giveaway.startAt > now ||
-        (giveaway.endAt && giveaway.endAt < now)
+        !form ||
+        // Check form is still active:
+        !form.active ||
+        form.startAt > now ||
+        (form.endAt && form.endAt < now)
       ) {
         throw new TRPCError({
           code: "NOT_FOUND",
-          message: "giveaway not found",
+          message: "form not found",
         });
       }
 
@@ -68,7 +68,7 @@ export const giveawaysRouter = router({
         });
       }
 
-      const config = calcGiveawayConfig(giveaway.config);
+      const config = calcFormConfig(form.config);
       if (config.hasRules && input.acceptRules !== true) {
         throw new TRPCError({
           code: "BAD_REQUEST",
@@ -78,13 +78,13 @@ export const giveawaysRouter = router({
 
       const userId = ctx.session.user.id;
       // Check use has not entered already
-      const existingEntry = await ctx.prisma.giveawayEntry.findUnique({
+      const existingEntry = await ctx.prisma.formEntry.findUnique({
         select: {
           id: true,
         },
         where: {
-          giveawayId_userId: {
-            giveawayId: giveaway.id,
+          formId_userId: {
+            formId: form.id,
             userId,
           },
         },
@@ -117,7 +117,7 @@ export const giveawaysRouter = router({
 
       // Perform server side checks if required
       if (config.checks) {
-        // TODO: Make the giveaway config granular. Right now the channel follow check is hard-coded here:
+        // TODO: Make the form config granular. Right now the channel follow check is hard-coded here:
         // NOTE: Does not work, twitch removed API access :(
         const channelConfig = (await getTwitchConfig()).channels
           .alveussanctuary;
@@ -128,20 +128,20 @@ export const giveawaysRouter = router({
       }
 
       // Insert entry
-      const entry = await createEntry(userId, giveaway.id, input);
+      const entry = await createEntry(userId, form.id, input);
 
-      if (giveaway.outgoingWebhookUrl) {
+      if (form.outgoingWebhookUrl) {
         try {
           // Trigger webhook
           const webhook = await triggerOutgoingWebhook({
-            url: giveaway.outgoingWebhookUrl,
-            type: "giveaway-entry",
+            url: form.outgoingWebhookUrl,
+            type: "form-entry",
             userId,
             body: JSON.stringify({
-              type: "giveaway-entry" as OutgoingWebhookType,
+              type: "form-entry" as OutgoingWebhookType,
               data: {
                 id: entry.id,
-                giveawayId: giveaway.id,
+                formId: form.id,
                 username: entry.user.name,
                 email: entry.user.email,
                 createdAt: entry.createdAt,
@@ -150,7 +150,7 @@ export const giveawaysRouter = router({
           });
 
           // connect the outgoing webhook to the entry
-          await ctx.prisma.giveawayEntry.update({
+          await ctx.prisma.formEntry.update({
             where: { id: entry.id },
             data: {
               outgoingWebhook: { connect: { id: webhook.id } },

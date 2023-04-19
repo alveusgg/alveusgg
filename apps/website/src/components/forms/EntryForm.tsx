@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
 import { useSession } from "next-auth/react";
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { Headline } from "@/components/shared/Headline";
@@ -9,33 +9,34 @@ import { MessageBox } from "@/components/shared/MessageBox";
 
 import { getCountryName } from "@/utils/countries";
 import { trpc } from "@/utils/trpc";
-import { calcGiveawayConfig } from "@/utils/giveaways";
-import type { GiveawayEntryWithAddress } from "@/pages/giveaways/[giveawayId]";
+import { calcFormConfig } from "@/utils/forms";
 import Markdown from "@/components/content/Markdown";
+import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
 
-import { GiveawayEntryConsentFieldset } from "@/components/giveaway/GiveawayEntryConsentFieldset";
+import { ConsentFieldset } from "@/components/forms/ConsentFieldset";
+
 import { GiveawayChecks } from "./GiveawayChecks";
-import { GiveawayEntryShippingAddressFieldset } from "./GiveawayEntryShippingAddressFieldset";
-import { GiveawayEntryNameFieldset } from "./GiveawayEntryNameFieldset";
-import { GiveawayEntryContactFieldset } from "./GiveawayEntryContactFieldset";
-import { GiveawayEntryRulesFieldset } from "./GiveawayEntryRulesFieldset";
+import { ShippingAddressFieldset } from "./ShippingAddressFieldset";
+import { NameFieldset } from "./NameFieldset";
+import { ContactFieldset } from "./ContactFieldset";
+import { EntryRulesFieldset } from "./EntryRulesFieldset";
 
-export const GiveawayEntryForm: React.FC<{
-  giveaway: Giveaway;
-  existingEntry: GiveawayEntryWithAddress | null;
-}> = ({ giveaway, existingEntry }) => {
+export const EntryForm: React.FC<{
+  form: Form;
+  existingEntry: FormEntryWithAddress | null;
+}> = ({ form, existingEntry }) => {
   const { data: session } = useSession();
 
-  const config = calcGiveawayConfig(giveaway.config);
-  const enterGiveaway = trpc.giveaways.enterGiveaway.useMutation();
+  const config = calcFormConfig(form.config);
+  const enterForm = trpc.forms.enterForm.useMutation();
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const data = new FormData(e.currentTarget);
-      enterGiveaway.mutate({
-        giveawayId: giveaway.id,
+      enterForm.mutate({
+        formId: form.id,
         email: String(data.get("email")),
         givenName: String(data.get("given-name")),
         familyName: String(data.get("family-name")),
@@ -51,7 +52,7 @@ export const GiveawayEntryForm: React.FC<{
         acceptPrivacy: String(data.get("acceptPrivacy")) === "yes",
       });
     },
-    [config.hasRules, enterGiveaway, giveaway.id]
+    [config.hasRules, enterForm, form.id]
   );
 
   if (!session?.user?.id) {
@@ -64,7 +65,7 @@ export const GiveawayEntryForm: React.FC<{
     );
   }
 
-  if (enterGiveaway.isSuccess) {
+  if (enterForm.isSuccess) {
     return (
       <MessageBox variant="success">Your entry was successful!</MessageBox>
     );
@@ -109,9 +110,9 @@ export const GiveawayEntryForm: React.FC<{
     <form onSubmit={handleSubmit}>
       {config.intro && <Markdown content={config.intro} />}
 
-      {enterGiveaway.error && (
+      {enterForm.error && (
         <MessageBox variant="failure">
-          Error: {enterGiveaway.error.message}
+          Error: {enterForm.error.message}
         </MessageBox>
       )}
 
@@ -125,18 +126,18 @@ export const GiveawayEntryForm: React.FC<{
       <Headline>Enter your details</Headline>
 
       <div className="flex flex-col gap-4">
-        <GiveawayEntryNameFieldset />
-        <GiveawayEntryContactFieldset
+        <NameFieldset />
+        <ContactFieldset
           defaultEmailAddress={session.user.email || undefined}
         />
-        <GiveawayEntryShippingAddressFieldset />
-        {config.hasRules && <GiveawayEntryRulesFieldset giveaway={giveaway} />}
+        <ShippingAddressFieldset />
+        {config.hasRules && <EntryRulesFieldset form={form} />}
 
-        <GiveawayEntryConsentFieldset />
+        <ConsentFieldset />
       </div>
 
       <div className="mt-7">
-        <Button type="submit" disabled={enterGiveaway.isLoading}>
+        <Button type="submit" disabled={enterForm.isLoading}>
           {config.submitButtonText || "Enter to Win"}
         </Button>
       </div>

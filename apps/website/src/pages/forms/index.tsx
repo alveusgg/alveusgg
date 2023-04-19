@@ -2,20 +2,20 @@ import React from "react";
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 import { prisma } from "@/server/db/client";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
-export type GiveawaysPageProps = InferGetStaticPropsType<typeof getStaticProps>;
+export type FormsPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 
 export const getStaticProps: GetStaticProps<{
-  giveaways: Giveaway[];
+  forms: Form[];
 }> = async () => {
   const now = new Date().toISOString();
-  const giveaways = await prisma.giveaway.findMany({
+  const forms = await prisma.form.findMany({
     where: {
       active: true,
       showInLists: true,
@@ -25,18 +25,15 @@ export const getStaticProps: GetStaticProps<{
   });
 
   return {
-    props: { giveaways },
+    props: { forms },
     revalidate: 60,
   };
 };
 
-const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
+const FormsPage: NextPage<FormsPageProps> = ({ forms }) => {
   return (
     <>
-      <Meta
-        title="Giveaways"
-        description="Check out the latest giveaways at Alveus."
-      />
+      <Meta title="Forms" description="Check out the latest forms at Alveus." />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -44,18 +41,18 @@ const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <header>
-          <Heading className="my-3 text-3xl">Giveaways</Heading>
+          <Heading className="my-3 text-3xl">Forms</Heading>
         </header>
 
-        {giveaways.length ? (
+        {forms.length ? (
           <ul>
-            {giveaways.map((giveaway) => (
-              <li key={giveaway.id}>
+            {forms.map((form) => (
+              <li key={form.id}>
                 <Link
                   className="group transition-colors hover:text-alveus-green"
-                  href={`/giveaways/${giveaway.slug || giveaway.id}`}
+                  href={`/forms/${form.slug || form.id}`}
                 >
-                  {giveaway.label}{" "}
+                  {form.label}{" "}
                   <span className="inline-block transition-transform group-hover:translate-x-1">
                     &rarr;
                   </span>
@@ -64,11 +61,11 @@ const GiveawaysPage: NextPage<GiveawaysPageProps> = ({ giveaways }) => {
             ))}
           </ul>
         ) : (
-          <p>There are currently no open giveaways.</p>
+          <p>There are currently no open forms.</p>
         )}
       </Section>
     </>
   );
 };
 
-export default GiveawaysPage;
+export default FormsPage;

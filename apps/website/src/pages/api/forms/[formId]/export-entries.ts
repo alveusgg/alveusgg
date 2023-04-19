@@ -4,14 +4,11 @@ import { stringify } from "csv-stringify/sync";
 import { getCountryName } from "@/utils/countries";
 import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 import { checkIsSuperUserSession } from "@/server/utils/auth";
-import { getAllEntriesForGiveaway } from "@/server/db/giveaways";
+import { getAllEntriesForForm } from "@/server/db/forms";
 
-type GiveawayEntryCsvExportRow = string[];
+type FormEntryCsvExportRow = string[];
 
-const exportGiveawayEntries = async (
-  req: NextApiRequest,
-  res: NextApiResponse
-) => {
+const exportFormEntries = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
   const isSuperUser = checkIsSuperUserSession(session);
 
@@ -20,11 +17,11 @@ const exportGiveawayEntries = async (
     return;
   }
 
-  const entries = await getAllEntriesForGiveaway(String(req.query.giveawayId));
+  const entries = await getAllEntriesForForm(String(req.query.formId));
 
-  const rows: GiveawayEntryCsvExportRow[] = entries.map((entry) => {
+  const rows: FormEntryCsvExportRow[] = entries.map((entry) => {
     return [
-      entry.giveawayId,
+      entry.formId,
       entry.id,
       entry.createdAt.toISOString(),
       String(entry.user.name),
@@ -45,7 +42,7 @@ const exportGiveawayEntries = async (
   });
 
   rows.unshift([
-    "giveawayId",
+    "formId",
     "id",
     "date",
     "userUsername",
@@ -67,11 +64,8 @@ const exportGiveawayEntries = async (
   res
     .status(200)
     .setHeader("Content-Type", "text/csv")
-    .setHeader(
-      "Content-Disposition",
-      `attachment; filename=giveaway-entries.csv`
-    )
+    .setHeader("Content-Disposition", `attachment; filename=form-entries.csv`)
     .send("\ufeff" + csv); // add utf-8 BOM for Excel to correctly open the CSV
 };
 
-export default exportGiveawayEntries;
+export default exportFormEntries;

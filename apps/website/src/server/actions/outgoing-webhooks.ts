@@ -2,7 +2,7 @@ import fetch from "node-fetch";
 import type { OutgoingWebhook } from "@prisma/client";
 import { prisma } from "../db/client";
 
-export type OutgoingWebhookType = "giveaway-entry" | "unknown";
+export type OutgoingWebhookType = "form-entry" | "unknown";
 
 class OutgoingWebhookDeliveryError extends Error {
   response?: string;

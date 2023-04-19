@@ -14,9 +14,9 @@ export const userRoles = {
     label: "Notifications",
     description: "Can send notifications to users",
   },
-  giveaways: {
-    label: "Giveaways",
-    description: "Can manage giveaways",
+  forms: {
+    label: "Forms",
+    description: "Can manage forms",
   },
 } as const satisfies Record<string, UserRoleConfig>;
 

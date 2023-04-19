@@ -1,15 +1,15 @@
 import React from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import type { GiveawayEntry, OutgoingWebhook, User } from "@prisma/client";
+import type { FormEntry, OutgoingWebhook, User } from "@prisma/client";
 import { trpc } from "@/utils/trpc";
 import { LocalDateTime } from "@/components/shared/LocalDateTime";
 
-type OutgoingWebhookWithGiveawayEntry = OutgoingWebhook & {
+type OutgoingWebhookWithFormEntry = OutgoingWebhook & {
   user: User | null;
-  giveawayEntry: GiveawayEntry | null;
+  formEntry: FormEntry | null;
 };
 export const OutgoingWebhookFeedEntry: React.FC<{
-  item: OutgoingWebhookWithGiveawayEntry;
+  item: OutgoingWebhookWithFormEntry;
 }> = ({ item }) => {
   let details = <>{item.body}</>;
   let label = item.type;
@@ -22,9 +22,9 @@ export const OutgoingWebhookFeedEntry: React.FC<{
       },
     });
 
-  if (item.type === "giveaway-entry") {
+  if (item.type === "form-entry") {
     {
-      label = "Giveaway entry: " + item.user?.name;
+      label = "Form entry: " + item.user?.name;
       details = <div>User #{item.user?.name}</div>;
     }
   }

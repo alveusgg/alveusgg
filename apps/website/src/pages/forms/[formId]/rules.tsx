@@ -5,40 +5,40 @@ import type {
   NextPage,
 } from "next";
 
-import type { Giveaway } from "@prisma/client";
+import type { Form } from "@prisma/client";
 
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
-import { calcGiveawayConfig } from "@/utils/giveaways";
-import { findActiveGiveaway } from "@/server/db/giveaways";
+import { calcFormConfig } from "@/utils/forms";
+import { findActiveForm } from "@/server/db/forms";
 import Markdown from "@/components/content/Markdown";
 
-export type GiveawayPageProps = InferGetServerSidePropsType<
+export type FormPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps
 >;
 
 export const getServerSideProps: GetServerSideProps<{
-  giveaway: Giveaway;
+  form: Form;
   rules: string;
 }> = async (context) => {
   // Check params
-  const giveawaySlugOrId = context.params?.giveawayId;
-  if (typeof giveawaySlugOrId !== "string") {
+  const formSlugOrId = context.params?.formId;
+  if (typeof formSlugOrId !== "string") {
     return {
       notFound: true,
     };
   }
 
-  // Find the giveaway
-  const giveaway = await findActiveGiveaway(giveawaySlugOrId);
-  if (!giveaway) {
+  // Find the forms
+  const form = await findActiveForm(formSlugOrId);
+  if (!form) {
     return {
       notFound: true,
     };
   }
 
-  const config = calcGiveawayConfig(giveaway.config);
+  const config = calcFormConfig(form.config);
   if (!config.hasRules || !config.rules) {
     return {
       notFound: true,
@@ -46,16 +46,16 @@ export const getServerSideProps: GetServerSideProps<{
   }
 
   return {
-    props: { giveaway, rules: config.rules },
+    props: { form, rules: config.rules },
   };
 };
 
-const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway, rules }) => {
+const FormPage: NextPage<FormPageProps> = ({ form, rules }) => {
   return (
     <>
       <Meta
-        title={`Rules | ${giveaway.label} | Giveaways`}
-        description={`Rules for the ${giveaway.label} giveaway at Alveus.`}
+        title={`Rules | ${form.label} | Forms`}
+        description={`Rules for the ${form.label} form at Alveus.`}
       />
 
       {/* Nav background */}
@@ -64,7 +64,7 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway, rules }) => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <header>
-          <Heading className="my-3 text-3xl">Rules - {giveaway.label}</Heading>
+          <Heading className="my-3 text-3xl">Rules - {form.label}</Heading>
         </header>
 
         <Markdown content={rules} />
@@ -73,4 +73,4 @@ const GiveawayPage: NextPage<GiveawayPageProps> = ({ giveaway, rules }) => {
   );
 };
 
-export default GiveawayPage;
+export default FormPage;

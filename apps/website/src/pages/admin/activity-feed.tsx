@@ -13,7 +13,7 @@ import Meta from "@/components/content/Meta";
 import IconLoading from "@/icons/IconLoading";
 
 export async function getServerSideProps(context: NextPageContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageGiveaways);
+  const adminProps = await getAdminSSP(context, permissions.manageForms);
   return adminProps ? { props: adminProps } : { notFound: true };
 }
 

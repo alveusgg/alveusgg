@@ -13,9 +13,9 @@ const menuItems = [
     permission: permissions.viewDashboard,
   },
   {
-    label: "Giveaways",
-    href: "/admin/giveaways",
-    permission: permissions.manageGiveaways,
+    label: "Forms",
+    href: "/admin/forms",
+    permission: permissions.manageForms,
   },
   {
     label: "Show & Tell",
