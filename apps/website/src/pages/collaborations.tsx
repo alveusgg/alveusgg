@@ -24,6 +24,12 @@ type Collaboration = {
 };
 
 const collaborations = {
+  graycen: {
+    name: "Graycen",
+    link: "https://www.twitch.tv/graycen",
+    date: new Date("2023-04-18"),
+    videoId: "M3WBnThqRkg",
+  },
   dareon: {
     name: "Dareon",
     link: "https://www.twitch.tv/dareon",
