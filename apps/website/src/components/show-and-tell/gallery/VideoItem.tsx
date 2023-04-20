@@ -55,17 +55,17 @@ export function VideoItem({
         loading="lazy"
         src={urlEmbed}
         draggable={false}
-        className="pointer-events-none mx-auto aspect-video w-full max-w-2xl select-none rounded-lg border-0 shadow-xl"
+        className="pointer-events-none mx-auto aspect-video w-full max-w-2xl select-none rounded-lg border-0 shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl"
       />
     );
   } else {
     content = (
       <div
         className={
-          "flex w-fit flex-col items-center justify-center rounded-lg text-center text-black " +
+          "flex w-fit flex-col items-center justify-center rounded-lg text-center text-black transition group-hover/trigger:scale-102 " +
           (showPreview
-            ? "gap-2 bg-white p-4 shadow-xl"
-            : "gap-0.5 bg-white/60 p-2 text-sm shadow-lg")
+            ? "gap-2 bg-white p-4 shadow-xl group-hover/trigger:shadow-2xl"
+            : "gap-0.5 bg-white/60 p-2 text-sm shadow-lg group-hover/trigger:shadow-xl")
         }
       >
         <VideoPlatformIcon

@@ -150,7 +150,7 @@ export function ShowAndTellGallery({
           openInLightbox
           linkAttributes={{
             className:
-              "pointer-events-auto flex items-center justify-center flex-1 cursor-pointer select-none",
+              "group/trigger pointer-events-auto flex items-center justify-center cursor-pointer select-none",
             draggable: false,
           }}
         />,
@@ -176,7 +176,7 @@ export function ShowAndTellGallery({
           }
           className="flex select-none items-center justify-center"
         >
-          <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl">
+          <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl transition hover:scale-102 hover:shadow-2xl">
             <Image
               width={600}
               height={600}
@@ -204,10 +204,10 @@ export function ShowAndTellGallery({
   }, [imageAttachments, videoAttachments]);
 
   const carouselCount = Object.keys(carouselItems).length;
-  const carousel = (
+  const carousel = carouselCount !== 0 && (
     <Carousel
       className="flex-1"
-      wrapperClassName="pb-4 flex-1"
+      wrapperClassName="pb-16 -mb-12 flex-1" // Negative margin to allow padding for shadows
       auto={null}
       itemClassName={`
           flex flex-col justify-center basis-full p-4
