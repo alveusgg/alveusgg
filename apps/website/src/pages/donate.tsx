@@ -76,7 +76,7 @@ const DonateItem: React.FC<{ link: DonateLink }> = ({ link }) => (
 );
 
 const DonatePage: NextPage = () => {
-  const { consent, loaded } = useConsent();
+  const { consent } = useConsent();
 
   return (
     <>
@@ -106,7 +106,7 @@ const DonatePage: NextPage = () => {
         </div>
 
         <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
-          {loaded && !consent.givingBlock && <DonateItem link={givingBlock} />}
+          {!consent.givingBlock && <DonateItem link={givingBlock} />}
 
           <Consent item="donation widget" consent="givingBlock">
             <iframe
