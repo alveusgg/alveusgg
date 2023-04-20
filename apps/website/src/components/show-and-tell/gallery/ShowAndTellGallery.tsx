@@ -1,4 +1,4 @@
-import type { MouseEventHandler } from "react";
+import type { MouseEventHandler, MutableRefObject } from "react";
 import React, { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
@@ -15,11 +15,13 @@ import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { createImageUrl } from "@/utils/image";
 
 export function ShowAndTellGallery({
-  lightboxParent,
+  isPresentationView,
+  lightboxParentRef,
   imageAttachments,
   videoAttachments,
 }: {
-  lightboxParent: HTMLElement | null;
+  isPresentationView: boolean;
+  lightboxParentRef: MutableRefObject<HTMLElement | null>;
   imageAttachments: Array<
     NonNullable<
       ShowAndTellEntryWithAttachments["attachments"][number]["imageAttachment"]
@@ -35,6 +37,9 @@ export function ShowAndTellGallery({
   const photoswipeId = `photoswipe-${useId().replace(/\W/g, "")}`;
   useEffect(() => {
     const defaultConfig = getDefaultPhotoswipeLightboxOptions();
+    const lightboxParent = isPresentationView
+      ? lightboxParentRef?.current
+      : null;
     const lightbox = new PhotoSwipeLightbox({
       ...defaultConfig,
       gallery: `#${photoswipeId}`,
@@ -125,7 +130,7 @@ export function ShowAndTellGallery({
     return () => {
       lightbox.destroy();
     };
-  }, [lightboxParent, photoswipeId]);
+  }, [lightboxParentRef, isPresentationView, photoswipeId]);
 
   const openLightBox = useCallback(
     (index: number) => {

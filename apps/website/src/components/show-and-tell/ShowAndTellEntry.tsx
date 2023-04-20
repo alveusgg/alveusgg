@@ -216,7 +216,8 @@ export const ShowAndTellEntry = forwardRef<
         {header}
 
         <ShowAndTellGallery
-          lightboxParent={isPresentationView ? wrapperRef.current : null}
+          isPresentationView={isPresentationView}
+          lightboxParentRef={wrapperRef}
           imageAttachments={imageAttachments}
           videoAttachments={videoAttachments}
         />
