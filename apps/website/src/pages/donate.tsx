@@ -63,7 +63,7 @@ const DonateItem: React.FC<{ link: DonateLink }> = ({ link }) => (
   <Link
     href={link.link}
     {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}
-    className="group w-full rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-102 hover:shadow-2xl"
+    className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-102 hover:shadow-2xl"
   >
     <div className="mb-1 flex items-center gap-4">
       <div className="block rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
@@ -105,14 +105,10 @@ const DonatePage: NextPage = () => {
           ))}
         </div>
 
-        <div className="flex basis-full flex-col items-center gap-8 py-4 md:basis-1/2 md:px-4">
+        <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
           {loaded && !consent.givingBlock && <DonateItem link={givingBlock} />}
 
-          <Consent
-            item="donation widget"
-            consent="givingBlock"
-            className="w-full"
-          >
+          <Consent item="donation widget" consent="givingBlock">
             <iframe
               src="https://tgbwidget.com/?charityID=861772907"
               width="100%"
