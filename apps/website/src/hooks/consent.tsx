@@ -127,7 +127,13 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
 
     // If the user hasn't interacted, and this is the first run, show the dialog
     // But, don't show it if the user is on the privacy page
-    if (hasInteracted === null && router.pathname !== "/privacy-policy") {
+    // And, don't show it if the user has a GPC/DNT signal
+    if (
+      hasInteracted === null &&
+      router.pathname !== "/privacy-policy" &&
+      navigator.doNotTrack !== "1" &&
+      !navigator.globalPrivacyControl
+    ) {
       setHasInteracted(false);
       setOpen(true);
     }
