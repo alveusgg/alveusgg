@@ -204,7 +204,7 @@ export function ShowAndTellGallery({
   }, [imageAttachments, videoAttachments]);
 
   const carouselCount = Object.keys(carouselItems).length;
-  const carousel = (
+  const carousel = carouselCount !== 0 && (
     <Carousel
       className="flex-1"
       wrapperClassName="pb-16 -mb-12 flex-1" // Negative margin to allow padding for shadows
