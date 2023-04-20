@@ -221,7 +221,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           {isPresentationView && (
-            <div className="fixed top-[20px] right-[20px] z-10 z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
+            <div className="fixed right-[20px] top-[20px] z-10 z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
               <div className="flex flex-row items-center gap-1">
                 <Heading level={1} className="pt-3">
                   Show and Tell
@@ -238,7 +238,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 Please share with the community any of your conservation or
                 wildlife related activities.
               </p>
-              <QrCode className="h-auto max-h-[20vh] w-full w-auto max-w-[12vw]" />
+              <QrCode className="h-auto max-h-[20vh] w-auto w-full max-w-[12vw]" />
             </div>
           )}
 
@@ -269,7 +269,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             </div>
 
             <Button
-              className="bg-white shadow-lg"
+              className="hidden bg-white shadow-lg lg:flex"
               onClick={handleTogglePresentationView}
             >
               {isPresentationView ? (
