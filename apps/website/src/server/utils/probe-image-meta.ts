@@ -2,7 +2,7 @@ import probe from "probe-image-size";
 
 export async function probeImageMeta(url: string) {
   try {
-    const { width, height, type, mime } = await probe(url, {
+    const { width, height, orientation, type, mime } = await probe(url, {
       open_timeout: 1_000,
       response_timeout: 1_000,
       read_timeout: 1_0000,
@@ -15,9 +15,11 @@ export async function probeImageMeta(url: string) {
       },
     });
 
+    const isRotated = orientation ? orientation > 4 : false;
+
     return {
-      width,
-      height,
+      width: isRotated ? height : width,
+      height: isRotated ? width : height,
       type,
       mimeType: mime,
     };
