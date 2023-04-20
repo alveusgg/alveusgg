@@ -176,7 +176,7 @@ export function ShowAndTellGallery({
           }
           className="flex select-none items-center justify-center"
         >
-          <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl">
+          <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl transition hover:scale-102 hover:shadow-2xl">
             <Image
               width={600}
               height={600}
