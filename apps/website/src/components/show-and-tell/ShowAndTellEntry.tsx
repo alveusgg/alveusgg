@@ -8,8 +8,16 @@ import type {
   ShowAndTellEntryAttachment,
 } from "@prisma/client";
 import Image from "next/image";
+import parse, {
+  domToReact,
+  Element,
+  type HTMLReactParserOptions,
+} from "html-react-parser";
+
 import { parseVideoUrl } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
+
+import Link from "@/components/content/Link";
 import { LocalDate } from "@/components/shared/LocalDate";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
@@ -33,6 +41,18 @@ type ShowAndTellEntryProps = {
   entry: ShowAndTellEntryWithAttachments;
   isPresentationView: boolean;
   showPermalink?: boolean;
+};
+
+const parseOptions: HTMLReactParserOptions = {
+  replace: (node) => {
+    if (node instanceof Element && node.name === "a" && node.attribs.href) {
+      return (
+        <Link href={node.attribs.href} external>
+          {domToReact(node.children, parseOptions)}
+        </Link>
+      );
+    }
+  },
 };
 
 export const ShowAndTellEntry = forwardRef<
@@ -169,10 +189,9 @@ export const ShowAndTellEntry = forwardRef<
               isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
             }`}
           >
-            <div
-              className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl"
-              dangerouslySetInnerHTML={{ __html: entry.text }}
-            />
+            <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+              {parse(entry.text, parseOptions)}
+            </div>
           </div>
         </div>
       </div>
