@@ -74,7 +74,7 @@ export function VideoItem({
         />
         {showPreview && "Open "}
         {videoPlatformConfig.label}
-        {showPreview && " in tab."}
+        {showPreview && " in a new tab."}
       </div>
     );
   }
