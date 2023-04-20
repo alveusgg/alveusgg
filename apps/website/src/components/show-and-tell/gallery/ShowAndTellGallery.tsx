@@ -150,7 +150,7 @@ export function ShowAndTellGallery({
           openInLightbox
           linkAttributes={{
             className:
-              "pointer-events-auto flex items-center justify-center flex-1 cursor-pointer select-none",
+              "group/trigger pointer-events-auto flex items-center justify-center cursor-pointer select-none",
             draggable: false,
           }}
         />,
