@@ -68,10 +68,6 @@
     li {
       @apply my-1;
     }
-
-    a[href] {
-      @apply text-blue-500 underline after:content-['_\2192'];
-    }
   }
 
   /* Rich text editor (Quill.js) */
@@ -81,6 +77,10 @@
     .ql-editor {
       padding: 0 20px;
       min-height: 200px;
+
+      a[href] {
+        @apply text-blue-500 underline;
+      }
     }
 
     .ql-toolbar.ql-snow {

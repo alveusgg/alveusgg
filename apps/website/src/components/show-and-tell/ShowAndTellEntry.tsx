@@ -1,4 +1,11 @@
-import React, { forwardRef, useCallback, useRef } from "react";
+import React, {
+  forwardRef,
+  Fragment,
+  isValidElement,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import type {
   FileStorageObject,
   ImageAttachment,
@@ -8,8 +15,18 @@ import type {
   ShowAndTellEntryAttachment,
 } from "@prisma/client";
 import Image from "next/image";
+import parse, {
+  domToReact,
+  Element,
+  Text,
+  type DOMNode,
+  type HTMLReactParserOptions,
+} from "html-react-parser";
+
 import { parseVideoUrl } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
+
+import Link from "@/components/content/Link";
 import { LocalDate } from "@/components/shared/LocalDate";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
@@ -33,6 +50,42 @@ type ShowAndTellEntryProps = {
   entry: ShowAndTellEntryWithAttachments;
   isPresentationView: boolean;
   showPermalink?: boolean;
+};
+
+const getTextContentRecursive = (node: DOMNode): string => {
+  if (node instanceof Element) {
+    return node.children
+      .map((child) => getTextContentRecursive(child))
+      .join("");
+  }
+
+  if (node instanceof Text) {
+    return node.data || "";
+  }
+
+  return "";
+};
+
+const Empty = () => <Fragment />;
+
+const parseOptions: HTMLReactParserOptions = {
+  replace: (node) => {
+    if (node instanceof Element && node.name === "root") {
+      return getTextContentRecursive(node).trim() ? (
+        <Fragment>{domToReact(node.children, parseOptions)}</Fragment>
+      ) : (
+        <Empty />
+      );
+    }
+
+    if (node instanceof Element && node.name === "a" && node.attribs.href) {
+      return (
+        <Link href={node.attribs.href} external>
+          {domToReact(node.children, parseOptions)}
+        </Link>
+      );
+    }
+  },
 };
 
 export const ShowAndTellEntry = forwardRef<
@@ -79,6 +132,11 @@ export const ShowAndTellEntry = forwardRef<
       }
     },
     [forwardedRef]
+  );
+
+  const content = useMemo(
+    () => parse(`<root>${entry.text}</root>`, parseOptions),
+    [entry.text]
   );
 
   const header = (
@@ -163,18 +221,19 @@ export const ShowAndTellEntry = forwardRef<
           videoAttachments={videoAttachments}
         />
 
-        <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
-          <div
-            className={`mx-auto w-fit  ${
-              isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
-            }`}
-          >
+        {isValidElement(content) && content.type !== Empty && (
+          <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
             <div
-              className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl"
-              dangerouslySetInnerHTML={{ __html: entry.text }}
-            />
+              className={`mx-auto w-fit  ${
+                isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
+              }`}
+            >
+              <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+                {content}
+              </div>
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </article>
   );
