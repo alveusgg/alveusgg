@@ -14,6 +14,7 @@ import {
   getPostById,
   markPostAsSeen,
   unmarkPostAsSeen,
+  getAdminPosts,
 } from "@/server/db/show-and-tell";
 import { permissions } from "@/config/permissions";
 import { deleteFileStorageObject } from "@/server/utils/file-storage";
@@ -78,43 +79,17 @@ export const adminShowAndTellRouter = router({
         cursor: z.string().cuid().nullish(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const limit = input.limit ?? 20;
       const { cursor } = input;
 
-      const items = await ctx.prisma.showAndTellEntry.findMany({
+      const items = await getAdminPosts({
         take: limit + 1, // get an extra item at the end which we'll use as next cursor
-        cursor: cursor ? { id: cursor } : undefined,
-        where:
-          input.filter === "pendingApproval"
-            ? {
-                OR: [
-                  {
-                    approvedAt: null,
-                  },
-                  {
-                    approvedAt: {
-                      lt: ctx.prisma.showAndTellEntry.fields.updatedAt,
-                    },
-                  },
-                ],
-              }
-            : input.filter === "approved"
-            ? {
-                approvedAt: {
-                  gte: ctx.prisma.showAndTellEntry.fields.updatedAt,
-                },
-              }
-            : {},
-        orderBy: {
-          approvedAt: "desc",
-        },
-        include: {
-          user: true,
-        },
+        cursor: cursor || undefined,
+        filter: input.filter,
       });
 
-      let nextCursor: typeof cursor | undefined = undefined;
+      let nextCursor: typeof cursor = undefined;
       if (items.length > limit) {
         const nextItem = items.pop();
         nextCursor = nextItem?.id || undefined;

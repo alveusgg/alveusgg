@@ -27,6 +27,25 @@ export const whereApproved = {
   approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt },
 };
 
+function getPostFilter(filter: "approved" | "pendingApproval") {
+  return filter === "pendingApproval"
+    ? {
+        OR: [
+          { approvedAt: null },
+          { approvedAt: { lt: prisma.showAndTellEntry.fields.updatedAt } },
+        ],
+      }
+    : filter === "approved"
+    ? { approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt } }
+    : {};
+}
+
+const postOrderBy = [
+  { seenOnStreamAt: { sort: "desc", nulls: "first" } },
+  { approvedAt: "desc" },
+  { updatedAt: "desc" },
+] as const;
+
 const attachmentSchema = z.object({
   url: z.string().url(),
   title: z.string().max(100),
@@ -201,6 +220,40 @@ export async function getPostById(
       userId: authorUserId,
       id,
     },
+  });
+}
+
+export async function getPosts({
+  take,
+  cursor,
+}: {
+  take?: number;
+  cursor?: string;
+} = {}) {
+  return prisma.showAndTellEntry.findMany({
+    where: getPostFilter("approved"),
+    orderBy: [...postOrderBy],
+    include: { user: true, attachments: withAttachments.include.attachments },
+    cursor: cursor ? { id: cursor } : undefined,
+    take,
+  });
+}
+
+export async function getAdminPosts({
+  take,
+  cursor,
+  filter = "approved",
+}: {
+  take?: number;
+  cursor?: string;
+  filter?: "approved" | "pendingApproval";
+} = {}) {
+  return prisma.showAndTellEntry.findMany({
+    where: getPostFilter(filter),
+    orderBy: [...postOrderBy],
+    include: { user: true },
+    cursor: cursor ? { id: cursor } : undefined,
+    take,
   });
 }
 
