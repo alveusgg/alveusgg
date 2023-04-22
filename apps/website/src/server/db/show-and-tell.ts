@@ -27,6 +27,25 @@ export const whereApproved = {
   approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt },
 };
 
+function getPostFilter(filter: "approved" | "pendingApproval") {
+  return filter === "pendingApproval"
+    ? {
+        OR: [
+          { approvedAt: null },
+          { approvedAt: { lt: prisma.showAndTellEntry.fields.updatedAt } },
+        ],
+      }
+    : filter === "approved"
+    ? { approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt } }
+    : {};
+}
+
+const postOrderBy = [
+  { seenOnStream: "asc" }, // make sure not yet seen posts are at the top
+  { approvedAt: "desc" },
+  { updatedAt: "desc" },
+] as const;
+
 const attachmentSchema = z.object({
   url: z.string().url(),
   title: z.string().max(100),
@@ -204,6 +223,40 @@ export async function getPostById(
   });
 }
 
+export async function getPosts({
+  take,
+  cursor,
+}: {
+  take?: number;
+  cursor?: string;
+} = {}) {
+  return prisma.showAndTellEntry.findMany({
+    where: getPostFilter("approved"),
+    orderBy: [...postOrderBy],
+    include: { user: true, attachments: withAttachments.include.attachments },
+    cursor: cursor ? { id: cursor } : undefined,
+    take,
+  });
+}
+
+export async function getAdminPosts({
+  take,
+  cursor,
+  filter = "approved",
+}: {
+  take?: number;
+  cursor?: string;
+  filter?: "approved" | "pendingApproval";
+} = {}) {
+  return prisma.showAndTellEntry.findMany({
+    where: getPostFilter(filter),
+    orderBy: [...postOrderBy],
+    include: { user: true },
+    cursor: cursor ? { id: cursor } : undefined,
+    take,
+  });
+}
+
 export async function updatePost(
   input: ShowAndTellUpdateInput,
   authorUserId?: string,
@@ -307,6 +360,7 @@ export async function markPostAsSeen(id: string, retroactive = false) {
     await prisma.showAndTellEntry.update({
       where: { id },
       data: {
+        seenOnStream: true,
         seenOnStreamAt: new Date(),
       },
     });
@@ -330,7 +384,10 @@ export async function markPostAsSeen(id: string, retroactive = false) {
   ).map((e) => e.id);
   await prisma.showAndTellEntry.updateMany({
     where: { id: { in: [id, ...ids] } },
-    data: { seenOnStreamAt: new Date() },
+    data: {
+      seenOnStream: true,
+      seenOnStreamAt: new Date(),
+    },
   });
 
   await revalidateCache([id, ...ids]);
@@ -341,6 +398,7 @@ export async function unmarkPostAsSeen(id: string) {
   await prisma.showAndTellEntry.update({
     where: { id },
     data: {
+      seenOnStream: false,
       seenOnStreamAt: null,
     },
   });

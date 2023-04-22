@@ -8,21 +8,25 @@ import {
   ArrowsPointingOutIcon,
   ArrowUpIcon,
 } from "@heroicons/react/20/solid";
-import { prisma } from "@/server/db/client";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
-import { Button } from "@/components/shared/Button";
+
 import { delay } from "@/utils/delay";
-import logoImage from "@/assets/logo.png";
-import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
-import { QrCode } from "@/components/show-and-tell/QrCode";
-import { withAttachments } from "@/server/db/show-and-tell";
 import { trpc } from "@/utils/trpc";
+import { getPosts } from "@/server/db/show-and-tell";
+
+import logoImage from "@/assets/logo.png";
 import IconLoading from "@/icons/IconLoading";
+
+import { Button } from "@/components/shared/Button";
 import { useOnToggleNativeFullscreen } from "@/components/shared/hooks/useOnToggleNativeFullscreen";
 import { useIntersectionObserver } from "@/components/shared/hooks/useIntersectionObserver";
+
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+
+import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
+import { QrCode } from "@/components/show-and-tell/QrCode";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -33,17 +37,7 @@ const entriesPerPage = 10;
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
 export const getStaticProps = async () => {
-  const entries = await prisma.showAndTellEntry.findMany({
-    where: {
-      approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt },
-    },
-    orderBy: { approvedAt: "desc" },
-    include: {
-      ...withAttachments.include,
-      user: true,
-    },
-    take: entriesPerPage + 1,
-  });
+  const entries = await getPosts({ take: entriesPerPage + 1 });
 
   let nextCursor: string | undefined = undefined;
   if (entries.length > entriesPerPage) {

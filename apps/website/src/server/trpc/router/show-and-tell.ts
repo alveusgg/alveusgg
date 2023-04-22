@@ -14,10 +14,10 @@ import {
   createPost,
   deletePost,
   getPostById,
+  getPosts,
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
-  whereApproved,
   withAttachments,
 } from "@/server/db/show-and-tell";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
@@ -36,20 +36,12 @@ export const showAndTellRouter = router({
         cursor: z.string().cuid().nullish(),
       })
     )
-    .query(async ({ ctx, input }) => {
+    .query(async ({ input }) => {
       const { cursor } = input;
 
-      const items = await ctx.prisma.showAndTellEntry.findMany({
-        include: {
-          ...withAttachments.include,
-          user: true,
-        },
-        where: whereApproved,
-        take: entriesPerPage + 1, // get an extra item at the end which we'll use as next cursor
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          approvedAt: "desc",
-        },
+      const items = await getPosts({
+        take: entriesPerPage + 1,
+        cursor: cursor || undefined,
       });
 
       let nextCursor: typeof cursor | undefined = undefined;

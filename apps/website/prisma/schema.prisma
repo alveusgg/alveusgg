@@ -280,6 +280,7 @@ model ShowAndTellEntry {
   updatedAt      DateTime  @default(now())
   approvedAt     DateTime?
   seenOnStreamAt DateTime?
+  seenOnStream   Boolean   @default(false)
 
   attachments ShowAndTellEntryAttachment[]
   user        User?                        @relation(fields: [userId], references: [id])
