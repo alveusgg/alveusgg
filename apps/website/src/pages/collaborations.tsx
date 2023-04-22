@@ -68,7 +68,7 @@ const collaborations = {
     name: "Alinity",
     link: "https://www.twitch.tv/alinity",
     date: new Date("2023-02-09"),
-    videoId: "qJpZzDMotmc",
+    videoId: "bak3RqjCzE0",
     vodId: "XHTEs94Cf4s",
   },
   connorEatsPants: {
