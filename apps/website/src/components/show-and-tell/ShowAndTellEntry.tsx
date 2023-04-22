@@ -25,9 +25,9 @@ import parse, {
 
 import { parseVideoUrl } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
+import { formatDateUTC } from "@/utils/datetime";
 
 import Link from "@/components/content/Link";
-import { LocalDate } from "@/components/shared/LocalDate";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 
@@ -165,7 +165,7 @@ export const ShowAndTellEntry = forwardRef<
         <span className="mr-1 italic">by </span>
         {entry.displayName}
         {" — "}
-        <LocalDate dateTime={entry.createdAt} format="long" />
+        {formatDateUTC(entry.createdAt, "long")}
       </p>
     </header>
   );
