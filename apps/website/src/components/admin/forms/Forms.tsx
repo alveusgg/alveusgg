@@ -1,7 +1,6 @@
 import type { inferRouterOutputs } from "@trpc/server";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
-
 import {
   TrashIcon,
   ArrowDownTrayIcon,
@@ -9,19 +8,20 @@ import {
 } from "@heroicons/react/20/solid";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { Menu } from "@headlessui/react";
+
 import type { AppRouter } from "@/server/trpc/router/_app";
 import { trpc } from "@/utils/trpc";
+import { formatDateTimeUTC } from "@/utils/datetime";
+
 import {
   Button,
   LinkButton,
   dangerButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/Button";
-
+import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import { LocalDateTime } from "@/components/shared/LocalDateTime";
-import { ModalDialog } from "@/components/shared/ModalDialog";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type FormWithCount = RouterOutput["adminForms"]["getForms"][number];
@@ -115,9 +115,9 @@ function Form({ form, onError, onUpdate }: FormProps) {
           {nf.format(form._count.entries)}
         </td>
         <td className="p-1 tabular-nums">
-          <LocalDateTime dateTime={form.startAt} />
+          {formatDateTimeUTC(form.startAt)}
           <br />
-          {form.endAt ? <LocalDateTime dateTime={form.endAt} /> : "(open end)"}
+          {form.endAt ? formatDateTimeUTC(form.endAt) : "(open end)"}
         </td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton

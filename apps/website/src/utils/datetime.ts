@@ -22,34 +22,6 @@ const getOrdinal = (n: number) => {
   return "th";
 };
 
-export const dateFormatterLong = new Intl.DateTimeFormat(undefined, {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
-
-export const dateFormatterShort = new Intl.DateTimeFormat(undefined, {
-  day: "2-digit",
-  month: "2-digit",
-  year: "2-digit",
-});
-
-export const dateTimeFormatterLong = new Intl.DateTimeFormat(undefined, {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-
-export const dateTimeFormatterShort = new Intl.DateTimeFormat(undefined, {
-  day: "2-digit",
-  month: "2-digit",
-  year: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-
 export function formatDateUTC(
   dateTime: Date,
   format: "short" | "long" = "short"
@@ -72,9 +44,29 @@ export function formatDateUTC(
   );
 }
 
-export function formatTimeUTC(dateTime: Date) {
-  return [
-    String(dateTime.getUTCHours()).padStart(2, "0"),
-    String(dateTime.getUTCMinutes()).padStart(2, "0"),
-  ].join(":");
+export function formatTimeUTC(
+  dateTime: Date,
+  { showSeconds = false, showTimezone = false } = {}
+) {
+  return (
+    [
+      String(dateTime.getUTCHours()).padStart(2, "0"),
+      String(dateTime.getUTCMinutes()).padStart(2, "0"),
+      showSeconds && String(dateTime.getUTCSeconds()).padStart(2, "0"),
+    ]
+      .filter(Boolean)
+      .join(":") + (showTimezone ? " UTC" : "")
+  );
+}
+
+export function formatDateTimeUTC(
+  dateTime: Date,
+  format: "short" | "long" = "short",
+  { showSeconds = false, showTimezone = false } = {}
+) {
+  return (
+    formatDateUTC(dateTime, format) +
+    " " +
+    formatTimeUTC(dateTime, { showSeconds, showTimezone })
+  );
 }
