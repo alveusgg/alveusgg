@@ -41,7 +41,7 @@ function getPostFilter(filter: "approved" | "pendingApproval") {
 }
 
 const postOrderBy = [
-  { seenOnStreamAt: { sort: "desc", nulls: "first" } },
+  { seenOnStream: "asc" }, // make sure not yet seen posts are at the top
   { approvedAt: "desc" },
   { updatedAt: "desc" },
 ] as const;
@@ -360,6 +360,7 @@ export async function markPostAsSeen(id: string, retroactive = false) {
     await prisma.showAndTellEntry.update({
       where: { id },
       data: {
+        seenOnStream: true,
         seenOnStreamAt: new Date(),
       },
     });
@@ -383,7 +384,10 @@ export async function markPostAsSeen(id: string, retroactive = false) {
   ).map((e) => e.id);
   await prisma.showAndTellEntry.updateMany({
     where: { id: { in: [id, ...ids] } },
-    data: { seenOnStreamAt: new Date() },
+    data: {
+      seenOnStream: true,
+      seenOnStreamAt: new Date(),
+    },
   });
 
   await revalidateCache([id, ...ids]);
@@ -394,6 +398,7 @@ export async function unmarkPostAsSeen(id: string) {
   await prisma.showAndTellEntry.update({
     where: { id },
     data: {
+      seenOnStream: false,
       seenOnStreamAt: null,
     },
   });
