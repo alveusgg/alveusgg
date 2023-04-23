@@ -19,6 +19,7 @@ import {
 } from "@/components/shared/Button";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import Meta from "@/components/content/Meta";
+import DateTime from "@/components/content/DateTime";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 
@@ -139,20 +140,26 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               : "Review pending"}
                           </td>
                           <td className={`${cellClasses}`}>
-                            {formatDateTime(entry.createdAt, {
-                              style: "long",
-                              time: "minutes",
-                            })}
+                            <DateTime
+                              date={entry.createdAt}
+                              format={{
+                                style: "long",
+                                time: "minutes",
+                              }}
+                            />
                             {entry.updatedAt &&
                               String(entry.updatedAt) !==
                                 String(entry.createdAt) && (
                                 <>
                                   <br />
                                   {" ("}
-                                  {formatDateTime(entry.updatedAt, {
-                                    style: "long",
-                                    time: "minutes",
-                                  })}
+                                  <DateTime
+                                    date={entry.updatedAt}
+                                    format={{
+                                      style: "long",
+                                      time: "minutes",
+                                    }}
+                                  />
                                   {")"}
                                 </>
                               )}

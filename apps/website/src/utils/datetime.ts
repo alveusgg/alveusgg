@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-type Format = {
+export type DateTimeFormat = {
   style: "short" | "long";
   time: "minutes" | "seconds" | undefined;
   timezone: boolean;
@@ -10,7 +10,7 @@ const getFormat = ({
   style,
   time,
   timezone,
-}: Format): Intl.DateTimeFormatOptions => {
+}: DateTimeFormat): Intl.DateTimeFormatOptions => {
   const defaults: Partial<Intl.DateTimeFormatOptions> = {
     timeZoneName: timezone ? "short" : undefined,
   };
@@ -37,18 +37,37 @@ const getFormat = ({
   };
 };
 
-type Options = {
-  locale: string;
-  zone: string;
+export type DateTimeOptions = {
+  locale: string | null;
+  zone: string | null;
 };
 
 export const formatDateTime = (
   dateTime: Date,
-  { style = "short", time = undefined, timezone = false }: Partial<Format> = {},
-  { locale = "en-US", zone = "UTC" }: Partial<Options> = {}
+  {
+    style = "short",
+    time = undefined,
+    timezone = false,
+  }: Partial<DateTimeFormat> = {},
+  { locale = "en-US", zone = "UTC" }: Partial<DateTimeOptions> = {}
 ) =>
   DateTime.fromJSDate(dateTime)
-    .setZone(zone)
+    .setZone(zone ?? undefined)
     .toLocaleString(getFormat({ style, time, timezone }), {
-      locale,
+      locale: locale ?? undefined,
     });
+
+export const formatDateTimeLocal = (
+  dateTime: Date,
+  format: Partial<DateTimeFormat> = {}
+) =>
+  formatDateTime(
+    dateTime,
+    { ...format, timezone: format.timezone ?? true },
+    {
+      locale: null,
+      zone: null,
+    }
+  );
+
+export const DATETIME_ALVEUS_ZONE = "America/Chicago";

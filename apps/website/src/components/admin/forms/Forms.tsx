@@ -11,7 +11,6 @@ import { Menu } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
 import { trpc } from "@/utils/trpc";
-import { formatDateTime } from "@/utils/datetime";
 
 import {
   Button,
@@ -22,6 +21,7 @@ import {
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
+import DateTime from "@/components/content/DateTime";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type FormWithCount = RouterOutput["adminForms"]["getForms"][number];
@@ -115,11 +115,13 @@ function Form({ form, onError, onUpdate }: FormProps) {
           {nf.format(form._count.entries)}
         </td>
         <td className="p-1 tabular-nums">
-          {formatDateTime(form.startAt, { time: "minutes" })}
+          <DateTime date={form.startAt} format={{ time: "minutes" }} />
           <br />
-          {form.endAt
-            ? formatDateTime(form.endAt, { time: "minutes" })
-            : "(open end)"}
+          {form.endAt ? (
+            <DateTime date={form.endAt} format={{ time: "minutes" }} />
+          ) : (
+            "(open end)"
+          )}
         </td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton

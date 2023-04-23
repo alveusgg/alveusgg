@@ -25,7 +25,7 @@ import parse, {
 
 import { parseVideoUrl } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
-import { formatDateTime } from "@/utils/datetime";
+import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
 import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
@@ -165,7 +165,11 @@ export const ShowAndTellEntry = forwardRef<
         <span className="mr-1 italic">by </span>
         {entry.displayName}
         {" — "}
-        {formatDateTime(entry.createdAt, { style: "long" })}
+        {formatDateTime(
+          entry.createdAt,
+          { style: "long" },
+          { zone: DATETIME_ALVEUS_ZONE }
+        )}
       </p>
     </header>
   );

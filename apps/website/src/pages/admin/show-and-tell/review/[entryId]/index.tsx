@@ -25,6 +25,7 @@ import {
   defaultButtonClasses,
 } from "@/components/shared/Button";
 import Meta from "@/components/content/Meta";
+import DateTime from "@/components/content/DateTime";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
@@ -93,15 +94,18 @@ const AdminReviewShowAndTellPage: NextPage<
                 )}
                 <br />
                 Submitted:{" "}
-                {formatDateTime(entry.createdAt, { time: "minutes" })}
+                <DateTime date={entry.createdAt} format={{ time: "minutes" }} />
                 <br />
                 Last updated:{" "}
-                {formatDateTime(entry.updatedAt, { time: "minutes" })}
+                <DateTime date={entry.updatedAt} format={{ time: "minutes" }} />
                 <br />
                 {entry.approvedAt && (
                   <>
                     Approved at:{" "}
-                    {formatDateTime(entry.approvedAt, { time: "minutes" })}
+                    <DateTime
+                      date={entry.approvedAt}
+                      format={{ time: "minutes" }}
+                    />
                   </>
                 )}
               </div>

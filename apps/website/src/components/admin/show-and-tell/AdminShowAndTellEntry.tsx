@@ -4,7 +4,7 @@ import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ArrowDownIcon, CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { formatDateTime } from "@/utils/datetime";
+import { formatDateTimeLocal } from "@/utils/datetime";
 
 import {
   Button,
@@ -12,6 +12,7 @@ import {
   LinkButton,
   secondaryButtonClasses,
 } from "@/components/shared/Button";
+import DateTime from "@/components/content/DateTime";
 
 type ShowAndTellEntryWithUser = ShowAndTellEntry & { user: User | null };
 
@@ -41,17 +42,18 @@ export function AdminShowAndTellEntry({
       </td>
       <td className={`${cellClasses} font-semibold`}>{entry.title || "n/a"}</td>
       <td className={`${cellClasses} whitespace-nowrap`}>
-        {formatDateTime(entry.createdAt, { time: "minutes" })}
+        <DateTime date={entry.createdAt} format={{ time: "minutes" }} />
         <br />
-        {Number(entry.createdAt) !== Number(entry.updatedAt) &&
-          formatDateTime(entry.updatedAt, { time: "minutes" })}
+        {Number(entry.createdAt) !== Number(entry.updatedAt) && (
+          <DateTime date={entry.updatedAt} format={{ time: "minutes" }} />
+        )}
       </td>
       <td className={`${cellClasses} whitespace-nowrap`}>
         {entry.seenOnStreamAt && (
           <Button
             size="small"
             onClick={() => unmarkSeen(entry)}
-            title={formatDateTime(entry.seenOnStreamAt)}
+            title={formatDateTimeLocal(entry.seenOnStreamAt)}
             className="bg-transparent"
           >
             <CheckIcon className="h-5 w-5" />
