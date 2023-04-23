@@ -10,6 +10,7 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
+import { createImageUrl } from "@/utils/image";
 import { type HTMLAttributes } from "@/utils/attrs";
 
 import { useConsent } from "@/hooks/consent";
@@ -81,30 +82,29 @@ type PreviewProps = {
 };
 
 const imgSrc = (id: string, type: string) =>
-  `https://img.youtube.com/vi/${encodeURIComponent(id)}/${encodeURIComponent(
-    type
-  )}.jpg`;
+  createImageUrl({
+    src: `https://img.youtube.com/vi/${encodeURIComponent(
+      id
+    )}/${encodeURIComponent(type)}.jpg`,
+    width: 1280,
+    quality: 100,
+  });
 
 export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
   // Handle falling back to hq if there isn't a maxres image
   const [type, setType] = useState<"maxresdefault" | "hqdefault">(
     "maxresdefault"
   );
-  const onLoad = useCallback(
-    (e: React.SyntheticEvent<HTMLImageElement>) => {
-      if (type === "maxresdefault" && e.currentTarget.naturalWidth <= 120) {
-        setType("hqdefault");
-      }
-    },
-    [type]
-  );
+  const onError = useCallback(() => {
+    if (type === "maxresdefault") setType("hqdefault");
+  }, [type]);
 
   return (
     <div className="relative aspect-video w-full">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgSrc(videoId, type)}
-        onLoad={onLoad}
+        onError={onError}
         alt=""
         loading="lazy"
         className={[
