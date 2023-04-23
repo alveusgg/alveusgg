@@ -3,9 +3,13 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
+
+import { trpc } from "@/utils/trpc";
+import { getEntityStatus } from "@/utils/entity-helpers";
+import { formatDateTime } from "@/utils/datetime";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import { trpc } from "@/utils/trpc";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import {
   Button,
@@ -13,10 +17,9 @@ import {
   dangerButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/Button";
-import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
-import { getEntityStatus } from "@/utils/entity-helpers";
 import Meta from "@/components/content/Meta";
+import DateTime from "@/components/content/DateTime";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 
@@ -137,9 +140,12 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               : "Review pending"}
                           </td>
                           <td className={`${cellClasses}`}>
-                            <LocalDateTime
-                              dateTime={entry.createdAt}
-                              format="long"
+                            <DateTime
+                              date={entry.createdAt}
+                              format={{
+                                style: "long",
+                                time: "minutes",
+                              }}
                             />
                             {entry.updatedAt &&
                               String(entry.updatedAt) !==
@@ -147,9 +153,12 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                                 <>
                                   <br />
                                   {" ("}
-                                  <LocalDateTime
-                                    dateTime={entry.updatedAt}
-                                    format="long"
+                                  <DateTime
+                                    date={entry.updatedAt}
+                                    format={{
+                                      style: "long",
+                                      time: "minutes",
+                                    }}
                                   />
                                   {")"}
                                 </>

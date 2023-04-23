@@ -10,7 +10,7 @@ import ambassadors, {
 } from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
-import { formatDateUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
@@ -117,7 +117,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             </Link>
             <p className="text-lg">
               <span className="text-base opacity-80">Broadcast: </span>
-              {formatDateUTC(episode.broadcast, "long")}
+              {formatDateTime(episode.broadcast, { style: "long" })}
             </p>
             {episode.ambassadors.length > 0 && (
               <p className="text-lg">

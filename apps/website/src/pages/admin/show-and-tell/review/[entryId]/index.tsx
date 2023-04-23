@@ -6,23 +6,26 @@ import {
   MinusIcon,
   TrashIcon,
 } from "@heroicons/react/20/solid";
+
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
+import { formatDateTime } from "@/utils/datetime";
 import { getAdminSSP } from "@/server/utils/admin";
+import { permissions } from "@/config/permissions";
+
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import { LocalDateTime } from "@/components/shared/LocalDateTime";
 import {
   approveButtonClasses,
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/Button";
-import { permissions } from "@/config/permissions";
 import Meta from "@/components/content/Meta";
+import DateTime from "@/components/content/DateTime";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
@@ -90,13 +93,19 @@ const AdminReviewShowAndTellPage: NextPage<
                   <em>Anonymous</em>
                 )}
                 <br />
-                Submitted: <LocalDateTime dateTime={entry.createdAt} />
+                Submitted:{" "}
+                <DateTime date={entry.createdAt} format={{ time: "minutes" }} />
                 <br />
-                Last updated: <LocalDateTime dateTime={entry.updatedAt} />
+                Last updated:{" "}
+                <DateTime date={entry.updatedAt} format={{ time: "minutes" }} />
                 <br />
                 {entry.approvedAt && (
                   <>
-                    Approved at: <LocalDateTime dateTime={entry.approvedAt} />
+                    Approved at:{" "}
+                    <DateTime
+                      date={entry.approvedAt}
+                      format={{ time: "minutes" }}
+                    />
                   </>
                 )}
               </div>

@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import React from "react";
 
-import { formatDateUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
@@ -152,14 +152,16 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
                 </Link>
                 <small className="text-xl text-alveus-green-600">
                   <Link href={`#${camelToKebab(key)}`} custom>
-                    {formatDateUTC(value.date, "long")}
+                    {formatDateTime(value.date, { style: "long" })}
                   </Link>
                 </small>
               </Heading>
 
               <Trigger
                 videoId={value.videoId}
-                caption={`${value.name}: ${formatDateUTC(value.date, "long")}`}
+                caption={`${value.name}: ${formatDateTime(value.date, {
+                  style: "long",
+                })}`}
                 className="w-full max-w-2xl"
               >
                 <Preview videoId={value.videoId} />

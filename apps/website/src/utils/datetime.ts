@@ -1,80 +1,73 @@
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+import { DateTime } from "luxon";
 
-const getOrdinal = (n: number) => {
-  const j = n % 10;
-  const k = n % 100;
-  if (j == 1 && k != 11) return "st";
-  if (j == 2 && k != 12) return "nd";
-  if (j == 3 && k != 13) return "rd";
-  return "th";
+export type DateTimeFormat = {
+  style: "short" | "long";
+  time: "minutes" | "seconds" | undefined;
+  timezone: boolean;
 };
 
-export const dateFormatterLong = new Intl.DateTimeFormat(undefined, {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-});
+const getFormat = ({
+  style,
+  time,
+  timezone,
+}: DateTimeFormat): Intl.DateTimeFormatOptions => {
+  const defaults: Partial<Intl.DateTimeFormatOptions> = {
+    timeZoneName: timezone ? "short" : undefined,
+  };
 
-export const dateFormatterShort = new Intl.DateTimeFormat(undefined, {
-  day: "2-digit",
-  month: "2-digit",
-  year: "2-digit",
-});
-
-export const dateTimeFormatterLong = new Intl.DateTimeFormat(undefined, {
-  day: "numeric",
-  month: "long",
-  year: "numeric",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-
-export const dateTimeFormatterShort = new Intl.DateTimeFormat(undefined, {
-  day: "2-digit",
-  month: "2-digit",
-  year: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-});
-
-export function formatDateUTC(
-  dateTime: Date,
-  format: "short" | "long" = "short"
-) {
-  if (format === "short") {
-    return [
-      String(dateTime.getUTCMonth() + 1).padStart(2, "0"),
-      String(dateTime.getUTCDate()).padStart(2, "0"),
-      String(dateTime.getUTCFullYear()).slice(-2).padStart(2, "0"),
-    ].join("/");
+  if (time === "seconds") {
+    return {
+      ...(style === "short"
+        ? DateTime.DATETIME_SHORT_WITH_SECONDS
+        : DateTime.DATETIME_FULL_WITH_SECONDS),
+      ...defaults,
+    };
   }
 
-  return (
-    monthNames[dateTime.getUTCMonth()] +
-    " " +
-    dateTime.getUTCDate() +
-    getOrdinal(dateTime.getUTCDate()) +
-    ", " +
-    dateTime.getUTCFullYear()
-  );
-}
+  if (time === "minutes") {
+    return {
+      ...(style === "short" ? DateTime.DATETIME_SHORT : DateTime.DATETIME_FULL),
+      ...defaults,
+    };
+  }
 
-export function formatTimeUTC(dateTime: Date) {
-  return [
-    String(dateTime.getUTCHours()).padStart(2, "0"),
-    String(dateTime.getUTCMinutes()).padStart(2, "0"),
-  ].join(":");
-}
+  return {
+    ...(style === "short" ? DateTime.DATE_SHORT : DateTime.DATE_FULL),
+    ...defaults,
+  };
+};
+
+export type DateTimeOptions = {
+  locale: string | null;
+  zone: string | null;
+};
+
+export const formatDateTime = (
+  dateTime: Date,
+  {
+    style = "short",
+    time = undefined,
+    timezone = false,
+  }: Partial<DateTimeFormat> = {},
+  { locale = "en-US", zone = "UTC" }: Partial<DateTimeOptions> = {}
+) =>
+  DateTime.fromJSDate(dateTime)
+    .setZone(zone ?? undefined)
+    .toLocaleString(getFormat({ style, time, timezone }), {
+      locale: locale ?? undefined,
+    });
+
+export const formatDateTimeLocal = (
+  dateTime: Date,
+  format: Partial<DateTimeFormat> = {}
+) =>
+  formatDateTime(
+    dateTime,
+    { ...format, timezone: format.timezone ?? true },
+    {
+      locale: null,
+      zone: null,
+    }
+  );
+
+export const DATETIME_ALVEUS_ZONE = "America/Chicago";

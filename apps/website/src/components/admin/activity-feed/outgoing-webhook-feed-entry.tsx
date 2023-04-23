@@ -1,8 +1,9 @@
 import React from "react";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import type { FormEntry, OutgoingWebhook, User } from "@prisma/client";
+
 import { trpc } from "@/utils/trpc";
-import { LocalDateTime } from "@/components/shared/LocalDateTime";
+import DateTime from "@/components/content/DateTime";
 
 type OutgoingWebhookWithFormEntry = OutgoingWebhook & {
   user: User | null;
@@ -53,7 +54,7 @@ export const OutgoingWebhookFeedEntry: React.FC<{
           )}
         </span>
         <span className="tabular-nums">
-          <LocalDateTime dateTime={item.createdAt} />
+          <DateTime date={item.createdAt} format={{ time: "minutes" }} />
         </span>
         <span className="flex-1 font-bold">{label}</span>
 

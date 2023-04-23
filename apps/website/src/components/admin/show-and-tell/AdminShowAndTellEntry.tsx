@@ -2,15 +2,17 @@ import React from "react";
 import type { ShowAndTellEntry, User } from "@prisma/client";
 import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ArrowDownIcon, CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
+
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { formatDateUTC } from "@/utils/datetime";
-import { LocalDateTime } from "../../shared/LocalDateTime";
+import { formatDateTimeLocal } from "@/utils/datetime";
+
 import {
   Button,
   dangerButtonClasses,
   LinkButton,
   secondaryButtonClasses,
-} from "../../shared/Button";
+} from "@/components/shared/Button";
+import DateTime from "@/components/content/DateTime";
 
 type ShowAndTellEntryWithUser = ShowAndTellEntry & { user: User | null };
 
@@ -40,10 +42,10 @@ export function AdminShowAndTellEntry({
       </td>
       <td className={`${cellClasses} font-semibold`}>{entry.title || "n/a"}</td>
       <td className={`${cellClasses} whitespace-nowrap`}>
-        <LocalDateTime dateTime={entry.createdAt} />
+        <DateTime date={entry.createdAt} format={{ time: "minutes" }} />
         <br />
         {Number(entry.createdAt) !== Number(entry.updatedAt) && (
-          <LocalDateTime dateTime={entry.updatedAt} />
+          <DateTime date={entry.updatedAt} format={{ time: "minutes" }} />
         )}
       </td>
       <td className={`${cellClasses} whitespace-nowrap`}>
@@ -51,7 +53,7 @@ export function AdminShowAndTellEntry({
           <Button
             size="small"
             onClick={() => unmarkSeen(entry)}
-            title={formatDateUTC(entry.seenOnStreamAt)}
+            title={formatDateTimeLocal(entry.seenOnStreamAt)}
             className="bg-transparent"
           >
             <CheckIcon className="h-5 w-5" />
