@@ -27,7 +27,9 @@ export const videoPlatformConfigs = {
     regex:
       /(?:https?:)?(?:\/\/)?(?:www\.)?streamable\.com\/(?:o\/)?([a-z0-9]+)/i,
     normalizedRegex: /https:\/\/streamable\.com\/([a-z0-9]+)/,
-    //embedUrl: (id: string) => `https://streamable.com/e/${id}`,
+    embedUrl: (id: string) => `https://streamable.com/e/${id}`,
+    previewUrl: (id: string) =>
+      `https://cdn-cf-east.streamable.com/image/${id}.jpg`,
   },
   imgurGallery: {
     key: "imgurGallery",

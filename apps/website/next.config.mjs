@@ -30,6 +30,11 @@ const config = {
         protocol: "https",
         hostname: "img.youtube.com",
       },
+      // Streamable Thumbnails
+      {
+        protocol: "https",
+        hostname: "cdn-cf-east.streamable.com",
+      },
       // Original Website
       {
         protocol: "https",
@@ -227,12 +232,12 @@ const config = {
               "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
               // YouTube embeds:
               "https://www.youtube-nocookie.com/",
+              // Streamable embeds:
+              "https://streamable.com/",
               // The Giving Block (crypto donations):
               "https://tgbwidget.com/",
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
-              // Streamable embeds:
-              //"https://streamable.com/",
             ]
               .filter(Boolean)
               .join(" ") + ";",
