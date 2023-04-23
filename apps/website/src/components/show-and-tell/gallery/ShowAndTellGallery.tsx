@@ -3,9 +3,7 @@ import React, { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
-import Carousel from "@/components/content/Carousel";
-import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
-import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
+
 import {
   parseVideoUrl,
   validateNormalizedVideoUrl,
@@ -13,6 +11,12 @@ import {
 } from "@/utils/video-urls";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { createImageUrl } from "@/utils/image";
+
+import { useConsent } from "@/hooks/consent";
+
+import Carousel from "@/components/content/Carousel";
+import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
+import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 
 export function ShowAndTellGallery({
   isPresentationView,
@@ -33,6 +37,8 @@ export function ShowAndTellGallery({
     >
   >;
 }) {
+  const { update: updateConsent } = useConsent();
+
   const lightboxRef = useRef<PhotoSwipeLightbox>();
   const photoswipeId = `photoswipe-${useId().replace(/\W/g, "")}`;
   useEffect(() => {
@@ -63,12 +69,17 @@ export function ShowAndTellGallery({
     lightbox.addFilter("itemData", (itemData) => ({
       ...itemData,
       iframeUrl: itemData.element?.dataset.iframeUrl,
+      consent: itemData.element?.dataset.consent,
     }));
 
     lightbox.on("contentLoad", (e) => {
       const { content } = e;
       if (content.type === "iframe") {
         e.preventDefault();
+
+        // Ensure the user has consented to YouTube
+        if (content.data.consent)
+          updateConsent({ [content.data.consent]: true });
 
         content.element = document.createElement("div");
         content.element.className =
