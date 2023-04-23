@@ -4,7 +4,7 @@ import type { PromiseReturnType } from "@prisma/client/scripts/default-index";
 
 import { getChannelConfigById } from "@/config/twitch";
 import { prisma } from "@/server/db/client";
-import { formatDateTimeUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 
 import DefaultPageLayout from "@/components/DefaultPageLayout";
 import { NotificationSettings } from "@/components/notifications/NotificationSettings";
@@ -56,7 +56,10 @@ const Updates: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               key={update.id}
               className="text-grey-500 flex flex-row gap-4 border-b border-b-gray-700 p-5"
             >
-              {formatDateTimeUTC(update.createdAt, "long")}
+              {formatDateTime(update.createdAt, {
+                style: "long",
+                time: "minutes",
+              })}
               <span>{channelConfigById[update.channel]?.label}</span>
               <div className="flex flex-col">
                 <span className="text-xl">{update.title}</span>

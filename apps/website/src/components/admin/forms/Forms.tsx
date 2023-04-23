@@ -11,7 +11,7 @@ import { Menu } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
 import { trpc } from "@/utils/trpc";
-import { formatDateTimeUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 
 import {
   Button,
@@ -115,9 +115,11 @@ function Form({ form, onError, onUpdate }: FormProps) {
           {nf.format(form._count.entries)}
         </td>
         <td className="p-1 tabular-nums">
-          {formatDateTimeUTC(form.startAt)}
+          {formatDateTime(form.startAt, { time: "minutes" })}
           <br />
-          {form.endAt ? formatDateTimeUTC(form.endAt) : "(open end)"}
+          {form.endAt
+            ? formatDateTime(form.endAt, { time: "minutes" })
+            : "(open end)"}
         </td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton

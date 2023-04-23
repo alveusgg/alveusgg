@@ -1,72 +1,54 @@
-const monthNames = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+import { DateTime } from "luxon";
 
-const getOrdinal = (n: number) => {
-  const j = n % 10;
-  const k = n % 100;
-  if (j == 1 && k != 11) return "st";
-  if (j == 2 && k != 12) return "nd";
-  if (j == 3 && k != 13) return "rd";
-  return "th";
+type Format = {
+  style: "short" | "long";
+  time: "minutes" | "seconds" | undefined;
+  timezone: boolean;
 };
 
-export function formatDateUTC(
-  dateTime: Date,
-  format: "short" | "long" = "short"
-) {
-  if (format === "short") {
-    return [
-      String(dateTime.getUTCMonth() + 1).padStart(2, "0"),
-      String(dateTime.getUTCDate()).padStart(2, "0"),
-      String(dateTime.getUTCFullYear()).slice(-2).padStart(2, "0"),
-    ].join("/");
+const getFormat = ({
+  style,
+  time,
+  timezone,
+}: Format): Intl.DateTimeFormatOptions => {
+  const defaults: Partial<Intl.DateTimeFormatOptions> = {
+    timeZoneName: timezone ? "short" : undefined,
+  };
+
+  if (time === "seconds") {
+    return {
+      ...(style === "short"
+        ? DateTime.DATETIME_SHORT_WITH_SECONDS
+        : DateTime.DATETIME_FULL_WITH_SECONDS),
+      ...defaults,
+    };
   }
 
-  return (
-    monthNames[dateTime.getUTCMonth()] +
-    " " +
-    dateTime.getUTCDate() +
-    getOrdinal(dateTime.getUTCDate()) +
-    ", " +
-    dateTime.getUTCFullYear()
-  );
-}
+  if (time === "minutes") {
+    return {
+      ...(style === "short" ? DateTime.DATETIME_SHORT : DateTime.DATETIME_FULL),
+      ...defaults,
+    };
+  }
 
-export function formatTimeUTC(
-  dateTime: Date,
-  { showSeconds = false, showTimezone = false } = {}
-) {
-  return (
-    [
-      String(dateTime.getUTCHours()).padStart(2, "0"),
-      String(dateTime.getUTCMinutes()).padStart(2, "0"),
-      showSeconds && String(dateTime.getUTCSeconds()).padStart(2, "0"),
-    ]
-      .filter(Boolean)
-      .join(":") + (showTimezone ? " UTC" : "")
-  );
-}
+  return {
+    ...(style === "short" ? DateTime.DATE_SHORT : DateTime.DATE_FULL),
+    ...defaults,
+  };
+};
 
-export function formatDateTimeUTC(
+type Options = {
+  locale: string;
+  zone: string;
+};
+
+export const formatDateTime = (
   dateTime: Date,
-  format: "short" | "long" = "short",
-  { showSeconds = false, showTimezone = false } = {}
-) {
-  return (
-    formatDateUTC(dateTime, format) +
-    " " +
-    formatTimeUTC(dateTime, { showSeconds, showTimezone })
-  );
-}
+  { style = "short", time = undefined, timezone = false }: Partial<Format> = {},
+  { locale = "en-US", zone = "UTC" }: Partial<Options> = {}
+) =>
+  DateTime.fromJSDate(dateTime)
+    .setZone(zone)
+    .toLocaleString(getFormat({ style, time, timezone }), {
+      locale,
+    });

@@ -6,7 +6,7 @@ import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { formatDateTimeUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -139,14 +139,20 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               : "Review pending"}
                           </td>
                           <td className={`${cellClasses}`}>
-                            {formatDateTimeUTC(entry.createdAt, "long")}
+                            {formatDateTime(entry.createdAt, {
+                              style: "long",
+                              time: "minutes",
+                            })}
                             {entry.updatedAt &&
                               String(entry.updatedAt) !==
                                 String(entry.createdAt) && (
                                 <>
                                   <br />
                                   {" ("}
-                                  {formatDateTimeUTC(entry.updatedAt, "long")}
+                                  {formatDateTime(entry.updatedAt, {
+                                    style: "long",
+                                    time: "minutes",
+                                  })}
                                   {")"}
                                 </>
                               )}

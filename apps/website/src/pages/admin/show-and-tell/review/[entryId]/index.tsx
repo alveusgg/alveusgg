@@ -9,7 +9,7 @@ import {
 
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { formatDateTimeUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/config/permissions";
 
@@ -92,12 +92,17 @@ const AdminReviewShowAndTellPage: NextPage<
                   <em>Anonymous</em>
                 )}
                 <br />
-                Submitted: {formatDateTimeUTC(entry.createdAt)}
+                Submitted:{" "}
+                {formatDateTime(entry.createdAt, { time: "minutes" })}
                 <br />
-                Last updated: {formatDateTimeUTC(entry.updatedAt)}
+                Last updated:{" "}
+                {formatDateTime(entry.updatedAt, { time: "minutes" })}
                 <br />
                 {entry.approvedAt && (
-                  <>Approved at: {formatDateTimeUTC(entry.approvedAt)}</>
+                  <>
+                    Approved at:{" "}
+                    {formatDateTime(entry.approvedAt, { time: "minutes" })}
+                  </>
                 )}
               </div>
               <div className="flex flex-col gap-2">

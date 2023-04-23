@@ -4,7 +4,7 @@ import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { ArrowDownIcon, CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { formatDateTimeUTC, formatDateUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 
 import {
   Button,
@@ -41,17 +41,17 @@ export function AdminShowAndTellEntry({
       </td>
       <td className={`${cellClasses} font-semibold`}>{entry.title || "n/a"}</td>
       <td className={`${cellClasses} whitespace-nowrap`}>
-        {formatDateTimeUTC(entry.createdAt)}
+        {formatDateTime(entry.createdAt, { time: "minutes" })}
         <br />
         {Number(entry.createdAt) !== Number(entry.updatedAt) &&
-          formatDateTimeUTC(entry.updatedAt)}
+          formatDateTime(entry.updatedAt, { time: "minutes" })}
       </td>
       <td className={`${cellClasses} whitespace-nowrap`}>
         {entry.seenOnStreamAt && (
           <Button
             size="small"
             onClick={() => unmarkSeen(entry)}
-            title={formatDateUTC(entry.seenOnStreamAt)}
+            title={formatDateTime(entry.seenOnStreamAt)}
             className="bg-transparent"
           >
             <CheckIcon className="h-5 w-5" />

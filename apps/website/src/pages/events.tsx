@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import React from "react";
 
-import { formatDateUTC } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -199,7 +199,7 @@ const EventsPage: NextPage = () => {
                 >
                   {event.name}
                   <small className="text-xl text-alveus-green-600">
-                    {formatDateUTC(event.date, "long")}
+                    {formatDateTime(event.date, { style: "long" })}
                   </small>
                 </Heading>
 
