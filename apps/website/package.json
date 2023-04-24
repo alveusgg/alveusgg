@@ -24,7 +24,8 @@
     "postinstall:ambassador-slugs": "node ./build-scripts/ambassador-slugs.mjs",
     "postinstall": "run-p postinstall:*",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "test": "vitest"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data",
