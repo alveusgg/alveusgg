@@ -180,7 +180,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           className={
             "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? "fixed inset-0 z-[100] snap-y snap-mandatory gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
+              ? "fixed inset-0 z-[100] snap-y snap-mandatory gap-5 overflow-hidden bg-black p-5"
               : "gap-20 bg-white/0")
           }
         >
@@ -215,7 +215,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           {isPresentationView && (
-            <div className="fixed right-[20px] top-[20px] z-10 z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
+            <div className="fixed right-[20px] top-[20px] z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
               <div className="flex flex-row items-center gap-1">
                 <Heading level={1} className="pt-3">
                   Show and Tell
