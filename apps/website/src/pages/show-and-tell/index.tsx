@@ -75,26 +75,34 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   // and when the next/prev buttons are clicked
   const currentEntryElementRef = useRef<HTMLElement | null>(null);
 
-  const autoLoadMore = useCallback(async () => {
-    const currentEntryElement = currentEntryElementRef.current;
-    if (!currentEntryElement || !isPresentationView || !entries.hasNextPage) {
-      return;
-    }
+  // We use these states to control whether the next/prev buttons are enabled
+  // and whether the click regions are visible in presentation view
+  const [hasPrevEntry, setHasPrevEntry] = useState(false);
+  const [hasNextEntry, setHasNextEntry] = useState(false);
 
-    // Use the DOM to determine if we should fetch the next page
-    // by counting the number of entries left after the current entry
+  // Use the DOM to determine if we have entries around the current one,
+  // and check if we should fetch the next page based on remaining entries
+  const checkPosition = useCallback(() => {
+    const currentEntryElement = currentEntryElementRef.current;
+    if (!currentEntryElement) return;
+
+    // Get the current position of the current entry
     const allEntries =
       currentEntryElement.parentElement?.getElementsByTagName("article");
-    if (!allEntries) {
-      return;
-    }
-
+    if (!allEntries) return;
     const entryElements = Array.from(allEntries);
-    const itemsLeft =
-      entryElements.length - entryElements.indexOf(currentEntryElement);
-    if (itemsLeft <= 2) {
-      await entries.fetchNextPage();
-    }
+    const currentPos = entryElements.indexOf(currentEntryElement);
+
+    // Update the next/prev buttons
+    setHasPrevEntry(currentPos > 0);
+    setHasNextEntry(currentPos < entryElements.length - 1);
+
+    // Only autoload if we're in presentation view, and if there's a next page
+    if (!isPresentationView || !entries.hasNextPage) return;
+
+    // Check if we need to load more entries
+    const itemsLeft = entryElements.length - currentPos;
+    if (itemsLeft <= 2) entries.fetchNextPage().then(() => undefined);
   }, [entries, isPresentationView]);
 
   // Keep reference which element is currently visible and autoload more entries if necessary
@@ -104,13 +112,13 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         if (entry?.target instanceof HTMLElement && entry.isIntersecting) {
           if (currentEntryElementRef.current !== entry.target) {
             currentEntryElementRef.current = entry.target;
-            await autoLoadMore();
+            await checkPosition();
           }
           break;
         }
       }
     },
-    [autoLoadMore]
+    [checkPosition]
   );
   const registerObserveElement = useIntersectionObserver(onEntryIntersection);
 
@@ -178,7 +186,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         <div
           ref={presentationViewRootElementRef}
           className={
-            "scrollbar-none flex flex-col transition-colors duration-200 " +
+            "flex flex-col transition-colors duration-200 " +
             (isPresentationView
               ? "fixed inset-0 z-[100] snap-y snap-mandatory gap-5 overflow-hidden bg-black p-5"
               : "gap-20 bg-white/0")
@@ -196,7 +204,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             ))
           )}
 
-          {entries.isSuccess && !entries.hasNextPage && (
+          {!isPresentationView && entries.isSuccess && !entries.hasNextPage && (
             <p className="border-t border-gray-700 p-4 text-center text-lg">
               - End -
             </p>
@@ -215,31 +223,65 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           {isPresentationView && (
-            <div className="fixed right-[20px] top-[20px] z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
-              <div className="flex flex-row items-center gap-1">
-                <Heading level={1} className="pt-3">
-                  Show and Tell
-                </Heading>
-                <Image
-                  src={logoImage}
-                  alt=""
-                  height={120}
-                  className="-mt-1 h-10 w-auto lg:mt-6 lg:h-28"
-                />
+            <>
+              {/* 6em come from 100vh-6em on each article, 1.25rem from the gap-5 on the container */}
+              {hasPrevEntry && (
+                <button
+                  className="group fixed left-5 top-0 z-20 h-[calc(6em/2)] w-[calc(80%-2em)]"
+                  type="button"
+                  onClick={() =>
+                    currentEntryElementRef.current?.previousElementSibling?.scrollIntoView(
+                      { behavior: "smooth", block: "start" }
+                    )
+                  }
+                >
+                  <span className="sr-only">Previous Post</span>
+                </button>
+              )}
+              {hasNextEntry && (
+                <button
+                  className={
+                    "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] " +
+                    (hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]")
+                  }
+                  type="button"
+                  onClick={() =>
+                    currentEntryElementRef.current?.nextElementSibling?.scrollIntoView(
+                      { behavior: "smooth", block: "start" }
+                    )
+                  }
+                >
+                  <span className="sr-only">Next Post</span>
+                </button>
+              )}
+
+              <div className="fixed right-[20px] top-[20px] z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
+                <div className="flex flex-row items-center gap-1">
+                  <Heading level={1} className="pt-3">
+                    Show and Tell
+                  </Heading>
+                  <Image
+                    src={logoImage}
+                    alt=""
+                    height={120}
+                    className="-mt-1 h-10 w-auto lg:mt-6 lg:h-28"
+                  />
+                </div>
+                <p className="text-sm lg:text-base xl:text-lg">
+                  Has stream helped you become more environmental conscious?
+                  Please share with the community any of your conservation or
+                  wildlife related activities.
+                </p>
+                <QrCode className="h-auto max-h-[20vh] w-full max-w-[12vw]" />
               </div>
-              <p className="text-sm lg:text-base xl:text-lg">
-                Has stream helped you become more environmental conscious?
-                Please share with the community any of your conservation or
-                wildlife related activities.
-              </p>
-              <QrCode className="h-auto max-h-[20vh] w-auto w-full max-w-[12vw]" />
-            </div>
+            </>
           )}
 
           <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit flex-col gap-2">
             <div className="flex flex-row gap-2">
               <Button
                 className="bg-white shadow-lg"
+                disabled={!hasPrevEntry}
                 onClick={() =>
                   currentEntryElementRef.current?.previousElementSibling?.scrollIntoView(
                     { behavior: "smooth", block: "start" }
@@ -251,6 +293,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               </Button>
               <Button
                 className="bg-white shadow-lg"
+                disabled={!hasNextEntry}
                 onClick={() =>
                   currentEntryElementRef.current?.nextElementSibling?.scrollIntoView(
                     { behavior: "smooth", block: "start" }
