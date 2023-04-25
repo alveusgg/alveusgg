@@ -58,50 +58,36 @@ export function SendNotificationForm() {
           ))}
         </SelectBoxField>
 
-        <label>
-          <strong className="mb-0.5 block font-normal">Heading:</strong>
-          <input
-            name="heading"
-            type="text"
-            minLength={1}
-            maxLength={100}
-            defaultValue="Alveus announcement"
-            required
-            className="w-full border p-1 px-2"
-          />
-        </label>
+        <TextField
+          label="Heading"
+          name="heading"
+          isRequired={true}
+          defaultValue="Alveus announcement"
+          minLength={1}
+          maxLength={100}
+        />
 
-        <label>
-          <strong className="mb-0.5 block font-normal">Text:</strong>
-          <textarea
-            name="text"
-            minLength={2}
-            maxLength={200}
-            defaultValue="Example content"
-            required
-            className="w-full border p-1 px-2"
-          />
-        </label>
+        <TextAreaField
+          label="Text"
+          name="text"
+          isRequired={true}
+          minLength={2}
+          maxLength={200}
+          defaultValue="This is an announcement."
+        />
 
-        <label>
-          <strong className="mb-0.5 block font-normal">Link:</strong>
-          <input
-            name="url"
-            type="url"
-            defaultValue="https://www.twitch.tv/AlveusSanctuary"
-            required
-            className="w-full border p-1 px-2"
-          />
-        </label>
+        <TextField
+          label="Link"
+          name="url"
+          type="url"
+          autoComplete="url"
+          isRequired={true}
+          defaultValue="https://www.twitch.tv/AlveusSanctuary"
+        />
 
-        <div className="flex flex-row justify-end">
-          <button
-            type="submit"
-            className="rounded-full bg-gray-800 p-2 px-4 text-white"
-          >
-            Send notification
-          </button>
-        </div>
+        <Button type="submit" className={defaultButtonClasses}>
+          Send notification
+        </Button>
       </div>
     </form>
   );
