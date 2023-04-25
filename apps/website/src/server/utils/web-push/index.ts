@@ -33,7 +33,7 @@ type PushRequestOptions = {
 };
 
 type HttpsPushRequestOptions = PushRequestOptions &
-  Pick<WebPushHttpsRequestOptions, "agent" | "timeout">;
+  Pick<WebPushHttpsRequestOptions, "timeout">;
 
 const DEFAULT_TTL = WEB_PUSH_MAX_TTL;
 
@@ -103,10 +103,8 @@ export async function sendWebPushNotification(
     options
   );
 
-  // TODO: Support fetch instead of node https?
   return await requestHttps(endpoint, body, {
     headers: headers,
     timeout: options.timeout,
-    agent: options.agent,
   });
 }

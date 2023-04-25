@@ -1,78 +1,39 @@
-import type { RequestOptions } from "node:https";
-import type { IncomingHttpHeaders } from "node:http";
-import { request } from "node:https";
-
-type NotificationResponse = {
-  statusCode?: number;
-  body: string;
-  headers: IncomingHttpHeaders;
-};
-
 export type WebPushHttpsRequestOptions = {
-  agent?: RequestOptions["agent"];
-  headers?: RequestOptions["headers"];
-  timeout?: RequestOptions["timeout"];
+  headers?: HeadersInit;
+  timeout?: number;
 };
 
-export function requestHttps(
+export async function requestHttps(
   endpoint: string,
   body?: Buffer | string | null,
   options?: WebPushHttpsRequestOptions
 ) {
-  return new Promise<NotificationResponse>((resolve, reject) => {
-    const pushRequest = request(
-      endpoint,
-      {
-        method: "POST",
-        headers: options?.headers,
-        timeout: options?.timeout,
-        agent: options?.agent,
-      },
-      (pushResponse) => {
-        let responseText = "";
+  const controller = new AbortController();
 
-        pushResponse.on("data", (chunk) => {
-          responseText += chunk;
-        });
+  let timeoutId: string | number | NodeJS.Timeout | undefined;
+  if (options?.timeout) {
+    timeoutId = setTimeout(() => controller.abort(), options.timeout);
+  }
 
-        pushResponse.on("end", () => {
-          if (
-            pushResponse.statusCode &&
-            (pushResponse.statusCode < 200 || pushResponse.statusCode > 299)
-          ) {
-            reject(
-              new Error(
-                "Received unexpected response code " +
-                  pushResponse.statusCode +
-                  " - " +
-                  responseText
-              )
-            );
-          } else {
-            resolve({
-              statusCode: pushResponse.statusCode,
-              body: responseText,
-              headers: pushResponse.headers,
-            });
-          }
-        });
-      }
-    );
-
-    if (options?.timeout) {
-      pushRequest.on("timeout", () => {
-        pushRequest.destroy(new Error("Socket timeout"));
-      });
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: options?.headers,
+    signal: controller.signal,
+    body,
+  }).then(async (response) => {
+    if (response.ok) {
+      return {
+        statusCode: response.status,
+        body: await response.text(),
+        headers: response.headers,
+      };
+    } else {
+      throw new Error(
+        `Received unexpected response code ${response.status} - ${response.statusText}`
+      );
     }
-
-    pushRequest.on("error", (e) => {
-      reject(e);
-    });
-
-    if (body) {
-      pushRequest.write(body);
-    }
-
-    pushRequest.end();
   });
+  if (timeoutId) clearTimeout(timeoutId);
+
+  return response;
 }
