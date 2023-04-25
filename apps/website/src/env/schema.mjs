@@ -37,6 +37,8 @@ export const serverSchema = z.object({
   FILE_STORAGE_REGION: z.string(),
   FILE_STORAGE_SECRET: z.string(),
   FILE_STORAGE_BUCKET: z.string(),
+  UPSTASH_QSTASH_URL: z.string().url().optional(),
+  UPSTASH_QSTASH_KEY: z.string().optional(),
 });
 
 /**
