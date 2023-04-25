@@ -1,4 +1,5 @@
 import { adminUsersRouter } from "@/server/trpc/router/admin/users";
+import { notificationsRouter } from "@/server/trpc/router/notifications";
 import { router } from "../trpc";
 import { authRouter } from "./auth";
 import { adminActionRouter } from "./admin/actions";
@@ -16,6 +17,7 @@ export const appRouter = router({
   adminActivityFeed: adminActivityFeedRouter,
   adminShowAndTell: adminShowAndTellRouter,
   adminUsersRouter: adminUsersRouter,
+  notifications: notificationsRouter,
   pushSubscription: pushSubscriptionRouter,
   showAndTell: showAndTellRouter,
   forms: formsRouter,

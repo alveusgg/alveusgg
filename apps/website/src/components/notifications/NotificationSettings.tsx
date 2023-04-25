@@ -5,6 +5,7 @@ import {
   isWebPushSupported,
 } from "@/utils/push-subscription";
 
+import { RecentNotifications } from "@/components/notifications/RecentNotifications";
 import {
   ErrorMessage,
   NotificationPermission,
@@ -41,6 +42,10 @@ export const NotificationSettings: React.FC = () => {
             setNotificationPermission={setNotificationPermission}
           />
           <NotificationSettingsForm
+            notificationPermission={notificationPermission}
+          />
+          <hr className="mt-4 opacity-50" />
+          <RecentNotifications
             notificationPermission={notificationPermission}
           />
         </>
