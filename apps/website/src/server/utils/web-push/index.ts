@@ -1,8 +1,8 @@
-import { knownPushServicesRegex } from "./web-push/known-push-services";
-import { getVapidAuthorizationString } from "./web-push/vapid";
-import { encryptContent } from "./web-push/content-encryption";
-import type { WebPushHttpsRequestOptions } from "./web-push/https-transport";
-import { requestHttps } from "./web-push/https-transport";
+import { knownPushServicesRegex } from "./known-push-services";
+import { getVapidAuthorizationString } from "./vapid";
+import { encryptContent } from "./content-encryption";
+import type { WebPushHttpsRequestOptions } from "./https-transport";
+import { requestHttps } from "./https-transport";
 
 type PushNotificationBase64Url = {
   endpoint: string;
