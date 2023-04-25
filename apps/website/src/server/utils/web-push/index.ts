@@ -1,3 +1,4 @@
+import { WEB_PUSH_MAX_TTL } from "./constants";
 import { knownPushServicesRegex } from "./known-push-services";
 import { getVapidAuthorizationString } from "./vapid";
 import { encryptContent } from "./content-encryption";
@@ -34,7 +35,7 @@ type PushRequestOptions = {
 type HttpsPushRequestOptions = PushRequestOptions &
   Pick<WebPushHttpsRequestOptions, "agent" | "timeout">;
 
-const DEFAULT_TTL = 4 * 7 * 24 * 60 * 60; // seconds
+const DEFAULT_TTL = WEB_PUSH_MAX_TTL;
 
 function generateRequestDetails(
   subscription: PushNotificationBase64Url,
