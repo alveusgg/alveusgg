@@ -1,8 +1,12 @@
 import type { LinkAttachment } from "@prisma/client";
 import React from "react";
+
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
+import { createImageUrl } from "@/utils/image";
+
 import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 import { Preview } from "@/components/content/YouTube";
+import IconYouTube from "@/icons/IconYouTube";
 
 type VideoThumbnailProps = {
   videoAttachment: LinkAttachment;
@@ -33,30 +37,38 @@ export function VideoItem({
     ...linkAttributes,
   };
 
-  let urlEmbed;
+  let urlEmbed, urlPreview;
   if ("embedUrl" in videoPlatformConfig) {
     urlEmbed = videoPlatformConfig.embedUrl(id);
+  }
+  if ("previewUrl" in videoPlatformConfig) {
+    urlPreview = videoPlatformConfig.previewUrl(id);
   }
 
   let content: JSX.Element;
   if (showPreview && platform === "youtube") {
+    // YouTube has a custom preview
     content = (
       <div className="max-w-2xl">
         <Preview videoId={id} />
       </div>
     );
-  } else if (showPreview && urlEmbed) {
+  } else if (showPreview && urlPreview) {
+    // Support platforms that have dedicated thumbnail URLs
     content = (
-      <iframe
-        allowFullScreen
-        referrerPolicy="no-referrer"
-        allow="encrypted-media"
-        sandbox="allow-same-origin allow-scripts"
-        loading="lazy"
-        src={urlEmbed}
-        draggable={false}
-        className="pointer-events-none mx-auto aspect-video w-full max-w-2xl select-none rounded-lg border-0 shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl"
-      />
+      <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={createImageUrl({ src: urlPreview, width: 720 })}
+          alt=""
+          loading="lazy"
+          className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl"
+        />
+        <IconYouTube
+          size={80}
+          className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
+        />
+      </div>
     );
   } else {
     content = (
@@ -90,6 +102,13 @@ export function VideoItem({
       "data-iframe-url": urlEmbed,
       ...linkAttributes,
     };
+
+    if ("consent" in videoPlatformConfig) {
+      linkAttributes = {
+        "data-consent": videoPlatformConfig.consent,
+        ...linkAttributes,
+      };
+    }
   }
 
   return (

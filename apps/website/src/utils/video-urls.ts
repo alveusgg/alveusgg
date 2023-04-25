@@ -18,6 +18,7 @@ export const videoPlatformConfigs = {
     normalizedRegex: /https:\/\/www\.youtube\.com\/watch\?v=([\w\-]{10,20})/,
     embedUrl: (id: string) =>
       `https://www.youtube-nocookie.com/embed/${id}?modestbranding=1`,
+    consent: "youtube",
   },
   streamable: {
     key: "streamable",
@@ -27,7 +28,10 @@ export const videoPlatformConfigs = {
     regex:
       /(?:https?:)?(?:\/\/)?(?:www\.)?streamable\.com\/(?:o\/)?([a-z0-9]+)/i,
     normalizedRegex: /https:\/\/streamable\.com\/([a-z0-9]+)/,
-    //embedUrl: (id: string) => `https://streamable.com/e/${id}`,
+    embedUrl: (id: string) => `https://streamable.com/e/${id}`,
+    previewUrl: (id: string) =>
+      `https://cdn-cf-east.streamable.com/image/${id}.jpg`,
+    consent: "streamable",
   },
   imgurGallery: {
     key: "imgurGallery",

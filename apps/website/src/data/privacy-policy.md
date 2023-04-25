@@ -94,11 +94,23 @@ Personal Data is collected for the following purposes and using the following se
 
   #### Twitch stream widget
 
-  Twitch is a video streaming service provided by Twitch Interactive, Inc, a subsidiary of Amazon.com Inc., that allows this Website to incorporate content of this kind on its pages.
+  Twitch is a video streaming service provided by Twitch Interactive, Inc., a subsidiary of Amazon.com Inc., that allows this Website to incorporate content of this kind on its pages.
 
   Personal Data collected: Cookies; Usage Data.
 
   Place of processing: United States – [Privacy Policy](https://www.twitch.tv/p/en/legal/privacy-notice/)
+
+  Category of personal data collected according to CCPA: internet information.
+
+  This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
+
+  #### Streamable video widget
+
+  Streamable is a video content visualization service provided by Streamable Inc., a division of Hopin Ltd, that allows this Website to incorporate content of this kind on its pages.
+
+  Personal Data collected: Cookies; Usage Data.
+
+  Place of processing: United States – [Privacy Policy](https://privacy.streamable.com/)
 
   Category of personal data collected according to CCPA: internet information.
 
@@ -348,4 +360,4 @@ This privacy statement has been prepared based on provisions of multiple legisla
 
 This privacy policy relates solely to this Website, if not stated otherwise within this document.
 
-Latest update: April 17th, 2023
+Latest update: April 23rd, 2023
