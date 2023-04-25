@@ -21,6 +21,7 @@ import {
   ProfileInfo,
   ProfileInfoImage,
 } from "@/components/layout/navbar/ProfileInfo";
+import { NotificationsButton } from "@/components/layout/navbar/NotificationsButton";
 
 import IconSignIn from "@/icons/IconSignIn";
 import IconAngleDown from "@/icons/IconAngleDown";
@@ -82,12 +83,10 @@ export function DesktopMenu() {
           ))}
         </ul>
 
-        {/*<div className="h-6 border-r"></div>*/}
+        <div className="h-6 border-r"></div>
 
         {/* Notifications toggle */}
-        {/*<li>*/}
-        {/*  <NotificationsButton />*/}
-        {/*</li>*/}
+        <NotificationsButton />
 
         <div className="h-6 border-r"></div>
 
