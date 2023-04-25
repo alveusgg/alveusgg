@@ -23,11 +23,6 @@ type AdditionalHeaderName =
     >;
 
 type PushRequestOptions = {
-  vapidDetails: {
-    subject: string;
-    publicKey: string;
-    privateKey: string;
-  };
   headers?: Record<AdditionalHeaderName, string>;
   TTL?: number;
 };
@@ -52,7 +47,6 @@ function generateRequestDetails(
     throw new Error("The subscription endpoint not a known endpoint.");
   }
 
-  const currentVapidDetails = options.vapidDetails;
   const timeToLive = options.TTL ?? DEFAULT_TTL;
 
   if (timeToLive < 0) {
@@ -82,10 +76,7 @@ function generateRequestDetails(
       "Content-Type": "application/octet-stream",
       "Content-Encoding": "aes128gcm",
       Authorization: getVapidAuthorizationString(
-        `${url.protocol}//${url.host}`,
-        currentVapidDetails.subject,
-        currentVapidDetails.publicKey,
-        currentVapidDetails.privateKey
+        `${url.protocol}//${url.host}`
       ),
     },
     body: body,

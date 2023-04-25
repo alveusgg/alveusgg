@@ -1,6 +1,5 @@
 import type { NotificationUrgency } from "@prisma/client";
 import { z } from "zod";
-import { env } from "@/env/server.mjs";
 import { defaultTag, defaultTitle } from "@/config/notifications";
 import type { NotificationPayload } from "@/utils/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
@@ -117,11 +116,6 @@ export default createTokenProtectedApiHandler(
           TTL: ttl,
           headers: {
             Urgency: getWebPushUrgency(options.urgency),
-          },
-          vapidDetails: {
-            subject: env.WEB_PUSH_VAPID_SUBJECT,
-            privateKey: env.WEB_PUSH_VAPID_PRIVATE_KEY,
-            publicKey: env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
           },
         }
       );

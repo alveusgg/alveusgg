@@ -13,6 +13,9 @@
 /public/sitemap.xml
 /src/data/generated/
 
+# Generated secret keys
+/.web-push-vapid.json
+
 # database
 /prisma/db.sqlite
 /prisma/db.sqlite-journal
