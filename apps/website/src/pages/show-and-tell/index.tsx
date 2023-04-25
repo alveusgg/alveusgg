@@ -123,8 +123,13 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const registerObserveElement = useIntersectionObserver(onEntryIntersection);
 
   // When the user attempts to scroll, we want to debounce scroll snapping
-  const scrollDebounceMs = 250;
-  const scrollDebounce = useRef<NodeJS.Timeout>();
+  const scrollDebounceMs = 100;
+  const scrollThresholdPx = 100;
+  const scrollDebounce = useRef<{
+    start: HTMLElement;
+    distance: number;
+    timer: NodeJS.Timeout;
+  }>();
   const isScrollable = useCallback(
     (element: HTMLElement) =>
       element.scrollHeight > element.clientHeight &&
@@ -134,7 +139,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const onWheel = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
       // Ignore the event if we're not in presentation view
-      if (!isPresentationView) return;
+      if (!isPresentationView || !currentEntryElementRef.current) return;
 
       // While the element is not scrollable, keep going up the tree
       let scrollable = e.target as HTMLElement;
@@ -155,22 +160,47 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }
       }
 
-      // Disable scroll snapping on the target
+      // If we're not currently debouncing, disable scroll snapping
       const target = e.currentTarget;
-      target.style.scrollSnapType = "none";
+      if (!scrollDebounce.current) target.style.scrollSnapType = "none";
 
-      // Debounce scroll snapping re-enabling
-      if (scrollDebounce.current) clearTimeout(scrollDebounce.current);
-      scrollDebounce.current = setTimeout(() => {
-        // Ensure the current element is properly scrolled into view
-        currentEntryElementRef.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+      // If we are currently debouncing, cancel the existing debounce
+      if (scrollDebounce.current) clearTimeout(scrollDebounce.current.timer);
 
-        // Re-enable scroll snapping
-        target.style.removeProperty("scroll-snap-type");
-      }, scrollDebounceMs);
+      // Create/update the scroll debounce
+      scrollDebounce.current = {
+        start: scrollDebounce.current?.start || currentEntryElementRef.current,
+        distance: (scrollDebounce.current?.distance || 0) + e.deltaY,
+        timer: setTimeout(() => {
+          if (!scrollDebounce.current || !currentEntryElementRef.current)
+            return;
+
+          // If we're on the same element we started on,
+          // move up/down based on scroll distance
+          let scroll = currentEntryElementRef.current;
+          if (
+            scroll === scrollDebounce.current.start &&
+            Math.abs(scrollDebounce.current.distance) > scrollThresholdPx
+          ) {
+            scroll =
+              scrollDebounce.current.distance > 0
+                ? (scroll.nextElementSibling as HTMLElement)
+                : (scroll.previousElementSibling as HTMLElement);
+          }
+
+          // Ensure the element is properly scrolled into view
+          scroll.scrollIntoView({
+            behavior: "smooth",
+            block: "center",
+          });
+
+          // Re-enable scroll snapping
+          target.style.removeProperty("scroll-snap-type");
+
+          // Reset the scroll debounce
+          scrollDebounce.current = undefined;
+        }, scrollDebounceMs),
+      };
     },
     [isPresentationView, isScrollable]
   );
