@@ -43,6 +43,7 @@ importers:
       '@types/react': ^18.0.35
       '@types/react-dom': ^18.0.11
       '@types/serviceworker': ^0.0.59
+      '@types/smoothscroll-polyfill': ^0.3.1
       '@typescript-eslint/eslint-plugin': ^5.58.0
       '@typescript-eslint/parser': ^5.58.0
       autoprefixer: ^10.4.14
@@ -88,6 +89,7 @@ importers:
       sharp: ^0.31.3
       simple-icons: ^8.10.0
       slugify: ^1.6.6
+      smoothscroll-polyfill: ^0.4.4
       superjson: 1.12.1
       swiper: ^8.4.7
       tailwindcss: ^3.3.1
@@ -144,6 +146,7 @@ importers:
       sharp: 0.31.3
       simple-icons: 8.10.0
       slugify: 1.6.6
+      smoothscroll-polyfill: 0.4.4
       superjson: 1.12.1
       swiper: 8.4.7
       zod: 3.21.4
@@ -164,6 +167,7 @@ importers:
       '@types/react': 18.0.35
       '@types/react-dom': 18.0.11
       '@types/serviceworker': 0.0.59
+      '@types/smoothscroll-polyfill': 0.3.1
       '@typescript-eslint/eslint-plugin': 5.58.0_gjoxkwycl3ml7yxlw3iuo7gyna
       '@typescript-eslint/parser': 5.58.0_voubu7prgxjfsfbgx5d4sqnwiy
       autoprefixer: 10.4.14_postcss@8.4.21
@@ -3534,6 +3538,10 @@ packages:
 
   /@types/serviceworker/0.0.59:
     resolution: {integrity: sha512-ArRmQ98Ln2MCC5AaYMTWimU8Ilg4OGM7H0th2b0o7GH+Lc/+B/Nm1Z0/ruIAT5hOX67/lR/iKJ+VGlI8U3o1eA==}
+    dev: true
+
+  /@types/smoothscroll-polyfill/0.3.1:
+    resolution: {integrity: sha512-+KkHw4y+EyeCtVXET7woHUhIbfWFCflc0E0mZnSV+ZdjPQeHt/9KPEuT7gSW/kFQ8O3EG30PLO++YhChDt8+Ag==}
     dev: true
 
   /@types/tough-cookie/4.0.2:
@@ -7773,6 +7781,10 @@ packages:
   /slugify/1.6.6:
     resolution: {integrity: sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==}
     engines: {node: '>=8.0.0'}
+    dev: false
+
+  /smoothscroll-polyfill/0.4.4:
+    resolution: {integrity: sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg==}
     dev: false
 
   /source-map-js/1.0.2:
