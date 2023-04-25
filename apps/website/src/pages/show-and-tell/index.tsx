@@ -122,12 +122,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   );
   const registerObserveElement = useIntersectionObserver(onEntryIntersection);
 
-  // When the user attempts to scroll, we want to switch what post we're on
-  const scrollTimeoutMs = 200;
-  const scrollDebounceMs = 200;
-  const scrollThresholdPx = 100;
-  const scrollTrack = useRef<{ delta: number; timer: NodeJS.Timeout }>();
-  const scrollDebounce = useRef<{ timer: NodeJS.Timeout }>();
+  // When the user attempts to scroll, we want to debounce scroll snapping
+  const scrollDebounceMs = 250;
+  const scrollDebounce = useRef<NodeJS.Timeout>();
   const isScrollable = useCallback(
     (element: HTMLElement) =>
       element.scrollHeight > element.clientHeight &&
@@ -146,7 +143,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         scrollable = scrollable.parentElement;
       }
 
-      // If we have a scrollable element, check we're not scrolling within it
+      // If we have a scrollable child, check we're not scrolling within it
       if (scrollable !== e.currentTarget) {
         if (
           (e.deltaY > 0 &&
@@ -154,67 +151,26 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               scrollable.scrollHeight - scrollable.clientHeight) ||
           (e.deltaY < 0 && scrollable.scrollTop > 0)
         ) {
-          // If we are scrolling within this, debounce scrolling the posts
-          if (scrollDebounce.current)
-            clearTimeout(scrollDebounce.current.timer);
-          scrollDebounce.current = {
-            timer: setTimeout(() => {
-              scrollDebounce.current = undefined;
-            }, scrollDebounceMs),
-          };
           return;
         }
       }
 
-      // If we're currently debouncing, ignore the event
-      if (scrollDebounce.current) return;
+      // Disable scroll snapping on the target
+      const target = e.currentTarget;
+      target.style.scrollSnapType = "none";
 
-      // If we've not started scrolling yet, store the position
-      if (!scrollTrack.current) {
-        scrollTrack.current = {
-          delta: e.deltaY,
-          timer: setTimeout(() => {
-            scrollTrack.current = undefined;
-          }, scrollTimeoutMs),
-        };
-        return;
-      }
-
-      // Update the total distance we've scrolled
-      scrollTrack.current.delta += e.deltaY;
-
-      // If we've scrolled less than 100px, just update the timer
-      if (Math.abs(scrollTrack.current.delta) < scrollThresholdPx) {
-        clearTimeout(scrollTrack.current.timer);
-        scrollTrack.current.timer = setTimeout(() => {
-          scrollTrack.current = undefined;
-        }, scrollTimeoutMs);
-        return;
-      }
-
-      // Move to the next/prev post, based on the direction we've scrolled
-      if (scrollTrack.current.delta > 0) {
-        currentEntryElementRef.current?.nextElementSibling?.scrollIntoView({
+      // Debounce scroll snapping re-enabling
+      if (scrollDebounce.current) clearTimeout(scrollDebounce.current);
+      scrollDebounce.current = setTimeout(() => {
+        // Ensure the current element is properly scrolled into view
+        currentEntryElementRef.current?.scrollIntoView({
           behavior: "smooth",
-          block: "start",
+          block: "center",
         });
-      } else {
-        currentEntryElementRef.current?.previousElementSibling?.scrollIntoView({
-          behavior: "smooth",
-          block: "start",
-        });
-      }
 
-      // Reset the scroll tracker
-      clearTimeout(scrollTrack.current.timer);
-      scrollTrack.current = undefined;
-
-      // Debounce the scroll event, so we don't jump multiple posts at once
-      scrollDebounce.current = {
-        timer: setTimeout(() => {
-          scrollDebounce.current = undefined;
-        }, scrollDebounceMs),
-      };
+        // Re-enable scroll snapping
+        target.style.removeProperty("scroll-snap-type");
+      }, scrollDebounceMs);
     },
     [isPresentationView, isScrollable]
   );
@@ -284,9 +240,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           ref={presentationViewRootElementRef}
           onWheel={onWheel}
           className={
-            "flex flex-col transition-colors duration-200 " +
+            "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? "fixed inset-0 z-[100] snap-y snap-mandatory gap-5 overflow-hidden bg-black p-5"
+              ? "fixed inset-0 z-[100] snap-y snap-mandatory gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
               : "gap-20 bg-white/0")
           }
         >
