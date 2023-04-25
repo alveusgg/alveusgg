@@ -19,7 +19,7 @@ const manifest = {
   ],
   theme_color: "#636a60",
   background_color: "#636a60",
-  start_url: `${env.NEXT_PUBLIC_BASE_URL.replace(/\/$/, "")}/homescreen`,
+  start_url: `${env.NEXT_PUBLIC_BASE_URL}/homescreen`,
   display: "standalone",
 };
 

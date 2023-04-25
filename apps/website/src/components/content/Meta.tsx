@@ -12,7 +12,7 @@ type MetaProps = {
 };
 
 // Get our base URL, which will either be specifically set, or from Vercel for preview deployments
-const BASE_URL = env.NEXT_PUBLIC_BASE_URL.replace(/\/$/, "");
+const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 
 const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
   const defaultTitle = "Alveus Sanctuary";
