@@ -1,10 +1,15 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+
 import {
   isNotificationsSupported,
   isWebPushSupported,
-} from "../../utils/push-subscription";
-import { ErrorMessage, NotificationPermission } from "./NotificationPermission";
-import { NotificationSettingsForm } from "./NotificationSettingsForm";
+} from "@/utils/push-subscription";
+
+import {
+  ErrorMessage,
+  NotificationPermission,
+} from "@/components/notifications/NotificationPermission";
+import { NotificationSettingsForm } from "@/components/notifications/NotificationSettingsForm";
 
 export const NotificationSettings: React.FC = () => {
   const [isClientSupported, setIsClientSupported] = useState(false);
@@ -19,10 +24,9 @@ export const NotificationSettings: React.FC = () => {
   }, []);
 
   return (
-    <>
-      <p className="leading-tight">
-        Get notified when stream content takes place, new videos are released or
-        the Alveus team has any other announcements to make!
+    <div className="flex flex-col">
+      <p className="p-4 leading-tight">
+        Get notified for streams, videos and other announcements!
       </p>
 
       {!isClientSupported ? (
@@ -41,6 +45,6 @@ export const NotificationSettings: React.FC = () => {
           />
         </>
       )}
-    </>
+    </div>
   );
 };

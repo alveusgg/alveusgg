@@ -2,12 +2,12 @@ import { useCallback } from "react";
 import {
   isNotificationsSupported,
   usePushServiceWorker,
-} from "../../utils/push-subscription";
+} from "@/utils/push-subscription";
 import {
   notificationHelpEntries,
   sendWelcomeNotification,
-} from "../../utils/notifications";
-import { typeSafeObjectKeys } from "../../utils/helpers";
+} from "@/utils/notifications";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 
 export const ErrorMessage = ({ children }: { children: React.ReactNode }) => (
   <p className="hyphens-auto rounded-lg bg-red-100 p-4 leading-tight text-red-800">
