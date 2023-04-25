@@ -160,8 +160,8 @@ export function usePushSubscription(
     ) {
       register.mutate({
         endpoint,
-        p256dh: clientSubQuery.data.toJSON().keys?.auth,
-        auth: clientSubQuery.data.toJSON().keys?.p256dh,
+        p256dh: clientSubQuery.data.toJSON().keys?.p256dh,
+        auth: clientSubQuery.data.toJSON().keys?.auth,
       });
     }
   }, [

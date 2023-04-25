@@ -62,10 +62,10 @@ function generateRequestDetails(
 
   const url = new URL(subscription.endpoint);
   const body = encryptContent(
-    subscription.keys.auth,
     subscription.keys.p256dh,
+    subscription.keys.auth,
     Buffer.from(payload || "")
-  ).cipherText;
+  );
 
   return {
     endpoint: subscription.endpoint,
