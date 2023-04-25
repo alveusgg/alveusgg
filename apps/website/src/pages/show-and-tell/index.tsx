@@ -122,6 +122,103 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   );
   const registerObserveElement = useIntersectionObserver(onEntryIntersection);
 
+  // When the user attempts to scroll, we want to switch what post we're on
+  const scrollTimeoutMs = 200;
+  const scrollDebounceMs = 200;
+  const scrollThresholdPx = 100;
+  const scrollTrack = useRef<{ delta: number; timer: NodeJS.Timeout }>();
+  const scrollDebounce = useRef<{ timer: NodeJS.Timeout }>();
+  const isScrollable = useCallback(
+    (element: HTMLElement) =>
+      element.scrollHeight > element.clientHeight &&
+      !["visible", "hidden"].includes(getComputedStyle(element).overflowY),
+    []
+  );
+  const onWheel = useCallback(
+    (e: React.WheelEvent<HTMLDivElement>) => {
+      // Ignore the event if we're not in presentation view
+      if (!isPresentationView) return;
+
+      // While the element is not scrollable, keep going up the tree
+      let scrollable = e.target as HTMLElement;
+      while (!isScrollable(scrollable) && scrollable !== e.currentTarget) {
+        if (!scrollable.parentElement) return;
+        scrollable = scrollable.parentElement;
+      }
+
+      // If we have a scrollable element, check we're not scrolling within it
+      if (scrollable !== e.currentTarget) {
+        if (
+          (e.deltaY > 0 &&
+            scrollable.scrollTop <
+              scrollable.scrollHeight - scrollable.clientHeight) ||
+          (e.deltaY < 0 && scrollable.scrollTop > 0)
+        ) {
+          // If we are scrolling within this, debounce scrolling the posts
+          if (scrollDebounce.current)
+            clearTimeout(scrollDebounce.current.timer);
+          scrollDebounce.current = {
+            timer: setTimeout(() => {
+              scrollDebounce.current = undefined;
+            }, scrollDebounceMs),
+          };
+          return;
+        }
+      }
+
+      // If we're currently debouncing, ignore the event
+      if (scrollDebounce.current) return;
+
+      // If we've not started scrolling yet, store the position
+      if (!scrollTrack.current) {
+        scrollTrack.current = {
+          delta: e.deltaY,
+          timer: setTimeout(() => {
+            scrollTrack.current = undefined;
+          }, scrollTimeoutMs),
+        };
+        return;
+      }
+
+      // Update the total distance we've scrolled
+      scrollTrack.current.delta += e.deltaY;
+
+      // If we've scrolled less than 100px, just update the timer
+      if (Math.abs(scrollTrack.current.delta) < scrollThresholdPx) {
+        clearTimeout(scrollTrack.current.timer);
+        scrollTrack.current.timer = setTimeout(() => {
+          scrollTrack.current = undefined;
+        }, scrollTimeoutMs);
+        return;
+      }
+
+      // Move to the next/prev post, based on the direction we've scrolled
+      if (scrollTrack.current.delta > 0) {
+        currentEntryElementRef.current?.nextElementSibling?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      } else {
+        currentEntryElementRef.current?.previousElementSibling?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      }
+
+      // Reset the scroll tracker
+      clearTimeout(scrollTrack.current.timer);
+      scrollTrack.current = undefined;
+
+      // Debounce the scroll event, so we don't jump multiple posts at once
+      scrollDebounce.current = {
+        timer: setTimeout(() => {
+          scrollDebounce.current = undefined;
+        }, scrollDebounceMs),
+      };
+    },
+    [isPresentationView, isScrollable]
+  );
+
   const togglePresentationView = useCallback(
     (scrollTargetElement: HTMLElement | null, value: boolean) => {
       if (value === isPresentationView) {
@@ -185,6 +282,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       <Section className="flex-grow" offsetParent={!isPresentationView}>
         <div
           ref={presentationViewRootElementRef}
+          onWheel={onWheel}
           className={
             "flex flex-col transition-colors duration-200 " +
             (isPresentationView
