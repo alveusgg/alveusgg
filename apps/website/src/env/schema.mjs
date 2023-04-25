@@ -8,7 +8,7 @@ import { z } from "zod";
 export const serverSchema = z.object({
   DATABASE_URL: z.string().url(),
   DATA_ENCRYPTION_PASSPHRASE: z.string().length(32),
-  NODE_ENV: z.enum(["development", "test", "production"]),
+  NODE_ENV: z.enum(["development", "test", "production"]).default("production"),
   NEXTAUTH_SECRET:
     process.env.NODE_ENV === "production"
       ? z.string().min(1)
@@ -48,7 +48,10 @@ export const clientSchema = z.object({
   NEXT_PUBLIC_NODE_ENV: z
     .enum(["development", "test", "production"])
     .optional(),
-  NEXT_PUBLIC_BASE_URL: z.string().url(),
+  NEXT_PUBLIC_BASE_URL: z
+    .string()
+    .url()
+    .refine((url) => !url.endsWith("/")),
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
   NEXT_PUBLIC_NOINDEX: z.string().optional(),
 });
