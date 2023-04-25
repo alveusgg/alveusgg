@@ -3,7 +3,6 @@ import { router } from "../trpc";
 import { authRouter } from "./auth";
 import { adminActionRouter } from "./admin/actions";
 import { pushSubscriptionRouter } from "./push/subscription";
-import { notificationsConfigRouter } from "./notificationsConfig";
 import { formsRouter } from "./forms";
 import { adminFormsRouter } from "./admin/forms";
 import { adminActivityFeedRouter } from "./admin/activity-feed";
@@ -18,7 +17,6 @@ export const appRouter = router({
   adminShowAndTell: adminShowAndTellRouter,
   adminUsersRouter: adminUsersRouter,
   pushSubscription: pushSubscriptionRouter,
-  notificationsConfig: notificationsConfigRouter,
   showAndTell: showAndTellRouter,
   forms: formsRouter,
 });

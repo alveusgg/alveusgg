@@ -1,11 +1,13 @@
-import { useRef } from "react";
+import React, { useRef } from "react";
 
-import type { NotificationsConfig } from "../../config/notifications";
-import { trpc } from "../../utils/trpc";
+import { notificationCategories } from "@/config/notifications";
+import { trpc } from "@/utils/trpc";
+import { TextField } from "@/components/shared/form/TextField";
+import { TextAreaField } from "@/components/shared/form/TextAreaField";
+import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 
-export const SendNotificationForm: React.FC<{
-  notificationConfig: NotificationsConfig;
-}> = ({ notificationConfig }) => {
+export function SendNotificationForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const runAction = trpc.adminAction.runAction.useMutation({
     onSuccess: () => {
@@ -38,22 +40,23 @@ export const SendNotificationForm: React.FC<{
       )}
 
       <div className="flex flex-col gap-5">
-        <label>
-          <strong className="mb-0.5 block font-normal">Category:</strong>
-          <select
-            name="tag"
-            required
-            defaultValue="announcements"
-            className="w-full border p-1 px-2"
-          >
-            <option></option>
-            {notificationConfig.categories.map(({ tag, label }) => (
-              <option key={tag} value={tag}>
-                {label}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectBoxField
+          label="Category"
+          name="tag"
+          required
+          defaultValue="announcements"
+        >
+          <option value=""></option>
+          {notificationCategories.map(({ tag, label }) => (
+            <option
+              key={tag}
+              value={tag}
+              defaultChecked={tag === "announcements"}
+            >
+              {label}
+            </option>
+          ))}
+        </SelectBoxField>
 
         <label>
           <strong className="mb-0.5 block font-normal">Heading:</strong>
@@ -102,4 +105,4 @@ export const SendNotificationForm: React.FC<{
       </div>
     </form>
   );
-};
+}

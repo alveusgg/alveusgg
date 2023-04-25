@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { getNotificationsConfig } from "@/config/notifications";
+import { defaultTags } from "@/config/notifications";
 import { knownPushServicesRegex } from "@/server/utils/web-push/known-push-services";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
@@ -53,7 +53,6 @@ export const pushSubscriptionRouter = router({
           },
         });
       } else {
-        const config = await getNotificationsConfig();
         await ctx.prisma.pushSubscription.create({
           data: {
             endpoint: input.endpoint,
@@ -62,12 +61,10 @@ export const pushSubscriptionRouter = router({
             auth: input.auth,
             tags: {
               createMany: {
-                data: Object.entries(config.defaultTags).map(
-                  ([name, value]) => ({
-                    name,
-                    value,
-                  })
-                ),
+                data: Object.entries(defaultTags).map(([name, value]) => ({
+                  name,
+                  value,
+                })),
               },
             },
           },
