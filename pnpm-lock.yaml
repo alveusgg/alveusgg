@@ -88,6 +88,7 @@ importers:
       sharp: ^0.31.3
       simple-icons: ^8.10.0
       slugify: ^1.6.6
+      smooth-scroll-into-view-if-needed: ^2.0.0
       superjson: 1.12.1
       swiper: ^8.4.7
       tailwindcss: ^3.3.1
@@ -144,6 +145,7 @@ importers:
       sharp: 0.31.3
       simple-icons: 8.10.0
       slugify: 1.6.6
+      smooth-scroll-into-view-if-needed: 2.0.0
       superjson: 1.12.1
       swiper: 8.4.7
       zod: 3.21.4
@@ -4291,6 +4293,10 @@ packages:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
     dev: false
 
+  /compute-scroll-into-view/3.0.3:
+    resolution: {integrity: sha512-nadqwNxghAGTamwIqQSG433W6OADZx2vCo3UXHNrzTRHK/htu+7+L0zhjEoaeaQVNAi3YgqWDv8+tzf0hRfR+A==}
+    dev: false
+
   /concat-map/0.0.1:
     resolution: {integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg==}
     dev: true
@@ -7653,6 +7659,12 @@ packages:
       ajv: 6.12.6
       ajv-keywords: 3.5.2_ajv@6.12.6
 
+  /scroll-into-view-if-needed/3.0.10:
+    resolution: {integrity: sha512-t44QCeDKAPf1mtQH3fYpWz8IM/DyvHLjs8wUvvwMYxk5moOqCzrMSxK6HQVD0QVmVjXFavoFIPRVrMuJPKAvtg==}
+    dependencies:
+      compute-scroll-into-view: 3.0.3
+    dev: false
+
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
     hasBin: true
@@ -7773,6 +7785,12 @@ packages:
   /slugify/1.6.6:
     resolution: {integrity: sha512-h+z7HKHYXj6wJU+AnS/+IH8Uh9fdcX1Lrhg1/VMdf9PwoBQXFcXiAdsy2tSK0P6gKwJLXp02r90ahUCqHk9rrw==}
     engines: {node: '>=8.0.0'}
+    dev: false
+
+  /smooth-scroll-into-view-if-needed/2.0.0:
+    resolution: {integrity: sha512-afkGGHcXTFggn0/byzt0vhTEFEzQItQVgEAuapNBEo8TcoxPlWx1kTyzar6b2sYiDPmZ9RIguIdBTTofpTJ3vw==}
+    dependencies:
+      scroll-into-view-if-needed: 3.0.10
     dev: false
 
   /source-map-js/1.0.2:

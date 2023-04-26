@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import {
   ArrowsPointingOutIcon,
   ArrowUpIcon,
 } from "@heroicons/react/20/solid";
+import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
@@ -75,26 +76,34 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   // and when the next/prev buttons are clicked
   const currentEntryElementRef = useRef<HTMLElement | null>(null);
 
-  const autoLoadMore = useCallback(async () => {
-    const currentEntryElement = currentEntryElementRef.current;
-    if (!currentEntryElement || !isPresentationView || !entries.hasNextPage) {
-      return;
-    }
+  // We use these states to control whether the next/prev buttons are enabled
+  // and whether the click regions are visible in presentation view
+  const [hasPrevEntry, setHasPrevEntry] = useState(false);
+  const [hasNextEntry, setHasNextEntry] = useState(false);
 
-    // Use the DOM to determine if we should fetch the next page
-    // by counting the number of entries left after the current entry
+  // Use the DOM to determine if we have entries around the current one,
+  // and check if we should fetch the next page based on remaining entries
+  const checkPosition = useCallback(() => {
+    const currentEntryElement = currentEntryElementRef.current;
+    if (!currentEntryElement) return;
+
+    // Get the current position of the current entry
     const allEntries =
       currentEntryElement.parentElement?.getElementsByTagName("article");
-    if (!allEntries) {
-      return;
-    }
-
+    if (!allEntries) return;
     const entryElements = Array.from(allEntries);
-    const itemsLeft =
-      entryElements.length - entryElements.indexOf(currentEntryElement);
-    if (itemsLeft <= 2) {
-      await entries.fetchNextPage();
-    }
+    const currentPos = entryElements.indexOf(currentEntryElement);
+
+    // Update the next/prev buttons
+    setHasPrevEntry(currentPos > 0);
+    setHasNextEntry(currentPos < entryElements.length - 1);
+
+    // Only autoload if we're in presentation view, and if there's a next page
+    if (!isPresentationView || !entries.hasNextPage) return;
+
+    // Check if we need to load more entries
+    const itemsLeft = entryElements.length - currentPos;
+    if (itemsLeft <= 2) entries.fetchNextPage().then(() => undefined);
   }, [entries, isPresentationView]);
 
   // Keep reference which element is currently visible and autoload more entries if necessary
@@ -104,15 +113,110 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         if (entry?.target instanceof HTMLElement && entry.isIntersecting) {
           if (currentEntryElementRef.current !== entry.target) {
             currentEntryElementRef.current = entry.target;
-            await autoLoadMore();
+            await checkPosition();
           }
           break;
         }
       }
     },
-    [autoLoadMore]
+    [checkPosition]
   );
-  const registerObserveElement = useIntersectionObserver(onEntryIntersection);
+  const intersectionObserverOpts = useMemo(() => ({ threshold: 0.55 }), []);
+  const registerObserveElement = useIntersectionObserver(
+    onEntryIntersection,
+    intersectionObserverOpts
+  );
+
+  // Scroll an element into the center of the viewport
+  const scrollTo = useCallback((element: HTMLElement) => {
+    // We use a library to do this, because not every browser supports it
+    // And even in Chrome, smooth breaks for the first/last element of things
+    scrollIntoView(element, {
+      behavior: "smooth",
+      block: "center",
+    });
+  }, []);
+  const scrollToPrev = useCallback(() => {
+    const prev = currentEntryElementRef.current?.previousElementSibling;
+    if (!(prev instanceof HTMLElement)) return;
+    scrollTo(prev);
+  }, [scrollTo]);
+  const scrollToNext = useCallback(() => {
+    const next = currentEntryElementRef.current?.nextElementSibling;
+    if (!(next instanceof HTMLElement)) return;
+    scrollTo(next);
+  }, [scrollTo]);
+
+  // Track when the user is manually scrolling
+  const userScrolling = useRef(false);
+  const userScrollingTimeout = useRef<NodeJS.Timeout>();
+  const userScrollingTimeoutMs = 100;
+  const onUserScroll = useCallback(() => {
+    userScrolling.current = true;
+    if (userScrollingTimeout.current)
+      clearTimeout(userScrollingTimeout.current);
+    userScrollingTimeout.current = setTimeout(() => {
+      userScrolling.current = false;
+    }, userScrollingTimeoutMs);
+  }, []);
+
+  // When the user scrolls in presentation view, we want to debounce snapping
+  const scrollTrack = useRef<{
+    element: HTMLElement;
+    scroll: number;
+    timer: NodeJS.Timeout;
+  }>();
+  const scrollDebounce = 250; // Milliseconds to wait before snapping
+  const scrollThreshold = 0.1; // multiplier of the viewport height
+  const onScroll = useCallback(
+    (e: React.WheelEvent<HTMLDivElement>) => {
+      // Ignore the event if we're not in presentation view,
+      // or if we're not currently on an entry,
+      // or if the user isn't scrolling
+      if (
+        !isPresentationView ||
+        !currentEntryElementRef.current ||
+        !userScrolling.current
+      )
+        return;
+
+      // If we are currently debouncing, cancel the existing debounce
+      if (scrollTrack.current) clearTimeout(scrollTrack.current.timer);
+
+      // Create/update the scroll debounce
+      const target = e.currentTarget;
+      scrollTrack.current = {
+        element: scrollTrack.current?.element || currentEntryElementRef.current,
+        scroll: scrollTrack.current?.scroll || target.scrollTop,
+        timer: setTimeout(() => {
+          if (!scrollTrack.current || !currentEntryElementRef.current) return;
+
+          // Get the distance we've scrolled since the start of the debounce
+          const distance = target.scrollTop - scrollTrack.current.scroll;
+
+          // If we're on the same element we started on,
+          // move up/down based on scroll distance
+          let scroll = currentEntryElementRef.current;
+          if (
+            scroll === scrollTrack.current.element &&
+            Math.abs(distance) > target.offsetHeight * scrollThreshold
+          ) {
+            scroll =
+              distance > 0
+                ? (scroll.nextElementSibling as HTMLElement)
+                : (scroll.previousElementSibling as HTMLElement);
+          }
+
+          // Scroll the element to the center of the viewport
+          scrollTo(scroll);
+
+          // Reset the debounce
+          scrollTrack.current = undefined;
+        }, scrollDebounce),
+      };
+    },
+    [isPresentationView]
+  );
 
   const togglePresentationView = useCallback(
     (scrollTargetElement: HTMLElement | null, value: boolean) => {
@@ -125,7 +229,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         value,
         presentationViewRootElementRef.current,
         scrollTargetElement
-      ).then(() => undefined);
+      ).then(() => {
+        if (value && currentEntryElementRef.current) {
+          // If we're entering presentation view, ensure the entry is aligned
+          scrollTo(currentEntryElementRef.current);
+        }
+      });
     },
     [isPresentationView]
   );
@@ -177,10 +286,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       <Section className="flex-grow" offsetParent={!isPresentationView}>
         <div
           ref={presentationViewRootElementRef}
+          onWheel={onUserScroll}
+          onScroll={onScroll}
           className={
             "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? "fixed inset-0 z-[100] snap-y snap-mandatory gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
+              ? "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
               : "gap-20 bg-white/0")
           }
         >
@@ -196,7 +307,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             ))
           )}
 
-          {entries.isSuccess && !entries.hasNextPage && (
+          {!isPresentationView && entries.isSuccess && !entries.hasNextPage && (
             <p className="border-t border-gray-700 p-4 text-center text-lg">
               - End -
             </p>
@@ -215,47 +326,66 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           {isPresentationView && (
-            <div className="fixed right-[20px] top-[20px] z-10 z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
-              <div className="flex flex-row items-center gap-1">
-                <Heading level={1} className="pt-3">
-                  Show and Tell
-                </Heading>
-                <Image
-                  src={logoImage}
-                  alt=""
-                  height={120}
-                  className="-mt-1 h-10 w-auto lg:mt-6 lg:h-28"
-                />
+            <>
+              {/* 6em come from 100vh-6em on each article, 1.25rem from the gap-5 on the container */}
+              {hasPrevEntry && (
+                <button
+                  className="group fixed left-5 top-0 z-20 h-[calc(6em/2)] w-[calc(80%-2em)]"
+                  type="button"
+                  onClick={scrollToPrev}
+                >
+                  <span className="sr-only">Previous Post</span>
+                </button>
+              )}
+              {hasNextEntry && (
+                <button
+                  className={
+                    "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] " +
+                    (hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]")
+                  }
+                  type="button"
+                  onClick={scrollToNext}
+                >
+                  <span className="sr-only">Next Post</span>
+                </button>
+              )}
+
+              <div className="fixed right-[20px] top-[20px] z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
+                <div className="flex flex-row items-center gap-1">
+                  <Heading level={1} className="pt-3">
+                    Show and Tell
+                  </Heading>
+                  <Image
+                    src={logoImage}
+                    alt=""
+                    height={120}
+                    className="-mt-1 h-10 w-auto lg:mt-6 lg:h-28"
+                  />
+                </div>
+                <p className="text-sm lg:text-base xl:text-lg">
+                  Has stream helped you become more environmental conscious?
+                  Please share with the community any of your conservation or
+                  wildlife related activities.
+                </p>
+                <QrCode className="h-auto max-h-[20vh] w-full max-w-[12vw]" />
               </div>
-              <p className="text-sm lg:text-base xl:text-lg">
-                Has stream helped you become more environmental conscious?
-                Please share with the community any of your conservation or
-                wildlife related activities.
-              </p>
-              <QrCode className="h-auto max-h-[20vh] w-auto w-full max-w-[12vw]" />
-            </div>
+            </>
           )}
 
           <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit flex-col gap-2">
             <div className="flex flex-row gap-2">
               <Button
                 className="bg-white shadow-lg"
-                onClick={() =>
-                  currentEntryElementRef.current?.previousElementSibling?.scrollIntoView(
-                    { behavior: "smooth", block: "start" }
-                  )
-                }
+                disabled={!hasPrevEntry}
+                onClick={scrollToPrev}
               >
                 <ArrowUpIcon className="h-5 w-5" />
                 <span className="sr-only">Previous Post</span>
               </Button>
               <Button
                 className="bg-white shadow-lg"
-                onClick={() =>
-                  currentEntryElementRef.current?.nextElementSibling?.scrollIntoView(
-                    { behavior: "smooth", block: "start" }
-                  )
-                }
+                disabled={!hasNextEntry}
+                onClick={scrollToNext}
               >
                 <ArrowDownIcon className="h-5 w-5" />
                 <span className="sr-only">Next Post</span>

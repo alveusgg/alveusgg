@@ -14,7 +14,8 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
   ButtonStyleProps;
 type LinkButtonProps = LinkProps & ButtonStyleProps;
 
-const baseClasses = "flex flex-row items-center justify-center text-center";
+const baseClasses =
+  "flex flex-row items-center justify-center text-center disabled:cursor-not-allowed disabled:opacity-50";
 export const defaultButtonClasses = "bg-gray-700 text-white";
 export const disabledButtonClasses = "bg-gray-600 text-gray-200";
 export const secondaryButtonClasses = "bg-gray-300 text-gray-900";

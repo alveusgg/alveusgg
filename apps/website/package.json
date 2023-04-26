@@ -73,6 +73,7 @@
     "sharp": "^0.31.3",
     "simple-icons": "^8.10.0",
     "slugify": "^1.6.6",
+    "smooth-scroll-into-view-if-needed": "^2.0.0",
     "superjson": "1.12.1",
     "swiper": "^8.4.7",
     "zod": "^3.21.4"
