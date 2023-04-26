@@ -18,6 +18,8 @@ export const videoPlatformConfigs = {
     normalizedRegex: /https:\/\/www\.youtube\.com\/watch\?v=([\w\-]{10,20})/,
     embedUrl: (id: string) =>
       `https://www.youtube-nocookie.com/embed/${id}?modestbranding=1`,
+    previewUrl: (id: string) =>
+      `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
     consent: "youtube",
   },
   streamable: {
