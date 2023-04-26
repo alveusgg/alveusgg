@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -121,7 +121,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
     },
     [checkPosition]
   );
-  const registerObserveElement = useIntersectionObserver(onEntryIntersection);
+  const intersectionObserverOpts = useMemo(() => ({ threshold: 0.55 }), []);
+  const registerObserveElement = useIntersectionObserver(
+    onEntryIntersection,
+    intersectionObserverOpts
+  );
 
   // Scroll an element into the center of the viewport
   const scrollTo = useCallback((element: HTMLElement) => {
