@@ -43,7 +43,6 @@ importers:
       '@types/react': ^18.0.35
       '@types/react-dom': ^18.0.11
       '@types/serviceworker': ^0.0.59
-      '@types/smoothscroll-polyfill': ^0.3.1
       '@typescript-eslint/eslint-plugin': ^5.58.0
       '@typescript-eslint/parser': ^5.58.0
       autoprefixer: ^10.4.14
@@ -89,7 +88,7 @@ importers:
       sharp: ^0.31.3
       simple-icons: ^8.10.0
       slugify: ^1.6.6
-      smoothscroll-polyfill: ^0.4.4
+      smooth-scroll-into-view-if-needed: ^2.0.0
       superjson: 1.12.1
       swiper: ^8.4.7
       tailwindcss: ^3.3.1
@@ -146,7 +145,7 @@ importers:
       sharp: 0.31.3
       simple-icons: 8.10.0
       slugify: 1.6.6
-      smoothscroll-polyfill: 0.4.4
+      smooth-scroll-into-view-if-needed: 2.0.0
       superjson: 1.12.1
       swiper: 8.4.7
       zod: 3.21.4
@@ -167,7 +166,6 @@ importers:
       '@types/react': 18.0.35
       '@types/react-dom': 18.0.11
       '@types/serviceworker': 0.0.59
-      '@types/smoothscroll-polyfill': 0.3.1
       '@typescript-eslint/eslint-plugin': 5.58.0_gjoxkwycl3ml7yxlw3iuo7gyna
       '@typescript-eslint/parser': 5.58.0_voubu7prgxjfsfbgx5d4sqnwiy
       autoprefixer: 10.4.14_postcss@8.4.21
@@ -3540,10 +3538,6 @@ packages:
     resolution: {integrity: sha512-ArRmQ98Ln2MCC5AaYMTWimU8Ilg4OGM7H0th2b0o7GH+Lc/+B/Nm1Z0/ruIAT5hOX67/lR/iKJ+VGlI8U3o1eA==}
     dev: true
 
-  /@types/smoothscroll-polyfill/0.3.1:
-    resolution: {integrity: sha512-+KkHw4y+EyeCtVXET7woHUhIbfWFCflc0E0mZnSV+ZdjPQeHt/9KPEuT7gSW/kFQ8O3EG30PLO++YhChDt8+Ag==}
-    dev: true
-
   /@types/tough-cookie/4.0.2:
     resolution: {integrity: sha512-Q5vtl1W5ue16D+nIaW8JWebSSraJVlK+EthKn7e7UcD4KWsaSJ8BqGPXNaPghgtcn/fhvrN17Tv8ksUsQpiplw==}
     dev: true
@@ -4297,6 +4291,10 @@ packages:
 
   /commondir/1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
+    dev: false
+
+  /compute-scroll-into-view/3.0.3:
+    resolution: {integrity: sha512-nadqwNxghAGTamwIqQSG433W6OADZx2vCo3UXHNrzTRHK/htu+7+L0zhjEoaeaQVNAi3YgqWDv8+tzf0hRfR+A==}
     dev: false
 
   /concat-map/0.0.1:
@@ -7661,6 +7659,12 @@ packages:
       ajv: 6.12.6
       ajv-keywords: 3.5.2_ajv@6.12.6
 
+  /scroll-into-view-if-needed/3.0.10:
+    resolution: {integrity: sha512-t44QCeDKAPf1mtQH3fYpWz8IM/DyvHLjs8wUvvwMYxk5moOqCzrMSxK6HQVD0QVmVjXFavoFIPRVrMuJPKAvtg==}
+    dependencies:
+      compute-scroll-into-view: 3.0.3
+    dev: false
+
   /semver/5.7.1:
     resolution: {integrity: sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==}
     hasBin: true
@@ -7783,8 +7787,10 @@ packages:
     engines: {node: '>=8.0.0'}
     dev: false
 
-  /smoothscroll-polyfill/0.4.4:
-    resolution: {integrity: sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg==}
+  /smooth-scroll-into-view-if-needed/2.0.0:
+    resolution: {integrity: sha512-afkGGHcXTFggn0/byzt0vhTEFEzQItQVgEAuapNBEo8TcoxPlWx1kTyzar6b2sYiDPmZ9RIguIdBTTofpTJ3vw==}
+    dependencies:
+      scroll-into-view-if-needed: 3.0.10
     dev: false
 
   /source-map-js/1.0.2:

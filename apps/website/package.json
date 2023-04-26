@@ -73,7 +73,7 @@
     "sharp": "^0.31.3",
     "simple-icons": "^8.10.0",
     "slugify": "^1.6.6",
-    "smoothscroll-polyfill": "^0.4.4",
+    "smooth-scroll-into-view-if-needed": "^2.0.0",
     "superjson": "1.12.1",
     "swiper": "^8.4.7",
     "zod": "^3.21.4"
@@ -95,7 +95,6 @@
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
     "@types/serviceworker": "^0.0.59",
-    "@types/smoothscroll-polyfill": "^0.3.1",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "autoprefixer": "^10.4.14",

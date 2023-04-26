@@ -8,6 +8,7 @@ import {
   ArrowsPointingOutIcon,
   ArrowUpIcon,
 } from "@heroicons/react/20/solid";
+import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
@@ -122,87 +123,95 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   );
   const registerObserveElement = useIntersectionObserver(onEntryIntersection);
 
-  // When the user attempts to scroll, we want to debounce scroll snapping
-  const scrollDebounceMs = 100;
-  const scrollThresholdPx = 100;
-  const scrollDebounce = useRef<{
-    start: HTMLElement;
-    distance: number;
+  // Scroll an element into the center of the viewport
+  const scrollTo = useCallback((element: HTMLElement) => {
+    // We use a library to do this, because not every browser supports it
+    // And even in Chrome, smooth breaks for the first/last element of things
+    scrollIntoView(element, {
+      behavior: "smooth",
+      block: "center",
+    });
+  }, []);
+  const scrollToPrev = useCallback(() => {
+    const prev = currentEntryElementRef.current?.previousElementSibling;
+    if (!(prev instanceof HTMLElement)) return;
+    scrollTo(prev);
+  }, [scrollTo]);
+  const scrollToNext = useCallback(() => {
+    const next = currentEntryElementRef.current?.nextElementSibling;
+    if (!(next instanceof HTMLElement)) return;
+    scrollTo(next);
+  }, [scrollTo]);
+
+  // Track when the user is manually scrolling
+  const userScrolling = useRef(false);
+  const userScrollingTimeout = useRef<NodeJS.Timeout>();
+  const userScrollingTimeoutMs = 100;
+  const onUserScroll = useCallback(() => {
+    userScrolling.current = true;
+    if (userScrollingTimeout.current)
+      clearTimeout(userScrollingTimeout.current);
+    userScrollingTimeout.current = setTimeout(() => {
+      userScrolling.current = false;
+    }, userScrollingTimeoutMs);
+  }, []);
+
+  // When the user scrolls in presentation view, we want to debounce snapping
+  const scrollTrack = useRef<{
+    element: HTMLElement;
+    scroll: number;
     timer: NodeJS.Timeout;
   }>();
-  const isScrollable = useCallback(
-    (element: HTMLElement) =>
-      element.scrollHeight > element.clientHeight &&
-      !["visible", "hidden"].includes(getComputedStyle(element).overflowY),
-    []
-  );
-  const onWheel = useCallback(
+  const scrollDebounce = 250; // Milliseconds to wait before snapping
+  const scrollThreshold = 0.1; // multiplier of the viewport height
+  const onScroll = useCallback(
     (e: React.WheelEvent<HTMLDivElement>) => {
-      // Ignore the event if we're not in presentation view
-      if (!isPresentationView || !currentEntryElementRef.current) return;
-
-      // While the element is not scrollable, keep going up the tree
-      let scrollable = e.target as HTMLElement;
-      while (!isScrollable(scrollable) && scrollable !== e.currentTarget) {
-        if (!scrollable.parentElement) return;
-        scrollable = scrollable.parentElement;
-      }
-
-      // If we have a scrollable child, check we're not scrolling within it
-      if (scrollable !== e.currentTarget) {
-        if (
-          (e.deltaY > 0 &&
-            scrollable.scrollTop <
-              scrollable.scrollHeight - scrollable.clientHeight) ||
-          (e.deltaY < 0 && scrollable.scrollTop > 0)
-        ) {
-          return;
-        }
-      }
-
-      // If we're not currently debouncing, disable scroll snapping
-      const target = e.currentTarget;
-      if (!scrollDebounce.current) target.style.scrollSnapType = "none";
+      // Ignore the event if we're not in presentation view,
+      // or if we're not currently on an entry,
+      // or if the user isn't scrolling
+      if (
+        !isPresentationView ||
+        !currentEntryElementRef.current ||
+        !userScrolling.current
+      )
+        return;
 
       // If we are currently debouncing, cancel the existing debounce
-      if (scrollDebounce.current) clearTimeout(scrollDebounce.current.timer);
+      if (scrollTrack.current) clearTimeout(scrollTrack.current.timer);
 
       // Create/update the scroll debounce
-      scrollDebounce.current = {
-        start: scrollDebounce.current?.start || currentEntryElementRef.current,
-        distance: (scrollDebounce.current?.distance || 0) + e.deltaY,
+      const target = e.currentTarget;
+      scrollTrack.current = {
+        element: scrollTrack.current?.element || currentEntryElementRef.current,
+        scroll: scrollTrack.current?.scroll || target.scrollTop,
         timer: setTimeout(() => {
-          if (!scrollDebounce.current || !currentEntryElementRef.current)
-            return;
+          if (!scrollTrack.current || !currentEntryElementRef.current) return;
+
+          // Get the distance we've scrolled since the start of the debounce
+          const distance = target.scrollTop - scrollTrack.current.scroll;
 
           // If we're on the same element we started on,
           // move up/down based on scroll distance
           let scroll = currentEntryElementRef.current;
           if (
-            scroll === scrollDebounce.current.start &&
-            Math.abs(scrollDebounce.current.distance) > scrollThresholdPx
+            scroll === scrollTrack.current.element &&
+            Math.abs(distance) > target.offsetHeight * scrollThreshold
           ) {
             scroll =
-              scrollDebounce.current.distance > 0
+              distance > 0
                 ? (scroll.nextElementSibling as HTMLElement)
                 : (scroll.previousElementSibling as HTMLElement);
           }
 
-          // Ensure the element is properly scrolled into view
-          scroll.scrollIntoView({
-            behavior: "smooth",
-            block: "center",
-          });
+          // Scroll the element to the center of the viewport
+          scrollTo(scroll);
 
-          // Re-enable scroll snapping
-          target.style.removeProperty("scroll-snap-type");
-
-          // Reset the scroll debounce
-          scrollDebounce.current = undefined;
-        }, scrollDebounceMs),
+          // Reset the debounce
+          scrollTrack.current = undefined;
+        }, scrollDebounce),
       };
     },
-    [isPresentationView, isScrollable]
+    [isPresentationView]
   );
 
   const togglePresentationView = useCallback(
@@ -216,7 +225,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         value,
         presentationViewRootElementRef.current,
         scrollTargetElement
-      ).then(() => undefined);
+      ).then(() => {
+        if (value && currentEntryElementRef.current) {
+          // If we're entering presentation view, ensure the entry is aligned
+          scrollTo(currentEntryElementRef.current);
+        }
+      });
     },
     [isPresentationView]
   );
@@ -268,11 +282,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       <Section className="flex-grow" offsetParent={!isPresentationView}>
         <div
           ref={presentationViewRootElementRef}
-          onWheel={onWheel}
+          onWheel={onUserScroll}
+          onScroll={onScroll}
           className={
             "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? "fixed inset-0 z-[100] snap-y snap-mandatory gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
+              ? "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
               : "gap-20 bg-white/0")
           }
         >
@@ -313,11 +328,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 <button
                   className="group fixed left-5 top-0 z-20 h-[calc(6em/2)] w-[calc(80%-2em)]"
                   type="button"
-                  onClick={() =>
-                    currentEntryElementRef.current?.previousElementSibling?.scrollIntoView(
-                      { behavior: "smooth", block: "start" }
-                    )
-                  }
+                  onClick={scrollToPrev}
                 >
                   <span className="sr-only">Previous Post</span>
                 </button>
@@ -329,11 +340,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                     (hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]")
                   }
                   type="button"
-                  onClick={() =>
-                    currentEntryElementRef.current?.nextElementSibling?.scrollIntoView(
-                      { behavior: "smooth", block: "start" }
-                    )
-                  }
+                  onClick={scrollToNext}
                 >
                   <span className="sr-only">Next Post</span>
                 </button>
@@ -366,11 +373,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               <Button
                 className="bg-white shadow-lg"
                 disabled={!hasPrevEntry}
-                onClick={() =>
-                  currentEntryElementRef.current?.previousElementSibling?.scrollIntoView(
-                    { behavior: "smooth", block: "start" }
-                  )
-                }
+                onClick={scrollToPrev}
               >
                 <ArrowUpIcon className="h-5 w-5" />
                 <span className="sr-only">Previous Post</span>
@@ -378,11 +381,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               <Button
                 className="bg-white shadow-lg"
                 disabled={!hasNextEntry}
-                onClick={() =>
-                  currentEntryElementRef.current?.nextElementSibling?.scrollIntoView(
-                    { behavior: "smooth", block: "start" }
-                  )
-                }
+                onClick={scrollToNext}
               >
                 <ArrowDownIcon className="h-5 w-5" />
                 <span className="sr-only">Next Post</span>
