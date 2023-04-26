@@ -23,7 +23,7 @@ import parse, {
   type HTMLReactParserOptions,
 } from "html-react-parser";
 
-import { parseVideoUrl } from "@/utils/video-urls";
+import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
@@ -111,14 +111,13 @@ export const ShowAndTellEntry = forwardRef<
 
   let featureImageUrl = imageAttachments[0]?.url;
   if (!featureImageUrl) {
-    const youtubeVideo = videoAttachments.find(
-      ({ url }) => parseVideoUrl(url)?.platform === "youtube"
-    );
-    if (youtubeVideo) {
-      const videoId = parseVideoUrl(youtubeVideo.url)?.id;
-      if (videoId) {
-        featureImageUrl = `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
-      }
+    for (const videoAttachment of videoAttachments) {
+      const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
+      if (!parsedVideoUrl) continue;
+      const videoPlatformConfig = videoPlatformConfigs[parsedVideoUrl.platform];
+      if (!("previewUrl" in videoPlatformConfig)) continue;
+      featureImageUrl = videoPlatformConfig.previewUrl(parsedVideoUrl.id);
+      break;
     }
   }
 

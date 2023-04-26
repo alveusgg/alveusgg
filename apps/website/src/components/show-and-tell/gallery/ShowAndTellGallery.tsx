@@ -223,7 +223,10 @@ export function ShowAndTellGallery({
   const carousel = carouselCount !== 0 && (
     <Carousel
       className="flex-1"
-      wrapperClassName="pb-16 -mb-12 flex-1" // Negative margin to allow padding for shadows
+      // Negative margin to allow padding for shadows
+      wrapperClassName={`flex-1 ${
+        isPresentationView ? "pb-6 -mb-4" : "pb-16 -mb-12"
+      }`}
       auto={null}
       itemClassName={`
           flex flex-col justify-center basis-full p-4
