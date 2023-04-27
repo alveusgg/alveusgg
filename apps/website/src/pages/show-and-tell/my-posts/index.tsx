@@ -6,7 +6,6 @@ import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { formatDateTime } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";

@@ -141,7 +141,7 @@ export function ShowAndTellGallery({
     return () => {
       lightbox.destroy();
     };
-  }, [lightboxParentRef, isPresentationView, photoswipeId]);
+  }, [lightboxParentRef, isPresentationView, photoswipeId, updateConsent]);
 
   const openLightBox = useCallback(
     (index: number) => {
