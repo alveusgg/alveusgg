@@ -9,6 +9,7 @@ import Heading from "@/components/content/Heading";
 import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
 
+import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
 import valentines2023Video from "@/assets/events/valentines-2023.mp4";
 import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
 import halloween2021Video from "@/assets/events/halloween-2021.mp4";
@@ -27,6 +28,29 @@ type Event = {
 };
 
 const events = {
+  artAuction2023: {
+    name: "Art Auction 2023",
+    date: new Date("2023-04-22"),
+    video: artAuction2023Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$63,019",
+      },
+      signedPrints: {
+        title: "Signed postcards for donors",
+        stat: "261",
+      },
+      ambassadorPaintings: {
+        title: "Ambassador paintings sold",
+        stat: "33",
+      },
+      averagePrice: {
+        title: "Paid for each painting on average",
+        stat: "$570",
+      },
+    },
+  },
   valentines2023: {
     name: "Valentine's Day 2023",
     date: new Date("2023-02-14"),
