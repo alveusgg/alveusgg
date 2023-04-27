@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useRef, useState } from "react";
 
 import { createImageUrl } from "@/utils/image";
 
@@ -29,20 +29,33 @@ const Video: React.FC<VideoProps> = ({
   threshold = 0.1,
 }) => {
   const [seen, setSeen] = useState(false);
+  const observer = useRef<IntersectionObserver>();
   const ref = useCallback(
     (node: HTMLVideoElement) => {
-      if (!node || seen) return;
-      const observer = new IntersectionObserver(
+      if (!node) {
+        if (observer.current) {
+          observer.current.disconnect();
+          observer.current = undefined;
+        }
+        return;
+      }
+
+      const obs = new IntersectionObserver(
         (entries) => {
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            setSeen(true);
-            observer.disconnect();
+            if (entry.isIntersecting) {
+              if (!seen) setSeen(true);
+              (entry.target as HTMLVideoElement).play();
+              return;
+            }
+
+            (entry.target as HTMLVideoElement).pause();
           });
         },
         { threshold }
       );
-      observer.observe(node);
+      obs.observe(node);
+      observer.current = obs;
     },
     [seen, threshold]
   );
