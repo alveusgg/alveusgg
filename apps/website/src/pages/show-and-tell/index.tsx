@@ -215,7 +215,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }, scrollDebounce),
       };
     },
-    [isPresentationView]
+    [isPresentationView, scrollTo]
   );
 
   const togglePresentationView = useCallback(
@@ -236,7 +236,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }
       });
     },
-    [isPresentationView]
+    [isPresentationView, scrollTo]
   );
 
   // Enable presentation view if native fullscreen gets activated, but not if it's deactivated
