@@ -219,7 +219,10 @@ const EventsPage: NextPage = () => {
               >
                 <Heading
                   level={2}
-                  className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center text-4xl"
+                  className="scroll-mt-8 text-center text-4xl"
+                  id={camelToKebab(key).replace(/([a-z])([0-9])/gi, "$1-$2")}
+                  link
+                  linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
                 >
                   {event.name}
                   <small className="text-xl text-alveus-green-600">
