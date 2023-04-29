@@ -19,6 +19,7 @@ const NotFound: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <Heading>404 - Page Not Found</Heading>
+        <p>this is a content change to test build time</p>
       </Section>
     </>
   );
