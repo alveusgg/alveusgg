@@ -15,6 +15,7 @@ import {
   typeSafeObjectEntries,
   typeSafeObjectFromEntries,
 } from "@/utils/helpers";
+import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -74,7 +75,7 @@ const MerchItem: React.FC<MerchItemProps> = ({
       href={item.link}
       target="_blank"
       rel="noreferrer"
-      className={["group block", className].filter(Boolean).join(" ")}
+      className={classes("group block", className)}
     >
       <Image
         src={item.image}
@@ -92,9 +93,7 @@ const MerchItem: React.FC<MerchItemProps> = ({
       )}
     </Link>
   ) : (
-    <div
-      className={["group cursor-pointer", className].filter(Boolean).join(" ")}
-    >
+    <div className={classes("group cursor-pointer", className)}>
       <div className="relative">
         <Image
           src={item.image}

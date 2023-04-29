@@ -4,6 +4,7 @@ import React from "react";
 
 import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
+import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -246,12 +247,10 @@ const CollaborationsPage: NextPage = () => {
             <div key={year}>
               <Heading
                 level={-1}
-                className={[
+                className={classes(
                   "alveus-green-800 border-b-2 border-alveus-green-500 pb-8 text-4xl",
-                  idx === 0 && "sr-only",
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
+                  idx === 0 && "sr-only"
+                )}
                 id={year.toString()}
                 link
               >

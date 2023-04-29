@@ -9,6 +9,8 @@ import {
 } from "@/config/main-nav-structure";
 import { checkRolesGivePermission, permissions } from "@/config/permissions";
 
+import { classes } from "@/utils/classes";
+
 import {
   NavLink,
   navLinkClassesMain,
@@ -168,12 +170,10 @@ export function DesktopMenu() {
                   {({ open }) => (
                     <>
                       <Menu.Button
-                        className={[
+                        className={classes(
                           navLinkClassesMain,
-                          "flex items-center gap-2",
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
+                          "flex items-center gap-2"
+                        )}
                       >
                         {link.title}
                         <IconAngleDown
@@ -190,13 +190,11 @@ export function DesktopMenu() {
                             {({ close, active }) => (
                               <NavLinkSub
                                 href={link.link}
-                                className={[
+                                className={classes(
                                   active &&
                                     "outline-blue-500 group-focus-visible:outline",
-                                  "w-full min-w-max",
-                                ]
-                                  .filter(Boolean)
-                                  .join(" ")}
+                                  "w-full min-w-max"
+                                )}
                                 onClick={close}
                               >
                                 {link.title}

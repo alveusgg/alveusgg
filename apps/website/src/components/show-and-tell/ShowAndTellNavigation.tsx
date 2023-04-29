@@ -1,7 +1,10 @@
 import type { LinkProps } from "next/link";
 import Link from "next/link";
-import React, { useMemo } from "react";
-import { useIsActivePath } from "../shared/hooks/useIsActivePath";
+import React from "react";
+
+import { classes } from "@/utils/classes";
+
+import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
 
 type NavLinkProps = Omit<
   React.AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -24,24 +27,23 @@ const NavLink: React.FC<NavLinkProps> = ({
   ...props
 }) => {
   const isActive = useIsActivePath(href, exact);
-  const classes = useMemo(
-    () =>
-      [
+
+  return (
+    <Link
+      href={href}
+      className={classes(
         navLinkClasses,
         isActive ? navLinkClassesActive : navLinkClassesHover,
-        className,
-      ]
-        .filter(Boolean)
-        .join(" "),
-    [isActive, className]
+        className
+      )}
+      {...props}
+    />
   );
-
-  return <Link href={href} className={classes} {...props} />;
 };
 
 export function ShowAndTellNavigation() {
   return (
-    <div className="mt-5 -ml-2 flex flex-wrap gap-2 md:mt-0 lg:flex-col">
+    <div className="-ml-2 mt-5 flex flex-wrap gap-2 md:mt-0 lg:flex-col">
       <NavLink href="/show-and-tell/" exact>
         Submissions
       </NavLink>

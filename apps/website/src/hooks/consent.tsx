@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { Dialog } from "@headlessui/react";
 
 import { safeJSONParse } from "@/utils/helpers";
+import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -228,24 +229,20 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                   />
 
                   <div
-                    className={[
+                    className={classes(
                       consent[key as ConsentKey]
                         ? "bg-alveus-green"
                         : "bg-alveus-green-300",
-                      "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline",
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
+                      "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline"
+                    )}
                   >
                     <span
-                      className={[
+                      className={classes(
                         consent[key as ConsentKey]
                           ? "translate-x-6"
                           : "translate-x-1",
-                        "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
+                        "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform"
+                      )}
                     />
                   </div>
                 </label>
@@ -292,20 +289,16 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
         title="Manage consent"
       >
         <div
-          className={[
+          className={classes(
             open && "bg-alveus-green",
-            "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green",
-          ]
-            .filter(Boolean)
-            .join(" ")}
+            "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green"
+          )}
         >
           <span
-            className={[
+            className={classes(
               hasConsented ? "translate-x-3.5" : "-translate-x-0.5",
-              "inline-block h-4 w-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform",
-            ]
-              .filter(Boolean)
-              .join(" ")}
+              "inline-block h-4 w-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform"
+            )}
           />
         </div>
       </button>

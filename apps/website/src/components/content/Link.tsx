@@ -1,6 +1,8 @@
 import React from "react";
 import NextLink from "next/link";
 
+import { classes } from "@/utils/classes";
+
 import IconExternal from "@/icons/IconExternal";
 
 type LinkProps = {
@@ -23,13 +25,11 @@ const Link: React.FC<LinkProps> = ({
   const props = {
     href,
     onClick,
-    className: [
+    className: classes(
       !custom &&
         "text-red-600 transition-colors hover:text-blue-600 hover:underline",
-      className,
-    ]
-      .filter(Boolean)
-      .join(" "),
+      className
+    ),
     ...(external ? { target: "_blank", rel: "noreferrer" } : {}),
   };
 

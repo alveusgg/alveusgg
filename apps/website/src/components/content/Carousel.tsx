@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
+import { classes } from "@/utils/classes";
+
 import usePrefersReducedMotion from "@/hooks/motion";
 
 import IconAngleLeft from "@/icons/IconAngleLeft";
@@ -192,10 +194,7 @@ const Carousel: React.FC<CarouselProps> = ({
   }, [auto, paused, move, reducedMotion]);
 
   return (
-    <div
-      id={id}
-      className={["flex flex-nowrap", className].filter(Boolean).join(" ")}
-    >
+    <div id={id} className={classes("flex flex-nowrap", className)}>
       <button
         className={`group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default ${
           state === "none" ? "hidden" : ""

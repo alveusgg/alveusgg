@@ -12,6 +12,7 @@ import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
+import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -55,12 +56,10 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                   : animalQuestFull
               }
               alt=""
-              className={[
+              className={classes(
                 episode.ambassadors.length === 0 && "opacity-10",
-                "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32",
-              ]
-                .filter(Boolean)
-                .join(" ")}
+                "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32"
+              )}
               width={256}
             />
 

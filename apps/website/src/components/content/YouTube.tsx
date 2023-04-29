@@ -12,6 +12,7 @@ import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl } from "@/utils/image";
 import { type HTMLAttributes } from "@/utils/attrs";
+import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -66,7 +67,7 @@ const createTrigger = (id: string) => {
         href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
         target="_blank"
         rel="noreferrer"
-        className={["group/trigger", className].filter(Boolean).join(" ")}
+        className={classes("group/trigger", className)}
         {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
       >
         {children}
@@ -107,13 +108,11 @@ export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
         onError={onError}
         alt=""
         loading="lazy"
-        className={[
+        className={classes(
           "pointer-events-none object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
           iframeAttrs.class,
-          className,
-        ]
-          .filter(Boolean)
-          .join(" ")}
+          className
+        )}
       />
       <IconYouTube
         size={80}
@@ -188,9 +187,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
       Object.entries(iframeAttrs).forEach(([key, value]) => {
         iframe.setAttribute(camelToKebab(key), value);
       });
-      iframe.className = ["pointer-events-auto", iframe.className]
-        .filter(Boolean)
-        .join(" ");
+      iframe.className = classes("pointer-events-auto", iframe.className);
 
       // Allow full-screen for the iframe
       iframe.allowFullscreen = true;
