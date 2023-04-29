@@ -86,6 +86,41 @@ const staff = {
   },
 };
 
+const team = {
+  flip: {
+    name: "Flip (@Station3Media)",
+    title: "Videographer / Photographer",
+  },
+  dion: {
+    name: "Dion (@Dionysus1911)",
+    title: "Illustrator / Animator",
+  },
+  danny: {
+    name: "Danny (@DannyDV)",
+    title: "Post Production Manager",
+  },
+  max: {
+    name: "Max (@maxzillajr)",
+    title: "Video Editor",
+  },
+  mik: {
+    name: "Mik (@Mik_MWP)",
+    title: "Social Media Manager",
+  },
+  abdullah: {
+    name: "Abdullah (@AbdullahMorrison)",
+    title: "Open-Source Developer (Twitch Extension)",
+  },
+  paul: {
+    name: "Paul (@pjeweb)",
+    title: "Open-Source Developer (Website)",
+  },
+  matt: {
+    name: "Matt (@MattIPv4)",
+    title: "Open-Source Developer (Website)",
+  },
+};
+
 const AboutStaffPage: NextPage = () => {
   return (
     <>
@@ -134,6 +169,21 @@ const AboutStaffPage: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <People people={staff} columns={2} />
+
+        <p className="mb-4 mt-8 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
+          The Alveus team is more than just our on-site staff. We have a number
+          of folks who help us out remotely with a variety of tasks, from social
+          media management to development.
+        </p>
+
+        <div className="flex flex-wrap">
+          {Object.entries(team).map(([key, person]) => (
+            <div key={key} className="w-full p-4 sm:w-1/2 lg:w-1/3">
+              <p className="text-lg font-semibold">{person.name}</p>
+              <p>{person.title}</p>
+            </div>
+          ))}
+        </div>
       </Section>
     </>
   );
