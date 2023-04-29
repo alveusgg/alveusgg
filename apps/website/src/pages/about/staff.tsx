@@ -89,7 +89,10 @@ const staff = {
 const AboutStaffPage: NextPage = () => {
   return (
     <>
-      <Meta title="Alveus Staff" description="Meet the Alveus staff." />
+      <Meta
+        title="Alveus Staff"
+        description="Watch the video to meet some of the team and discover what they do at Alveus in their jobs, or read on to learn more about each of them."
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -99,8 +102,19 @@ const AboutStaffPage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="w-full pb-16 pt-4 md:w-2/5 md:py-24">
-          <Heading className="text-center">Alveus Staff</Heading>
+        <div className="flex w-full flex-col gap-4 pb-16 pt-4 md:w-2/5 md:py-24">
+          <Heading className="my-0">Alveus Staff</Heading>
+          <p className="text-lg">
+            The staff at Alveus all work at our facility in Texas, providing
+            care to our animal ambassadors on a daily basis, cleaning enclosures
+            and maintaining the property, and ensuring we can provide the best
+            online education experience for livestream viewers.
+          </p>
+          <p className="text-lg">
+            Watch the video to meet some of the team and discover what they do
+            at Alveus in their jobs, or read on to learn more about each of
+            them.
+          </p>
         </div>
 
         <div className="w-full max-w-2xl p-4 pt-8 md:mx-0 md:w-3/5 md:pt-4">
@@ -108,6 +122,9 @@ const AboutStaffPage: NextPage = () => {
             {({ Trigger }) => (
               <Trigger videoId="7DvtjAqmWl8">
                 <Preview videoId="7DvtjAqmWl8" />
+                <Heading level={2} className="text-center">
+                  Meet the team
+                </Heading>
               </Trigger>
             )}
           </Lightbox>

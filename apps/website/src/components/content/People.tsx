@@ -54,6 +54,7 @@ const People: React.FC<PeopleProps> = ({
         >
           <Image
             src={person.image}
+            width={columns === 1 ? 384 : 320}
             alt=""
             className="aspect-square h-auto w-full rounded-2xl object-cover"
           />
