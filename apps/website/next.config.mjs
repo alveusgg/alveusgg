@@ -269,6 +269,11 @@ const config = {
       type: "asset/source",
     });
 
+    // If we're caching to disk, reduce generations kept
+    if (!options.dev && config.cache?.type === "filesystem") {
+      config.cache.maxAge = 5 * 60 * 1000;
+    }
+
     return config;
   },
   transpilePackages: ["@alveusgg/data"],
