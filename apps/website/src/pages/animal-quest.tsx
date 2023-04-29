@@ -100,7 +100,14 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               external
               custom
             >
-              <Heading level={2} className="my-0 mb-1.5">
+              <Heading
+                level={2}
+                className="my-0 mb-1.5"
+                id={episode.edition
+                  .toLowerCase()
+                  .replace(/\s+/g, "-")
+                  .replace(/-edition$/, "")}
+              >
                 <span className="flex items-center gap-2 text-lg">
                   <IconYouTube size={24} className="lg:hidden" />
                   Episode {episode.episode}:{" "}
