@@ -56,7 +56,7 @@ const People: React.FC<PeopleProps> = ({
             src={person.image}
             width={columns === 1 ? 384 : 320}
             alt=""
-            className="aspect-square h-auto w-full rounded-2xl object-cover"
+            className="aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover"
           />
         </div>
         <div
@@ -71,7 +71,9 @@ const People: React.FC<PeopleProps> = ({
           <Heading level={3} className="text-xl">
             {person.title}
           </Heading>
-          <div className="text-gray-500">{person.description}</div>
+          <div className="flex flex-col gap-4 text-gray-500">
+            {person.description}
+          </div>
         </div>
       </li>
     ))}

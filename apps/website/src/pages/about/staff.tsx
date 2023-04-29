@@ -11,6 +11,7 @@ import { Lightbox, Preview } from "@/components/content/YouTube";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import ellaRocksImage from "@/assets/people/ella-rocks.jpg";
+import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -30,7 +31,7 @@ const staff = {
           organizations around the country develop and scale large conservation
           projects.
         </p>
-        <p className="mt-4">
+        <p>
           There is no better place to utilize technology for conservation than
           Alveus. Connor believes Alveus will set the standard for online
           education and drive significant impact and reach for conservation
@@ -84,6 +85,30 @@ const staff = {
           into her work at Alveus where she looks forward to seeing the
           ambassadors assist in educating audiences on what they can do for
           their wild counterparts.
+        </p>
+      </>
+    ),
+  },
+  space: {
+    image: spaceVoyageImage,
+    name: "SpaceVoyage",
+    title: "Production Tech",
+    description: (
+      <>
+        <p>
+          Space graduated with a degree in computer science and engineering, and
+          puts that to use at Alveus, being responsible for all the live
+          broadcasts. When he&apos;s not operating cameras and mixing streams,
+          he maintains all the software logic that allows chat moderators to
+          control the livestream layout and camera positions, as well as
+          building one-off automations to support events that we host.
+        </p>
+        <p>
+          Space started out working remotely for Maya and Alveus,
+          behind-the-scenes making sure that everything was working flawlessly.
+          He has since moved to Texas to work on-site at Alveus as an employee,
+          ensuring you get the best viewing experience possible for our
+          educational content.
         </p>
       </>
     ),

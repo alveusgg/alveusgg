@@ -74,17 +74,17 @@ const advisors = {
           she has expanded this work to grizzly bears and other Pacific
           Northwest fauna.
         </p>
-        <p className="mt-4">
+        <p>
           Previously, Ellie attended the University of California at Berkeley,
           where she received her B.S. in Molecular Environmental Biology, and
           subsequently obtained a M.S. from the University of Hawaii, Hilo.
         </p>
-        <p className="mt-4">
+        <p>
           In addition to her work in genetics, Ellie is also a board member and
           science advisor for Tigers in America and is passionate about working
           to end unregulated captive breeding in the United States.
         </p>
-        <p className="mt-4">
+        <p>
           In her spare time, Ellie loves to hang out with her dogs, run, play
           video games, and watch Twitch! She’s thrilled to support Alveus as
           they grow.
