@@ -102,7 +102,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             >
               <Heading
                 level={2}
-                className="my-0 mb-1.5"
+                className="my-0 mb-1.5 scroll-mt-4"
                 id={episode.edition
                   .toLowerCase()
                   .replace(/\s+/g, "-")
