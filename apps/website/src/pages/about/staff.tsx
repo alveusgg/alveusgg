@@ -5,6 +5,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import People from "@/components/content/People";
 import Meta from "@/components/content/Meta";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
@@ -93,8 +94,24 @@ const AboutStaffPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark className="py-8">
-        <Heading className="text-center">Alveus Staff</Heading>
+      <Section
+        dark
+        className="py-8"
+        containerClassName="flex flex-wrap items-center justify-between"
+      >
+        <div className="w-full pb-16 pt-4 md:w-2/5 md:py-24">
+          <Heading className="text-center">Alveus Staff</Heading>
+        </div>
+
+        <div className="w-full max-w-2xl p-4 pt-8 md:mx-0 md:w-3/5 md:pt-4">
+          <Lightbox>
+            {({ Trigger }) => (
+              <Trigger videoId="7DvtjAqmWl8">
+                <Preview videoId="7DvtjAqmWl8" />
+              </Trigger>
+            )}
+          </Lightbox>
+        </div>
       </Section>
 
       {/* Grow the last section to cover the page */}
