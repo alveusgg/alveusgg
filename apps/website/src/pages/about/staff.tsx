@@ -116,7 +116,7 @@ const AboutStaffPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        <People people={staff} />
+        <People people={staff} columns={2} />
       </Section>
     </>
   );

@@ -99,7 +99,7 @@ const AboutBoardOfDirectorsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        <People people={directors} sideBySide />
+        <People people={directors} columns={2} align="center" />
       </Section>
     </>
   );

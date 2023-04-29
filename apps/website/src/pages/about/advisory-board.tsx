@@ -186,7 +186,7 @@ const AboutAdvisoryBoardPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        <People people={advisors} sideBySide />
+        <People people={advisors} columns={2} align="center" />
       </Section>
     </>
   );
