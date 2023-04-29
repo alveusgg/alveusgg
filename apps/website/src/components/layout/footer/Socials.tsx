@@ -5,7 +5,7 @@ import Image from "next/image";
 
 import usePrefersReducedMotion from "@/hooks/motion";
 
-import reelVideo from "@/assets/socials/gerogie-reel-clip.mp4?quality=low";
+import reelVideo from "@/assets/socials/gerogie-reel-clip.mp4";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 
 import IconInstagram from "@/icons/IconInstagram";
@@ -28,11 +28,10 @@ const Socials: React.FC = () => {
               href="https://www.instagram.com/p/CoIq_hvOxiQ/"
               rel="noreferrer"
               target="_blank"
-              className="hover:scale-102 absolute left-[8%] top-[5%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150"
+              className="absolute left-[8%] top-[5%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-102"
             >
               <Video
-                sources={reelVideo.sources}
-                poster={reelVideo.poster}
+                sources={[{ src: reelVideo, type: "video/mp4" }]}
                 className="absolute inset-0"
                 title="A video of Georgie, Alveus' African Bullfrog, on Instagram"
                 autoPlay={!reducedMotion}
@@ -49,7 +48,7 @@ const Socials: React.FC = () => {
               href="https://twitter.com/AlveusSanctuary/status/1627138286140461063/"
               rel="noreferrer"
               target="_blank"
-              className="hover:scale-102 absolute right-[3%] top-[23%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150"
+              className="absolute right-[3%] top-[23%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-102"
             >
               <Image
                 src={pic}

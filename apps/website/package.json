@@ -80,8 +80,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.21.4",
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "@ffprobe-installer/ffprobe": "^2.0.0",
     "@types/country-list": "^2.1.1",
     "@types/dompurify": "^2.4.0",
     "@types/jsdom": "^21.1.1",
@@ -101,6 +99,7 @@
     "eslint": "^8.38.0",
     "eslint-config-next": "13.1.1",
     "eslint-plugin-import": "^2.27.5",
+    "file-loader": "^6.2.0",
     "file-type": "^18.2.1",
     "loader-utils": "^3.2.1",
     "npm-run-all": "^4.1.5",

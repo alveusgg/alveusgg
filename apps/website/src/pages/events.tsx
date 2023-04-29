@@ -23,7 +23,7 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 type Event = {
   name: string;
   date: Date;
-  video: Video;
+  video: string;
   stats: Record<string, { title: string; stat: string }>;
 };
 
@@ -203,8 +203,7 @@ const EventsPage: NextPage = () => {
               <div className="mx-auto flex basis-full flex-col py-8 md:px-8 lg:basis-1/2">
                 <VideoPlayer
                   className="my-auto aspect-video w-full rounded-xl"
-                  poster={event.video.poster}
-                  sources={event.video.sources}
+                  sources={[{ src: event.video, type: "video/mp4" }]}
                   autoPlay
                   loop
                   muted
