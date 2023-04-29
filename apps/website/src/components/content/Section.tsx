@@ -1,6 +1,9 @@
-import React, { useMemo } from "react";
-import topographyTexture from "../../assets/textures/topography.svg";
-import dustTexture from "../../assets/textures/dust.svg";
+import React from "react";
+
+import { classes } from "@/utils/classes";
+
+import topographyTexture from "@/assets/textures/topography.svg";
+import dustTexture from "@/assets/textures/dust.svg";
 
 type SectionProps = {
   children?: React.ReactNode;
@@ -17,32 +20,23 @@ const Section: React.FC<SectionProps> = ({
   className,
   containerClassName,
 }) => {
-  // Determine the classes for the two elements
-  const sectionClass = useMemo(
-    () =>
-      [
-        !/\bpy-\d+\b/.test(className || "") && "py-16",
-        offsetParent && "relative z-0",
-        dark && "bg-alveus-green text-alveus-tan",
-        !dark && "bg-alveus-tan text-alveus-green-900",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" "),
-    [offsetParent, dark, className]
-  );
-  const containerClass = useMemo(
-    () =>
-      ["container mx-auto px-4", containerClassName].filter(Boolean).join(" "),
-    [containerClassName]
-  );
-
   // Determine the texture to use
   const opacity = dark ? "opacity-[0.06]" : "opacity-[0.03]";
   const texture = dark ? dustTexture.src : topographyTexture.src;
 
   return (
-    <section className={sectionClass}>
+    <section
+      className={classes(
+        offsetParent && "relative z-0",
+        dark ? "text-alveus-tan" : "text-alveus-green-900",
+        // add vertical padding if not overwritten via className
+        !/\bpy-\d+\b/.test(className || "") && "py-16",
+        // add background color if not overwritten via className
+        !/\bbg-/.test(className || "") &&
+          (dark ? "bg-alveus-green" : "bg-alveus-tan"),
+        className
+      )}
+    >
       {offsetParent && (
         <div
           className={`absolute inset-0 -z-10 ${opacity}`}
@@ -52,7 +46,9 @@ const Section: React.FC<SectionProps> = ({
           }}
         />
       )}
-      <div className={containerClass}>{children}</div>
+      <div className={classes("container mx-auto px-4", containerClassName)}>
+        {children}
+      </div>
     </section>
   );
 };

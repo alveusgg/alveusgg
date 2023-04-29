@@ -1,6 +1,9 @@
-import React, { forwardRef, useMemo } from "react";
+import React, { forwardRef } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
+
+import { classes } from "@/utils/classes";
+
 import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
 
 type NavLinkProps = Omit<
@@ -25,9 +28,11 @@ export const NavLink: React.FC<NavLinkProps> = forwardRef(
     ref
   ) => {
     const isActive = useIsActivePath(href);
-    const classes = useMemo(
-      () =>
-        [
+
+    return (
+      <Link
+        href={href}
+        className={classes(
           // base classes
           variant === "main" ? navLinkClassesMain : navLinkClassesSub,
           // active classes
@@ -36,17 +41,8 @@ export const NavLink: React.FC<NavLinkProps> = forwardRef(
               ? navLinkClassesMainActive
               : navLinkClassesSubActive),
           // custom classes
-          className,
-        ]
-          .filter(Boolean)
-          .join(" "),
-      [variant, isActive, className]
-    );
-
-    return (
-      <Link
-        href={href}
-        className={classes}
+          className
+        )}
         {...(isExternal
           ? {
               target: "_blank",

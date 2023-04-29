@@ -311,8 +311,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
       </div>
 
       {ambassador.clips.length > 0 && (
-        <Section dark>
-          <Heading level={2} className="text-center text-4xl">
+        <Section dark className="bg-alveus-green-800">
+          <Heading
+            level={2}
+            id="highlights"
+            link
+            className="text-center text-4xl"
+          >
             {ambassador.name}
             &apos;s Highlights
           </Heading>

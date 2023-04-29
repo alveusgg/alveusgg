@@ -2,6 +2,8 @@ import React, { useMemo } from "react";
 import ReactMarkdown, { type Components, type Options } from "react-markdown";
 import headingId from "remark-heading-id";
 
+import { classes } from "@/utils/classes";
+
 import Heading, { type HeadingProps } from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 
@@ -13,7 +15,7 @@ const MarkdownHeading: React.FC<HeadingProps> = ({
 }) => (
   <Heading
     level={level}
-    className={[className, "break-words"].filter(Boolean).join(" ")}
+    className={classes(className, "break-words")}
     id={id}
     link
   >

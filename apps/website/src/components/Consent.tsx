@@ -1,5 +1,7 @@
 import React, { useCallback, type MouseEventHandler } from "react";
 
+import { classes } from "@/utils/classes";
+
 import {
   useConsent,
   consentData,
@@ -33,12 +35,10 @@ const Consent: React.FC<ConsentProps> = ({
 
   return (
     <div
-      className={[
+      className={classes(
         "relative z-0 flex flex-col items-center justify-center",
-        className,
-      ]
-        .filter(Boolean)
-        .join(" ")}
+        className
+      )}
     >
       {loaded &&
         (consent[key] ? (

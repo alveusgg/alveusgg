@@ -12,11 +12,13 @@ import enclosures, {
   type EnclosureKey,
 } from "@alveusgg/data/src/enclosures";
 
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
+import { classes } from "@/utils/classes";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import { camelToKebab, kebabToCamel } from "@/utils/string-case";
-import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -73,7 +75,7 @@ const AmbassadorItems: React.FC<{
   className?: string;
   level?: React.ComponentProps<typeof Heading>["level"];
 }> = ({ ambassadors, className, level }) => (
-  <div className={["flex flex-wrap", className].filter(Boolean).join(" ")}>
+  <div className={classes("flex flex-wrap", className)}>
     {ambassadors.map((key) => (
       <AmbassadorItem key={key} ambassador={key} level={level} />
     ))}
@@ -231,23 +233,19 @@ const AmbassadorsPage: NextPage = () => {
                         setTab(key);
                         setActive(null);
                       }}
-                      className={[
+                      className={classes(
                         "group relative inline-block p-4 transition-colors hover:border-alveus-green-500 hover:text-alveus-green-500",
-                        tab === key && "text-alveus-green-700",
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
+                        tab === key && "text-alveus-green-700"
+                      )}
                       aria-current={tab === key ? "page" : undefined}
                     >
                       {val}
 
                       <div
-                        className={[
+                        className={classes(
                           "absolute inset-x-0 -bottom-0.5 h-1 w-full rounded-sm transition-colors group-hover:bg-alveus-green-500",
-                          tab === key && "bg-alveus-green-700",
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
+                          tab === key && "bg-alveus-green-700"
+                        )}
                       />
                     </button>
                   </li>
