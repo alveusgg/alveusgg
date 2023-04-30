@@ -1,5 +1,11 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { padKeyBuffer, toPEM } from "../build-scripts/vapid";
+
+vi.mock("@/env/server.mjs", () => {
+  return {
+    env: {},
+  };
+});
 
 // NOTE: DO NOT USE THESE KEYS IN PRODUCTION!
 const publicKey =

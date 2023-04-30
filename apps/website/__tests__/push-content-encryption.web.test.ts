@@ -1,7 +1,7 @@
 import { webcrypto as crypto } from "node:crypto";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 
-import { decode } from "@/utils/base64url";
+import { decodeBase64UrlToArrayBuffer } from "@/utils/base64url";
 import {
   HMAC_hash,
   HKDF_expand,
@@ -12,6 +12,12 @@ import {
   createCipherText,
   createECDH,
 } from "@/server/utils/web-push/content-encryption.web";
+
+vi.mock("@/env/server.mjs", () => {
+  return {
+    env: {},
+  };
+});
 
 const salt = new TextEncoder().encode("3208123h08dsf9pnsadf");
 const data = new TextEncoder().encode("this is some data");
@@ -144,8 +150,8 @@ test("writeHeader", () => {
 });
 
 test("deriveKeyAndNonce", async () => {
-  const authSecret = decode(authSecretStr);
-  const dh = decode(dhStr);
+  const authSecret = decodeBase64UrlToArrayBuffer(authSecretStr);
+  const dh = decodeBase64UrlToArrayBuffer(dhStr);
   const localKeypair = await createECDH();
 
   const { key, nonce } = await deriveKeyAndNonce({

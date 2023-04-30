@@ -17,13 +17,30 @@ function arrayBufferToBase64(buffer: ArrayBuffer) {
   return btoa(binary);
 }
 
-export function encode(src: ArrayBuffer) {
-  return arrayBufferToBase64(src)
-    .replace(/\//g, "_")
-    .replace(/\+/g, "-")
-    .replace(/=+$/, "");
+export function base64toBase64Url(base64: string) {
+  return base64.replace(/\//g, "_").replace(/\+/g, "-").replace(/=+$/, "");
 }
 
-export function decode(str: string) {
-  return base64ToArrayBuffer(str.replaceAll("-", "+").replaceAll("_", "/"));
+export function encodeArrayBufferToBase64Url(src: ArrayBuffer) {
+  return base64toBase64Url(arrayBufferToBase64(src));
+}
+
+export function encodeBase64UrlString(str: string) {
+  return base64toBase64Url(btoa(str));
+}
+
+export function base64toBase64URL(str: string) {
+  return str.replaceAll("/", "_").replaceAll("+", "-").replaceAll("=", "");
+}
+
+export function base64UrlToBase64(str: string) {
+  return str.replaceAll("-", "+").replaceAll("_", "/");
+}
+
+export function decodeBase64UrlString(str: string) {
+  return atob(base64UrlToBase64(str));
+}
+
+export function decodeBase64UrlToArrayBuffer(str: string) {
+  return base64ToArrayBuffer(base64UrlToBase64(str));
 }

@@ -1,7 +1,7 @@
 import { createECDH } from "node:crypto";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 
-import { decode } from "@/utils/base64url";
+import { decodeBase64UrlToArrayBuffer } from "@/utils/base64url";
 import {
   HMAC_hash,
   HKDF_expand,
@@ -11,6 +11,12 @@ import {
   writeHeader,
   createCipherText,
 } from "@/server/utils/web-push/content-encryption";
+
+vi.mock("@/env/server.mjs", () => {
+  return {
+    env: {},
+  };
+});
 
 const salt = Buffer.from("3208123h08dsf9pnsadf");
 const data = Buffer.from("this is some data");
@@ -137,8 +143,8 @@ test("writeHeader", () => {
 });
 
 test("deriveKeyAndNonce", () => {
-  const authSecret = decode(authSecretStr);
-  const dh = decode(dhStr);
+  const authSecret = decodeBase64UrlToArrayBuffer(authSecretStr);
+  const dh = decodeBase64UrlToArrayBuffer(dhStr);
   const localKeypair = createECDH("prime256v1");
   localKeypair.generateKeys();
 

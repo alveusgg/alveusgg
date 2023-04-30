@@ -1,6 +1,6 @@
 import { webcrypto as crypto } from "node:crypto";
 
-import { decode } from "@/utils/base64url";
+import { decodeBase64UrlToArrayBuffer } from "@/utils/base64url";
 import {
   concatArrayBuffers,
   createUintArrayBEFromNumber,
@@ -233,14 +233,14 @@ export async function encryptContent(
   userPrivateKey: string,
   payload: Uint8Array
 ) {
-  const dh = decode(userPublicKey);
+  const dh = decodeBase64UrlToArrayBuffer(userPublicKey);
   if (dh.length !== 65) {
     throw new Error(
       "The subscription p256dh value should be exactly 65 bytes long."
     );
   }
 
-  const authSecret = decode(userPrivateKey);
+  const authSecret = decodeBase64UrlToArrayBuffer(userPrivateKey);
   if (authSecret.length < 16) {
     throw new Error(
       "The subscription auth key should be at least 16 bytes long"

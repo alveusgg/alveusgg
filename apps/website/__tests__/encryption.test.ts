@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import {
   generateSalt,
   decodeSalt,
@@ -7,6 +7,14 @@ import {
   encrypt,
   decrypt,
 } from "@/server/utils/encryption";
+
+vi.mock("@/env/server.mjs", () => {
+  return {
+    env: {
+      DATA_ENCRYPTION_PASSPHRASE: "Y6fK9EJsQQX85pmgeXjsTQdqKL5ioc37",
+    },
+  };
+});
 
 test("generate salt", async () => {
   const salt = await generateSalt();
@@ -44,8 +52,8 @@ test("encrypt", async () => {
 });
 
 test("decrypt", async () => {
-  const salt = decodeSalt("nqjSIYuP82Tle4YCJCelDg==");
-  const encrypted = "zH9R26HtTiw/Tkbfc1ZLh44XxlMhwORBiHn2OG04zVuL";
+  const salt = decodeSalt("PBgjVu4YvlyR1zvRXK2u2Q==");
+  const encrypted = "OGWBKBR87FPiqMFckXnMXSq/9Al6IfNUSMRYuMdJU2CQ";
 
   const key = await createSaltedEncryptionKey(salt);
   expect(key).toBeDefined();
