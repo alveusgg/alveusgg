@@ -6,25 +6,17 @@ vi.mock("@/env/server.mjs", () => {
   return {
     env: {
       WEB_PUSH_VAPID_SUBJECT: "mailto:admin@alveus.gg",
-      WEB_PUSH_VAPID_PEM:
-        "-----BEGIN EC PARAMETERS-----\r\n" +
-        "BggqhkjOPQMBBw==\r\n" +
-        "-----END EC PARAMETERS-----\r\n" +
-        "-----BEGIN EC PRIVATE KEY-----\r\n" +
-        "MHcCATEEIBj3T/aWouqvkYeA1Sg8Lml3UynBXS70VIdVFeQ3+EVHoAoGCCqGSM49\r\n" +
-        "AwEHoUQDQgAEmRdnFEV93/Hl16lhWXFDyUn7JNQMtXqLniAq+hW7mXj0lmIJoYw3\r\n" +
-        "6Km1rbB8nKyShdiX+HeL9pz5T+pobKkfRg==\r\n" +
-        "-----END EC PRIVATE KEY-----\r\n",
+      WEB_PUSH_VAPID_PRIVATE_KEY: "iE5C-sg_Qpt4CqVdnqzJUCpLTspXoZRNrW0EUn8oTu0",
       NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
-        "BJkXZxRFfd_x5depYVlxQ8lJ-yTUDLV6i54gKvoVu5l49JZiCaGMN-ipta2wfJyskoXYl_h3i_ac-U_qaGypH0Y",
+        "BAj7ffkexjXdSBHWkyle7tyiZLy9V_pcm7vqNNlMybJ_anJobVtrtU_E2WxQDgEI7WDXLtxyHueOWyLtlRR7SQ4",
     },
   };
 });
 
 const testAudience = "https://domain.tld";
 
-test("getVapidAuthorizationString", () => {
-  const str = getVapidAuthorizationString(testAudience);
+test("getVapidAuthorizationString", async () => {
+  const str = await getVapidAuthorizationString(testAudience);
 
   const parts = str.split(", ");
   expect(parts.length).toBe(2);

@@ -1,6 +1,11 @@
-import * as jws from "jws";
+import { webcrypto as crypto } from "node:crypto";
 
 import { env } from "@/env/server.mjs";
+import {
+  decodeBase64UrlToArrayBuffer,
+  encodeArrayBufferToBase64Url,
+  encodeBase64UrlString,
+} from "@/utils/base64url";
 
 // Default expiration in seconds
 const DEFAULT_EXPIRATION_SECONDS = 12 * 60 * 60;
@@ -30,7 +35,48 @@ function checkExpiration(expiration: number) {
   }
 }
 
-export function getVapidAuthorizationString(
+export function toUint8Array(binaryStr: string) {
+  const uint8Array = new Uint8Array(binaryStr.length);
+  for (let s = 0, sl = binaryStr.length; s < sl; s++) {
+    uint8Array[s] = binaryStr.charCodeAt(s);
+  }
+  return uint8Array;
+}
+
+const signAlgorithm = {
+  name: "HMAC",
+  hash: { name: "SHA-512" },
+};
+
+export async function sign(payload: unknown) {
+  const payloadString =
+    encodeBase64UrlString(
+      JSON.stringify({
+        typ: "JWT",
+        alg: "ES256",
+      })
+    ) +
+    "." +
+    encodeBase64UrlString(JSON.stringify(payload));
+
+  const privateKey = env.WEB_PUSH_VAPID_PRIVATE_KEY;
+  if (!privateKey) throw new Error("Vapid private key is not set.");
+
+  const buffer = toUint8Array(payloadString);
+  const signingKey = await crypto.subtle.importKey(
+    "raw",
+    decodeBase64UrlToArrayBuffer(privateKey),
+    signAlgorithm,
+    false,
+    ["sign"]
+  );
+
+  const signature = await crypto.subtle.sign(signAlgorithm, signingKey, buffer);
+
+  return `${payloadString}.${encodeArrayBufferToBase64Url(signature)}`;
+}
+
+export async function getVapidAuthorizationString(
   audience: string,
   expiration?: number
 ) {
@@ -51,26 +97,16 @@ export function getVapidAuthorizationString(
   const subject = env.WEB_PUSH_VAPID_SUBJECT;
   if (!subject) throw new Error("Vapid subject is not set.");
 
-  const pem = env.WEB_PUSH_VAPID_PEM;
-  if (!pem) throw new Error("Vapid PEM is not set.");
-
   if (expiration) {
     checkExpiration(expiration);
   } else {
     expiration = getFutureTimestamp(DEFAULT_EXPIRATION_SECONDS);
   }
 
-  const jwt = jws.sign({
-    header: {
-      typ: "JWT",
-      alg: "ES256",
-    },
-    payload: {
-      aud: audience,
-      exp: expiration,
-      sub: subject,
-    },
-    privateKey: pem,
+  const jwt = await sign({
+    aud: audience,
+    exp: expiration,
+    sub: subject,
   });
 
   return `vapid t=${jwt}, k=${publicKey}`;

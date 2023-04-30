@@ -32,7 +32,7 @@ type HttpsPushRequestOptions = PushRequestOptions &
 
 const DEFAULT_TTL = WEB_PUSH_MAX_TTL;
 
-function generateRequestDetails(
+async function generateRequestDetails(
   subscription: PushNotificationBase64Url,
   payload: string | Buffer | null,
   options: PushRequestOptions
@@ -61,7 +61,7 @@ function generateRequestDetails(
   }
 
   const url = new URL(subscription.endpoint);
-  const body = encryptContent(
+  const body = await encryptContent(
     subscription.keys.p256dh,
     subscription.keys.auth,
     Buffer.from(payload || "")
@@ -72,10 +72,10 @@ function generateRequestDetails(
     headers: {
       ...options.headers,
       TTL: String(timeToLive),
-      "Content-Length": String(body.length),
+      "Content-Length": String(body.byteLength),
       "Content-Type": "application/octet-stream",
       "Content-Encoding": "aes128gcm",
-      Authorization: getVapidAuthorizationString(
+      Authorization: await getVapidAuthorizationString(
         `${url.protocol}//${url.host}`
       ),
     },
@@ -88,7 +88,7 @@ export async function sendWebPushNotification(
   payload: string | Buffer | null,
   options: HttpsPushRequestOptions
 ) {
-  const { endpoint, body, headers } = generateRequestDetails(
+  const { endpoint, body, headers } = await generateRequestDetails(
     subscription,
     payload,
     options

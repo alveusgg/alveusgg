@@ -11,7 +11,7 @@ import {
   writeHeader,
   createCipherText,
   createECDH,
-} from "@/server/utils/web-push/content-encryption.web";
+} from "@/server/utils/web-push/content-encryption";
 
 vi.mock("@/env/server.mjs", () => {
   return {

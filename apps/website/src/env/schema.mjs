@@ -38,7 +38,6 @@ export const serverSchema = z.object({
     .superRefine(checkPrivateKey)
     .optional(),
   WEB_PUSH_VAPID_SUBJECT: z.string().superRefine(checkSubject).optional(),
-  WEB_PUSH_VAPID_PEM: z.string().optional(),
   OPEN_WEATHER_MAP_API_KEY: z.string().optional(),
   OPEN_WEATHER_MAP_API_LAT: z.string().optional(),
   OPEN_WEATHER_MAP_API_LON: z.string().optional(),
