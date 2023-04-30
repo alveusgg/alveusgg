@@ -39,7 +39,7 @@ const publicKey = await crypto.subtle.importKey(
   ]),
   { name: "ECDH", namedCurve: "P-256" },
   true,
-  ["deriveBits"]
+  []
 );
 
 const authSecretStr = "ZFO3cPjB3ehHtfmB3Tdv7Q";

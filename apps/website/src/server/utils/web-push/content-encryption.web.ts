@@ -96,7 +96,7 @@ export async function deriveKeyAndNonce(params: {
     params.dh,
     { name: "ECDH", namedCurve: "P-256" },
     true,
-    ["deriveBits"]
+    []
   );
 
   const secret = await deriveHmacKey(
