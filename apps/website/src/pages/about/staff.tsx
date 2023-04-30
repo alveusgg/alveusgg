@@ -1,4 +1,5 @@
 import { type NextPage } from "next";
+import Image from "next/image";
 import React from "react";
 
 import Section from "@/components/content/Section";
@@ -10,6 +11,9 @@ import { Lightbox, Preview } from "@/components/content/YouTube";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import ellaRocksImage from "@/assets/people/ella-rocks.jpg";
+
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const staff = {
   connor: {
@@ -167,24 +171,37 @@ const AboutStaffPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
-        <People people={staff} columns={2} />
+      <div className="relative flex flex-grow flex-col">
+        <Image
+          src={leafLeftImage1}
+          alt=""
+          className="pointer-events-none absolute -left-8 -top-52 z-10 hidden h-auto w-1/2 max-w-[10rem] -rotate-45 select-none lg:block"
+        />
+        <Image
+          src={leafRightImage2}
+          alt=""
+          className="pointer-events-none absolute -bottom-52 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
+        />
 
-        <p className="mb-4 mt-8 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
-          The Alveus team is more than just our on-site staff. We have a number
-          of folks who help us out remotely with a variety of tasks, from social
-          media management to development.
-        </p>
+        <Section className="flex-grow">
+          <People people={staff} columns={2} />
 
-        <div className="flex flex-wrap">
-          {Object.entries(team).map(([key, person]) => (
-            <div key={key} className="w-full p-4 sm:w-1/2 lg:w-1/3">
-              <p className="text-lg font-semibold">{person.name}</p>
-              <p>{person.title}</p>
-            </div>
-          ))}
-        </div>
-      </Section>
+          <p className="mb-4 mt-8 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
+            The Alveus team is more than just our on-site staff. We have a
+            number of folks who help us out remotely with a variety of tasks,
+            from social media management to development.
+          </p>
+
+          <div className="flex flex-wrap">
+            {Object.entries(team).map(([key, person]) => (
+              <div key={key} className="w-full p-4 sm:w-1/2 lg:w-1/3">
+                <p className="text-lg font-semibold">{person.name}</p>
+                <p>{person.title}</p>
+              </div>
+            ))}
+          </div>
+        </Section>
+      </div>
     </>
   );
 };
