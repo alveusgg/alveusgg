@@ -3,6 +3,8 @@ import Image from "next/image";
 import React from "react";
 
 import { formatDateTime } from "@/utils/datetime";
+import { camelToKebab } from "@/utils/string-case";
+import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -25,6 +27,7 @@ type Event = {
   date: Date;
   video: Video;
   stats: Record<string, { title: string; stat: string }>;
+  info: React.ReactNode;
 };
 
 const events = {
@@ -50,6 +53,27 @@ const events = {
         stat: "$570",
       },
     },
+    info: (
+      <>
+        <p>
+          Hosted in the Session Yard at Alveus, with Connor and Alex from the
+          Alveus team as the auctioneers, the Art Auction 2023 was a huge
+          success. Livestream viewers were able to bid on paintings created by
+          the ambassadors at Alveus via chat, with 33 paintings being sold this
+          year. For viewers who were unable to win a painting, they had the
+          option to donate $25 or more to get a signed postcard for the event,
+          and 261 wonderful donors claimed one.
+        </p>
+        <p>
+          The event raised $63,019 for Alveus Sanctuary over the course of the
+          3.5-hour long event, with $31,500 of that from an incredibly generous
+          donation by Rotary at the end of the event. Georgie was our most
+          successful ambassador artist this year, with his four paintings
+          raising $4,225 in donations, with the top one selling for $2.1k. Thank
+          you to everyone that watched and supported this event!
+        </p>
+      </>
+    ),
   },
   valentines2023: {
     name: "Valentine's Day 2023",
@@ -73,6 +97,27 @@ const events = {
         stat: "9,729",
       },
     },
+    info: (
+      <>
+        <p>
+          To celebrate Valentine&apos;s Day, we hosted a short livestream
+          fundraiser. Viewers were able to donate $25 or more to get a signed
+          postcard for the event, and the chance to win a ambassador plushie
+          hand-crafted by Maya. We were able to raise $40,076 for Alveus over
+          the 3-hour long event, with 596 donors claiming a postcard.
+        </p>
+        <p>
+          Each donation of $25 or more would also include some 3D-printed
+          dabloons ($25 per dabloon), which also represented an entry into the
+          plushie giveaway (one free entry was available for anyone unable to
+          donate). The top 5 donors during the event were able to pick which
+          plushie they would like, and the remaining 19 plushies were
+          distributed based on random golden dabloons amongst the 1,600 dabloons
+          sent out to donors. Thank you to everyone that watched and supported
+          this event!
+        </p>
+      </>
+    ),
   },
   artAuction2022: {
     name: "Art Auction 2022",
@@ -96,6 +141,17 @@ const events = {
         stat: "30",
       },
     },
+    info: (
+      <p>
+        30 incredible paintings produced by the ambassadors at Alveus (with help
+        from our animal care staff) were up for auction, with livestream viewers
+        able to bid in real-time to get one. Alongside the paintings, anyone was
+        able to donate $100 or more to claim a signed print of a painting
+        containing all the ambassadors. During the event, we raised $42,104 for
+        Alveus Sanctuary, with 199 donors claiming a print. Thank you for your
+        support!
+      </p>
+    ),
   },
   halloween2021: {
     name: "Halloween 2021",
@@ -123,6 +179,28 @@ const events = {
         stat: "93,000",
       },
     },
+    info: (
+      <>
+        <p>
+          The halloween event at Alveus was a massive success, with 34 creators
+          from across the streaming space descending on the sanctuary to help
+          raise money for the animals. During the event, anyone that donated
+          $250 or more had their name written on the side wall of the Nutrition
+          House, with the wall being sealed after the event. Over the evening, 5
+          hours of live content, we were able to raise $101,971 for Alveus
+          Sanctuary, with 1,235 donors claiming a name on the wall.
+        </p>
+        <p>
+          Two teams were formed from the creators, and they competed in many
+          activities around the property throughout the event. A game of apple
+          bobbing started the evening off, followed by hale bale throwing to see
+          which team had better technique. A little while later we had a game of
+          badminton on the grass, followed by trivia and then the dunk tank. We
+          rounded off the evening with some mud wrestling. Thank you to all the
+          creators that joined us, and everyone who watched and donated!
+        </p>
+      </>
+    ),
   },
   fundathon2021: {
     name: "Fund-a-thon 2021",
@@ -146,6 +224,19 @@ const events = {
         stat: "82,000",
       },
     },
+    info: (
+      <p>
+        The event that started it all! A 20-hour long mega-stream with a whole
+        bunch of donation goals along the way, aiming to raise as much money as
+        possible to kick-start Alveus. Each donor that donated $100 or more got
+        their name engraved on a golden leaf that form part of six donor trees
+        now affixed to the back of the studio building. The final goal for the
+        stream was that at $500k raised Maya would shave her head, and we were
+        able to reach that goal with $573,004 raised for Alveus over the whole
+        stream. Thank you to all the leafers, everyone that donated and everyone
+        that watched!
+      </p>
+    ),
   },
 } as const satisfies Record<string, Event>;
 
@@ -198,28 +289,23 @@ const EventsPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          {Object.entries(events).map(([key, event], idx) => (
-            <div key={key} className="flex flex-wrap-reverse">
-              <div className="mx-auto flex basis-full flex-col py-8 md:px-8 lg:basis-1/2">
-                <VideoPlayer
-                  className="my-auto aspect-video w-full rounded-xl"
-                  poster={event.video.poster}
-                  sources={event.video.sources}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-
-              <div
-                className={`mx-auto flex basis-full flex-col py-8 lg:basis-1/2 lg:px-8 ${
-                  idx % 2 ? "lg:order-first" : ""
-                }`}
-              >
+          {Object.entries(events).map(([key, event], idx, arr) => (
+            <div
+              key={key}
+              className={classes(
+                "flex flex-wrap gap-y-8 pb-12 pt-8",
+                idx === 0 ? "lg:pb-16" : "lg:py-16",
+                idx !== arr.length - 1 &&
+                  "border-b-2 border-alveus-green-300/25"
+              )}
+            >
+              <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
                 <Heading
                   level={2}
-                  className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center text-4xl"
+                  className="my-4 scroll-mt-8 text-center text-4xl"
+                  id={camelToKebab(key).replace(/([a-z])([0-9])/gi, "$1-$2")}
+                  link
+                  linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
                 >
                   {event.name}
                   <small className="text-xl text-alveus-green-600">
@@ -240,6 +326,27 @@ const EventsPage: NextPage = () => {
                     </div>
                   ))}
                 </div>
+              </div>
+
+              <div
+                className={classes(
+                  "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
+                  idx % 2 === 0 && "lg:order-first"
+                )}
+              >
+                <VideoPlayer
+                  className="my-auto aspect-video w-full rounded-xl"
+                  poster={event.video.poster}
+                  sources={event.video.sources}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+
+              <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
+                {event.info}
               </div>
             </div>
           ))}
