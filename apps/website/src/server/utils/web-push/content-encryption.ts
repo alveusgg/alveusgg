@@ -9,8 +9,14 @@ import {
 
 export const PAD_SIZE = 1;
 export const TAG_LENGTH = 16;
+export const KEY_LENGTH = 16;
 export const NONCE_LENGTH = 12;
 export const SHA_256_LENGTH = 32;
+
+type KeyAndNonce = {
+  key: ArrayBuffer;
+  nonce: ArrayBuffer;
+};
 
 export async function computeSecret(
   privateKey: CryptoKey,
@@ -71,12 +77,12 @@ export async function deriveHmacKey(
   return HKDF_expand(pseudoRandomKey, info, length);
 }
 
-export async function deriveNonce(params: {
+export async function deriveKeyAndNonce(params: {
   salt: ArrayBuffer;
   authSecret: ArrayBuffer;
   dh: ArrayBuffer;
   localKeypair: { privateKey: CryptoKey; publicKey: CryptoKey };
-}) {
+}): Promise<KeyAndNonce> {
   const userPublicKey = await crypto.subtle.importKey(
     "raw",
     params.dh,
@@ -97,12 +103,18 @@ export async function deriveNonce(params: {
   );
 
   const pseudoRandomKey = await HMAC_hash(params.salt, secret);
-
-  return HKDF_expand(
-    pseudoRandomKey,
-    new TextEncoder().encode("Content-Encoding: nonce\0"),
-    NONCE_LENGTH
-  );
+  return {
+    key: await HKDF_expand(
+      pseudoRandomKey,
+      new TextEncoder().encode("Content-Encoding: aes128gcm\0"),
+      KEY_LENGTH
+    ),
+    nonce: await HKDF_expand(
+      pseudoRandomKey,
+      new TextEncoder().encode("Content-Encoding: nonce\0"),
+      NONCE_LENGTH
+    ),
+  };
 }
 
 export function generateNonce(base: ArrayBuffer, counter: number) {
@@ -117,16 +129,18 @@ export function generateNonce(base: ArrayBuffer, counter: number) {
 }
 
 export async function encryptRecord(
-  nonce: ArrayBuffer,
+  keyAndNonce: KeyAndNonce,
   counter: number,
   buffer: ArrayBuffer,
   pad = 0,
   last = false
 ) {
   pad = pad || 0;
-  const iv = generateNonce(nonce, counter);
+  const iv = generateNonce(keyAndNonce.nonce, counter);
 
-  const aesKey = await crypto.subtle.generateKey(
+  const aesKey = await crypto.subtle.importKey(
+    "raw",
+    keyAndNonce.key,
     {
       name: "AES-GCM",
       length: 128,
@@ -150,58 +164,61 @@ export async function encryptRecord(
   );
 }
 
-export function createCipherHeader(
-  keyId: ArrayBuffer,
-  rs: number,
-  salt: Uint8Array
-) {
-  const ints = new ArrayBuffer(5);
-  const dv = new DataView(ints);
-  dv.setUint32(0, rs, false);
-  dv.setUint8(4, salt.byteLength);
-  return concatArrayBuffers([salt, ints, keyId]);
+export function createCipherHeader(keyId: ArrayBuffer, recordSize: number) {
+  const sizes = new ArrayBuffer(5);
+  const dv = new DataView(sizes);
+  dv.setUint32(0, recordSize, false);
+  dv.setUint8(4, keyId.byteLength);
+  return [sizes, keyId];
 }
 
 export async function createCipherText(
   localPublicKey: CryptoKey,
   salt: Uint8Array,
   payload: Uint8Array,
-  nonce: ArrayBuffer
+  keyAndNonce: KeyAndNonce
 ) {
   const overhead = PAD_SIZE + TAG_LENGTH;
-  const rs = 4096;
+  const recordSize = 4096;
 
   const publicKeyBuffer = await crypto.subtle.exportKey("raw", localPublicKey);
-  let cipherText = createCipherHeader(publicKeyBuffer, rs, salt);
+
+  const buffers: Array<ArrayBuffer> = [
+    salt.buffer,
+    ...createCipherHeader(publicKeyBuffer, recordSize),
+  ];
 
   let start = 0;
   let pad = 0;
   let counter = 0;
   while (true) {
     // Pad so that at least one data byte is in a block.
-    let recordPad = Math.min(rs - overhead - 1, pad);
+    let recordPad = Math.min(recordSize - overhead - 1, pad);
     if (pad > 0 && recordPad === 0) {
       recordPad += 1; // Deal with perverse case of rs=overhead+1 with padding.
     }
     pad -= recordPad;
 
-    const end = start + rs - overhead - recordPad;
+    const end = start + recordSize - overhead - recordPad;
     const isLast = end >= payload.length && pad <= 0;
-    const block = await encryptRecord(
-      nonce,
-      counter++,
-      payload.subarray(start, end),
-      recordPad,
-      isLast
+    buffers.push(
+      await encryptRecord(
+        keyAndNonce,
+        counter++,
+        payload.subarray(start, end),
+        recordPad,
+        isLast
+      )
     );
-    cipherText = concatArrayBuffers([cipherText, block]);
 
     if (isLast) break;
 
     start = end;
   }
 
-  return cipherText;
+  console.log({ buffers });
+
+  return concatArrayBuffers(buffers);
 }
 
 export async function encryptContent(
@@ -229,12 +246,12 @@ export async function encryptContent(
     ["deriveKey", "deriveBits"]
   );
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  const nonce = await deriveNonce({
+  const keyAndNonce = await deriveKeyAndNonce({
     salt,
     localKeypair,
     dh,
     authSecret,
   });
 
-  return createCipherText(localKeypair.publicKey, salt, payload, nonce);
+  return createCipherText(localKeypair.publicKey, salt, payload, keyAndNonce);
 }
