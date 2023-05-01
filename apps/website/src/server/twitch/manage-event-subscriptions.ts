@@ -6,7 +6,7 @@ import {
   getSubscriptions,
   getSubscriptionsForUser,
   removeSubscription,
-} from "../../utils/twitch-api";
+} from "../utils/twitch-api";
 
 /*
   Notes:

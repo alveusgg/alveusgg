@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createNotification } from "@/server/actions/notifications/create-notification";
+import { createNotification } from "@/server/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 
 export default createTokenProtectedApiHandler(

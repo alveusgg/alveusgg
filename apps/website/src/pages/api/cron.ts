@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { runScheduledTasks } from "@/server/actions/scheduler";
+import { runScheduledTasks } from "@/server/scheduler";
 
 export default async function handler(
   req: NextApiRequest,

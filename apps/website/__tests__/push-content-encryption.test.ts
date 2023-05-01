@@ -14,7 +14,7 @@ import {
   encryptContent,
   createCipherHeader,
   createCipherText,
-} from "@/server/utils/web-push/content-encryption";
+} from "@/server/web-push/content-encryption";
 
 vi.mock("@/env/server.mjs", () => {
   return {

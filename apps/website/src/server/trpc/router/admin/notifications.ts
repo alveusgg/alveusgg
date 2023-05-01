@@ -4,7 +4,7 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { createNotification } from "@/server/actions/notifications/create-notification";
+import { createNotification } from "@/server/notifications";
 import { permissions } from "@/config/permissions";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { createFileStorageUpload } from "@/server/utils/file-storage";

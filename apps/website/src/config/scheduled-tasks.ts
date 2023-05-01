@@ -3,7 +3,7 @@ import { z } from "zod";
 //import { updateSubscriptions } from "@/server/actions/twitch/manage-event-subscriptions";
 //import { checkLiveStatus } from "@/server/actions/twitch/check-live-status";
 //import { syncRoles } from "@/server/actions/twitch/sync-roles";
-import { cleanupFileStorage } from "@/server/actions/file-storage/cleanup";
+import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 

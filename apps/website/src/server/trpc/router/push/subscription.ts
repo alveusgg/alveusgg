@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { defaultTags } from "@/config/notifications";
-import { knownPushServicesRegex } from "@/server/utils/web-push/known-push-services";
+import { knownPushServicesRegex } from "@/server/web-push/known-push-services";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
 const baseRegistrationSchema = z.object({

@@ -8,7 +8,7 @@ const PUSH_BATCH_SIZE = 2;
 export async function createNotification(data: {
   tag: string;
   text?: string;
-  url: string;
+  url?: string;
   heading?: string;
   imageUrl?: string;
 }) {

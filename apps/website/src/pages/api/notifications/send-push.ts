@@ -1,14 +1,15 @@
 import type { NotificationUrgency } from "@prisma/client";
 import { z } from "zod";
+
 import { defaultTag, defaultTitle } from "@/config/notifications";
 import type { NotificationPayload } from "@/utils/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
-import { sendWebPushNotification } from "@/server/utils/web-push";
 import {
   getWebPushUrgency,
   isNotificationUrgency,
   WEB_PUSH_MAX_TTL,
-} from "@/server/utils/web-push/constants";
+} from "@/server/web-push/constants";
+import { sendWebPushNotification } from "@/server/web-push";
 import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
