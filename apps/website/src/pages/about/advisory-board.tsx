@@ -6,38 +6,13 @@ import Heading from "@/components/content/Heading";
 import People from "@/components/content/People";
 import Meta from "@/components/content/Meta";
 
-import samanthaJacksonImage from "@/assets/people/samantha-jackson.png";
 import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
 import synackImage from "@/assets/people/synack.png";
-import anitaYeattesImage from "@/assets/people/anita-yeattes.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
 import allisonJohnsonImage from "@/assets/people/allison-johnson.jpg";
 
 const advisors = {
-  samantha: {
-    image: samanthaJacksonImage,
-    name: "Samantha Jackson",
-    title: "Advisory Board Member",
-    description: (
-      <>
-        <p>
-          Samantha has a profound connection to animals and a strong passion for
-          conservation. Her parents, David and Anita, founded Zoo to You before
-          she was born, meaning Samantha was raised with tigers, monkeys, bears,
-          lions and all of the animals that have found sanctuary at her family’s
-          rescue zoo. Having been surrounded by wildlife education and
-          conservation for her entire life, carrying on the family legacy came
-          naturally for her. She has appeared on Jack Hanna’s Into the Wild,
-          David Letterman, and many other national and local programs in a
-          continued effort to spread the message of conservation. Samantha is
-          the co-founder of the Falconry Experience, where she works hard and
-          uses her expertise as a licensed falconer to inspire everyone she
-          meets to fall in love, respect, and conserve wildlife.
-        </p>
-      </>
-    ),
-  },
   michele: {
     image: micheleRaffinImage,
     name: "Michele Raffin",
@@ -107,21 +82,6 @@ const advisors = {
           spay/neuter organization. In addition, he has 10 years of experience
           on an advisory board for the business and technology department of a
           local college.
-        </p>
-      </>
-    ),
-  },
-  anita: {
-    image: anitaYeattesImage,
-    name: "Anita Yeattes",
-    title: "Advisory Board Member",
-    description: (
-      <>
-        <p>
-          Anita has vast knowledge and experience with many species of animals
-          ranging from tigers to bald eagles. She was a zoological director for
-          Bush Gardens. She is also a master falconer of more than 30 years. She
-          is the founder of Falconry Experience & Zoo to You in California.
         </p>
       </>
     ),
