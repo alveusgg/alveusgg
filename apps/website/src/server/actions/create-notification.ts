@@ -39,6 +39,7 @@ export async function createNotification(data: {
     const subscriptions = await prisma.pushSubscription.findMany({
       select: { id: true },
       where: {
+        deletedAt: null,
         p256dh: { not: { equals: null } },
         auth: { not: { equals: null } },
         tags: {

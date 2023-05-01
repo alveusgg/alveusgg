@@ -31,6 +31,7 @@ export const pushSubscriptionRouter = router({
         where: {
           userId: ctx.session?.user?.id,
           endpoint: input.endpoint,
+          deletedAt: null,
         },
       })
     ),
@@ -50,6 +51,7 @@ export const pushSubscriptionRouter = router({
             userId: ctx.session?.user?.id,
             p256dh: input.p256dh,
             auth: input.auth,
+            deletedAt: null,
           },
         });
       } else {
@@ -104,8 +106,9 @@ export const pushSubscriptionRouter = router({
   unregister: publicProcedure
     .input(selectionSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.pushSubscription.delete({
+      await ctx.prisma.pushSubscription.updateMany({
         where: { endpoint: input.endpoint },
+        data: { deletedAt: new Date() },
       });
     }),
 
@@ -116,7 +119,10 @@ export const pushSubscriptionRouter = router({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.pushSubscription.update({
         where: { endpoint: input.endpoint },
-        data: input.newSubscription,
+        data: {
+          ...input.newSubscription,
+          deletedAt: null,
+        },
       });
     }),
 });

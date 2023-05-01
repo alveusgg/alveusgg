@@ -11,6 +11,7 @@ import {
 } from "@/server/utils/web-push/constants";
 import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
+import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
 
 export type SendPushOptions = z.infer<typeof sendPushSchema>;
 
@@ -40,7 +41,7 @@ export default createTokenProtectedApiHandler(
       where: { id: options.subscriptionId },
     });
 
-    if (!subscription) {
+    if (!subscription || subscription.deletedAt !== null) {
       return true;
     }
 
@@ -120,10 +121,17 @@ export default createTokenProtectedApiHandler(
         }
       );
 
-      if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
-        delivered = true;
+      if (res.statusCode) {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          delivered = true;
+        } else if (res.statusCode === 410) {
+          // 410 Gone = subscription expired or unsubscribed
+          await markPushSubscriptionAsDeleted(options.subscriptionId);
+        }
       }
-    } catch (e) {}
+    } catch (e) {
+      console.error("Failed to send push notification", e);
+    }
 
     await updateNotificationPushStatus(
       delivered
