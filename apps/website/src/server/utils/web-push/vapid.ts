@@ -35,45 +35,42 @@ function checkExpiration(expiration: number) {
   }
 }
 
-export function toUint8Array(binaryStr: string) {
-  const uint8Array = new Uint8Array(binaryStr.length);
-  for (let s = 0, sl = binaryStr.length; s < sl; s++) {
-    uint8Array[s] = binaryStr.charCodeAt(s);
-  }
-  return uint8Array;
-}
+export async function createSignedJWT(payload: unknown) {
+  const headerStr = encodeBase64UrlString(
+    JSON.stringify({ typ: "JWT", alg: "ES256" })
+  );
+  const payloadStr = encodeBase64UrlString(JSON.stringify(payload));
+  const unsignedToken = `${headerStr}.${payloadStr}`;
 
-const signAlgorithm = {
-  name: "HMAC",
-  hash: { name: "SHA-512" },
-};
-
-export async function sign(payload: unknown) {
-  const payloadString =
-    encodeBase64UrlString(
-      JSON.stringify({
-        typ: "JWT",
-        alg: "ES256",
-      })
-    ) +
-    "." +
-    encodeBase64UrlString(JSON.stringify(payload));
+  const publicKey = env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY;
+  if (!publicKey) throw new Error("Vapid public key is not set.");
 
   const privateKey = env.WEB_PUSH_VAPID_PRIVATE_KEY;
   if (!privateKey) throw new Error("Vapid private key is not set.");
 
-  const buffer = toUint8Array(payloadString);
+  const publicKeyBuffer = decodeBase64UrlToArrayBuffer(publicKey);
+
   const signingKey = await crypto.subtle.importKey(
-    "raw",
-    decodeBase64UrlToArrayBuffer(privateKey),
-    signAlgorithm,
-    false,
+    "jwk",
+    {
+      kty: "EC",
+      crv: "P-256",
+      x: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(1, 33)),
+      y: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(33, 65)),
+      d: privateKey,
+    },
+    { name: "ECDSA", namedCurve: "P-256" },
+    true,
     ["sign"]
   );
 
-  const signature = await crypto.subtle.sign(signAlgorithm, signingKey, buffer);
+  const signature = await crypto.subtle.sign(
+    { name: "ECDSA", hash: { name: "SHA-256" } },
+    signingKey,
+    new TextEncoder().encode(unsignedToken)
+  );
 
-  return `${payloadString}.${encodeArrayBufferToBase64Url(signature)}`;
+  return `${unsignedToken}.${encodeArrayBufferToBase64Url(signature)}`;
 }
 
 export async function getVapidAuthorizationString(
@@ -103,7 +100,7 @@ export async function getVapidAuthorizationString(
     expiration = getFutureTimestamp(DEFAULT_EXPIRATION_SECONDS);
   }
 
-  const jwt = await sign({
+  const jwt = await createSignedJWT({
     aud: audience,
     exp: expiration,
     sub: subject,

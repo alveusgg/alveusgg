@@ -9,22 +9,8 @@ import {
 
 export const PAD_SIZE = 1;
 export const TAG_LENGTH = 16;
-export const KEY_LENGTH = 16;
 export const NONCE_LENGTH = 12;
 export const SHA_256_LENGTH = 32;
-
-type KeyAndNonce = {
-  key: ArrayBuffer;
-  nonce: ArrayBuffer;
-};
-
-export async function createECDH() {
-  return crypto.subtle.generateKey(
-    { name: "ECDH", namedCurve: "P-256" },
-    true,
-    ["deriveKey", "deriveBits"]
-  );
-}
 
 export async function computeSecret(
   privateKey: CryptoKey,
@@ -85,12 +71,12 @@ export async function deriveHmacKey(
   return HKDF_expand(pseudoRandomKey, info, length);
 }
 
-export async function deriveKeyAndNonce(params: {
+export async function deriveNonce(params: {
   salt: ArrayBuffer;
   authSecret: ArrayBuffer;
   dh: ArrayBuffer;
   localKeypair: { privateKey: CryptoKey; publicKey: CryptoKey };
-}): Promise<KeyAndNonce> {
+}) {
   const userPublicKey = await crypto.subtle.importKey(
     "raw",
     params.dh,
@@ -109,19 +95,14 @@ export async function deriveKeyAndNonce(params: {
     ]),
     SHA_256_LENGTH
   );
-  const prk = await HMAC_hash(params.salt, secret);
-  return {
-    key: await HKDF_expand(
-      prk,
-      new TextEncoder().encode("Content-Encoding: aes128gcm\0"),
-      KEY_LENGTH
-    ),
-    nonce: await HKDF_expand(
-      prk,
-      new TextEncoder().encode("Content-Encoding: nonce\0"),
-      NONCE_LENGTH
-    ),
-  };
+
+  const pseudoRandomKey = await HMAC_hash(params.salt, secret);
+
+  return HKDF_expand(
+    pseudoRandomKey,
+    new TextEncoder().encode("Content-Encoding: nonce\0"),
+    NONCE_LENGTH
+  );
 }
 
 export function generateNonce(base: ArrayBuffer, counter: number) {
@@ -136,19 +117,19 @@ export function generateNonce(base: ArrayBuffer, counter: number) {
 }
 
 export async function encryptRecord(
-  key: KeyAndNonce,
+  nonce: ArrayBuffer,
   counter: number,
   buffer: ArrayBuffer,
   pad = 0,
   last = false
 ) {
   pad = pad || 0;
-  const nonce = generateNonce(key.nonce, counter);
+  const iv = generateNonce(nonce, counter);
 
   const aesKey = await crypto.subtle.generateKey(
     {
       name: "AES-GCM",
-      length: 256,
+      length: 128,
     },
     true,
     ["encrypt", "decrypt"]
@@ -156,29 +137,24 @@ export async function encryptRecord(
 
   const padding = new Uint8Array(pad + PAD_SIZE);
   padding.fill(0);
-  new DataView(padding.buffer).setUint8(0, last ? 2 : 1);
+  const paddingBuffer = padding.buffer;
+  new DataView(paddingBuffer).setUint8(0, last ? 2 : 1);
 
-  const ciphertextBuffer = concatArrayBuffers([buffer, padding]);
-
-  const encrypted = await crypto.subtle.encrypt(
+  return crypto.subtle.encrypt(
     {
       name: "AES-GCM",
-      iv: nonce,
+      iv,
     },
     aesKey,
-    buffer
+    concatArrayBuffers([buffer, paddingBuffer])
   );
-  const [, tag] = [
-    encrypted.slice(0, encrypted.byteLength - 16),
-    encrypted.slice(encrypted.byteLength - 16),
-  ];
-  if (tag.byteLength !== TAG_LENGTH) {
-    throw new Error("invalid tag generated");
-  }
-  return concatArrayBuffers([ciphertextBuffer, tag]);
 }
 
-export function writeHeader(keyId: ArrayBuffer, rs: number, salt: Uint8Array) {
+export function createCipherHeader(
+  keyId: ArrayBuffer,
+  rs: number,
+  salt: Uint8Array
+) {
   const ints = new ArrayBuffer(5);
   const dv = new DataView(ints);
   dv.setUint32(0, rs, false);
@@ -190,18 +166,18 @@ export async function createCipherText(
   localPublicKey: CryptoKey,
   salt: Uint8Array,
   payload: Uint8Array,
-  key: KeyAndNonce
+  nonce: ArrayBuffer
 ) {
   const overhead = PAD_SIZE + TAG_LENGTH;
   const rs = 4096;
 
   const publicKeyBuffer = await crypto.subtle.exportKey("raw", localPublicKey);
-  let cipherText = writeHeader(publicKeyBuffer, rs, salt);
+  let cipherText = createCipherHeader(publicKeyBuffer, rs, salt);
+
   let start = 0;
   let pad = 0;
   let counter = 0;
-  let last = false;
-  while (!last) {
+  while (true) {
     // Pad so that at least one data byte is in a block.
     let recordPad = Math.min(rs - overhead - 1, pad);
     if (pad > 0 && recordPad === 0) {
@@ -210,19 +186,19 @@ export async function createCipherText(
     pad -= recordPad;
 
     const end = start + rs - overhead - recordPad;
-    last = end >= payload.length;
-    last = last && pad <= 0;
+    const isLast = end >= payload.length && pad <= 0;
     const block = await encryptRecord(
-      key,
-      counter,
+      nonce,
+      counter++,
       payload.subarray(start, end),
       recordPad,
-      last
+      isLast
     );
     cipherText = concatArrayBuffers([cipherText, block]);
 
+    if (isLast) break;
+
     start = end;
-    ++counter;
   }
 
   return cipherText;
@@ -247,14 +223,18 @@ export async function encryptContent(
     );
   }
 
-  const localKeypair = await createECDH();
+  const localKeypair = await crypto.subtle.generateKey(
+    { name: "ECDH", namedCurve: "P-256" },
+    true,
+    ["deriveKey", "deriveBits"]
+  );
   const salt = crypto.getRandomValues(new Uint8Array(16));
-  const key = await deriveKeyAndNonce({
+  const nonce = await deriveNonce({
     salt,
     localKeypair,
     dh,
     authSecret,
   });
 
-  return createCipherText(localKeypair.publicKey, salt, payload, key);
+  return createCipherText(localKeypair.publicKey, salt, payload, nonce);
 }

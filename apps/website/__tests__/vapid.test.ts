@@ -1,6 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { getVapidAuthorizationString } from "@/server/utils/web-push/vapid";
 import { decodeBase64UrlString } from "@/utils/base64url";
+import { env } from "@/env/server.mjs";
 
 vi.mock("@/env/server.mjs", () => {
   return {
@@ -50,5 +51,5 @@ test("getVapidAuthorizationString", async () => {
   expect(signatureStr).toHaveLength(86);
 
   const publicKey = publicKeyWithPrefix.split("k=")[1];
-  expect(publicKey).toMatch(/^[a-zA-Z0-9-_]{87}$/);
+  expect(publicKey).toStrictEqual(env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY);
 });

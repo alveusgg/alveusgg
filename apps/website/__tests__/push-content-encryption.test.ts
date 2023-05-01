@@ -1,16 +1,18 @@
 import { webcrypto as crypto } from "node:crypto";
 import { expect, test, vi } from "vitest";
 
-import { decodeBase64UrlToArrayBuffer } from "@/utils/base64url";
+import {
+  decodeBase64UrlToArrayBuffer,
+  encodeArrayBufferToBase64Url,
+} from "@/utils/base64url";
 import {
   HMAC_hash,
   HKDF_expand,
   SHA_256_LENGTH,
-  deriveKeyAndNonce,
+  deriveNonce,
   encryptContent,
-  writeHeader,
+  createCipherHeader,
   createCipherText,
-  createECDH,
 } from "@/server/utils/web-push/content-encryption";
 
 vi.mock("@/env/server.mjs", () => {
@@ -22,12 +24,9 @@ vi.mock("@/env/server.mjs", () => {
 const salt = new TextEncoder().encode("3208123h08dsf9pnsadf");
 const data = new TextEncoder().encode("this is some data");
 
-const keyAndNonce = {
-  key: new Uint8Array([
-    250, 13, 71, 104, 127, 97, 86, 238, 51, 137, 76, 33, 207, 208, 201, 190,
-  ]),
-  nonce: new Uint8Array([90, 84, 77, 229, 216, 154, 30, 104, 88, 243, 51, 68]),
-};
+const nonce = new Uint8Array([
+  90, 84, 77, 229, 216, 154, 30, 104, 88, 243, 51, 68,
+]);
 
 const publicKey = await crypto.subtle.importKey(
   "raw",
@@ -109,7 +108,7 @@ test("HKDF_expand 512", async () => {
 });
 
 test("createCipherText", async () => {
-  const cipherText = await createCipherText(publicKey, salt, data, keyAndNonce);
+  const cipherText = await createCipherText(publicKey, salt, data, nonce);
 
   expect(cipherText).toEqual(
     new Uint8Array([
@@ -136,7 +135,7 @@ test("encryptContent", async () => {
 });
 
 test("writeHeader", () => {
-  const res = writeHeader(
+  const res = createCipherHeader(
     new TextEncoder().encode("Hallo"),
     4096,
     new Uint8Array([13, 234, 34, 234, 54, 34, 98, 5])
@@ -149,20 +148,43 @@ test("writeHeader", () => {
   );
 });
 
-test("deriveKeyAndNonce", async () => {
+test("deriveNonce", async () => {
   const authSecret = decodeBase64UrlToArrayBuffer(authSecretStr);
   const dh = decodeBase64UrlToArrayBuffer(dhStr);
-  const localKeypair = await createECDH();
+  const publicKeyBuffer = decodeBase64UrlToArrayBuffer(
+    "BOUkJH3aWWO-FB6boIyhErhknl48pmFvz3Pd7sWGHi81SUQYjV38xVLy4XFARBAO7za4dtU1oGbbSEgdI70mUbg"
+  );
+  const localKeypair = {
+    publicKey: await crypto.subtle.importKey(
+      "raw",
+      publicKeyBuffer,
+      { name: "ECDH", namedCurve: "P-256" },
+      true,
+      []
+    ),
+    privateKey: await crypto.subtle.importKey(
+      "jwk",
+      {
+        kty: "EC",
+        crv: "P-256",
+        x: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(1, 33)),
+        y: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(33, 65)),
+        d: "4rVU9zZHMXO9dYJ4i45Xodx8TyOH-BP4iAE-aDZwRww",
+      },
+      { name: "ECDH", namedCurve: "P-256" },
+      true,
+      ["deriveKey", "deriveBits"]
+    ),
+  } as unknown as CryptoKeyPair;
 
-  const { key, nonce } = await deriveKeyAndNonce({
+  const nonce = await deriveNonce({
     salt,
     localKeypair,
     dh,
     authSecret,
   });
 
-  expect(key).toBeDefined();
+  expect(encodeArrayBufferToBase64Url(nonce)).toStrictEqual("crsdwlimDwobdJFl");
   expect(nonce).toBeDefined();
-  expect(key.byteLength).toBe(16);
   expect(nonce.byteLength).toBe(12);
 });

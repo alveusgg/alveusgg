@@ -20,20 +20,12 @@ export async function requestHttps(
     headers: options?.headers,
     signal: controller.signal,
     body,
-  }).then(async (response) => {
-    if (response.ok) {
-      return {
-        statusCode: response.status,
-        body: await response.text(),
-        headers: response.headers,
-      };
-    } else {
-      throw new Error(
-        `Received unexpected response code ${response.status} - ${response.statusText}`
-      );
-    }
   });
   if (timeoutId) clearTimeout(timeoutId);
 
-  return response;
+  return {
+    statusCode: response.status,
+    body: await response.text(),
+    headers: response.headers,
+  };
 }

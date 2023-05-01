@@ -19,7 +19,7 @@
     "dev:next": "next dev",
     "dev:push-sw": "tsup --watch --config sw.tsup.config.ts",
     "build": "run-s build:next build:next-sitemap build:push-sw build:manifest",
-    "dev": "run-p build:vapid build:manifest dev:*",
+    "dev": "run-p build:manifest dev:*",
     "postinstall:prisma": "prisma generate",
     "postinstall:create-data": "tsx ./build-scripts/create-data.ts",
     "postinstall": "run-p postinstall:*",
