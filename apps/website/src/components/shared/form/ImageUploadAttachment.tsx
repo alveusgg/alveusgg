@@ -14,17 +14,20 @@ export function ImageUploadAttachment({
   fileReference: FileReference;
   children?: ReactNode | ReactNode[];
 }) {
+  const src =
+    fileReference.status === "saved"
+      ? fileReference.url
+      : "dataURL" in fileReference
+      ? fileReference.dataURL
+      : undefined;
+
   return (
     <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
       <div className="py-2">
         <div className="relative h-32 w-32 overflow-hidden rounded-lg bg-gray-200">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={
-              fileReference.status === "saved"
-                ? fileReference.url
-                : fileReference.dataURL
-            }
+            src={src}
             alt=""
             className={`absolute inset-0 h-full w-full object-contain object-center transition-opacity ${
               fileReference.status === "upload.pending" ||

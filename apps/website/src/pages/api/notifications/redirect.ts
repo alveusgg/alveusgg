@@ -8,6 +8,7 @@ export default async function handler(
 ) {
   if (!req.url) {
     res.redirect(404, "/");
+    res.end();
     return;
   }
 
@@ -17,10 +18,10 @@ export default async function handler(
   //const tag = params.get('notification_tag');
   //const action = params.get('notification_action');
   const notificationId = params.get("notification_id");
-  const subscriptionId = params.get("subscription_id");
 
   if (!notificationId) {
     res.redirect(404, "/");
+    res.end();
     return;
   }
 
@@ -28,11 +29,17 @@ export default async function handler(
   const notification = await prisma.notification.findUnique({
     where: { id: notificationId },
   });
-  if (notification) {
-    res.redirect(303, notification.linkUrl || "/");
+  if (notification === null) {
+    res.redirect(404, "/");
+    res.end();
+    return;
   }
 
+  res.redirect(303, notification.linkUrl || "/");
+  res.end();
+
   // Track click if possible
+  const subscriptionId = params.get("subscription_id");
   if (subscriptionId) {
     await prisma.notificationPush.updateMany({
       where: { notificationId, subscriptionId, clickedAt: null },

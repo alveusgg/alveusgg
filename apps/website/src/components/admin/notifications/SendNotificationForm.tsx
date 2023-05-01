@@ -6,16 +6,40 @@ import { TextField } from "@/components/shared/form/TextField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";
 import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
+import {
+  UploadAttachmentsField,
+  useUploadAttachmentsData,
+} from "@/components/shared/form/UploadAttachmentsField";
+import { useFileUpload } from "@/components/shared/hooks/useFileUpload";
+import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
+
+export const allowedFileTypes = [
+  "image/png",
+  "image/jpeg",
+  "image/gif",
+  "image/webp",
+] as const;
+type AllowedFileTypes = typeof allowedFileTypes;
 
 export function SendNotificationForm() {
   const formRef = useRef<HTMLFormElement>(null);
-  const runAction = trpc.adminAction.runAction.useMutation({
-    onSuccess: () => {
-      if (formRef.current) {
-        formRef.current.reset();
-      }
-    },
-  });
+  const sendNotification = trpc.adminNotifications.sendNotification.useMutation(
+    {
+      onSuccess: () => {
+        if (formRef.current) {
+          formRef.current.reset();
+        }
+      },
+    }
+  );
+
+  const createFileUpload =
+    trpc.adminNotifications.createFileUpload.useMutation();
+  const upload = useFileUpload<AllowedFileTypes>(
+    (signature) => createFileUpload.mutateAsync(signature),
+    { allowedFileTypes }
+  );
+  const imageAttachmentData = useUploadAttachmentsData();
 
   return (
     <form
@@ -23,19 +47,23 @@ export function SendNotificationForm() {
       onSubmit={(event) => {
         event.preventDefault();
         const data = new FormData(event.currentTarget);
-        runAction.mutate({
-          action: "sendNotification",
+        const image = imageAttachmentData.files[0];
+        const imageUrl =
+          image && image.status === "upload.done" ? image.url : undefined;
+
+        sendNotification.mutate({
           text: String(data.get("text") || ""),
           tag: String(data.get("tag") || ""),
           heading: String(data.get("heading") || ""),
           url: String(data.get("url") || ""),
+          imageUrl,
         });
       }}
     >
-      {runAction.isLoading && (
+      {sendNotification.isLoading && (
         <p className="text-gray-700">Notification is being sent …</p>
       )}
-      {runAction.isError && (
+      {sendNotification.isError && (
         <p className="text-red-800">ERROR: Could not send the notification!</p>
       )}
 
@@ -83,6 +111,17 @@ export function SendNotificationForm() {
           autoComplete="url"
           isRequired={true}
           defaultValue="https://www.twitch.tv/AlveusSanctuary"
+        />
+
+        <UploadAttachmentsField
+          label="Image"
+          {...imageAttachmentData}
+          maxNumber={1}
+          upload={upload}
+          allowedFileTypes={allowedFileTypes}
+          renderAttachment={({ fileReference, ...props }) => (
+            <ImageUploadAttachment {...props} fileReference={fileReference} />
+          )}
         />
 
         <Button type="submit" className={defaultButtonClasses}>

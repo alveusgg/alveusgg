@@ -6,6 +6,7 @@ import { MessageBox } from "../MessageBox";
 import { useFileDragAndDrop } from "../hooks/useFileDragAndDrop";
 
 export type FileReference =
+  | InitialFileReference
   | SavedFileReference
   | PendingUploadFileReference
   | UploadedUploadFileReference
@@ -15,16 +16,20 @@ type BaseFileReference = {
   id: string;
 };
 
+type InitialFileReference = {
+  status: "initial";
+} & BaseFileReference;
+
 export type SavedFileReference = {
   status: "saved";
   url: string;
   fileStorageObjectId: string;
 } & BaseFileReference;
 
-type UploadFileReference = BaseFileReference & {
+type UploadFileReference = {
   dataURL: string;
   file: File;
-};
+} & BaseFileReference;
 
 type PendingUploadFileReference = {
   status: "upload.pending";

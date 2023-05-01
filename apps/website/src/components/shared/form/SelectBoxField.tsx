@@ -21,6 +21,7 @@ export function SelectBoxField(props: SelectBoxFieldProps) {
         name={props.name}
         value={props.value}
         onChange={props.onChange}
+        defaultValue={props.defaultValue}
       >
         {props.children}
       </select>

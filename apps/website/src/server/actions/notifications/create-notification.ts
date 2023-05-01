@@ -10,6 +10,7 @@ export async function createNotification(data: {
   text: string;
   url: string;
   heading?: string;
+  imageUrl?: string;
 }) {
   const tagConfig = notificationCategories.find((cat) => cat.tag === data.tag);
   if (tagConfig === undefined) {
@@ -25,8 +26,7 @@ export async function createNotification(data: {
       message: data.text,
       linkUrl: data.url,
       // TODO: Actually allow uploading/choosing an image
-      imageUrl:
-        "https://i.ytimg.com/vi/7DvtjAqmWl8/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLBqtYOnWwXm31edNmHBy8cOtsTpDg",
+      imageUrl: data.imageUrl,
       tag: data.tag,
       urgency: tagConfig.urgency,
     },

@@ -30,7 +30,6 @@ const sendPushSchema = z.object({
 });
 
 // TODO: Retry (exponential backoff)
-// TODO: Handle rejections/failures -> remove subscription from DB
 
 export default createTokenProtectedApiHandler(
   sendPushSchema,
