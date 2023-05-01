@@ -27,11 +27,11 @@ const directors = {
           episodes on her channel and raised more than $92,000 for wildlife
           protection organizations around the globe.
         </p>
-        <p className="mt-4">
+        <p>
           At the beginning of 2021, Higa founded Alveus Sanctuary, a non-profit
           wildlife sanctuary and virtual education center in central Texas.
         </p>
-        <p className="mt-4">
+        <p>
           Among this, Higa’s accomplishments include earning a Bachelor of
           Science in Agricultural Education and Communication at Cal-Poly
           University at San Luis Obispo, as well as being on the Board of
@@ -99,7 +99,7 @@ const AboutBoardOfDirectorsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        <People people={directors} sideBySide />
+        <People people={directors} columns={2} align="center" />
       </Section>
     </>
   );
