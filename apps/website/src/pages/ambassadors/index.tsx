@@ -25,14 +25,23 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
+// We don't want to show retired ambassadors on the page
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).reduce<
+  AmbassadorKey[]
+>((arr, [key, val]) => (val.retired ? arr : [...arr, key]), []);
+
+// Group all the non-retired ambassadors by their enclosure
 type AmbassadorsByEnclosure = Partial<Record<EnclosureKey, AmbassadorKey[]>>;
-const ambassadorsByEnclosure = Object.entries(
+const ambassadorsByEnclosure = typeSafeObjectEntries(
   ambassadors
 ).reduce<AmbassadorsByEnclosure>(
-  (acc, [key, val]) => ({
-    ...acc,
-    [val.enclosure]: [...(acc[val.enclosure] || []), key],
-  }),
+  (acc, [key, val]) =>
+    val.retired
+      ? acc
+      : {
+          ...acc,
+          [val.enclosure]: [...(acc[val.enclosure] || []), key],
+        },
   {}
 );
 
@@ -258,9 +267,7 @@ const AmbassadorsPage: NextPage = () => {
             </p>
           </div>
 
-          {tab === "all" && (
-            <AmbassadorItems ambassadors={typeSafeObjectKeys(ambassadors)} />
-          )}
+          {tab === "all" && <AmbassadorItems ambassadors={activeAmbassadors} />}
 
           {tab === "enclosures" && (
             <div className="flex flex-col gap-12">

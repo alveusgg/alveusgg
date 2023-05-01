@@ -130,9 +130,14 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                 <span className="text-base opacity-80">Featuring: </span>
                 {episode.ambassadors.map((ambassador, idx) => (
                   <Fragment key={ambassador}>
-                    <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
-                      {ambassadors[ambassador].name}
-                    </Link>
+                    {/* Retired ambassadors don't have pages */}
+                    {ambassadors[ambassador].retired ? (
+                      ambassadors[ambassador].name
+                    ) : (
+                      <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
+                        {ambassadors[ambassador].name}
+                      </Link>
+                    )}
                     {idx < episode.ambassadors.length - 2 && ", "}
                     {idx === episode.ambassadors.length - 2 &&
                       episode.ambassadors.length > 2 &&

@@ -32,6 +32,7 @@ import IconYouTube from "@/icons/IconYouTube";
 
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 
 const parseDate = (date: string | null): string => {
   if (!date) return "Unknown";
@@ -60,9 +61,21 @@ type AmbassadorPageProps = {
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: Object.keys(ambassadors).map((slug) => ({
-      params: { ambassadorName: camelToKebab(slug) },
-    })),
+    // We don't want to generate pages for retired ambassadors
+    paths: typeSafeObjectEntries(ambassadors).reduce<
+      { params: { ambassadorName: string } }[]
+    >(
+      (arr, [key, val]) =>
+        val.retired
+          ? arr
+          : [
+              ...arr,
+              {
+                params: { ambassadorName: camelToKebab(key) },
+              },
+            ],
+      []
+    ),
     fallback: false,
   };
 };
@@ -77,6 +90,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   if (!isAmbassadorKey(ambassadorKey)) return { notFound: true };
 
   const ambassador = ambassadors[ambassadorKey];
+  if (ambassador.retired) return { notFound: true };
 
   return {
     props: {
