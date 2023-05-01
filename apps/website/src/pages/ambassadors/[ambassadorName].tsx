@@ -168,6 +168,14 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
           <div className="flex basis-full flex-col py-4 md:max-w-1/2 md:basis-1/2 md:px-8 md:pt-8">
             <Heading className="text-5xl">{ambassador.name}</Heading>
+            {!!ambassador.alternate.length && (
+              <p className="-mt-1 mb-2 text-lg italic text-alveus-green-700">
+                also:{" "}
+                <span className="text-xl">
+                  {ambassador.alternate.join("; ")}
+                </span>
+              </p>
+            )}
 
             <div className="my-2 text-xl">
               <p className="my-2">{ambassador.story}</p>
