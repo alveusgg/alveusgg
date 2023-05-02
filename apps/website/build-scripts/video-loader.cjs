@@ -274,11 +274,15 @@ const videoLoader = async (context, content) => {
 };
 
 module.exports = function (content) {
-  console.log(`Processing video ${this.resourcePath}...`);
+  console.log(`Processing video ${this.resourcePath} ...`);
   const callback = this.async();
   videoLoader(this, content)
     .then((res) => {
-      console.log(`Processed video ${this.resourcePath}: ${res}`);
+      console.log(
+        ` ... ${this.resourcePath} completed${
+          this.getOptions().isServer ? " (render skipped)" : ""
+        }`
+      );
       callback(null, res);
     })
     .catch(callback);
