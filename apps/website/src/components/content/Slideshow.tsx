@@ -1,7 +1,9 @@
 import type { ImageProps } from "next/image";
 import Image from "next/image";
-import React, { type CSSProperties, useId, useMemo } from "react";
-import { camelToKebab } from "../../utils/string-case";
+import React, { type CSSProperties, useCallback, useId, useMemo } from "react";
+
+import { camelToKebab } from "@/utils/string-case";
+import { createImageUrl, type ImageLoaderProps } from "@/utils/image";
 
 type SlideshowProps = {
   images: {
@@ -92,6 +94,15 @@ const Slideshow: React.FC<SlideshowProps> = ({
     };
   }, [timing, images.length, scale]);
 
+  // Determine the quality we load based on the image's size
+  const qualityLoader = useCallback((props: ImageLoaderProps) => {
+    let quality = 50;
+    if (props.width >= 1280) quality = 90;
+    else if (props.width >= 720) quality = 75;
+
+    return createImageUrl({ ...props, quality });
+  }, []);
+
   return (
     <div className="relative z-0 h-full w-full">
       <style
@@ -123,7 +134,8 @@ const Slideshow: React.FC<SlideshowProps> = ({
             src={src}
             alt={alt}
             sizes="100vw"
-            quality={100}
+            quality="50"
+            loader={qualityLoader}
             priority={idx === 0}
             placeholder="blur"
             className="h-full w-full object-cover"

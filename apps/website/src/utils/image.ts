@@ -15,6 +15,8 @@ const imageWidths = [
   ...imageConfig.imageSizes,
 ].sort((a, b) => a - b);
 
+export type { ImageLoaderProps };
+
 export function createImageUrl(props: ImageLoaderProps) {
   const resolvedWidth = imageWidths.find((w) => w >= props.width);
   if (!resolvedWidth)
