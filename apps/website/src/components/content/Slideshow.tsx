@@ -122,6 +122,8 @@ const Slideshow: React.FC<SlideshowProps> = ({
           <Image
             src={src}
             alt={alt}
+            sizes="100vw"
+            quality={100}
             priority={idx === 0}
             placeholder="blur"
             className="h-full w-full object-cover"
