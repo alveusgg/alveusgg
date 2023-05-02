@@ -77,14 +77,16 @@ const scaleFilter = (width = undefined, height = undefined) => {
  *
  * @param {Object} context Webpack compilation context
  * @param {string} format Output filename format
+ * @param {string|Buffer} content Input video content
+ * @param {boolean} isServer Is the loader being run for the server build
  * @param {string} [extension] Optional output extension (will default to input extension)
  * @param {number} [width] Optional width for the filter
  * @param {number} [height] Optional height for the filter
  * @param {string[]} [args=[]] Additional arguments to pass to ffmpeg
- * @return {Promise<{ name: string, content: Buffer }>}
+ * @return {Promise<{ name: string, content: Buffer|null }>}
  */
 const videoResized = async (
-  { context, format },
+  { context, format, content, isServer },
   { extension = undefined, width = undefined, height = undefined },
   args = []
 ) => {
@@ -93,37 +95,42 @@ const videoResized = async (
     context: context.rootContext,
   });
 
-  // Get a temporary file that we're outputting to
-  const tmpFile = join(
-    tmpdir(),
-    `${randomBytes(16).toString("hex")}.${extension || originalExtension}`
-  );
+  // Only process the video if we're on the client
+  // See `videoLoader` for context on why we don't emit files for the server
+  let resized = null;
+  if (!isServer) {
+    // Get a temporary file that we're outputting to
+    const tmpFile = join(
+      tmpdir(),
+      `${randomBytes(16).toString("hex")}.${extension || originalExtension}`
+    );
 
-  // Determine the scale filter
-  const scale = width || height ? scaleFilter(width, height) : "";
+    // Determine the scale filter
+    const scale = width || height ? scaleFilter(width, height) : "";
 
-  // Use ffmpeg to change the size to what is requested
-  const command = [
-    ffmpeg.path,
-    "-i",
-    context.resourcePath,
-    scale,
-    ...args,
-    "-n",
-    tmpFile,
-  ]
-    .filter(Boolean)
-    .join(" ");
-  await exec(command).catch(({ error, stdout, stderr }) => {
-    console.error("ffmpeg command failed:", command);
-    console.error("stdout:", stdout);
-    console.error("stderr:", stderr);
-    throw error;
-  });
+    // Use ffmpeg to change the size to what is requested
+    const command = [
+      ffmpeg.path,
+      "-i",
+      context.resourcePath,
+      scale,
+      ...args,
+      "-n",
+      tmpFile,
+    ]
+      .filter(Boolean)
+      .join(" ");
+    await exec(command).catch(({ error, stdout, stderr }) => {
+      console.error("ffmpeg command failed:", command);
+      console.error("stdout:", stdout);
+      console.error("stderr:", stderr);
+      throw error;
+    });
 
-  // Read in the temporary file
-  const resized = await readFile(tmpFile);
-  await unlink(tmpFile);
+    // Read in the temporary file
+    resized = await readFile(tmpFile);
+    await unlink(tmpFile);
+  }
 
   // Get the original name
   const name = interpolateName(context, "[name]", {
@@ -131,9 +138,10 @@ const videoResized = async (
   });
 
   // Get the output name
+  // Use the input content hash, so it's consistent between server and client
   const interpolatedName = interpolateName(context, format, {
     context: context.rootContext,
-    content: resized,
+    content,
   })
     .replace(`${name}.`, `${name}-${width || ""}x${height || ""}.`)
     .replace(`.${originalExtension}`, `.${extension || originalExtension}`);
@@ -149,18 +157,21 @@ const videoResized = async (
  *
  * @param {Object} context Webpack compilation context
  * @param {string} format Output filename format
+ * @param {string|Buffer} content Input video content
+ * @param {boolean} isServer Is the loader being run for the server build
  * @param {number} [width] Optional width for the filter
  * @param {number} [height] Optional height for the filter
- * @return {Promise<{ name: string, content: Buffer }>}
+ * @return {Promise<{ name: string, content: Buffer|null }>}
  */
 const videoPoster = (
-  { context, format },
+  { context, format, content, isServer },
   { width = undefined, height = undefined }
 ) =>
-  videoResized({ context, format }, { extension: "png", width, height }, [
-    "-an",
-    "-vframes 1",
-  ]);
+  videoResized(
+    { context, format, content, isServer },
+    { extension: "png", width, height },
+    ["-an", "-vframes 1"]
+  );
 
 /**
  * Get the requested quality from the resource query, or the default options
@@ -215,6 +226,7 @@ const videoLoader = async (context, content) => {
     context,
     format: "/static/media/[name].[hash:8].[ext]",
     content,
+    isServer: options.isServer,
   };
   const files = [];
   const obj = { poster: "", sources: [] };
@@ -262,9 +274,17 @@ const videoLoader = async (context, content) => {
 };
 
 module.exports = function (content) {
+  console.log(`Processing video ${this.resourcePath} ...`);
   const callback = this.async();
   videoLoader(this, content)
-    .then((res) => callback(null, res))
+    .then((res) => {
+      console.log(
+        ` ... ${this.resourcePath} completed${
+          this.getOptions().isServer ? " (render skipped)" : ""
+        }`
+      );
+      callback(null, res);
+    })
     .catch(callback);
 };
 
