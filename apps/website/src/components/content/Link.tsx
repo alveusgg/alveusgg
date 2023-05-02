@@ -12,6 +12,7 @@ type LinkProps = {
   className?: string;
   external?: boolean;
   custom?: boolean;
+  prefetch?: boolean;
 };
 
 const Link: React.FC<LinkProps> = ({
@@ -21,10 +22,12 @@ const Link: React.FC<LinkProps> = ({
   className,
   external = false,
   custom = false,
+  prefetch = true,
 }) => {
   const props = {
     href,
     onClick,
+    prefetch,
     className: classes(
       !custom &&
         "text-red-600 transition-colors hover:text-blue-600 hover:underline",

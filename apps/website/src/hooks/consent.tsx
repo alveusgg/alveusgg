@@ -252,7 +252,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
             <p className="mt-6">
               You can find out more about how we, and third parties, use your
               data in our{" "}
-              <Link href="/privacy-policy" onClick={close}>
+              <Link href="/privacy-policy" onClick={close} prefetch={false}>
                 Privacy Policy
               </Link>
               .
