@@ -1,6 +1,6 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useCallback, useMemo } from "react";
-import debounce from "lodash/debounce";
+import debounce from "just-debounce-it";
 
 import { usePushSubscription } from "@/utils/push-subscription";
 import { notificationCategories } from "@/config/notifications";
@@ -64,16 +64,17 @@ export function NotificationSettingsForm({
     <form
       onSubmit={submitHandler}
       className={
-        enableSettings
+        "pb-4 transition-opacity " +
+        (enableSettings
           ? ""
-          : "pointer-none cursor-default select-none opacity-50"
+          : "pointer-none cursor-default select-none opacity-50")
       }
     >
       <fieldset className="mx-2 space-y-1">
         <legend className="sr-only">Notifications</legend>
 
         {notificationPermission === "granted" && !isRegistered && (
-          <p>Setting up notifications …</p>
+          <p className="px-4">Setting up notifications …</p>
         )}
 
         {notificationCategories.map((category) => (
