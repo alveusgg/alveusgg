@@ -10,6 +10,7 @@ import { Panel } from "@/components/admin/Panel";
 import { SendNotificationForm } from "@/components/admin/notifications/SendNotificationForm";
 import Meta from "@/components/content/Meta";
 import { NotificationStats } from "@/components/admin/notifications/NotificationStats";
+import { NotificationsLive } from "@/components/admin/notifications/NotificationsLive";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(
@@ -40,8 +41,11 @@ const AdminNotificationsPage: NextPage<
           </div>
           <div className="flex-1">
             <Headline>Stats</Headline>
+            <NotificationStats />
+
+            <Headline>Recent Notifications</Headline>
             <Panel>
-              <NotificationStats />
+              <NotificationsLive />
             </Panel>
           </div>
         </div>

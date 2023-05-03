@@ -43,6 +43,7 @@
     "@trpc/react-query": "^10.23.0",
     "@trpc/server": "^10.23.0",
     "@vercel/analytics": "^1.0.1",
+    "canvas-hypertxt": "^1.0.1",
     "country-list": "^2.3.0",
     "csv-stringify": "^6.3.2",
     "date-fns": "^2.29.3",

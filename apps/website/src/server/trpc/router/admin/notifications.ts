@@ -9,6 +9,8 @@ import { permissions } from "@/config/permissions";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { createFileStorageUpload } from "@/server/utils/file-storage";
 import { env } from "@/env/server.mjs";
+import { getRecentNotifications } from "@/server/db/notifications";
+import { prisma } from "@/server/db/client";
 
 const uploadPrefix = "notifications/";
 
@@ -21,7 +23,7 @@ export const adminNotificationsRouter = router({
     .input(
       z.object({
         tag: z.string().min(2).max(100),
-        text: z.string().min(2).max(200),
+        text: z.string().max(200).optional(),
         heading: z.string(),
         url: z.string().url(),
         imageUrl: z.string().url().optional(),
@@ -29,19 +31,30 @@ export const adminNotificationsRouter = router({
     )
     .mutation(async ({ input }) => createNotification(input)),
 
-  getStats: permittedProcedure.query(async ({ ctx }) => {
-    const totalNotifications = await ctx.prisma.notification.count();
-    const totalPushes = await ctx.prisma.notificationPush.count();
-    const pendingPushes = await ctx.prisma.notificationPush.count({
-      where: { deliveredAt: null },
-    });
+  getStats: permittedProcedure.query(async () => {
+    const [totalNotifications, totalPushes, totalSubscriptions, pendingPushes] =
+      await Promise.all([
+        prisma.notification.count(),
+        prisma.notificationPush.count(),
+        prisma.pushSubscription.count({
+          where: { deletedAt: null },
+        }),
+        prisma.notificationPush.count({
+          where: { deliveredAt: null },
+        }),
+      ]);
 
     return {
       totalNotifications,
       totalPushes,
+      totalSubscriptions,
       pendingPushes,
     };
   }),
+
+  getRecentNotifications: permittedProcedure.query(async () =>
+    getRecentNotifications({ take: 10 })
+  ),
 
   createFileUpload: permittedProcedure
     .input(

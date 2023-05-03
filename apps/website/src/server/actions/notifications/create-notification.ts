@@ -7,7 +7,7 @@ const PUSH_BATCH_SIZE = 2;
 
 export async function createNotification(data: {
   tag: string;
-  text: string;
+  text?: string;
   url: string;
   heading?: string;
   imageUrl?: string;
@@ -23,9 +23,8 @@ export async function createNotification(data: {
     data: {
       title: data.heading,
       expiresAt: expiresAt,
-      message: data.text,
+      message: data.text || "",
       linkUrl: data.url,
-      // TODO: Actually allow uploading/choosing an image
       imageUrl: data.imageUrl,
       tag: data.tag,
       urgency: tagConfig.urgency,
