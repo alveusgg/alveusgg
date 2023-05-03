@@ -59,6 +59,13 @@ const config: ScheduledTasksConfig = {
       startDateTime: new Date(2023, 2, 3, 0, 8, 0),
       interval: { minutes: 10 },
     },
+    //{
+    //  id: "notificationPushes.retryAndCleanup",
+    //  task: () => cleanupFileStorage({ maxItems: 100 }),
+    //  label: "File storage: Cleanup expired objects",
+    //  startDateTime: new Date(2023, 2, 3, 0, 8, 0),
+    //  interval: { minutes: 1 },
+    //},
   ],
 };
 
