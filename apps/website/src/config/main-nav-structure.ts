@@ -20,8 +20,8 @@ export type NavStructure = {
 
 export const mainNavStructure: NavStructure = {
   home: {
-    title: "Home",
-    link: "/",
+    title: "Updates",
+    link: "/updates",
   },
   live: {
     title: "Live",

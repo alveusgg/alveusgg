@@ -1,7 +1,10 @@
 import { z } from "zod";
 
 import { publicProcedure, router } from "@/server/trpc/trpc";
-import { getRecentNotificationsForTags } from "@/server/db/notifications";
+import {
+  getActiveAnnouncements,
+  getRecentNotificationsForTags,
+} from "@/server/db/notifications";
 
 export const notificationsRouter = router({
   getRecentNotificationsForTags: publicProcedure
@@ -9,4 +12,6 @@ export const notificationsRouter = router({
     .query(async ({ input }) =>
       getRecentNotificationsForTags({ tags: input.tags, take: 10 })
     ),
+
+  getActiveAnnouncements: publicProcedure.query(getActiveAnnouncements),
 });

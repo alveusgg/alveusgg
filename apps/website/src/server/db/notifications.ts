@@ -1,15 +1,4 @@
-import type {
-  NotificationPush,
-  Notification,
-  PushSubscription,
-} from "@prisma/client";
 import { prisma } from "@/server/db/client";
-
-export type NotificationPushWithNotificationAndSubscription =
-  NotificationPush & {
-    notification: Notification;
-    subscription: PushSubscription;
-  };
 
 export async function getRecentNotificationsForTags({
   tags,
@@ -17,52 +6,35 @@ export async function getRecentNotificationsForTags({
 }: {
   tags: string[];
   take: number;
-}): Promise<Notification[]> {
+}) {
   return prisma.notification.findMany({
-    where: {
-      tag: {
-        in: tags,
-      },
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
+    where: { tag: { in: tags } },
+    orderBy: { createdAt: "desc" },
     take,
   });
 }
 
-export async function getAndLockNotificationPush() {
-  return prisma.$transaction(async (prisma) => {
-    const push = await prisma.notificationPush.findFirst({
-      where: {
-        processingStatus: "PENDING",
-      },
-      include: {
-        notification: true,
-        subscription: true,
-      },
-      orderBy: {
-        createdAt: "asc",
-      },
-    });
-    if (push === null) {
-      return null;
-    }
+export async function getActiveAnnouncements() {
+  return prisma.notification.findMany({
+    where: {
+      tag: "announcements",
+      OR: [{ expiresAt: { gt: new Date() } }],
+    },
+    orderBy: { createdAt: "desc" },
+    take: 20,
+  });
+}
 
-    await prisma.notificationPush.update({
-      where: {
-        notificationId_subscriptionId: {
-          notificationId: push.notificationId,
-          subscriptionId: push.subscriptionId,
-        },
-      },
-      data: {
-        processingStatus: "IN_PROGRESS",
-        attempts: { increment: 1 },
-      },
-    });
+export async function getNotificationById(notificationId: string) {
+  return prisma.notification.findUnique({
+    where: { id: notificationId },
+  });
+}
 
-    return push;
+export async function getRecentNotifications({ take }: { take: number }) {
+  return prisma.notification.findMany({
+    orderBy: { createdAt: "desc" },
+    take,
   });
 }
 
