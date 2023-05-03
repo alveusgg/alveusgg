@@ -19,6 +19,9 @@
       "@/*": ["./src/*"],
       "photoswipe/lightbox": [
         "./node_modules/photoswipe/dist/types/lightbox/lightbox.d.ts"
+      ],
+      "canvas-hypertxt": [
+        "./node_modules/canvas-hypertxt/dist/ts/src/index.d.ts"
       ]
     }
   },
