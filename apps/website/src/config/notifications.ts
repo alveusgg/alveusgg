@@ -33,7 +33,7 @@ export const notificationCategories = [
   },
   {
     tag: "announcements",
-    label: "Other announcements",
+    label: "Announcements",
     ttl: 5 * 24 * 60 * 60, // 5 days
     urgency: "HIGH",
   },
