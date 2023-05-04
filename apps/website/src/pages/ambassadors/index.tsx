@@ -6,6 +6,10 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ambassadors, {
   type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
+import {
+  isActiveAmbassadorEntry,
+  type ActiveAmbassadorKey,
+} from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import enclosures, {
   isEnclosureKey,
@@ -26,22 +30,19 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
 // We don't want to show retired ambassadors on the page
-const activeAmbassadors = typeSafeObjectEntries(ambassadors).reduce<
-  AmbassadorKey[]
->((arr, [key, val]) => (val.retired ? arr : [...arr, key]), []);
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry
+);
 
-// Group all the non-retired ambassadors by their enclosure
-type AmbassadorsByEnclosure = Partial<Record<EnclosureKey, AmbassadorKey[]>>;
-const ambassadorsByEnclosure = typeSafeObjectEntries(
-  ambassadors
-).reduce<AmbassadorsByEnclosure>(
-  (acc, [key, val]) =>
-    val.retired
-      ? acc
-      : {
-          ...acc,
-          [val.enclosure]: [...(acc[val.enclosure] || []), key],
-        },
+// Group all the ambassadors by their enclosure
+type AmbassadorsByEnclosure = Partial<
+  Record<EnclosureKey, ActiveAmbassadorKey[]>
+>;
+const ambassadorsByEnclosure = activeAmbassadors.reduce<AmbassadorsByEnclosure>(
+  (acc, [key, val]) => ({
+    ...acc,
+    [val.enclosure]: [...(acc[val.enclosure] || []), key],
+  }),
   {}
 );
 
@@ -267,7 +268,11 @@ const AmbassadorsPage: NextPage = () => {
             </p>
           </div>
 
-          {tab === "all" && <AmbassadorItems ambassadors={activeAmbassadors} />}
+          {tab === "all" && (
+            <AmbassadorItems
+              ambassadors={activeAmbassadors.map(([key]) => key)}
+            />
+          )}
 
           {tab === "enclosures" && (
             <div className="flex flex-col gap-12">

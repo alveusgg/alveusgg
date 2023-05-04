@@ -8,6 +8,7 @@ import animalQuest, {
 import ambassadors, {
   type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { formatDateTime } from "@/utils/datetime";
@@ -131,12 +132,12 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                 {episode.ambassadors.map((ambassador, idx) => (
                   <Fragment key={ambassador}>
                     {/* Retired ambassadors don't have pages */}
-                    {ambassadors[ambassador].retired ? (
-                      ambassadors[ambassador].name
-                    ) : (
+                    {isActiveAmbassadorKey(ambassador) ? (
                       <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
                         {ambassadors[ambassador].name}
                       </Link>
+                    ) : (
+                      ambassadors[ambassador].name
                     )}
                     {idx < episode.ambassadors.length - 2 && ", "}
                     {idx === episode.ambassadors.length - 2 &&
