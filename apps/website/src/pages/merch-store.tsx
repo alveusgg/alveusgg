@@ -5,11 +5,14 @@ import React from "react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import {
-  getAmbassadorMerchImage,
   isAmbassadorWithPlushKey,
   type AmbassadorWithPlushKey,
   type AmbassadorWithPlush,
-} from "@alveusgg/data/src/ambassadors/images";
+  isActiveAmbassadorKey,
+  type ActiveAmbassadors,
+  type ActiveAmbassador,
+} from "@alveusgg/data/src/ambassadors/filters";
+import { getAmbassadorMerchImage } from "@alveusgg/data/src/ambassadors/images";
 
 import {
   typeSafeObjectEntries,
@@ -31,7 +34,7 @@ type MerchItem = {
 type MerchData = {
   store: MerchItem;
   plushies: {
-    [key in AmbassadorWithPlushKey]: MerchItem;
+    [key in AmbassadorWithPlushKey<ActiveAmbassadors>]: MerchItem;
   };
 };
 
@@ -43,9 +46,12 @@ const merch: MerchData = {
   },
   plushies: typeSafeObjectFromEntries(
     (
-      typeSafeObjectEntries(ambassadors).filter(([key]) =>
-        isAmbassadorWithPlushKey(key)
-      ) as [AmbassadorWithPlushKey, AmbassadorWithPlush][]
+      typeSafeObjectEntries(ambassadors).filter(
+        ([key]) => isActiveAmbassadorKey(key) && isAmbassadorWithPlushKey(key)
+      ) as [
+        AmbassadorWithPlushKey<ActiveAmbassadors>,
+        AmbassadorWithPlush<ActiveAmbassador>
+      ][]
     ).map(([key, ambassador]) => [
       key,
       {

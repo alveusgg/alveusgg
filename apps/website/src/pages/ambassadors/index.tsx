@@ -6,6 +6,10 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import ambassadors, {
   type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
+import {
+  isActiveAmbassadorEntry,
+  type ActiveAmbassadorKey,
+} from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import enclosures, {
   isEnclosureKey,
@@ -25,10 +29,16 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
-type AmbassadorsByEnclosure = Partial<Record<EnclosureKey, AmbassadorKey[]>>;
-const ambassadorsByEnclosure = Object.entries(
-  ambassadors
-).reduce<AmbassadorsByEnclosure>(
+// We don't want to show retired ambassadors on the page
+const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
+  isActiveAmbassadorEntry
+);
+
+// Group all the ambassadors by their enclosure
+type AmbassadorsByEnclosure = Partial<
+  Record<EnclosureKey, ActiveAmbassadorKey[]>
+>;
+const ambassadorsByEnclosure = activeAmbassadors.reduce<AmbassadorsByEnclosure>(
   (acc, [key, val]) => ({
     ...acc,
     [val.enclosure]: [...(acc[val.enclosure] || []), key],
@@ -259,7 +269,9 @@ const AmbassadorsPage: NextPage = () => {
           </div>
 
           {tab === "all" && (
-            <AmbassadorItems ambassadors={typeSafeObjectKeys(ambassadors)} />
+            <AmbassadorItems
+              ambassadors={activeAmbassadors.map(([key]) => key)}
+            />
           )}
 
           {tab === "enclosures" && (

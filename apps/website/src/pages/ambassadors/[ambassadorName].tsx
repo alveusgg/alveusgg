@@ -4,9 +4,9 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 import React, { useEffect, useId, useMemo } from "react";
 
 import ambassadors, {
-  isAmbassadorKey,
   type Ambassador,
 } from "@alveusgg/data/src/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
@@ -32,6 +32,7 @@ import IconYouTube from "@/icons/IconYouTube";
 
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 
 const parseDate = (date: string | null): string => {
   if (!date) return "Unknown";
@@ -60,9 +61,11 @@ type AmbassadorPageProps = {
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: Object.keys(ambassadors).map((slug) => ({
-      params: { ambassadorName: camelToKebab(slug) },
-    })),
+    paths: typeSafeObjectKeys(ambassadors)
+      .filter(isActiveAmbassadorKey)
+      .map((key) => ({
+        params: { ambassadorName: camelToKebab(key) },
+      })),
     fallback: false,
   };
 };
@@ -74,10 +77,9 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   if (typeof ambassadorName !== "string") return { notFound: true };
 
   const ambassadorKey = kebabToCamel(ambassadorName);
-  if (!isAmbassadorKey(ambassadorKey)) return { notFound: true };
+  if (!isActiveAmbassadorKey(ambassadorKey)) return { notFound: true };
 
   const ambassador = ambassadors[ambassadorKey];
-
   return {
     props: {
       ambassador,
