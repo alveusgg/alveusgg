@@ -80,6 +80,10 @@ export const mainNavStructure: NavStructure = {
         title: "Annual Reports",
         link: "/about/annual-reports",
       },
+      tech: {
+        title: "Tech",
+        link: "/about/tech",
+      },
     },
   },
   donate: {
