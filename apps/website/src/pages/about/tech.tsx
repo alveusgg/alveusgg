@@ -7,10 +7,12 @@ import { classes } from "@/utils/classes";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
 const broadcastStudio: ListItems = {
@@ -22,21 +24,26 @@ const broadcastStudio: ListItems = {
     title: "Camera",
     description: "Sony Alpha a6400",
   },
-  wirelessMics: {
-    title: "Wireless Mics",
-    description: "4x Sennheiser XSW 1-ME3-A Wireless Headmic Set",
-  },
-  overheadMic: {
-    title: "Overhead Mic",
-    description: "Audio Technica PRO45",
-  },
-  monitoring: {
-    title: "Monitoring",
-    description: "Xvive U4 Wireless in-Ear Monitor System",
-  },
-  audioInterface: {
-    title: "Audio Interface",
-    description: "Focusrite Scarlett 18i8 3rd Gen",
+  audio: {
+    title: "Audio",
+    items: {
+      wirelessMics: {
+        title: "Wireless Mics",
+        description: "4x Sennheiser XSW 1-ME3-A Wireless Headmic Set",
+      },
+      overheadMic: {
+        title: "Overhead Mic",
+        description: "Audio Technica PRO45",
+      },
+      monitoring: {
+        title: "Monitoring",
+        description: "Xvive U4 Wireless in-Ear Monitor System",
+      },
+      audioInterface: {
+        title: "Audio Interface",
+        description: "Focusrite Scarlett 18i8 3rd Gen",
+      },
+    },
   },
   lighting: {
     title: "Lighting",
@@ -342,10 +349,23 @@ const enclosures = {
   },
 };
 
+const openSource = {
+  website: {
+    title: "Website",
+    description: "github.com/alveusgg/alveusgg",
+    link: "https://github.com/alveusgg/alveusgg",
+  },
+  extension: {
+    title: "Extension (Twitch)",
+    description: "github.com/alveusgg/extension",
+    link: "https://github.com/alveusgg/extension",
+  },
+};
+
 type ListItems = {
   [key: string]:
     | string
-    | { title: string; description?: string; items?: ListItems };
+    | { title: string; description?: string; link?: string; items?: ListItems };
 };
 
 type ListProps = {
@@ -371,10 +391,23 @@ const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
           <>
             <p>
               <span className="font-bold">
-                {item.title}
+                {item.description || !item.link ? (
+                  item.title
+                ) : (
+                  <Link href={item.link} external>
+                    {item.title}
+                  </Link>
+                )}
                 {item.description && ": "}
               </span>
-              {item.description}
+              {item.description &&
+                (item.link ? (
+                  <Link href={item.link} external>
+                    {item.description}
+                  </Link>
+                ) : (
+                  item.description
+                ))}
             </p>
             {item.items && <List items={item.items} className="ml-4" />}
           </>
@@ -467,6 +500,25 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
+      <div className="relative">
+        <Image
+          src={leafLeftImage2}
+          alt=""
+          className="pointer-events-none absolute -bottom-20 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+        />
+
+        <Section>
+          <Heading level={2} className="mb-4 mt-0">
+            Enclosure cameras + audio
+          </Heading>
+          <List
+            items={enclosures}
+            className="flex flex-wrap md:gap-y-4"
+            itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
+          />
+        </Section>
+      </div>
+
       {/* Grow the last section to cover the page */}
       <div className="relative flex flex-grow flex-col">
         <Image
@@ -475,12 +527,12 @@ const AboutTechPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section className="flex-grow">
+        <Section dark className="flex-grow bg-alveus-green-800">
           <Heading level={2} className="mb-4 mt-0">
-            Enclosure cameras + audio
+            Open-source
           </Heading>
           <List
-            items={enclosures}
+            items={openSource}
             className="flex flex-wrap md:gap-y-4"
             itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
           />
