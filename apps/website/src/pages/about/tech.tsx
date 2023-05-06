@@ -2,6 +2,8 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import React from "react";
 
+import { classes } from "@/utils/classes";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -11,138 +13,382 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
-const enclosures = {
-  foxes: {
-    name: "Foxes",
+const broadcastStudio: ListItems = {
+  software: {
+    title: "Software",
+    description: "OBS + Psynaps Cloud Server",
+  },
+  camera: {
+    title: "Camera",
+    description: "Sony Alpha a6400",
+  },
+  wirelessMics: {
+    title: "Wireless Mics",
+    description: "4x Sennheiser XSW 1-ME3-A Wireless Headmic Set",
+  },
+  overheadMic: {
+    title: "Overhead Mic",
+    description: "Audio Technica PRO45",
+  },
+  monitoring: {
+    title: "Monitoring",
+    description: "Xvive U4 Wireless in-Ear Monitor System",
+  },
+  audioInterface: {
+    title: "Audio Interface",
+    description: "Focusrite Scarlett 18i8 3rd Gen",
+  },
+  lighting: {
+    title: "Lighting",
     items: {
-      wideAngle: {
-        name: "Wide Angle",
-        model: "Axis M2036-LE (Fixed)",
+      keyLight: {
+        title: "Key Light",
+        description: "Elgato Ring Light",
       },
-      den: {
-        name: "Den",
-        model: "Axis P3268-LV (Fixed)",
-      },
-      main: {
-        name: "Main",
-        model: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        name: "Audio",
-        model: "???",
+      fillLight: {
+        title: "Fill Light",
+        description:
+          '2x Godox SL150WII w/ Neewer 32"x32" Octagon Flash Softbox',
       },
     },
   },
-  crows: {
-    name: "Crows",
+  streamingPc: {
+    title: "Streaming PC",
     items: {
-      indoor: {
-        name: "Indoor",
-        model: "Axis M5525-E (PTZ)",
+      cpu: {
+        title: "CPU",
+        description: "AMD Ryzen 9 5900X",
       },
-      outdoor: {
-        name: "Outdoor",
-        model: "Axis M5525-E (PTZ)",
+      gpu: {
+        title: "GPU",
+        description: "Nvidia RTX 3070",
       },
-      audio: {
-        name: "Audio",
-        model: "???",
+      ram: {
+        title: "RAM",
+        description: "32GB",
       },
-    },
-  },
-  marmosets: {
-    name: "Marmosets",
-    items: {
-      indoor: {
-        name: "Indoor",
-        model: "???",
+      storage: {
+        title: "Storage",
+        description: "CORSAIR Force MP600 1TB SSD",
       },
-      outdoor: {
-        name: "Outdoor",
-        model: "???",
+      control: {
+        title: "Control",
+        description: "Elgato Stream Deck",
       },
-      audio: {
-        name: "Audio",
-        model: "???",
-      },
-    },
-  },
-  georgie: {
-    name: "Georgie",
-    items: {
-      main: {
-        name: "Main",
-        model: "???",
-      },
-      water: {
-        name: "Water",
-        model: "???",
-      },
-    },
-  },
-  noodle: {
-    name: "Noodle",
-    items: {
-      main: {
-        name: "Main",
-        model: "???",
-      },
-    },
-  },
-  critterCave: {
-    name: "Critter Cave",
-    items: {
-      hank: {
-        name: "Hank",
-        model: "???",
-      },
-      barbaraBakedBean: {
-        name: "Barbara / Baked Bean",
-        model: "???",
-      },
-      marty: {
-        name: "Marty",
-        model: "???",
-      },
-      bb: {
-        name: "BB",
-        model: "???",
-      },
-    },
-  },
-  parrots: {
-    name: "Parrots",
-    items: {
-      main: {
-        name: "Main",
-        model: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        name: "Audio",
-        model: "???",
-      },
-    },
-  },
-  pasture: {
-    name: "Pasture",
-    items: {
-      main: {
-        name: "Main",
-        model: "Axis Q6135-LE (PTZ)",
-      },
-      audio: {
-        name: "Audio",
-        model: "???",
+      videoOutput: {
+        title: "Video Output",
+        description: "OREI HDMI Splitter UHDS-102C",
       },
     },
   },
 };
 
+const broadcastSystem: ListItems = {
+  localPc: {
+    title: "Local PC",
+    description: "MINISFORUM EliteMini TH80",
+    items: {
+      cpu: {
+        title: "CPU",
+        description: "Intel Core i7-11800H",
+      },
+      ram: {
+        title: "RAM",
+        description: "32GB",
+      },
+      storage: {
+        title: "Storage",
+        description: "512GB SSD",
+      },
+    },
+  },
+  remotePc: {
+    title: "Remote PC",
+    description: "ROG Strix G10 Gaming Desktop PC",
+    items: {
+      cpu: {
+        title: "CPU",
+        description: "Intel Core i7-11700",
+      },
+      gpu: {
+        title: "GPU",
+        description: "Nvidia RTX 3060",
+      },
+      ram: {
+        title: "RAM",
+        description: "16GB DDR4",
+      },
+      storage: {
+        title: "Storage",
+        description: "1TB SSD",
+      },
+    },
+  },
+  software: {
+    title: "Software",
+    items: {
+      obs: {
+        title: "OBS",
+        description: "Used with assorted plugins",
+        items: {
+          transitionTable: "Transition Table",
+          sourceCopy: "Source Copy",
+          advancedSceneSwitcher: "Advanced Scene Switcher",
+        },
+      },
+      chatBot: {
+        title: "Chat Control",
+        description: "Custom Node.js app for Twitch.tv chat features",
+        items: {
+          obs: "Controls local and cloud OBS instances",
+          cams: "Controls Axis PTZ cameras",
+        },
+      },
+    },
+  },
+  nutritionHouse: {
+    title: "Nutrition House",
+    items: {
+      pc: {
+        title: "PC",
+        description: "Beelink Mini PC w/ AMD Ryzen 5 5500U",
+      },
+      cam: {
+        title: "Camera",
+        description: "OBSBot",
+      },
+    },
+  },
+};
+
+const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
+  backpack: {
+    connectivity: {
+      title: "Connectivity",
+      items: {
+        liveU: "LiveU Solo",
+        nighthawk: "Verizon Netgear Nighthawk MR1100-100NAS",
+        inseego: "2 x Inseego MC800 Modems",
+      },
+    },
+    power: {
+      title: "Power",
+      items: {
+        maxoak: "MAXOAK Laptop Power Bank 185Wh/50000mAh",
+        krisdonia: "Krisdonia 50000mAh Laptop Power Bank",
+      },
+    },
+    dslr: {
+      title: "DSLR",
+      items: {
+        camera: "Sony a7R III Camera",
+        mic: "Rode VideoMicro I Mic",
+      },
+    },
+    goPro: {
+      title: "GoPro",
+      items: {
+        camera: "GoPro 11 + MediaMod w/ GoPro Labs firmware (clean HDMI out)",
+        quickRelease: "ULANZI GP-4 Magnetic Quick Release for GoPro",
+        shoulderMount: "STUNTMAN Pack Mount Shoulder Mount for GoPro",
+      },
+    },
+  },
+  animals: {
+    device: {
+      title: "Device",
+      description: "Google Pixel 7",
+    },
+    apps: {
+      title: "Apps",
+      items: {
+        larixBroadcaster: "Larix Broadcaster (broadcasting)",
+        speedify: "Speedify (internet bonding)",
+        irlChat: "IRL Chat (alerts + chat)",
+      },
+    },
+  },
+};
+
+const enclosures = {
+  foxes: {
+    title: "Foxes",
+    items: {
+      wideAngle: {
+        title: "Wide Angle",
+        description: "Axis M2036-LE (Fixed)",
+      },
+      den: {
+        title: "Den",
+        description: "Axis P3268-LV (Fixed)",
+      },
+      main: {
+        title: "Main",
+        description: "Axis M5525-E (PTZ)",
+      },
+    },
+  },
+  crows: {
+    title: "Crows",
+    items: {
+      indoor: {
+        title: "Indoor",
+        description: "Axis M5525-E (PTZ)",
+      },
+      outdoor: {
+        title: "Outdoor",
+        description: "Axis M5525-E (PTZ)",
+      },
+      audio: {
+        title: "Audio",
+        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+      },
+    },
+  },
+  // marmosets: {
+  //   title: "Marmosets",
+  //   items: {
+  //     indoor: {
+  //       title: "Indoor",
+  //       description: "???",
+  //     },
+  //     outdoor: {
+  //       title: "Outdoor",
+  //       description: "???",
+  //     },
+  //     audio: {
+  //       title: "Audio",
+  //       description: "???",
+  //     },
+  //   },
+  // },
+  georgie: {
+    title: "Georgie",
+    items: {
+      main: {
+        title: "Main",
+        description: "Axis M5075-G (PTZ)",
+      },
+      water: {
+        title: "Water",
+        description: "Axis P12 MkII (Fixed)",
+      },
+    },
+  },
+  noodle: {
+    title: "Noodle",
+    items: {
+      main: {
+        title: "Main",
+        description: "Axis M5075-G (PTZ)",
+      },
+      hide: {
+        title: "Hide",
+        description: "Axis P12 MkII (Fixed)",
+      },
+    },
+  },
+  critterCave: {
+    title: "Critter Cave",
+    items: {
+      hank: {
+        title: "Hank",
+        items: {
+          day: {
+            title: "Day",
+            description: "Axis M5075-G (PTZ)",
+          },
+          night: {
+            title: "Night",
+            description: "Axis M1065-LW (Fixed)",
+          },
+        },
+      },
+      barbaraBakedBean: {
+        title: "Barbara / Baked Bean",
+        description: "Axis M5075-G (PTZ)",
+      },
+      marty: {
+        title: "Marty",
+        description: "Axis M5075-G (PTZ)",
+      },
+    },
+  },
+  parrots: {
+    title: "Parrots",
+    items: {
+      main: {
+        title: "Main",
+        description: "Axis M5525-E (PTZ)",
+      },
+      audio: {
+        title: "Audio",
+        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+      },
+    },
+  },
+  pasture: {
+    title: "Pasture",
+    items: {
+      main: {
+        title: "Main",
+        description: "Axis Q6135-LE (PTZ)",
+      },
+      audio: {
+        title: "Audio",
+        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+      },
+    },
+  },
+};
+
+type ListItems = {
+  [key: string]:
+    | string
+    | { title: string; description?: string; items?: ListItems };
+};
+
+type ListProps = {
+  items: ListItems;
+  className?: string;
+  itemClassName?: string;
+};
+
+const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
+  <ul className={className}>
+    {Object.entries(items).map(([key, item], idx) => (
+      <li
+        key={key}
+        className={classes(
+          // Add whitespace above if we're nested and not the first item
+          idx !== 0 && typeof item === "object" && item.items && "mt-2",
+          itemClassName
+        )}
+      >
+        {typeof item === "string" ? (
+          <p>{item}</p>
+        ) : (
+          <>
+            <p>
+              <span className="font-bold">
+                {item.title}
+                {item.description && ": "}
+              </span>
+              {item.description}
+            </p>
+            {item.items && <List items={item.items} className="ml-4" />}
+          </>
+        )}
+      </li>
+    ))}
+  </ul>
+);
+
 const AboutTechPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="About Tech"
+        title="Tech at Alveus"
         description="Alveus Sanctuary is a virtual education center, and with that comes the need for a lot of technology to make it all work, from livestream broadcast systems to PTZ cameras and microphones in the ambassador enclosures."
       />
 
@@ -153,12 +399,12 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block xl:max-w-lg"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
           <div className="w-full lg:w-3/5">
-            <Heading level={1}>About Tech at Alveus</Heading>
+            <Heading level={1}>Tech at Alveus</Heading>
             <p className="text-lg">
               Alveus Sanctuary is a virtual education center, and with that
               comes the need for a lot of technology to make it all work, from
@@ -173,35 +419,23 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-[10rem] -rotate-45 select-none lg:block 2xl:max-w-[12rem]"
         />
 
-        <Section>
-          <Heading level={2}>Broadcast studio</Heading>
+        <Section containerClassName="flex flex-wrap -mx-4">
+          <div className="basis-full p-4 lg:basis-1/2">
+            <Heading level={2} className="mb-4 mt-0">
+              Broadcast Studio
+            </Heading>
+            <List items={broadcastStudio} />
+          </div>
 
-          <ul>
-            <li>
-              <p>Software: OBS + Psynaps Cloud Server</p>
-            </li>
-            <li>
-              <p>Camera: ???</p>
-            </li>
-            <li>
-              <p>
-                Wireless Mics: 4x Sennheiser ME 3 w/ SK-XSW Bodypacks + EM-XSW 1
-                Receivers
-              </p>
-            </li>
-            <li>
-              <p>Overhead Mic: Audio Technica PRO45</p>
-            </li>
-            <li>
-              <p>Audio Interface: Focusrite Scarlett 18i8</p>
-            </li>
-            <li>
-              <p>Livestream PC: ???</p>
-            </li>
-          </ul>
+          <div className="basis-full p-4 lg:basis-1/2">
+            <Heading level={2} className="mb-4 mt-0">
+              Broadcast System
+            </Heading>
+            <List items={broadcastSystem} />
+          </div>
         </Section>
       </div>
 
@@ -213,10 +447,23 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark>
-          <Heading level={2}>Outside broadcasts</Heading>
+          <Heading level={2}>Outside Broadcasts</Heading>
 
-          <p>Livestream backpack: GoPro, LiveU</p>
-          <p>Animal cams: Phone w/ Software</p>
+          <div className="flex flex-wrap">
+            <div className="basis-full p-4 lg:basis-1/2">
+              <Heading level={3} className="mb-4 mt-0 text-2xl">
+                Livestream Backpack
+              </Heading>
+              <List items={outsideBroadcasts.backpack} />
+            </div>
+
+            <div className="basis-full p-4 lg:basis-1/2">
+              <Heading level={3} className="mb-4 mt-0 text-2xl">
+                Roaming Animal Cam
+              </Heading>
+              <List items={outsideBroadcasts.animals} />
+            </div>
+          </div>
         </Section>
       </div>
 
@@ -225,28 +472,18 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
         <Section className="flex-grow">
-          <Heading level={2}>Enclosure cameras + audio</Heading>
-
-          <ul>
-            {Object.entries(enclosures).map(([key, enclosure]) => (
-              <li key={key}>
-                <Heading level={3}>{enclosure.name}</Heading>
-                <ul>
-                  {Object.entries(enclosure.items).map(([key, item]) => (
-                    <li key={key}>
-                      <p>
-                        {item.name}: {item.model}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ))}
-          </ul>
+          <Heading level={2} className="mb-4 mt-0">
+            Enclosure cameras + audio
+          </Heading>
+          <List
+            items={enclosures}
+            className="flex flex-wrap md:gap-y-4"
+            itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
+          />
         </Section>
       </div>
     </>
