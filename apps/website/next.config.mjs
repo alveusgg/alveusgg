@@ -139,6 +139,11 @@ const config = {
       destination: "/collaborations",
       permanent: true,
     },
+    {
+      source: "/tech",
+      destination: "/about/tech",
+      permanent: true,
+    },
     ...ambassadorSlugs.map((slug) => ({
       source: `/${slug}`,
       destination: `/ambassadors/${slug}`,
