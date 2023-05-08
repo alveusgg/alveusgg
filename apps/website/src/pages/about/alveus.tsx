@@ -7,6 +7,8 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import { Lightbox } from "@/components/content/YouTube";
+import TransparencySealSection from "@/components/content/TransparencySealSection";
+
 import IconTwitch from "@/icons/IconTwitch";
 
 import mayaImage from "@/assets/maya.png";
@@ -223,6 +225,8 @@ const AboutAlveusPage: NextPage = () => {
             className="mt-6 transition-colors hover:text-alveus-green-900"
           />
         </Section>
+
+        <TransparencySealSection />
       </div>
     </>
   );
