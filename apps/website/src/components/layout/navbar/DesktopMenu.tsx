@@ -154,7 +154,11 @@ export function DesktopMenu() {
           )}
         </div>
       </div>
-      <div className="flex items-center gap-4 border-t border-white pt-2">
+      <div
+        id="main-nav"
+        tabIndex={-1}
+        className="flex items-center gap-4 border-t border-white pt-2"
+      >
         <Link href="/" className="font-serif text-3xl font-bold">
           Alveus
         </Link>
