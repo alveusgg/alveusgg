@@ -76,6 +76,7 @@ export function DesktopMenu() {
                 title={link.title}
               >
                 <link.icon size={24} />
+                <span className="sr-only">Open Alveus&apos; {link.title}</span>
               </a>
             </li>
           ))}
