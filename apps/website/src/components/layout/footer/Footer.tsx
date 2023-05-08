@@ -4,8 +4,6 @@ import { useRouter } from "next/router";
 
 import Image from "next/image";
 import IconGitHub from "@/icons/IconGitHub";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
 import ContentLink from "@/components/content/Link";
 import imageGuidestarSeal from "@/assets/guidestar-candid-gold-seal.svg";
 import Socials from "./Socials";
