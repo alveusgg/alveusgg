@@ -17,6 +17,8 @@ export const Navbar: React.FC = () => {
     >
       {({ open }) => (
         <>
+          <h2 className="sr-only">Page header</h2>
+
           <div className="container mx-auto flex gap-4 p-2">
             {/* Logo */}
             <Link

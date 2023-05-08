@@ -20,6 +20,8 @@ export const Footer: React.FC = () => {
       {!isAdmin && <Socials />}
 
       <footer className="bg-gray-800 px-2 py-4 text-gray-400 md:px-0 md:py-2">
+        <h2 className="sr-only">Page footer</h2>
+
         <div className="container mx-auto">
           <ul className="flex flex-wrap items-center justify-between">
             <li className="basis-full p-2 md:basis-1/3">
