@@ -2,7 +2,12 @@ import React, { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import Image from "next/image";
 import IconGitHub from "@/icons/IconGitHub";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import ContentLink from "@/components/content/Link";
+import imageGuidestarSeal from "@/assets/guidestar-candid-gold-seal.svg";
 import Socials from "./Socials";
 
 const footerLinkClasses =
@@ -20,6 +25,45 @@ export const Footer: React.FC = () => {
       {!isAdmin && <Socials />}
 
       <footer className="bg-gray-800 px-2 py-4 text-gray-400 md:px-0 md:py-2">
+        <h3 className="sr-only">Page footer</h3>
+
+        <div className="container mx-auto mb-4 flex flex-row-reverse gap-4 border-b border-gray-700 px-2 py-4 text-xs md:gap-10 md:text-sm lg:text-base">
+          <div>
+            <h4 className="sr-only" id="seal">
+              Gold rated transparency
+            </h4>
+
+            <p>
+              Alveus&apos; transparency has been rated gold on Candid
+              (GuideStar). Candid is a leading source of information on
+              non-profit organizations, helping donors and funders make informed
+              decisions about their support. Check out our updated{" "}
+              <ContentLink
+                external
+                href="https://www.guidestar.org/profile/86-1772907"
+              >
+                non-profit profile on Candid
+              </ContentLink>
+              .
+            </p>
+          </div>
+
+          <Link
+            className="flex-shrink-0"
+            rel="noreferrer"
+            target="_blank"
+            href="https://www.guidestar.org/profile/86-1772907"
+          >
+            <Image
+              className="h-20 w-20"
+              src={imageGuidestarSeal}
+              width={100}
+              height={100}
+              alt="Gold Transparency Seal 2023 by Candid"
+            />
+          </Link>
+        </div>
+
         <div className="container mx-auto">
           <ul className="flex flex-wrap items-center justify-between">
             <li className="basis-full p-2 md:basis-1/3">

@@ -14,6 +14,7 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import { TransparencySealSection } from "@/components/content/TransparencySealSection";
 
 const stats = {
   averageTime: {
@@ -223,6 +224,8 @@ const AboutAlveusPage: NextPage = () => {
             className="mt-6 transition-colors hover:text-alveus-green-900"
           />
         </Section>
+
+        <TransparencySealSection />
       </div>
     </>
   );

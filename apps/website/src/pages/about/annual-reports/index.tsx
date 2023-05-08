@@ -1,11 +1,16 @@
 import { type NextPage } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 
+import ContentLink from "@/components/content/Link";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import IconAngleRight from "@/icons/IconAngleRight";
+
+import imageGuidestarSeal from "@/assets/guidestar-candid-gold-seal.svg";
+import { TransparencySealSection } from "@/components/content/TransparencySealSection";
 
 const reports = {
   2021: {
@@ -53,6 +58,8 @@ const AnnualReportsPage: NextPage = () => {
           ))}
         </div>
       </Section>
+
+      <TransparencySealSection />
     </>
   );
 };
