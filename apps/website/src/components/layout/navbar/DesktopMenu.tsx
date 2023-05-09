@@ -76,6 +76,7 @@ export function DesktopMenu() {
                 title={link.title}
               >
                 <link.icon size={24} />
+                <span className="sr-only">Open Alveus&apos; {link.title}</span>
               </a>
             </li>
           ))}
@@ -154,7 +155,11 @@ export function DesktopMenu() {
           )}
         </div>
       </div>
-      <div className="flex items-center gap-4 border-t border-white pt-2">
+      <div
+        id="main-nav"
+        tabIndex={-1}
+        className="flex items-center gap-4 border-t border-white pt-2"
+      >
         <Link href="/" className="font-serif text-3xl font-bold">
           Alveus
         </Link>

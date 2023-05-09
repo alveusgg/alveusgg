@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
+
 import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
@@ -64,8 +65,23 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         id="app"
         className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${fonts}`}
       >
+        <a
+          href="#main"
+          className="sr-only left-0 top-0 z-40 w-auto rounded border-2 border-white bg-alveus-green-900 text-lg text-white focus:not-sr-only focus:fixed focus:m-4 focus:block focus:px-6 focus:py-4"
+        >
+          Jump to page content
+        </a>
+        <a
+          href="#main-nav"
+          className="sr-only left-0 top-0 z-40 w-auto rounded border-2 border-white bg-alveus-green-900 text-lg text-white focus:not-sr-only focus:fixed focus:m-4 focus:block focus:px-6 focus:py-4"
+        >
+          Jump to main navigation
+        </a>
+
         <Navbar />
-        <main className="flex flex-grow flex-col">{children}</main>
+        <main tabIndex={-1} id="main" className="flex flex-grow flex-col">
+          {children}
+        </main>
         <Footer />
       </div>
     </>
