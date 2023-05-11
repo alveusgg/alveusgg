@@ -307,6 +307,27 @@ const config = {
       ],
     },
   ],
+  async rewrites() {
+    /** @type {Array<import("next/dist/lib/load-custom-routes").Rewrite>} */
+    const rewrites = [];
+
+    const statsBaseUrl = process.env.STATS_BASE_URL;
+    if (statsBaseUrl) {
+      rewrites.push(
+        // public urls for stats:
+        {
+          source: "/stats/js/script.js",
+          destination: `${statsBaseUrl}/js/script.js`,
+        },
+        {
+          source: "/stats/api/event",
+          destination: `${statsBaseUrl}/api/event`,
+        },
+      );
+    }
+
+    return rewrites;
+  },
   webpack: (config, options) => {
     // Add a custom loader for videos
     config.module.rules.push({

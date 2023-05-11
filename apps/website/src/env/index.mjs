@@ -87,6 +87,11 @@ export const env = createEnv({
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
     DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfUrlsSchema.optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
+    STATS_BASE_URL: z
+      .string()
+      .url()
+      .refine((url) => !url.endsWith("/"))
+      .optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -152,6 +157,7 @@ export const env = createEnv({
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT,
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION,
+    STATS_BASE_URL: process.env.STATS_BASE_URL,
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
