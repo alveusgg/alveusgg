@@ -300,6 +300,8 @@ const config = {
               "https://widget.thegivingblock.com/",
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
+              // Stats (for the admin dashboard):
+              process.env.STATS_BASE_URL,
             ]
               .filter(Boolean)
               .join(" ") + ";",
