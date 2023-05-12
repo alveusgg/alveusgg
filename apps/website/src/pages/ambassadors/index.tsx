@@ -21,6 +21,7 @@ import { parseDate, sortDate } from "@/utils/datetime";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Select from "@/components/content/Select";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -76,6 +77,12 @@ const sortByOptions = {
 } as const satisfies AmbassadorSortOptions;
 
 type SortByOption = keyof typeof sortByOptions;
+
+const sortByDropdown = Object.fromEntries(
+  Object.entries(sortByOptions).map(([key, val]) => [key, val.label])
+) as {
+  [key in SortByOption]: (typeof sortByOptions)[key]["label"];
+};
 
 const isSortByOption = (option: string): option is SortByOption =>
   Object.keys(sortByOptions).includes(option);
@@ -162,10 +169,7 @@ const AmbassadorGroup: React.FC<{
 
 const AmbassadorsPage: NextPage = () => {
   const [checked, setChecked] = useState(false);
-
   const [sortBy, setSortBy] = useState<SortByOption>("all");
-  const results = sortByOptions[sortBy].result;
-
   const [active, setActive] = useState<string | null>(null);
 
   // Check the hash to see what sort by option should be selected
@@ -209,6 +213,16 @@ const AmbassadorsPage: NextPage = () => {
     if (current !== updated) window.history.pushState({}, "", updated);
   }, [checked, sortBy, active]);
 
+  // When the user picks a new sort by option, reset the active group
+  const selectSortBy = useCallback((val: string) => {
+    if (isSortByOption(val)) {
+      setSortBy(val);
+      setActive(null);
+    }
+  }, []);
+
+  const results = sortByOptions[sortBy].result;
+
   return (
     <>
       <Meta
@@ -223,12 +237,12 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block"
+          className="pointer-events-none absolute -bottom-4 right-0 z-10 hidden h-auto w-1/2 max-w-xs select-none lg:block"
         />
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-[10rem] -rotate-45 select-none lg:block"
+          className="pointer-events-none absolute -bottom-36 -left-8 z-10 hidden h-auto w-1/2 max-w-[8rem] rotate-45 -scale-y-100 select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -258,40 +272,19 @@ const AmbassadorsPage: NextPage = () => {
         />
 
         <Section className="flex-grow pt-0">
-          <div className="my-4 flex flex-col items-center gap-4">
-            <div className="border-b border-alveus-green/50 text-center text-xl font-semibold">
-              <ul className="flex flex-wrap items-end justify-center">
-                {typeSafeObjectEntries(sortByOptions).map(([key, val]) => (
-                  <li key={key} className="mx-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSortBy(key);
-                        setActive(null);
-                      }}
-                      className={classes(
-                        "group relative inline-block p-4 transition-colors hover:border-alveus-green-500 hover:text-alveus-green-500",
-                        sortBy === key && "text-alveus-green-700"
-                      )}
-                      aria-current={sortBy === key ? "page" : undefined}
-                    >
-                      {val.label}
-
-                      <div
-                        className={classes(
-                          "absolute inset-x-0 -bottom-0.5 h-1 w-full rounded-sm transition-colors group-hover:bg-alveus-green-500",
-                          sortBy === key && "bg-alveus-green-700"
-                        )}
-                      />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <p className="text-center text-xl font-semibold">
+          <div className="mb-4 mt-8 flex flex-col items-center justify-between gap-4 md:flex-row md:px-4">
+            <p className="flex-shrink text-center text-xl font-semibold">
               Click each ambassador for information and highlights!
             </p>
+
+            <Select
+              options={sortByDropdown}
+              value={sortBy}
+              onChange={selectSortBy}
+              label={<span className="sr-only">Sort by</span>}
+              align="right"
+              className="flex-shrink-0"
+            />
           </div>
 
           {Array.isArray(results) ? (

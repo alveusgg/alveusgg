@@ -37,7 +37,7 @@ const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
   >
     <Menu.Items
       as="ul"
-      className="group absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg"
+      className="group absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg focus:outline-none"
       {...props}
     />
   </Transition>
