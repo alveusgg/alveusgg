@@ -211,7 +211,7 @@ const Home: NextPage = () => {
             <p className="mt-8 text-lg">
               Alveus is a virtual education center following the journeys of our
               non-releasable exotic ambassadors, aiming to educate and spark an
-              appreciation for them and their wild counterparts.
+              appreciation for them, their species, and their wild counterparts.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
