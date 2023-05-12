@@ -2,7 +2,14 @@ const { tmpdir } = require("os");
 const { randomBytes } = require("crypto");
 const { join, dirname } = require("path");
 const { exec: execSync } = require("child_process");
-const { readFile, rename, mkdir } = require("fs/promises");
+const {
+  readFile,
+  rename,
+  mkdir,
+  readdir,
+  stat,
+  unlink,
+} = require("fs/promises");
 const { interpolateName, getHashDigest } = require("loader-utils");
 const ffmpeg = require("@ffmpeg-installer/ffmpeg");
 const ffprobe = require("@ffprobe-installer/ffprobe");
@@ -20,6 +27,8 @@ const fileType = async (buffer) => {
   if (!fileTypeCache) fileTypeCache = await import("file-type");
   return fileTypeCache.fileTypeFromBuffer(buffer);
 };
+
+const cacheDir = "./.next/cache/video-loader";
 
 /**
  * Get the raw video data
@@ -259,7 +268,7 @@ const videoLoader = async (context, content) => {
     format: "/static/media/[name].[hash:8].[ext]",
     content,
     isServer: options.isServer,
-    cache: "./.next/cache/video-loader",
+    cache: cacheDir,
   };
   const files = [];
   const obj = { poster: "", sources: [] };
@@ -319,6 +328,22 @@ const videoLoader = async (context, content) => {
   };
 };
 
+const cacheCleanup = async () => {
+  // Get all files in the cache dir
+  const cacheFiles = await readdir(cacheDir, { withFileTypes: true }).then(
+    (file) => file.filter((f) => f.isFile()).map((f) => f.name)
+  );
+
+  // Remove all files last accessed over 24 hours ago
+  const cutoff = Date.now() - 24 * 60 * 60 * 1000;
+  await Promise.all(
+    cacheFiles.map(async (file) => {
+      const { atimeMs } = await stat(join(cacheDir, file));
+      if (atimeMs < cutoff) await unlink(join(cacheDir, file));
+    })
+  );
+};
+
 module.exports = function (content) {
   console.log(`Processing video ${this.resourcePath} ...`);
   const callback = this.async();
@@ -330,6 +355,14 @@ module.exports = function (content) {
       callback(null, res.output);
     })
     .catch(callback);
+
+  // If our cleanup hook isn't already registered, register it
+  if (!this._compiler.hooks.afterEmit.taps.some((t) => t.fn === cacheCleanup)) {
+    this._compiler.hooks.afterEmit.tapPromise(
+      "VideoLoaderCleanup",
+      cacheCleanup
+    );
+  }
 };
 
 module.exports.raw = true;
