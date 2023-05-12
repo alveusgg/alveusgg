@@ -60,8 +60,8 @@ const sortByOptions = {
       return map;
     }, new Map()),
   },
-  arrived: {
-    label: "Arrived",
+  recent: {
+    label: "Recent",
     result: [...activeAmbassadors]
       .sort(([, a], [, b]) => sortAmbassadorDate(a.arrival, b.arrival))
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
