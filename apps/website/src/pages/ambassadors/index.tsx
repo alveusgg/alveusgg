@@ -16,6 +16,7 @@ import enclosures from "@alveusgg/data/src/enclosures";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
+import { parseDate, sortDate } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -31,7 +32,8 @@ const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
   isActiveAmbassadorEntry
 );
 
-type AmbassadorsByGroup = Record<
+// Use a map rather than a group, so we can sort the keys
+type AmbassadorsByGroup = Map<
   string,
   { name: string; items: ActiveAmbassadorKey[] }
 >;
@@ -48,16 +50,28 @@ const sortByOptions = {
   },
   enclosures: {
     label: "Enclosures",
-    result: activeAmbassadors.reduce<AmbassadorsByGroup>(
-      (acc, [key, val]) => ({
-        ...acc,
-        [val.enclosure]: {
-          name: enclosures[val.enclosure].name,
-          items: [...(acc[val.enclosure]?.items || []), key],
-        },
-      }),
-      {}
-    ),
+    result: activeAmbassadors.reduce<AmbassadorsByGroup>((map, [key, val]) => {
+      const group = val.enclosure;
+      map.set(group, {
+        name: enclosures[group].name,
+        items: [...(map.get(group)?.items || []), key],
+      });
+      return map;
+    }, new Map()),
+  },
+  arrived: {
+    label: "Arrived",
+    result: [...activeAmbassadors]
+      .sort(([, a], [, b]) => sortDate(a.arrival, b.arrival))
+      .reduce<AmbassadorsByGroup>((map, [key, val]) => {
+        const year = parseDate(val.arrival)?.getUTCFullYear()?.toString();
+        const group = year || "unknown";
+        map.set(group, {
+          name: year || "Unknown",
+          items: [...(map.get(group)?.items || []), key],
+        });
+        return map;
+      }, new Map()),
   },
 } as const satisfies AmbassadorSortOptions;
 
@@ -284,7 +298,7 @@ const AmbassadorsPage: NextPage = () => {
             <AmbassadorItems ambassadors={results} />
           ) : (
             <div className="flex flex-col gap-12">
-              {typeSafeObjectEntries(results).map(([key, val]) => (
+              {[...results.entries()].map(([key, val]) => (
                 <AmbassadorGroup
                   key={key}
                   type={sortBy}
