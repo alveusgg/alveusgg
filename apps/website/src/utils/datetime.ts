@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
 
 export type DateTimeFormat = {
   style: "short" | "long";
@@ -72,13 +73,9 @@ export const formatDateTimeLocal = (
 
 export const DATETIME_ALVEUS_ZONE = "America/Chicago";
 
-/**
- * Parse a partial date string into a Date object
- *
- * @param {string} date partial date to parse (e.g. 2023 or 2023-01 or 2023-01-01)
- * @returns {Date|null} Date object if the date is valid, null otherwise
- */
-export const parseDate = (date: string): Date | null => {
+export const parseAmbassadorDate = (
+  date: Exclude<Ambassador["birth"], null>
+): Date | null => {
   const arr = date.split("-");
   const d = parseInt(arr[2] || "");
   const m = parseInt(arr[1] || "");
@@ -91,16 +88,12 @@ export const parseDate = (date: string): Date | null => {
   return null;
 };
 
-/**
- * Sorts the dates in descending order, with nulls at the end
- *
- * @param {string|null} a first date to compare
- * @param {string|null} b second date to compare
- * @returns {number}
- */
-export const sortDate = (a: string | null, b: string | null): number => {
-  const parsedA = typeof a === "string" ? parseDate(a) : null;
-  const parsedB = typeof b === "string" ? parseDate(b) : null;
+export const sortAmbassadorDate = (
+  a: Ambassador["birth"],
+  b: Ambassador["birth"]
+): number => {
+  const parsedA = typeof a === "string" ? parseAmbassadorDate(a) : null;
+  const parsedB = typeof b === "string" ? parseAmbassadorDate(b) : null;
 
   // If they match (same date or both unknown), no change
   if (parsedA === parsedB) return 0;

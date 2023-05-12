@@ -16,7 +16,7 @@ import enclosures from "@alveusgg/data/src/enclosures";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
-import { parseDate, sortDate } from "@/utils/datetime";
+import { parseAmbassadorDate, sortAmbassadorDate } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -63,9 +63,11 @@ const sortByOptions = {
   arrived: {
     label: "Arrived",
     result: [...activeAmbassadors]
-      .sort(([, a], [, b]) => sortDate(a.arrival, b.arrival))
+      .sort(([, a], [, b]) => sortAmbassadorDate(a.arrival, b.arrival))
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
-        const year = parseDate(val.arrival)?.getUTCFullYear()?.toString();
+        const year = parseAmbassadorDate(val.arrival)
+          ?.getUTCFullYear()
+          ?.toString();
         const group = year || "unknown";
         map.set(group, {
           name: year || "Unknown",
