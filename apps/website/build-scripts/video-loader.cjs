@@ -1,9 +1,9 @@
 const { tmpdir } = require("os");
 const { randomBytes } = require("crypto");
-const { join } = require("path");
+const { join, dirname } = require("path");
 const { exec: execSync } = require("child_process");
-const { readFile, unlink } = require("fs/promises");
-const { interpolateName } = require("loader-utils");
+const { readFile, rename, mkdir } = require("fs/promises");
+const { interpolateName, getHashDigest } = require("loader-utils");
 const ffmpeg = require("@ffmpeg-installer/ffmpeg");
 const ffprobe = require("@ffprobe-installer/ffprobe");
 
@@ -79,14 +79,15 @@ const scaleFilter = (width = undefined, height = undefined) => {
  * @param {string} format Output filename format
  * @param {string|Buffer} content Input video content
  * @param {boolean} isServer Is the loader being run for the server build
+ * @param {string} cache Directory to cache the resized video in
  * @param {string} [extension] Optional output extension (will default to input extension)
  * @param {number} [width] Optional width for the filter
  * @param {number} [height] Optional height for the filter
  * @param {string[]} [args=[]] Additional arguments to pass to ffmpeg
- * @return {Promise<{ name: string, content: Buffer|null }>}
+ * @return {Promise<{ name: string, content: Buffer|null, cached: boolean, skipped: boolean }>}
  */
 const videoResized = async (
-  { context, format, content, isServer },
+  { context, format, content, isServer, cache },
   { extension = undefined, width = undefined, height = undefined },
   args = []
 ) => {
@@ -94,42 +95,70 @@ const videoResized = async (
   const originalExtension = interpolateName(context, "[ext]", {
     context: context.rootContext,
   });
+  const processedExtension = extension || originalExtension;
 
   // Only process the video if we're on the client
   // See `videoLoader` for context on why we don't emit files for the server
   let resized = null;
+  let cached = false;
   if (!isServer) {
-    // Get a temporary file that we're outputting to
-    const tmpFile = join(
-      tmpdir(),
-      `${randomBytes(16).toString("hex")}.${extension || originalExtension}`
+    // Determine the cache key
+    const cacheKey = getHashDigest(
+      Buffer.from(
+        [
+          "video-loader",
+          context.resourcePath,
+          width,
+          height,
+          ...args,
+          getHashDigest(content, "sha1"),
+        ].join(":")
+      ),
+      "sha1"
     );
+    const cacheFile = `${cache}/${cacheKey}.${processedExtension}`;
 
-    // Determine the scale filter
-    const scale = width || height ? scaleFilter(width, height) : "";
+    // See if the cache exists
+    const cacheData = await readFile(cacheFile).catch(() => null);
+    if (cacheData) {
+      resized = cacheData;
+      cached = true;
+    } else {
+      // Get a temporary file that we're outputting to
+      const tmpFile = join(
+        tmpdir(),
+        `${randomBytes(16).toString("hex")}.${processedExtension}`
+      );
 
-    // Use ffmpeg to change the size to what is requested
-    const command = [
-      ffmpeg.path,
-      "-i",
-      context.resourcePath,
-      scale,
-      ...args,
-      "-n",
-      tmpFile,
-    ]
-      .filter(Boolean)
-      .join(" ");
-    await exec(command).catch(({ error, stdout, stderr }) => {
-      console.error("ffmpeg command failed:", command);
-      console.error("stdout:", stdout);
-      console.error("stderr:", stderr);
-      throw error;
-    });
+      // Determine the scale filter
+      const scale = width || height ? scaleFilter(width, height) : "";
 
-    // Read in the temporary file
-    resized = await readFile(tmpFile);
-    await unlink(tmpFile);
+      // Use ffmpeg to change the size to what is requested
+      const command = [
+        ffmpeg.path,
+        "-i",
+        context.resourcePath,
+        scale,
+        ...args,
+        "-n",
+        tmpFile,
+      ]
+        .filter(Boolean)
+        .join(" ");
+      await exec(command).catch(({ error, stdout, stderr }) => {
+        console.error("ffmpeg command failed:", command);
+        console.error("stdout:", stdout);
+        console.error("stderr:", stderr);
+        throw error;
+      });
+
+      // Read in the temporary file
+      resized = await readFile(tmpFile);
+
+      // Move the temporary file to the cache
+      await mkdir(dirname(cacheFile), { recursive: true });
+      await rename(tmpFile, cacheFile);
+    }
   }
 
   // Get the original name
@@ -144,11 +173,13 @@ const videoResized = async (
     content,
   })
     .replace(`${name}.`, `${name}-${width || ""}x${height || ""}.`)
-    .replace(`.${originalExtension}`, `.${extension || originalExtension}`);
+    .replace(`.${originalExtension}`, `.${processedExtension}`);
 
   return {
     name: interpolatedName,
     content: resized,
+    cached,
+    skipped: isServer,
   };
 };
 
@@ -159,16 +190,17 @@ const videoResized = async (
  * @param {string} format Output filename format
  * @param {string|Buffer} content Input video content
  * @param {boolean} isServer Is the loader being run for the server build
+ * @param {string} cache Directory to cache the resized video in
  * @param {number} [width] Optional width for the filter
  * @param {number} [height] Optional height for the filter
- * @return {Promise<{ name: string, content: Buffer|null }>}
+ * @return {Promise<{ name: string, content: Buffer|null, cached: boolean, skipped: boolean }>}
  */
 const videoPoster = (
-  { context, format, content, isServer },
+  { context, format, content, isServer, cache },
   { width = undefined, height = undefined }
 ) =>
   videoResized(
-    { context, format, content, isServer },
+    { context, format, content, isServer, cache },
     { extension: "png", width, height },
     ["-an", "-vframes 1"]
   );
@@ -227,6 +259,7 @@ const videoLoader = async (context, content) => {
     format: "/static/media/[name].[hash:8].[ext]",
     content,
     isServer: options.isServer,
+    cache: "./.next/cache/video-loader",
   };
   const files = [];
   const obj = { poster: "", sources: [] };
@@ -269,8 +302,21 @@ const videoLoader = async (context, content) => {
     files.forEach(({ name, content }) => context.emitFile(name, content, null));
   }
 
+  // Collect stats on cache/skipped files
+  const stats = files.reduce(
+    (acc, { cached, skipped }) => ({
+      cached: (acc.cached || 0) + (cached ? 1 : 0),
+      skipped: (acc.skipped || 0) + (skipped ? 1 : 0),
+      total: (acc.total || 0) + 1,
+    }),
+    {}
+  );
+
   // Return the object with the paths
-  return `export default ${JSON.stringify(obj)};`;
+  return {
+    output: `export default ${JSON.stringify(obj)};`,
+    stats,
+  };
 };
 
 module.exports = function (content) {
@@ -279,11 +325,9 @@ module.exports = function (content) {
   videoLoader(this, content)
     .then((res) => {
       console.log(
-        ` ... ${this.resourcePath} completed${
-          this.getOptions().isServer ? " (render skipped)" : ""
-        }`
+        ` ... ${this.resourcePath} completed (${res.stats.cached}/${res.stats.total} cached, ${res.stats.skipped}/${res.stats.total} skipped)`
       );
-      callback(null, res);
+      callback(null, res.output);
     })
     .catch(callback);
 };
