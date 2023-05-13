@@ -11,18 +11,17 @@ import {
   type ActiveAmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
-import enclosures, {
-  isEnclosureKey,
-  type EnclosureKey,
-} from "@alveusgg/data/src/enclosures";
+import enclosures from "@alveusgg/data/src/enclosures";
 
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
-import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
+import { parseAmbassadorDate, sortAmbassadorDate } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Select from "@/components/content/Select";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -34,17 +33,61 @@ const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
   isActiveAmbassadorEntry
 );
 
-// Group all the ambassadors by their enclosure
-type AmbassadorsByEnclosure = Partial<
-  Record<EnclosureKey, ActiveAmbassadorKey[]>
+// Use a map rather than a group, so we can sort the keys
+type AmbassadorsByGroup = Map<
+  string,
+  { name: string; items: ActiveAmbassadorKey[] }
 >;
-const ambassadorsByEnclosure = activeAmbassadors.reduce<AmbassadorsByEnclosure>(
-  (acc, [key, val]) => ({
-    ...acc,
-    [val.enclosure]: [...(acc[val.enclosure] || []), key],
-  }),
-  {}
-);
+
+type AmbassadorSortOptions = Record<
+  string,
+  { label: string; result: AmbassadorKey[] | AmbassadorsByGroup }
+>;
+
+const sortByOptions = {
+  all: {
+    label: "All Ambassadors",
+    result: activeAmbassadors.map(([key]) => key),
+  },
+  enclosures: {
+    label: "Enclosures",
+    result: activeAmbassadors.reduce<AmbassadorsByGroup>((map, [key, val]) => {
+      const group = val.enclosure;
+      map.set(group, {
+        name: enclosures[group].name,
+        items: [...(map.get(group)?.items || []), key],
+      });
+      return map;
+    }, new Map()),
+  },
+  recent: {
+    label: "Recent",
+    result: [...activeAmbassadors]
+      .sort(([, a], [, b]) => sortAmbassadorDate(a.arrival, b.arrival))
+      .reduce<AmbassadorsByGroup>((map, [key, val]) => {
+        const year = parseAmbassadorDate(val.arrival)
+          ?.getUTCFullYear()
+          ?.toString();
+        const group = year || "unknown";
+        map.set(group, {
+          name: year || "Unknown",
+          items: [...(map.get(group)?.items || []), key],
+        });
+        return map;
+      }, new Map()),
+  },
+} as const satisfies AmbassadorSortOptions;
+
+type SortByOption = keyof typeof sortByOptions;
+
+const sortByDropdown = Object.fromEntries(
+  Object.entries(sortByOptions).map(([key, val]) => [key, val.label])
+) as {
+  [key in SortByOption]: (typeof sortByOptions)[key]["label"];
+};
+
+const isSortByOption = (option: string): option is SortByOption =>
+  Object.keys(sortByOptions).includes(option);
 
 export const ambassadorImageHover =
   "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
@@ -92,17 +135,14 @@ const AmbassadorItems: React.FC<{
   </div>
 );
 
-const AmbassadorEnclosure: React.FC<{
-  enclosure: EnclosureKey;
+const AmbassadorGroup: React.FC<{
+  type: string;
+  group: string;
+  name: string;
+  ambassadors: AmbassadorKey[];
   active?: boolean;
-}> = ({ enclosure, active = false }) => {
-  const data = useMemo(() => enclosures[enclosure], [enclosure]);
-  const ambassadors = useMemo(
-    () => ambassadorsByEnclosure[enclosure] || [],
-    [enclosure]
-  );
-
-  // If this enclosure is the "active" one in the URL, scroll it into view
+}> = ({ type, group, name, ambassadors, active = false }) => {
+  // If this group is the "active" one in the URL, scroll it into view
   const scroll = useCallback(
     (node: HTMLDivElement | null) => {
       if (node && active) node.scrollIntoView({ behavior: "smooth" });
@@ -115,10 +155,10 @@ const AmbassadorEnclosure: React.FC<{
       <Heading
         level={2}
         className="mb-4"
-        id={`enclosures:${camelToKebab(enclosure)}`}
+        id={`${type}:${camelToKebab(group)}`}
         link
       >
-        {data.name}
+        {name}
       </Heading>
       <AmbassadorItems
         ambassadors={ambassadors}
@@ -129,35 +169,27 @@ const AmbassadorEnclosure: React.FC<{
   );
 };
 
-const tabs = {
-  all: "All Ambassadors",
-  enclosures: "Enclosures",
-} as const;
-
-type TabKey = keyof typeof tabs;
-
-const isTabKey = (key: string): key is TabKey =>
-  Object.keys(tabs).includes(key);
-
 const AmbassadorsPage: NextPage = () => {
   const [checked, setChecked] = useState(false);
-  const [tab, setTab] = useState<TabKey>("all");
+  const [sortBy, setSortBy] = useState<SortByOption>("all");
   const [active, setActive] = useState<string | null>(null);
 
-  // Check the hash to see if we should be on the enclosures tab
+  // Check the hash to see what sort by option should be selected
   const checkHash = useCallback(() => {
     const match = window.location.hash.match(/^#([^:]+)(?::(.+))?$/);
-    if (match && match[1] && isTabKey(match[1])) {
-      setTab(match[1]);
+    if (match && match[1] && isSortByOption(match[1])) {
+      setSortBy(match[1]);
+
+      // If we have a group, check if the option has groups and has this one
+      const option = sortByOptions[match[1]];
+      const group = match[2] && kebabToCamel(match[2]);
       setActive(
-        match[1] === "enclosures" &&
-          match[2] &&
-          isEnclosureKey(kebabToCamel(match[2]))
-          ? kebabToCamel(match[2])
+        group && !Array.isArray(option.result) && group in option.result
+          ? group
           : null
       );
     } else {
-      setTab("all");
+      setSortBy("all");
       setActive(null);
     }
     setChecked(true);
@@ -175,13 +207,23 @@ const AmbassadorsPage: NextPage = () => {
     const current = window.location.toString();
     const url = new URL(current);
 
-    if (tab === "all") url.hash = "";
-    else if (active) url.hash = `${tab}:${active}`;
-    else url.hash = tab;
+    if (sortBy === "all") url.hash = "";
+    else if (active) url.hash = `${sortBy}:${active}`;
+    else url.hash = sortBy;
 
     const updated = url.toString();
     if (current !== updated) window.history.pushState({}, "", updated);
-  }, [checked, tab, active]);
+  }, [checked, sortBy, active]);
+
+  // When the user picks a new sort by option, reset the active group
+  const selectSortBy = useCallback((val: string) => {
+    if (isSortByOption(val)) {
+      setSortBy(val);
+      setActive(null);
+    }
+  }, []);
+
+  const results = sortByOptions[sortBy].result;
 
   return (
     <>
@@ -197,12 +239,12 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block"
+          className="pointer-events-none absolute -bottom-4 right-0 z-10 hidden h-auto w-1/2 max-w-xs select-none lg:block"
         />
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-[10rem] -rotate-45 select-none lg:block"
+          className="pointer-events-none absolute -bottom-36 -left-8 z-10 hidden h-auto w-1/2 max-w-[8rem] rotate-45 -scale-y-100 select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -232,54 +274,32 @@ const AmbassadorsPage: NextPage = () => {
         />
 
         <Section className="flex-grow pt-0">
-          <div className="my-4 flex flex-col items-center gap-4">
-            <div className="border-b border-alveus-green/50 text-center text-xl font-semibold">
-              <ul className="flex flex-wrap items-end justify-center">
-                {typeSafeObjectEntries(tabs).map(([key, val]) => (
-                  <li key={key} className="mx-4">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setTab(key);
-                        setActive(null);
-                      }}
-                      className={classes(
-                        "group relative inline-block p-4 transition-colors hover:border-alveus-green-500 hover:text-alveus-green-500",
-                        tab === key && "text-alveus-green-700"
-                      )}
-                      aria-current={tab === key ? "page" : undefined}
-                    >
-                      {val}
-
-                      <div
-                        className={classes(
-                          "absolute inset-x-0 -bottom-0.5 h-1 w-full rounded-sm transition-colors group-hover:bg-alveus-green-500",
-                          tab === key && "bg-alveus-green-700"
-                        )}
-                      />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <p className="text-center text-xl font-semibold">
+          <div className="mb-4 mt-8 flex flex-col items-center justify-between gap-4 md:flex-row md:px-4">
+            <p className="flex-shrink text-center text-xl font-semibold">
               Click each ambassador for information and highlights!
             </p>
+
+            <Select
+              options={sortByDropdown}
+              value={sortBy}
+              onChange={selectSortBy}
+              label={<span className="sr-only">Sort by</span>}
+              align="right"
+              className="flex-shrink-0"
+            />
           </div>
 
-          {tab === "all" && (
-            <AmbassadorItems
-              ambassadors={activeAmbassadors.map(([key]) => key)}
-            />
-          )}
-
-          {tab === "enclosures" && (
+          {Array.isArray(results) ? (
+            <AmbassadorItems ambassadors={results} />
+          ) : (
             <div className="flex flex-col gap-12">
-              {typeSafeObjectKeys(ambassadorsByEnclosure).map((key) => (
-                <AmbassadorEnclosure
+              {[...results.entries()].map(([key, val]) => (
+                <AmbassadorGroup
                   key={key}
-                  enclosure={key}
+                  type={sortBy}
+                  group={key}
+                  name={val.name}
+                  ambassadors={val.items}
                   active={key === active}
                 />
               ))}
