@@ -45,6 +45,7 @@ importers:
       '@types/serviceworker': ^0.0.59
       '@typescript-eslint/eslint-plugin': ^5.58.0
       '@typescript-eslint/parser': ^5.58.0
+      '@vercel/analytics': ^1.0.1
       autoprefixer: ^10.4.14
       country-list: ^2.3.0
       csv-stringify: ^6.3.0
@@ -114,6 +115,7 @@ importers:
       '@trpc/next': 10.20.0_qzkuapawkjsjyexyi7x2zcy4au
       '@trpc/react-query': 10.20.0_5fs7tzxxsvejrgme5avwzwpub4
       '@trpc/server': 10.20.0
+      '@vercel/analytics': 1.0.1
       country-list: 2.3.0
       csv-stringify: 6.3.0
       date-fns: 2.29.3
@@ -3678,6 +3680,10 @@ packages:
       '@typescript-eslint/types': 5.58.0
       eslint-visitor-keys: 3.4.0
     dev: true
+
+  /@vercel/analytics/1.0.1:
+    resolution: {integrity: sha512-Ux0c9qUfkcPqng3vrR0GTrlQdqNJ2JREn/2ydrVuKwM3RtMfF2mWX31Ijqo1opSjNAq6rK76PwtANw6kl6TAow==}
+    dev: false
 
   /@vitest/expect/0.30.1:
     resolution: {integrity: sha512-c3kbEtN8XXJSeN81iDGq29bUzSjQhjES2WR3aColsS4lPGbivwLtas4DNUe0jD9gg/FYGIteqOenfU95EFituw==}

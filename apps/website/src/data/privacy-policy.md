@@ -148,6 +148,35 @@ Personal Data is collected for the following purposes and using the following se
   This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers
 
 
+- ### Analytics
+
+  The services contained in this section enable the Owner to monitor and analyze web traffic and can be used to keep track of User behavior.
+
+  #### Vercel Web Analytics
+
+  This website utilizes Vercel Web Analytics to measure views. Vercel Web Analytics is designed to align with
+  international data protection guidelines. It does not collect personal identifiers that track and cross-check
+  users' data across different applications or websites. The service deals with only aggregated data which does not
+  allow identification or re-identification of end users.
+  Data points like page views and custom events are recorded anonymously. They are not tied or associated with any
+  individual, customer, or IP address. Moreover, Vercel Web Analytics does not collect or store any information that
+  could reconstruct a user’s browsing session across different applications or websites, or personally identify a user.
+  A minimal amount of data is collected for aggregated statistics only.
+  Full list of data points: Timestamp of event, URL, referrer, rough location (country, region and city) derived from
+  the visitor’s IP address, name and version of the web browser, name and version of the operating system,
+  and device category (desktop, mobile or tablet).
+  Vercel Web Analytics tracks website traffic and gathers insights without using any third-party cookies. End users are
+  identified by a hash generated from the incoming request. The data related to a visitor session is not stored
+  permanently and is automatically discarded after 24 hours.
+
+  Personal Data collected: Derived, aggregated and anonymized usage data as described above.
+
+  Place of processing: United States – [Privacy Policy](https://vercel.com/legal/privacy-policy).
+
+  Category of personal data collected according to CCPA: internet information.
+
+  This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers
+
 ## The rights of Users {#rights_subjects}
 
 Users may exercise certain rights regarding their Data processed by the Owner.
@@ -360,4 +389,4 @@ This privacy statement has been prepared based on provisions of multiple legisla
 
 This privacy policy relates solely to this Website, if not stated otherwise within this document.
 
-Latest update: April 23rd, 2023
+Latest update: May 19th, 2023
