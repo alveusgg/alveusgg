@@ -108,6 +108,7 @@ const AmbassadorItem: React.FC<{
           placeholder="blur"
           width={700}
           className={`aspect-4/3 h-auto w-full rounded-xl object-cover ${ambassadorImageHover}`}
+          style={{ objectPosition: images[0].position }}
         />
         <Heading
           level={level}

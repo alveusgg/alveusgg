@@ -115,7 +115,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
   const carousel = useMemo(
     () =>
-      images.reduce((obj, { src, alt }) => {
+      images.reduce((obj, { src, alt, position }) => {
         return {
           ...obj,
           [src.src]: (
@@ -133,6 +133,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 draggable={false}
                 width={300}
                 className="aspect-square h-auto w-full rounded-xl object-cover"
+                style={{ objectPosition: position }}
               />
             </a>
           ),
@@ -163,6 +164,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               alt={images[0].alt}
               placeholder="blur"
               className="absolute inset-x-0 top-0 h-full w-full object-cover md:sticky md:h-screen md:max-h-full"
+              style={{ objectPosition: images[0].position }}
             />
           </div>
 

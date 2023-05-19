@@ -88,6 +88,7 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
             draggable={false}
             width={200}
             className={`mx-auto aspect-square h-auto w-full max-w-[10rem] rounded-xl object-cover ${ambassadorImageHover}`}
+            style={{ objectPosition: images[0].position }}
           />
           <Heading level={3} className="text-center text-xl transition-colors">
             {homepage?.title}

@@ -48,49 +48,57 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
           className="mx-auto flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
         >
           <div className="relative order-last flex-shrink-0 rounded-full bg-alveus-tan lg:order-first">
-            <Image
-              src={
-                episode.ambassadors.length > 0
-                  ? getAmbassadorImages(
-                      episode.ambassadors[0] as AmbassadorKey
-                    )[0].src
-                  : animalQuestFull
-              }
-              alt=""
-              className={classes(
-                episode.ambassadors.length === 0 && "opacity-10",
-                "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32"
-              )}
-              width={256}
-            />
+            {(() => {
+              const img =
+                episode.ambassadors.length > 0 &&
+                getAmbassadorImages(episode.ambassadors[0] as AmbassadorKey)[0];
+              return (
+                <Image
+                  src={img ? img.src : animalQuestFull}
+                  alt={img ? img.alt : "Animal Quest"}
+                  className={classes(
+                    !img && "opacity-10",
+                    "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32"
+                  )}
+                  width={256}
+                  style={{ objectPosition: img ? img.position : undefined }}
+                />
+              );
+            })()}
 
-            {episode.ambassadors.length > 1 && (
-              <Image
-                src={
-                  getAmbassadorImages(
-                    episode.ambassadors[
-                      episode.ambassadors.length > 2 ? 2 : 1
-                    ] as AmbassadorKey
-                  )[0].src
-                }
-                alt=""
-                className="absolute -bottom-2 -right-2 hidden h-12 w-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
-                width={256}
-              />
-            )}
+            {episode.ambassadors.length > 1 &&
+              (() => {
+                const img = getAmbassadorImages(
+                  episode.ambassadors[
+                    episode.ambassadors.length > 2 ? 2 : 1
+                  ] as AmbassadorKey
+                )[0];
+                return (
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    className="absolute -bottom-2 -right-2 hidden h-12 w-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                    width={256}
+                    style={{ objectPosition: img.position }}
+                  />
+                );
+              })()}
 
-            {episode.ambassadors.length > 2 && (
-              <Image
-                src={
-                  getAmbassadorImages(
-                    episode.ambassadors[1] as AmbassadorKey
-                  )[0].src
-                }
-                alt=""
-                className="absolute -bottom-2 -left-2 hidden h-12 w-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
-                width={256}
-              />
-            )}
+            {episode.ambassadors.length > 2 &&
+              (() => {
+                const img = getAmbassadorImages(
+                  episode.ambassadors[1] as AmbassadorKey
+                )[0];
+                return (
+                  <Image
+                    src={img.src}
+                    alt={img.alt}
+                    className="absolute -bottom-2 -left-2 hidden h-12 w-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                    width={256}
+                    style={{ objectPosition: img.position }}
+                  />
+                );
+              })()}
           </div>
 
           <div className="flex-grow">
