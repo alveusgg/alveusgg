@@ -148,7 +148,11 @@ Personal Data is collected for the following purposes and using the following se
   This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers
 
 
-- ### Measuring views (Vercel Web Analytics)
+- ### Analytics
+
+  The services contained in this section enable the Owner to monitor and analyze web traffic and can be used to keep track of User behavior.
+  
+  #### Vercel Web Analytics
 
   This website utilizes Vercel Web Analytics to measure views. Vercel Web Analytics is designed to align with
   international data protection guidelines. It does not collect personal identifiers that track and cross-check
