@@ -151,7 +151,7 @@ Personal Data is collected for the following purposes and using the following se
 - ### Analytics
 
   The services contained in this section enable the Owner to monitor and analyze web traffic and can be used to keep track of User behavior.
-  
+
   #### Vercel Web Analytics
 
   This website utilizes Vercel Web Analytics to measure views. Vercel Web Analytics is designed to align with
@@ -389,4 +389,4 @@ This privacy statement has been prepared based on provisions of multiple legisla
 
 This privacy policy relates solely to this Website, if not stated otherwise within this document.
 
-Latest update: April 23rd, 2023
+Latest update: May 19th, 2023
