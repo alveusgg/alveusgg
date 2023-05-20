@@ -133,7 +133,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             {episode.ambassadors.length > 0 && (
               <p className="text-lg">
                 <span className="text-base opacity-80">Featuring: </span>
-                {episode.ambassadors.map((ambassador, idx) => (
+                {episode.ambassadors.map((ambassador, idx, arr) => (
                   <Fragment key={ambassador}>
                     {/* Retired ambassadors don't have pages */}
                     {isActiveAmbassadorKey(ambassador) ? (
@@ -143,11 +143,9 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                     ) : (
                       ambassadors[ambassador].name
                     )}
-                    {idx < episode.ambassadors.length - 2 && ", "}
-                    {idx === episode.ambassadors.length - 2 &&
-                      episode.ambassadors.length > 2 &&
-                      ","}
-                    {idx === episode.ambassadors.length - 2 && " and "}
+                    {idx < arr.length - 2 && ", "}
+                    {idx === arr.length - 2 && arr.length > 2 && ","}
+                    {idx === arr.length - 2 && " and "}
                   </Fragment>
                 ))}
               </p>

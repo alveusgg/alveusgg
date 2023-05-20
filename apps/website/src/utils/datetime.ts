@@ -107,3 +107,39 @@ export const sortAmbassadorDate = (
   // Otherwise, sort by date
   return parsedA > parsedB ? -1 : 1;
 };
+
+export const formatSeconds = (
+  seconds: number,
+  {
+    style = "short",
+    seconds: showSeconds = true,
+  }: Partial<{ style: "short" | "long"; seconds: boolean }> = {}
+): string => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  // If short, output as hh:mm:ss
+  // If we're showing seconds, hh is optional
+  // mm is padded if hh is present, ss is always padded (if shown)
+  if (style === "short") {
+    return [
+      ...(!showSeconds || hours > 0 ? [hours] : []),
+      minutes.toString().padStart(!showSeconds || hours > 0 ? 2 : 1, "0"),
+      ...(showSeconds ? [remainingSeconds.toString().padStart(2, "0")] : []),
+    ].join(":");
+  }
+
+  // If long, output as hh hours, mm minutes, ss seconds
+  // If we're showing seconds, hh and mm are optional
+  // If we're not showing seconds, hh only is optional
+  return [
+    ...(hours > 0 ? [`${hours} hour${hours === 1 ? "" : "s"}`] : []),
+    ...(!showSeconds || minutes > 0
+      ? [`${minutes} minute${minutes === 1 ? "" : "s"}`]
+      : []),
+    ...(showSeconds
+      ? [`${remainingSeconds} second${remainingSeconds === 1 ? "" : "s"}`]
+      : []),
+  ].join(", ");
+};

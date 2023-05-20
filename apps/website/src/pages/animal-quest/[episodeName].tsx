@@ -1,18 +1,22 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import React, { Fragment, useEffect, useState } from "react";
 
 import animalQuest, {
   type AnimalQuestWithEpisode,
 } from "@alveusgg/data/src/animal-quest";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Consent from "@/components/Consent";
 
-import { sentenceToKebab } from "@/utils/string-case";
-import { formatDateTime } from "@/utils/datetime";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
+import { formatDateTime, formatSeconds } from "@/utils/datetime";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 
@@ -31,8 +35,28 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
     {}
   );
 
+const getTwitchEmbed = (
+  video: number,
+  parent: string,
+  start?: string
+): string => {
+  const url = new URL("https://player.twitch.tv");
+  url.searchParams.set("video", video.toString());
+  url.searchParams.set("parent", parent);
+  url.searchParams.set("autoplay", "false");
+  url.searchParams.set("muted", "false");
+  url.searchParams.set("allowfullscreen", "true");
+  url.searchParams.set("width", "100%");
+  url.searchParams.set("height", "100%");
+  if (start) url.searchParams.set("time", start);
+  return url.toString();
+};
+
 type AnimalQuestEpisodePageProps = {
   episode: AnimalQuestWithEpisode;
+  featured: {
+    [key in AnimalQuestWithEpisode["ambassadors"][number]]: (typeof ambassadors)[key];
+  };
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -53,23 +77,42 @@ export const getStaticProps: GetStaticProps<
   const episode = episodes[episodeName];
   if (!episode) return { notFound: true };
 
-  // TODO: Get the ambassador data and images for the episode
+  const featured = episode.ambassadors.reduce(
+    (obj, ambassador) => ({
+      ...obj,
+      [ambassador]: ambassadors[ambassador],
+    }),
+    {}
+  ) as AnimalQuestEpisodePageProps["featured"];
 
   return {
     props: {
       episode,
+      featured,
     },
   };
 };
 
 const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   episode,
+  featured,
 }) => {
+  const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
+  useEffect(() => {
+    setTwitchEmbed(
+      getTwitchEmbed(
+        episode.video.id,
+        window.location.hostname,
+        episode.video.start
+      )
+    );
+  }, []);
+
   return (
     <>
       <Meta
         title={`Episode ${episode.episode}: ${episode.edition} | Animal Quest`}
-        description={``}
+        description={episode.description}
         image={animalQuestFull.src}
       />
 
@@ -95,7 +138,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               </span>
               <span className="block">{episode.edition}</span>
             </Heading>
-            <p className="text-lg"></p>
+            <p className="text-lg">{episode.description}</p>
           </div>
 
           <div className="w-full pb-16 pt-4 md:w-2/5 md:py-24">
@@ -113,32 +156,83 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 <Heading level={3} className="text-2xl">
                   Featuring:
                 </Heading>
-                <p>TODO</p>
+                <p>
+                  {typeSafeObjectEntries(featured).map(
+                    ([key, ambassador], idx, arr) => (
+                      <Fragment key={key}>
+                        {/* Retired ambassadors don't have pages */}
+                        {isActiveAmbassadorKey(key) ? (
+                          <Link
+                            href={`/ambassadors/${camelToKebab(key)}`}
+                            custom
+                            className="hover:underline"
+                          >
+                            {ambassador.name}
+                          </Link>
+                        ) : (
+                          ambassador.name
+                        )}
+                        {idx < arr.length - 2 && ", "}
+                        {idx === arr.length - 2 && arr.length > 2 && ","}
+                        {idx === arr.length - 2 && " and "}
+                      </Fragment>
+                    )
+                  )}
+                </p>
               </div>
 
               <div className="w-full md:w-1/2">
                 <Heading level={3} className="text-2xl">
                   Host:
                 </Heading>
-                <p>Maya Higa</p>
+                <p>{episode.host}</p>
               </div>
 
               <div className="w-full md:w-1/2">
                 <Heading level={3} className="text-2xl">
                   Length:
                 </Heading>
-                <p>TODO</p>
+                <p>
+                  {formatSeconds(episode.length, {
+                    style: "long",
+                    seconds: false,
+                  })}
+                </p>
               </div>
             </div>
 
             <Link
               href="/animal-quest"
               className="text-md mt-6 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+              custom
             >
               Discover other episodes
             </Link>
           </div>
         </Section>
+
+        {/* Grow the last section to cover the page */}
+        <div className="relative flex flex-grow flex-col">
+          <Section className="flex-grow">
+            <Consent
+              item="episode video"
+              consent="twitch"
+              className="aspect-video h-auto w-full rounded-2xl"
+            >
+              {twitchEmbed && (
+                <iframe
+                  src={twitchEmbed}
+                  title="Twitch video"
+                  referrerPolicy="no-referrer"
+                  allow="autoplay; encrypted-media; fullscreen"
+                  sandbox="allow-same-origin allow-scripts"
+                  className="aspect-video h-auto w-full rounded-2xl"
+                  tabIndex={-1}
+                ></iframe>
+              )}
+            </Consent>
+          </Section>
+        </div>
       </div>
     </>
   );
