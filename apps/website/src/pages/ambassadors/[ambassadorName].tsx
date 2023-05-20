@@ -30,7 +30,11 @@ import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import IconYouTube from "@/icons/IconYouTube";
 
-import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import {
+  camelToKebab,
+  kebabToCamel,
+  sentenceToKebab,
+} from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
@@ -260,9 +264,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
             {animalQuest && (
               <Link
-                href={animalQuest.link}
+                href={`/animal-quest/${sentenceToKebab(animalQuest.edition)}`}
                 className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
-                external
                 custom
               >
                 <Image
