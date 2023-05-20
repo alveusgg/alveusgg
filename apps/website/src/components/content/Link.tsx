@@ -22,7 +22,7 @@ const Link: React.FC<LinkProps> = ({
   className,
   external = false,
   custom = false,
-  prefetch = true,
+  prefetch,
 }) => {
   const props = {
     href,
