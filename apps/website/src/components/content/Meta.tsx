@@ -9,12 +9,13 @@ type MetaProps = {
   title?: string;
   description?: string;
   image?: string;
+  children?: React.ReactNode;
 };
 
 // Get our base URL, which will either be specifically set, or from Vercel for preview deployments
 const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 
-const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
+const Meta: React.FC<MetaProps> = ({ title, description, image, children }) => {
   const defaultTitle = "Alveus Sanctuary";
   const defaultDescription =
     "Alveus is a 501(c)(3) nonprofit organization functioning as a wildlife sanctuary & virtual education center following the journeys of our non-releasable ambassadors, aiming to educate and spark an appreciation for them and their wild counterparts.";
@@ -66,6 +67,7 @@ const Meta: React.FC<MetaProps> = ({ title, description, image }) => {
       {env.NEXT_PUBLIC_NOINDEX === "true" && (
         <meta key="robots" name="robots" content="noindex" />
       )}
+      {children}
     </Head>
   );
 };
