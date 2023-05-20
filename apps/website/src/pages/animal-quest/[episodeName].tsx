@@ -293,6 +293,8 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         />
 
         <Section className="flex-grow">
+          <h2 className="sr-only">Video</h2>
+
           <Consent
             item="episode video"
             consent="twitch"
