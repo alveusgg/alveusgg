@@ -12,7 +12,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { formatDateTime } from "@/utils/datetime";
-import { camelToKebab } from "@/utils/string-case";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
@@ -103,18 +103,14 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
 
           <div className="flex-grow">
             <Link
-              href={episode.link}
+              href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
               className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
-              external
               custom
             >
               <Heading
                 level={2}
                 className="my-0 mb-1.5 scroll-mt-4"
-                id={episode.edition
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")
-                  .replace(/-edition$/, "")}
+                id={sentenceToKebab(episode.edition).replace(/-edition$/, "")}
               >
                 <span className="flex items-center gap-2 text-lg">
                   <IconYouTube size={24} className="lg:hidden" />
