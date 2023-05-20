@@ -217,14 +217,14 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             <div className="flex w-full flex-wrap">
               <h2 className="sr-only">Episode Information</h2>
 
-              <div className="w-full md:w-1/2">
+              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
                 <Heading level={3} className="text-2xl">
                   Broadcast:
                 </Heading>
                 <p>{formatDateTime(episode.broadcast, { style: "long" })}</p>
               </div>
 
-              <div className="w-full md:w-1/2">
+              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
                 <Heading level={3} className="text-2xl">
                   Featuring:
                 </Heading>
@@ -253,14 +253,14 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 </p>
               </div>
 
-              <div className="w-full md:w-1/2">
+              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
                 <Heading level={3} className="text-2xl">
                   Host:
                 </Heading>
                 <p>{episode.host}</p>
               </div>
 
-              <div className="w-full md:w-1/2">
+              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
                 <Heading level={3} className="text-2xl">
                   Length:
                 </Heading>
