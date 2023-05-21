@@ -47,7 +47,11 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
           key={episode.episode}
           className="mx-auto flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
         >
-          <div className="relative order-last flex-shrink-0 rounded-full bg-alveus-tan lg:order-first">
+          <Link
+            href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
+            className="group relative order-last flex-shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
+            custom
+          >
             {(() => {
               const img =
                 episode.ambassadors.length > 0 &&
@@ -58,7 +62,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                   alt={img ? img.alt : "Animal Quest"}
                   className={classes(
                     !img && "opacity-10",
-                    "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32"
+                    "hidden h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md min-[430px]:block md:h-32 md:w-32"
                   )}
                   width={256}
                   style={{ objectPosition: img ? img.position : undefined }}
@@ -99,7 +103,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                   />
                 );
               })()}
-          </div>
+          </Link>
 
           <div className="flex-grow">
             <Link

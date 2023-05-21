@@ -101,7 +101,7 @@ importers:
       webpack: ^5.79.0
       zod: ^3.21.4
     dependencies:
-      '@alveusgg/data': github.com/alveusgg/data/f6336d1e9de291b77e0a5fe1052767cf2386cc02
+      '@alveusgg/data': github.com/alveusgg/data/f636349f7a51114284fe8bee76bcd7bcbd94eb16
       '@aws-sdk/client-s3': 3.312.0
       '@aws-sdk/s3-request-presigner': 3.312.0
       '@headlessui/react': 1.7.14_biqbaboplfbrettd7655fr4n2y
@@ -8943,8 +8943,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  github.com/alveusgg/data/f6336d1e9de291b77e0a5fe1052767cf2386cc02:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/f6336d1e9de291b77e0a5fe1052767cf2386cc02}
+  github.com/alveusgg/data/f636349f7a51114284fe8bee76bcd7bcbd94eb16:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/f636349f7a51114284fe8bee76bcd7bcbd94eb16}
     name: '@alveusgg/data'
-    version: 0.9.0-2
+    version: 0.9.0-3
     dev: false
