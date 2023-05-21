@@ -200,9 +200,10 @@ const Carousel: React.FC<CarouselProps> = ({
   return (
     <div id={id} className={classes("flex flex-nowrap", className)}>
       <button
-        className={`group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default ${
-          state === "none" ? "hidden" : ""
-        }`}
+        className={classes(
+          "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
+          state === "none" && "hidden"
+        )}
         type="button"
         onClick={() => {
           interacted();
@@ -218,9 +219,11 @@ const Carousel: React.FC<CarouselProps> = ({
       </button>
 
       <div
-        className={`scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto ${wrapperClassName} ${
-          state !== "none" ? "cursor-grab" : ""
-        }`}
+        className={classes(
+          "scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto",
+          wrapperClassName,
+          state === "none" ? "justify-evenly" : "cursor-grab"
+        )}
         ref={ref}
         onScroll={scrolled}
         onMouseDown={state === "none" ? undefined : drag}
@@ -237,9 +240,10 @@ const Carousel: React.FC<CarouselProps> = ({
       </div>
 
       <button
-        className={`group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default ${
-          state === "none" ? "hidden" : ""
-        }`}
+        className={classes(
+          "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
+          state === "none" && "hidden"
+        )}
         type="button"
         onClick={() => {
           interacted();
