@@ -61,7 +61,7 @@ const getTwitchEmbed = (
 type AnimalQuestEpisodePageProps = {
   episode: AnimalQuestWithEpisode;
   featured: {
-    [key in AnimalQuestWithEpisode["ambassadors"][number]]: (typeof ambassadors)[key];
+    [key in (typeof animalQuest)[number]["ambassadors"]["featured"][number]]: (typeof ambassadors)[key];
   };
 };
 
@@ -83,7 +83,7 @@ export const getStaticProps: GetStaticProps<
   const episode = episodes[episodeName];
   if (!episode) return { notFound: true };
 
-  const featured = episode.ambassadors.reduce(
+  const featured = episode.ambassadors.featured.reduce(
     (obj, ambassador) => ({
       ...obj,
       [ambassador]: ambassadors[ambassador],

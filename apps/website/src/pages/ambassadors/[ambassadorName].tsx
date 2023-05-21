@@ -14,8 +14,8 @@ import {
   type AmbassadorImages,
 } from "@alveusgg/data/src/ambassadors/images";
 import {
-  type AnimalQuestWithEpisode,
   getAmbassadorEpisode,
+  type AnimalQuestWithRelation,
 } from "@alveusgg/data/src/animal-quest";
 import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
@@ -60,7 +60,7 @@ type AmbassadorPageProps = {
   enclosure: Enclosure;
   images: AmbassadorImages;
   merchImage?: AmbassadorImage;
-  animalQuest?: AnimalQuestWithEpisode;
+  animalQuest?: AnimalQuestWithRelation;
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -90,7 +90,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
       enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
-      animalQuest: getAmbassadorEpisode(ambassadorKey),
+      animalQuest: getAmbassadorEpisode(ambassadorKey), // featured + related
     },
   };
 };
@@ -280,7 +280,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     level={2}
                     className="transition-colors group-hover:text-alveus-green-800"
                   >
-                    Learn more about {ambassador.name} on{" "}
+                    Learn more{" "}
+                    {animalQuest.relation === "featured" &&
+                      `about ${ambassador.name} `}
+                    on{" "}
                     <span className="min-[320px]:whitespace-nowrap">
                       Animal Quest
                     </span>

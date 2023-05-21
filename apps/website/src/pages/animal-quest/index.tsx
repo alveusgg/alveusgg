@@ -54,8 +54,10 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
           >
             {(() => {
               const img =
-                episode.ambassadors.length > 0 &&
-                getAmbassadorImages(episode.ambassadors[0] as AmbassadorKey)[0];
+                episode.ambassadors.featured.length > 0 &&
+                getAmbassadorImages(
+                  episode.ambassadors.featured[0] as AmbassadorKey
+                )[0];
               return (
                 <Image
                   src={img ? img.src : animalQuestFull}
@@ -70,11 +72,11 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               );
             })()}
 
-            {episode.ambassadors.length > 1 &&
+            {episode.ambassadors.featured.length > 1 &&
               (() => {
                 const img = getAmbassadorImages(
-                  episode.ambassadors[
-                    episode.ambassadors.length > 2 ? 2 : 1
+                  episode.ambassadors.featured[
+                    episode.ambassadors.featured.length > 2 ? 2 : 1
                   ] as AmbassadorKey
                 )[0];
                 return (
@@ -88,10 +90,10 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                 );
               })()}
 
-            {episode.ambassadors.length > 2 &&
+            {episode.ambassadors.featured.length > 2 &&
               (() => {
                 const img = getAmbassadorImages(
-                  episode.ambassadors[1] as AmbassadorKey
+                  episode.ambassadors.featured[1] as AmbassadorKey
                 )[0];
                 return (
                   <Image
@@ -134,10 +136,10 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               <span className="text-base opacity-80">Broadcast: </span>
               {formatDateTime(episode.broadcast, { style: "long" })}
             </p>
-            {episode.ambassadors.length > 0 && (
+            {episode.ambassadors.featured.length > 0 && (
               <p className="text-lg">
                 <span className="text-base opacity-80">Featuring: </span>
-                {episode.ambassadors.map((ambassador, idx, arr) => (
+                {episode.ambassadors.featured.map((ambassador, idx, arr) => (
                   <Fragment key={ambassador}>
                     {/* Retired ambassadors don't have pages */}
                     {isActiveAmbassadorKey(ambassador) ? (
