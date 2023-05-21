@@ -1,5 +1,6 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 
 import animalQuest, {
@@ -7,12 +8,14 @@ import animalQuest, {
 } from "@alveusgg/data/src/animal-quest";
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
 import Consent from "@/components/Consent";
+import Carousel from "@/components/content/Carousel";
+import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { formatDateTime, formatSeconds } from "@/utils/datetime";
@@ -63,6 +66,9 @@ type AnimalQuestEpisodePageProps = {
   featured: {
     [key in (typeof animalQuest)[number]["ambassadors"]["featured"][number]]: (typeof ambassadors)[key];
   };
+  related: {
+    [key in (typeof animalQuest)[number]["ambassadors"]["related"][number]]: (typeof ambassadors)[key];
+  };
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -91,10 +97,19 @@ export const getStaticProps: GetStaticProps<
     {}
   ) as AnimalQuestEpisodePageProps["featured"];
 
+  const related = episode.ambassadors.related.reduce(
+    (obj, ambassador) => ({
+      ...obj,
+      [ambassador]: ambassadors[ambassador],
+    }),
+    {}
+  ) as AnimalQuestEpisodePageProps["related"];
+
   return {
     props: {
       episode,
       featured,
+      related,
     },
   };
 };
@@ -102,6 +117,7 @@ export const getStaticProps: GetStaticProps<
 const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   episode,
   featured,
+  related,
 }) => {
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
   useEffect(() => {
@@ -120,6 +136,57 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
       ].filter(Boolean),
     [episode.description]
   );
+
+  const featuredAmbassadors = [
+    ...typeSafeObjectEntries(featured).map(([key, ambassador]) => ({
+      key,
+      ambassador,
+      relation: "featured",
+    })),
+    ...typeSafeObjectEntries(related).map(([key, ambassador]) => ({
+      key,
+      ambassador,
+      relation: "related",
+    })),
+  ]
+    .filter(({ key }) => isActiveAmbassadorKey(key))
+    .reduce((obj, { key, ambassador, relation }) => {
+      const images = getAmbassadorImages(key);
+      return {
+        ...obj,
+        [key]: (
+          <Link
+            href={`/ambassadors/${camelToKebab(key)}`}
+            draggable={false}
+            className="group text-center transition-colors hover:text-alveus-green"
+          >
+            <Image
+              src={images[0].src}
+              alt={images[0].alt}
+              draggable={false}
+              width={430}
+              className={`mx-auto aspect-square h-auto w-full max-w-2/3 rounded-2xl object-cover ${ambassadorImageHover}`}
+              style={{ objectPosition: images[0].position }}
+            />
+            <Heading level={3} className="mb-0 mt-4 text-2xl">
+              {ambassador.name}
+            </Heading>
+            <p
+              title={
+                relation === "featured"
+                  ? "Featured in this episode"
+                  : "Related to this episode"
+              }
+              className="text-sm font-bold uppercase text-alveus-green-500"
+            >
+              {relation}
+            </p>
+            <p className="mt-2">{ambassador.story}</p>
+            <p className="mt-2">{ambassador.mission}</p>
+          </Link>
+        ),
+      };
+    }, {});
 
   return (
     <>
@@ -236,7 +303,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                         {isActiveAmbassadorKey(key) ? (
                           <Link
                             href={`/ambassadors/${camelToKebab(key)}`}
-                            custom
                             className="hover:underline"
                           >
                             {ambassador.name}
@@ -276,7 +342,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             <Link
               href="/animal-quest"
               className="text-md mt-6 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-              custom
             >
               Discover other episodes
             </Link>
@@ -311,6 +376,16 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               ></iframe>
             )}
           </Consent>
+
+          <Heading level={2} className="mt-16">
+            Meet the ambassadors
+          </Heading>
+          <Carousel
+            items={featuredAmbassadors}
+            auto={10000}
+            className="mt-4"
+            itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+          />
         </Section>
       </div>
     </>

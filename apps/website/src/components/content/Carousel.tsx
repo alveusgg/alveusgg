@@ -110,8 +110,12 @@ const Carousel: React.FC<CarouselProps> = ({
   }, [interacted]);
 
   // Run the scroll handler on load to check our current state
+  // Run it on any window resize to check our state
   useEffect(() => {
     scrolled();
+
+    window.addEventListener("resize", scrolled);
+    return () => window.removeEventListener("resize", scrolled);
   }, [scrolled]);
 
   // Allow the user to drag to scroll
