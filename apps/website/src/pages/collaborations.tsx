@@ -28,6 +28,12 @@ type Collaboration = {
 type Collaborations = Record<string, Collaboration>;
 
 const collaborations = {
+  peachJars: {
+    name: "PeachJars and Jessica Nigri",
+    link: "https://www.twitch.tv/peachjars",
+    date: new Date("2023-05-21"),
+    videoId: "KF4HIypXiyc",
+  },
   squeex: {
     name: "Squeex",
     link: "https://www.twitch.tv/squeex",
