@@ -377,15 +377,19 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             )}
           </Consent>
 
-          <Heading level={2} className="mt-16">
-            Meet the ambassadors
-          </Heading>
-          <Carousel
-            items={featuredAmbassadors}
-            auto={10000}
-            className="mt-4"
-            itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
-          />
+          {Object.keys(featuredAmbassadors).length > 0 && (
+            <>
+              <Heading level={2} className="mt-16">
+                Meet the ambassadors
+              </Heading>
+              <Carousel
+                items={featuredAmbassadors}
+                auto={10000}
+                className="mt-4"
+                itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+              />
+            </>
+          )}
         </Section>
       </div>
     </>

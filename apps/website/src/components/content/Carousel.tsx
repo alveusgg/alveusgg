@@ -85,7 +85,13 @@ const Carousel: React.FC<CarouselProps> = ({
   );
   const scrolled = useCallback(() => {
     const { current } = ref;
-    if (!current || !current.children[0]) return;
+    if (!current) return;
+
+    // If there are no children, set the state to none
+    if (!current.children[0]) {
+      setState("none");
+      return;
+    }
 
     // Get the width of the first child
     const { width } = current.children[0].getBoundingClientRect();
