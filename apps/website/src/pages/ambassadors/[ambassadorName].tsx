@@ -199,7 +199,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               </div>
 
               <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>IUCN Status:</Heading>
+                <Heading level={2}>Conservation Status:</Heading>
 
                 <div className="ml-4">
                   <p className="text-xl">
@@ -208,10 +208,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                         href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${ambassador.iucn.id}`}
                         external
                       >
-                        {getIUCNStatus(ambassador.iucn.status)}
+                        IUCN: {getIUCNStatus(ambassador.iucn.status)}
                       </Link>
                     ) : (
-                      getIUCNStatus(ambassador.iucn.status)
+                      <>IUCN: {getIUCNStatus(ambassador.iucn.status)}</>
                     )}
                   </p>
                 </div>
