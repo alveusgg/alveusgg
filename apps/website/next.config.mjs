@@ -1,6 +1,7 @@
 import { resolve } from "path";
 import { withSuperjson } from "next-superjson";
-import ambassadorSlugs from "./src/data/ambassador-slugs.json" assert { type: "json" };
+import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
+import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
 
 // @ts-check
 /**
@@ -144,11 +145,28 @@ const config = {
       destination: "/about/tech",
       permanent: true,
     },
+    {
+      source: "/aq/:path*",
+      destination: "/animal-quest/:path*",
+      permanent: false,
+    },
     ...ambassadorSlugs.map((slug) => ({
       source: `/${slug}`,
       destination: `/ambassadors/${slug}`,
       permanent: false,
     })),
+    ...animalQuestEpisodes.flatMap(({ slug, episode }) => [
+      {
+        source: `/animal-quest/${episode}`,
+        destination: `/animal-quest/${slug}`,
+        permanent: false,
+      },
+      {
+        source: `/animal-quest/episode-${episode}`,
+        destination: `/animal-quest/${slug}`,
+        permanent: false,
+      },
+    ]),
     // External redirects
     {
       source: "/merch",

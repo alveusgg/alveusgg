@@ -11,7 +11,7 @@
 /public/push/alveus/*
 /public/robots.txt
 /public/sitemap.xml
-/src/data/ambassador-slugs.json
+/src/data/generated/
 
 # database
 /prisma/db.sqlite
