@@ -116,6 +116,18 @@ Personal Data is collected for the following purposes and using the following se
 
   This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
 
+  #### Prezi presentation widget
+
+  Prezi is a presentation visualization service provided by Prezi Inc. that allows this Website to incorporate content of this kind on its pages.
+
+  Personal Data collected: Cookies; Usage Data.
+
+  Place of processing: United States – [Privacy Policy](https://prezi.com/legal/privacy-policy/)
+
+  Category of personal data collected according to CCPA: internet information.
+
+  This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
+
   #### The Giving Block donation widget
 
   The Giving Block is a donation service provided by The Giving Block Holdings LLC, a subsidiary of Shift4 Payments LLC, that allows this Website to incorporate content of this kind on its pages.
@@ -389,4 +401,4 @@ This privacy statement has been prepared based on provisions of multiple legisla
 
 This privacy policy relates solely to this Website, if not stated otherwise within this document.
 
-Latest update: May 19th, 2023
+Latest update: May 26th, 2023

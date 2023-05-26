@@ -85,7 +85,13 @@ const Carousel: React.FC<CarouselProps> = ({
   );
   const scrolled = useCallback(() => {
     const { current } = ref;
-    if (!current || !current.children[0]) return;
+    if (!current) return;
+
+    // If there are no children, set the state to none
+    if (!current.children[0]) {
+      setState("none");
+      return;
+    }
 
     // Get the width of the first child
     const { width } = current.children[0].getBoundingClientRect();
@@ -110,8 +116,12 @@ const Carousel: React.FC<CarouselProps> = ({
   }, [interacted]);
 
   // Run the scroll handler on load to check our current state
+  // Run it on any window resize to check our state
   useEffect(() => {
     scrolled();
+
+    window.addEventListener("resize", scrolled);
+    return () => window.removeEventListener("resize", scrolled);
   }, [scrolled]);
 
   // Allow the user to drag to scroll
@@ -196,9 +206,10 @@ const Carousel: React.FC<CarouselProps> = ({
   return (
     <div id={id} className={classes("flex flex-nowrap", className)}>
       <button
-        className={`group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default ${
-          state === "none" ? "hidden" : ""
-        }`}
+        className={classes(
+          "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
+          state === "none" && "hidden"
+        )}
         type="button"
         onClick={() => {
           interacted();
@@ -214,9 +225,11 @@ const Carousel: React.FC<CarouselProps> = ({
       </button>
 
       <div
-        className={`scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto ${wrapperClassName} ${
-          state !== "none" ? "cursor-grab" : ""
-        }`}
+        className={classes(
+          "scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto",
+          wrapperClassName,
+          state === "none" ? "justify-evenly" : "cursor-grab"
+        )}
         ref={ref}
         onScroll={scrolled}
         onMouseDown={state === "none" ? undefined : drag}
@@ -233,9 +246,10 @@ const Carousel: React.FC<CarouselProps> = ({
       </div>
 
       <button
-        className={`group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default ${
-          state === "none" ? "hidden" : ""
-        }`}
+        className={classes(
+          "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
+          state === "none" && "hidden"
+        )}
         type="button"
         onClick={() => {
           interacted();

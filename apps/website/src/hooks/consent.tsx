@@ -40,6 +40,11 @@ export const consentData = {
     description: "Embedded videos from Streamable.com",
     privacy: "https://privacy.streamable.com/",
   },
+  prezi: {
+    name: "Prezi",
+    description: "Embedded presentations from Prezi.com",
+    privacy: "https://prezi.com/legal/privacy-policy/",
+  },
   givingBlock: {
     name: "The Giving Block",
     description: "Embedded donation widget from The Giving Block",

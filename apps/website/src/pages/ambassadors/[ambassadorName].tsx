@@ -14,8 +14,8 @@ import {
   type AmbassadorImages,
 } from "@alveusgg/data/src/ambassadors/images";
 import {
-  type AnimalQuestWithEpisode,
   getAmbassadorEpisode,
+  type AnimalQuestWithRelation,
 } from "@alveusgg/data/src/animal-quest";
 import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
@@ -30,7 +30,11 @@ import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import IconYouTube from "@/icons/IconYouTube";
 
-import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import {
+  camelToKebab,
+  kebabToCamel,
+  sentenceToKebab,
+} from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
@@ -56,7 +60,7 @@ type AmbassadorPageProps = {
   enclosure: Enclosure;
   images: AmbassadorImages;
   merchImage?: AmbassadorImage;
-  animalQuest?: AnimalQuestWithEpisode;
+  animalQuest?: AnimalQuestWithRelation;
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -86,7 +90,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
       enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
-      animalQuest: getAmbassadorEpisode(ambassadorKey),
+      animalQuest: getAmbassadorEpisode(ambassadorKey), // featured + related
     },
   };
 };
@@ -260,9 +264,8 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
             {animalQuest && (
               <Link
-                href={animalQuest.link}
+                href={`/animal-quest/${sentenceToKebab(animalQuest.edition)}`}
                 className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
-                external
                 custom
               >
                 <Image
@@ -277,7 +280,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     level={2}
                     className="transition-colors group-hover:text-alveus-green-800"
                   >
-                    Learn more about {ambassador.name} on{" "}
+                    Learn more{" "}
+                    {animalQuest.relation === "featured" &&
+                      `about ${ambassador.name} `}
+                    on{" "}
                     <span className="min-[320px]:whitespace-nowrap">
                       Animal Quest
                     </span>

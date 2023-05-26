@@ -12,7 +12,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { formatDateTime } from "@/utils/datetime";
-import { camelToKebab } from "@/utils/string-case";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
@@ -47,18 +47,24 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
           key={episode.episode}
           className="mx-auto flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
         >
-          <div className="relative order-last flex-shrink-0 rounded-full bg-alveus-tan lg:order-first">
+          <Link
+            href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
+            className="group relative order-last flex-shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
+            custom
+          >
             {(() => {
               const img =
-                episode.ambassadors.length > 0 &&
-                getAmbassadorImages(episode.ambassadors[0] as AmbassadorKey)[0];
+                episode.ambassadors.featured.length > 0 &&
+                getAmbassadorImages(
+                  episode.ambassadors.featured[0] as AmbassadorKey
+                )[0];
               return (
                 <Image
                   src={img ? img.src : animalQuestFull}
                   alt={img ? img.alt : "Animal Quest"}
                   className={classes(
                     !img && "opacity-10",
-                    "hidden h-24 w-24 rounded-full object-cover shadow min-[430px]:block md:h-32 md:w-32"
+                    "hidden h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md min-[430px]:block md:h-32 md:w-32"
                   )}
                   width={256}
                   style={{ objectPosition: img ? img.position : undefined }}
@@ -66,11 +72,11 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               );
             })()}
 
-            {episode.ambassadors.length > 1 &&
+            {episode.ambassadors.featured.length > 1 &&
               (() => {
                 const img = getAmbassadorImages(
-                  episode.ambassadors[
-                    episode.ambassadors.length > 2 ? 2 : 1
+                  episode.ambassadors.featured[
+                    episode.ambassadors.featured.length > 2 ? 2 : 1
                   ] as AmbassadorKey
                 )[0];
                 return (
@@ -84,10 +90,10 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                 );
               })()}
 
-            {episode.ambassadors.length > 2 &&
+            {episode.ambassadors.featured.length > 2 &&
               (() => {
                 const img = getAmbassadorImages(
-                  episode.ambassadors[1] as AmbassadorKey
+                  episode.ambassadors.featured[1] as AmbassadorKey
                 )[0];
                 return (
                   <Image
@@ -99,22 +105,18 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                   />
                 );
               })()}
-          </div>
+          </Link>
 
           <div className="flex-grow">
             <Link
-              href={episode.link}
+              href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
               className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
-              external
               custom
             >
               <Heading
                 level={2}
                 className="my-0 mb-1.5 scroll-mt-4"
-                id={episode.edition
-                  .toLowerCase()
-                  .replace(/\s+/g, "-")
-                  .replace(/-edition$/, "")}
+                id={sentenceToKebab(episode.edition).replace(/-edition$/, "")}
               >
                 <span className="flex items-center gap-2 text-lg">
                   <IconYouTube size={24} className="lg:hidden" />
@@ -134,10 +136,10 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               <span className="text-base opacity-80">Broadcast: </span>
               {formatDateTime(episode.broadcast, { style: "long" })}
             </p>
-            {episode.ambassadors.length > 0 && (
+            {episode.ambassadors.featured.length > 0 && (
               <p className="text-lg">
                 <span className="text-base opacity-80">Featuring: </span>
-                {episode.ambassadors.map((ambassador, idx) => (
+                {episode.ambassadors.featured.map((ambassador, idx, arr) => (
                   <Fragment key={ambassador}>
                     {/* Retired ambassadors don't have pages */}
                     {isActiveAmbassadorKey(ambassador) ? (
@@ -147,11 +149,9 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                     ) : (
                       ambassadors[ambassador].name
                     )}
-                    {idx < episode.ambassadors.length - 2 && ", "}
-                    {idx === episode.ambassadors.length - 2 &&
-                      episode.ambassadors.length > 2 &&
-                      ","}
-                    {idx === episode.ambassadors.length - 2 && " and "}
+                    {idx < arr.length - 2 && ", "}
+                    {idx === arr.length - 2 && arr.length > 2 && ","}
+                    {idx === arr.length - 2 && " and "}
                   </Fragment>
                 ))}
               </p>
