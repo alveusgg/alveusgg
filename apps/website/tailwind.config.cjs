@@ -122,6 +122,9 @@ module.exports = {
       scale: {
         102: "1.02",
       },
+      spacing: {
+        22: "5.5rem",
+      },
     },
   },
   plugins: [],

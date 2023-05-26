@@ -23,8 +23,10 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 
-import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
   .map((episode, idx) => ({
@@ -357,9 +359,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
 
       <div className="relative">
         <Image
-          src={leafLeftImage3}
+          src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-22 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
         <Section>
@@ -418,6 +420,17 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex flex-grow flex-col">
+        <Image
+          src={leafLeftImage3}
+          alt=""
+          className="pointer-events-none absolute -top-16 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+        />
+        <Image
+          src={leafRightImage2}
+          alt=""
+          className="pointer-events-none absolute -bottom-56 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
+        />
+
         <Section className="flex-grow">
           <Heading level={2} className="mb-8 mt-0" id="presentation" link>
             Presentation
