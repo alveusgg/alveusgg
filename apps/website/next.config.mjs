@@ -239,6 +239,8 @@ const config = {
               "https://www.youtube-nocookie.com/",
               // Streamable embeds:
               "https://streamable.com/",
+              // Prezi embeds:
+              "https://prezi.com/",
               // The Giving Block (crypto donations):
               "https://tgbwidget.com/",
               // Imgur embeds:

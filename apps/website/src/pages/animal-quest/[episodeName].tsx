@@ -61,6 +61,12 @@ const getTwitchEmbed = (
   return url.toString();
 };
 
+const getPreziEmbed = (id: string): string => {
+  const url = new URL(`https://prezi.com/p/embed/${encodeURIComponent(id)}`);
+  url.searchParams.set("autoplay", "1");
+  return url.toString();
+};
+
 type AnimalQuestEpisodePageProps = {
   episode: AnimalQuestWithEpisode;
   featured: {
@@ -158,7 +164,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Link
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
-            className="group text-center transition-colors hover:text-alveus-green"
+            className="group text-center transition-colors hover:text-alveus-green-900"
           >
             <Image
               src={images[0].src}
@@ -177,7 +183,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                   ? "Featured in this episode"
                   : "Related to this episode"
               }
-              className="text-sm font-bold uppercase text-alveus-green-500"
+              className="text-sm font-bold uppercase text-alveus-green-900"
             >
               {relation}
             </p>
@@ -341,24 +347,25 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
 
             <Link
               href="/animal-quest"
-              className="text-md mt-6 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+              className="text-md mt-8 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
             >
-              Discover other episodes
+              Discover more episodes
             </Link>
           </div>
         </Section>
       </div>
 
-      {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative">
         <Image
           src={leafLeftImage3}
           alt=""
           className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section className="flex-grow">
-          <h2 className="sr-only">Video</h2>
+        <Section>
+          <h2 className="sr-only" id="video">
+            Video
+          </h2>
 
           <Consent
             item="episode video"
@@ -376,20 +383,59 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               ></iframe>
             )}
           </Consent>
+        </Section>
+      </div>
 
-          {Object.keys(featuredAmbassadors).length > 0 && (
-            <>
-              <Heading level={2} className="mt-16">
-                Meet the ambassadors
-              </Heading>
-              <Carousel
-                items={featuredAmbassadors}
-                auto={10000}
-                className="mt-4"
-                itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
-              />
-            </>
-          )}
+      <Section dark>
+        {Object.keys(featuredAmbassadors).length > 0 && (
+          <>
+            <Heading level={2} className="mb-8 mt-0" id="ambassadors" link>
+              Meet the ambassadors
+            </Heading>
+            <Carousel
+              items={featuredAmbassadors}
+              auto={10000}
+              className="mb-16 mt-4"
+              itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+            />
+          </>
+        )}
+
+        <div className="flex flex-row flex-wrap items-center justify-evenly gap-4">
+          <p className="text-xl">
+            Learn about more of our ambassadors and their species in other
+            episodes of Animal Quest.
+          </p>
+
+          <Link
+            href="/animal-quest"
+            className="text-md inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+          >
+            Discover more episodes
+          </Link>
+        </div>
+      </Section>
+
+      {/* Grow the last section to cover the page */}
+      <div className="relative flex flex-grow flex-col">
+        <Section className="flex-grow">
+          <Heading level={2} className="mb-8 mt-0" id="presentation" link>
+            Presentation
+          </Heading>
+          <Consent
+            item="episode presentation"
+            consent="prezi"
+            className="aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
+          >
+            <iframe
+              src={getPreziEmbed(episode.prezi)}
+              title="Prezi presentation"
+              referrerPolicy="no-referrer"
+              allow="autoplay; fullscreen"
+              sandbox="allow-same-origin allow-scripts"
+              className="aspect-video h-auto w-full rounded-2xl"
+            ></iframe>
+          </Consent>
         </Section>
       </div>
     </>
