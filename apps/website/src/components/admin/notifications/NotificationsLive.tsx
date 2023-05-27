@@ -29,10 +29,12 @@ export function NotificationsLive() {
 
       <ul>
         {recentNotifications.data?.map((notification) => (
-          <NotificationEntry
+          <li
             key={notification.id}
-            notification={notification}
-          />
+            className="border-t border-t-white/20 px-4 py-1 first:border-t-0 hover:bg-black/20"
+          >
+            <NotificationEntry notification={notification} />
+          </li>
         ))}
       </ul>
     </div>

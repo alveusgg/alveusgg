@@ -2,6 +2,8 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import React from "react";
 
+import IconDiscord from "@/icons/IconDiscord";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -16,8 +18,8 @@ const UpdatesPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Donate"
-        description="Help Alveus carry on its mission to inspire online audiences to engage in conservation efforts while providing high-quality animal care to our ambassadors."
+        title="Updates"
+        description="Announcements, Updates and Stream schedule"
       />
 
       {/* Nav background */}
@@ -31,16 +33,17 @@ const UpdatesPage: NextPage = () => {
       <Section className="flex-grow">
         <Heading level={3}>Get updates</Heading>
         <ul className="flex gap-2">
-          <li className="flex items-center rounded bg-alveus-green/30">
-            <NotificationsButton openDirection="right" />
+          <li className="flex items-center rounded bg-alveus-green/30 transition-transform hover:scale-102 hover:bg-alveus-green/40">
+            <NotificationsButton showLabel={true} openDirection="right" />
           </li>
           <li className="contents">
             <Link
               rel="noreferer"
               target="_blank"
-              className="flex items-center rounded bg-alveus-green/30 px-2"
+              className="flex items-center rounded bg-alveus-green/30 px-2 transition-transform hover:scale-102 hover:bg-alveus-green/40"
               href="https://discord.com/channels/548410541991919617/1052380120981180426"
             >
+              <IconDiscord className="mr-2 h-6 w-6" />
               Discord #alveus-announcements
             </Link>
           </li>
@@ -53,6 +56,7 @@ const UpdatesPage: NextPage = () => {
             <Announcements />
           </section>
 
+          {/*
           <div className="flex flex-1 flex-col gap-10">
             <section>
               <Heading level={3}>Upcoming events</Heading>
@@ -71,6 +75,7 @@ const UpdatesPage: NextPage = () => {
               </div>
             </section>
           </div>
+          */}
 
           <section className="flex-1">
             <Heading level={3}>Recent notifications</Heading>

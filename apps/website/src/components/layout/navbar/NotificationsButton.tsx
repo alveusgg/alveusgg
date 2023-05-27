@@ -6,14 +6,18 @@ import { NotificationSettings } from "@/components/notifications/NotificationSet
 
 export const NotificationsButton = ({
   openDirection = "left",
+  showLabel = false,
 }: {
   openDirection?: "left" | "right";
+  showLabel?: boolean;
 }) => {
   return (
     <Popover as="div" className="relative flex items-center self-stretch">
       <Popover.Button className="flex gap-2 rounded-lg p-2">
         <IconNotificationOn />
-        <span className="hidden md:block">Notifications</span>
+        <span className={`sr-only ${showLabel ? "md:not-sr-only" : ""}`}>
+          Notifications
+        </span>
       </Popover.Button>
 
       <Transition
