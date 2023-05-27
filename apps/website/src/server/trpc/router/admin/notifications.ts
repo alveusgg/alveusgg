@@ -25,7 +25,7 @@ export const adminNotificationsRouter = router({
         tag: z.string().min(2).max(100),
         text: z.string().max(200).optional(),
         heading: z.string(),
-        url: z.string().url(),
+        url: z.string().url().optional(),
         imageUrl: z.string().url().optional(),
       })
     )

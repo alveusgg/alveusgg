@@ -139,7 +139,6 @@ export function SendNotificationForm() {
             type="url"
             autoComplete="url"
             list="notification-link-suggestions"
-            isRequired={true}
             showResetButton={true}
             value={link}
             onChange={(value) => setLink(value)}
