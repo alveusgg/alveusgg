@@ -36,6 +36,7 @@ export default createTokenProtectedApiHandler(
   sendPushSchema,
   async (options) => {
     let delivered = false;
+    let expired = false;
 
     const subscription = await prisma.pushSubscription.findUnique({
       where: { id: options.subscriptionId },
@@ -125,6 +126,7 @@ export default createTokenProtectedApiHandler(
         if (res.statusCode >= 200 && res.statusCode < 300) {
           delivered = true;
         } else if (res.statusCode === 410) {
+          expired = true;
           // 410 Gone = subscription expired or unsubscribed
           await markPushSubscriptionAsDeleted(options.subscriptionId);
         }
@@ -133,13 +135,14 @@ export default createTokenProtectedApiHandler(
       console.error("Failed to send push notification", e);
     }
 
+    const done = delivered || expired;
     await updateNotificationPushStatus(
-      delivered
+      done
         ? {
             processingStatus: "DONE",
             notificationId: options.notificationId,
             subscriptionId: options.subscriptionId,
-            deliveredAt: now,
+            deliveredAt: delivered ? now : undefined,
           }
         : {
             processingStatus: "PENDING",
