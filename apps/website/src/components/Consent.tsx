@@ -52,7 +52,7 @@ const Consent: React.FC<ConsentProps> = ({
           <>
             <p className="m-6 mb-3 text-2xl">Loading {item}...</p>
 
-            <div className="m-6 mt-3 flex flex-col gap-4 rounded-lg bg-alveus-tan p-4 text-alveus-green shadow-lg">
+            <div className="m-6 mt-3 flex max-w-2xl flex-col gap-4 rounded-lg bg-alveus-tan p-4 text-alveus-green shadow-lg">
               <p>
                 This content is from a third party and we need your consent to
                 show it. It {consentExplainer}.
