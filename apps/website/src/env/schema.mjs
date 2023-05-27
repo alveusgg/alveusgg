@@ -70,6 +70,10 @@ export const clientSchema = z.object({
     .superRefine(checkPublicKey)
     .optional(),
   NEXT_PUBLIC_NOINDEX: z.string().optional(),
+  NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED: z
+    .boolean()
+    .optional()
+    .default(false),
 });
 
 /**
@@ -87,4 +91,6 @@ export const clientEnv = {
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
   NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+  NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED:
+    process.env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED === "true",
 };

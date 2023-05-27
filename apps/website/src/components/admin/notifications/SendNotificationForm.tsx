@@ -1,6 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { Duration } from "luxon";
 
+import { env } from "@/env/client.mjs";
 import { notificationCategories } from "@/config/notifications";
 import { trpc } from "@/utils/trpc";
 
@@ -192,38 +193,40 @@ export function SendNotificationForm() {
             </div>
           </Fieldset>
 
-          <Fieldset legend="Publication channels">
-            <div className="flex flex-wrap gap-4">
-              <CheckboxField
-                name="channel"
-                value="updatesPage"
-                className="rounded-lg border border-white/20 px-2"
-              >
-                Updates page
-              </CheckboxField>
-              <CheckboxField
-                name="channel"
-                value="twitter"
-                className="rounded-lg border border-white/20 px-2"
-              >
-                Twitter
-              </CheckboxField>
-              <CheckboxField
-                name="channel"
-                value="instagram"
-                className="rounded-lg border border-white/20 px-2"
-              >
-                Instagram
-              </CheckboxField>
-              <CheckboxField
-                name="channel"
-                value="stream"
-                className="rounded-lg border border-white/20 px-2"
-              >
-                Show on stream
-              </CheckboxField>
-            </div>
-          </Fieldset>
+          {env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED && (
+            <Fieldset legend="Publication channels">
+              <div className="flex flex-wrap gap-4">
+                <CheckboxField
+                  name="channel"
+                  value="updatesPage"
+                  className="rounded-lg border border-white/20 px-2"
+                >
+                  Updates page
+                </CheckboxField>
+                <CheckboxField
+                  name="channel"
+                  value="twitter"
+                  className="rounded-lg border border-white/20 px-2"
+                >
+                  Twitter
+                </CheckboxField>
+                <CheckboxField
+                  name="channel"
+                  value="instagram"
+                  className="rounded-lg border border-white/20 px-2"
+                >
+                  Instagram
+                </CheckboxField>
+                <CheckboxField
+                  name="channel"
+                  value="stream"
+                  className="rounded-lg border border-white/20 px-2"
+                >
+                  Show on stream
+                </CheckboxField>
+              </div>
+            </Fieldset>
+          )}
 
           <Button type="submit" className={defaultButtonClasses}>
             Send notification
@@ -231,34 +234,36 @@ export function SendNotificationForm() {
         </div>
       </form>
 
-      <div className="mt-10 flex gap-4 border-t border-black/50 pt-5">
-        <div className="flex-1">
-          <Headline>OpenGraph (Twitter, Facebook etc.)</Headline>
+      {env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED && (
+        <div className="mt-10 flex gap-4 border-t border-black/50 pt-5">
+          <div className="flex-1">
+            <Headline>OpenGraph (Twitter, Facebook etc.)</Headline>
 
-          <div className="overflow-hidden rounded-xl">
-            <PushImageCanvas
-              heading={heading}
-              text={text}
-              backgroundImageUrl={previewImageUrl}
-              logoImageUrl={logoImage.src}
-            />
+            <div className="overflow-hidden rounded-xl">
+              <PushImageCanvas
+                heading={heading}
+                text={text}
+                backgroundImageUrl={previewImageUrl}
+                logoImageUrl={logoImage.src}
+              />
+            </div>
+          </div>
+          <div className="flex-1">
+            <Headline>Instagram</Headline>
+
+            <div className="overflow-hidden rounded-xl">
+              <PushImageCanvas
+                heading={heading}
+                text={text}
+                backgroundImageUrl={previewImageUrl}
+                logoImageUrl={logoImage.src}
+                width={1080}
+                height={1080}
+              />
+            </div>
           </div>
         </div>
-        <div className="flex-1">
-          <Headline>Instagram</Headline>
-
-          <div className="overflow-hidden rounded-xl">
-            <PushImageCanvas
-              heading={heading}
-              text={text}
-              backgroundImageUrl={previewImageUrl}
-              logoImageUrl={logoImage.src}
-              width={1080}
-              height={1080}
-            />
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 }
