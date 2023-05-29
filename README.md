@@ -5,7 +5,8 @@ You can access the site at https://alveussanctuary.org/ (or https://alveus.gg/).
 
 ## See also
 
-- Twitch extension: https://github.com/abdullahmorrison/AlveusTwitchExtension
+- Data repository: https://github.com/alveusgg/data
+- Twitch extension: https://github.com/alveusgg/extension
 
 ## Tech stack
 
