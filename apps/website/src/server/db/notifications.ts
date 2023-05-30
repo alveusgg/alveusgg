@@ -1,4 +1,5 @@
 import { prisma } from "@/server/db/client";
+import { PUSH_MAX_ATTEMPTS } from "@/server/notifications";
 
 export async function getRecentNotificationsForTags({
   tags,
@@ -62,6 +63,21 @@ export async function updateNotificationPushStatus({
       processingStatus,
       failedAt,
       deliveredAt,
+    },
+  });
+}
+
+export async function cleanupExpiredNotificationPushes() {
+  const now = new Date();
+  await prisma.notificationPush.updateMany({
+    data: { processingStatus: "DONE" },
+    where: {
+      processingStatus: "PENDING",
+      OR: [
+        { subscription: { deletedAt: { not: null } } },
+        { expiresAt: { lte: now } },
+        { attempts: { gt: PUSH_MAX_ATTEMPTS } },
+      ],
     },
   });
 }

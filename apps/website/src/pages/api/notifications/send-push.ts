@@ -13,10 +13,12 @@ import { sendWebPushNotification } from "@/server/web-push";
 import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
+import { PUSH_MAX_ATTEMPTS } from "@/server/notifications";
 
 export type SendPushOptions = z.infer<typeof sendPushSchema>;
 
 const sendPushSchema = z.object({
+  attempt: z.number().optional(),
   notificationId: z.string().cuid(),
   subscriptionId: z.string().cuid(),
   expiresAt: z.number(),
@@ -29,8 +31,6 @@ const sendPushSchema = z.object({
     .refine((value) => isNotificationUrgency(value), "invalid urgency")
     .transform((value) => value as NotificationUrgency),
 });
-
-// TODO: Retry (exponential backoff)
 
 export default createTokenProtectedApiHandler(
   sendPushSchema,
@@ -47,9 +47,14 @@ export default createTokenProtectedApiHandler(
     }
 
     const expiresAt = new Date(options.expiresAt);
-
-    const push = await prisma.notificationPush.create({
-      data: {
+    const push = await prisma.notificationPush.upsert({
+      where: {
+        notificationId_subscriptionId: {
+          notificationId: options.notificationId,
+          subscriptionId: options.subscriptionId,
+        },
+      },
+      create: {
         processingStatus: "IN_PROGRESS",
         attempts: 1,
         notification: { connect: { id: options.notificationId } },
@@ -59,10 +64,13 @@ export default createTokenProtectedApiHandler(
           : undefined,
         expiresAt,
       },
+      update: {
+        processingStatus: "IN_PROGRESS",
+        attempts: options.attempt || 1,
+      },
     });
 
     const now = new Date();
-
     try {
       if (
         options.expiresAt < now.getTime() ||
@@ -107,7 +115,6 @@ export default createTokenProtectedApiHandler(
               subscriptionId: options.subscriptionId,
             },
             image: options.imageUrl,
-            // TODO: Configurable:
             dir: "ltr", // TODO: Configurable?
             lang: "en", // TODO: Configurable?
             icon: `https://alveus.gg/apple-touch-icon.png`,
@@ -145,7 +152,10 @@ export default createTokenProtectedApiHandler(
             deliveredAt: delivered ? now : undefined,
           }
         : {
-            processingStatus: "PENDING",
+            processingStatus:
+              options.attempt && options.attempt >= PUSH_MAX_ATTEMPTS
+                ? "DONE"
+                : "PENDING",
             notificationId: options.notificationId,
             subscriptionId: options.subscriptionId,
             failedAt: now,

@@ -1,9 +1,19 @@
-import { prisma } from "@/server/db/client";
 import { notificationCategories } from "@/config/notifications";
-import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
+
+import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";
 
-const PUSH_BATCH_SIZE = 2;
+import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
+import type { RetryPushesOptions } from "@/pages/api/notifications/batched-retry-notification-pushes";
+
+const PUSH_BATCH_SIZE = 2; // TODO: make configurable? env file?
+export const PUSH_MAX_ATTEMPTS = 5; // TODO: make configurable? env file?
+
+const RETRY_DELAY = 30_000; // TODO: make configurable? env file?
+
+const exponentialDelays = new Array(PUSH_MAX_ATTEMPTS + 1)
+  .fill(0)
+  .map((_, i) => RETRY_DELAY * Math.pow(2, i));
 
 export async function createNotification(data: {
   tag: string;
@@ -68,7 +78,51 @@ export async function createNotification(data: {
     );
   }
 
-  // TODO: Do we want to retry?
+  await Promise.allSettled(requests);
+}
+
+export async function retryPendingNotificationPushes() {
+  const requests = [];
+  let i = 0;
+  const now = new Date();
+  while (true) {
+    const pendingPushes = await prisma.notificationPush.findMany({
+      select: {
+        notificationId: true,
+        subscriptionId: true,
+        expiresAt: true,
+        attempts: true,
+      },
+      where: {
+        processingStatus: "PENDING",
+        expiresAt: { gte: now },
+        OR: exponentialDelays
+          .slice(1) // skipping initial one. that should be handled by sendNotification
+          .map((delay, attempts) => ({
+            attempts: attempts,
+            failedAt: { lte: new Date(now.getTime() - delay) },
+          })),
+      },
+      take: PUSH_BATCH_SIZE,
+      skip: PUSH_BATCH_SIZE * i++,
+    });
+
+    if (pendingPushes.length === 0) {
+      break;
+    }
+
+    requests.push(
+      callEndpoint<RetryPushesOptions>(
+        `/api/notifications/batched-retry-notification-pushes`,
+        {
+          pushes: pendingPushes.map((push) => ({
+            ...push,
+            expiresAt: push.expiresAt.getTime(),
+          })),
+        }
+      )
+    );
+  }
 
   await Promise.allSettled(requests);
 }
