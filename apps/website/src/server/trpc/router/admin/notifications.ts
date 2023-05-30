@@ -40,7 +40,7 @@ export const adminNotificationsRouter = router({
           where: { deletedAt: null },
         }),
         prisma.notificationPush.count({
-          where: { deliveredAt: null },
+          where: { processingStatus: "PENDING" },
         }),
       ]);
 
