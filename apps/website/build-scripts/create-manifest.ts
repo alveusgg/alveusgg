@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import "./env.mjs";
-import { env } from "../src/env/client.mjs";
+import { env } from "../src/env/index.mjs";
 
 const manifest = {
   name: "Alveus Sanctuary",

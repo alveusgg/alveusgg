@@ -1,6 +1,6 @@
 import { getNotificationsConfig } from "../../config/notifications";
 import { sendWebPushNotification } from "../utils/web-push";
-import { env } from "../../env/server.mjs";
+import { env } from "@/env/index.mjs";
 
 import { prisma } from "../db/client";
 

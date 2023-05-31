@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { env } from "../../env/server.mjs";
+import { env } from "@/env/index.mjs";
 
 export type WeatherData = z.infer<typeof weatherSchema>;
 

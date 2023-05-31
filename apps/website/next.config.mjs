@@ -4,9 +4,7 @@ import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert 
 import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
 
 // @ts-check
-// TODO: can combine into one env if server variable names are not sensitive
-import "./src/env/client.mjs";
-import "./src/env/server.mjs";
+import "./src/env/index.mjs";
 
 /** @type {import("next").NextConfig} */
 const config = {

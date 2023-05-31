@@ -1,6 +1,6 @@
 import { z } from "zod";
 import fetch from "node-fetch";
-import { env } from "../../env/server.mjs";
+import { env } from "@/env/index.mjs";
 import {
   ExpiredAccessTokenError,
   getClientCredentialsAccessToken,

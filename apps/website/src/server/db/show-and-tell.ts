@@ -6,7 +6,7 @@ import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 
 const MAX_IMAGES = 12;
 
