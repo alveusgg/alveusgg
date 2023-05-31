@@ -25,6 +25,7 @@ importers:
       '@next/env': ^13.3.0
       '@paralleldrive/cuid2': ^2.2.0
       '@prisma/client': ^4.12.0
+      '@t3-oss/env-nextjs': ^0.4.0
       '@tanstack/react-query': ^4.29.1
       '@trpc/client': ^10.20.0
       '@trpc/next': ^10.20.0
@@ -110,6 +111,7 @@ importers:
       '@next/env': 13.3.0
       '@paralleldrive/cuid2': 2.2.0
       '@prisma/client': 4.12.0_prisma@4.12.0
+      '@t3-oss/env-nextjs': 0.4.0_z34kx2cq3kivpffalfeqk2ugre
       '@tanstack/react-query': 4.29.1_biqbaboplfbrettd7655fr4n2y
       '@trpc/client': 10.20.0_@trpc+server@10.20.0
       '@trpc/next': 10.20.0_qzkuapawkjsjyexyi7x2zcy4au
@@ -3312,6 +3314,27 @@ packages:
     resolution: {integrity: sha512-4C7nX/dvpzB7za4Ql9K81xK3HPxCpHMgwTZVyf+9JQ6VUbn9jjZVN7/Nkdz/Ugzs2CSjqnL/UPXroiVBVHUWUw==}
     dependencies:
       tslib: 2.5.0
+    dev: false
+
+  /@t3-oss/env-core/0.4.0_z34kx2cq3kivpffalfeqk2ugre:
+    resolution: {integrity: sha512-6JlMp0Vru15q/axHzBKsQQjiyGS6k+EsZBY1iErGVmOGzNSoVluBahnYFP7tEkwZ7KoRgSq4NRIc1Ez7SVYuxQ==}
+    peerDependencies:
+      typescript: '>=4.7.2'
+      zod: ^3.0.0
+    dependencies:
+      typescript: 5.0.4
+      zod: 3.21.4
+    dev: false
+
+  /@t3-oss/env-nextjs/0.4.0_z34kx2cq3kivpffalfeqk2ugre:
+    resolution: {integrity: sha512-K1u2i+S/uEhjfg++FqWlOzS6x237EARRbWGowH2MkDkFu2q7ZJSiJBJT8e47L7NHWH5IyZrTCM6BdOxyWEnQuQ==}
+    peerDependencies:
+      typescript: '>=4.7.2'
+      zod: ^3.0.0
+    dependencies:
+      '@t3-oss/env-core': 0.4.0_z34kx2cq3kivpffalfeqk2ugre
+      typescript: 5.0.4
+      zod: 3.21.4
     dev: false
 
   /@tanstack/query-core/4.29.1:
@@ -8401,7 +8424,6 @@ packages:
     resolution: {integrity: sha512-cW9T5W9xY37cc+jfEnaUvX91foxtHkza3Nw3wkoF4sSlKn0MONdkdEndig/qPBWXNkmplh3NzayQzCiHM4/hqw==}
     engines: {node: '>=12.20'}
     hasBin: true
-    dev: true
 
   /ufo/1.1.1:
     resolution: {integrity: sha512-MvlCc4GHrmZdAllBc0iUDowff36Q9Ndw/UzqmEKyrfSzokTd9ZCy1i+IIk5hrYKkjoYVQyNbrw7/F8XJ2rEwTg==}

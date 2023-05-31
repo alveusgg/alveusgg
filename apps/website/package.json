@@ -37,6 +37,7 @@
     "@next/env": "^13.3.0",
     "@paralleldrive/cuid2": "^2.2.0",
     "@prisma/client": "^4.12.0",
+    "@t3-oss/env-nextjs": "^0.4.0",
     "@tanstack/react-query": "^4.29.1",
     "@trpc/client": "^10.20.0",
     "@trpc/next": "^10.20.0",
