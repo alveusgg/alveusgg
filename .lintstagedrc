@@ -1,0 +1,3 @@
+{
+  "apps/**/*": "prettier --write --ignore-unknown"
+}
