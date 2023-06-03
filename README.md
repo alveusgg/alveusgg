@@ -10,28 +10,28 @@ You can access the site at https://alveussanctuary.org/ (or https://alveus.gg/).
 
 ## Tech stack
 
-This project uses pnpm workspaces. The main app is the website package (`apps/website`), which is a Next.js app.
+This project uses PNPM workspaces. The main app is the website package (`apps/website`), which is a Next.js app.
 
 For development:
 
-- node v16
-- pnpm 7 with workspaces
-- prettier (code formatting)
-- eslint (code linting)
+- Node.js
+- PNPM with workspaces
+- Prettier (code formatting)
+- ESLint (code linting)
 
 Website stack (based on [T3 Stack](https://create.t3.gg/)):
 
-- typescript
-- next.js (framework)
-- trpc (typesafe api)
-- prisma (database orm)
-- auth.js aka next-auth (auth via OAuth)
-- tailwindcss (styling)
+- TypeScript
+- Next.js (framework)
+- tRPC (typesafe api)
+- Prisma (database orm)
+- Auth.js aka NextAuth.js (auth via OAuth)
+- Tailwind CSS (styling)
 
 Hosting (production):
 
-- planetscale (mysql database)
-- vercel (serverless hosting)
+- PlanetScale (MySQL database)
+- Vercel (serverless hosting)
 - DigitalOcean Spaces (S3-compatible storage)
 
 # External APIs
@@ -61,15 +61,15 @@ TODO
 
 ### Local development
 
-1. Install Node.js v16 and pnpm
+1. Install Node.js and PNPM (see `engines` in `package.json` for the required versions) or use `fnm`/`nvm` to install the correct version
 2. Install dependencies: `pnpm install`
-3. Create a [Planetscale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
+3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
 4. Copy `apps/website/.env.example` to `apps/website/.env`
-    - Fill the Prisma section with the database info (DSN)
-    - Fill in the S3 section with your S3-compatible storage info
-    - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
-    - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
-    - You may define privileged user once they have signed in via the `SUPER_USER_IDS` variable
+   - Fill the Prisma section with the database info (DSN)
+   - Fill in the S3 section with your S3-compatible storage info
+   - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
+   - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
+   - You may define privileged user once they have signed in via the `SUPER_USER_IDS` variable
 5. Push the database schema to the new database using `npx prisma db push` from within `apps/website`.
 6. Start the dev server: `pnpm run -r dev`
 7. The website should be running at `http://localhost:3000/` (open in browser)
@@ -82,24 +82,19 @@ TODO
 ### Website
 
 The stack should work on any Node.js server or Next.js capable hosting provider and any MySQL server,
-but has only been tested on Vercel (and Planetscale) for now.
+but has only been tested on Vercel (and PlanetScale) for now.
 
 1. Create a twitch extension (see Getting started above)
 2. Set up a database (see Getting started above)
 3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see Getting started above)
 4. Push the database schema to the new database using `npx prisma db push`.
 5. Get your own domain (optional)
-6. Create a vercel account
-7. Create a new vercel project with these settings:
-    - *General*:
-        - *Framework Preset*: `Next.js`, leave the other build/dev settings on the default option
-        - *Root directory*: `apps/website`
-        - *Node.js Version*: `16.x`
-    - *Domains*: add your domains
-    - *Git*: connect your git repo
-    - *Environment Variables*: Copy paste your `apps/website/.env.production` into the first Key field (yes you can simply copy-paste everything at once)
-
-
-
-
-
+6. Create a Vercel account
+7. Create a new Vercel project with these settings:
+   - _General_:
+     - _Framework Preset_: `Next.js`, leave the other build/dev settings on the default option
+     - _Root directory_: `apps/website`
+     - _Node.js Version_: See `engines` in `package.json` for the required version
+   - _Domains_: add your domains
+   - _Git_: connect your git repo
+   - _Environment Variables_: Copy and paste your `apps/website/.env.production` into the first Key field (yes you can simply copy-paste everything at once)
