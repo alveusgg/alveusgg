@@ -3,6 +3,7 @@ import React, { Fragment } from "react";
 
 import IconNotificationOn from "@/icons/IconNotificationOn";
 import { NotificationSettings } from "@/components/notifications/NotificationSettings";
+import { classes } from "@/utils/classes";
 
 export const NotificationsButton = ({
   openDirection = "left",
@@ -15,7 +16,7 @@ export const NotificationsButton = ({
     <Popover as="div" className="relative flex items-center self-stretch">
       <Popover.Button className="flex gap-2 rounded-lg p-2">
         <IconNotificationOn />
-        <span className={`sr-only ${showLabel ? "md:not-sr-only" : ""}`}>
+        <span className={classes(!showLabel && "sr-only")}>
           Push Notifications on this device
         </span>
       </Popover.Button>

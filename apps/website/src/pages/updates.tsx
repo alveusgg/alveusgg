@@ -25,7 +25,7 @@ const UpdatesPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark offsetParent={false}>
+      <Section dark className="z-20">
         <Heading>Announcements, Updates and Stream schedule</Heading>
 
         <p className="mt-6">

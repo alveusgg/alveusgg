@@ -42,13 +42,14 @@ export function Announcement({ notification }: { notification: Notification }) {
 
   const content = (
     <div className="flex flex-1 flex-col">
-      <div className="flex">
+      <div className="flex flex-col md:flex-row">
         {notification.imageUrl && (
-          <div className="h-30 mr-4 w-28 self-start overflow-hidden rounded-xl">
+          <div className="mb-2 mr-4 w-1/2 self-start overflow-hidden rounded-lg md:w-32">
             <Image
               src={notification.imageUrl}
-              width={200}
-              height={200}
+              className="w-full"
+              width={400}
+              height={400}
               alt=""
             />
           </div>
