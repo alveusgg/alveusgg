@@ -9,10 +9,20 @@ export function Announcements() {
     }
   );
 
+  if (announcements.isLoading) {
+    return <p className="">Loading announcements...</p>;
+  }
+
+  if (announcements.data?.length === 0) {
+    return <p className="">No current announcements.</p>;
+  }
+
   return (
     <ul className="flex flex-col gap-2">
       {announcements.data?.map((notification) => (
-        <Announcement key={notification.id} notification={notification} />
+        <li key={notification.id}>
+          <Announcement notification={notification} />
+        </li>
       ))}
     </ul>
   );

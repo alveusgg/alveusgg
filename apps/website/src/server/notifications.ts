@@ -21,6 +21,8 @@ export async function createNotification(data: {
   url?: string;
   heading?: string;
   imageUrl?: string;
+  scheduledStartAt?: Date | null;
+  scheduledEndAt?: Date | null;
 }) {
   const tagConfig = notificationCategories.find((cat) => cat.tag === data.tag);
   if (tagConfig === undefined) {
@@ -35,9 +37,11 @@ export async function createNotification(data: {
       expiresAt: expiresAt,
       message: data.text || "",
       linkUrl: data.url,
-      imageUrl: data.imageUrl,
+      imageUrl: data.imageUrl || null,
       tag: data.tag,
       urgency: tagConfig.urgency,
+      scheduledStartAt: data.scheduledStartAt || null,
+      scheduledEndAt: data.scheduledEndAt || null,
     },
   });
 

@@ -11,12 +11,18 @@ import { createFileStorageUpload } from "@/server/utils/file-storage";
 import { env } from "@/env/server.mjs";
 import { getRecentNotifications } from "@/server/db/notifications";
 import { prisma } from "@/server/db/client";
+import { inputValueDatetimeLocalToUtc } from "@/utils/local-datetime";
 
 const uploadPrefix = "notifications/";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageNotifications)
 );
+
+const localDatetimeAsDateSchema = z
+  .string()
+  .regex(/\d\d\d\d-\d\d-\d\dT\d\d:\d\d/)
+  .transform((str) => (str ? inputValueDatetimeLocalToUtc(str) : null));
 
 export const adminNotificationsRouter = router({
   sendNotification: permittedProcedure
@@ -25,8 +31,10 @@ export const adminNotificationsRouter = router({
         tag: z.string().min(2).max(100),
         text: z.string().max(200).optional(),
         heading: z.string(),
-        url: z.string().url().optional(),
+        url: z.union([z.literal(""), z.string().trim().url()]).optional(),
         imageUrl: z.string().url().optional(),
+        scheduledStartAt: localDatetimeAsDateSchema.optional(),
+        scheduledEndAt: localDatetimeAsDateSchema.optional(),
       })
     )
     .mutation(async ({ input }) => createNotification(input)),

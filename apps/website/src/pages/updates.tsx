@@ -25,22 +25,22 @@ const UpdatesPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark>
+      <Section dark offsetParent={false}>
         <Heading>Announcements, Updates and Stream schedule</Heading>
-      </Section>
 
-      {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
-        <Heading level={3}>Get updates</Heading>
-        <ul className="flex gap-2">
-          <li className="flex items-center rounded bg-alveus-green/30 transition-transform hover:scale-102 hover:bg-alveus-green/40">
+        <p className="mt-6">
+          Keep up-to-date using one of our announcement channels:
+        </p>
+        <ul className="mt-4 flex gap-4">
+          <li className="flex items-center rounded bg-alveus-green-900/80 px-2 transition-transform hover:scale-102 hover:bg-alveus-green-900">
             <NotificationsButton showLabel={true} openDirection="right" />
           </li>
           <li className="contents">
+            <span className="self-center italic">or</span>
             <Link
               rel="noreferer"
               target="_blank"
-              className="flex items-center rounded bg-alveus-green/30 px-2 transition-transform hover:scale-102 hover:bg-alveus-green/40"
+              className="flex items-center rounded bg-alveus-green-900/50 px-4 transition-transform hover:scale-102 hover:bg-alveus-green-900"
               href="https://discord.com/channels/548410541991919617/1052380120981180426"
             >
               <IconDiscord className="mr-2 h-6 w-6" />
@@ -49,8 +49,11 @@ const UpdatesPage: NextPage = () => {
           </li>
           {/* TODO: twitter, ig */}
         </ul>
+      </Section>
 
-        <div className="mt-10 flex flex-col gap-10 lg:flex-row">
+      {/* Grow the last section to cover the page */}
+      <Section className="flex-grow">
+        <div className="flex flex-col gap-10 lg:flex-row">
           <section className="flex-1">
             <Heading level={3}>Announcements</Heading>
             <Announcements />

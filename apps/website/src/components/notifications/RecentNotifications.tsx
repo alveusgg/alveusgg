@@ -5,6 +5,10 @@ export function RecentNotifications({ tags }: { tags: Array<string> }) {
   const recentNotifications =
     trpc.notifications.getRecentNotificationsForTags.useQuery({ tags });
 
+  if (recentNotifications.isLoading) {
+    return <p className="">Loading recent notifications...</p>;
+  }
+
   return (
     <ul className="flex flex-col gap-2">
       {recentNotifications.data?.map((notification) => (

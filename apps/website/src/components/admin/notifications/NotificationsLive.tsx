@@ -1,6 +1,10 @@
+import ArrowPathIcon from "@heroicons/react/20/solid/ArrowPathIcon";
+import XCircleIcon from "@heroicons/react/24/outline/XCircleIcon";
+import { ArchiveBoxIcon, BoltIcon } from "@heroicons/react/20/solid";
 import { trpc } from "@/utils/trpc";
 import { NotificationEntry } from "@/components/notifications/NotificationEntry";
 import DateTime from "@/components/content/DateTime";
+import { Button } from "@/components/shared/Button";
 
 export function NotificationsLive() {
   const recentNotifications =
@@ -11,6 +15,8 @@ export function NotificationsLive() {
   if (!recentNotifications.data) {
     return <p>Loading …</p>;
   }
+
+  const now = new Date();
 
   return (
     <div>
@@ -28,14 +34,38 @@ export function NotificationsLive() {
       </small>
 
       <ul>
-        {recentNotifications.data?.map((notification) => (
-          <li
-            key={notification.id}
-            className="border-t border-t-white/20 px-4 py-1 first:border-t-0 hover:bg-black/20"
-          >
-            <NotificationEntry notification={notification} />
-          </li>
-        ))}
+        {recentNotifications.data?.map((notification) => {
+          const isActive = notification.expiresAt > now;
+
+          return (
+            <li
+              key={notification.id}
+              className="flex items-center gap-3 border-t border-t-white/20 p-1 px-2 first:border-t-0 hover:bg-black"
+            >
+              {isActive ? (
+                <BoltIcon title="Notification is active" className="h-4 w-4" />
+              ) : (
+                <ArchiveBoxIcon
+                  title="Notification is inactive"
+                  className="h-4 w-4"
+                />
+              )}
+              <div className="flex-1 pl-2">
+                <NotificationEntry notification={notification} />
+              </div>
+              <div className="flex w-28 justify-end gap-1 border-l border-gray-400">
+                {isActive && (
+                  <Button width="auto" size="small" title="Cancel announcement">
+                    <XCircleIcon className="h-5 w-5" />
+                  </Button>
+                )}
+                <Button width="auto" size="small" title="Resend notification">
+                  <ArrowPathIcon className="h-5 w-5" />
+                </Button>
+              </div>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

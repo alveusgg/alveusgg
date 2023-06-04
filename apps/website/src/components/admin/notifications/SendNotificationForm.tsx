@@ -23,6 +23,9 @@ import { Headline } from "@/components/admin/Headline";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
+import { MessageBox } from "@/components/shared/MessageBox";
+import IconLoading from "@/icons/IconLoading";
+import { classes } from "@/utils/classes";
 
 export const allowedFileTypes = [
   "image/png",
@@ -31,6 +34,8 @@ export const allowedFileTypes = [
   "image/webp",
 ] as const;
 type AllowedFileTypes = typeof allowedFileTypes;
+
+const localTimeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export function SendNotificationForm() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -58,22 +63,29 @@ export function SendNotificationForm() {
   const [text, setText] = useState("");
   const [link, setLink] = useState("https://www.twitch.tv/AlveusSanctuary");
 
+  const [isScheduled, setIsScheduled] = useState(false);
+
   const submit = useCallback(
     (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      const imageUrl =
-        image && image.status === "upload.done" ? image.url : undefined;
+      const imageUrl = image?.status === "upload.done" ? image.url : undefined;
+      const scheduledStartAt =
+        (isScheduled && String(data.get("scheduledStartAt"))) || undefined;
+      const scheduledEndAt =
+        (isScheduled && String(data.get("scheduledEndAt"))) || undefined;
 
       sendNotification.mutate({
         text: String(data.get("text") || ""),
         tag: String(data.get("tag") || ""),
         heading: String(data.get("heading") || ""),
         url: String(data.get("url") || ""),
+        scheduledStartAt,
+        scheduledEndAt,
         imageUrl,
       });
     },
-    [image, sendNotification]
+    [image, isScheduled, sendNotification]
   );
 
   const previewImageUrl =
@@ -86,12 +98,15 @@ export function SendNotificationForm() {
     <div>
       <form ref={formRef} onSubmit={submit}>
         {sendNotification.isLoading && (
-          <p className="text-gray-700">Notification is being sent …</p>
+          <MessageBox variant="default">
+            <IconLoading className="mr-2 h-5 w-5 animate-spin" />
+            Notification is being sent …
+          </MessageBox>
         )}
         {sendNotification.isError && (
-          <p className="text-red-800">
+          <MessageBox variant="failure">
             ERROR: Could not send the notification!
-          </p>
+          </MessageBox>
         )}
 
         <div className="flex flex-col gap-5">
@@ -125,11 +140,11 @@ export function SendNotificationForm() {
           />
 
           <TextAreaField
-            label="Text (200 chars)"
+            label="Text (180 chars)"
             name="text"
             isRequired={true}
             minLength={2}
-            maxLength={200}
+            maxLength={180}
             value={text}
             onChange={(value) => setText(value)}
           />
@@ -166,7 +181,7 @@ export function SendNotificationForm() {
           </datalist>
 
           <UploadAttachmentsField
-            label="Base Image"
+            label="Image"
             {...imageAttachmentData}
             maxNumber={1}
             upload={upload}
@@ -176,19 +191,34 @@ export function SendNotificationForm() {
             )}
           />
 
-          <Fieldset legend="Event details">
-            <div className="flex flex-wrap gap-4">
+          <Fieldset legend="Announcement details">
+            <div>
+              <CheckboxField
+                name="isScheduled"
+                value="true"
+                isSelected={isScheduled}
+                onChange={(selected) => setIsScheduled(selected)}
+              >
+                Is scheduled event (start/end date)
+              </CheckboxField>
+            </div>
+
+            <div
+              className={classes(
+                `flex flex-wrap gap-4 border-l pl-3`,
+                !isScheduled && "hidden"
+              )}
+            >
               <LocalDateTimeField
                 showResetButton
-                name="start"
-                label="Start"
+                name="scheduledStartAt"
+                label="Start (Central Time)"
                 required
               />
               <LocalDateTimeField
                 showResetButton
-                name="end"
-                label="End"
-                required
+                name="scheduledEndAt"
+                label="End (Central Time)"
               />
             </div>
           </Fieldset>

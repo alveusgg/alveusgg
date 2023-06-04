@@ -16,7 +16,7 @@ export const NotificationsButton = ({
       <Popover.Button className="flex gap-2 rounded-lg p-2">
         <IconNotificationOn />
         <span className={`sr-only ${showLabel ? "md:not-sr-only" : ""}`}>
-          Notifications
+          Push Notifications on this device
         </span>
       </Popover.Button>
 

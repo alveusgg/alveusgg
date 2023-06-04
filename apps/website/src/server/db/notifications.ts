@@ -16,10 +16,16 @@ export async function getRecentNotificationsForTags({
 }
 
 export async function getActiveAnnouncements() {
+  const now = new Date();
+
   return prisma.notification.findMany({
     where: {
       tag: "announcements",
-      OR: [{ expiresAt: { gt: new Date() } }],
+      OR: [
+        { expiresAt: { gt: now } },
+        { scheduledStartAt: { gt: now } },
+        { scheduledEndAt: { gt: now } },
+      ],
     },
     orderBy: { createdAt: "desc" },
     take: 20,
