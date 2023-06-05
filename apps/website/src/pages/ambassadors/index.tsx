@@ -317,7 +317,7 @@ const AmbassadorsPage: NextPage = () => {
           </div>
 
           {Array.isArray(results) ? (
-            <AmbassadorItems ambassadors={results} />
+            <AmbassadorItems ambassadors={results} className="mt-8" />
           ) : (
             <div className="grid gap-12">
               {[...results.entries()].map(([key, val]) => (
