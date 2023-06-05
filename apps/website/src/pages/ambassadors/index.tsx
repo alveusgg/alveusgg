@@ -31,6 +31,7 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import { convertToSlug } from "@/utils/slugs";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
@@ -62,9 +63,10 @@ const sortByOptions = {
           sortAmbassadorDate(a.arrival, b.arrival)
       )
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
-        const group = getClassification(val.class);
+        const classification = getClassification(val.class);
+        const group = convertToSlug(classification);
         map.set(group, {
-          name: group,
+          name: classification,
           items: [...(map.get(group)?.items || []), key],
         });
         return map;
@@ -209,9 +211,9 @@ const AmbassadorsPage: NextPage = () => {
 
       // If we have a group, check if the option has groups and has this one
       const option = sortByOptions[match[1]];
-      const group = match[2] && kebabToCamel(match[2]);
+      const group = match[2];
       setActive(
-        group && !Array.isArray(option.result) && group in option.result
+        group && !Array.isArray(option.result) && option.result.has(group)
           ? group
           : null
       );
