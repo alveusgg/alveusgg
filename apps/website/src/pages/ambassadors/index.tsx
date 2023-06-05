@@ -17,7 +17,7 @@ import {
   sortAmbassadorClassification,
 } from "@alveusgg/data/src/ambassadors/classification";
 
-import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import { camelToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
 import { parseAmbassadorDate, sortAmbassadorDate } from "@/utils/datetime";
