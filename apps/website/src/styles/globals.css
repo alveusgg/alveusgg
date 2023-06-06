@@ -15,7 +15,8 @@
     -ms-overflow-style: none; /* Internet Explorer 10+ */
   }
 
-  .scrollbar-none::-webkit-scrollbar { /* Safari and Chrome */
+  .scrollbar-none::-webkit-scrollbar {
+    /* Safari and Chrome */
     width: 0;
     height: 0;
     display: none;
@@ -39,16 +40,16 @@
     h1,
     h2,
     h3 {
-      @apply font-bold my-3 text-xl;
+      @apply my-3 text-xl font-bold;
     }
 
     h4 {
-      @apply font-bold my-3 text-lg;
+      @apply my-3 text-lg font-bold;
     }
 
     h5,
     h6 {
-      @apply font-bold my-3;
+      @apply my-3 font-bold;
     }
 
     p,
@@ -58,11 +59,11 @@
     }
 
     ul {
-      @apply pl-0 ml-7 list-disc;
+      @apply ml-7 list-disc pl-0;
     }
 
     ol {
-      @apply pl-0 ml-7 list-decimal;
+      @apply ml-7 list-decimal pl-0;
     }
 
     li {
@@ -106,6 +107,6 @@
   @apply font-sans;
 
   &__alveus-caption {
-    @apply absolute empty:hidden bottom-0 left-1/2 -translate-x-1/2 w-fit max-w-[calc(100%-80px)] bg-black/80 text-white leading-tight p-4;
+    @apply absolute bottom-0 left-1/2 w-fit max-w-[calc(100%-80px)] -translate-x-1/2 bg-black/80 p-4 leading-tight text-white empty:hidden;
   }
 }
