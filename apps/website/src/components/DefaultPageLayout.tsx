@@ -1,5 +1,5 @@
 import React from "react";
-import Heading from "./content/Heading"
+import Heading from "./content/Heading";
 
 export type DefaultPageLayoutProps = {
   children?: React.ReactNode;

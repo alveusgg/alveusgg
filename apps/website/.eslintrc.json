@@ -5,7 +5,12 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["@typescript-eslint", "import"],
-  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended", "plugin:import/recommended", "plugin:import/typescript"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript"
+  ],
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-unused-vars": [
@@ -16,15 +21,18 @@
         "caughtErrorsIgnorePattern": "^_"
       }
     ],
-    "import/order": ["warn", {
-      "pathGroups": [
-        {
-          "pattern": "@/**",
-          "group": "external",
-          "position": "after"
-        }
-      ]
-    }]
+    "import/order": [
+      "warn",
+      {
+        "pathGroups": [
+          {
+            "pattern": "@/**",
+            "group": "external",
+            "position": "after"
+          }
+        ]
+      }
+    ]
   },
   "settings": {
     "import/resolver": {
