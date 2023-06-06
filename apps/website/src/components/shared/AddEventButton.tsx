@@ -100,7 +100,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
             Add to calendar
           </Button>
         </Disclosure.Button>
-        <Disclosure.Panel className="absolute z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl">
+        <Disclosure.Panel className="absolute right-0 z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl">
           <div className="flex gap-2">
             <Button
               width="auto"

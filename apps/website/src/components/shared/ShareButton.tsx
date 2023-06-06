@@ -59,7 +59,7 @@ export function ShareButton({
             Share
           </Button>
         </Disclosure.Button>
-        <Disclosure.Panel className="absolute z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl">
+        <Disclosure.Panel className="absolute right-0 z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl">
           <p className="mb-1">Share this link:</p>
           <input
             readOnly={true}

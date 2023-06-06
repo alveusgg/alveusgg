@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
 import { ArrowUpTrayIcon, PlusIcon } from "@heroicons/react/20/solid";
@@ -20,7 +20,7 @@ import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
 
 import Link from "@/components/content/Link";
 
-export const NotificationSettings: React.FC = () => {
+export function useNotificationStatus() {
   const [isClientSupported, setIsClientSupported] = useState(false);
   const [isInstallAsPWARequired, setIsInstallAsPWARequired] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState<
@@ -36,6 +36,30 @@ export const NotificationSettings: React.FC = () => {
       isNotificationsSupported && Notification.permission
     );
   }, []);
+
+  return useMemo(
+    () => ({
+      isClientSupported,
+      isInstallAsPWARequired,
+      notificationPermission,
+      updateNotificationPermission: setNotificationPermission,
+    }),
+    [
+      isClientSupported,
+      isInstallAsPWARequired,
+      notificationPermission,
+      setNotificationPermission,
+    ]
+  );
+}
+
+export function NotificationSettings() {
+  const {
+    notificationPermission,
+    isClientSupported,
+    isInstallAsPWARequired,
+    updateNotificationPermission,
+  } = useNotificationStatus();
 
   return (
     <div className="flex flex-col">
@@ -93,7 +117,7 @@ export const NotificationSettings: React.FC = () => {
         <>
           <NotificationPermission
             notificationPermission={notificationPermission}
-            setNotificationPermission={setNotificationPermission}
+            updateNotificationPermission={updateNotificationPermission}
           />
           <NotificationSettingsForm
             notificationPermission={notificationPermission}
@@ -102,4 +126,4 @@ export const NotificationSettings: React.FC = () => {
       )}
     </div>
   );
-};
+}

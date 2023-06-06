@@ -16,8 +16,8 @@ export const ErrorMessage = ({ children }: { children: React.ReactNode }) => (
 );
 export const NotificationPermission: React.FC<{
   notificationPermission: NotificationPermission | false;
-  setNotificationPermission: (perm: NotificationPermission) => void;
-}> = ({ notificationPermission, setNotificationPermission }) => {
+  updateNotificationPermission: (perm: NotificationPermission) => void;
+}> = ({ notificationPermission, updateNotificationPermission }) => {
   const swr = usePushServiceWorker();
   const handleSubscribeClick = useCallback(() => {
     if (isNotificationsSupported && Notification.permission === "denied") {
@@ -25,10 +25,10 @@ export const NotificationPermission: React.FC<{
     }
 
     Notification.requestPermission().then((permission) => {
-      setNotificationPermission(permission);
+      updateNotificationPermission(permission);
       sendWelcomeNotification(permission, swr);
     });
-  }, [setNotificationPermission, swr]);
+  }, [updateNotificationPermission, swr]);
 
   if (notificationPermission === "granted") {
     return null;

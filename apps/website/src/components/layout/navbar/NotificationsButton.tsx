@@ -1,9 +1,14 @@
 import { Popover, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
 
-import IconNotificationOn from "@/icons/IconNotificationOn";
-import { NotificationSettings } from "@/components/notifications/NotificationSettings";
 import { classes } from "@/utils/classes";
+import IconNotification from "@/icons/IconNotification";
+import IconNotificationOn from "@/icons/IconNotificationOn";
+import IconNotificationOff from "@/icons/IconNotificationOff";
+import {
+  NotificationSettings,
+  useNotificationStatus,
+} from "@/components/notifications/NotificationSettings";
 
 export const NotificationsButton = ({
   openDirection = "left",
@@ -12,10 +17,25 @@ export const NotificationsButton = ({
   openDirection?: "left" | "right";
   showLabel?: boolean;
 }) => {
+  const perms = useNotificationStatus().notificationPermission;
+
+  let Icon;
+  switch (perms) {
+    case false:
+    case "denied":
+      Icon = IconNotificationOff;
+      break;
+    case "granted":
+      Icon = IconNotificationOn;
+      break;
+    default:
+      Icon = IconNotification;
+  }
+
   return (
     <Popover as="div" className="relative flex items-center self-stretch">
       <Popover.Button className="flex gap-2 rounded-lg p-2">
-        <IconNotificationOn />
+        <Icon />
         <span className={classes(!showLabel && "sr-only")}>
           Push Notifications on this device
         </span>

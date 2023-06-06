@@ -25,30 +25,31 @@ const UpdatesPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark className="z-20">
+      <Section dark className="z-10">
         <Heading>Announcements, Updates and Stream schedule</Heading>
 
         <p className="mt-6">
           Keep up-to-date using one of our announcement channels:
         </p>
-        <ul className="mt-4 flex gap-4">
-          <li className="flex items-center rounded bg-alveus-green-900/80 px-2 transition-transform hover:scale-102 hover:bg-alveus-green-900">
+
+        <div className="mt-4 flex flex-col items-center gap-1 md:flex-row md:gap-4">
+          <div className="rounded-lg bg-alveus-green-900/80 px-2 hover:bg-alveus-green-900">
             <NotificationsButton showLabel={true} openDirection="right" />
-          </li>
-          <li className="contents">
-            <span className="self-center italic">or</span>
+          </div>
+          <span className="self-center italic">or</span>
+          <div className="rounded-lg bg-alveus-green-900/50 px-2 opacity-80 hover:bg-alveus-green-900">
             <Link
               rel="noreferer"
               target="_blank"
-              className="flex items-center rounded bg-alveus-green-900/50 px-4 transition-transform hover:scale-102 hover:bg-alveus-green-900"
+              className="flex rounded-lg p-2"
               href="https://discord.com/channels/548410541991919617/1052380120981180426"
             >
               <IconDiscord className="mr-2 h-6 w-6" />
               Discord #alveus-announcements
             </Link>
-          </li>
+          </div>
           {/* TODO: twitter, ig */}
-        </ul>
+        </div>
       </Section>
 
       {/* Grow the last section to cover the page */}
