@@ -28,7 +28,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@alveusgg/data": "github:mforsb/alveus-data#class",
+    "@alveusgg/data": "github:alveusgg/data",
     "@aws-sdk/client-s3": "^3.312.0",
     "@aws-sdk/s3-request-presigner": "^3.312.0",
     "@headlessui/react": "^1.7.14",
