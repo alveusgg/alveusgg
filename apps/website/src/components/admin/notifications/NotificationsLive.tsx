@@ -12,6 +12,12 @@ export function NotificationsLive() {
       refetchInterval: 2_000,
     });
 
+  const cancelMutation =
+    trpc.adminNotifications.cancelNotification.useMutation();
+
+  const resendMutation =
+    trpc.adminNotifications.resendNotification.useMutation();
+
   if (!recentNotifications.data) {
     return <p>Loading …</p>;
   }
@@ -55,11 +61,27 @@ export function NotificationsLive() {
               </div>
               <div className="flex w-28 justify-end gap-1 border-l border-gray-400">
                 {isActive && (
-                  <Button width="auto" size="small" title="Cancel announcement">
+                  <Button
+                    width="auto"
+                    size="small"
+                    title="Cancel announcement"
+                    confirmationMessage="Are you sure you want to cancel this notification?"
+                    onClick={() => {
+                      cancelMutation.mutate(notification.id);
+                    }}
+                  >
                     <XCircleIcon className="h-5 w-5" />
                   </Button>
                 )}
-                <Button width="auto" size="small" title="Resend notification">
+                <Button
+                  width="auto"
+                  size="small"
+                  title="Resend notification"
+                  confirmationMessage="Are you sure you want to resend this notification?"
+                  onClick={() => {
+                    resendMutation.mutate(notification.id);
+                  }}
+                >
                   <ArrowPathIcon className="h-5 w-5" />
                 </Button>
               </div>

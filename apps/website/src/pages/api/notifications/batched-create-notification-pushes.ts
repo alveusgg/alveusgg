@@ -22,7 +22,11 @@ export default createTokenProtectedApiHandler(
         where: { id: options.notificationId },
       });
 
-      if (!notification) {
+      if (
+        !notification ||
+        notification.canceledAt !== null ||
+        notification.expiresAt < new Date()
+      ) {
         return false;
       }
 

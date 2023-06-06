@@ -6,6 +6,7 @@ import { callEndpoint } from "@/server/utils/queue";
 import { prisma } from "@/server/db/client";
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 import { PUSH_MAX_ATTEMPTS } from "@/server/notifications";
+import { updateNotificationPushStatus } from "@/server/db/notifications";
 
 export type RetryPushesOptions = z.infer<typeof retryPushesSchema>;
 
@@ -20,34 +21,58 @@ const retryPushesSchema = z.object({
   ),
 });
 
+async function getNotificationMapForPushes(
+  pushes: RetryPushesOptions["pushes"]
+) {
+  const notificationIds = [
+    ...new Set(pushes.map((push) => push.notificationId)),
+  ];
+  const notifications = await prisma.notification.findMany({
+    where: {
+      id: { in: notificationIds },
+      canceledAt: null,
+      expiresAt: { gt: new Date() },
+    },
+  });
+  return new Map<string, Notification>(
+    notifications.map((notification) => [notification.id, notification])
+  );
+}
+
+function isPushRetry<T extends { attempts: number | null }>(
+  push: T
+): push is T & { attempts: number } {
+  return (
+    push.attempts !== null &&
+    push.attempts > 0 &&
+    push.attempts < PUSH_MAX_ATTEMPTS
+  );
+}
+
 export default createTokenProtectedApiHandler(
   retryPushesSchema,
   async (options) => {
     try {
-      const notificationIds = [
-        ...new Set(options.pushes.map((push) => push.notificationId)),
-      ];
-      const notifications = await prisma.notification.findMany({
-        where: { id: { in: notificationIds } },
-      });
+      const tasks: Array<Promise<unknown>> = [];
 
-      const notificationMap = new Map<string, Notification>(
-        notifications.map((notification) => [notification.id, notification])
-      );
+      const pushRetries = options.pushes.filter(isPushRetry);
+      const notificationMap = await getNotificationMapForPushes(pushRetries);
 
-      const calls: Array<Promise<Response>> = [];
-      options.pushes.forEach((push) => {
-        if (
-          !push.attempts ||
-          push.attempts === 0 ||
-          push.attempts >= PUSH_MAX_ATTEMPTS
-        )
-          return;
-
+      pushRetries.forEach((push) => {
         const notification = notificationMap.get(push.notificationId);
-        if (!notification) return;
+        if (!notification) {
+          tasks.push(
+            updateNotificationPushStatus({
+              notificationId: push.notificationId,
+              subscriptionId: push.subscriptionId,
+              processingStatus: "DONE",
+              failedAt: new Date(),
+            })
+          );
+          return;
+        }
 
-        calls.push(
+        tasks.push(
           callEndpoint<SendPushOptions>("/api/notifications/send-push", {
             attempt: push.attempts + 1,
             message: notification.message,
@@ -62,7 +87,7 @@ export default createTokenProtectedApiHandler(
         );
       });
 
-      await Promise.allSettled(calls);
+      await Promise.allSettled(tasks);
 
       return true;
     } catch (e) {

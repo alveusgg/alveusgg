@@ -128,6 +128,7 @@ model Notification {
   message          String
   createdAt        DateTime            @default(now())
   expiresAt        DateTime
+  canceledAt       DateTime?
   scheduledStartAt DateTime?
   scheduledEndAt   DateTime?
   title            String?

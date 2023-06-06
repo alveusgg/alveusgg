@@ -29,7 +29,8 @@ export default async function handler(
   const notification = await prisma.notification.findUnique({
     where: { id: notificationId },
   });
-  if (notification === null) {
+  // We still redirect if the notification is expired, but not if it was canceled
+  if (notification === null || notification.canceledAt !== null) {
     res.redirect(404, "/");
     res.end();
     return;

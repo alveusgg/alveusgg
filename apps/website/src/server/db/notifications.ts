@@ -1,5 +1,7 @@
+import { type Notification } from "@prisma/client";
 import { prisma } from "@/server/db/client";
-import { PUSH_MAX_ATTEMPTS } from "@/server/notifications";
+import { createNotification, PUSH_MAX_ATTEMPTS } from "@/server/notifications";
+import { defaultTag, defaultTitle } from "@/config/notifications";
 
 export async function getRecentNotificationsForTags({
   tags,
@@ -9,7 +11,7 @@ export async function getRecentNotificationsForTags({
   take: number;
 }) {
   return prisma.notification.findMany({
-    where: { tag: { in: tags } },
+    where: { tag: { in: tags }, canceledAt: null },
     orderBy: { createdAt: "desc" },
     take,
   });
@@ -21,6 +23,7 @@ export async function getActiveAnnouncements() {
   return prisma.notification.findMany({
     where: {
       tag: "announcements",
+      canceledAt: null,
       OR: [
         { expiresAt: { gt: now } },
         { scheduledStartAt: { gt: now } },
@@ -33,15 +36,57 @@ export async function getActiveAnnouncements() {
 }
 
 export async function getNotificationById(notificationId: string) {
-  return prisma.notification.findUnique({
+  const notification = await prisma.notification.findUnique({
     where: { id: notificationId },
   });
+
+  return notification?.canceledAt === null ? notification : null;
 }
 
 export async function getRecentNotifications({ take }: { take: number }) {
   return prisma.notification.findMany({
+    where: { canceledAt: null },
     orderBy: { createdAt: "desc" },
     take,
+  });
+}
+
+export async function cancelNotification(notificationId: string) {
+  const now = new Date();
+  await prisma.notification.update({
+    where: { id: notificationId },
+    data: { canceledAt: now },
+  });
+
+  await prisma.notificationPush.updateMany({
+    where: {
+      notificationId: notificationId,
+      processingStatus: { not: "DONE" },
+    },
+    data: {
+      processingStatus: "DONE",
+      expiresAt: now,
+    },
+  });
+
+  return;
+}
+
+export async function resendNotification(notificationId: string) {
+  const oldNotification = await prisma.notification.findUnique({
+    where: { id: notificationId },
+  });
+
+  if (!oldNotification) return;
+
+  return createNotification({
+    tag: oldNotification.tag || defaultTag,
+    title: oldNotification.title || defaultTitle,
+    imageUrl: oldNotification.imageUrl || undefined,
+    linkUrl: oldNotification.linkUrl || undefined,
+    text: oldNotification.message,
+    scheduledEndAt: oldNotification.scheduledEndAt,
+    scheduledStartAt: oldNotification.scheduledStartAt,
   });
 }
 

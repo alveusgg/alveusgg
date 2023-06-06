@@ -18,8 +18,8 @@ const exponentialDelays = new Array(PUSH_MAX_ATTEMPTS + 1)
 export async function createNotification(data: {
   tag: string;
   text?: string;
-  url?: string;
-  heading?: string;
+  linkUrl?: string;
+  title?: string;
   imageUrl?: string;
   scheduledStartAt?: Date | null;
   scheduledEndAt?: Date | null;
@@ -33,10 +33,10 @@ export async function createNotification(data: {
   const expiresAt = new Date(now.getTime() + tagConfig.ttl * 1000);
   const notification = await prisma.notification.create({
     data: {
-      title: data.heading,
+      title: data.title,
       expiresAt: expiresAt,
       message: data.text || "",
-      linkUrl: data.url,
+      linkUrl: data.linkUrl,
       imageUrl: data.imageUrl || null,
       tag: data.tag,
       urgency: tagConfig.urgency,

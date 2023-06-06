@@ -9,7 +9,11 @@ import { permissions } from "@/config/permissions";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { createFileStorageUpload } from "@/server/utils/file-storage";
 import { env } from "@/env/server.mjs";
-import { getRecentNotifications } from "@/server/db/notifications";
+import {
+  cancelNotification,
+  getRecentNotifications,
+  resendNotification,
+} from "@/server/db/notifications";
 import { prisma } from "@/server/db/client";
 import { inputValueDatetimeLocalToUtc } from "@/utils/local-datetime";
 
@@ -63,6 +67,14 @@ export const adminNotificationsRouter = router({
   getRecentNotifications: permittedProcedure.query(async () =>
     getRecentNotifications({ take: 10 })
   ),
+
+  cancelNotification: permittedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ input }) => cancelNotification(input)),
+
+  resendNotification: permittedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ input }) => resendNotification(input)),
 
   createFileUpload: permittedProcedure
     .input(
