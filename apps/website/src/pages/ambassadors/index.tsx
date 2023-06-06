@@ -21,6 +21,7 @@ import { camelToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
 import { parseAmbassadorDate, sortAmbassadorDate } from "@/utils/datetime";
+import { convertToSlug } from "@/utils/slugs";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -31,7 +32,6 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
-import { convertToSlug } from "@/utils/slugs";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
@@ -75,9 +75,9 @@ const sortByOptions = {
   enclosures: {
     label: "Enclosures",
     result: activeAmbassadors.reduce<AmbassadorsByGroup>((map, [key, val]) => {
-      const group = val.enclosure;
+      const group = camelToKebab(val.enclosure);
       map.set(group, {
-        name: enclosures[group].name,
+        name: enclosures[val.enclosure].name,
         items: [...(map.get(group)?.items || []), key],
       });
       return map;
@@ -181,12 +181,7 @@ const AmbassadorGroup: React.FC<{
 
   return (
     <div ref={scroll}>
-      <Heading
-        level={2}
-        className="mb-8"
-        id={`${type}:${camelToKebab(group)}`}
-        link
-      >
+      <Heading level={2} className="mb-8" id={`${type}:${group}`} link>
         {name}
       </Heading>
       <AmbassadorItems

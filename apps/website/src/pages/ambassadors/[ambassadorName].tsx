@@ -19,8 +19,8 @@ import {
 } from "@alveusgg/data/src/animal-quest";
 import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
-
 import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
+
 import animalQuestImage from "@/assets/animal-quest/full.png";
 
 import Section from "@/components/content/Section";
