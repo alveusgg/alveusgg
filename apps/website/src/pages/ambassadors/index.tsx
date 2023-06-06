@@ -12,11 +12,16 @@ import {
 } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import enclosures from "@alveusgg/data/src/enclosures";
+import {
+  getClassification,
+  sortAmbassadorClassification,
+} from "@alveusgg/data/src/ambassadors/classification";
 
-import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import { camelToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
 import { parseAmbassadorDate, sortAmbassadorDate } from "@/utils/datetime";
+import { convertToSlug } from "@/utils/slugs";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -49,12 +54,30 @@ const sortByOptions = {
     label: "All Ambassadors",
     result: activeAmbassadors.map(([key]) => key),
   },
+  classification: {
+    label: "Classification",
+    result: [...activeAmbassadors]
+      .sort(
+        ([, a], [, b]) =>
+          sortAmbassadorClassification(a.class, b.class) ||
+          sortAmbassadorDate(a.arrival, b.arrival)
+      )
+      .reduce<AmbassadorsByGroup>((map, [key, val]) => {
+        const classification = getClassification(val.class);
+        const group = convertToSlug(classification);
+        map.set(group, {
+          name: classification,
+          items: [...(map.get(group)?.items || []), key],
+        });
+        return map;
+      }, new Map()),
+  },
   enclosures: {
     label: "Enclosures",
     result: activeAmbassadors.reduce<AmbassadorsByGroup>((map, [key, val]) => {
-      const group = val.enclosure;
+      const group = camelToKebab(val.enclosure);
       map.set(group, {
-        name: enclosures[group].name,
+        name: enclosures[val.enclosure].name,
         items: [...(map.get(group)?.items || []), key],
       });
       return map;
@@ -100,7 +123,7 @@ const AmbassadorItem: React.FC<{
   const images = useMemo(() => getAmbassadorImages(ambassador), [ambassador]);
 
   return (
-    <div className="basis-full py-4 md:basis-1/2 md:px-4 lg:basis-1/4">
+    <div>
       <Link href={`/ambassadors/${camelToKebab(ambassador)}`} className="group">
         <Image
           src={images[0].src}
@@ -129,7 +152,12 @@ const AmbassadorItems: React.FC<{
   className?: string;
   level?: React.ComponentProps<typeof Heading>["level"];
 }> = ({ ambassadors, className, level }) => (
-  <div className={classes("flex flex-wrap", className)}>
+  <div
+    className={classes(
+      "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+      className
+    )}
+  >
     {ambassadors.map((key) => (
       <AmbassadorItem key={key} ambassador={key} level={level} />
     ))}
@@ -153,17 +181,12 @@ const AmbassadorGroup: React.FC<{
 
   return (
     <div ref={scroll}>
-      <Heading
-        level={2}
-        className="mb-4"
-        id={`${type}:${camelToKebab(group)}`}
-        link
-      >
+      <Heading level={2} className="mb-8" id={`${type}:${group}`} link>
         {name}
       </Heading>
       <AmbassadorItems
         ambassadors={ambassadors}
-        className="md:ml-8"
+        className="xl:grid-cols-5"
         level={3}
       />
     </div>
@@ -183,9 +206,9 @@ const AmbassadorsPage: NextPage = () => {
 
       // If we have a group, check if the option has groups and has this one
       const option = sortByOptions[match[1]];
-      const group = match[2] && kebabToCamel(match[2]);
+      const group = match[2];
       setActive(
-        group && !Array.isArray(option.result) && group in option.result
+        group && !Array.isArray(option.result) && option.result.has(group)
           ? group
           : null
       );
@@ -275,7 +298,7 @@ const AmbassadorsPage: NextPage = () => {
         />
 
         <Section className="flex-grow pt-0">
-          <div className="mb-4 mt-8 flex flex-col items-center justify-between gap-4 md:flex-row md:px-4">
+          <div className="mb-4 mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
             <p className="flex-shrink text-center text-xl font-semibold">
               Click each ambassador for information and highlights!
             </p>
@@ -291,9 +314,9 @@ const AmbassadorsPage: NextPage = () => {
           </div>
 
           {Array.isArray(results) ? (
-            <AmbassadorItems ambassadors={results} />
+            <AmbassadorItems ambassadors={results} className="mt-8" />
           ) : (
-            <div className="flex flex-col gap-12">
+            <div className="grid gap-12">
               {[...results.entries()].map(([key, val]) => (
                 <AmbassadorGroup
                   key={key}

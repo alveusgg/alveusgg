@@ -19,6 +19,7 @@ import {
 } from "@alveusgg/data/src/animal-quest";
 import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
+import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
 
@@ -37,6 +38,7 @@ import {
 } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
+import { convertToSlug } from "@/utils/slugs";
 
 const parseDate = (date: string | null): string => {
   if (!date) return "Unknown";
@@ -197,7 +199,15 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <div className="ml-4">
                   <p className="text-xl">{ambassador.species}</p>
                   <p className="text-xl italic text-alveus-green-700">
-                    {ambassador.scientific}
+                    {ambassador.scientific} (
+                    <Link
+                      href={`/ambassadors#classification:${convertToSlug(
+                        getClassification(ambassador.class)
+                      )}`}
+                    >
+                      {getClassification(ambassador.class)}
+                    </Link>
+                    )
                   </p>
                 </div>
               </div>
