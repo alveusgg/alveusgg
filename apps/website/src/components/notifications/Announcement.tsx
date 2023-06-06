@@ -81,7 +81,7 @@ export function Announcement({ notification }: { notification: Notification }) {
           title={formatDateTime(notification.createdAt)}
         >
           Created{" "}
-          {DateTime.fromJSDate(notification.createdAt).toRelativeCalendar({
+          {DateTime.fromJSDate(notification.createdAt).toRelative({
             locale: "en-US",
           })}
         </time>

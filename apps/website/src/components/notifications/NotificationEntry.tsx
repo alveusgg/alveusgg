@@ -23,7 +23,9 @@ export function NotificationEntry({
           dateTime={notification.createdAt.toISOString()}
           title={formatDateTime(notification.createdAt)}
         >
-          {DateTime.fromJSDate(notification.createdAt).toRelativeCalendar()}
+          {DateTime.fromJSDate(notification.createdAt).toRelative({
+            locale: "en-US",
+          })}
         </time>
       </div>
       <div title={categoryLabel || undefined}>
