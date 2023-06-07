@@ -138,7 +138,7 @@ export function SendNotificationForm() {
           />
 
           <TextAreaField
-            label="Text (180 chars)"
+            label="Message text (180 chars)"
             name="text"
             isRequired={true}
             minLength={2}
@@ -226,10 +226,17 @@ export function SendNotificationForm() {
               <div className="flex flex-wrap gap-4">
                 <CheckboxField
                   name="channel"
-                  value="updatesPage"
+                  value="push"
                   className="rounded-lg border border-white/20 px-2"
                 >
-                  Updates page
+                  Push
+                </CheckboxField>
+                <CheckboxField
+                  name="channel"
+                  value="discord"
+                  className="rounded-lg border border-white/20 px-2"
+                >
+                  Discord
                 </CheckboxField>
                 <CheckboxField
                   name="channel"
@@ -240,17 +247,10 @@ export function SendNotificationForm() {
                 </CheckboxField>
                 <CheckboxField
                   name="channel"
-                  value="instagram"
+                  value="updatesPage"
                   className="rounded-lg border border-white/20 px-2"
                 >
-                  Instagram
-                </CheckboxField>
-                <CheckboxField
-                  name="channel"
-                  value="stream"
-                  className="rounded-lg border border-white/20 px-2"
-                >
-                  Show on stream
+                  Updates page
                 </CheckboxField>
               </div>
             </Fieldset>
