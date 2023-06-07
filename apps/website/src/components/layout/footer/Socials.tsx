@@ -10,11 +10,16 @@ import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 
 import IconInstagram from "@/icons/IconInstagram";
 import IconTwitter from "@/icons/IconTwitter";
+import IconDiscord from "@/icons/IconDiscord";
 
 import socials from "@/components/shared/data/socials";
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Video from "@/components/content/Video";
+import { NotificationsButton } from "@/components/notifications/NotificationsButton";
+
+const buttonClasses =
+  "block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan";
 
 const Socials: React.FC = () => {
   const reducedMotion = usePrefersReducedMotion();
@@ -72,16 +77,16 @@ const Socials: React.FC = () => {
         <div className="basis-full pb-16 md:basis-1/2 md:py-4">
           <Heading level={2}>Stay Updated!</Heading>
 
-          <p className="my-4">
+          <p className="mb-2 mt-4">
             follow <span className="font-bold">@alveussanctuary</span> on all
-            social platforms to keep up to date!
+            social platforms!
           </p>
 
           <ul className="flex flex-wrap gap-4">
             {Object.entries(socials).map(([key, social]) => (
               <li key={key}>
                 <a
-                  className="block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                  className={buttonClasses}
                   href={social.link}
                   target="_blank"
                   rel="noreferrer"
@@ -91,6 +96,31 @@ const Socials: React.FC = () => {
                 </a>
               </li>
             ))}
+          </ul>
+
+          <p className="mb-2 mt-4">
+            and keep up-to-date with our announcement channels:
+          </p>
+
+          <ul className="flex flex-wrap gap-4">
+            <li>
+              <NotificationsButton
+                className={buttonClasses}
+                openDirectionX="right"
+                openDirectionY="top"
+              />
+            </li>
+            <li>
+              <a
+                className={buttonClasses}
+                href="https://discord.com/channels/548410541991919617/1052380120981180426"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Discord #alveus-announcements"
+              >
+                <IconDiscord className="h-6 w-6" />
+              </a>
+            </li>
           </ul>
         </div>
       </div>
