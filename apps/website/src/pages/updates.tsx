@@ -39,17 +39,15 @@ const UpdatesPage: NextPage = () => {
             openDirectionX="right"
           />
           <span className="self-center italic">or</span>
-          <div className="rounded-lg bg-alveus-green-900/50 px-2 opacity-80 hover:bg-alveus-green-900">
-            <Link
-              rel="noreferer"
-              target="_blank"
-              className="flex rounded-lg p-2"
-              href="https://discord.com/channels/548410541991919617/1052380120981180426"
-            >
-              <IconDiscord className="mr-2 h-6 w-6" />
-              Discord #alveus-announcements
-            </Link>
-          </div>
+          <Link
+            rel="noreferer"
+            target="_blank"
+            className="flex rounded-lg bg-alveus-green-900/50 px-4 py-2 opacity-80 hover:bg-alveus-green-900"
+            href="https://discord.com/channels/548410541991919617/1052380120981180426"
+          >
+            <IconDiscord className="mr-2 h-6 w-6" />
+            Discord #alveus-announcements
+          </Link>
           {/* TODO: twitter, ig */}
         </div>
       </Section>
