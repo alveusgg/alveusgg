@@ -8,7 +8,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
-import { NotificationsButton } from "@/components/layout/navbar/NotificationsButton";
+import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
 
@@ -33,9 +33,11 @@ const UpdatesPage: NextPage = () => {
         </p>
 
         <div className="mt-4 flex flex-col items-center gap-1 md:flex-row md:gap-4">
-          <div className="rounded-lg bg-alveus-green-900/80 px-2 hover:bg-alveus-green-900">
-            <NotificationsButton showLabel={true} openDirection="right" />
-          </div>
+          <NotificationsButton
+            className="rounded-lg bg-alveus-green-900/80 px-4 py-2 hover:bg-alveus-green-900"
+            showLabel={true}
+            openDirectionX="right"
+          />
           <span className="self-center italic">or</span>
           <div className="rounded-lg bg-alveus-green-900/50 px-2 opacity-80 hover:bg-alveus-green-900">
             <Link

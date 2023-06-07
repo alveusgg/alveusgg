@@ -7,7 +7,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import logoImage from "@/assets/logo.png";
 import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
 import { DesktopMenu } from "@/components/layout/navbar/DesktopMenu";
-import { NotificationsButton } from "@/components/layout/navbar/NotificationsButton";
+import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
 export const Navbar: React.FC = () => {
   return (
@@ -44,7 +44,7 @@ export const Navbar: React.FC = () => {
               </Link>
             </div>
             <div className="flex items-center lg:hidden">
-              <NotificationsButton />
+              <NotificationsButton className="rounded-lg p-4" />
 
               <Disclosure.Button
                 className="

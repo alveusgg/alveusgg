@@ -1,5 +1,6 @@
 import { Popover, Transition } from "@headlessui/react";
 import React, { Fragment } from "react";
+import Link from "next/link";
 
 import { classes } from "@/utils/classes";
 import IconNotification from "@/icons/IconNotification";
@@ -9,13 +10,20 @@ import {
   NotificationSettings,
   useNotificationStatus,
 } from "@/components/notifications/NotificationSettings";
+import IconAngleRight from "@/icons/IconAngleRight";
 
 export const NotificationsButton = ({
-  openDirection = "left",
+  openDirectionX = "left",
+  openDirectionY = "bottom",
   showLabel = false,
+  className,
+  containerClassName,
 }: {
-  openDirection?: "left" | "right";
+  openDirectionX?: "left" | "right";
+  openDirectionY?: "top" | "bottom";
   showLabel?: boolean;
+  className?: string;
+  containerClassName?: string;
 }) => {
   const perms = useNotificationStatus().notificationPermission;
 
@@ -33,8 +41,14 @@ export const NotificationsButton = ({
   }
 
   return (
-    <Popover as="div" className="relative flex items-center self-stretch">
-      <Popover.Button className="flex gap-2 rounded-lg p-2">
+    <Popover
+      as="div"
+      className={classes(
+        "relative flex items-center self-stretch",
+        containerClassName
+      )}
+    >
+      <Popover.Button className={classes("flex gap-2", className)}>
         <Icon />
         <span className={classes(!showLabel && "sr-only")}>
           Push Notifications on this device
@@ -51,11 +65,19 @@ export const NotificationsButton = ({
         leaveTo="transform opacity-0 scale-95"
       >
         <Popover.Panel
-          className={`absolute ${
-            openDirection === "left" ? "right-0" : "left-0"
-          } top-full z-30 -mt-0.5 w-[320px] max-w-[calc(80vw-50px)] rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg`}
+          className={classes(
+            `absolute z-30 -mt-0.5 flex w-[320px] max-w-[calc(80vw-50px)] flex-col rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg`,
+            openDirectionX === "left" ? "right-0" : "left-0",
+            openDirectionY === "top" ? "bottom-full" : "top-full"
+          )}
         >
           <NotificationSettings />
+          <p className="border-t p-4">
+            <Popover.Button as={Link} href="/updates">
+              Show all updates
+              <IconAngleRight className="ml-1 inline-block" size={20} />
+            </Popover.Button>
+          </p>
         </Popover.Panel>
       </Transition>
     </Popover>
