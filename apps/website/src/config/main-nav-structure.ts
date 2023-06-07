@@ -20,8 +20,8 @@ export type NavStructure = {
 
 export const mainNavStructure: NavStructure = {
   home: {
-    title: "Updates",
-    link: "/updates",
+    title: "Home",
+    link: "/",
   },
   live: {
     title: "Live",
@@ -50,6 +50,10 @@ export const mainNavStructure: NavStructure = {
       events: {
         title: "Events",
         link: "/events",
+      },
+      updates: {
+        title: "Updates",
+        link: "/updates",
       },
     },
   },
