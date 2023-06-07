@@ -63,9 +63,7 @@ export function NotificationSettings() {
 
   return (
     <div className="flex flex-col">
-      <p className="p-4 leading-tight">
-        Get notified for streams and announcements!
-      </p>
+      <p className="p-4 leading-tight">Notification settings</p>
 
       {isInstallAsPWARequired && (
         <div className="px-4 pb-4">
