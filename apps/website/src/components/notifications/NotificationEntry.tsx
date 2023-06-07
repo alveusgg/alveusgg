@@ -18,6 +18,7 @@ export function NotificationEntry({
     <div className="flex w-full items-center gap-3">
       <div className="flex flex-1 flex-col">
         <strong>{notification.title}</strong>
+        {notification.message && <span>{notification.message}</span>}
         <time
           className="text-sm opacity-70"
           dateTime={notification.createdAt.toISOString()}
