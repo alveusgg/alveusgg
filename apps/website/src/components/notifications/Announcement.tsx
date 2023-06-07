@@ -20,30 +20,31 @@ export function Announcement({ notification }: { notification: Notification }) {
   ).toString();
   const title = notification.title || "Alveus Sanctuary Announcement";
   const event = useMemo(
-    () => ({
-      id: notification.id,
-      title,
-      description: notification.message,
-      startTime: notification.createdAt,
-      endTime: notification.createdAt,
-      url: fullAbsoluteNotificationUrl,
-    }),
+    () =>
+      notification.scheduledStartAt
+        ? {
+            id: notification.id,
+            title,
+            description: notification.message,
+            startTime: notification.scheduledStartAt,
+            endTime: notification.scheduledEndAt,
+            url: fullAbsoluteNotificationUrl,
+          }
+        : null,
     [
       notification.id,
       title,
       notification.message,
-      notification.createdAt,
+      notification.scheduledStartAt,
+      notification.scheduledEndAt,
       fullAbsoluteNotificationUrl,
     ]
   );
 
-  const isScheduled =
-    notification.scheduledStartAt !== null ||
-    notification.scheduledEndAt !== null;
-
   let heading = (
     <>
-      {isScheduled ? (
+      {notification.scheduledStartAt !== null ||
+      notification.scheduledEndAt !== null ? (
         <span>
           {notification.scheduledStartAt && (
             <>
@@ -109,33 +110,30 @@ export function Announcement({ notification }: { notification: Notification }) {
 
   const content = (
     <div className="flex flex-1 flex-col">
-      <div className="flex flex-col md:flex-row">
-        {notification.imageUrl && (
-          <div className="mb-2 mr-4 w-1/2 self-start overflow-hidden rounded-lg md:w-32">
-            <Image
-              src={notification.imageUrl}
-              className="w-full"
-              width={400}
-              height={400}
-              alt=""
-            />
-          </div>
-        )}
+      <div className="flex flex-1 flex-col">
+        <div className="flex items-center gap-4">
+          <header className="flex flex-1 flex-col">{heading}</header>
 
-        <div className="flex flex-1 flex-col">
-          <div className="flex items-center gap-4">
-            <header className="flex flex-1 flex-col">{heading}</header>
-            <NotificationIcon notification={notification} />
-          </div>
-
-          {notification.message && (
-            <p className="my-2">{notification.message}</p>
+          {notification.imageUrl && (
+            <div className="mb-2 mr-4 h-auto max-w-full self-start overflow-hidden rounded-lg md:w-32">
+              <Image
+                src={notification.imageUrl}
+                className="w-full"
+                width={400}
+                height={400}
+                alt=""
+              />
+            </div>
           )}
+
+          <NotificationIcon notification={notification} />
         </div>
+
+        {notification.message && <p className="my-2">{notification.message}</p>}
       </div>
 
       <div className="mt-3 flex items-center justify-end gap-1 border-t py-2 text-sm">
-        {isScheduled && <AddEventButton event={event} />}
+        {event && <AddEventButton event={event} />}
         <ShareButton
           url={fullAbsoluteNotificationUrl}
           title={title}
