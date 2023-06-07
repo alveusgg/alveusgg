@@ -34,8 +34,8 @@ export const adminNotificationsRouter = router({
       z.object({
         tag: z.string().min(2).max(100),
         text: z.string().max(200).optional(),
-        heading: z.string(),
-        url: z.union([z.literal(""), z.string().trim().url()]).optional(),
+        title: z.string(),
+        linkUrl: z.union([z.literal(""), z.string().trim().url()]).optional(),
         imageUrl: z.string().url().optional(),
         scheduledStartAt: localDatetimeAsDateSchema.optional(),
         scheduledEndAt: localDatetimeAsDateSchema.optional(),

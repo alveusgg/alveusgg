@@ -5,7 +5,7 @@ import { split } from "canvas-hypertxt";
 import debounce from "just-debounce-it";
 
 interface PushImageCanvasProps {
-  heading: string;
+  title: string;
   text: string;
   backgroundImageUrl: string;
   logoImageUrl: string;
@@ -127,7 +127,7 @@ type DrawPushImageProps = {
   bgPromise: Promise<HTMLImageElement> | null;
   logoPromise: Promise<HTMLImageElement> | null;
   text: string;
-  heading: string;
+  title: string;
 };
 
 async function drawPushImage({
@@ -135,7 +135,7 @@ async function drawPushImage({
   bgPromise,
   logoPromise,
   text,
-  heading,
+  title,
 }: DrawPushImageProps) {
   const canvas = canvasRef.current;
   if (!canvas) return;
@@ -158,8 +158,8 @@ async function drawPushImage({
     }).height;
   }
 
-  if (heading.trim()) {
-    drawTextBoxWithBlurredBg(ctx, heading, canvas, bg, {
+  if (title.trim()) {
+    drawTextBoxWithBlurredBg(ctx, title, canvas, bg, {
       startY: canvas.height - 20 - textHeight - 10,
       fontSize: 50,
       // alveus green bg
@@ -174,7 +174,7 @@ async function drawPushImage({
 }
 
 export function PushImageCanvas({
-  heading,
+  title,
   text,
   backgroundImageUrl,
   logoImageUrl,
@@ -200,8 +200,14 @@ export function PushImageCanvas({
     if (!canvasRef.current) return;
 
     canvasRef.current.classList.add("opacity-50");
-    debouncedAsyncEffect({ canvasRef, bgPromise, logoPromise, text, heading });
-  }, [bgPromise, debouncedAsyncEffect, heading, logoPromise, text]);
+    debouncedAsyncEffect({
+      canvasRef,
+      bgPromise,
+      logoPromise,
+      text,
+      title,
+    });
+  }, [bgPromise, debouncedAsyncEffect, title, logoPromise, text]);
 
   return (
     <canvas

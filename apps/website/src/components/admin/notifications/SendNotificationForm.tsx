@@ -35,8 +35,6 @@ export const allowedFileTypes = [
 ] as const;
 type AllowedFileTypes = typeof allowedFileTypes;
 
-const localTimeZoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
 export function SendNotificationForm() {
   const formRef = useRef<HTMLFormElement>(null);
   const sendNotification = trpc.adminNotifications.sendNotification.useMutation(
@@ -59,7 +57,7 @@ export function SendNotificationForm() {
   const image = imageAttachmentData.files[0];
 
   const [category, setCategory] = useState("announcements");
-  const [heading, setHeading] = useState("");
+  const [title, setTitle] = useState("");
   const [text, setText] = useState("");
   const [link, setLink] = useState("https://www.twitch.tv/AlveusSanctuary");
 
@@ -78,8 +76,8 @@ export function SendNotificationForm() {
       sendNotification.mutate({
         text: String(data.get("text") || ""),
         tag: String(data.get("tag") || ""),
-        heading: String(data.get("heading") || ""),
-        url: String(data.get("url") || ""),
+        title: String(data.get("title") || ""),
+        linkUrl: String(data.get("url") || ""),
         scheduledStartAt,
         scheduledEndAt,
         imageUrl,
@@ -130,13 +128,13 @@ export function SendNotificationForm() {
           </SelectBoxField>
 
           <TextField
-            label="Heading (100 chars)"
-            name="heading"
+            label="Title (100 chars)"
+            name="title"
             isRequired={true}
             minLength={1}
             maxLength={100}
-            value={heading}
-            onChange={(value) => setHeading(value)}
+            value={title}
+            onChange={(value) => setTitle(value)}
           />
 
           <TextAreaField
@@ -271,7 +269,7 @@ export function SendNotificationForm() {
 
             <div className="overflow-hidden rounded-xl">
               <PushImageCanvas
-                heading={heading}
+                title={title}
                 text={text}
                 backgroundImageUrl={previewImageUrl}
                 logoImageUrl={logoImage.src}
@@ -283,7 +281,7 @@ export function SendNotificationForm() {
 
             <div className="overflow-hidden rounded-xl">
               <PushImageCanvas
-                heading={heading}
+                title={title}
                 text={text}
                 backgroundImageUrl={previewImageUrl}
                 logoImageUrl={logoImage.src}
