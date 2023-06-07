@@ -25,12 +25,12 @@ export const notificationCategories = [
     ttl: 30 * 60, // 30 minutes
     urgency: "HIGH",
   },
-  {
-    tag: "vod",
-    label: "Video releases",
-    ttl: 5 * 24 * 60 * 60, // 5 days
-    urgency: "HIGH",
-  },
+  //{
+  //  tag: "vod",
+  //  label: "Video releases",
+  //  ttl: 5 * 24 * 60 * 60, // 5 days
+  //  urgency: "HIGH",
+  //},
   {
     tag: "announcements",
     label: "Announcements",
