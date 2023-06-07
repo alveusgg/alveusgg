@@ -14,7 +14,7 @@ type IcsEvent = {
   title: string;
   description: string;
   startTime: Date;
-  endTime: Date;
+  endTime: Date | null;
   url: string;
 };
 
@@ -47,12 +47,13 @@ function createIcsEvent(event: IcsEvent): string {
       `DTSTAMP:${formatIcsDate(new Date())}`,
       `UID:${event.id}@${hostname}`,
       `DTSTART:${formatIcsDate(event.startTime)}`,
-      `DTEND:${formatIcsDate(event.endTime)}`,
+      event.endTime && `DTEND:${formatIcsDate(event.endTime)}`,
       `SUMMARY:${event.title}`,
       `DESCRIPTION:${event.description} ${event.url}`,
       "END:VEVENT",
       "END:VCALENDAR",
     ]
+      .filter((str): str is string => str !== null)
       // Split every 72 characters and add a new line (CRLF) with one space
       .map((str) => str.match(/.{1,72}/g)?.join("\r\n ") ?? str)
       .join("\r\n")
@@ -69,7 +70,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
     googleCalendarEventUrl.searchParams.append("text", title + " " + url);
     googleCalendarEventUrl.searchParams.append(
       "dates",
-      `${formatIcsDate(startTime)}/${formatIcsDate(endTime)}`
+      `${formatIcsDate(startTime)}/${formatIcsDate(endTime || startTime)}`
     );
     googleCalendarEventUrl.searchParams.append("details", description);
 
