@@ -49,6 +49,11 @@ export const serverSchema = z.object({
   FILE_STORAGE_BUCKET: z.string(),
   UPSTASH_QSTASH_URL: z.string().url().optional(),
   UPSTASH_QSTASH_KEY: z.string().optional(),
+  PUSH_LANG: z.string().optional(),
+  PUSH_TEXT_DIR: z.enum(["ltr", "rtl"]).optional(),
+  PUSH_BATCH_SIZE: z.number().int().min(1).optional(),
+  PUSH_MAX_ATTEMPTS: z.number().int().min(1).optional(),
+  PUSH_RETRY_DELAY_MS: z.number().int().min(1).optional(),
 });
 
 /**

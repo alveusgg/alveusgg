@@ -1,4 +1,5 @@
 import { notificationCategories } from "@/config/notifications";
+import { pushBatchSize, pushMaxAttempts, pushRetryDelay } from "@/config/push";
 
 import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";
@@ -6,14 +7,9 @@ import { callEndpoint } from "@/server/utils/queue";
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
 import type { RetryPushesOptions } from "@/pages/api/notifications/batched-retry-notification-pushes";
 
-const PUSH_BATCH_SIZE = 2; // TODO: make configurable? env file?
-export const PUSH_MAX_ATTEMPTS = 5; // TODO: make configurable? env file?
-
-const RETRY_DELAY = 30_000; // TODO: make configurable? env file?
-
-const exponentialDelays = new Array(PUSH_MAX_ATTEMPTS + 1)
+const exponentialDelays = new Array(pushMaxAttempts + 1)
   .fill(0)
-  .map((_, i) => RETRY_DELAY * Math.pow(2, i));
+  .map((_, i) => pushRetryDelay * Math.pow(2, i));
 
 export async function createNotification(data: {
   tag: string;
@@ -62,8 +58,8 @@ export async function createNotification(data: {
           },
         },
       },
-      take: PUSH_BATCH_SIZE,
-      skip: PUSH_BATCH_SIZE * i++,
+      take: pushBatchSize,
+      skip: pushBatchSize * i++,
     });
 
     if (subscriptions.length === 0) {
@@ -107,8 +103,8 @@ export async function retryPendingNotificationPushes() {
             failedAt: { lte: new Date(now.getTime() - delay) },
           })),
       },
-      take: PUSH_BATCH_SIZE,
-      skip: PUSH_BATCH_SIZE * i++,
+      take: pushBatchSize,
+      skip: pushBatchSize * i++,
     });
 
     if (pendingPushes.length === 0) {

@@ -1,7 +1,8 @@
-import { type Notification } from "@prisma/client";
-import { prisma } from "@/server/db/client";
-import { createNotification, PUSH_MAX_ATTEMPTS } from "@/server/notifications";
+import { pushMaxAttempts } from "@/config/push";
 import { defaultTag, defaultTitle } from "@/config/notifications";
+
+import { prisma } from "@/server/db/client";
+import { createNotification } from "@/server/notifications";
 
 export async function getRecentNotificationsForTags({
   tags,
@@ -127,7 +128,7 @@ export async function cleanupExpiredNotificationPushes() {
       OR: [
         { subscription: { deletedAt: { not: null } } },
         { expiresAt: { lte: now } },
-        { attempts: { gt: PUSH_MAX_ATTEMPTS } },
+        { attempts: { gt: pushMaxAttempts } },
       ],
     },
   });

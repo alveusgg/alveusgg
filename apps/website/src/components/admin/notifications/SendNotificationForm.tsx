@@ -2,7 +2,11 @@ import React, { useCallback, useRef, useState } from "react";
 import { Duration } from "luxon";
 
 import { env } from "@/env/client.mjs";
-import { notificationCategories } from "@/config/notifications";
+import {
+  notificationCategories,
+  notificationLinkSuggestions,
+  notificationLinkDefault,
+} from "@/config/notifications";
 import { trpc } from "@/utils/trpc";
 
 import logoImage from "@/assets/push-image/logo.png";
@@ -59,7 +63,7 @@ export function SendNotificationForm() {
   const [category, setCategory] = useState("announcements");
   const [title, setTitle] = useState("");
   const [text, setText] = useState("");
-  const [link, setLink] = useState("https://www.twitch.tv/AlveusSanctuary");
+  const [link, setLink] = useState(notificationLinkDefault);
 
   const [isScheduled, setIsScheduled] = useState(false);
 
@@ -160,22 +164,11 @@ export function SendNotificationForm() {
           />
 
           <datalist id="notification-link-suggestions">
-            <option value="https://www.twitch.tv/AlveusSanctuary">
-              Twitch channel AlveusSanctuary
-            </option>
-            <option value="https://www.twitch.tv/maya">
-              Twitch channel Maya
-            </option>
-            <option value="https://youtube.com/@AlveusSanctuary">
-              YouTube channel AlveusSanctuary
-            </option>
-            <option value="https://www.youtube.com/@mayahiga">
-              YouTube channel Maya
-            </option>
-            <option value="https://www.alveussanctuary.org/">Website</option>
-            <option value="https://twitter.com/AlveusSanctuary">
-              Twitter page
-            </option>
+            {notificationLinkSuggestions.map((link) => (
+              <option key={link.url} value={link.url}>
+                {link.label}
+              </option>
+            ))}
           </datalist>
 
           <UploadAttachmentsField

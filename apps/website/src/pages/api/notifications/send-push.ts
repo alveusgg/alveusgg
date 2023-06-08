@@ -1,8 +1,16 @@
 import type { NotificationUrgency } from "@prisma/client";
 import { z } from "zod";
 
-import { defaultTag, defaultTitle } from "@/config/notifications";
+import { pushTextDir, pushLang, pushMaxAttempts } from "@/config/push";
+import {
+  badgeUrl,
+  defaultTag,
+  defaultTitle,
+  iconUrl,
+} from "@/config/notifications";
+
 import type { NotificationPayload } from "@/utils/notifications";
+
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import {
   getWebPushUrgency,
@@ -13,7 +21,6 @@ import { sendWebPushNotification } from "@/server/web-push";
 import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
-import { PUSH_MAX_ATTEMPTS } from "@/server/notifications";
 
 export type SendPushOptions = z.infer<typeof sendPushSchema>;
 
@@ -115,10 +122,10 @@ export default createTokenProtectedApiHandler(
               subscriptionId: options.subscriptionId,
             },
             image: options.imageUrl,
-            dir: "ltr", // TODO: Configurable?
-            lang: "en", // TODO: Configurable?
-            icon: `https://alveus.gg/apple-touch-icon.png`,
-            badge: `https://alveus.gg/notification-badge.png`,
+            dir: pushTextDir,
+            lang: pushLang,
+            icon: iconUrl,
+            badge: badgeUrl,
           },
         } satisfies NotificationPayload),
         {
@@ -153,7 +160,7 @@ export default createTokenProtectedApiHandler(
           }
         : {
             processingStatus:
-              options.attempt && options.attempt >= PUSH_MAX_ATTEMPTS
+              options.attempt && options.attempt >= pushMaxAttempts
                 ? "DONE"
                 : "PENDING",
             notificationId: options.notificationId,

@@ -1,9 +1,18 @@
 import type { NotificationUrgency } from "@prisma/client";
+import { env } from "@/env/client.mjs";
+
+type NotificationLinkSuggestion = {
+  label: string;
+  url: string;
+};
 
 export type NotificationTag = (typeof notificationCategories)[number]["tag"];
 
 export const defaultTitle = "Alveus Update";
 export const defaultTag = "announcements" satisfies NotificationTag;
+
+export const iconUrl = `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`;
+export const badgeUrl = `${env.NEXT_PUBLIC_BASE_URL}/notification-badge.png`;
 
 export const defaultTags = {
   stream: "1",
@@ -42,3 +51,17 @@ export const notificationCategories = [
 export function getNotificationCategory(tag: string) {
   return notificationCategories.find((c) => c.tag === tag);
 }
+
+export const notificationLinkSuggestions = [
+  {
+    label: "TTV AlveusSanctuary",
+    url: "https://www.twitch.tv/AlveusSanctuary",
+  },
+  { label: "TTV Maya", url: "https://www.twitch.tv/maya" },
+  { label: "YT AlveusSanctuary", url: "https://youtube.com/@AlveusSanctuary" },
+  { label: "YT Maya", url: "https://www.youtube.com/@mayahiga" },
+  { label: "Website", url: "https://www.alveussanctuary.org/" },
+  { label: "Twitter page", url: "https://twitter.com/AlveusSanctuary" },
+] satisfies NotificationLinkSuggestion[];
+
+export const notificationLinkDefault = "";

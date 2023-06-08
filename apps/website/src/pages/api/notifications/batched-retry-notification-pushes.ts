@@ -1,12 +1,14 @@
 import { z } from "zod";
 import type { Notification } from "@prisma/client";
 
+import { pushMaxAttempts } from "@/config/push";
+
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
 import { prisma } from "@/server/db/client";
-import type { SendPushOptions } from "@/pages/api/notifications/send-push";
-import { PUSH_MAX_ATTEMPTS } from "@/server/notifications";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
+
+import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 
 export type RetryPushesOptions = z.infer<typeof retryPushesSchema>;
 
@@ -45,7 +47,7 @@ function isPushRetry<T extends { attempts: number | null }>(
   return (
     push.attempts !== null &&
     push.attempts > 0 &&
-    push.attempts < PUSH_MAX_ATTEMPTS
+    push.attempts < pushMaxAttempts
   );
 }
 
