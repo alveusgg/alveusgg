@@ -43,10 +43,7 @@ export const NotificationsButton = ({
   return (
     <Popover
       as="div"
-      className={classes(
-        "relative flex items-center self-stretch",
-        containerClassName
-      )}
+      className={classes("relative flex items-center", containerClassName)}
     >
       <Popover.Button className={classes("flex gap-2", className)}>
         <Icon />
