@@ -1,7 +1,13 @@
+import React, { Fragment } from "react";
+
 import ArrowPathIcon from "@heroicons/react/20/solid/ArrowPathIcon";
 import XCircleIcon from "@heroicons/react/24/outline/XCircleIcon";
 import { ArchiveBoxIcon, BoltIcon } from "@heroicons/react/20/solid";
+
 import { trpc } from "@/utils/trpc";
+
+import IconLoading from "@/icons/IconLoading";
+
 import { NotificationEntry } from "@/components/notifications/NotificationEntry";
 import DateTime from "@/components/content/DateTime";
 import { Button } from "@/components/shared/Button";
@@ -9,9 +15,13 @@ import { MessageBox } from "@/components/shared/MessageBox";
 
 export function NotificationsLive() {
   const recentNotifications =
-    trpc.adminNotifications.getRecentNotifications.useQuery(undefined, {
-      refetchInterval: 2_000,
-    });
+    trpc.adminNotifications.getRecentNotifications.useInfiniteQuery(
+      {},
+      {
+        refetchInterval: 2_000,
+        getNextPageParam: (lastPage) => lastPage.nextCursor,
+      }
+    );
 
   const cancelMutation = trpc.adminNotifications.cancelNotification.useMutation(
     {
@@ -68,53 +78,80 @@ export function NotificationsLive() {
       </small>
 
       <ul>
-        {recentNotifications.data?.map((notification) => {
-          const isActive = notification.expiresAt > now;
+        {recentNotifications.data?.pages.map((page) => (
+          <Fragment key={page.nextCursor}>
+            {page.items.map((notification) => {
+              const isActive = notification.expiresAt > now;
 
-          return (
-            <li
-              key={notification.id}
-              className="flex items-center gap-3 border-t border-t-white/20 p-1 px-2 first:border-t-0 hover:bg-black"
-            >
-              {isActive ? (
-                <BoltIcon title="Notification is active" className="h-4 w-4" />
-              ) : (
-                <ArchiveBoxIcon
-                  title="Notification is inactive"
-                  className="h-4 w-4"
-                />
-              )}
-              <div className="flex-1 pl-2">
-                <NotificationEntry notification={notification} />
-              </div>
-              <div className="flex w-28 justify-end gap-1 border-l border-gray-400">
-                <Button
-                  width="auto"
-                  size="small"
-                  title="Cancel announcement"
-                  confirmationMessage="Are you sure you want to cancel this notification?"
-                  onClick={() => {
-                    cancelMutation.mutate(notification.id);
-                  }}
+              return (
+                <li
+                  key={notification.id}
+                  className="flex items-center gap-3 border-t border-t-white/20 p-1 px-2 first:border-t-0 hover:bg-black"
                 >
-                  <XCircleIcon className="h-5 w-5" />
-                </Button>
-                <Button
-                  width="auto"
-                  size="small"
-                  title="Resend notification"
-                  confirmationMessage="Are you sure you want to resend this notification?"
-                  onClick={() => {
-                    resendMutation.mutate(notification.id);
-                  }}
-                >
-                  <ArrowPathIcon className="h-5 w-5" />
-                </Button>
-              </div>
-            </li>
-          );
-        })}
+                  {isActive ? (
+                    <BoltIcon
+                      title="Notification is active"
+                      className="h-4 w-4"
+                    />
+                  ) : (
+                    <ArchiveBoxIcon
+                      title="Notification is inactive"
+                      className="h-4 w-4"
+                    />
+                  )}
+                  <div className="flex-1 pl-2">
+                    <NotificationEntry notification={notification} />
+                  </div>
+                  <div className="flex w-28 justify-end gap-1 border-l border-gray-400">
+                    <Button
+                      width="auto"
+                      size="small"
+                      title="Cancel announcement"
+                      confirmationMessage="Are you sure you want to cancel this notification?"
+                      onClick={() => {
+                        cancelMutation.mutate(notification.id);
+                      }}
+                    >
+                      <XCircleIcon className="h-5 w-5" />
+                    </Button>
+                    <Button
+                      width="auto"
+                      size="small"
+                      title="Resend notification"
+                      confirmationMessage="Are you sure you want to resend this notification?"
+                      onClick={() => {
+                        resendMutation.mutate(notification.id);
+                      }}
+                    >
+                      <ArrowPathIcon className="h-5 w-5" />
+                    </Button>
+                  </div>
+                </li>
+              );
+            })}
+          </Fragment>
+        ))}
       </ul>
+
+      <div className="mt-5">
+        <Button
+          onClick={() => recentNotifications.fetchNextPage()}
+          disabled={
+            !recentNotifications.hasNextPage ||
+            recentNotifications.isFetchingNextPage
+          }
+        >
+          {recentNotifications.isFetchingNextPage ? (
+            <>
+              <IconLoading size={20} /> Loading...
+            </>
+          ) : recentNotifications.hasNextPage ? (
+            "Load more"
+          ) : (
+            "- End -"
+          )}
+        </Button>
+      </div>
     </div>
   );
 }

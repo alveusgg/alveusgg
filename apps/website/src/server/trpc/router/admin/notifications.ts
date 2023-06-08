@@ -64,9 +64,16 @@ export const adminNotificationsRouter = router({
     };
   }),
 
-  getRecentNotifications: permittedProcedure.query(async () =>
-    getRecentNotifications({ take: 10 })
-  ),
+  getRecentNotifications: permittedProcedure
+    .input(
+      z.object({
+        limit: z.number().int().min(1).optional(),
+        cursor: z.string().cuid().optional(),
+      })
+    )
+    .query(async ({ input: { limit, cursor } }) =>
+      getRecentNotifications({ limit, cursor })
+    ),
 
   cancelNotification: permittedProcedure
     .input(z.string().cuid())

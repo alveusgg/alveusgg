@@ -44,12 +44,27 @@ export async function getNotificationById(notificationId: string) {
   return notification?.canceledAt === null ? notification : null;
 }
 
-export async function getRecentNotifications({ take }: { take: number }) {
-  return prisma.notification.findMany({
+export async function getRecentNotifications({
+  limit = 10,
+  cursor,
+}: {
+  limit?: number;
+  cursor?: string;
+}) {
+  const items = await prisma.notification.findMany({
     where: { canceledAt: null },
     orderBy: { createdAt: "desc" },
-    take,
+    take: limit + 1, // get an extra item at the end which we'll use as next cursor
+    cursor: cursor ? { id: cursor } : undefined,
   });
+
+  let nextCursor: typeof cursor | undefined = undefined;
+  if (items.length > limit) {
+    const nextItem = items.pop();
+    nextCursor = nextItem?.id || undefined;
+  }
+
+  return { items, nextCursor };
 }
 
 export async function cancelNotification(notificationId: string) {
