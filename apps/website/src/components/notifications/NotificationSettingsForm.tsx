@@ -5,6 +5,7 @@ import debounce from "just-debounce-it";
 import { usePushSubscription } from "@/utils/push-subscription";
 import { notificationCategories } from "@/config/notifications";
 
+import IconLoading from "@/icons/IconLoading";
 import type { NotificationPermission } from "./NotificationPermission";
 import { NotificationCategoryCheckbox } from "./NotificationCategoryCheckbox";
 
@@ -74,7 +75,10 @@ export function NotificationSettingsForm({
         <legend className="sr-only">Notifications</legend>
 
         {notificationPermission === "granted" && !isRegistered && (
-          <p className="px-4">Setting up notifications …</p>
+          <p className="flex items-center gap-2 p-2 pt-0 italic text-gray-300">
+            <IconLoading className="h-4 w-4 animate-spin" />
+            Setting up notifications…
+          </p>
         )}
 
         {notificationCategories.map((category) => (
