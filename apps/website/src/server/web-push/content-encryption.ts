@@ -216,8 +216,6 @@ export async function createCipherText(
     start = end;
   }
 
-  console.log({ buffers });
-
   return concatArrayBuffers(buffers);
 }
 
