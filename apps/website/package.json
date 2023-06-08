@@ -49,6 +49,7 @@
     "date-fns": "^2.30.0",
     "dompurify": "^3.0.3",
     "html-react-parser": "^3.0.16",
+    "intl-messageformat": "10.3.x",
     "jsdom": "^21.1.2",
     "just-debounce-it": "^3.2.0",
     "luxon": "^3.3.0",
