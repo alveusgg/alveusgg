@@ -20,6 +20,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import IconYouTube from "@/icons/IconYouTube";
+import LinkHover from "@/components/content/LinkHover";
 
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
 import animalQuestFull from "@/assets/animal-quest/full.png";
@@ -143,9 +144,12 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
                   <Fragment key={ambassador}>
                     {/* Retired ambassadors don't have pages */}
                     {isActiveAmbassadorKey(ambassador) ? (
-                      <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
-                        {ambassadors[ambassador].name}
-                      </Link>
+                      <LinkHover
+                        href={`/ambassadors/${camelToKebab(ambassador)}`}
+                        name={ambassadors[ambassador].name}
+                      >
+                        {/* {ambassadors[ambassador].name} */}
+                      </LinkHover>
                     ) : (
                       ambassadors[ambassador].name
                     )}
