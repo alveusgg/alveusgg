@@ -114,20 +114,20 @@ export function Announcement({ notification }: { notification: Notification }) {
         <div className="flex items-center gap-4">
           <header className="flex flex-1 flex-col">{heading}</header>
 
-          {notification.imageUrl && (
-            <div className="mb-2 mr-4 h-auto max-w-full self-start overflow-hidden rounded-lg md:w-32">
-              <Image
-                src={notification.imageUrl}
-                className="w-full"
-                width={400}
-                height={400}
-                alt=""
-              />
-            </div>
-          )}
-
           <NotificationIcon notification={notification} />
         </div>
+
+        {notification.imageUrl && (
+          <div className="my-2 h-auto max-w-full self-start overflow-hidden rounded">
+            <Image
+              src={notification.imageUrl}
+              className="w-full"
+              width={800}
+              height={800}
+              alt=""
+            />
+          </div>
+        )}
 
         {notification.message && <p className="my-2">{notification.message}</p>}
       </div>
