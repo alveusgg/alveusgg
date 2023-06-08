@@ -1,11 +1,14 @@
-import type { MouseEvent } from "react";
-import { Disclosure } from "@headlessui/react";
 import React, { Fragment } from "react";
+import { Popover } from "@headlessui/react";
+
+import { env } from "@/env/client.mjs";
+
 import IconCalendar from "@/icons/IconCalendar";
-import { Button } from "@/components/shared/Button";
 import IconGoogleCalendar from "@/icons/IconGoogleCalendar";
 import IconOutlook from "@/icons/IconOutlook";
-import { env } from "@/env/client.mjs";
+
+import { Button } from "@/components/shared/Button";
+import { PopoverButton } from "@/components/shared/PopoverButton";
 
 const ICS_FEED_NAME = "Alveus announcement";
 
@@ -77,9 +80,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
     window.open(googleCalendarEventUrl, "_blank");
   };
 
-  const handleIcsClick = (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-
+  const handleIcsClick = () => {
     const blob = new Blob([createIcsEvent(event)], {
       type: "text/calendar;charset=utf-8",
     });
@@ -93,37 +94,38 @@ export function AddEventButton({ event }: AddEventButtonProps) {
   };
 
   return (
-    <div className="relative">
-      <Disclosure>
-        <Disclosure.Button as={Fragment}>
-          <Button width="auto" size="small">
-            <IconCalendar className="mr-1 h-5 w-5" />
-            Add to calendar
+    <PopoverButton
+      label={
+        <>
+          <IconCalendar className="mr-1 h-5 w-5" />
+          Add to calendar
+        </>
+      }
+    >
+      <div className="flex gap-2">
+        <Popover.Button as={Fragment}>
+          <Button
+            width="auto"
+            size="small"
+            onClick={handleGCalClick}
+            title="Save event to Google calendar"
+          >
+            <IconGoogleCalendar className="mr-2 h-5 w-5" />
+            Google
           </Button>
-        </Disclosure.Button>
-        <Disclosure.Panel className="absolute right-0 z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl">
-          <div className="flex gap-2">
-            <Button
-              width="auto"
-              size="small"
-              onClick={handleGCalClick}
-              title="Save event to Google calendar"
-            >
-              <IconGoogleCalendar className="mr-2 h-5 w-5" />
-              Google
-            </Button>
-            <Button
-              width="auto"
-              size="small"
-              onClick={handleIcsClick}
-              title="Save event to Apple/Outlook calendar"
-            >
-              <IconOutlook className="mr-2 h-5 w-5" />
-              Apple/Outlook
-            </Button>
-          </div>
-        </Disclosure.Panel>
-      </Disclosure>
-    </div>
+        </Popover.Button>
+        <Popover.Button as={Fragment}>
+          <Button
+            width="auto"
+            size="small"
+            onClick={handleIcsClick}
+            title="Save event to Apple/Outlook calendar"
+          >
+            <IconOutlook className="mr-2 h-5 w-5" />
+            Apple/Outlook
+          </Button>
+        </Popover.Button>
+      </div>
+    </PopoverButton>
   );
 }

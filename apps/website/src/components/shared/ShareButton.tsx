@@ -1,11 +1,15 @@
 import type { MouseEventHandler } from "react";
-import { Disclosure } from "@headlessui/react";
 import { Fragment } from "react";
+
+import { Popover } from "@headlessui/react";
 import ShareIcon from "@heroicons/react/20/solid/ShareIcon";
-import { Button } from "@/components/shared/Button";
+
 import IconTwitter from "@/icons/IconTwitter";
 import IconEmail from "@/icons/IconEmail";
 import IconFacebook from "@/icons/IconFacebook";
+
+import { Button } from "@/components/shared/Button";
+import { PopoverButton } from "@/components/shared/PopoverButton";
 
 export function ShareButton({
   url,
@@ -51,56 +55,58 @@ export function ShareButton({
   };
 
   return (
-    <div className="relative">
-      <Disclosure>
-        <Disclosure.Button as={Fragment}>
-          <Button width="auto" size="small" onClick={handleClick}>
-            <ShareIcon className="mr-1 h-5 w-5" />
-            Share
-          </Button>
-        </Disclosure.Button>
-        <Disclosure.Panel className="absolute right-0 z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl">
-          <p className="mb-1">Share this link:</p>
-          <input
-            readOnly={true}
-            type="url"
-            className="mb-2 w-full bg-transparent text-inherit"
-            value={url}
-          />
+    <PopoverButton
+      onClick={handleClick}
+      label={
+        <>
+          <ShareIcon className="mr-1 h-5 w-5" />
+          Share
+        </>
+      }
+    >
+      <p className="mb-1">Share this link:</p>
+      <input
+        readOnly={true}
+        type="url"
+        className="mb-2 w-full bg-transparent text-inherit"
+        value={url}
+      />
 
-          <div className="flex gap-2">
-            <Button
-              width="auto"
-              size="small"
-              onClick={() => window.open(createTwitterLink(), "_blank")}
-              title="Share announcement on Twitter"
-            >
-              <IconTwitter className="mr-1 h-4 w-4" />
-              Twitter
-            </Button>
-            <Button
-              width="auto"
-              size="small"
-              onClick={() => window.open(createFacebookLink(), "_blank")}
-              title="Share announcement on Facebook"
-            >
-              <IconFacebook className="mr-1 h-4 w-4" />
-              Facebook
-            </Button>
-            <Button
-              width="auto"
-              size="small"
-              onClick={() => window.open(createEmailLink())}
-              title="Share announcement on Email"
-            >
-              <IconEmail className="mr-1 h-4 w-4" />
-              Email
-            </Button>
-          </div>
-        </Disclosure.Panel>
-      </Disclosure>
-    </div>
+      <div className="flex gap-2">
+        <Popover.Button as={Fragment}>
+          <Button
+            width="auto"
+            size="small"
+            onClick={() => window.open(createTwitterLink(), "_blank")}
+            title="Share announcement on Twitter"
+          >
+            <IconTwitter className="mr-1 h-4 w-4" />
+            Twitter
+          </Button>
+        </Popover.Button>
+        <Popover.Button as={Fragment}>
+          <Button
+            width="auto"
+            size="small"
+            onClick={() => window.open(createFacebookLink(), "_blank")}
+            title="Share announcement on Facebook"
+          >
+            <IconFacebook className="mr-1 h-4 w-4" />
+            Facebook
+          </Button>
+        </Popover.Button>
+        <Popover.Button as={Fragment}>
+          <Button
+            width="auto"
+            size="small"
+            onClick={() => window.open(createEmailLink())}
+            title="Share announcement on Email"
+          >
+            <IconEmail className="mr-1 h-4 w-4" />
+            Email
+          </Button>
+        </Popover.Button>
+      </div>
+    </PopoverButton>
   );
 }
-
-export default ShareButton;
