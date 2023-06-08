@@ -32,7 +32,7 @@ const AdminNotificationsPage: NextPage<
       <Meta title="Notifications | Admin" />
 
       <AdminPageLayout title="Notifications" menuItems={menuItems}>
-        <div className="flex w-full gap-4">
+        <div className="flex w-full flex-col gap-4 lg:flex-row">
           <div className="flex-1">
             <Headline>Create a notification</Headline>
             <Panel>
