@@ -138,7 +138,7 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
               {formatDateTime(episode.broadcast, { style: "long" })}
             </p>
             {episode.ambassadors.featured.length > 0 && (
-              <p className="text-lg">
+              <div className="text-lg">
                 <span className="text-base opacity-80">Featuring: </span>
                 {episode.ambassadors.featured.map((ambassador, idx, arr) => (
                   <Fragment key={ambassador}>
@@ -147,9 +147,7 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
                       <LinkHover
                         href={`/ambassadors/${camelToKebab(ambassador)}`}
                         name={ambassadors[ambassador].name}
-                      >
-                        {/* {ambassadors[ambassador].name} */}
-                      </LinkHover>
+                      ></LinkHover>
                     ) : (
                       ambassadors[ambassador].name
                     )}
@@ -158,7 +156,7 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
                     {idx === arr.length - 2 && " and "}
                   </Fragment>
                 ))}
-              </p>
+              </div>
             )}
           </div>
         </div>

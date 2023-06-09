@@ -17,7 +17,6 @@ const LinkHover: React.FC<LinkHoverProps> = ({ href, name }) => {
     setDelay(
       setTimeout(() => {
         setCardShown(true);
-        console.log("showing card lol");
       }, 500)
     );
   };
@@ -28,7 +27,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({ href, name }) => {
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave}>
       <Link href={href}>{name}</Link>
-      {cardShown && <span>This would be the card</span>}
+      {cardShown && <span>This would be {name}&apos;s card </span>}
     </div>
   );
 };
