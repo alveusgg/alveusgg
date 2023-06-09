@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import React, { useState } from "react";
+import Link from "./Link";
 
 type LinkHoverProps = {
+  children?: never[] | string;
   href: string;
   name: string;
 };
