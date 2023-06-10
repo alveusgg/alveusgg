@@ -106,7 +106,7 @@ export function NotificationSettings() {
 
           {getIsIos() && !getIsSafari() && (
             <p>
-              Try using Safari Browser and install Alveus to your Home Screen.
+              Try opening this site in Safari and adding it to your Home Screen.
             </p>
           )}
 
