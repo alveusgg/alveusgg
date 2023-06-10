@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { getIsIos, getIsSafari } from "@/utils/browser-detection";
+import { welcomeMessage, welcomeTitle } from "@/config/notifications";
 
 export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
 export type NotificationOptionsData = z.infer<typeof notificationOptionsSchema>;
@@ -33,15 +35,11 @@ export const notificationPayloadSchema = z.object({
 });
 
 export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
-  const userAgent: string = window.navigator.userAgent;
-  const isSafari: boolean =
-    /Safari/.test(userAgent) && !/Chrome|Chromium|CriOS/.test(userAgent);
-  const isIOS: boolean = /iPhone|iPad|iPod/.test(userAgent);
-
-  if (!isSafari || !isIOS) {
+  if (!getIsSafari() || !getIsIos()) {
     return false;
   }
-  const match = userAgent.match(/Version\/(\d+)(?:\.(\d+))?/);
+
+  const match = window.navigator.userAgent.match(/Version\/(\d+)(?:\.(\d+))?/);
   if (!match || !match[1] || !match[2]) {
     return false;
   }

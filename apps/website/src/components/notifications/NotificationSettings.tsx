@@ -19,6 +19,7 @@ import imageIOSShareDialog from "@/assets/notifications-help/ios-share-dialog.pn
 import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
 
 import Link from "@/components/content/Link";
+import { getIsIos } from "@/utils/browser-detection";
 
 export function useNotificationStatus() {
   const [isClientSupported, setIsClientSupported] = useState(false);
@@ -104,6 +105,13 @@ export function NotificationSettings() {
 
       {!isClientSupported && !isInstallAsPWARequired && (
         <ErrorMessage>
+          {getIsIos() && (
+            <p>
+              Try using Safari Browser instead and install Alveus on your Home
+              Screen to get updates on your device!
+            </p>
+          )}
+
           <Link href="/updates">
             Your browser sadly does not support notifications! Click here for
             more options.
