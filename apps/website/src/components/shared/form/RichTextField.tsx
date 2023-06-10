@@ -5,6 +5,8 @@ import dynamic from "next/dynamic";
 import type { default as ReactQuillType } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
+import { classes } from "@/utils/classes";
+
 const ReactQuill = dynamic<
   ReactQuillType.ReactQuillProps & {
     forwardedRef?: LegacyRef<ReactQuillType>;
@@ -51,7 +53,7 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
   const [value, setValue] = useState(defaultValue || "");
 
   return (
-    <div className={`flex-1 ${props.className || ""}`}>
+    <div className={classes("flex-1", props.className)}>
       <div className="flex flex-row items-end justify-between">
         <label
           {...labelProps}

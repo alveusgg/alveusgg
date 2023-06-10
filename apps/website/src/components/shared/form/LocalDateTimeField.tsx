@@ -9,6 +9,9 @@ import React, {
   useRef,
 } from "react";
 import { useField, type AriaFieldProps } from "react-aria";
+
+import { classes } from "@/utils/classes";
+
 import IconCross from "@/icons/IconCross";
 
 type DateTimeFieldProps = DetailedHTMLProps<
@@ -51,7 +54,7 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
   }, []);
 
   return (
-    <div className={`flex-1 ${props.className || ""}`}>
+    <div className={classes("flex-1", props.className)}>
       <label {...labelProps}>{props.label}</label>
       <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
         {props.prefix}

@@ -1,6 +1,9 @@
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import type { AriaTextFieldOptions } from "react-aria";
 import { useTextField } from "react-aria";
+
+import { classes } from "@/utils/classes";
+
 import IconCross from "@/icons/IconCross";
 
 export type TextFieldProps = AriaTextFieldOptions<"input"> & {
@@ -48,9 +51,10 @@ export function TextField(props: TextFieldProps) {
       <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
         {props.prefix}
         <input
-          className={`w-full flex-1 bg-white p-1 px-2 text-black ${
-            props.inputClassName || ""
-          }`}
+          className={classes(
+            "w-full flex-1 bg-white p-1 px-2 text-black",
+            props.inputClassName
+          )}
           {...inputProps}
           list={props.list}
           required={props.isRequired}

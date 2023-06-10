@@ -1,6 +1,8 @@
 import React, { type ReactNode, type SelectHTMLAttributes } from "react";
 import { useField, type AriaFieldProps } from "react-aria";
 
+import { classes } from "@/utils/classes";
+
 type SelectBoxFieldProps = SelectHTMLAttributes<HTMLSelectElement> &
   AriaFieldProps & {
     children?: ReactNode;
@@ -12,7 +14,7 @@ export function SelectBoxField(props: SelectBoxFieldProps) {
   const { labelProps, fieldProps } = useField(props);
 
   return (
-    <div className={`flex-1 ${props.className || ""}`}>
+    <div className={classes("flex-1", props.className)}>
       <label {...labelProps}>{props.label}</label>
       <br />
       <select
