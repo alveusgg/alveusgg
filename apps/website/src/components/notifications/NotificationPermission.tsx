@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+
 import {
   isNotificationsSupported,
   usePushServiceWorker,
@@ -9,11 +10,8 @@ import {
 } from "@/utils/notifications";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
-export const ErrorMessage = ({ children }: { children: React.ReactNode }) => (
-  <p className="hyphens-auto rounded-lg bg-red-100 p-4 leading-tight text-red-800">
-    {children}
-  </p>
-);
+import { NotificationErrorMessage } from "@/components/notifications/NotificationErrorMessage";
+
 export const NotificationPermission: React.FC<{
   notificationPermission: NotificationPermission | false;
   updateNotificationPermission: (perm: NotificationPermission) => void;
@@ -37,7 +35,7 @@ export const NotificationPermission: React.FC<{
   if (notificationPermission === "denied") {
     return (
       <div className="mx-4 mb-4">
-        <ErrorMessage>
+        <NotificationErrorMessage>
           <p>
             Notification permissions were denied. You need to enable
             notifications for this site in your browser settings.
@@ -78,7 +76,7 @@ export const NotificationPermission: React.FC<{
               );
             })}
           </ul>
-        </ErrorMessage>
+        </NotificationErrorMessage>
       </div>
     );
   }

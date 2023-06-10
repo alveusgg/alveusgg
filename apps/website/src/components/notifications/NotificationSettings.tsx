@@ -7,19 +7,16 @@ import {
   isNotificationsSupported,
   isWebPushSupported,
 } from "@/utils/push-subscription";
-
-import {
-  ErrorMessage,
-  NotificationPermission,
-} from "@/components/notifications/NotificationPermission";
-import { NotificationSettingsForm } from "@/components/notifications/NotificationSettingsForm";
 import { checkUserAgentRequiresToBeInstalledAsPWA } from "@/utils/notifications";
+import { getIsIos, getIsSafari } from "@/utils/browser-detection";
+
+import { NotificationErrorMessage } from "@/components/notifications/NotificationErrorMessage";
+import { NotificationPermission } from "@/components/notifications/NotificationPermission";
+import { NotificationSettingsForm } from "@/components/notifications/NotificationSettingsForm";
+import Link from "@/components/content/Link";
 
 import imageIOSShareDialog from "@/assets/notifications-help/ios-share-dialog.png";
 import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
-
-import Link from "@/components/content/Link";
-import { getIsIos } from "@/utils/browser-detection";
 
 export function useNotificationStatus() {
   const [isClientSupported, setIsClientSupported] = useState(false);
@@ -104,19 +101,19 @@ export function NotificationSettings() {
       )}
 
       {!isClientSupported && !isInstallAsPWARequired && (
-        <ErrorMessage>
-          {getIsIos() && (
+        <NotificationErrorMessage className="m-2 flex flex-col gap-2">
+          <p>Your browser does not support push notifications!</p>
+
+          {getIsIos() && !getIsSafari() && (
             <p>
-              Try using Safari Browser instead and install Alveus on your Home
-              Screen to get updates on your device!
+              Try using Safari Browser and install Alveus to your Home Screen.
             </p>
           )}
 
-          <Link href="/updates">
-            Your browser sadly does not support notifications! Click here for
-            more options.
-          </Link>
-        </ErrorMessage>
+          <p>
+            <Link href="/updates">Click here for more options.</Link>
+          </p>
+        </NotificationErrorMessage>
       )}
 
       {isClientSupported && !isInstallAsPWARequired && (
