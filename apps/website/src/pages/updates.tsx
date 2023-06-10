@@ -1,8 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import React from "react";
-
-import IconDiscord from "@/icons/IconDiscord";
+import React, { Fragment } from "react";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -11,8 +9,9 @@ import Meta from "@/components/content/Meta";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
+import updateChannels from "@/components/shared/data/updateChannels";
 
-const notificationTags = ["vod", "stream"];
+const notificationTags = ["stream"];
 
 const UpdatesPage: NextPage = () => {
   return (
@@ -38,17 +37,21 @@ const UpdatesPage: NextPage = () => {
             showLabel={true}
             openDirectionX="right"
           />
-          <span className="self-center italic">or</span>
-          <Link
-            rel="noreferer"
-            target="_blank"
-            className="flex rounded-lg bg-alveus-green-900/50 px-4 py-2 opacity-80 hover:bg-alveus-green-900"
-            href="https://discord.com/channels/548410541991919617/1052380120981180426"
-          >
-            <IconDiscord className="mr-2 h-6 w-6" />
-            Discord #alveus-announcements
-          </Link>
-          {/* TODO: twitter, ig */}
+
+          {Object.entries(updateChannels).map(([key, updateChannel]) => (
+            <Fragment key={key}>
+              <span className="self-center italic">or</span>
+              <Link
+                rel="noreferer"
+                target="_blank"
+                className="flex rounded-lg bg-alveus-green-800 px-4 py-2 hover:bg-alveus-green-900"
+                href={updateChannel.link}
+              >
+                <updateChannel.icon size={24} className="mr-2 h-6 w-6" />
+                {updateChannel.title}
+              </Link>
+            </Fragment>
+          ))}
         </div>
       </Section>
 

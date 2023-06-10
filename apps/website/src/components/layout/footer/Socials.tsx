@@ -10,9 +10,10 @@ import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 
 import IconInstagram from "@/icons/IconInstagram";
 import IconTwitter from "@/icons/IconTwitter";
-import IconDiscord from "@/icons/IconDiscord";
 
 import socials from "@/components/shared/data/socials";
+import updateChannels from "@/components/shared/data/updateChannels";
+
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Video from "@/components/content/Video";
@@ -110,17 +111,19 @@ const Socials: React.FC = () => {
                 openDirectionY="top"
               />
             </li>
-            <li>
-              <a
-                className={buttonClasses}
-                href="https://discord.com/channels/548410541991919617/1052380120981180426"
-                target="_blank"
-                rel="noreferrer"
-                aria-label="Discord #alveus-announcements"
-              >
-                <IconDiscord className="h-6 w-6" />
-              </a>
-            </li>
+            {Object.entries(updateChannels).map(([key, updateChannel]) => (
+              <li key={key}>
+                <a
+                  className={buttonClasses}
+                  href={updateChannel.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={updateChannel.title}
+                >
+                  <updateChannel.icon size={24} />
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
