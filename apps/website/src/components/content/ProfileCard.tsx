@@ -5,7 +5,7 @@ import type Image from "next/image";
 
 type CardProps = {
   name: string;
+  position?: string;
   species?: Ambassador["species"];
-  enclosure?: Ambassador["enclosure"];
   img?: typeof Image;
 };

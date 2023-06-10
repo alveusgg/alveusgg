@@ -11,21 +11,21 @@ type LinkHoverProps = {
 
 const LinkHover: React.FC<LinkHoverProps> = ({ href, name }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
-  const [delay, setDelay] = useState<any | null>(null);
+  const [delay, setDelay] = useState<number | null>(null);
 
   const onEnter = () => {
     setDelay(
-      setTimeout(() => {
+      window.setTimeout(() => {
         setCardShown(true);
       }, 500)
     );
   };
   const onLeave = () => {
     setCardShown(false);
-    clearTimeout(delay);
+    if (delay) window.clearTimeout(delay);
   };
   return (
-    <div onMouseEnter={onEnter} onMouseLeave={onLeave}>
+    <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
       <Link href={href}>{name}</Link>
       {cardShown && <span>This would be {name}&apos;s card </span>}
     </div>
