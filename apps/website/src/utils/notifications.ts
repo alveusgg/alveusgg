@@ -112,17 +112,19 @@ export function sendWelcomeNotification(
 ) {
   // If the user accepts, let's create a notification
   if (permission === "granted") {
+    // If the service worker is registered, and it's ready use that to show the notification
     if (swr) {
       swr
-        .showNotification("Welcome!", {
-          body: "Push notifications are set up.",
+        .showNotification(welcomeTitle, {
+          body: welcomeMessage,
         })
         .then(() => {
           // ignore
         });
     } else {
-      new Notification("Welcome!", {
-        body: "Notifications are set up.",
+      // Otherwise use the "normal" Notification API
+      new Notification(welcomeTitle, {
+        body: welcomeMessage,
       });
     }
   }

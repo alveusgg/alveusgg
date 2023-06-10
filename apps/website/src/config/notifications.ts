@@ -11,6 +11,9 @@ export type NotificationTag = (typeof notificationCategories)[number]["tag"];
 export const defaultTitle = "Alveus Update";
 export const defaultTag = "announcements" satisfies NotificationTag;
 
+export const welcomeTitle = "Welcome!";
+export const welcomeMessage = "Your Alveus notifications are set up.";
+
 export const iconUrl = `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`;
 export const badgeUrl = `${env.NEXT_PUBLIC_BASE_URL}/notification-badge.png`;
 
