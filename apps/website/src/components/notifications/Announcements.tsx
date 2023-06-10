@@ -18,7 +18,7 @@ export function Announcements() {
   }
 
   return (
-    <ul className="flex flex-col gap-2">
+    <ul className="flex flex-col gap-2 pb-6">
       {announcements.data?.map((notification) => (
         <li key={notification.id}>
           <Announcement notification={notification} />
