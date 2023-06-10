@@ -62,9 +62,10 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
           ref={ref}
           type="datetime-local"
           pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-          className={`w-full bg-white p-1 text-black ${
-            props.inputClassName || ""
-          }`}
+          className={classes(
+            "w-full bg-white p-1 text-black",
+            props.inputClassName
+          )}
           {...fieldProps}
           defaultValue={props.defaultValue}
           name={props.name}
