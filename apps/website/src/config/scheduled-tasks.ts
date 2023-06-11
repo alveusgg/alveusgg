@@ -3,7 +3,9 @@ import { z } from "zod";
 //import { updateSubscriptions } from "@/server/actions/twitch/manage-event-subscriptions";
 //import { checkLiveStatus } from "@/server/actions/twitch/check-live-status";
 //import { syncRoles } from "@/server/actions/twitch/sync-roles";
-import { cleanupFileStorage } from "@/server/actions/file-storage/cleanup";
+import { cleanupFileStorage } from "@/server/file-storage/cleanup";
+import { retryPendingNotificationPushes } from "@/server/notifications";
+import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 
@@ -57,6 +59,20 @@ const config: ScheduledTasksConfig = {
       task: () => cleanupFileStorage({ maxItems: 100 }),
       label: "File storage: Cleanup expired objects",
       startDateTime: new Date(2023, 2, 3, 0, 8, 0),
+      interval: { minutes: 10 },
+    },
+    {
+      id: "notificationPushes.retry",
+      task: () => retryPendingNotificationPushes(),
+      label: "Notifications: Retry pending pushes",
+      startDateTime: new Date(2023, 2, 3, 0, 8, 0),
+      interval: { seconds: 30 },
+    },
+    {
+      id: "notificationPushes.cleanup",
+      task: () => cleanupExpiredNotificationPushes(),
+      label: "Notifications: Cleanup expired pushes",
+      startDateTime: new Date(2023, 2, 3, 0, 14, 0),
       interval: { minutes: 10 },
     },
   ],

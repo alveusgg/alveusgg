@@ -1,5 +1,7 @@
 import React from "react";
 
+import { classes } from "@/utils/classes";
+
 type FieldsetProps = {
   className?: string;
   legend: string;
@@ -15,7 +17,9 @@ export function Fieldset({
 }: FieldsetProps) {
   return (
     <fieldset className={className}>
-      <legend className={`mb-2 font-bold ${legendClassName}`}>{legend}</legend>
+      <legend className={classes("mb-2 font-bold", legendClassName)}>
+        {legend}
+      </legend>
       <div className="flex flex-col gap-2">{children}</div>
     </fieldset>
   );

@@ -33,6 +33,7 @@ Hosting (production):
 - PlanetScale (MySQL database)
 - Vercel (serverless hosting)
 - DigitalOcean Spaces (S3-compatible storage)
+- Upstash QStash (Simple Queue Service)
 
 # External APIs
 

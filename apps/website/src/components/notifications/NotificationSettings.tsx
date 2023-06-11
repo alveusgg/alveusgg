@@ -1,46 +1,132 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+
+import { ArrowUpTrayIcon, PlusIcon } from "@heroicons/react/20/solid";
+
 import {
   isNotificationsSupported,
   isWebPushSupported,
-} from "../../utils/push-subscription";
-import { ErrorMessage, NotificationPermission } from "./NotificationPermission";
-import { NotificationSettingsForm } from "./NotificationSettingsForm";
+} from "@/utils/push-subscription";
+import { checkUserAgentRequiresToBeInstalledAsPWA } from "@/utils/notifications";
+import { getIsIos, getIsSafari } from "@/utils/browser-detection";
 
-export const NotificationSettings: React.FC = () => {
+import { NotificationErrorMessage } from "@/components/notifications/NotificationErrorMessage";
+import { NotificationPermission } from "@/components/notifications/NotificationPermission";
+import { NotificationSettingsForm } from "@/components/notifications/NotificationSettingsForm";
+import Link from "@/components/content/Link";
+
+import imageIOSShareDialog from "@/assets/notifications-help/ios-share-dialog.png";
+import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
+
+export function useNotificationStatus() {
   const [isClientSupported, setIsClientSupported] = useState(false);
+  const [isInstallAsPWARequired, setIsInstallAsPWARequired] = useState(false);
   const [notificationPermission, setNotificationPermission] = useState<
     false | NotificationPermission
   >(false);
   useEffect(() => {
-    setIsClientSupported(isNotificationsSupported && isWebPushSupported);
+    const isSupported = isNotificationsSupported && isWebPushSupported;
+    setIsClientSupported(isSupported);
+    setIsInstallAsPWARequired(
+      !isSupported && checkUserAgentRequiresToBeInstalledAsPWA()
+    );
     setNotificationPermission(
       isNotificationsSupported && Notification.permission
     );
   }, []);
 
-  return (
-    <>
-      <p className="leading-tight">
-        Get notified when stream content takes place, new videos are released or
-        the Alveus team has any other announcements to make!
-      </p>
+  return useMemo(
+    () => ({
+      isClientSupported,
+      isInstallAsPWARequired,
+      notificationPermission,
+      updateNotificationPermission: setNotificationPermission,
+    }),
+    [
+      isClientSupported,
+      isInstallAsPWARequired,
+      notificationPermission,
+      setNotificationPermission,
+    ]
+  );
+}
 
-      {!isClientSupported ? (
-        <ErrorMessage>
-          Your browser does not support notifications! You can join Discord or
-          Follow Twitter instead!
-        </ErrorMessage>
-      ) : (
+export function NotificationSettings() {
+  const {
+    notificationPermission,
+    isClientSupported,
+    isInstallAsPWARequired,
+    updateNotificationPermission,
+  } = useNotificationStatus();
+
+  return (
+    <div className="flex flex-col">
+      <p className="p-4 leading-tight">Notification settings</p>
+
+      {isInstallAsPWARequired && (
+        <div className="px-4 pb-4">
+          <p>
+            You can receive notifications if you add this site to your Home
+            Screen.
+          </p>
+
+          <ol className="list-decimal pl-5">
+            <li className="my-3">
+              Tap the <ArrowUpTrayIcon className="inline-block h-6 w-6" /> Share
+              button in the menu bar.
+            </li>
+            <li className="my-3">
+              Scroll down the list of options, then tap{" "}
+              <em>Add to Home Screen</em>{" "}
+              <PlusIcon className="inline-block h-6 w-6" />.
+            </li>
+          </ol>
+
+          <div className="rounded-xl border-t bg-white p-4">
+            <Image src={imageIOSShareDialog} alt="" />
+          </div>
+
+          <p className="mt-4 text-sm">
+            If you don’t see Add to Home Screen, you can add it. Scroll down to
+            the bottom of the list, tap <em>Edit Actions …</em>, then tap{" "}
+            <Image
+              alt=""
+              src={imageIOSAddIcon}
+              className="inline-block h-6 w-6"
+            />{" "}
+            <em>Add to Home Screen</em>. The icon appears only on the device
+            where you add it.
+          </p>
+        </div>
+      )}
+
+      {!isClientSupported && !isInstallAsPWARequired && (
+        <NotificationErrorMessage className="m-2 flex flex-col gap-2">
+          <p>Your browser does not support push notifications!</p>
+
+          {getIsIos() && !getIsSafari() && (
+            <p>
+              Try opening this site in Safari and adding it to your Home Screen.
+            </p>
+          )}
+
+          <p>
+            <Link href="/updates">Click here for more options.</Link>
+          </p>
+        </NotificationErrorMessage>
+      )}
+
+      {isClientSupported && !isInstallAsPWARequired && (
         <>
           <NotificationPermission
             notificationPermission={notificationPermission}
-            setNotificationPermission={setNotificationPermission}
+            updateNotificationPermission={updateNotificationPermission}
           />
           <NotificationSettingsForm
             notificationPermission={notificationPermission}
           />
         </>
       )}
-    </>
+    </div>
   );
-};
+}

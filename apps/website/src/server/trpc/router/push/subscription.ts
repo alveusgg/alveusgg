@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getNotificationsConfig } from "@/config/notifications";
-import { knownPushServicesRegex } from "@/server/utils/web-push/known-push-services";
+import { defaultTags } from "@/config/notifications";
+import { knownPushServicesRegex } from "@/server/web-push/known-push-services";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 
 const baseRegistrationSchema = z.object({
@@ -31,6 +31,7 @@ export const pushSubscriptionRouter = router({
         where: {
           userId: ctx.session?.user?.id,
           endpoint: input.endpoint,
+          deletedAt: null,
         },
       })
     ),
@@ -50,10 +51,10 @@ export const pushSubscriptionRouter = router({
             userId: ctx.session?.user?.id,
             p256dh: input.p256dh,
             auth: input.auth,
+            deletedAt: null,
           },
         });
       } else {
-        const config = await getNotificationsConfig();
         await ctx.prisma.pushSubscription.create({
           data: {
             endpoint: input.endpoint,
@@ -62,12 +63,10 @@ export const pushSubscriptionRouter = router({
             auth: input.auth,
             tags: {
               createMany: {
-                data: Object.entries(config.defaultTags).map(
-                  ([name, value]) => ({
-                    name,
-                    value,
-                  })
-                ),
+                data: Object.entries(defaultTags).map(([name, value]) => ({
+                  name,
+                  value,
+                })),
               },
             },
           },
@@ -107,8 +106,9 @@ export const pushSubscriptionRouter = router({
   unregister: publicProcedure
     .input(selectionSchema)
     .mutation(async ({ ctx, input }) => {
-      await ctx.prisma.pushSubscription.delete({
+      await ctx.prisma.pushSubscription.updateMany({
         where: { endpoint: input.endpoint },
+        data: { deletedAt: new Date() },
       });
     }),
 
@@ -119,7 +119,10 @@ export const pushSubscriptionRouter = router({
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.pushSubscription.update({
         where: { endpoint: input.endpoint },
-        data: input.newSubscription,
+        data: {
+          ...input.newSubscription,
+          deletedAt: null,
+        },
       });
     }),
 });

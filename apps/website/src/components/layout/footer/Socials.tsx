@@ -12,9 +12,15 @@ import IconInstagram from "@/icons/IconInstagram";
 import IconTwitter from "@/icons/IconTwitter";
 
 import socials from "@/components/shared/data/socials";
+import updateChannels from "@/components/shared/data/updateChannels";
+
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Video from "@/components/content/Video";
+import { NotificationsButton } from "@/components/notifications/NotificationsButton";
+
+const buttonClasses =
+  "block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan";
 
 const Socials: React.FC = () => {
   const reducedMotion = usePrefersReducedMotion();
@@ -72,22 +78,49 @@ const Socials: React.FC = () => {
         <div className="basis-full pb-16 md:basis-1/2 md:py-4">
           <Heading level={2}>Stay Updated!</Heading>
 
-          <p className="my-4">
+          <p className="mb-2 mt-4">
             follow <span className="font-bold">@alveussanctuary</span> on all
-            social platforms to keep up to date!
+            social platforms!
           </p>
 
           <ul className="flex flex-wrap gap-4">
             {Object.entries(socials).map(([key, social]) => (
               <li key={key}>
                 <a
-                  className="block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                  className={buttonClasses}
                   href={social.link}
                   target="_blank"
                   rel="noreferrer"
                   aria-label={social.title}
                 >
                   <social.icon size={24} />
+                </a>
+              </li>
+            ))}
+          </ul>
+
+          <p className="mb-2 mt-4">
+            and keep up-to-date with our announcement channels:
+          </p>
+
+          <ul className="flex flex-wrap gap-4">
+            <li>
+              <NotificationsButton
+                className={buttonClasses}
+                openDirectionX="right"
+                openDirectionY="top"
+              />
+            </li>
+            {Object.entries(updateChannels).map(([key, updateChannel]) => (
+              <li key={key}>
+                <a
+                  className={buttonClasses}
+                  href={updateChannel.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label={updateChannel.title}
+                >
+                  <updateChannel.icon size={24} />
                 </a>
               </li>
             ))}

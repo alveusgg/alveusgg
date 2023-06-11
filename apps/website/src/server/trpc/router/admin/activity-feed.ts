@@ -1,13 +1,13 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { retryOutgoingWebhook } from "@/server/actions/outgoing-webhooks";
+import { retryOutgoingWebhook } from "@/server/outgoing-webhooks";
 import { router, superUserProcedure } from "../../trpc";
 
 export const adminActivityFeedRouter = router({
   getOutgoingWebhooks: superUserProcedure
     .input(
       z.object({
-        limit: z.number().min(1).max(100).nullish(),
+        limit: z.number().int().min(1).max(100).nullish(),
         cursor: z.string().cuid().nullish(),
       })
     )

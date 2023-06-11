@@ -51,6 +51,10 @@ export const mainNavStructure: NavStructure = {
         title: "Events",
         link: "/events",
       },
+      updates: {
+        title: "Updates",
+        link: "/updates",
+      },
     },
   },
   about: {

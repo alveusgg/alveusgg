@@ -1,5 +1,11 @@
 // @ts-check
 import { z } from "zod";
+import {
+  checkBase64UrlEncoded,
+  checkPrivateKey,
+  checkPublicKey,
+  checkSubject,
+} from "./vapid.mjs";
 
 /**
  * Specify your server-side environment variables schema here.
@@ -26,8 +32,12 @@ export const serverSchema = z.object({
   TWITCH_EVENTSUB_CALLBACK: z.string(),
   ACTION_API_SECRET: z.string(),
   SUPER_USER_IDS: z.string(),
-  WEB_PUSH_VAPID_PRIVATE_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
-  WEB_PUSH_VAPID_SUBJECT: z.string(),
+  WEB_PUSH_VAPID_PRIVATE_KEY: z
+    .string()
+    .superRefine(checkBase64UrlEncoded)
+    .superRefine(checkPrivateKey)
+    .optional(),
+  WEB_PUSH_VAPID_SUBJECT: z.string().superRefine(checkSubject).optional(),
   OPEN_WEATHER_MAP_API_KEY: z.string().optional(),
   OPEN_WEATHER_MAP_API_LAT: z.string().optional(),
   OPEN_WEATHER_MAP_API_LON: z.string().optional(),
@@ -37,6 +47,13 @@ export const serverSchema = z.object({
   FILE_STORAGE_REGION: z.string(),
   FILE_STORAGE_SECRET: z.string(),
   FILE_STORAGE_BUCKET: z.string(),
+  UPSTASH_QSTASH_URL: z.string().url().optional(),
+  UPSTASH_QSTASH_KEY: z.string().optional(),
+  PUSH_LANG: z.string().optional(),
+  PUSH_TEXT_DIR: z.enum(["ltr", "rtl"]).optional(),
+  PUSH_BATCH_SIZE: z.number().int().min(1).optional(),
+  PUSH_MAX_ATTEMPTS: z.number().int().min(1).optional(),
+  PUSH_RETRY_DELAY_MS: z.number().int().min(1).optional(),
 });
 
 /**
@@ -52,8 +69,16 @@ export const clientSchema = z.object({
     .string()
     .url()
     .refine((url) => !url.endsWith("/")),
-  NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
+  NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z
+    .string()
+    .superRefine(checkBase64UrlEncoded)
+    .superRefine(checkPublicKey)
+    .optional(),
   NEXT_PUBLIC_NOINDEX: z.string().optional(),
+  NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED: z
+    .boolean()
+    .optional()
+    .default(false),
 });
 
 /**
@@ -71,4 +96,6 @@ export const clientEnv = {
   NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
     process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
   NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+  NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED:
+    process.env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED === "true",
 };

@@ -5,6 +5,8 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
+
+import { env } from "@/env/client.mjs";
 import { trpc } from "./trpc";
 
 const SW_PATH = "/push/alveus/PushServiceWorker.js";
@@ -53,7 +55,7 @@ async function getSubscription() {
   try {
     const subscription = await pushManager.subscribe({
       userVisibleOnly: true,
-      applicationServerKey: process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
+      applicationServerKey: env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     });
 
     if (subscription) {
@@ -160,8 +162,8 @@ export function usePushSubscription(
     ) {
       register.mutate({
         endpoint,
-        p256dh: clientSubQuery.data.toJSON().keys?.auth,
-        auth: clientSubQuery.data.toJSON().keys?.p256dh,
+        p256dh: clientSubQuery.data.toJSON().keys?.p256dh,
+        auth: clientSubQuery.data.toJSON().keys?.auth,
       });
     }
   }, [

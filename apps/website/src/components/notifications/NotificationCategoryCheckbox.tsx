@@ -10,7 +10,10 @@ export const NotificationCategoryCheckbox: React.FC<{
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }> = ({ tag, label, endpoint, isRegistered, enabled, tags, handleChange }) => {
   return (
-    <div className="relative flex items-start">
+    <label
+      htmlFor={`tag-${tag}`}
+      className="relative flex cursor-pointer items-start rounded-xl p-2 hover:bg-black/30"
+    >
       <div className="flex h-5 items-center">
         <input
           id={`tag-${tag}`}
@@ -25,11 +28,7 @@ export const NotificationCategoryCheckbox: React.FC<{
         />
       </div>
 
-      <div className="ml-2 text-sm">
-        <label htmlFor={`tag-${tag}`} className="font-medium">
-          {label}
-        </label>
-      </div>
-    </div>
+      <div className="ml-2 text-sm font-medium">{label}</div>
+    </label>
   );
 };

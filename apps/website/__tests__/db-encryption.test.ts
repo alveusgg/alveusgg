@@ -1,5 +1,13 @@
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { decryptRecord, encryptRecord } from "@/server/db/encryption";
+
+vi.mock("@/env/server.mjs", () => {
+  return {
+    env: {
+      DATA_ENCRYPTION_PASSPHRASE: "Y6fK9EJsQQX85pmgeXjsTQdqKL5ioc37",
+    },
+  };
+});
 
 const mockRecord = {
   id: "1",
@@ -12,12 +20,12 @@ const mockRecord = {
 
 const mockEncryptedRecord = {
   id: "1",
-  name: "0fwQpw243HidhxIyybQqHfVEhx1ZzI7yqX+YOr5LHi7HJci7",
-  email: "r4zqDjibdRkWXUf++Fxk5yN/jMHX5CGbUd39tylYslU/Ko7Ew75VFohCK5ZQEnY=",
+  name: "jPNJft+LPw8ykfjEVdB7NAzCgKN/jx0d8gtoCV86yipx9gL4",
+  email: "OXQlCnHhebRqnU78wkHGgk1lvGt3sSrDUc6kzQQwn6d5zG775ZORCLvF5d8bDxM=",
   createdAt: mockRecord.createdAt,
   flag: true,
   count: 42,
-  salt: "IS7+eEBg1IKX6MN/5miHFA==",
+  salt: "tZyLgCOOYjRw4p3cjQQJXw==",
 };
 
 test("encrypt record", async () => {

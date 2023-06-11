@@ -1,11 +1,13 @@
+import { classes } from "@/utils/classes";
+
 import type { IconProps } from "@/icons/BaseIcon";
 import { BaseIcon } from "@/icons/BaseIcon";
 
-export default function IconLoading({ className = "", ...props }: IconProps) {
+export default function IconLoading({ className, ...props }: IconProps) {
   return (
     <BaseIcon
       viewBox="0 0 24 24"
-      className={`animate-spin-slow ${className}`}
+      className={classes("animate-spin-slow", className)}
       {...props}
     >
       <circle
