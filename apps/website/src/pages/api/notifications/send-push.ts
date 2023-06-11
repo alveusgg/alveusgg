@@ -9,7 +9,7 @@ import {
   iconUrl,
 } from "@/config/notifications";
 
-import type { NotificationPayload } from "@/utils/notifications";
+import type { NotificationPayload } from "@/utils/notification-payload";
 
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import {
