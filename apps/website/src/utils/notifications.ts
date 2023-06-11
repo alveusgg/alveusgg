@@ -1,38 +1,10 @@
-import { z } from "zod";
+import type { NotificationOptionsData } from "@/utils/notification-payload";
 import { getIsIos, getIsSafari } from "@/utils/browser-detection";
 import { welcomeMessage, welcomeTitle } from "@/config/notifications";
-
-export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
-export type NotificationOptionsData = z.infer<typeof notificationOptionsSchema>;
 
 if ({} as NotificationOptionsData satisfies NotificationOptions) {
   // Weird test to make sure that the types are compatible
 }
-
-export const notificationOptionsSchema = z.object({
-  //actions?: NotificationAction[];
-  badge: z.string().url(),
-  body: z.string(),
-  data: z.object({
-    notificationId: z.string().cuid(),
-    subscriptionId: z.string().cuid(),
-  }),
-  dir: z.enum(["ltr", "rtl", "auto"]),
-  icon: z.string().url().optional(),
-  image: z.string().url().optional(),
-  lang: z.string().length(2).optional(),
-  renotify: z.boolean().optional(),
-  requireInteraction: z.boolean().optional(),
-  silent: z.boolean().optional(),
-  tag: z.string(),
-  timestamp: z.number().optional(),
-  vibrate: z.number().or(z.array(z.number())).optional(),
-});
-
-export const notificationPayloadSchema = z.object({
-  title: z.string(),
-  options: notificationOptionsSchema,
-});
 
 export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
   if (!getIsSafari() || !getIsIos()) {
