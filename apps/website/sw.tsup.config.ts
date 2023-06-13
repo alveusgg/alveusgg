@@ -21,7 +21,7 @@ export default defineConfig((options) => ({
       ...Object.fromEntries(
         Object.entries(env)
           .filter(([_, value]) => value !== undefined)
-          // .filter(([key]) => key.startsWith("NEXT_PUBLIC_"))
+          .filter(([key]) => key.startsWith("NEXT_PUBLIC_"))
           // .filter(
           //   ([key, value]) =>
           //     key.startsWith("NEXT_PUBLIC_") && value !== undefined
