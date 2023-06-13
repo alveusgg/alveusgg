@@ -15,7 +15,7 @@ import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
-const staff = {
+export const staff = {
   connor: {
     image: connorObrienImage,
     name: "Connor O'Brien",

@@ -1,23 +1,23 @@
 "use client";
 import React, { useState } from "react";
 import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
-
 import type {
   Ambassador,
   AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import { kebabToCamel, sentenceToKebab } from "@/utils/string-case";
+import { staff } from "@/pages/about/staff";
 import ProfileCard from "./ProfileCard";
 import Link from "./Link";
 
 type LinkHoverProps = {
-  children?: never[] | string;
   species?: Ambassador["species"];
   enclosure?: EnclosureKey | undefined;
   href: string;
   name: string;
 };
+
 const nameToCamelCase = (name: string) => {
   const noSymbols = name.replace(/[{(/.)}]/g, "");
   const camelCased = noSymbols.replace("ñ", "n");
@@ -35,8 +35,9 @@ const LinkHover: React.FC<LinkHoverProps> = ({
 
   const camelName = nameToCamelCase(name);
   const img = getAmbassadorImages(camelName as AmbassadorKey)[0];
+  console.log(typeof staff.connor.image);
 
-  const enclosh = enclosures[enclosure as EnclosureKey].name;
+  const enclosureName = enclosures[enclosure as EnclosureKey].name;
 
   const onEnter = () => {
     setDelay(
@@ -57,7 +58,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
           name={name}
           img={img}
           species={species}
-          enclosure={enclosh}
+          enclosure={enclosureName}
         />
       )}
     </div>
