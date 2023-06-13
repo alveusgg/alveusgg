@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Popover } from "@headlessui/react";
 
-import { env } from "@/env/client.mjs";
+import { env } from "@/env/index.mjs";
 
 import IconCalendar from "@/icons/IconCalendar";
 import IconGoogleCalendar from "@/icons/IconGoogleCalendar";

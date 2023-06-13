@@ -1,6 +1,6 @@
 import { webcrypto as crypto } from "node:crypto";
 
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 import {
   decodeBase64UrlToArrayBuffer,
   encodeArrayBufferToBase64Url,

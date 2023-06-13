@@ -6,7 +6,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-import { env } from "@/env/client.mjs";
+import { env } from "@/env/index.mjs";
 import { trpc } from "./trpc";
 
 const SW_PATH = "/push/alveus/PushServiceWorker.js";
