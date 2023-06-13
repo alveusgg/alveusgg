@@ -3,7 +3,7 @@ import TwitchProvider from "next-auth/providers/twitch";
 // Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";

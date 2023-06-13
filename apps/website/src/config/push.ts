@@ -1,4 +1,4 @@
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 
 export const pushLang = env.PUSH_LANG || "en"; // two letter language code
 export const pushTextDir = env.PUSH_TEXT_DIR || "ltr"; // "ltr" or "rtl"

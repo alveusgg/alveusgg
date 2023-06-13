@@ -3,7 +3,7 @@ import React from "react";
 
 import headerImage from "@/assets/header.png";
 import { createImageUrl } from "@/utils/image";
-import { env } from "@/env/client.mjs";
+import { env } from "@/env/index.mjs";
 
 type MetaProps = {
   title?: string;

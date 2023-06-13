@@ -5,7 +5,7 @@ import {
   encodeArrayBufferToBase64Url,
 } from "@/utils/base64url";
 
-vi.mock("@/env/server.mjs", () => {
+vi.mock("@/env/index.mjs", () => {
   return {
     env: {},
   };

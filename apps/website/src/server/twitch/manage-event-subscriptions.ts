@@ -1,6 +1,6 @@
 import type { TwitchConfig } from "@/config/twitch";
 import { getTwitchConfig } from "@/config/twitch";
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 import {
   createSubscription,
   getSubscriptions,

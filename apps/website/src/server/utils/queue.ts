@@ -1,4 +1,4 @@
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 
 export function callEndpoint<T>(endpoint: string, body: T) {
   const bodyText = JSON.stringify(body);

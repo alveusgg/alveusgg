@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from "react";
 import { Duration } from "luxon";
 
-import { env } from "@/env/client.mjs";
+import { env } from "@/env/index.mjs";
 import {
   notificationCategories,
   notificationLinkSuggestions,

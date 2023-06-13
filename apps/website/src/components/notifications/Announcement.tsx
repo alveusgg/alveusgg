@@ -7,7 +7,7 @@ import { DateTime } from "luxon";
 import { NotificationIcon } from "@/components/notifications/NotificationIcon";
 import { ShareButton } from "@/components/shared/ShareButton";
 import DateTimeComponent from "@/components/content/DateTime";
-import { env } from "@/env/client.mjs";
+import { env } from "@/env/index.mjs";
 import { AddEventButton } from "@/components/shared/AddEventButton";
 import { formatDateTime } from "@/utils/datetime";
 import IconAngleRight from "@/icons/IconAngleRight";

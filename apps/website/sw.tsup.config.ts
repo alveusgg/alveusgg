@@ -1,6 +1,7 @@
-import { defineConfig } from "tsup";
 import "./build-scripts/env.mjs";
-import { env } from "@/env/client.mjs";
+
+import { defineConfig } from "tsup";
+import { env } from "@/env/index.mjs";
 
 export default defineConfig((options) => ({
   entry: {
@@ -20,7 +21,10 @@ export default defineConfig((options) => ({
     options.define = {
       ...Object.fromEntries(
         Object.entries(env)
-          .filter(([, value]) => value !== undefined)
+          .filter(
+            ([key, value]) =>
+              key.startsWith("NEXT_PUBLIC_") && value !== undefined
+          )
           .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)])
       ),
     };

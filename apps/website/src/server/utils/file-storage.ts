@@ -7,7 +7,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import add from "date-fns/add";
 
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 import { prisma } from "@/server/db/client";
 import { probeImageMeta } from "@/server/utils/probe-image-meta";
 

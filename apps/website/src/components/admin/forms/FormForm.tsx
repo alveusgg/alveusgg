@@ -4,7 +4,7 @@ import { useCallback, useState } from "react";
 import type { Form } from "@prisma/client";
 import { useRouter } from "next/router";
 
-import { env } from "@/env/client.mjs";
+import { env } from "@/env/index.mjs";
 
 import { trpc } from "@/utils/trpc";
 import { calcFormConfig } from "@/utils/forms";

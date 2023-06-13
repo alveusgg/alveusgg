@@ -8,7 +8,7 @@ import { createNotification } from "@/server/notifications";
 import { permissions } from "@/config/permissions";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { createFileStorageUpload } from "@/server/utils/file-storage";
-import { env } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 import {
   cancelNotification,
   getRecentNotifications,

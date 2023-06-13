@@ -22,3 +22,7 @@ yarn-error.log*
 
 # vercel config
 /.vercel/
+
+# IDE
+.vscode
+.idea
