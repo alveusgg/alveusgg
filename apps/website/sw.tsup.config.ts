@@ -20,10 +20,12 @@ export default defineConfig((options) => ({
     options.define = {
       ...Object.fromEntries(
         Object.entries(env)
-          .filter(
-            ([key, value]) =>
-              key.startsWith("NEXT_PUBLIC_") && value !== undefined
-          )
+          .filter(([_, value]) => value !== undefined)
+          // .filter(([key]) => key.startsWith("NEXT_PUBLIC_"))
+          // .filter(
+          //   ([key, value]) =>
+          //     key.startsWith("NEXT_PUBLIC_") && value !== undefined
+          // )
           .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)])
       ),
     };

@@ -1,7 +1,7 @@
 import { expect, test, vi } from "vitest";
 import { decryptRecord, encryptRecord } from "@/server/db/encryption";
 
-vi.mock("@/env/server.mjs", () => {
+vi.mock("@/env/index.mjs", () => {
   return {
     env: {
       DATA_ENCRYPTION_PASSPHRASE: "Y6fK9EJsQQX85pmgeXjsTQdqKL5ioc37",

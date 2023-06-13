@@ -8,7 +8,7 @@ import {
   decrypt,
 } from "@/server/utils/encryption";
 
-vi.mock("@/env/server.mjs", () => {
+vi.mock("@/env/index.mjs", () => {
   return {
     env: {
       DATA_ENCRYPTION_PASSPHRASE: "Y6fK9EJsQQX85pmgeXjsTQdqKL5ioc37",

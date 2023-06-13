@@ -16,7 +16,7 @@ import {
   createCipherText,
 } from "@/server/web-push/content-encryption";
 
-vi.mock("@/env/server.mjs", () => {
+vi.mock("@/env/index.mjs", () => {
   return {
     env: {},
   };

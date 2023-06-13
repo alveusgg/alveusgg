@@ -3,7 +3,7 @@ import { getVapidAuthorizationString } from "@/server/web-push/vapid";
 import { decodeBase64UrlString } from "@/utils/base64url";
 import { env } from "@/env/index.mjs";
 
-vi.mock("@/env/server.mjs", () => {
+vi.mock("@/env/index.mjs", () => {
   return {
     env: {
       WEB_PUSH_VAPID_SUBJECT: "mailto:admin@alveus.gg",
