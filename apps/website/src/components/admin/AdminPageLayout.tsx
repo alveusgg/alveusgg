@@ -1,7 +1,10 @@
 import React from "react";
 import Link, { type LinkProps } from "next/link";
+
+import { classes } from "@/utils/classes";
+
+import { type DefaultPageLayoutProps } from "@/components/DefaultPageLayout";
 import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
-import { type DefaultPageLayoutProps } from "../DefaultPageLayout";
 
 export type AdminMenuItem = {
   label: string;
@@ -25,9 +28,11 @@ const NavLink: React.FC<NavLinkProps> = (props) => {
   return (
     <Link
       {...props}
-      className={`rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30 ${
-        props.className || ""
-      } ${isActive ? "bg-black/20" : ""}`}
+      className={classes(
+        "rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30",
+        props.className,
+        isActive && "bg-black/20"
+      )}
     />
   );
 };

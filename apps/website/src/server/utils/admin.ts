@@ -13,6 +13,11 @@ const menuItems = [
     permission: permissions.viewDashboard,
   },
   {
+    label: "Notifications",
+    href: "/admin/notifications",
+    permission: permissions.manageNotifications,
+  },
+  {
     label: "Forms",
     href: "/admin/forms",
     permission: permissions.manageForms,

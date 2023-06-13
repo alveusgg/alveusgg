@@ -1,8 +1,8 @@
 import type { TwitchConfig } from "@/config/twitch";
 import { getTwitchConfig } from "@/config/twitch";
-import type { StreamsResponse } from "../../utils/twitch-api";
-import { getStreamsForChannels } from "../../utils/twitch-api";
-import { prisma } from "../../db/client";
+import type { StreamsResponse } from "../utils/twitch-api";
+import { getStreamsForChannels } from "../utils/twitch-api";
+import { prisma } from "../db/client";
 
 const SERVICE_TWITCH = "twitch";
 const EVENT_SOURCE_CRON_LIVE_CHECK = "cron-live-check";

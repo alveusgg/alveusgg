@@ -1,7 +1,7 @@
 import {
-  NotificationOptionsData,
+  type NotificationOptionsData,
   notificationPayloadSchema,
-} from "../utils/notifications";
+} from "../utils/notification-payload";
 
 declare const self: ServiceWorkerGlobalScope;
 

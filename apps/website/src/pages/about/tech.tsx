@@ -252,23 +252,23 @@ const enclosures = {
       },
     },
   },
-  // marmosets: {
-  //   title: "Marmosets",
-  //   items: {
-  //     indoor: {
-  //       title: "Indoor",
-  //       description: "???",
-  //     },
-  //     outdoor: {
-  //       title: "Outdoor",
-  //       description: "???",
-  //     },
-  //     audio: {
-  //       title: "Audio",
-  //       description: "???",
-  //     },
-  //   },
-  // },
+  marmosets: {
+    title: "Marmosets",
+    items: {
+      indoor: {
+        title: "Indoor",
+        description: "Axis M5075-G (PTZ)",
+      },
+      outdoor: {
+        title: "Outdoor",
+        description: "Axis M5525-E (PTZ)",
+      },
+      audio: {
+        title: "Audio",
+        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+      },
+    },
+  },
   georgie: {
     title: "Georgie",
     items: {

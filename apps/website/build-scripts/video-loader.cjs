@@ -372,9 +372,9 @@ const videoLoader = async (context, content) => {
  */
 const cacheCleanup = async () => {
   // Get all files in the cache dir
-  const cacheFiles = await readdir(cacheDir, { withFileTypes: true }).then(
-    (file) => file.filter((f) => f.isFile()).map((f) => f.name)
-  ).catch(() => []);
+  const cacheFiles = await readdir(cacheDir, { withFileTypes: true })
+    .then((file) => file.filter((f) => f.isFile()).map((f) => f.name))
+    .catch(() => []);
 
   // Remove all files last accessed over 24 hours ago
   const cutoff = Date.now() - 24 * 60 * 60 * 1000;

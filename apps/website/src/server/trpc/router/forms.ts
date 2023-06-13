@@ -7,7 +7,7 @@ import { getUserFollowsBroadcaster } from "@/server/utils/twitch-api";
 import {
   type OutgoingWebhookType,
   triggerOutgoingWebhook,
-} from "@/server/actions/outgoing-webhooks";
+} from "@/server/outgoing-webhooks";
 import { router, protectedProcedure } from "@/server/trpc/trpc";
 import { createEntry, formEntrySchema } from "@/server/db/forms";
 

@@ -4,6 +4,12 @@ import IconTwitter from "@/icons/IconTwitter";
 import IconTwitch from "@/icons/IconTwitch";
 import IconYouTube from "@/icons/IconYouTube";
 
+type SocialLink = {
+  link: string;
+  title: string;
+  icon: React.ComponentType;
+};
+
 const socials = {
   twitch: {
     link: "https://twitch.tv/alveussanctuary",
@@ -30,6 +36,6 @@ const socials = {
     title: "YouTube",
     icon: IconYouTube,
   },
-};
+} satisfies Record<string, SocialLink>;
 
 export default socials;

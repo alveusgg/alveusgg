@@ -40,7 +40,7 @@ export function encodeSalt(salt: Uint8Array) {
 async function importEncryptionKey(key: string) {
   const keyBuffer = encoder.encode(key);
   if (keyBuffer.length !== ENCRYPTION_PASSPHRASE_LENGTH)
-    throw new Error("Invalid salt length");
+    throw new Error("Invalid key length");
 
   return crypto.subtle.importKey(
     "raw",
@@ -124,6 +124,7 @@ export async function decrypt(
     );
     return decoder.decode(decryptedBuffer);
   } catch (e) {
+    console.error(e);
     throw new Error("Could not decrypt"); // Re-throw with a more generic error message to avoid leaking information
   }
 }

@@ -5,6 +5,12 @@
  */
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
+import {
+  checkBase64UrlEncoded,
+  checkPrivateKey,
+  checkPublicKey,
+  checkSubject,
+} from "./vapid.mjs";
 
 export const env = createEnv({
   server: {
@@ -30,8 +36,12 @@ export const env = createEnv({
     TWITCH_EVENTSUB_CALLBACK: z.string(),
     ACTION_API_SECRET: z.string(),
     SUPER_USER_IDS: z.string(),
-    WEB_PUSH_VAPID_PRIVATE_KEY: z.string().regex(/^[A-Za-z0-9\-_]+$/),
-    WEB_PUSH_VAPID_SUBJECT: z.string(),
+    WEB_PUSH_VAPID_PRIVATE_KEY: z
+      .string()
+      .superRefine(checkBase64UrlEncoded)
+      .superRefine(checkPrivateKey)
+      .optional(),
+    WEB_PUSH_VAPID_SUBJECT: z.string().superRefine(checkSubject).optional(),
     OPEN_WEATHER_MAP_API_KEY: z.string().optional(),
     OPEN_WEATHER_MAP_API_LAT: z.string().optional(),
     OPEN_WEATHER_MAP_API_LON: z.string().optional(),
@@ -41,6 +51,13 @@ export const env = createEnv({
     FILE_STORAGE_REGION: z.string(),
     FILE_STORAGE_SECRET: z.string(),
     FILE_STORAGE_BUCKET: z.string(),
+    UPSTASH_QSTASH_URL: z.string().url().optional(),
+    UPSTASH_QSTASH_KEY: z.string().optional(),
+    PUSH_LANG: z.string().optional(),
+    PUSH_TEXT_DIR: z.enum(["ltr", "rtl"]).optional(),
+    PUSH_BATCH_SIZE: z.number().int().min(1).optional(),
+    PUSH_MAX_ATTEMPTS: z.number().int().min(1).optional(),
+    PUSH_RETRY_DELAY_MS: z.number().int().min(1).optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -52,8 +69,14 @@ export const env = createEnv({
       .refine((url) => !url.endsWith("/")),
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z
       .string()
-      .regex(/^[A-Za-z0-9\-_]+$/),
+      .superRefine(checkBase64UrlEncoded)
+      .superRefine(checkPublicKey)
+      .optional(),
     NEXT_PUBLIC_NOINDEX: z.string().optional(),
+    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED: z
+      .boolean()
+      .optional()
+      .default(false),
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -87,6 +110,13 @@ export const env = createEnv({
     FILE_STORAGE_REGION: process.env.FILE_STORAGE_REGION,
     FILE_STORAGE_SECRET: process.env.FILE_STORAGE_SECRET,
     FILE_STORAGE_BUCKET: process.env.FILE_STORAGE_BUCKET,
+    UPSTASH_QSTASH_URL: process.env.UPSTASH_QSTASH_URL,
+    UPSTASH_QSTASH_KEY: process.env.UPSTASH_QSTASH_KEY,
+    PUSH_LANG: process.env.PUSH_LANG,
+    PUSH_TEXT_DIR: process.env.PUSH_TEXT_DIR,
+    PUSH_BATCH_SIZE: process.env.PUSH_BATCH_SIZE,
+    PUSH_MAX_ATTEMPTS: process.env.PUSH_MAX_ATTEMPTS,
+    PUSH_RETRY_DELAY_MS: process.env.PUSH_RETRY_DELAY_MS,
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV ?? "development",
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
@@ -96,6 +126,8 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED:
+      process.env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED === "true",
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

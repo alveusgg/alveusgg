@@ -120,7 +120,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
 
                       return (
                         <tr key={entry.id} className="border-t border-gray-600">
-                          <td className={`${cellClasses}`}>
+                          <td className={cellClasses}>
                             {featuredImage && (
                               <Image
                                 width={150}
@@ -133,12 +133,12 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                           <td className={`${cellClasses} w-[40%]`}>
                             {entry.title}
                           </td>
-                          <td className={`${cellClasses}`}>
+                          <td className={cellClasses}>
                             {status === "approved"
                               ? "Approved"
                               : "Review pending"}
                           </td>
-                          <td className={`${cellClasses}`}>
+                          <td className={cellClasses}>
                             <DateTime
                               date={entry.createdAt}
                               format={{

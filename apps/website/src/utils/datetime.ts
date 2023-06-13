@@ -83,7 +83,7 @@ export const parseAmbassadorDate = (
 
   if (!isNaN(d) && !isNaN(m) && !isNaN(y)) return new Date(y, m - 1, d);
   if (!isNaN(m) && !isNaN(y)) return new Date(y, m - 1);
-  if (!isNaN(y)) return new Date(y);
+  if (!isNaN(y)) return new Date(y, 0);
 
   return null;
 };
@@ -92,17 +92,21 @@ export const sortAmbassadorDate = (
   a: Ambassador["birth"],
   b: Ambassador["birth"]
 ): number => {
-  const parsedA = typeof a === "string" ? parseAmbassadorDate(a) : null;
-  const parsedB = typeof b === "string" ? parseAmbassadorDate(b) : null;
+  const parsedA = (
+    typeof a === "string" ? parseAmbassadorDate(a) : null
+  )?.getTime();
+  const parsedB = (
+    typeof b === "string" ? parseAmbassadorDate(b) : null
+  )?.getTime();
 
   // If they match (same date or both unknown), no change
   if (parsedA === parsedB) return 0;
 
   // If the first date is unknown, the second date moves up
-  if (parsedA === null) return 1;
+  if (parsedA === undefined) return 1;
 
   // If the second date is unknown, the first date moves up
-  if (parsedB === null) return -1;
+  if (parsedB === undefined) return -1;
 
   // Otherwise, sort by date
   return parsedA > parsedB ? -1 : 1;

@@ -1,8 +1,9 @@
-import { knownPushServicesRegex } from "./web-push/known-push-services";
-import { getVapidAuthorizationString } from "./web-push/vapid";
-import { encryptContent } from "./web-push/content-encryption";
-import type { WebPushHttpsRequestOptions } from "./web-push/https-transport";
-import { requestHttps } from "./web-push/https-transport";
+import { WEB_PUSH_MAX_TTL } from "./constants";
+import { knownPushServicesRegex } from "./known-push-services";
+import { getVapidAuthorizationString } from "./vapid";
+import { encryptContent } from "./content-encryption";
+import type { WebPushHttpsRequestOptions } from "./https-transport";
+import { requestHttps } from "./https-transport";
 
 type PushNotificationBase64Url = {
   endpoint: string;
@@ -22,21 +23,16 @@ type AdditionalHeaderName =
     >;
 
 type PushRequestOptions = {
-  vapidDetails: {
-    subject: string;
-    publicKey: string;
-    privateKey: string;
-  };
   headers?: Record<AdditionalHeaderName, string>;
   TTL?: number;
 };
 
 type HttpsPushRequestOptions = PushRequestOptions &
-  Pick<WebPushHttpsRequestOptions, "agent" | "timeout">;
+  Pick<WebPushHttpsRequestOptions, "timeout">;
 
-const DEFAULT_TTL = 4 * 7 * 24 * 60 * 60; // seconds
+const DEFAULT_TTL = WEB_PUSH_MAX_TTL;
 
-function generateRequestDetails(
+async function generateRequestDetails(
   subscription: PushNotificationBase64Url,
   payload: string | Buffer | null,
   options: PushRequestOptions
@@ -51,7 +47,6 @@ function generateRequestDetails(
     throw new Error("The subscription endpoint not a known endpoint.");
   }
 
-  const currentVapidDetails = options.vapidDetails;
   const timeToLive = options.TTL ?? DEFAULT_TTL;
 
   if (timeToLive < 0) {
@@ -66,25 +61,22 @@ function generateRequestDetails(
   }
 
   const url = new URL(subscription.endpoint);
-  const body = encryptContent(
-    subscription.keys.auth,
+  const body = await encryptContent(
     subscription.keys.p256dh,
+    subscription.keys.auth,
     Buffer.from(payload || "")
-  ).cipherText;
+  );
 
   return {
     endpoint: subscription.endpoint,
     headers: {
       ...options.headers,
       TTL: String(timeToLive),
-      "Content-Length": String(body.length),
+      "Content-Length": String(body.byteLength),
       "Content-Type": "application/octet-stream",
       "Content-Encoding": "aes128gcm",
-      Authorization: getVapidAuthorizationString(
-        `${url.protocol}//${url.host}`,
-        currentVapidDetails.subject,
-        currentVapidDetails.publicKey,
-        currentVapidDetails.privateKey
+      Authorization: await getVapidAuthorizationString(
+        `${url.protocol}//${url.host}`
       ),
     },
     body: body,
@@ -96,16 +88,14 @@ export async function sendWebPushNotification(
   payload: string | Buffer | null,
   options: HttpsPushRequestOptions
 ) {
-  const { endpoint, body, headers } = generateRequestDetails(
+  const { endpoint, body, headers } = await generateRequestDetails(
     subscription,
     payload,
     options
   );
 
-  // TODO: Support fetch instead of node https?
   return await requestHttps(endpoint, body, {
     headers: headers,
     timeout: options.timeout,
-    agent: options.agent,
   });
 }

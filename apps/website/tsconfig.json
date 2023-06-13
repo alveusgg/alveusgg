@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2017",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -23,18 +19,12 @@
       "@/*": ["./src/*"],
       "photoswipe/lightbox": [
         "./node_modules/photoswipe/dist/types/lightbox/lightbox.d.ts"
+      ],
+      "canvas-hypertxt": [
+        "./node_modules/canvas-hypertxt/dist/ts/src/index.d.ts"
       ]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "**/*.cjs",
-    "**/*.mjs"
-  ],
-  "exclude": [
-    "node_modules",
-    "src/sw"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.cjs", "**/*.mjs"],
+  "exclude": ["node_modules", "src/sw"]
 }

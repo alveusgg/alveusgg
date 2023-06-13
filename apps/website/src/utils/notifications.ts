@@ -1,42 +1,42 @@
-import { z } from "zod";
-
-export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
-export type NotificationOptionsData = z.infer<typeof notificationOptionsSchema>;
+import type { NotificationOptionsData } from "@/utils/notification-payload";
+import { getIsIos, getIsSafari } from "@/utils/browser-detection";
+import { welcomeMessage, welcomeTitle } from "@/config/notifications";
 
 if ({} as NotificationOptionsData satisfies NotificationOptions) {
   // Weird test to make sure that the types are compatible
 }
 
-export const notificationOptionsSchema = z.object({
-  //actions?: NotificationAction[];
-  badge: z.string().url(),
-  body: z.string(),
-  data: z.object({
-    notificationId: z.string().cuid(),
-    subscriptionId: z.string().cuid(),
-  }),
-  dir: z.enum(["ltr", "rtl", "auto"]),
-  icon: z.string().url().optional(),
-  image: z.string().url().optional(),
-  lang: z.string().length(2).optional(),
-  renotify: z.boolean().optional(),
-  requireInteraction: z.boolean().optional(),
-  silent: z.boolean().optional(),
-  tag: z.string(),
-  timestamp: z.number().optional(),
-  vibrate: z.number().or(z.array(z.number())).optional(),
-});
+export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
+  if (!getIsSafari() || !getIsIos()) {
+    return false;
+  }
 
-export const notificationPayloadSchema = z.object({
-  title: z.string(),
-  options: notificationOptionsSchema,
-});
+  const match = window.navigator.userAgent.match(/Version\/(\d+)(?:\.(\d+))?/);
+  if (!match || !match[1] || !match[2]) {
+    return false;
+  }
 
-// TODO: Add iOS Safari
+  const majorVersion: number = parseInt(match[1], 10);
+  const minorVersion: number = match[2] ? parseInt(match[2], 10) : 0;
+  if (majorVersion <= 16 && !(majorVersion === 16 && minorVersion >= 4)) {
+    return false;
+  }
+
+  return (
+    !("standalone" in window.navigator) || window.navigator.standalone !== true
+  );
+}
+
 export const notificationHelpEntries = {
+  "Safari/iOS": {
+    label: "Safari 16.4 on iOS (or newer)",
+    includes: [/Safari/, /iPhone OS/],
+    excludes: [/Chrome|Edge|Firefox|Chromium|CriOS/],
+    link: "https://support.apple.com/guide/iphone/change-notification-settings-iph7c3d96bab/ios",
+  },
   "Chrome/Android": {
     label: "Google Chrome on Android",
-    includes: [/Android/i, /Chrome/i],
+    includes: [/Android/, /Chrome/],
     excludes: [],
     link: "https://support.google.com/chrome/answer/3220216?co=GENIE.Platform%3DAndroid",
   },
@@ -67,7 +67,7 @@ export const notificationHelpEntries = {
   Safari: {
     label: "Apple Safari on Mac OS",
     includes: [/Safari/],
-    excludes: [/Chrome/, /Edge/, /Firefox/],
+    excludes: [/Chrome|Edge|Firefox|Chromium|CriOS/],
     link: "https://support.apple.com/guide/safari/sfri40734/",
   },
   MacOS: {
@@ -76,7 +76,7 @@ export const notificationHelpEntries = {
     excludes: [],
     link: "https://support.apple.com/guide/mac-help/change-notifications-settings-mh40583/mac",
   },
-};
+} as const;
 
 export function sendWelcomeNotification(
   permission: "default" | "denied" | "granted",
@@ -84,17 +84,19 @@ export function sendWelcomeNotification(
 ) {
   // If the user accepts, let's create a notification
   if (permission === "granted") {
+    // If the service worker is registered, and it's ready use that to show the notification
     if (swr) {
       swr
-        .showNotification("Welcome!", {
-          body: "Push notifications are set up.",
+        .showNotification(welcomeTitle, {
+          body: welcomeMessage,
         })
         .then(() => {
           // ignore
         });
     } else {
-      new Notification("Welcome!", {
-        body: "Notifications are set up.",
+      // Otherwise use the "normal" Notification API
+      new Notification(welcomeTitle, {
+        body: welcomeMessage,
       });
     }
   }
