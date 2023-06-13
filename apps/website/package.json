@@ -73,7 +73,6 @@
     "react-textarea-autosize": "^8.4.1",
     "remark-heading-id": "^1.0.0",
     "sharp": "^0.31.3",
-    "simple-icons": "^8.15.0",
     "slugify": "^1.6.6",
     "smooth-scroll-into-view-if-needed": "^2.0.0",
     "superjson": "1.12.1",

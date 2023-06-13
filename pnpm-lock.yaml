@@ -161,9 +161,6 @@ importers:
       sharp:
         specifier: ^0.31.3
         version: 0.31.3
-      simple-icons:
-        specifier: ^8.15.0
-        version: 8.15.0
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
@@ -8103,11 +8100,6 @@ packages:
       decompress-response: 6.0.0
       once: 1.4.0
       simple-concat: 1.0.1
-    dev: false
-
-  /simple-icons@8.15.0:
-    resolution: {integrity: sha512-W9USb8Yic98wAZc9HpjMyH/wrJZx/BRqGK82SsmdApFaO5XqYe5peWV5A18XLYIgdcAsUC6PS2Z0STJoHdNXXQ==}
-    engines: {node: '>=0.12.18'}
     dev: false
 
   /simple-swizzle@0.2.2:

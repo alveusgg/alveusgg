@@ -1,17 +1,12 @@
 import React, { useCallback, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 
 import { GlobeAltIcon } from "@heroicons/react/24/outline";
-import twitchIcon from "simple-icons/icons/twitch.svg";
-import twitterIcon from "simple-icons/icons/twitter.svg";
-import youtubeIcon from "simple-icons/icons/youtube.svg";
-import instagramIcon from "simple-icons/icons/instagram.svg";
-import tiktokIcon from "simple-icons/icons/tiktok.svg";
-
-const Icon: React.FC<{ src: string; alt?: string }> = ({ src, alt = "" }) => (
-  <Image className="h-8 w-8" src={src} alt={alt} />
-);
+import IconTwitch from "@/icons/IconTwitch";
+import IconTwitter from "@/icons/IconTwitter";
+import IconYouTube from "@/icons/IconYouTube";
+import IconInstagram from "@/icons/IconInstagram";
+import IconTikTok from "@/icons/IconTikTok";
 
 const GiveawayCheck: React.FC<{
   name: string;
@@ -87,7 +82,7 @@ export const GiveawayChecks: React.FC = () => (
       label="Follow AlveusSanctuary on Twitch"
       url="https://twitch.tv/AlveusSanctuary"
     >
-      <Icon src={twitchIcon} />
+      <IconTwitch size={32} />
       <span>Follow AlveusSanctuary on Twitch</span>
     </GiveawayCheck>
 
@@ -96,7 +91,7 @@ export const GiveawayChecks: React.FC = () => (
       label="Follow @AlveusSanctuary on Twitter"
       url="https://twitter.com/AlveusSanctuary"
     >
-      <Icon src={twitterIcon} />
+      <IconTwitter size={32} />
       <span>Follow @AlveusSanctuary on Twitter</span>
     </GiveawayCheck>
 
@@ -105,7 +100,7 @@ export const GiveawayChecks: React.FC = () => (
       label="Subscribe to AlveusSanctuary on YouTube"
       url="https://www.youtube.com/alveussanctuary?sub_confirmation=1"
     >
-      <Icon src={youtubeIcon} />
+      <IconYouTube size={32} />
       <span>Subscribe to AlveusSanctuary on YouTube</span>
     </GiveawayCheck>
 
@@ -114,7 +109,7 @@ export const GiveawayChecks: React.FC = () => (
       label="Follow @alveussanctuary on Instagram"
       url="https://www.instagram.com/alveussanctuary/"
     >
-      <Icon src={instagramIcon} />
+      <IconInstagram size={32} />
       <span>Follow @alveussanctuary on Instagram</span>
     </GiveawayCheck>
 
@@ -123,7 +118,7 @@ export const GiveawayChecks: React.FC = () => (
       label="Follow @alveussanctuary on TikTok"
       url="https://www.tiktok.com/@alveussanctuary"
     >
-      <Icon src={tiktokIcon} />
+      <IconTikTok size={32} />
       <span>Follow @alveussanctuary on TikTok</span>
     </GiveawayCheck>
 

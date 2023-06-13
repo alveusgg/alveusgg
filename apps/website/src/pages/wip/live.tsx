@@ -3,9 +3,10 @@ import type { InferGetStaticPropsType, NextPage } from "next";
 //import Link from "next/link";
 //import { GlobeAltIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
-//import paypalIcon from "simple-icons/icons/paypal.svg";
-//import amazonIcon from "simple-icons/icons/amazon.svg";
-//import twitchIcon from "simple-icons/icons/twitch.svg";
+// TODO: Replace with real icons
+// import paypalIcon from "simple-icons/icons/paypal.svg";
+// import amazonIcon from "simple-icons/icons/amazon.svg";
+// import twitchIcon from "simple-icons/icons/twitch.svg";
 
 import { TwitchEmbed } from "@/components/TwitchEmbed";
 import Meta from "@/components/content/Meta";

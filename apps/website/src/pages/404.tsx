@@ -4,6 +4,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import { GiveawayChecks } from "@/components/forms/GiveawayChecks";
 
 const NotFound: NextPage = () => {
   return (
@@ -20,6 +21,8 @@ const NotFound: NextPage = () => {
       <Section className="flex-grow">
         <Heading>404 - Page Not Found</Heading>
       </Section>
+
+      <GiveawayChecks />
     </>
   );
 };
