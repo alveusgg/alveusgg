@@ -61,10 +61,10 @@ export function NotificationSettings() {
 
   return (
     <div className="flex flex-col">
-      <p className="p-4 leading-tight">Notification settings</p>
+      <p className="px-7 pb-2 pt-4 leading-tight">Notification settings</p>
 
       {isInstallAsPWARequired && (
-        <div className="min-w-[320px] px-4 pb-4">
+        <div className="min-w-[300px] px-7 pb-4">
           <p>
             You can receive notifications if you add this site to your Home
             Screen.
@@ -101,7 +101,7 @@ export function NotificationSettings() {
       )}
 
       {!isClientSupported && !isInstallAsPWARequired && (
-        <NotificationErrorMessage className="m-2 flex flex-col gap-2">
+        <NotificationErrorMessage className="m-3 flex flex-col gap-2">
           <p>Your browser does not support push notifications!</p>
 
           {getIsIos() && !getIsSafari() && (

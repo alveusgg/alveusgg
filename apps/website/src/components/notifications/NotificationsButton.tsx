@@ -6,11 +6,13 @@ import { classes } from "@/utils/classes";
 import IconNotification from "@/icons/IconNotification";
 import IconNotificationOn from "@/icons/IconNotificationOn";
 import IconNotificationOff from "@/icons/IconNotificationOff";
+import IconAngleRight from "@/icons/IconAngleRight";
+
 import {
   NotificationSettings,
   useNotificationStatus,
 } from "@/components/notifications/NotificationSettings";
-import IconAngleRight from "@/icons/IconAngleRight";
+import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
 
 export const NotificationsButton = ({
   openDirectionX = "left",
@@ -63,7 +65,7 @@ export const NotificationsButton = ({
       >
         <Popover.Panel
           className={classes(
-            `absolute z-30 -mt-0.5 flex min-w-[240px] max-w-[calc(80vw-50px)] flex-col rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg`,
+            `absolute z-30 -mt-0.5 flex min-w-[240px] max-w-[calc(80vw-50px)] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg`,
             openDirectionX === "left" ? "right-0" : "left-0",
             openDirectionY === "top" ? "bottom-full" : "top-full"
           )}
@@ -72,10 +74,14 @@ export const NotificationsButton = ({
 
           <div className="mx-2 border-t opacity-30"></div>
 
-          <p className="p-4">
-            <Popover.Button as={Link} href="/updates" className="block">
+          <p className="px-2 pb-2">
+            <Popover.Button
+              as={Link}
+              href="/updates"
+              className={navLinkClassesSub}
+            >
               Show all updates
-              <IconAngleRight className="ml-1 inline-block" size={20} />
+              <IconAngleRight className="-mt-px ml-1 inline-block" size={18} />
             </Popover.Button>
           </p>
         </Popover.Panel>

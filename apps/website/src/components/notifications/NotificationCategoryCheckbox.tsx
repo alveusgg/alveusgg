@@ -1,5 +1,9 @@
 import type { ChangeEvent } from "react";
 
+import { classes } from "@/utils/classes";
+
+import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
+
 export const NotificationCategoryCheckbox: React.FC<{
   tag: string;
   label: string;
@@ -12,7 +16,10 @@ export const NotificationCategoryCheckbox: React.FC<{
   return (
     <label
       htmlFor={`tag-${tag}`}
-      className="relative flex cursor-pointer items-start rounded-xl p-2 hover:bg-black/30"
+      className={classes(
+        navLinkClassesSub,
+        "relative flex cursor-pointer items-start"
+      )}
     >
       <div className="flex h-5 items-center">
         <input
