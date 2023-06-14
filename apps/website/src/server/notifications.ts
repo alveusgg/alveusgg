@@ -1,3 +1,7 @@
+import type { Notification } from "@prisma/client";
+
+import { env } from "@/env/index.mjs";
+
 import {
   defaultTag,
   defaultTitle,
@@ -10,12 +14,9 @@ import { callEndpoint } from "@/server/utils/queue";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
 import type { RetryPushesOptions } from "@/pages/api/notifications/batched-retry-notification-pushes";
+import { triggerDiscordChannelWebhookToEveryone } from "@/server/discord";
 
-const exponentialDelays = new Array(pushMaxAttempts + 1)
-  .fill(0)
-  .map((_, i) => pushRetryDelay * Math.pow(2, i));
-
-export async function createNotification(data: {
+type CreateNotificationData = {
   tag: string;
   text?: string;
   linkUrl?: string;
@@ -23,7 +24,15 @@ export async function createNotification(data: {
   imageUrl?: string;
   scheduledStartAt?: Date | null;
   scheduledEndAt?: Date | null;
-}) {
+  isPush?: boolean;
+  isDiscord?: boolean;
+};
+
+const exponentialDelays = new Array(pushMaxAttempts + 1)
+  .fill(0)
+  .map((_, i) => pushRetryDelay * Math.pow(2, i));
+
+export async function createNotification(data: CreateNotificationData) {
   const tagConfig = notificationCategories.find((cat) => cat.tag === data.tag);
   if (tagConfig === undefined) {
     throw Error("Notification tag unknown!");
@@ -42,47 +51,22 @@ export async function createNotification(data: {
       urgency: tagConfig.urgency,
       scheduledStartAt: data.scheduledStartAt || null,
       scheduledEndAt: data.scheduledEndAt || null,
+      isPush: data.isPush || false,
+      isDiscord: data.isDiscord || false,
     },
   });
 
-  // Get subscriptions in batches and delegate them to separate workers
-  const requests = [];
-  let i = 0;
-  while (true) {
-    const subscriptions = await prisma.pushSubscription.findMany({
-      select: { id: true },
-      where: {
-        deletedAt: null,
-        p256dh: { not: { equals: null } },
-        auth: { not: { equals: null } },
-        tags: {
-          some: {
-            name: data.tag,
-            value: "1",
-          },
-        },
-      },
-      take: pushBatchSize,
-      skip: pushBatchSize * i++,
-    });
+  const tasks = [];
 
-    if (subscriptions.length === 0) {
-      break;
-    }
-
-    requests.push(
-      callEndpoint<CreatePushesOptions>(
-        `/api/notifications/batched-create-notification-pushes`,
-        {
-          notificationId: notification.id,
-          expiresAt: expiresAt.getTime(),
-          subscriptionIds: subscriptions.map((s) => s.id),
-        }
-      )
-    );
+  if (notification.isPush) {
+    tasks.push(createPushNotifications(notification));
   }
 
-  await Promise.allSettled(requests);
+  if (notification.isDiscord) {
+    tasks.push(createDiscordNotifications(notification));
+  }
+
+  await Promise.all(tasks);
 }
 
 export async function resendNotification(notificationId: string) {
@@ -100,6 +84,8 @@ export async function resendNotification(notificationId: string) {
     text: oldNotification.message,
     scheduledEndAt: oldNotification.scheduledEndAt,
     scheduledStartAt: oldNotification.scheduledStartAt,
+    isPush: oldNotification.isPush,
+    isDiscord: oldNotification.isDiscord,
   });
 }
 
@@ -119,7 +105,7 @@ export async function retryPendingNotificationPushes() {
         processingStatus: "PENDING",
         expiresAt: { gte: now },
         OR: exponentialDelays
-          .slice(1) // skipping initial one. that should be handled by sendNotification
+          .slice(1) // skipping initial one. that should be handled by createNotification
           .map((delay, attempts) => ({
             attempts: attempts,
             failedAt: { lte: new Date(now.getTime() - delay) },
@@ -147,4 +133,88 @@ export async function retryPendingNotificationPushes() {
   }
 
   await Promise.allSettled(requests);
+}
+
+async function createPushNotifications(notification: Notification) {
+  // Get subscriptions in batches and delegate them to separate workers
+  const requests = [];
+  let i = 0;
+  while (true) {
+    const subscriptions = await prisma.pushSubscription.findMany({
+      select: { id: true },
+      where: {
+        deletedAt: null,
+        p256dh: { not: { equals: null } },
+        auth: { not: { equals: null } },
+        tags: notification.tag
+          ? {
+              some: {
+                name: notification.tag,
+                value: "1",
+              },
+            }
+          : undefined,
+      },
+      take: pushBatchSize,
+      skip: pushBatchSize * i++,
+    });
+
+    if (subscriptions.length === 0) {
+      break;
+    }
+
+    requests.push(
+      callEndpoint<CreatePushesOptions>(
+        `/api/notifications/batched-create-notification-pushes`,
+        {
+          notificationId: notification.id,
+          expiresAt: notification.expiresAt.getTime(),
+          subscriptionIds: subscriptions.map((s) => s.id),
+        }
+      )
+    );
+  }
+
+  return Promise.allSettled(requests);
+}
+
+async function createDiscordNotifications(notification: Notification) {
+  let webhookUrls: string[] = [];
+  switch (notification.tag) {
+    case "stream":
+      webhookUrls =
+        env.DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION || webhookUrls;
+      break;
+    case "announcement":
+      webhookUrls =
+        env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT || webhookUrls;
+      break;
+    default:
+  }
+
+  const tasks = [];
+  for (const webhookUrl of webhookUrls) {
+    const relativeNotificationUrl = `/notifications/${notification.id}`;
+    const fullAbsoluteNotificationUrl = new URL(
+      relativeNotificationUrl,
+      env.NEXT_PUBLIC_BASE_URL
+    ).toString();
+    const content = `${notification.title}\n${notification.message}\n${fullAbsoluteNotificationUrl}`;
+
+    tasks.push(
+      triggerDiscordChannelWebhookToEveryone({ content, webhookUrl }).then(
+        async (webhook) => {
+          await prisma.notificationDiscordChannelWebhook.create({
+            data: {
+              notificationId: notification.id,
+              outgoingWebhookId: webhook.id,
+            },
+          });
+          return webhook;
+        }
+      )
+    );
+  }
+
+  return Promise.all(tasks);
 }

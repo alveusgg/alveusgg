@@ -32,7 +32,7 @@ const localDatetimeAsDateSchema = z
   .transform((str) => (str ? inputValueDatetimeLocalToUtc(str) : null));
 
 export const adminNotificationsRouter = router({
-  sendNotification: permittedProcedure
+  createNotification: permittedProcedure
     .input(
       z.object({
         tag: z.string().min(2).max(100),
@@ -42,6 +42,8 @@ export const adminNotificationsRouter = router({
         imageUrl: z.string().url().optional(),
         scheduledStartAt: localDatetimeAsDateSchema.optional(),
         scheduledEndAt: localDatetimeAsDateSchema.optional(),
+        isPush: z.boolean().optional(),
+        isDiscord: z.boolean().optional(),
       })
     )
     .mutation(async ({ input }) => createNotification(input)),

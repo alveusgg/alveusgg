@@ -43,12 +43,14 @@ async function createOutgoingWebhook({
   body,
   success,
   userId,
+  retry = false,
 }: {
   url: string;
   type: string;
   body: string;
   success: boolean;
   userId?: string;
+  retry?: boolean;
 }) {
   return await prisma.outgoingWebhook.create({
     data: {
@@ -59,6 +61,7 @@ async function createOutgoingWebhook({
       deliveredAt: success ? new Date() : undefined,
       failedAt: success ? undefined : new Date(),
       attempts: 1,
+      retry,
     },
   });
 }
@@ -81,14 +84,23 @@ export async function triggerOutgoingWebhook({
   type,
   body,
   userId,
+  retry = false,
 }: {
   url: string;
   type: string;
   body: string;
   userId?: string;
-}) {
+  retry?: boolean;
+}): Promise<OutgoingWebhook> {
   const success = await tryToCallOutgoingWebhook(url, body, type);
-  return await createOutgoingWebhook({ url, type, body, userId, success });
+  return createOutgoingWebhook({
+    url,
+    type,
+    body,
+    userId,
+    success,
+    retry,
+  });
 }
 
 export async function retryOutgoingWebhook(outgoingWebhook: OutgoingWebhook) {

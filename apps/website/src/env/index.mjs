@@ -12,6 +12,12 @@ import {
   checkSubject,
 } from "./vapid.mjs";
 
+const listOfUrlsSchema = z
+  .string()
+  .transform((val) =>
+    val.split(" ").map((url) => z.string().url().parse(url.trim()).toString())
+  );
+
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
@@ -58,6 +64,10 @@ export const env = createEnv({
     PUSH_BATCH_SIZE: z.number().int().min(1).optional(),
     PUSH_MAX_ATTEMPTS: z.number().int().min(1).optional(),
     PUSH_RETRY_DELAY_MS: z.number().int().min(1).optional(),
+    DISCORD_BOT_NAME: z.string().default("Alveus Updates"),
+    DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
+      listOfUrlsSchema.optional(),
+    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfUrlsSchema.optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -117,6 +127,11 @@ export const env = createEnv({
     PUSH_BATCH_SIZE: process.env.PUSH_BATCH_SIZE,
     PUSH_MAX_ATTEMPTS: process.env.PUSH_MAX_ATTEMPTS,
     PUSH_RETRY_DELAY_MS: process.env.PUSH_RETRY_DELAY_MS,
+    DISCORD_BOT_NAME: process.env.DISCORD_BOT_NAME,
+    DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
+      process.env.DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION,
+    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT:
+      process.env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT,
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV ?? "development",
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
