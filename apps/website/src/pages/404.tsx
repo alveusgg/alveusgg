@@ -4,7 +4,6 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import { GiveawayChecks } from "@/components/forms/GiveawayChecks";
 
 const NotFound: NextPage = () => {
   return (
@@ -22,7 +21,8 @@ const NotFound: NextPage = () => {
         <Heading>404 - Page Not Found</Heading>
       </Section>
 
-      <GiveawayChecks />
+      {/* TODO: REMOVE ME */}
+      <FaArrowsRotate size={24} className="h-5 w-5 animate-spin" />
     </>
   );
 };
