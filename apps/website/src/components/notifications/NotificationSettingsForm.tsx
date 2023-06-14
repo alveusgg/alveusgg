@@ -65,7 +65,7 @@ export function NotificationSettingsForm({
     <form
       onSubmit={submitHandler}
       className={
-        "pb-4 transition-opacity " +
+        "pb-2 transition-opacity " +
         (enableSettings
           ? ""
           : "pointer-none cursor-default select-none opacity-50")
