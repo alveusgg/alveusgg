@@ -4,8 +4,8 @@ import { classes } from "@/utils/classes";
 
 import usePrefersReducedMotion from "@/hooks/motion";
 
-import IconAngleLeft from "@/icons/IconAngleLeft";
-import IconAngleRight from "@/icons/IconAngleRight";
+import IconChevronLeft from "@/icons/IconChevronLeft";
+import IconChevronRight from "@/icons/IconChevronRight";
 
 type CarouselProps = {
   id?: string;
@@ -218,7 +218,7 @@ const Carousel: React.FC<CarouselProps> = ({
         disabled={state === "start" || state === "none"}
       >
         <span className="sr-only">Previous</span>
-        <IconAngleLeft
+        <IconChevronLeft
           className="transition-opacity group-disabled:opacity-20"
           size={24}
         />
@@ -258,7 +258,7 @@ const Carousel: React.FC<CarouselProps> = ({
         disabled={state === "end" || state === "none"}
       >
         <span className="sr-only">Next</span>
-        <IconAngleRight
+        <IconChevronRight
           className="transition-opacity group-disabled:opacity-20"
           size={24}
         />

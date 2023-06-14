@@ -10,7 +10,7 @@ import {
   NotificationSettings,
   useNotificationStatus,
 } from "@/components/notifications/NotificationSettings";
-import IconAngleRight from "@/icons/IconAngleRight";
+import IconChevronRight from "@/icons/IconChevronRight";
 
 export const NotificationsButton = ({
   openDirectionX = "left",
@@ -72,7 +72,7 @@ export const NotificationsButton = ({
           <p className="border-t p-4">
             <Popover.Button as={Link} href="/updates">
               Show all updates
-              <IconAngleRight className="ml-1 inline-block" size={20} />
+              <IconChevronRight className="ml-1 inline-block" size={20} />
             </Popover.Button>
           </p>
         </Popover.Panel>

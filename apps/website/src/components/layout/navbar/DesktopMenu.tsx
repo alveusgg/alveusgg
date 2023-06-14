@@ -24,7 +24,7 @@ import {
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
 import IconSignIn from "@/icons/IconSignIn";
-import IconAngleDown from "@/icons/IconAngleDown";
+import IconChevronDown from "@/icons/IconChevronDown";
 
 const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
   <Transition
@@ -179,7 +179,7 @@ export function DesktopMenu() {
                         )}
                       >
                         {link.title}
-                        <IconAngleDown
+                        <IconChevronDown
                           size={16}
                           className={`${
                             open ? "translate-y-1" : "translate-y-0.5"

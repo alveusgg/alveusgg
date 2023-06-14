@@ -1,5 +1,4 @@
-import type { IconProps } from "@/icons/BaseIcon";
-import { BaseIcon } from "@/icons/BaseIcon";
+import { BaseIcon, type IconProps } from "@/icons/BaseIcon";
 
 // This SVG code is derived from Heroicons (https://heroicons.com)
 // bell-slash-outline

@@ -27,7 +27,7 @@ import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconMinus from "@/icons/IconMinus";
 import IconCheckCircle from "@/icons/IconCheckCircle";
 import IconCheck from "@/icons/IconCheck";
-import IconTimes from "@/icons/IconTimes";
+import IconX from "@/icons/IconX";
 import IconMenu from "@/icons/IconMenu";
 import IconInformationCircle from "@/icons/IconInformationCircle";
 import IconUploadFiles from "@/icons/IconUploadFiles";
@@ -39,6 +39,13 @@ import IconEnvelope from "@/icons/IconEnvelope";
 import IconNotification from "@/icons/IconNotification";
 import IconNotificationOff from "@/icons/IconNotificationOff";
 import IconNotificationOn from "@/icons/IconNotificationOn";
+import IconExternal from "@/icons/IconExternal";
+import IconCalendar from "@/icons/IconCalendar";
+import IconBox from "@/icons/IconBox";
+import IconChevronDown from "@/icons/IconChevronDown";
+import IconChevronUp from "@/icons/IconChevronUp";
+import IconChevronLeft from "@/icons/IconChevronLeft";
+import IconChevronRight from "@/icons/IconChevronRight";
 
 const NotFound: NextPage = () => {
   return (
@@ -78,7 +85,7 @@ const NotFound: NextPage = () => {
       <IconMinus className="h-20 w-20 text-red-500" />
       <IconCheckCircle className="h-20 w-20 text-red-500" />
       <IconCheck className="h-20 w-20 text-red-500" />
-      <IconTimes className="h-20 w-20 text-red-500" />
+      <IconX className="h-20 w-20 text-red-500" />
       <IconMenu className="h-20 w-20 text-red-500" />
       <IconInformationCircle className="h-20 w-20 text-red-500" />
       <IconUploadFiles className="h-20 w-20 text-red-500" />
@@ -90,9 +97,17 @@ const NotFound: NextPage = () => {
       <br />
       <IconNotification className="h-20 w-20 text-red-500" />
       <IconNotificationOn className="h-20 w-20 text-red-500" />
-    <IconNotificationAlert className="h-20 w-20 text-red-500" />
+      <IconNotificationAlert className="h-20 w-20 text-red-500" />
       <IconNotificationOff className="h-20 w-20 text-red-500" />
-      
+      <br />
+      <IconExternal className="h-20 w-20 text-red-500" />
+      <IconEnvelope className="h-20 w-20 text-red-500" />
+      <IconCalendar className="h-20 w-20 text-red-500" />
+      <IconBox className="h-20 w-20 text-red-500" />
+      <IconChevronDown className="h-20 w-20 text-red-500" />
+      <IconChevronUp className="h-20 w-20 text-red-500" />
+      <IconChevronLeft className="h-20 w-20 text-red-500" />
+      <IconChevronRight className="h-20 w-20 text-red-500" />
     </>
   );
 };
