@@ -18,7 +18,7 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 import IconPlus from "@/icons/IconPlus";
 import IconDownload from "@/icons/IconDownload";
 import IconUpload from "@/icons/IconUpload";
-import IconBellAlert from "@/icons/IconBellAlert";
+import IconNotificationAlert from "@/icons/IconNotificationAlert";
 import IconMinusCircle from "@/icons/IconMinusCircle";
 import IconArchive from "@/icons/IconArchive";
 import IconBolt from "@/icons/IconBolt";
@@ -35,6 +35,10 @@ import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
+import IconEnvelope from "@/icons/IconEnvelope";
+import IconNotification from "@/icons/IconNotification";
+import IconNotificationOff from "@/icons/IconNotificationOff";
+import IconNotificationOn from "@/icons/IconNotificationOn";
 
 const NotFound: NextPage = () => {
   return (
@@ -65,7 +69,7 @@ const NotFound: NextPage = () => {
       <IconPlus className="h-20 w-20 text-red-500" />
       <IconDownload className="h-20 w-20 text-red-500" />
       <IconUpload className="h-20 w-20 text-red-500" />
-      <IconBellAlert className="h-20 w-20 text-red-500" />
+      <IconNotificationAlert className="h-20 w-20 text-red-500" />
       <IconMinusCircle className="h-20 w-20 text-red-500" />
       <IconArchive className="h-20 w-20 text-red-500" />
       <IconBolt className="h-20 w-20 text-red-500" />
@@ -82,6 +86,13 @@ const NotFound: NextPage = () => {
       <IconArrowDown className="h-20 w-20 text-red-500" />
       <IconArrowsIn className="h-20 w-20 text-red-500" />
       <IconArrowsOut className="h-20 w-20 text-red-500" />
+      <IconEnvelope className="h-20 w-20 text-red-500" />
+      <br />
+      <IconNotification className="h-20 w-20 text-red-500" />
+      <IconNotificationOn className="h-20 w-20 text-red-500" />
+    <IconNotificationAlert className="h-20 w-20 text-red-500" />
+      <IconNotificationOff className="h-20 w-20 text-red-500" />
+      
     </>
   );
 };

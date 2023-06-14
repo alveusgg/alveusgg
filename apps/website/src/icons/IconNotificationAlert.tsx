@@ -2,7 +2,7 @@ import { BaseIcon, type IconProps } from "@/icons/BaseIcon";
 
 // This SVG code is derived from Heroicons (https://heroicons.com)
 // bell-alert-solid
-export default function IconBellAlert(props: IconProps) {
+export default function IconNotificationAlert(props: IconProps) {
   return (
     <BaseIcon viewBox="0 0 24 24" {...props}>
       <path
