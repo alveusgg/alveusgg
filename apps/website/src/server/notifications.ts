@@ -1,4 +1,8 @@
-import { notificationCategories } from "@/config/notifications";
+import {
+  defaultTag,
+  defaultTitle,
+  notificationCategories,
+} from "@/config/notifications";
 import { pushBatchSize, pushMaxAttempts, pushRetryDelay } from "@/config/push";
 
 import { prisma } from "@/server/db/client";
@@ -79,6 +83,24 @@ export async function createNotification(data: {
   }
 
   await Promise.allSettled(requests);
+}
+
+export async function resendNotification(notificationId: string) {
+  const oldNotification = await prisma.notification.findUnique({
+    where: { id: notificationId },
+  });
+
+  if (!oldNotification) return;
+
+  return createNotification({
+    tag: oldNotification.tag || defaultTag,
+    title: oldNotification.title || defaultTitle,
+    imageUrl: oldNotification.imageUrl || undefined,
+    linkUrl: oldNotification.linkUrl || undefined,
+    text: oldNotification.message,
+    scheduledEndAt: oldNotification.scheduledEndAt,
+    scheduledStartAt: oldNotification.scheduledStartAt,
+  });
 }
 
 export async function retryPendingNotificationPushes() {
