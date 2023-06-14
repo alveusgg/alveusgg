@@ -64,7 +64,7 @@ export function NotificationSettings() {
       <p className="p-4 leading-tight">Notification settings</p>
 
       {isInstallAsPWARequired && (
-        <div className="px-4 pb-4">
+        <div className="min-w-[320px] px-4 pb-4">
           <p>
             You can receive notifications if you add this site to your Home
             Screen.
