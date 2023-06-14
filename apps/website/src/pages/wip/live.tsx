@@ -1,11 +1,11 @@
 import React from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 //import Link from "next/link";
-//import { GlobeAltIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
 // import IconAmazon from "@/icons/IconAmazon";
 // import IconPayPal from "@/icons/IconPayPal";
 // import IconTwitch from "@/icons/IconTwitch";
+// import IconGlobe from "@/icons/IconGlobe";
 
 import { TwitchEmbed } from "@/components/TwitchEmbed";
 import Meta from "@/components/content/Meta";
@@ -124,7 +124,7 @@ const Live: NextPage<LivePageProps> = (
 
             <LinkBox>
               <LinkBox.Link href="https://www.alveussanctuary.org/">
-                <GlobeAltIcon className="h-8 w-8" />
+                <IconGlobe size={32} />
                 Website
               </LinkBox.Link>
               <LinkBoxSocials />
@@ -137,7 +137,7 @@ const Live: NextPage<LivePageProps> = (
                 Subscribe on Twitch
               </LinkBox.Link>
               <LinkBox.Link href="https://www.alveussanctuary.org/merch">
-                <GlobeAltIcon className="h-8 w-8" />
+                <IconGlobe size={32} />
                 Buy merch
               </LinkBox.Link>
               <LinkBox.Link href="https://www.alveussanctuary.org/wishlist">

@@ -4,6 +4,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import IconSync from "@/icons/IconSync";
 
 const NotFound: NextPage = () => {
   return (
@@ -20,6 +21,9 @@ const NotFound: NextPage = () => {
       <Section className="flex-grow">
         <Heading>404 - Page Not Found</Heading>
       </Section>
+
+      {/* TODO: remove this! */}
+      <IconSync />
     </>
   );
 };

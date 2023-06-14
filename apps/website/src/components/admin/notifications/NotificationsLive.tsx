@@ -1,6 +1,5 @@
 import React, { Fragment } from "react";
 
-import ArrowPathIcon from "@heroicons/react/20/solid/ArrowPathIcon";
 import XCircleIcon from "@heroicons/react/24/outline/XCircleIcon";
 import { ArchiveBoxIcon, BoltIcon } from "@heroicons/react/20/solid";
 
@@ -12,6 +11,7 @@ import { NotificationEntry } from "@/components/notifications/NotificationEntry"
 import DateTime from "@/components/content/DateTime";
 import { Button } from "@/components/shared/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
+import IconSync from "@/icons/IconSync";
 
 export function NotificationsLive() {
   const recentNotifications =
@@ -123,7 +123,7 @@ export function NotificationsLive() {
                         resendMutation.mutate(notification.id);
                       }}
                     >
-                      <ArrowPathIcon className="h-5 w-5" />
+                      <IconSync className="h-5 w-5" />
                     </Button>
                   </div>
                 </li>

@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from "react";
 import Link from "next/link";
 
-import { GlobeAltIcon } from "@heroicons/react/24/outline";
 import IconTwitch from "@/icons/IconTwitch";
 import IconTwitter from "@/icons/IconTwitter";
 import IconYouTube from "@/icons/IconYouTube";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTikTok from "@/icons/IconTikTok";
+import IconGlobe from "@/icons/IconGlobe";
 
 const GiveawayCheck: React.FC<{
   name: string;
@@ -127,7 +127,7 @@ export const GiveawayChecks: React.FC = () => (
       label="Visit our Website"
       url="https://alveussanctuary.org/"
     >
-      <GlobeAltIcon className="h-8 w-8" />
+      <IconGlobe size={32} />
       <span>Visit our Website</span>
     </GiveawayCheck>
   </div>

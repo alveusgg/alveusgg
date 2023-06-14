@@ -1,9 +1,9 @@
 import React from "react";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import type { FormEntry, OutgoingWebhook, User } from "@prisma/client";
 
 import { trpc } from "@/utils/trpc";
 import DateTime from "@/components/content/DateTime";
+import IconSync from "@/icons/IconSync";
 
 type OutgoingWebhookWithFormEntry = OutgoingWebhook & {
   user: User | null;
@@ -46,7 +46,7 @@ export const OutgoingWebhookFeedEntry: React.FC<{
           }
         >
           {retryOutgoingWebhook.isLoading ? (
-            <ArrowPathIcon className="h-5 w-5 animate-spin" />
+            <IconSync className="h-5 w-5 animate-spin" />
           ) : lastAttemptWasSuccessful ? (
             "✅"
           ) : (
