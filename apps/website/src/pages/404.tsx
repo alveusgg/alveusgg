@@ -20,9 +20,6 @@ const NotFound: NextPage = () => {
       <Section className="flex-grow">
         <Heading>404 - Page Not Found</Heading>
       </Section>
-
-      {/* TODO: REMOVE ME */}
-      <FaArrowsRotate size={24} className="h-5 w-5 animate-spin" />
     </>
   );
 };
