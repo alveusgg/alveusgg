@@ -1,17 +1,17 @@
 import React, { Fragment } from "react";
 
-import XCircleIcon from "@heroicons/react/24/outline/XCircleIcon";
-import { ArchiveBoxIcon, BoltIcon } from "@heroicons/react/20/solid";
-
 import { trpc } from "@/utils/trpc";
 
 import IconLoading from "@/icons/IconLoading";
+import IconSync from "@/icons/IconSync";
+import IconArchive from "@/icons/IconArchive";
+import IconBolt from "@/icons/IconBolt";
+import IconXCircleOutline from "@/icons/IconXCircleOutline";
 
 import { NotificationEntry } from "@/components/notifications/NotificationEntry";
 import DateTime from "@/components/content/DateTime";
 import { Button } from "@/components/shared/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
-import IconSync from "@/icons/IconSync";
 
 export function NotificationsLive() {
   const recentNotifications =
@@ -89,12 +89,12 @@ export function NotificationsLive() {
                   className="flex items-center gap-3 border-t border-t-white/20 p-1 px-2 first:border-t-0 hover:bg-black"
                 >
                   {isActive ? (
-                    <BoltIcon
+                    <IconBolt
                       title="Notification is active"
                       className="h-4 w-4"
                     />
                   ) : (
-                    <ArchiveBoxIcon
+                    <IconArchive
                       title="Notification is inactive"
                       className="h-4 w-4"
                     />
@@ -112,7 +112,7 @@ export function NotificationsLive() {
                         cancelMutation.mutate(notification.id);
                       }}
                     >
-                      <XCircleIcon className="h-5 w-5" />
+                      <IconXCircleOutline className="h-5 w-5" />
                     </Button>
                     <Button
                       width="auto"

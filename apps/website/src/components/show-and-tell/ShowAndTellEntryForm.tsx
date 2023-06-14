@@ -1,13 +1,15 @@
 import React, { useMemo, useState } from "react";
 import { useRouter } from "next/router";
-import { ExclamationTriangleIcon } from "@heroicons/react/20/solid";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
+
 import { trpc } from "@/utils/trpc";
 import { notEmpty } from "@/utils/helpers";
-import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
-import IconLoading from "@/icons/IconLoading";
 import { getEntityStatus } from "@/utils/entity-helpers";
+import IconLoading from "@/icons/IconLoading";
+import IconWarningTriangle from "@/icons/IconWarningTriangle";
+
+import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
@@ -199,7 +201,7 @@ export function ShowAndTellEntryForm({
     <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
       {action === "update" && wasApproved && (
         <MessageBox variant="warning" className="my-4 flex items-center gap-2">
-          <ExclamationTriangleIcon className="h-6 w-6 text-yellow-900" />
+          <IconWarningTriangle className="h-6 w-6 text-yellow-900" />
           You are modifying a previously approved post. Upon submitting your
           edits, the post will be unpublished until the changes have been
           reviewed and approved.

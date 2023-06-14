@@ -2,7 +2,6 @@ import type { MouseEventHandler } from "react";
 import { Fragment } from "react";
 
 import { Popover } from "@headlessui/react";
-import ShareIcon from "@heroicons/react/20/solid/ShareIcon";
 
 import IconTwitter from "@/icons/IconTwitter";
 import IconEmail from "@/icons/IconEmail";
@@ -10,6 +9,7 @@ import IconFacebook from "@/icons/IconFacebook";
 
 import { Button } from "@/components/shared/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
+import IconShare from "@/icons/IconShare";
 
 export function ShareButton({
   url,
@@ -59,7 +59,7 @@ export function ShareButton({
       onClick={handleClick}
       label={
         <>
-          <ShareIcon className="mr-1 h-5 w-5" />
+          <IconShare className="mr-1 h-5 w-5" />
           Share
         </>
       }

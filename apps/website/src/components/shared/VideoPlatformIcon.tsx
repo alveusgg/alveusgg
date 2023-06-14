@@ -1,10 +1,10 @@
 import React from "react";
-import { VideoCameraIcon } from "@heroicons/react/20/solid";
 import IconStreamable from "@/icons/IconStreamable";
 import IconImgur from "@/icons/IconImgur";
+import IconVideoCamera from "@/icons/IconVideoCamera";
+import IconYouTube from "@/icons/IconYouTube";
 
 import type { videoPlatformConfigs } from "@/utils/video-urls";
-import IconYouTube from "@/icons/IconYouTube";
 
 export function VideoPlatformIcon({
   platform,
@@ -24,6 +24,6 @@ export function VideoPlatformIcon({
     case "imgurGallery":
       return <IconImgur alt={alt} {...props} />;
     default:
-      return <VideoCameraIcon {...props} />;
+      return <IconVideoCamera {...props} />;
   }
 }

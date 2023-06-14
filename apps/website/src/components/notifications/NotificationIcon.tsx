@@ -1,8 +1,8 @@
 import type { Notification } from "@prisma/client";
-import { BellAlertIcon } from "@heroicons/react/20/solid";
 
 import IconTwitch from "@/icons/IconTwitch";
 import IconYouTube from "@/icons/IconYouTube";
+import IconBellAlert from "@/icons/IconBellAlert";
 
 const iconProps = { className: "h-6 w-6" };
 
@@ -11,7 +11,7 @@ export function NotificationIcon({
 }: {
   notification: Notification;
 }) {
-  let icon = <BellAlertIcon {...iconProps} />;
+  let icon = <IconBellAlert {...iconProps} />;
   const link = notification.linkUrl;
   if (link) {
     if (link.match(/https:\/\/(www\.)?twitch\.tv\//)) {

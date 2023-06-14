@@ -1,12 +1,6 @@
 import type { inferRouterOutputs } from "@trpc/server";
 import Link from "next/link";
 import React, { useCallback, useState } from "react";
-import {
-  TrashIcon,
-  ArrowDownTrayIcon,
-  EllipsisHorizontalIcon,
-} from "@heroicons/react/20/solid";
-import { PencilIcon } from "@heroicons/react/24/outline";
 import { Menu } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
@@ -22,6 +16,10 @@ import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import DateTime from "@/components/content/DateTime";
+import IconPencil from "@/icons/IconPencil";
+import IconTrash from "@/icons/IconTrash";
+import IconEllipsis from "@/icons/IconEllipsis";
+import IconDownload from "@/icons/IconDownload";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type FormWithCount = RouterOutput["adminForms"]["getForms"][number];
@@ -129,7 +127,7 @@ function Form({ form, onError, onUpdate }: FormProps) {
             width="auto"
             href={`/admin/forms/${form.id}/edit`}
           >
-            <PencilIcon className="h-4 w-4" />
+            <IconPencil className="h-4 w-4" />
             Edit
           </LinkButton>
           <LinkButton
@@ -138,13 +136,13 @@ function Form({ form, onError, onUpdate }: FormProps) {
             className={secondaryButtonClasses}
             href={`/api/forms/${form.id}/export-entries`}
           >
-            <ArrowDownTrayIcon className="h-4 w-4" />
+            <IconDownload className="h-4 w-4" />
             CSV
           </LinkButton>
 
           <Menu as="div" className="relative inline-block text-left">
             <Menu.Button as={Button}>
-              <EllipsisHorizontalIcon className="h-4 w-4" />
+              <IconEllipsis className="h-4 w-4" />
               <span className="sr-only">Open menu with more options</span>
             </Menu.Button>
             <Menu.Items className="absolute right-0 z-20 mt-2 flex w-56 origin-top-right flex-col gap-2 rounded-md border border-white/50 bg-gray-800 p-4 shadow-xl">
@@ -155,7 +153,7 @@ function Form({ form, onError, onUpdate }: FormProps) {
                   confirmationMessage="Please confirm deletion!"
                   onClick={() => deleteMutation.mutate(form.id)}
                 >
-                  <TrashIcon className="h-4 w-4" />
+                  <IconTrash className="h-4 w-4" />
                   Delete
                 </Button>
               </Menu.Item>
