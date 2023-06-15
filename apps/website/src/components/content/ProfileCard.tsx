@@ -1,15 +1,16 @@
 "use client";
 import React from "react";
 import type { Ambassador } from "@alveusgg/data/src/ambassadors/core";
-import Image, { type StaticImageData, type ImageProps } from "next/image";
+import Image, { type ImageProps } from "next/image";
 import type { AmbassadorImage } from "@alveusgg/data/src/ambassadors/images";
+import type { StaffImage } from "./LinkHover";
 import Heading from "./Heading";
 
 export type ProfileCardProps = {
   name: string;
   position?: string;
   species?: Ambassador["species"];
-  img: AmbassadorImage | ImageProps;
+  img: AmbassadorImage | ImageProps | StaffImage;
   enclosure?: string;
 };
 

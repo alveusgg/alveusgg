@@ -23,14 +23,33 @@ type LinkHoverProps = {
   name: string;
 };
 
+export type StaffImage = StaticImageData & {
+  alt: string;
+};
+
 type StaffMember = {
   name: string;
   title: string;
-  image: ImageProps | StaticImageData;
+  image: ImageProps | StaffImage;
   description?: JSX.Element;
 };
 
 type Staff = Array<StaffMember>;
+
+const allStaff: Staff = Object.values(staff).map((person) => ({
+  image: { ...person.image, alt: `${person.name}'s picture` },
+  name: person.name,
+  title: person.title,
+  description: person.description,
+}));
+
+allStaff.push({
+  image: { ...mayaImage, alt: "Maya's picture" },
+  name: "Maya Higa",
+  title: "Founder",
+});
+console.log(allStaff);
+console.log(mayaImage);
 
 const nameToCamelCase = (name: string) => {
   const noSymbols = name.replace(/[{(/.)}]/g, "");
@@ -38,18 +57,11 @@ const nameToCamelCase = (name: string) => {
   return kebabToCamel(sentenceToKebab(camelCased));
 };
 
-const allStaff: Staff = Object.values(staff).map((person) => ({
-  image: person.image,
-  name: person.name,
-  title: person.title,
-  description: person.description,
-}));
-
-console.log(allStaff);
-
-const findMember = (name: StaffMember[0], members: Staff) => {
+const findMember = (name: string, members: Staff) => {
   // const camelName = nameToCamelCase(name);
-  const member = members.find((person) => name.includes(person[0]));
+  const member = members.find(
+    (person) => nameToCamelCase(name) == nameToCamelCase(person.name)
+  );
   console.log(member);
   return member;
 };
