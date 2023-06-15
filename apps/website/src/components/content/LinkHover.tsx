@@ -5,18 +5,32 @@ import type {
   Ambassador,
   AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
+import type { ImageProps, StaticImageData } from "next/image";
+
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import { kebabToCamel, sentenceToKebab } from "@/utils/string-case";
 import { staff } from "@/pages/about/staff";
-import ProfileCard from "./ProfileCard";
+import mayaImage from "@/assets/maya.png";
 import Link from "./Link";
+import ProfileCard from "./ProfileCard";
 
 type LinkHoverProps = {
   species?: Ambassador["species"];
-  enclosure?: EnclosureKey | undefined;
+  enclosure?: EnclosureKey;
+  position?: string;
+  profile?: boolean;
   href: string;
   name: string;
 };
+
+type StaffMember = {
+  name: string;
+  title: string;
+  image: ImageProps | StaticImageData;
+  description?: JSX.Element;
+};
+
+type Staff = Array<StaffMember>;
 
 const nameToCamelCase = (name: string) => {
   const noSymbols = name.replace(/[{(/.)}]/g, "");
@@ -24,18 +38,34 @@ const nameToCamelCase = (name: string) => {
   return kebabToCamel(sentenceToKebab(camelCased));
 };
 
+const allStaff: Staff = Object.values(staff).map((person) => ({
+  image: person.image,
+  name: person.name,
+  title: person.title,
+  description: person.description,
+}));
+
+console.log(allStaff);
+
+const findMember = (name: StaffMember[0], members: Staff) => {
+  // const camelName = nameToCamelCase(name);
+  const member = members.find((person) => name.includes(person[0]));
+  console.log(member);
+  return member;
+};
+
 const LinkHover: React.FC<LinkHoverProps> = ({
   href,
   name,
   species,
   enclosure,
+  profile,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [delay, setDelay] = useState<number | null>(null);
 
   const camelName = nameToCamelCase(name);
   const img = getAmbassadorImages(camelName as AmbassadorKey)[0];
-  console.log(typeof staff.connor.image);
 
   const enclosureName = enclosures[enclosure as EnclosureKey].name;
 
@@ -53,7 +83,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
       <Link href={href}>{name}</Link>
-      {cardShown && (
+      {cardShown && profile && (
         <ProfileCard
           name={name}
           img={img}

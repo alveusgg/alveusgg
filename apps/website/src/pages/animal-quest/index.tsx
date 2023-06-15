@@ -149,6 +149,7 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
                         name={ambassadors[ambassador].name}
                         species={ambassadors[ambassador].species}
                         enclosure={ambassadors[ambassador].enclosure}
+                        profile
                       ></LinkHover>
                     ) : (
                       ambassadors[ambassador].name
