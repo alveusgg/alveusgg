@@ -278,6 +278,7 @@ model OutgoingWebhook {
   createdAt   DateTime  @default(now())
   failedAt    DateTime?
   deliveredAt DateTime?
+  expiresAt   DateTime?
 
   user         User?                              @relation(fields: [userId], references: [id])
   formEntry    FormEntry?

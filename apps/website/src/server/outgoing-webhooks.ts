@@ -1,27 +1,33 @@
 import fetch from "node-fetch";
 import type { OutgoingWebhook } from "@prisma/client";
-import { prisma } from "./db/client";
+
+import { prisma } from "@/server/db/client";
 
 export type OutgoingWebhookType = "form-entry" | "unknown";
+
+type OutgoingWebhookData = Pick<
+  OutgoingWebhook,
+  "url" | "type" | "body" | "retry" | "expiresAt"
+>;
 
 class OutgoingWebhookDeliveryError extends Error {
   response?: string;
   status?: number;
 }
 
-async function callWebhookUrl(url: string, body: string, type: string) {
+async function callWebhookUrl(data: OutgoingWebhookData) {
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), 2000);
 
-  return fetch(url, {
+  return fetch(data.url, {
     method: "POST",
     headers: {
       "User-Agent": "alveus.gg",
       "Content-Type": "application/json",
-      "X-Hook-Type": type,
+      "X-Hook-Type": data.type,
     },
     signal: controller.signal,
-    body,
+    body: data.body,
   }).then((response) => {
     clearTimeout(timeoutId);
 
@@ -37,43 +43,10 @@ async function callWebhookUrl(url: string, body: string, type: string) {
   });
 }
 
-async function createOutgoingWebhook({
-  url,
-  type,
-  body,
-  success,
-  userId,
-  retry = false,
-}: {
-  url: string;
-  type: string;
-  body: string;
-  success: boolean;
-  userId?: string;
-  retry?: boolean;
-}) {
-  return await prisma.outgoingWebhook.create({
-    data: {
-      url,
-      body,
-      type,
-      user: userId === undefined ? undefined : { connect: { id: userId } },
-      deliveredAt: success ? new Date() : undefined,
-      failedAt: success ? undefined : new Date(),
-      attempts: 1,
-      retry,
-    },
-  });
-}
-
-export async function tryToCallOutgoingWebhook(
-  url: string,
-  body: string,
-  type: string
-) {
+export async function tryToCallOutgoingWebhook(data: OutgoingWebhookData) {
   let success = false;
   try {
-    await callWebhookUrl(url, body, type);
+    await callWebhookUrl(data);
     success = true;
   } catch (e) {}
   return success;
@@ -85,32 +58,39 @@ export async function triggerOutgoingWebhook({
   body,
   userId,
   retry = false,
+  expiresAt = null,
 }: {
   url: string;
   type: string;
   body: string;
   userId?: string;
   retry?: boolean;
+  expiresAt?: Date | null;
 }): Promise<OutgoingWebhook> {
-  const success = await tryToCallOutgoingWebhook(url, body, type);
-  return createOutgoingWebhook({
+  const data = {
     url,
-    type,
     body,
-    userId,
-    success,
+    type,
+    expiresAt,
     retry,
+  };
+  const success = await tryToCallOutgoingWebhook(data);
+
+  return prisma.outgoingWebhook.create({
+    data: {
+      ...data,
+      user: userId === undefined ? undefined : { connect: { id: userId } },
+      deliveredAt: success ? new Date() : undefined,
+      failedAt: success ? undefined : new Date(),
+      attempts: 1,
+    },
   });
 }
 
 export async function retryOutgoingWebhook(outgoingWebhook: OutgoingWebhook) {
   let success = false;
   try {
-    success = await tryToCallOutgoingWebhook(
-      outgoingWebhook.url,
-      outgoingWebhook.body,
-      outgoingWebhook.type
-    );
+    success = await tryToCallOutgoingWebhook(outgoingWebhook);
   } catch (e) {}
 
   await prisma.outgoingWebhook.update({
@@ -123,4 +103,48 @@ export async function retryOutgoingWebhook(outgoingWebhook: OutgoingWebhook) {
   });
 
   return success;
+}
+
+export async function retryOutgoingWebhooks({
+  maxAttempts = 5,
+  retryDelay = 10,
+  limit = 100,
+  type,
+}: {
+  maxAttempts?: number;
+  retryDelay?: number;
+  limit?: number;
+  type?: string;
+}) {
+  const now = new Date();
+
+  const exponentialDelays = new Array(maxAttempts).map(
+    (_, i) => retryDelay * Math.pow(2, i + 1)
+  );
+
+  const pendingOutgoingWebhooks = await prisma.outgoingWebhook.findMany({
+    where: {
+      deliveredAt: null,
+      AND: [
+        {
+          OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
+        },
+        {
+          OR: exponentialDelays.map((delay, attempts) => ({
+            attempts: attempts,
+            failedAt: { lte: new Date(now.getTime() - delay) },
+          })),
+        },
+      ],
+      retry: true,
+      type,
+    },
+    take: limit,
+  });
+
+  const tasks = pendingOutgoingWebhooks.map((outgoingWebhook) =>
+    retryOutgoingWebhook(outgoingWebhook)
+  );
+
+  await Promise.all(tasks);
 }

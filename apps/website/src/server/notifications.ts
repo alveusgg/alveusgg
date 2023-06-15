@@ -28,9 +28,9 @@ type CreateNotificationData = {
   isDiscord?: boolean;
 };
 
-const exponentialDelays = new Array(pushMaxAttempts + 1)
-  .fill(0)
-  .map((_, i) => pushRetryDelay * Math.pow(2, i));
+const exponentialDelays = new Array(pushMaxAttempts).map(
+  (_, i) => pushRetryDelay * Math.pow(2, i + 1)
+);
 
 export async function createNotification(data: CreateNotificationData) {
   const tagConfig = notificationCategories.find((cat) => cat.tag === data.tag);
@@ -104,12 +104,10 @@ export async function retryPendingNotificationPushes() {
       where: {
         processingStatus: "PENDING",
         expiresAt: { gte: now },
-        OR: exponentialDelays
-          .slice(1) // skipping initial one. that should be handled by createNotification
-          .map((delay, attempts) => ({
-            attempts: attempts,
-            failedAt: { lte: new Date(now.getTime() - delay) },
-          })),
+        OR: exponentialDelays.map((delay, attempts) => ({
+          attempts: attempts,
+          failedAt: { lte: new Date(now.getTime() - delay) },
+        })),
       },
       take: pushBatchSize,
       skip: pushBatchSize * i++,
@@ -202,17 +200,19 @@ async function createDiscordNotifications(notification: Notification) {
     const content = `${notification.title}\n${notification.message}\n${fullAbsoluteNotificationUrl}`;
 
     tasks.push(
-      triggerDiscordChannelWebhookToEveryone({ content, webhookUrl }).then(
-        async (webhook) => {
-          await prisma.notificationDiscordChannelWebhook.create({
-            data: {
-              notificationId: notification.id,
-              outgoingWebhookId: webhook.id,
-            },
-          });
-          return webhook;
-        }
-      )
+      triggerDiscordChannelWebhookToEveryone({
+        content,
+        webhookUrl,
+        expiresAt: notification.expiresAt,
+      }).then(async (webhook) => {
+        await prisma.notificationDiscordChannelWebhook.create({
+          data: {
+            notificationId: notification.id,
+            outgoingWebhookId: webhook.id,
+          },
+        });
+        return webhook;
+      })
     );
   }
 
