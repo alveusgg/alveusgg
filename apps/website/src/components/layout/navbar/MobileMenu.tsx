@@ -59,11 +59,7 @@ export function MobileMenu() {
                 <li>
                   <div className="my-3 w-full border-t opacity-30"></div>
 
-                  <Disclosure.Button
-                    as={NavLinkSub}
-                    className="px-5 py-3"
-                    href="/admin/dashboard"
-                  >
+                  <Disclosure.Button as={NavLinkSub} href="/admin/dashboard">
                     Admin
                   </Disclosure.Button>
                 </li>
@@ -71,7 +67,7 @@ export function MobileMenu() {
               <li>
                 <div className="my-3 w-full border-t opacity-30"></div>
 
-                <div className="px-5 py-3">
+                <div className="px-5 py-2">
                   <ProfileInfo full />
                 </div>
 
