@@ -90,12 +90,12 @@ export function NotificationsLive() {
                 >
                   {isActive ? (
                     <IconBolt
-                      title="Notification is active"
+                      alt="Notification is active"
                       className="h-4 w-4"
                     />
                   ) : (
                     <IconArchive
-                      title="Notification is inactive"
+                      alt="Notification is inactive"
                       className="h-4 w-4"
                     />
                   )}
