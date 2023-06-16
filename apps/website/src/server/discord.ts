@@ -10,7 +10,7 @@ type DiscordWebhookNotificationBody = {
   username: string;
   content: string;
   tts: boolean;
-  allowed_mentions?: {
+  allowed_mentions: {
     parse?: Array<"everyone" | "roles" | "users">;
     users?: string[];
   };
@@ -34,6 +34,9 @@ export async function triggerDiscordChannelWebhook({
     content,
     tts: false,
     avatar_url: `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`,
+    allowed_mentions: {
+      parse: [],
+    },
   };
 
   if (toEveryone) {
