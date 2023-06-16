@@ -18,6 +18,11 @@ const listOfUrlsSchema = z
     val.split(" ").map((url) => z.string().url().parse(url.trim()).toString())
   );
 
+const optionalBoolSchema = z
+  .enum(["true", "false"])
+  .optional()
+  .transform((val) => val === "true");
+
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
@@ -67,12 +72,15 @@ export const env = createEnv({
     DISCORD_BOT_NAME: z.string().default("Alveus Updates"),
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
       listOfUrlsSchema.optional(),
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
     DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfUrlsSchema.optional(),
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
       .enum(["development", "test", "production"])
-      .optional(),
+      .optional()
+      .default("development"),
     NEXT_PUBLIC_BASE_URL: z
       .string()
       .url()
@@ -83,10 +91,7 @@ export const env = createEnv({
       .superRefine(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.string().optional(),
-    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED: z
-      .boolean()
-      .optional()
-      .default(false),
+    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED: optionalBoolSchema,
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -130,10 +135,14 @@ export const env = createEnv({
     DISCORD_BOT_NAME: process.env.DISCORD_BOT_NAME,
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION,
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT:
+      process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT,
     DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT:
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT,
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION:
+      process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION,
     // Client:
-    NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV ?? "development",
+    NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
@@ -142,7 +151,7 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
     NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED:
-      process.env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED === "true",
+      process.env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

@@ -11,10 +11,10 @@ import { pushBatchSize, pushMaxAttempts, pushRetryDelay } from "@/config/push";
 
 import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";
+import { triggerDiscordChannelWebhook } from "@/server/discord";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
 import type { RetryPushesOptions } from "@/pages/api/notifications/batched-retry-notification-pushes";
-import { triggerDiscordChannelWebhookToEveryone } from "@/server/discord";
 
 type CreateNotificationData = {
   tag: string;
@@ -176,38 +176,48 @@ async function createPushNotifications(notification: Notification) {
   return Promise.allSettled(requests);
 }
 
-async function createDiscordNotifications(notification: Notification) {
+async function createDiscordNotifications({
+  tag,
+  id,
+  title,
+  message,
+  expiresAt,
+}: Notification) {
   let webhookUrls: string[] = [];
-  switch (notification.tag) {
+  let toEveryone = false;
+  switch (tag) {
     case "stream":
       webhookUrls =
         env.DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION || webhookUrls;
+      toEveryone = env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION;
       break;
     case "announcement":
       webhookUrls =
         env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT || webhookUrls;
+      toEveryone = env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT;
       break;
     default:
   }
 
   const tasks = [];
   for (const webhookUrl of webhookUrls) {
-    const relativeNotificationUrl = `/notifications/${notification.id}`;
+    const relativeNotificationUrl = `/notifications/${id}`;
     const fullAbsoluteNotificationUrl = new URL(
       relativeNotificationUrl,
       env.NEXT_PUBLIC_BASE_URL
     ).toString();
-    const content = `${notification.title}\n${notification.message}\n${fullAbsoluteNotificationUrl}`;
+    const content = `${title}\n${message}\n${fullAbsoluteNotificationUrl}`;
 
     tasks.push(
-      triggerDiscordChannelWebhookToEveryone({
+      triggerDiscordChannelWebhook({
         content,
         webhookUrl,
-        expiresAt: notification.expiresAt,
+        expiresAt,
+        toEveryone,
       }).then(async (webhook) => {
         await prisma.notificationDiscordChannelWebhook.create({
           data: {
-            notificationId: notification.id,
+            notificationId: id,
             outgoingWebhookId: webhook.id,
           },
         });
