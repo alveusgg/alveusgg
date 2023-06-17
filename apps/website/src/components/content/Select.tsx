@@ -1,9 +1,10 @@
 import React, { Fragment } from "react";
 import { Listbox, Transition } from "@headlessui/react";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
+import IconCheck from "@/icons/IconCheck";
+import IconChevronVertical from "@/icons/IconChevronVertical";
 
 type SelectProps = {
   options: Record<string, string>;
@@ -38,7 +39,7 @@ const Select: React.FC<SelectProps> = ({
         >
           <span className="block">{options[value]}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-            <ChevronUpDownIcon
+            <IconChevronVertical
               className="h-5 w-5 opacity-75"
               aria-hidden="true"
             />
@@ -76,7 +77,7 @@ const Select: React.FC<SelectProps> = ({
                     <span className="block">{value}</span>
                     {selected && (
                       <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <CheckIcon className="h-5 w-5" aria-hidden="true" />
+                        <IconCheck className="h-5 w-5" aria-hidden="true" />
                       </span>
                     )}
                   </li>

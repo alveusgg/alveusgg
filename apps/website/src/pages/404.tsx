@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
 import React from "react";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
 const NotFound: NextPage = () => {
   return (

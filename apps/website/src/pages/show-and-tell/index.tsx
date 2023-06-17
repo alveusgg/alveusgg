@@ -2,12 +2,6 @@ import React, { useCallback, useMemo, useRef, useState } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowDownIcon,
-  ArrowsPointingInIcon,
-  ArrowsPointingOutIcon,
-  ArrowUpIcon,
-} from "@heroicons/react/20/solid";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
@@ -16,6 +10,10 @@ import { getPosts } from "@/server/db/show-and-tell";
 
 import logoImage from "@/assets/logo.png";
 import IconLoading from "@/icons/IconLoading";
+import IconArrowUp from "@/icons/IconArrowUp";
+import IconArrowDown from "@/icons/IconArrowDown";
+import IconArrowsIn from "@/icons/IconArrowsIn";
+import IconArrowsOut from "@/icons/IconArrowsOut";
 
 import { Button } from "@/components/shared/Button";
 import { useOnToggleNativeFullscreen } from "@/components/shared/hooks/useOnToggleNativeFullscreen";
@@ -379,7 +377,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 disabled={!hasPrevEntry}
                 onClick={scrollToPrev}
               >
-                <ArrowUpIcon className="h-5 w-5" />
+                <IconArrowUp className="h-5 w-5" />
                 <span className="sr-only">Previous Post</span>
               </Button>
               <Button
@@ -387,7 +385,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 disabled={!hasNextEntry}
                 onClick={scrollToNext}
               >
-                <ArrowDownIcon className="h-5 w-5" />
+                <IconArrowDown className="h-5 w-5" />
                 <span className="sr-only">Next Post</span>
               </Button>
             </div>
@@ -398,11 +396,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             >
               {isPresentationView ? (
                 <>
-                  <ArrowsPointingInIcon className="h-5 w-5" /> Close Fullscreen
+                  <IconArrowsIn className="h-5 w-5" /> Close Fullscreen
                 </>
               ) : (
                 <>
-                  <ArrowsPointingOutIcon className="h-5 w-5" /> Open Fullscreen
+                  <IconArrowsOut className="h-5 w-5" /> Open Fullscreen
                 </>
               )}
             </Button>

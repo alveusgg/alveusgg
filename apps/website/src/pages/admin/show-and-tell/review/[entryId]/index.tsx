@@ -1,11 +1,6 @@
 import React from "react";
 import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
-import {
-  CheckCircleIcon,
-  MinusIcon,
-  TrashIcon,
-} from "@heroicons/react/20/solid";
 
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
@@ -25,6 +20,9 @@ import {
 } from "@/components/shared/Button";
 import Meta from "@/components/content/Meta";
 import DateTime from "@/components/content/DateTime";
+import IconTrash from "@/icons/IconTrash";
+import IconMinus from "@/icons/IconMinus";
+import IconCheckCircle from "@/icons/IconCheckCircle";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
@@ -116,7 +114,7 @@ const AdminReviewShowAndTellPage: NextPage<
                     confirmationMessage="Please confirm removing the approval!"
                     onClick={() => removeApprovalMutation.mutate(entry.id)}
                   >
-                    <MinusIcon className="h-4 w-4" />
+                    <IconMinus className="h-4 w-4" />
                     Remove approval
                   </Button>
                 )}
@@ -126,7 +124,7 @@ const AdminReviewShowAndTellPage: NextPage<
                     className={approveButtonClasses}
                     onClick={() => approveMutation.mutate(entry.id)}
                   >
-                    <CheckCircleIcon className="h-4 w-4" />
+                    <IconCheckCircle className="h-4 w-4" />
                     Approve
                   </Button>
                 )}
@@ -136,7 +134,7 @@ const AdminReviewShowAndTellPage: NextPage<
                   confirmationMessage="Please confirm deletion!"
                   onClick={() => deleteMutation.mutate(entry.id)}
                 >
-                  <TrashIcon className="h-4 w-4" />
+                  <IconTrash className="h-4 w-4" />
                   Delete
                 </Button>
               </div>

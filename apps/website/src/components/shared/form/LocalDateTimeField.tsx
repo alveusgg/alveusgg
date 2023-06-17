@@ -12,7 +12,7 @@ import { useField, type AriaFieldProps } from "react-aria";
 
 import { classes } from "@/utils/classes";
 
-import IconCross from "@/icons/IconCross";
+import IconX from "@/icons/IconX";
 
 type DateTimeFieldProps = DetailedHTMLProps<
   InputHTMLAttributes<HTMLInputElement>,
@@ -74,7 +74,7 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
         />
         {showResetButton && (
           <button className="px-2" type="button" onClick={reset}>
-            <IconCross className="h-4 w-4" />
+            <IconX className="h-4 w-4" />
           </button>
         )}
         {props.suffix}

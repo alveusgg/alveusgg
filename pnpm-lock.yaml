@@ -38,9 +38,6 @@ importers:
       '@headlessui/react':
         specifier: ^1.7.15
         version: 1.7.15(react-dom@18.2.0)(react@18.2.0)
-      '@heroicons/react':
-        specifier: ^2.0.18
-        version: 2.0.18(react@18.2.0)
       '@next-auth/prisma-adapter':
         specifier: ^1.0.7
         version: 1.0.7(@prisma/client@4.15.0)(next-auth@4.22.1)
@@ -161,9 +158,6 @@ importers:
       sharp:
         specifier: ^0.31.3
         version: 0.31.3
-      simple-icons:
-        specifier: ^8.15.0
-        version: 8.15.0
       slugify:
         specifier: ^1.6.6
         version: 1.6.6
@@ -1929,14 +1923,6 @@ packages:
       client-only: 0.0.1
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
-  /@heroicons/react@2.0.18(react@18.2.0):
-    resolution: {integrity: sha512-7TyMjRrZZMBPa+/5Y8lN0iyvUU/01PeMGX2+RE7cQWpEUIcb4QotzUObFkJDejj/HUH4qjP/eQ0gzzKs2f+6Yw==}
-    peerDependencies:
-      react: '>= 16'
-    dependencies:
-      react: 18.2.0
     dev: false
 
   /@humanwhocodes/config-array@0.11.10:
@@ -8103,11 +8089,6 @@ packages:
       decompress-response: 6.0.0
       once: 1.4.0
       simple-concat: 1.0.1
-    dev: false
-
-  /simple-icons@8.15.0:
-    resolution: {integrity: sha512-W9USb8Yic98wAZc9HpjMyH/wrJZx/BRqGK82SsmdApFaO5XqYe5peWV5A18XLYIgdcAsUC6PS2Z0STJoHdNXXQ==}
-    engines: {node: '>=0.12.18'}
     dev: false
 
   /simple-swizzle@0.2.2:

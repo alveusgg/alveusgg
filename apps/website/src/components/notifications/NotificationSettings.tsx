@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
-import { ArrowUpTrayIcon, PlusIcon } from "@heroicons/react/20/solid";
-
 import {
   isNotificationsSupported,
   isWebPushSupported,
@@ -17,6 +15,8 @@ import Link from "@/components/content/Link";
 
 import imageIOSShareDialog from "@/assets/notifications-help/ios-share-dialog.png";
 import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
+import IconPlus from "@/icons/IconPlus";
+import IconUpload from "@/icons/IconUpload";
 
 export function useNotificationStatus() {
   const [isClientSupported, setIsClientSupported] = useState(false);
@@ -72,13 +72,13 @@ export function NotificationSettings() {
 
           <ol className="list-decimal pl-5">
             <li className="my-3">
-              Tap the <ArrowUpTrayIcon className="inline-block h-6 w-6" /> Share
+              Tap the <IconUpload className="inline-block h-6 w-6" /> Share
               button in the menu bar.
             </li>
             <li className="my-3">
               Scroll down the list of options, then tap{" "}
               <em>Add to Home Screen</em>{" "}
-              <PlusIcon className="inline-block h-6 w-6" />.
+              <IconPlus className="inline-block h-6 w-6" />.
             </li>
           </ol>
 

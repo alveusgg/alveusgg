@@ -1,6 +1,6 @@
 import React, { useCallback, useId, useReducer, useRef, useState } from "react";
-import { ArrowUpOnSquareStackIcon } from "@heroicons/react/20/solid";
 import { fileToBase64 } from "@/utils/files";
+import IconUploadFiles from "@/icons/IconUploadFiles";
 import { Button, defaultButtonClasses } from "../Button";
 import { MessageBox } from "../MessageBox";
 import { useFileDragAndDrop } from "../hooks/useFileDragAndDrop";
@@ -260,7 +260,7 @@ export const UploadAttachmentsField = ({
           onClick={onFileUpload}
           {...dragProps}
         >
-          <ArrowUpOnSquareStackIcon className="h-5 w-5" />
+          <IconUploadFiles className="h-5 w-5" />
           Click or Drop here
         </Button>
       </div>

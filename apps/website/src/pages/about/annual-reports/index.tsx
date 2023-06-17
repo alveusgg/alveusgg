@@ -5,7 +5,7 @@ import React from "react";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import IconAngleRight from "@/icons/IconAngleRight";
+import IconChevronRight from "@/icons/IconChevronRight";
 
 const reports = {
   2021: {
@@ -45,7 +45,7 @@ const AnnualReportsPage: NextPage = () => {
               <Heading level={2} className="my-0">
                 {report.title}
               </Heading>
-              <IconAngleRight
+              <IconChevronRight
                 size={24}
                 className="text-alveus-green transition-colors group-hover:text-alveus-tan"
               />

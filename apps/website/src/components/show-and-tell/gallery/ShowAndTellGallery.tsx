@@ -2,7 +2,6 @@ import type { MouseEventHandler, MutableRefObject } from "react";
 import React, { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
-import { InformationCircleIcon } from "@heroicons/react/20/solid";
 
 import {
   parseVideoUrl,
@@ -17,6 +16,7 @@ import { useConsent } from "@/hooks/consent";
 import Carousel from "@/components/content/Carousel";
 import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
+import IconInformationCircle from "@/icons/IconInformationCircle";
 
 export function ShowAndTellGallery({
   isPresentationView,
@@ -204,7 +204,7 @@ export function ShowAndTellGallery({
             {imageAttachment.caption && (
               <>
                 <div className="absolute bottom-0 right-0 m-2 flex flex-row items-center gap-1 opacity-100 drop-shadow-lg transition-opacity duration-200 group-hover/carousel-item:opacity-0">
-                  caption <InformationCircleIcon className="h-5 w-5" />
+                  caption <IconInformationCircle className="h-5 w-5" />
                 </div>
                 <figcaption className="absolute inset-0 top-auto flex items-center justify-center bg-black/80 p-2 leading-tight opacity-0 transition-opacity duration-200 group-hover/carousel-item:opacity-100">
                   {imageAttachment.caption}

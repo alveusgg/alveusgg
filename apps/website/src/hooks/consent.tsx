@@ -16,7 +16,7 @@ import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
-import IconCross from "@/icons/IconCross";
+import IconX from "@/icons/IconX";
 
 type ConsentData = {
   name: string;
@@ -201,7 +201,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                 className="-mr-2 flex-shrink-0 p-2 transition-colors hover:text-alveus-green"
                 title="Close"
               >
-                <IconCross />
+                <IconX />
               </button>
             </Dialog.Title>
 

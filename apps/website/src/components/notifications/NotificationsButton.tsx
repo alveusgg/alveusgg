@@ -6,7 +6,7 @@ import { classes } from "@/utils/classes";
 import IconNotification from "@/icons/IconNotification";
 import IconNotificationOn from "@/icons/IconNotificationOn";
 import IconNotificationOff from "@/icons/IconNotificationOff";
-import IconAngleRight from "@/icons/IconAngleRight";
+import IconChevronRight from "@/icons/IconChevronRight";
 
 import {
   NotificationSettings,
@@ -81,7 +81,7 @@ export const NotificationsButton = ({
               className={navLinkClassesSub}
             >
               Show all updates
-              <IconAngleRight className="-mt-px ml-1 inline-block" size={18} />
+              <IconChevronRight className="-mt-px ml-1 inline-block" size={18} />
             </Popover.Button>
           </p>
         </Popover.Panel>

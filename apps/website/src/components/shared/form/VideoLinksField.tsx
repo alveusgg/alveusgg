@@ -1,6 +1,7 @@
 import React, { useCallback, useState } from "react";
-import { PlusIcon, TrashIcon } from "@heroicons/react/20/solid";
 import { parseVideoUrl } from "@/utils/video-urls";
+import IconTrash from "@/icons/IconTrash";
+import IconPlus from "@/icons/IconPlus";
 import { Button, defaultButtonClasses, disabledButtonClasses } from "../Button";
 import { MessageBox } from "../MessageBox";
 import { VideoPlatformIcon } from "../VideoPlatformIcon";
@@ -102,7 +103,7 @@ export function VideoLinksField({
           }
           disabled={inputValue.length === 0}
         >
-          <PlusIcon className="h-6 w-6" /> Add Videos
+          <IconPlus className="h-6 w-6" /> Add Videos
         </Button>
 
         {videoUrls.length > 0 && (
@@ -124,7 +125,7 @@ export function VideoLinksField({
                     setVideoUrls(videoUrls.filter((item) => item !== url));
                   }}
                 >
-                  <TrashIcon className="h-6 w-6" /> Remove
+                  <IconTrash className="h-6 w-6" /> Remove
                 </Button>
               </li>
             ))}
