@@ -10,13 +10,13 @@ export type ProfileCardProps = {
   name: string;
   position?: string;
   species?: Ambassador["species"];
-  img: AmbassadorImage | ImageProps | StaffImage;
+  img?: AmbassadorImage | ImageProps | StaffImage;
   enclosure?: string;
 };
 
 type SpanProps = {
   title: string;
-  titleName: Ambassador["species"] | string | undefined;
+  titleName?: Ambassador["species"] | string;
 };
 
 const Span: React.FC<SpanProps> = ({ title, titleName }) => {
@@ -27,6 +27,11 @@ const Span: React.FC<SpanProps> = ({ title, titleName }) => {
   );
 };
 
+const staffStyle = `absolute z-20 flex flex-col lg:flex-row lg:-mt-[240px] -mt-[330px] border border-yellow-400 box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+
+const ambassadorStyle =
+  "absolute z-50 flex max-w-[448px] -mt-[168px] items-center gap-6 rounded border border-yellow-500 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
+
 const ProfileCard: React.FC<ProfileCardProps> = ({
   name,
   img,
@@ -35,10 +40,16 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   position,
 }) => {
   return (
-    <div className="absolute z-10 flex min-w-[320px] max-w-[448px] gap-6 rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800">
-      {/* Hard crear un Image obj dentro de staff Member? */}
-      {<Image src={img.src} alt={img.alt} className="h-24 w-24 rounded-full" />}
-
+    <div className={position ? staffStyle : ambassadorStyle}>
+      {img && (
+        <Image
+          src={img.src}
+          alt={img.alt}
+          width="176"
+          height="176"
+          className={`${position ? "h-44 w-auto" : "h-24 w-24 rounded-full"}`}
+        />
+      )}
       <div className="flex flex-col">
         <Heading className="inline text-2xl text-yellow-500" level={4}>
           {name}

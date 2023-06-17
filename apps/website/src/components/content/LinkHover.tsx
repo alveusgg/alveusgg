@@ -30,21 +30,21 @@ export type StaffImage = StaticImageData & {
 type StaffMember = {
   name: string;
   title: string;
-  image: ImageProps | StaffImage;
+  img: ImageProps | StaffImage;
   description?: JSX.Element;
 };
 
 type Staff = Array<StaffMember>;
 
 const allStaff: Staff = Object.values(staff).map((person) => ({
-  image: { ...person.image, alt: `${person.name}'s picture` },
+  img: { ...person.image, alt: `${person.name}'s picture` },
   name: person.name,
   title: person.title,
   description: person.description,
 }));
 
 allStaff.push({
-  image: { ...mayaImage, alt: "Maya's picture" },
+  img: { ...mayaImage, alt: "Maya's picture" },
   name: "Maya Higa",
   title: "Founder",
 });
@@ -62,7 +62,6 @@ const findMember = (name: string, members: Staff) => {
   const member = members.find(
     (person) => nameToCamelCase(name) == nameToCamelCase(person.name)
   );
-  console.log(member);
   return member;
 };
 
@@ -72,14 +71,17 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   species,
   enclosure,
   profile,
+  position,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [delay, setDelay] = useState<number | null>(null);
 
   const camelName = nameToCamelCase(name);
-  const img = getAmbassadorImages(camelName as AmbassadorKey)[0];
+  const img = species
+    ? getAmbassadorImages(camelName as AmbassadorKey)[0]
+    : findMember(name, allStaff)?.img;
 
-  const enclosureName = enclosures[enclosure as EnclosureKey].name;
+  const enclosureName = species && enclosures[enclosure as EnclosureKey].name;
 
   const onEnter = () => {
     setDelay(
@@ -94,13 +96,16 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   };
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
-      <Link href={href}>{name}</Link>
+      <Link className={`${position && "text-yellow-400"}`} href={href}>
+        {name}
+      </Link>
       {cardShown && profile && (
         <ProfileCard
           name={name}
           img={img}
           species={species}
           enclosure={enclosureName}
+          position={position}
         />
       )}
     </div>
