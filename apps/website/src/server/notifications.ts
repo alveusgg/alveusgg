@@ -182,6 +182,7 @@ async function createDiscordNotifications({
   title,
   message,
   expiresAt,
+  linkUrl,
 }: Notification) {
   let webhookUrls: string[] = [];
   let toEveryone = false;
@@ -202,11 +203,10 @@ async function createDiscordNotifications({
   const tasks = [];
   for (const webhookUrl of webhookUrls) {
     const relativeNotificationUrl = `/notifications/${id}`;
-    const fullAbsoluteNotificationUrl = new URL(
-      relativeNotificationUrl,
-      env.NEXT_PUBLIC_BASE_URL
-    ).toString();
-    const content = `${title}\n${message}\n${fullAbsoluteNotificationUrl}`;
+    const link =
+      linkUrl ||
+      new URL(relativeNotificationUrl, env.NEXT_PUBLIC_BASE_URL).toString();
+    const content = `${title}\n${message}\n${link}`;
 
     tasks.push(
       triggerDiscordChannelWebhook({
