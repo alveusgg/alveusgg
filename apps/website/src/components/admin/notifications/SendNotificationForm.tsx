@@ -6,11 +6,17 @@ import {
   notificationCategories,
   notificationLinkSuggestions,
   notificationLinkDefault,
+  notificationChannels,
 } from "@/config/notifications";
+
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 
 import logoImage from "@/assets/push-image/logo.png";
 import defaultBgImage from "@/assets/push-image/default.png";
+
+import IconLoading from "@/icons/IconLoading";
 
 import { TextField } from "@/components/shared/form/TextField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";
@@ -28,8 +34,6 @@ import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
 import { MessageBox } from "@/components/shared/MessageBox";
-import IconLoading from "@/icons/IconLoading";
-import { classes } from "@/utils/classes";
 
 export const allowedFileTypes = [
   "image/png",
@@ -41,15 +45,14 @@ type AllowedFileTypes = typeof allowedFileTypes;
 
 export function SendNotificationForm() {
   const formRef = useRef<HTMLFormElement>(null);
-  const sendNotification = trpc.adminNotifications.sendNotification.useMutation(
-    {
+  const createNotification =
+    trpc.adminNotifications.createNotification.useMutation({
       onSuccess: () => {
         if (formRef.current) {
           formRef.current.reset();
         }
       },
-    }
-  );
+    });
 
   const createFileUpload =
     trpc.adminNotifications.createFileUpload.useMutation();
@@ -76,8 +79,9 @@ export function SendNotificationForm() {
         (isScheduled && String(data.get("scheduledStartAt"))) || undefined;
       const scheduledEndAt =
         (isScheduled && String(data.get("scheduledEndAt"))) || undefined;
+      const channels = data.getAll("channel").map(String);
 
-      sendNotification.mutate({
+      createNotification.mutate({
         text: String(data.get("text") || ""),
         tag: String(data.get("tag") || ""),
         title: String(data.get("title") || ""),
@@ -85,9 +89,11 @@ export function SendNotificationForm() {
         scheduledStartAt,
         scheduledEndAt,
         imageUrl,
+        isPush: channels.includes("push"),
+        isDiscord: channels.includes("discord"),
       });
     },
-    [image, isScheduled, sendNotification]
+    [image, isScheduled, createNotification]
   );
 
   const previewImageUrl =
@@ -99,15 +105,15 @@ export function SendNotificationForm() {
   return (
     <div>
       <form ref={formRef} onSubmit={submit}>
-        {sendNotification.isLoading && (
+        {createNotification.isLoading && (
           <MessageBox variant="default">
             <IconLoading className="mr-2 h-5 w-5 animate-spin" />
-            Notification is being sent …
+            Notification is being published …
           </MessageBox>
         )}
-        {sendNotification.isError && (
+        {createNotification.isError && (
           <MessageBox variant="failure">
-            ERROR: Could not send the notification!
+            ERROR: Could not create the notification!
           </MessageBox>
         )}
 
@@ -214,40 +220,23 @@ export function SendNotificationForm() {
             </div>
           </Fieldset>
 
-          {env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED && (
-            <Fieldset legend="Publication channels">
-              <div className="flex flex-wrap gap-4">
-                <CheckboxField
-                  name="channel"
-                  value="push"
-                  className="rounded-lg border border-white/20 px-2"
-                >
-                  Push
-                </CheckboxField>
-                <CheckboxField
-                  name="channel"
-                  value="discord"
-                  className="rounded-lg border border-white/20 px-2"
-                >
-                  Discord
-                </CheckboxField>
-                <CheckboxField
-                  name="channel"
-                  value="twitter"
-                  className="rounded-lg border border-white/20 px-2"
-                >
-                  Twitter
-                </CheckboxField>
-                <CheckboxField
-                  name="channel"
-                  value="updatesPage"
-                  className="rounded-lg border border-white/20 px-2"
-                >
-                  Updates page
-                </CheckboxField>
-              </div>
-            </Fieldset>
-          )}
+          <Fieldset legend="Publication channels">
+            <div className="flex flex-wrap gap-4">
+              {typeSafeObjectEntries(notificationChannels).map(
+                ([id, options]) => (
+                  <CheckboxField
+                    key={id}
+                    name="channel"
+                    value={id}
+                    className="rounded-lg border border-white/20 px-2"
+                    defaultSelected={options.isDefault}
+                  >
+                    {options.label}
+                  </CheckboxField>
+                )
+              )}
+            </div>
+          </Fieldset>
 
           <Button type="submit" className={defaultButtonClasses}>
             Send notification

@@ -1,7 +1,8 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+
 import { retryOutgoingWebhook } from "@/server/outgoing-webhooks";
-import { router, superUserProcedure } from "../../trpc";
+import { router, superUserProcedure } from "@/server/trpc/trpc";
 
 export const adminActivityFeedRouter = router({
   getOutgoingWebhooks: superUserProcedure

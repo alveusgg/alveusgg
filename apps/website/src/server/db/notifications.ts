@@ -1,8 +1,6 @@
 import { pushMaxAttempts } from "@/config/push";
-import { defaultTag, defaultTitle } from "@/config/notifications";
 
 import { prisma } from "@/server/db/client";
-import { createNotification } from "@/server/notifications";
 
 export async function getRecentNotificationsForTags({
   tags,
@@ -86,24 +84,6 @@ export async function cancelNotification(notificationId: string) {
   });
 
   return;
-}
-
-export async function resendNotification(notificationId: string) {
-  const oldNotification = await prisma.notification.findUnique({
-    where: { id: notificationId },
-  });
-
-  if (!oldNotification) return;
-
-  return createNotification({
-    tag: oldNotification.tag || defaultTag,
-    title: oldNotification.title || defaultTitle,
-    imageUrl: oldNotification.imageUrl || undefined,
-    linkUrl: oldNotification.linkUrl || undefined,
-    text: oldNotification.message,
-    scheduledEndAt: oldNotification.scheduledEndAt,
-    scheduledStartAt: oldNotification.scheduledStartAt,
-  });
 }
 
 export async function updateNotificationPushStatus({
