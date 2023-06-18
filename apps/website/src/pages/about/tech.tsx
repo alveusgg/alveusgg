@@ -374,6 +374,358 @@ type ListProps = {
   itemClassName?: string;
 };
 
+type NetworkConnectionCore = {
+  type: string;
+};
+
+type NetworkConnectionWired = NetworkConnectionCore & {
+  type: "ethernet" | "fiber";
+  location: "buried" | "overhead" | "wall";
+  accessories?: { name: string; model: string; url: string }[];
+};
+
+type NetworkConnectionWireless = NetworkConnectionCore & {
+  type: "wifi";
+};
+
+type NetworkConnection = NetworkConnectionWired | NetworkConnectionWireless;
+
+type NetworkItemCore = {
+  type: string;
+  name: string;
+  model: string;
+  url: string;
+  connection: NetworkConnection;
+};
+
+type NetworkItemSwitch = NetworkItemCore & {
+  type: "switch";
+  links: NetworkItem[];
+};
+
+type NetworkItemCamera = NetworkItemCore & {
+  type: "camera";
+};
+
+type NetworkItemAccessPoint = NetworkItemCore & {
+  type: "accessPoint";
+  links?: NetworkItem[];
+};
+
+type NetworkItem =
+  | NetworkItemSwitch
+  | NetworkItemCamera
+  | NetworkItemAccessPoint;
+
+const network: NetworkItem[] = [
+  {
+    type: "switch",
+    name: "Studio",
+    model: "",
+    url: "",
+    connection: { type: "ethernet", location: "wall" },
+    links: [
+      {
+        type: "accessPoint",
+        name: "Studio",
+        model: "",
+        url: "",
+        connection: { type: "ethernet", location: "wall" },
+      },
+      {
+        type: "switch",
+        name: "Reptile Room",
+        model: "",
+        url: "",
+        connection: { type: "ethernet", location: "wall" },
+        links: [
+          {
+            type: "camera",
+            name: "Noodle",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
+            type: "camera",
+            name: "Noodle Hide",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
+            type: "camera",
+            name: "Georgie",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
+            type: "camera",
+            name: "Georgie Water",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
+            type: "camera",
+            name: "Isopods",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
+            type: "camera",
+            name: "Cockroaches",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
+            type: "switch",
+            name: "Critter Cave",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+            links: [
+              {
+                type: "camera",
+                name: "Hank",
+                model: "",
+                url: "",
+                connection: { type: "ethernet", location: "wall" },
+              },
+              {
+                type: "camera",
+                name: "Hank Corner",
+                model: "",
+                url: "",
+                connection: { type: "ethernet", location: "wall" },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "switch",
+        name: "Ella's House",
+        model: "",
+        url: "",
+        connection: { type: "ethernet", location: "buried" },
+        links: [
+          {
+            type: "accessPoint",
+            name: "Area Wide",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+            links: [
+              {
+                type: "accessPoint",
+                name: "Pasture",
+                model: "",
+                url: "",
+                connection: { type: "wifi" },
+              },
+              {
+                type: "accessPoint",
+                name: "Parrots",
+                model: "",
+                url: "",
+                connection: { type: "wifi" },
+                links: [
+                  {
+                    type: "switch",
+                    name: "Parrots",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Parrots",
+                        model: "",
+                        url: "",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Parrots Audio",
+                        model: "",
+                        url: "",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "switch",
+            name: "Pasture",
+            model: "",
+            url: "",
+            connection: { type: "fiber", location: "wall" },
+            links: [
+              {
+                type: "camera",
+                name: "Pasture",
+                model: "",
+                url: "",
+                connection: { type: "ethernet", location: "wall" },
+              },
+              {
+                type: "camera",
+                name: "Pasture Audio",
+                model: "",
+                url: "",
+                connection: { type: "ethernet", location: "wall" },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "switch",
+        name: "Nutrition House",
+        model: "",
+        url: "",
+        connection: { type: "ethernet", location: "buried" },
+        links: [
+          {
+            type: "camera",
+            name: "Nutrition House",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
+            type: "switch",
+            name: "Power Distribution",
+            model: "",
+            url: "",
+            connection: { type: "ethernet", location: "buried" },
+            links: [
+              {
+                type: "switch",
+                name: "Crows",
+                model: "",
+                url: "",
+                connection: { type: "ethernet", location: "buried" },
+                links: [
+                  {
+                    type: "camera",
+                    name: "Crows Outside",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Crows Inside",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Crows Audio",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "accessPoint",
+                    name: "Crows",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                ],
+              },
+              {
+                type: "switch",
+                name: "Marmosets",
+                model: "",
+                url: "",
+                connection: { type: "ethernet", location: "buried" },
+                links: [
+                  {
+                    type: "camera",
+                    name: "Marmosets Outside",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Marmosets Inside",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Marmosets Audio",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "accessPoint",
+                    name: "Marmosets",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                ],
+              },
+              {
+                type: "switch",
+                name: "Foxes",
+                model: "",
+                url: "",
+                connection: { type: "fiber", location: "buried" },
+                links: [
+                  {
+                    type: "camera",
+                    name: "Foxes",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Foxes Corner",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Foxes Audio",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "accessPoint",
+                    name: "Foxes",
+                    model: "",
+                    url: "",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+];
+
 const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
   <ul className={className}>
     {Object.entries(items).map(([key, item], idx) => (
