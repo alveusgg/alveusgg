@@ -6,6 +6,7 @@ import {
   Controls,
   Position,
   type NodeTypes,
+  type EdgeTypes,
   type XYPosition,
   type ReactFlowInstance,
 } from "reactflow";
@@ -41,6 +42,7 @@ type TreeEdgeInternal = {
 interface TreeProps<T> {
   data: TreeNode<T> | TreeNode<T>[];
   nodeTypes?: NodeTypes;
+  edgeType?: EdgeTypes[string];
   nodeSize?: { width: number; height: number };
   defaultZoom?: number;
 }
@@ -48,12 +50,17 @@ interface TreeProps<T> {
 const withPositions = <T,>(
   { nodes, edges }: { nodes: TreeNodeInternal<T>[]; edges: TreeEdgeInternal[] },
   size: { width: number; height: number },
+  separation = { ranks: 100, siblings: 50 },
   direction: "TB" | "LR" = "LR"
 ) => {
   // Create the graph
   const dagreGraph = new graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
-  dagreGraph.setGraph({ rankdir: direction });
+  dagreGraph.setGraph({
+    ranksep: separation.ranks,
+    nodesep: separation.siblings,
+    rankdir: direction,
+  });
   nodes.forEach((node) => {
     dagreGraph.setNode(node.id, { ...size });
   });
@@ -132,7 +139,7 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
   return {
     nodes: nodes.map((node) => ({
       ...node,
-      // Invert the z-index so that the deepest node is on top
+      // Invert the z-index so that the shallowest node is on top
       zIndex: deepest - node.zIndex,
     })),
     edges,
@@ -142,17 +149,21 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
 const Tree = <T,>({
   data,
   nodeTypes,
+  edgeType,
   nodeSize = { width: 180, height: 40 },
   defaultZoom = 1,
 }: TreeProps<T>) => {
+  // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(
     () => withPositions(getNodesEdges(data), nodeSize),
     [data, nodeSize]
   );
+
+  // When the tree loads, center it
   const init = useCallback(
     (instance: ReactFlowInstance) => {
-      if (!nodes[0]) return;
       const firstNode = nodes[0];
+      if (!firstNode) return;
 
       // Center on 0, 0
       instance.setCenter(0, 0);
@@ -171,11 +182,18 @@ const Tree = <T,>({
     [nodes, defaultZoom]
   );
 
+  // Override the default edge type if one is provided
+  const edgeTypes = useMemo(
+    () => (edgeType ? { default: edgeType } : undefined),
+    [edgeType]
+  );
+
   return (
     <ReactFlow
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       proOptions={{ hideAttribution: true }}
       onInit={init}
     >
