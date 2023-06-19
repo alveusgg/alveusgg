@@ -5,6 +5,7 @@ import React from "react";
 import network, { type NetworkItem } from "@/data/network";
 import { classes } from "@/utils/classes";
 
+import Tree, { type TreeNode } from "@/components/content/Tree";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -218,138 +219,6 @@ const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
   },
 };
 
-const enclosures = {
-  foxes: {
-    title: "Foxes",
-    items: {
-      wideAngle: {
-        title: "Wide Angle",
-        description: "Axis M2036-LE (Fixed)",
-      },
-      den: {
-        title: "Den",
-        description: "Axis P3268-LV (Fixed)",
-      },
-      main: {
-        title: "Main",
-        description: "Axis M5525-E (PTZ)",
-      },
-    },
-  },
-  crows: {
-    title: "Crows",
-    items: {
-      indoor: {
-        title: "Indoor",
-        description: "Axis M5525-E (PTZ)",
-      },
-      outdoor: {
-        title: "Outdoor",
-        description: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-  marmosets: {
-    title: "Marmosets",
-    items: {
-      indoor: {
-        title: "Indoor",
-        description: "Axis M5075-G (PTZ)",
-      },
-      outdoor: {
-        title: "Outdoor",
-        description: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-  georgie: {
-    title: "Georgie",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis M5075-G (PTZ)",
-      },
-      water: {
-        title: "Water",
-        description: "Axis P12 MkII (Fixed)",
-      },
-    },
-  },
-  noodle: {
-    title: "Noodle",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis M5075-G (PTZ)",
-      },
-      hide: {
-        title: "Hide",
-        description: "Axis P12 MkII (Fixed)",
-      },
-    },
-  },
-  critterCave: {
-    title: "Critter Cave",
-    items: {
-      hank: {
-        title: "Hank",
-        items: {
-          day: {
-            title: "Day",
-            description: "Axis M5075-G (PTZ)",
-          },
-          night: {
-            title: "Night",
-            description: "Axis M1065-LW (Fixed)",
-          },
-        },
-      },
-      barbaraBakedBean: {
-        title: "Barbara / Baked Bean",
-        description: "Axis M5075-G (PTZ)",
-      },
-      marty: {
-        title: "Marty",
-        description: "Axis M5075-G (PTZ)",
-      },
-    },
-  },
-  parrots: {
-    title: "Parrots",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-  pasture: {
-    title: "Pasture",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis Q6135-LE (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-};
-
 const openSource = {
   website: {
     title: "Website",
@@ -374,6 +243,21 @@ type ListProps = {
   className?: string;
   itemClassName?: string;
 };
+
+const networkToTree = (items: NetworkItem[]): TreeNode[] =>
+  items.map((item) => ({
+    id: `${item.name}-${item.type}`
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g, "-")
+      .replace(/-+/g, "-"),
+    data: {
+      label: `${item.name} (${item.type})`,
+      item,
+    },
+    children: "links" in item && item.links ? networkToTree(item.links) : [],
+  }));
+
+const networkTree = networkToTree(network);
 
 const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
   <ul className={className}>
@@ -510,13 +394,11 @@ const AboutTechPage: NextPage = () => {
 
         <Section>
           <Heading level={2} className="mb-4 mt-0">
-            Enclosure cameras + audio
+            Network + Enclosure Cameras
           </Heading>
-          <List
-            items={enclosures}
-            className="flex flex-wrap md:gap-y-4"
-            itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
-          />
+          <div className="h-[80vh] rounded-2xl border border-alveus-green bg-alveus-tan">
+            <Tree data={networkTree} />
+          </div>
         </Section>
       </div>
 
