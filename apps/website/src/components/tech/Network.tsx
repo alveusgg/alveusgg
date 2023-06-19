@@ -13,6 +13,7 @@ import {
 
 import network, { type NetworkItem } from "@/data/network";
 import { classes } from "@/utils/classes";
+import { convertToSlug } from "@/utils/slugs";
 
 import IconExternal from "@/icons/IconExternal";
 import Tree, { type TreeNode } from "@/components/tech/Tree";
@@ -24,10 +25,7 @@ type Data = {
 
 const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
   items.map((item) => ({
-    id: `${item.name}-${item.type}`
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "-")
-      .replace(/-+/g, "-"),
+    id: convertToSlug(`${item.name}-${item.type}`),
     type: "network",
     data: {
       label: `${item.name} (${item.type})`,
@@ -87,7 +85,7 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
         ? {
             href: data.item.url,
             target: "_blank",
-            rel: "noopener",
+            rel: "noopener noreferrer",
           }
         : {},
     [data.item.url]
@@ -286,16 +284,61 @@ const NetworkEdge: React.FC<EdgeProps> = ({
   );
 };
 
+const NetworkList: React.FC<{ items: NetworkItem[]; className?: string }> = ({
+  items,
+  className,
+}) => (
+  <ul className={className}>
+    {items.map((item) => (
+      <li key={convertToSlug(`${item.name}-${item.type}`)} className="my-2">
+        <p>
+          {nodeTypes[item.type].eyebrow.name}: {item.name}
+        </p>
+        <p>
+          Model:{" "}
+          {item.url ? (
+            <a
+              href={item.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              {item.model}
+            </a>
+          ) : (
+            item.model
+          )}
+        </p>
+        <p>Connection: {edgeTypes[item.connection.type].name}</p>
+
+        {"links" in item && item.links && (
+          <>
+            <p>Links:</p>
+            <NetworkList items={item.links} className="ml-4" />
+          </>
+        )}
+      </li>
+    ))}
+  </ul>
+);
+
 const Network = () => (
-  <div className="h-[80vh] rounded-2xl border border-alveus-green bg-alveus-tan">
-    <Tree
-      data={useMemo(() => toTree(network), [])}
-      nodeTypes={useMemo(() => ({ network: NetworkNode }), [])}
-      edgeType={NetworkEdge}
-      nodeSize={useMemo(() => ({ width: 176, height: 80 }), [])}
-      defaultZoom={0.75}
-    />
-  </div>
+  <>
+    <div
+      className="h-[80vh] rounded-2xl border border-alveus-green bg-alveus-tan"
+      aria-hidden
+    >
+      <Tree
+        data={useMemo(() => toTree(network), [])}
+        nodeTypes={useMemo(() => ({ network: NetworkNode }), [])}
+        edgeType={NetworkEdge}
+        nodeSize={useMemo(() => ({ width: 176, height: 80 }), [])}
+        defaultZoom={0.75}
+      />
+    </div>
+
+    <NetworkList items={network} className="sr-only" />
+  </>
 );
 
 export default Network;
