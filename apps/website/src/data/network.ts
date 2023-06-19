@@ -28,7 +28,7 @@ type NetworkItemSwitch = NetworkItemCore & {
 };
 
 type NetworkItemCamera = NetworkItemCore & {
-  type: "camera";
+  type: "camera" | "microphone";
 };
 
 type NetworkItemAccessPoint = NetworkItemCore & {
@@ -180,7 +180,7 @@ const data: NetworkItem[] = [
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
-                        type: "camera",
+                        type: "microphone",
                         name: "Parrots Audio",
                         model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
                         url: "",
@@ -207,7 +207,7 @@ const data: NetworkItem[] = [
                 connection: { type: "ethernet", location: "wall" },
               },
               {
-                type: "camera",
+                type: "microphone",
                 name: "Pasture Audio",
                 model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
                 url: "",
@@ -267,7 +267,7 @@ const data: NetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
-                    type: "camera",
+                    type: "microphone",
                     name: "Crows Audio",
                     model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
                     url: "",
@@ -304,7 +304,7 @@ const data: NetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
-                    type: "camera",
+                    type: "microphone",
                     name: "Marmosets Audio",
                     model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
                     url: "",
@@ -348,7 +348,7 @@ const data: NetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
-                    type: "camera",
+                    type: "microphone",
                     name: "Foxes Audio",
                     model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
                     url: "",

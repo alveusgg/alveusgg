@@ -2,14 +2,13 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import React from "react";
 
-import network, { type NetworkItem } from "@/data/network";
 import { classes } from "@/utils/classes";
 
-import Tree, { type TreeNode } from "@/components/content/Tree";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Network from "@/components/tech/Network";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -244,21 +243,6 @@ type ListProps = {
   itemClassName?: string;
 };
 
-const networkToTree = (items: NetworkItem[]): TreeNode[] =>
-  items.map((item) => ({
-    id: `${item.name}-${item.type}`
-      .toLowerCase()
-      .replace(/[^a-z0-9]/g, "-")
-      .replace(/-+/g, "-"),
-    data: {
-      label: `${item.name} (${item.type})`,
-      item,
-    },
-    children: "links" in item && item.links ? networkToTree(item.links) : [],
-  }));
-
-const networkTree = networkToTree(network);
-
 const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
   <ul className={className}>
     {Object.entries(items).map(([key, item], idx) => (
@@ -396,9 +380,7 @@ const AboutTechPage: NextPage = () => {
           <Heading level={2} className="mb-4 mt-0">
             Network + Enclosure Cameras
           </Heading>
-          <div className="h-[80vh] rounded-2xl border border-alveus-green bg-alveus-tan">
-            <Tree data={networkTree} />
-          </div>
+          <Network />
         </Section>
       </div>
 
