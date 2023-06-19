@@ -12,8 +12,10 @@ import {
 } from "reactflow";
 
 import network, { type NetworkItem } from "@/data/network";
-import Tree, { type TreeNode } from "@/components/tech/Tree";
 import { classes } from "@/utils/classes";
+
+import IconExternal from "@/icons/IconExternal";
+import Tree, { type TreeNode } from "@/components/tech/Tree";
 
 type Data = {
   label: string;
@@ -68,6 +70,7 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
   sourcePosition = Position.Bottom,
   isConnectable,
 }) => {
+  // Get the source and target edges
   const edges = useEdges();
   let targetEdge, sourceEdge;
   for (const edge of edges) {
@@ -76,13 +79,28 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
     if (targetEdge && sourceEdge) break;
   }
 
+  // If this node has a URL, we need some extra link props
+  const Element = data.item.url ? "a" : "div";
+  const linkProps = useMemo(
+    () =>
+      data.item.url
+        ? {
+            href: data.item.url,
+            target: "_blank",
+            rel: "noopener",
+          }
+        : {},
+    [data.item.url]
+  );
+
   return (
-    <div
+    <Element
       className={classes(
-        "flex h-20 w-40 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
+        "group flex h-20 w-44 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
         nodeTypes[data.item.type].container
       )}
       tabIndex={-1}
+      {...linkProps}
     >
       {(targetEdge || isConnectable) && (
         <Handle
@@ -108,11 +126,22 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
         <p className="overflow-hidden text-ellipsis whitespace-nowrap text-alveus-green-900">
           {data.item.name}
         </p>
-        <p className="overflow-hidden text-ellipsis whitespace-nowrap text-xs text-alveus-green-700">
-          {data.item.model}
+        <p className="flex items-end gap-1 text-xs text-alveus-green-700">
+          <span
+            className={classes(
+              "shrink overflow-hidden text-ellipsis whitespace-nowrap",
+              data.item.url && "group-hover:underline"
+            )}
+          >
+            {data.item.model}
+          </span>
+
+          {data.item.url && (
+            <IconExternal className="shrink-0 grow-0" size={14} />
+          )}
         </p>
       </div>
-    </div>
+    </Element>
   );
 };
 
@@ -263,7 +292,7 @@ const Network = () => (
       data={useMemo(() => toTree(network), [])}
       nodeTypes={useMemo(() => ({ network: NetworkNode }), [])}
       edgeType={NetworkEdge}
-      nodeSize={useMemo(() => ({ width: 160, height: 80 }), [])}
+      nodeSize={useMemo(() => ({ width: 176, height: 80 }), [])}
       defaultZoom={0.75}
     />
   </div>
