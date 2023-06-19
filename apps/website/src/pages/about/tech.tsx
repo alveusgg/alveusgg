@@ -326,14 +326,14 @@ const AboutTechPage: NextPage = () => {
 
         <Section containerClassName="flex flex-wrap -mx-4">
           <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mb-4 mt-0">
+            <Heading level={2} className="mb-4 mt-0" id="studio" link>
               Broadcast Studio
             </Heading>
             <List items={broadcastStudio} />
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mb-4 mt-0">
+            <Heading level={2} className="mb-4 mt-0" id="system" link>
               Broadcast System
             </Heading>
             <List items={broadcastSystem} />
@@ -349,7 +349,9 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark>
-          <Heading level={2}>Outside Broadcasts</Heading>
+          <Heading level={2} id="outside" link>
+            Outside Broadcasts
+          </Heading>
 
           <div className="flex flex-wrap">
             <div className="basis-full p-4 lg:basis-1/2">
@@ -377,7 +379,7 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section>
-          <Heading level={2} className="mb-4 mt-0">
+          <Heading level={2} className="mb-4 mt-0" id="cameras" link>
             Network + Enclosure Cameras
           </Heading>
           <Network />
@@ -393,7 +395,7 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark className="flex-grow bg-alveus-green-800">
-          <Heading level={2} className="mb-4 mt-0">
+          <Heading level={2} className="mb-4 mt-0" id="open-source" link>
             Open-source
           </Heading>
           <List
