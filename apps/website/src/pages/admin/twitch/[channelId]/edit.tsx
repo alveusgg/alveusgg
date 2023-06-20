@@ -10,19 +10,19 @@ import { permissions } from "@/config/permissions";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import Meta from "@/components/content/Meta";
-import { FormForm } from "@/components/admin/forms/FormForm";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { TwitchChannelForm } from "@/components/admin/twitch/TwitchChannelForm";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageForms);
+  const adminProps = await getAdminSSP(context, permissions.manageTwitchApi);
   if (!adminProps) {
     return { notFound: true };
   }
 
-  const id = context.params?.formId;
+  const id = context.params?.channelId;
   if (!id) {
     return { notFound: true };
   }
@@ -30,26 +30,29 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       ...adminProps,
-      formId: String(id),
+      channelId: String(id),
     },
   };
 }
 
-const AdminEditFormPage: NextPage<
+const AdminEditTwitchChannelPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({ menuItems, formId }) => {
-  const form = trpc.adminForms.getForm.useQuery(formId);
+> = ({ menuItems, channelId }) => {
+  const channel = trpc.adminTwitch.getChannel.useQuery(channelId);
 
   return (
     <>
-      <Meta title="Edit Form | Admin" />
+      <Meta title="Edit Twitch Channel Config - Twitch API | Admin" />
 
-      <AdminPageLayout title="Edit Form" menuItems={menuItems}>
-        <Headline>Edit Form</Headline>
+      <AdminPageLayout
+        title="Edit Twitch Channel Config - Twitch API"
+        menuItems={menuItems}
+      >
+        <Headline>Edit Twitch Channel Config</Headline>
 
         <Panel>
-          {form.data ? (
-            <FormForm action="edit" form={form.data} />
+          {channel.data ? (
+            <TwitchChannelForm action="edit" data={channel.data} />
           ) : (
             <MessageBox>Loading …</MessageBox>
           )}
@@ -58,4 +61,4 @@ const AdminEditFormPage: NextPage<
     </>
   );
 };
-export default AdminEditFormPage;
+export default AdminEditTwitchChannelPage;

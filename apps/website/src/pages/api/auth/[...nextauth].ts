@@ -7,6 +7,7 @@ import { env } from "@/env/index.mjs";
 import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
+import { defaultScope } from "@/config/twitch";
 
 const adapter = PrismaAdapter(prisma);
 
@@ -65,8 +66,7 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.TWITCH_CLIENT_SECRET,
       authorization: {
         params: {
-          scope:
-            "openid user:read:email user:read:follows user:read:subscriptions",
+          scope: defaultScope,
         },
       },
     }),

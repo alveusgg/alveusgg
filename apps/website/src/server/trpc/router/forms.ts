@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { getTwitchConfig, type TwitchConfig } from "@/config/twitch";
 import { calcFormConfig } from "@/utils/forms";
 import { getUserFollowsBroadcaster } from "@/server/utils/twitch-api";
 import {
@@ -20,20 +19,14 @@ export const createFormEntrySchema = formEntrySchema.and(
 );
 
 async function checkFollowsChannel(
-  channelConfig: TwitchConfig["channels"][string],
+  channelId: string,
   twitchAccount: { access_token: string; providerAccountId: string }
 ) {
-  const isFollowing = await getUserFollowsBroadcaster(
+  return getUserFollowsBroadcaster(
     twitchAccount.access_token,
     twitchAccount.providerAccountId,
-    channelConfig.id
+    channelId
   );
-  if (!isFollowing) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: `Your connected Twitch account does not follow ${channelConfig.label}!`,
-    });
-  }
 }
 
 export const formsRouter = router({
@@ -119,12 +112,17 @@ export const formsRouter = router({
       if (config.checks) {
         // TODO: Make the form config granular. Right now the channel follow check is hard-coded here:
         // NOTE: Does not work, twitch removed API access :(
-        const channelConfig = (await getTwitchConfig()).channels
-          .alveussanctuary;
-        await checkFollowsChannel(channelConfig, {
+        const isFollowing = await checkFollowsChannel("636587384", {
           access_token: accessToken,
           providerAccountId: twitchAccount.providerAccountId,
         });
+
+        if (!isFollowing) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Your connected Twitch account does not follow AlveusSanctuary!`,
+          });
+        }
       }
 
       // Insert entry

@@ -69,6 +69,9 @@ model Account {
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
+  twitchChannelBroadcaster TwitchChannel[] @relation("BroadcasterAccount")
+  twitchChannelModerator   TwitchChannel[] @relation("ModeratorAccount")
+
   @@unique([provider, providerAccountId])
   @@index([userId], name: "Account_userId")
 }
@@ -370,4 +373,15 @@ model ImageAttachment {
 
   fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
   showAndTellEntryAttachment ShowAndTellEntryAttachment?
+}
+
+model TwitchChannel {
+  channelId            String  @id
+  username             String
+  label                String
+  broadcasterAccountId String?
+  moderatorAccountId   String?
+
+  broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
+  moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
 }

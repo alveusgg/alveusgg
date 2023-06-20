@@ -19,7 +19,7 @@ export const permissions = {
     requiredRole: "forms",
   },
   manageTwitchApi: {
-    requiresSuperUser: true,
+    requiredRole: "twitchApi",
   },
   manageUsersAndRoles: {
     requiresSuperUser: true,

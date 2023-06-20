@@ -1,10 +1,12 @@
 import { z } from "zod";
 import fetch from "node-fetch";
+
 import { env } from "@/env/index.mjs";
+
 import {
   ExpiredAccessTokenError,
   getClientCredentialsAccessToken,
-} from "./oauth2";
+} from "@/server/utils/oauth2";
 
 export type AuthHeaders = {
   "Client-Id": string;
@@ -113,7 +115,12 @@ export async function getSubscriptions() {
   }
 
   const json = await response.json();
-  return await subscriptionsResponseSchema.parseAsync(json);
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get subscriptions!");
+  }
+
+  return subscriptionsResponseSchema.parseAsync(json);
 }
 
 export async function removeSubscription(id: string) {
@@ -197,7 +204,7 @@ export async function getSubscriptionsForUser(userId: string) {
     throw new Error("Could not get subscription!");
   }
 
-  return await subscriptionsResponseSchema.parseAsync(json);
+  return subscriptionsResponseSchema.parseAsync(json);
 }
 
 export async function getStreamsForChannels(channelIds: Array<string>) {
@@ -223,7 +230,7 @@ export async function getStreamsForChannels(channelIds: Array<string>) {
     throw new Error("Could not get streams!");
   }
 
-  return await streamsResponseSchema.parseAsync(json);
+  return streamsResponseSchema.parseAsync(json);
 }
 
 const channelsFollowedResponseSchema = z.object({
@@ -272,7 +279,7 @@ export async function getUserChannelsFollowed(
     throw new Error("Could not get channel follows status!");
   }
 
-  return await channelsFollowedResponseSchema.parseAsync(json);
+  return channelsFollowedResponseSchema.parseAsync(json);
 }
 
 export async function getUserFollowsBroadcaster(
@@ -295,4 +302,76 @@ export async function getUserFollowsBroadcaster(
   }
 
   return false;
+}
+
+const usersResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string(),
+      login: z.string(),
+      display_name: z.string(),
+      type: z.enum(["staff", "admin", "global_mod", ""]),
+      broadcaster_type: z.enum(["partner", "affiliate", ""]),
+      description: z.string(),
+      profile_image_url: z.string(),
+      offline_image_url: z.string(),
+      view_count: z.number(),
+      email: z.string().email().optional(),
+      created_at: z.string(),
+    })
+  ),
+});
+
+export async function getUserById(channelId: string) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/users?${new URLSearchParams({
+      id: channelId,
+    })}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getApplicationAuthHeaders()),
+      },
+    }
+  );
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get broadcaster name!");
+  }
+
+  const data = await usersResponseSchema.parseAsync(json);
+  return data?.data?.[0];
+}
+
+export async function getUserByName(userName: string) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/users?${new URLSearchParams({
+      login: userName,
+    })}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getApplicationAuthHeaders()),
+      },
+    }
+  );
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get broadcaster name!");
+  }
+
+  const data = await usersResponseSchema.parseAsync(json);
+  return data?.data?.[0];
 }
