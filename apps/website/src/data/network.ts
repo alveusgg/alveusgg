@@ -73,7 +73,8 @@ const data: NetworkItem[] = [
           {
             type: "camera",
             name: "Noodle Hide",
-            model: "Axis P12 MkII (Fixed)",
+            model: "Axis P1275 (Fixed)",
+            url: "https://www.axis.com/products/axis-p1275",
             connection: { type: "ethernet", location: "wall" },
           },
           {
@@ -86,7 +87,8 @@ const data: NetworkItem[] = [
           {
             type: "camera",
             name: "Georgie Water",
-            model: "Axis P12 MkII (Fixed)",
+            model: "Axis P1245 (Fixed)",
+            url: "https://www.axis.com/products/axis-p1245",
             connection: { type: "ethernet", location: "wall" },
           },
           {
