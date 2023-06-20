@@ -319,15 +319,19 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 <Heading level={3} className="text-2xl">
                   Featuring:
                 </Heading>
-                <p>
+                <div>
                   {typeSafeObjectEntries(featured).map(
                     ([key, ambassador], idx, arr) => (
                       <Fragment key={key}>
                         {/* Retired ambassadors don't have pages */}
                         {isActiveAmbassadorKey(key) ? (
-                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
-                            {ambassador.name}
-                          </Link>
+                          <LinkHover
+                            href={`/ambassadors/${camelToKebab(key)}`}
+                            name={ambassadors[key].name}
+                            species={ambassadors[key].species}
+                            enclosure={ambassadors[key].enclosure}
+                            profile
+                          ></LinkHover>
                         ) : (
                           ambassador.name
                         )}
@@ -337,7 +341,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                       </Fragment>
                     )
                   )}
-                </p>
+                </div>
               </div>
 
               <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">

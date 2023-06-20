@@ -27,10 +27,9 @@ const Span: React.FC<SpanProps> = ({ title, titleName }) => {
   );
 };
 
-const staffStyle = `absolute z-20 flex flex-col lg:flex-row lg:-mt-[240px] -mt-[330px] border border-yellow-400 box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const staffStyle = `absolute z-50 flex flex-col xl:flex-row xl:-mt-[215px] -mt-[305px] border border-yellow-400 box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
-const ambassadorStyle =
-  "absolute z-50 flex max-w-[448px] -mt-[168px] items-center gap-6 rounded border border-yellow-500 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
+const ambassadorStyle = `absolute z-50 flex flex-col lg:flex-row lg:-ml-[110px] lg:-mt-[170px] items-center gap-4 -mt-[255px]  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   name,
@@ -47,11 +46,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           alt={img.alt}
           width="176"
           height="176"
-          className={`${position ? "h-44 w-auto" : "h-24 w-24 rounded-full"}`}
+          className={`${
+            position
+              ? "h-44 w-auto"
+              : "h-32 w-auto rounded lg:h-24 lg:w-24 lg:rounded-full"
+          }`}
         />
       )}
-      <div className="flex flex-col">
-        <Heading className="inline text-2xl text-yellow-500" level={4}>
+      <div className="flex flex-col text-sm">
+        <Heading className="inline text-xl text-yellow-500" level={5}>
           {name}
         </Heading>
         {species ? (

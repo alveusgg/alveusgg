@@ -96,9 +96,6 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   };
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
-      <Link className={`${position && "text-yellow-400"}`} href={href}>
-        {name}
-      </Link>
       {cardShown && profile && (
         <ProfileCard
           name={name}
@@ -108,6 +105,9 @@ const LinkHover: React.FC<LinkHoverProps> = ({
           position={position}
         />
       )}
+      <Link className={`${position && "text-yellow-400"}`} href={href}>
+        {name}
+      </Link>
     </div>
   );
 };
