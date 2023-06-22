@@ -27,9 +27,9 @@ const Span: React.FC<SpanProps> = ({ title, titleName }) => {
   );
 };
 
-const staffStyle = `absolute z-50 flex flex-col xl:flex-row xl:-mt-[215px] -mt-[305px] border border-yellow-400 box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const staffStyle = `absolute z-50 flex flex-col xl:flex-row -translate-y-full -mt-[5px] border border-yellow-400 box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
-const ambassadorStyle = `absolute z-50 flex flex-col lg:flex-row lg:-ml-[110px] lg:-mt-[170px] items-center gap-4 -mt-[255px]  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row -translate-y-full -translate-x-1/4 -mt-[25px] items-center gap-4  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   name,
@@ -49,7 +49,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           className={`${
             position
               ? "h-44 w-auto"
-              : "h-32 w-auto rounded lg:h-24 lg:w-24 lg:rounded-full"
+              : "h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"
           }`}
         />
       )}
