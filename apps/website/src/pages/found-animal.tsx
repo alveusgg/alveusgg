@@ -22,51 +22,66 @@ type Log = {
 };
 
 const FoundAnimalPage: NextPage = () => {
+  // Track the current flow state and log of messages
   const [flow, setFlow] = useState<FoundAnimalFlow>(foundAnimal);
   const [log, setLog] = useState<Log[]>(
     foundAnimal.prompt.map((message) => ({ message, type: "prompt" }))
   );
+
+  // Track the current queue of messages to display and the option being loaded
+  const [queue, setQueue] = useState<Log[]>([]);
+  const [loading, setLoading] = useState<FoundAnimalOption | null>(null);
   const timer = useRef<NodeJS.Timeout | null>(null);
-  const [loading, setLoading] = useState(false);
+
+  // Scroll to the bottom whenever the log changes
   const container = useRef<HTMLDivElement | null>(null);
-
-  const scroll = useCallback(() => {
+  useEffect(() => {
     if (!container.current) return;
-    console.log(container.current.textContent);
     container.current.scrollTop = container.current.scrollHeight;
-  }, []);
+  }, [log]);
 
+  // When the user selects an option, queue up the messages to be displayed
   const click = useCallback(
     (option: FoundAnimalOption) => {
       if (loading) return;
-      setLoading(true);
+      setLoading(option);
       setLog((prev) => [...prev, { message: option.name, type: "option" }]);
-
-      // Completely artificial delay to make it feel more natural
-      timer.current = setTimeout(() => {
-        setLoading(false);
-        setLog((prev) => [
-          ...prev,
-          ...option.flow.prompt.map<Log>((message) => ({
-            message,
-            type: "prompt",
-          })),
-        ]);
-        setFlow(option.flow);
-      }, 250);
+      setQueue(
+        option.flow.prompt.map((message) => ({ message, type: "prompt" }))
+      );
     },
     [loading]
   );
 
+  // Implement an artificial delay for each message, to make it "natural"
+  useEffect(() => {
+    const next = queue[0];
+    const remaining = queue.slice(1);
+    if (!next) return;
+
+    timer.current = setTimeout(() => {
+      if (!remaining.length) {
+        setLoading((prev) => {
+          if (prev) setFlow(prev.flow);
+          return null;
+        });
+      }
+      setLog((prev) => [...prev, next]);
+      setQueue(remaining);
+    }, 500);
+  }, [queue]);
+
+  // Allow the user to reset the flow at any time
   const reset = useCallback(() => {
+    // Clear the current queue
+    setLoading(null);
+    setQueue([]);
+    if (timer.current) clearTimeout(timer.current);
+
+    // Reset the flow and the log
     setFlow(foundAnimal);
     setLog(foundAnimal.prompt.map((message) => ({ message, type: "prompt" })));
   }, []);
-
-  // Scroll to the bottom whenever the log changes
-  useEffect(() => {
-    scroll();
-  }, [scroll, log]);
 
   // Clean up any timers when the component unmounts
   useEffect(() => {
@@ -130,16 +145,16 @@ const FoundAnimalPage: NextPage = () => {
                     log.type === "prompt"
                       ? "self-start bg-alveus-tan-50/75"
                       : "self-end bg-alveus-green-50/75",
-                    "rounded px-2 py-1 text-alveus-green-700"
+                    "rounded px-2 py-1 text-alveus-green-800"
                   )}
                 >
                   {log.message}
                 </p>
               ))}
 
-              {loading && (
-                <p className="self-start rounded bg-alveus-tan-50 px-2 py-1 text-alveus-green-700">
-                  . . .
+              {!!loading && (
+                <p className="self-start rounded bg-alveus-tan-50 px-2 py-1 font-extrabold text-alveus-green-700">
+                  <span className="animate-pulse">. . .</span>
                 </p>
               )}
 
@@ -150,7 +165,7 @@ const FoundAnimalPage: NextPage = () => {
                       <button
                         className="rounded-2xl border border-alveus-green bg-alveus-green px-4 py-1 text-lg text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green disabled:cursor-not-allowed disabled:opacity-50"
                         onClick={() => click(option)}
-                        disabled={loading}
+                        disabled={!!loading}
                         type="button"
                       >
                         {option.name}
