@@ -35,7 +35,10 @@ const data: FoundAnimalFlow = {
           {
             name: "Yes",
             flow: {
-              prompt: ["Call a wildlife rehabilitator", ...macros.bird.rehab],
+              prompt: [
+                "Call a wildlife rehabilitator. They will be best equipped to help an injured bird.",
+                ...macros.bird.rehab,
+              ],
             },
           },
           {
