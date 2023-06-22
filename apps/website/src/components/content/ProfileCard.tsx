@@ -12,6 +12,7 @@ export type ProfileCardProps = {
   species?: Ambassador["species"];
   img?: AmbassadorImage | ImageProps | StaffImage;
   enclosure?: string;
+  upwards: boolean;
 };
 
 type SpanProps = {
@@ -27,9 +28,9 @@ const Span: React.FC<SpanProps> = ({ title, titleName }) => {
   );
 };
 
-const staffStyle = `absolute z-50 flex flex-col xl:flex-row -translate-y-full -mt-[5px] border border-yellow-400 box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const staffStyle = `absolute z-50 flex flex-col lg:flex-row border border-yellow-400 box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
-const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row -translate-y-full -translate-x-1/4 -mt-[25px] items-center gap-4  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-4  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   name,
@@ -37,9 +38,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   species,
   enclosure,
   position,
+  upwards,
 }) => {
+  const ambassadorStyles = `${ambassadorStyle} ${
+    upwards ? "-translate-y-full" : "mt-4"
+  } `;
   return (
-    <div className={position ? staffStyle : ambassadorStyle}>
+    <div
+      className={
+        position
+          ? `${staffStyle} ${upwards ? "-translate-y-full" : "mt-5"} `
+          : ambassadorStyles
+      }
+    >
       {img && (
         <Image
           src={img.src}

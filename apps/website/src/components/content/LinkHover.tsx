@@ -48,8 +48,6 @@ allStaff.push({
   name: "Maya Higa",
   title: "Founder",
 });
-console.log(allStaff);
-console.log(mayaImage);
 
 const nameToCamelCase = (name: string) => {
   const noSymbols = name.replace(/[{(/.)}]/g, "");
@@ -75,6 +73,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [delay, setDelay] = useState<number | null>(null);
+  const [displayUpwards, setDisplayUpwards] = useState<boolean>(false);
 
   const camelName = nameToCamelCase(name);
   const img = species
@@ -83,7 +82,18 @@ const LinkHover: React.FC<LinkHoverProps> = ({
 
   const enclosureName = species && enclosures[enclosure as EnclosureKey].name;
 
-  const onEnter = () => {
+  const calcDistance = (e: React.MouseEvent<HTMLDivElement>) => {
+    const linkPosition = e.currentTarget.getBoundingClientRect();
+    const vwHeight = window.innerHeight;
+
+    const bottom = vwHeight - linkPosition.bottom;
+    const top = linkPosition.top;
+
+    setDisplayUpwards(top > bottom ? true : false);
+  };
+
+  const onEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+    calcDistance(e);
     setDelay(
       window.setTimeout(() => {
         setCardShown(true);
@@ -103,6 +113,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
           species={species}
           enclosure={enclosureName}
           position={position}
+          upwards={displayUpwards}
         />
       )}
       <Link className={`${position && "text-yellow-400"}`} href={href}>
