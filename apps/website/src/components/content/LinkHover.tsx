@@ -17,6 +17,7 @@ import ProfileCard from "./ProfileCard";
 type LinkHoverProps = {
   species?: Ambassador["species"];
   enclosure?: EnclosureKey;
+  isEnclosure?: boolean;
   position?: string;
   profile?: boolean;
   href: string;
@@ -54,11 +55,8 @@ const nameToCamelCase = (name: string) => {
   const camelCased = noSymbols.replace("ñ", "n");
   return kebabToCamel(sentenceToKebab(camelCased));
 };
-const inhabitants = Object.entries(ambassadors);
-console.log(inhabitants);
 
 const findMember = (name: string, members: Staff) => {
-  // const camelName = nameToCamelCase(name);
   const member = members.find(
     (person) => nameToCamelCase(name) == nameToCamelCase(person.name)
   );
@@ -70,6 +68,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   name,
   species,
   enclosure,
+  isEnclosure,
   profile,
   position,
 }) => {
@@ -78,16 +77,27 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   const [displayUpwards, setDisplayUpwards] = useState<boolean>(false);
 
   const camelName = nameToCamelCase(name);
+
   const img = species
     ? getAmbassadorImages(camelName as AmbassadorKey)[0]
     : findMember(name, allStaff)?.img;
 
   const enclosureName = species && enclosures[enclosure as EnclosureKey].name;
 
-  const inhabiting = inhabitants.filter(
-    (ambass) => ambass[1].enclosure === enclosure
-  );
+  const inhabiting = isEnclosure
+    ? Object.entries(ambassadors).filter(
+        (ambassador) => ambassador[1].enclosure === enclosure
+      )
+    : [];
+
+  const imgs =
+    isEnclosure &&
+    inhabiting?.map((ambassador) => {
+      return getAmbassadorImages(ambassador[0] as AmbassadorKey)[0];
+    });
+
   console.log(inhabiting);
+
   const calcDistance = (e: React.MouseEvent<HTMLDivElement>) => {
     const linkPosition = e.currentTarget.getBoundingClientRect();
     const vwHeight = window.innerHeight;
@@ -120,6 +130,16 @@ const LinkHover: React.FC<LinkHoverProps> = ({
           enclosure={enclosureName}
           position={position}
           upwards={displayUpwards}
+        />
+      )}
+      {cardShown && isEnclosure && (
+        <ProfileCard
+          name={name}
+          img={img}
+          imgs={imgs}
+          enclosure={enclosureName}
+          upwards={displayUpwards}
+          isEnclosure
         />
       )}
       <Link className={`${position && "text-yellow-400"}`} href={href}>
