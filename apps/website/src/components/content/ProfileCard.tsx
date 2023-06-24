@@ -59,7 +59,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           height="176"
           className={`${
             position
-              ? "h-44 w-auto"
+              ? "h-40 w-auto"
               : "h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"
           }`}
         />

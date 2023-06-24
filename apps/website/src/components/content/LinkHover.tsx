@@ -1,9 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
-import type {
-  Ambassador,
-  AmbassadorKey,
+import ambassadors, {
+  type Ambassador,
+  type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
 import type { ImageProps, StaticImageData } from "next/image";
 
@@ -54,6 +54,8 @@ const nameToCamelCase = (name: string) => {
   const camelCased = noSymbols.replace("ñ", "n");
   return kebabToCamel(sentenceToKebab(camelCased));
 };
+const inhabitants = Object.entries(ambassadors);
+console.log(inhabitants);
 
 const findMember = (name: string, members: Staff) => {
   // const camelName = nameToCamelCase(name);
@@ -82,6 +84,10 @@ const LinkHover: React.FC<LinkHoverProps> = ({
 
   const enclosureName = species && enclosures[enclosure as EnclosureKey].name;
 
+  const inhabiting = inhabitants.filter(
+    (ambass) => ambass[1].enclosure === enclosure
+  );
+  console.log(inhabiting);
   const calcDistance = (e: React.MouseEvent<HTMLDivElement>) => {
     const linkPosition = e.currentTarget.getBoundingClientRect();
     const vwHeight = window.innerHeight;
