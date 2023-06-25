@@ -140,7 +140,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
           isEnclosure
         />
       )}
-      <Link className={`${position && "text-yellow-400"}`} href={href}>
+      <Link className={`${position ? "text-yellow-400" : ""}`} href={href}>
         {name}
       </Link>
     </div>

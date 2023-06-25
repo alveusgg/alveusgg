@@ -51,7 +51,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   } `;
   return (
     <>
-      {!isEnclosure && (
+      {!isEnclosure ? (
         <div
           className={
             position
@@ -88,8 +88,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             )}
           </div>
         </div>
-      )}
-      {isEnclosure && (
+      ) : (
         <div
           className={`${enclosureStyle} ${
             upwards ? "mt-1 -translate-y-full" : "mt-6"
