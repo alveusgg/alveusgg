@@ -40,6 +40,7 @@ import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { formatPartialDateString } from "@/utils/datetime";
+import LinkHover from "@/components/content/LinkHover";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
@@ -61,7 +62,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
-  context,
+  context
 ) => {
   const ambassadorName = context.params?.ambassadorName;
   if (typeof ambassadorName !== "string") return { notFound: true };
@@ -99,7 +100,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               {ambassador.scientific} (
               <Link
                 href={`/ambassadors#classification:${convertToSlug(
-                  getClassification(ambassador.class),
+                  getClassification(ambassador.class)
                 )}`}
               >
                 {getClassification(ambassador.class)}
@@ -145,19 +146,20 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
       {
         title: "Enclosure",
         value: (
-          <p>
-            <Link
+          <div className="text-xl">
+            <LinkHover
+              name={enclosure.name}
+              enclosure={ambassador.enclosure}
               href={`/ambassadors#enclosures:${camelToKebab(
-                ambassador.enclosure,
+                ambassador.enclosure
               )}`}
-            >
-              {enclosure.name}
-            </Link>
-          </p>
+              isEnclosure
+            />
+          </div>
         ),
       },
     ],
-    [ambassador, enclosure],
+    [ambassador, enclosure]
   );
 
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
@@ -201,7 +203,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           ),
         };
       }, {}),
-    [images],
+    [images]
   );
 
   return (

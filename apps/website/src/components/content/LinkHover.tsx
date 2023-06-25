@@ -96,8 +96,6 @@ const LinkHover: React.FC<LinkHoverProps> = ({
       return getAmbassadorImages(ambassador[0] as AmbassadorKey)[0];
     });
 
-  console.log(inhabiting);
-
   const calcDistance = (e: React.MouseEvent<HTMLDivElement>) => {
     const linkPosition = e.currentTarget.getBoundingClientRect();
     const vwHeight = window.innerHeight;

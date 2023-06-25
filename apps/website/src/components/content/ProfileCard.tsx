@@ -34,7 +34,7 @@ const staffStyle = `absolute z-50 flex flex-col lg:flex-row border border-yellow
 
 const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-4  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
-const enclosureStyle = `absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-4  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const enclosureStyle = `absolute z-50 flex flex-col -translate-x-1/4 -mt-[25px] items-center gap-4  rounded border border-yellow-400 bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   name,
@@ -90,22 +90,38 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
       )}
       {isEnclosure && (
-        <div className={enclosureStyle}>
-          <Heading className="inline text-xl text-yellow-500" level={5}>
-            {name}
-          </Heading>
-          <div>
-            {imgs &&
-              imgs.map((img, id) => (
-                <Image
-                  key={id}
-                  src={img.src}
-                  alt={img.alt}
-                  width={176}
-                  height={176}
-                  className="h-20 w-auto rounded"
-                />
-              ))}
+        <div
+          className={`${enclosureStyle} ${
+            upwards ? "-translate-y-full" : "mt-6"
+          }`}
+        >
+          <Span title={`Inhabitants (${imgs && imgs.length})`} />
+          <div className="flex max-w-[210px] flex-row flex-wrap items-center justify-center">
+            {imgs && imgs.length <= 4
+              ? imgs &&
+                imgs.map((img, id) => (
+                  <Image
+                    key={id}
+                    src={img.src}
+                    alt={img.alt}
+                    width={176}
+                    height={176}
+                    className="m-1 h-24 w-24 rounded border border-yellow-400 object-cover"
+                  />
+                ))
+              : imgs &&
+                imgs
+                  .slice(0, 4)
+                  .map((img, id) => (
+                    <Image
+                      key={id}
+                      src={img.src}
+                      alt={img.alt}
+                      width={176}
+                      height={176}
+                      className="m-1 h-24 w-24 rounded border border-yellow-400 object-cover"
+                    />
+                  ))}
           </div>
         </div>
       )}
