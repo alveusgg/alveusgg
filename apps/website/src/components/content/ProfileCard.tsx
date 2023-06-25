@@ -32,7 +32,7 @@ const Span: React.FC<SpanProps> = ({ title, titleName }) => {
 
 const staffStyle = `absolute z-50 flex flex-col lg:flex-row  box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
-const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-4  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-4 max-w-[340px]  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
 const enclosureStyle = `absolute z-50 flex flex-col -translate-x-1/4 -mt-[25px] items-center gap-4  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
