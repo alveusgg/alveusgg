@@ -23,7 +23,28 @@ const broadcastStudio: ListItems = {
   },
   camera: {
     title: "Camera",
-    description: "Sony Alpha a6400",
+    items: {
+      dslr: {
+        title: "DSLR",
+        description: "Sony Alpha a6400",
+      },
+      lens: {
+        title: "Studio Lens",
+        description: "Sony SELP1650 16-50mm Power Zoom Lens",
+      },
+      telephoto: {
+        title: "Telephoto Lens",
+        description: "Tamron 70-180mm f/2.8 Di III VXD Lens",
+      },
+      flipLens: {
+        title: "Studio Lens (Station3Media)",
+        description: "Sony Vario-Tessar T* FE 16-35mm f/4 ZA OSS Lens",
+      },
+      flipTripod: {
+        title: "Tripod (Station3Media)",
+        description: "Manfrotto MVT502AM Tripod and MVH500A Fluid Head",
+      },
+    },
   },
   audio: {
     title: "Audio",
@@ -189,8 +210,11 @@ const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
     dslr: {
       title: "DSLR",
       items: {
-        camera: "Sony a7R III Camera",
-        mic: "Rode VideoMicro I Mic",
+        dslr: "Sony a7R III Camera",
+        lens: "Tamron 28-75mm F/2.8 Di III RXD Lens",
+        flipLens: "Sigma 24-70mm F2.8 DG DN | Art Lens (Station3Media)",
+        flipFilter:
+          "K&F Concept Nano-X 82mm Circular Polarizer + Variable ND2-32 Filter (1- to 5-Stop) (Station3Media)",
       },
     },
     goPro: {
@@ -199,6 +223,18 @@ const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
         camera: "GoPro 11 + MediaMod w/ GoPro Labs firmware (clean HDMI out)",
         quickRelease: "ULANZI GP-4 Magnetic Quick Release for GoPro",
         shoulderMount: "STUNTMAN Pack Mount Shoulder Mount for GoPro",
+      },
+    },
+    audio: {
+      title: "Audio",
+      items: {
+        lav: "Rode Wireless GO II",
+        mic: "Rode VideoMicro I Mic (for DSLR)",
+        flipTx:
+          "Rode RodeLink TX-BELT Wireless Beltpack Transmitter (for DSLR; Station3Media)",
+        flipRx:
+          "Rode RodeLink RX-Cam Camera Mounted Wireless Receiver (for DSLR; Station3Media)",
+        flipRecorder: "H6 Audio Recorder (for DSLR; Station3Media)",
       },
     },
   },
@@ -241,9 +277,15 @@ type ListProps = {
   items: ListItems;
   className?: string;
   itemClassName?: string;
+  dark?: boolean;
 };
 
-const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
+const List: React.FC<ListProps> = ({
+  items,
+  className,
+  itemClassName,
+  dark,
+}) => (
   <ul className={className}>
     {Object.entries(items).map(([key, item], idx) => (
       <li
@@ -263,7 +305,7 @@ const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
                 {item.description || !item.link ? (
                   item.title
                 ) : (
-                  <Link href={item.link} external>
+                  <Link href={item.link} dark={dark} external>
                     {item.title}
                   </Link>
                 )}
@@ -271,14 +313,16 @@ const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
               </span>
               {item.description &&
                 (item.link ? (
-                  <Link href={item.link} external>
+                  <Link href={item.link} dark={dark} external>
                     {item.description}
                   </Link>
                 ) : (
                   item.description
                 ))}
             </p>
-            {item.items && <List items={item.items} className="ml-4" />}
+            {item.items && (
+              <List items={item.items} dark={dark} className="ml-4" />
+            )}
           </>
         )}
       </li>
@@ -395,13 +439,18 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark className="flex-grow bg-alveus-green-800">
-          <Heading level={2} className="mb-4 mt-0" id="open-source" link>
+          <Heading level={2} className="mb-2 mt-0" id="open-source" link>
             Open-source
           </Heading>
+          <p className="mb-4">
+            This website, and our Twitch extension, are open-source on GitHub.
+            We&apos;re always looking for contributors to help us improve them!
+          </p>
           <List
             items={openSource}
             className="flex flex-wrap md:gap-y-4"
             itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
+            dark
           />
         </Section>
       </div>
