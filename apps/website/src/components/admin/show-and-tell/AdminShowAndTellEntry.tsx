@@ -1,7 +1,5 @@
 import React from "react";
 import type { ShowAndTellEntry, User } from "@prisma/client";
-import { EyeIcon, PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { ArrowDownIcon, CheckIcon, PlusIcon } from "@heroicons/react/20/solid";
 
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { formatDateTimeLocal } from "@/utils/datetime";
@@ -13,6 +11,12 @@ import {
   secondaryButtonClasses,
 } from "@/components/shared/Button";
 import DateTime from "@/components/content/DateTime";
+import IconPencil from "@/icons/IconPencil";
+import IconTrash from "@/icons/IconTrash";
+import IconEye from "@/icons/IconEye";
+import IconPlus from "@/icons/IconPlus";
+import IconCheck from "@/icons/IconCheck";
+import IconArrowDown from "@/icons/IconArrowDown";
 
 type ShowAndTellEntryWithUser = ShowAndTellEntry & { user: User | null };
 
@@ -56,7 +60,7 @@ export function AdminShowAndTellEntry({
             title={formatDateTimeLocal(entry.seenOnStreamAt)}
             className="bg-transparent"
           >
-            <CheckIcon className="h-5 w-5" />
+            <IconCheck className="h-5 w-5" />
           </Button>
         )}
         {!entry.seenOnStreamAt && status === "approved" && (
@@ -67,7 +71,7 @@ export function AdminShowAndTellEntry({
               onClick={() => markSeen(entry)}
               title="Mark post as seen on stream"
             >
-              <PlusIcon className="h-5 w-5" /> Seen
+              <IconPlus className="h-5 w-5" /> Seen
             </Button>
 
             <Button
@@ -80,7 +84,7 @@ export function AdminShowAndTellEntry({
               }}
               title="Mark all posts until here as seen on stream"
             >
-              <ArrowDownIcon className="h-5 w-5" /> All
+              <IconArrowDown className="h-5 w-5" /> All
             </Button>
           </div>
         )}
@@ -91,7 +95,7 @@ export function AdminShowAndTellEntry({
           size="small"
           href={`/admin/show-and-tell/review/${entry.id}`}
         >
-          <PencilIcon className="h-5 w-5" />
+          <IconPencil className="h-5 w-5" />
           Review
         </LinkButton>
         <div className="flex gap-1">
@@ -100,7 +104,7 @@ export function AdminShowAndTellEntry({
             className={secondaryButtonClasses}
             href={`/admin/show-and-tell/review/${entry.id}/preview`}
           >
-            <EyeIcon className="h-5 w-5" />
+            <IconEye className="h-5 w-5" />
             Preview
           </LinkButton>
           <Button
@@ -109,7 +113,7 @@ export function AdminShowAndTellEntry({
             confirmationMessage="Please confirm deletion!"
             onClick={() => deletePost(entry)}
           >
-            <TrashIcon className="h-5 w-5" />
+            <IconTrash className="h-5 w-5" />
             Delete
           </Button>
         </div>

@@ -20,7 +20,7 @@ import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
-import IconEmail from "@/icons/IconEmail";
+import IconEnvelope from "@/icons/IconEnvelope";
 
 import mayaImage from "@/assets/maya.png";
 
@@ -156,7 +156,7 @@ const help = {
     external: true,
   },
   contact: {
-    icon: IconEmail,
+    icon: IconEnvelope,
     title: "Offer Help",
     link: "/contact-us",
     external: false,

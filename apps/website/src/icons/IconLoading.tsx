@@ -1,7 +1,6 @@
 import { classes } from "@/utils/classes";
 
-import type { IconProps } from "@/icons/BaseIcon";
-import { BaseIcon } from "@/icons/BaseIcon";
+import { BaseIcon, type IconProps } from "@/icons/BaseIcon";
 
 export default function IconLoading({ className, ...props }: IconProps) {
   return (

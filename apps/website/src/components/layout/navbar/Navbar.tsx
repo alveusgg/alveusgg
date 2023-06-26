@@ -2,12 +2,13 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
-import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
 import logoImage from "@/assets/logo.png";
 import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
 import { DesktopMenu } from "@/components/layout/navbar/DesktopMenu";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
+import IconX from "@/icons/IconX";
+import IconMenu from "@/icons/IconMenu";
 
 export const Navbar: React.FC = () => {
   return (
@@ -60,9 +61,9 @@ export const Navbar: React.FC = () => {
                   {open ? "Close main menu" : "Open main menu"}
                 </span>
                 {open ? (
-                  <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                  <IconX className="block h-6 w-6" aria-hidden="true" />
                 ) : (
-                  <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                  <IconMenu className="block h-6 w-6" aria-hidden="true" />
                 )}
               </Disclosure.Button>
             </div>

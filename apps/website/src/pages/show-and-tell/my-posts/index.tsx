@@ -2,7 +2,6 @@ import React from "react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { PencilIcon, TrashIcon, EyeIcon } from "@heroicons/react/24/outline";
 
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
@@ -19,6 +18,9 @@ import {
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import Meta from "@/components/content/Meta";
 import DateTime from "@/components/content/DateTime";
+import IconPencil from "@/icons/IconPencil";
+import IconEye from "@/icons/IconEye";
+import IconTrash from "@/icons/IconTrash";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 
@@ -171,7 +173,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               size="small"
                               href={`/show-and-tell/my-posts/${entry.id}`}
                             >
-                              <PencilIcon className="h-5 w-5" />
+                              <IconPencil className="h-5 w-5" />
                               Edit
                             </LinkButton>
                             <LinkButton
@@ -180,7 +182,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               className={secondaryButtonClasses}
                               href={`/show-and-tell/my-posts/${entry.id}/preview`}
                             >
-                              <EyeIcon className="h-5 w-5" />
+                              <IconEye className="h-5 w-5" />
                               Preview
                             </LinkButton>
                             <Button
@@ -190,7 +192,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               confirmationMessage="Please confirm deletion!"
                               onClick={() => deleteMutation.mutate(entry.id)}
                             >
-                              <TrashIcon className="h-5 w-5" />
+                              <IconTrash className="h-5 w-5" />
                               Delete
                             </Button>
                           </td>

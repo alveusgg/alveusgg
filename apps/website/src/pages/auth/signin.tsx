@@ -6,12 +6,12 @@ import type {
 } from "next";
 import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
-import { XCircleIcon } from "@heroicons/react/20/solid";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import IconXCircle from "@/icons/IconXCircle";
 
 const errorMessages: Record<string, string> = {
   default: "Unable to sign in.",
@@ -76,7 +76,7 @@ const SigninPage: NextPage<SigninPageProps> = () => {
           <div className="mb-6 rounded-md bg-red-50 p-4">
             <div className="flex">
               <div className="flex-shrink-0">
-                <XCircleIcon
+                <IconXCircle
                   className="h-5 w-5 text-red-400"
                   aria-hidden="true"
                 />

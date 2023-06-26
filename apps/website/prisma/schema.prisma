@@ -136,7 +136,11 @@ model Notification {
   imageUrl         String?
   tag              String?
   urgency          NotificationUrgency @default(NORMAL)
-  pushes           NotificationPush[]
+  isPush           Boolean             @default(false)
+  isDiscord        Boolean             @default(false)
+
+  pushes                            NotificationPush[]
+  NotificationDiscordChannelWebhook NotificationDiscordChannelWebhook[]
 }
 
 enum NotificationPushProcessingStatus {
@@ -193,6 +197,17 @@ model PushSubscriptionTag {
   subscription   PushSubscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
 
   @@unique([subscriptionId, name])
+}
+
+model NotificationDiscordChannelWebhook {
+  notificationId    String
+  outgoingWebhookId String
+
+  notification    Notification    @relation(fields: [notificationId], references: [id], onDelete: Cascade)
+  outgoingWebhook OutgoingWebhook @relation(fields: [outgoingWebhookId], references: [id], onDelete: Cascade)
+
+  @@unique([notificationId, outgoingWebhookId])
+  @@unique([outgoingWebhookId])
 }
 
 model MailingAddress {
@@ -258,13 +273,16 @@ model OutgoingWebhook {
   url         String    @db.VarChar(720)
   body        String    @db.Text
   userId      String?
+  retry       Boolean   @default(false)
   attempts    Int?
   createdAt   DateTime  @default(now())
   failedAt    DateTime?
   deliveredAt DateTime?
+  expiresAt   DateTime?
 
-  user      User?      @relation(fields: [userId], references: [id])
-  formEntry FormEntry?
+  user         User?                              @relation(fields: [userId], references: [id])
+  formEntry    FormEntry?
+  notification NotificationDiscordChannelWebhook?
 
   @@index([userId], name: "OutgoingWebhook_userId")
 }

@@ -1,8 +1,6 @@
 import React, { useCallback, useId, useState } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
-import { MinusCircleIcon } from "@heroicons/react/24/outline";
-
 import { trpc } from "@/utils/trpc";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { getAdminSSP } from "@/server/utils/admin";
@@ -18,6 +16,7 @@ import { TextField } from "@/components/shared/form/TextField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { MessageBox } from "@/components/shared/MessageBox";
 import Meta from "@/components/content/Meta";
+import IconMinusCircle from "@/icons/IconMinusCircle";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(
@@ -163,7 +162,7 @@ const AdminUsersPage: NextPage<
                                       })
                                     }
                                   >
-                                    <MinusCircleIcon className="h-4 w-4" />
+                                    <IconMinusCircle className="h-4 w-4" />
                                     <span className="sr-only">Remove role</span>
                                   </Button>
                                 </li>

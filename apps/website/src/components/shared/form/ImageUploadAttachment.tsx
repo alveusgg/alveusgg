@@ -1,6 +1,5 @@
 import type { ReactNode } from "react";
 import React from "react";
-import { ExclamationTriangleIcon, TrashIcon } from "@heroicons/react/20/solid";
 
 import { classes } from "@/utils/classes";
 
@@ -8,6 +7,8 @@ import IconLoading from "@/icons/IconLoading";
 
 import { Button } from "@/components/shared/Button";
 import type { FileReference } from "@/components/shared/form/UploadAttachmentsField";
+import IconTrash from "@/icons/IconTrash";
+import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
 export function ImageUploadAttachment({
   removeFileReference,
@@ -50,7 +51,7 @@ export function ImageUploadAttachment({
           )}
           {fileReference.status === "upload.failed" && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-red/20 text-black">
-              <ExclamationTriangleIcon className="h-5 w-5" />
+              <IconWarningTriangle className="h-5 w-5" />
               <span>Failed</span>
             </div>
           )}
@@ -60,7 +61,7 @@ export function ImageUploadAttachment({
             size="small"
             onClick={() => removeFileReference(fileReference.id)}
           >
-            <TrashIcon className="h-5 w-5" />
+            <IconTrash className="h-5 w-5" />
             Remove
           </Button>
         </div>

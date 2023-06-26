@@ -4,7 +4,7 @@ import { useTextField } from "react-aria";
 
 import { classes } from "@/utils/classes";
 
-import IconCross from "@/icons/IconCross";
+import IconX from "@/icons/IconX";
 
 export type TextFieldProps = AriaTextFieldOptions<"input"> & {
   label: string;
@@ -62,7 +62,7 @@ export function TextField(props: TextFieldProps) {
         />
         {showResetButton && (
           <button className="px-2" type="button" onClick={reset}>
-            <IconCross className="h-4 w-4" />
+            <IconX className="h-4 w-4" />
           </button>
         )}
         {props.suffix}

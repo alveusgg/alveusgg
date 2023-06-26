@@ -8,6 +8,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Network from "@/components/tech/Network";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -217,138 +218,6 @@ const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
   },
 };
 
-const enclosures = {
-  foxes: {
-    title: "Foxes",
-    items: {
-      wideAngle: {
-        title: "Wide Angle",
-        description: "Axis M2036-LE (Fixed)",
-      },
-      den: {
-        title: "Den",
-        description: "Axis P3268-LV (Fixed)",
-      },
-      main: {
-        title: "Main",
-        description: "Axis M5525-E (PTZ)",
-      },
-    },
-  },
-  crows: {
-    title: "Crows",
-    items: {
-      indoor: {
-        title: "Indoor",
-        description: "Axis M5525-E (PTZ)",
-      },
-      outdoor: {
-        title: "Outdoor",
-        description: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-  marmosets: {
-    title: "Marmosets",
-    items: {
-      indoor: {
-        title: "Indoor",
-        description: "Axis M5075-G (PTZ)",
-      },
-      outdoor: {
-        title: "Outdoor",
-        description: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-  georgie: {
-    title: "Georgie",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis M5075-G (PTZ)",
-      },
-      water: {
-        title: "Water",
-        description: "Axis P12 MkII (Fixed)",
-      },
-    },
-  },
-  noodle: {
-    title: "Noodle",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis M5075-G (PTZ)",
-      },
-      hide: {
-        title: "Hide",
-        description: "Axis P12 MkII (Fixed)",
-      },
-    },
-  },
-  critterCave: {
-    title: "Critter Cave",
-    items: {
-      hank: {
-        title: "Hank",
-        items: {
-          day: {
-            title: "Day",
-            description: "Axis M5075-G (PTZ)",
-          },
-          night: {
-            title: "Night",
-            description: "Axis M1065-LW (Fixed)",
-          },
-        },
-      },
-      barbaraBakedBean: {
-        title: "Barbara / Baked Bean",
-        description: "Axis M5075-G (PTZ)",
-      },
-      marty: {
-        title: "Marty",
-        description: "Axis M5075-G (PTZ)",
-      },
-    },
-  },
-  parrots: {
-    title: "Parrots",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis M5525-E (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-  pasture: {
-    title: "Pasture",
-    items: {
-      main: {
-        title: "Main",
-        description: "Axis Q6135-LE (PTZ)",
-      },
-      audio: {
-        title: "Audio",
-        description: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-      },
-    },
-  },
-};
-
 const openSource = {
   website: {
     title: "Website",
@@ -457,14 +326,14 @@ const AboutTechPage: NextPage = () => {
 
         <Section containerClassName="flex flex-wrap -mx-4">
           <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mb-4 mt-0">
+            <Heading level={2} className="mb-4 mt-0" id="studio" link>
               Broadcast Studio
             </Heading>
             <List items={broadcastStudio} />
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mb-4 mt-0">
+            <Heading level={2} className="mb-4 mt-0" id="system" link>
               Broadcast System
             </Heading>
             <List items={broadcastSystem} />
@@ -480,7 +349,9 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark>
-          <Heading level={2}>Outside Broadcasts</Heading>
+          <Heading level={2} id="outside" link>
+            Outside Broadcasts
+          </Heading>
 
           <div className="flex flex-wrap">
             <div className="basis-full p-4 lg:basis-1/2">
@@ -508,14 +379,10 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section>
-          <Heading level={2} className="mb-4 mt-0">
-            Enclosure cameras + audio
+          <Heading level={2} className="mb-4 mt-0" id="cameras" link>
+            Network + Enclosure Cameras
           </Heading>
-          <List
-            items={enclosures}
-            className="flex flex-wrap md:gap-y-4"
-            itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
-          />
+          <Network />
         </Section>
       </div>
 
@@ -528,7 +395,7 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark className="flex-grow bg-alveus-green-800">
-          <Heading level={2} className="mb-4 mt-0">
+          <Heading level={2} className="mb-4 mt-0" id="open-source" link>
             Open-source
           </Heading>
           <List

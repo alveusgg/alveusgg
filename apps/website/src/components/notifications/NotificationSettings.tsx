@@ -1,8 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 
-import { ArrowUpTrayIcon, PlusIcon } from "@heroicons/react/20/solid";
-
 import {
   isNotificationsSupported,
   isWebPushSupported,
@@ -17,6 +15,8 @@ import Link from "@/components/content/Link";
 
 import imageIOSShareDialog from "@/assets/notifications-help/ios-share-dialog.png";
 import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
+import IconPlus from "@/icons/IconPlus";
+import IconUpload from "@/icons/IconUpload";
 
 export function useNotificationStatus() {
   const [isClientSupported, setIsClientSupported] = useState(false);
@@ -61,10 +61,10 @@ export function NotificationSettings() {
 
   return (
     <div className="flex flex-col">
-      <p className="p-4 leading-tight">Notification settings</p>
+      <p className="px-7 pb-2 pt-4 leading-tight">Notification settings</p>
 
       {isInstallAsPWARequired && (
-        <div className="px-4 pb-4">
+        <div className="min-w-[300px] px-7 pb-4">
           <p>
             You can receive notifications if you add this site to your Home
             Screen.
@@ -72,13 +72,13 @@ export function NotificationSettings() {
 
           <ol className="list-decimal pl-5">
             <li className="my-3">
-              Tap the <ArrowUpTrayIcon className="inline-block h-6 w-6" /> Share
+              Tap the <IconUpload className="inline-block h-6 w-6" /> Share
               button in the menu bar.
             </li>
             <li className="my-3">
               Scroll down the list of options, then tap{" "}
               <em>Add to Home Screen</em>{" "}
-              <PlusIcon className="inline-block h-6 w-6" />.
+              <IconPlus className="inline-block h-6 w-6" />.
             </li>
           </ol>
 
@@ -101,7 +101,7 @@ export function NotificationSettings() {
       )}
 
       {!isClientSupported && !isInstallAsPWARequired && (
-        <NotificationErrorMessage className="m-2 flex flex-col gap-2">
+        <NotificationErrorMessage className="m-3 flex flex-col gap-2">
           <p>Your browser does not support push notifications!</p>
 
           {getIsIos() && !getIsSafari() && (

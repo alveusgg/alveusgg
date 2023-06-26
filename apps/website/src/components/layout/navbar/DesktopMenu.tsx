@@ -24,7 +24,7 @@ import {
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
 import IconSignIn from "@/icons/IconSignIn";
-import IconAngleDown from "@/icons/IconAngleDown";
+import IconChevronDown from "@/icons/IconChevronDown";
 
 const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
   <Transition
@@ -103,7 +103,7 @@ export function DesktopMenu() {
 
               <DropdownMenuItems>
                 <Menu.Item disabled>
-                  <div className="px-5 py-3">
+                  <div className="px-5 py-2">
                     <ProfileInfo full />
                   </div>
                 </Menu.Item>
@@ -114,9 +114,7 @@ export function DesktopMenu() {
 
                 {showAdminLink && (
                   <Menu.Item>
-                    <NavLinkSub className="px-5 py-3" href="/admin/dashboard">
-                      Admin
-                    </NavLinkSub>
+                    <NavLinkSub href="/admin/dashboard">Admin</NavLinkSub>
                   </Menu.Item>
                 )}
 
@@ -179,7 +177,7 @@ export function DesktopMenu() {
                         )}
                       >
                         {link.title}
-                        <IconAngleDown
+                        <IconChevronDown
                           size={16}
                           className={`${
                             open ? "translate-y-1" : "translate-y-0.5"

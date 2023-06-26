@@ -1,18 +1,17 @@
-import type { IconProps } from "@/icons/BaseIcon";
-import { BaseIcon } from "@/icons/BaseIcon";
+import { BaseIcon, type IconProps } from "@/icons/BaseIcon";
 
+// This SVG code is derived from Heroicons (https://heroicons.com)
+// bell-slash-outline
 export default function IconNotificationOff(props: IconProps) {
   return (
     <BaseIcon viewBox="0 0 24 24" {...props}>
       <path
-        fill="currentColor"
-        d="M12 2a1 1 0 0 1 1 1v.75h.557c1.182 0 2.256.488 3.024 1.279a.24.24 0 0 1-.007.336l-.703.703c-.105.105-.278.095-.382-.01a2.708 2.708 0 0 0-1.932-.808h-3.114a2.714 2.714 0 0 0-2.709 2.544l-.22 3.534a8.877 8.877 0 0 1-1.574 4.516c-.05.073-.05.195-.111.258l-.764.77c-.098.1-.26.1-.34-.013a1.611 1.611 0 0 1-.017-1.871 7.377 7.377 0 0 0 1.308-3.754l.221-3.533a4.214 4.214 0 0 1 4.206-3.951H11V3a1 1 0 0 1 1-1Z"
-      />
-      <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M17.786 8.074 21.03 4.83a.75.75 0 0 0-1.06-1.06l-16 16a.75.75 0 1 0 1.06 1.06l3.046-3.045 1.174.14V19a2.75 2.75 0 1 0 5.5 0v-1.075l3.407-.409a1.617 1.617 0 0 0 1.135-2.528 7.376 7.376 0 0 1-1.308-3.754l-.198-3.16ZM16.372 9.49l-6.947 6.947.334.04c1.489.178 2.993.178 4.482 0l3.737-.449a.117.117 0 0 0 .082-.183 8.877 8.877 0 0 1-1.573-4.516l-.115-1.84ZM12 20.25c-.69 0-1.25-.56-1.25-1.25v-.75h2.5V19c0 .69-.56 1.25-1.25 1.25Z"
-        clipRule="evenodd"
+        fill="none"
+        strokeWidth={1.5}
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M9.143 17.082a24.248 24.248 0 003.844.148m-3.844-.148a23.856 23.856 0 01-5.455-1.31 8.964 8.964 0 002.3-5.542m3.155 6.852a3 3 0 005.667 1.97m1.965-2.277L21 21m-4.225-4.225a23.81 23.81 0 003.536-1.003A8.967 8.967 0 0118 9.75V9A6 6 0 006.53 6.53m10.245 10.245L6.53 6.53M3 3l3.53 3.53"
       />
     </BaseIcon>
   );

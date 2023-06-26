@@ -10,7 +10,7 @@ import DateTimeComponent from "@/components/content/DateTime";
 import { env } from "@/env/index.mjs";
 import { AddEventButton } from "@/components/shared/AddEventButton";
 import { formatDateTime } from "@/utils/datetime";
-import IconAngleRight from "@/icons/IconAngleRight";
+import IconChevronRight from "@/icons/IconChevronRight";
 
 export function Announcement({ notification }: { notification: Notification }) {
   const relativeNotificationUrl = `/notifications/${notification.id}`;
@@ -90,7 +90,7 @@ export function Announcement({ notification }: { notification: Notification }) {
       <h3 className="text-2xl font-bold">
         {title}
         {notification.linkUrl && (
-          <IconAngleRight className="ml-0.5 inline-block h-4 w-4" />
+          <IconChevronRight className="ml-0.5 inline-block h-4 w-4" />
         )}
       </h3>
     </>

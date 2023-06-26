@@ -16,19 +16,16 @@ const notificationTags = ["stream"];
 const UpdatesPage: NextPage = () => {
   return (
     <>
-      <Meta
-        title="Updates"
-        description="Announcements, Updates and Stream schedule"
-      />
+      <Meta title="Updates" description="Announcements and Updates" />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section dark className="z-10">
-        <Heading>Announcements, Updates and Stream schedule</Heading>
+        <Heading>Announcements and Updates</Heading>
 
         <p className="mt-6">
-          Keep up-to-date using one of our announcement channels:
+          Stay updated using one of our announcement channels:
         </p>
 
         <div className="mt-4 flex flex-col items-center gap-1 md:flex-row md:gap-4">

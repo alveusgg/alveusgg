@@ -79,7 +79,7 @@ const cacheDir = "./.next/cache/video-loader";
 const videoRaw = async (ctx) => {
   // Use ffprobe to get the height
   const { stdout } = await exec(
-    `${ffprobe.path} -v error -select_streams v:0 -show_entries stream=height -of json ${ctx.context.resourcePath}`
+    `"${ffprobe.path}" -v error -select_streams v:0 -show_entries stream=height -of json "${ctx.context.resourcePath}"`
   );
   const { height } = JSON.parse(stdout).streams[0];
 
@@ -183,13 +183,13 @@ const videoResized = async (
 
       // Use ffmpeg to change the size to what is requested
       const command = [
-        ffmpeg.path,
+        `"${ffmpeg.path}"`,
         "-i",
-        ctx.context.resourcePath,
+        `"${ctx.context.resourcePath}"`,
         scale,
         ...args,
         "-n",
-        tmpFile,
+        `"${tmpFile}"`,
       ]
         .filter(Boolean)
         .join(" ");

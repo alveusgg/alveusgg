@@ -1,4 +1,5 @@
 import type { NotificationUrgency } from "@prisma/client";
+
 import { env } from "@/env/index.mjs";
 
 type NotificationLinkSuggestion = {
@@ -68,3 +69,26 @@ export const notificationLinkSuggestions = [
 ] satisfies NotificationLinkSuggestion[];
 
 export const notificationLinkDefault = "";
+
+export const notificationChannels = {
+  push: {
+    label: "Push",
+    isDefault: true,
+  },
+  discord: {
+    label: "Discord",
+    isDefault: true,
+  },
+  //website: {
+  //  label: "Website",
+  //  isDefault: true,
+  //},
+  //twitter: {
+  //  label: "Twitter",
+  //  isDefault: true,
+  //},
+  //instagram: {
+  //  label: "Instagram",
+  //  isDefault: true,
+  //},
+} as const;

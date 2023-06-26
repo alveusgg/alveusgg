@@ -6,6 +6,8 @@ import { z } from "zod";
 import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 import { retryPendingNotificationPushes } from "@/server/notifications";
 import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
+import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
+import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 
@@ -74,6 +76,14 @@ const config: ScheduledTasksConfig = {
       label: "Notifications: Cleanup expired pushes",
       startDateTime: new Date(2023, 2, 3, 0, 14, 0),
       interval: { minutes: 10 },
+    },
+    {
+      id: "outgoingWebhooks.retry.discordChannel",
+      task: () =>
+        retryOutgoingWebhooks({ type: OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL }),
+      label: "Outgoing webhooks: Retry Discord Channel Webhooks",
+      startDateTime: new Date(2023, 2, 3, 0, 8, 0),
+      interval: { seconds: 30 },
     },
   ],
 };
