@@ -23,7 +23,28 @@ const broadcastStudio: ListItems = {
   },
   camera: {
     title: "Camera",
-    description: "Sony Alpha a6400",
+    items: {
+      dslr: {
+        title: "DSLR",
+        description: "Sony Alpha a6400",
+      },
+      lens: {
+        title: "Studio Lens",
+        description: "Sony SELP1650 16-50mm Power Zoom Lens",
+      },
+      telephoto: {
+        title: "Telephoto Lens",
+        description: "Tamron 70-180mm f/2.8 Di III VXD Lens",
+      },
+      flipLens: {
+        title: "Studio Lens (Station3Media)",
+        description: "Sony Vario-Tessar T* FE 16-35mm f/4 ZA OSS Lens",
+      },
+      flipTripod: {
+        title: "Tripod (Station3Media)",
+        description: "Manfrotto MVT502AM Tripod and MVH500A Fluid Head",
+      },
+    },
   },
   audio: {
     title: "Audio",
@@ -189,8 +210,11 @@ const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
     dslr: {
       title: "DSLR",
       items: {
-        camera: "Sony a7R III Camera",
-        mic: "Rode VideoMicro I Mic",
+        dslr: "Sony a7R III Camera",
+        lens: "Tamron 28-75mm F/2.8 Di III RXD Lens",
+        flipLens: "Sigma 24-70mm F2.8 DG DN | Art Lens (Station3Media)",
+        flipFilter:
+          "K&F Concept Nano-X 82mm Circular Polarizer + Variable ND2-32 Filter (1- to 5-Stop) (Station3Media)",
       },
     },
     goPro: {
@@ -199,6 +223,18 @@ const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
         camera: "GoPro 11 + MediaMod w/ GoPro Labs firmware (clean HDMI out)",
         quickRelease: "ULANZI GP-4 Magnetic Quick Release for GoPro",
         shoulderMount: "STUNTMAN Pack Mount Shoulder Mount for GoPro",
+      },
+    },
+    audio: {
+      title: "Audio",
+      items: {
+        lav: "Rode Wireless GO II",
+        mic: "Rode VideoMicro I Mic (for DSLR)",
+        flipTx:
+          "Rode RodeLink TX-BELT Wireless Beltpack Transmitter (for DSLR; Station3Media)",
+        flipRx:
+          "Rode RodeLink RX-Cam Camera Mounted Wireless Receiver (for DSLR; Station3Media)",
+        flipRecorder: "H6 Audio Recorder (for DSLR; Station3Media)",
       },
     },
   },
