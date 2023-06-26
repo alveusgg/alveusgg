@@ -295,7 +295,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
       >
         <div
           className={classes(
-            hasConsented ? "bg-alveus-green" : "bg-alveus-green-300",
+            hasConsented && "bg-alveus-green-300",
             "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green"
           )}
         >
