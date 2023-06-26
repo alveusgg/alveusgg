@@ -277,9 +277,15 @@ type ListProps = {
   items: ListItems;
   className?: string;
   itemClassName?: string;
+  dark?: boolean;
 };
 
-const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
+const List: React.FC<ListProps> = ({
+  items,
+  className,
+  itemClassName,
+  dark,
+}) => (
   <ul className={className}>
     {Object.entries(items).map(([key, item], idx) => (
       <li
@@ -299,7 +305,7 @@ const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
                 {item.description || !item.link ? (
                   item.title
                 ) : (
-                  <Link href={item.link} external>
+                  <Link href={item.link} dark={dark} external>
                     {item.title}
                   </Link>
                 )}
@@ -307,14 +313,16 @@ const List: React.FC<ListProps> = ({ items, className, itemClassName }) => (
               </span>
               {item.description &&
                 (item.link ? (
-                  <Link href={item.link} external>
+                  <Link href={item.link} dark={dark} external>
                     {item.description}
                   </Link>
                 ) : (
                   item.description
                 ))}
             </p>
-            {item.items && <List items={item.items} className="ml-4" />}
+            {item.items && (
+              <List items={item.items} dark={dark} className="ml-4" />
+            )}
           </>
         )}
       </li>
@@ -438,6 +446,7 @@ const AboutTechPage: NextPage = () => {
             items={openSource}
             className="flex flex-wrap md:gap-y-4"
             itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
+            dark
           />
         </Section>
       </div>
