@@ -439,9 +439,13 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark className="flex-grow bg-alveus-green-800">
-          <Heading level={2} className="mb-4 mt-0" id="open-source" link>
+          <Heading level={2} className="mb-2 mt-0" id="open-source" link>
             Open-source
           </Heading>
+          <p className="mb-4">
+            This website, and our Twitch extension, are open-source on GitHub.
+            We&apos;re always looking for contributors to help us improve them!
+          </p>
           <List
             items={openSource}
             className="flex flex-wrap md:gap-y-4"
