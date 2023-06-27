@@ -192,7 +192,7 @@ async function createDiscordNotifications({
         env.DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION || webhookUrls;
       toEveryone = env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION;
       break;
-    case "announcement":
+    case "announcements":
       webhookUrls =
         env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT || webhookUrls;
       toEveryone = env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT;
