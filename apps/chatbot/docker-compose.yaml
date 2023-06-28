@@ -1,0 +1,7 @@
+version: "3.3"
+services:
+  chatbot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always

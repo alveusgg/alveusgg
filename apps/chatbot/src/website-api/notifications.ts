@@ -1,6 +1,9 @@
 import { z } from "zod";
-import { createNotification } from "@/server/notifications";
-import { createTokenProtectedApiHandler } from "@/server/utils/api";
+
+import { env } from "@/env";
+import { fetchApi } from "@/website-api/index";
+
+type NotificationData = z.infer<typeof notificationSchema>;
 
 // TODO: move API data schema into a shared package for website and chatbot
 const dateSchema = z.string().pipe(z.coerce.date());
@@ -17,15 +20,11 @@ const notificationSchema = z.object({
   isDiscord: z.boolean().optional(),
 });
 
-export default createTokenProtectedApiHandler(
-  notificationSchema,
-  async (options) => {
-    try {
-      await createNotification(options);
-      return true;
-    } catch (e) {
-      console.error("Failed to create notification", e);
-      return false;
-    }
-  }
-);
+export async function createNotification(data: NotificationData) {
+  const url = new URL("notifications/create-notification", env.API_BASE_URL);
+  await fetchApi({
+    url,
+    method: "POST",
+    body: data,
+  });
+}
