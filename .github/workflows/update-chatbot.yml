@@ -1,0 +1,62 @@
+name: Update Chatbot
+on:
+  push:
+    branches:
+      - "main"
+      - "preview"
+    paths:
+      - "apps/chatbot/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "pnpm-workspace.yaml"
+      - ".github/workflows/update-chatbot.yml"
+
+env:
+  COMPOSE_PROJECT_NAME: ${{ vars.CHATBOT_COMPOSE_PROJECT_NAME }}
+  CHATBOT_PATH: ${{ vars.CHATBOT_PATH }}
+  REF_NAME: ${{ github.ref_name }}
+
+jobs:
+  update-chatbot-production:
+    name: Update Chatbot (Production)
+    runs-on: ubuntu-latest
+    environment: production
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Update Chatbot SSH (Production)
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME
+          host: ${{ secrets.CHATBOT_HOST }}
+          username: ${{ secrets.CHATBOT_USERNAME }}
+          key: ${{ secrets.CHATBOT_KEY }}
+          port: ${{ secrets.CHATBOT_PORT }}
+          passphrase: ${{ secrets.CHATBOT_PASSPHRASE }}
+          script_stop: true
+          script: |
+            cd $CHATBOT_PATH
+            git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
+            cd apps/chatbot
+            docker compose up --build --detach
+
+  update-chatbot-preview:
+    name: Update Chatbot (Preview)
+    runs-on: ubuntu-latest
+    environment: preview
+    if: github.ref == 'refs/heads/preview'
+    steps:
+      - name: Update Chatbot SSH (Preview)
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME
+          host: ${{ secrets.CHATBOT_HOST }}
+          username: ${{ secrets.CHATBOT_USERNAME }}
+          key: ${{ secrets.CHATBOT_KEY }}
+          port: ${{ secrets.CHATBOT_PORT }}
+          passphrase: ${{ secrets.CHATBOT_PASSPHRASE }}
+          script_stop: true
+          script: |
+            cd $CHATBOT_PATH
+            git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
+            cd apps/chatbot
+            docker compose up --build --detach
