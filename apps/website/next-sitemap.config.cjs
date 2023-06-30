@@ -1,3 +1,4 @@
+// @ts-check
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
   // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does

@@ -1,10 +1,21 @@
+// @ts-check
 import { resolve } from "path";
 import { withSuperjson } from "next-superjson";
+
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
 import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
 
-// @ts-check
 import "./src/env/index.mjs";
+
+/** @type {Array<import("next/dist/shared/lib/image-config").RemotePattern>} */
+const cdnImagesRemotePattern = process.env.FILE_STORAGE_CDN_URL
+  ? [
+      {
+        protocol: "https",
+        hostname: process.env.FILE_STORAGE_CDN_URL.replace(/^https?:\/\//, ""),
+      },
+    ]
+  : [];
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -42,17 +53,7 @@ const config = {
         hostname: "www.alveussanctuary.org",
       },
       // S3 - Configured CDN
-      ...(process.env.FILE_STORAGE_CDN_URL
-        ? [
-            {
-              protocol: "https",
-              hostname: process.env.FILE_STORAGE_CDN_URL.replace(
-                /^https?:\/\//,
-                ""
-              ),
-            },
-          ]
-        : []),
+      ...cdnImagesRemotePattern,
       // S3 - Production CDN CNAME
       {
         protocol: "https",
@@ -249,7 +250,8 @@ const config = {
             [
               "frame-src 'self'",
               // Allow vercel preview helper (if not in production):
-              ["development", "preview"].includes(process.env.VERCEL_ENV) &&
+              process.env.VERCEL_ENV &&
+                ["development", "preview"].includes(process.env.VERCEL_ENV) &&
                 "https://vercel.live/",
               // Twitch embeds:
               "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",

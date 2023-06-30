@@ -1,7 +1,6 @@
 import { type AppType } from "next/app";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
-import { SSRProvider } from "react-aria";
 import { Analytics } from "@vercel/analytics/react";
 
 import { trpc } from "@/utils/trpc";
@@ -18,14 +17,12 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <SSRProvider>
-        <ConsentProvider>
-          <Layout>
-            <Component {...pageProps} />
-            <Analytics />
-          </Layout>
-        </ConsentProvider>
-      </SSRProvider>
+      <ConsentProvider>
+        <Layout>
+          <Component {...pageProps} />
+          <Analytics />
+        </Layout>
+      </ConsentProvider>
     </SessionProvider>
   );
 };
