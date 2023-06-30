@@ -8,9 +8,6 @@ importers:
 
   .:
     devDependencies:
-      '@types/prettier':
-        specifier: ^2.7.3
-        version: 2.7.3
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -219,6 +216,9 @@ importers:
       '@types/oauth':
         specifier: ^0.9.1
         version: 0.9.1
+      '@types/prettier':
+        specifier: ^2.7.3
+        version: 2.7.3
       '@types/probe-image-size':
         specifier: ^7.2.0
         version: 7.2.0
