@@ -29,6 +29,7 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import ProfileCard from "@/components/content/ProfileCard";
 
 const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
   .map((episode, idx) => ({
