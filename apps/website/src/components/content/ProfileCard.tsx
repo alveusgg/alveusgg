@@ -4,6 +4,8 @@ import ambassadors, {
   type Ambassador,
   type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
+import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
+
 import Image, { type ImageProps, type StaticImageData } from "next/image";
 import type { AmbassadorImage } from "@alveusgg/data/src/ambassadors/images";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
@@ -71,7 +73,7 @@ const calcDistance = (position: DOMRect) => {
 
 type SpanProps = {
   title: string;
-  titleName?: Ambassador["species"] | string;
+  titleName?: Ambassador["species"] | undefined;
 };
 
 const Span: React.FC<SpanProps> = ({ title, titleName }) => {
@@ -93,12 +95,13 @@ const staffStyle = `absolute z-50 flex flex-col lg:flex-row  box-border  max-w-[
 
 const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-4 max-w-[340px]  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
-const enclosureStyle = `absolute z-50 flex flex-col -translate-x-1/4 -mt-[25px] items-center gap-4  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+// const enclosureStyle = `absolute z-50 flex flex-col -translate-x-1/4 -mt-[25px] items-center gap-4  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   ambassador,
   cardType,
   staffMember,
+  linkPosition,
 }) => {
   const ambassadorInfo = ambassador && ambassadors[ambassador];
   const staffMemberInfo = findMember(staffMember, allStaff);
@@ -106,77 +109,51 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const name =
     cardType === "ambassador" ? ambassadorInfo?.name : staffMemberInfo?.name;
 
+  const species = cardType === "ambassador" ? ambassadorInfo?.species : "";
+
+  const enclosure =
+    cardType === "ambassador" &&
+    ambassadorInfo &&
+    enclosures[ambassadorInfo.enclosure].name;
+
   const img =
     cardType === "ambassador"
       ? getAmbassadorImages(ambassador as AmbassadorKey)[0]
       : findMember(name, allStaff)?.img;
+
+  const upwards = linkPosition && calcDistance(linkPosition);
 
   const ambassadorStyles = `${ambassadorStyle} ${
     upwards ? "-translate-y-full" : "mt-4"
   } `;
   return (
     <>
-      {!isEnclosure ? (
-        <div
-          className={
-            position
-              ? `${staffStyle} ${upwards ? "-translate-y-full" : "mt-5"} `
-              : ambassadorStyles
-          }
-        >
-          {img && (
-            <Image
-              src={img.src}
-              alt={img.alt}
-              width="176"
-              height="176"
-              className={`${
-                position
-                  ? "h-40 w-auto"
-                  : "h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"
-              }`}
-            />
+      <div className={ambassadorStyles}>
+        {img && (
+          <Image
+            src={img.src}
+            alt={img.alt}
+            width="176"
+            height="176"
+            className={`${"h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"}`}
+          />
+        )}
+        <div className="flex flex-col text-sm">
+          <Heading className="inline text-xl text-yellow-500" level={5}>
+            {name}
+          </Heading>
+          {cardType === "ambassador" ? (
+            <Span title="Species" titleName={species} />
+          ) : (
+            ""
           )}
-          <div className="flex flex-col text-sm">
-            <Heading className="inline text-xl text-yellow-500" level={5}>
-              {name}
-            </Heading>
-            {species ? (
-              <Span title="Species" titleName={species} />
-            ) : (
-              <Span title="Position" titleName={position} />
-            )}
-            {enclosure && (
-              <div className="inline text-yellow-300">
-                <span className="font-semibold">Enclosure:</span> {enclosure}
-              </div>
-            )}
-          </div>
+          {cardType === "ambassador" && (
+            <div className="inline text-yellow-300">
+              <span className="font-semibold">Enclosure:</span> {enclosure}
+            </div>
+          )}
         </div>
-      ) : (
-        <div
-          className={`${enclosureStyle} ${
-            upwards ? "mt-1 -translate-y-full" : "mt-6"
-          }`}
-        >
-          <Span title={`Inhabitants (${imgs && imgs.length})`} />
-          <div className="flex max-w-[210px] flex-row flex-wrap items-center justify-center">
-            {imgs &&
-              imgs
-                .slice(0, 4)
-                .map((img, id) => (
-                  <Image
-                    key={id}
-                    src={img.src}
-                    alt={img.alt}
-                    width={176}
-                    height={176}
-                    className="m-1 h-24 w-24 rounded border border-yellow-300  object-cover"
-                  />
-                ))}
-          </div>
-        </div>
-      )}
+      </div>
     </>
   );
 };
