@@ -13,6 +13,7 @@ type LinkHoverProps = {
   name: string;
   ambassador?: AmbassadorKey;
   staffMember?: string;
+  cardType: "ambassador" | "staff" | "enclosure";
 };
 
 const LinkHover: React.FC<LinkHoverProps> = ({
@@ -20,20 +21,11 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   name,
   ambassador,
   staffMember,
+  cardType,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [delay, setDelay] = useState<number | null>(null);
   const [linkPosition, setLinkPosition] = useState<DOMRect | undefined>();
-
-  const calcDistance = (position: DOMRect) => {
-    const elemPosition = position;
-    const vwHeight = window.innerHeight;
-
-    const bottom = vwHeight - elemPosition.bottom;
-    const top = elemPosition.top;
-
-    return top > bottom;
-  };
 
   const onEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     setLinkPosition(e.currentTarget.getBoundingClientRect());
@@ -51,9 +43,10 @@ const LinkHover: React.FC<LinkHoverProps> = ({
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
       {cardShown && (
         <ProfileCard
-          cardType="ambassador"
+          cardType={cardType}
           linkPosition={linkPosition && linkPosition}
           ambassador={ambassador}
+          staffMember={cardType === "staff" ? name : ""}
         />
       )}
 

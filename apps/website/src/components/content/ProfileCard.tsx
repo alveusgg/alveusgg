@@ -73,13 +73,13 @@ const calcDistance = (position: DOMRect) => {
 
 type SpanProps = {
   title: string;
-  titleName?: Ambassador["species"] | undefined;
+  name?: Ambassador["species"] | undefined;
 };
 
-const Span: React.FC<SpanProps> = ({ title, titleName }) => {
+const Span: React.FC<SpanProps> = ({ title, name }) => {
   return (
     <div className="inline text-yellow-300">
-      <span className="font-semibold">{title}:</span> {titleName}
+      <span className="font-semibold">{title}:</span> {name}
     </div>
   );
 };
@@ -110,11 +110,12 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     cardType === "ambassador" ? ambassadorInfo?.name : staffMemberInfo?.name;
 
   const species = cardType === "ambassador" ? ambassadorInfo?.species : "";
+  const position = cardType === "staff" ? staffMemberInfo?.title : "";
 
   const enclosure =
-    cardType === "ambassador" &&
-    ambassadorInfo &&
-    enclosures[ambassadorInfo.enclosure].name;
+    cardType === "ambassador"
+      ? ambassadorInfo && enclosures[ambassadorInfo.enclosure].name
+      : "";
 
   const img =
     cardType === "ambassador"
@@ -123,37 +124,52 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
   const upwards = linkPosition && calcDistance(linkPosition);
 
+  if (cardType === "staff") console.log(staffMemberInfo);
+
   const ambassadorStyles = `${ambassadorStyle} ${
     upwards ? "-translate-y-full" : "mt-4"
   } `;
   return (
     <>
-      <div className={ambassadorStyles}>
-        {img && (
-          <Image
-            src={img.src}
-            alt={img.alt}
-            width="176"
-            height="176"
-            className={`${"h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"}`}
-          />
-        )}
-        <div className="flex flex-col text-sm">
-          <Heading className="inline text-xl text-yellow-500" level={5}>
-            {name}
-          </Heading>
-          {cardType === "ambassador" ? (
-            <Span title="Species" titleName={species} />
-          ) : (
-            ""
+      {cardType === "ambassador" && (
+        <div className={ambassadorStyles}>
+          {img && (
+            <Image
+              src={img.src}
+              alt={img.alt}
+              width="176"
+              height="176"
+              className={`${"h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"}`}
+            />
           )}
-          {cardType === "ambassador" && (
-            <div className="inline text-yellow-300">
-              <span className="font-semibold">Enclosure:</span> {enclosure}
-            </div>
-          )}
+          <div className="flex flex-col text-sm">
+            <Heading className="inline text-xl text-yellow-500" level={5}>
+              {name}
+            </Heading>
+            <Span title="Species" name={species} />
+            <Span title="Enclosure" name={enclosure} />
+          </div>
         </div>
-      </div>
+      )}
+      {cardType === "staff" && (
+        <div className={staffStyle}>
+          {img && (
+            <Image
+              src={img.src}
+              alt={img.alt}
+              width="176"
+              height="176"
+              className={`${"h-28 w-auto rounded xl:h-28 xl:w-auto"}`}
+            />
+          )}
+          <div className="flex flex-col text-sm">
+            <Heading className="inline text-xl text-yellow-500" level={5}>
+              {staffMember}
+            </Heading>
+            <Span title="Position" name={position} />
+          </div>
+        </div>
+      )}
     </>
   );
 };

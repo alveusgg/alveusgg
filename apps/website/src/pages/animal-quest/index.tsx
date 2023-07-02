@@ -148,6 +148,7 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
                         href={`/ambassadors/${camelToKebab(ambassador)}`}
                         name={ambassadors[ambassador].name}
                         ambassador={ambassador}
+                        cardType="ambassador"
                       />
                     ) : (
                       ambassadors[ambassador].name
