@@ -1,9 +1,5 @@
-import React, { useState, type ReactElement } from "react";
-import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
-import ambassadors, {
-  type Ambassador,
-  type AmbassadorKey,
-} from "@alveusgg/data/src/ambassadors/core";
+import React, { useState } from "react";
+import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import ProfileCard from "./ProfileCard";
 
 import Link from "./Link";
@@ -14,13 +10,14 @@ type LinkHoverProps = {
   ambassador?: AmbassadorKey;
   staffMember?: string;
   cardType: "ambassador" | "staff" | "enclosure";
+  yellow?: boolean;
 };
 
 const LinkHover: React.FC<LinkHoverProps> = ({
   href,
   name,
   ambassador,
-  staffMember,
+  yellow,
   cardType,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
@@ -49,8 +46,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
           staffMember={cardType === "staff" ? name : ""}
         />
       )}
-
-      <Link className={`text-yellow-400`} href={href}>
+      <Link className={yellow ? "text-yellow-400" : ""} href={href}>
         {name}
       </Link>
     </div>

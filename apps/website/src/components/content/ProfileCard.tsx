@@ -7,13 +7,12 @@ import ambassadors, {
 import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
 
 import Image, { type ImageProps, type StaticImageData } from "next/image";
-import type { AmbassadorImage } from "@alveusgg/data/src/ambassadors/images";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import { kebabToCamel, sentenceToKebab } from "@/utils/string-case";
 
 import { staff } from "@/pages/about/staff";
 import mayaImage from "@/assets/maya.png";
-
+import { classes } from "@/utils/classes";
 import Heading from "./Heading";
 
 export type StaffImage = StaticImageData & {
@@ -30,10 +29,10 @@ type Staff = Array<StaffMember>;
 
 export type ProfileCardProps = {
   ambassador?: AmbassadorKey;
+  enclosure?: EnclosureKey;
   staffMember?: string;
   cardType: "ambassador" | "staff" | "enclosure";
   linkPosition: DOMRect | undefined;
-  isEnclosure?: boolean;
 };
 
 const allStaff: Staff = Object.values(staff).map((person) => ({
@@ -61,6 +60,7 @@ const findMember = (name: string | undefined, members: Staff) => {
   );
   return member;
 };
+
 const calcDistance = (position: DOMRect) => {
   const elemPosition = position;
   const vwHeight = window.innerHeight;
@@ -84,24 +84,21 @@ const Span: React.FC<SpanProps> = ({ title, name }) => {
   );
 };
 
-// const enclosureName = species && enclosures[enclosure].name;
-// const inhabiting = isEnclosure
-//     ? Object.entries(ambassadors).filter(
-//         (ambassador) => ambassador[1].enclosure === enclosure
-//       )
-// : [];
+const staffStyle =
+  "absolute z-50 flex flex-col lg:flex-row  box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
 
-const staffStyle = `absolute z-50 flex flex-col lg:flex-row  box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const ambassadorStyle =
+  "absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-1 xl:gap-4 max-w-[340px]  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
 
-const ambassadorStyle = `absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-4 max-w-[340px]  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
-
-// const enclosureStyle = `absolute z-50 flex flex-col -translate-x-1/4 -mt-[25px] items-center gap-4  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800`;
+const enclosureStyle =
+  "absolute z-50 flex flex-col -translate-x-1/4 -mt-[25px] items-center gap-4  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   ambassador,
   cardType,
   staffMember,
   linkPosition,
+  enclosure,
 }) => {
   const ambassadorInfo = ambassador && ambassadors[ambassador];
   const staffMemberInfo = findMember(staffMember, allStaff);
@@ -112,7 +109,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const species = cardType === "ambassador" ? ambassadorInfo?.species : "";
   const position = cardType === "staff" ? staffMemberInfo?.title : "";
 
-  const enclosure =
+  const ambassadorEnclosure =
     cardType === "ambassador"
       ? ambassadorInfo && enclosures[ambassadorInfo.enclosure].name
       : "";
@@ -122,44 +119,60 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       ? getAmbassadorImages(ambassador as AmbassadorKey)[0]
       : findMember(name, allStaff)?.img;
 
+  const inhabiting =
+    cardType === "enclosure"
+      ? Object.entries(ambassadors).filter(
+          (ambassador) => ambassador[1].enclosure === enclosure
+        )
+      : [];
+
+  // Pending: map the inhabiting ambassasdors and pull their pictures. Limit to 4 pictures
+  console.log(inhabiting);
+
   const upwards = linkPosition && calcDistance(linkPosition);
 
-  if (cardType === "staff") console.log(staffMemberInfo);
-
-  const ambassadorStyles = `${ambassadorStyle} ${
-    upwards ? "-translate-y-full" : "mt-4"
-  } `;
   return (
     <>
       {cardType === "ambassador" && (
-        <div className={ambassadorStyles}>
+        <div
+          className={classes(
+            ambassadorStyle,
+            upwards ? "-translate-y-full" : "mt-4"
+          )}
+        >
           {img && (
             <Image
               src={img.src}
               alt={img.alt}
               width="176"
               height="176"
-              className={`${"h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"}`}
+              className="h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"
             />
           )}
           <div className="flex flex-col text-sm">
-            <Heading className="inline text-xl text-yellow-500" level={5}>
+            <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
               {name}
             </Heading>
             <Span title="Species" name={species} />
-            <Span title="Enclosure" name={enclosure} />
+            <Span title="Enclosure" name={ambassadorEnclosure} />
           </div>
         </div>
       )}
+
       {cardType === "staff" && (
-        <div className={staffStyle}>
+        <div
+          className={classes(
+            staffStyle,
+            upwards ? "-translate-y-full" : "mt-4"
+          )}
+        >
           {img && (
             <Image
               src={img.src}
               alt={img.alt}
               width="176"
               height="176"
-              className={`${"h-28 w-auto rounded xl:h-28 xl:w-auto"}`}
+              className="h-28 w-auto rounded xl:h-28 xl:w-auto"
             />
           )}
           <div className="flex flex-col text-sm">
@@ -168,6 +181,20 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
             </Heading>
             <Span title="Position" name={position} />
           </div>
+        </div>
+      )}
+
+      {cardType === "enclosure" && (
+        <div
+          className={classes(
+            enclosureStyle,
+            upwards ? "-translate-y-full" : "mt-4"
+          )}
+        >
+          <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
+            Inhabitants:
+          </Heading>
+          {/* images here */}
         </div>
       )}
     </>
