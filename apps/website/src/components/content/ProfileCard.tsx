@@ -126,8 +126,18 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         )
       : [];
 
+  const inhabitantsImgs =
+    cardType === "enclosure" &&
+    inhabiting
+      .slice(0, 4)
+      .map((ambassador) => {
+        const ambaKey: string = ambassador[0];
+        return getAmbassadorImages(ambaKey as AmbassadorKey)[0];
+      })
+      .map((image, id) => <Image key={id} alt={image.alt} src={image.src} />);
+
+  console.log(inhabitantsImgs);
   // Pending: map the inhabiting ambassasdors and pull their pictures. Limit to 4 pictures
-  console.log(inhabiting);
 
   const upwards = linkPosition && calcDistance(linkPosition);
 
@@ -194,7 +204,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
             Inhabitants:
           </Heading>
-          {/* images here */}
+          <div>{inhabitantsImgs}</div>
         </div>
       )}
     </>

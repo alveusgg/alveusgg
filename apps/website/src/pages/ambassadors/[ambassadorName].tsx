@@ -153,7 +153,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               href={`/ambassadors#enclosures:${camelToKebab(
                 ambassador.enclosure
               )}`}
-              isEnclosure
+              cardType="enclosure"
             />
           </div>
         ),
