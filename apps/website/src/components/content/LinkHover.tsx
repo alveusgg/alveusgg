@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { type EnclosureKey } from "@alveusgg/data/src/enclosures";
-
 import DynamicCard from "./DynamicCard";
 
 import Link from "./Link";
