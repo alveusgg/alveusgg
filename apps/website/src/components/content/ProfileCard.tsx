@@ -5,7 +5,6 @@ import ambassadors, {
   type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
 import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
-
 import Image, { type ImageProps, type StaticImageData } from "next/image";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import { kebabToCamel, sentenceToKebab } from "@/utils/string-case";
@@ -88,10 +87,10 @@ const staffStyle =
   "absolute z-50 flex flex-col lg:flex-row  box-border  max-w-[448px] gap-4 items-center rounded bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
 
 const ambassadorStyle =
-  "absolute z-50 flex flex-col xl:flex-row  -translate-x-1/4 -mt-[25px] items-center gap-1 xl:gap-4 max-w-[340px]  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
+  "absolute z-50 flex flex-col xl:flex-row  -translate-x-1/8 -mt-[25px] items-center gap-1 xl:gap-4 max-w-[340px]  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
 
 const enclosureStyle =
-  "absolute z-50 flex flex-col -translate-x-1/4 -mt-[25px] items-center gap-4  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
+  "absolute z-50 flex flex-col -translate-x-1/4 items-center justify-center rounded bg-alveus-green-900 p-2 shadow-lg shadow-alveus-green-800";
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   ambassador,
@@ -134,10 +133,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         const ambaKey: string = ambassador[0];
         return getAmbassadorImages(ambaKey as AmbassadorKey)[0];
       })
-      .map((image, id) => <Image key={id} alt={image.alt} src={image.src} />);
-
-  console.log(inhabitantsImgs);
-  // Pending: map the inhabiting ambassasdors and pull their pictures. Limit to 4 pictures
+      .map((image, id) => (
+        <Image
+          key={id}
+          alt={image.alt}
+          src={image.src}
+          className="h-20 w-20 rounded border border-yellow-600"
+        />
+      ));
 
   const upwards = linkPosition && calcDistance(linkPosition);
 
@@ -198,13 +201,15 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         <div
           className={classes(
             enclosureStyle,
-            upwards ? "-translate-y-full" : "mt-4"
+            upwards ? "-translate-y-full" : "mt-6"
           )}
         >
           <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
             Inhabitants:
           </Heading>
-          <div>{inhabitantsImgs}</div>
+          <div className="flex w-44 flex-wrap  items-center justify-center gap-1">
+            {inhabitantsImgs}
+          </div>
         </div>
       )}
     </>

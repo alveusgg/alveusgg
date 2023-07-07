@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { type EnclosureKey } from "@alveusgg/data/src/enclosures";
 
-import ProfileCard from "./ProfileCard";
+import DynamicCard from "./DynamicCard";
 
 import Link from "./Link";
 
@@ -43,7 +43,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
       {cardShown && (
-        <ProfileCard
+        <DynamicCard
           cardType={cardType}
           linkPosition={linkPosition && linkPosition}
           ambassador={ambassador}
