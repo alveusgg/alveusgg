@@ -1,4 +1,4 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
 
 settings:
   autoInstallPeers: true
@@ -28,7 +28,7 @@ importers:
     dependencies:
       '@alveusgg/data':
         specifier: github:alveusgg/data
-        version: github.com/alveusgg/data/fb35326aa2a2b49636b25cdce47508435995c0ce
+        version: github.com/alveusgg/data/faa6d23f78ae824f3f52abb9700e7e7cf2e380e5
       '@aws-sdk/client-s3':
         specifier: ^3.348.0
         version: 3.348.0
@@ -9774,8 +9774,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/alveusgg/data/fb35326aa2a2b49636b25cdce47508435995c0ce:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/fb35326aa2a2b49636b25cdce47508435995c0ce}
+  github.com/alveusgg/data/faa6d23f78ae824f3f52abb9700e7e7cf2e380e5:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/faa6d23f78ae824f3f52abb9700e7e7cf2e380e5}
     name: '@alveusgg/data'
-    version: 0.13.0
+    version: 0.15.0
     dev: false
