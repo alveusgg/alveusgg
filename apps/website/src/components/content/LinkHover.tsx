@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { type EnclosureKey } from "@alveusgg/data/src/enclosures";
-import DynamicCard from "./DynamicCard";
+import dynamic from "next/dynamic";
 
 import Link from "./Link";
+
+const DynamicCard = dynamic(() => import("./ProfileCard"), {
+  ssr: false,
+});
 
 type LinkHoverProps = {
   href: string;
