@@ -5,5 +5,5 @@ const buildEslintCommand = (filenames) =>
 
 module.exports = {
   ...mainConfig,
-  "*.{js,jsx,ts,tsx}": buildEslintCommand,
+  "*.{mjs,cjs,js,ts}": buildEslintCommand,
 };
