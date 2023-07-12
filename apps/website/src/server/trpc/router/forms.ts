@@ -111,7 +111,6 @@ export const formsRouter = router({
       // Perform server side checks if required
       if (config.checks) {
         // TODO: Make the form config granular. Right now the channel follow check is hard-coded here:
-        // NOTE: Does not work, twitch removed API access :(
         const isFollowing = await checkFollowsChannel("636587384", {
           access_token: accessToken,
           providerAccountId: twitchAccount.providerAccountId,
