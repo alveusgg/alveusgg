@@ -1,7 +1,7 @@
 const mainConfig = require("../../lint-staged.config.js");
 
 const buildEslintCommand = (filenames) =>
-  `pnpm run lint --fix ${filenames.join(" ")}`;
+  `pnpm eslint --fix ${filenames.join(" ")}`;
 
 module.exports = {
   ...mainConfig,
