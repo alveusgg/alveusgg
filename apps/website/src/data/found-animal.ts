@@ -9,14 +9,17 @@ export type FoundAnimalFlow = {
 };
 
 const macros = {
-  bird: {
-    rehab: [
+  general: {
+    rehab: (animal = "it", context = "") => [
+      `${
+        context ? `${context}, call` : "Call"
+      } a wildlife rehabilitator. They will be able to help ${animal}, or give you advice on what to do next.`,
       "To find a local wildlife rehabilitator, you can try searching online, or contacting your region's wildlife agency, or a local veterinarian.",
     ],
-    leave: [
-      "Leave the bird alone and keep yourself, and any pets, away from it.",
-      "If you are still concerned, you can monitor the bird from a distance to make sure the parents are still caring for it.",
-      "Do not feed or otherwise interfere with it, to avoid it imprinting on humans.",
+    leave: (animal = "it") => [
+      `Leave ${animal} alone and keep yourself, and any pets, away from it.`,
+      `If you are still concerned, you can monitor ${animal} from a distance to make sure it is doing okay over a few days.`,
+      `Do not feed or otherwise interfere with it, to avoid ${animal} imprinting on humans.`,
     ],
   },
 } as const;
@@ -35,10 +38,7 @@ const data: FoundAnimalFlow = {
           {
             name: "Yes",
             flow: {
-              prompt: [
-                "Call a wildlife rehabilitator. They will be best equipped to help an injured bird.",
-                ...macros.bird.rehab,
-              ],
+              prompt: macros.general.rehab("an injured bird"),
             },
           },
           {
@@ -58,7 +58,7 @@ const data: FoundAnimalFlow = {
                       {
                         name: "Yes",
                         flow: {
-                          prompt: macros.bird.leave,
+                          prompt: macros.general.leave("the bird"),
                         },
                       },
                       {
@@ -73,16 +73,16 @@ const data: FoundAnimalFlow = {
                             {
                               name: "Yes",
                               flow: {
-                                prompt: macros.bird.leave,
+                                prompt: macros.general.leave("the bird"),
                               },
                             },
                             {
                               name: "No",
                               flow: {
-                                prompt: [
-                                  "If you are sure the parents are not nearby, and do not return within a few hours, call a wildlife rehabilitator.",
-                                  ...macros.bird.rehab,
-                                ],
+                                prompt: macros.general.rehab(
+                                  "the bird",
+                                  "If you are sure the parents are not nearby, and do not return within a few hours"
+                                ),
                               },
                             },
                           ],
@@ -111,16 +111,16 @@ const data: FoundAnimalFlow = {
                             {
                               name: "Yes",
                               flow: {
-                                prompt: macros.bird.leave,
+                                prompt: macros.general.leave("the bird"),
                               },
                             },
                             {
                               name: "No",
                               flow: {
-                                prompt: [
-                                  "If you are sure the parents are not nearby, and do not return within a few hours, call a wildlife rehabilitator.",
-                                  ...macros.bird.rehab,
-                                ],
+                                prompt: macros.general.rehab(
+                                  "the bird",
+                                  "If you are sure the parents are not nearby, and do not return within a few hours"
+                                ),
                               },
                             },
                           ],
@@ -148,22 +148,89 @@ const data: FoundAnimalFlow = {
                                   {
                                     name: "Yes",
                                     flow: {
-                                      prompt: macros.bird.leave,
+                                      prompt: macros.general.leave("the bird"),
                                     },
                                   },
                                   {
                                     name: "No",
                                     flow: {
-                                      prompt: [
-                                        "If you are sure the parents are not nearby, and do not return within a few hours, call a wildlife rehabilitator.",
-                                        ...macros.bird.rehab,
-                                      ],
+                                      prompt: macros.general.rehab(
+                                        "the bird",
+                                        "If you are sure the parents are not nearby, and do not return within a few hours"
+                                      ),
                                     },
                                   },
                                 ],
                               },
                             },
                           ],
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "Deer/Fawn",
+      flow: {
+        prompt: [
+          "Is the deer injured?",
+          "For example, does it look like it may have been attacked, is it bleeding, is it unable to walk?",
+        ],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: [
+                "Do not approach or try to handle the deer, as this may scare it and lead to further injury.",
+                ...macros.general.rehab("an injured deer"),
+              ],
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Is the deer trapped or stuck?",
+                "For example, is it stuck in a fence, or in a hole?",
+              ],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "Do not approach or try to handle the deer, as this may scare it and lead to further injury.",
+                      ...macros.general.rehab("a trapped deer"),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: ["Is the deer alone?"],
+                    options: [
+                      {
+                        name: "Yes",
+                        flow: {
+                          prompt: [
+                            "This is normal, do not worry. Younger deer (fawns) are often left alone for long periods of time. The mother should return to feed them, often toward the end of the day.",
+                            "If you are still concerned, you can monitor the deer from a distance to make sure the mother is still caring for it. Do not approach or try to handle the deer, as your scent may lead to the mother abandoning it.",
+                            ...macros.general.rehab(
+                              "a deer",
+                              "If you don't see the mother return over the next couple of days"
+                            ),
+                          ],
+                        },
+                      },
+                      {
+                        name: "No",
+                        flow: {
+                          prompt: macros.general.leave("the deer"),
                         },
                       },
                     ],
