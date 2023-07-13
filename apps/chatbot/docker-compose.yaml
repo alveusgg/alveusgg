@@ -5,3 +5,5 @@ services:
       context: .
       dockerfile: Dockerfile
     restart: always
+    environment:
+      - CHATBOT_REF_SHA=$CHATBOT_REF_SHA

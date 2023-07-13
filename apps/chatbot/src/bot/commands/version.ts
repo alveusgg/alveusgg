@@ -10,7 +10,11 @@ const versionPromise = readPackage().then(({ version }) => version);
 export async function createVersionCommands() {
   const versionCommand: CommandHandler = async (params, { reply }) => {
     const version = await versionPromise;
-    reply(`AlveusGG Bot v${version}`);
+    const ref = process.env.CHATBOT_REF_SHA
+      ? `- ${process.env.CHATBOT_REF_SHA.slice(0, 7)}`
+      : "(no ref)";
+
+    reply(`AlveusGG Bot v${version} ${ref}`);
   };
 
   return [
