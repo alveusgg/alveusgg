@@ -24,7 +24,7 @@ Website stack (based on [T3 Stack](https://create.t3.gg/)):
 - TypeScript
 - Next.js (framework)
 - tRPC (typesafe api)
-- Prisma (database orm)
+- Drizzle (database orm)
 - Auth.js aka NextAuth.js (auth via OAuth)
 - Tailwind CSS (styling)
 
@@ -76,7 +76,7 @@ TODO
 7. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Also see [T3 Stack](https://create.t3.gg/)
-- Use `npx prisma studio` to view your database
+- Use `pnpm drizzle-kit studio` to view your database
 
 ## How to set up your own production instance
 

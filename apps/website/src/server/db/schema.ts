@@ -8,9 +8,18 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-export type ClientAccessToken = InferModel<typeof clientAccessTokens, "select">;
+// TODO: use timestamps instead of datetime?
+//  so we can have something like
+// `timestamp("createdAt").notNull().defaultNow().onUpdateNow()`
 
-export const clientAccessTokens = mysqlTable(
+// TODO: add primary keys
+
+export type ClientAccessToken = InferModel<
+  typeof clientAccessTokenTable,
+  "select"
+>;
+
+export const clientAccessTokenTable = mysqlTable(
   "ClientAccessToken",
   {
     service: varchar("service", { length: 191 }).notNull(),
@@ -30,11 +39,11 @@ export const clientAccessTokens = mysqlTable(
 );
 
 export type TaskExecutionEvent = InferModel<
-  typeof taskExecutionEvents,
+  typeof taskExecutionEventTable,
   "select"
 >;
 
-export const taskExecutionEvents = mysqlTable("TaskExecutionEvent", {
+export const taskExecutionEventTable = mysqlTable("TaskExecutionEvent", {
   id: varchar("id", { length: 191 }).notNull(),
   task: varchar("task", { length: 191 }).notNull(),
   startedAt: datetime("startedAt").default(sql`CURRENT_TIMESTAMP`),
@@ -42,11 +51,11 @@ export const taskExecutionEvents = mysqlTable("TaskExecutionEvent", {
 });
 
 export type ChannelUpdateEvent = InferModel<
-  typeof channelUpdateEvents,
+  typeof channelUpdateEventTable,
   "select"
 >;
 
-export const channelUpdateEvents = mysqlTable("ChannelUpdateEvent", {
+export const channelUpdateEventTable = mysqlTable("ChannelUpdateEvent", {
   id: varchar("id", { length: 191 }).notNull(),
   service: varchar("service", { length: 191 }).notNull(),
   channel: varchar("channel", { length: 191 }).notNull(),
@@ -57,9 +66,12 @@ export const channelUpdateEvents = mysqlTable("ChannelUpdateEvent", {
   createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export type StreamStatusEvent = InferModel<typeof streamStatusEvents, "select">;
+export type StreamStatusEvent = InferModel<
+  typeof streamStatusEventTable,
+  "select"
+>;
 
-export const streamStatusEvents = mysqlTable("StreamStatusEvent", {
+export const streamStatusEventTable = mysqlTable("StreamStatusEvent", {
   id: varchar("id", { length: 191 }).notNull(),
   service: varchar("service", { length: 191 }).notNull(),
   channel: varchar("channel", { length: 191 }).notNull(),
@@ -70,9 +82,9 @@ export const streamStatusEvents = mysqlTable("StreamStatusEvent", {
 });
 
 // Necessary for Next auth
-export type Account = InferModel<typeof accounts, "select">;
+export type Account = InferModel<typeof accountTable, "select">;
 
-export const accounts = mysqlTable(
+export const accountTable = mysqlTable(
   "Account",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -97,9 +109,9 @@ export const accounts = mysqlTable(
   })
 );
 
-export type Session = InferModel<typeof sessions, "select">;
+export type Session = InferModel<typeof sessionTable, "select">;
 
-export const sessions = mysqlTable(
+export const sessionTable = mysqlTable(
   "Session",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -116,9 +128,9 @@ export const sessions = mysqlTable(
   })
 );
 
-export type User = InferModel<typeof users, "select">;
+export type User = InferModel<typeof userTable, "select">;
 
-export const users = mysqlTable(
+export const userTable = mysqlTable(
   "User",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -133,9 +145,12 @@ export const users = mysqlTable(
   })
 );
 
-export type VerificationToken = InferModel<typeof verificationTokens, "select">;
+export type VerificationToken = InferModel<
+  typeof verificationTokenTable,
+  "select"
+>;
 
-export const verificationTokens = mysqlTable(
+export const verificationTokenTable = mysqlTable(
   "VerificationToken",
   {
     identifier: varchar("identifier", { length: 191 }).notNull(),
@@ -150,9 +165,9 @@ export const verificationTokens = mysqlTable(
   })
 );
 
-export type UserRole = InferModel<typeof userRoles, "select">;
+export type UserRole = InferModel<typeof userRoleTable, "select">;
 
-export const userRoles = mysqlTable(
+export const userRoleTable = mysqlTable(
   "UserRole",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -168,9 +183,9 @@ export const userRoles = mysqlTable(
   })
 );
 
-export type Notification = InferModel<typeof notifications, "select">;
+export type Notification = InferModel<typeof notificationTable, "select">;
 
-export const notifications = mysqlTable("Notification", {
+export const notificationTable = mysqlTable("Notification", {
   id: varchar("id", { length: 191 }).notNull(),
   message: varchar("message", { length: 191 }).notNull(),
   createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
@@ -187,9 +202,12 @@ export const notifications = mysqlTable("Notification", {
   isDiscord: int("isDiscord").default(0),
 });
 
-export type NotificationPush = InferModel<typeof notificationPushes, "select">;
+export type NotificationPush = InferModel<
+  typeof notificationPushTable,
+  "select"
+>;
 
-export const notificationPushes = mysqlTable(
+export const notificationPushTable = mysqlTable(
   "NotificationPush",
   {
     notificationId: varchar("notificationId", { length: 191 }).notNull(),
@@ -225,9 +243,12 @@ export const notificationPushes = mysqlTable(
 // FIXME: Endpoint URLs could be up to 2048 chars, which would be 8192 bytes with utf8mb4 (4 bytes per char),
 //        but innodb unique index keys may only be up to 3072 bytes which would be 768 characters so we round
 //        down to 720. So far Endpoint URLS have been less than 256 chars. So that _should_ not collide.
-export type PushSubscription = InferModel<typeof pushSubscriptions, "select">;
+export type PushSubscription = InferModel<
+  typeof pushSubscriptionTable,
+  "select"
+>;
 
-export const pushSubscriptions = mysqlTable(
+export const pushSubscriptionTable = mysqlTable(
   "PushSubscription",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -251,11 +272,11 @@ export const pushSubscriptions = mysqlTable(
 );
 
 export type PushSubscriptionTag = InferModel<
-  typeof pushSubscriptionTags,
+  typeof pushSubscriptionTagTable,
   "select"
 >;
 
-export const pushSubscriptionTags = mysqlTable(
+export const pushSubscriptionTagTable = mysqlTable(
   "PushSubscriptionTag",
   {
     subscriptionId: varchar("subscriptionId", { length: 191 }).notNull(),
@@ -271,11 +292,11 @@ export const pushSubscriptionTags = mysqlTable(
 );
 
 export type NotificationDiscordChannelWebhook = InferModel<
-  typeof notificationDiscordChannelWebhooks,
+  typeof notificationDiscordChannelWebhookTable,
   "select"
 >;
 
-export const notificationDiscordChannelWebhooks = mysqlTable(
+export const notificationDiscordChannelWebhookTable = mysqlTable(
   "NotificationDiscordChannelWebhook",
   {
     notificationId: varchar("notificationId", { length: 191 }).notNull(),
@@ -292,9 +313,9 @@ export const notificationDiscordChannelWebhooks = mysqlTable(
   })
 );
 
-export type MailingAddress = InferModel<typeof mailingAddresses, "select">;
+export type MailingAddress = InferModel<typeof mailingAddressTable, "select">;
 
-export const mailingAddresses = mysqlTable("MailingAddress", {
+export const mailingAddressTable = mysqlTable("MailingAddress", {
   id: varchar("id", { length: 191 }).notNull(),
   country: varchar("country", { length: 191 }).notNull(),
   addressLine1: varchar("addressLine1", { length: 191 }).notNull(),
@@ -307,9 +328,9 @@ export const mailingAddresses = mysqlTable("MailingAddress", {
   updatedAt: datetime("updatedAt").default(sql`CURRENT_TIMESTAMP`),
 });
 
-export type Form = InferModel<typeof forms, "select">;
+export type Form = InferModel<typeof formTable, "select">;
 
-export const forms = mysqlTable(
+export const formTable = mysqlTable(
   "Form",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -330,9 +351,9 @@ export const forms = mysqlTable(
   })
 );
 
-export type FormEntry = InferModel<typeof formEntries, "select">;
+export type FormEntry = InferModel<typeof formEntryTable, "select">;
 
-export const formEntries = mysqlTable(
+export const formEntryTable = mysqlTable(
   "FormEntry",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -357,9 +378,9 @@ export const formEntries = mysqlTable(
   })
 );
 
-export type OutgoingWebhook = InferModel<typeof outgoingWebhooks, "select">;
+export type OutgoingWebhook = InferModel<typeof outgoingWebhookTable, "select">;
 
-export const outgoingWebhooks = mysqlTable(
+export const outgoingWebhookTable = mysqlTable(
   "OutgoingWebhook",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -382,9 +403,9 @@ export const outgoingWebhooks = mysqlTable(
   })
 );
 
-export type LinkAttachment = InferModel<typeof linkAttachments, "select">;
+export type LinkAttachment = InferModel<typeof linkAttachmentTable, "select">;
 
-export const linkAttachments = mysqlTable("LinkAttachment", {
+export const linkAttachmentTable = mysqlTable("LinkAttachment", {
   id: varchar("id", { length: 191 }).notNull(),
   type: varchar("type", { length: 191 }).notNull(),
   name: varchar("name", { length: 191 }).notNull(),
@@ -395,9 +416,12 @@ export const linkAttachments = mysqlTable("LinkAttachment", {
   url: varchar("url", { length: 191 }).notNull(),
 });
 
-export type ShowAndTellEntry = InferModel<typeof showAndTellEntries, "select">;
+export type ShowAndTellEntry = InferModel<
+  typeof showAndTellEntryTable,
+  "select"
+>;
 
-export const showAndTellEntries = mysqlTable(
+export const showAndTellEntryTable = mysqlTable(
   "ShowAndTellEntry",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -420,11 +444,11 @@ export const showAndTellEntries = mysqlTable(
 );
 
 export type ShowAndTellEntryAttachment = InferModel<
-  typeof showAndTellEntryAttachments,
+  typeof showAndTellEntryAttachmentTable,
   "select"
 >;
 
-export const showAndTellEntryAttachments = mysqlTable(
+export const showAndTellEntryAttachmentTable = mysqlTable(
   "ShowAndTellEntryAttachment",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -441,9 +465,12 @@ export const showAndTellEntryAttachments = mysqlTable(
   })
 );
 
-export type FileStorageObject = InferModel<typeof fileStorageObjects, "select">;
+export type FileStorageObject = InferModel<
+  typeof fileStorageObjectTable,
+  "select"
+>;
 
-export const fileStorageObjects = mysqlTable(
+export const fileStorageObjectTable = mysqlTable(
   "FileStorageObject",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -465,9 +492,9 @@ export const fileStorageObjects = mysqlTable(
   })
 );
 
-export type ImageMetadata = InferModel<typeof imageMetadata, "select">;
+export type ImageMetadata = InferModel<typeof imageMetadataTable, "select">;
 
-export const imageMetadata = mysqlTable(
+export const imageMetadataTable = mysqlTable(
   "ImageMetadata",
   {
     mimeType: varchar("mimeType", { length: 191 }).notNull(),
@@ -484,9 +511,9 @@ export const imageMetadata = mysqlTable(
   })
 );
 
-export type ImageAttachment = InferModel<typeof imageAttachments, "select">;
+export type ImageAttachment = InferModel<typeof imageAttachmentTable, "select">;
 
-export const imageAttachments = mysqlTable(
+export const imageAttachmentTable = mysqlTable(
   "ImageAttachment",
   {
     id: varchar("id", { length: 191 }).notNull(),

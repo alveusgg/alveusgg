@@ -1,12 +1,13 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
-import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
-import { prisma } from "@/server/db/client";
+import { z } from "zod";
+import { env } from "@/env/index.mjs";
+import { getDatabase, prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
+import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
-import { env } from "@/env/index.mjs";
+import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
+import { showAndTellEntryTable } from "./schema";
 
 const MAX_IMAGES = 12;
 
@@ -180,6 +181,23 @@ export async function createPost(
   const text = sanitizeUserHtml(input.text);
   const newImages = await createImageAttachments(input.imageAttachments.create);
   const newVideos = createVideoAttachments(input.videoLinks);
+
+  const db = await getDatabase();
+
+  const _res = await db.insert(showAndTellEntryTable).values({
+    // ...(importAt
+    //   ? {
+    //       createdAt: importAt,
+    //       updatedAt: importAt,
+    //       approvedAt: importAt,
+    //     }
+    //   : {}),
+    // // user_id: authorUserId,
+    // displayName: input.displayName,
+    // title: input.title,
+    // text,
+    id: input.id,
+  });
 
   // TODO: Webhook? Notify mods?
   const res = await prisma.showAndTellEntry.create({
