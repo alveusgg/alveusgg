@@ -185,13 +185,9 @@ export async function createPost(
 
   const db = getDatabase();
 
-  // TODO: cant use returning values in mysql :(
-
-  const id = createId();
-
   // TODO: Webhook? Notify mods?
   const res = await db.insert(showAndTellEntryTable).values({
-    id,
+    id: createId(),
     ...(importAt
       ? {
           createdAt: importAt,
@@ -205,7 +201,9 @@ export async function createPost(
     text,
     // attachments: { create: [...newImages, ...newVideos] },
   });
-  await revalidateCache(id);
+
+  // TODO: check if insertId is the correct id
+  await revalidateCache(res.insertId);
   // returned value isn't the inserted row, but we don't use it anyway
   return res;
 }

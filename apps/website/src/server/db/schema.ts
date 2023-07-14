@@ -1,11 +1,13 @@
-import type { InferModel } from "drizzle-orm";
+import { sql, type InferModel } from "drizzle-orm";
 import {
   customType,
+  datetime,
   int,
   mysqlEnum,
   mysqlTable,
   text,
   timestamp,
+  unique,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
@@ -16,6 +18,9 @@ const cuid = customType<{ data: string; notNull: true }>({
     return "varchar(191)";
   },
 });
+
+// TODO: adding .unique() creates a constraint like `User_name_unique`
+//  whilst the table already has `User_name_key` from Prisma
 
 // TODO: update chatbot code to not await getDatabase()
 
@@ -33,12 +38,21 @@ export const clientAccessTokenTable = mysqlTable(
     client_id: varchar("client_id", { length: 191 }).notNull(),
     access_token: varchar("access_token", { length: 191 }).notNull(),
     refresh_token: varchar("refresh_token", { length: 191 }),
-    createdAt: timestamp("createdAt").notNull().defaultNow(),
-    updatedAt: timestamp("updatedAt").notNull().defaultNow().onUpdateNow(),
-    expiresAt: timestamp("expiresAt"),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    // TODO: fix updatedAt for datetime
+    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
+      sql`CURRENT_TIMESTAMP(3)`
+    ),
+    // expiresAt: timestamp("expiresAt"),
+    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }),
   },
   (clientAccessTokenTable) => ({
-    serviceClientIdIndex: uniqueIndex("service_client_id_key").on(
+    // serviceClientIdIndex: uniqueIndex("service_client_id_key").on(
+    serviceClientIdIndex: unique("ClientAccessToken_service_client_id_key").on(
       clientAccessTokenTable.service,
       clientAccessTokenTable.client_id
     ),
@@ -70,7 +84,10 @@ export const channelUpdateEventTable = mysqlTable("ChannelUpdateEvent", {
   category_id: varchar("category_id", { length: 191 }).notNull(),
   category_name: varchar("category_name", { length: 191 }).notNull(),
   source: varchar("source", { length: 191 }).notNull(),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  // createdAt: timestamp("createdAt").notNull().defaultNow(),
+  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP(3)`),
 });
 
 export type StreamStatusEvent = InferModel<
@@ -84,7 +101,10 @@ export const streamStatusEventTable = mysqlTable("StreamStatusEvent", {
   channel: varchar("channel", { length: 191 }).notNull(),
   online: int("online").notNull(),
   source: varchar("source", { length: 191 }).notNull(),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  // createdAt: timestamp("createdAt").notNull().defaultNow(),
+  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP(3)`),
   startedAt: timestamp("startedAt"),
 });
 
@@ -94,7 +114,7 @@ export type Account = InferModel<typeof accountTable, "select">;
 export const accountTable = mysqlTable(
   "Account",
   {
-    id: cuid("id").notNull(),
+    id: cuid("id").notNull().primaryKey(),
     userId: varchar("userId", { length: 191 }).notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     provider: varchar("provider", { length: 191 }).notNull(),
@@ -121,10 +141,12 @@ export type Session = InferModel<typeof sessionTable, "select">;
 export const sessionTable = mysqlTable(
   "Session",
   {
-    id: cuid("id").notNull(),
-    sessionToken: varchar("sessionToken", { length: 191 }).notNull().unique(),
+    id: cuid("id").notNull().primaryKey(),
+    // sessionToken: varchar("sessionToken", { length: 191 }).notNull().unique(),
+    sessionToken: varchar("sessionToken", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
-    expires: timestamp("expires").notNull(),
+    // expires: timestamp("expires").notNull(),
+    expires: datetime("expires", { mode: "date", fsp: 3 }).notNull(),
   },
   (sessionTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(sessionTable.id),
@@ -140,10 +162,12 @@ export type User = InferModel<typeof userTable, "select">;
 export const userTable = mysqlTable(
   "User",
   {
-    id: cuid("id").notNull(),
-    name: varchar("name", { length: 191 }).unique(),
+    id: cuid("id").notNull().primaryKey(),
+    // name: varchar("name", { length: 191 }).unique(),
+    name: varchar("name", { length: 191 }),
     email: varchar("email", { length: 191 }),
-    emailVerified: timestamp("emailVerified"),
+    // emailVerified: timestamp("emailVerified"),
+    emailVerified: datetime("emailVerified", { mode: "date", fsp: 3 }),
     image: varchar("image", { length: 191 }),
   },
   (userTable) => ({
@@ -161,8 +185,10 @@ export const verificationTokenTable = mysqlTable(
   "VerificationToken",
   {
     identifier: varchar("identifier", { length: 191 }).notNull(),
-    token: varchar("token", { length: 191 }).notNull().unique(),
-    expires: timestamp("expires").notNull(),
+    // token: varchar("token", { length: 191 }).notNull().unique(),
+    token: varchar("token", { length: 191 }).notNull(),
+    // expires: timestamp("expires").notNull(),
+    expires: datetime("expires", { mode: "date", fsp: 3 }).notNull(),
   },
   (verificationTokenTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(
@@ -206,11 +232,18 @@ export type Notification = InferModel<typeof notificationTable, "select">;
 export const notificationTable = mysqlTable("Notification", {
   id: cuid("id").notNull(),
   message: varchar("message", { length: 191 }).notNull(),
-  createdAt: timestamp("createdAt").notNull().defaultNow(),
-  expiresAt: timestamp("expiresAt").notNull(),
-  canceledAt: timestamp("canceledAt"),
-  scheduledStartAt: timestamp("scheduledStartAt"),
-  scheduledEndAt: timestamp("scheduledEndAt"),
+  // createdAt: timestamp("createdAt").notNull().defaultNow(),
+  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP(3)`),
+  // expiresAt: timestamp("expiresAt").notNull(),
+  expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }).notNull(),
+  // canceledAt: timestamp("canceledAt"),
+  canceledAt: datetime("canceledAt", { mode: "date", fsp: 3 }),
+  // scheduledStartAt: timestamp("scheduledStartAt"),
+  scheduledStartAt: datetime("scheduledStartAt", { mode: "date", fsp: 3 }),
+  // scheduledEndAt: timestamp("scheduledEndAt"),
+  scheduledEndAt: datetime("scheduledEndAt", { mode: "date", fsp: 3 }),
   title: varchar("title", { length: 191 }),
   linkUrl: varchar("linkUrl", { length: 191 }),
   imageUrl: varchar("imageUrl", { length: 191 }),
@@ -244,11 +277,18 @@ export const notificationPushTable = mysqlTable(
       .notNull()
       .default("PENDING"),
     attempts: int("attempts"),
-    createdAt: timestamp("createdAt").defaultNow(),
-    expiresAt: timestamp("expiresAt").notNull(),
-    clickedAt: timestamp("clickedAt"),
-    failedAt: timestamp("failedAt"),
-    deliveredAt: timestamp("deliveredAt"),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // expiresAt: timestamp("expiresAt").notNull(),
+    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }).notNull(),
+    // clickedAt: timestamp("clickedAt"),
+    clickedAt: datetime("clickedAt", { mode: "date", fsp: 3 }),
+    // failedAt: timestamp("failedAt"),
+    failedAt: datetime("failedAt", { mode: "date", fsp: 3 }),
+    // deliveredAt: timestamp("deliveredAt"),
+    deliveredAt: datetime("deliveredAt", { mode: "date", fsp: 3 }),
   },
   (notificationPushTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(
@@ -283,9 +323,17 @@ export const pushSubscriptionTable = mysqlTable(
     endpoint: varchar("endpoint", { length: 720 }).notNull(), // ^ see FIXME above
     p256dh: varchar("p256dh", { length: 191 }),
     auth: varchar("auth", { length: 191 }),
-    createdAt: timestamp("createdAt").defaultNow(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-    deletedAt: timestamp("deletedAt"),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    // TODO: fix updatedAt for datetime
+    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
+      sql`CURRENT_TIMESTAMP(3)`
+    ),
+    // deletedAt: timestamp("deletedAt"),
+    deletedAt: datetime("deletedAt", { mode: "date", fsp: 3 }),
   },
   (pushSubscriptionTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(pushSubscriptionTable.id),
@@ -351,8 +399,15 @@ export const mailingAddressTable = mysqlTable("MailingAddress", {
   state: varchar("state", { length: 191 }).notNull(),
   postalCode: varchar("postalCode", { length: 191 }).notNull(),
   salt: varchar("salt", { length: 32 }).notNull(),
-  createdAt: timestamp("createdAt").defaultNow(),
-  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+  // createdAt: timestamp("createdAt").defaultNow(),
+  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+    .notNull()
+    .default(sql`CURRENT_TIMESTAMP(3)`),
+  // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+  // TODO: fix updatedAt for datetime
+  updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
+    sql`CURRENT_TIMESTAMP(3)`
+  ),
 });
 
 export type Form = InferModel<typeof formTable, "select">;
@@ -369,8 +424,15 @@ export const formTable = mysqlTable(
     outgoingWebhookUrl: varchar("outgoingWebhookUrl", { length: 720 }),
     showInLists: int("showInLists").default(1),
     config: text("config").default(""),
-    createdAt: timestamp("createdAt").defaultNow(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    // TODO: fix updatedAt for datetime
+    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
+      sql`CURRENT_TIMESTAMP(3)`
+    ),
   },
   (formTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(formTable.id),
@@ -386,14 +448,23 @@ export const formEntryTable = mysqlTable(
     id: cuid("id").notNull(),
     formId: varchar("formId", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
-    mailingAddressId: varchar("mailingAddressId", { length: 191 }).unique(),
-    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }).unique(),
+    // mailingAddressId: varchar("mailingAddressId", { length: 191 }).unique(),
+    mailingAddressId: varchar("mailingAddressId", { length: 191 }),
+    // outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }).unique(),
+    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }),
     email: varchar("email", { length: 191 }),
     givenName: varchar("givenName", { length: 191 }).notNull(),
     familyName: varchar("familyName", { length: 191 }).notNull(),
     salt: varchar("salt", { length: 32 }).notNull(),
-    createdAt: timestamp("createdAt").defaultNow(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    // TODO: fix updatedAt for datetime
+    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
+      sql`CURRENT_TIMESTAMP(3)`
+    ),
   },
   (formEntryTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(formEntryTable.id),
@@ -417,10 +488,16 @@ export const outgoingWebhookTable = mysqlTable(
     userId: varchar("userId", { length: 191 }),
     retry: int("retry").default(0),
     attempts: int("attempts"),
-    createdAt: timestamp("createdAt").defaultNow(),
-    failedAt: timestamp("failedAt"),
-    deliveredAt: timestamp("deliveredAt"),
-    expiresAt: timestamp("expiresAt"),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // failedAt: timestamp("failedAt"),
+    failedAt: datetime("failedAt", { mode: "date", fsp: 3 }),
+    // deliveredAt: timestamp("deliveredAt"),
+    deliveredAt: datetime("deliveredAt", { mode: "date", fsp: 3 }),
+    // expiresAt: timestamp("expiresAt"),
+    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }),
   },
   (outgoingWebhookTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(outgoingWebhookTable.id),
@@ -457,10 +534,19 @@ export const showAndTellEntryTable = mysqlTable(
     title: varchar("title", { length: 191 }).notNull(),
     text: text("text").notNull(),
     displayName: varchar("displayName", { length: 191 }),
-    createdAt: timestamp("createdAt").defaultNow(),
-    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-    approvedAt: timestamp("approvedAt"),
-    seenOnStreamAt: timestamp("seenOnStreamAt"),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    // TODO: fix updatedAt for datetime
+    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
+      sql`CURRENT_TIMESTAMP(3)`
+    ),
+    // approvedAt: timestamp("approvedAt"),
+    approvedAt: datetime("approvedAt", { mode: "date", fsp: 3 }),
+    // seenOnStreamAt: timestamp("seenOnStreamAt"),
+    seenOnStreamAt: datetime("seenOnStreamAt", { mode: "date", fsp: 3 }),
     seenOnStream: int("seenOnStream").default(0),
   },
   (showAndTellEntryTable) => ({
@@ -479,12 +565,14 @@ export type ShowAndTellEntryAttachment = InferModel<
 export const showAndTellEntryAttachmentTable = mysqlTable(
   "ShowAndTellEntryAttachment",
   {
-    // id: varchar("id", { length: 191 }).notNull(),
-    id: cuid("id").notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
+    //id: cuid("id").notNull(),
     entryId: varchar("entryId", { length: 191 }).notNull(),
     attachmentType: varchar("attachmentType", { length: 191 }).notNull(),
-    linkAttachmentId: varchar("linkAttachmentId", { length: 191 }).unique(),
-    imageAttachmentId: varchar("imageAttachmentId", { length: 191 }).unique(),
+    // linkAttachmentId: varchar("linkAttachmentId", { length: 191 }).unique(),
+    linkAttachmentId: varchar("linkAttachmentId", { length: 191 }),
+    // imageAttachmentId: varchar("imageAttachmentId", { length: 191 }).unique(),
+    imageAttachmentId: varchar("imageAttachmentId", { length: 191 }),
   },
   (showAndTellEntryAttachmentTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(showAndTellEntryAttachmentTable.id),
@@ -503,15 +591,22 @@ export const fileStorageObjectTable = mysqlTable(
   "FileStorageObject",
   {
     id: cuid("id").notNull(),
-    key: varchar("key", { length: 191 }).notNull().unique(),
+    // key: varchar("key", { length: 191 }).notNull().unique(),
+    key: varchar("key", { length: 191 }).notNull(),
     name: varchar("name", { length: 191 }).notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     prefix: varchar("prefix", { length: 191 }).notNull(),
     acl: varchar("acl", { length: 191 }).notNull(),
-    createdAt: timestamp("createdAt").defaultNow(),
-    uploadedAt: timestamp("uploadedAt"),
-    deletedAt: timestamp("deletedAt"),
-    expiresAt: timestamp("expiresAt"),
+    // createdAt: timestamp("createdAt").defaultNow(),
+    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
+      .notNull()
+      .default(sql`CURRENT_TIMESTAMP(3)`),
+    // uploadedAt: timestamp("uploadedAt"),
+    uploadedAt: datetime("uploadedAt", { mode: "date", fsp: 3 }),
+    // deletedAt: timestamp("deletedAt"),
+    deletedAt: datetime("deletedAt", { mode: "date", fsp: 3 }),
+    // expiresAt: timestamp("expiresAt"),
+    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }),
   },
   (fileStorageObjectTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(fileStorageObjectTable.id),
@@ -529,11 +624,14 @@ export const imageMetadataTable = mysqlTable(
     mimeType: varchar("mimeType", { length: 191 }).notNull(),
     width: int("width").notNull(),
     height: int("height").notNull(),
+    // fileStorageObjectId: varchar("fileStorageObjectId", {
+    //   length: 191,
+    // })
+    //   .notNull()
+    //   .unique(),
     fileStorageObjectId: varchar("fileStorageObjectId", {
       length: 191,
-    })
-      .notNull()
-      .unique(),
+    }).notNull(),
   },
   (imageMetadataTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(
@@ -554,11 +652,14 @@ export const imageAttachmentTable = mysqlTable(
     caption: varchar("caption", { length: 191 }).notNull(),
     description: varchar("description", { length: 191 }).notNull(),
     url: varchar("url", { length: 191 }).notNull(),
+    // fileStorageObjectId: varchar("fileStorageObjectId", {
+    //   length: 191,
+    // })
+    //   .notNull()
+    //   .unique(),
     fileStorageObjectId: varchar("fileStorageObjectId", {
       length: 191,
-    })
-      .notNull()
-      .unique(),
+    }).notNull(),
   },
   (imageAttachmentTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(imageAttachmentTable.id),
