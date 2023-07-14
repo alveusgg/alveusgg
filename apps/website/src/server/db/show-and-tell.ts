@@ -1,3 +1,4 @@
+import { createId } from "@paralleldrive/cuid2";
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { env } from "@/env/index.mjs";
@@ -182,41 +183,30 @@ export async function createPost(
   const newImages = await createImageAttachments(input.imageAttachments.create);
   const newVideos = createVideoAttachments(input.videoLinks);
 
-  const db = await getDatabase();
+  const db = getDatabase();
 
-  const _res = await db.insert(showAndTellEntryTable).values({
-    // ...(importAt
-    //   ? {
-    //       createdAt: importAt,
-    //       updatedAt: importAt,
-    //       approvedAt: importAt,
-    //     }
-    //   : {}),
-    // // user_id: authorUserId,
-    // displayName: input.displayName,
-    // title: input.title,
-    // text,
-    id: input.id,
-  });
+  // TODO: cant use returning values in mysql :(
+
+  const id = createId();
 
   // TODO: Webhook? Notify mods?
-  const res = await prisma.showAndTellEntry.create({
-    data: {
-      ...(importAt
-        ? {
-            createdAt: importAt,
-            updatedAt: importAt,
-            approvedAt: importAt,
-          }
-        : {}),
-      user: authorUserId ? { connect: { id: authorUserId } } : undefined,
-      displayName: input.displayName,
-      title: input.title,
-      text,
-      attachments: { create: [...newImages, ...newVideos] },
-    },
+  const res = await db.insert(showAndTellEntryTable).values({
+    id,
+    ...(importAt
+      ? {
+          createdAt: importAt,
+          updatedAt: importAt,
+          approvedAt: importAt,
+        }
+      : {}),
+    userId: authorUserId ?? undefined,
+    displayName: input.displayName,
+    title: input.title,
+    text,
+    // attachments: { create: [...newImages, ...newVideos] },
   });
-  await revalidateCache(res.id);
+  await revalidateCache(id);
+  // returned value isn't the inserted row, but we don't use it anyway
   return res;
 }
 

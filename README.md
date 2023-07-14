@@ -66,12 +66,11 @@ TODO
 2. Install dependencies: `pnpm install`
 3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
 4. Copy `apps/website/.env.example` to `apps/website/.env`
-   - Fill the Prisma section with the database info (DSN)
    - Fill in the S3 section with your S3-compatible storage info
    - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
    - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
    - You may define privileged user once they have signed in via the `SUPER_USER_IDS` variable
-5. Push the database schema to the new database using `npx prisma db push` from within `apps/website`.
+5. Push the database schema to the new database using `pnpm drizzle-kit push:mysql` from within `apps/website`.
 6. Start the dev server: `pnpm run -r dev`
 7. The website should be running at `http://localhost:3000/` (open in browser)
 
@@ -88,7 +87,7 @@ but has only been tested on Vercel (and PlanetScale) for now.
 1. Create a twitch extension (see Getting started above)
 2. Set up a database (see Getting started above)
 3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see Getting started above)
-4. Push the database schema to the new database using `npx prisma db push`.
+4. Push the database schema to the new database using `pnpm drizzle-kit push:mysql`.
 5. Get your own domain (optional)
 6. Create a Vercel account
 7. Create a new Vercel project with these settings:

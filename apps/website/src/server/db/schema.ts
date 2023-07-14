@@ -1,16 +1,23 @@
-import { sql, type InferModel } from "drizzle-orm";
+import type { InferModel } from "drizzle-orm";
 import {
-  datetime,
+  customType,
   int,
+  mysqlEnum,
   mysqlTable,
   text,
+  timestamp,
   uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
 
-// TODO: use timestamps instead of datetime?
-//  so we can have something like
-// `timestamp("createdAt").notNull().defaultNow().onUpdateNow()`
+// TODO: what else can we do with this?
+const cuid = customType<{ data: string; notNull: true }>({
+  dataType() {
+    return "varchar(191)";
+  },
+});
+
+// TODO: update chatbot code to not await getDatabase()
 
 // TODO: add primary keys
 
@@ -26,9 +33,9 @@ export const clientAccessTokenTable = mysqlTable(
     client_id: varchar("client_id", { length: 191 }).notNull(),
     access_token: varchar("access_token", { length: 191 }).notNull(),
     refresh_token: varchar("refresh_token", { length: 191 }),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: datetime("updatedAt").default(sql`CURRENT_TIMESTAMP`),
-    expiresAt: datetime("expiresAt"),
+    createdAt: timestamp("createdAt").notNull().defaultNow(),
+    updatedAt: timestamp("updatedAt").notNull().defaultNow().onUpdateNow(),
+    expiresAt: timestamp("expiresAt"),
   },
   (clientAccessTokenTable) => ({
     serviceClientIdIndex: uniqueIndex("service_client_id_key").on(
@@ -44,10 +51,10 @@ export type TaskExecutionEvent = InferModel<
 >;
 
 export const taskExecutionEventTable = mysqlTable("TaskExecutionEvent", {
-  id: varchar("id", { length: 191 }).notNull(),
+  id: cuid("id").notNull(),
   task: varchar("task", { length: 191 }).notNull(),
-  startedAt: datetime("startedAt").default(sql`CURRENT_TIMESTAMP`),
-  finishedAt: datetime("finishedAt"),
+  startedAt: timestamp("startedAt").notNull().defaultNow(),
+  finishedAt: timestamp("finishedAt"),
 });
 
 export type ChannelUpdateEvent = InferModel<
@@ -56,14 +63,14 @@ export type ChannelUpdateEvent = InferModel<
 >;
 
 export const channelUpdateEventTable = mysqlTable("ChannelUpdateEvent", {
-  id: varchar("id", { length: 191 }).notNull(),
+  id: cuid("id").notNull(),
   service: varchar("service", { length: 191 }).notNull(),
   channel: varchar("channel", { length: 191 }).notNull(),
   title: varchar("title", { length: 191 }).notNull(),
   category_id: varchar("category_id", { length: 191 }).notNull(),
   category_name: varchar("category_name", { length: 191 }).notNull(),
   source: varchar("source", { length: 191 }).notNull(),
-  createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
 });
 
 export type StreamStatusEvent = InferModel<
@@ -72,13 +79,13 @@ export type StreamStatusEvent = InferModel<
 >;
 
 export const streamStatusEventTable = mysqlTable("StreamStatusEvent", {
-  id: varchar("id", { length: 191 }).notNull(),
+  id: cuid("id").notNull(),
   service: varchar("service", { length: 191 }).notNull(),
   channel: varchar("channel", { length: 191 }).notNull(),
   online: int("online").notNull(),
   source: varchar("source", { length: 191 }).notNull(),
-  createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-  startedAt: datetime("startedAt"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  startedAt: timestamp("startedAt"),
 });
 
 // Necessary for Next auth
@@ -87,7 +94,7 @@ export type Account = InferModel<typeof accountTable, "select">;
 export const accountTable = mysqlTable(
   "Account",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     provider: varchar("provider", { length: 191 }).notNull(),
@@ -114,10 +121,10 @@ export type Session = InferModel<typeof sessionTable, "select">;
 export const sessionTable = mysqlTable(
   "Session",
   {
-    id: varchar("id", { length: 191 }).notNull(),
-    sessionToken: varchar("sessionToken", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
+    sessionToken: varchar("sessionToken", { length: 191 }).notNull().unique(),
     userId: varchar("userId", { length: 191 }).notNull(),
-    expires: datetime("expires").notNull(),
+    expires: timestamp("expires").notNull(),
   },
   (sessionTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(sessionTable.id),
@@ -133,10 +140,10 @@ export type User = InferModel<typeof userTable, "select">;
 export const userTable = mysqlTable(
   "User",
   {
-    id: varchar("id", { length: 191 }).notNull(),
-    name: varchar("name", { length: 191 }),
+    id: cuid("id").notNull(),
+    name: varchar("name", { length: 191 }).unique(),
     email: varchar("email", { length: 191 }),
-    emailVerified: datetime("emailVerified"),
+    emailVerified: timestamp("emailVerified"),
     image: varchar("image", { length: 191 }),
   },
   (userTable) => ({
@@ -154,8 +161,8 @@ export const verificationTokenTable = mysqlTable(
   "VerificationToken",
   {
     identifier: varchar("identifier", { length: 191 }).notNull(),
-    token: varchar("token", { length: 191 }).notNull(),
-    expires: datetime("expires").notNull(),
+    token: varchar("token", { length: 191 }).notNull().unique(),
+    expires: timestamp("expires").notNull(),
   },
   (verificationTokenTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(
@@ -170,7 +177,7 @@ export type UserRole = InferModel<typeof userRoleTable, "select">;
 export const userRoleTable = mysqlTable(
   "UserRole",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     role: varchar("role", { length: 191 }).notNull(),
   },
@@ -183,24 +190,44 @@ export const userRoleTable = mysqlTable(
   })
 );
 
+// TODO: how to extract type for this?
+// export type NotificationUrgency = InferModel<typeof notificationUrgencyEnum, "insert">;
+
+// TODO: look into drizzle-zod?
+export const notificationUrgencyEnum = mysqlEnum("urgency", [
+  "VERY_LOW",
+  "LOW",
+  "NORMAL",
+  "HIGH",
+]);
+
 export type Notification = InferModel<typeof notificationTable, "select">;
 
 export const notificationTable = mysqlTable("Notification", {
-  id: varchar("id", { length: 191 }).notNull(),
+  id: cuid("id").notNull(),
   message: varchar("message", { length: 191 }).notNull(),
-  createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-  expiresAt: datetime("expiresAt").notNull(),
-  canceledAt: datetime("canceledAt"),
-  scheduledStartAt: datetime("scheduledStartAt"),
-  scheduledEndAt: datetime("scheduledEndAt"),
+  createdAt: timestamp("createdAt").notNull().defaultNow(),
+  expiresAt: timestamp("expiresAt").notNull(),
+  canceledAt: timestamp("canceledAt"),
+  scheduledStartAt: timestamp("scheduledStartAt"),
+  scheduledEndAt: timestamp("scheduledEndAt"),
   title: varchar("title", { length: 191 }),
   linkUrl: varchar("linkUrl", { length: 191 }),
   imageUrl: varchar("imageUrl", { length: 191 }),
   tag: varchar("tag", { length: 191 }),
-  urgency: varchar("urgency", { length: 191 }).default("NORMAL"),
-  isPush: int("isPush").default(0),
-  isDiscord: int("isDiscord").default(0),
+  urgency: notificationUrgencyEnum.notNull().default("NORMAL"),
+  isPush: int("isPush").notNull().default(0),
+  isDiscord: int("isDiscord").notNull().default(0),
 });
+
+// TODO: how to extract type for this?
+// export type NotificationPushProcessingStatus = InferModel<typeof notificationPushProcessingStatusEnum, "insert">;
+
+// TODO: look into drizzle-zod?
+export const notificationPushProcessingStatusEnum = mysqlEnum(
+  "processingStatus",
+  ["PENDING", "IN_PROGRESS", "DONE"]
+);
 
 export type NotificationPush = InferModel<
   typeof notificationPushTable,
@@ -213,15 +240,15 @@ export const notificationPushTable = mysqlTable(
     notificationId: varchar("notificationId", { length: 191 }).notNull(),
     subscriptionId: varchar("subscriptionId", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }),
-    processingStatus: varchar("processingStatus", { length: 191 }).default(
-      "PENDING"
-    ),
+    processingStatus: notificationPushProcessingStatusEnum
+      .notNull()
+      .default("PENDING"),
     attempts: int("attempts"),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    expiresAt: datetime("expiresAt").notNull(),
-    clickedAt: datetime("clickedAt"),
-    failedAt: datetime("failedAt"),
-    deliveredAt: datetime("deliveredAt"),
+    createdAt: timestamp("createdAt").defaultNow(),
+    expiresAt: timestamp("expiresAt").notNull(),
+    clickedAt: timestamp("clickedAt"),
+    failedAt: timestamp("failedAt"),
+    deliveredAt: timestamp("deliveredAt"),
   },
   (notificationPushTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(
@@ -251,14 +278,14 @@ export type PushSubscription = InferModel<
 export const pushSubscriptionTable = mysqlTable(
   "PushSubscription",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     userId: varchar("userId", { length: 191 }),
     endpoint: varchar("endpoint", { length: 720 }).notNull(), // ^ see FIXME above
     p256dh: varchar("p256dh", { length: 191 }),
     auth: varchar("auth", { length: 191 }),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: datetime("updatedAt").default(sql`CURRENT_TIMESTAMP`),
-    deletedAt: datetime("deletedAt"),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    deletedAt: timestamp("deletedAt"),
   },
   (pushSubscriptionTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(pushSubscriptionTable.id),
@@ -316,7 +343,7 @@ export const notificationDiscordChannelWebhookTable = mysqlTable(
 export type MailingAddress = InferModel<typeof mailingAddressTable, "select">;
 
 export const mailingAddressTable = mysqlTable("MailingAddress", {
-  id: varchar("id", { length: 191 }).notNull(),
+  id: cuid("id").notNull(),
   country: varchar("country", { length: 191 }).notNull(),
   addressLine1: varchar("addressLine1", { length: 191 }).notNull(),
   addressLine2: varchar("addressLine2", { length: 191 }).notNull(),
@@ -324,8 +351,8 @@ export const mailingAddressTable = mysqlTable("MailingAddress", {
   state: varchar("state", { length: 191 }).notNull(),
   postalCode: varchar("postalCode", { length: 191 }).notNull(),
   salt: varchar("salt", { length: 32 }).notNull(),
-  createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-  updatedAt: datetime("updatedAt").default(sql`CURRENT_TIMESTAMP`),
+  createdAt: timestamp("createdAt").defaultNow(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
 });
 
 export type Form = InferModel<typeof formTable, "select">;
@@ -333,17 +360,17 @@ export type Form = InferModel<typeof formTable, "select">;
 export const formTable = mysqlTable(
   "Form",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     label: varchar("label", { length: 191 }).notNull(),
     slug: varchar("slug", { length: 191 }),
     active: int("active").default(0),
-    startAt: datetime("startAt").default(sql`CURRENT_TIMESTAMP`),
-    endAt: datetime("endAt"),
+    startAt: timestamp("startAt").defaultNow(),
+    endAt: timestamp("endAt"),
     outgoingWebhookUrl: varchar("outgoingWebhookUrl", { length: 720 }),
     showInLists: int("showInLists").default(1),
     config: text("config").default(""),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: datetime("updatedAt").default(sql`CURRENT_TIMESTAMP`),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
   },
   (formTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(formTable.id),
@@ -356,17 +383,17 @@ export type FormEntry = InferModel<typeof formEntryTable, "select">;
 export const formEntryTable = mysqlTable(
   "FormEntry",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     formId: varchar("formId", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
-    mailingAddressId: varchar("mailingAddressId", { length: 191 }),
-    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }),
+    mailingAddressId: varchar("mailingAddressId", { length: 191 }).unique(),
+    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }).unique(),
     email: varchar("email", { length: 191 }),
     givenName: varchar("givenName", { length: 191 }).notNull(),
     familyName: varchar("familyName", { length: 191 }).notNull(),
     salt: varchar("salt", { length: 32 }).notNull(),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: datetime("updatedAt").default(sql`CURRENT_TIMESTAMP`),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
   },
   (formEntryTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(formEntryTable.id),
@@ -383,17 +410,17 @@ export type OutgoingWebhook = InferModel<typeof outgoingWebhookTable, "select">;
 export const outgoingWebhookTable = mysqlTable(
   "OutgoingWebhook",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     url: varchar("url", { length: 720 }).notNull(),
     body: text("body").notNull(),
     userId: varchar("userId", { length: 191 }),
     retry: int("retry").default(0),
     attempts: int("attempts"),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    failedAt: datetime("failedAt"),
-    deliveredAt: datetime("deliveredAt"),
-    expiresAt: datetime("expiresAt"),
+    createdAt: timestamp("createdAt").defaultNow(),
+    failedAt: timestamp("failedAt"),
+    deliveredAt: timestamp("deliveredAt"),
+    expiresAt: timestamp("expiresAt"),
   },
   (outgoingWebhookTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(outgoingWebhookTable.id),
@@ -406,7 +433,7 @@ export const outgoingWebhookTable = mysqlTable(
 export type LinkAttachment = InferModel<typeof linkAttachmentTable, "select">;
 
 export const linkAttachmentTable = mysqlTable("LinkAttachment", {
-  id: varchar("id", { length: 191 }).notNull(),
+  id: cuid("id").notNull(),
   type: varchar("type", { length: 191 }).notNull(),
   name: varchar("name", { length: 191 }).notNull(),
   title: varchar("title", { length: 191 }).notNull(),
@@ -424,19 +451,20 @@ export type ShowAndTellEntry = InferModel<
 export const showAndTellEntryTable = mysqlTable(
   "ShowAndTellEntry",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    // id: cuid("id").notNull(),
+    id: cuid("id").notNull(),
     userId: varchar("userId", { length: 191 }),
     title: varchar("title", { length: 191 }).notNull(),
     text: text("text").notNull(),
     displayName: varchar("displayName", { length: 191 }),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    updatedAt: datetime("updatedAt").default(sql`CURRENT_TIMESTAMP`),
-    approvedAt: datetime("approvedAt"),
-    seenOnStreamAt: datetime("seenOnStreamAt"),
+    createdAt: timestamp("createdAt").defaultNow(),
+    updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
+    approvedAt: timestamp("approvedAt"),
+    seenOnStreamAt: timestamp("seenOnStreamAt"),
     seenOnStream: int("seenOnStream").default(0),
   },
   (showAndTellEntryTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(showAndTellEntryTable.id),
+    // primaryIndex: uniqueIndex("PRIMARY").on(showAndTellEntryTable.id),
     userIdIndex: uniqueIndex("ShowAndTellEntry_userId_key").on(
       showAndTellEntryTable.userId
     ),
@@ -451,11 +479,12 @@ export type ShowAndTellEntryAttachment = InferModel<
 export const showAndTellEntryAttachmentTable = mysqlTable(
   "ShowAndTellEntryAttachment",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    // id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     entryId: varchar("entryId", { length: 191 }).notNull(),
     attachmentType: varchar("attachmentType", { length: 191 }).notNull(),
-    linkAttachmentId: varchar("linkAttachmentId", { length: 191 }),
-    imageAttachmentId: varchar("imageAttachmentId", { length: 191 }),
+    linkAttachmentId: varchar("linkAttachmentId", { length: 191 }).unique(),
+    imageAttachmentId: varchar("imageAttachmentId", { length: 191 }).unique(),
   },
   (showAndTellEntryAttachmentTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(showAndTellEntryAttachmentTable.id),
@@ -473,16 +502,16 @@ export type FileStorageObject = InferModel<
 export const fileStorageObjectTable = mysqlTable(
   "FileStorageObject",
   {
-    id: varchar("id", { length: 191 }).notNull(),
-    key: varchar("key", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
+    key: varchar("key", { length: 191 }).notNull().unique(),
     name: varchar("name", { length: 191 }).notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     prefix: varchar("prefix", { length: 191 }).notNull(),
     acl: varchar("acl", { length: 191 }).notNull(),
-    createdAt: datetime("createdAt").default(sql`CURRENT_TIMESTAMP`),
-    uploadedAt: datetime("uploadedAt"),
-    deletedAt: datetime("deletedAt"),
-    expiresAt: datetime("expiresAt"),
+    createdAt: timestamp("createdAt").defaultNow(),
+    uploadedAt: timestamp("uploadedAt"),
+    deletedAt: timestamp("deletedAt"),
+    expiresAt: timestamp("expiresAt"),
   },
   (fileStorageObjectTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(fileStorageObjectTable.id),
@@ -502,7 +531,9 @@ export const imageMetadataTable = mysqlTable(
     height: int("height").notNull(),
     fileStorageObjectId: varchar("fileStorageObjectId", {
       length: 191,
-    }).notNull(),
+    })
+      .notNull()
+      .unique(),
   },
   (imageMetadataTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(
@@ -516,7 +547,7 @@ export type ImageAttachment = InferModel<typeof imageAttachmentTable, "select">;
 export const imageAttachmentTable = mysqlTable(
   "ImageAttachment",
   {
-    id: varchar("id", { length: 191 }).notNull(),
+    id: cuid("id").notNull(),
     name: varchar("name", { length: 191 }).notNull(),
     title: varchar("title", { length: 191 }).notNull(),
     alternativeText: varchar("alternativeText", { length: 191 }).notNull(),
@@ -525,7 +556,9 @@ export const imageAttachmentTable = mysqlTable(
     url: varchar("url", { length: 191 }).notNull(),
     fileStorageObjectId: varchar("fileStorageObjectId", {
       length: 191,
-    }).notNull(),
+    })
+      .notNull()
+      .unique(),
   },
   (imageAttachmentTable) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(imageAttachmentTable.id),
