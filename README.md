@@ -1,12 +1,12 @@
 # Alveus Sanctuary website
 
 This is the community-built, open-source website for Alveus Sanctuary.
-You can access the site at https://alveussanctuary.org/ (or https://alveus.gg/).
+You can access the site at [alveussanctuary.org](https://alveussanctuary.org/) (or [alveus.gg](https://alveus.gg/).
 
 ## See also
 
-- Data repository: https://github.com/alveusgg/data
-- Twitch extension: https://github.com/alveusgg/extension
+- [Data repository](https://github.com/alveusgg/data)
+- [Twitch extension](https://github.com/alveusgg/extension)
 
 ## Tech stack
 
@@ -23,8 +23,8 @@ Website stack (based on [T3 Stack](https://create.t3.gg/)):
 
 - TypeScript
 - Next.js (framework)
-- tRPC (typesafe api)
-- Prisma (database orm)
+- tRPC (typesafe API)
+- Prisma (database ORM)
 - Auth.js aka NextAuth.js (auth via OAuth)
 - Tailwind CSS (styling)
 
@@ -35,7 +35,7 @@ Hosting (production):
 - DigitalOcean Spaces (S3-compatible storage)
 - Upstash QStash (Simple Queue Service)
 
-# External APIs
+## External APIs
 
 - Twitch OAuth (application)
 - Twitch EventSub/Helix
@@ -62,15 +62,15 @@ TODO
 
 ### Local development
 
-1. Install Node.js and PNPM (see `engines` in `package.json` for the required versions) or use `fnm`/`nvm` to install the correct version
+1. Install Node.js and PNPM (see `engines` in `package.json` for the required versions) or use `fnm`/`nvm` to install the correct version of Node.js
 2. Install dependencies: `pnpm install`
-3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
+3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict` and `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg/shadow?sslaccept=strict`)
 4. Copy `apps/website/.env.example` to `apps/website/.env`
    - Fill the Prisma section with the database info (DSN)
    - Fill in the S3 section with your S3-compatible storage info
    - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
    - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
-   - You may define privileged user once they have signed in via the `SUPER_USER_IDS` variable
+   - You may define privileged users once they have signed in via the `SUPER_USER_IDS` variable (using comma separated values)
 5. Push the database schema to the new database using `npx prisma db push` from within `apps/website`.
 6. Start the dev server: `pnpm run -r dev`
 7. The website should be running at `http://localhost:3000/` (open in browser)
@@ -97,5 +97,5 @@ but has only been tested on Vercel (and PlanetScale) for now.
      - _Root directory_: `apps/website`
      - _Node.js Version_: See `engines` in `package.json` for the required version
    - _Domains_: add your domains
-   - _Git_: connect your git repo
-   - _Environment Variables_: Copy and paste your `apps/website/.env.production` into the first Key field (yes you can simply copy-paste everything at once)
+   - _Git_: connect your Git repo
+   - _Environment Variables_: Copy and paste your `apps/website/.env.production` into the first key field (yes you can simply copy-paste everything at once)
