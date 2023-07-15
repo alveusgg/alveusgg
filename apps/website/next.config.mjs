@@ -171,7 +171,17 @@ const config = {
     // External redirects
     {
       source: "/merch",
-      destination: "https://alveussanctuary.myshopify.com",
+      destination: "https://shopalveus.org/",
+      permanent: true,
+    },
+    {
+      source: "/shop",
+      destination: "https://shopalveus.org/",
+      permanent: true,
+    },
+    {
+      source: "/store",
+      destination: "https://shopalveus.org/",
       permanent: true,
     },
     {

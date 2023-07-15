@@ -15,6 +15,7 @@ import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
+import Merch from "@/components/content/Merch";
 import Consent from "@/components/Consent";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
@@ -35,13 +36,6 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-
-import caseMerchImage from "@/assets/merch/biodegradable-iphone-case-iphone-11-pro-max-case-on-phone.png";
-import toteMerchImage from "@/assets/merch/large-eco-tote-oyster-front.png";
-import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-front.png";
-import croptopMerchImage from "@/assets/merch/organic-crop-top-black-front.png";
-import beanieMerchImage from "@/assets/merch/organic-ribbed-beanie-black-front.png";
-import hoodieMerchImage from "@/assets/merch/unisex-essential-eco-hoodie-white-front.png";
 
 const slides = [
   {
@@ -100,47 +94,6 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
       ),
     };
   }, {});
-
-const merch = Object.entries({
-  hoodie: {
-    src: hoodieMerchImage,
-    alt: "Unisex Essential Echo Hoodie (White)",
-  },
-  case: {
-    src: caseMerchImage,
-    alt: "Biodegradable iPhone Case (iPhone 11 Pro Max)",
-  },
-  tshirt: {
-    src: tshirtMerchImage,
-    alt: "Organic Cotton T-Shirt Dress (Black)",
-  },
-  croptop: {
-    src: croptopMerchImage,
-    alt: "Organic Crop Top (Black)",
-  },
-  tote: {
-    src: toteMerchImage,
-    alt: "Large Eco Tote (Oyster)",
-  },
-  beanie: {
-    src: beanieMerchImage,
-    alt: "Organic Ribbed Beanie (Black)",
-  },
-}).reduce(
-  (obj, [key, { src, alt }]) => ({
-    ...obj,
-    [key]: (
-      <Image
-        src={src}
-        alt={alt}
-        draggable={false}
-        width={200}
-        className="mx-auto h-auto w-full max-w-[10rem]"
-      />
-    ),
-  }),
-  {}
-);
 
 const help = {
   donate: {
@@ -367,7 +320,7 @@ const Home: NextPage = () => {
         <Section dark>
           <div className="flex flex-wrap items-center">
             <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2">
-              <Carousel items={merch} />
+              <Merch />
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
