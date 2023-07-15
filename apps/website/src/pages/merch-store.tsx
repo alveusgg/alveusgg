@@ -110,7 +110,7 @@ const MerchStorePage: NextPage = () => {
     <>
       <Meta
         title="Merch"
-        description="Grab yourself some Alveus merch, like a hoodie or t-shirt, or check out the Alveus Georgie and Stompy plushies! ALL of the proceeds go directly into Alveus and the support & care of our educational ambassadors!"
+        description="Grab yourself some Alveus merch, like a hoodie or t-shirt, or check out the Alveus ambassador plushies! All proceeds go directly into Alveus and the support & care of our educational ambassadors!"
       />
 
       {/* Nav background */}
