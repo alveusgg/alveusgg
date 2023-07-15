@@ -15,53 +15,85 @@ const merch = Object.entries({
   tshirtFront: {
     src: tshirtFront,
     alt: "Alveus T-Shirt (Front)",
+    pip: {
+      src: tshirtBack,
+      alt: "Alveus T-Shirt (Back)",
+    },
   },
   tshirtDemoGrinder: {
     src: tshirtDemoGrinder,
     alt: "Alveus T-Shirt (Front) - Demo w/ Grinder",
   },
-  tshirtBack: {
-    src: tshirtBack,
-    alt: "Alveus T-Shirt (Back)",
-  },
-  tshirtDemoAppa: {
-    src: tshirtDemoAppa,
-    alt: "Alveus T-Shirt (Back) - Demo w/ Appa",
-  },
-  tshirtDemoMia: {
-    src: tshirtDemoMia,
-    alt: "Alveus T-Shirt (Back) - Demo w/ Mia",
-  },
   hoodieFront: {
     src: hoodieFront,
     alt: "Alveus Hoodie (Front)",
-  },
-  hoodieBack: {
-    src: hoodieBack,
-    alt: "Alveus Hoodie (Back)",
+    pip: {
+      src: hoodieBack,
+      alt: "Alveus Hoodie (Back)",
+    },
   },
   hoodieDemoGeorgie: {
     src: hoodieDemoGeorgie,
     alt: "Alveus Hoodie (Back) - Demo w/ Georgie",
   },
+  tshirtBack: {
+    src: tshirtBack,
+    alt: "Alveus T-Shirt (Back)",
+    pip: {
+      src: tshirtFront,
+      alt: "Alveus T-Shirt (Front)",
+    },
+  },
+  tshirtDemoAppa: {
+    src: tshirtDemoAppa,
+    alt: "Alveus T-Shirt (Back) - Demo w/ Appa",
+  },
+  hoodieBack: {
+    src: hoodieBack,
+    alt: "Alveus Hoodie (Back)",
+    pip: {
+      src: hoodieFront,
+      alt: "Alveus Hoodie (Front)",
+    },
+  },
+  tshirtDemoMia: {
+    src: tshirtDemoMia,
+    alt: "Alveus T-Shirt (Back) - Demo w/ Mia",
+  },
 }).reduce(
-  (obj, [key, { src, alt }]) => ({
+  (obj, [key, { src, alt, pip }]) => ({
     ...obj,
     [key]: (
-      <Image
-        src={src}
-        alt={alt}
-        draggable={false}
-        width={200}
-        className="mx-auto h-auto w-full max-w-[10rem]"
-      />
+      <div className="relative mx-auto h-auto w-full max-w-[10rem]">
+        <Image
+          src={src}
+          alt={alt}
+          draggable={false}
+          width={200}
+          className="h-auto w-full drop-shadow"
+        />
+
+        {pip && (
+          <Image
+            src={pip.src}
+            alt={pip.alt}
+            draggable={false}
+            width={80}
+            className="absolute -bottom-8 -right-8 h-auto w-full max-w-[5rem] drop-shadow"
+          />
+        )}
+      </div>
     ),
   }),
   {}
 );
 
-const Scroller = () => (
-  <Carousel items={merch} wrapperClassName="items-center" />
+const Merch = () => (
+  <Carousel
+    items={merch}
+    wrapperClassName="items-center"
+    itemClassName="basis-full sm:basis-1/2 lg:basis-1/3 p-2"
+  />
 );
 
-export default Scroller;
+export default Merch;

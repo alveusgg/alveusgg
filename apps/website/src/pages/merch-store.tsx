@@ -138,7 +138,7 @@ const MerchStorePage: NextPage = () => {
             <Merch />
 
             <div className="flex flex-wrap items-center justify-evenly gap-4">
-              <p className="text-center text-lg">
+              <p className="text-center text-lg text-alveus-green-800">
                 Grab yourself a high-quality t-shirt or hoodie to support
                 Alveus.
               </p>
