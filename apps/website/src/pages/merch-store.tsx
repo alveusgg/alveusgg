@@ -119,8 +119,8 @@ const MerchStorePage: NextPage = () => {
       <Section dark>
         <Heading>Merch</Heading>
         <p>
-          ALL of the proceeds go directly into Alveus and the support & care of
-          our educational ambassadors!
+          All proceeds go directly into Alveus and the support & care of our
+          educational ambassadors!
         </p>
       </Section>
 
@@ -134,17 +134,23 @@ const MerchStorePage: NextPage = () => {
             <MerchItem item={merch.store} />
           </div>
 
-          <div className="flex basis-full flex-col items-center justify-evenly p-4 md:basis-1/2 lg:basis-2/3">
+          <div className="flex basis-full flex-col justify-evenly p-4 md:basis-1/2 lg:basis-2/3">
             <Merch />
 
-            <Link
-              className="inline-block rounded-full border-2 border-alveus-green bg-alveus-green px-8 py-4 text-2xl text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-              href="/merch"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Shop Now
-            </Link>
+            <div className="flex flex-wrap items-center justify-evenly gap-4">
+              <p className="text-center text-lg">
+                Grab yourself a high-quality t-shirt or hoodie to support
+                Alveus.
+              </p>
+              <Link
+                className="inline-block rounded-full border-2 border-alveus-green bg-alveus-green px-6 py-3 text-xl text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
+                href="/merch"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Shop Now
+              </Link>
+            </div>
           </div>
         </div>
 

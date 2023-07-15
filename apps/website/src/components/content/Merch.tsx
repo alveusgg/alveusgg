@@ -1,38 +1,48 @@
 import Image from "next/image";
 
-import caseMerchImage from "@/assets/merch/biodegradable-iphone-case-iphone-11-pro-max-case-on-phone.png";
-import toteMerchImage from "@/assets/merch/large-eco-tote-oyster-front.png";
-import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-front.png";
-import croptopMerchImage from "@/assets/merch/organic-crop-top-black-front.png";
-import beanieMerchImage from "@/assets/merch/organic-ribbed-beanie-black-front.png";
-import hoodieMerchImage from "@/assets/merch/unisex-essential-eco-hoodie-white-front.png";
+import tshirtFront from "@/assets/merch/tshirt-front.png";
+import tshirtDemoGrinder from "@/assets/merch/tshirt-demo-grinder.png";
+import tshirtBack from "@/assets/merch/tshirt-back.png";
+import tshirtDemoAppa from "@/assets/merch/tshirt-demo-appa.png";
+import tshirtDemoMia from "@/assets/merch/tshirt-demo-mia.png";
+import hoodieFront from "@/assets/merch/hoodie-front.png";
+import hoodieBack from "@/assets/merch/hoodie-back.png";
+import hoodieDemoGeorgie from "@/assets/merch/hoodie-demo-georgie.png";
 
 import Carousel from "./Carousel";
 
 const merch = Object.entries({
-  hoodie: {
-    src: hoodieMerchImage,
-    alt: "Unisex Essential Echo Hoodie (White)",
+  tshirtFront: {
+    src: tshirtFront,
+    alt: "Alveus T-Shirt (Front)",
   },
-  case: {
-    src: caseMerchImage,
-    alt: "Biodegradable iPhone Case (iPhone 11 Pro Max)",
+  tshirtDemoGrinder: {
+    src: tshirtDemoGrinder,
+    alt: "Alveus T-Shirt (Front) - Demo w/ Grinder",
   },
-  tshirt: {
-    src: tshirtMerchImage,
-    alt: "Organic Cotton T-Shirt Dress (Black)",
+  tshirtBack: {
+    src: tshirtBack,
+    alt: "Alveus T-Shirt (Back)",
   },
-  croptop: {
-    src: croptopMerchImage,
-    alt: "Organic Crop Top (Black)",
+  tshirtDemoAppa: {
+    src: tshirtDemoAppa,
+    alt: "Alveus T-Shirt (Back) - Demo w/ Appa",
   },
-  tote: {
-    src: toteMerchImage,
-    alt: "Large Eco Tote (Oyster)",
+  tshirtDemoMia: {
+    src: tshirtDemoMia,
+    alt: "Alveus T-Shirt (Back) - Demo w/ Mia",
   },
-  beanie: {
-    src: beanieMerchImage,
-    alt: "Organic Ribbed Beanie (Black)",
+  hoodieFront: {
+    src: hoodieFront,
+    alt: "Alveus Hoodie (Front)",
+  },
+  hoodieBack: {
+    src: hoodieBack,
+    alt: "Alveus Hoodie (Back)",
+  },
+  hoodieDemoGeorgie: {
+    src: hoodieDemoGeorgie,
+    alt: "Alveus Hoodie (Back) - Demo w/ Georgie",
   },
 }).reduce(
   (obj, [key, { src, alt }]) => ({
@@ -50,6 +60,8 @@ const merch = Object.entries({
   {}
 );
 
-const Scroller = () => <Carousel items={merch} />;
+const Scroller = () => (
+  <Carousel items={merch} wrapperClassName="items-center" />
+);
 
 export default Scroller;

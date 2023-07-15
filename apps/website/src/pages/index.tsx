@@ -326,16 +326,15 @@ const Home: NextPage = () => {
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Heading level={2}>New Merch Available!</Heading>
               <p className="my-4">
-                An official merchandise line composed from Recycled, Organic, or
-                Biodegradable Materials!
+                Grab yourself a high-quality t-shirt or hoodie to support
+                Alveus.
               </p>
               <p className="my-4">
-                Hoodies, T-Shirts, T-Shirt Dresses, Crop Tops, Beanies, iPhone
-                Cases, and Tote Bags
+                Have your very own ambassador in your home with our plushies!
               </p>
               <p className="my-4">
-                - Every purchase goes directly towards supporting an Alveus
-                Sanctuary Ambassador!
+                All proceeds go directly into Alveus and the support & care of
+                our educational ambassadors!
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
