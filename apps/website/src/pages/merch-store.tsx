@@ -129,7 +129,7 @@ const MerchStorePage: NextPage = () => {
         className="flex-grow"
         containerClassName="flex flex-wrap items-start"
       >
-        <div className="flex flex-wrap">
+        <div className="flex basis-full flex-wrap">
           <div className="flex basis-full flex-wrap justify-center gap-8 p-4 md:basis-1/2 lg:basis-1/3">
             <MerchItem item={merch.store} />
           </div>
