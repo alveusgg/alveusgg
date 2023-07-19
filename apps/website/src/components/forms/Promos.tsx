@@ -3,7 +3,7 @@ import Link from "next/link";
 import Heading from "@/components/content/Heading";
 
 export const Promos = () => (
-  <div className="-mx-8 flex flex-wrap">
+  <div className="-mx-8 flex flex-wrap gap-y-8">
     <div className="flex basis-full flex-col items-start gap-4 px-8 md:basis-1/2">
       <Heading level={2} className="my-0">
         New Merch Available!
