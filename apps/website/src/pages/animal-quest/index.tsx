@@ -146,10 +146,11 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
                     {isActiveAmbassadorKey(ambassador) ? (
                       <LinkHover
                         href={`/ambassadors/${camelToKebab(ambassador)}`}
-                        name={ambassadors[ambassador].name}
-                        ambassador={ambassador}
-                        cardType="ambassador"
-                      />
+                        key={ambassador}
+                        type="ambassador"
+                      >
+                        {ambassadors[ambassador].name}
+                      </LinkHover>
                     ) : (
                       ambassadors[ambassador].name
                     )}

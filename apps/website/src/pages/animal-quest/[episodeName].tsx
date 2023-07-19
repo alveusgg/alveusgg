@@ -327,11 +327,12 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                         {isActiveAmbassadorKey(key) ? (
                           <LinkHover
                             href={`/ambassadors/${camelToKebab(key)}`}
-                            name={ambassadors[key].name}
-                            ambassador={key}
-                            cardType="ambassador"
+                            key={key}
+                            type="ambassador"
                             dark
-                          ></LinkHover>
+                          >
+                            {ambassadors[key].name}
+                          </LinkHover>
                         ) : (
                           ambassador.name
                         )}
@@ -348,12 +349,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 <Heading level={3} className="text-2xl">
                   Host:
                 </Heading>
-                <LinkHover
-                  name={episode.host}
-                  href={host.link}
-                  cardType="staff"
-                  dark
-                />
+                <LinkHover href={host.link} type="staff" key="maya" dark>
+                  {episode.host}
+                </LinkHover>
               </div>
 
               <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">

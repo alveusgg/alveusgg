@@ -148,13 +148,14 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         value: (
           <div className="text-xl">
             <LinkHover
-              name={enclosure.name}
-              enclosure={ambassador.enclosure}
+              key={ambassador.enclosure}
+              type="enclosure"
               href={`/ambassadors#enclosures:${camelToKebab(
                 ambassador.enclosure
               )}`}
-              cardType="enclosure"
-            />
+            >
+              {enclosure.name}
+            </LinkHover>
           </div>
         ),
       },

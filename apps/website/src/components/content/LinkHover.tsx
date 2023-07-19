@@ -10,52 +10,49 @@ const DynamicCard = dynamic(() => import("./ProfileCard"), {
 });
 
 type LinkHoverProps = {
+  children: React.ReactNode;
   href: string;
-  name: string;
   dark?: boolean;
-  ambassador?: AmbassadorKey;
-  enclosure?: EnclosureKey;
-  staffMember?: string;
-  cardType: "ambassador" | "staff" | "enclosure";
-};
+} & (
+  | { type: "ambassador"; key: AmbassadorKey }
+  | { type: "enclosure"; key: EnclosureKey }
+  | { type: "staff"; key: string }
+);
 
 const LinkHover: React.FC<LinkHoverProps> = ({
   href,
-  name,
-  ambassador,
-  enclosure,
-  cardType,
+  children,
+  type,
+  key,
   dark,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
-  const [delay, setDelay] = useState<number | null>(null);
+  const [delay, setDelay] = useState<NodeJS.Timeout | null>(null);
   const [linkPosition, setLinkPosition] = useState<DOMRect | undefined>();
 
   const onEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     setLinkPosition(e.currentTarget.getBoundingClientRect());
     setDelay(
-      window.setTimeout(() => {
+      setTimeout(() => {
         setCardShown(true);
       }, 500)
     );
   };
   const onLeave = () => {
     setCardShown(false);
-    if (delay) window.clearTimeout(delay);
+    if (delay) clearTimeout(delay);
   };
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
       {cardShown && (
         <DynamicCard
-          cardType={cardType}
+          cardType={type}
           linkPosition={linkPosition && linkPosition}
-          ambassador={ambassador}
-          enclosure={enclosure}
-          staffMember={cardType === "staff" ? name : ""}
+          key={key}
         />
       )}
       <Link dark={dark && dark} href={href}>
-        {name}
+        {children}
       </Link>
     </div>
   );
