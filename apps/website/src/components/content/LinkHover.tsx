@@ -12,11 +12,11 @@ const DynamicCard = dynamic(() => import("./ProfileCard"), {
 type LinkHoverProps = {
   href: string;
   name: string;
+  dark?: boolean;
   ambassador?: AmbassadorKey;
   enclosure?: EnclosureKey;
   staffMember?: string;
   cardType: "ambassador" | "staff" | "enclosure";
-  yellow?: boolean;
 };
 
 const LinkHover: React.FC<LinkHoverProps> = ({
@@ -24,8 +24,8 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   name,
   ambassador,
   enclosure,
-  yellow,
   cardType,
+  dark,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [delay, setDelay] = useState<number | null>(null);
@@ -54,7 +54,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
           staffMember={cardType === "staff" ? name : ""}
         />
       )}
-      <Link className={yellow ? "text-yellow-400" : ""} href={href}>
+      <Link dark={dark && dark} href={href}>
         {name}
       </Link>
     </div>

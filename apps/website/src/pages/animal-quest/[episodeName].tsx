@@ -330,7 +330,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                             name={ambassadors[key].name}
                             ambassador={key}
                             cardType="ambassador"
-                            yellow
+                            dark
                           ></LinkHover>
                         ) : (
                           ambassador.name
@@ -352,7 +352,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                   name={episode.host}
                   href={host.link}
                   cardType="staff"
-                  yellow
+                  dark
                 />
               </div>
 
