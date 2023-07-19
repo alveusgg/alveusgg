@@ -3,23 +3,26 @@ import { useSession } from "next-auth/react";
 import type { Form } from "@prisma/client";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { Headline } from "@/components/shared/Headline";
 import { Button } from "@/components/shared/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
+
+import Markdown from "@/components/content/Markdown";
+import Heading from "@/components/content/Heading";
+import Section from "@/components/content/Section";
 
 import { getCountryName } from "@/utils/countries";
 import { trpc } from "@/utils/trpc";
 import { calcFormConfig } from "@/utils/forms";
-import Markdown from "@/components/content/Markdown";
+
 import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
 
-import { ConsentFieldset } from "@/components/forms/ConsentFieldset";
-
+import { ConsentFieldset } from "./ConsentFieldset";
 import { GiveawayChecks } from "./GiveawayChecks";
 import { ShippingAddressFieldset } from "./ShippingAddressFieldset";
 import { NameFieldset } from "./NameFieldset";
 import { ContactFieldset } from "./ContactFieldset";
 import { EntryRulesFieldset } from "./EntryRulesFieldset";
+import { Promos } from "./Promos";
 
 export const EntryForm: React.FC<{
   form: Form;
@@ -55,92 +58,182 @@ export const EntryForm: React.FC<{
     [config.hasRules, enterForm, form.id]
   );
 
-  if (!session?.user?.id) {
-    return (
-      <MessageBox>
-        <p className="mb-4">You need to be logged in with Twitch to enter.</p>
-
-        <LoginWithTwitchButton />
-      </MessageBox>
-    );
-  }
-
-  if (enterForm.isSuccess) {
-    return (
-      <MessageBox variant="success">Your entry was successful!</MessageBox>
-    );
-  }
-
-  if (existingEntry) {
-    return (
-      <>
-        <MessageBox variant="success">You are already entered!</MessageBox>
-
-        <Headline>Check your data</Headline>
-        <p className="my-2">
-          Username: {session.user.name}
-          <br />
-          Email: {existingEntry.email}
-          <br />
-          Name: {existingEntry.givenName} {existingEntry.familyName}
-        </p>
-        <p className="my-2">
-          <strong>Shipping address:</strong>
-          <br />
-          Street address: {existingEntry.mailingAddress?.addressLine1}
-          <br />
-          Second address line:{" "}
-          {existingEntry.mailingAddress?.addressLine2 || "-"}
-          <br />
-          City: {existingEntry.mailingAddress?.city}
-          <br />
-          State / Province / Region: {existingEntry.mailingAddress?.state}
-          <br />
-          Postal code/ZIP: {existingEntry.mailingAddress?.postalCode}
-          <br />
-          Country:{" "}
-          {existingEntry.mailingAddress?.country &&
-            getCountryName(existingEntry.mailingAddress?.country)}
-        </p>
-      </>
-    );
-  }
+  // Map submitted form data, or existing entry data, to a consistent format
+  const entry = enterForm.isSuccess
+    ? enterForm.variables
+    : existingEntry && {
+        email: existingEntry.email,
+        givenName: existingEntry.givenName,
+        familyName: existingEntry.familyName,
+        addressLine1: existingEntry.mailingAddress?.addressLine1,
+        addressLine2: existingEntry.mailingAddress?.addressLine2,
+        country: existingEntry.mailingAddress?.country,
+        state: existingEntry.mailingAddress?.state,
+        city: existingEntry.mailingAddress?.city,
+        postalCode: existingEntry.mailingAddress?.postalCode,
+      };
 
   return (
-    <form onSubmit={handleSubmit}>
-      {config.intro && <Markdown content={config.intro} />}
+    <>
+      <Section dark>
+        <header>
+          <Heading>{form.label}</Heading>
+        </header>
 
-      {enterForm.error && (
-        <MessageBox variant="failure">
-          Error: {enterForm.error.message}
-        </MessageBox>
+        {config.intro && <Markdown content={config.intro} />}
+      </Section>
+
+      {/* Handle users that aren't logged in */}
+      {!session?.user?.id && (
+        <Section containerClassName="max-w-lg">
+          <MessageBox>
+            <p className="mb-4">
+              You need to be logged in with Twitch to enter.
+            </p>
+
+            <LoginWithTwitchButton />
+          </MessageBox>
+        </Section>
       )}
 
-      {config.checks && (
+      {/* Handle users that are logged in, but have already submitted */}
+      {session?.user?.id && entry && (
         <>
-          <Headline>Steps to enter</Headline>
-          <GiveawayChecks />
+          <Section containerClassName="max-w-lg">
+            <MessageBox variant="success">
+              <Heading level={2} className="mx-2 mb-2 text-2xl">
+                {enterForm.isSuccess
+                  ? "Your entry has been submitted!"
+                  : "You've already entered!"}
+              </Heading>
+
+              <p className="m-2">Check the details you submitted below.</p>
+            </MessageBox>
+          </Section>
+
+          <Section dark>
+            <Promos />
+          </Section>
+
+          <Section containerClassName="max-w-xl">
+            <Heading level={2} className="mb-6 text-2xl">
+              Your Entry
+            </Heading>
+
+            <table className="w-full table-auto border-separate border-spacing-1">
+              <tbody>
+                <tr>
+                  <th className="text-left">Username</th>
+                  <td>{session.user.name}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">Email</th>
+                  <td>{entry.email}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">Name</th>
+                  <td>
+                    {entry.givenName} {entry.familyName}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th colSpan={2} className="pt-2 text-left text-xl">
+                    Shipping address
+                  </th>
+                </tr>
+                <tr>
+                  <th className="text-left">Street address</th>
+                  <td>{entry.addressLine1}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">Second address line</th>
+                  <td>{entry.addressLine2}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">City</th>
+                  <td>{entry.city}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">State / Province / Region</th>
+                  <td>{entry.state}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">ZIP / Postal Code</th>
+                  <td>{entry.postalCode}</td>
+                </tr>
+                <tr>
+                  <th className="text-left">Country</th>
+                  <td>{entry.country && getCountryName(entry.country)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </Section>
         </>
       )}
 
-      <Headline>Enter your details</Headline>
+      {/* Handle users that are logged in, but haven't submitted yet */}
+      {session?.user?.id && !entry && (
+        <form onSubmit={handleSubmit}>
+          {config.checks && (
+            <>
+              <Section containerClassName="max-w-lg">
+                {/* Surface errors at the start */}
+                {enterForm.error && (
+                  <MessageBox variant="failure">
+                    Error: {enterForm.error.message}
+                  </MessageBox>
+                )}
 
-      <div className="flex flex-col gap-4">
-        <NameFieldset />
-        <ContactFieldset
-          defaultEmailAddress={session.user.email || undefined}
-        />
-        <ShippingAddressFieldset />
-        {config.hasRules && <EntryRulesFieldset form={form} />}
+                <Heading level={2} className="mb-6 text-2xl">
+                  Steps to Enter
+                </Heading>
 
-        <ConsentFieldset />
-      </div>
+                <GiveawayChecks />
 
-      <div className="mt-7">
-        <Button type="submit" disabled={enterForm.isLoading}>
-          {config.submitButtonText || "Enter to Win"}
-        </Button>
-      </div>
-    </form>
+                <p className="mt-8 text-sm italic opacity-75">
+                  Enter your details below to enter once you&apos;ve completed
+                  all the steps.
+                </p>
+              </Section>
+
+              <Section dark>
+                <Promos />
+              </Section>
+            </>
+          )}
+
+          <Section containerClassName="max-w-lg">
+            {/* Surface errors at the start, if there was no checks section */}
+            {!config.checks && enterForm.error && (
+              <MessageBox variant="failure">
+                Error: {enterForm.error.message}
+              </MessageBox>
+            )}
+
+            <Heading level={2} className="mb-6 text-2xl">
+              Your Details
+            </Heading>
+
+            <div className="flex flex-col gap-4">
+              <NameFieldset />
+              <ContactFieldset
+                defaultEmailAddress={session.user.email || undefined}
+              />
+              <ShippingAddressFieldset />
+              {config.hasRules && <EntryRulesFieldset form={form} />}
+
+              <ConsentFieldset />
+            </div>
+
+            <div className="mt-7">
+              <Button type="submit" disabled={enterForm.isLoading}>
+                {config.submitButtonText || "Enter to Win"}
+              </Button>
+            </div>
+          </Section>
+        </form>
+      )}
+    </>
   );
 };
