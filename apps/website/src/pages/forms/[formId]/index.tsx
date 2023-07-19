@@ -73,18 +73,20 @@ const FormPage: NextPage<FormPageProps> = ({ form, ...props }) => (
     {/* Nav background */}
     <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-    {/* Grow the last section to cover the page */}
-    <Section className="flex-grow" containerClassName="max-w-lg">
-      <header>
-        <Heading className="my-3 text-3xl">{form.label}</Heading>
-      </header>
+    {"error" in props ? (
+      <>
+        {/* Grow the last section to cover the page */}
+        <Section className="flex-grow" containerClassName="max-w-lg">
+          <header>
+            <Heading className="my-3 text-3xl">{form.label}</Heading>
+          </header>
 
-      {"error" in props ? (
-        <MessageBox variant="failure">{props.error}</MessageBox>
-      ) : (
-        <EntryForm form={form} existingEntry={props.existingEntry} />
-      )}
-    </Section>
+          <MessageBox variant="failure">{props.error}</MessageBox>
+        </Section>
+      </>
+    ) : (
+      <EntryForm form={form} existingEntry={props.existingEntry} />
+    )}
   </>
 );
 
