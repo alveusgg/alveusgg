@@ -186,14 +186,14 @@ export const EntryForm: React.FC<{
                 )}
 
                 <Heading level={2} className="mb-6 text-2xl">
-                  Steps to Enter
+                  1) Actions to Enter
                 </Heading>
 
                 <GiveawayChecks />
 
                 <p className="mt-8 text-sm italic opacity-75">
                   Enter your details below to enter once you&apos;ve completed
-                  all the steps.
+                  all the actions.
                 </p>
               </Section>
 
@@ -212,6 +212,7 @@ export const EntryForm: React.FC<{
             )}
 
             <Heading level={2} className="mb-6 text-2xl">
+              {config.checks && "2) "}
               Your Details
             </Heading>
 
