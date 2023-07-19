@@ -99,7 +99,7 @@ export const EntryForm: React.FC<{
       {/* Handle users that are logged in, but have already submitted */}
       {session?.user?.id && entry && (
         <>
-          <Section containerClassName="max-w-lg">
+          <Section containerClassName="max-w-xl">
             <MessageBox variant="success">
               <Heading level={2} className="mx-2 mb-2 text-2xl">
                 {enterForm.isSuccess
@@ -109,14 +109,8 @@ export const EntryForm: React.FC<{
 
               <p className="m-2">Check the details you submitted below.</p>
             </MessageBox>
-          </Section>
 
-          <Section dark>
-            <Promos />
-          </Section>
-
-          <Section containerClassName="max-w-xl">
-            <Heading level={2} className="mb-6 text-2xl">
+            <Heading level={2} className="mb-6 mt-16 text-2xl">
               Your Entry
             </Heading>
 
