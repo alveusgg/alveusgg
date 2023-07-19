@@ -38,6 +38,15 @@ const GiveawayCheck: React.FC<{
 
   // Disable the checkbox if this is a link, and the user hasn't clicked yet
   const disabled = hasLink && !isClicked;
+  const handleCheckboxClick = useCallback(
+    (e: React.MouseEvent<HTMLInputElement>) => {
+      if (disabled) {
+        e.preventDefault();
+      }
+    },
+    [disabled]
+  );
+
   const checkboxJsx = (
     <label
       className={classes(
@@ -52,12 +61,14 @@ const GiveawayCheck: React.FC<{
         type="checkbox"
         defaultChecked={hasLink && isClicked}
         required={true}
-        disabled={disabled}
+        aria-disabled={disabled}
+        onClick={handleCheckboxClick}
+        className={classes(disabled && "opacity-50")}
       />
     </label>
   );
 
-  const handleClick = useCallback(() => {
+  const handleLinkClick = useCallback(() => {
     // Wait at least 2 seconds before allowing to check the checkmark
     setTimeout(() => setIsClicked(true), 1000);
   }, []);
@@ -72,7 +83,7 @@ const GiveawayCheck: React.FC<{
         rel="noreferrer"
         target="_blank"
         href={url}
-        onClick={handleClick}
+        onClick={handleLinkClick}
         className={classes(containerClasses, "underline")}
       >
         {childrenJsx}
