@@ -99,7 +99,8 @@ const collaborations = {
     name: "Russel",
     link: "https://www.twitch.tv/russel",
     date: new Date("2023-03-20"),
-    videoId: "OUaYjkkLeFQ",
+    videoId: "Xizgus_phn4",
+    vodId: "OUaYjkkLeFQ",
   },
   ludwig: {
     name: "Ludwig",
