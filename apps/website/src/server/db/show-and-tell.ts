@@ -1,5 +1,6 @@
 import { createId } from "@paralleldrive/cuid2";
 import { TRPCError } from "@trpc/server";
+import { and, eq, gte } from "drizzle-orm";
 import { z } from "zod";
 import { env } from "@/env/index.mjs";
 import { getDatabase, prisma } from "@/server/db/client";
@@ -213,20 +214,37 @@ export async function getPostById(
   authorUserId?: string,
   filter?: "published"
 ) {
-  return prisma.showAndTellEntry.findFirst({
-    include: {
-      ...withAttachments.include,
-      user: true,
-    },
-    where: {
-      approvedAt:
-        filter === "published"
-          ? { gte: prisma.showAndTellEntry.fields.updatedAt }
-          : undefined,
-      userId: authorUserId,
-      id,
-    },
-  });
+  const db = getDatabase();
+
+  const posts = await db
+    .select()
+    .from(showAndTellEntryTable)
+    .limit(1)
+    .where(
+      and(
+        gte(showAndTellEntryTable.approvedAt, showAndTellEntryTable.updatedAt),
+        and(
+          eq(showAndTellEntryTable.userId, authorUserId),
+          eq(showAndTellEntryTable.id, id)
+        )
+      )
+    );
+
+  return posts[0];
+
+  //   include: {
+  //     ...withAttachments.include,
+  //     user: true,
+  //   },
+  //   where: {
+  //     approvedAt:
+  //       filter === "published"
+  //         ? { gte: prisma.showAndTellEntry.fields.updatedAt }
+  //         : undefined,
+  //     userId: authorUserId,
+  //     id,
+  //   },
+  // });
 }
 
 export async function getPosts({
