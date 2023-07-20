@@ -14,21 +14,23 @@ type LinkHoverProps = {
   href: string;
   dark?: boolean;
 } & (
-  | { type: "ambassador"; key: AmbassadorKey }
-  | { type: "enclosure"; key: EnclosureKey }
-  | { type: "staff"; key: string }
+  | { type: "ambassador"; itemKey: AmbassadorKey }
+  | { type: "staff"; itemKey: string }
+  | { type: "enclosure"; itemKey: EnclosureKey }
 );
 
 const LinkHover: React.FC<LinkHoverProps> = ({
   href,
   children,
   type,
-  key,
+  itemKey,
   dark,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
   const [delay, setDelay] = useState<NodeJS.Timeout | null>(null);
   const [linkPosition, setLinkPosition] = useState<DOMRect | undefined>();
+  console.log("type", type);
+  console.log("itemKey", itemKey);
 
   const onEnter = (e: React.MouseEvent<HTMLDivElement>) => {
     setLinkPosition(e.currentTarget.getBoundingClientRect());
@@ -46,9 +48,9 @@ const LinkHover: React.FC<LinkHoverProps> = ({
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
       {cardShown && (
         <DynamicCard
-          cardType={type}
+          type={type}
           linkPosition={linkPosition && linkPosition}
-          key={key}
+          itemKey={itemKey}
         />
       )}
       <Link dark={dark && dark} href={href}>

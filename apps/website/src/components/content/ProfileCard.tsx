@@ -1,5 +1,4 @@
 import React from "react";
-
 import ambassadors, {
   type Ambassador,
   type AmbassadorKey,
@@ -27,12 +26,11 @@ type StaffMember = {
 type Staff = Array<StaffMember>;
 
 export type ProfileCardProps = {
-  cardType: "ambassador" | "staff" | "enclosure";
   linkPosition: DOMRect | undefined;
 } & (
-  | { type?: "ambassador"; key: AmbassadorKey }
-  | { type?: "enclosure"; key: EnclosureKey }
-  | { type?: "staff"; key: string }
+  | { type: "ambassador"; itemKey: AmbassadorKey }
+  | { type: "enclosure"; itemKey: EnclosureKey }
+  | { type: "staff"; itemKey: string }
 );
 
 const allStaff: Staff = Object.values(staff).map((person) => ({
@@ -94,35 +92,36 @@ const enclosureStyle =
   "absolute z-50 flex flex-col -translate-x-1/4 items-center justify-center rounded bg-alveus-green-900 p-2 shadow-lg shadow-alveus-green-800";
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
-  cardType,
   type,
-  key,
+  itemKey,
   linkPosition,
 }) => {
-  // Find out how to make it so ambassadorInfo can't be "false"
-  const ambassadorInfo = type == "ambassador" && ambassadors[key];
-  const staffMemberInfo = findMember(key, allStaff);
+  const ambassadorInfo =
+    type === "ambassador" ? ambassadors[itemKey] : undefined;
+  console.log(itemKey);
+  const staffMemberInfo =
+    type === "staff" ? findMember(itemKey, allStaff) : undefined;
 
   const name =
-    type == "ambassador" ? ambassadorInfo?.name : staffMemberInfo?.name;
+    type === "ambassador" ? ambassadorInfo?.name : staffMemberInfo?.name;
 
   const species = type === "ambassador" ? ambassadorInfo?.species : "";
   const position = type === "staff" ? staffMemberInfo?.title : "";
 
   const ambassadorEnclosure =
-    cardType === "ambassador"
+    type === "ambassador"
       ? ambassadorInfo && enclosures[ambassadorInfo.enclosure].name
       : "";
 
   const img =
     type === "ambassador"
-      ? getAmbassadorImages(key as AmbassadorKey)[0]
+      ? getAmbassadorImages(itemKey as AmbassadorKey)?.[0]
       : findMember(name, allStaff)?.img;
 
   const inhabiting =
     type === "enclosure"
       ? Object.entries(ambassadors).filter(
-          (ambassador) => ambassador[1].enclosure === key
+          (ambassador) => ambassador[1].enclosure === itemKey
         )
       : [];
 
@@ -147,7 +146,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
   return (
     <>
-      {cardType === "ambassador" && (
+      {type === "ambassador" && (
         <div
           className={classes(
             ambassadorStyle,
@@ -173,7 +172,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
         </div>
       )}
 
-      {cardType === "staff" && (
+      {type === "staff" && (
         <div
           className={classes(
             staffStyle,
@@ -191,14 +190,14 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
           )}
           <div className="flex flex-col text-sm">
             <Heading className="inline text-xl text-yellow-500" level={5}>
-              {key}
+              {itemKey}
             </Heading>
             <Span title="Position" name={position} />
           </div>
         </div>
       )}
 
-      {cardType === "enclosure" && (
+      {type === "enclosure" && (
         <div
           className={classes(
             enclosureStyle,
