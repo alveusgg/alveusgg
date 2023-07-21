@@ -3,8 +3,8 @@ import Link from "next/link";
 import Heading from "@/components/content/Heading";
 
 export const Promos = () => (
-  <div className="-mx-8 flex flex-wrap gap-y-8">
-    <div className="flex basis-full flex-col items-start gap-4 px-8 md:basis-1/2">
+  <div className="flex flex-col flex-wrap gap-12 md:flex-row">
+    <div className="flex flex-1 flex-col items-start gap-4">
       <Heading level={2} className="my-0">
         New Merch Available!
       </Heading>
@@ -23,7 +23,7 @@ export const Promos = () => (
       </Link>
     </div>
 
-    <div className="flex basis-full flex-col items-start gap-4 px-8 md:basis-1/2">
+    <div className="flex flex-1 flex-col items-start gap-4">
       <Heading level={2} className="my-0">
         Get Alveus Notifications!
       </Heading>
