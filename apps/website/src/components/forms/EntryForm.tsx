@@ -80,7 +80,7 @@ export const EntryForm: React.FC<{
           <Heading>{form.label}</Heading>
         </header>
 
-        {config.intro && <Markdown content={config.intro} />}
+        {config.intro && <Markdown content={config.intro} dark={true} />}
       </Section>
 
       {/* Handle users that aren't logged in */}
