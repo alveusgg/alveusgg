@@ -219,7 +219,9 @@ export const EntryForm: React.FC<{
               />
               {config.requireShippingAddress && <ShippingAddressFieldset />}
               {config.hasRules && <EntryRulesFieldset form={form} />}
-              <ConsentFieldset />
+              <ConsentFieldset
+                withShippingAddress={config.requireShippingAddress}
+              />
             </div>
 
             <div className="mt-7">
