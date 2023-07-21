@@ -245,15 +245,16 @@ model Form {
 }
 
 model FormEntry {
-  id                String  @id @default(cuid())
-  formId            String
-  userId            String
-  mailingAddressId  String? @unique
-  outgoingWebhookId String? @unique
-  email             String?
-  givenName         String
-  familyName        String
-  salt              String  @db.Char(32)
+  id                   String  @id @default(cuid())
+  formId               String
+  userId               String
+  mailingAddressId     String? @unique
+  outgoingWebhookId    String? @unique
+  email                String?
+  givenName            String
+  familyName           String
+  allowMarketingEmails Boolean @default(false)
+  salt                 String  @db.Char(32)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

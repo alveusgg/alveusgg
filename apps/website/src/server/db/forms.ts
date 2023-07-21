@@ -44,10 +44,7 @@ async function decryptFormEntryWithAddress<T extends FormEntryWithAddress>(
   return res;
 }
 
-export const formEntrySchema = z.object({
-  givenName: z.string().min(1),
-  familyName: z.string().min(1),
-  email: z.string().email(),
+const formEntryMailingAddressSchema = z.object({
   addressLine1: z.string().min(1),
   addressLine2: z.string(), // second address line may be empty
   postalCode: z.string().min(1),
@@ -56,6 +53,14 @@ export const formEntrySchema = z.object({
     message: "Invalid country code",
   }),
   state: z.string(), // state may be left empty
+});
+
+export const formEntrySchema = z.object({
+  givenName: z.string().min(1),
+  familyName: z.string().min(1),
+  email: z.string().email(),
+  allowMarketingEmails: z.boolean().default(false),
+  mailingAddress: formEntryMailingAddressSchema.optional(),
 });
 
 export async function findActiveForm(formSlugOrId: string) {
@@ -95,8 +100,13 @@ export async function getFormEntry(userId: string, formId: string) {
 export async function createEntry(
   userId: string,
   formId: string,
-  input: z.infer<typeof formEntrySchema>
+  input: z.infer<typeof formEntrySchema>,
+  { withMailingAddress = false } = {}
 ) {
+  if (withMailingAddress && input.mailingAddress === undefined) {
+    throw new Error("Mailing address is required");
+  }
+
   return prisma.formEntry.create({
     select: {
       id: true,
@@ -114,19 +124,23 @@ export async function createEntry(
       form: { connect: { id: formId } },
       user: { connect: { id: userId } },
       email: input.email,
-      mailingAddress: {
-        create: await encryptRecord(
-          {
-            addressLine1: input.addressLine1,
-            addressLine2: input.addressLine2,
-            city: input.city,
-            state: input.state,
-            postalCode: input.postalCode,
-            country: input.country,
-          },
-          mailingAddressEncryptFields
-        ),
-      },
+      allowMarketingEmails: input.allowMarketingEmails,
+      mailingAddress:
+        withMailingAddress && input.mailingAddress
+          ? {
+              create: await encryptRecord(
+                {
+                  addressLine1: input.mailingAddress.addressLine1,
+                  addressLine2: input.mailingAddress.addressLine2,
+                  city: input.mailingAddress.city,
+                  state: input.mailingAddress.state,
+                  postalCode: input.mailingAddress.postalCode,
+                  country: input.mailingAddress.country,
+                },
+                mailingAddressEncryptFields
+              ),
+            }
+          : undefined,
     },
   });
 }
