@@ -6,7 +6,8 @@ import IconTwitter from "@/icons/IconTwitter";
 import IconYouTube from "@/icons/IconYouTube";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTikTok from "@/icons/IconTikTok";
-import IconGlobe from "@/icons/IconGlobe";
+import IconShoppingCart from "@/icons/IconShoppingCart";
+
 import { classes } from "@/utils/classes";
 
 const GiveawayCheck: React.FC<{
@@ -115,7 +116,7 @@ export const GiveawayChecks: React.FC = () => (
     <GiveawayCheck
       name="twitter"
       label="Follow @AlveusSanctuary on Twitter"
-      url="https://twitter.com/AlveusSanctuary"
+      url="https://twitter.com/intent/follow?user_id=1349932850632667137"
     >
       <IconTwitter size={32} />
       <span>Follow @AlveusSanctuary on Twitter</span>
@@ -148,13 +149,9 @@ export const GiveawayChecks: React.FC = () => (
       <span>Follow @alveussanctuary on TikTok</span>
     </GiveawayCheck>
 
-    <GiveawayCheck
-      name="website"
-      label="Visit our Website"
-      url="https://alveussanctuary.org/"
-    >
-      <IconGlobe size={32} />
-      <span>Visit our Website</span>
+    <GiveawayCheck name="website" label="Visit our Merch Store" url="/shop">
+      <IconShoppingCart size={32} />
+      <span>Visit our Merch Store</span>
     </GiveawayCheck>
   </div>
 );
