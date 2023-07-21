@@ -116,7 +116,7 @@ export const GiveawayChecks: React.FC = () => (
     <GiveawayCheck
       name="twitter"
       label="Follow @AlveusSanctuary on Twitter"
-      url="https://twitter.com/AlveusSanctuary"
+      url="https://twitter.com/intent/follow?user_id=1349932850632667137"
     >
       <IconTwitter size={32} />
       <span>Follow @AlveusSanctuary on Twitter</span>
