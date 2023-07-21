@@ -214,13 +214,13 @@ export const EntryForm: React.FC<{
               <NameFieldset />
               <ContactFieldset
                 defaultEmailAddress={session.user.email || undefined}
-                askMarketingEmails={config.askMarketingEmails}
-                askMarketingEmailsLabel={config.askMarketingEmailsLabel}
               />
               {config.requireShippingAddress && <ShippingAddressFieldset />}
               {config.hasRules && <EntryRulesFieldset form={form} />}
               <ConsentFieldset
                 withShippingAddress={config.requireShippingAddress}
+                askMarketingEmails={config.askMarketingEmails}
+                askMarketingEmailsLabel={config.askMarketingEmailsLabel}
               />
             </div>
 

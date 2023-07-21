@@ -1,10 +1,16 @@
 import React from "react";
 
+import { PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL } from "@/utils/forms";
+
 import Link from "../content/Link";
 import { Fieldset } from "../shared/form/Fieldset";
 import { CheckboxField } from "../shared/form/CheckboxField";
 
-export function ConsentFieldset({ withShippingAddress = false }) {
+export function ConsentFieldset({
+  withShippingAddress = false,
+  askMarketingEmails = false,
+  askMarketingEmailsLabel = "",
+}) {
   return (
     <Fieldset legend="Data processing">
       <CheckboxField isRequired={true} name="acceptPrivacy" value="yes">
@@ -19,6 +25,12 @@ export function ConsentFieldset({ withShippingAddress = false }) {
         This data will be transferred and stored securely using encryption,
         and deleted once its intended purpose has been fulfilled.`}
       </CheckboxField>
+
+      {askMarketingEmails && (
+        <CheckboxField name="allowMarketingEmails" value="yes">
+          {askMarketingEmailsLabel || PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL}
+        </CheckboxField>
+      )}
     </Fieldset>
   );
 }
