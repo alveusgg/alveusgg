@@ -128,7 +128,9 @@ export const formsRouter = router({
       }
 
       // Insert entry
-      const entry = await createEntry(userId, form.id, input);
+      const entry = await createEntry(userId, form.id, input, {
+        withMailingAddress: config.requireShippingAddress,
+      });
 
       if (form.outgoingWebhookUrl) {
         try {

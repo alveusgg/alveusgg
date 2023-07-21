@@ -6,7 +6,7 @@ export type CalculatedFormConfig = z.infer<typeof formConfigSchema> & {
 
 export const PLACEHOLDER_SUBMIT_BUTTON_TEXT = "Submit";
 export const PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL =
-  "I agree to receive emails from Alveus Sanctuary Inc. and its partners related to news, fundraisers and other promotions.";
+  "Additionally, I am happy for Alveus Sanctuary Inc. to use my email for direct marketing relating to the sanctuary, including from its partners, such as for news, fundraisers, and other promotions.";
 
 export const formConfigSchema = z.object({
   checks: z.boolean().optional(),

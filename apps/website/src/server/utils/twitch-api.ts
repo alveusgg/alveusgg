@@ -291,6 +291,7 @@ export async function getUserFollowsBroadcaster(
     }
   } catch (e) {
     console.error(e);
+    return true;
   }
 
   return false;

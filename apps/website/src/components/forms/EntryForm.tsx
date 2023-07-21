@@ -43,35 +43,29 @@ export const EntryForm: React.FC<{
         email: String(data.get("email")),
         givenName: String(data.get("given-name")),
         familyName: String(data.get("family-name")),
-        addressLine1: String(data.get("address-line1")),
-        addressLine2: String(data.get("address-line2")),
-        country: String(data.get("country")),
-        state: String(data.get("state")),
-        city: String(data.get("city")),
-        postalCode: String(data.get("postal-code")),
         acceptRules: config.hasRules
           ? String(data.get("acceptRules")) === "yes"
           : undefined,
         acceptPrivacy: String(data.get("acceptPrivacy")) === "yes",
+        allowMarketingEmails:
+          String(data.get("allowMarketingEmails")) === "yes",
+        mailingAddress: config.requireShippingAddress
+          ? {
+              addressLine1: String(data.get("address-line1")),
+              addressLine2: String(data.get("address-line2")),
+              country: String(data.get("country")),
+              state: String(data.get("state")),
+              city: String(data.get("city")),
+              postalCode: String(data.get("postal-code")),
+            }
+          : undefined,
       });
     },
-    [config.hasRules, enterForm, form.id]
+    [config.hasRules, config.requireShippingAddress, enterForm, form.id]
   );
 
   // Map submitted form data, or existing entry data, to a consistent format
-  const entry = enterForm.isSuccess
-    ? enterForm.variables
-    : existingEntry && {
-        email: existingEntry.email,
-        givenName: existingEntry.givenName,
-        familyName: existingEntry.familyName,
-        addressLine1: existingEntry.mailingAddress?.addressLine1,
-        addressLine2: existingEntry.mailingAddress?.addressLine2,
-        country: existingEntry.mailingAddress?.country,
-        state: existingEntry.mailingAddress?.state,
-        city: existingEntry.mailingAddress?.city,
-        postalCode: existingEntry.mailingAddress?.postalCode,
-      };
+  const entry = enterForm.isSuccess ? enterForm.variables : existingEntry;
 
   return (
     <>
@@ -80,7 +74,7 @@ export const EntryForm: React.FC<{
           <Heading>{form.label}</Heading>
         </header>
 
-        {config.intro && <Markdown content={config.intro} />}
+        {config.intro && <Markdown content={config.intro} dark />}
       </Section>
 
       {/* Handle users that aren't logged in */}
@@ -131,35 +125,42 @@ export const EntryForm: React.FC<{
                   </td>
                 </tr>
 
-                <tr>
-                  <th colSpan={2} className="pt-2 text-left text-xl">
-                    Shipping address
-                  </th>
-                </tr>
-                <tr>
-                  <th className="text-left">Street address</th>
-                  <td>{entry.addressLine1}</td>
-                </tr>
-                <tr>
-                  <th className="text-left">Second address line</th>
-                  <td>{entry.addressLine2}</td>
-                </tr>
-                <tr>
-                  <th className="text-left">City</th>
-                  <td>{entry.city}</td>
-                </tr>
-                <tr>
-                  <th className="text-left">State / Province / Region</th>
-                  <td>{entry.state}</td>
-                </tr>
-                <tr>
-                  <th className="text-left">ZIP / Postal Code</th>
-                  <td>{entry.postalCode}</td>
-                </tr>
-                <tr>
-                  <th className="text-left">Country</th>
-                  <td>{entry.country && getCountryName(entry.country)}</td>
-                </tr>
+                {config.requireShippingAddress && entry.mailingAddress && (
+                  <>
+                    <tr>
+                      <th colSpan={2} className="pt-2 text-left text-xl">
+                        Shipping address
+                      </th>
+                    </tr>
+                    <tr>
+                      <th className="text-left">Street address</th>
+                      <td>{entry.mailingAddress.addressLine1}</td>
+                    </tr>
+                    <tr>
+                      <th className="text-left">Second address line</th>
+                      <td>{entry.mailingAddress.addressLine2}</td>
+                    </tr>
+                    <tr>
+                      <th className="text-left">City</th>
+                      <td>{entry.mailingAddress.city}</td>
+                    </tr>
+                    <tr>
+                      <th className="text-left">State / Province / Region</th>
+                      <td>{entry.mailingAddress.state}</td>
+                    </tr>
+                    <tr>
+                      <th className="text-left">ZIP / Postal Code</th>
+                      <td>{entry.mailingAddress.postalCode}</td>
+                    </tr>
+                    <tr>
+                      <th className="text-left">Country</th>
+                      <td>
+                        {entry.mailingAddress.country &&
+                          getCountryName(entry.mailingAddress.country)}
+                      </td>
+                    </tr>
+                  </>
+                )}
               </tbody>
             </table>
           </Section>
@@ -214,12 +215,14 @@ export const EntryForm: React.FC<{
               <NameFieldset />
               <ContactFieldset
                 defaultEmailAddress={session.user.email || undefined}
-                askMarketingEmails={config.askMarketingEmails}
-                askMarketingEmailsLabel={config.askMarketingEmailsLabel}
               />
               {config.requireShippingAddress && <ShippingAddressFieldset />}
               {config.hasRules && <EntryRulesFieldset form={form} />}
-              <ConsentFieldset />
+              <ConsentFieldset
+                withShippingAddress={config.requireShippingAddress}
+                askMarketingEmails={config.askMarketingEmails}
+                askMarketingEmailsLabel={config.askMarketingEmailsLabel}
+              />
             </div>
 
             <div className="mt-7">

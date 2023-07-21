@@ -1,19 +1,12 @@
 import React from "react";
 
-import { CheckboxField } from "@/components/shared/form/CheckboxField";
-import { PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL } from "@/utils/forms";
-
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
 
-export const ContactFieldset: React.FC<{
-  defaultEmailAddress?: string;
-  askMarketingEmails?: boolean;
-  askMarketingEmailsLabel?: string;
-}> = ({
+export const ContactFieldset = ({
   defaultEmailAddress,
-  askMarketingEmails = false,
-  askMarketingEmailsLabel,
+}: {
+  defaultEmailAddress?: string;
 }) => (
   <Fieldset legend="Contact & Updates">
     <TextField
@@ -25,11 +18,5 @@ export const ContactFieldset: React.FC<{
       defaultValue={defaultEmailAddress}
       minLength={3}
     />
-
-    {askMarketingEmails && (
-      <CheckboxField name="allowMarketingEmails" value="yes">
-        {askMarketingEmailsLabel || PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL}
-      </CheckboxField>
-    )}
   </Fieldset>
 );

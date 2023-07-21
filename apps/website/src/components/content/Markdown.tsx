@@ -25,9 +25,10 @@ const MarkdownHeading: React.FC<HeadingProps> = ({
 
 type MarkdownProps = {
   content: string;
+  dark?: boolean;
 };
 
-const Markdown: React.FC<MarkdownProps> = ({ content }) => {
+const Markdown: React.FC<MarkdownProps> = ({ content, dark = false }) => {
   const components: Components = useMemo(
     () => ({
       h1: ({ children, id }) => (
@@ -68,6 +69,7 @@ const Markdown: React.FC<MarkdownProps> = ({ content }) => {
         <Link
           href={href || ""}
           external={!!href && /^(https?:)?\/\//.test(href)}
+          dark={dark}
         >
           {children}
         </Link>
