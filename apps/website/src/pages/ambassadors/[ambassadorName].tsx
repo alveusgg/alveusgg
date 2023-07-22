@@ -148,7 +148,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         value: (
           <div className="text-xl">
             <LinkHover
-              key={ambassador.enclosure}
+              itemKey={ambassador.enclosure}
               type="enclosure"
               href={`/ambassadors#enclosures:${camelToKebab(
                 ambassador.enclosure

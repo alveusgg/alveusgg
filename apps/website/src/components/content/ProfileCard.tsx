@@ -98,7 +98,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 }) => {
   const ambassadorInfo =
     type === "ambassador" ? ambassadors[itemKey] : undefined;
-  console.log(itemKey);
+
   const staffMemberInfo =
     type === "staff" ? findMember(itemKey, allStaff) : undefined;
 

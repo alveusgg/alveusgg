@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { type EnclosureKey } from "@alveusgg/data/src/enclosures";
 import dynamic from "next/dynamic";
@@ -27,23 +27,27 @@ const LinkHover: React.FC<LinkHoverProps> = ({
   dark,
 }) => {
   const [cardShown, setCardShown] = useState<boolean>(false);
-  const [delay, setDelay] = useState<NodeJS.Timeout | null>(null);
+  const [delay, setDelay] = useState<NodeJS.Timeout | undefined>(undefined);
   const [linkPosition, setLinkPosition] = useState<DOMRect | undefined>();
-  console.log("type", type);
-  console.log("itemKey", itemKey);
 
-  const onEnter = (e: React.MouseEvent<HTMLDivElement>) => {
+  useEffect(() => {
+    return () => clearTimeout(delay);
+  }, []);
+
+  const onEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     setLinkPosition(e.currentTarget.getBoundingClientRect());
     setDelay(
       setTimeout(() => {
         setCardShown(true);
       }, 500)
     );
-  };
-  const onLeave = () => {
+  }, []);
+
+  const onLeave = useCallback(() => {
     setCardShown(false);
     if (delay) clearTimeout(delay);
-  };
+  }, [delay]);
+
   return (
     <div onMouseEnter={onEnter} onMouseLeave={onLeave} className="inline">
       {cardShown && (
