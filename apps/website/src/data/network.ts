@@ -153,13 +153,6 @@ const data: NetworkItem[] = [
             links: [
               {
                 type: "accessPoint",
-                name: "Pasture",
-                model: "Ubiquiti UAP-AC-M-Pro",
-                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
-                connection: { type: "wifi" },
-              },
-              {
-                type: "accessPoint",
                 name: "Parrots",
                 model: "Ubiquiti UAP-AC-M-Pro",
                 url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
@@ -221,6 +214,29 @@ const data: NetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                 ],
+              },
+            ],
+          },
+          {
+            type: "switch",
+            name: "Training Center",
+            model: "Ubiquiti USW-Lite-8-PoE",
+            url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+            connection: { type: "ethernet", location: "overhead" },
+            links: [
+              {
+                type: "camera",
+                name: "Training Center",
+                model: "Axis M5075-G (PTZ)",
+                url: "https://www.axis.com/products/axis-m5075-g",
+                connection: { type: "ethernet", location: "wall" },
+              },
+              {
+                type: "accessPoint",
+                name: "Pasture",
+                model: "Ubiquiti UAP-AC-M-Pro",
+                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
+                connection: { type: "ethernet", location: "buried" },
               },
             ],
           },
