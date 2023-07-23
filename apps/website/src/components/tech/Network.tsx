@@ -47,6 +47,10 @@ const nodeTypes: {
     container: "border-blue-700",
     eyebrow: { name: "Network Switch", color: "text-blue-700" },
   },
+  converter: {
+    container: "border-blue-700 border-dashed",
+    eyebrow: { name: "Media Converter", color: "text-blue-700" },
+  },
   accessPoint: {
     container: "border-blue-400",
     eyebrow: { name: "WiFi Access Point", color: "text-blue-400" },
