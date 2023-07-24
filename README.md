@@ -1,7 +1,7 @@
 # Alveus Sanctuary website
 
 This is the community-built, open-source website for Alveus Sanctuary.
-You can access the site at [alveussanctuary.org](https://alveussanctuary.org/) (or [alveus.gg](https://alveus.gg/).
+You can access the site at [alveussanctuary.org](https://alveussanctuary.org/) (or [alveus.gg](https://alveus.gg/)).
 
 ## See also
 
