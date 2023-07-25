@@ -72,25 +72,16 @@ const withPositions = <T,>(
   // Calculate the auto layout
   layout(dagreGraph);
 
-  // Get the nodes that have no children, and group them by parent
-  const leafNodes = nodes
-    .filter((node) => !node.children.length)
-    .reduce<Record<string, string[]>>((acc, node) => {
-      const edge = dagreGraph.inEdges(node.id);
-      if (!edge?.[0]) return acc;
-
-      return {
-        ...acc,
-        [edge[0].v]: [...(acc[edge[0].v] || []), node.id],
-      };
-    }, {});
-
+  // Get the nodes where all the children are leaf nodes
   // For each parent, find the nearest child, and fix any misalignment
   // Without this, leaf nodes sometimes appear to not be grouped together
-  Object.entries(leafNodes).forEach(([parentId, children]) => {
+  nodes.forEach(({ id, children }) => {
+    if (!children.length) return;
+    if (children.some((child) => child.children.length)) return;
+
     // Get the parent node
-    const parent = dagreGraph.node(parentId);
-    if (!parent) return;
+    const dagreParent = dagreGraph.node(id);
+    if (!dagreParent) return;
 
     // Determine which axis we want to align on
     const axis = direction === "LR" ? "y" : "x";
@@ -98,32 +89,32 @@ const withPositions = <T,>(
 
     // Get the children nodes
     type ChildNode = { id: string } & DagreNode;
-    const childNodes = children
-      .reduce<ChildNode[]>((acc, id) => {
+    const dagreChildren = children
+      .reduce<ChildNode[]>((acc, { id }) => {
         const node = dagreGraph.node(id);
         if (!node) return acc;
         return [...acc, { id, ...node }];
       }, [])
       .sort((a, b) => a[axis] - b[axis]);
-    if (!childNodes[0]) return;
+    if (!dagreChildren[0]) return;
 
     // Find the child node that is nearest to the parent
-    const [nearestNode, nearestIdx] = childNodes
+    const [nearestNode, nearestIdx] = dagreChildren
       .slice(1)
       .reduce<[ChildNode, number]>(
         (acc, child, idx) => {
-          const accDistance = Math.abs(acc[0][axis] - parent[axis]);
-          const childDistance = Math.abs(child[axis] - parent[axis]);
+          const accDistance = Math.abs(acc[0][axis] - dagreParent[axis]);
+          const childDistance = Math.abs(child[axis] - dagreParent[axis]);
           return childDistance < accDistance ? [child, idx + 1] : acc;
         },
-        [childNodes[0], 0]
+        [dagreChildren[0], 0]
       );
 
     let idx: number, pos: number;
 
     // Walk backwards from the nearest node, and fix any misalignment
     for (idx = nearestIdx - 1, pos = nearestNode[axis]; idx >= 0; idx--) {
-      const node = childNodes[idx];
+      const node = dagreChildren[idx];
       if (!node) continue; // Make TS happy
 
       // Apply the expected position
@@ -136,10 +127,10 @@ const withPositions = <T,>(
     // Walk forwards from the nearest node, and fix any misalignment
     for (
       idx = nearestIdx + 1, pos = nearestNode[axis] + nearestNode[dimension];
-      idx < childNodes.length;
+      idx < dagreChildren.length;
       idx++
     ) {
-      const node = childNodes[idx];
+      const node = dagreChildren[idx];
       if (!node) continue; // Make TS happy
 
       // Apply the expected position
