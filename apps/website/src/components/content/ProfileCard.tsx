@@ -37,6 +37,10 @@ type AmbassadorCardProps = {
   itemKey: AmbassadorKey;
   upwards?: boolean;
 };
+type EnclosureCardProps = {
+  itemKey: EnclosureKey;
+  upwards?: boolean;
+};
 
 const allStaff: Staff = Object.values(staff).map((person) => ({
   img: { ...person.image, alt: `${person.name}'s picture` },
@@ -94,7 +98,7 @@ const ambassadorStyle =
   "absolute z-50 flex flex-col xl:flex-row  -translate-x-1/8 -mt-[25px] items-center gap-1 xl:gap-4 max-w-[340px]  rounded  bg-alveus-green-900 p-4 shadow-lg shadow-alveus-green-800";
 
 const enclosureStyle =
-  "absolute z-50 flex flex-col -translate-x-1/4 items-center justify-center rounded bg-alveus-green-900 p-2 shadow-lg shadow-alveus-green-800";
+  "absolute z-50 flex flex-col items-center justify-center rounded bg-alveus-green-900 p-2 shadow-lg shadow-alveus-green-800";
 
 const AmbassadorCard: React.FC<AmbassadorCardProps> = ({
   itemKey,
@@ -133,6 +137,41 @@ const AmbassadorCard: React.FC<AmbassadorCardProps> = ({
     </div>
   );
 };
+const EnclosureCard: React.FC<EnclosureCardProps> = ({ itemKey, upwards }) => {
+  const inhabiting = Object.entries(ambassadors).filter(
+    (ambassador) => ambassador[1].enclosure === itemKey
+  );
+  const imgs = inhabiting
+    .slice(0, 4)
+    .map((ambassador) => {
+      const ambaKey: string = ambassador[0];
+      return getAmbassadorImages(ambaKey as AmbassadorKey)[0];
+    })
+    .map((image, id) => (
+      <Image
+        key={id}
+        alt={image.alt}
+        src={image.src}
+        className="h-20 w-20 rounded border border-yellow-600"
+      />
+    ));
+
+  return (
+    <div
+      className={classes(
+        enclosureStyle,
+        upwards ? "-translate-y-full" : "mt-6"
+      )}
+    >
+      <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
+        Inhabitants:
+      </Heading>
+      <div className="flex w-44 flex-wrap  items-center justify-center gap-1">
+        {imgs}
+      </div>
+    </div>
+  );
+};
 
 const ProfileCard: React.FC<ProfileCardProps> = ({
   type,
@@ -154,30 +193,6 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
     type === "ambassador"
       ? getAmbassadorImages(itemKey as AmbassadorKey)?.[0]
       : findMember(name, allStaff)?.img;
-
-  const inhabiting =
-    type === "enclosure"
-      ? Object.entries(ambassadors).filter(
-          (ambassador) => ambassador[1].enclosure === itemKey
-        )
-      : [];
-
-  const inhabitantsImgs =
-    type === "enclosure" &&
-    inhabiting
-      .slice(0, 4)
-      .map((ambassador) => {
-        const ambaKey: string = ambassador[0];
-        return getAmbassadorImages(ambaKey as AmbassadorKey)[0];
-      })
-      .map((image, id) => (
-        <Image
-          key={id}
-          alt={image.alt}
-          src={image.src}
-          className="h-20 w-20 rounded border border-yellow-600"
-        />
-      ));
 
   const upwards = linkPosition && calcDistance(linkPosition);
 
@@ -213,19 +228,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
       )}
 
       {type === "enclosure" && (
-        <div
-          className={classes(
-            enclosureStyle,
-            upwards ? "-translate-y-full" : "mt-6"
-          )}
-        >
-          <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
-            Inhabitants:
-          </Heading>
-          <div className="flex w-44 flex-wrap  items-center justify-center gap-1">
-            {inhabitantsImgs}
-          </div>
-        </div>
+        <EnclosureCard itemKey={itemKey} upwards={upwards} />
       )}
     </>
   );
