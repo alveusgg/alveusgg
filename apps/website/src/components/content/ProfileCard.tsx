@@ -33,6 +33,11 @@ export type ProfileCardProps = {
   | { type: "staff"; itemKey: string }
 );
 
+type AmbassadorCardProps = {
+  itemKey: AmbassadorKey;
+  upwards?: boolean;
+};
+
 const allStaff: Staff = Object.values(staff).map((person) => ({
   img: { ...person.image, alt: `${person.name}'s picture` },
   name: person.name,
@@ -91,6 +96,44 @@ const ambassadorStyle =
 const enclosureStyle =
   "absolute z-50 flex flex-col -translate-x-1/4 items-center justify-center rounded bg-alveus-green-900 p-2 shadow-lg shadow-alveus-green-800";
 
+const AmbassadorCard: React.FC<AmbassadorCardProps> = ({
+  itemKey,
+  upwards,
+}) => {
+  const ambassadorInfo = ambassadors[itemKey];
+
+  const name = ambassadorInfo.name;
+  const species = ambassadorInfo.species;
+  const enclosure = enclosures[ambassadorInfo.enclosure].name;
+  const img = getAmbassadorImages(itemKey)[0];
+
+  return (
+    <div
+      className={classes(
+        ambassadorStyle,
+        upwards ? "-translate-y-full" : "mt-4"
+      )}
+    >
+      {
+        <Image
+          src={img.src}
+          alt={img.alt}
+          width="176"
+          height="176"
+          className="h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"
+        />
+      }
+      <div className="flex flex-col text-sm">
+        <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
+          {name}
+        </Heading>
+        <Span title="Species" name={species} />
+        <Span title="Enclosure" name={enclosure} />
+      </div>
+    </div>
+  );
+};
+
 const ProfileCard: React.FC<ProfileCardProps> = ({
   type,
   itemKey,
@@ -105,13 +148,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   const name =
     type === "ambassador" ? ambassadorInfo?.name : staffMemberInfo?.name;
 
-  const species = type === "ambassador" ? ambassadorInfo?.species : "";
   const position = type === "staff" ? staffMemberInfo?.title : "";
-
-  const ambassadorEnclosure =
-    type === "ambassador"
-      ? ambassadorInfo && enclosures[ambassadorInfo.enclosure].name
-      : "";
 
   const img =
     type === "ambassador"
@@ -147,29 +184,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   return (
     <>
       {type === "ambassador" && (
-        <div
-          className={classes(
-            ambassadorStyle,
-            upwards ? "-translate-y-full" : "mt-4"
-          )}
-        >
-          {img && (
-            <Image
-              src={img.src}
-              alt={img.alt}
-              width="176"
-              height="176"
-              className="h-28 w-auto rounded xl:h-24 xl:w-24 xl:rounded-full"
-            />
-          )}
-          <div className="flex flex-col text-sm">
-            <Heading className="mb-1 inline text-xl text-yellow-500" level={5}>
-              {name}
-            </Heading>
-            <Span title="Species" name={species} />
-            <Span title="Enclosure" name={ambassadorEnclosure} />
-          </div>
-        </div>
+        <AmbassadorCard itemKey={itemKey} upwards={upwards} />
       )}
 
       {type === "staff" && (
