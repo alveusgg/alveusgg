@@ -23,7 +23,7 @@ type NetworkItemCore = {
 };
 
 type NetworkItemSwitch = NetworkItemCore & {
-  type: "switch";
+  type: "switch" | "converter";
   links: NetworkItem[];
 };
 
@@ -153,13 +153,6 @@ const data: NetworkItem[] = [
             links: [
               {
                 type: "accessPoint",
-                name: "Pasture",
-                model: "Ubiquiti UAP-AC-M-Pro",
-                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
-                connection: { type: "wifi" },
-              },
-              {
-                type: "accessPoint",
                 name: "Parrots",
                 model: "Ubiquiti UAP-AC-M-Pro",
                 url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
@@ -193,25 +186,57 @@ const data: NetworkItem[] = [
             ],
           },
           {
-            type: "switch",
+            type: "converter",
             name: "Pasture",
-            model: "Ubiquiti USW-Lite-8-PoE",
-            url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+            model: "TP-Link MC220L",
+            url: "https://www.tp-link.com/us/business-networking/accessory/mc220l/",
             connection: { type: "fiber", location: "wall" },
             links: [
               {
-                type: "camera",
+                type: "switch",
                 name: "Pasture",
-                model: "Axis Q6135-LE (PTZ)",
-                url: "https://www.axis.com/products/axis-q6135-le",
+                model: "Ubiquiti USW-Lite-8-PoE",
+                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                connection: { type: "ethernet", location: "wall" },
+                links: [
+                  {
+                    type: "camera",
+                    name: "Pasture",
+                    model: "Axis Q6135-LE (PTZ)",
+                    url: "https://www.axis.com/products/axis-q6135-le",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "microphone",
+                    name: "Pasture Audio",
+                    model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                    url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            type: "switch",
+            name: "Training Center",
+            model: "Ubiquiti USW-Lite-8-PoE",
+            url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+            connection: { type: "ethernet", location: "overhead" },
+            links: [
+              {
+                type: "camera",
+                name: "Training Center",
+                model: "Axis M5075-G (PTZ)",
+                url: "https://www.axis.com/products/axis-m5075-g",
                 connection: { type: "ethernet", location: "wall" },
               },
               {
-                type: "microphone",
-                name: "Pasture Audio",
-                model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
-                connection: { type: "ethernet", location: "wall" },
+                type: "accessPoint",
+                name: "Pasture",
+                model: "Ubiquiti UAP-AC-M-Pro",
+                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
+                connection: { type: "ethernet", location: "buried" },
               },
             ],
           },
@@ -299,8 +324,8 @@ const data: NetworkItem[] = [
                   {
                     type: "camera",
                     name: "Marmosets Inside",
-                    model: "Axis M5075-G (PTZ)",
-                    url: "https://www.axis.com/products/axis-m5075-g",
+                    model: "Axis M5525-E (PTZ)",
+                    url: "https://www.axis.com/products/axis-m5525-e",
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
@@ -320,46 +345,55 @@ const data: NetworkItem[] = [
                 ],
               },
               {
-                type: "switch",
+                type: "converter",
                 name: "Foxes",
-                model: "Ubiquiti US-8-150W",
-                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/us-8-150w",
-                connection: { type: "fiber", location: "buried" },
+                model: "FS UMC-1F1T",
+                url: "https://www.fs.com/products/101472.html",
+                connection: { type: "ethernet", location: "wall" },
                 links: [
                   {
-                    type: "camera",
+                    type: "switch",
                     name: "Foxes",
-                    model: "Axis M5525-E (PTZ)",
-                    url: "https://www.axis.com/products/axis-m5525-e",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                  {
-                    type: "camera",
-                    name: "Foxes Corner",
-                    model: "Axis M2036-LE (Fixed)",
-                    url: "https://www.axis.com/products/axis-m2036-le",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                  {
-                    type: "camera",
-                    name: "Foxes Den",
-                    model: "Axis P3268-LV (Fixed)",
-                    url: "https://www.axis.com/products/axis-p3268-lv",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                  {
-                    type: "microphone",
-                    name: "Foxes Audio",
-                    model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                    url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
-                    connection: { type: "ethernet", location: "wall" },
-                  },
-                  {
-                    type: "accessPoint",
-                    name: "Foxes",
-                    model: "Ubiquiti UAP-AC-M",
-                    url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-ac-mesh",
-                    connection: { type: "ethernet", location: "wall" },
+                    model: "Ubiquiti US-8-150W",
+                    url: "https://store.ui.com/us/en/pro/category/switching-utility/products/us-8-150w",
+                    connection: { type: "fiber", location: "buried" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Foxes",
+                        model: "Axis M5525-E (PTZ)",
+                        url: "https://www.axis.com/products/axis-m5525-e",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Foxes Corner",
+                        model: "Axis M2036-LE (Fixed)",
+                        url: "https://www.axis.com/products/axis-m2036-le",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Foxes Den",
+                        model: "Axis P3268-LV (Fixed)",
+                        url: "https://www.axis.com/products/axis-p3268-lv",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "microphone",
+                        name: "Foxes Audio",
+                        model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "accessPoint",
+                        name: "Foxes",
+                        model: "Ubiquiti UAP-AC-M",
+                        url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-ac-mesh",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
                   },
                 ],
               },
