@@ -324,8 +324,8 @@ const data: NetworkItem[] = [
                   {
                     type: "camera",
                     name: "Marmosets Inside",
-                    model: "Axis M5075-G (PTZ)",
-                    url: "https://www.axis.com/products/axis-m5075-g",
+                    model: "Axis M5525-E (PTZ)",
+                    url: "https://www.axis.com/products/axis-m5525-e",
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
