@@ -21,11 +21,3 @@ For general questions about the project unrelated to a specific issue, please st
 
 - Try to keep your commits to small units of change. Prefering more commits over less.
 - Please keep your commit message to a concise message that clearly explains the change made.
-
-### PRs
-
-- `Title`
-- `Description`
-- `Notes for testing the change`
-- `Reference to the issue the PR fixes if applicible`
-- Please add one of the following Github [keywords](https://docs.github.com/en/get-started/writing-on-github/working-with-advanced-formatting/using-keywords-in-issues-and-pull-requests#linking-a-pull-request-to-an-issue) (e.g. `Closes #13`) in the related issue so that it automatically closes.
