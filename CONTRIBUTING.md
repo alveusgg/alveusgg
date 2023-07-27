@@ -1,32 +1,12 @@
-# Contributing to the Project
+# Contributing to Alveus.gg
 
-Hey there! Welcome to the project! Here's some things to keep in mind before you get started.
+Hey there! Welcome to Alveus.gg! Here's some things to keep in mind before you get started.
 
 # Questions
 
-If you have a question, and there isn't any specific Issue that the question is about, please post your questions in the [discussion](https://github.com/orgs/alveusgg/discussions).
+If you're looking to work on an issue but have a question about it or are generally unsure about how to approach it, reach out in that specific issue and folks will be able to help.
 
-# Issues
-
-### Bug Reports:
-
-When reporting a bug, please open an issue following this format:
-
-- `Title`
-- `Expected Behavior`
-- `Current Behavior`
-- `Any Relevant Screenshots`
-- Go to [what's my browser](https://www.whatsmybrowser.org/), copy the link generated and paste it into the issue description. E.g. `https://www.whatsmybrowser.org/b/WTBQ3`
-- Add the `bug` label
-
-### Ideas / Enhancements
-
-When sharing an idea or enhancement open an issue in the following format:
-
-- `Title`
-- `Description` of the idea
-- `Justification` of why this idea would be beneficial
-- Add the `idea` or `enhancement` label.
+For general questions about the project unrelated to a specific issue, please start a [discussion](https://github.com/orgs/alveusgg/discussions) (or file an issue if you believe what you're asking is something actionable in code).
 
 # Development
 
@@ -40,7 +20,7 @@ When sharing an idea or enhancement open an issue in the following format:
 ### Commit Messages
 
 - Try to keep your commits to small units of change. Prefering more commits over less.
-- Please keep your commit message to ae a concise message that clearly explains the change made.
+- Please keep your commit message to a concise message that clearly explains the change made.
 
 ### PRs
 
