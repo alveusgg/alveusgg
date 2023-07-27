@@ -28,7 +28,7 @@ importers:
     dependencies:
       '@alveusgg/data':
         specifier: github:alveusgg/data
-        version: github.com/alveusgg/data/faa6d23f78ae824f3f52abb9700e7e7cf2e380e5
+        version: github.com/alveusgg/data/0c8563a3c4ca1a671287610e4f59bb335942d2ff
       '@aws-sdk/client-s3':
         specifier: ^3.348.0
         version: 3.348.0
@@ -9774,8 +9774,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/alveusgg/data/faa6d23f78ae824f3f52abb9700e7e7cf2e380e5:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/faa6d23f78ae824f3f52abb9700e7e7cf2e380e5}
+  github.com/alveusgg/data/0c8563a3c4ca1a671287610e4f59bb335942d2ff:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/0c8563a3c4ca1a671287610e4f59bb335942d2ff}
     name: '@alveusgg/data'
-    version: 0.15.0
+    version: 0.17.2
     dev: false
