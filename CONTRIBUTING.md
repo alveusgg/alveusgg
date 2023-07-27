@@ -2,13 +2,13 @@
 
 Hey there! Welcome to Alveus.gg! Here's some things to keep in mind before you get started.
 
-# Questions
+## Questions
 
 If you're looking to work on an issue but have a question about it or are generally unsure about how to approach it, reach out in that specific issue and folks will be able to help.
 
 For general questions about the project unrelated to a specific issue, please start a [discussion](https://github.com/orgs/alveusgg/discussions) (or file an issue if you believe what you're asking is something actionable in code).
 
-# Development
+## Development
 
 ### Dev Environment
 
