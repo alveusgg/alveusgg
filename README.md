@@ -50,7 +50,7 @@ For a more complete overview see: [#9](https://github.com/alveusgg/alveusgg/issu
 
 Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute.
 
-1. If you find a bug - you can fill out a bug [report]()
+1. If you find a bug - you can fill out a bug [report](https://github.com/alveusgg/alveusgg/issues/new/choose)
 2. If you have an idea that would make Alveus better - please fill out an idea [issue]()
 3. If you have development experience, take a look at our issues labeled [good first issue](https://github.com/alveusgg/alveusgg/pulls?q=is%3Aopen+is%3Apr+label%3A%22good+first+issue%22), read our [contributing guide](https://github.com/alveusgg/alveusgg/blob/main/CONTRIBUTING.md) and agree to our [code of conduct]() before you get started.
 
