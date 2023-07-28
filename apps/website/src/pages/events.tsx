@@ -11,6 +11,7 @@ import Heading from "@/components/content/Heading";
 import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
 
+import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
 import valentines2023Video from "@/assets/events/valentines-2023.mp4";
 import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
@@ -31,6 +32,55 @@ type Event = {
 };
 
 const events = {
+  summerCamp2023: {
+    name: "Summer Camp 2023",
+    date: new Date("2023-07-21"),
+    video: summerCamp2023Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$14,070",
+      },
+      uniqueViewers: {
+        title: "Unique viewers tuned in",
+        stat: "414,000",
+      },
+      craftsAuctioned: {
+        title: "Summer crafts auctioned off",
+        stat: "16",
+      },
+      minutesStreamed: {
+        title: "Minutes streamed live",
+        stat: "1,495",
+      },
+    },
+    info: (
+      <>
+        <p>
+          A 24-hour long livestream event, featuring many of the Alveus staff
+          camping in the Session Yard at Alveus. There were plenty of activities
+          for the staff to participate in, including an archery competition to
+          start the event off, a water balloon fight later in the day, cooking
+          dinner around a campfire, late-night beer pong and feeding the pasture
+          with a catapult.
+        </p>
+        <p>
+          After camping overnight, still on the stream, the event ended with a
+          craft auction where viewers could bid and donate on 16 different
+          crafts made by the staff for the event, including multiple friendship
+          bracelets, two different Summer Camp paintings, a few
+          ambassador-themed hats, two hand-crafted pet rocks, a rubber chicken
+          and the Summer Camp Spirit Stick itself.
+        </p>
+        <p>
+          Over the course of the 24-hour stream, a total of $14,070 was raised
+          for Alveus Sanctuary, with $6,291 of that coming from the craft
+          auction. Thank you to everyone that watched the stream, and to
+          everyone that donated to support the sanctuary!
+        </p>
+      </>
+    ),
+  },
   artAuction2023: {
     name: "Art Auction 2023",
     date: new Date("2023-04-22"),
