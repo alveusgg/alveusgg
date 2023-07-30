@@ -19,55 +19,87 @@ const ContactUsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section
-        className="flex min-h-[85vh] flex-grow items-center"
+        className="flex min-h-[85vh] flex-grow"
         containerClassName="flex flex-col items-center text-center text-alveus-green"
       >
-        <Heading className="text-6xl">Contact Us</Heading>
-        <p className="my-3 text-xl font-semibold">We are not openly hiring.</p>
-
-        <p className="my-3 text-xl font-semibold">
-          For business inquiries: <br />
-          <Link href="mailto:TeamAlveus@unitedtalent.com">
-            TeamAlveus@unitedtalent.com
-          </Link>
-        </p>
-
-        <div className="flex flex-wrap gap-x-6">
+        <div className="my-auto flex flex-col items-center">
+          <Heading className="text-6xl">Contact Us</Heading>
           <p className="my-3 text-xl font-semibold">
-            For merch inquiries: <br />
-            <Link href="https://shopalveus.org/pages/contact" external>
-              shopalveus.org/pages/contact
-            </Link>
+            We are not openly hiring.
           </p>
 
           <p className="my-3 text-xl font-semibold">
-            For plushie inquiries: <br />
-            <Link href="https://youtooz.com/pages/contact-us" external>
-              youtooz.com/pages/contact-us
+            For business inquiries: <br />
+            <Link href="mailto:TeamAlveus@unitedtalent.com">
+              TeamAlveus@unitedtalent.com
+            </Link>
+          </p>
+
+          <div className="flex flex-wrap gap-x-6">
+            <p className="my-3 text-xl font-semibold">
+              For merch inquiries: <br />
+              <Link href="https://shopalveus.org/pages/contact" external>
+                shopalveus.org/pages/contact
+              </Link>
+            </p>
+
+            <p className="my-3 text-xl font-semibold">
+              For plushie inquiries: <br />
+              <Link href="https://youtooz.com/pages/contact-us" external>
+                youtooz.com/pages/contact-us
+              </Link>
+            </p>
+          </div>
+
+          <ul className="my-3 flex flex-wrap gap-4">
+            <li>
+              <Link
+                className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                href="/donate"
+                custom
+              >
+                Donate
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                href="/po-box"
+                custom
+              >
+                PO Box
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mt-6 text-sm">
+          <p>
+            For issues with the website or Twitch extension, please open an
+            issue on GitHub:{" "}
+            <Link
+              href="https://github.com/alveusgg/alveusgg/issues/new/choose"
+              external
+            >
+              Website
+            </Link>{" "}
+            or{" "}
+            <Link
+              href="https://github.com/alveusgg/extension/issues/new/choose"
+              external
+            >
+              Twitch Extension
+            </Link>
+          </p>
+
+          <p>
+            If you discover a security vulnerability within the website or
+            Twitch extension, please email us:{" "}
+            <Link href="mailto:opensource@alveussanctuary.org">
+              opensource@alveussanctuary.org
             </Link>
           </p>
         </div>
-
-        <ul className="my-3 flex flex-wrap gap-4">
-          <li>
-            <Link
-              className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-              href="/donate"
-              custom
-            >
-              Donate
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-              href="/po-box"
-              custom
-            >
-              PO Box
-            </Link>
-          </li>
-        </ul>
       </Section>
     </>
   );
