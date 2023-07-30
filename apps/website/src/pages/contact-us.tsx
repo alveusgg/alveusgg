@@ -35,7 +35,7 @@ const ContactUsPage: NextPage = () => {
             </Link>
           </p>
 
-          <div className="flex flex-wrap gap-x-6">
+          <div className="flex flex-wrap justify-center gap-x-6">
             <p className="my-3 text-xl font-semibold">
               For merch inquiries: <br />
               <Link href="https://shopalveus.org/pages/contact" external>
