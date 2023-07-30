@@ -5,7 +5,6 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
-import socials from "@/components/shared/data/socials";
 
 const ContactUsPage: NextPage = () => {
   return (
@@ -34,18 +33,24 @@ const ContactUsPage: NextPage = () => {
         </p>
 
         <ul className="my-3 flex flex-wrap gap-4">
-          {Object.entries(socials).map(([key, social]) => (
-            <li key={key}>
-              <a
-                className="block rounded-2xl bg-alveus-green p-3 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                href={social.link}
-                target="_blank"
-                rel="noreferrer"
-              >
-                <social.icon size={24} />
-              </a>
-            </li>
-          ))}
+          <li>
+            <Link
+              className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+              href="/donate"
+              custom
+            >
+              Donate
+            </Link>
+          </li>
+          <li>
+            <Link
+              className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+              href="/po-box"
+              custom
+            >
+              PO Box
+            </Link>
+          </li>
         </ul>
       </Section>
     </>
