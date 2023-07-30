@@ -24,16 +24,6 @@ const ContactUsPage: NextPage = () => {
         containerClassName="flex flex-col items-center text-center text-alveus-green"
       >
         <Heading className="text-6xl">Contact Us</Heading>
-
-        <p className="my-3 text-xl font-semibold">
-          <Link href="mailto:maya@alveussanctuary.org">
-            maya@alveussanctuary.org
-          </Link>
-        </p>
-
-        <p>You can send in a resume to maya@alveussanctuary.org.</p>
-        <p>You will be put on a list for future reference.</p>
-
         <p className="my-3 text-xl font-semibold">We are not openly hiring.</p>
 
         <p className="my-3 text-xl font-semibold">
