@@ -32,6 +32,22 @@ const ContactUsPage: NextPage = () => {
           </Link>
         </p>
 
+        <div className="flex flex-wrap gap-x-6">
+          <p className="my-3 text-xl font-semibold">
+            For merch inquiries: <br />
+            <Link href="https://shopalveus.org/pages/contact" external>
+              shopalveus.org/pages/contact
+            </Link>
+          </p>
+
+          <p className="my-3 text-xl font-semibold">
+            For plushie inquiries: <br />
+            <Link href="https://youtooz.com/pages/contact-us" external>
+              youtooz.com/pages/contact-us
+            </Link>
+          </p>
+        </div>
+
         <ul className="my-3 flex flex-wrap gap-4">
           <li>
             <Link
