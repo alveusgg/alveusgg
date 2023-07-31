@@ -140,7 +140,7 @@ const data: FoundAnimalFlow = {
                               name: "Done",
                               flow: {
                                 prompt: [
-                                  "Once the nest is in situ, carefully place the bird in the nest.",
+                                  "Once the nest is in place, carefully put the bird in the nest.",
                                   "Once returned, leave the bird alone, keeping yourself and any pets away from it, and observe from a distance.",
                                   "Are the parents still nearby? Are they visiting the nest and showing interest in the bird?",
                                 ],
