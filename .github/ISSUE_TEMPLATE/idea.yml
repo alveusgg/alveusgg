@@ -2,8 +2,6 @@ name: Idea / Enhancement
 description: Share an idea
 title: "[Idea]: "
 labels: ["idea", "enhancement"]
-assignees:
-  - octocat
 body:
   - type: textarea
     id: description
