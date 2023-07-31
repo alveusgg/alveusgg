@@ -1,0 +1,17 @@
+name: Idea / Enhancement
+description: Share an idea
+title: "[Idea]: "
+labels: ["idea", "enhancement"]
+body:
+  - type: textarea
+    id: description
+    attributes:
+      label: Describe your idea / enhancement
+    validations:
+      required: true
+  - type: textarea
+    id: justificiation
+    attributes:
+      label: How would this idea / enhancement be beneficial?
+    validations:
+      required: true
