@@ -1,5 +1,6 @@
 import type { Notification } from "@prisma/client";
 
+import LinkifyIt from "linkify-it";
 import { env } from "@/env/index.mjs";
 
 import {
@@ -198,6 +199,24 @@ async function createDiscordNotifications({
       toEveryone = env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT;
       break;
     default:
+  }
+
+  const linkify = new LinkifyIt();
+
+  const matches: LinkifyIt.Match[] | null = linkify.match(message);
+
+  let offset = 0;
+  if (matches != null) {
+    for (const match of matches) {
+      const linkStart: number = match.index + offset;
+      const linkEnd: number = match.lastIndex + offset;
+
+      const linkified = `<${match.text}>`;
+      message =
+        message.slice(0, linkStart) + linkified + message.slice(linkEnd + 1);
+
+      offset += linkified.length - (match.lastIndex - match.index + 1);
+    }
   }
 
   const tasks = [];
