@@ -14,7 +14,7 @@ export function escapeLinksForDiscord(text: string) {
       const linkified = `<${match.text}>`;
       text = text.slice(0, linkStart) + linkified + text.slice(linkEnd);
 
-      offset += linkified.length - (match.lastIndex - match.index + 1);
+      offset += linkified.length - (match.lastIndex - match.index);
     }
   }
 
