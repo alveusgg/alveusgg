@@ -203,13 +203,13 @@ async function createDiscordNotifications({
 
   const linkify = new LinkifyIt();
 
-  const matches: LinkifyIt.Match[] | null = linkify.match(message);
+  const matches = linkify.match(message);
 
   let offset = 0;
   if (matches != null) {
     for (const match of matches) {
-      const linkStart: number = match.index + offset;
-      const linkEnd: number = match.lastIndex + offset;
+      const linkStart = match.index + offset;
+      const linkEnd = match.lastIndex + offset;
 
       const linkified = `<${match.text}>`;
       message =
