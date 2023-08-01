@@ -12,7 +12,7 @@ export function escapeLinksForDiscord(text: string) {
       const linkEnd = match.lastIndex + offset;
 
       const linkified = `<${match.text}>`;
-      text = text.slice(0, linkStart) + linkified + text.slice(linkEnd + 1);
+      text = text.slice(0, linkStart) + linkified + text.slice(linkEnd);
 
       offset += linkified.length - (match.lastIndex - match.index + 1);
     }
