@@ -7,14 +7,7 @@ settings:
 importers:
 
   .:
-    dependencies:
-      linkify-it:
-        specifier: ^4.0.1
-        version: 4.0.1
     devDependencies:
-      '@types/linkify-it':
-        specifier: ^3.0.2
-        version: 3.0.2
       husky:
         specifier: ^8.0.3
         version: 8.0.3
@@ -108,6 +101,9 @@ importers:
       just-debounce-it:
         specifier: ^3.2.0
         version: 3.2.0
+      linkify-it:
+        specifier: ^4.0.1
+        version: 4.0.1
       luxon:
         specifier: ^3.3.0
         version: 3.3.0
@@ -208,6 +204,9 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.1
         version: 21.1.1
+      '@types/linkify-it':
+        specifier: ^3.0.2
+        version: 3.0.2
       '@types/lodash':
         specifier: ^4.14.195
         version: 4.14.195
