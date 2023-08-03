@@ -56,7 +56,10 @@ const stats = {
 const history: { date: PartialDateString; content: [string, ...string[]] }[] = [
   {
     date: "2021-02",
-    content: ["Maya founded Alveus"], // TODO: Add more details
+    content: [
+      "Alveus Sanctuary was founded by Maya",
+      // TODO: Add more details (land purchase?)
+    ],
   },
   {
     date: "2021-04",
@@ -172,8 +175,7 @@ const AboutAlveusPage: NextPage = () => {
             <p>
               She is a top streamer on Twitch.tv, with a large following across
               many social platforms. She is a licensed falconer and wildlife
-              conservationist with a passion for educating others about the
-              importance of conservation and wildlife.
+              conservationist with a passion for educating others.
             </p>
 
             <Link
