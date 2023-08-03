@@ -47,7 +47,7 @@ const Timeline: React.FC<TimelineProps> = ({ items }) => (
             }`}
           >
             <p
-              className={`text-md text-alveus-green-500 ${
+              className={`text-md text-alveus-green-700 ${
                 idx % 2 ? "text-right" : "text-left"
               }`}
             >

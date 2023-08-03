@@ -1,11 +1,15 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import React from "react";
+import type { PartialDateString } from "@alveusgg/data/src/types";
+
+import { formatPartialDateString } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Timeline from "@/components/content/Timeline";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import mayaImage from "@/assets/maya.png";
@@ -14,6 +18,7 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import imageGuidestarSeal from "@/assets/guidestar-candid-gold-seal.svg";
 
+// TODO: Review/update these stats (maybe bring in geo-related stats from previous page)
 const stats = {
   averageTime: {
     source: "https://influencermarketinghub.com/twitch-statistics/",
@@ -47,6 +52,23 @@ const stats = {
     caption: "The United States accounts for 20% of Twitch's market share.",
   },
 };
+
+const history: { date: PartialDateString; content: [string, ...string[]] }[] = [
+  {
+    date: "2021-02",
+    content: ["Maya founded Alveus"], // TODO: Add more details
+  },
+  {
+    date: "2021-04",
+    content: [
+      "Parrot Aviary constructed",
+      "A 20ft by 20ft wire-mesh enclosure at a cost of $52,000 USD, plus an addon with enclosed rooms for the parrots to shelter in at a further cost of $7,000 USD.",
+      "Sponsored by Michele Raffin (previous owner of the parrots), and flimflam.",
+    ],
+  },
+  // TODO: Add all other enclosures
+  // TODO: Add key fundraising milestones
+];
 
 const AboutAlveusPage: NextPage = () => {
   return (
@@ -133,47 +155,74 @@ const AboutAlveusPage: NextPage = () => {
         </Section>
       </div>
 
+      <Section dark>
+        <div className="flex flex-wrap-reverse items-center">
+          <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
+            <Image
+              src={mayaImage}
+              alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
+              className="ml-auto h-auto w-full max-w-lg"
+            />
+          </div>
+
+          <div className="basis-full md:basis-1/2 md:px-4">
+            <Heading id="maya" level={2} className="italic">
+              Maya Higa founded Alveus in February 2021
+            </Heading>
+            <p>
+              She is a top streamer on Twitch.tv, with a large following across
+              many social platforms. She is a licensed falconer and wildlife
+              conservationist with a passion for educating others about the
+              importance of conservation and wildlife.
+            </p>
+
+            <Link
+              className="mt-8 inline-block rounded-full border-2 border-alveus-tan px-6 py-2 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
+              custom
+              href="/about/maya"
+            >
+              Learn more about Maya
+            </Link>
+          </div>
+        </div>
+      </Section>
+
       <div className="relative">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
         />
 
-        <Section dark>
-          <div className="flex flex-wrap-reverse items-center">
-            <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
-              <Image
-                src={mayaImage}
-                alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-                className="ml-auto h-auto w-full max-w-lg"
-              />
-            </div>
+        <Section>
+          <Heading
+            id="history"
+            level={2}
+            className="text-center text-5xl text-alveus-green"
+          >
+            Alveus&apos; History
+          </Heading>
 
-            <div className="basis-full md:basis-1/2 md:px-4">
-              <Heading id="maya" level={2} className="italic">
-                Maya Higa founded Alveus in February 2021
-              </Heading>
-              <p>
-                She is a top streamer on Twitch.tv, with a large following
-                across many social platforms. She is a licensed falconer and
-                wildlife conservationist with a passion for educating others
-                about the importance of conservation and wildlife.
-              </p>
+          <Timeline
+            items={history.map(({ date, content }) => ({
+              date: formatPartialDateString(date),
+              content: (
+                <>
+                  <p className="text-lg">{content[0]}</p>
+                  {content.slice(1).map((paragraph, idx) => (
+                    <p key={idx} className="mt-2">
+                      {paragraph}
+                    </p>
+                  ))}
+                </>
+              ),
+            }))}
+          />
 
-              <Link
-                className="mt-8 inline-block rounded-full border-2 border-alveus-tan px-6 py-2 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                custom
-                href="/about/maya"
-              >
-                Learn more about Maya
-              </Link>
-            </div>
-          </div>
+          {/* TODO: Embed tour videos? Maybe split the timeline into parts? */}
+          {/* TODO: Link to the events page from fundraising items? */}
         </Section>
       </div>
-
-      {/* TODO: Timeline of Alveus (fundraising + enclosures), embed tour videos, CTA to events? */}
 
       {/* TODO: CTA slice for ambassadors */}
 
