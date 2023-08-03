@@ -8,7 +8,10 @@ import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
+import mayaImage from "@/assets/maya.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import imageGuidestarSeal from "@/assets/guidestar-candid-gold-seal.svg";
 
 const stats = {
@@ -89,40 +92,86 @@ const AboutAlveusPage: NextPage = () => {
         </div>
       </Section>
 
-      <Section className="text-center">
-        <Heading id="twitch" level={2}>
-          Why Twitch.tv
-        </Heading>
-        <p className="mx-auto max-w-2xl">
-          Twitch offers our guests the opportunity to connect with viewers from
-          around the globe, and allows us to target a demographic that is
-          otherwise far less likely to be exposed to conservation education. We
-          see Twitch as an untapped reservoir for doing good.
-        </p>
+      <div className="relative">
+        <Image
+          src={leafLeftImage3}
+          alt=""
+          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+        />
 
-        <ul className="mb-2 mt-6 flex flex-wrap justify-center md:mt-12">
-          {Object.entries(stats).map(([key, stat]) => (
-            <li key={key} className="basis-full py-4 md:basis-1/3 md:px-4">
+        <Section className="text-center">
+          <Heading id="twitch" level={2}>
+            Why Twitch.tv
+          </Heading>
+          <p className="mx-auto max-w-2xl">
+            Twitch offers our guests the opportunity to connect with viewers
+            from around the globe, and allows us to target a demographic that is
+            otherwise far less likely to be exposed to conservation education.
+            We see Twitch as an untapped reservoir for doing good.
+          </p>
+
+          <ul className="mb-2 mt-6 flex flex-wrap justify-center md:mt-12">
+            {Object.entries(stats).map(([key, stat]) => (
+              <li key={key} className="basis-full py-4 md:basis-1/3 md:px-4">
+                <Link
+                  href={stat.source}
+                  className="flex h-full flex-col justify-center rounded-2xl bg-alveus-green px-6 py-6 text-alveus-tan shadow-lg transition-shadow hover:shadow-xl"
+                  external
+                  custom
+                >
+                  <p className="text-center text-xl font-bold">{stat.title}</p>
+                  <p className="my-4 text-center text-3xl font-extrabold">
+                    {stat.value}
+                  </p>
+                  <p className="text-center">{stat.caption}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <p>Click each box for source.</p>
+        </Section>
+      </div>
+
+      <div className="relative">
+        <Image
+          src={leafLeftImage1}
+          alt=""
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+        />
+
+        <Section dark>
+          <div className="flex flex-wrap-reverse items-center">
+            <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
+              <Image
+                src={mayaImage}
+                alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
+                className="ml-auto h-auto w-full max-w-lg"
+              />
+            </div>
+
+            <div className="basis-full md:basis-1/2 md:px-4">
+              <Heading id="maya" level={2} className="italic">
+                Maya Higa founded Alveus in February 2021
+              </Heading>
+              <p>
+                She is a top streamer on Twitch.tv, with a large following
+                across many social platforms. She is a licensed falconer and
+                wildlife conservationist with a passion for educating others
+                about the importance of conservation and wildlife.
+              </p>
+
               <Link
-                href={stat.source}
-                className="flex h-full flex-col justify-center rounded-2xl bg-alveus-green px-6 py-6 text-alveus-tan shadow-lg transition-shadow hover:shadow-xl"
-                external
+                className="mt-8 inline-block rounded-full border-2 border-alveus-tan px-6 py-2 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
                 custom
+                href="/about/maya"
               >
-                <p className="text-center text-xl font-bold">{stat.title}</p>
-                <p className="my-4 text-center text-3xl font-extrabold">
-                  {stat.value}
-                </p>
-                <p className="text-center">{stat.caption}</p>
+                Learn more about Maya
               </Link>
-            </li>
-          ))}
-        </ul>
-
-        <p>Click each box for source.</p>
-      </Section>
-
-      {/* TODO: CTA slice for maya */}
+            </div>
+          </div>
+        </Section>
+      </div>
 
       {/* TODO: Timeline of Alveus (fundraising + enclosures), embed tour videos, CTA to events? */}
 
