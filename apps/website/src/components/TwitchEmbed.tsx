@@ -14,7 +14,7 @@ export const TwitchEmbed: React.FC = () => {
     statusRef.current = "active";
 
     // https://dev.twitch.tv/docs/embed/everything
-    const embed = new Twitch.Embed(`twitch-embed-${id}`, {
+    const embed = new window.Twitch.Embed(`twitch-embed-${id}`, {
       width: "100%",
       height: "100%",
       channel: "alveussanctuary",
@@ -25,11 +25,11 @@ export const TwitchEmbed: React.FC = () => {
       autoplay: true,
       muted: false,
     });
-    embed.addEventListener(Twitch.Embed.VIDEO_PLAY, function () {
+    embed.addEventListener(window.Twitch.Embed.VIDEO_PLAY, function () {
       const player = embed.getPlayer();
       console.log("The video is playing", player);
     });
-    embed.addEventListener(Twitch.Embed.VIDEO_READY, function () {
+    embed.addEventListener(window.Twitch.Embed.VIDEO_READY, function () {
       const player = embed.getPlayer();
       console.log("The video is ready", player);
     });
