@@ -4,6 +4,7 @@ import IconCalendar from "@/icons/IconCalendar";
 
 type TimelineProps = {
   items: {
+    key: string;
     date: string;
     content: React.ReactNode;
   }[];
@@ -14,7 +15,7 @@ const Timeline: React.FC<TimelineProps> = ({ items }) => (
     <div className="absolute left-5 -z-10 h-full w-1 -translate-x-1/2 bg-alveus-green md:left-1/2" />
     <ol>
       {items.map((item, idx) => (
-        <li key={item.date} className="relative my-4 flex items-start">
+        <li key={item.key} className="relative my-4 flex items-start">
           <div
             className={`absolute left-5 inline-block ${
               idx % 2 ? "md:left-1/2" : "md:left-auto md:right-1/2"

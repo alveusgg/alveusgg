@@ -16,14 +16,17 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
 const experience = [
   {
+    key: "horsemanship-certification",
     date: "August, 2015",
     content: <p>Level 3 certification in Parelli Natural Horsemanship</p>,
   },
   {
+    key: "all-star-ambassador",
     date: "June, 2016",
     content: <p>County 4-H All Star Ambassador</p>,
   },
   {
+    key: "zoo-to-you",
     date: "June, 2018",
     content: (
       <p>
@@ -33,6 +36,7 @@ const experience = [
     ),
   },
   {
+    key: "charles-paddock-zoo",
     date: "January, 2019",
     content: (
       <p>
@@ -42,18 +46,21 @@ const experience = [
     ),
   },
   {
+    key: "falconry-license",
     date: "February, 2019",
     content: (
       <p>Falconry license issued by the Department of Fish and Wildlife</p>
     ),
   },
   {
+    key: "free-flight-exotic-bird-sanctuary",
     date: "June, 2019",
     content: (
       <p>Education and Husbandry intern at Free Flight Exotic Bird Sanctuary</p>
     ),
   },
   {
+    key: "cal-poly-graduation",
     date: "June, 2020",
     content: (
       <p>
@@ -64,6 +71,7 @@ const experience = [
     ),
   },
   {
+    key: "central-texas-wildlife",
     date: "October, 2020 – October, 2021",
     content: (
       <p>
@@ -73,10 +81,12 @@ const experience = [
     ),
   },
   {
+    key: "found-alveus-sanctuary",
     date: "February, 2021",
     content: <p>Founded Alveus Sanctuary</p>,
   },
   {
+    key: "make-a-wish",
     date: "March, 2021 – March, 2022",
     content: (
       <p>

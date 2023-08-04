@@ -53,15 +53,37 @@ const stats = {
   },
 };
 
-const history: { date: PartialDateString; content: [string, ...string[]] }[] = [
+const history: {
+  key: string;
+  date: PartialDateString;
+  content: [string, ...string[]];
+}[] = [
   {
+    key: "founding",
     date: "2021-02",
     content: [
       "Alveus Sanctuary was founded by Maya",
-      // TODO: Add more details (land purchase?)
+      "A 15-acre property in Texas was purchased on which Alveus would be built.",
     ],
   },
   {
+    key: "fund-a-thon",
+    date: "2021-02",
+    content: [
+      "Fund-a-thon charity stream",
+      "Over $573,000 USD raised through donations during the 20-hour long livestream to kick-start the sanctuary.",
+    ],
+  },
+  {
+    key: "pasture-fencing",
+    date: "2021", // TODO: Confirm date
+    content: [
+      "Pasture and fencing installed",
+      "A total of 4,000 linear feet of predator-proof fencing was installed around the property for a cost of $72,000 USD.",
+    ],
+  },
+  {
+    key: "parrot-aviary",
     date: "2021-04",
     content: [
       "Parrot Aviary constructed",
@@ -69,7 +91,58 @@ const history: { date: PartialDateString; content: [string, ...string[]] }[] = [
       "Sponsored by Michele Raffin (previous owner of the parrots), and flimflam.",
     ],
   },
-  // TODO: Add all other enclosures
+  {
+    key: "crow-aviary",
+    date: "2021", // TODO: Confirm date
+    content: [
+      "Crow Aviary constructed",
+      "A wire-mesh enclosure, built for a total of $8,000 USD.",
+      "Sponsored by PointCrow.",
+    ],
+  },
+  {
+    key: "training-center",
+    date: "2021", // TODO: Confirm date
+    content: [
+      "Training Center constructed",
+      "A large wire-mesh building with grass inside, allowing for training and enrichment activities as well as hosting content collaborations, built for a total of $135,000 USD.",
+    ],
+  },
+  {
+    key: "fox-enclosure",
+    date: "2022-01",
+    content: [
+      "Fox enclosure constructed",
+      "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, built for a total of $48,000 USD.",
+      "Sponsored by QTCinderalla.",
+    ],
+  },
+  {
+    key: "chicken-coop",
+    date: "2022-05",
+    content: [
+      "Chicken Coop constructed",
+      "A 10ft by 20ft wire-mesh enclosure, with a 6ft by 6ft indoor area, built for a total of $8,000 USD.",
+    ],
+  },
+  {
+    key: "falcon-aviary",
+    date: "2023-01",
+    content: [
+      "Falcon/Crow Aviary constructed",
+      "Originally build for Orion, Alveus' falcon, prior to his passing. Re-purposed as the new crow aviary.",
+      "A two-part enclosure with a sheltered indoor area and a wire-mesh outdoor area, built for a total of $15,000 USD.",
+      "Sponsored by Oni Studios, and Merck X.",
+    ],
+  },
+  {
+    key: "marmoset-enclosure",
+    date: "2023-06",
+    content: [
+      "Marmoset enclosure retro-fitted",
+      "The original crow aviary was retro-fitted to house marmosets, with a new indoor area added to the rear.",
+    ],
+  },
   // TODO: Add key fundraising milestones
 ];
 
@@ -206,7 +279,8 @@ const AboutAlveusPage: NextPage = () => {
           </Heading>
 
           <Timeline
-            items={history.map(({ date, content }) => ({
+            items={history.map(({ key, date, content }) => ({
+              key,
               date: formatPartialDateString(date),
               content: (
                 <>
