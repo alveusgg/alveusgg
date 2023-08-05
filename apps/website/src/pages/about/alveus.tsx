@@ -12,6 +12,8 @@ import Link from "@/components/content/Link";
 import Timeline from "@/components/content/Timeline";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
+import IconArrowRight from "@/icons/IconArrowRight";
+
 import mayaImage from "@/assets/maya.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -81,6 +83,10 @@ type HistoryItem = {
   key: string;
   date: PartialDateString;
   content: [string, ...string[]];
+  link?: {
+    text: string;
+    href: string;
+  };
 };
 type HistoryItems = { key: string; items: HistoryItem[] };
 
@@ -91,7 +97,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "idea",
         date: "2020-12", // https://youtu.be/7DvtjAqmWl8?t=138
-        content: ["Initial idea + 3-5 year plan"],
+        content: ["Initial idea + 3-5 year plan writen"],
       },
       {
         key: "founding",
@@ -109,6 +115,10 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           "Fund-a-thon charity stream",
           "Over $573,000 USD raised through donations during the 20-hour long livestream to kick-start the sanctuary.",
         ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#fundathon-2021",
+        },
       },
       {
         key: "fencing-pasture",
@@ -149,13 +159,13 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
   {
     key: "tour-part-1",
     cta: (
-      <div className="flex flex-wrap items-center gap-y-8">
+      <div className="flex flex-wrap items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
           <Heading id="tour-part-1" level={3} className="italic">
             Alveus Tour Part 1
           </Heading>
 
-          <p className="text-lg">
+          <p className="mt-4 text-lg">
             Watch the video and join Maya for a tour of Alveus, exploring the
             parrot aviary, the chicken coop, and the pasture. Meet some of our
             ambassadors and learn about their stories.
@@ -192,6 +202,10 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           "First stream from the studio",
           "Animal Quest Episode 1: Chicken Edition was the first official stream hosted from the Alveus studio.",
         ],
+        link: {
+          text: "Watch the episode",
+          href: "/animal-quest/chicken-edition",
+        },
       },
       {
         key: "kayla-connor",
@@ -200,6 +214,10 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           "Kayla and Connor join the team",
           "Kayla joins Alveus as the Animal Care & Training Manager, and Connor joins as the Operations Manager.",
         ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
       },
       {
         key: "halloween-fundraiser",
@@ -208,6 +226,10 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           "Halloween fundraiser stream",
           "Over $101,000 USD raised through donations during the live event at Alveus, with 34 creators from the industry joining us.",
         ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#halloween-2021",
+        },
       },
       {
         key: "fox-enclosure",
@@ -225,15 +247,19 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           "First educational collaboration stream",
           "Jack Manifold and his community joined us at Alveus for a stream exploring Alveus, getting to know many of our ambassadors at the sanctuary and learning about their conservation missions.",
         ],
+        link: {
+          text: "Watch the collaboration",
+          href: "/collaborations#jack-manifold",
+        },
       },
       {
         key: "falcon-aviary",
         date: "2022-09", // https://youtu.be/Gat85y-RGBo?t=11592 + https://youtu.be/gbTYxTTHK30
         content: [
           "Falcon/Crow Aviary constructed",
-          "Originally build for Orion, Alveus' falcon, prior to his passing. Re-purposed as the new crow aviary.",
+          "Originally built for Orion, Alveus' falcon, prior to his passing. Re-purposed as the new crow aviary.",
           "A two-part enclosure with a sheltered indoor area and a wire-mesh outdoor area, built for a total of $15,000 USD.",
-          "Sponsored by Oni Studios, and Merck X.",
+          "Sponsored by Oni Studios, and Merkx.",
         ],
       },
     ],
@@ -241,7 +267,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
   {
     key: "tour-part-2",
     cta: (
-      <div className="flex flex-wrap-reverse items-center gap-y-8">
+      <div className="flex flex-wrap-reverse items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
           <Lightbox>
             {({ Trigger }) => (
@@ -257,7 +283,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
             Alveus Tour Part 2
           </Heading>
 
-          <p className="text-lg">
+          <p className="mt-4 text-lg">
             Watch the video and join Maya for a tour around more of Alveus,
             exploring the training center, the studio, the reptile room and
             critter cave, the nutrition house, crow aviary and the new fox
@@ -293,11 +319,45 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           "Summer Camp and first merch drop",
           "Alveus hosted a 24-hour long charity stream from the training center, accompanied by our first limited-time merch drop to raise funds for the sanctuary.",
         ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#summer-camp-2023",
+        },
       },
       // TODO: Lindsay joins
     ],
   },
 ];
+
+const transformHistoryItem = (item: HistoryItem) => ({
+  key: item.key,
+  date: formatPartialDateString(item.date),
+  content: (
+    <>
+      <p className="font-serif text-lg font-bold">{item.content[0]}</p>
+      {item.content.slice(1).map((paragraph, idx) => (
+        <p key={idx} className="mt-2">
+          {paragraph}
+        </p>
+      ))}
+      {item.link && (
+        <p className="mt-2">
+          <Link
+            external={!item.link.href.startsWith("/")}
+            href={item.link.href}
+            dark
+            className="flex items-center"
+          >
+            {item.link.text}
+            {item.link.href.startsWith("/") && (
+              <IconArrowRight size={16} className="ml-1 mt-0.5" />
+            )}
+          </Link>
+        </p>
+      )}
+    </>
+  ),
+});
 
 const AboutAlveusPage: NextPage = () => {
   return (
@@ -453,20 +513,7 @@ const AboutAlveusPage: NextPage = () => {
 
           <Timeline
             after={"cta" in (history[1] || {}) ? "-bottom-20" : undefined}
-            items={history[0].items.map(({ key, date, content }) => ({
-              key,
-              date: formatPartialDateString(date),
-              content: (
-                <>
-                  <p className="text-lg">{content[0]}</p>
-                  {content.slice(1).map((paragraph, idx) => (
-                    <p key={idx} className="mt-2">
-                      {paragraph}
-                    </p>
-                  ))}
-                </>
-              ),
-            }))}
+            items={history[0].items.map(transformHistoryItem)}
           />
         </Section>
       </div>
@@ -479,20 +526,7 @@ const AboutAlveusPage: NextPage = () => {
               after={
                 "cta" in (history[idx + 2] || {}) ? "-bottom-20" : undefined
               }
-              items={section.items.map(({ key, date, content }) => ({
-                key,
-                date: formatPartialDateString(date),
-                content: (
-                  <>
-                    <p className="text-lg">{content[0]}</p>
-                    {content.slice(1).map((paragraph, idx) => (
-                      <p key={idx} className="mt-2">
-                        {paragraph}
-                      </p>
-                    ))}
-                  </>
-                ),
-              }))}
+              items={section.items.map(transformHistoryItem)}
             />
           </Section>
         ) : (
