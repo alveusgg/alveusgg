@@ -271,8 +271,8 @@ const config = {
               "https://streamable.com/",
               // Prezi embeds:
               "https://prezi.com/",
-              // The Giving Block (crypto donations):
-              "https://tgbwidget.com/",
+              // The Giving Block (donation widget):
+              "https://widget.thegivingblock.com/",
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
             ]
