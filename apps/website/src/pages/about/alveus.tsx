@@ -53,97 +53,227 @@ const stats = {
   },
 };
 
-const history: {
+type HistoryCTA = { key: string; cta: React.ReactNode };
+type HistoryItem = {
   key: string;
   date: PartialDateString;
   content: [string, ...string[]];
-}[] = [
+};
+type HistoryItems = { key: string; items: HistoryItem[] };
+
+const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
   {
-    key: "founding",
-    date: "2021-02",
-    content: [
-      "Alveus Sanctuary was founded by Maya",
-      "A 15-acre property in Texas was purchased on which Alveus would be built.",
+    key: "initial-construction",
+    items: [
+      {
+        key: "idea",
+        date: "2020-12", // https://youtu.be/7DvtjAqmWl8?t=138
+        content: ["Initial idea + 3-5 year plan"],
+      },
+      {
+        key: "founding",
+        date: "2021-02-10",
+        content: [
+          "Alveus Sanctuary was founded by Maya",
+          "A 15-acre property in Texas was purchased on which Alveus would be built.",
+          "Ella joined the team from the start to handle animal care duties.",
+        ],
+      },
+      {
+        key: "fund-a-thon",
+        date: "2021-02",
+        content: [
+          "Fund-a-thon charity stream",
+          "Over $573,000 USD raised through donations during the 20-hour long livestream to kick-start the sanctuary.",
+        ],
+      },
+      {
+        key: "fencing-pasture",
+        date: "2021-05", // https://youtu.be/pTnYmPKDaF8?t=2373 + https://youtu.be/QPsbX1HefRk?t=1230
+        content: [
+          "Fencing and pasture installed",
+          "A total of 4,000 linear feet of predator-proof fencing was installed around the property for a cost of $72,000 USD.",
+        ],
+      },
+      {
+        key: "parrot-aviary",
+        date: "2021-06", // https://youtu.be/rSaWp3pEvFE?t=5729
+        content: [
+          "Parrot Aviary constructed",
+          "A 20ft by 20ft wire-mesh enclosure at a cost of $52,000 USD, plus an addon with enclosed rooms for the parrots to shelter in at a further cost of $7,000 USD.",
+          "Sponsored by Michele Raffin (previous owner of the parrots), and flimflam.",
+        ],
+      },
+      {
+        key: "crow-aviary",
+        date: "2021-07", // https://youtu.be/BgtVRjQC0Vk?t=917
+        content: [
+          "Crow Aviary constructed",
+          "A wire-mesh enclosure, built for a total of $8,000 USD.",
+          "Sponsored by PointCrow.",
+        ],
+      },
+      {
+        key: "chicken-coop",
+        date: "2021-08", // https://youtu.be/W05oJEwNI_s?t=810
+        content: [
+          "Chicken Coop constructed",
+          "A 10ft by 20ft wire-mesh enclosure, with a 6ft by 6ft indoor area, built for a total of $8,000 USD.",
+        ],
+      },
     ],
   },
   {
-    key: "fund-a-thon",
-    date: "2021-02",
-    content: [
-      "Fund-a-thon charity stream",
-      "Over $573,000 USD raised through donations during the 20-hour long livestream to kick-start the sanctuary.",
+    key: "tour-part-1",
+    cta: (
+      <div className="flex flex-wrap items-center gap-y-8">
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Heading id="tour-part-1" level={2} className="italic">
+            Alveus Tour Part 1
+          </Heading>
+
+          <p className="text-lg">
+            Watch the video and join Maya for a tour of Alveus, exploring the
+            parrot aviary, the chicken coop, and the pasture. Meet some of our
+            ambassadors and learn about their stories.
+          </p>
+        </div>
+
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Lightbox>
+            {({ Trigger }) => (
+              <Trigger videoId="4_ZrMe_6-CU">
+                <Preview videoId="4_ZrMe_6-CU" />
+              </Trigger>
+            )}
+          </Lightbox>
+        </div>
+      </div>
+    ),
+  },
+  {
+    key: "expanding-the-team",
+    items: [
+      {
+        key: "training-center",
+        date: "2021-08", // https://youtu.be/i0DbJjU41eM?t=1409
+        content: [
+          "Training Center constructed",
+          "A large wire-mesh building with grass inside, allowing for training and enrichment activities as well as hosting content collaborations, built for a total of $135,000 USD.",
+        ],
+      },
+      {
+        key: "first-studio-stream",
+        date: "2021-08-16",
+        content: [
+          "First stream from the studio",
+          "Animal Quest Episode 1: Chicken Edition was the first official stream hosted from the Alveus studio.",
+        ],
+      },
+      {
+        key: "kayla-connor",
+        date: "2021-10", // https://youtu.be/7DvtjAqmWl8?t=145
+        content: [
+          "Kayla and Connor join the team",
+          "Kayla joins Alveus as the Animal Care & Training Manager, and Connor joins as the Operations Manager.",
+        ],
+      },
+      {
+        key: "halloween-fundraiser",
+        date: "2021-10-31",
+        content: [
+          "Halloween fundraiser stream",
+          "Over $101,000 USD raised through donations during the live event at Alveus, with 34 creators from the industry joining us.",
+        ],
+      },
+      {
+        key: "fox-enclosure",
+        date: "2022-01", // https://youtu.be/DN8apMfuNCY?t=19152 + https://youtu.be/Bu0HVHcMc_M?t=6822
+        content: [
+          "Fox enclosure constructed",
+          "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, built for a total of $48,000 USD.",
+          "Sponsored by QTCinderalla and her community.",
+        ],
+      },
+      {
+        key: "first-collab-stream",
+        date: "2022-04-22",
+        content: [
+          "First educational collaboration stream",
+          "Jack Manifold and his community joined us at Alveus for a stream exploring Alveus, getting to know many of our ambassadors at the sanctuary and learning about their conservation missions.",
+        ],
+      },
+      {
+        key: "falcon-aviary",
+        date: "2022-09", // https://youtu.be/Gat85y-RGBo?t=11592 + https://youtu.be/gbTYxTTHK30
+        content: [
+          "Falcon/Crow Aviary constructed",
+          "Originally build for Orion, Alveus' falcon, prior to his passing. Re-purposed as the new crow aviary.",
+          "A two-part enclosure with a sheltered indoor area and a wire-mesh outdoor area, built for a total of $15,000 USD.",
+          "Sponsored by Oni Studios, and Merck X.",
+        ],
+      },
     ],
   },
   {
-    key: "pasture-fencing",
-    date: "2021", // TODO: Confirm date
-    content: [
-      "Pasture and fencing installed",
-      "A total of 4,000 linear feet of predator-proof fencing was installed around the property for a cost of $72,000 USD.",
-    ],
+    key: "tour-part-2",
+    cta: (
+      <div className="flex flex-wrap-reverse items-center gap-y-8">
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Lightbox>
+            {({ Trigger }) => (
+              <Trigger videoId="_PRVsl9Nxok">
+                <Preview videoId="_PRVsl9Nxok" />
+              </Trigger>
+            )}
+          </Lightbox>
+        </div>
+
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Heading id="tour-part-2" level={2} className="italic">
+            Alveus Tour Part 2
+          </Heading>
+
+          <p className="text-lg">
+            Watch the video and join Maya for a tour around more of Alveus,
+            exploring the training center, the studio, the reptile room and
+            critter cave, the nutrition house, crow aviary and the new fox
+            enclosure.
+          </p>
+        </div>
+      </div>
+    ),
   },
   {
-    key: "parrot-aviary",
-    date: "2021-04",
-    content: [
-      "Parrot Aviary constructed",
-      "A 20ft by 20ft wire-mesh enclosure at a cost of $52,000 USD, plus an addon with enclosed rooms for the parrots to shelter in at a further cost of $7,000 USD.",
-      "Sponsored by Michele Raffin (previous owner of the parrots), and flimflam.",
+    key: "24-7-streams-and-beyond",
+    items: [
+      {
+        key: "24-7-streams",
+        date: "2022-11-16",
+        content: [
+          "24/7 live-cam streams started",
+          "Alveus started streaming 24/7 on Twitch with live cams of many of our ambassadors.",
+        ],
+      },
+      {
+        key: "marmoset-enclosure",
+        date: "2023-06", // https://youtu.be/3LV02t0ZWR8?t=820
+        content: [
+          "Marmoset enclosure retro-fitted",
+          "The original crow aviary was retro-fitted to house marmosets, with a new indoor area added to the rear.",
+        ],
+      },
+      {
+        key: "summer-camp",
+        date: "2023-07-21",
+        content: [
+          "Summer Camp and first merch drop",
+          "Alveus hosted a 24-hour long charity stream from the training center, accompanied by our first limited-time merch drop to raise funds for the sanctuary.",
+        ],
+      },
+      // TODO: Lindsay joins
     ],
   },
-  {
-    key: "crow-aviary",
-    date: "2021", // TODO: Confirm date
-    content: [
-      "Crow Aviary constructed",
-      "A wire-mesh enclosure, built for a total of $8,000 USD.",
-      "Sponsored by PointCrow.",
-    ],
-  },
-  {
-    key: "training-center",
-    date: "2021", // TODO: Confirm date
-    content: [
-      "Training Center constructed",
-      "A large wire-mesh building with grass inside, allowing for training and enrichment activities as well as hosting content collaborations, built for a total of $135,000 USD.",
-    ],
-  },
-  {
-    key: "fox-enclosure",
-    date: "2022-01",
-    content: [
-      "Fox enclosure constructed",
-      "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, built for a total of $48,000 USD.",
-      "Sponsored by QTCinderalla.",
-    ],
-  },
-  {
-    key: "chicken-coop",
-    date: "2022-05",
-    content: [
-      "Chicken Coop constructed",
-      "A 10ft by 20ft wire-mesh enclosure, with a 6ft by 6ft indoor area, built for a total of $8,000 USD.",
-    ],
-  },
-  {
-    key: "falcon-aviary",
-    date: "2023-01",
-    content: [
-      "Falcon/Crow Aviary constructed",
-      "Originally build for Orion, Alveus' falcon, prior to his passing. Re-purposed as the new crow aviary.",
-      "A two-part enclosure with a sheltered indoor area and a wire-mesh outdoor area, built for a total of $15,000 USD.",
-      "Sponsored by Oni Studios, and Merck X.",
-    ],
-  },
-  {
-    key: "marmoset-enclosure",
-    date: "2023-06",
-    content: [
-      "Marmoset enclosure retro-fitted",
-      "The original crow aviary was retro-fitted to house marmosets, with a new indoor area added to the rear.",
-    ],
-  },
-  // TODO: Add key fundraising milestones
 ];
 
 const AboutAlveusPage: NextPage = () => {
@@ -273,13 +403,14 @@ const AboutAlveusPage: NextPage = () => {
           <Heading
             id="history"
             level={2}
-            className="text-center text-5xl text-alveus-green"
+            className="mb-16 text-center text-5xl text-alveus-green"
           >
             Alveus&apos; History
           </Heading>
 
           <Timeline
-            items={history.map(({ key, date, content }) => ({
+            after={"cta" in (history[1] || {}) ? "-bottom-20" : undefined}
+            items={history[0].items.map(({ key, date, content }) => ({
               key,
               date: formatPartialDateString(date),
               content: (
@@ -294,13 +425,41 @@ const AboutAlveusPage: NextPage = () => {
               ),
             }))}
           />
-
-          {/* TODO: Embed tour videos? Maybe split the timeline into parts? */}
-          {/* TODO: Link to the events page from fundraising items? */}
         </Section>
       </div>
 
-      {/* TODO: CTA slice for ambassadors */}
+      {history.slice(1).map((section, idx) =>
+        "items" in section ? (
+          <Section key={section.key}>
+            <Timeline
+              before={"cta" in (history[idx] || {}) ? "-top-20" : undefined}
+              after={
+                "cta" in (history[idx + 2] || {}) ? "-bottom-20" : undefined
+              }
+              items={section.items.map(({ key, date, content }) => ({
+                key,
+                date: formatPartialDateString(date),
+                content: (
+                  <>
+                    <p className="text-lg">{content[0]}</p>
+                    {content.slice(1).map((paragraph, idx) => (
+                      <p key={idx} className="mt-2">
+                        {paragraph}
+                      </p>
+                    ))}
+                  </>
+                ),
+              }))}
+            />
+          </Section>
+        ) : (
+          <Section key={section.key} dark>
+            {section.cta}
+          </Section>
+        )
+      )}
+
+      {/* TODO: CTA slice for ambassadors? */}
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex flex-grow flex-col">

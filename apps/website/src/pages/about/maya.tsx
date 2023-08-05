@@ -197,7 +197,10 @@ const AboutMayaPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          <Heading level={2} className="text-center text-5xl text-alveus-green">
+          <Heading
+            level={2}
+            className="mb-16 text-center text-5xl text-alveus-green"
+          >
             Maya&apos;s Experience
           </Heading>
 

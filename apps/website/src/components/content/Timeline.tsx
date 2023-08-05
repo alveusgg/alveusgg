@@ -2,17 +2,27 @@ import React from "react";
 
 import IconCalendar from "@/icons/IconCalendar";
 
+import { classes } from "@/utils/classes";
+
 type TimelineProps = {
   items: {
     key: string;
     date: string;
     content: React.ReactNode;
   }[];
+  before?: string;
+  after?: string;
 };
 
-const Timeline: React.FC<TimelineProps> = ({ items }) => (
-  <div className="relative z-0 mx-auto mt-16 max-w-6xl">
-    <div className="absolute left-5 -z-10 h-full w-1 -translate-x-1/2 bg-alveus-green md:left-1/2" />
+const Timeline: React.FC<TimelineProps> = ({ items, before, after }) => (
+  <div className="relative z-0 mx-auto max-w-6xl">
+    <div
+      className={classes(
+        "absolute left-5 -z-10 w-1 -translate-x-1/2 bg-alveus-green md:left-1/2",
+        before || "top-0",
+        after || "bottom-0"
+      )}
+    />
     <ol>
       {items.map((item, idx) => (
         <li key={item.key} className="relative my-4 flex items-start">

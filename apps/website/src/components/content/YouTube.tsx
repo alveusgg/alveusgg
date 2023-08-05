@@ -21,7 +21,7 @@ import IconYouTube from "@/icons/IconYouTube";
 const iframeSrc = (id: string) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
     id
-  )}?modestbranding=1`;
+  )}?modestbranding=1&rel=0`;
 
 const iframeAttrs: HTMLAttributes = {
   title: "YouTube video",
