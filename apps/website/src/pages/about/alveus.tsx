@@ -375,28 +375,57 @@ const AboutAlveusPage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="flex w-full flex-col gap-4 pb-16 pt-4 md:w-2/5 md:py-24">
+        <div className="flex basis-full flex-col gap-4 pb-16 pt-4 md:basis-1/2 md:py-24">
           <Heading className="my-0">About Alveus Sanctuary</Heading>
+
           <p className="text-lg">
             Alveus is a nonprofit organization founded by Maya Higa that
             functions as an exotic animal sanctuary and as a virtual education
             center facility to provide permanent homes to non-releasable exotic
             animals.
           </p>
+
           <p className="text-lg">
-            Watch the video to learn more about why Maya founded Alveus, and the
-            mission of the organization.
+            We aim to spread conservation awareness and education to the next
+            generation through harnessing the power of online platforms, such as
+            Twitch, YouTube, Instagram and TikTok. We are committed to
+            delivering high-quality, curated and well-researched educational
+            content that tells a story, through series such as Animal Quest, and
+            through collaborations with other creators.
+          </p>
+
+          <p className="text-lg">
+            Viewers can also follow along with our ambassadors and their daily
+            lives at the sanctuary, fostering a deeper connection between our
+            audience, the ambassadors, and the species they represent, while
+            learning about the conservation stories for each of them. Each
+            ambassador at Alveus is chosen with a purpose, being representatives
+            of their species with unique stories to be told about conservation
+            or consumer choice.
+          </p>
+
+          <p className="text-lg">
+            Our goal is to inspire online audiences across the world to get
+            involved with conservation efforts. We hope to create more awareness
+            for the diverse planet we live on, and to encourage people to take
+            action to protect it, with every individual being able to make a
+            difference.
           </p>
         </div>
 
-        <div className="w-full max-w-2xl p-4 pt-8 md:mx-0 md:w-3/5 md:pt-4">
+        <div className="max-w-2xl basis-full p-4 pt-8 md:mx-0 md:basis-1/2 md:pt-4">
           <Lightbox>
             {({ Trigger }) => (
               <Trigger videoId="jXTqWIc--jo">
                 <Preview videoId="jXTqWIc--jo" />
+
                 <Heading level={2} className="text-center">
                   Announcing Alveus
                 </Heading>
+
+                <p className="text-center italic">
+                  Watch the video to learn more about why Maya founded Alveus.
+                </p>
               </Trigger>
             )}
           </Lightbox>
@@ -414,10 +443,16 @@ const AboutAlveusPage: NextPage = () => {
           <Heading id="twitch" level={2} link>
             Why Twitch.tv
           </Heading>
-          <p className="mx-auto max-w-2xl">
-            Twitch offers our guests the opportunity to connect with viewers
-            from around the globe, and allows us to target a demographic that is
-            otherwise far less likely to be exposed to conservation education.
+
+          <p className="mx-auto max-w-3xl">
+            Twitch offers Alveus and our guests the opportunity to connect with
+            online viewers from around the globe. Through educational content
+            collaborations with other creators, and with our own streams, we can
+            maximize the number of people we can reach who may otherwise not be
+            exposed to conservation efforts and stories.
+          </p>
+
+          <p className="mt-4">
             We see Twitch as an untapped reservoir for doing good.
           </p>
 
