@@ -364,7 +364,7 @@ const AboutAlveusPage: NextPage = () => {
     <>
       <Meta
         title="About Alveus"
-        description="Alveus is a non profit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a virtual education center facility to provide permanent homes to non-releasable exotic animals."
+        description="Alveus is a nonprofit organization founded by Maya Higa that functions as an exotic animal sanctuary and as a virtual education center facility to provide permanent homes to non-releasable exotic animals."
       />
 
       {/* Nav background */}
@@ -378,7 +378,7 @@ const AboutAlveusPage: NextPage = () => {
         <div className="flex w-full flex-col gap-4 pb-16 pt-4 md:w-2/5 md:py-24">
           <Heading className="my-0">About Alveus Sanctuary</Heading>
           <p className="text-lg">
-            Alveus is a non profit organization founded by Maya Higa that
+            Alveus is a nonprofit organization founded by Maya Higa that
             functions as an exotic animal sanctuary and as a virtual education
             center facility to provide permanent homes to non-releasable exotic
             animals.
