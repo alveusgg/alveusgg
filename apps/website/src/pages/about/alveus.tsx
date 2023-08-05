@@ -97,7 +97,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       {
         key: "idea",
         date: "2020-12", // https://youtu.be/7DvtjAqmWl8?t=138
-        content: ["Initial idea + 3-5 year plan writen"],
+        content: ["Initial idea + 3-5 year plan written"],
       },
       {
         key: "founding",
