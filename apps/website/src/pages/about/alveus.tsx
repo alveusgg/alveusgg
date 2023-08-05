@@ -411,7 +411,7 @@ const AboutAlveusPage: NextPage = () => {
         />
 
         <Section className="text-center">
-          <Heading id="twitch" level={2}>
+          <Heading id="twitch" level={2} link>
             Why Twitch.tv
           </Heading>
           <p className="mx-auto max-w-2xl">
@@ -437,13 +437,17 @@ const AboutAlveusPage: NextPage = () => {
                     </p>
                     <p className="text-center">
                       {stat.caption}{" "}
-                      <span className="align-super text-xs">
+                      <Link
+                        href="#twitch-sources"
+                        custom
+                        className="align-super text-xs transition-colors hover:text-red-300 hover:underline"
+                      >
                         [
                         {Object.keys(sources).findIndex(
                           (source) => source === stat.source
                         ) + 1}
                         ]
-                      </span>
+                      </Link>
                     </p>
                   </div>
                 </div>
@@ -451,7 +455,7 @@ const AboutAlveusPage: NextPage = () => {
             ))}
           </ul>
 
-          <ul className="mt-8 text-left text-xs opacity-75">
+          <ul className="mt-8 text-left text-xs opacity-75" id="twitch-sources">
             {Object.values(sources).map((source, idx) => (
               <li key={idx} className="mb-1">
                 [{idx + 1}]{" "}
@@ -475,7 +479,7 @@ const AboutAlveusPage: NextPage = () => {
           </div>
 
           <div className="basis-full md:basis-1/2 md:px-4">
-            <Heading id="maya" level={2} className="italic">
+            <Heading id="maya" level={2} className="italic" link>
               Maya Higa founded Alveus in February 2021
             </Heading>
             <p>
@@ -507,6 +511,7 @@ const AboutAlveusPage: NextPage = () => {
             id="history"
             level={2}
             className="mb-16 text-center text-5xl text-alveus-green"
+            link
           >
             Alveus&apos; History
           </Heading>
@@ -552,7 +557,7 @@ const AboutAlveusPage: NextPage = () => {
           containerClassName="flex flex-col-reverse md:flex-row-reverse gap-4 md:gap-10"
         >
           <div>
-            <Heading id="seal" level={2}>
+            <Heading id="transparency" level={2} link>
               Gold rated transparency
             </Heading>
 
