@@ -8,6 +8,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Consent from "@/components/Consent";
+import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
@@ -109,12 +110,7 @@ const DonatePage: NextPage = () => {
           {!consent.givingBlock && <DonateItem link={givingBlock} />}
 
           <Consent item="donation widget" consent="givingBlock">
-            <iframe
-              src="https://tgbwidget.com/?charityID=861772907"
-              width="100%"
-              height="604px"
-              frameBorder="0"
-            />
+            <TheGivingBlockEmbed />
           </Consent>
         </div>
       </Section>
