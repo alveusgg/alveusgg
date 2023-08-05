@@ -18,40 +18,63 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import imageGuidestarSeal from "@/assets/guidestar-candid-gold-seal.svg";
 
-// TODO: Review/update these stats (maybe bring in geo-related stats from previous page)
-const stats = {
-  averageTime: {
-    source: "https://influencermarketinghub.com/twitch-statistics/",
-    title: "Average User Time Spent on Twitch.tv",
+const sources = {
+  twitchAdvertising: {
+    text: "Twitch Advertising, Audience. August 2023",
+    link: "https://twitchadvertising.tv/audience/",
+  },
+  influencerMarketingHub: {
+    text: "Influencer Marketing Hub, Twitch Statistics. August 2023",
+    link: "https://influencermarketinghub.com/twitch-stats/",
+  },
+  semrush: {
+    text: "Semrush, Twitch.tv. June 2023",
+    link: "https://www.semrush.com/website/twitch.tv/overview/",
+  },
+} as const;
+
+type Stat = {
+  source: keyof typeof sources;
+  title: string;
+  value: string;
+  caption: string;
+};
+
+const stats: Record<string, Stat> = {
+  dailyViewers: {
+    source: "twitchAdvertising",
+    title: "Twitch's Daily Viewers",
+    value: "35 Million",
+    caption:
+      "Each day, an average of 35 million visitors tune in to a Twitch stream.",
+  },
+  viewerAge: {
+    source: "twitchAdvertising",
+    title: "Viewers Aged 18 to 34",
+    value: "> 70%",
+    caption: "On Twitch, over 70% of the viewers are aged between 18 and 34.",
+  },
+  watchTime: {
+    source: "influencerMarketingHub",
+    title: "Average Daily Watch Time",
     value: "95 Minutes",
     caption:
-      "On average Twitch users spend 95 minutes per day on the platform.",
+      "The average user spends 95 minutes each day watching live streams on Twitch.",
   },
   sitePopularity: {
-    source: "https://www.alexa.com/topsites",
-    title: "Site Popularity",
+    source: "semrush",
+    title: "Global Site Popularity",
     value: "35th",
-    caption: "Twitch.tv is the 35th most popular website online.",
-  },
-  dailyViewers: {
-    source: "https://muchneeded.com/twitch-statistics/",
-    title: "Twitch's Daily Viewers",
-    value: "15 Million",
-    caption: "Twitch garners on average 15 million daily viewers.",
-  },
-  millennialUsers: {
-    source: "https://muchneeded.com/twitch-statistics/",
-    title: "Millennial Twitch Users",
-    value: "71%",
-    caption: "Millennials account for 71% of Twitch users.",
+    caption: "Worldwide, Twitch.tv is the 35th most popular website online.",
   },
   marketShare: {
-    source: "https://www.similarweb.com/website/twitch.tv#overview",
+    source: "semrush",
     title: "U.S Market Share on Twitch",
-    value: "20%",
-    caption: "The United States accounts for 20% of Twitch's market share.",
+    value: "> 20%",
+    caption:
+      "The United States accounts for over 20% of Twitch's market share.",
   },
-};
+} as const;
 
 type HistoryCTA = { key: string; cta: React.ReactNode };
 type HistoryItem = {
@@ -128,7 +151,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     cta: (
       <div className="flex flex-wrap items-center gap-y-8">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-1" level={2} className="italic">
+          <Heading id="tour-part-1" level={3} className="italic">
             Alveus Tour Part 1
           </Heading>
 
@@ -230,7 +253,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-2" level={2} className="italic">
+          <Heading id="tour-part-2" level={3} className="italic">
             Alveus Tour Part 2
           </Heading>
 
@@ -340,24 +363,44 @@ const AboutAlveusPage: NextPage = () => {
 
           <ul className="mb-2 mt-6 flex flex-wrap justify-center md:mt-12">
             {Object.entries(stats).map(([key, stat]) => (
-              <li key={key} className="basis-full py-4 md:basis-1/3 md:px-4">
-                <Link
-                  href={stat.source}
-                  className="flex h-full flex-col justify-center rounded-2xl bg-alveus-green px-6 py-6 text-alveus-tan shadow-lg transition-shadow hover:shadow-xl"
-                  external
-                  custom
-                >
-                  <p className="text-center text-xl font-bold">{stat.title}</p>
-                  <p className="my-4 text-center text-3xl font-extrabold">
-                    {stat.value}
-                  </p>
-                  <p className="text-center">{stat.caption}</p>
-                </Link>
+              <li
+                key={key}
+                className="basis-full py-4 md:basis-1/2 md:px-4 xl:basis-1/3"
+              >
+                <div className="flex h-full flex-col justify-center rounded-2xl bg-alveus-green px-6 py-6 text-alveus-tan shadow-lg transition-shadow hover:shadow-xl">
+                  <div className="mx-auto max-w-xs">
+                    <p className="text-center text-xl font-bold">
+                      {stat.title}
+                    </p>
+                    <p className="my-4 text-center text-3xl font-extrabold">
+                      {stat.value}
+                    </p>
+                    <p className="text-center">
+                      {stat.caption}{" "}
+                      <span className="align-super text-xs">
+                        [
+                        {Object.keys(sources).findIndex(
+                          (source) => source === stat.source
+                        ) + 1}
+                        ]
+                      </span>
+                    </p>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
 
-          <p>Click each box for source.</p>
+          <ul className="mt-8 text-left text-xs opacity-75">
+            {Object.values(sources).map((source, idx) => (
+              <li key={idx} className="mb-1">
+                [{idx + 1}]{" "}
+                <Link external href={source.link}>
+                  {source.text}
+                </Link>
+              </li>
+            ))}
+          </ul>
         </Section>
       </div>
 
