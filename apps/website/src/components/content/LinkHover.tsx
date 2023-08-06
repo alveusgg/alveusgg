@@ -32,7 +32,7 @@ const LinkHover: React.FC<LinkHoverProps> = ({
 
   useEffect(() => {
     return () => clearTimeout(delay);
-  }, []);
+  }, [delay]);
 
   const onEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     setLinkPosition(e.currentTarget.getBoundingClientRect());
