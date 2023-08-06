@@ -26,10 +26,10 @@ const Socials: React.FC = () => {
   const reducedMotion = usePrefersReducedMotion();
 
   return (
-    <Section dark className="z-0 pb-0">
-      <div className="flex flex-wrap-reverse items-center">
-        <div className="basis-full md:basis-1/2 md:pr-8 md:pt-0">
-          <div className="relative mx-auto aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden lg:-mt-10">
+    <Section dark className="z-0 py-0">
+      <div className="flex flex-wrap-reverse gap-y-4 pt-8">
+        <div className="mt-auto basis-full md:basis-1/2 md:pr-8">
+          <div className="relative mx-auto aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden">
             <Link
               href="https://www.instagram.com/p/CoIq_hvOxiQ/"
               rel="noreferrer"
@@ -75,7 +75,7 @@ const Socials: React.FC = () => {
           </div>
         </div>
 
-        <div className="basis-full pb-16 md:basis-1/2 md:py-4">
+        <div className="my-auto basis-full py-4 md:basis-1/2">
           <Heading level={2}>Stay Updated!</Heading>
 
           <p className="mb-2 mt-4">
