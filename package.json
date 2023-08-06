@@ -19,15 +19,11 @@
   },
   "packageManager": "pnpm@8.6.0",
   "devDependencies": {
-    "@types/linkify-it": "^3.0.2",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "prettier": "^2.8.8"
   },
   "scripts": {
     "prepare": "husky install"
-  },
-  "dependencies": {
-    "linkify-it": "^4.0.1"
   }
 }
