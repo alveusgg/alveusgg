@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -203,6 +209,22 @@ const Carousel: React.FC<CarouselProps> = ({
     return () => clearInterval(interval);
   }, [auto, paused, move, reducedMotion]);
 
+  const childrenToRender = useMemo(
+    () =>
+      Object.entries(items).map(([key, item]) => {
+        return (
+          <div
+            key={key}
+            className={`${itemClassName} flex-shrink-0 snap-start`}
+            draggable={false}
+          >
+            {item}
+          </div>
+        );
+      }),
+    [items]
+  );
+
   return (
     <div id={id} className={classes("flex flex-nowrap", className)}>
       <button
@@ -234,15 +256,7 @@ const Carousel: React.FC<CarouselProps> = ({
         onScroll={scrolled}
         onMouseDown={state === "none" ? undefined : drag}
       >
-        {Object.entries(items).map(([key, item]) => (
-          <div
-            key={key}
-            className={`${itemClassName} flex-shrink-0 snap-start`}
-            draggable={false}
-          >
-            {item}
-          </div>
-        ))}
+        {childrenToRender}
       </div>
 
       <button
