@@ -29,7 +29,7 @@ const Socials: React.FC = () => {
     <Section dark className="z-0 pb-0">
       <div className="flex flex-wrap-reverse items-center">
         <div className="basis-full md:basis-1/2 md:pr-8 md:pt-0">
-          <div className="relative mx-auto aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden md:-mt-10">
+          <div className="relative mx-auto aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden lg:-mt-10">
             <Link
               href="https://www.instagram.com/p/CoIq_hvOxiQ/"
               rel="noreferrer"
