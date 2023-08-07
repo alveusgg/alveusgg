@@ -242,7 +242,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       },
       {
         key: "first-collab-stream",
-        date: "2022-04-22",
+        date: "2022-04-21",
         content: [
           "First educational collaboration stream",
           "Jack Manifold and his community joined us at Alveus for a stream exploring Alveus, getting to know many of our ambassadors at the sanctuary and learning about their conservation missions.",
@@ -250,6 +250,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         link: {
           text: "Watch the collaboration",
           href: "/collaborations#jack-manifold",
+        },
+      },
+      {
+        key: "art-auction",
+        date: "2022-04",
+        content: [
+          "Art Auction fundraiser",
+          "Livestream viewers donated over $42,000 USD for signed prints and artwork produced by the ambassadors at Alveus.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#art-auction-2022",
         },
       },
       {
@@ -303,6 +315,30 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           "24/7 live-cam streams started",
           "Alveus started streaming 24/7 on Twitch with live cams of many of our ambassadors.",
         ],
+      },
+      {
+        key: "valentines-day",
+        date: "2023-02",
+        content: [
+          "Valentine's Day fundraiser",
+          "Over $40,000 USD was donated by viewers of the livestream event, with hand-crafted plushies being sent to 24 donors.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#valentines-2023",
+        },
+      },
+      {
+        key: "art-auction",
+        date: "2023-04",
+        content: [
+          "Art Auction fundraiser",
+          "Over 30 pieces of artwork produced by our ambassadors, and over 250 signed prints, were donated for during the event, raising over $63,000 USD.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#art-auction-2023",
+        },
       },
       {
         key: "marmoset-enclosure",
