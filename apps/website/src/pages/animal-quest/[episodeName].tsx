@@ -168,6 +168,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
             className="group text-center transition-colors hover:text-alveus-green-900"
+            custom
           >
             <Image
               src={images[0].src}
