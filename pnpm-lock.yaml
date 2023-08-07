@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -28,7 +28,7 @@ importers:
     dependencies:
       '@alveusgg/data':
         specifier: github:alveusgg/data
-        version: github.com/alveusgg/data/4147f0894285d06823a629ba7fd5c520d847b62d
+        version: github.com/alveusgg/data/29346f8fc70878272d4c01d0143c29bd7dcc20d2
       '@aws-sdk/client-s3':
         specifier: ^3.348.0
         version: 3.348.0
@@ -101,6 +101,9 @@ importers:
       just-debounce-it:
         specifier: ^3.2.0
         version: 3.2.0
+      linkify-it:
+        specifier: ^4.0.1
+        version: 4.0.1
       luxon:
         specifier: ^3.3.0
         version: 3.3.0
@@ -201,6 +204,9 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.1
         version: 21.1.1
+      '@types/linkify-it':
+        specifier: ^3.0.2
+        version: 3.0.2
       '@types/lodash':
         specifier: ^4.14.195
         version: 4.14.195
@@ -3886,6 +3892,10 @@ packages:
     resolution: {integrity: sha512-dRLjCWHYg4oaA77cxO64oO+7JwCwnIzkZPdrrC71jQmQtlhM556pwKo5bUzqvZndkVbeFLIIi+9TC40JNF5hNQ==}
     dev: true
 
+  /@types/linkify-it@3.0.2:
+    resolution: {integrity: sha512-HZQYqbiFVWufzCwexrvh694SOim8z2d+xJl5UNamcvQFejLY/2YUtzXHYi3cHdI7PMlS8ejH2slRAOJQ32aNbA==}
+    dev: true
+
   /@types/lodash@4.14.195:
     resolution: {integrity: sha512-Hwx9EUgdwf2GLarOjQp5ZH8ZmblzcbTBC2wtQWNKARBSxM9ezRIAUpeDTgoQRAFB0+8CNWXVA9+MaSOzOF3nPg==}
     dev: true
@@ -6649,6 +6659,12 @@ packages:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
     dev: true
 
+  /linkify-it@4.0.1:
+    resolution: {integrity: sha512-C7bfi1UZmoj8+PQx22XyeXCuBlokoyWQL5pWSP+EI6nzRylyThouddufc2c1NDIcP9k5agmN9fLpA7VNJfIiqw==}
+    dependencies:
+      uc.micro: 1.0.6
+    dev: false
+
   /lint-staged@13.2.2:
     resolution: {integrity: sha512-71gSwXKy649VrSU09s10uAT0rWCcY3aewhMaHyl2N84oBk4Xs9HgxvUp3AYu+bNsK4NrOYYxvSgg7FyGJ+jGcA==}
     engines: {node: ^14.13.1 || >=16.0.0}
@@ -9191,6 +9207,10 @@ packages:
     engines: {node: '>=14.17'}
     hasBin: true
 
+  /uc.micro@1.0.6:
+    resolution: {integrity: sha512-8Y75pvTYkLJW2hWQHXxoqRgV7qb9B+9vFEtidML+7koHUFapnVJAZ6cKs+Qjz5Aw3aZWHMC6u0wJE3At+nSGwA==}
+    dev: false
+
   /ufo@1.1.2:
     resolution: {integrity: sha512-TrY6DsjTQQgyS3E3dBaOXf0TpPD8u9FVrVYmKVegJuFw51n/YB9XPt+U6ydzFG5ZIN7+DIjPbNmXoBj9esYhgQ==}
     dev: true
@@ -9774,8 +9794,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/alveusgg/data/4147f0894285d06823a629ba7fd5c520d847b62d:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/4147f0894285d06823a629ba7fd5c520d847b62d}
+  github.com/alveusgg/data/29346f8fc70878272d4c01d0143c29bd7dcc20d2:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/29346f8fc70878272d4c01d0143c29bd7dcc20d2}
     name: '@alveusgg/data'
-    version: 0.17.3
+    version: 0.18.0
     dev: false
