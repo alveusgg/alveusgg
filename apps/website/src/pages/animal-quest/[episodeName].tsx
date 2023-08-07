@@ -5,6 +5,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import animalQuest, {
   hosts,
   type AnimalQuestWithEpisode,
+  hosts,
 } from "@alveusgg/data/src/animal-quest";
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
@@ -327,7 +328,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                         {isActiveAmbassadorKey(key) ? (
                           <LinkHover
                             href={`/ambassadors/${camelToKebab(key)}`}
-                            key={key}
+                            itemKey={key}
                             type="ambassador"
                             dark
                           >
@@ -349,8 +350,8 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 <Heading level={3} className="text-2xl">
                   Host:
                 </Heading>
-                <LinkHover href={host.link} type="staff" key="maya" dark>
-                  {episode.host}
+                <LinkHover href={host.link} type="staff" itemKey="maya" dark>
+                  {hosts[episode.host].name}
                 </LinkHover>
               </div>
 
