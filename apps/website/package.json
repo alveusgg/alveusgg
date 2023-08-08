@@ -28,7 +28,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@alveusgg/data": "github:alveusgg/data",
+    "@alveusgg/data": "github:alveusgg/data#0.18.1",
     "@aws-sdk/client-s3": "^3.348.0",
     "@aws-sdk/s3-request-presigner": "^3.348.0",
     "@headlessui/react": "^1.7.15",
@@ -53,6 +53,7 @@
     "intl-messageformat": "10.3.x",
     "jsdom": "^21.1.2",
     "just-debounce-it": "^3.2.0",
+    "linkify-it": "^4.0.1",
     "luxon": "^3.3.0",
     "next": "^13.4.4",
     "next-auth": "^4.22.1",
@@ -88,6 +89,7 @@
     "@types/dagre": "^0.7.48",
     "@types/dompurify": "^2.4.0",
     "@types/jsdom": "^21.1.1",
+    "@types/linkify-it": "^3.0.2",
     "@types/lodash": "^4.14.195",
     "@types/luxon": "^3.3.0",
     "@types/node": "^18.16.16",
