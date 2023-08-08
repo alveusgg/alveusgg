@@ -13,9 +13,13 @@ import usePrefersReducedMotion from "@/hooks/motion";
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";
 
+type CarouselCtx = {
+  ctx: string;
+};
+
 type CarouselProps = {
   id?: string;
-  items: Record<string, React.ReactNode>;
+  items: Record<string, (ctx: CarouselCtx) => React.ReactNode>;
   auto?: number | null;
   className?: string;
   wrapperClassName?: string;
@@ -209,20 +213,24 @@ const Carousel: React.FC<CarouselProps> = ({
     return () => clearInterval(interval);
   }, [auto, paused, move, reducedMotion]);
 
+  const ctx: CarouselCtx = "";
+
   const childrenToRender = useMemo(
     () =>
-      Object.entries(items).map(([key, item]) => {
+      Object.entries(items).map(([string, child]) => {
+        const element = typeof child === "function" ? child(ctx) : child;
+
         return (
           <div
-            key={key}
+            key={string}
             className={`${itemClassName} flex-shrink-0 snap-start`}
             draggable={false}
           >
-            {item}
+            {element}
           </div>
         );
       }),
-    [items]
+    [items, ctx]
   );
 
   return (
