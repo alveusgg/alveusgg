@@ -12,6 +12,7 @@ import { pushBatchSize, pushMaxAttempts, pushRetryDelay } from "@/config/push";
 import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";
 import { triggerDiscordChannelWebhook } from "@/server/discord";
+import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
 import type { RetryPushesOptions } from "@/pages/api/notifications/batched-retry-notification-pushes";
@@ -199,6 +200,8 @@ async function createDiscordNotifications({
       break;
     default:
   }
+
+  message = escapeLinksForDiscord(message);
 
   const tasks = [];
   for (const webhookUrl of webhookUrls) {

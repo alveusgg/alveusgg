@@ -1,9 +1,9 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 
 import animalQuest, {
+  hosts,
   type AnimalQuestWithEpisode,
 } from "@alveusgg/data/src/animal-quest";
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
@@ -13,8 +13,9 @@ import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import Consent from "@/components/Consent";
 import Carousel from "@/components/content/Carousel";
+import Link from "@/components/content/Link";
+import Consent from "@/components/Consent";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
@@ -167,6 +168,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
             className="group text-center transition-colors hover:text-alveus-green-900"
+            custom
           >
             <Image
               src={images[0].src}
@@ -195,6 +197,19 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         ),
       };
     }, {});
+
+  const host = useMemo(() => {
+    const data = hosts[episode.host];
+    const link = data.link.replace(
+      /^https?:\/\/(www.)?alveussanctuary.org/,
+      ""
+    );
+    return {
+      ...data,
+      link,
+      external: /^https?:\/\//.test(link),
+    };
+  }, [episode.host]);
 
   return (
     <>
@@ -309,10 +324,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                       <Fragment key={key}>
                         {/* Retired ambassadors don't have pages */}
                         {isActiveAmbassadorKey(key) ? (
-                          <Link
-                            href={`/ambassadors/${camelToKebab(key)}`}
-                            className="hover:underline"
-                          >
+                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
                             {ambassador.name}
                           </Link>
                         ) : (
@@ -331,7 +343,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 <Heading level={3} className="text-2xl">
                   Host:
                 </Heading>
-                <p>{episode.host}</p>
+                <p>
+                  <Link href={host.link} external={host.external} dark>
+                    {host.name}
+                  </Link>
+                </p>
               </div>
 
               <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
@@ -350,6 +366,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             <Link
               href="/animal-quest"
               className="text-md mt-8 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+              custom
             >
               Discover more episodes
             </Link>
@@ -412,6 +429,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Link
             href="/animal-quest"
             className="text-md inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+            custom
           >
             Discover more episodes
           </Link>
