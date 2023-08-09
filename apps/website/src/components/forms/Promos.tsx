@@ -15,12 +15,21 @@ export const Promos = () => (
         Alveus and the support & care of our educational ambassadors.
       </p>
 
-      <Link
-        className="mt-auto inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-        href="/merch-store"
-      >
-        Merch Store
-      </Link>
+      <div className="flex flex-wrap gap-4">
+        <Link
+          className="mt-auto inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
+          href="/merch"
+        >
+          Merch Store
+        </Link>
+
+        <Link
+          className="mt-auto inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
+          href="/plushies"
+        >
+          Plushies
+        </Link>
+      </div>
     </div>
 
     <div className="flex flex-1 flex-col items-start gap-4">

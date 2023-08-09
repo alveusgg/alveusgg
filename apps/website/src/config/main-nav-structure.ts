@@ -96,7 +96,7 @@ export const mainNavStructure: NavStructure = {
   },
   merch: {
     title: "Merch",
-    link: "/merch-store",
+    link: "/merch",
   },
 };
 

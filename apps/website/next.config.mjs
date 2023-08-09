@@ -175,6 +175,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/merch-store",
+      destination: "https://shopalveus.org/",
+      permanent: false,
+    },
+    {
       source: "/shop",
       destination: "https://shopalveus.org/",
       permanent: true,
