@@ -23,11 +23,6 @@ export const mainNavStructure: NavStructure = {
     title: "Home",
     link: "/",
   },
-  live: {
-    title: "Live",
-    link: "/live",
-    isExternal: true,
-  },
   ambassadors: {
     title: "Ambassadors",
     link: "/ambassadors",
@@ -35,13 +30,14 @@ export const mainNavStructure: NavStructure = {
   explore: {
     title: "Explore",
     dropdown: {
+      live: {
+        title: "Live",
+        link: "/live",
+        isExternal: true,
+      },
       animalQuest: {
         title: "Animal Quest",
         link: "/animal-quest",
-      },
-      showAndTell: {
-        title: "Show and Tell",
-        link: "/show-and-tell",
       },
       collaborations: {
         title: "Collaborations",
@@ -57,19 +53,27 @@ export const mainNavStructure: NavStructure = {
       },
     },
   },
+  donate: {
+    title: "Donate",
+    link: "/donate",
+  },
+  merch: {
+    title: "Merch",
+    link: "/merch",
+  },
   about: {
     title: "About",
     dropdown: {
       alveus: {
-        title: "Alveus",
+        title: "About Alveus",
         link: "/about/alveus",
       },
       maya: {
-        title: "Maya",
+        title: "About Maya",
         link: "/about/maya",
       },
       staff: {
-        title: "Staff",
+        title: "Alveus Staff",
         link: "/about/staff",
       },
       advisoryBoard: {
@@ -85,18 +89,27 @@ export const mainNavStructure: NavStructure = {
         link: "/about/annual-reports",
       },
       tech: {
-        title: "Tech",
+        title: "Tech at Alveus",
         link: "/about/tech",
       },
     },
   },
-  donate: {
-    title: "Donate",
-    link: "/donate",
-  },
-  merch: {
-    title: "Merch",
-    link: "/merch",
+  more: {
+    title: "More",
+    dropdown: {
+      showAndTell: {
+        title: "Show and Tell",
+        link: "/show-and-tell",
+      },
+      plushies: {
+        title: "Ambassador Plushies",
+        link: "/plushies",
+      },
+      foundAnimal: {
+        title: "Found an Animal?",
+        link: "/found-animal",
+      },
+    },
   },
 };
 
