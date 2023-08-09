@@ -6,6 +6,7 @@ import ambassadors, {
 import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
 import Image, { type ImageProps, type StaticImageData } from "next/image";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import { hosts } from "@alveusgg/data/src/animal-quest";
 import { kebabToCamel, sentenceToKebab } from "@/utils/string-case";
 
 import { staff } from "@/pages/about/staff";
@@ -30,7 +31,7 @@ export type ProfileCardProps = {
 } & (
   | { type: "ambassador"; itemKey: AmbassadorKey }
   | { type: "enclosure"; itemKey: EnclosureKey }
-  | { type: "staff"; itemKey: string }
+  | { type: "staff"; itemKey: keyof typeof hosts }
 );
 
 type AmbassadorCardProps = {
@@ -39,6 +40,10 @@ type AmbassadorCardProps = {
 };
 type EnclosureCardProps = {
   itemKey: EnclosureKey;
+  upwards?: boolean;
+};
+type StaffCardProps = {
+  itemKey: keyof typeof hosts;
   upwards?: boolean;
 };
 
@@ -173,6 +178,32 @@ const EnclosureCard: React.FC<EnclosureCardProps> = ({ itemKey, upwards }) => {
   );
 };
 
+const StaffCard: React.FC<StaffCardProps> = ({ itemKey, upwards }) => {
+  const host = hosts[itemKey];
+  const img = { src: mayaImage, alt: "picture of Maya" };
+
+  return (
+    <div
+      className={classes(staffStyle, upwards ? "-translate-y-full" : "mt-4")}
+    >
+      {img && (
+        <Image
+          src={img.src}
+          alt={img.alt}
+          width="176"
+          height="176"
+          className="h-28 w-auto rounded xl:h-28 xl:w-auto"
+        />
+      )}
+      <div className="flex flex-col text-sm">
+        <Heading className="inline text-xl text-yellow-500" level={5}>
+          {host.name}
+        </Heading>
+      </div>
+    </div>
+  );
+};
+
 const ProfileCard: React.FC<ProfileCardProps> = ({
   type,
   itemKey,
@@ -198,38 +229,11 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
 
   return (
     <>
-      {type === "ambassador" && (
-        <AmbassadorCard itemKey={itemKey} upwards={upwards} />
-      )}
+      {type === "ambassador" && <AmbassadorCard itemKey={itemKey} upwards />}
 
-      {type === "staff" && (
-        <div
-          className={classes(
-            staffStyle,
-            upwards ? "-translate-y-full" : "mt-4"
-          )}
-        >
-          {img && (
-            <Image
-              src={img.src}
-              alt={img.alt}
-              width="176"
-              height="176"
-              className="h-28 w-auto rounded xl:h-28 xl:w-auto"
-            />
-          )}
-          <div className="flex flex-col text-sm">
-            <Heading className="inline text-xl text-yellow-500" level={5}>
-              {itemKey}
-            </Heading>
-            <Span title="Position" name={position} />
-          </div>
-        </div>
-      )}
+      {type === "staff" && <StaffCard itemKey={itemKey} upwards />}
 
-      {type === "enclosure" && (
-        <EnclosureCard itemKey={itemKey} upwards={upwards} />
-      )}
+      {type === "enclosure" && <EnclosureCard itemKey={itemKey} upwards />}
     </>
   );
 };
