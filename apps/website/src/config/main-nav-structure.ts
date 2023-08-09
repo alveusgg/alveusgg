@@ -96,6 +96,7 @@ export const mainNavStructure: NavStructure = {
       plushies: {
         title: "Ambassador Plushies",
         link: "/plushies",
+        isExternal: true,
       },
       foundAnimal: {
         title: "Found an Animal?",
@@ -110,6 +111,7 @@ export const mainNavStructure: NavStructure = {
   merch: {
     title: "Merch",
     link: "/merch",
+    isExternal: true,
   },
 };
 

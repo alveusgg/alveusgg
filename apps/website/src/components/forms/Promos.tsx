@@ -19,6 +19,8 @@ export const Promos = () => (
         <Link
           className="mt-auto inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
           href="/merch"
+          target="_blank"
+          rel="noreferrer"
         >
           Merch Store
         </Link>
@@ -26,6 +28,8 @@ export const Promos = () => (
         <Link
           className="mt-auto inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
           href="/plushies"
+          target="_blank"
+          rel="noreferrer"
         >
           Plushies
         </Link>
