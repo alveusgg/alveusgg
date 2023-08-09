@@ -53,14 +53,6 @@ export const mainNavStructure: NavStructure = {
       },
     },
   },
-  donate: {
-    title: "Donate",
-    link: "/donate",
-  },
-  merch: {
-    title: "Merch",
-    link: "/merch",
-  },
   about: {
     title: "About",
     dropdown: {
@@ -110,6 +102,14 @@ export const mainNavStructure: NavStructure = {
         link: "/found-animal",
       },
     },
+  },
+  donate: {
+    title: "Donate",
+    link: "/donate",
+  },
+  merch: {
+    title: "Merch",
+    link: "/merch",
   },
 };
 
