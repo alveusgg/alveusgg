@@ -125,7 +125,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2021-05", // https://youtu.be/pTnYmPKDaF8?t=2373 + https://youtu.be/QPsbX1HefRk?t=1230
         content: [
           "Fencing and pasture installed",
-          "A total of 4,000 linear feet of predator-proof fencing was installed around the property for a cost of $72,000 USD.",
+          "A total of 4,000 linear feet of predator-proof fencing was installed around the property, and a barn was built at the top of the pasture.",
         ],
       },
       {
@@ -133,7 +133,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2021-06", // https://youtu.be/rSaWp3pEvFE?t=5729
         content: [
           "Parrot Aviary constructed",
-          "A 20ft by 20ft wire-mesh enclosure at a cost of $52,000 USD, plus an addon with enclosed rooms for the parrots to shelter in at a further cost of $7,000 USD.",
+          "A 20ft by 20ft wire-mesh enclosure with a solid floor and planters, plus an addon with enclosed rooms for the parrots to shelter in and storage for supplies.",
           "Sponsored by Michele Raffin (previous owner of the parrots), and flimflam.",
         ],
       },
@@ -142,7 +142,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2021-07", // https://youtu.be/BgtVRjQC0Vk?t=917
         content: [
           "Crow Aviary constructed",
-          "A wire-mesh enclosure, built for a total of $8,000 USD.",
+          "A 15ft by 18ft wire-mesh enclosure, with a solid rear wall.",
           "Sponsored by PointCrow.",
         ],
       },
@@ -151,7 +151,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2021-08", // https://youtu.be/W05oJEwNI_s?t=810
         content: [
           "Chicken Coop constructed",
-          "A 10ft by 20ft wire-mesh enclosure, with a 6ft by 6ft indoor area, built for a total of $8,000 USD.",
+          "A 10ft by 20ft wire-mesh enclosure with a bark/dirt floor, and a 6ft by 6ft indoor area for shelter at night.",
         ],
       },
     ],
@@ -192,7 +192,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2021-08", // https://youtu.be/i0DbJjU41eM?t=1409
         content: [
           "Training Center constructed",
-          "A large wire-mesh building with grass inside, allowing for training and enrichment activities as well as hosting content collaborations, built for a total of $135,000 USD.",
+          "A large 50ft by 40ft wire-mesh building with grass inside, allowing for training and enrichment activities as well as hosting content collaborations.",
         ],
       },
       {
@@ -236,7 +236,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2022-01", // https://youtu.be/DN8apMfuNCY?t=19152 + https://youtu.be/Bu0HVHcMc_M?t=6822
         content: [
           "Fox enclosure constructed",
-          "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, built for a total of $48,000 USD.",
+          "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, and an air-conditioned indoor area.",
           "Sponsored by QTCinderalla and her community.",
         ],
       },
@@ -270,7 +270,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         content: [
           "Falcon/Crow Aviary constructed",
           "Originally built for Orion, Alveus' falcon, prior to his passing. Re-purposed as the new crow aviary.",
-          "A two-part enclosure with a sheltered indoor area and a wire-mesh outdoor area, built for a total of $15,000 USD.",
+          "A two-part enclosure with a 8ft by 17ft sheltered indoor area and a 12ft by 17ft wire-mesh outdoor area, all with pea-gravel flooring.",
           "Sponsored by Oni Studios, and Merkx.",
         ],
       },
@@ -345,7 +345,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2023-06", // https://youtu.be/3LV02t0ZWR8?t=820
         content: [
           "Marmoset enclosure retro-fitted",
-          "The original crow aviary was retro-fitted to house marmosets, with a new indoor area added to the rear.",
+          "The original crow aviary was retro-fitted, with a new 8ft by 18ft indoor area added to the rear to provide air-conditioned shelter for the marmosets and space to store supplies.",
         ],
       },
       {
@@ -360,7 +360,6 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/events#summer-camp-2023",
         },
       },
-      // TODO: Lindsay joins
     ],
   },
 ];
