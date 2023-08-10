@@ -50,7 +50,8 @@ const collaborations = {
     name: "Squeex",
     link: "https://www.twitch.tv/squeex",
     date: new Date("2023-05-19"),
-    videoId: "dCV8b8LcG-0",
+    videoId: "oUJxCDGQDlY ",
+    vodId: "dCV8b8LcG-0",
   },
   caroline: {
     name: "Caroline Kwan",
