@@ -1,6 +1,5 @@
-import type { TwitchConfig } from "@/config/twitch";
-import { getTwitchConfig } from "@/config/twitch";
 import { env } from "@/env/index.mjs";
+import { getTwitchChannels } from "@/server/db/twitch-channels";
 import {
   createSubscription,
   getSubscriptions,
@@ -107,33 +106,30 @@ async function updateSubscriptionsForChannel(
 async function updateSubscriptionsForChannels() {
   const twitchEventSubCallback = env.TWITCH_EVENTSUB_CALLBACK;
   const twitchEventSubSecret = env.TWITCH_EVENTSUB_SECRET;
-  const twitchConfig: TwitchConfig = await getTwitchConfig();
+  const channels = await getTwitchChannels();
 
-  for (const key in twitchConfig.channels) {
-    const channelConfig = twitchConfig.channels[key];
-    if (channelConfig === undefined) {
-      continue;
-    }
-
-    await updateSubscriptionsForChannel(
-      String(channelConfig.id),
+  const tasks = channels.flatMap((channel) => [
+    updateSubscriptionsForChannel(
+      String(channel.channelId),
       "channel.update",
       twitchEventSubCallback,
       twitchEventSubSecret
-    );
-    await updateSubscriptionsForChannel(
-      String(channelConfig.id),
+    ),
+    updateSubscriptionsForChannel(
+      String(channel.channelId),
       "stream.online",
       twitchEventSubCallback,
       twitchEventSubSecret
-    );
-    await updateSubscriptionsForChannel(
-      String(channelConfig.id),
+    ),
+    updateSubscriptionsForChannel(
+      String(channel.channelId),
       "stream.offline",
       twitchEventSubCallback,
       twitchEventSubSecret
-    );
-  }
+    ),
+  ]);
+
+  await Promise.allSettled(tasks);
 }
 
 async function checkSubscriptions() {
