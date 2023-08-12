@@ -142,6 +142,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/about",
+      destination: "/about/alveus",
+      permanent: true,
+    },
+    {
       source: "/tech",
       destination: "/about/tech",
       permanent: true,
