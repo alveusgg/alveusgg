@@ -115,7 +115,7 @@ function parseOptionalStartAndEnd(params: string[]): {
 }
 
 function parseTitleAndText(params: string[]) {
-  const textParts = params.join(" ").split(/[|\/]/);
+  const textParts = params.join(" ").split("|");
   const title = textParts[0]?.trim();
   const text = textParts.slice(1).join("/").trim();
   return { title, text };
