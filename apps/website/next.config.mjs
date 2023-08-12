@@ -180,6 +180,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/merch-store",
+      destination: "https://shopalveus.org/",
+      permanent: false,
+    },
+    {
       source: "/shop",
       destination: "https://shopalveus.org/",
       permanent: true,
@@ -190,7 +195,22 @@ const config = {
       permanent: true,
     },
     {
+      source: "/apparel",
+      destination: "https://shopalveus.org/",
+      permanent: true,
+    },
+    {
       source: "/plushies",
+      destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/plushie",
+      destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/plushy",
       destination: "https://youtooz.com/collections/alveus",
       permanent: true,
     },
