@@ -93,25 +93,30 @@ export const mainNavStructure: NavStructure = {
         title: "Show and Tell",
         link: "/show-and-tell",
       },
-      plushies: {
-        title: "Ambassador Plushies",
-        link: "/plushies",
-        isExternal: true,
-      },
       foundAnimal: {
         title: "Found an Animal?",
         link: "/found-animal",
       },
     },
   },
+  merch: {
+    title: "Merch",
+    dropdown: {
+      apparel: {
+        title: "Apparel",
+        link: "/apparel",
+        isExternal: true,
+      },
+      plushies: {
+        title: "Plushies",
+        link: "/plushies",
+        isExternal: true,
+      },
+    },
+  },
   donate: {
     title: "Donate",
     link: "/donate",
-  },
-  merch: {
-    title: "Merch",
-    link: "/merch",
-    isExternal: true,
   },
 };
 
