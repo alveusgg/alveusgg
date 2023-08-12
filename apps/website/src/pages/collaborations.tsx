@@ -146,7 +146,7 @@ const collaborations = {
   jackManifold: {
     name: "Jack Manifold",
     link: "https://www.twitch.tv/jackmanifoldtv",
-    date: new Date("2022-04-22"),
+    date: new Date("2022-04-21"),
     videoId: "jzyxhnODe2g",
   },
 } as const satisfies Collaborations;

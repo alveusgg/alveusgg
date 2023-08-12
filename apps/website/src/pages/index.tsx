@@ -237,7 +237,7 @@ const Home: NextPage = () => {
                 Founded by Maya Higa
               </p>
               <p className="my-4 text-lg">
-                Alveus is a non profit organization founded by Maya Higa that
+                Alveus is a nonprofit organization founded by Maya Higa that
                 functions as an exotic animal sanctuary and as a virtual
                 education center facility to provide permanent homes to
                 non-releasable exotic animals. These animals function as

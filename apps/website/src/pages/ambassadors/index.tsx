@@ -20,7 +20,10 @@ import {
 import { camelToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
-import { parseAmbassadorDate, sortAmbassadorDate } from "@/utils/datetime";
+import {
+  parsePartialDateString,
+  sortPartialDateString,
+} from "@/utils/datetime";
 import { convertToSlug } from "@/utils/slugs";
 
 import Section from "@/components/content/Section";
@@ -60,7 +63,7 @@ const sortByOptions = {
       .sort(
         ([, a], [, b]) =>
           sortAmbassadorClassification(a.class, b.class) ||
-          sortAmbassadorDate(a.arrival, b.arrival)
+          sortPartialDateString(a.arrival, b.arrival)
       )
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
         const classification = getClassification(val.class);
@@ -86,9 +89,9 @@ const sortByOptions = {
   recent: {
     label: "Recent",
     result: [...activeAmbassadors]
-      .sort(([, a], [, b]) => sortAmbassadorDate(a.arrival, b.arrival))
+      .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
-        const year = parseAmbassadorDate(val.arrival)
+        const year = parsePartialDateString(val.arrival)
           ?.getUTCFullYear()
           ?.toString();
         const group = year || "unknown";
