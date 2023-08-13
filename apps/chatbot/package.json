@@ -14,10 +14,10 @@
   "dependencies": {
     "@planetscale/database": "^1.10.0",
     "@t3-oss/env-core": "^0.6.0",
-    "@twurple/api": "^6.2.1",
-    "@twurple/auth": "^6.2.1",
-    "@twurple/chat": "^6.2.1",
-    "@twurple/easy-bot": "^6.2.1",
+    "@twurple/api": "^7.0.1",
+    "@twurple/auth": "^7.0.1",
+    "@twurple/chat": "^7.0.1",
+    "@twurple/easy-bot": "^7.0.1",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.28.2",
     "read-pkg": "^8.0.0",
@@ -25,10 +25,10 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
-    "@types/node": "^18.17.5",
+    "@types/node": "^20.5.0",
     "@types/prettier": "^2.7.3",
-    "@typescript-eslint/eslint-plugin": "^5.62.0",
-    "@typescript-eslint/parser": "^5.62.0",
+    "@typescript-eslint/eslint-plugin": "^6.3.0",
+    "@typescript-eslint/parser": "^6.3.0",
     "eslint": "^8.47.0",
     "eslint-plugin-import": "^2.28.0",
     "typescript": "^5.1.6"
