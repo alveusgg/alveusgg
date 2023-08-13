@@ -1,7 +1,7 @@
 @import "swiper/swiper.scss";
-@import "swiper/modules/a11y/a11y.scss";
-@import "swiper/modules/navigation/navigation.scss";
-@import "swiper/modules/scrollbar/scrollbar.scss";
+@import "swiper/modules/a11y.scss";
+@import "swiper/modules/navigation.scss";
+@import "swiper/modules/scrollbar.scss";
 
 @import "photoswipe/dist/photoswipe.css";
 
