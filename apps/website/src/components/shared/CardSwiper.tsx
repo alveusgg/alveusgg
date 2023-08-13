@@ -1,5 +1,5 @@
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Scrollbar, Navigation, Keyboard } from "swiper";
+import { Scrollbar, Navigation, Keyboard } from "swiper/modules";
 import React from "react";
 
 export const CardSwiper: React.FC<{
