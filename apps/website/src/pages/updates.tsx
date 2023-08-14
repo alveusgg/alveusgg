@@ -58,7 +58,12 @@ const UpdatesPage: NextPage = () => {
         </div>
 
         <div className="w-full max-w-2xl md:w-3/5">
-          <Image src={bellPeepo} alt="" className="w-full" />
+          <Image
+            src={bellPeepo}
+            alt=""
+            className="w-full"
+            unoptimized // Next.js optimization makes this larger than source
+          />
         </div>
       </Section>
 
