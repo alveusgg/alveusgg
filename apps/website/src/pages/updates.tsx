@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import React, { Fragment } from "react";
+import Image from "next/image";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -10,6 +10,8 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 import { Announcements } from "@/components/notifications/Announcements";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
 import updateChannels from "@/components/shared/data/updateChannels";
+
+import bellPeepo from "@/assets/bell-peepo.webp";
 
 const notificationTags = ["stream"];
 
@@ -21,24 +23,28 @@ const UpdatesPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark className="z-10">
-        <Heading>Announcements and Updates</Heading>
+      <Section
+        dark
+        className="py-0"
+        containerClassName="flex flex-wrap items-center justify-between"
+      >
+        <div className="w-full py-8 md:w-2/5">
+          <Heading>Announcements and Updates</Heading>
 
-        <p className="mt-6">
-          Stay updated using one of our announcement channels:
-        </p>
+          <p className="mt-6">
+            Stay updated using one of our announcement channels:
+          </p>
 
-        <div className="mt-4 flex flex-col items-center gap-1 md:flex-row md:gap-4">
-          <NotificationsButton
-            className="rounded-lg bg-alveus-green-900/80 px-4 py-2 hover:bg-alveus-green-900"
-            showLabel={true}
-            openDirectionX="right"
-          />
+          <div className="mt-4 flex flex-col items-center gap-1 md:items-start">
+            <NotificationsButton
+              className="rounded-lg bg-alveus-green-900/80 px-4 py-2 hover:bg-alveus-green-900"
+              showLabel={true}
+              openDirectionX="right"
+            />
 
-          {Object.entries(updateChannels).map(([key, updateChannel]) => (
-            <Fragment key={key}>
-              <span className="self-center italic">or</span>
+            {Object.entries(updateChannels).map(([key, updateChannel]) => (
               <Link
+                key={key}
                 rel="noreferer"
                 target="_blank"
                 className="flex rounded-lg bg-alveus-green-800 px-4 py-2 hover:bg-alveus-green-900"
@@ -47,8 +53,12 @@ const UpdatesPage: NextPage = () => {
                 <updateChannel.icon size={24} className="mr-2 h-6 w-6" />
                 {updateChannel.title}
               </Link>
-            </Fragment>
-          ))}
+            ))}
+          </div>
+        </div>
+
+        <div className="w-full max-w-2xl md:w-3/5">
+          <Image src={bellPeepo} alt="" className="w-full" />
         </div>
       </Section>
 
