@@ -25,7 +25,7 @@ const UpdatesPage: NextPage = () => {
 
       <Section
         dark
-        className="py-0"
+        className="z-10 py-0"
         containerClassName="flex flex-wrap items-center justify-between"
       >
         <div className="w-full py-8 md:w-2/5">
