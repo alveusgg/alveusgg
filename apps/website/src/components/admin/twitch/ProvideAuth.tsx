@@ -51,7 +51,7 @@ export function ProvideAuth() {
             { redirect: false },
             {
               scope: `${defaultScope} ${botScope}`,
-            }
+            },
           )
         }
       >

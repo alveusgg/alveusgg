@@ -19,7 +19,7 @@ export type TextFieldProps = AriaTextFieldOptions<"input"> & {
 export function TextField(props: TextFieldProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [showResetButton, setShowResetButton] = useState(
-    () => props.showResetButton && Boolean(props.value || props.defaultValue)
+    () => props.showResetButton && Boolean(props.value || props.defaultValue),
   );
   const customizedProps = useMemo(() => {
     return {
@@ -53,7 +53,7 @@ export function TextField(props: TextFieldProps) {
         <input
           className={classes(
             "w-full flex-1 bg-white p-1 px-2 text-black",
-            props.inputClassName
+            props.inputClassName,
           )}
           {...inputProps}
           list={props.list}

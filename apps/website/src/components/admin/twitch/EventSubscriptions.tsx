@@ -15,7 +15,7 @@ export function EventSubscriptions() {
       <ul>
         {twitchEventSubs.map((sub) => {
           const channel = channels.data?.find(
-            (c) => c.channelId === sub.condition.broadcaster_user_id
+            (c) => c.channelId === sub.condition.broadcaster_user_id,
           );
           const label = channel?.label || "";
 

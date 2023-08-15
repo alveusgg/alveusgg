@@ -42,7 +42,7 @@ export default createTokenProtectedApiHandler(
             tag: notification.tag || undefined,
             title: notification.title || undefined,
             imageUrl: notification.imageUrl || undefined,
-          })
+          }),
         );
       });
 
@@ -53,5 +53,5 @@ export default createTokenProtectedApiHandler(
       console.error("Failed to create notification", e);
       return false;
     }
-  }
+  },
 );

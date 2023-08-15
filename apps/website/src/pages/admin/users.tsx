@@ -21,7 +21,7 @@ import IconMinusCircle from "@/icons/IconMinusCircle";
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(
     context,
-    permissions.manageUsersAndRoles
+    permissions.manageUsersAndRoles,
   );
   if (!adminProps) {
     return { notFound: true };
@@ -54,7 +54,7 @@ const AdminUsersPage: NextPage<
   const [userNameSearchTerm, setUserNameSearchTerm] = useState("");
   const userNameSuggestions = trpc.adminUsersRouter.searchUsernames.useQuery(
     userNameSearchTerm,
-    { enabled: userNameSearchTerm.length > 1 }
+    { enabled: userNameSearchTerm.length > 1 },
   );
 
   const handleAssign = useCallback(() => {

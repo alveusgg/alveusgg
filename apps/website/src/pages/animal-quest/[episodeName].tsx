@@ -39,7 +39,7 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
       ...obj,
       [sentenceToKebab(episode.edition)]: episode,
     }),
-    {}
+    {},
   );
 
 const getTwitchEmbed = (
@@ -49,7 +49,7 @@ const getTwitchEmbed = (
     start,
     player,
     autoPlay = false,
-  }: Partial<{ start: string; player: string; autoPlay: boolean }> = {}
+  }: Partial<{ start: string; player: string; autoPlay: boolean }> = {},
 ): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("video", video.toString());
@@ -103,7 +103,7 @@ export const getStaticProps: GetStaticProps<
       ...obj,
       [ambassador]: ambassadors[ambassador],
     }),
-    {}
+    {},
   ) as AnimalQuestEpisodePageProps["featured"];
 
   const related = episode.ambassadors.related.reduce(
@@ -111,7 +111,7 @@ export const getStaticProps: GetStaticProps<
       ...obj,
       [ambassador]: ambassadors[ambassador],
     }),
-    {}
+    {},
   ) as AnimalQuestEpisodePageProps["related"];
 
   return {
@@ -133,7 +133,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
     setTwitchEmbed(
       getTwitchEmbed(episode.video.id, window.location.hostname, {
         start: episode.video.start,
-      })
+      }),
     );
   }, [episode.video.id, episode.video.start]);
 
@@ -143,7 +143,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         episode.description,
         "Each episode of Animal Quest introduces you to an ambassador at Alveus and teaches you about them as well as their species as a whole. We'll look at their importance to the world around us, the risks and misconceptions their species faces, and what we can do to help them.",
       ].filter(Boolean),
-    [episode.description]
+    [episode.description],
   );
 
   const featuredAmbassadors = [
@@ -202,7 +202,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
     const data = hosts[episode.host];
     const link = data.link.replace(
       /^https?:\/\/(www.)?alveussanctuary.org/,
-      ""
+      "",
     );
     return {
       ...data,
@@ -334,7 +334,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                         {idx === arr.length - 2 && arr.length > 2 && ","}
                         {idx === arr.length - 2 && " and "}
                       </Fragment>
-                    )
+                    ),
                   )}
                 </p>
               </div>

@@ -28,7 +28,7 @@ async function updateSubscriptionsForChannel(
   id: string,
   type: string,
   twitchEventSubCallback: string,
-  twitchEventSubSecret: string
+  twitchEventSubSecret: string,
 ) {
   let isEnabled = false;
   let isPending = false;
@@ -74,8 +74,8 @@ async function updateSubscriptionsForChannel(
   const totalRemoved = (
     await Promise.allSettled(
       [...enabledSubs, ...pendingSubs, ...failedSubs].map(
-        async (sub) => await removeSubscription(sub.id)
-      )
+        async (sub) => await removeSubscription(sub.id),
+      ),
     )
   ).reduce((count, removed) => (removed ? count + 1 : count), 0);
 
@@ -86,7 +86,7 @@ async function updateSubscriptionsForChannel(
       type,
       String(id),
       twitchEventSubCallback,
-      twitchEventSubSecret
+      twitchEventSubSecret,
     );
 
     if (created) {
@@ -113,19 +113,19 @@ async function updateSubscriptionsForChannels() {
       String(channel.channelId),
       "channel.update",
       twitchEventSubCallback,
-      twitchEventSubSecret
+      twitchEventSubSecret,
     ),
     updateSubscriptionsForChannel(
       String(channel.channelId),
       "stream.online",
       twitchEventSubCallback,
-      twitchEventSubSecret
+      twitchEventSubSecret,
     ),
     updateSubscriptionsForChannel(
       String(channel.channelId),
       "stream.offline",
       twitchEventSubCallback,
-      twitchEventSubSecret
+      twitchEventSubSecret,
     ),
   ]);
 
@@ -142,7 +142,7 @@ async function checkSubscriptions() {
   });
   if (subscriptions.total_cost >= subscriptions.max_total_cost) {
     console.warn(
-      "Twitch Event Sub: Warning: Reached max cost of event subs for twitch!"
+      "Twitch Event Sub: Warning: Reached max cost of event subs for twitch!",
     );
   }
 }

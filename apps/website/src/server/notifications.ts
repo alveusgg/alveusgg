@@ -30,7 +30,7 @@ type CreateNotificationData = {
 };
 
 const exponentialDelays = new Array(pushMaxAttempts).map(
-  (_, i) => pushRetryDelay * Math.pow(2, i + 1)
+  (_, i) => pushRetryDelay * Math.pow(2, i + 1),
 );
 
 export async function createNotification(data: CreateNotificationData) {
@@ -126,8 +126,8 @@ export async function retryPendingNotificationPushes() {
             ...push,
             expiresAt: push.expiresAt.getTime(),
           })),
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -169,8 +169,8 @@ async function createPushNotifications(notification: Notification) {
           notificationId: notification.id,
           expiresAt: notification.expiresAt.getTime(),
           subscriptionIds: subscriptions.map((s) => s.id),
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -225,7 +225,7 @@ async function createDiscordNotifications({
           },
         });
         return webhook;
-      })
+      }),
     );
   }
 

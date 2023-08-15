@@ -9,16 +9,16 @@ type SignedUploadInfo = {
 };
 
 type CreateFileUpload<
-  AllowedFileTypes extends readonly string[] = readonly string[]
+  AllowedFileTypes extends readonly string[] = readonly string[],
 > = (
-  signature: FileSignature<AllowedFileTypes[number]>
+  signature: FileSignature<AllowedFileTypes[number]>,
 ) => Promise<SignedUploadInfo>;
 
 export function useFileUpload<
-  AllowedFileTypes extends readonly string[] = readonly string[]
+  AllowedFileTypes extends readonly string[] = readonly string[],
 >(
   createFileUpload: CreateFileUpload<AllowedFileTypes>,
-  options: { allowedFileTypes?: AllowedFileTypes } = {}
+  options: { allowedFileTypes?: AllowedFileTypes } = {},
 ) {
   return async (file: File) => {
     const fileType = file.type as AllowedFileTypes[number];

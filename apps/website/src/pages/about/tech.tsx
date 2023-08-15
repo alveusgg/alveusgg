@@ -293,7 +293,7 @@ const List: React.FC<ListProps> = ({
         className={classes(
           // Add whitespace above if we're nested and not the first item
           idx !== 0 && typeof item === "object" && item.items && "mt-2",
-          itemClassName
+          itemClassName,
         )}
       >
         {typeof item === "string" ? (

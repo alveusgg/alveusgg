@@ -64,7 +64,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         pages: [{ items: initialEntries, nextCursor: nextCursor }],
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    },
   );
 
   const [isPresentationView, setIsPresentationView] = useState(false);
@@ -117,12 +117,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }
       }
     },
-    [checkPosition]
+    [checkPosition],
   );
   const intersectionObserverOpts = useMemo(() => ({ threshold: 0.55 }), []);
   const registerObserveElement = useIntersectionObserver(
     onEntryIntersection,
-    intersectionObserverOpts
+    intersectionObserverOpts,
   );
 
   // Scroll an element into the center of the viewport
@@ -213,7 +213,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }, scrollDebounce),
       };
     },
-    [isPresentationView, scrollTo]
+    [isPresentationView, scrollTo],
   );
 
   const togglePresentationView = useCallback(
@@ -226,7 +226,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       transitionBetweenViews(
         value,
         presentationViewRootElementRef.current,
-        scrollTargetElement
+        scrollTargetElement,
       ).then(() => {
         if (value && currentEntryElementRef.current) {
           // If we're entering presentation view, ensure the entry is aligned
@@ -234,7 +234,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }
       });
     },
-    [isPresentationView, scrollTo]
+    [isPresentationView, scrollTo],
   );
 
   // Enable presentation view if native fullscreen gets activated, but not if it's deactivated
@@ -245,8 +245,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           togglePresentationView(currentEntryElementRef.current, true);
         }
       },
-      [togglePresentationView]
-    )
+      [togglePresentationView],
+    ),
   );
 
   const handleTogglePresentationView = useCallback(() => {
@@ -302,7 +302,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 key={entry.id}
                 ref={registerObserveElement}
               />
-            ))
+            )),
           )}
 
           {!isPresentationView && entries.isSuccess && !entries.hasNextPage && (
@@ -417,7 +417,7 @@ export default ShowAndTellIndexPage;
 async function transitionBetweenViews(
   value: boolean,
   presentationViewRootElement: HTMLElement | null = null,
-  scrollTargetElement: HTMLElement | null = null
+  scrollTargetElement: HTMLElement | null = null,
 ) {
   if (value) {
     // Case 1: Normal view -> Presentation view
@@ -428,7 +428,7 @@ async function transitionBetweenViews(
         presentationViewRootElement.children,
         (child: HTMLElement) => {
           child.style.opacity = "0";
-        }
+        },
       );
     }
 
@@ -465,7 +465,7 @@ async function transitionBetweenViews(
       presentationViewRootElement.children,
       (child: HTMLElement) => {
         child.style.opacity = "1";
-      }
+      },
     );
   }
 }

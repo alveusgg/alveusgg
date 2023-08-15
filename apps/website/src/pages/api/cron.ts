@@ -3,7 +3,7 @@ import { runScheduledTasks } from "@/server/scheduler";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   try {
     await runScheduledTasks();

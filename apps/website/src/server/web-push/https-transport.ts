@@ -6,7 +6,7 @@ export type WebPushHttpsRequestOptions = {
 export async function requestHttps(
   endpoint: string,
   body?: ArrayBuffer | string | null,
-  options?: WebPushHttpsRequestOptions
+  options?: WebPushHttpsRequestOptions,
 ) {
   const controller = new AbortController();
 

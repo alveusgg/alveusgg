@@ -56,7 +56,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
               const img =
                 episode.ambassadors.featured.length > 0 &&
                 getAmbassadorImages(
-                  episode.ambassadors.featured[0] as AmbassadorKey
+                  episode.ambassadors.featured[0] as AmbassadorKey,
                 )[0];
               return (
                 <Image
@@ -64,7 +64,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                   alt={img ? img.alt : "Animal Quest"}
                   className={classes(
                     !img && "opacity-10",
-                    "hidden h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md min-[430px]:block md:h-32 md:w-32"
+                    "hidden h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md min-[430px]:block md:h-32 md:w-32",
                   )}
                   width={256}
                   style={{ objectPosition: img ? img.position : undefined }}
@@ -77,7 +77,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
                 const img = getAmbassadorImages(
                   episode.ambassadors.featured[
                     episode.ambassadors.featured.length > 2 ? 2 : 1
-                  ] as AmbassadorKey
+                  ] as AmbassadorKey,
                 )[0];
                 return (
                   <Image
@@ -93,7 +93,7 @@ const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
             {episode.ambassadors.featured.length > 2 &&
               (() => {
                 const img = getAmbassadorImages(
-                  episode.ambassadors.featured[1] as AmbassadorKey
+                  episode.ambassadors.featured[1] as AmbassadorKey,
                 )[0];
                 return (
                   <Image

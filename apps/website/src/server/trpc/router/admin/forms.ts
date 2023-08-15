@@ -8,7 +8,7 @@ import { permissions } from "@/config/permissions";
 import { createForm, editForm, formSchema } from "@/server/db/forms";
 
 const permittedProcedure = protectedProcedure.use(
-  createCheckPermissionMiddleware(permissions.manageForms)
+  createCheckPermissionMiddleware(permissions.manageForms),
 );
 
 export const adminFormsRouter = router({
@@ -19,7 +19,7 @@ export const adminFormsRouter = router({
           z.object({ action: z.literal("create") }),
           z.object({ action: z.literal("edit"), id: z.string().cuid() }),
         ])
-        .and(formSchema)
+        .and(formSchema),
     )
     .mutation(async ({ input }) => {
       switch (input.action) {
@@ -39,7 +39,7 @@ export const adminFormsRouter = router({
   deleteForm: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) =>
-      ctx.prisma.form.delete({ where: { id } })
+      ctx.prisma.form.delete({ where: { id } }),
     ),
 
   purgeFormEntries: permittedProcedure
@@ -49,7 +49,7 @@ export const adminFormsRouter = router({
         where: {
           formId: id,
         },
-      })
+      }),
     ),
 
   anonymizeFormEntries: permittedProcedure
@@ -73,13 +73,13 @@ export const adminFormsRouter = router({
             },
           },
         }),
-      ])
+      ]),
     ),
 
   getForm: permittedProcedure
     .input(z.string().cuid())
     .query(async ({ ctx, input: id }) =>
-      ctx.prisma.form.findUnique({ where: { id } })
+      ctx.prisma.form.findUnique({ where: { id } }),
     ),
 
   getForms: permittedProcedure.query(async ({ ctx }) =>
@@ -89,7 +89,7 @@ export const adminFormsRouter = router({
           select: { entries: true },
         },
       },
-    })
+    }),
   ),
 
   toggleFormStatus: permittedProcedure
@@ -97,7 +97,7 @@ export const adminFormsRouter = router({
       z.object({
         id: z.string().cuid(),
         active: z.boolean(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.form.update({
@@ -115,7 +115,7 @@ export const adminFormsRouter = router({
       z.object({
         id: z.string().cuid(),
         outgoingWebhookUrl: z.string().url(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       await Promise.all([

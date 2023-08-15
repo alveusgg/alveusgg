@@ -45,14 +45,14 @@ const GiveawayCheck: React.FC<{
         e.preventDefault();
       }
     },
-    [disabled]
+    [disabled],
   );
 
   const checkboxJsx = (
     <label
       className={classes(
         "flex cursor-pointer flex-row items-center px-5",
-        disabled ? "pointer-events-none bg-gray-200" : "bg-white"
+        disabled ? "pointer-events-none bg-gray-200" : "bg-white",
       )}
     >
       <span className="sr-only">{label}</span>

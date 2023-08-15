@@ -35,7 +35,7 @@ type OptionValues<TOptions extends GenericOptions> = {
 
 const getBaseOptionByName = <TOptions extends GenericOptions>(
   options: TOptions,
-  optionName: keyof TOptions
+  optionName: keyof TOptions,
 ) => {
   return options[optionName] as OptionConfig;
 };
@@ -43,7 +43,7 @@ const getBaseOptionByName = <TOptions extends GenericOptions>(
 function parseOptionParams<TOptions extends GenericOptions>(
   defaultValues: OptionValues<TOptions>,
   params: string[],
-  options: TOptions
+  options: TOptions,
 ) {
   const errors: string[] = [];
   const values = { ...defaultValues };
@@ -103,13 +103,13 @@ function renderOptionsHelp<TOptions extends GenericOptions>(options: TOptions) {
 }
 
 export function createOptions<TOptions extends GenericOptions>(
-  options: TOptions
+  options: TOptions,
 ) {
   const defaultValues = Object.fromEntries(
     typeSafeObjectKeys(options).map((optionName) => {
       const option = getBaseOptionByName(options, optionName);
       return [optionName, option.default];
-    })
+    }),
   ) as OptionValues<TOptions>;
 
   return {

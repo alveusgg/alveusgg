@@ -19,12 +19,12 @@ const retryPushesSchema = z.object({
       notificationId: z.string().cuid(),
       subscriptionId: z.string().cuid(),
       expiresAt: z.number(),
-    })
+    }),
   ),
 });
 
 async function getNotificationMapForPushes(
-  pushes: RetryPushesOptions["pushes"]
+  pushes: RetryPushesOptions["pushes"],
 ) {
   const notificationIds = [
     ...new Set(pushes.map((push) => push.notificationId)),
@@ -37,12 +37,12 @@ async function getNotificationMapForPushes(
     },
   });
   return new Map<string, Notification>(
-    notifications.map((notification) => [notification.id, notification])
+    notifications.map((notification) => [notification.id, notification]),
   );
 }
 
 function isPushRetry<T extends { attempts: number | null }>(
-  push: T
+  push: T,
 ): push is T & { attempts: number } {
   return (
     push.attempts !== null &&
@@ -69,7 +69,7 @@ export default createTokenProtectedApiHandler(
               subscriptionId: push.subscriptionId,
               processingStatus: "DONE",
               failedAt: new Date(),
-            })
+            }),
           );
           return;
         }
@@ -85,7 +85,7 @@ export default createTokenProtectedApiHandler(
             tag: notification.tag || undefined,
             title: notification.title || undefined,
             imageUrl: notification.imageUrl || undefined,
-          })
+          }),
         );
       });
 
@@ -96,5 +96,5 @@ export default createTokenProtectedApiHandler(
       console.error("Failed to create notification", e);
       return false;
     }
-  }
+  },
 );

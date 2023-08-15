@@ -10,7 +10,7 @@ type DateTimeProps = {
 const DateTime: React.FC<DateTimeProps> = ({ date, format }) => {
   // On client load, and when the settings change, reformat the date
   const [formattedDate, setFormattedDate] = useState<string>(
-    formatDateTimeLocal(date, format)
+    formatDateTimeLocal(date, format),
   );
   useEffect(() => {
     setFormattedDate(formatDateTimeLocal(date, format));

@@ -35,11 +35,11 @@ const DEFAULT_TTL = WEB_PUSH_MAX_TTL;
 async function generateRequestDetails(
   subscription: PushNotificationBase64Url,
   payload: string | Buffer | null,
-  options: PushRequestOptions
+  options: PushRequestOptions,
 ) {
   if (subscription.endpoint.length === 0) {
     throw new Error(
-      "The subscription endpoint must be a string with a valid URL."
+      "The subscription endpoint must be a string with a valid URL.",
     );
   }
 
@@ -56,7 +56,7 @@ async function generateRequestDetails(
   // Validate the subscription keys
   if (typeof subscription.keys !== "object") {
     throw new Error(
-      "To send a message with a payload, the subscription must have 'auth' and 'p256dh' keys."
+      "To send a message with a payload, the subscription must have 'auth' and 'p256dh' keys.",
     );
   }
 
@@ -64,7 +64,7 @@ async function generateRequestDetails(
   const body = await encryptContent(
     subscription.keys.p256dh,
     subscription.keys.auth,
-    Buffer.from(payload || "")
+    Buffer.from(payload || ""),
   );
 
   return {
@@ -76,7 +76,7 @@ async function generateRequestDetails(
       "Content-Type": "application/octet-stream",
       "Content-Encoding": "aes128gcm",
       Authorization: await getVapidAuthorizationString(
-        `${url.protocol}//${url.host}`
+        `${url.protocol}//${url.host}`,
       ),
     },
     body: body,
@@ -86,12 +86,12 @@ async function generateRequestDetails(
 export async function sendWebPushNotification(
   subscription: PushNotificationBase64Url,
   payload: string | Buffer | null,
-  options: HttpsPushRequestOptions
+  options: HttpsPushRequestOptions,
 ) {
   const { endpoint, body, headers } = await generateRequestDetails(
     subscription,
     payload,
-    options
+    options,
   );
 
   return await requestHttps(endpoint, body, {

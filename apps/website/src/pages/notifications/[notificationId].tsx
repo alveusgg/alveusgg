@@ -45,7 +45,9 @@ const NotificationPage: NextPage<
     } else {
       router
         .replace(
-          `/updates?${new URLSearchParams({ notificationId: notification.id })}`
+          `/updates?${new URLSearchParams({
+            notificationId: notification.id,
+          })}`,
         )
         .then(() => {
           // ignore

@@ -41,7 +41,7 @@ export const WeatherInfo: React.FC<{ weatherData: WeatherData }> = ({
             <td>
               <span
                 title={`${nfCelsius.format(
-                  convertFahrenheitToCelsius(weatherData.main.temp)
+                  convertFahrenheitToCelsius(weatherData.main.temp),
                 )} °C`}
               >
                 {`${nfFahrenheit.format(weatherData.main.temp)} °F`}

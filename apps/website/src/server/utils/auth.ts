@@ -23,7 +23,7 @@ export function checkIsSuperUserSession(session: Session | null) {
 
 export async function checkPermissions(
   permissionConfig: PermissionConfig,
-  userId?: string
+  userId?: string,
 ) {
   if (!userId) {
     return false;
@@ -36,7 +36,7 @@ export async function checkPermissions(
 
   if (!permissionConfig.requiresSuperUser && permissionConfig.requiredRole) {
     return (await getRolesForUser(userId)).includes(
-      permissionConfig.requiredRole
+      permissionConfig.requiredRole,
     );
   }
 

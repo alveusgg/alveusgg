@@ -76,7 +76,7 @@ const Markdown: React.FC<MarkdownProps> = ({ content, dark = false }) => {
       ),
       p: ({ children }) => <p className="my-2">{children}</p>,
     }),
-    [dark]
+    [dark],
   );
 
   const plugins: Options["remarkPlugins"] = useMemo(() => [headingId], []);

@@ -18,6 +18,6 @@ export async function cleanupFileStorage({
   });
 
   await Promise.allSettled(
-    expiredFileStorageObjects.map(({ id }) => deleteFileStorageObject(id))
+    expiredFileStorageObjects.map(({ id }) => deleteFileStorageObject(id)),
   );
 }

@@ -16,7 +16,7 @@ const selectionSchema = z.object({
 const tagsSchema = selectionSchema.and(
   z.object({
     tags: z.record(z.string(), z.string()),
-  })
+  }),
 );
 
 export const pushSubscriptionRouter = router({
@@ -33,7 +33,7 @@ export const pushSubscriptionRouter = router({
           endpoint: input.endpoint,
           deletedAt: null,
         },
-      })
+      }),
     ),
 
   register: publicProcedure
@@ -114,7 +114,9 @@ export const pushSubscriptionRouter = router({
 
   updateRegistration: publicProcedure
     .input(
-      selectionSchema.and(z.object({ newSubscription: baseRegistrationSchema }))
+      selectionSchema.and(
+        z.object({ newSubscription: baseRegistrationSchema }),
+      ),
     )
     .mutation(async ({ ctx, input }) => {
       await ctx.prisma.pushSubscription.update({

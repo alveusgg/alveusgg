@@ -18,7 +18,7 @@ export const NotificationCategoryCheckbox: React.FC<{
       htmlFor={`tag-${tag}`}
       className={classes(
         navLinkClassesSub,
-        "relative flex cursor-pointer items-start"
+        "relative flex cursor-pointer items-start",
       )}
     >
       <div className="flex h-5 items-center">

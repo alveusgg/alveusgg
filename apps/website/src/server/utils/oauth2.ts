@@ -27,7 +27,7 @@ const oAuth2ServiceUrls: OAuth2ServiceUrls = {
 async function validateAccessToken(
   service: OAuth2Service,
   clientId: string,
-  accessToken: string
+  accessToken: string,
 ) {
   const response = await fetch(
     oAuth2ServiceUrls[service].baseSite +
@@ -38,7 +38,7 @@ async function validateAccessToken(
         "Client-Id": clientId,
         Authorization: `Bearer ${accessToken}`,
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -51,7 +51,7 @@ async function validateAccessToken(
 export async function getClientCredentialsAccessToken(
   service: OAuth2Service,
   clientId: string,
-  clientSecret: string
+  clientSecret: string,
 ) {
   const oauth2 = new OAuth2(
     clientId,
@@ -59,7 +59,7 @@ export async function getClientCredentialsAccessToken(
     oAuth2ServiceUrls[service].baseSite,
     oAuth2ServiceUrls[service].authorizePath,
     oAuth2ServiceUrls[service].accessTokenPath,
-    undefined
+    undefined,
   );
   const cache = await prisma.clientAccessToken.findFirst({
     where: { client_id: clientId, service },
@@ -93,7 +93,7 @@ export async function getClientCredentialsAccessToken(
         (error, access_token, refresh_token, results) => {
           console.info({ results });
           resolve({ error, access_token });
-        }
+        },
       );
     });
 

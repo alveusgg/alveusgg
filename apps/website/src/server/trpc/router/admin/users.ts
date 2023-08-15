@@ -17,7 +17,7 @@ export const adminUsersRouter = router({
           accounts: true,
           roles: true,
         },
-      })
+      }),
     ),
 
   assignRole: superUserProcedure
@@ -27,7 +27,7 @@ export const adminUsersRouter = router({
         role: z
           .string()
           .refine((role) => isValidUserRole(role), "Invalid role"),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const user = await ctx.prisma.user.findFirst({
@@ -67,7 +67,7 @@ export const adminUsersRouter = router({
       z.object({
         userId: z.string().cuid(),
         role: z.string(),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.userRole.deleteMany({
@@ -75,7 +75,7 @@ export const adminUsersRouter = router({
           user: { id: input.userId },
           role: input.role,
         },
-      })
+      }),
     ),
 
   getUserWithRoles: superUserProcedure.query(async ({ ctx }) => {
@@ -107,6 +107,6 @@ export const adminUsersRouter = router({
         accounts: true,
         roles: true,
       },
-    })
+    }),
   ),
 });

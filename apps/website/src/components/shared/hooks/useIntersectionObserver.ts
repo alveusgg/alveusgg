@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 
 export function useIntersectionObserver(
   handleIntersection: (entries: IntersectionObserverEntry[]) => void,
-  options: IntersectionObserverInit = { threshold: 0.7 }
+  options: IntersectionObserverInit = { threshold: 0.7 },
 ) {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const handlerRef = useRef(handleIntersection);
@@ -12,7 +12,7 @@ export function useIntersectionObserver(
     if (typeof window !== "undefined" && "IntersectionObserver" in window) {
       observerRef.current = new IntersectionObserver(
         (entries) => handlerRef.current(entries),
-        options
+        options,
       );
     }
   }, [options]);

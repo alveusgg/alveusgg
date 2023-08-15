@@ -20,7 +20,7 @@ export function NotificationsLive() {
       {
         refetchInterval: 2_000,
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
+      },
     );
 
   const cancelMutation = trpc.adminNotifications.cancelNotification.useMutation(
@@ -28,7 +28,7 @@ export function NotificationsLive() {
       onSuccess: async () => {
         await recentNotifications.refetch();
       },
-    }
+    },
   );
 
   const resendMutation = trpc.adminNotifications.resendNotification.useMutation(
@@ -36,7 +36,7 @@ export function NotificationsLive() {
       onSuccess: async () => {
         await recentNotifications.refetch();
       },
-    }
+    },
   );
 
   if (!recentNotifications.data) {

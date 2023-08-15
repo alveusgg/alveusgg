@@ -6,7 +6,7 @@ export function Announcements() {
     undefined,
     {
       refetchInterval: 10 * 60 * 1000,
-    }
+    },
   );
 
   if (announcements.isLoading) {

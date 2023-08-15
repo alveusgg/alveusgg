@@ -15,7 +15,7 @@ export function NotificationSettingsForm({
   notificationPermission: NotificationPermission | false;
 }) {
   const { endpoint, tags, isRegistered, updateTags } = usePushSubscription(
-    notificationPermission
+    notificationPermission,
   );
   const enableSettings = notificationPermission === "granted" && isRegistered;
   const handlePreferencesChange = useCallback(
@@ -23,12 +23,12 @@ export function NotificationSettingsForm({
       const tags: Record<string, string> = {};
       notificationCategories.forEach(({ tag }) => {
         tags[tag] = String(
-          data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0"
+          data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0",
         );
       });
       await updateTags(tags);
     },
-    [updateTags]
+    [updateTags],
   );
 
   const submitHandler = useCallback(
@@ -38,23 +38,23 @@ export function NotificationSettingsForm({
         await handlePreferencesChange(new FormData(event.currentTarget));
       }
     },
-    [enableSettings, handlePreferencesChange]
+    [enableSettings, handlePreferencesChange],
   );
 
   const debouncedHandlePreferencesChange = useMemo(
     () => debounce(handlePreferencesChange, 200),
-    [handlePreferencesChange]
+    [handlePreferencesChange],
   );
 
   const handleChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       if (enableSettings && event.currentTarget.form) {
         debouncedHandlePreferencesChange(
-          new FormData(event.currentTarget.form)
+          new FormData(event.currentTarget.form),
         );
       }
     },
-    [debouncedHandlePreferencesChange, enableSettings]
+    [debouncedHandlePreferencesChange, enableSettings],
   );
 
   if (!endpoint) {

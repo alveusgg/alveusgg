@@ -44,7 +44,7 @@ async function getRolesForUser(userName: string) {
 }
 
 async function getNewUserRoleEntry(
-  userName: string
+  userName: string,
 ): Promise<UserRoleCacheEntry> {
   const roles = await getUserRoles(userName);
   const expiresAt = Date.now() + 60_000;

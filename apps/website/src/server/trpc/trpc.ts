@@ -39,7 +39,7 @@ export const createCheckPermissionMiddleware = (permission: PermissionConfig) =>
   isAuthed.unstable_pipe(async ({ ctx, next }) => {
     const hasPermissions = await checkPermissions(
       permission,
-      ctx.session.user.id
+      ctx.session.user.id,
     );
     if (!hasPermissions) {
       throw new TRPCError({ code: "UNAUTHORIZED" });

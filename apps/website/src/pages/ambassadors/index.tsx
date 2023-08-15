@@ -38,7 +38,7 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
-  isActiveAmbassadorEntry
+  isActiveAmbassadorEntry,
 );
 
 // Use a map rather than a group, so we can sort the keys
@@ -63,7 +63,7 @@ const sortByOptions = {
       .sort(
         ([, a], [, b]) =>
           sortAmbassadorClassification(a.class, b.class) ||
-          sortPartialDateString(a.arrival, b.arrival)
+          sortPartialDateString(a.arrival, b.arrival),
       )
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
         const classification = getClassification(val.class);
@@ -107,7 +107,7 @@ const sortByOptions = {
 type SortByOption = keyof typeof sortByOptions;
 
 const sortByDropdown = Object.fromEntries(
-  Object.entries(sortByOptions).map(([key, val]) => [key, val.label])
+  Object.entries(sortByOptions).map(([key, val]) => [key, val.label]),
 ) as {
   [key in SortByOption]: (typeof sortByOptions)[key]["label"];
 };
@@ -158,7 +158,7 @@ const AmbassadorItems: React.FC<{
   <div
     className={classes(
       "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
-      className
+      className,
     )}
   >
     {ambassadors.map((key) => (
@@ -179,7 +179,7 @@ const AmbassadorGroup: React.FC<{
     (node: HTMLDivElement | null) => {
       if (node && active) node.scrollIntoView({ behavior: "smooth" });
     },
-    [active]
+    [active],
   );
 
   return (
@@ -213,7 +213,7 @@ const AmbassadorsPage: NextPage = () => {
       setActive(
         group && !Array.isArray(option.result) && option.result.has(group)
           ? group
-          : null
+          : null,
       );
     } else {
       setSortBy("all");

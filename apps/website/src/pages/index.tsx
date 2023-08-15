@@ -119,7 +119,7 @@ const help = {
 const getTwitchEmbed = (
   channel: string,
   parent: string,
-  autoPlay = true
+  autoPlay = true,
 ): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("channel", channel);
@@ -141,8 +141,8 @@ const Home: NextPage = () => {
       getTwitchEmbed(
         "alveussanctuary",
         window.location.hostname,
-        !reducedMotion
-      )
+        !reducedMotion,
+      ),
     );
   }, [reducedMotion]);
 

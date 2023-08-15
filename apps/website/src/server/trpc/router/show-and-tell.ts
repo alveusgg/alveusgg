@@ -34,7 +34,7 @@ export const showAndTellRouter = router({
       z.object({
         filter: z.enum(["approved", "pendingApproval"]).optional(),
         cursor: z.string().cuid().nullish(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const { cursor } = input;
@@ -56,13 +56,13 @@ export const showAndTellRouter = router({
   create: publicProcedure
     .input(showAndTellCreateInputSchema)
     .mutation(
-      async ({ ctx, input }) => await createPost(input, ctx.session?.user?.id)
+      async ({ ctx, input }) => await createPost(input, ctx.session?.user?.id),
     ),
 
   update: protectedProcedure
     .input(showAndTellUpdateInputSchema)
     .mutation(
-      async ({ ctx, input }) => await updatePost(input, ctx.session.user.id)
+      async ({ ctx, input }) => await updatePost(input, ctx.session.user.id),
     ),
 
   getMyEntries: protectedProcedure.query(({ ctx }) =>
@@ -74,7 +74,7 @@ export const showAndTellRouter = router({
       orderBy: {
         createdAt: "desc",
       },
-    })
+    }),
   ),
 
   delete: protectedProcedure
@@ -104,7 +104,7 @@ export const showAndTellRouter = router({
           userId: ctx.session.user.id,
           id: input,
         },
-      })
+      }),
     ),
 
   createFileUpload: publicProcedure
@@ -112,7 +112,7 @@ export const showAndTellRouter = router({
       z.object({
         fileName: z.string(),
         fileType: z.enum(allowedFileTypes),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { uploadUrl, viewUrl, fileStorageObject } =

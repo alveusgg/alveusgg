@@ -3,7 +3,7 @@ import { env } from "@/env/index.mjs";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   // Check for secret to confirm this is a valid request
   if (req.query.secret !== env.ACTION_API_SECRET) {
@@ -21,8 +21,8 @@ export default async function handler(
       } else {
         await Promise.allSettled(
           req.query.postId.map((postId: string) =>
-            res.revalidate(`/show-and-tell/posts/${postId}`)
-          )
+            res.revalidate(`/show-and-tell/posts/${postId}`),
+          ),
         );
       }
     }

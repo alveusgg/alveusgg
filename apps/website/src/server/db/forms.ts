@@ -31,11 +31,11 @@ export const formSchema = z.object({
 export const existingFormSchema = formSchema.and(
   z.object({
     id: z.string().cuid(),
-  })
+  }),
 );
 
 async function decryptFormEntryWithAddress<T extends FormEntryWithAddress>(
-  entry: T
+  entry: T,
 ) {
   const res = await decryptRecord(entry, entryEncryptFields);
   res.mailingAddress =
@@ -101,7 +101,7 @@ export async function createEntry(
   userId: string,
   formId: string,
   input: z.infer<typeof formEntrySchema>,
-  { withMailingAddress = false } = {}
+  { withMailingAddress = false } = {},
 ) {
   if (withMailingAddress && input.mailingAddress === undefined) {
     throw new Error("Mailing address is required");
@@ -119,7 +119,7 @@ export async function createEntry(
           givenName: input.givenName,
           familyName: input.familyName,
         },
-        entryEncryptFields
+        entryEncryptFields,
       )),
       form: { connect: { id: formId } },
       user: { connect: { id: userId } },
@@ -137,7 +137,7 @@ export async function createEntry(
                   postalCode: input.mailingAddress.postalCode,
                   country: input.mailingAddress.country,
                 },
-                mailingAddressEncryptFields
+                mailingAddressEncryptFields,
               ),
             }
           : undefined,
@@ -157,7 +157,7 @@ export async function getAllEntriesForForm(formId: string) {
   });
 
   return Promise.all(
-    entries.map((entry) => decryptFormEntryWithAddress(entry))
+    entries.map((entry) => decryptFormEntryWithAddress(entry)),
   );
 }
 

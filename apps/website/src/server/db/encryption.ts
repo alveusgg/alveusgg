@@ -17,7 +17,7 @@ type RecordToEncryptWithSalt<EncryptionField extends string> =
 
 export async function decryptRecord<
   EncryptionField extends string,
-  RecordType extends RecordToEncryptWithSalt<EncryptionField>
+  RecordType extends RecordToEncryptWithSalt<EncryptionField>,
 >(input: RecordType, fields: Array<EncryptionField>) {
   const salt = await decodeSalt(input.salt);
   const key = await createSaltedEncryptionKey(salt);
@@ -42,7 +42,7 @@ export async function decryptRecord<
 
 export async function encryptRecord<
   EncryptionField extends string,
-  RecordType extends RecordToEncrypt<EncryptionField>
+  RecordType extends RecordToEncrypt<EncryptionField>,
 >(input: RecordType, fields: Array<EncryptionField>) {
   const salt = await generateSalt();
   const key = await createSaltedEncryptionKey(salt);

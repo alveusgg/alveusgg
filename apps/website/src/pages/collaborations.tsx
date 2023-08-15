@@ -161,8 +161,8 @@ const collaborationsByYear: { year: number; collaborations: Collaborations }[] =
           [key]: value,
         },
       }),
-      {}
-    )
+      {},
+    ),
   )
     .map(([year, collaborations]) => ({ year: Number(year), collaborations }))
     .sort((a, b) => b.year - a.year);
@@ -288,7 +288,7 @@ const CollaborationsPage: NextPage = () => {
                 level={-1}
                 className={classes(
                   "alveus-green-800 mb-6 mt-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
-                  idx === 0 && "sr-only"
+                  idx === 0 && "sr-only",
                 )}
                 id={year.toString()}
                 link

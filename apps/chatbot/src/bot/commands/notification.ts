@@ -37,12 +37,12 @@ const partialUrlFilterList = ["https://twitch.tv/", "https://youtube.com/"];
 
 const createPendingNotificationKey = (
   broadcasterId: string,
-  userId: string
+  userId: string,
 ): PendingNotificationKey => `${broadcasterId}|${userId}`;
 
 function createPendingNotification(
   key: PendingNotificationKey,
-  data: Omit<PendingNotification, "expiresAt">
+  data: Omit<PendingNotification, "expiresAt">,
 ) {
   const pendingNotification: PendingNotification = {
     ...data,
@@ -145,7 +145,7 @@ export async function createNotificationCommands() {
 
   const notificationCommand: CommandHandler = async (
     params,
-    { broadcasterId, broadcasterName, userName, userId, reply, say }
+    { broadcasterId, broadcasterName, userName, userId, reply, say },
   ) => {
     const isMod = await checkUserIsAllowedToSendNotifications(userName);
     if (!isMod) {
@@ -163,7 +163,7 @@ export async function createNotificationCommands() {
       reply(
         `Usage: !notify [link] [title] [|text] | ` +
           `Arguments: link = URL | ` +
-          `Options: ${options.renderHelp()}`
+          `Options: ${options.renderHelp()}`,
       );
       return;
     }
@@ -175,7 +175,7 @@ export async function createNotificationCommands() {
 
     const { linkUrl, restParams } = parseOptionalLinkUrl(
       broadcasterName,
-      paramsWithoutOptions
+      paramsWithoutOptions,
     );
     let { title, text } = parseTitleAndText(restParams);
 
@@ -204,14 +204,14 @@ export async function createNotificationCommands() {
 
     reply(
       `PauseChamp please !confirm: ${renderPendingNotification(
-        pendingNotification
-      )}`
+        pendingNotification,
+      )}`,
     );
   };
 
   const announcementCommand: CommandHandler = async (
     params,
-    { broadcasterId, broadcasterName, userName, userId, reply }
+    { broadcasterId, broadcasterName, userName, userId, reply },
   ) => {
     const isMod = await checkUserIsAllowedToSendNotifications(userName);
     if (!isMod) {
@@ -229,7 +229,7 @@ export async function createNotificationCommands() {
       reply(
         `Usage: !announce [link] [start] [end] [title] [|text] | ` +
           `Arguments: link = URL, start/end = YYYY-MM-DD[ HH:II] | ` +
-          `Options: ${options.renderHelp()}`
+          `Options: ${options.renderHelp()}`,
       );
       return;
     }
@@ -241,7 +241,7 @@ export async function createNotificationCommands() {
 
     const { linkUrl, restParams } = parseOptionalLinkUrl(
       broadcasterName,
-      paramsWithoutOptions
+      paramsWithoutOptions,
     );
     const {
       start,
@@ -271,14 +271,14 @@ export async function createNotificationCommands() {
 
     reply(
       `PauseChamp please !confirm: ${renderPendingNotification(
-        pendingNotification
-      )}`
+        pendingNotification,
+      )}`,
     );
   };
 
   const confirmCommand: CommandHandler = async (
     params,
-    { broadcasterId, userName, userId, reply }
+    { broadcasterId, userName, userId, reply },
   ) => {
     const isMod = await checkUserIsAllowedToSendNotifications(userName);
     if (!isMod) {

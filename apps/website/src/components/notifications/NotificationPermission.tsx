@@ -46,7 +46,7 @@ export const NotificationPermission: React.FC<{
             {typeSafeObjectKeys(notificationHelpEntries).map((key) => {
               const entry = notificationHelpEntries[key];
               const matches = entry.includes.every((regex) =>
-                regex.test(navigator.userAgent)
+                regex.test(navigator.userAgent),
               );
               if (!matches) {
                 return null;

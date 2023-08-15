@@ -4,7 +4,7 @@ export function callEndpoint<T>(endpoint: string, body: T) {
   const bodyText = JSON.stringify(body);
   const fullEndpointUrl = new URL(
     endpoint,
-    env.NEXT_PUBLIC_BASE_URL
+    env.NEXT_PUBLIC_BASE_URL,
   ).toString();
 
   // Use queue

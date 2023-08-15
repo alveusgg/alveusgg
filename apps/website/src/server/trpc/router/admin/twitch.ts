@@ -18,7 +18,7 @@ import { permissions } from "@/config/permissions";
 type Subscription = z.infer<typeof subscriptionSchema>;
 
 const permittedProcedure = protectedProcedure.use(
-  createCheckPermissionMiddleware(permissions.manageTwitchApi)
+  createCheckPermissionMiddleware(permissions.manageTwitchApi),
 );
 
 const roles = ["moderator", "broadcaster"] as const;
@@ -46,7 +46,7 @@ export const adminTwitchRouter = router({
   getChannel: permittedProcedure
     .input(z.string())
     .query(async ({ ctx, input: channelId }) =>
-      ctx.prisma.twitchChannel.findUnique({ where: { channelId } })
+      ctx.prisma.twitchChannel.findUnique({ where: { channelId } }),
     ),
 
   createOrEditChannel: permittedProcedure
@@ -59,8 +59,8 @@ export const adminTwitchRouter = router({
         .and(
           z.object({
             label: z.string(),
-          })
-        )
+          }),
+        ),
     )
     .mutation(async ({ input }) => {
       switch (input.action) {
@@ -103,7 +103,7 @@ export const adminTwitchRouter = router({
       select: {
         scope: true,
       },
-    })
+    }),
   ),
 
   connectUserAsBroadcasterOrModerator: permittedProcedure
@@ -111,7 +111,7 @@ export const adminTwitchRouter = router({
       z.object({
         twitchChannelId: z.string(),
         role: z.enum(roles),
-      })
+      }),
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user?.id;

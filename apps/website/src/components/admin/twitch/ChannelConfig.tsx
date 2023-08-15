@@ -42,7 +42,7 @@ function ChannelConfigRow({
   channel: ChannelConfigWithUsers;
   handleConnectUserAsBroadcasterOrModerator: (
     channelId: string,
-    role: "broadcaster" | "moderator"
+    role: "broadcaster" | "moderator",
   ) => void;
   onError: (error: string) => void;
   onUpdate: () => void;
@@ -108,7 +108,7 @@ function ChannelConfigRow({
             onClick={() =>
               handleConnectUserAsBroadcasterOrModerator(
                 channel.channelId,
-                "broadcaster"
+                "broadcaster",
               )
             }
           >
@@ -138,7 +138,7 @@ function ChannelConfigRow({
             onClick={() =>
               handleConnectUserAsBroadcasterOrModerator(
                 channel.channelId,
-                "moderator"
+                "moderator",
               )
             }
           >
@@ -197,7 +197,7 @@ export function ChannelConfig() {
                 onUpdate={() => channels.refetch()}
                 handleConnectUserAsBroadcasterOrModerator={(
                   twitchChannelId,
-                  role
+                  role,
                 ) => {
                   connectUserAsBroadcasterOrModerator.mutate({
                     twitchChannelId,

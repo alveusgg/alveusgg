@@ -61,7 +61,7 @@ export function VideoLinksField({
         setErrors(newErrors);
       }
     },
-    [setVideoUrls, videoUrls]
+    [setVideoUrls, videoUrls],
   );
 
   return (

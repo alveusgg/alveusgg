@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export function useFileDragAndDrop(
-  addFiles: (filesToAdd: FileList | null) => Promise<void>
+  addFiles: (filesToAdd: FileList | null) => Promise<void>,
 ) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
 

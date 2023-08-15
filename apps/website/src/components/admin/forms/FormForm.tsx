@@ -44,7 +44,7 @@ export function FormForm({ action, form }: FormFormProps) {
   const [rules, setRules] = useState(defaultConfig.rules || "");
   const [label, setLabel] = useState(form?.label || "");
   const [askMarketingEmails, setAskMarketingEmails] = useState(
-    defaultConfig.askMarketingEmails || false
+    defaultConfig.askMarketingEmails || false,
   );
 
   const handleSubmit = useCallback(
@@ -101,11 +101,11 @@ export function FormForm({ action, form }: FormFormProps) {
             onSuccess: async () => {
               await router.push(`/admin/forms`);
             },
-          }
+          },
         );
       }
     },
-    [action, form, router, submit, askMarketingEmails]
+    [action, form, router, submit, askMarketingEmails],
   );
 
   return (

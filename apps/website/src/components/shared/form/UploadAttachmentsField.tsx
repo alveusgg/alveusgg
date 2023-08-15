@@ -56,7 +56,7 @@ type FileUploadingPropsType = {
   files: FileReference[];
   dispatch: React.Dispatch<FileAction>;
   upload: (
-    file: File
+    file: File,
   ) => Promise<{ viewUrl: string; fileStorageObjectId: string } | false>;
   label?: string;
   allowedFileTypes?: readonly string[];
@@ -79,7 +79,7 @@ type FileAction =
 
 function fileReducer(
   state: FileReference[],
-  action: FileAction
+  action: FileAction,
 ): FileReference[] {
   switch (action.type) {
     case "add":
@@ -95,7 +95,7 @@ function fileReducer(
               url: action.url,
               fileStorageObjectId: action.fileStorageObjectId,
             }
-          : file
+          : file,
       );
     case "upload.failed":
       return state.map((file) =>
@@ -105,7 +105,7 @@ function fileReducer(
               status: "upload.failed",
               error: action.error,
             }
-          : file
+          : file,
       );
     default:
       return state;
@@ -115,7 +115,7 @@ function fileReducer(
 let fileCounter = 0;
 
 export const useUploadAttachmentsData = (
-  initialFiles: FileReference[] = []
+  initialFiles: FileReference[] = [],
 ) => {
   const [fileReferences, dispatch] = useReducer(fileReducer, initialFiles);
   return { files: fileReferences, dispatch };
@@ -145,7 +145,7 @@ export const UploadAttachmentsField = ({
     (id: string): void => {
       dispatch({ type: "remove", id });
     },
-    [dispatch]
+    [dispatch],
   );
 
   const addFiles = async (filesToAdd: FileList | null) => {
@@ -181,7 +181,7 @@ export const UploadAttachmentsField = ({
             dataURL,
             file,
           });
-        })
+        }),
       );
     }
 
@@ -209,7 +209,7 @@ export const UploadAttachmentsField = ({
   };
 
   const onInputChange = async (
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
     await addFiles(e.target.files);
     if (inputRef.current) inputRef.current.value = "";
@@ -250,7 +250,7 @@ export const UploadAttachmentsField = ({
                 key: file.id,
                 fileReference: file,
                 removeFileReference: onFileRemove,
-              })
+              }),
             )}
           </div>
         )}

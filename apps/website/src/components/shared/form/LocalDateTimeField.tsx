@@ -32,7 +32,7 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
   const ref = useRef<HTMLInputElement>(null);
   const { labelProps, fieldProps } = useField(props);
   const [showResetButton, setShowResetButton] = useState(
-    () => props.showResetButton && Boolean(props.value || props.defaultValue)
+    () => props.showResetButton && Boolean(props.value || props.defaultValue),
   );
   const onChange = useMemo(
     () => (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,7 +44,7 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
         props.onChange(e);
       }
     },
-    [props]
+    [props],
   );
   const reset = useCallback(() => {
     if (ref.current) {
@@ -64,7 +64,7 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
           pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
           className={classes(
             "w-full bg-white p-1 text-black",
-            props.inputClassName
+            props.inputClassName,
           )}
           {...fieldProps}
           defaultValue={props.defaultValue}

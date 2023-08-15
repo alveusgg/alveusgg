@@ -39,7 +39,7 @@ export type LivePageProps = InferGetStaticPropsType<typeof getStaticProps>;
 const Live: NextPage<LivePageProps> = (
   {
     /* weatherData, ambassadors */
-  }
+  },
 ) => {
   //const currentAmbassadors = ["tico", "miley", "mia", "siren"];
 

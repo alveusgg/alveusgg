@@ -81,7 +81,7 @@ const data: FoundAnimalFlow = {
                               flow: {
                                 prompt: macros.general.rehab(
                                   "the bird",
-                                  "If you are sure the parents are not nearby, and do not return within a few hours"
+                                  "If you are sure the parents are not nearby, and do not return within a few hours",
                                 ),
                               },
                             },
@@ -119,7 +119,7 @@ const data: FoundAnimalFlow = {
                               flow: {
                                 prompt: macros.general.rehab(
                                   "the bird",
-                                  "If you are sure the parents are not nearby, and do not return within a few hours"
+                                  "If you are sure the parents are not nearby, and do not return within a few hours",
                                 ),
                               },
                             },
@@ -156,7 +156,7 @@ const data: FoundAnimalFlow = {
                                     flow: {
                                       prompt: macros.general.rehab(
                                         "the bird",
-                                        "If you are sure the parents are not nearby, and do not return within a few hours"
+                                        "If you are sure the parents are not nearby, and do not return within a few hours",
                                       ),
                                     },
                                   },
@@ -222,7 +222,7 @@ const data: FoundAnimalFlow = {
                             "If you are still concerned, you can monitor the deer from a distance to make sure the mother is still caring for it. Do not approach or try to handle the deer, as your scent may lead to the mother abandoning it.",
                             ...macros.general.rehab(
                               "a deer",
-                              "If you don't see the mother return over the next couple of days"
+                              "If you don't see the mother return over the next couple of days",
                             ),
                           ],
                         },

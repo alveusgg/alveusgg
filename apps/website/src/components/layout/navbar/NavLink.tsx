@@ -25,7 +25,7 @@ export const navLinkClassesSubActive = "bg-alveus-tan/10";
 export const NavLink: React.FC<NavLinkProps> = forwardRef(
   (
     { href, variant = "main", isExternal = false, className, ...props },
-    ref
+    ref,
   ) => {
     const isActive = useIsActivePath(href);
 
@@ -41,7 +41,7 @@ export const NavLink: React.FC<NavLinkProps> = forwardRef(
               ? navLinkClassesMainActive
               : navLinkClassesSubActive),
           // custom classes
-          className
+          className,
         )}
         {...(isExternal
           ? {
@@ -53,7 +53,7 @@ export const NavLink: React.FC<NavLinkProps> = forwardRef(
         ref={ref}
       />
     );
-  }
+  },
 );
 NavLink.displayName = "NavLink";
 

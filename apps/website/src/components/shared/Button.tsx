@@ -48,7 +48,7 @@ export function LinkButton({
   return (
     <Link
       className={`${baseClasses} ${getWidthClasses(width)} ${getSizeClasses(
-        size
+        size,
       )} ${className}`}
       {...props}
     >
@@ -81,7 +81,7 @@ export function Button({
     <button
       type={type}
       className={`${baseClasses} ${getWidthClasses(width)} ${getSizeClasses(
-        size
+        size,
       )} ${className}`}
       {...buttonProps}
     >

@@ -61,8 +61,8 @@ type Consent = Readonly<{
 const defaultConsent = Object.freeze(
   Object.keys(consentData).reduce(
     (acc, key) => ({ ...acc, [key]: false }),
-    {} as Consent
-  )
+    {} as Consent,
+  ),
 ) as Consent;
 
 export const consentExplainer =
@@ -74,7 +74,7 @@ const isPartialConsent = (val: unknown): val is Partial<Consent> =>
   Object.entries(val).every(
     ([k, v]) =>
       Object.prototype.hasOwnProperty.call(consentData, k) &&
-      typeof v === "boolean"
+      typeof v === "boolean",
   );
 
 type ConsentContext = Readonly<{
@@ -154,11 +154,11 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
   const updateAll = useCallback(
     (val: boolean) => {
       update(
-        Object.keys(consent).reduce((acc, key) => ({ ...acc, [key]: val }), {})
+        Object.keys(consent).reduce((acc, key) => ({ ...acc, [key]: val }), {}),
       );
       close();
     },
-    [update, consent, close]
+    [update, consent, close],
   );
 
   // Track the allow all button, so we can focus it when the dialog opens
@@ -167,7 +167,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
   // Track if the user has consented to anything, we'll use this for the visual toggle
   const hasConsented = useMemo(
     () => Object.values(consent).some(Boolean),
-    [consent]
+    [consent],
   );
 
   return (
@@ -238,7 +238,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                       consent[key as ConsentKey]
                         ? "bg-alveus-green"
                         : "bg-alveus-green-300",
-                      "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline"
+                      "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline",
                     )}
                   >
                     <span
@@ -246,7 +246,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
                         consent[key as ConsentKey]
                           ? "translate-x-6"
                           : "translate-x-1",
-                        "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform"
+                        "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform",
                       )}
                     />
                   </div>
@@ -296,13 +296,13 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
         <div
           className={classes(
             hasConsented && "bg-alveus-green-300",
-            "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green"
+            "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-hover:bg-alveus-green",
           )}
         >
           <span
             className={classes(
               hasConsented ? "translate-x-3.5" : "-translate-x-0.5",
-              "inline-block h-4 w-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform"
+              "inline-block h-4 w-4 rounded-full border-2 border-alveus-green bg-alveus-tan transition-transform",
             )}
           />
         </div>
@@ -349,7 +349,7 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
 
   const value = useMemo<ConsentContext>(
     () => Object.freeze({ consent, update, reset, loaded, interacted }),
-    [consent, update, reset, loaded, interacted]
+    [consent, update, reset, loaded, interacted],
   );
 
   useEffect(() => {

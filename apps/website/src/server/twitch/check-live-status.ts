@@ -24,7 +24,7 @@ async function getCurrentChannelInfo(id: string) {
 
 async function checkChannelForUpdates(
   id: string,
-  liveStatusMap: LiveStatusMap
+  liveStatusMap: LiveStatusMap,
 ) {
   const oldStatus = await getChannelLiveStatus(id);
 
@@ -104,7 +104,7 @@ async function checkLiveStatusForChannels() {
   });
 
   await Promise.allSettled(
-    channelIds.map(async (id) => checkChannelForUpdates(id, liveStatusMap))
+    channelIds.map(async (id) => checkChannelForUpdates(id, liveStatusMap)),
   );
 }
 

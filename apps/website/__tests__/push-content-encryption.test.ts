@@ -43,7 +43,7 @@ const publicKey = await crypto.subtle.importKey(
   ]),
   { name: "ECDH", namedCurve: "P-256" },
   true,
-  []
+  [],
 );
 
 const authSecretStr = "ZFO3cPjB3ehHtfmB3Tdv7Q";
@@ -57,7 +57,7 @@ test("HMAC_hash", async () => {
       216, 235, 41, 61, 107, 42, 177, 75, 117, 28, 251, 147, 128, 3, 248, 166,
       72, 193, 230, 216, 45, 129, 220, 131, 200, 140, 186, 187, 250, 211, 158,
       187,
-    ]).buffer
+    ]).buffer,
   );
 });
 
@@ -67,7 +67,7 @@ test("HKDF_expand", async () => {
     new Uint8Array([
       29, 219, 22, 29, 64, 36, 132, 133, 194, 12, 161, 243, 182, 128, 234, 166,
       248, 94, 218, 7, 194, 237, 24, 0, 138, 253, 71, 128, 108, 85, 174, 150,
-    ]).buffer
+    ]).buffer,
   );
 });
 
@@ -108,7 +108,7 @@ test("HKDF_expand 512", async () => {
       146, 176, 205, 194, 164, 58, 194, 89, 75, 29, 215, 111, 182, 45, 115, 80,
       0, 87, 181, 236, 127, 191, 207, 226, 99, 114, 27, 139, 118, 59, 36, 245,
       216, 174, 193,
-    ]).buffer
+    ]).buffer,
   );
 });
 
@@ -127,7 +127,7 @@ test("createCipherText", async () => {
   expect(reportedRecordSize).toStrictEqual(4096);
   expect(new DataView(keySize).getUint8(0)).toStrictEqual(65);
   expect(cipherPublicKey).toStrictEqual(
-    await crypto.subtle.exportKey("raw", publicKey)
+    await crypto.subtle.exportKey("raw", publicKey),
   );
 
   expect(encryptedPayload).toStrictEqual(
@@ -135,7 +135,7 @@ test("createCipherText", async () => {
       194, 161, 48, 26, 136, 212, 214, 181, 135, 157, 215, 73, 165, 30, 103,
       137, 222, 49, 30, 65, 137, 74, 51, 24, 73, 157, 214, 13, 159, 174, 90, 26,
       136, 226,
-    ]).buffer
+    ]).buffer,
   );
 });
 
@@ -143,7 +143,7 @@ test("encryptContent", async () => {
   const cipherText = await encryptContent(
     dhStr,
     authSecretStr,
-    new TextEncoder().encode("hello world")
+    new TextEncoder().encode("hello world"),
   );
 
   expect(cipherText).toBeDefined();
@@ -154,7 +154,7 @@ test("writeHeader", () => {
   const res = createCipherHeader(publicKeyBuffer, 4096);
 
   expect(concatArrayBuffers(res)).toStrictEqual(
-    new Uint8Array([0, 0, 16, 0, 5, 72, 97, 108, 108, 111]).buffer
+    new Uint8Array([0, 0, 16, 0, 5, 72, 97, 108, 108, 111]).buffer,
   );
 });
 
@@ -162,7 +162,7 @@ test("deriveNonce", async () => {
   const authSecret = decodeBase64UrlToArrayBuffer(authSecretStr);
   const dh = decodeBase64UrlToArrayBuffer(dhStr);
   const publicKeyBuffer = decodeBase64UrlToArrayBuffer(
-    "BOUkJH3aWWO-FB6boIyhErhknl48pmFvz3Pd7sWGHi81SUQYjV38xVLy4XFARBAO7za4dtU1oGbbSEgdI70mUbg"
+    "BOUkJH3aWWO-FB6boIyhErhknl48pmFvz3Pd7sWGHi81SUQYjV38xVLy4XFARBAO7za4dtU1oGbbSEgdI70mUbg",
   );
   const localKeypair = {
     publicKey: await crypto.subtle.importKey(
@@ -170,7 +170,7 @@ test("deriveNonce", async () => {
       publicKeyBuffer,
       { name: "ECDH", namedCurve: "P-256" },
       true,
-      []
+      [],
     ),
     privateKey: await crypto.subtle.importKey(
       "jwk",
@@ -183,7 +183,7 @@ test("deriveNonce", async () => {
       },
       { name: "ECDH", namedCurve: "P-256" },
       true,
-      ["deriveKey", "deriveBits"]
+      ["deriveKey", "deriveBits"],
     ),
   } as unknown as CryptoKeyPair;
 

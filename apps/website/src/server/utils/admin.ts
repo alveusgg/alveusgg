@@ -46,7 +46,7 @@ const menuItems = [
 
 export async function getAdminSSP(
   context: GetSessionParams,
-  permission: PermissionConfig
+  permission: PermissionConfig,
 ) {
   const session = await getSession(context);
 
@@ -60,7 +60,7 @@ export async function getAdminSSP(
         .map((item) =>
           isSuperUser || checkRolesGivePermission(roles, item.permission)
             ? { label: item.label, href: item.href }
-            : undefined
+            : undefined,
         )
         .filter(notEmpty);
 

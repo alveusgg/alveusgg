@@ -45,11 +45,11 @@ export function TwitchChannelForm({ action, data }: TwitchChannelFormProps) {
             onSuccess: async () => {
               await router.push(`/admin/twitch`);
             },
-          }
+          },
         );
       }
     },
-    [action, data, router, submit]
+    [action, data, router, submit],
   );
 
   return (

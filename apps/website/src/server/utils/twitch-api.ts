@@ -26,7 +26,7 @@ async function getApplicationAuthHeaders() {
   const accessToken = await getClientCredentialsAccessToken(
     "twitch",
     clientId,
-    clientSecret
+    clientSecret,
   );
   if (accessToken === undefined) {
     throw Error("Twitch API: Could not obtain OAuth access token!");
@@ -94,7 +94,7 @@ const streamsResponseSchema = z.object({
       thumbnail_url: z.string(),
       tag_ids: z.array(z.string()),
       is_mature: z.boolean(),
-    })
+    }),
   ),
   pagination: paginationSchema,
 });
@@ -107,7 +107,7 @@ export async function getSubscriptions() {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -133,7 +133,7 @@ export async function removeSubscription(id: string) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -148,7 +148,7 @@ export async function createSubscription(
   type: string,
   user_id: string,
   callback: string,
-  secret: string
+  secret: string,
 ) {
   const response = await fetch(
     `https://api.twitch.tv/helix/eventsub/subscriptions`,
@@ -170,7 +170,7 @@ export async function createSubscription(
           secret: secret,
         },
       }),
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -191,7 +191,7 @@ export async function getSubscriptionsForUser(userId: string) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -217,7 +217,7 @@ export async function getStreamsForChannels(channelIds: Array<string>) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -241,7 +241,7 @@ const channelsFollowedResponseSchema = z.object({
       broadcaster_login: z.string(),
       broadcaster_name: z.string(),
       followed_at: z.string(),
-    })
+    }),
   ),
   pagination: paginationSchema,
 });
@@ -249,7 +249,7 @@ const channelsFollowedResponseSchema = z.object({
 export async function getUserChannelsFollowed(
   userAccessToken: string,
   userId: string,
-  broadcasterId?: string
+  broadcasterId?: string,
 ) {
   const params = [["user_id", userId]];
 
@@ -259,14 +259,14 @@ export async function getUserChannelsFollowed(
 
   const response = await fetch(
     `https://api.twitch.tv/helix/channels/followed?${new URLSearchParams(
-      params
+      params,
     )}`,
     {
       method: "GET",
       headers: {
         ...(await getUserAuthHeaders(userAccessToken)),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -285,13 +285,13 @@ export async function getUserChannelsFollowed(
 export async function getUserFollowsBroadcaster(
   userAccessToken: string,
   userId: string,
-  broadcasterId: string
+  broadcasterId: string,
 ) {
   try {
     const res = await getUserChannelsFollowed(
       userAccessToken,
       userId,
-      broadcasterId
+      broadcasterId,
     );
     if (res.total > 0) {
       return true;
@@ -318,7 +318,7 @@ const usersResponseSchema = z.object({
       view_count: z.number(),
       email: z.string().email().optional(),
       created_at: z.string(),
-    })
+    }),
   ),
 });
 
@@ -332,7 +332,7 @@ export async function getUserById(channelId: string) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -359,7 +359,7 @@ export async function getUserByName(userName: string) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {

@@ -21,7 +21,7 @@ const ptSans = PT_Sans({
 
 function drawBackgroundCover(
   canvas: HTMLCanvasElement,
-  image: HTMLImageElement
+  image: HTMLImageElement,
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
@@ -61,7 +61,7 @@ function drawTextBoxWithBlurredBg(
     boxPaddingY = 10,
     color = "black",
     boxBgColor = "rgba(255, 255, 255, 0.6)",
-  } = {}
+  } = {},
 ) {
   // Set up font
   const fontFamily = ptSans.style.fontFamily.replaceAll(" ", "").trim();
@@ -184,14 +184,14 @@ export function PushImageCanvas({
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [bgPromise, setBgPromise] = useState<Promise<HTMLImageElement> | null>(
-    null
+    null,
   );
   const [logoPromise, setLogoPromise] =
     useState<Promise<HTMLImageElement> | null>(null);
 
   useEffect(
     () => setBgPromise(loadImage(backgroundImageUrl)),
-    [backgroundImageUrl]
+    [backgroundImageUrl],
   );
   useEffect(() => setLogoPromise(loadImage(logoImageUrl)), [logoImageUrl]);
 

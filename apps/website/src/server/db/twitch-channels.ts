@@ -37,7 +37,7 @@ export async function createTwitchChannel({
 
 export async function editTwitchChannel(
   channelId: string,
-  { label }: { label?: string }
+  { label }: { label?: string },
 ) {
   return prisma.twitchChannel.update({
     where: { channelId },

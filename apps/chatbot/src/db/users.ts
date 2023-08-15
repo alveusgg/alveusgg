@@ -48,8 +48,8 @@ export async function getAccountByProviderAccountId({
     .where(
       and(
         eq(accounts.provider, provider),
-        eq(accounts.providerAccountId, providerAccountId)
-      )
+        eq(accounts.providerAccountId, providerAccountId),
+      ),
     );
   return foundAccounts[0];
 }
@@ -78,7 +78,7 @@ export async function updateAccessToken({
     .where(
       and(
         eq(accounts.provider, provider),
-        eq(accounts.providerAccountId, providerAccountId)
-      )
+        eq(accounts.providerAccountId, providerAccountId),
+      ),
     );
 }

@@ -29,9 +29,9 @@ const Heading: React.FC<HeadingProps> = ({
         !/\btext-(xs|sm|base|lg|[2-6]?xl)\b/.test(className || "") &&
           "text-3xl",
         "font-serif font-bold",
-        className
+        className,
       ),
-    [className]
+    [className],
   );
 
   return (

@@ -32,7 +32,7 @@ test("getVapidAuthorizationString", async () => {
   const [headerStr, payloadStr, signatureStr] = jwtToken.split(".") as [
     string,
     string,
-    string
+    string,
   ];
 
   const decodedHeader = JSON.parse(decodeBase64UrlString(headerStr));
