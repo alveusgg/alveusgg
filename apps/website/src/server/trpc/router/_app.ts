@@ -9,12 +9,14 @@ import { adminFormsRouter } from "./admin/forms";
 import { adminActivityFeedRouter } from "./admin/activity-feed";
 import { showAndTellRouter } from "./show-and-tell";
 import { adminShowAndTellRouter } from "./admin/show-and-tell";
+import { adminTwitchRouter } from "./admin/twitch";
 
 export const appRouter = router({
   auth: authRouter,
   adminActivityFeed: adminActivityFeedRouter,
   adminForms: adminFormsRouter,
   adminNotifications: adminNotificationsRouter,
+  adminTwitch: adminTwitchRouter,
   adminShowAndTell: adminShowAndTellRouter,
   adminUsersRouter: adminUsersRouter,
   notifications: notificationsRouter,

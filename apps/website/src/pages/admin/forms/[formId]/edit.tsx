@@ -45,7 +45,7 @@ const AdminEditFormPage: NextPage<
       <Meta title="Edit Form | Admin" />
 
       <AdminPageLayout title="Edit Form" menuItems={menuItems}>
-        <Headline>Create new Form</Headline>
+        <Headline>Edit Form</Headline>
 
         <Panel>
           {form.data ? (

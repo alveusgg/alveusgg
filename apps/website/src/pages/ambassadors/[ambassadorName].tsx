@@ -39,23 +39,7 @@ import {
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
-
-const parseDate = (date: string | null): string => {
-  if (!date) return "Unknown";
-
-  const [year, month, day] = date.split("-");
-  const parsed = new Date(
-    Number(year),
-    Number(month || 1) - 1,
-    Number(day || 1)
-  );
-
-  return parsed.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: month ? "long" : undefined,
-    day: day ? "numeric" : undefined,
-  });
-};
+import { formatPartialDateString } from "@/utils/datetime";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
@@ -243,7 +227,9 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <Heading level={2}>Date of Birth:</Heading>
 
                 <div className="ml-4">
-                  <p className="text-xl">{parseDate(ambassador.birth)}</p>
+                  <p className="text-xl">
+                    {formatPartialDateString(ambassador.birth)}
+                  </p>
                 </div>
               </div>
 
@@ -251,7 +237,9 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <Heading level={2}>Arrived at Alveus:</Heading>
 
                 <div className="ml-4">
-                  <p className="text-xl">{parseDate(ambassador.arrival)}</p>
+                  <p className="text-xl">
+                    {formatPartialDateString(ambassador.arrival)}
+                  </p>
                 </div>
               </div>
 

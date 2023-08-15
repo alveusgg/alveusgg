@@ -39,6 +39,14 @@ export function FormForm({ action, form }: FormFormProps) {
   const router = useRouter();
   const submit = trpc.adminForms.createOrEditForm.useMutation();
 
+  const defaultConfig = calcFormConfig(form?.config);
+  const [intro, setIntro] = useState(defaultConfig.intro || "");
+  const [rules, setRules] = useState(defaultConfig.rules || "");
+  const [label, setLabel] = useState(form?.label || "");
+  const [askMarketingEmails, setAskMarketingEmails] = useState(
+    defaultConfig.askMarketingEmails || false
+  );
+
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -97,15 +105,7 @@ export function FormForm({ action, form }: FormFormProps) {
         );
       }
     },
-    [action, form, router, submit]
-  );
-
-  const defaultConfig = calcFormConfig(form?.config);
-  const [intro, setIntro] = useState(defaultConfig.intro || "");
-  const [rules, setRules] = useState(defaultConfig.rules || "");
-  const [label, setLabel] = useState(form?.label || "");
-  const [askMarketingEmails, setAskMarketingEmails] = useState(
-    defaultConfig.askMarketingEmails || false
+    [action, form, router, submit, askMarketingEmails]
   );
 
   return (

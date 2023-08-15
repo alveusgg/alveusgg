@@ -237,7 +237,7 @@ const Home: NextPage = () => {
                 Founded by Maya Higa
               </p>
               <p className="my-4 text-lg">
-                Alveus is a non profit organization founded by Maya Higa that
+                Alveus is a nonprofit organization founded by Maya Higa that
                 functions as an exotic animal sanctuary and as a virtual
                 education center facility to provide permanent homes to
                 non-releasable exotic animals. These animals function as
@@ -324,13 +324,14 @@ const Home: NextPage = () => {
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
-              <Heading level={2}>New Merch Available!</Heading>
+              <Heading level={2}>Alveus Merch!</Heading>
               <p className="my-4">
-                Grab yourself a high-quality t-shirt or hoodie to support
-                Alveus.
+                Grab yourself some high-quality merch from Alveus in our
+                limited-time exclusive drops!
               </p>
               <p className="my-4">
-                Have your very own ambassador in your home with our plushies!
+                Or, have your very own ambassador in your home with our
+                plushies!
               </p>
               <p className="my-4">
                 All proceeds go directly into Alveus and the support & care of
@@ -344,7 +345,7 @@ const Home: NextPage = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Buy Merch!
+                  Explore Merch
                 </Link>
                 <Link
                   className="inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
@@ -352,7 +353,7 @@ const Home: NextPage = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Buy Plushies!
+                  Buy Plushies
                 </Link>
               </div>
             </div>
