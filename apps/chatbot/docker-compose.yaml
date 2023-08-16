@@ -2,8 +2,8 @@ version: "3.3"
 services:
   chatbot:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ../..
+      dockerfile: apps/chatbot/Dockerfile
     restart: always
     environment:
       - CHATBOT_REF_SHA=$CHATBOT_REF_SHA
