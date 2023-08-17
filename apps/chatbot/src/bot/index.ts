@@ -8,7 +8,7 @@ import { createVersionCommands } from "@/bot/commands/version";
 export async function startBot() {
   const authProvider = await getAuthProvider();
 
-  const bot = new Bot(null, {
+  const bot = new Bot({
     authProvider,
     channels: env.BOT_CHANNEL_NAMES,
     commands: (
