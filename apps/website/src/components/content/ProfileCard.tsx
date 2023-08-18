@@ -4,12 +4,10 @@ import ambassadors, {
   type AmbassadorKey,
 } from "@alveusgg/data/src/ambassadors/core";
 import enclosures, { type EnclosureKey } from "@alveusgg/data/src/enclosures";
-import Image, { type ImageProps, type StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import { hosts } from "@alveusgg/data/src/animal-quest";
-import { kebabToCamel, sentenceToKebab } from "@/utils/string-case";
-
-import { staff } from "@/pages/about/staff";
+// import { staff } from "@/pages/about/staff";
 import mayaImage from "@/assets/maya.png";
 import { classes } from "@/utils/classes";
 import Heading from "./Heading";
@@ -17,21 +15,24 @@ import Heading from "./Heading";
 export type StaffImage = StaticImageData & {
   alt: string;
 };
-type StaffMember = {
-  name: string;
-  title: string;
-  img: ImageProps | StaffImage;
-  description?: JSX.Element;
-};
 
-type Staff = Array<StaffMember>;
+// type StaffMember = {
+//   name: string;
+//   title: string;
+//   img: ImageProps | StaffImage;
+//   description?: JSX.Element;
+// };
+
+// type Staff = Array<StaffMember>;
+
+export type StaffMemberKey = keyof typeof hosts;
 
 export type ProfileCardProps = {
   linkPosition: DOMRect | undefined;
 } & (
   | { type: "ambassador"; itemKey: AmbassadorKey }
   | { type: "enclosure"; itemKey: EnclosureKey }
-  | { type: "staff"; itemKey: keyof typeof hosts }
+  | { type: "staff"; itemKey: StaffMemberKey }
 );
 
 type AmbassadorCardProps = {
@@ -43,35 +44,22 @@ type EnclosureCardProps = {
   upwards?: boolean;
 };
 type StaffCardProps = {
-  itemKey: keyof typeof hosts;
+  itemKey: StaffMemberKey;
   upwards?: boolean;
 };
 
-const allStaff: Staff = Object.values(staff).map((person) => ({
-  img: { ...person.image, alt: `${person.name}'s picture` },
-  name: person.name,
-  title: person.title,
-  description: person.description,
-}));
+// const allStaff: Staff = Object.values(staff).map((person) => ({
+//   img: { ...person.image, alt: `${person.name}'s picture` },
+//   name: person.name,
+//   title: person.title,
+//   description: person.description,
+// }));
 
-allStaff.push({
-  img: { ...mayaImage, alt: "Maya's picture" },
-  name: "Maya Higa",
-  title: "Founder",
-});
-
-const nameToCamelCase = (name: string) => {
-  const noSymbols = name.replace(/[{(/.)}]/g, "");
-  const camelCased = noSymbols.replace("ñ", "n");
-  return kebabToCamel(sentenceToKebab(camelCased));
-};
-
-const findMember = (name: string | undefined, members: Staff) => {
-  const member = members.find(
-    (person) => name && nameToCamelCase(name) == nameToCamelCase(person.name)
-  );
-  return member;
-};
+// allStaff.push({
+//   img: { ...mayaImage, alt: "Maya's picture" },
+//   name: "Maya Higa",
+//   title: "Founder",
+// });
 
 const calcDistance = (position: DOMRect) => {
   const elemPosition = position;
@@ -91,7 +79,7 @@ type SpanProps = {
 const Span: React.FC<SpanProps> = ({ title, name }) => {
   return (
     <div className="inline text-yellow-300">
-      <span className="font-semibold">{title}:</span> {name}
+      {title}:<span className="font-semibold"> {name} </span>
     </div>
   );
 };
@@ -209,31 +197,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
   itemKey,
   linkPosition,
 }) => {
-  const ambassadorInfo =
-    type === "ambassador" ? ambassadors[itemKey] : undefined;
-
-  const staffMemberInfo =
-    type === "staff" ? findMember(itemKey, allStaff) : undefined;
-
-  const name =
-    type === "ambassador" ? ambassadorInfo?.name : staffMemberInfo?.name;
-
-  const position = type === "staff" ? staffMemberInfo?.title : "";
-
-  const img =
-    type === "ambassador"
-      ? getAmbassadorImages(itemKey as AmbassadorKey)?.[0]
-      : findMember(name, allStaff)?.img;
-
   const upwards = linkPosition && calcDistance(linkPosition);
 
   return (
     <>
-      {type === "ambassador" && <AmbassadorCard itemKey={itemKey} upwards />}
+      {type === "ambassador" && (
+        <AmbassadorCard itemKey={itemKey} upwards={upwards} />
+      )}
 
-      {type === "staff" && <StaffCard itemKey={itemKey} upwards />}
+      {type === "staff" && <StaffCard itemKey={itemKey} upwards={upwards} />}
 
-      {type === "enclosure" && <EnclosureCard itemKey={itemKey} upwards />}
+      {type === "enclosure" && (
+        <EnclosureCard itemKey={itemKey} upwards={upwards} />
+      )}
     </>
   );
 };

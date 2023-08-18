@@ -2,8 +2,8 @@ import React, { useState, useCallback, useEffect } from "react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { type EnclosureKey } from "@alveusgg/data/src/enclosures";
 import dynamic from "next/dynamic";
-
 import Link from "./Link";
+import { type StaffMemberKey } from "./ProfileCard";
 
 const DynamicCard = dynamic(() => import("./ProfileCard"), {
   ssr: false,
@@ -15,8 +15,8 @@ type LinkHoverProps = {
   dark?: boolean;
 } & (
   | { type: "ambassador"; itemKey: AmbassadorKey }
-  | { type: "staff"; itemKey: string }
   | { type: "enclosure"; itemKey: EnclosureKey }
+  | { type: "staff"; itemKey: StaffMemberKey }
 );
 
 const LinkHover: React.FC<LinkHoverProps> = ({
