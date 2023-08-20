@@ -177,7 +177,7 @@ export const ShowAndTellEntry = forwardRef<
     <article
       key={entry.id}
       className={
-        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 " +
+        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-none " +
         (isPresentationView
           ? "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] select-none snap-center overflow-hidden bg-alveus-green text-white shadow-xl"
           : "min-h-[70svh] min-h-[70vh] justify-center border-t border-alveus-green/50 first:border-t-0")
@@ -190,6 +190,8 @@ export const ShowAndTellEntry = forwardRef<
           });
       }}
       ref={handleRef}
+      data-show-and-tell-entry={entry.id}
+      tabIndex={-1}
     >
       {isPresentationView && featureImageUrl && (
         <div className="absolute top-0 z-0 h-full w-full overflow-hidden rounded-xl">
