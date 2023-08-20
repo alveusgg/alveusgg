@@ -66,8 +66,8 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 
 ### Local development
 
-1. Install Node.js and PNPM (see `engines` in `package.json` for the required versions) or use `fnm`/`nvm` to install the correct version of Node.js
-2. Install dependencies: `pnpm install`
+1. Install Node.js (see `engines` in `package.json` for the required versions), or use `fnm`/`nvm` to install the correct version of Node.js, and use `corepack enable` to use PNPM.
+2. Install dependencies: `pnpm install --frozen-lockfile`
 3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict` and `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg/shadow?sslaccept=strict`)
 4. Copy `apps/website/.env.example` to `apps/website/.env`
    - Fill the Prisma section with the database info (DSN)
