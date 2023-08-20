@@ -190,6 +190,8 @@ export const ShowAndTellEntry = forwardRef<
           });
       }}
       ref={handleRef}
+      data-show-and-tell-entry={entry.id}
+      tabIndex={-1}
     >
       {isPresentationView && featureImageUrl && (
         <div className="absolute top-0 z-0 h-full w-full overflow-hidden rounded-xl">

@@ -1,4 +1,11 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import type { KeyboardEventHandler } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -51,6 +58,12 @@ export const getStaticProps = async () => {
     },
   };
 };
+
+const isShowAndTellEntry = (
+  element: Element | null | undefined,
+): element is HTMLElement =>
+  element instanceof HTMLElement &&
+  element.hasAttribute("data-show-and-tell-entry");
 
 const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   entries: initialEntries,
@@ -133,16 +146,19 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       behavior: "smooth",
       block: "center",
     });
+    element.focus({ preventScroll: true });
   }, []);
   const scrollToPrev = useCallback(() => {
     const prev = currentEntryElementRef.current?.previousElementSibling;
-    if (!(prev instanceof HTMLElement)) return;
-    scrollTo(prev);
+    if (isShowAndTellEntry(prev)) {
+      scrollTo(prev);
+    }
   }, [scrollTo]);
   const scrollToNext = useCallback(() => {
     const next = currentEntryElementRef.current?.nextElementSibling;
-    if (!(next instanceof HTMLElement)) return;
-    scrollTo(next);
+    if (isShowAndTellEntry(next)) {
+      scrollTo(next);
+    }
   }, [scrollTo]);
 
   // Track when the user is manually scrolling
@@ -205,8 +221,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 : (scroll.previousElementSibling as HTMLElement);
           }
 
-          // Scroll the element to the center of the viewport
-          scrollTo(scroll);
+          if (isShowAndTellEntry(scroll)) {
+            // Scroll the element to the center of the viewport
+            scrollTo(scroll);
+          }
 
           // Reset the debounce
           scrollTrack.current = undefined;
@@ -252,6 +270,52 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const handleTogglePresentationView = useCallback(() => {
     togglePresentationView(currentEntryElementRef.current, !isPresentationView);
   }, [isPresentationView, togglePresentationView]);
+  const entryIdToFocusRef = useRef<string>();
+
+  const handleLoadNext = useCallback(async () => {
+    // Keeping track of the number of pages before starting to load more
+    const pageBefore = entries.data?.pages.length;
+
+    const res = await entries.fetchNextPage();
+
+    const pages = res.data?.pages;
+    if (!pages) return;
+
+    // When loading more, set the focus to the first entry of the newly loaded page
+    // or if no new page was loaded, set the focus to the last entry of the last page,
+    // but we can't focus it directly, because it did not render yet, so we store
+    // the id in a ref.
+    const hasLoadedNewPage = !pageBefore || pages.length > pageBefore;
+    const lastPageItems = pages[pages.length - 1]?.items;
+
+    entryIdToFocusRef.current = hasLoadedNewPage
+      ? lastPageItems?.[0]?.id
+      : lastPageItems?.[lastPageItems.length - 1]?.id;
+  }, [entries]);
+
+  useEffect(() => {
+    // Check if we need to focus an entry after loading more
+    if (entryIdToFocusRef.current) {
+      const element = presentationViewRootElementRef.current?.querySelector(
+        `[data-show-and-tell-entry="${entryIdToFocusRef.current}"]`,
+      );
+      if (isShowAndTellEntry(element)) {
+        scrollTo(element);
+        entryIdToFocusRef.current = undefined;
+      }
+    }
+  }, [entries.data, scrollTo]);
+
+  const handleArrowKeys: KeyboardEventHandler = useCallback(
+    (event) => {
+      if (event.key === "ArrowUp") {
+        scrollToPrev();
+      } else if (event.key === "ArrowDown") {
+        scrollToNext();
+      }
+    },
+    [scrollToPrev, scrollToNext],
+  );
 
   return (
     <>
@@ -292,6 +356,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               ? "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
               : "gap-20 bg-white/0")
           }
+          onKeyDown={handleArrowKeys}
+          tabIndex={-1}
         >
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
@@ -312,7 +378,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           {entries.hasNextPage && (
-            <Button onClick={() => entries.fetchNextPage()}>
+            <Button onClick={handleLoadNext}>
               {entries.isFetchingNextPage ? (
                 <>
                   <IconLoading size={20} /> Loading...
