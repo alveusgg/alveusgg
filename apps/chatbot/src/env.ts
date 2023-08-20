@@ -1,3 +1,4 @@
+import { LogLevel } from "@twurple/chat";
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 import "dotenv/config";
@@ -25,6 +26,13 @@ export const env = createEnv({
     // Chatbot
     BOT_USER_ID: z.string().default("858050963"),
     BOT_CHANNEL_NAMES: namesSchema.default(["AlveusGG"].join(",")),
+    BOT_LOGLEVEL: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .default("ERROR" satisfies keyof typeof LogLevel)
+      .transform((level) => LogLevel[level as keyof typeof LogLevel])
+      .refine((level) => level !== undefined),
 
     // Users
     MODERATOR_USER_NAMES: namesSchema.default(

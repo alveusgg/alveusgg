@@ -18,6 +18,11 @@ export async function startBot() {
         createVersionCommands(),
       ])
     ).flat(),
+    chatClientOptions: {
+      logger: {
+        minLevel: env.BOT_LOGLEVEL,
+      },
+    },
   });
 
   bot.onJoin(async (e) => {
