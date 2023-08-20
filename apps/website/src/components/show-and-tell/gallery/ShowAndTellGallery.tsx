@@ -146,12 +146,12 @@ export function ShowAndTellGallery({
   const openLightBox = useCallback(
     (index: number) => {
       const gallery = document.getElementById(
-        photoswipeId
+        photoswipeId,
       ) as HTMLElement | null;
       if (!gallery) return;
       lightboxRef.current?.loadAndOpen(index, { gallery });
     },
-    [photoswipeId]
+    [photoswipeId],
   );
 
   const carouselItems = useMemo(() => {
@@ -213,7 +213,7 @@ export function ShowAndTellGallery({
             )}
           </figure>
         </a>,
-      ]
+      ],
     );
 
     return Object.fromEntries([...videoItems, ...imageItems]);

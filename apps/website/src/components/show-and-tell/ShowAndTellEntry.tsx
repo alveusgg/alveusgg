@@ -97,7 +97,7 @@ export const ShowAndTellEntry = forwardRef<
     isPresentationView,
     //showPermalink = false,
   },
-  forwardedRef
+  forwardedRef,
 ) {
   const wrapperRef = useRef<HTMLElement | null>(null);
   const imageAttachments = entry.attachments
@@ -130,12 +130,12 @@ export const ShowAndTellEntry = forwardRef<
         forwardedRef.current = node;
       }
     },
-    [forwardedRef]
+    [forwardedRef],
   );
 
   const content = useMemo(
     () => parse(`<root>${entry.text}</root>`, parseOptions),
-    [entry.text]
+    [entry.text],
   );
 
   const header = (
@@ -167,7 +167,7 @@ export const ShowAndTellEntry = forwardRef<
         {formatDateTime(
           entry.createdAt,
           { style: "long" },
-          { zone: DATETIME_ALVEUS_ZONE }
+          { zone: DATETIME_ALVEUS_ZONE },
         )}
       </p>
     </header>

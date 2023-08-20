@@ -4,5 +4,5 @@ export { createBotCommand } from "@twurple/easy-bot";
 
 export type CommandHandler = (
   params: string[],
-  context: BotCommandContext
+  context: BotCommandContext,
 ) => void;

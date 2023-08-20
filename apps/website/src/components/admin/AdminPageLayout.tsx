@@ -31,7 +31,7 @@ const NavLink: React.FC<NavLinkProps> = (props) => {
       className={classes(
         "rounded-2xl px-4 py-2 hover:bg-black/30 focus:bg-black/30",
         props.className,
-        isActive && "bg-black/20"
+        isActive && "bg-black/20",
       )}
     />
   );

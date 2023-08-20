@@ -32,9 +32,9 @@ export const accounts = mysqlTable(
   (accounts) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(accounts.id),
     providerProviderAccountIndex: uniqueIndex(
-      "Account_provider_providerAccountId_key"
+      "Account_provider_providerAccountId_key",
     ).on(accounts.provider, accounts.providerAccountId),
-  })
+  }),
 );
 
 export type User = InferModel<typeof users, "select">;
@@ -49,7 +49,7 @@ export const users = mysqlTable(
   (users) => ({
     primaryIndex: uniqueIndex("PRIMARY").on(accounts.id),
     userEmailIndex: uniqueIndex("User_email_key").on(users.email),
-  })
+  }),
 );
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -69,9 +69,9 @@ export const userRoles = mysqlTable(
     primaryIndex: uniqueIndex("PRIMARY").on(accounts.id),
     userRoleUserIdRoleIndex: uniqueIndex("UserRole_userId_role_key").on(
       userRoles.userId,
-      userRoles.role
+      userRoles.role,
     ),
-  })
+  }),
 );
 
 export const userRoleRelations = relations(userRoles, ({ one }) => ({

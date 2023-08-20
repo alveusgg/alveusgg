@@ -61,7 +61,7 @@ export const EntryForm: React.FC<{
           : undefined,
       });
     },
-    [config.hasRules, config.requireShippingAddress, enterForm, form.id]
+    [config.hasRules, config.requireShippingAddress, enterForm, form.id],
   );
 
   // Map submitted form data, or existing entry data, to a consistent format

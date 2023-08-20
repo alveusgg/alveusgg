@@ -21,7 +21,7 @@ const ReactQuill = dynamic<
   },
   {
     ssr: false,
-  }
+  },
 );
 
 type FormFieldProps = AriaTextFieldOptions<"input"> & {

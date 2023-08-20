@@ -38,7 +38,7 @@ export async function fetchApi<RequestBody = unknown>({
 
   if (!response.ok) {
     throw new Error(
-      `HTTP error! status: ${response.status} ${response.statusText}`
+      `HTTP error! status: ${response.status} ${response.statusText}`,
     );
   }
 

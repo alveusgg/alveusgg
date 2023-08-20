@@ -23,9 +23,9 @@ export default defineConfig((options) => ({
         Object.entries(env)
           .filter(
             ([key, value]) =>
-              key.startsWith("NEXT_PUBLIC_") && value !== undefined
+              key.startsWith("NEXT_PUBLIC_") && value !== undefined,
           )
-          .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)])
+          .map(([key, value]) => [`process.env.${key}`, JSON.stringify(value)]),
       ),
     };
   },

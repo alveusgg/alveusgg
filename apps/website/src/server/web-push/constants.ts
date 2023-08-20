@@ -16,5 +16,5 @@ export const getWebPushUrgency = (notificationUrgency: NotificationUrgency) =>
   webPushUrgencyMap[notificationUrgency];
 
 export const isNotificationUrgency = (
-  str: string
+  str: string,
 ): str is NotificationUrgency => str in webPushUrgencyMap;

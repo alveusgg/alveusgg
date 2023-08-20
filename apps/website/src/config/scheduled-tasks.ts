@@ -29,7 +29,7 @@ const scheduledTasksConfigSchema = z.object({
       label: z.string(),
       interval: durationSchema,
       startDateTime: z.date(),
-    })
+    }),
   ),
 });
 

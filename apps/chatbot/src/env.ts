@@ -50,12 +50,12 @@ export const env = createEnv({
         //"MaxzillaJr",
         //"VirtualPop",
         //"HellSatanX",
-      ].join(",")
+      ].join(","),
     ),
 
     // Website API
     API_BASE_URL: urlWithTrailingSlashSchema.default(
-      "http://localhost:3000/api/"
+      "http://localhost:3000/api/",
     ),
     API_SECRET: z.string(),
 

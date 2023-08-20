@@ -52,7 +52,7 @@ const withPositions = <T,>(
   { nodes, edges }: { nodes: TreeNodeInternal<T>[]; edges: TreeEdgeInternal[] },
   size: { width: number; height: number },
   separation = { ranks: 100, siblings: 50 },
-  direction: "TB" | "LR" = "LR"
+  direction: "TB" | "LR" = "LR",
 ) => {
   // Create the graph
   const dagreGraph = new graphlib.Graph();
@@ -107,7 +107,7 @@ const withPositions = <T,>(
           const childDistance = Math.abs(child[axis] - dagreParent[axis]);
           return childDistance < accDistance ? [child, idx + 1] : acc;
         },
-        [dagreChildren[0], 0]
+        [dagreChildren[0], 0],
       );
 
     let idx: number, pos: number;
@@ -226,7 +226,7 @@ const Tree = <T,>({
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(
     () => withPositions(getNodesEdges(data), nodeSize),
-    [data, nodeSize]
+    [data, nodeSize],
   );
 
   // When the tree loads, center it
@@ -249,13 +249,13 @@ const Tree = <T,>({
         });
       });
     },
-    [nodes, defaultZoom]
+    [nodes, defaultZoom],
   );
 
   // Override the default edge type if one is provided
   const edgeTypes = useMemo(
     () => (edgeType ? { default: edgeType } : undefined),
-    [edgeType]
+    [edgeType],
   );
 
   return (

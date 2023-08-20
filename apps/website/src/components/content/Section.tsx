@@ -34,7 +34,7 @@ const Section: React.FC<SectionProps> = ({
         // add background color if not overwritten via className
         !/\bbg-/.test(className || "") &&
           (dark ? "bg-alveus-green" : "bg-alveus-tan"),
-        className
+        className,
       )}
     >
       {offsetParent && (

@@ -85,7 +85,7 @@ const merch = Object.entries({
       </div>
     ),
   }),
-  {}
+  {},
 );
 
 const Merch = () => (

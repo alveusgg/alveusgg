@@ -30,14 +30,14 @@ const Consent: React.FC<ConsentProps> = ({
       e.preventDefault();
       update({ [key]: true });
     },
-    [key, update]
+    [key, update],
   );
 
   return (
     <div
       className={classes(
         "relative z-0 flex flex-col items-center justify-center",
-        className
+        className,
       )}
     >
       {loaded &&

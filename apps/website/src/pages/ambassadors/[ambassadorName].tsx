@@ -61,7 +61,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
-  context
+  context,
 ) => {
   const ambassadorName = context.params?.ambassadorName;
   if (typeof ambassadorName !== "string") return { notFound: true };
@@ -129,7 +129,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           ),
         };
       }, {}),
-    [images]
+    [images],
   );
 
   return (
@@ -186,7 +186,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     {ambassador.scientific} (
                     <Link
                       href={`/ambassadors#classification:${convertToSlug(
-                        getClassification(ambassador.class)
+                        getClassification(ambassador.class),
                       )}`}
                     >
                       {getClassification(ambassador.class)}
@@ -250,7 +250,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   <p className="text-xl">
                     <Link
                       href={`/ambassadors#enclosures:${camelToKebab(
-                        ambassador.enclosure
+                        ambassador.enclosure,
                       )}`}
                     >
                       {enclosure.name}

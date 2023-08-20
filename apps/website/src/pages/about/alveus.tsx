@@ -514,7 +514,7 @@ const AboutAlveusPage: NextPage = () => {
                       >
                         [
                         {Object.keys(sources).findIndex(
-                          (source) => source === stat.source
+                          (source) => source === stat.source,
                         ) + 1}
                         ]
                       </Link>
@@ -608,7 +608,7 @@ const AboutAlveusPage: NextPage = () => {
           <Section key={section.key} dark>
             {section.cta}
           </Section>
-        )
+        ),
       )}
 
       {/* TODO: CTA slice for ambassadors? */}

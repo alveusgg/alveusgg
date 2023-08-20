@@ -34,7 +34,7 @@ const Select: React.FC<SelectProps> = ({
             "relative w-full rounded-lg border py-2 pl-3 pr-10 text-left",
             dark
               ? "border-alveus-tan/40 bg-alveus-green text-alveus-tan"
-              : "border-alveus-green/40 bg-alveus-tan text-alveus-green"
+              : "border-alveus-green/40 bg-alveus-tan text-alveus-green",
           )}
         >
           <span className="block">{options[value]}</span>
@@ -57,7 +57,7 @@ const Select: React.FC<SelectProps> = ({
               align === "left" ? "left-0" : "right-0",
               dark
                 ? "border-alveus-tan/20 bg-alveus-green text-alveus-tan"
-                : "border-alveus-green/20 bg-alveus-tan text-alveus-green"
+                : "border-alveus-green/20 bg-alveus-tan text-alveus-green",
             )}
           >
             {typeSafeObjectEntries(options).map(([key, value]) => (
@@ -71,7 +71,7 @@ const Select: React.FC<SelectProps> = ({
                         : "hover:bg-alveus-green/20",
                       active && "outline-blue-500 group-focus-visible:outline",
                       selected &&
-                        (dark ? "bg-alveus-tan/10" : "bg-alveus-green/10")
+                        (dark ? "bg-alveus-tan/10" : "bg-alveus-green/10"),
                     )}
                   >
                     <span className="block">{value}</span>

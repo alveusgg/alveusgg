@@ -28,7 +28,7 @@ export const authOptions: NextAuthOptions = {
     async signIn({ user, account }) {
       if (user && account) {
         try {
-          const userFromDatabase = await adapter.getUser(user.id);
+          const userFromDatabase = await adapter.getUser?.(user.id);
 
           if (userFromDatabase) {
             await prisma.account.update({

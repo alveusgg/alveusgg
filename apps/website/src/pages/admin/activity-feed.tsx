@@ -25,7 +25,7 @@ const AdminActivityFeedPage: NextPage<
       {},
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
+      },
     );
 
   return (

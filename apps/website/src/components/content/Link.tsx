@@ -29,18 +29,18 @@ const Link: React.FC<LinkProps> = ({
           (dark
             ? "text-red-200 hover:text-blue-200"
             : "text-red-600 hover:text-blue-600"),
-        className
+        className,
       ),
-    [custom, dark, className]
+    [custom, dark, className],
   );
 
   const computedTarget = useMemo(
     () => (external ? "_blank" : target),
-    [external, target]
+    [external, target],
   );
   const computedRel = useMemo(
     () => (external ? "noreferrer" : rel),
-    [external, rel]
+    [external, rel],
   );
 
   return (

@@ -52,12 +52,12 @@ const Video: React.FC<VideoProps> = ({
             (entry.target as HTMLVideoElement).pause();
           });
         },
-        { threshold }
+        { threshold },
       );
       obs.observe(node);
       observer.current = obs;
     },
-    [seen, threshold]
+    [seen, threshold],
   );
 
   const computedPoster = poster && createImageUrl({ src: poster, width: 512 });

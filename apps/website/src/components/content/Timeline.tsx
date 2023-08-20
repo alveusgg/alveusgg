@@ -20,7 +20,7 @@ const Timeline: React.FC<TimelineProps> = ({ items, before, after }) => (
       className={classes(
         "absolute left-5 -z-10 w-1 -translate-x-1/2 bg-alveus-green md:left-1/2",
         before || "top-0",
-        after || "bottom-0"
+        after || "bottom-0",
       )}
     />
     <ol>

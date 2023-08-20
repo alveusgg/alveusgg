@@ -15,7 +15,7 @@ import { NotificationsLive } from "@/components/admin/notifications/Notification
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(
     context,
-    permissions.manageNotifications
+    permissions.manageNotifications,
   );
   if (!adminProps) {
     return { notFound: true };

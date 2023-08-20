@@ -50,7 +50,7 @@ export const formatDateTime = (
     time = undefined,
     timezone = false,
   }: Partial<DateTimeFormat> = {},
-  { locale = "en-US", zone = "UTC" }: Partial<DateTimeOptions> = {}
+  { locale = "en-US", zone = "UTC" }: Partial<DateTimeOptions> = {},
 ) =>
   DateTime.fromJSDate(dateTime)
     .setZone(zone ?? undefined)
@@ -60,7 +60,7 @@ export const formatDateTime = (
 
 export const formatDateTimeLocal = (
   dateTime: Date,
-  format: Partial<DateTimeFormat> = {}
+  format: Partial<DateTimeFormat> = {},
 ) =>
   formatDateTime(
     dateTime,
@@ -68,13 +68,13 @@ export const formatDateTimeLocal = (
     {
       locale: null,
       zone: null,
-    }
+    },
   );
 
 export const DATETIME_ALVEUS_ZONE = "America/Chicago";
 
 export const parsePartialDateString = (
-  date: PartialDateString
+  date: PartialDateString,
 ): Date | null => {
   const arr = date.split("-");
   const d = parseInt(arr[2] || "");
@@ -90,7 +90,7 @@ export const parsePartialDateString = (
 
 export const sortPartialDateString = (
   a: PartialDateString | null,
-  b: PartialDateString | null
+  b: PartialDateString | null,
 ): number => {
   const parsedA = (
     typeof a === "string" ? parsePartialDateString(a) : null
@@ -113,7 +113,7 @@ export const sortPartialDateString = (
 };
 
 export const formatPartialDateString = (
-  date: PartialDateString | null
+  date: PartialDateString | null,
 ): string => {
   if (!date) return "Unknown";
 
@@ -121,7 +121,7 @@ export const formatPartialDateString = (
   const parsed = new Date(
     Number(year),
     Number(month || 1) - 1,
-    Number(day || 1)
+    Number(day || 1),
   );
 
   return parsed.toLocaleDateString("en-US", {
@@ -136,7 +136,7 @@ export const formatSeconds = (
   {
     style = "short",
     seconds: showSeconds = true,
-  }: Partial<{ style: "short" | "long"; seconds: boolean }> = {}
+  }: Partial<{ style: "short" | "long"; seconds: boolean }> = {},
 ): string => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);

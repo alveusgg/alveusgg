@@ -31,7 +31,7 @@ export const permissions = {
 
 export function checkRolesGivePermission(
   roles: string[],
-  permissionConfig: PermissionConfig
+  permissionConfig: PermissionConfig,
 ) {
   return permissionConfig.requiredRole
     ? roles.includes(permissionConfig.requiredRole)

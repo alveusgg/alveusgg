@@ -20,7 +20,7 @@ import IconYouTube from "@/icons/IconYouTube";
 
 const iframeSrc = (id: string) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
-    id
+    id,
   )}?modestbranding=1&rel=0`;
 
 const iframeAttrs: HTMLAttributes = {
@@ -42,7 +42,7 @@ const safeJsonParse = (str: string) => {
 
 export const parseUrl = (url: string) => {
   const match = url.match(
-    /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/
+    /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/,
   );
   if (!match?.[1]) throw new Error(`Invalid YouTube URL: ${url}`);
   return match[1];
@@ -85,7 +85,7 @@ type PreviewProps = {
 const imgSrc = (id: string, type: string) =>
   createImageUrl({
     src: `https://img.youtube.com/vi/${encodeURIComponent(
-      id
+      id,
     )}/${encodeURIComponent(type)}.jpg`,
     width: 1280,
     quality: 100,
@@ -94,7 +94,7 @@ const imgSrc = (id: string, type: string) =>
 export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
   // Handle falling back to hq if there isn't a maxres image
   const [type, setType] = useState<"maxresdefault" | "hqdefault">(
-    "maxresdefault"
+    "maxresdefault",
   );
   const onError = useCallback(() => {
     if (type === "maxresdefault") setType("hqdefault");
@@ -111,7 +111,7 @@ export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
         className={classes(
           "pointer-events-none object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
           iframeAttrs.class,
-          className
+          className,
         )}
       />
       <IconYouTube
@@ -156,7 +156,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
     lightbox.addFilter("itemData", (itemData) => ({
       ...itemData,
       youTube: safeJsonParse(
-        itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`) || ""
+        itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`) || "",
       ),
     }));
 
@@ -226,7 +226,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
       parseUrl,
       id: photoswipeId,
     }),
-    [photoswipeId]
+    [photoswipeId],
   );
 
   // Allow children to be functions that receive the context
@@ -236,7 +236,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
         const element = typeof child === "function" ? child(ctx) : child;
         return cloneElement(element, { key: index });
       }),
-    [children, ctx]
+    [children, ctx],
   );
 
   return (

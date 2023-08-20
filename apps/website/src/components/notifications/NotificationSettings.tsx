@@ -28,10 +28,10 @@ export function useNotificationStatus() {
     const isSupported = isNotificationsSupported && isWebPushSupported;
     setIsClientSupported(isSupported);
     setIsInstallAsPWARequired(
-      !isSupported && checkUserAgentRequiresToBeInstalledAsPWA()
+      !isSupported && checkUserAgentRequiresToBeInstalledAsPWA(),
     );
     setNotificationPermission(
-      isNotificationsSupported && Notification.permission
+      isNotificationsSupported && Notification.permission,
     );
   }, []);
 
@@ -47,7 +47,7 @@ export function useNotificationStatus() {
       isInstallAsPWARequired,
       notificationPermission,
       setNotificationPermission,
-    ]
+    ],
   );
 }
 

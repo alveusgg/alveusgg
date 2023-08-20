@@ -46,7 +46,7 @@ const fileUploadProxy = async (req: NextApiRequest, res: NextApiResponse) => {
       if (values === undefined) return [];
       if (Array.isArray(values)) return values.map((value) => [key, value]);
       return [[key, values]];
-    })
+    }),
   );
   storageUrl.search = new URLSearchParams(paramMaps).toString();
 

@@ -15,17 +15,17 @@ export const createFormEntrySchema = formEntrySchema.and(
     formId: z.string().cuid(),
     acceptRules: z.boolean().optional(),
     acceptPrivacy: z.boolean(),
-  })
+  }),
 );
 
 async function checkFollowsChannel(
   channelId: string,
-  twitchAccount: { access_token: string; providerAccountId: string }
+  twitchAccount: { access_token: string; providerAccountId: string },
 ) {
   return getUserFollowsBroadcaster(
     twitchAccount.access_token,
     twitchAccount.providerAccountId,
-    channelId
+    channelId,
   );
 }
 

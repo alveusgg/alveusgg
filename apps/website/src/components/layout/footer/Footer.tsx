@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
   const router = useRouter();
   const isAdmin = useMemo(
     () => router.pathname === "/admin" || router.pathname.startsWith("/admin/"),
-    [router.pathname]
+    [router.pathname],
   );
 
   return (

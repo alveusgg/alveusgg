@@ -10,7 +10,7 @@ const weatherSchema = z.object({
       main: z.string(),
       description: z.string(),
       icon: z.string(),
-    })
+    }),
   ),
   main: z.object({
     temp: z.number(),
@@ -31,7 +31,7 @@ export async function getWeatherData() {
     env.OPEN_WEATHER_MAP_API_LAT
   ) {
     const res = await fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${env.OPEN_WEATHER_MAP_API_LAT}&lon=${env.OPEN_WEATHER_MAP_API_LON}&appid=${env.OPEN_WEATHER_MAP_API_KEY}&lang=en&units=imperial`
+      `https://api.openweathermap.org/data/2.5/weather?lat=${env.OPEN_WEATHER_MAP_API_LAT}&lon=${env.OPEN_WEATHER_MAP_API_LON}&appid=${env.OPEN_WEATHER_MAP_API_KEY}&lang=en&units=imperial`,
     );
     const data = await res.json();
     weatherData = weatherSchema.parse(data);

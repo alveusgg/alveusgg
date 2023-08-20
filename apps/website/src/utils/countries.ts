@@ -27,7 +27,7 @@ export const commonCountries: Country[] = commonCountryCodes.map((code) => ({
   name: getCountryName(code) || code,
 }));
 export const otherCountries = allCountries.filter(
-  (country) => !commonCountryCodes.includes(country.code)
+  (country) => !commonCountryCodes.includes(country.code),
 );
 
 export const countryCodes = allCountries.map((country) => country.code);

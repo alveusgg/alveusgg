@@ -50,7 +50,7 @@ const DropdownMenuItem: React.FC<{ children: React.ReactElement }> = forwardRef(
     <li {...props}>
       {Children.map(children, (child) => cloneElement(child, { ref }))}
     </li>
-  )
+  ),
 );
 DropdownMenuItem.displayName = "DropdownMenuItem";
 
@@ -173,7 +173,7 @@ export function DesktopMenu() {
                       <Menu.Button
                         className={classes(
                           navLinkClassesMain,
-                          "flex items-center gap-2"
+                          "flex items-center gap-2",
                         )}
                       >
                         {link.title}
@@ -194,7 +194,7 @@ export function DesktopMenu() {
                                 className={classes(
                                   active &&
                                     "outline-blue-500 group-focus-visible:outline",
-                                  "w-full min-w-max"
+                                  "w-full min-w-max",
                                 )}
                                 onClick={close}
                               >

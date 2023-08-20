@@ -40,7 +40,7 @@ export function ImageUploadAttachment({
             alt=""
             className={classes(
               "absolute inset-0 h-full w-full object-contain object-center transition-opacity",
-              fadeOutImage && "opacity-50"
+              fadeOutImage && "opacity-50",
             )}
           />
           {fileReference.status === "upload.pending" && (

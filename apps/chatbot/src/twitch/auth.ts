@@ -44,11 +44,11 @@ async function createAuthProvider() {
         expiresIn: expiresAt - obtainmentTimestamp,
         obtainmentTimestamp,
       },
-      ["chat"]
+      ["chat"],
     );
 
     const newAccessToken = await authProvider.getAccessTokenForUser(
-      env.BOT_USER_ID
+      env.BOT_USER_ID,
     );
     if (!newAccessToken) {
       throw new Error("No new access token found");
@@ -67,7 +67,7 @@ async function createAuthProvider() {
     authProvider = new StaticAuthProvider(
       env.TWITCH_CLIENT_ID,
       accessToken,
-      scope
+      scope,
     );
   }
 

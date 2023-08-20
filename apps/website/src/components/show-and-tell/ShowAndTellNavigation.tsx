@@ -34,7 +34,7 @@ const NavLink: React.FC<NavLinkProps> = ({
       className={classes(
         navLinkClasses,
         isActive ? navLinkClassesActive : navLinkClassesHover,
-        className
+        className,
       )}
       {...props}
     />

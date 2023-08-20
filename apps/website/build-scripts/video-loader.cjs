@@ -79,7 +79,7 @@ const cacheDir = "./.next/cache/video-loader";
 const videoRaw = async (ctx) => {
   // Use ffprobe to get the height
   const { stdout } = await exec(
-    `"${ffprobe.path}" -v error -select_streams v:0 -show_entries stream=height -of json "${ctx.context.resourcePath}"`
+    `"${ffprobe.path}" -v error -select_streams v:0 -show_entries stream=height -of json "${ctx.context.resourcePath}"`,
   );
   const { height } = JSON.parse(stdout).streams[0];
 
@@ -137,7 +137,7 @@ const scaleFilter = (width = undefined, height = undefined) => {
 const videoResized = async (
   ctx,
   { extension = undefined, width = undefined, height = undefined },
-  args = []
+  args = [],
 ) => {
   // Get the original extension
   const originalExtension = interpolateName(ctx.context, "[ext]", {
@@ -160,9 +160,9 @@ const videoResized = async (
           height,
           ...args,
           getHashDigest(ctx.content, "sha1"),
-        ].join(":")
+        ].join(":"),
       ),
-      "sha1"
+      "sha1",
     );
     const cacheFile = `${ctx.cache}/${cacheKey}.${processedExtension}`;
 
@@ -175,7 +175,7 @@ const videoResized = async (
       // Get a temporary file that we're outputting to
       const tmpFile = join(
         tmpdir(),
-        `${randomBytes(16).toString("hex")}.${processedExtension}`
+        `${randomBytes(16).toString("hex")}.${processedExtension}`,
       );
 
       // Determine the scale filter
@@ -319,7 +319,7 @@ const videoLoader = async (context, content) => {
       const video = await videoResized(
         ctx,
         { height: size, extension: type },
-        args
+        args,
       );
       files.push(video);
       obj.sources.push({
@@ -344,7 +344,7 @@ const videoLoader = async (context, content) => {
   // We don't emit for the server as videos are considered traceable and this breaks things (see https://github.com/vercel/next.js/pull/41554/files)
   if (!options.isServer) {
     files.forEach(
-      ({ name, content }) => content && context.emitFile(name, content)
+      ({ name, content }) => content && context.emitFile(name, content),
     );
   }
 
@@ -355,7 +355,7 @@ const videoLoader = async (context, content) => {
       skipped: acc.skipped + (skipped ? 1 : 0),
       total: acc.total + 1,
     }),
-    { cached: 0, skipped: 0, total: 0 }
+    { cached: 0, skipped: 0, total: 0 },
   );
 
   // Return the object with the paths
@@ -382,7 +382,7 @@ const cacheCleanup = async () => {
     cacheFiles.map(async (file) => {
       const { atimeMs } = await stat(join(cacheDir, file));
       if (atimeMs < cutoff) await unlink(join(cacheDir, file));
-    })
+    }),
   );
 };
 
@@ -395,7 +395,7 @@ module.exports = function (content) {
   videoLoader(this, content)
     .then((res) => {
       console.log(
-        ` ... ${this.resourcePath} completed (${res.stats.cached}/${res.stats.total} cached, ${res.stats.skipped}/${res.stats.total} skipped)`
+        ` ... ${this.resourcePath} completed (${res.stats.cached}/${res.stats.total} cached, ${res.stats.skipped}/${res.stats.total} skipped)`,
       );
       callback(null, res.output);
     })
@@ -411,7 +411,7 @@ module.exports = function (content) {
   ) {
     this._compiler.hooks.afterEmit.tapPromise(
       "VideoLoaderCleanup",
-      cacheCleanup
+      cacheCleanup,
     );
   }
 };

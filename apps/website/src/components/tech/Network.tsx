@@ -92,14 +92,14 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
             rel: "noopener noreferrer",
           }
         : {},
-    [data.item.url]
+    [data.item.url],
   );
 
   return (
     <Element
       className={classes(
         "group flex h-20 w-44 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
-        nodeTypes[data.item.type].container
+        nodeTypes[data.item.type].container,
       )}
       tabIndex={-1}
       {...linkProps}
@@ -132,7 +132,7 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
           <span
             className={classes(
               "shrink overflow-hidden text-ellipsis whitespace-nowrap",
-              data.item.url && "group-hover:underline"
+              data.item.url && "group-hover:underline",
             )}
           >
             {data.item.model}
@@ -256,7 +256,7 @@ const NetworkEdge: React.FC<EdgeProps> = ({
         ref={ref}
         className={classes(
           edgeTypes[targetConnection.type].stroke.color,
-          !hovered && !focused && "opacity-75"
+          !hovered && !focused && "opacity-75",
         )}
       >
         <BaseEdge

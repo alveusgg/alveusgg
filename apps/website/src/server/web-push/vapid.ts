@@ -37,7 +37,7 @@ function checkExpiration(expiration: number) {
 
 export async function createSignedJWT(payload: unknown) {
   const headerStr = encodeBase64UrlString(
-    JSON.stringify({ typ: "JWT", alg: "ES256" })
+    JSON.stringify({ typ: "JWT", alg: "ES256" }),
   );
   const payloadStr = encodeBase64UrlString(JSON.stringify(payload));
   const unsignedToken = `${headerStr}.${payloadStr}`;
@@ -61,13 +61,13 @@ export async function createSignedJWT(payload: unknown) {
     },
     { name: "ECDSA", namedCurve: "P-256" },
     true,
-    ["sign"]
+    ["sign"],
   );
 
   const signature = await crypto.subtle.sign(
     { name: "ECDSA", hash: { name: "SHA-256" } },
     signingKey,
-    new TextEncoder().encode(unsignedToken)
+    new TextEncoder().encode(unsignedToken),
   );
 
   return `${unsignedToken}.${encodeArrayBufferToBase64Url(signature)}`;
@@ -75,11 +75,11 @@ export async function createSignedJWT(payload: unknown) {
 
 export async function getVapidAuthorizationString(
   audience: string,
-  expiration?: number
+  expiration?: number,
 ) {
   if (audience.length === 0) {
     throw new Error(
-      `The audience value must be a string containing the origin of a push service. ${audience}`
+      `The audience value must be a string containing the origin of a push service. ${audience}`,
     );
   }
 

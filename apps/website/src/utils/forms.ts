@@ -24,7 +24,7 @@ export const getDefaultFormConfig = () =>
     requireShippingAddress: true,
     hasRules: false,
     askMarketingEmails: false,
-  } satisfies CalculatedFormConfig);
+  }) satisfies CalculatedFormConfig;
 
 export function calcFormConfig(formConfig?: string) {
   const config: CalculatedFormConfig = getDefaultFormConfig();

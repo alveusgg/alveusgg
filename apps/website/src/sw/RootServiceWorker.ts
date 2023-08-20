@@ -4,7 +4,7 @@ self.addEventListener("install", (event) => {
       return cache.addAll([
         // Add some cache entries?
       ]);
-    })
+    }),
   );
 });
 

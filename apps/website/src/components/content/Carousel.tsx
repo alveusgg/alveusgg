@@ -38,7 +38,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
     // Determine the new scroll offset
     let offset = Math.round(
-      current.scrollLeft + width * (direction === "left" ? -1 : 1)
+      current.scrollLeft + width * (direction === "left" ? -1 : 1),
     );
 
     // If we're half a width before the start, scroll to the end
@@ -81,7 +81,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
   // When we've scrolled, track if we've hit the start or end (and pause auto-scroll if it was the user)
   const [state, setState] = useState<"none" | "start" | "scrolling" | "end">(
-    "start"
+    "start",
   );
   const scrolled = useCallback(() => {
     const { current } = ref;
@@ -189,7 +189,7 @@ const Carousel: React.FC<CarouselProps> = ({
       current.style.cursor = "grabbing";
       current.style.scrollSnapType = "none";
     },
-    [interacted]
+    [interacted],
   );
 
   // Run the auto scroll if requested, and not paused, and not preferring reduced motion
@@ -208,7 +208,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         className={classes(
           "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
-          state === "none" && "hidden"
+          state === "none" && "hidden",
         )}
         type="button"
         onClick={() => {
@@ -228,7 +228,7 @@ const Carousel: React.FC<CarouselProps> = ({
         className={classes(
           "scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto",
           wrapperClassName,
-          state === "none" ? "justify-evenly" : "cursor-grab"
+          state === "none" ? "justify-evenly" : "cursor-grab",
         )}
         ref={ref}
         onScroll={scrolled}
@@ -248,7 +248,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         className={classes(
           "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
-          state === "none" && "hidden"
+          state === "none" && "hidden",
         )}
         type="button"
         onClick={() => {

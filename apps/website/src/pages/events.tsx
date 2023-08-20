@@ -346,7 +346,7 @@ const EventsPage: NextPage = () => {
                 "flex flex-wrap gap-y-8 pb-12 pt-8",
                 idx === 0 ? "lg:pb-16" : "lg:py-16",
                 idx !== arr.length - 1 &&
-                  "border-b-2 border-alveus-green-300/25"
+                  "border-b-2 border-alveus-green-300/25",
               )}
             >
               <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
@@ -381,7 +381,7 @@ const EventsPage: NextPage = () => {
               <div
                 className={classes(
                   "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
-                  idx % 2 === 0 && "lg:order-first"
+                  idx % 2 === 0 && "lg:order-first",
                 )}
               >
                 <VideoPlayer

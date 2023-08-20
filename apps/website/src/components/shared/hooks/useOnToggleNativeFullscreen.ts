@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 
 export function useOnToggleNativeFullscreen(
-  toggleFullscreen: (isFullscreen: boolean) => void
+  toggleFullscreen: (isFullscreen: boolean) => void,
 ) {
   useEffect(() => {
     const handleFullscreenChange = () => {

@@ -12,5 +12,8 @@ const convertAttributeKey = (key: string) => {
 
 export const htmlToReact = (obj: HTMLAttributes) =>
   Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [convertAttributeKey(key), value])
+    Object.entries(obj).map(([key, value]) => [
+      convertAttributeKey(key),
+      value,
+    ]),
   );

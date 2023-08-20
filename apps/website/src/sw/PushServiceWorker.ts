@@ -21,8 +21,8 @@ self.addEventListener("push", async (event) => {
       event.waitUntil(
         self.registration.showNotification(
           notification.title,
-          notification.options
-        )
+          notification.options,
+        ),
       );
     } catch (e) {
       console.error("Failed to show notification", e);

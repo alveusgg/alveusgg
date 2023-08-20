@@ -58,7 +58,7 @@ export function SendNotificationForm() {
     trpc.adminNotifications.createFileUpload.useMutation();
   const upload = useFileUpload<AllowedFileTypes>(
     (signature) => createFileUpload.mutateAsync(signature),
-    { allowedFileTypes }
+    { allowedFileTypes },
   );
   const imageAttachmentData = useUploadAttachmentsData();
   const image = imageAttachmentData.files[0];
@@ -93,7 +93,7 @@ export function SendNotificationForm() {
         isDiscord: channels.includes("discord"),
       });
     },
-    [image, isScheduled, createNotification]
+    [image, isScheduled, createNotification],
   );
 
   const previewImageUrl =
@@ -203,7 +203,7 @@ export function SendNotificationForm() {
             <div
               className={classes(
                 `flex flex-wrap gap-4 border-l pl-3`,
-                !isScheduled && "hidden"
+                !isScheduled && "hidden",
               )}
             >
               <LocalDateTimeField
@@ -233,7 +233,7 @@ export function SendNotificationForm() {
                   >
                     {options.label}
                   </CheckboxField>
-                )
+                ),
               )}
             </div>
           </Fieldset>

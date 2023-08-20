@@ -21,7 +21,7 @@ export function AdminShowAndTellEntriesPanel({
     { filter },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    },
   );
 
   const deletePost = trpc.adminShowAndTell.delete.useMutation({
@@ -31,7 +31,7 @@ export function AdminShowAndTellEntriesPanel({
     (entry: Entry) => {
       deletePost.mutate(entry.id);
     },
-    [deletePost]
+    [deletePost],
   );
 
   const markAsSeen = trpc.adminShowAndTell.markAsSeen.useMutation({
@@ -41,7 +41,7 @@ export function AdminShowAndTellEntriesPanel({
     (entry: Entry, retroactive = false) => {
       markAsSeen.mutate({ id: entry.id, retroactive });
     },
-    [markAsSeen]
+    [markAsSeen],
   );
 
   const unmarkAsSeen = trpc.adminShowAndTell.unmarkAsSeen.useMutation({
@@ -51,7 +51,7 @@ export function AdminShowAndTellEntriesPanel({
     (entry: Entry) => {
       unmarkAsSeen.mutate({ id: entry.id });
     },
-    [unmarkAsSeen]
+    [unmarkAsSeen],
   );
 
   const canLoadMore = entries.hasNextPage && !entries.isFetchingNextPage;

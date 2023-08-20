@@ -53,6 +53,6 @@ export async function runScheduledTasks() {
       if (await checkTaskIsDue(taskConfig)) {
         await executeTask(taskConfig);
       }
-    })
+    }),
   );
 }

@@ -27,5 +27,5 @@ export default createTokenProtectedApiHandler(
       console.error("Failed to create notification", e);
       return false;
     }
-  }
+  },
 );
