@@ -38,7 +38,8 @@ const collaborations = {
     name: "Zoil",
     link: "https://www.twitch.tv/zoil",
     date: new Date("2023-06-13"),
-    videoId: "n4KpVaUmrSE",
+    videoId: "8M_qtYuSrys",
+    vodId: "n4KpVaUmrSE",
   },
   peachJars: {
     name: "PeachJars and Jessica Nigri",
