@@ -1,4 +1,4 @@
-import React, { type LegacyRef, useRef, useState } from "react";
+import { type LegacyRef, useRef, useState } from "react";
 import type { AriaTextFieldOptions } from "react-aria";
 import { useTextField } from "react-aria";
 import dynamic from "next/dynamic";

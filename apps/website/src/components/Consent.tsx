@@ -1,4 +1,9 @@
-import React, { useCallback, type MouseEventHandler } from "react";
+import {
+  useCallback,
+  type MouseEventHandler,
+  type ReactNode,
+  type FC,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -15,10 +20,10 @@ type ConsentProps = {
   item: string;
   consent: ConsentKey;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-const Consent: React.FC<ConsentProps> = ({
+const Consent: FC<ConsentProps> = ({
   item,
   consent: key,
   className,

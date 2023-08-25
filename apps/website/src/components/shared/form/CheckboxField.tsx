@@ -1,4 +1,4 @@
-import React, { useRef, type ReactNode } from "react";
+import { useRef, type ReactNode } from "react";
 import { useCheckbox, type AriaCheckboxProps } from "react-aria";
 import { useToggleState } from "react-stately";
 

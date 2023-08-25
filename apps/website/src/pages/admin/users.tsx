@@ -1,4 +1,4 @@
-import React, { useCallback, useId, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
 import { trpc } from "@/utils/trpc";

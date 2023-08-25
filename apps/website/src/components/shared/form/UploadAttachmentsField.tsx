@@ -1,4 +1,13 @@
-import React, { useCallback, useId, useReducer, useRef, useState } from "react";
+import {
+  useCallback,
+  useId,
+  useReducer,
+  useRef,
+  useState,
+  type Dispatch,
+  type ChangeEvent,
+  type Key,
+} from "react";
 import { fileToBase64 } from "@/utils/files";
 import IconUploadFiles from "@/icons/IconUploadFiles";
 import { Button, defaultButtonClasses } from "../Button";
@@ -47,14 +56,14 @@ type FailedUploadFileReference = {
 } & UploadFileReference;
 
 export type FileUploadRenderProps = {
-  key: React.Key;
+  key: Key;
   fileReference: FileReference;
   removeFileReference: (id: string) => void;
 };
 
 type FileUploadingPropsType = {
   files: FileReference[];
-  dispatch: React.Dispatch<FileAction>;
+  dispatch: Dispatch<FileAction>;
   upload: (
     file: File,
   ) => Promise<{ viewUrl: string; fileStorageObjectId: string } | false>;
@@ -209,7 +218,7 @@ export const UploadAttachmentsField = ({
   };
 
   const onInputChange = async (
-    e: React.ChangeEvent<HTMLInputElement>,
+    e: ChangeEvent<HTMLInputElement>,
   ): Promise<void> => {
     await addFiles(e.target.files);
     if (inputRef.current) inputRef.current.value = "";

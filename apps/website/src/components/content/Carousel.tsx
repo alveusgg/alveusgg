@@ -1,4 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type FC,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -9,14 +17,14 @@ import IconChevronRight from "@/icons/IconChevronRight";
 
 type CarouselProps = {
   id?: string;
-  items: Record<string, React.ReactNode>;
+  items: Record<string, ReactNode>;
   auto?: number | null;
   className?: string;
   wrapperClassName?: string;
   itemClassName?: string;
 };
 
-const Carousel: React.FC<CarouselProps> = ({
+const Carousel: FC<CarouselProps> = ({
   items,
   auto = 2000,
   id,
@@ -126,7 +134,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
   // Allow the user to drag to scroll
   const drag = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
+    (event: ReactMouseEvent<HTMLDivElement>) => {
       const { current } = ref;
       if (!current) return;
 

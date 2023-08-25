@@ -1,4 +1,4 @@
-import React, {
+import {
   useCallback,
   useEffect,
   useState,
@@ -7,6 +7,9 @@ import React, {
   useMemo,
   forwardRef,
   useRef,
+  type FC,
+  type ReactNode,
+  type Ref,
 } from "react";
 import { useRouter } from "next/router";
 import { Dialog } from "@headlessui/react";
@@ -93,11 +96,11 @@ declare global {
 
 const Context = createContext<ConsentContext | undefined>(undefined);
 
-const ConsentButton: React.FC<{
+const ConsentButton: FC<{
   onClick: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
   disabled?: boolean;
-  ref?: React.Ref<HTMLButtonElement>;
+  ref?: Ref<HTMLButtonElement>;
 }> = forwardRef(({ onClick, children, disabled }, ref) => (
   <button
     type="button"
@@ -116,7 +119,7 @@ const ConsentButton: React.FC<{
 ));
 ConsentButton.displayName = "ConsentButton";
 
-const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
+const ConsentDialog: FC<{ context: ConsentContext }> = ({ context }) => {
   const { consent, update, reset, loaded, interacted } = context;
   const router = useRouter();
 
@@ -311,9 +314,7 @@ const ConsentDialog: React.FC<{ context: ConsentContext }> = ({ context }) => {
   );
 };
 
-export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export const ConsentProvider: FC<{ children: ReactNode }> = ({ children }) => {
   const [loaded, setLoaded] = useState(false);
   const [interacted, setInteracted] = useState(false);
   const [consent, setConsent] = useState<Consent>(defaultConsent);

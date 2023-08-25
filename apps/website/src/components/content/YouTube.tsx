@@ -1,10 +1,12 @@
-import React, {
+import {
   cloneElement,
   useCallback,
   useEffect,
   useId,
   useMemo,
   useState,
+  type ReactNode,
+  type FC,
 } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
@@ -51,11 +53,11 @@ type TriggerProps = {
   videoId: string;
   caption?: string;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const createTrigger = (id: string) => {
-  const Trigger: React.FC<TriggerProps> = ({
+  const Trigger: FC<TriggerProps> = ({
     videoId,
     caption,
     className,
@@ -90,7 +92,7 @@ const imgSrc = (id: string, type: string) =>
     quality: 100,
   });
 
-export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
+export const Preview: FC<PreviewProps> = ({ videoId, className }) => {
   // Handle falling back to hq if there isn't a maxres image
   const [type, setType] = useState<"maxresdefault" | "hqdefault">(
     "maxresdefault",
@@ -130,14 +132,10 @@ type LightboxCtxProps = {
 type LightboxProps = {
   id?: string;
   className?: string;
-  children: React.ReactNode | ((ctx: LightboxCtxProps) => React.ReactNode);
+  children: ReactNode | ((ctx: LightboxCtxProps) => ReactNode);
 };
 
-export const Lightbox: React.FC<LightboxProps> = ({
-  id,
-  className,
-  children,
-}) => {
+export const Lightbox: FC<LightboxProps> = ({ id, className, children }) => {
   const { update: updateConsent } = useConsent();
 
   const defaultId = useId().replace(/\W/g, "").toLowerCase();

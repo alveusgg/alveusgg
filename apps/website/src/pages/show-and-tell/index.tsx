@@ -1,10 +1,11 @@
-import type { KeyboardEventHandler } from "react";
-import React, {
+import {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
+  type WheelEvent,
+  type KeyboardEventHandler,
 } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
@@ -183,7 +184,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const scrollDebounce = 250; // Milliseconds to wait before snapping
   const scrollThreshold = 0.1; // multiplier of the viewport height
   const onScroll = useCallback(
-    (e: React.WheelEvent<HTMLDivElement>) => {
+    (e: WheelEvent<HTMLDivElement>) => {
       // Ignore the event if we're not in presentation view,
       // or if we're not currently on an entry,
       // or if the user isn't scrolling

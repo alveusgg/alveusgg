@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import React from "react";
+import { type ReactNode } from "react";
 import type { PartialDateString } from "@alveusgg/data/src/types";
 
 import { formatPartialDateString } from "@/utils/datetime";
@@ -78,7 +78,7 @@ const stats: Record<string, Stat> = {
   },
 } as const;
 
-type HistoryCTA = { key: string; cta: React.ReactNode };
+type HistoryCTA = { key: string; cta: ReactNode };
 type HistoryItem = {
   key: string;
   date: PartialDateString;

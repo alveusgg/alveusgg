@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
+import { useMemo, type ReactNode, type FC } from "react";
 
 import { classes } from "@/utils/classes";
 
 import Link from "@/components/content/Link";
 
 export type HeadingProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   level?: 1 | 2 | 3 | 4 | 5 | 6 | -1;
   className?: string;
   id?: string;
@@ -13,7 +13,7 @@ export type HeadingProps = {
   linkClassName?: string;
 };
 
-const Heading: React.FC<HeadingProps> = ({
+const Heading: FC<HeadingProps> = ({
   children,
   level = 1,
   className,

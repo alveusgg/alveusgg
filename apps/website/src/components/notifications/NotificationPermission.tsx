@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, type FC } from "react";
 
 import {
   isNotificationsSupported,
@@ -12,7 +12,7 @@ import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import { NotificationErrorMessage } from "@/components/notifications/NotificationErrorMessage";
 
-export const NotificationPermission: React.FC<{
+export const NotificationPermission: FC<{
   notificationPermission: NotificationPermission | false;
   updateNotificationPermission: (perm: NotificationPermission) => void;
 }> = ({ notificationPermission, updateNotificationPermission }) => {

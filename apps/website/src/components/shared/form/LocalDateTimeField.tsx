@@ -1,4 +1,4 @@
-import React, {
+import {
   type ChangeEvent,
   type InputHTMLAttributes,
   type DetailedHTMLProps,
@@ -23,8 +23,8 @@ type DateTimeFieldProps = DetailedHTMLProps<
     label: string;
     className?: string;
     inputClassName?: string;
-    prefix?: React.ReactNode;
-    suffix?: React.ReactNode;
+    prefix?: ReactNode;
+    suffix?: ReactNode;
     showResetButton?: boolean;
   };
 

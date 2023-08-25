@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment, type FC, type JSX } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -16,7 +16,7 @@ type SelectProps = {
   className?: string;
 };
 
-const Select: React.FC<SelectProps> = ({
+const Select: FC<SelectProps> = ({
   options,
   value,
   onChange,

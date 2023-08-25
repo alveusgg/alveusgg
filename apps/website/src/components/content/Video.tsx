@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type FC } from "react";
 
 import { createImageUrl } from "@/utils/image";
 
@@ -17,7 +17,7 @@ type VideoProps = {
   threshold?: number;
 };
 
-const Video: React.FC<VideoProps> = ({
+const Video: FC<VideoProps> = ({
   autoPlay = false,
   loop = false,
   muted = false,

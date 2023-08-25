@@ -1,5 +1,5 @@
 import { Popover, Transition } from "@headlessui/react";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import Link from "next/link";
 
 import { classes } from "@/utils/classes";

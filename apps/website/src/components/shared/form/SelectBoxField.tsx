@@ -1,4 +1,4 @@
-import React, { type ReactNode, type SelectHTMLAttributes } from "react";
+import { type ReactNode, type SelectHTMLAttributes } from "react";
 import { useField, type AriaFieldProps } from "react-aria";
 
 import { classes } from "@/utils/classes";

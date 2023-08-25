@@ -1,4 +1,3 @@
-import React from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
 import { getAdminSSP } from "@/server/utils/admin";

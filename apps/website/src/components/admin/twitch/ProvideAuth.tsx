@@ -1,5 +1,4 @@
 import { signIn } from "next-auth/react";
-import React from "react";
 
 import { botScope, defaultScope, scopeLabels } from "@/config/twitch";
 import { trpc } from "@/utils/trpc";

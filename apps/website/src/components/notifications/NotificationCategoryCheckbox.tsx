@@ -1,10 +1,10 @@
-import type { ChangeEvent } from "react";
+import type { ChangeEvent, FC } from "react";
 
 import { classes } from "@/utils/classes";
 
 import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
 
-export const NotificationCategoryCheckbox: React.FC<{
+export const NotificationCategoryCheckbox: FC<{
   tag: string;
   label: string;
   endpoint: string;

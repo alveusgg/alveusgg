@@ -1,17 +1,16 @@
-import React from "react";
+import { type ReactNode, type ButtonHTMLAttributes } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 
 type ButtonStyleProps = {
   className?: string;
-  children: React.ReactNode | string;
+  children: ReactNode | string;
   size?: "default" | "small";
   width?: "full" | "auto";
   confirmationMessage?: string;
 };
 
-type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
-  ButtonStyleProps;
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & ButtonStyleProps;
 type LinkButtonProps = LinkProps & ButtonStyleProps;
 
 const baseClasses =

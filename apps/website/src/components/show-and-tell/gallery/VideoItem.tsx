@@ -1,5 +1,5 @@
 import type { LinkAttachment } from "@prisma/client";
-import React from "react";
+import { type AnchorHTMLAttributes } from "react";
 
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { createImageUrl } from "@/utils/image";
@@ -13,7 +13,7 @@ type VideoThumbnailProps = {
   showPreview?: boolean;
   openInLightbox?: boolean;
   linkAttributes?: Record<string, unknown> &
-    React.AnchorHTMLAttributes<HTMLAnchorElement>;
+    AnchorHTMLAttributes<HTMLAnchorElement>;
 };
 
 export function VideoItem({

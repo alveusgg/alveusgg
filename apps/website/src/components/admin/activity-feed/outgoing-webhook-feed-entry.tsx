@@ -1,4 +1,4 @@
-import React from "react";
+import { type FC } from "react";
 import type { FormEntry, OutgoingWebhook, User } from "@prisma/client";
 
 import { trpc } from "@/utils/trpc";
@@ -9,7 +9,7 @@ type OutgoingWebhookWithFormEntry = OutgoingWebhook & {
   user: User | null;
   formEntry: FormEntry | null;
 };
-export const OutgoingWebhookFeedEntry: React.FC<{
+export const OutgoingWebhookFeedEntry: FC<{
   item: OutgoingWebhookWithFormEntry;
 }> = ({ item }) => {
   let details = <>{item.body}</>;

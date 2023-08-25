@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type FormEvent } from "react";
 import { Duration } from "luxon";
 
 import {
@@ -65,7 +65,7 @@ export function SendNotificationForm() {
   const [isScheduled, setIsScheduled] = useState(false);
 
   const submit = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
+    (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const imageUrl = image?.status === "upload.done" ? image.url : undefined;

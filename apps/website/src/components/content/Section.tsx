@@ -1,4 +1,4 @@
-import React from "react";
+import { type ReactNode, type FC } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -6,14 +6,14 @@ import topographyTexture from "@/assets/textures/topography.svg";
 import dustTexture from "@/assets/textures/dust.svg";
 
 type SectionProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   dark?: boolean;
   offsetParent?: boolean;
   className?: string;
   containerClassName?: string;
 };
 
-const Section: React.FC<SectionProps> = ({
+const Section: FC<SectionProps> = ({
   children,
   dark,
   offsetParent = true,

@@ -1,15 +1,12 @@
-import React from "react";
+import { type FC, type ReactNode, type JSX } from "react";
 import Heading from "./content/Heading";
 
 export type DefaultPageLayoutProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   title: string | JSX.Element;
 };
 
-const DefaultPageLayout: React.FC<DefaultPageLayoutProps> = ({
-  children,
-  title,
-}) => {
+const DefaultPageLayout: FC<DefaultPageLayoutProps> = ({ children, title }) => {
   return (
     <div className="p-4">
       <header className="container mx-auto">

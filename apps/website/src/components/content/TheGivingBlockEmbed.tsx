@@ -1,9 +1,9 @@
 import Script from "next/script";
-import React, { useEffect } from "react";
+import { useEffect, type FC } from "react";
 
 import { theGivingBlockConfig } from "@/config/the-giving-block";
 
-const TheGivingBlockEmbed: React.FC = () => {
+const TheGivingBlockEmbed: FC = () => {
   useEffect(() => {
     window.tgbWidgetOptions = theGivingBlockConfig;
   }, []);

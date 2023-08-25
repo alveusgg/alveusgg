@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import React from "react";
 
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";

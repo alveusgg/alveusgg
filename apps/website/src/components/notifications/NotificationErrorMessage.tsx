@@ -1,10 +1,12 @@
+import { type ReactNode } from "react";
+
 import { classes } from "@/utils/classes";
 
 export const NotificationErrorMessage = ({
   children,
   className,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }) => (
   <div

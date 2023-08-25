@@ -1,7 +1,7 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import React, { useEffect, useId, useMemo, Fragment } from "react";
+import { useEffect, useId, useMemo, Fragment } from "react";
 
 import ambassadors, {
   type Ambassador,

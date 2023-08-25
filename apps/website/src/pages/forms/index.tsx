@@ -1,4 +1,3 @@
-import React from "react";
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 
