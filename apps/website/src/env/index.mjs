@@ -91,7 +91,6 @@ export const env = createEnv({
       .superRefine(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.string().optional(),
-    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED: optionalBoolSchema,
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -150,8 +149,6 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
-    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED:
-      process.env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
