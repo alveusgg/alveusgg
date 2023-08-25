@@ -1,4 +1,4 @@
-import { useMemo, type FC } from "react";
+import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -8,7 +8,7 @@ import Socials from "./Socials";
 const footerLinkClasses =
   "underline decoration-gray-600 underline-offset-2 transition-colors hover:text-gray-300";
 
-export const Footer: FC = () => {
+export const Footer = () => {
   const router = useRouter();
   const isAdmin = useMemo(
     () => router.pathname === "/admin" || router.pathname.startsWith("/admin/"),

@@ -6,7 +6,6 @@ import {
   useEffect,
   useMemo,
   useState,
-  type FC,
   type ComponentProps,
 } from "react";
 
@@ -125,10 +124,13 @@ const isSortByOption = (option: string): option is SortByOption =>
 export const ambassadorImageHover =
   "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
 
-const AmbassadorItem: FC<{
+const AmbassadorItem = ({
+  ambassador,
+  level = 2,
+}: {
   ambassador: AmbassadorKey;
   level?: ComponentProps<typeof Heading>["level"];
-}> = ({ ambassador, level = 2 }) => {
+}) => {
   const data = useMemo(() => ambassadors[ambassador], [ambassador]);
   const images = useMemo(() => getAmbassadorImages(ambassador), [ambassador]);
 
@@ -157,11 +159,15 @@ const AmbassadorItem: FC<{
   );
 };
 
-const AmbassadorItems: FC<{
+const AmbassadorItems = ({
+  ambassadors,
+  className,
+  level,
+}: {
   ambassadors: AmbassadorKey[];
   className?: string;
   level?: ComponentProps<typeof Heading>["level"];
-}> = ({ ambassadors, className, level }) => (
+}) => (
   <div
     className={classes(
       "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
@@ -174,13 +180,19 @@ const AmbassadorItems: FC<{
   </div>
 );
 
-const AmbassadorGroup: FC<{
+const AmbassadorGroup = ({
+  type,
+  group,
+  name,
+  ambassadors,
+  active = false,
+}: {
   type: string;
   group: string;
   name: string;
   ambassadors: AmbassadorKey[];
   active?: boolean;
-}> = ({ type, group, name, ambassadors, active = false }) => {
+}) => {
   // If this group is the "active" one in the URL, scroll it into view
   const scroll = useCallback(
     (node: HTMLDivElement | null) => {

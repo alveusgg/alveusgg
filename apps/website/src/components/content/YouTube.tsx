@@ -6,7 +6,6 @@ import {
   useMemo,
   useState,
   type ReactNode,
-  type FC,
 } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
@@ -57,12 +56,7 @@ type TriggerProps = {
 };
 
 const createTrigger = (id: string) => {
-  const Trigger: FC<TriggerProps> = ({
-    videoId,
-    caption,
-    className,
-    children,
-  }) => {
+  const Trigger = ({ videoId, caption, className, children }: TriggerProps) => {
     return (
       <a
         href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
@@ -92,7 +86,7 @@ const imgSrc = (id: string, type: string) =>
     quality: 100,
   });
 
-export const Preview: FC<PreviewProps> = ({ videoId, className }) => {
+export const Preview = ({ videoId, className }: PreviewProps) => {
   // Handle falling back to hq if there isn't a maxres image
   const [type, setType] = useState<"maxresdefault" | "hqdefault">(
     "maxresdefault",
@@ -135,7 +129,7 @@ type LightboxProps = {
   children: ReactNode | ((ctx: LightboxCtxProps) => ReactNode);
 };
 
-export const Lightbox: FC<LightboxProps> = ({ id, className, children }) => {
+export const Lightbox = ({ id, className, children }: LightboxProps) => {
   const { update: updateConsent } = useConsent();
 
   const defaultId = useId().replace(/\W/g, "").toLowerCase();

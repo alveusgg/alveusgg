@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode, type FC } from "react";
+import { useEffect, type ReactNode } from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
 
@@ -24,7 +24,7 @@ const ptSerif = PT_Serif({
 
 const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
 
-const Layout: FC<LayoutProps> = ({ children }) => {
+const Layout = ({ children }: LayoutProps) => {
   // Add fonts to body for portals that do not attach to #app
   useEffect(() => {
     document.body.classList.add(...fonts.split(" "));

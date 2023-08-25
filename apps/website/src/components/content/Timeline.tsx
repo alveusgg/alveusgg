@@ -1,4 +1,4 @@
-import { type ReactNode, type FC } from "react";
+import { type ReactNode } from "react";
 
 import IconCalendar from "@/icons/IconCalendar";
 
@@ -14,7 +14,7 @@ type TimelineProps = {
   after?: string;
 };
 
-const Timeline: FC<TimelineProps> = ({ items, before, after }) => (
+const Timeline = ({ items, before, after }: TimelineProps) => (
   <div className="relative z-0 mx-auto max-w-6xl">
     <div
       className={classes(

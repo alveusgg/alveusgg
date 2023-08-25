@@ -7,7 +7,6 @@ import {
   forwardRef,
   Fragment,
   type ReactElement,
-  type FC,
 } from "react";
 
 import {
@@ -52,7 +51,7 @@ const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
 
-const DropdownMenuItem: FC<{ children: ReactElement }> = forwardRef(
+const DropdownMenuItem = forwardRef<HTMLLIElement, { children: ReactElement }>(
   ({ children, ...props }, ref) => (
     <li {...props}>
       {Children.map(children, (child) => cloneElement(child, { ref }))}

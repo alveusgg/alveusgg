@@ -1,4 +1,4 @@
-import { useCallback, type FC, type FormEvent } from "react";
+import { useCallback, type FormEvent } from "react";
 import { useSession } from "next-auth/react";
 import type { Form } from "@prisma/client";
 
@@ -24,10 +24,13 @@ import { ContactFieldset } from "./ContactFieldset";
 import { EntryRulesFieldset } from "./EntryRulesFieldset";
 import { Promos } from "./Promos";
 
-export const EntryForm: FC<{
+export const EntryForm = ({
+  form,
+  existingEntry,
+}: {
   form: Form;
   existingEntry: FormEntryWithAddress | null;
-}> = ({ form, existingEntry }) => {
+}) => {
   const { data: session } = useSession();
 
   const config = calcFormConfig(form.config);

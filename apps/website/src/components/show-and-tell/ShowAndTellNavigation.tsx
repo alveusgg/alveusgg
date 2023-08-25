@@ -4,7 +4,6 @@ import {
   type AnchorHTMLAttributes,
   type RefAttributes,
   type ReactNode,
-  type FC,
 } from "react";
 
 import { classes } from "@/utils/classes";
@@ -25,12 +24,12 @@ const navLinkClassesHover = "hover:bg-alveus-tan hover:text-alveus-green";
 const navLinkClasses =
   "rounded-full text-center border-2 border-alveus-tan text-base px-2 py-1 md:px-4 md:py-2 md:text-lg transition-colors transition-colors";
 
-const NavLink: FC<NavLinkProps> = ({
+const NavLink = ({
   href,
   exact = false,
   className,
   ...props
-}) => {
+}: NavLinkProps) => {
   const isActive = useIsActivePath(href, exact);
 
   return (

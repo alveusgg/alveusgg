@@ -1,4 +1,3 @@
-import { type FC } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
@@ -10,7 +9,7 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 import IconX from "@/icons/IconX";
 import IconMenu from "@/icons/IconMenu";
 
-export const Navbar: FC = () => {
+export const Navbar = () => {
   return (
     <Disclosure
       as="header"

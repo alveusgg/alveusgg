@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type FC } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { createImageUrl } from "@/utils/image";
 
@@ -17,7 +17,7 @@ type VideoProps = {
   threshold?: number;
 };
 
-const Video: FC<VideoProps> = ({
+const Video = ({
   autoPlay = false,
   loop = false,
   muted = false,
@@ -27,7 +27,7 @@ const Video: FC<VideoProps> = ({
   poster,
   sources,
   threshold = 0.1,
-}) => {
+}: VideoProps) => {
   const [seen, setSeen] = useState(false);
   const observer = useRef<IntersectionObserver>();
   const ref = useCallback(

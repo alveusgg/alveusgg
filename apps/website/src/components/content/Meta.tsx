@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { type ReactNode, type FC } from "react";
+import { type ReactNode } from "react";
 
 import headerImage from "@/assets/header.png";
 import { createImageUrl } from "@/utils/image";
@@ -15,7 +15,7 @@ type MetaProps = {
 // Get our base URL, which will either be specifically set, or from Vercel for preview deployments
 const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 
-const Meta: FC<MetaProps> = ({ title, description, image, children }) => {
+const Meta = ({ title, description, image, children }: MetaProps) => {
   const defaultTitle = "Alveus Sanctuary";
   const defaultDescription =
     "Alveus is a 501(c)(3) nonprofit organization functioning as a wildlife sanctuary & virtual education center following the journeys of our non-releasable ambassadors, aiming to educate and spark an appreciation for them and their wild counterparts.";

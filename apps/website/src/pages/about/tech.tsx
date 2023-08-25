@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { type FC } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -280,7 +279,7 @@ type ListProps = {
   dark?: boolean;
 };
 
-const List: FC<ListProps> = ({ items, className, itemClassName, dark }) => (
+const List = ({ items, className, itemClassName, dark }: ListProps) => (
   <ul className={className}>
     {Object.entries(items).map(([key, item], idx) => (
       <li

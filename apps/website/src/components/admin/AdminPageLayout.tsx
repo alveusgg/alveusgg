@@ -2,7 +2,6 @@ import {
   type AnchorHTMLAttributes,
   type RefAttributes,
   type ReactNode,
-  type FC,
 } from "react";
 import Link, { type LinkProps } from "next/link";
 
@@ -27,7 +26,7 @@ type NavLinkProps = Omit<
   LinkProps & {
     children?: ReactNode;
   } & RefAttributes<HTMLAnchorElement>;
-const NavLink: FC<NavLinkProps> = (props) => {
+const NavLink = (props: NavLinkProps) => {
   const isActive = useIsActivePath(props.href);
 
   return (
@@ -42,12 +41,12 @@ const NavLink: FC<NavLinkProps> = (props) => {
   );
 };
 
-export const AdminPageLayout: FC<AdminPageLayoutProps> = ({
+export const AdminPageLayout = ({
   children,
   title,
   menuItems,
   ...props
-}) => {
+}: AdminPageLayoutProps) => {
   return (
     <>
       {/* Nav background */}

@@ -4,7 +4,6 @@ import {
   useRef,
   useState,
   type ReactNode,
-  type FC,
   type MouseEvent as ReactMouseEvent,
 } from "react";
 
@@ -24,14 +23,14 @@ type CarouselProps = {
   itemClassName?: string;
 };
 
-const Carousel: FC<CarouselProps> = ({
+const Carousel = ({
   items,
   auto = 2000,
   id,
   className = "",
   wrapperClassName = "",
   itemClassName = "basis-full sm:basis-1/2 lg:basis-1/3 p-4",
-}) => {
+}: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
 
   // Allow the user to scroll to the next/previous image

@@ -1,4 +1,4 @@
-import { useMemo, type ComponentProps, type FC } from "react";
+import { useMemo, type ComponentProps } from "react";
 import NextLink from "next/link";
 
 import { classes } from "@/utils/classes";
@@ -11,7 +11,7 @@ type LinkProps = {
   dark?: boolean;
 } & ComponentProps<typeof NextLink>;
 
-const Link: FC<LinkProps> = ({
+const Link = ({
   external = false,
   custom = false,
   dark = false,
@@ -20,7 +20,7 @@ const Link: FC<LinkProps> = ({
   rel,
   children,
   ...props
-}) => {
+}: LinkProps) => {
   const computedClassName = useMemo(
     () =>
       classes(

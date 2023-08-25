@@ -1,4 +1,4 @@
-import { type ReactNode, type FC } from "react";
+import { type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
 
 import { classes } from "@/utils/classes";
@@ -19,7 +19,7 @@ type PeopleProps = {
   align?: "left" | "center";
 };
 
-const People: FC<PeopleProps> = ({ people, columns = 1, align = "left" }) => (
+const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
   <ul
     className={classes(
       "flex flex-wrap",

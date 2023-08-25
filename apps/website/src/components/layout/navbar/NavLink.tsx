@@ -3,7 +3,6 @@ import {
   type AnchorHTMLAttributes,
   type RefAttributes,
   type ReactNode,
-  type FC,
 } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
@@ -28,7 +27,7 @@ export const navLinkClassesMainActive = "lg:border-white";
 export const navLinkClassesSub = `${navLinkClasses} py-2 hover:bg-alveus-tan/20 rounded`;
 export const navLinkClassesSubActive = "bg-alveus-tan/10";
 
-export const NavLink: FC<NavLinkProps> = forwardRef(
+export const NavLink = forwardRef<HTMLAnchorElement, NavLinkProps>(
   (
     { href, variant = "main", isExternal = false, className, ...props },
     ref,
@@ -63,7 +62,7 @@ export const NavLink: FC<NavLinkProps> = forwardRef(
 );
 NavLink.displayName = "NavLink";
 
-export const NavLinkSub: FC<NavLinkProps> = forwardRef((props, ref) => (
-  <NavLink variant="sub" {...props} ref={ref} />
-));
+export const NavLinkSub = forwardRef<HTMLAnchorElement, NavLinkProps>(
+  (props, ref) => <NavLink variant="sub" {...props} ref={ref} />,
+);
 NavLinkSub.displayName = "NavLinkSub";

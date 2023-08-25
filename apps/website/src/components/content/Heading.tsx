@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode, type FC } from "react";
+import { useMemo, type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -13,14 +13,14 @@ export type HeadingProps = {
   linkClassName?: string;
 };
 
-const Heading: FC<HeadingProps> = ({
+const Heading = ({
   children,
   level = 1,
   className,
   id,
   link = false,
   linkClassName,
-}) => {
+}: HeadingProps) => {
   const Tag = level === -1 ? "p" : (`h${level}` as keyof JSX.IntrinsicElements);
   const headingClass = useMemo(
     () =>

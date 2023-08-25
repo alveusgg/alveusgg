@@ -1,5 +1,3 @@
-import { type FC } from "react";
-
 import Link from "next/link";
 import Image from "next/image";
 
@@ -22,7 +20,7 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 const buttonClasses =
   "block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan";
 
-const Socials: FC = () => {
+const Socials = () => {
   const reducedMotion = usePrefersReducedMotion();
 
   return (

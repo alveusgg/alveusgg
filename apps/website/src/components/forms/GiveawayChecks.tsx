@@ -1,10 +1,4 @@
-import {
-  useCallback,
-  useState,
-  type ReactNode,
-  type FC,
-  type MouseEvent,
-} from "react";
+import { useCallback, useState, type ReactNode, type MouseEvent } from "react";
 import Link from "next/link";
 
 import IconTwitch from "@/icons/IconTwitch";
@@ -16,12 +10,17 @@ import IconShoppingCart from "@/icons/IconShoppingCart";
 
 import { classes } from "@/utils/classes";
 
-const GiveawayCheck: FC<{
+const GiveawayCheck = ({
+  name,
+  label,
+  children,
+  url,
+}: {
   name: string;
   label: string;
   children: ReactNode;
   url?: string;
-}> = ({ name, label, children, url }) => {
+}) => {
   const [isClicked, setIsClicked] = useState(false);
   const hasLink = url !== undefined;
 
@@ -108,7 +107,7 @@ const GiveawayCheck: FC<{
   );
 };
 
-export const GiveawayChecks: FC = () => (
+export const GiveawayChecks = () => (
   <div className="flex flex-col gap-5">
     <GiveawayCheck
       name="twitter"

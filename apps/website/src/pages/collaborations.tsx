@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { type FC } from "react";
 
 import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
@@ -172,7 +171,7 @@ type CollaborationsSectionProps = {
   items: Collaborations;
 };
 
-const CollaborationsSection: FC<CollaborationsSectionProps> = ({ items }) => {
+const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
   return (
     <Lightbox id="collaborations" className="flex flex-wrap">
       {({ Trigger }) => (

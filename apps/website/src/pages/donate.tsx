@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import { type ComponentType, type FC } from "react";
+import { type ComponentType } from "react";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -60,7 +60,7 @@ const givingBlock: DonateLink = {
     "Donate cryptocurrency, stocks or via card to Alveus using The Giving Block.",
 };
 
-const DonateItem: FC<{ link: DonateLink }> = ({ link }) => (
+const DonateItem = ({ link }: { link: DonateLink }) => (
   <Link
     href={link.link}
     {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}

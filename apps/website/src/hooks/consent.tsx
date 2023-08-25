@@ -7,7 +7,6 @@ import {
   useMemo,
   forwardRef,
   useRef,
-  type FC,
   type ReactNode,
   type Ref,
 } from "react";
@@ -96,12 +95,15 @@ declare global {
 
 const Context = createContext<ConsentContext | undefined>(undefined);
 
-const ConsentButton: FC<{
-  onClick: () => void;
-  children: ReactNode;
-  disabled?: boolean;
-  ref?: Ref<HTMLButtonElement>;
-}> = forwardRef(({ onClick, children, disabled }, ref) => (
+const ConsentButton = forwardRef<
+  HTMLButtonElement,
+  {
+    onClick: () => void;
+    children: ReactNode;
+    disabled?: boolean;
+    ref?: Ref<HTMLButtonElement>;
+  }
+>(({ onClick, children, disabled }, ref) => (
   <button
     type="button"
     className={[
@@ -119,7 +121,7 @@ const ConsentButton: FC<{
 ));
 ConsentButton.displayName = "ConsentButton";
 
-const ConsentDialog: FC<{ context: ConsentContext }> = ({ context }) => {
+const ConsentDialog = ({ context }: { context: ConsentContext }) => {
   const { consent, update, reset, loaded, interacted } = context;
   const router = useRouter();
 
@@ -314,7 +316,7 @@ const ConsentDialog: FC<{ context: ConsentContext }> = ({ context }) => {
   );
 };
 
-export const ConsentProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const ConsentProvider = ({ children }: { children: ReactNode }) => {
   const [loaded, setLoaded] = useState(false);
   const [interacted, setInteracted] = useState(false);
   const [consent, setConsent] = useState<Consent>(defaultConsent);
