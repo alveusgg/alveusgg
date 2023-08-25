@@ -11,7 +11,6 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl } from "@/utils/image";
-import { type HTMLAttributes } from "@/utils/attrs";
 import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
@@ -23,7 +22,7 @@ const iframeSrc = (id: string) =>
     id,
   )}?modestbranding=1&rel=0`;
 
-const iframeAttrs: HTMLAttributes = {
+const iframeAttrs = {
   title: "YouTube video",
   referrerpolicy: "no-referrer",
   allow: "encrypted-media",
