@@ -248,19 +248,19 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <div className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+            <dl className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
               {stats.map(({ title, value }, idx) => (
                 <Fragment key={title}>
                   {idx !== 0 && (
                     <div className="col-span-full my-2 h-px bg-alveus-green opacity-10" />
                   )}
-                  <Heading level={2} className="self-center">
+                  <dt className="my-2 self-center text-2xl font-bold">
                     {title}
-                  </Heading>
-                  <div className="mx-2 my-2 self-center text-xl">{value}</div>
+                  </dt>
+                  <dd className="mx-2 my-2 self-center text-xl">{value}</dd>
                 </Fragment>
               ))}
-            </div>
+            </dl>
 
             {animalQuest && (
               <Link
