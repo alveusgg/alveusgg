@@ -1,10 +1,10 @@
-import React from "react";
+import { type ReactNode } from "react";
 
 export function Panel({
   children,
   lightMode = false,
 }: {
-  children?: React.ReactNode | React.ReactNode[];
+  children?: ReactNode | ReactNode[];
   lightMode?: boolean;
 }) {
   return (

@@ -1,5 +1,5 @@
 import type { MouseEventHandler, MutableRefObject } from "react";
-import React, { useCallback, useEffect, useId, useMemo, useRef } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
 

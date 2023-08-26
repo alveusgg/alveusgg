@@ -1,5 +1,3 @@
-import React from "react";
-
 import {
   DEFAULT_COUNTRY_CODE,
   commonCountries,
@@ -11,7 +9,7 @@ import { FieldGroup } from "../shared/form/FieldGroup";
 import { TextField } from "../shared/form/TextField";
 import { SelectBoxField } from "../shared/form/SelectBoxField";
 
-export const ShippingAddressFieldset: React.FC = () => {
+export const ShippingAddressFieldset = () => {
   return (
     <Fieldset legend="Shipping address">
       <FieldGroup>

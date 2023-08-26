@@ -4,7 +4,7 @@ import type {
   NextPage,
 } from "next";
 
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
 import { useRouter } from "next/router";
 import Section from "@/components/content/Section";

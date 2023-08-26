@@ -1,4 +1,3 @@
-import React from "react";
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
 import { permissions } from "@/config/permissions";

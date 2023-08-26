@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState, type ReactNode, type MouseEvent } from "react";
 import Link from "next/link";
 
 import IconTwitch from "@/icons/IconTwitch";
@@ -10,12 +10,17 @@ import IconShoppingCart from "@/icons/IconShoppingCart";
 
 import { classes } from "@/utils/classes";
 
-const GiveawayCheck: React.FC<{
+const GiveawayCheck = ({
+  name,
+  label,
+  children,
+  url,
+}: {
   name: string;
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
   url?: string;
-}> = ({ name, label, children, url }) => {
+}) => {
   const [isClicked, setIsClicked] = useState(false);
   const hasLink = url !== undefined;
 
@@ -40,7 +45,7 @@ const GiveawayCheck: React.FC<{
   // Disable the checkbox if this is a link, and the user hasn't clicked yet
   const disabled = hasLink && !isClicked;
   const handleCheckboxClick = useCallback(
-    (e: React.MouseEvent<HTMLInputElement>) => {
+    (e: MouseEvent<HTMLInputElement>) => {
       if (disabled) {
         e.preventDefault();
       }
@@ -102,7 +107,7 @@ const GiveawayCheck: React.FC<{
   );
 };
 
-export const GiveawayChecks: React.FC = () => (
+export const GiveawayChecks = () => (
   <div className="flex flex-col gap-5">
     <GiveawayCheck
       name="twitter"

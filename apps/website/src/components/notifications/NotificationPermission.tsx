@@ -12,10 +12,13 @@ import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import { NotificationErrorMessage } from "@/components/notifications/NotificationErrorMessage";
 
-export const NotificationPermission: React.FC<{
+export const NotificationPermission = ({
+  notificationPermission,
+  updateNotificationPermission,
+}: {
   notificationPermission: NotificationPermission | false;
   updateNotificationPermission: (perm: NotificationPermission) => void;
-}> = ({ notificationPermission, updateNotificationPermission }) => {
+}) => {
   const swr = usePushServiceWorker();
   const handleSubscribeClick = useCallback(() => {
     if (isNotificationsSupported && Notification.permission === "denied") {

@@ -1,4 +1,4 @@
-import React, { useCallback, type MouseEventHandler } from "react";
+import { useCallback, type MouseEventHandler, type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -15,15 +15,10 @@ type ConsentProps = {
   item: string;
   consent: ConsentKey;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
-const Consent: React.FC<ConsentProps> = ({
-  item,
-  consent: key,
-  className,
-  children,
-}) => {
+const Consent = ({ item, consent: key, className, children }: ConsentProps) => {
   const { consent, update, loaded } = useConsent();
   const clicked = useCallback<MouseEventHandler<HTMLButtonElement>>(
     (e) => {

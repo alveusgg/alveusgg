@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import React from "react";
+import { type ComponentType } from "react";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -17,7 +17,7 @@ import IconBitcoin from "@/icons/IconBitcoin";
 import { type IconProps } from "@/icons/BaseIcon";
 
 type DonateLink = {
-  icon: React.ComponentType<IconProps>;
+  icon: ComponentType<IconProps>;
   title: string;
   link: string;
   external: boolean;
@@ -60,7 +60,7 @@ const givingBlock: DonateLink = {
     "Donate cryptocurrency, stocks or via card to Alveus using The Giving Block.",
 };
 
-const DonateItem: React.FC<{ link: DonateLink }> = ({ link }) => (
+const DonateItem = ({ link }: { link: DonateLink }) => (
   <Link
     href={link.link}
     {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}

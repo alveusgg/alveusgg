@@ -1,4 +1,4 @@
-import React from "react";
+import { type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
 
 import { classes } from "@/utils/classes";
@@ -12,18 +12,14 @@ type PeopleProps = {
       image: ImageProps["src"];
       name: string;
       title: string;
-      description: React.ReactNode;
+      description: ReactNode;
     }
   >;
   columns?: 1 | 2;
   align?: "left" | "center";
 };
 
-const People: React.FC<PeopleProps> = ({
-  people,
-  columns = 1,
-  align = "left",
-}) => (
+const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
   <ul
     className={classes(
       "flex flex-wrap",

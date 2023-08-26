@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 
 import animalQuest, {
   type AnimalQuestWithEpisode,
@@ -39,7 +39,7 @@ type AnimalQuestSectionProps = {
   items: AnimalQuestWithEpisode[];
 };
 
-const AnimalQuestSection: React.FC<AnimalQuestSectionProps> = ({ items }) => {
+const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
   return (
     <div className="flex flex-wrap">
       {items.map((episode) => (

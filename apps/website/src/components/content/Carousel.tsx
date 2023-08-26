@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -9,21 +16,21 @@ import IconChevronRight from "@/icons/IconChevronRight";
 
 type CarouselProps = {
   id?: string;
-  items: Record<string, React.ReactNode>;
+  items: Record<string, ReactNode>;
   auto?: number | null;
   className?: string;
   wrapperClassName?: string;
   itemClassName?: string;
 };
 
-const Carousel: React.FC<CarouselProps> = ({
+const Carousel = ({
   items,
   auto = 2000,
   id,
   className = "",
   wrapperClassName = "",
   itemClassName = "basis-full sm:basis-1/2 lg:basis-1/3 p-4",
-}) => {
+}: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
 
   // Allow the user to scroll to the next/previous image
@@ -126,7 +133,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
   // Allow the user to drag to scroll
   const drag = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
+    (event: ReactMouseEvent<HTMLDivElement>) => {
       const { current } = ref;
       if (!current) return;
 

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import ReactMarkdown, { type Components, type Options } from "react-markdown";
 import headingId from "remark-heading-id";
 
@@ -7,12 +7,7 @@ import { classes } from "@/utils/classes";
 import Heading, { type HeadingProps } from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 
-const MarkdownHeading: React.FC<HeadingProps> = ({
-  level,
-  className,
-  children,
-  id,
-}) => (
+const MarkdownHeading = ({ level, className, children, id }: HeadingProps) => (
   <Heading
     level={level}
     className={classes(className, "break-words")}
@@ -28,7 +23,7 @@ type MarkdownProps = {
   dark?: boolean;
 };
 
-const Markdown: React.FC<MarkdownProps> = ({ content, dark = false }) => {
+const Markdown = ({ content, dark = false }: MarkdownProps) => {
   const components: Components = useMemo(
     () => ({
       h1: ({ children, id }) => (

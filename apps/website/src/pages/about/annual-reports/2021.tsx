@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";

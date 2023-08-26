@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import React, { Children, cloneElement, forwardRef, Fragment } from "react";
+import {
+  Children,
+  cloneElement,
+  forwardRef,
+  Fragment,
+  type ReactElement,
+} from "react";
 
 import {
   mainNavStructure,
@@ -45,7 +51,7 @@ const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
 
-const DropdownMenuItem: React.FC<{ children: React.ReactElement }> = forwardRef(
+const DropdownMenuItem = forwardRef<HTMLLIElement, { children: ReactElement }>(
   ({ children, ...props }, ref) => (
     <li {...props}>
       {Children.map(children, (child) => cloneElement(child, { ref }))}

@@ -1,4 +1,4 @@
-import React from "react";
+import { type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -6,7 +6,7 @@ type FieldsetProps = {
   className?: string;
   legend: string;
   legendClassName?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export function Fieldset({

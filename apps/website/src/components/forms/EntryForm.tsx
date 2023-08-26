@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import { useCallback, type FormEvent } from "react";
 import { useSession } from "next-auth/react";
 import type { Form } from "@prisma/client";
 
@@ -24,17 +24,20 @@ import { ContactFieldset } from "./ContactFieldset";
 import { EntryRulesFieldset } from "./EntryRulesFieldset";
 import { Promos } from "./Promos";
 
-export const EntryForm: React.FC<{
+export const EntryForm = ({
+  form,
+  existingEntry,
+}: {
   form: Form;
   existingEntry: FormEntryWithAddress | null;
-}> = ({ form, existingEntry }) => {
+}) => {
   const { data: session } = useSession();
 
   const config = calcFormConfig(form.config);
   const enterForm = trpc.forms.enterForm.useMutation();
 
   const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
+    async (e: FormEvent<HTMLFormElement>) => {
       e.preventDefault();
 
       const data = new FormData(e.currentTarget);

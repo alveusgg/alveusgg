@@ -1,5 +1,5 @@
 import { Disclosure } from "@headlessui/react";
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { mainNavStructure } from "@/config/main-nav-structure";
 import { checkRolesGivePermission, permissions } from "@/config/permissions";

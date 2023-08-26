@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Handle,
   Position,
@@ -65,13 +65,13 @@ const nodeTypes: {
   },
 };
 
-const NetworkNode: React.FC<NodeProps<Data>> = ({
+const NetworkNode = ({
   id,
   data,
   targetPosition = Position.Top,
   sourcePosition = Position.Bottom,
   isConnectable,
-}) => {
+}: NodeProps<Data>) => {
   // Get the source and target edges
   const edges = useEdges();
   let targetEdge, sourceEdge;
@@ -178,7 +178,7 @@ const edgeTypes: {
   },
 };
 
-const NetworkEdge: React.FC<EdgeProps> = ({
+const NetworkEdge = ({
   source,
   sourceX,
   sourceY,
@@ -187,7 +187,7 @@ const NetworkEdge: React.FC<EdgeProps> = ({
   targetX,
   targetY,
   targetPosition,
-}) => {
+}: EdgeProps) => {
   // Get the source and target nodes
   const nodes = useNodes<Data>();
   let sourceNode, targetNode;
@@ -288,9 +288,12 @@ const NetworkEdge: React.FC<EdgeProps> = ({
   );
 };
 
-const NetworkList: React.FC<{ items: NetworkItem[]; className?: string }> = ({
+const NetworkList = ({
   items,
   className,
+}: {
+  items: NetworkItem[];
+  className?: string;
 }) => (
   <ul className={className}>
     {items.map((item) => (

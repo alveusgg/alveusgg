@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import React from "react";
+import { type ReactNode } from "react";
 
 import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
@@ -28,7 +28,7 @@ type Event = {
   date: Date;
   video: Video;
   stats: Record<string, { title: string; stat: string }>;
-  info: React.ReactNode;
+  info: ReactNode;
 };
 
 const events = {

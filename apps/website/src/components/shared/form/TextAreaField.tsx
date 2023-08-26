@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-import React, { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import type { AriaTextFieldOptions } from "react-aria";
 import { useTextField } from "react-aria";
 import { default as TextareaAutosize } from "react-textarea-autosize";

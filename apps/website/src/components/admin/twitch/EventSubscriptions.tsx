@@ -1,4 +1,3 @@
-import React from "react";
 import { trpc } from "@/utils/trpc";
 
 export function EventSubscriptions() {

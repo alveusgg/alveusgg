@@ -1,4 +1,3 @@
-import React from "react";
 import { signIn } from "next-auth/react";
 import IconTwitch from "../../icons/IconTwitch";
 import { Button } from "./Button";

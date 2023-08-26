@@ -1,4 +1,4 @@
-import React from "react";
+import { type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -6,20 +6,20 @@ import topographyTexture from "@/assets/textures/topography.svg";
 import dustTexture from "@/assets/textures/dust.svg";
 
 type SectionProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   dark?: boolean;
   offsetParent?: boolean;
   className?: string;
   containerClassName?: string;
 };
 
-const Section: React.FC<SectionProps> = ({
+const Section = ({
   children,
   dark,
   offsetParent = true,
   className,
   containerClassName,
-}) => {
+}: SectionProps) => {
   // Determine the texture to use
   const opacity = dark ? "opacity-[0.06]" : "opacity-[0.03]";
   const texture = dark ? dustTexture.src : topographyTexture.src;

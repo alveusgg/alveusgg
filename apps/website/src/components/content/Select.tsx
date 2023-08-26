@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment, type JSX } from "react";
 import { Listbox, Transition } from "@headlessui/react";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -16,7 +16,7 @@ type SelectProps = {
   className?: string;
 };
 
-const Select: React.FC<SelectProps> = ({
+const Select = ({
   options,
   value,
   onChange,
@@ -24,7 +24,7 @@ const Select: React.FC<SelectProps> = ({
   dark = false,
   align = "left",
   className,
-}) => {
+}: SelectProps) => {
   return (
     <Listbox value={value} onChange={onChange}>
       <div className={classes("relative mt-1 flex flex-col", className)}>

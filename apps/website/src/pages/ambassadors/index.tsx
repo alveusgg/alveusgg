@@ -1,7 +1,13 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ComponentProps,
+} from "react";
 
 import ambassadors, {
   type AmbassadorKey,
@@ -118,10 +124,13 @@ const isSortByOption = (option: string): option is SortByOption =>
 export const ambassadorImageHover =
   "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
 
-const AmbassadorItem: React.FC<{
+const AmbassadorItem = ({
+  ambassador,
+  level = 2,
+}: {
   ambassador: AmbassadorKey;
-  level?: React.ComponentProps<typeof Heading>["level"];
-}> = ({ ambassador, level = 2 }) => {
+  level?: ComponentProps<typeof Heading>["level"];
+}) => {
   const data = useMemo(() => ambassadors[ambassador], [ambassador]);
   const images = useMemo(() => getAmbassadorImages(ambassador), [ambassador]);
 
@@ -150,11 +159,15 @@ const AmbassadorItem: React.FC<{
   );
 };
 
-const AmbassadorItems: React.FC<{
+const AmbassadorItems = ({
+  ambassadors,
+  className,
+  level,
+}: {
   ambassadors: AmbassadorKey[];
   className?: string;
-  level?: React.ComponentProps<typeof Heading>["level"];
-}> = ({ ambassadors, className, level }) => (
+  level?: ComponentProps<typeof Heading>["level"];
+}) => (
   <div
     className={classes(
       "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
@@ -167,13 +180,19 @@ const AmbassadorItems: React.FC<{
   </div>
 );
 
-const AmbassadorGroup: React.FC<{
+const AmbassadorGroup = ({
+  type,
+  group,
+  name,
+  ambassadors,
+  active = false,
+}: {
   type: string;
   group: string;
   name: string;
   ambassadors: AmbassadorKey[];
   active?: boolean;
-}> = ({ type, group, name, ambassadors, active = false }) => {
+}) => {
   // If this group is the "active" one in the URL, scroll it into view
   const scroll = useCallback(
     (node: HTMLDivElement | null) => {

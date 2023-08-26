@@ -4,7 +4,15 @@ import { classes } from "@/utils/classes";
 
 import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
 
-export const NotificationCategoryCheckbox: React.FC<{
+export const NotificationCategoryCheckbox = ({
+  tag,
+  label,
+  endpoint,
+  isRegistered,
+  enabled,
+  tags,
+  handleChange,
+}: {
   tag: string;
   label: string;
   endpoint: string;
@@ -12,7 +20,7 @@ export const NotificationCategoryCheckbox: React.FC<{
   enabled: boolean;
   tags: Record<string, string>;
   handleChange: (event: ChangeEvent<HTMLInputElement>) => void;
-}> = ({ tag, label, endpoint, isRegistered, enabled, tags, handleChange }) => {
+}) => {
   return (
     <label
       htmlFor={`tag-${tag}`}

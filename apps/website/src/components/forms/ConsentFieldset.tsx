@@ -1,5 +1,3 @@
-import React from "react";
-
 import { PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL } from "@/utils/forms";
 
 import Link from "../content/Link";

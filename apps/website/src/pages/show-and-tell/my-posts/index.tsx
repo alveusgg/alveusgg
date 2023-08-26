@@ -1,4 +1,3 @@
-import React from "react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";

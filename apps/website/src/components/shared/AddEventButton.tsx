@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Popover } from "@headlessui/react";
 
 import { env } from "@/env/index.mjs";
