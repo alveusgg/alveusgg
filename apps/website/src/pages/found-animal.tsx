@@ -205,7 +205,7 @@ const FoundAnimalPage: NextPage = () => {
               There are a bunch of different ways to find a wildlife
               rehabilitator, and it may depend on where you are. A good first
               place to start is by searching online for rehabilitation
-              organisations that are local to you. You can also try calling a
+              organizations that are local to you. You can also try calling a
               local veterinarian who may be able to give you some suggestions
               for who to contact, or you can reach out to your local wildlife
               authority.

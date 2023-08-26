@@ -48,18 +48,18 @@ const staff = {
       <>
         <p>
           Kayla graduated from college with a degree in biology and a desire to
-          see the world. Her travels eventually found her in Alaska where she
+          see the world. Her travels eventually found her in Alaska, where she
           realized that animal care and conservation was a cause worth staying
-          for. Since Alaska she has traveled to Nepal where she developed an
+          for. Since Alaska, she has traveled to Nepal where she developed an
           unparalleled love and respect for vultures. That interest in birds of
-          prey took her to Tennessee and the American Eagle Foundation where
+          prey took her to Tennessee and the American Eagle Foundation, where
           training became her primary interest and passion. While she
           specializes in caring for and training birds of prey, Kayla is
           dedicated to and eager to learn about any species she can. She
           believes training is an integral part of animal welfare and is excited
           to build relationships with the Alveus ambassadors to showcase their
           personalities and inspire dedication to their wild counterparts across
-          an ever growing online audience.
+          an ever-growing online audience.
         </p>
       </>
     ),
@@ -72,7 +72,7 @@ const staff = {
       <>
         <p>
           Ella started volunteering at a local wildlife rehabilitation center
-          during high school. After a year of volunteering she began working at
+          during high school. After a year of volunteering, she began working at
           the center as a wildlife care coordinator. As part of her job, Ella
           communicated with the public when they found potentially injured, ill
           or orphaned wildlife. She came to realize how important the education
