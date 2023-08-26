@@ -57,7 +57,7 @@ const events = {
     info: (
       <>
         <p>
-          A 24-hour long livestream event, featuring many of the Alveus staff
+          A 24-hour-long livestream event, featuring many of the Alveus staff
           camping in the Session Yard at Alveus. There were plenty of activities
           for the staff to participate in, including an archery competition to
           start the event off, a water balloon fight later in the day, cooking
@@ -116,7 +116,7 @@ const events = {
         </p>
         <p>
           The event raised $63,019 for Alveus Sanctuary over the course of the
-          3.5-hour long event, with $31,500 of that from an incredibly generous
+          3.5-hour-long event, with $31,500 of that from an incredibly generous
           donation by Rotary at the end of the event. Georgie was our most
           successful ambassador artist this year, with his four paintings
           raising $4,225 in donations, with the top one selling for $2.1k. Thank
@@ -152,9 +152,9 @@ const events = {
         <p>
           To celebrate Valentine&apos;s Day, we hosted a short livestream
           fundraiser. Viewers were able to donate $25 or more to get a signed
-          postcard for the event, and the chance to win a ambassador plushie
+          postcard for the event, and the chance to win an ambassador plushie
           hand-crafted by Maya. We were able to raise $40,076 for Alveus over
-          the 3-hour long event, with 596 donors claiming a postcard.
+          the 3-hour-long event, with 596 donors claiming a postcard.
         </p>
         <p>
           Each donation of $25 or more would also include some 3D-printed
@@ -232,7 +232,7 @@ const events = {
     info: (
       <>
         <p>
-          The halloween event at Alveus was a massive success, with 34 creators
+          The Halloween event at Alveus was a massive success, with 34 creators
           from across the streaming space descending on the sanctuary to help
           raise money for the animals. During the event, anyone that donated
           $250 or more had their name written on the side wall of the Nutrition
@@ -244,7 +244,7 @@ const events = {
           Two teams were formed from the creators, and they competed in many
           activities around the property throughout the event. A game of apple
           bobbing started the evening off, followed by hale bale throwing to see
-          which team had better technique. A little while later we had a game of
+          which team had better technique. A little while later, we had a game of
           badminton on the grass, followed by trivia and then the dunk tank. We
           rounded off the evening with some mud wrestling. Thank you to all the
           creators that joined us, and everyone who watched and donated!
@@ -276,8 +276,8 @@ const events = {
     },
     info: (
       <p>
-        The event that started it all! A 20-hour long mega-stream with a whole
-        bunch of donation goals along the way, aiming to raise as much money as
+        The event that started it all! A 20-hour-long mega-stream with a bunch 
+        of donation goals along the way, aiming to raise as much money as
         possible to kick-start Alveus. Each donor that donated $100 or more got
         their name engraved on a golden leaf that form part of six donor trees
         now affixed to the back of the studio building. The final goal for the

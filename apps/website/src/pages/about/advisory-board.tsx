@@ -43,7 +43,7 @@ const advisors = {
           Ellie received her PhD from Stanford University in the Biology
           Department in 2021 where she used genomics to study big cats and built
           tools to assist in tracking and identifying illegally traded animals
-          and animal products. She is now a post doctoral fellow with the
+          and animal products. She is now a post-doctoral fellow with the
           Washington Research Foundation at Washington State University, where
           she has expanded this work to grizzly bears and other Pacific
           Northwest fauna.

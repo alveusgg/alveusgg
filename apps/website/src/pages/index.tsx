@@ -241,8 +241,8 @@ const Home: NextPage = () => {
                 functions as an exotic animal sanctuary and as a virtual
                 education center facility to provide permanent homes to
                 non-releasable exotic animals. These animals function as
-                ambassadors so viewers can watch their journeys, get to know the
-                animals and gain an appreciation for their species.
+                ambassadors, so viewers can watch their journeys, get to know the
+                animals, and gain an appreciation for their species.
               </p>
               <p className="my-4 text-lg">
                 Alveus hosts content collaborations where creators can visit and
