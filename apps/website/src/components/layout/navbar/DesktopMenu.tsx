@@ -197,6 +197,7 @@ export function DesktopMenu() {
                             {({ close, active }) => (
                               <NavLinkSub
                                 href={link.link}
+                                isExternal={link.isExternal}
                                 className={classes(
                                   active &&
                                     "outline-blue-500 group-focus-visible:outline",
