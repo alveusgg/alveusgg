@@ -110,12 +110,15 @@ const Slideshow = ({
   }, []);
 
   // Wait until the first two images have loaded before starting the animation
-  const [loaded, setLoaded] = useState(-1);
+  const [loaded, setLoaded] = useState(new Set());
   const handleLoad = useCallback(
-    (idx: number) => setLoaded((current) => Math.max(current, idx)),
+    (idx: number) => setLoaded((current) => new Set(current).add(idx)),
     [],
   );
-  const ready = loaded >= 1;
+  const ready = useMemo(
+    () => loaded.has(0) && (loaded.has(1) || images.length === 1),
+    [loaded, images.length],
+  );
 
   return (
     <div className="relative z-0 h-full w-full">
