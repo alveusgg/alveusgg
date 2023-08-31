@@ -127,8 +127,8 @@ const Slideshow = ({
           __html: [
             `@keyframes slideshow-${id}-container { ${animation.keyframes.container} }`,
             `@keyframes slideshow-${id}-image { ${animation.keyframes.image} }`,
-            `.slideshow-${id}-container { animation: ${animation.duration.total}ms slideshow-${id}-container infinite; will-change: opacity, z-index; }`,
-            `.slideshow-${id}-container img { animation: ${animation.duration.total}ms slideshow-${id}-image infinite; transform: scale(${scale.from}); will-change: transform; }`,
+            `.slideshow-${id}-container { animation: ${animation.duration.total}ms slideshow-${id}-container infinite; }`,
+            `.slideshow-${id}-container img { animation: ${animation.duration.total}ms slideshow-${id}-image infinite; transform: scale(${scale.from}); }`,
             `@media (prefers-reduced-motion) { .slideshow-${id}-container img { animation-play-state: paused !important; } }`,
           ].join("\n"),
         }}
