@@ -1,6 +1,12 @@
 import type { ImageProps } from "next/image";
 import Image from "next/image";
-import { type CSSProperties, useCallback, useId, useMemo } from "react";
+import {
+  type CSSProperties,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from "react";
 
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl, type ImageLoaderProps } from "@/utils/image";
@@ -103,6 +109,14 @@ const Slideshow = ({
     return createImageUrl({ ...props, quality });
   }, []);
 
+  // Wait until the first two images have loaded before starting the animation
+  const [loaded, setLoaded] = useState(-1);
+  const handleLoad = useCallback(
+    (idx: number) => setLoaded((current) => Math.max(current, idx)),
+    [],
+  );
+  const ready = loaded >= 1;
+
   return (
     <div className="relative z-0 h-full w-full">
       <style
@@ -112,7 +126,7 @@ const Slideshow = ({
             `@keyframes slideshow-${id}-image { ${animation.keyframes.image} }`,
             `.slideshow-${id}-container { animation: ${animation.duration.total}ms slideshow-${id}-container infinite; will-change: opacity, z-index; }`,
             `.slideshow-${id}-container img { animation: ${animation.duration.total}ms slideshow-${id}-image infinite; transform: scale(${scale.from}); will-change: transform; }`,
-            `@media (prefers-reduced-motion) { .slideshow-${id}-container img { animation: none !important; } }`,
+            `@media (prefers-reduced-motion) { .slideshow-${id}-container img { animation-play-state: paused !important; } }`,
           ].join("\n"),
         }}
       />
@@ -128,6 +142,7 @@ const Slideshow = ({
           }
           style={{
             animationDelay: `${idx * animation.duration.offset}ms`,
+            animationPlayState: ready ? "running" : "paused",
           }}
         >
           <Image
@@ -137,10 +152,12 @@ const Slideshow = ({
             quality="50"
             loader={qualityLoader}
             priority={idx === 0}
+            onLoadingComplete={() => handleLoad(idx)}
             placeholder="blur"
             className="h-full w-full object-cover"
             style={{
               animationDelay: `${idx * animation.duration.offset}ms`,
+              animationPlayState: ready ? "running" : "paused",
             }}
           />
         </div>
