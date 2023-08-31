@@ -10,6 +10,7 @@ import {
 
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl, type ImageLoaderProps } from "@/utils/image";
+import { classes } from "@/utils/classes";
 
 type SlideshowProps = {
   images: {
@@ -109,16 +110,13 @@ const Slideshow = ({
     return createImageUrl({ ...props, quality });
   }, []);
 
-  // Wait until the first two images have loaded before starting the animation
+  // Stagger the images loading in, and animate once the first two are loaded
   const [loaded, setLoaded] = useState(new Set());
   const handleLoad = useCallback(
     (idx: number) => setLoaded((current) => new Set(current).add(idx)),
     [],
   );
-  const ready = useMemo(
-    () => loaded.has(0) && (loaded.has(1) || images.length === 1),
-    [loaded, images.length],
-  );
+  const ready = loaded.has(0) && loaded.has(1);
 
   return (
     <div className="relative z-0 h-full w-full">
@@ -157,7 +155,10 @@ const Slideshow = ({
             priority={idx === 0}
             onLoadingComplete={() => handleLoad(idx)}
             placeholder="blur"
-            className="h-full w-full object-cover"
+            className={classes(
+              "h-full w-full object-cover",
+              idx !== 0 && !loaded.has(idx - 1) && "hidden",
+            )}
             style={{
               animationDelay: `${idx * animation.duration.offset}ms`,
               animationPlayState: ready ? "running" : "paused",
