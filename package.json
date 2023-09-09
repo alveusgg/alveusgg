@@ -20,10 +20,11 @@
   "packageManager": "pnpm@8.6.12",
   "devDependencies": {
     "husky": "^8.0.3",
-    "lint-staged": "^14.0.0",
-    "prettier": "^3.0.2"
+    "lint-staged": "^14.0.1",
+    "prettier": "^3.0.3"
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged --relative"
   }
 }
