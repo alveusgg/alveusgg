@@ -410,7 +410,7 @@ const AboutAlveusPage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="flex basis-full flex-col gap-4 pb-16 pt-4 md:basis-1/2 md:py-24">
+        <div className="flex basis-full flex-col gap-4 pb-16 pt-4 xl:basis-1/2 xl:py-24">
           <Heading className="my-0">About Alveus Sanctuary</Heading>
 
           <p className="text-lg">
@@ -448,8 +448,8 @@ const AboutAlveusPage: NextPage = () => {
           </p>
         </div>
 
-        <div className="max-w-2xl basis-full p-4 pt-8 md:mx-0 md:basis-1/2 md:pt-4">
-          <Lightbox>
+        <div className="basis-full p-4 pt-8 xl:mx-0 xl:basis-1/2 xl:pt-4">
+          <Lightbox className="mx-auto max-w-2xl">
             {({ Trigger }) => (
               <Trigger videoId="jXTqWIc--jo">
                 <Preview videoId="jXTqWIc--jo" />
