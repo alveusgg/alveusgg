@@ -19,6 +19,11 @@
 }
 
 @layer components {
+  .container {
+    @apply 2xl:max-w-screen-xl;
+  }
+
+
   details > summary {
     list-style: none;
   }
