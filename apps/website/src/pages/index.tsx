@@ -155,8 +155,8 @@ const Home: NextPage = () => {
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:px-6 lg:pt-40 xl:px-10">
-          <div className="basis-full p-4 xl:basis-1/2 xl:px-0">
+        <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:pt-40">
+          <div className="basis-full p-4 xl:basis-1/2">
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
               World from the Web
@@ -190,7 +190,7 @@ const Home: NextPage = () => {
             <Consent
               item="live cam feed"
               consent="twitch"
-              className="aspect-video h-auto w-full max-w-2xl rounded-2xl xl:mx-auto"
+              className="aspect-video h-auto w-full max-w-2xl rounded-2xl xl:ml-auto"
             >
               {twitchEmbed && (
                 <Link
