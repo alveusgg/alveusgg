@@ -24,6 +24,7 @@
     "prettier": "^3.0.2"
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "lint-staged": "lint-staged --relative"
   }
 }
