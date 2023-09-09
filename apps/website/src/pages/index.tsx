@@ -156,7 +156,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:pt-40">
-          <div className="basis-full p-4 lg:basis-1/2">
+          <div className="basis-full p-4 xl:basis-1/2">
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
               World from the Web
@@ -186,11 +186,11 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="basis-full p-4 lg:basis-1/2">
+          <div className="basis-full p-4 xl:basis-1/2">
             <Consent
               item="live cam feed"
               consent="twitch"
-              className="aspect-video h-auto w-full rounded-2xl"
+              className="aspect-video h-auto w-full max-w-2xl rounded-2xl xl:ml-auto"
             >
               {twitchEmbed && (
                 <Link
@@ -241,8 +241,8 @@ const Home: NextPage = () => {
                 functions as an exotic animal sanctuary and as a virtual
                 education center facility to provide permanent homes to
                 non-releasable exotic animals. These animals function as
-                ambassadors, so viewers can watch their journeys, get to know the
-                animals, and gain an appreciation for their species.
+                ambassadors, so viewers can watch their journeys, get to know
+                the animals, and gain an appreciation for their species.
               </p>
               <p className="my-4 text-lg">
                 Alveus hosts content collaborations where creators can visit and
