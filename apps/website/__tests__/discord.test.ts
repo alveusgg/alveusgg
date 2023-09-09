@@ -10,20 +10,31 @@ test("wrapping fully qualified urls", async () => {
   expect(res).toEqual(expected);
 });
 
-test("wrapping partial urls", async () => {
-  const example = "twitch.tv/alveussanctuary";
-  const expected = "<twitch.tv/alveussanctuary>";
+test("wrapping multiple qualified urls", async () => {
+  const example =
+    "http://twitch.tv/alveussanctuary, https://www.twitter.com/AlveusSanctuary, https://youtube.com/@AlveusSanctuary";
+  const expected =
+    "<http://twitch.tv/alveussanctuary>, <https://www.twitter.com/AlveusSanctuary>, <https://youtube.com/@AlveusSanctuary>";
 
   const res = escapeLinksForDiscord(example);
 
   expect(res).toEqual(expected);
 });
 
-test("wrapping multiple partial urls", async () => {
+test("not wrapping partial urls", async () => {
+  const example = "twitch.tv/alveussanctuary";
+  const expected = "twitch.tv/alveussanctuary";
+
+  const res = escapeLinksForDiscord(example);
+
+  expect(res).toEqual(expected);
+});
+
+test("not wrapping multiple partial urls", async () => {
   const example =
     "twitch.tv/alveussanctuary, twitter.com/AlveusSanctuary, youtube.com/@AlveusSanctuary";
   const expected =
-    "<twitch.tv/alveussanctuary>, <twitter.com/AlveusSanctuary>, <youtube.com/@AlveusSanctuary>";
+    "twitch.tv/alveussanctuary, twitter.com/AlveusSanctuary, youtube.com/@AlveusSanctuary";
 
   const res = escapeLinksForDiscord(example);
 
@@ -32,9 +43,9 @@ test("wrapping multiple partial urls", async () => {
 
 test("full message example", async () => {
   const example =
-    "We're live at twitch.tv/alveussanctuary! Georgie is a big cutie!";
+    "We're live at https://twitch.tv/alveussanctuary! Georgie is a big cutie!";
   const expected =
-    "We're live at <twitch.tv/alveussanctuary>! Georgie is a big cutie!";
+    "We're live at <https://twitch.tv/alveussanctuary>! Georgie is a big cutie!";
 
   const res = escapeLinksForDiscord(example);
 

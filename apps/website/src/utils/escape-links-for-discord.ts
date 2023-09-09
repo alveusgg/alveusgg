@@ -2,7 +2,11 @@
 import LinkifyIt from "linkify-it";
 
 export function escapeLinksForDiscord(text: string) {
-  const linkify = new LinkifyIt();
+  const linkify = new LinkifyIt({
+    fuzzyLink: false,
+    fuzzyEmail: false,
+    fuzzyIP: false,
+  });
 
   const matches = linkify.match(text);
 
