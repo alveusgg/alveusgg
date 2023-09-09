@@ -165,7 +165,7 @@ const AboutStaffPage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="flex w-full flex-col gap-4 pb-16 pt-4 md:w-2/5 md:py-24">
+        <div className="flex basis-full flex-col gap-4 pb-16 pt-4 xl:basis-1/2 xl:py-24">
           <Heading className="my-0">Alveus Staff</Heading>
           <p className="text-lg">
             The staff at Alveus all work at our facility in Texas, providing
@@ -180,8 +180,8 @@ const AboutStaffPage: NextPage = () => {
           </p>
         </div>
 
-        <div className="w-full max-w-2xl p-4 pt-8 md:mx-0 md:w-3/5 md:pt-4">
-          <Lightbox>
+        <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4">
+          <Lightbox className="mx-auto max-w-2xl xl:mr-0">
             {({ Trigger }) => (
               <Trigger videoId="7DvtjAqmWl8">
                 <Preview videoId="7DvtjAqmWl8" />

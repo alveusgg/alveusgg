@@ -448,8 +448,8 @@ const AboutAlveusPage: NextPage = () => {
           </p>
         </div>
 
-        <div className="basis-full p-4 pt-8 xl:mx-0 xl:basis-1/2 xl:pt-4">
-          <Lightbox className="mx-auto max-w-2xl">
+        <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4">
+          <Lightbox className="mx-auto max-w-2xl xl:mr-0">
             {({ Trigger }) => (
               <Trigger videoId="jXTqWIc--jo">
                 <Preview videoId="jXTqWIc--jo" />
