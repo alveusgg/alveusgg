@@ -23,7 +23,7 @@ export const Navbar = () => {
             {/* Logo */}
             <Link
               href="/"
-              className="-ml-4 flex items-center"
+              className="flex items-center px-1 lg:-ml-4 lg:px-0"
               aria-label="Alveus Sanctuary Inc."
             >
               <Image
