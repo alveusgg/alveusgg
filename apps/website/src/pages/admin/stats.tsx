@@ -2,7 +2,7 @@ import React from "react";
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 import Script from "next/script";
 
-import { env as serverEnv } from "@/env/server.mjs";
+import { env } from "@/env/index.mjs";
 
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/config/permissions";
@@ -17,12 +17,12 @@ export async function getServerSideProps(context: NextPageContext) {
     return { notFound: true };
   }
 
-  const statsBaseUrl = serverEnv.STATS_BASE_URL;
+  const statsBaseUrl = env.STATS_BASE_URL;
 
   return {
     props: {
       ...adminProps,
-      statsEmbedUrl: serverEnv.STATS_EMBED_URL,
+      statsEmbedUrl: env.STATS_EMBED_URL,
       statsHostScriptUrl: statsBaseUrl && `${statsBaseUrl}/js/embed.host.js`,
     },
   };

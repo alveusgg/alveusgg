@@ -3,7 +3,7 @@ import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
 import Script from "next/script";
 
-import { env } from "@/env/client.mjs";
+import { env } from "@/env/index.mjs";
 import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
@@ -34,7 +34,7 @@ const Layout = ({ children }: LayoutProps) => {
 
   const statsDomain = useMemo(
     () => new URL(env.NEXT_PUBLIC_BASE_URL).hostname,
-    []
+    [],
   );
 
   return (
