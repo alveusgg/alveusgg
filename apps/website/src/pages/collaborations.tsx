@@ -31,7 +31,8 @@ const collaborations = {
     name: "Esfand",
     link: "https://www.twitch.tv/esfandtv",
     date: new Date("2023-08-26"),
-    videoId: "o7nyVU62rf8",
+    videoId: "9aXebCBRonA",
+    vodId: "o7nyVU62rf8",
   },
   extraEmily: {
     name: "ExtraEmily",
