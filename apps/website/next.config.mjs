@@ -176,28 +176,28 @@ const config = {
     // External redirects
     {
       source: "/merch",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/", // Temporary redirect to home page until new merch show is set up
+      permanent: false,
     },
     {
       source: "/merch-store",
-      destination: "https://shopalveus.org/",
+      destination: "/", // Temporary redirect to home page until new merch show is set up
       permanent: false,
     },
     {
       source: "/shop",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/", // Temporary redirect to home page until new merch show is set up
+      permanent: false,
     },
     {
       source: "/store",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/", // Temporary redirect to home page until new merch show is set up
+      permanent: false,
     },
     {
       source: "/apparel",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/", // Temporary redirect to home page until new merch show is set up
+      permanent: false,
     },
     {
       source: "/plushies",
