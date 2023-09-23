@@ -63,6 +63,10 @@ const nodeTypes: {
     container: "border-green-400",
     eyebrow: { name: "Microphone", color: "text-green-400" },
   },
+  speaker: {
+    container: "border-green-400",
+    eyebrow: { name: "Speaker", color: "text-green-400" },
+  },
 };
 
 const NetworkNode = ({
