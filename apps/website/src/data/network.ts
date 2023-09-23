@@ -168,8 +168,8 @@ const data: NetworkItem[] = [
                       {
                         type: "camera",
                         name: "Parrots",
-                        model: "Axis M5525-E (PTZ)",
-                        url: "https://www.axis.com/products/axis-m5525-e",
+                        model: "Axis P5676-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-p5676-le",
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
