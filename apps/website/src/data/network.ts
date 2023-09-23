@@ -28,11 +28,7 @@ type NetworkItemSwitch = NetworkItemCore & {
 };
 
 type NetworkItemCamera = NetworkItemCore & {
-  type: "camera" | "microphone";
-};
-
-type NetworkItemSpeaker = NetworkItemCore & {
-  type: "speaker";
+  type: "camera" | "microphone" | "speaker";
 };
 
 type NetworkItemAccessPoint = NetworkItemCore & {
