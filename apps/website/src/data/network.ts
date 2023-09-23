@@ -39,7 +39,6 @@ type NetworkItemAccessPoint = NetworkItemCore & {
 export type NetworkItem =
   | NetworkItemSwitch
   | NetworkItemCamera
-  | NetworkItemSpeaker
   | NetworkItemAccessPoint;
 
 const data: NetworkItem[] = [
