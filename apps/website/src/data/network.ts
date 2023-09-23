@@ -28,7 +28,7 @@ type NetworkItemSwitch = NetworkItemCore & {
 };
 
 type NetworkItemCamera = NetworkItemCore & {
-  type: "camera" | "microphone";
+  type: "camera" | "microphone" | "speaker";
 };
 
 type NetworkItemAccessPoint = NetworkItemCore & {
@@ -177,6 +177,13 @@ const data: NetworkItem[] = [
                         name: "Parrots Audio",
                         model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
                         url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "speaker",
+                        name: "Parrots Speaker",
+                        model: "Axis C1610-VE Network Sound Projector",
+                        url: "https://www.axis.com/products/axis-c1610-ve",
                         connection: { type: "ethernet", location: "wall" },
                       },
                     ],
