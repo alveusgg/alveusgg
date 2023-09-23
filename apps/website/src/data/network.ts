@@ -185,7 +185,7 @@ const data: NetworkItem[] = [
                         model: "Axis C1610-VE Network Sound Projector",
                         url: "https://www.axis.com/products/axis-c1610-ve",
                         connection: { type: "ethernet", location: "wall" },
-                      }
+                      },
                     ],
                   },
                 ],
