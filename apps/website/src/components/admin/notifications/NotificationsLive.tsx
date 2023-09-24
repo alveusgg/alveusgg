@@ -143,7 +143,7 @@ export function NotificationsLive() {
         >
           {recentNotifications.isFetchingNextPage ? (
             <>
-              <IconLoading size={20} /> Loading...
+              <IconLoading size={20} /> Loading…
             </>
           ) : recentNotifications.hasNextPage ? (
             "Load more"

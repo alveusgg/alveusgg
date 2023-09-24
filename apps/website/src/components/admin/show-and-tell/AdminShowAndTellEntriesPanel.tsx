@@ -104,7 +104,7 @@ export function AdminShowAndTellEntriesPanel({
               <Button onClick={() => entries.fetchNextPage()}>
                 {entries.isFetchingNextPage ? (
                   <>
-                    <IconLoading size={20} /> Loading...
+                    <IconLoading size={20} /> Loading…
                   </>
                 ) : (
                   "Load more"

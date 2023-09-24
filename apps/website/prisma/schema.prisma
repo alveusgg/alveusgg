@@ -97,6 +97,7 @@ model User {
   pushSubscriptions  PushSubscription[]
   notificationPushes NotificationPush[]
   formEntries        FormEntry[]
+  bingoEntries       BingoEntry[]
   outgoingWebhooks   OutgoingWebhook[]
   showAndTellEntries ShowAndTellEntry[]
   roles              UserRole[]
@@ -272,6 +273,45 @@ model FormEntry {
   @@index([userId], name: "FormEntry_userId")
 }
 
+model Bingo {
+  id                 String    @id @default(cuid())
+  type               String
+  label              String
+  slug               String?
+  active             Boolean   @default(false)
+  startAt            DateTime  @default(now())
+  endAt              DateTime?
+  outgoingWebhookUrl String?   @db.VarChar(720)
+  showInLists        Boolean   @default(true)
+  config             String    @db.MediumText
+  playData           String    @db.Text
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  entries BingoEntry[]
+
+  @@unique([slug])
+}
+
+model BingoEntry {
+  id                String  @id @default(cuid())
+  userId            String
+  bingoId           String
+  permutation       Int
+  outgoingWebhookId String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  bingo           Bingo            @relation(fields: [bingoId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+  outgoingWebhook OutgoingWebhook? @relation(fields: [outgoingWebhookId], references: [id])
+
+  @@unique([bingoId, userId])
+  @@index([userId], name: "BingoEntry_userId")
+}
+
 model OutgoingWebhook {
   id          String    @id @default(cuid())
   type        String
@@ -288,6 +328,7 @@ model OutgoingWebhook {
   user         User?                              @relation(fields: [userId], references: [id])
   formEntry    FormEntry?
   notification NotificationDiscordChannelWebhook?
+  BingoEntry   BingoEntry?
 
   @@index([userId], name: "OutgoingWebhook_userId")
 }
