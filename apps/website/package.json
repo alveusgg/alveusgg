@@ -48,6 +48,7 @@
     "dagre": "^0.8.5",
     "date-fns": "^2.30.0",
     "dompurify": "^3.0.5",
+    "framer-motion": "^10.16.4",
     "html-react-parser": "^4.2.2",
     "jsdom": "^22.1.0",
     "just-debounce-it": "^3.2.0",
