@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package.json .
 COPY pnpm-lock.yaml .
 COPY pnpm-workspace.yaml .
+COPY patches ./patches
 
 ## Copy chatbot files
 WORKDIR apps/chatbot

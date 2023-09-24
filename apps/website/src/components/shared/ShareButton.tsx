@@ -1,5 +1,5 @@
 import type { MouseEventHandler } from "react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useId, useState } from "react";
 
 import { Popover } from "@headlessui/react";
 
@@ -10,6 +10,7 @@ import IconEnvelope from "@/icons/IconEnvelope";
 
 import { Button } from "@/components/shared/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
+import IconClipboard from "@/icons/IconClipboard";
 
 export function ShareButton({
   url,
@@ -54,6 +55,25 @@ export function ShareButton({
     return link.toString().replaceAll("+", "%20");
   };
 
+  const linkInputId = useId();
+  const [linkCopiedState, setLinkCopiedState] = useState<
+    undefined | "success" | "error"
+  >();
+  const linkCopiedText =
+    linkCopiedState === "success"
+      ? "Copied!"
+      : linkCopiedState === "error"
+      ? "Failed"
+      : "Copy";
+  useEffect(() => {
+    if (linkCopiedState) {
+      const timeout = setTimeout(() => {
+        setLinkCopiedState(undefined);
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [linkCopiedState]);
+
   return (
     <PopoverButton
       onClick={handleClick}
@@ -64,13 +84,45 @@ export function ShareButton({
         </>
       }
     >
-      <p className="mb-1">Share this link:</p>
-      <input
-        readOnly={true}
-        type="url"
-        className="mb-2 w-full bg-transparent text-inherit"
-        value={url}
-      />
+      <p className="mb-1">Share this link</p>
+
+      <div className="mb-3 flex w-[80vw] max-w-[400px] items-stretch gap-2">
+        <Button
+          width="auto"
+          size="small"
+          onClick={() => {
+            const linkInputElement = document.getElementById(
+              linkInputId,
+            ) as HTMLInputElement | null;
+            if (linkInputElement) {
+              linkInputElement.focus();
+              linkInputElement.setSelectionRange(
+                0,
+                linkInputElement.value.length,
+              );
+              document.execCommand("copy");
+              setLinkCopiedState("success");
+            } else {
+              setLinkCopiedState("error");
+            }
+          }}
+          title="Copy link to clipboard"
+        >
+          <IconClipboard className="h-4 w-4" />
+          {linkCopiedText}
+        </Button>
+
+        <input
+          id={linkInputId}
+          readOnly={true}
+          type="url"
+          className="w-full bg-transparent p-0.5 text-xs text-inherit"
+          value={url}
+          onClick={(e) =>
+            e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+          }
+        />
+      </div>
 
       <div className="flex gap-2">
         <Popover.Button as={Fragment}>
