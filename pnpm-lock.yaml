@@ -79,8 +79,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#0.19.0
-        version: github.com/alveusgg/data/f557ec4e482021144953befbe3367e89bc298332
+        specifier: github:alveusgg/data#MattIPv4/marmosets-animal-quest
+        version: github.com/alveusgg/data/da7c09aea0093c04e91982a0a25471c8bba3af1e
       '@aws-sdk/client-s3':
         specifier: ^3.409.0
         version: 3.409.0
@@ -10011,8 +10011,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/alveusgg/data/f557ec4e482021144953befbe3367e89bc298332:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/f557ec4e482021144953befbe3367e89bc298332}
+  github.com/alveusgg/data/da7c09aea0093c04e91982a0a25471c8bba3af1e:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/da7c09aea0093c04e91982a0a25471c8bba3af1e}
     name: '@alveusgg/data'
-    version: 0.19.0
+    version: 0.20.0
     dev: false
