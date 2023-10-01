@@ -62,7 +62,6 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 2. Set up some S3-compatible storage for file uploads:
    - locally (e.g. [Minio](https://min.io/) or [Localstack](https://localstack.cloud/))
    - online (e.g. [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
-3. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) keys if you want those
 
 ### Local development
 
