@@ -56,13 +56,15 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 
 ## How to develop / Getting started
 
+> [!NOTE]
+> If you only want to work on the front end, you may skip the prerequisites and skip configuring a database or file storage (steps 3, 4.i, 4.ii and 5). But you may encounter some errors when running the website without a database or file storage.
+
 ### Prerequisites
 
 1. Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
 2. Set up some S3-compatible storage for file uploads:
    - locally (e.g. [Minio](https://min.io/) or [Localstack](https://localstack.cloud/))
    - online (e.g. [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
-3. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) keys if you want those
 
 ### Local development
 
@@ -70,13 +72,14 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 2. Install dependencies: `pnpm install --frozen-lockfile`
 3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict` and `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg/shadow?sslaccept=strict`)
 4. Copy `apps/website/.env.example` to `apps/website/.env`
-   - Fill the Prisma section with the database info (DSN)
-   - Fill in the S3 section with your S3-compatible storage info
-   - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
-   - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
-   - You may define privileged users once they have signed in via the `SUPER_USER_IDS` variable (using comma separated values)
+   1. Fill the Prisma section with the database info (DSN)
+   2. Fill in the S3 section with your S3-compatible storage info
+   3. The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
+   4. Next Auth secret (`NEXTAUTH_SECRET`), Twitch EventSub API secret (`TWITCH_EVENTSUB_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to generated using `openssl rand -base64 32`
+   5. The `DATA_ENCRYPTION_PASSPHRASE` has to generated using `openssl rand -base64 24`
+   6. You may define privileged users once they have signed in via the `SUPER_USER_IDS` variable (using comma separated values)
 5. Push the database schema to the new database using `npx prisma db push` from within `apps/website`.
-6. Start the dev server: `pnpm run -r dev`
+6. Start the dev server using `pnpm dev` from within `apps/website`
 7. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Also see [T3 Stack](https://create.t3.gg/)
