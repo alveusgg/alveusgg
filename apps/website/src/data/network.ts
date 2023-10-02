@@ -213,7 +213,7 @@ const data: NetworkItem[] = [
         name: "Studio Radio",
         model: "airMAX NanoStation 5AC Loco",
         url: "https://store.ui.com/us/en/products/loco5ac",
-        connection: { type: "wired", location: "wall" },
+        connection: { type: "ethernet", location: "wall" },
         links: [
           {
             type: "accessPoint",
