@@ -94,7 +94,8 @@ const collaborations = {
     name: "Dareon",
     link: "https://www.twitch.tv/dareon",
     date: new Date("2023-04-11"),
-    videoId: "RCzMJs9uDSI",
+    videoId: "kqKnhu5zBIY",
+    vodId: "RCzMJs9uDSI",
   },
   yungJeff: {
     name: "YungJeff",
