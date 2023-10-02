@@ -150,47 +150,6 @@ const data: NetworkItem[] = [
             model: "Ubiquiti UAP-AC-M-Pro",
             url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
             connection: { type: "ethernet", location: "wall" },
-            links: [
-              {
-                type: "accessPoint",
-                name: "Parrots",
-                model: "Ubiquiti UAP-AC-M-Pro",
-                url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
-                connection: { type: "wifi" },
-                links: [
-                  {
-                    type: "switch",
-                    name: "Parrots",
-                    model: "Ubiquiti USW-Lite-8-PoE",
-                    url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
-                    connection: { type: "ethernet", location: "wall" },
-                    links: [
-                      {
-                        type: "camera",
-                        name: "Parrots",
-                        model: "Axis P5676-LE (PTZ)",
-                        url: "https://www.axis.com/products/axis-p5676-le",
-                        connection: { type: "ethernet", location: "wall" },
-                      },
-                      {
-                        type: "microphone",
-                        name: "Parrots Audio",
-                        model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
-                        connection: { type: "ethernet", location: "wall" },
-                      },
-                      {
-                        type: "speaker",
-                        name: "Parrots Speaker",
-                        model: "Axis C1610-VE Network Sound Projector",
-                        url: "https://www.axis.com/products/axis-c1610-ve",
-                        connection: { type: "ethernet", location: "wall" },
-                      },
-                    ],
-                  },
-                ],
-              },
-            ],
           },
           {
             type: "converter",
@@ -244,6 +203,61 @@ const data: NetworkItem[] = [
                 model: "Ubiquiti UAP-AC-M-Pro",
                 url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
                 connection: { type: "ethernet", location: "buried" },
+              },
+            ],
+          },
+        ],
+      },
+      {
+        type: "accessPoint",
+        name: "Studio Radio",
+        model: "airMAX NanoStation 5AC Loco",
+        url: "https://store.ui.com/us/en/products/loco5ac",
+        connection: { type: "wired", location: "wall" },
+        links: [
+          {
+            type: "accessPoint",
+            name: "Parrot Radio",
+            model: "airMAX NanoStation 5AC Loco",
+            url: "https://store.ui.com/us/en/products/loco5ac",
+            connection: { type: "wifi" },
+            links: [
+              {
+                type: "switch",
+                name: "Parrots",
+                model: "Ubiquiti USW-Lite-8-PoE",
+                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                connection: { type: "ethernet", location: "wall" },
+                links: [
+                  {
+                    type: "camera",
+                    name: "Parrots",
+                    model: "Axis P5676-LE (PTZ)",
+                    url: "https://www.axis.com/products/axis-p5676-le",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "microphone",
+                    name: "Parrots Audio",
+                    model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                    url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "speaker",
+                    name: "Parrots Speaker",
+                    model: "Axis C1610-VE Network Sound Projector",
+                    url: "https://www.axis.com/products/axis-c1610-ve",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "accessPoint",
+                    name: "Parrots",
+                    model: "Ubiquiti UAP-AC-M-Pro",
+                    url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
+                    connection: { type: "ethernet", location: "wall" },
+                  }
+                ],
               },
             ],
           },
