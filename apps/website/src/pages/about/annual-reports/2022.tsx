@@ -42,14 +42,16 @@ const AboutAnnualReport2022Page: NextPage = () => {
         />
 
         <div className="sr-only">
-          <h2>Followers</h2>
+          <Heading level={2} className="mt-8">
+            Followers
+          </Heading>
 
-          <table>
+          <table className="w-full table-auto">
             <thead>
               <tr>
-                <th>Platform</th>
-                <th>Start 2022</th>
-                <th>End 2022</th>
+                <th className="text-start">Platform</th>
+                <th className="text-start">Start 2022</th>
+                <th className="text-start">End 2022</th>
               </tr>
             </thead>
 
@@ -82,63 +84,77 @@ const AboutAnnualReport2022Page: NextPage = () => {
             </tbody>
           </table>
 
-          <h2>Twitch Demographics</h2>
+          <Heading level={2} className="mt-8">
+            Twitch Demographics
+          </Heading>
 
-          <dl>
-            <dt>Male</dt>
-            <dd>78.36%</dd>
+          <div className="flex flex-wrap justify-between gap-8">
+            <dl>
+              <dt className="mt-2 font-bold">Male</dt>
+              <dd>78.36%</dd>
 
-            <dt>Female</dt>
-            <dd>19.64%</dd>
+              <dt className="mt-2 font-bold">Female</dt>
+              <dd>19.64%</dd>
 
-            <dt>Other</dt>
-            <dd>2%</dd>
-          </dl>
+              <dt className="mt-2 font-bold">Other</dt>
+              <dd>2%</dd>
+            </dl>
 
-          <dl>
-            <dt>18-24</dt>
-            <dd>35.85%</dd>
+            <dl>
+              <dt className="mt-2 font-bold">18-24</dt>
+              <dd>35.85%</dd>
 
-            <dt>25-34</dt>
-            <dd>32.14%</dd>
+              <dt className="mt-2 font-bold">25-34</dt>
+              <dd>32.14%</dd>
 
-            <dt>35-44</dt>
-            <dd>15.33%</dd>
+              <dt className="mt-2 font-bold">35-44</dt>
+              <dd>15.33%</dd>
 
-            <dt>45-54</dt>
-            <dd>8.62%</dd>
+              <dt className="mt-2 font-bold">45-54</dt>
+              <dd>8.62%</dd>
 
-            <dt>55-64</dt>
-            <dd>4.97%</dd>
-          </dl>
+              <dt className="mt-2 font-bold">55-64</dt>
+              <dd>4.97%</dd>
+            </dl>
 
-          <dl>
-            <dt>USA</dt>
-            <dd>20.48%</dd>
+            <dl>
+              <dt className="mt-2 font-bold">USA</dt>
+              <dd>20.48%</dd>
 
-            <dt>Germany</dt>
-            <dd>6.54%</dd>
+              <dt className="mt-2 font-bold">Germany</dt>
+              <dd>6.54%</dd>
 
-            <dt>South Korea</dt>
-            <dd>5.09%</dd>
+              <dt className="mt-2 font-bold">South Korea</dt>
+              <dd>5.09%</dd>
 
-            <dt>Russia</dt>
-            <dd>4.7%</dd>
+              <dt className="mt-2 font-bold">Russia</dt>
+              <dd>4.7%</dd>
 
-            <dt>France</dt>
-            <dd>4.27%</dd>
+              <dt className="mt-2 font-bold">France</dt>
+              <dd>4.27%</dd>
 
-            <dt>Others</dt>
-            <dd>58.95%</dd>
-          </dl>
+              <dt className="mt-2 font-bold">Others</dt>
+              <dd>58.95%</dd>
+            </dl>
+          </div>
 
-          <h3>50.3 million minutes watched</h3>
-          <h3>2.65 million live views</h3>
-          <h3>18,689 peak viewership</h3>
+          <div className="flex flex-wrap justify-between gap-8">
+            <Heading level={3} className="text-xl">
+              50.3 million minutes watched
+            </Heading>
+            <Heading level={3} className="text-xl">
+              2.65 million live views
+            </Heading>
+            <Heading level={3} className="text-xl">
+              18,689 peak viewership
+            </Heading>
+          </div>
 
-          <h2>Financial Report</h2>
+          <Heading level={2} className="mt-8">
+            Financial Report
+          </Heading>
 
-          <table>
+          <table className="w-full table-auto">
             <tbody>
               <tr>
                 <td>
@@ -345,7 +361,9 @@ const AboutAnnualReport2022Page: NextPage = () => {
             </tbody>
           </table>
 
-          <h2>Continuing Our Mission</h2>
+          <Heading level={2} className="mt-8">
+            Continuing Our Mission
+          </Heading>
 
           <p>
             The mission of Alveus is to inspire online audiences to engage in
