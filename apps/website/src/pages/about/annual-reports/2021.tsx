@@ -6,7 +6,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
-import report2021Image from "@/assets/reports/2021.png";
+import report2021Image from "@/assets/reports/2021.svg";
 
 const AboutAnnualReport2021Page: NextPage = () => {
   return (
@@ -36,10 +36,9 @@ const AboutAnnualReport2021Page: NextPage = () => {
       <Section className="flex-grow">
         <Image
           src={report2021Image}
-          placeholder="blur"
           quality={100}
           alt=""
-          className="mx-auto h-auto w-full max-w-[700px]"
+          className="mx-auto h-auto w-full max-w-3xl"
         />
       </Section>
     </>
