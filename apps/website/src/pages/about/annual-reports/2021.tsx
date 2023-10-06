@@ -37,11 +37,12 @@ const AboutAnnualReport2021Page: NextPage = () => {
         <Image
           src={report2021Image}
           quality={100}
-          alt=""
           className="mx-auto h-auto w-full max-w-3xl"
+          alt="Report graphic"
+          aria-describedby="report"
         />
 
-        <div className="sr-only">
+        <div className="sr-only" id="report">
           <Heading level={2} className="mt-8">
             Viewer Demographics
           </Heading>
