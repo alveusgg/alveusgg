@@ -25,7 +25,7 @@ importers:
         version: 1.11.0
       '@t3-oss/env-core':
         specifier: ^0.6.1
-        version: 0.6.1(typescript@5.2.2)(zod@3.22.2)
+        version: 0.6.1(typescript@5.2.2)(zod@3.22.3)
       '@twurple/api':
         specifier: ^7.0.2
         version: 7.0.2(@twurple/auth@7.0.2)
@@ -51,8 +51,8 @@ importers:
         specifier: ^3.12.10
         version: 3.12.10
       zod:
-        specifier: ^3.22.2
-        version: 3.22.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@types/node':
         specifier: 18.15.0
@@ -104,7 +104,7 @@ importers:
         version: 5.3.1(prisma@5.3.1)
       '@t3-oss/env-nextjs':
         specifier: ^0.6.1
-        version: 0.6.1(typescript@5.2.2)(zod@3.22.2)
+        version: 0.6.1(typescript@5.2.2)(zod@3.22.3)
       '@tanstack/react-query':
         specifier: ^4.35.3
         version: 4.35.3(react-dom@18.2.0)(react@18.2.0)
@@ -220,8 +220,8 @@ importers:
         specifier: 1.13.1
         version: 1.13.1
       zod:
-        specifier: ^3.22.2
-        version: 3.22.2
+        specifier: ^3.22.3
+        version: 3.22.3
     devDependencies:
       '@babel/core':
         specifier: ^7.22.20
@@ -3731,25 +3731,25 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@t3-oss/env-core@0.6.1(typescript@5.2.2)(zod@3.22.2):
+  /@t3-oss/env-core@0.6.1(typescript@5.2.2)(zod@3.22.3):
     resolution: {integrity: sha512-KQD7qEDJtkWIWWmTVjNvk0wnHpkvAQ6CRbUxbWMFNG/fiosBQDQvtRpBNu6USxBscJCoC4z6y7P9MN52/mLOzw==}
     peerDependencies:
       typescript: '>=4.7.2'
       zod: ^3.0.0
     dependencies:
       typescript: 5.2.2
-      zod: 3.22.2
+      zod: 3.22.3
     dev: false
 
-  /@t3-oss/env-nextjs@0.6.1(typescript@5.2.2)(zod@3.22.2):
+  /@t3-oss/env-nextjs@0.6.1(typescript@5.2.2)(zod@3.22.3):
     resolution: {integrity: sha512-z1dIC++Vxj9kmzX5nSPfcrCSkszy3dTEPC4Ssx7Ap5AqR3c2Qa7S0xf8axn6coy7D/vCXDAAnHYnCMDhtcY3SQ==}
     peerDependencies:
       typescript: '>=4.7.2'
       zod: ^3.0.0
     dependencies:
-      '@t3-oss/env-core': 0.6.1(typescript@5.2.2)(zod@3.22.2)
+      '@t3-oss/env-core': 0.6.1(typescript@5.2.2)(zod@3.22.3)
       typescript: 5.2.2
-      zod: 3.22.2
+      zod: 3.22.3
     dev: false
 
   /@tanstack/query-core@4.35.3:
@@ -10069,8 +10069,8 @@ packages:
     resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
     dev: false
 
-  /zod@3.22.2:
-    resolution: {integrity: sha512-wvWkphh5WQsJbVk1tbx1l1Ly4yg+XecD+Mq280uBGt9wa5BKSWf4Mhp6GmrkPixhMxmabYY7RbzlwVP32pbGCg==}
+  /zod@3.22.3:
+    resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
     dev: false
 
   /zustand@4.4.1(@types/react@18.2.22)(react@18.2.0):
