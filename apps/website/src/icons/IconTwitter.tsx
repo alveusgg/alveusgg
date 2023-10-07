@@ -1,5 +1,6 @@
 import { BaseIcon, type IconProps } from "@/icons/BaseIcon";
 
+// This SVG code is derived from FontAwesome (https://fontawesome.com/icons/twitter)
 export default function IconTwitter(props: IconProps) {
   return (
     <BaseIcon viewBox="0 0 512 512" {...props}>
