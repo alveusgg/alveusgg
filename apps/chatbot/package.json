@@ -22,7 +22,7 @@
     "drizzle-orm": "^0.28.6",
     "read-pkg": "^8.1.0",
     "tsx": "^3.12.10",
-    "zod": "^3.22.2"
+    "zod": "^3.22.3"
   },
   "devDependencies": {
     "@types/node": "18.15.0",
