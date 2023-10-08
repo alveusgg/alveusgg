@@ -63,7 +63,7 @@ const createTrigger = (id: string) => {
       // Expose a method to open the lightbox as the ref
       const elm = useRef<HTMLAnchorElement>(null);
       const open = useCallback(() => {
-        elm.current?.dispatchEvent(new Event("lightbox"));
+        if (elm.current) elm.current.dispatchEvent(new Event("lightbox"));
       }, []);
       useEffect(() => {
         if (typeof ref === "function") ref(open);
@@ -161,10 +161,10 @@ export const Lightbox = ({
   // Track the initialized state and expose it to the parent
   const [initialized, setInitialized] = useState(false);
   useEffect(() => {
-    if (initialized) onInit?.();
+    if (initialized && onInit) onInit();
   }, [initialized, onInit]);
   useEffect(() => {
-    if (!initialized) onDestroy?.();
+    if (!initialized && onDestroy) onDestroy();
   }, [initialized, onDestroy]);
 
   // Start up Photoswipe lightbox
