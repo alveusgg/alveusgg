@@ -1,3 +1,4 @@
+import { useCallback, useRef } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -186,6 +187,27 @@ type CollaborationsSectionProps = {
 };
 
 const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
+  // Store refs to every trigger
+  const triggers = useRef<Record<string, HTMLAnchorElement>>({});
+
+  // When a ref changes, update the stored ref
+  const updateRef = useCallback(
+    (key: string, ref: HTMLAnchorElement | null) => {
+      // If we have a new ref, store it
+      if (ref) {
+        triggers.current[key] = ref;
+        return;
+      }
+
+      // If we have a ref stored, remove it
+      if (triggers.current[key]) {
+        delete triggers.current[key];
+        return;
+      }
+    },
+    [],
+  );
+
   return (
     <Lightbox id="collaborations" className="flex flex-wrap">
       {({ Trigger }) => (
@@ -221,6 +243,7 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
                   style: "long",
                 })}`}
                 className="w-full max-w-2xl"
+                ref={(el) => updateRef(key, el)}
               >
                 <Preview videoId={value.videoId} />
               </Trigger>
