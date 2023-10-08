@@ -6,6 +6,7 @@ import {
   useMemo,
   useState,
   type ReactNode,
+  forwardRef,
 } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
@@ -56,19 +57,25 @@ type TriggerProps = {
 };
 
 const createTrigger = (id: string) => {
-  const Trigger = ({ videoId, caption, className, children }: TriggerProps) => {
-    return (
-      <a
-        href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
-        target="_blank"
-        rel="noreferrer"
-        className={classes("group/trigger", className)}
-        {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
-      >
-        {children}
-      </a>
-    );
-  };
+  const Trigger = forwardRef<HTMLAnchorElement, TriggerProps>(
+    ({ videoId, caption, className, children }, ref) => {
+      return (
+        <a
+          href={`https://www.youtube.com/watch?v=${encodeURIComponent(
+            videoId,
+          )}`}
+          target="_blank"
+          rel="noreferrer"
+          className={classes("group/trigger", className)}
+          ref={ref}
+          {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
+        >
+          {children}
+        </a>
+      );
+    },
+  );
+  Trigger.displayName = "Trigger";
   return Trigger;
 };
 
