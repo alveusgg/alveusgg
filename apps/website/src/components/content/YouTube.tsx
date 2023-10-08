@@ -211,9 +211,39 @@ export const Lightbox = ({ id, className, children }: LightboxProps) => {
       }
     });
 
+    // Add the open attribute to the current slide
+    let lastElm: HTMLElement;
+    lightbox.on("change", () => {
+      // If there was a previously open slide, remove the attribute
+      if (lastElm) lastElm.removeAttribute("data-lightbox-open");
+
+      // If there is a current slide (there always should be), add the attribute
+      const elm = lightbox.pswp?.currSlide?.data?.element;
+      if (elm) {
+        elm.setAttribute("data-lightbox-open", "true");
+        lastElm = elm;
+      }
+    });
+    lightbox.on("close", () => {
+      // If there was a previously open slide, remove the attribute
+      if (lastElm) lastElm.removeAttribute("data-lightbox-open");
+    });
+
+    // Initialize the lightbox, and mark all the triggers as ready
     lightbox.init();
+    const elms = document.querySelectorAll(
+      `#${photoswipeId} a[data-lightbox-${photoswipeId}]`,
+    );
+    elms.forEach((elm) => {
+      elm.setAttribute("data-lightbox-ready", "true");
+    });
+
     return () => {
+      // Destroy the lightbox, and remove the ready attribute from all triggers
       lightbox.destroy();
+      elms.forEach((elm) => {
+        elm.removeAttribute("data-lightbox-ready");
+      });
     };
   }, [photoswipeId, updateConsent]);
 

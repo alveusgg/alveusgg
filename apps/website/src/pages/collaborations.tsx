@@ -221,7 +221,25 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
     const trigger = triggers.current[kebabToCamel(hash)];
     if (!trigger) return;
 
-    trigger.click();
+    // If the trigger isn't ready, watch the element for when it is
+    if (!trigger.getAttribute("data-lightbox-ready")) {
+      const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+          if (mutation.attributeName !== "data-lightbox-ready") return;
+          if (!trigger.getAttribute("data-lightbox-ready")) return;
+
+          if (!trigger.getAttribute("data-lightbox-open")) {
+            trigger.click();
+            observer.disconnect();
+          }
+        });
+      });
+      observer.observe(trigger, { attributes: true });
+      return () => observer.disconnect();
+    }
+
+    // If the the trigger isn't already open, click it
+    if (!trigger.getAttribute("data-lightbox-open")) trigger.click();
   }, [loaded]);
 
   return (
