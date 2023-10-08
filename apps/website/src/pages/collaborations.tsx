@@ -16,6 +16,7 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import useRefs from "@/hooks/refs";
 
 type Collaboration = {
   name: string;
@@ -187,26 +188,7 @@ type CollaborationsSectionProps = {
 };
 
 const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
-  // Store refs to every trigger
-  const triggers = useRef<Record<string, HTMLAnchorElement>>({});
-
-  // When a ref changes, update the stored ref
-  const updateRef = useCallback(
-    (key: string, ref: HTMLAnchorElement | null) => {
-      // If we have a new ref, store it
-      if (ref) {
-        triggers.current[key] = ref;
-        return;
-      }
-
-      // If we have a ref stored, remove it
-      if (triggers.current[key]) {
-        delete triggers.current[key];
-        return;
-      }
-    },
-    [],
-  );
+  const { refs, setRef } = useRefs<HTMLAnchorElement>();
 
   // If we have an anchor hash on load, "click" the corresponding trigger
   const [loaded, setLoaded] = useState(false);
@@ -218,7 +200,7 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
 
-    const trigger = triggers.current[kebabToCamel(hash)];
+    const trigger = refs[kebabToCamel(hash)];
     if (!trigger) return;
 
     // If the trigger isn't ready, watch the element for when it is
@@ -240,7 +222,7 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
 
     // If the the trigger isn't already open, click it
     if (!trigger.getAttribute("data-lightbox-open")) trigger.click();
-  }, [loaded]);
+  }, [loaded, refs]);
 
   return (
     <Lightbox id="collaborations" className="flex flex-wrap">
@@ -277,7 +259,7 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
                   style: "long",
                 })}`}
                 className="w-full max-w-2xl"
-                ref={(el) => updateRef(key, el)}
+                ref={(el) => setRef(key, el)}
               >
                 <Preview videoId={value.videoId} />
               </Trigger>
