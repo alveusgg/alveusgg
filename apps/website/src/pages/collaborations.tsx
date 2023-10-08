@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -191,29 +191,17 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
   // Track all the trigger open methods
   const { refs, setRef } = useRefs<() => void>();
 
-  // Track if the lightbox is ready
-  const [ready, setReady] = useState(false);
-  const onInit = useCallback(() => setReady(true), []);
-  const onDestroy = useCallback(() => setReady(false), []);
-
   // Once the lightbox is ready, if we have a hash, open the corresponding trigger
-  useEffect(() => {
-    if (!ready) return;
-
+  const onInit = useCallback(() => {
     const hash = window.location.hash.slice(1);
     if (!hash) return;
 
     const trigger = refs[kebabToCamel(hash)];
     if (trigger) trigger();
-  }, [ready, refs]);
+  }, [refs]);
 
   return (
-    <Lightbox
-      id="collaborations"
-      className="flex flex-wrap"
-      onInit={onInit}
-      onDestroy={onDestroy}
-    >
+    <Lightbox id="collaborations" className="flex flex-wrap" onInit={onInit}>
       {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
