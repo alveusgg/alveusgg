@@ -1,12 +1,13 @@
 import {
   cloneElement,
+  forwardRef,
   useCallback,
   useEffect,
   useId,
   useMemo,
   useState,
+  useRef,
   type ReactNode,
-  forwardRef,
 } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
@@ -57,8 +58,18 @@ type TriggerProps = {
 };
 
 const createTrigger = (id: string) => {
-  const Trigger = forwardRef<HTMLAnchorElement, TriggerProps>(
+  const Trigger = forwardRef<() => void, TriggerProps>(
     ({ videoId, caption, className, children }, ref) => {
+      // Expose a method to open the lightbox as the ref
+      const elm = useRef<HTMLAnchorElement>(null);
+      const open = useCallback(() => {
+        elm.current?.dispatchEvent(new Event("lightbox"));
+      }, []);
+      useEffect(() => {
+        if (typeof ref === "function") ref(open);
+        else if (ref) ref.current = open;
+      }, [ref, open]);
+
       return (
         <a
           href={`https://www.youtube.com/watch?v=${encodeURIComponent(
@@ -67,7 +78,7 @@ const createTrigger = (id: string) => {
           target="_blank"
           rel="noreferrer"
           className={classes("group/trigger", className)}
-          ref={ref}
+          ref={elm}
           {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
         >
           {children}
@@ -132,23 +143,42 @@ type LightboxCtxProps = {
 
 type LightboxProps = {
   id?: string;
+  onInit?: () => void;
+  onDestroy?: () => void;
   className?: string;
   children: ReactNode | ((ctx: LightboxCtxProps) => ReactNode);
 };
 
-export const Lightbox = ({ id, className, children }: LightboxProps) => {
+export const Lightbox = ({
+  id,
+  onInit,
+  onDestroy,
+  className,
+  children,
+}: LightboxProps) => {
   const { update: updateConsent } = useConsent();
 
+  // Track the initialized state and expose it to the parent
+  const [initialized, setInitialized] = useState(false);
+  useEffect(() => {
+    if (initialized) onInit?.();
+  }, [initialized, onInit]);
+  useEffect(() => {
+    if (!initialized) onDestroy?.();
+  }, [initialized, onDestroy]);
+
+  // Start up Photoswipe lightbox
   const defaultId = useId().replace(/\W/g, "").toLowerCase();
   const photoswipeId = `photoswipe-${id || defaultId}`;
   useEffect(() => {
-    const lightbox = new PhotoSwipeLightbox({
+    const opts = {
       ...getDefaultPhotoswipeLightboxOptions(),
       gallery: `#${photoswipeId}`,
       mainClass: `pswp--${photoswipeId}`,
       children: `a[data-lightbox-${photoswipeId}]`,
       preloaderDelay: 0,
-    });
+    };
+    const lightbox = new PhotoSwipeLightbox(opts);
 
     // Expose the video id
     lightbox.addFilter("itemData", (itemData) => ({
@@ -211,39 +241,45 @@ export const Lightbox = ({ id, className, children }: LightboxProps) => {
       }
     });
 
-    // Add the open attribute to the current slide
-    let lastElm: HTMLElement;
-    lightbox.on("change", () => {
-      // If there was a previously open slide, remove the attribute
-      if (lastElm) lastElm.removeAttribute("data-lightbox-open");
-
-      // If there is a current slide (there always should be), add the attribute
-      const elm = lightbox.pswp?.currSlide?.data?.element;
-      if (elm) {
-        elm.setAttribute("data-lightbox-open", "true");
-        lastElm = elm;
-      }
-    });
-    lightbox.on("close", () => {
-      // If there was a previously open slide, remove the attribute
-      if (lastElm) lastElm.removeAttribute("data-lightbox-open");
-    });
-
-    // Initialize the lightbox, and mark all the triggers as ready
+    // Initialize the lightbox
     lightbox.init();
-    const elms = document.querySelectorAll(
-      `#${photoswipeId} a[data-lightbox-${photoswipeId}]`,
-    );
-    elms.forEach((elm) => {
-      elm.setAttribute("data-lightbox-ready", "true");
+
+    // Bind a custom lightbox event, so we can trigger the lightbox from a child
+    const cleanup = [
+      ...document.querySelectorAll<HTMLElement>(
+        `${opts.gallery} ${opts.children}`,
+      ),
+    ].map((elm) => {
+      const handler = (e: Event) => {
+        e.preventDefault();
+
+        // Create a custom event to pass to the lightbox
+        // Lightbox expects a MouseEvent from a listener bound to the gallery
+        const customEvent = new Event("lightbox");
+        Object.defineProperty(customEvent, "target", {
+          writable: false,
+          value: elm,
+        });
+        Object.defineProperty(customEvent, "currentTarget", {
+          writable: false,
+          value: document.querySelector(opts.gallery),
+        });
+        lightbox.onThumbnailsClick(customEvent as unknown as MouseEvent);
+      };
+      elm.addEventListener("lightbox", handler);
+      return () => {
+        elm.removeEventListener("lightbox", handler);
+      };
     });
 
+    // Track that lightbox has been initialized
+    setInitialized(true);
+
+    // Do the cleanup in the reverse order
     return () => {
-      // Destroy the lightbox, and remove the ready attribute from all triggers
+      setInitialized(false);
+      cleanup.forEach((fn) => fn());
       lightbox.destroy();
-      elms.forEach((elm) => {
-        elm.removeAttribute("data-lightbox-ready");
-      });
     };
   }, [photoswipeId, updateConsent]);
 

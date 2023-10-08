@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -188,44 +188,32 @@ type CollaborationsSectionProps = {
 };
 
 const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
-  const { refs, setRef } = useRefs<HTMLAnchorElement>();
+  // Track all the trigger open methods
+  const { refs, setRef } = useRefs<() => void>();
 
-  // If we have an anchor hash on load, "click" the corresponding trigger
-  const [loaded, setLoaded] = useState(false);
+  // Track if the lightbox is ready
+  const [ready, setReady] = useState(false);
+  const onInit = useCallback(() => setReady(true), []);
+  const onDestroy = useCallback(() => setReady(false), []);
+
+  // Once the lightbox is ready, if we have a hash, open the corresponding trigger
   useEffect(() => {
-    // Only attempt this once on load
-    if (loaded) return;
-    setLoaded(true);
+    if (!ready) return;
 
     const hash = window.location.hash.slice(1);
     if (!hash) return;
 
     const trigger = refs[kebabToCamel(hash)];
-    if (!trigger) return;
-
-    // If the trigger isn't ready, watch the element for when it is
-    if (!trigger.getAttribute("data-lightbox-ready")) {
-      const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-          if (mutation.attributeName !== "data-lightbox-ready") return;
-          if (!trigger.getAttribute("data-lightbox-ready")) return;
-
-          if (!trigger.getAttribute("data-lightbox-open")) {
-            trigger.click();
-            observer.disconnect();
-          }
-        });
-      });
-      observer.observe(trigger, { attributes: true });
-      return () => observer.disconnect();
-    }
-
-    // If the the trigger isn't already open, click it
-    if (!trigger.getAttribute("data-lightbox-open")) trigger.click();
-  }, [loaded, refs]);
+    if (trigger) trigger();
+  }, [ready, refs]);
 
   return (
-    <Lightbox id="collaborations" className="flex flex-wrap">
+    <Lightbox
+      id="collaborations"
+      className="flex flex-wrap"
+      onInit={onInit}
+      onDestroy={onDestroy}
+    >
       {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
@@ -259,7 +247,7 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
                   style: "long",
                 })}`}
                 className="w-full max-w-2xl"
-                ref={(el) => setRef(key, el)}
+                ref={(open) => setRef(key, open)}
               >
                 <Preview videoId={value.videoId} />
               </Trigger>
