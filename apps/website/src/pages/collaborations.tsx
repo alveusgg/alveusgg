@@ -1,9 +1,9 @@
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
 import { formatDateTime } from "@/utils/datetime";
-import { camelToKebab } from "@/utils/string-case";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
@@ -207,6 +207,22 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
     },
     [],
   );
+
+  // If we have an anchor hash on load, "click" the corresponding trigger
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    // Only attempt this once on load
+    if (loaded) return;
+    setLoaded(true);
+
+    const hash = window.location.hash.slice(1);
+    if (!hash) return;
+
+    const trigger = triggers.current[kebabToCamel(hash)];
+    if (!trigger) return;
+
+    trigger.click();
+  }, [loaded]);
 
   return (
     <Lightbox id="collaborations" className="flex flex-wrap">
