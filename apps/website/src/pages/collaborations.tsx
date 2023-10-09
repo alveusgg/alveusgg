@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -16,7 +16,6 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import useRefs from "@/hooks/refs";
 
 type Collaboration = {
   name: string;
@@ -188,20 +187,17 @@ type CollaborationsSectionProps = {
 };
 
 const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
-  // Track all the trigger open methods
-  const { refs, setRef } = useRefs<() => void>();
-
-  // Once the lightbox is ready, if we have a hash, open the corresponding trigger
-  const onInit = useCallback(() => {
-    const hash = window.location.hash.slice(1);
-    if (!hash) return;
-
-    const trigger = refs[kebabToCamel(hash)];
-    if (trigger) trigger();
-  }, [refs]);
+  const [open, setOpen] = useState<number>();
+  useEffect(() => {
+    const hash = kebabToCamel(window.location.hash.slice(1));
+    if (hash) {
+      const index = Object.keys(items).indexOf(hash);
+      if (index >= 0) setOpen(index);
+    }
+  }, [items]);
 
   return (
-    <Lightbox id="collaborations" className="flex flex-wrap" onInit={onInit}>
+    <Lightbox id="collaborations" className="flex flex-wrap" defaultOpen={open}>
       {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
@@ -235,7 +231,6 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
                   style: "long",
                 })}`}
                 className="w-full max-w-2xl"
-                ref={(open) => setRef(key, open)}
               >
                 <Preview videoId={value.videoId} />
               </Trigger>

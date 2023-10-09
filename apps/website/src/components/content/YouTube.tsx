@@ -1,6 +1,5 @@
 import {
   cloneElement,
-  forwardRef,
   useCallback,
   useEffect,
   useId,
@@ -58,34 +57,23 @@ type TriggerProps = {
 };
 
 const createTrigger = (id: string) => {
-  const Trigger = forwardRef<() => void, TriggerProps>(
-    ({ videoId, caption, className, children }, ref) => {
-      // Expose a method to open the lightbox as the ref
-      const elm = useRef<HTMLAnchorElement>(null);
-      const open = useCallback(() => {
-        if (elm.current) elm.current.dispatchEvent(new Event("lightbox"));
-      }, []);
-      useEffect(() => {
-        if (typeof ref === "function") ref(open);
-        else if (ref) ref.current = open;
-      }, [ref, open]);
+  const Trigger = ({ videoId, caption, className, children }: TriggerProps) => {
+    // Expose a method to open the lightbox as the ref
+    const elm = useRef<HTMLAnchorElement>(null);
 
-      return (
-        <a
-          href={`https://www.youtube.com/watch?v=${encodeURIComponent(
-            videoId,
-          )}`}
-          target="_blank"
-          rel="noreferrer"
-          className={classes("group/trigger", className)}
-          ref={elm}
-          {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
-        >
-          {children}
-        </a>
-      );
-    },
-  );
+    return (
+      <a
+        href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
+        target="_blank"
+        rel="noreferrer"
+        className={classes("group/trigger", className)}
+        ref={elm}
+        {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
+      >
+        {children}
+      </a>
+    );
+  };
   Trigger.displayName = "Trigger";
   return Trigger;
 };
@@ -143,33 +131,25 @@ type LightboxCtxProps = {
 
 type LightboxProps = {
   id?: string;
-  onInit?: () => void;
-  onDestroy?: () => void;
   className?: string;
   children: ReactNode | ((ctx: LightboxCtxProps) => ReactNode);
+  defaultOpen?: number;
 };
 
 export const Lightbox = ({
   id,
-  onInit,
-  onDestroy,
   className,
   children,
+  defaultOpen,
 }: LightboxProps) => {
   const { update: updateConsent } = useConsent();
-
-  // Track the initialized state and expose it to the parent
-  const [initialized, setInitialized] = useState(false);
-  useEffect(() => {
-    if (initialized && onInit) onInit();
-  }, [initialized, onInit]);
-  useEffect(() => {
-    if (!initialized && onDestroy) onDestroy();
-  }, [initialized, onDestroy]);
 
   // Start up Photoswipe lightbox
   const defaultId = useId().replace(/\W/g, "").toLowerCase();
   const photoswipeId = `photoswipe-${id || defaultId}`;
+
+  const lightboxRef = useRef<PhotoSwipeLightbox>();
+
   useEffect(() => {
     const opts = {
       ...getDefaultPhotoswipeLightboxOptions(),
@@ -179,6 +159,7 @@ export const Lightbox = ({
       preloaderDelay: 0,
     };
     const lightbox = new PhotoSwipeLightbox(opts);
+    lightboxRef.current = lightbox;
 
     // Expose the video id
     lightbox.addFilter("itemData", (itemData) => ({
@@ -244,44 +225,22 @@ export const Lightbox = ({
     // Initialize the lightbox
     lightbox.init();
 
-    // Bind a custom lightbox event, so we can trigger the lightbox from a child
-    const cleanup = [
-      ...document.querySelectorAll<HTMLElement>(
-        `${opts.gallery} ${opts.children}`,
-      ),
-    ].map((elm) => {
-      const handler = (e: Event) => {
-        e.preventDefault();
-
-        // Create a custom event to pass to the lightbox
-        // Lightbox expects a MouseEvent from a listener bound to the gallery
-        const customEvent = new Event("lightbox");
-        Object.defineProperty(customEvent, "target", {
-          writable: false,
-          value: elm,
-        });
-        Object.defineProperty(customEvent, "currentTarget", {
-          writable: false,
-          value: document.querySelector(opts.gallery),
-        });
-        lightbox.onThumbnailsClick(customEvent as unknown as MouseEvent);
-      };
-      elm.addEventListener("lightbox", handler);
-      return () => {
-        elm.removeEventListener("lightbox", handler);
-      };
-    });
-
-    // Track that lightbox has been initialized
-    setInitialized(true);
-
     // Do the cleanup in the reverse order
     return () => {
-      setInitialized(false);
-      cleanup.forEach((fn) => fn());
       lightbox.destroy();
     };
-  }, [photoswipeId, updateConsent]);
+  }, [defaultOpen, photoswipeId, updateConsent]);
+
+  // Open the lightbox on load if we have a default
+  useEffect(() => {
+    if (defaultOpen && defaultOpen > -1) {
+      const gallery = document.getElementById(
+        photoswipeId,
+      ) as HTMLElement | null;
+      if (!gallery) return;
+      lightboxRef.current?.loadAndOpen(defaultOpen, { gallery });
+    }
+  }, [defaultOpen, photoswipeId]);
 
   // Expose the nested components
   const ctx: LightboxCtxProps = useMemo(
