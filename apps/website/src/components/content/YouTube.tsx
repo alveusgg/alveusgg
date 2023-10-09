@@ -57,23 +57,17 @@ type TriggerProps = {
 };
 
 const createTrigger = (id: string) => {
-  const Trigger = ({ videoId, caption, className, children }: TriggerProps) => {
-    // Expose a method to open the lightbox as the ref
-    const elm = useRef<HTMLAnchorElement>(null);
-
-    return (
-      <a
-        href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
-        target="_blank"
-        rel="noreferrer"
-        className={classes("group/trigger", className)}
-        ref={elm}
-        {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
-      >
-        {children}
-      </a>
-    );
-  };
+  const Trigger = ({ videoId, caption, className, children }: TriggerProps) => (
+    <a
+      href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
+      target="_blank"
+      rel="noreferrer"
+      className={classes("group/trigger", className)}
+      {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
+    >
+      {children}
+    </a>
+  );
   Trigger.displayName = "Trigger";
   return Trigger;
 };
