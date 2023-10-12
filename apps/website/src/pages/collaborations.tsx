@@ -184,20 +184,23 @@ const collaborationsByYear: { year: number; collaborations: Collaborations }[] =
 
 type CollaborationsSectionProps = {
   items: Collaborations;
+  year: number;
 };
 
-const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
-  const [open, setOpen] = useState<number>();
+const CollaborationsSection = ({ items, year }: CollaborationsSectionProps) => {
+  const [open, setOpen] = useState<string>();
   useEffect(() => {
     const hash = kebabToCamel(window.location.hash.slice(1));
-    if (hash) {
-      const index = Object.keys(items).indexOf(hash);
-      if (index >= 0) setOpen(index);
-    }
+    if (hash && items[hash]) setOpen(hash);
   }, [items]);
 
   return (
-    <Lightbox id="collaborations" className="flex flex-wrap" defaultOpen={open}>
+    <Lightbox
+      id={`collaborations-${year}`}
+      className="flex flex-wrap"
+      value={open}
+      onChange={setOpen}
+    >
       {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
@@ -230,6 +233,7 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
                 caption={`${value.name}: ${formatDateTime(value.date, {
                   style: "long",
                 })}`}
+                triggerId={key}
                 className="w-full max-w-2xl"
               >
                 <Preview videoId={value.videoId} />
@@ -317,7 +321,7 @@ const CollaborationsPage: NextPage = () => {
               >
                 {year}
               </Heading>
-              <CollaborationsSection items={collaborations} />
+              <CollaborationsSection items={collaborations} year={year} />
             </div>
           ))}
         </Section>
