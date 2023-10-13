@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
 import { formatDateTime } from "@/utils/datetime";
-import { camelToKebab } from "@/utils/string-case";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
@@ -183,11 +184,23 @@ const collaborationsByYear: { year: number; collaborations: Collaborations }[] =
 
 type CollaborationsSectionProps = {
   items: Collaborations;
+  year: number;
 };
 
-const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
+const CollaborationsSection = ({ items, year }: CollaborationsSectionProps) => {
+  const [open, setOpen] = useState<string>();
+  useEffect(() => {
+    const hash = kebabToCamel(window.location.hash.slice(1));
+    if (hash && items[hash]) setOpen(hash);
+  }, [items]);
+
   return (
-    <Lightbox id="collaborations" className="flex flex-wrap">
+    <Lightbox
+      id={`collaborations-${year}`}
+      className="flex flex-wrap"
+      value={open}
+      onChange={setOpen}
+    >
       {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
@@ -220,6 +233,7 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
                 caption={`${value.name}: ${formatDateTime(value.date, {
                   style: "long",
                 })}`}
+                triggerId={key}
                 className="w-full max-w-2xl"
               >
                 <Preview videoId={value.videoId} />
@@ -307,7 +321,7 @@ const CollaborationsPage: NextPage = () => {
               >
                 {year}
               </Heading>
-              <CollaborationsSection items={collaborations} />
+              <CollaborationsSection items={collaborations} year={year} />
             </div>
           ))}
         </Section>
