@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -16,7 +16,6 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import useRefs from "@/hooks/refs";
 
 type Collaboration = {
   name: string;
@@ -185,23 +184,23 @@ const collaborationsByYear: { year: number; collaborations: Collaborations }[] =
 
 type CollaborationsSectionProps = {
   items: Collaborations;
+  year: number;
 };
 
-const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
-  // Track all the trigger open methods
-  const { refs, setRef } = useRefs<() => void>();
-
-  // Once the lightbox is ready, if we have a hash, open the corresponding trigger
-  const onInit = useCallback(() => {
-    const hash = window.location.hash.slice(1);
-    if (!hash) return;
-
-    const trigger = refs[kebabToCamel(hash)];
-    if (trigger) trigger();
-  }, [refs]);
+const CollaborationsSection = ({ items, year }: CollaborationsSectionProps) => {
+  const [open, setOpen] = useState<string>();
+  useEffect(() => {
+    const hash = kebabToCamel(window.location.hash.slice(1));
+    if (hash && items[hash]) setOpen(hash);
+  }, [items]);
 
   return (
-    <Lightbox id="collaborations" className="flex flex-wrap" onInit={onInit}>
+    <Lightbox
+      id={`collaborations-${year}`}
+      className="flex flex-wrap"
+      value={open}
+      onChange={setOpen}
+    >
       {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
@@ -234,8 +233,8 @@ const CollaborationsSection = ({ items }: CollaborationsSectionProps) => {
                 caption={`${value.name}: ${formatDateTime(value.date, {
                   style: "long",
                 })}`}
+                triggerId={key}
                 className="w-full max-w-2xl"
-                ref={(open) => setRef(key, open)}
               >
                 <Preview videoId={value.videoId} />
               </Trigger>
@@ -322,7 +321,7 @@ const CollaborationsPage: NextPage = () => {
               >
                 {year}
               </Heading>
-              <CollaborationsSection items={collaborations} />
+              <CollaborationsSection items={collaborations} year={year} />
             </div>
           ))}
         </Section>
