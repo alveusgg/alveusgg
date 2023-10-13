@@ -237,7 +237,7 @@ model Form {
   endAt              DateTime?
   outgoingWebhookUrl String?   @db.VarChar(720)
   showInLists        Boolean   @default(true)
-  config             String    @default("") @db.Text
+  config             String    @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
