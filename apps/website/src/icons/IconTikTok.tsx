@@ -1,5 +1,6 @@
 import { BaseIcon, type IconProps } from "@/icons/BaseIcon";
 
+// This SVG code is derived from FontAwesome (https://fontawesome.com/icons/tiktok)
 export default function IconTikTok(props: IconProps) {
   return (
     <BaseIcon viewBox="0 0 448 512" {...props}>
