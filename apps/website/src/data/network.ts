@@ -23,7 +23,7 @@ type NetworkItemCore = {
 };
 
 type NetworkItemSwitch = NetworkItemCore & {
-  type: "switch" | "converter" | "interface";
+  type: "switch" | "converter"  | "interface";
   links: NetworkItem[];
 };
 
