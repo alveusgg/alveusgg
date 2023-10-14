@@ -71,19 +71,30 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 1. Install Node.js (see `engines` in `package.json` for the required versions), or use `fnm`/`nvm` to install the correct version of Node.js, and use `corepack enable` to use PNPM.
 2. Install dependencies: `pnpm install --frozen-lockfile`
 3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict` and `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg/shadow?sslaccept=strict`)
-4. Copy `apps/website/.env.example` to `apps/website/.env`
+4. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
    1. Fill the Prisma section with the database info (DSN)
    2. Fill in the S3 section with your S3-compatible storage info
-   3. The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
-   4. Next Auth secret (`NEXTAUTH_SECRET`), Twitch EventSub API secret (`TWITCH_EVENTSUB_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to generated using `openssl rand -base64 32`
-   5. The `DATA_ENCRYPTION_PASSPHRASE` has to generated using `openssl rand -base64 24`
-   6. You may define privileged users once they have signed in via the `SUPER_USER_IDS` variable (using comma separated values)
-5. Push the database schema to the new database using `npx prisma db push` from within `apps/website`.
+   3. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
+   4. The Next Auth secret (`NEXTAUTH_SECRET`), Twitch EventSub API secret (`TWITCH_EVENTSUB_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See "Generate secrets" below.
+   5. The Data encryption passphase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See "Generate secrets" below.
+   6. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
+5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
 6. Start the dev server using `pnpm dev` from within `apps/website`
 7. The website should be running at `http://localhost:3000/` (open in browser)
 
-- Also see [T3 Stack](https://create.t3.gg/)
-- Use `npx prisma studio` to view your database
+- Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
+- You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio`
+
+### Generate secrets
+
+We use Base64-encoded random strings for various secrets. To generate these secrets you can use OpenSSL or Python. OpenSSL should be preinstalled on most Unix-like systems (Linux, macOS, WSL).  If neither is installed on your system, you may need to install it yourself.
+
+- Using OpenSSL (Linux, macOS, WSL):
+  - Generate a 32-byte secret: `openssl rand -base64 32`
+  - Generate a 24-byte secret: `openssl rand -base64 24`
+- Using Python. You might need to use `python`/`python3` on Unix-like systems or `python.exe`/`python3.exe` on Windows depending on how you installed Python):
+  - Generate a 32-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode('utf-8'))"`
+  - Generate a 24-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(24)).decode('utf-8'))"`
 
 ## How to set up your own production instance
 
@@ -92,10 +103,10 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 The stack should work on any Node.js server or Next.js capable hosting provider and any MySQL server,
 but has only been tested on Vercel (and PlanetScale) for now.
 
-1. Create a twitch extension (see Getting started above)
-2. Set up a database (see Getting started above)
-3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see Getting started above)
-4. Push the database schema to the new database using `npx prisma db push`.
+1. Create a twitch application (see "Getting started" above)
+2. Set up a database (see "Getting started" above)
+3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see "Getting started" above)
+4. Push the database schema to the new database using `pnpm prisma db push`.
 5. Get your own domain (optional)
 6. Create a Vercel account
 7. Create a new Vercel project with these settings:
