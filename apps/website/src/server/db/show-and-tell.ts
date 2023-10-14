@@ -191,9 +191,9 @@ export async function createPost(
     id: createId(),
     ...(importAt
       ? {
-          createdAt: importAt,
-          updatedAt: importAt,
-          approvedAt: importAt,
+          createdAt: importAt.toISOString(),
+          updatedAt: importAt.toISOString(),
+          approvedAt: importAt.toISOString(),
         }
       : {}),
     userId: authorUserId ?? undefined,
@@ -224,10 +224,10 @@ export async function getPostById(
       and(
         gte(showAndTellEntryTable.approvedAt, showAndTellEntryTable.updatedAt),
         and(
-          eq(showAndTellEntryTable.userId, authorUserId),
-          eq(showAndTellEntryTable.id, id)
-        )
-      )
+          eq(showAndTellEntryTable.userId, authorUserId ?? ""),
+          eq(showAndTellEntryTable.id, id),
+        ),
+      ),
     );
 
   return posts[0];

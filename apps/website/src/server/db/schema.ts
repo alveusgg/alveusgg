@@ -13,7 +13,7 @@ import {
   varchar,
 } from "drizzle-orm/mysql-core";
 
-export const account = mysqlTable(
+export const accountTable = mysqlTable(
   "Account",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -40,7 +40,7 @@ export const account = mysqlTable(
   },
 );
 
-export const channelUpdateEvent = mysqlTable(
+export const channelUpdateEventTable = mysqlTable(
   "ChannelUpdateEvent",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -61,7 +61,7 @@ export const channelUpdateEvent = mysqlTable(
   },
 );
 
-export const clientAccessToken = mysqlTable(
+export const clientAccessTokenTable = mysqlTable(
   "ClientAccessToken",
   {
     service: varchar("service", { length: 191 }).notNull(),
@@ -83,7 +83,7 @@ export const clientAccessToken = mysqlTable(
   },
 );
 
-export const fileStorageObject = mysqlTable(
+export const fileStorageObjectTable = mysqlTable(
   "FileStorageObject",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -109,7 +109,7 @@ export const fileStorageObject = mysqlTable(
   },
 );
 
-export const form = mysqlTable(
+export const formTable = mysqlTable(
   "Form",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -136,7 +136,7 @@ export const form = mysqlTable(
   },
 );
 
-export const formEntry = mysqlTable(
+export const formEntryTable = mysqlTable(
   "FormEntry",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -172,7 +172,7 @@ export const formEntry = mysqlTable(
   },
 );
 
-export const imageAttachment = mysqlTable(
+export const imageAttachmentTable = mysqlTable(
   "ImageAttachment",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -196,7 +196,7 @@ export const imageAttachment = mysqlTable(
   },
 );
 
-export const imageMetadata = mysqlTable(
+export const imageMetadataTable = mysqlTable(
   "ImageMetadata",
   {
     mimeType: varchar("mimeType", { length: 191 }).notNull(),
@@ -215,7 +215,7 @@ export const imageMetadata = mysqlTable(
   },
 );
 
-export const linkAttachment = mysqlTable(
+export const linkAttachmentTable = mysqlTable(
   "LinkAttachment",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -234,7 +234,7 @@ export const linkAttachment = mysqlTable(
   },
 );
 
-export const mailingAddress = mysqlTable(
+export const mailingAddressTable = mysqlTable(
   "MailingAddress",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -257,7 +257,7 @@ export const mailingAddress = mysqlTable(
   },
 );
 
-export const notification = mysqlTable(
+export const notificationTable = mysqlTable(
   "Notification",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -286,7 +286,7 @@ export const notification = mysqlTable(
   },
 );
 
-export const notificationDiscordChannelWebhook = mysqlTable(
+export const notificationDiscordChannelWebhookTable = mysqlTable(
   "NotificationDiscordChannelWebhook",
   {
     notificationId: varchar("notificationId", { length: 191 }).notNull(),
@@ -304,7 +304,7 @@ export const notificationDiscordChannelWebhook = mysqlTable(
   },
 );
 
-export const notificationPush = mysqlTable(
+export const notificationPushTable = mysqlTable(
   "NotificationPush",
   {
     notificationId: varchar("notificationId", { length: 191 }).notNull(),
@@ -342,7 +342,7 @@ export const notificationPush = mysqlTable(
   },
 );
 
-export const outgoingWebhook = mysqlTable(
+export const outgoingWebhookTable = mysqlTable(
   "OutgoingWebhook",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -367,7 +367,7 @@ export const outgoingWebhook = mysqlTable(
   },
 );
 
-export const pushSubscription = mysqlTable(
+export const pushSubscriptionTable = mysqlTable(
   "PushSubscription",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -392,7 +392,7 @@ export const pushSubscription = mysqlTable(
   },
 );
 
-export const pushSubscriptionTag = mysqlTable(
+export const pushSubscriptionTagTable = mysqlTable(
   "PushSubscriptionTag",
   {
     subscriptionId: varchar("subscriptionId", { length: 191 }).notNull(),
@@ -408,7 +408,7 @@ export const pushSubscriptionTag = mysqlTable(
   },
 );
 
-export const session = mysqlTable(
+export const sessionTable = mysqlTable(
   "Session",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -427,7 +427,7 @@ export const session = mysqlTable(
   },
 );
 
-export const showAndTellEntry = mysqlTable(
+export const showAndTellEntryTable = mysqlTable(
   "ShowAndTellEntry",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -453,7 +453,7 @@ export const showAndTellEntry = mysqlTable(
   },
 );
 
-export const showAndTellEntryAttachment = mysqlTable(
+export const showAndTellEntryAttachmentTable = mysqlTable(
   "ShowAndTellEntryAttachment",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -476,7 +476,7 @@ export const showAndTellEntryAttachment = mysqlTable(
   },
 );
 
-export const streamStatusEvent = mysqlTable(
+export const streamStatusEventTable = mysqlTable(
   "StreamStatusEvent",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -496,7 +496,7 @@ export const streamStatusEvent = mysqlTable(
   },
 );
 
-export const taskExecutionEvent = mysqlTable(
+export const taskExecutionEventTable = mysqlTable(
   "TaskExecutionEvent",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -513,7 +513,7 @@ export const taskExecutionEvent = mysqlTable(
   },
 );
 
-export const twitchChannel = mysqlTable(
+export const twitchChannelTable = mysqlTable(
   "TwitchChannel",
   {
     channelId: varchar("channelId", { length: 191 }).notNull(),
@@ -524,12 +524,13 @@ export const twitchChannel = mysqlTable(
   },
   (table) => {
     return {
-      twitchChannelId: primaryKey(table.id),
+      // twitchChannelId: primaryKey(table.id),
+      twitchChannelId: primaryKey(table.channelId),
     };
   },
 );
 
-export const user = mysqlTable(
+export const userTable = mysqlTable(
   "User",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -546,7 +547,7 @@ export const user = mysqlTable(
   },
 );
 
-export const userRole = mysqlTable(
+export const userRoleTable = mysqlTable(
   "UserRole",
   {
     id: varchar("id", { length: 191 }).notNull(),
@@ -564,7 +565,7 @@ export const userRole = mysqlTable(
   },
 );
 
-export const verificationToken = mysqlTable(
+export const verificationTokenTable = mysqlTable(
   "VerificationToken",
   {
     identifier: varchar("identifier", { length: 191 }).notNull(),
