@@ -30,7 +30,8 @@ const iframeAttrs = {
   title: "YouTube video",
   referrerpolicy: "no-referrer",
   allow: "encrypted-media",
-  sandbox: "allow-same-origin allow-scripts",
+  sandbox:
+    "allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox",
   loading: "lazy",
   class: "aspect-video w-full rounded-2xl shadow-xl bg-alveus-green-800",
 };
