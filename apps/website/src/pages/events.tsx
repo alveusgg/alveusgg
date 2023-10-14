@@ -244,10 +244,10 @@ const events = {
           Two teams were formed from the creators, and they competed in many
           activities around the property throughout the event. A game of apple
           bobbing started the evening off, followed by hale bale throwing to see
-          which team had better technique. A little while later, we had a game of
-          badminton on the grass, followed by trivia and then the dunk tank. We
-          rounded off the evening with some mud wrestling. Thank you to all the
-          creators that joined us, and everyone who watched and donated!
+          which team had better technique. A little while later, we had a game
+          of badminton on the grass, followed by trivia and then the dunk tank.
+          We rounded off the evening with some mud wrestling. Thank you to all
+          the creators that joined us, and everyone who watched and donated!
         </p>
       </>
     ),
@@ -276,7 +276,7 @@ const events = {
     },
     info: (
       <p>
-        The event that started it all! A 20-hour-long mega-stream with a bunch 
+        The event that started it all! A 20-hour-long mega-stream with a bunch
         of donation goals along the way, aiming to raise as much money as
         possible to kick-start Alveus. Each donor that donated $100 or more got
         their name engraved on a golden leaf that form part of six donor trees
