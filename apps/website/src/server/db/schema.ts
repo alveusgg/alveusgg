@@ -1,670 +1,584 @@
-import { sql, type InferModel } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import {
-  customType,
+  char,
   datetime,
+  index,
   int,
   mysqlEnum,
   mysqlTable,
+  primaryKey,
   text,
-  timestamp,
+  tinyint,
   unique,
-  uniqueIndex,
   varchar,
 } from "drizzle-orm/mysql-core";
 
-// TODO: what else can we do with this?
-const cuid = customType<{ data: string; notNull: true }>({
-  dataType() {
-    return "varchar(191)";
-  },
-});
-
-// TODO: adding .unique() creates a constraint like `User_name_unique`
-//  whilst the table already has `User_name_key` from Prisma
-
-// TODO: update chatbot code to not await getDatabase()
-
-// TODO: add primary keys
-
-export type ClientAccessToken = InferModel<
-  typeof clientAccessTokenTable,
-  "select"
->;
-
-export const clientAccessTokenTable = mysqlTable(
-  "ClientAccessToken",
-  {
-    service: varchar("service", { length: 191 }).notNull(),
-    client_id: varchar("client_id", { length: 191 }).notNull(),
-    access_token: varchar("access_token", { length: 191 }).notNull(),
-    refresh_token: varchar("refresh_token", { length: 191 }),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-    // TODO: fix updatedAt for datetime
-    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
-      sql`CURRENT_TIMESTAMP(3)`
-    ),
-    // expiresAt: timestamp("expiresAt"),
-    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }),
-  },
-  (clientAccessTokenTable) => ({
-    // serviceClientIdIndex: uniqueIndex("service_client_id_key").on(
-    serviceClientIdIndex: unique("ClientAccessToken_service_client_id_key").on(
-      clientAccessTokenTable.service,
-      clientAccessTokenTable.client_id
-    ),
-  })
-);
-
-export type TaskExecutionEvent = InferModel<
-  typeof taskExecutionEventTable,
-  "select"
->;
-
-export const taskExecutionEventTable = mysqlTable("TaskExecutionEvent", {
-  id: cuid("id").notNull(),
-  task: varchar("task", { length: 191 }).notNull(),
-  startedAt: timestamp("startedAt").notNull().defaultNow(),
-  finishedAt: timestamp("finishedAt"),
-});
-
-export type ChannelUpdateEvent = InferModel<
-  typeof channelUpdateEventTable,
-  "select"
->;
-
-export const channelUpdateEventTable = mysqlTable("ChannelUpdateEvent", {
-  id: cuid("id").notNull(),
-  service: varchar("service", { length: 191 }).notNull(),
-  channel: varchar("channel", { length: 191 }).notNull(),
-  title: varchar("title", { length: 191 }).notNull(),
-  category_id: varchar("category_id", { length: 191 }).notNull(),
-  category_name: varchar("category_name", { length: 191 }).notNull(),
-  source: varchar("source", { length: 191 }).notNull(),
-  // createdAt: timestamp("createdAt").notNull().defaultNow(),
-  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP(3)`),
-});
-
-export type StreamStatusEvent = InferModel<
-  typeof streamStatusEventTable,
-  "select"
->;
-
-export const streamStatusEventTable = mysqlTable("StreamStatusEvent", {
-  id: cuid("id").notNull(),
-  service: varchar("service", { length: 191 }).notNull(),
-  channel: varchar("channel", { length: 191 }).notNull(),
-  online: int("online").notNull(),
-  source: varchar("source", { length: 191 }).notNull(),
-  // createdAt: timestamp("createdAt").notNull().defaultNow(),
-  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP(3)`),
-  startedAt: timestamp("startedAt"),
-});
-
-// Necessary for Next auth
-export type Account = InferModel<typeof accountTable, "select">;
-
-export const accountTable = mysqlTable(
+export const account = mysqlTable(
   "Account",
   {
-    id: cuid("id").notNull().primaryKey(),
+    id: varchar("id", { length: 191 }).notNull(),
     userId: varchar("userId", { length: 191 }).notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     provider: varchar("provider", { length: 191 }).notNull(),
     providerAccountId: varchar("providerAccountId", { length: 191 }).notNull(),
-    refresh_token: text("refresh_token"),
-    access_token: text("access_token"),
-    expires_at: int("expires_at"),
-    token_type: varchar("token_type", { length: 191 }),
+    refreshToken: text("refresh_token"),
+    accessToken: text("access_token"),
+    expiresAt: int("expires_at"),
+    tokenType: varchar("token_type", { length: 191 }),
     scope: varchar("scope", { length: 191 }),
-    id_token: text("id_token"),
-    session_state: varchar("session_state", { length: 191 }),
+    idToken: text("id_token"),
+    sessionState: varchar("session_state", { length: 191 }),
   },
-  (accountTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(accountTable.id),
-    providerProviderAccountIndex: uniqueIndex(
-      "Account_provider_providerAccountId_key"
-    ).on(accountTable.provider, accountTable.providerAccountId),
-    userIdIndex: uniqueIndex("Account_userId_key").on(accountTable.userId),
-  })
-);
-
-export type Session = InferModel<typeof sessionTable, "select">;
-
-export const sessionTable = mysqlTable(
-  "Session",
-  {
-    id: cuid("id").notNull().primaryKey(),
-    // sessionToken: varchar("sessionToken", { length: 191 }).notNull().unique(),
-    sessionToken: varchar("sessionToken", { length: 191 }).notNull(),
-    userId: varchar("userId", { length: 191 }).notNull(),
-    // expires: timestamp("expires").notNull(),
-    expires: datetime("expires", { mode: "date", fsp: 3 }).notNull(),
+  (table) => {
+    return {
+      userId: index("Account_userId").on(table.userId),
+      accountId: primaryKey(table.id),
+      accountProviderProviderAccountIdKey: unique(
+        "Account_provider_providerAccountId_key",
+      ).on(table.provider, table.providerAccountId),
+    };
   },
-  (sessionTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(sessionTable.id),
-    sessionTokenIndex: uniqueIndex("Session_sessionToken_key").on(
-      sessionTable.sessionToken
-    ),
-    userIdIndex: uniqueIndex("Session_userId_key").on(sessionTable.userId),
-  })
 );
 
-export type User = InferModel<typeof userTable, "select">;
-
-export const userTable = mysqlTable(
-  "User",
-  {
-    id: cuid("id").notNull().primaryKey(),
-    // name: varchar("name", { length: 191 }).unique(),
-    name: varchar("name", { length: 191 }),
-    email: varchar("email", { length: 191 }),
-    // emailVerified: timestamp("emailVerified"),
-    emailVerified: datetime("emailVerified", { mode: "date", fsp: 3 }),
-    image: varchar("image", { length: 191 }),
-  },
-  (userTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(userTable.id),
-    emailIndex: uniqueIndex("User_email_key").on(userTable.email),
-  })
-);
-
-export type VerificationToken = InferModel<
-  typeof verificationTokenTable,
-  "select"
->;
-
-export const verificationTokenTable = mysqlTable(
-  "VerificationToken",
-  {
-    identifier: varchar("identifier", { length: 191 }).notNull(),
-    // token: varchar("token", { length: 191 }).notNull().unique(),
-    token: varchar("token", { length: 191 }).notNull(),
-    // expires: timestamp("expires").notNull(),
-    expires: datetime("expires", { mode: "date", fsp: 3 }).notNull(),
-  },
-  (verificationTokenTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(
-      verificationTokenTable.identifier,
-      verificationTokenTable.token
-    ),
-  })
-);
-
-export type UserRole = InferModel<typeof userRoleTable, "select">;
-
-export const userRoleTable = mysqlTable(
-  "UserRole",
-  {
-    id: cuid("id").notNull(),
-    userId: varchar("userId", { length: 191 }).notNull(),
-    role: varchar("role", { length: 191 }).notNull(),
-  },
-  (userRoleTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(userRoleTable.id),
-    userIdRoleIndex: uniqueIndex("UserRole_userId_role_key").on(
-      userRoleTable.userId,
-      userRoleTable.role
-    ),
-  })
-);
-
-// TODO: how to extract type for this?
-// export type NotificationUrgency = InferModel<typeof notificationUrgencyEnum, "insert">;
-
-// TODO: look into drizzle-zod?
-export const notificationUrgencyEnum = mysqlEnum("urgency", [
-  "VERY_LOW",
-  "LOW",
-  "NORMAL",
-  "HIGH",
-]);
-
-export type Notification = InferModel<typeof notificationTable, "select">;
-
-export const notificationTable = mysqlTable("Notification", {
-  id: cuid("id").notNull(),
-  message: varchar("message", { length: 191 }).notNull(),
-  // createdAt: timestamp("createdAt").notNull().defaultNow(),
-  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP(3)`),
-  // expiresAt: timestamp("expiresAt").notNull(),
-  expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }).notNull(),
-  // canceledAt: timestamp("canceledAt"),
-  canceledAt: datetime("canceledAt", { mode: "date", fsp: 3 }),
-  // scheduledStartAt: timestamp("scheduledStartAt"),
-  scheduledStartAt: datetime("scheduledStartAt", { mode: "date", fsp: 3 }),
-  // scheduledEndAt: timestamp("scheduledEndAt"),
-  scheduledEndAt: datetime("scheduledEndAt", { mode: "date", fsp: 3 }),
-  title: varchar("title", { length: 191 }),
-  linkUrl: varchar("linkUrl", { length: 191 }),
-  imageUrl: varchar("imageUrl", { length: 191 }),
-  tag: varchar("tag", { length: 191 }),
-  urgency: notificationUrgencyEnum.notNull().default("NORMAL"),
-  isPush: int("isPush").notNull().default(0),
-  isDiscord: int("isDiscord").notNull().default(0),
-});
-
-// TODO: how to extract type for this?
-// export type NotificationPushProcessingStatus = InferModel<typeof notificationPushProcessingStatusEnum, "insert">;
-
-// TODO: look into drizzle-zod?
-export const notificationPushProcessingStatusEnum = mysqlEnum(
-  "processingStatus",
-  ["PENDING", "IN_PROGRESS", "DONE"]
-);
-
-export type NotificationPush = InferModel<
-  typeof notificationPushTable,
-  "select"
->;
-
-export const notificationPushTable = mysqlTable(
-  "NotificationPush",
-  {
-    notificationId: varchar("notificationId", { length: 191 }).notNull(),
-    subscriptionId: varchar("subscriptionId", { length: 191 }).notNull(),
-    userId: varchar("userId", { length: 191 }),
-    processingStatus: notificationPushProcessingStatusEnum
-      .notNull()
-      .default("PENDING"),
-    attempts: int("attempts"),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // expiresAt: timestamp("expiresAt").notNull(),
-    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }).notNull(),
-    // clickedAt: timestamp("clickedAt"),
-    clickedAt: datetime("clickedAt", { mode: "date", fsp: 3 }),
-    // failedAt: timestamp("failedAt"),
-    failedAt: datetime("failedAt", { mode: "date", fsp: 3 }),
-    // deliveredAt: timestamp("deliveredAt"),
-    deliveredAt: datetime("deliveredAt", { mode: "date", fsp: 3 }),
-  },
-  (notificationPushTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(
-      notificationPushTable.notificationId,
-      notificationPushTable.subscriptionId
-    ),
-    userIdIndex: uniqueIndex("NotificationPush_userId_key").on(
-      notificationPushTable.userId
-    ),
-    processingStatusIndex: uniqueIndex(
-      "NotificationPush_processingStatus_key"
-    ).on(notificationPushTable.processingStatus),
-    subscriptionIdIndex: uniqueIndex("NotificationPush_subscriptionId_key").on(
-      notificationPushTable.subscriptionId
-    ),
-  })
-);
-
-// FIXME: Endpoint URLs could be up to 2048 chars, which would be 8192 bytes with utf8mb4 (4 bytes per char),
-//        but innodb unique index keys may only be up to 3072 bytes which would be 768 characters so we round
-//        down to 720. So far Endpoint URLS have been less than 256 chars. So that _should_ not collide.
-export type PushSubscription = InferModel<
-  typeof pushSubscriptionTable,
-  "select"
->;
-
-export const pushSubscriptionTable = mysqlTable(
-  "PushSubscription",
-  {
-    id: cuid("id").notNull(),
-    userId: varchar("userId", { length: 191 }),
-    endpoint: varchar("endpoint", { length: 720 }).notNull(), // ^ see FIXME above
-    p256dh: varchar("p256dh", { length: 191 }),
-    auth: varchar("auth", { length: 191 }),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-    // TODO: fix updatedAt for datetime
-    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
-      sql`CURRENT_TIMESTAMP(3)`
-    ),
-    // deletedAt: timestamp("deletedAt"),
-    deletedAt: datetime("deletedAt", { mode: "date", fsp: 3 }),
-  },
-  (pushSubscriptionTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(pushSubscriptionTable.id),
-    endpointIndex: uniqueIndex("PushSubscription_endpoint_key").on(
-      pushSubscriptionTable.endpoint
-    ),
-    userIdIndex: uniqueIndex("PushSubscription_userId_key").on(
-      pushSubscriptionTable.userId
-    ),
-  })
-);
-
-export type PushSubscriptionTag = InferModel<
-  typeof pushSubscriptionTagTable,
-  "select"
->;
-
-export const pushSubscriptionTagTable = mysqlTable(
-  "PushSubscriptionTag",
-  {
-    subscriptionId: varchar("subscriptionId", { length: 191 }).notNull(),
-    name: varchar("name", { length: 191 }).notNull(),
-    value: varchar("value", { length: 191 }).notNull(),
-  },
-  (pushSubscriptionTagTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(
-      pushSubscriptionTagTable.subscriptionId,
-      pushSubscriptionTagTable.name
-    ),
-  })
-);
-
-export type NotificationDiscordChannelWebhook = InferModel<
-  typeof notificationDiscordChannelWebhookTable,
-  "select"
->;
-
-export const notificationDiscordChannelWebhookTable = mysqlTable(
-  "NotificationDiscordChannelWebhook",
-  {
-    notificationId: varchar("notificationId", { length: 191 }).notNull(),
-    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }).notNull(),
-  },
-  (notificationDiscordChannelWebhookTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(
-      notificationDiscordChannelWebhookTable.notificationId,
-      notificationDiscordChannelWebhookTable.outgoingWebhookId
-    ),
-    outgoingWebhookIdIndex: uniqueIndex(
-      "NotificationDiscordChannelWebhook_outgoingWebhookId_key"
-    ).on(notificationDiscordChannelWebhookTable.outgoingWebhookId),
-  })
-);
-
-export type MailingAddress = InferModel<typeof mailingAddressTable, "select">;
-
-export const mailingAddressTable = mysqlTable("MailingAddress", {
-  id: cuid("id").notNull(),
-  country: varchar("country", { length: 191 }).notNull(),
-  addressLine1: varchar("addressLine1", { length: 191 }).notNull(),
-  addressLine2: varchar("addressLine2", { length: 191 }).notNull(),
-  city: varchar("city", { length: 191 }).notNull(),
-  state: varchar("state", { length: 191 }).notNull(),
-  postalCode: varchar("postalCode", { length: 191 }).notNull(),
-  salt: varchar("salt", { length: 32 }).notNull(),
-  // createdAt: timestamp("createdAt").defaultNow(),
-  createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-    .notNull()
-    .default(sql`CURRENT_TIMESTAMP(3)`),
-  // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-  // TODO: fix updatedAt for datetime
-  updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
-    sql`CURRENT_TIMESTAMP(3)`
-  ),
-});
-
-export type Form = InferModel<typeof formTable, "select">;
-
-export const formTable = mysqlTable(
-  "Form",
-  {
-    id: cuid("id").notNull(),
-    label: varchar("label", { length: 191 }).notNull(),
-    slug: varchar("slug", { length: 191 }),
-    active: int("active").default(0),
-    startAt: timestamp("startAt").defaultNow(),
-    endAt: timestamp("endAt"),
-    outgoingWebhookUrl: varchar("outgoingWebhookUrl", { length: 720 }),
-    showInLists: int("showInLists").default(1),
-    config: text("config").default(""),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-    // TODO: fix updatedAt for datetime
-    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
-      sql`CURRENT_TIMESTAMP(3)`
-    ),
-  },
-  (formTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(formTable.id),
-    slugIndex: uniqueIndex("Form_slug_key").on(formTable.slug),
-  })
-);
-
-export type FormEntry = InferModel<typeof formEntryTable, "select">;
-
-export const formEntryTable = mysqlTable(
-  "FormEntry",
-  {
-    id: cuid("id").notNull(),
-    formId: varchar("formId", { length: 191 }).notNull(),
-    userId: varchar("userId", { length: 191 }).notNull(),
-    // mailingAddressId: varchar("mailingAddressId", { length: 191 }).unique(),
-    mailingAddressId: varchar("mailingAddressId", { length: 191 }),
-    // outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }).unique(),
-    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }),
-    email: varchar("email", { length: 191 }),
-    givenName: varchar("givenName", { length: 191 }).notNull(),
-    familyName: varchar("familyName", { length: 191 }).notNull(),
-    salt: varchar("salt", { length: 32 }).notNull(),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-    // TODO: fix updatedAt for datetime
-    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
-      sql`CURRENT_TIMESTAMP(3)`
-    ),
-  },
-  (formEntryTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(formEntryTable.id),
-    formIdUserIdIndex: uniqueIndex("FormEntry_formId_userId_key").on(
-      formEntryTable.formId,
-      formEntryTable.userId
-    ),
-    userIdIndex: uniqueIndex("FormEntry_userId_key").on(formEntryTable.userId),
-  })
-);
-
-export type OutgoingWebhook = InferModel<typeof outgoingWebhookTable, "select">;
-
-export const outgoingWebhookTable = mysqlTable(
-  "OutgoingWebhook",
-  {
-    id: cuid("id").notNull(),
-    type: varchar("type", { length: 191 }).notNull(),
-    url: varchar("url", { length: 720 }).notNull(),
-    body: text("body").notNull(),
-    userId: varchar("userId", { length: 191 }),
-    retry: int("retry").default(0),
-    attempts: int("attempts"),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // failedAt: timestamp("failedAt"),
-    failedAt: datetime("failedAt", { mode: "date", fsp: 3 }),
-    // deliveredAt: timestamp("deliveredAt"),
-    deliveredAt: datetime("deliveredAt", { mode: "date", fsp: 3 }),
-    // expiresAt: timestamp("expiresAt"),
-    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }),
-  },
-  (outgoingWebhookTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(outgoingWebhookTable.id),
-    userIdIndex: uniqueIndex("OutgoingWebhook_userId_key").on(
-      outgoingWebhookTable.userId
-    ),
-  })
-);
-
-export type LinkAttachment = InferModel<typeof linkAttachmentTable, "select">;
-
-export const linkAttachmentTable = mysqlTable("LinkAttachment", {
-  id: cuid("id").notNull(),
-  type: varchar("type", { length: 191 }).notNull(),
-  name: varchar("name", { length: 191 }).notNull(),
-  title: varchar("title", { length: 191 }).notNull(),
-  alternativeText: varchar("alternativeText", { length: 191 }).notNull(),
-  caption: varchar("caption", { length: 191 }).notNull(),
-  description: varchar("description", { length: 191 }).notNull(),
-  url: varchar("url", { length: 191 }).notNull(),
-});
-
-export type ShowAndTellEntry = InferModel<
-  typeof showAndTellEntryTable,
-  "select"
->;
-
-export const showAndTellEntryTable = mysqlTable(
-  "ShowAndTellEntry",
-  {
-    // id: cuid("id").notNull(),
-    id: cuid("id").notNull(),
-    userId: varchar("userId", { length: 191 }),
-    title: varchar("title", { length: 191 }).notNull(),
-    text: text("text").notNull(),
-    displayName: varchar("displayName", { length: 191 }),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow(),
-    // TODO: fix updatedAt for datetime
-    updatedAt: datetime("updatedAt", { mode: "date", fsp: 3 }).default(
-      sql`CURRENT_TIMESTAMP(3)`
-    ),
-    // approvedAt: timestamp("approvedAt"),
-    approvedAt: datetime("approvedAt", { mode: "date", fsp: 3 }),
-    // seenOnStreamAt: timestamp("seenOnStreamAt"),
-    seenOnStreamAt: datetime("seenOnStreamAt", { mode: "date", fsp: 3 }),
-    seenOnStream: int("seenOnStream").default(0),
-  },
-  (showAndTellEntryTable) => ({
-    // primaryIndex: uniqueIndex("PRIMARY").on(showAndTellEntryTable.id),
-    userIdIndex: uniqueIndex("ShowAndTellEntry_userId_key").on(
-      showAndTellEntryTable.userId
-    ),
-  })
-);
-
-export type ShowAndTellEntryAttachment = InferModel<
-  typeof showAndTellEntryAttachmentTable,
-  "select"
->;
-
-export const showAndTellEntryAttachmentTable = mysqlTable(
-  "ShowAndTellEntryAttachment",
+export const channelUpdateEvent = mysqlTable(
+  "ChannelUpdateEvent",
   {
     id: varchar("id", { length: 191 }).notNull(),
-    //id: cuid("id").notNull(),
-    entryId: varchar("entryId", { length: 191 }).notNull(),
-    attachmentType: varchar("attachmentType", { length: 191 }).notNull(),
-    // linkAttachmentId: varchar("linkAttachmentId", { length: 191 }).unique(),
-    linkAttachmentId: varchar("linkAttachmentId", { length: 191 }),
-    // imageAttachmentId: varchar("imageAttachmentId", { length: 191 }).unique(),
-    imageAttachmentId: varchar("imageAttachmentId", { length: 191 }),
+    service: varchar("service", { length: 191 }).notNull(),
+    channel: varchar("channel", { length: 191 }).notNull(),
+    title: varchar("title", { length: 191 }).notNull(),
+    categoryId: varchar("category_id", { length: 191 }).notNull(),
+    categoryName: varchar("category_name", { length: 191 }).notNull(),
+    source: varchar("source", { length: 191 }).notNull(),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
   },
-  (showAndTellEntryAttachmentTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(showAndTellEntryAttachmentTable.id),
-    entryIdIndex: uniqueIndex("ShowAndTellEntryAttachment_entryId_key").on(
-      showAndTellEntryAttachmentTable.entryId
-    ),
-  })
+  (table) => {
+    return {
+      channelUpdateEventId: primaryKey(table.id),
+    };
+  },
 );
 
-export type FileStorageObject = InferModel<
-  typeof fileStorageObjectTable,
-  "select"
->;
+export const clientAccessToken = mysqlTable(
+  "ClientAccessToken",
+  {
+    service: varchar("service", { length: 191 }).notNull(),
+    clientId: varchar("client_id", { length: 191 }).notNull(),
+    accessToken: varchar("access_token", { length: 191 }).notNull(),
+    refreshToken: varchar("refresh_token", { length: 191 }),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    expiresAt: datetime("expiresAt", { mode: "string", fsp: 3 }),
+  },
+  (table) => {
+    return {
+      clientAccessTokenServiceClientIdKey: unique(
+        "ClientAccessToken_service_client_id_key",
+      ).on(table.service, table.clientId),
+    };
+  },
+);
 
-export const fileStorageObjectTable = mysqlTable(
+export const fileStorageObject = mysqlTable(
   "FileStorageObject",
   {
-    id: cuid("id").notNull(),
-    // key: varchar("key", { length: 191 }).notNull().unique(),
+    id: varchar("id", { length: 191 }).notNull(),
     key: varchar("key", { length: 191 }).notNull(),
     name: varchar("name", { length: 191 }).notNull(),
     type: varchar("type", { length: 191 }).notNull(),
     prefix: varchar("prefix", { length: 191 }).notNull(),
     acl: varchar("acl", { length: 191 }).notNull(),
-    // createdAt: timestamp("createdAt").defaultNow(),
-    createdAt: datetime("createdAt", { mode: "date", fsp: 3 })
-      .notNull()
-      .default(sql`CURRENT_TIMESTAMP(3)`),
-    // uploadedAt: timestamp("uploadedAt"),
-    uploadedAt: datetime("uploadedAt", { mode: "date", fsp: 3 }),
-    // deletedAt: timestamp("deletedAt"),
-    deletedAt: datetime("deletedAt", { mode: "date", fsp: 3 }),
-    // expiresAt: timestamp("expiresAt"),
-    expiresAt: datetime("expiresAt", { mode: "date", fsp: 3 }),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    uploadedAt: datetime("uploadedAt", { mode: "string", fsp: 3 }),
+    deletedAt: datetime("deletedAt", { mode: "string", fsp: 3 }),
+    expiresAt: datetime("expiresAt", { mode: "string", fsp: 3 }),
   },
-  (fileStorageObjectTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(fileStorageObjectTable.id),
-    keyIndex: uniqueIndex("FileStorageObject_key_key").on(
-      fileStorageObjectTable.key
-    ),
-  })
+  (table) => {
+    return {
+      fileStorageObjectId: primaryKey(table.id),
+      fileStorageObjectKeyKey: unique("FileStorageObject_key_key").on(
+        table.key,
+      ),
+    };
+  },
 );
 
-export type ImageMetadata = InferModel<typeof imageMetadataTable, "select">;
-
-export const imageMetadataTable = mysqlTable(
-  "ImageMetadata",
+export const form = mysqlTable(
+  "Form",
   {
-    mimeType: varchar("mimeType", { length: 191 }).notNull(),
-    width: int("width").notNull(),
-    height: int("height").notNull(),
-    // fileStorageObjectId: varchar("fileStorageObjectId", {
-    //   length: 191,
-    // })
-    //   .notNull()
-    //   .unique(),
-    fileStorageObjectId: varchar("fileStorageObjectId", {
-      length: 191,
-    }).notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
+    label: varchar("label", { length: 191 }).notNull(),
+    slug: varchar("slug", { length: 191 }),
+    active: tinyint("active").default(0).notNull(),
+    startAt: datetime("startAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    endAt: datetime("endAt", { mode: "string", fsp: 3 }),
+    outgoingWebhookUrl: varchar("outgoingWebhookUrl", { length: 720 }),
+    showInLists: tinyint("showInLists").default(1).notNull(),
+    config: text("config").notNull(),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
   },
-  (imageMetadataTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(
-      imageMetadataTable.fileStorageObjectId
-    ),
-  })
+  (table) => {
+    return {
+      formId: primaryKey(table.id),
+      formSlugKey: unique("Form_slug_key").on(table.slug),
+    };
+  },
 );
 
-export type ImageAttachment = InferModel<typeof imageAttachmentTable, "select">;
+export const formEntry = mysqlTable(
+  "FormEntry",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    formId: varchar("formId", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }).notNull(),
+    mailingAddressId: varchar("mailingAddressId", { length: 191 }),
+    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }),
+    email: varchar("email", { length: 191 }),
+    givenName: varchar("givenName", { length: 191 }).notNull(),
+    familyName: varchar("familyName", { length: 191 }).notNull(),
+    salt: char("salt", { length: 32 }).notNull(),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    allowMarketingEmails: tinyint("allowMarketingEmails").default(0).notNull(),
+  },
+  (table) => {
+    return {
+      userId: index("FormEntry_userId").on(table.userId),
+      formEntryId: primaryKey(table.id),
+      formEntryFormIdUserIdKey: unique("FormEntry_formId_userId_key").on(
+        table.formId,
+        table.userId,
+      ),
+      formEntryMailingAddressIdKey: unique("FormEntry_mailingAddressId_key").on(
+        table.mailingAddressId,
+      ),
+      formEntryOutgoingWebhookIdKey: unique(
+        "FormEntry_outgoingWebhookId_key",
+      ).on(table.outgoingWebhookId),
+    };
+  },
+);
 
-export const imageAttachmentTable = mysqlTable(
+export const imageAttachment = mysqlTable(
   "ImageAttachment",
   {
-    id: cuid("id").notNull(),
+    id: varchar("id", { length: 191 }).notNull(),
     name: varchar("name", { length: 191 }).notNull(),
     title: varchar("title", { length: 191 }).notNull(),
     alternativeText: varchar("alternativeText", { length: 191 }).notNull(),
     caption: varchar("caption", { length: 191 }).notNull(),
     description: varchar("description", { length: 191 }).notNull(),
     url: varchar("url", { length: 191 }).notNull(),
-    // fileStorageObjectId: varchar("fileStorageObjectId", {
-    //   length: 191,
-    // })
-    //   .notNull()
-    //   .unique(),
     fileStorageObjectId: varchar("fileStorageObjectId", {
       length: 191,
     }).notNull(),
   },
-  (imageAttachmentTable) => ({
-    primaryIndex: uniqueIndex("PRIMARY").on(imageAttachmentTable.id),
-    fileStorageObjectIdIndex: uniqueIndex(
-      "ImageAttachment_fileStorageObjectId_key"
-    ).on(imageAttachmentTable.fileStorageObjectId),
-  })
+  (table) => {
+    return {
+      imageAttachmentId: primaryKey(table.id),
+      imageAttachmentFileStorageObjectIdKey: unique(
+        "ImageAttachment_fileStorageObjectId_key",
+      ).on(table.fileStorageObjectId),
+    };
+  },
+);
+
+export const imageMetadata = mysqlTable(
+  "ImageMetadata",
+  {
+    mimeType: varchar("mimeType", { length: 191 }).notNull(),
+    width: int("width").notNull(),
+    height: int("height").notNull(),
+    fileStorageObjectId: varchar("fileStorageObjectId", {
+      length: 191,
+    }).notNull(),
+  },
+  (table) => {
+    return {
+      imageMetadataFileStorageObjectIdKey: unique(
+        "ImageMetadata_fileStorageObjectId_key",
+      ).on(table.fileStorageObjectId),
+    };
+  },
+);
+
+export const linkAttachment = mysqlTable(
+  "LinkAttachment",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    type: varchar("type", { length: 191 }).notNull(),
+    name: varchar("name", { length: 191 }).notNull(),
+    title: varchar("title", { length: 191 }).notNull(),
+    alternativeText: varchar("alternativeText", { length: 191 }).notNull(),
+    caption: varchar("caption", { length: 191 }).notNull(),
+    description: varchar("description", { length: 191 }).notNull(),
+    url: varchar("url", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      linkAttachmentId: primaryKey(table.id),
+    };
+  },
+);
+
+export const mailingAddress = mysqlTable(
+  "MailingAddress",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    country: varchar("country", { length: 191 }).notNull(),
+    addressLine1: varchar("addressLine1", { length: 191 }).notNull(),
+    addressLine2: varchar("addressLine2", { length: 191 }).notNull(),
+    city: varchar("city", { length: 191 }).notNull(),
+    state: varchar("state", { length: 191 }).notNull(),
+    postalCode: varchar("postalCode", { length: 191 }).notNull(),
+    salt: char("salt", { length: 32 }).notNull(),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+  },
+  (table) => {
+    return {
+      mailingAddressId: primaryKey(table.id),
+    };
+  },
+);
+
+export const notification = mysqlTable(
+  "Notification",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    message: varchar("message", { length: 191 }).notNull(),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    expiresAt: datetime("expiresAt", { mode: "string", fsp: 3 }).notNull(),
+    canceledAt: datetime("canceledAt", { mode: "string", fsp: 3 }),
+    scheduledStartAt: datetime("scheduledStartAt", { mode: "string", fsp: 3 }),
+    scheduledEndAt: datetime("scheduledEndAt", { mode: "string", fsp: 3 }),
+    title: varchar("title", { length: 191 }),
+    linkUrl: varchar("linkUrl", { length: 191 }),
+    imageUrl: varchar("imageUrl", { length: 191 }),
+    tag: varchar("tag", { length: 191 }),
+    urgency: mysqlEnum("urgency", ["VERY_LOW", "LOW", "NORMAL", "HIGH"])
+      .default("NORMAL")
+      .notNull(),
+    isPush: tinyint("isPush").default(0).notNull(),
+    isDiscord: tinyint("isDiscord").default(0).notNull(),
+  },
+  (table) => {
+    return {
+      notificationId: primaryKey(table.id),
+    };
+  },
+);
+
+export const notificationDiscordChannelWebhook = mysqlTable(
+  "NotificationDiscordChannelWebhook",
+  {
+    notificationId: varchar("notificationId", { length: 191 }).notNull(),
+    outgoingWebhookId: varchar("outgoingWebhookId", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      notificationDiscordChannelWebhookNotificationIdOutgoingWebKey: unique(
+        "NotificationDiscordChannelWebhook_notificationId_outgoingWeb_key",
+      ).on(table.notificationId, table.outgoingWebhookId),
+      notificationDiscordChannelWebhookOutgoingWebhookIdKey: unique(
+        "NotificationDiscordChannelWebhook_outgoingWebhookId_key",
+      ).on(table.outgoingWebhookId),
+    };
+  },
+);
+
+export const notificationPush = mysqlTable(
+  "NotificationPush",
+  {
+    notificationId: varchar("notificationId", { length: 191 }).notNull(),
+    subscriptionId: varchar("subscriptionId", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }),
+    processingStatus: mysqlEnum("processingStatus", [
+      "PENDING",
+      "IN_PROGRESS",
+      "DONE",
+    ])
+      .default("PENDING")
+      .notNull(),
+    attempts: int("attempts"),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    expiresAt: datetime("expiresAt", { mode: "string", fsp: 3 }).notNull(),
+    clickedAt: datetime("clickedAt", { mode: "string", fsp: 3 }),
+    failedAt: datetime("failedAt", { mode: "string", fsp: 3 }),
+    deliveredAt: datetime("deliveredAt", { mode: "string", fsp: 3 }),
+  },
+  (table) => {
+    return {
+      userId: index("NotificationPush_userId").on(table.userId),
+      processingStatus: index("NotificationPush_processingStatus").on(
+        table.processingStatus,
+      ),
+      subscriptionId: index("NotificationPush_subscriptionId").on(
+        table.subscriptionId,
+      ),
+      notificationPushNotificationIdSubscriptionIdKey: unique(
+        "NotificationPush_notificationId_subscriptionId_key",
+      ).on(table.notificationId, table.subscriptionId),
+    };
+  },
+);
+
+export const outgoingWebhook = mysqlTable(
+  "OutgoingWebhook",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    type: varchar("type", { length: 191 }).notNull(),
+    url: varchar("url", { length: 720 }).notNull(),
+    body: text("body").notNull(),
+    userId: varchar("userId", { length: 191 }),
+    retry: tinyint("retry").default(0).notNull(),
+    attempts: int("attempts"),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    failedAt: datetime("failedAt", { mode: "string", fsp: 3 }),
+    deliveredAt: datetime("deliveredAt", { mode: "string", fsp: 3 }),
+    expiresAt: datetime("expiresAt", { mode: "string", fsp: 3 }),
+  },
+  (table) => {
+    return {
+      userId: index("OutgoingWebhook_userId").on(table.userId),
+      outgoingWebhookId: primaryKey(table.id),
+    };
+  },
+);
+
+export const pushSubscription = mysqlTable(
+  "PushSubscription",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }),
+    endpoint: varchar("endpoint", { length: 720 }).notNull(),
+    p256Dh: varchar("p256dh", { length: 191 }),
+    auth: varchar("auth", { length: 191 }),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 }).notNull(),
+    deletedAt: datetime("deletedAt", { mode: "string", fsp: 3 }),
+  },
+  (table) => {
+    return {
+      userId: index("PushSubscription_userId").on(table.userId),
+      pushSubscriptionId: primaryKey(table.id),
+      pushSubscriptionEndpointKey: unique("PushSubscription_endpoint_key").on(
+        table.endpoint,
+      ),
+    };
+  },
+);
+
+export const pushSubscriptionTag = mysqlTable(
+  "PushSubscriptionTag",
+  {
+    subscriptionId: varchar("subscriptionId", { length: 191 }).notNull(),
+    name: varchar("name", { length: 191 }).notNull(),
+    value: varchar("value", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      pushSubscriptionTagSubscriptionIdNameKey: unique(
+        "PushSubscriptionTag_subscriptionId_name_key",
+      ).on(table.subscriptionId, table.name),
+    };
+  },
+);
+
+export const session = mysqlTable(
+  "Session",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    sessionToken: varchar("sessionToken", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }).notNull(),
+    expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
+  },
+  (table) => {
+    return {
+      userId: index("Session_userId").on(table.userId),
+      sessionId: primaryKey(table.id),
+      sessionSessionTokenKey: unique("Session_sessionToken_key").on(
+        table.sessionToken,
+      ),
+    };
+  },
+);
+
+export const showAndTellEntry = mysqlTable(
+  "ShowAndTellEntry",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }),
+    title: varchar("title", { length: 191 }).notNull(),
+    text: text("text").notNull(),
+    displayName: varchar("displayName", { length: 191 }),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    updatedAt: datetime("updatedAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    approvedAt: datetime("approvedAt", { mode: "string", fsp: 3 }),
+    seenOnStreamAt: datetime("seenOnStreamAt", { mode: "string", fsp: 3 }),
+    seenOnStream: tinyint("seenOnStream").default(0).notNull(),
+  },
+  (table) => {
+    return {
+      userId: index("ShowAndTellEntry_userId").on(table.userId),
+      showAndTellEntryId: primaryKey(table.id),
+    };
+  },
+);
+
+export const showAndTellEntryAttachment = mysqlTable(
+  "ShowAndTellEntryAttachment",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    entryId: varchar("entryId", { length: 191 }).notNull(),
+    attachmentType: varchar("attachmentType", { length: 191 }).notNull(),
+    linkAttachmentId: varchar("linkAttachmentId", { length: 191 }),
+    imageAttachmentId: varchar("imageAttachmentId", { length: 191 }),
+  },
+  (table) => {
+    return {
+      entryId: index("ShowAndTellEntryAttachment_entryId").on(table.entryId),
+      showAndTellEntryAttachmentId: primaryKey(table.id),
+      showAndTellEntryAttachmentLinkAttachmentIdKey: unique(
+        "ShowAndTellEntryAttachment_linkAttachmentId_key",
+      ).on(table.linkAttachmentId),
+      showAndTellEntryAttachmentImageAttachmentIdKey: unique(
+        "ShowAndTellEntryAttachment_imageAttachmentId_key",
+      ).on(table.imageAttachmentId),
+    };
+  },
+);
+
+export const streamStatusEvent = mysqlTable(
+  "StreamStatusEvent",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    service: varchar("service", { length: 191 }).notNull(),
+    channel: varchar("channel", { length: 191 }).notNull(),
+    online: tinyint("online").notNull(),
+    source: varchar("source", { length: 191 }).notNull(),
+    createdAt: datetime("createdAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    startedAt: datetime("startedAt", { mode: "string", fsp: 3 }),
+  },
+  (table) => {
+    return {
+      streamStatusEventId: primaryKey(table.id),
+    };
+  },
+);
+
+export const taskExecutionEvent = mysqlTable(
+  "TaskExecutionEvent",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    task: varchar("task", { length: 191 }).notNull(),
+    startedAt: datetime("startedAt", { mode: "string", fsp: 3 })
+      .default(sql`CURRENT_TIMESTAMP(3)`)
+      .notNull(),
+    finishedAt: datetime("finishedAt", { mode: "string", fsp: 3 }),
+  },
+  (table) => {
+    return {
+      taskExecutionEventId: primaryKey(table.id),
+    };
+  },
+);
+
+export const twitchChannel = mysqlTable(
+  "TwitchChannel",
+  {
+    channelId: varchar("channelId", { length: 191 }).notNull(),
+    username: varchar("username", { length: 191 }).notNull(),
+    label: varchar("label", { length: 191 }).notNull(),
+    broadcasterAccountId: varchar("broadcasterAccountId", { length: 191 }),
+    moderatorAccountId: varchar("moderatorAccountId", { length: 191 }),
+  },
+  (table) => {
+    return {
+      twitchChannelId: primaryKey(table.id),
+    };
+  },
+);
+
+export const user = mysqlTable(
+  "User",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    email: varchar("email", { length: 191 }),
+    emailVerified: datetime("emailVerified", { mode: "string", fsp: 3 }),
+    image: varchar("image", { length: 191 }),
+    name: varchar("name", { length: 191 }),
+  },
+  (table) => {
+    return {
+      userId: primaryKey(table.id),
+      userEmailKey: unique("User_email_key").on(table.email),
+    };
+  },
+);
+
+export const userRole = mysqlTable(
+  "UserRole",
+  {
+    id: varchar("id", { length: 191 }).notNull(),
+    userId: varchar("userId", { length: 191 }).notNull(),
+    role: varchar("role", { length: 191 }).notNull(),
+  },
+  (table) => {
+    return {
+      userRoleId: primaryKey(table.id),
+      userRoleUserIdRoleKey: unique("UserRole_userId_role_key").on(
+        table.userId,
+        table.role,
+      ),
+    };
+  },
+);
+
+export const verificationToken = mysqlTable(
+  "VerificationToken",
+  {
+    identifier: varchar("identifier", { length: 191 }).notNull(),
+    token: varchar("token", { length: 191 }).notNull(),
+    expires: datetime("expires", { mode: "string", fsp: 3 }).notNull(),
+  },
+  (table) => {
+    return {
+      verificationTokenTokenKey: unique("VerificationToken_token_key").on(
+        table.token,
+      ),
+      verificationTokenIdentifierTokenKey: unique(
+        "VerificationToken_identifier_token_key",
+      ).on(table.identifier, table.token),
+    };
+  },
 );
