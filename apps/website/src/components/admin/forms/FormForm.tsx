@@ -7,7 +7,11 @@ import { useRouter } from "next/router";
 import { env } from "@/env/index.mjs";
 
 import { trpc } from "@/utils/trpc";
-import { calcFormConfig } from "@/utils/forms";
+import {
+  calcFormConfig,
+  PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL,
+  PLACEHOLDER_SUBMIT_BUTTON_TEXT,
+} from "@/utils/forms";
 import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 import {
   inputValueDatetimeLocalToUtc,
@@ -35,6 +39,14 @@ export function FormForm({ action, form }: FormFormProps) {
   const router = useRouter();
   const submit = trpc.adminForms.createOrEditForm.useMutation();
 
+  const defaultConfig = calcFormConfig(form?.config);
+  const [intro, setIntro] = useState(defaultConfig.intro || "");
+  const [rules, setRules] = useState(defaultConfig.rules || "");
+  const [label, setLabel] = useState(form?.label || "");
+  const [askMarketingEmails, setAskMarketingEmails] = useState(
+    defaultConfig.askMarketingEmails || false,
+  );
+
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
@@ -45,6 +57,12 @@ export function FormForm({ action, form }: FormFormProps) {
         label: String(formData.get("label")),
         config: {
           checks: formData.get("checks") === "true",
+          requireShippingAddress:
+            formData.get("requireShippingAddress") === "true",
+          askMarketingEmails,
+          askMarketingEmailsLabel: formData.has("askMarketingEmailsLabel")
+            ? String(formData.get("askMarketingEmailsLabel"))
+            : undefined,
           intro: formData.has("intro")
             ? String(formData.get("intro"))
             : undefined,
@@ -83,17 +101,12 @@ export function FormForm({ action, form }: FormFormProps) {
             onSuccess: async () => {
               await router.push(`/admin/forms`);
             },
-          }
+          },
         );
       }
     },
-    [action, form, router, submit]
+    [action, form, router, submit, askMarketingEmails],
   );
-
-  const defaultConfig = calcFormConfig(form?.config);
-  const [intro, setIntro] = useState(defaultConfig.intro || "");
-  const [rules, setRules] = useState(defaultConfig.rules || "");
-  const [label, setLabel] = useState(form?.label || "");
 
   return (
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
@@ -127,17 +140,7 @@ export function FormForm({ action, form }: FormFormProps) {
         />
       </Fieldset>
 
-      <Fieldset legend="Appearance">
-        <TextField
-          label="Submit button text"
-          name="submitButtonText"
-          placeholder="Enter to Win"
-          className="max-w-[200px]"
-          defaultValue={defaultConfig.submitButtonText}
-        />
-      </Fieldset>
-
-      <Fieldset legend="Entry actions">
+      <Fieldset legend="User entry">
         <CheckboxField
           name="checks"
           value="true"
@@ -145,6 +148,34 @@ export function FormForm({ action, form }: FormFormProps) {
         >
           Require users to perform actions to enter
         </CheckboxField>
+
+        <CheckboxField
+          name="requireShippingAddress"
+          value="true"
+          defaultSelected={defaultConfig.requireShippingAddress}
+        >
+          Require shipping address
+        </CheckboxField>
+      </Fieldset>
+
+      <Fieldset legend="Marketing">
+        <CheckboxField
+          name="askMarketingEmails"
+          value="true"
+          defaultSelected={defaultConfig.askMarketingEmails}
+          isSelected={askMarketingEmails}
+          onChange={setAskMarketingEmails}
+        >
+          Ask user to allow sending marketing emails
+        </CheckboxField>
+
+        <TextField
+          label="Checkbox label asking user to allow marketing emails"
+          name="askMarketingEmailsLabel"
+          placeholder={PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL}
+          defaultValue={defaultConfig.askMarketingEmailsLabel}
+          isDisabled={!askMarketingEmails}
+        />
       </Fieldset>
 
       <Fieldset legend="Time and date">
@@ -196,6 +227,16 @@ export function FormForm({ action, form }: FormFormProps) {
             </div>
           </div>
         </FieldGroup>
+      </Fieldset>
+
+      <Fieldset legend="Appearance">
+        <TextField
+          label="Submit button text"
+          name="submitButtonText"
+          placeholder={PLACEHOLDER_SUBMIT_BUTTON_TEXT}
+          className="max-w-[200px]"
+          defaultValue={defaultConfig.submitButtonText}
+        />
       </Fieldset>
 
       <Button type="submit" className={defaultButtonClasses}>

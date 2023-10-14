@@ -1,7 +1,7 @@
-import React from "react";
+import { type ReactNode } from "react";
 
 type FieldGroupProps = {
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export function FieldGroup({ children }: FieldGroupProps) {

@@ -1,8 +1,7 @@
-import type { TwitchConfig } from "@/config/twitch";
-import { getTwitchConfig } from "@/config/twitch";
-import type { StreamsResponse } from "../utils/twitch-api";
-import { getStreamsForChannels } from "../utils/twitch-api";
-import { prisma } from "../db/client";
+import type { StreamsResponse } from "@/server/utils/twitch-api";
+import { getStreamsForChannels } from "@/server/utils/twitch-api";
+import { prisma } from "@/server/db/client";
+import { getTwitchChannels } from "@/server/db/twitch-channels";
 
 const SERVICE_TWITCH = "twitch";
 const EVENT_SOURCE_CRON_LIVE_CHECK = "cron-live-check";
@@ -25,7 +24,7 @@ async function getCurrentChannelInfo(id: string) {
 
 async function checkChannelForUpdates(
   id: string,
-  liveStatusMap: LiveStatusMap
+  liveStatusMap: LiveStatusMap,
 ) {
   const oldStatus = await getChannelLiveStatus(id);
 
@@ -91,15 +90,8 @@ async function checkChannelForUpdates(
 }
 
 async function checkLiveStatusForChannels() {
-  const twitchConfig: TwitchConfig = await getTwitchConfig();
-  const channelIds = [];
-
-  for (const key in twitchConfig.channels) {
-    const channelConfig = twitchConfig.channels[key];
-    if (channelConfig !== undefined) {
-      channelIds.push(String(channelConfig.id));
-    }
-  }
+  const channels = await getTwitchChannels();
+  const channelIds = channels.map((channel) => channel.channelId);
 
   if (!channelIds.length) {
     return;
@@ -111,12 +103,8 @@ async function checkLiveStatusForChannels() {
     liveStatusMap[streamData.user_id] = streamData;
   });
 
-  console.log("live status map", liveStatusMap);
-
   await Promise.allSettled(
-    channelIds.map(
-      async (id) => await checkChannelForUpdates(id, liveStatusMap)
-    )
+    channelIds.map(async (id) => checkChannelForUpdates(id, liveStatusMap)),
   );
 }
 

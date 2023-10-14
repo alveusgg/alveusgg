@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import { Popover } from "@headlessui/react";
 
 import { env } from "@/env/index.mjs";
@@ -67,13 +67,13 @@ export function AddEventButton({ event }: AddEventButtonProps) {
   const handleGCalClick = () => {
     const { title, description, startTime, endTime, url } = event;
     const googleCalendarEventUrl = new URL(
-      "https://www.google.com/calendar/render"
+      "https://www.google.com/calendar/render",
     );
     googleCalendarEventUrl.searchParams.append("action", "TEMPLATE");
     googleCalendarEventUrl.searchParams.append("text", title + " " + url);
     googleCalendarEventUrl.searchParams.append(
       "dates",
-      `${formatIcsDate(startTime)}/${formatIcsDate(endTime || startTime)}`
+      `${formatIcsDate(startTime)}/${formatIcsDate(endTime || startTime)}`,
     );
     googleCalendarEventUrl.searchParams.append("details", description);
 

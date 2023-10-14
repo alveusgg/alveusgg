@@ -1,7 +1,13 @@
 import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import React, { Children, cloneElement, forwardRef, Fragment } from "react";
+import {
+  Children,
+  cloneElement,
+  forwardRef,
+  Fragment,
+  type ReactElement,
+} from "react";
 
 import {
   mainNavStructure,
@@ -45,12 +51,12 @@ const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
 
-const DropdownMenuItem: React.FC<{ children: React.ReactElement }> = forwardRef(
+const DropdownMenuItem = forwardRef<HTMLLIElement, { children: ReactElement }>(
   ({ children, ...props }, ref) => (
     <li {...props}>
       {Children.map(children, (child) => cloneElement(child, { ref }))}
     </li>
-  )
+  ),
 );
 DropdownMenuItem.displayName = "DropdownMenuItem";
 
@@ -173,7 +179,7 @@ export function DesktopMenu() {
                       <Menu.Button
                         className={classes(
                           navLinkClassesMain,
-                          "flex items-center gap-2"
+                          "flex items-center gap-2",
                         )}
                       >
                         {link.title}
@@ -191,10 +197,11 @@ export function DesktopMenu() {
                             {({ close, active }) => (
                               <NavLinkSub
                                 href={link.link}
+                                isExternal={link.isExternal}
                                 className={classes(
                                   active &&
                                     "outline-blue-500 group-focus-visible:outline",
-                                  "w-full min-w-max"
+                                  "w-full min-w-max",
                                 )}
                                 onClick={close}
                               >

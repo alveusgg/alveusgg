@@ -1,9 +1,11 @@
+import { type ComponentType } from "react";
+
 import IconDiscord from "@/icons/IconDiscord";
 
 type UpdateChannelLink = {
   link: string;
   title: string;
-  icon: React.ComponentType;
+  icon: ComponentType;
 };
 
 const updateChannels = {

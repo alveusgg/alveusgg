@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
 import type { AriaTextFieldOptions } from "react-aria";
 import { useTextField } from "react-aria";
 
@@ -11,15 +11,15 @@ export type TextFieldProps = AriaTextFieldOptions<"input"> & {
   className?: string;
   inputClassName?: string;
   list?: string;
-  prefix?: React.ReactNode;
-  suffix?: React.ReactNode;
+  prefix?: ReactNode;
+  suffix?: ReactNode;
   showResetButton?: boolean;
 };
 
 export function TextField(props: TextFieldProps) {
   const ref = useRef<HTMLInputElement>(null);
   const [showResetButton, setShowResetButton] = useState(
-    () => props.showResetButton && Boolean(props.value || props.defaultValue)
+    () => props.showResetButton && Boolean(props.value || props.defaultValue),
   );
   const customizedProps = useMemo(() => {
     return {
@@ -53,7 +53,7 @@ export function TextField(props: TextFieldProps) {
         <input
           className={classes(
             "w-full flex-1 bg-white p-1 px-2 text-black",
-            props.inputClassName
+            props.inputClassName,
           )}
           {...inputProps}
           list={props.list}

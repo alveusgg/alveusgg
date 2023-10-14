@@ -3,7 +3,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["fieldReference", "fullTextSearch", "jsonProtocol"]
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -68,6 +68,9 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  twitchChannelBroadcaster TwitchChannel[] @relation("BroadcasterAccount")
+  twitchChannelModerator   TwitchChannel[] @relation("ModeratorAccount")
 
   @@unique([provider, providerAccountId])
   @@index([userId], name: "Account_userId")
@@ -234,7 +237,7 @@ model Form {
   endAt              DateTime?
   outgoingWebhookUrl String?   @db.VarChar(720)
   showInLists        Boolean   @default(true)
-  config             String    @default("") @db.Text
+  config             String    @db.Text
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -245,15 +248,16 @@ model Form {
 }
 
 model FormEntry {
-  id                String  @id @default(cuid())
-  formId            String
-  userId            String
-  mailingAddressId  String? @unique
-  outgoingWebhookId String? @unique
-  email             String?
-  givenName         String
-  familyName        String
-  salt              String  @db.Char(32)
+  id                   String  @id @default(cuid())
+  formId               String
+  userId               String
+  mailingAddressId     String? @unique
+  outgoingWebhookId    String? @unique
+  email                String?
+  givenName            String
+  familyName           String
+  allowMarketingEmails Boolean @default(false)
+  salt                 String  @db.Char(32)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -369,4 +373,15 @@ model ImageAttachment {
 
   fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
   showAndTellEntryAttachment ShowAndTellEntryAttachment?
+}
+
+model TwitchChannel {
+  channelId            String  @id
+  username             String
+  label                String
+  broadcasterAccountId String?
+  moderatorAccountId   String?
+
+  broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
+  moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
 }

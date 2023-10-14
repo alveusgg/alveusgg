@@ -1,16 +1,16 @@
-import { useState } from "react";
+import { useState, type DragEvent } from "react";
 
 export function useFileDragAndDrop(
-  addFiles: (filesToAdd: FileList | null) => Promise<void>
+  addFiles: (filesToAdd: FileList | null) => Promise<void>,
 ) {
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
-  const handleDrag = (e: React.DragEvent<HTMLElement>) => {
+  const handleDrag = (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDragIn = (e: React.DragEvent<HTMLElement>) => {
+  const handleDragIn = (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
     if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
@@ -18,13 +18,13 @@ export function useFileDragAndDrop(
     }
   };
 
-  const handleDragOut = (e: React.DragEvent<HTMLElement>) => {
+  const handleDragOut = (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
   };
 
-  const handleDrop = async (e: React.DragEvent<HTMLElement>) => {
+  const handleDrop = async (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
@@ -33,7 +33,7 @@ export function useFileDragAndDrop(
     }
   };
 
-  const handleDragStart = (e: React.DragEvent<HTMLElement>) => {
+  const handleDragStart = (e: DragEvent<HTMLElement>) => {
     e.preventDefault();
     e.stopPropagation();
     e.dataTransfer.clearData();

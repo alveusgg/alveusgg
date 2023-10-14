@@ -1,31 +1,35 @@
 import type { LinkProps } from "next/link";
 import Link from "next/link";
-import React from "react";
+import {
+  type AnchorHTMLAttributes,
+  type RefAttributes,
+  type ReactNode,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
 import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
 
 type NavLinkProps = Omit<
-  React.AnchorHTMLAttributes<HTMLAnchorElement>,
+  AnchorHTMLAttributes<HTMLAnchorElement>,
   keyof LinkProps
 > &
   LinkProps & {
-    children?: React.ReactNode;
+    children?: ReactNode;
     exact?: boolean;
-  } & React.RefAttributes<HTMLAnchorElement>;
+  } & RefAttributes<HTMLAnchorElement>;
 
 const navLinkClassesActive = "bg-alveus-tan text-alveus-green";
 const navLinkClassesHover = "hover:bg-alveus-tan hover:text-alveus-green";
 const navLinkClasses =
   "rounded-full text-center border-2 border-alveus-tan text-base px-2 py-1 md:px-4 md:py-2 md:text-lg transition-colors transition-colors";
 
-const NavLink: React.FC<NavLinkProps> = ({
+const NavLink = ({
   href,
   exact = false,
   className,
   ...props
-}) => {
+}: NavLinkProps) => {
   const isActive = useIsActivePath(href, exact);
 
   return (
@@ -34,7 +38,7 @@ const NavLink: React.FC<NavLinkProps> = ({
       className={classes(
         navLinkClasses,
         isActive ? navLinkClassesActive : navLinkClassesHover,
-        className
+        className,
       )}
       {...props}
     />

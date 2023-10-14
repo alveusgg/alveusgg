@@ -1,7 +1,6 @@
 import { useSession } from "next-auth/react";
-import React from "react";
 
-export const ProfileInfoImage: React.FC = () => {
+export const ProfileInfoImage = () => {
   const { data: sessionData } = useSession();
   const user = sessionData?.user;
 
@@ -21,7 +20,7 @@ export const ProfileInfoImage: React.FC = () => {
   return <></>;
 };
 
-export const ProfileInfo: React.FC<{ full?: boolean }> = ({ full = false }) => {
+export const ProfileInfo = ({ full = false }) => {
   const { data: sessionData } = useSession();
   const user = sessionData?.user;
 

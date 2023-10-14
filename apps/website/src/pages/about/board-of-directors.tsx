@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import React from "react";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -19,7 +18,7 @@ const directors = {
       <>
         <p>
           Maya Higa is one of the top female streamers on Twitch whose passions
-          include wildlife conservation and education which she integrates into
+          include wildlife conservation and education, which she integrates into
           her content regularly. Maya is a licensed falconer and wildlife
           conservationist. Her livestreams feature falconry, wildlife rehab,
           conservation education, and charity fundraising. She created a

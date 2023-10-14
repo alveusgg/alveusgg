@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import React from "react";
+import { type ComponentType } from "react";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -8,6 +8,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Consent from "@/components/Consent";
+import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
@@ -16,7 +17,7 @@ import IconBitcoin from "@/icons/IconBitcoin";
 import { type IconProps } from "@/icons/BaseIcon";
 
 type DonateLink = {
-  icon: React.ComponentType<IconProps>;
+  icon: ComponentType<IconProps>;
   title: string;
   link: string;
   external: boolean;
@@ -59,7 +60,7 @@ const givingBlock: DonateLink = {
     "Donate cryptocurrency, stocks or via card to Alveus using The Giving Block.",
 };
 
-const DonateItem: React.FC<{ link: DonateLink }> = ({ link }) => (
+const DonateItem = ({ link }: { link: DonateLink }) => (
   <Link
     href={link.link}
     {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}
@@ -109,12 +110,7 @@ const DonatePage: NextPage = () => {
           {!consent.givingBlock && <DonateItem link={givingBlock} />}
 
           <Consent item="donation widget" consent="givingBlock">
-            <iframe
-              src="https://tgbwidget.com/?charityID=861772907"
-              width="100%"
-              height="604px"
-              frameBorder="0"
-            />
+            <TheGivingBlockEmbed />
           </Consent>
         </div>
       </Section>

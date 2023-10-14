@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { formatDateTimeLocal, type DateTimeFormat } from "@/utils/datetime";
 
@@ -7,10 +7,10 @@ type DateTimeProps = {
   format?: Partial<DateTimeFormat>;
 };
 
-const DateTime: React.FC<DateTimeProps> = ({ date, format }) => {
+const DateTime = ({ date, format }: DateTimeProps) => {
   // On client load, and when the settings change, reformat the date
   const [formattedDate, setFormattedDate] = useState<string>(
-    formatDateTimeLocal(date, format)
+    formatDateTimeLocal(date, format),
   );
   useEffect(() => {
     setFormattedDate(formatDateTimeLocal(date, format));

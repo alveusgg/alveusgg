@@ -5,7 +5,7 @@ import { env } from "@/env/index.mjs";
 
 export function createTokenProtectedApiHandler<T extends ZodType>(
   schema: T,
-  action: (options: z.infer<T>) => Promise<boolean>
+  action: (options: z.infer<T>) => Promise<boolean>,
 ) {
   return async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (req.method !== "POST") {

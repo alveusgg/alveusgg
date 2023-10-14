@@ -10,7 +10,7 @@ export const adminActivityFeedRouter = router({
       z.object({
         limit: z.number().int().min(1).max(100).nullish(),
         cursor: z.string().cuid().nullish(),
-      })
+      }),
     )
     .query(async ({ ctx, input }) => {
       const limit = input.limit ?? 50;

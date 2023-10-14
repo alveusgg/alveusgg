@@ -23,7 +23,7 @@ import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryFor
 const uploadPrefix = "notifications/";
 
 const permittedProcedure = protectedProcedure.use(
-  createCheckPermissionMiddleware(permissions.manageNotifications)
+  createCheckPermissionMiddleware(permissions.manageNotifications),
 );
 
 const localDatetimeAsDateSchema = z
@@ -44,7 +44,7 @@ export const adminNotificationsRouter = router({
         scheduledEndAt: localDatetimeAsDateSchema.optional(),
         isPush: z.boolean().optional(),
         isDiscord: z.boolean().optional(),
-      })
+      }),
     )
     .mutation(async ({ input }) => createNotification(input)),
 
@@ -74,10 +74,10 @@ export const adminNotificationsRouter = router({
       z.object({
         limit: z.number().int().min(1).optional(),
         cursor: z.string().cuid().optional(),
-      })
+      }),
     )
     .query(async ({ input: { limit, cursor } }) =>
-      getRecentNotifications({ limit, cursor })
+      getRecentNotifications({ limit, cursor }),
     ),
 
   cancelNotification: permittedProcedure
@@ -93,7 +93,7 @@ export const adminNotificationsRouter = router({
       z.object({
         fileName: z.string(),
         fileType: z.enum(allowedFileTypes),
-      })
+      }),
     )
     .mutation(async ({ input }) => {
       const { uploadUrl, viewUrl, fileStorageObject } =

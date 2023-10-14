@@ -84,7 +84,7 @@ export const config = {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) {
   const signature = getFirstHeader(req.headers[TWITCH_MESSAGE_SIGNATURE]);
   const messageType = getFirstHeader(req.headers[TWITCH_MESSAGE_TYPE]);
@@ -117,8 +117,8 @@ export default async function handler(
       `condition: ${JSON.stringify(
         notification.subscription.condition,
         null,
-        4
-      )}`
+        4,
+      )}`,
     );
     return;
   }
@@ -133,7 +133,7 @@ export default async function handler(
       case "channel.update":
         {
           const data = channelUpdateNotificationEventSchema.parse(
-            notification.event
+            notification.event,
           );
 
           await prisma.channelUpdateEvent.create({

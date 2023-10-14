@@ -12,11 +12,23 @@ import {
   checkSubject,
 } from "./vapid.mjs";
 
-const listOfUrlsSchema = z
-  .string()
-  .transform((val) =>
-    val.split(" ").map((url) => z.string().url().parse(url.trim()).toString())
-  );
+const listOfUrlsSchema = z.string().transform((val, ctx) => {
+  if (val.trim() === "") {
+    return [];
+  }
+
+  const urls = [];
+  for (const url of val.split(" ")) {
+    const parsed = z.string().url().safeParse(url.trim());
+    if (!parsed.success) {
+      parsed.error.issues.forEach((issue) => ctx.addIssue(issue));
+      return;
+    }
+
+    urls.push(parsed.data);
+  }
+  return urls;
+});
 
 const optionalBoolSchema = z
   .enum(["true", "false"])
@@ -91,7 +103,6 @@ export const env = createEnv({
       .superRefine(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.string().optional(),
-    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED: optionalBoolSchema,
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -150,8 +161,6 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
-    NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED:
-      process.env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

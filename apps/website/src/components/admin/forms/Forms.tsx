@@ -1,6 +1,6 @@
 import type { inferRouterOutputs } from "@trpc/server";
 import Link from "next/link";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { Menu } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";

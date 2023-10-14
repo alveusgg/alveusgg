@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { parseVideoUrl } from "@/utils/video-urls";
 import IconTrash from "@/icons/IconTrash";
 import IconPlus from "@/icons/IconPlus";
@@ -61,7 +61,7 @@ export function VideoLinksField({
         setErrors(newErrors);
       }
     },
-    [setVideoUrls, videoUrls]
+    [setVideoUrls, videoUrls],
   );
 
   return (

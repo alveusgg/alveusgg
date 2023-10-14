@@ -1,5 +1,4 @@
-import type { MouseEventHandler } from "react";
-import { Fragment } from "react";
+import { Fragment, type MouseEventHandler, type ReactNode } from "react";
 import { Popover } from "@headlessui/react";
 import { Button, defaultButtonClasses } from "@/components/shared/Button";
 
@@ -8,8 +7,8 @@ export function PopoverButton({
   label,
   onClick,
 }: {
-  children: React.ReactNode;
-  label: React.ReactNode;
+  children: ReactNode;
+  label: ReactNode;
   onClick?: MouseEventHandler;
 }) {
   return (

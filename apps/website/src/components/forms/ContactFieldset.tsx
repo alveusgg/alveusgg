@@ -1,12 +1,12 @@
-import React from "react";
-
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
 
-export const ContactFieldset: React.FC<{
+export const ContactFieldset = ({
+  defaultEmailAddress,
+}: {
   defaultEmailAddress?: string;
-}> = ({ defaultEmailAddress }) => (
-  <Fieldset legend="Contact">
+}) => (
+  <Fieldset legend="Contact & Updates">
     <TextField
       label="Email address"
       name="email"

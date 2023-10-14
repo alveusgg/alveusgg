@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import React from "react";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -48,18 +47,18 @@ const staff = {
       <>
         <p>
           Kayla graduated from college with a degree in biology and a desire to
-          see the world. Her travels eventually found her in Alaska where she
+          see the world. Her travels eventually found her in Alaska, where she
           realized that animal care and conservation was a cause worth staying
-          for. Since Alaska she has traveled to Nepal where she developed an
+          for. Since Alaska, she has traveled to Nepal where she developed an
           unparalleled love and respect for vultures. That interest in birds of
-          prey took her to Tennessee and the American Eagle Foundation where
+          prey took her to Tennessee and the American Eagle Foundation, where
           training became her primary interest and passion. While she
           specializes in caring for and training birds of prey, Kayla is
           dedicated to and eager to learn about any species she can. She
           believes training is an integral part of animal welfare and is excited
           to build relationships with the Alveus ambassadors to showcase their
           personalities and inspire dedication to their wild counterparts across
-          an ever growing online audience.
+          an ever-growing online audience.
         </p>
       </>
     ),
@@ -72,7 +71,7 @@ const staff = {
       <>
         <p>
           Ella started volunteering at a local wildlife rehabilitation center
-          during high school. After a year of volunteering she began working at
+          during high school. After a year of volunteering, she began working at
           the center as a wildlife care coordinator. As part of her job, Ella
           communicated with the public when they found potentially injured, ill
           or orphaned wildlife. She came to realize how important the education
@@ -166,7 +165,7 @@ const AboutStaffPage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="flex w-full flex-col gap-4 pb-16 pt-4 md:w-2/5 md:py-24">
+        <div className="flex basis-full flex-col gap-4 pb-16 pt-4 xl:basis-1/2 xl:py-24">
           <Heading className="my-0">Alveus Staff</Heading>
           <p className="text-lg">
             The staff at Alveus all work at our facility in Texas, providing
@@ -181,8 +180,8 @@ const AboutStaffPage: NextPage = () => {
           </p>
         </div>
 
-        <div className="w-full max-w-2xl p-4 pt-8 md:mx-0 md:w-3/5 md:pt-4">
-          <Lightbox>
+        <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4">
+          <Lightbox className="mx-auto max-w-2xl xl:mr-0">
             {({ Trigger }) => (
               <Trigger videoId="7DvtjAqmWl8">
                 <Preview videoId="7DvtjAqmWl8" />

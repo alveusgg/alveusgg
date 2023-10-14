@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import React from "react";
+import { type ReactNode } from "react";
 
 import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab } from "@/utils/string-case";
@@ -11,6 +11,7 @@ import Heading from "@/components/content/Heading";
 import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
 
+import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
 import valentines2023Video from "@/assets/events/valentines-2023.mp4";
 import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
@@ -27,10 +28,59 @@ type Event = {
   date: Date;
   video: Video;
   stats: Record<string, { title: string; stat: string }>;
-  info: React.ReactNode;
+  info: ReactNode;
 };
 
 const events = {
+  summerCamp2023: {
+    name: "Summer Camp 2023",
+    date: new Date("2023-07-21"),
+    video: summerCamp2023Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$14,070",
+      },
+      uniqueViewers: {
+        title: "Unique viewers tuned in",
+        stat: "414,000",
+      },
+      craftsAuctioned: {
+        title: "Summer crafts auctioned off",
+        stat: "16",
+      },
+      minutesStreamed: {
+        title: "Minutes streamed live",
+        stat: "1,495",
+      },
+    },
+    info: (
+      <>
+        <p>
+          A 24-hour-long livestream event, featuring many of the Alveus staff
+          camping in the Session Yard at Alveus. There were plenty of activities
+          for the staff to participate in, including an archery competition to
+          start the event off, a water balloon fight later in the day, cooking
+          dinner around a campfire, late-night beer pong and feeding the pasture
+          with a catapult.
+        </p>
+        <p>
+          After camping overnight, still on the stream, the event ended with a
+          craft auction where viewers could bid and donate on 16 different
+          crafts made by the staff for the event, including multiple friendship
+          bracelets, two different Summer Camp paintings, a few
+          ambassador-themed hats, two hand-crafted pet rocks, a rubber chicken
+          and the Summer Camp Spirit Stick itself.
+        </p>
+        <p>
+          Over the course of the 24-hour stream, a total of $14,070 was raised
+          for Alveus Sanctuary, with $6,291 of that coming from the craft
+          auction. Thank you to everyone that watched the stream, and to
+          everyone that donated to support the sanctuary!
+        </p>
+      </>
+    ),
+  },
   artAuction2023: {
     name: "Art Auction 2023",
     date: new Date("2023-04-22"),
@@ -66,7 +116,7 @@ const events = {
         </p>
         <p>
           The event raised $63,019 for Alveus Sanctuary over the course of the
-          3.5-hour long event, with $31,500 of that from an incredibly generous
+          3.5-hour-long event, with $31,500 of that from an incredibly generous
           donation by Rotary at the end of the event. Georgie was our most
           successful ambassador artist this year, with his four paintings
           raising $4,225 in donations, with the top one selling for $2.1k. Thank
@@ -102,9 +152,9 @@ const events = {
         <p>
           To celebrate Valentine&apos;s Day, we hosted a short livestream
           fundraiser. Viewers were able to donate $25 or more to get a signed
-          postcard for the event, and the chance to win a ambassador plushie
+          postcard for the event, and the chance to win an ambassador plushie
           hand-crafted by Maya. We were able to raise $40,076 for Alveus over
-          the 3-hour long event, with 596 donors claiming a postcard.
+          the 3-hour-long event, with 596 donors claiming a postcard.
         </p>
         <p>
           Each donation of $25 or more would also include some 3D-printed
@@ -182,7 +232,7 @@ const events = {
     info: (
       <>
         <p>
-          The halloween event at Alveus was a massive success, with 34 creators
+          The Halloween event at Alveus was a massive success, with 34 creators
           from across the streaming space descending on the sanctuary to help
           raise money for the animals. During the event, anyone that donated
           $250 or more had their name written on the side wall of the Nutrition
@@ -194,7 +244,7 @@ const events = {
           Two teams were formed from the creators, and they competed in many
           activities around the property throughout the event. A game of apple
           bobbing started the evening off, followed by hale bale throwing to see
-          which team had better technique. A little while later we had a game of
+          which team had better technique. A little while later, we had a game of
           badminton on the grass, followed by trivia and then the dunk tank. We
           rounded off the evening with some mud wrestling. Thank you to all the
           creators that joined us, and everyone who watched and donated!
@@ -226,8 +276,8 @@ const events = {
     },
     info: (
       <p>
-        The event that started it all! A 20-hour long mega-stream with a whole
-        bunch of donation goals along the way, aiming to raise as much money as
+        The event that started it all! A 20-hour-long mega-stream with a bunch 
+        of donation goals along the way, aiming to raise as much money as
         possible to kick-start Alveus. Each donor that donated $100 or more got
         their name engraved on a golden leaf that form part of six donor trees
         now affixed to the back of the studio building. The final goal for the
@@ -296,7 +346,7 @@ const EventsPage: NextPage = () => {
                 "flex flex-wrap gap-y-8 pb-12 pt-8",
                 idx === 0 ? "lg:pb-16" : "lg:py-16",
                 idx !== arr.length - 1 &&
-                  "border-b-2 border-alveus-green-300/25"
+                  "border-b-2 border-alveus-green-300/25",
               )}
             >
               <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
@@ -331,7 +381,7 @@ const EventsPage: NextPage = () => {
               <div
                 className={classes(
                   "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
-                  idx % 2 === 0 && "lg:order-first"
+                  idx % 2 === 0 && "lg:order-first",
                 )}
               >
                 <VideoPlayer

@@ -1,7 +1,7 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import React, { useEffect, useId, useMemo } from "react";
+import { useEffect, useId, useMemo, Fragment } from "react";
 
 import ambassadors, {
   type Ambassador,
@@ -39,23 +39,7 @@ import {
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
-
-const parseDate = (date: string | null): string => {
-  if (!date) return "Unknown";
-
-  const [year, month, day] = date.split("-");
-  const parsed = new Date(
-    Number(year),
-    Number(month || 1) - 1,
-    Number(day || 1)
-  );
-
-  return parsed.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: month ? "long" : undefined,
-    day: day ? "numeric" : undefined,
-  });
-};
+import { formatPartialDateString } from "@/utils/datetime";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
@@ -77,7 +61,7 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
-  context
+  context,
 ) => {
   const ambassadorName = context.params?.ambassadorName;
   if (typeof ambassadorName !== "string") return { notFound: true };
@@ -104,6 +88,78 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   merchImage,
   animalQuest,
 }) => {
+  const stats = useMemo(
+    () => [
+      {
+        title: "Species",
+        value: (
+          <>
+            <p>{ambassador.species}</p>
+            <p className="italic text-alveus-green-700">
+              {ambassador.scientific} (
+              <Link
+                href={`/ambassadors#classification:${convertToSlug(
+                  getClassification(ambassador.class),
+                )}`}
+              >
+                {getClassification(ambassador.class)}
+              </Link>
+              )
+            </p>
+          </>
+        ),
+      },
+      {
+        title: "Conservation Status",
+        value: (
+          <p>
+            {ambassador.iucn.id ? (
+              <Link
+                href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${ambassador.iucn.id}`}
+                external
+              >
+                IUCN: {getIUCNStatus(ambassador.iucn.status)}
+              </Link>
+            ) : (
+              <>IUCN: {getIUCNStatus(ambassador.iucn.status)}</>
+            )}
+          </p>
+        ),
+      },
+      {
+        title: "Native To",
+        value: <p>{ambassador.native.text}</p>,
+      },
+      {
+        title: "Date of Birth",
+        value: <p>{formatPartialDateString(ambassador.birth)}</p>,
+      },
+      {
+        title: "Sex",
+        value: <p>{ambassador.sex || "Unknown"}</p>,
+      },
+      {
+        title: "Arrived at Alveus",
+        value: <p>{formatPartialDateString(ambassador.arrival)}</p>,
+      },
+      {
+        title: "Enclosure",
+        value: (
+          <p>
+            <Link
+              href={`/ambassadors#enclosures:${camelToKebab(
+                ambassador.enclosure,
+              )}`}
+            >
+              {enclosure.name}
+            </Link>
+          </p>
+        ),
+      },
+    ],
+    [ambassador, enclosure],
+  );
+
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
@@ -145,7 +201,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           ),
         };
       }, {}),
-    [images]
+    [images],
   );
 
   return (
@@ -192,85 +248,19 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <div className="mb-4 flex flex-wrap">
-              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>Species:</Heading>
-
-                <div className="ml-4">
-                  <p className="text-xl">{ambassador.species}</p>
-                  <p className="text-xl italic text-alveus-green-700">
-                    {ambassador.scientific} (
-                    <Link
-                      href={`/ambassadors#classification:${convertToSlug(
-                        getClassification(ambassador.class)
-                      )}`}
-                    >
-                      {getClassification(ambassador.class)}
-                    </Link>
-                    )
-                  </p>
-                </div>
-              </div>
-
-              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>Conservation Status:</Heading>
-
-                <div className="ml-4">
-                  <p className="text-xl">
-                    {ambassador.iucn.id ? (
-                      <Link
-                        href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${ambassador.iucn.id}`}
-                        external
-                      >
-                        IUCN: {getIUCNStatus(ambassador.iucn.status)}
-                      </Link>
-                    ) : (
-                      <>IUCN: {getIUCNStatus(ambassador.iucn.status)}</>
-                    )}
-                  </p>
-                </div>
-              </div>
-
-              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>Sex:</Heading>
-
-                <div className="ml-4">
-                  <p className="text-xl">{ambassador.sex || "Unknown"}</p>
-                </div>
-              </div>
-
-              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>Date of Birth:</Heading>
-
-                <div className="ml-4">
-                  <p className="text-xl">{parseDate(ambassador.birth)}</p>
-                </div>
-              </div>
-
-              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>Arrived at Alveus:</Heading>
-
-                <div className="ml-4">
-                  <p className="text-xl">{parseDate(ambassador.arrival)}</p>
-                </div>
-              </div>
-
-              <div className="basis-full py-2 lg:basis-1/2 lg:px-2">
-                <Heading level={2}>Enclosure:</Heading>
-
-                <div className="ml-4">
-                  <p className="text-xl">
-                    <Link
-                      href={`/ambassadors#enclosures:${camelToKebab(
-                        ambassador.enclosure
-                      )}`}
-                    >
-                      {enclosure.name}
-                    </Link>
-                  </p>
-                </div>
-              </div>
-            </div>
+            <dl className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+              {stats.map(({ title, value }, idx) => (
+                <Fragment key={title}>
+                  {idx !== 0 && (
+                    <div className="col-span-full my-2 h-px bg-alveus-green opacity-10" />
+                  )}
+                  <dt className="my-2 self-center text-2xl font-bold">
+                    {title}
+                  </dt>
+                  <dd className="mx-2 my-2 self-center text-xl">{value}</dd>
+                </Fragment>
+              ))}
+            </dl>
 
             {animalQuest && (
               <Link

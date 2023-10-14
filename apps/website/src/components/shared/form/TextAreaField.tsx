@@ -1,5 +1,4 @@
-import type { ReactNode } from "react";
-import React, { useRef } from "react";
+import { useRef, type ReactNode } from "react";
 import type { AriaTextFieldOptions } from "react-aria";
 import { useTextField } from "react-aria";
 import { default as TextareaAutosize } from "react-textarea-autosize";
@@ -27,7 +26,7 @@ export function TextAreaField(props: TextAreaFieldProps) {
       <TextareaAutosize
         className={classes(
           "h-[calc(1em+0.5rem)] max-h-[500px] min-h-[calc(1em+0.5rem)] w-full resize-y rounded-sm border border-gray-700 bg-white p-1 px-2 text-black",
-          props.inputClassName
+          props.inputClassName,
         )}
         {...textareaProps}
         ref={ref}

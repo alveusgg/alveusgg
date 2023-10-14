@@ -19,7 +19,7 @@ export const permissions = {
     requiredRole: "forms",
   },
   manageTwitchApi: {
-    requiresSuperUser: true,
+    requiredRole: "twitchApi",
   },
   manageUsersAndRoles: {
     requiresSuperUser: true,
@@ -31,7 +31,7 @@ export const permissions = {
 
 export function checkRolesGivePermission(
   roles: string[],
-  permissionConfig: PermissionConfig
+  permissionConfig: PermissionConfig,
 ) {
   return permissionConfig.requiredRole
     ? roles.includes(permissionConfig.requiredRole)

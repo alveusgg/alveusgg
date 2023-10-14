@@ -1,4 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+  type MouseEvent as ReactMouseEvent,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -9,21 +16,21 @@ import IconChevronRight from "@/icons/IconChevronRight";
 
 type CarouselProps = {
   id?: string;
-  items: Record<string, React.ReactNode>;
+  items: Record<string, ReactNode>;
   auto?: number | null;
   className?: string;
   wrapperClassName?: string;
   itemClassName?: string;
 };
 
-const Carousel: React.FC<CarouselProps> = ({
+const Carousel = ({
   items,
   auto = 2000,
   id,
   className = "",
   wrapperClassName = "",
   itemClassName = "basis-full sm:basis-1/2 lg:basis-1/3 p-4",
-}) => {
+}: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
 
   // Allow the user to scroll to the next/previous image
@@ -38,7 +45,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
     // Determine the new scroll offset
     let offset = Math.round(
-      current.scrollLeft + width * (direction === "left" ? -1 : 1)
+      current.scrollLeft + width * (direction === "left" ? -1 : 1),
     );
 
     // If we're half a width before the start, scroll to the end
@@ -81,7 +88,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
   // When we've scrolled, track if we've hit the start or end (and pause auto-scroll if it was the user)
   const [state, setState] = useState<"none" | "start" | "scrolling" | "end">(
-    "start"
+    "start",
   );
   const scrolled = useCallback(() => {
     const { current } = ref;
@@ -126,7 +133,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
   // Allow the user to drag to scroll
   const drag = useCallback(
-    (event: React.MouseEvent<HTMLDivElement>) => {
+    (event: ReactMouseEvent<HTMLDivElement>) => {
       const { current } = ref;
       if (!current) return;
 
@@ -189,7 +196,7 @@ const Carousel: React.FC<CarouselProps> = ({
       current.style.cursor = "grabbing";
       current.style.scrollSnapType = "none";
     },
-    [interacted]
+    [interacted],
   );
 
   // Run the auto scroll if requested, and not paused, and not preferring reduced motion
@@ -208,7 +215,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         className={classes(
           "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
-          state === "none" && "hidden"
+          state === "none" && "hidden",
         )}
         type="button"
         onClick={() => {
@@ -228,7 +235,7 @@ const Carousel: React.FC<CarouselProps> = ({
         className={classes(
           "scrollbar-none flex flex-grow snap-x snap-mandatory flex-nowrap overflow-x-auto",
           wrapperClassName,
-          state === "none" ? "justify-evenly" : "cursor-grab"
+          state === "none" ? "justify-evenly" : "cursor-grab",
         )}
         ref={ref}
         onScroll={scrolled}
@@ -248,7 +255,7 @@ const Carousel: React.FC<CarouselProps> = ({
       <button
         className={classes(
           "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
-          state === "none" && "hidden"
+          state === "none" && "hidden",
         )}
         type="button"
         onClick={() => {

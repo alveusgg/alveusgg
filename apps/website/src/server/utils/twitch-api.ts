@@ -1,10 +1,12 @@
 import { z } from "zod";
 import fetch from "node-fetch";
+
 import { env } from "@/env/index.mjs";
+
 import {
   ExpiredAccessTokenError,
   getClientCredentialsAccessToken,
-} from "./oauth2";
+} from "@/server/utils/oauth2";
 
 export type AuthHeaders = {
   "Client-Id": string;
@@ -24,7 +26,7 @@ async function getApplicationAuthHeaders() {
   const accessToken = await getClientCredentialsAccessToken(
     "twitch",
     clientId,
-    clientSecret
+    clientSecret,
   );
   if (accessToken === undefined) {
     throw Error("Twitch API: Could not obtain OAuth access token!");
@@ -92,7 +94,7 @@ const streamsResponseSchema = z.object({
       thumbnail_url: z.string(),
       tag_ids: z.array(z.string()),
       is_mature: z.boolean(),
-    })
+    }),
   ),
   pagination: paginationSchema,
 });
@@ -105,7 +107,7 @@ export async function getSubscriptions() {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -113,7 +115,12 @@ export async function getSubscriptions() {
   }
 
   const json = await response.json();
-  return await subscriptionsResponseSchema.parseAsync(json);
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get subscriptions!");
+  }
+
+  return subscriptionsResponseSchema.parseAsync(json);
 }
 
 export async function removeSubscription(id: string) {
@@ -126,7 +133,7 @@ export async function removeSubscription(id: string) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -141,7 +148,7 @@ export async function createSubscription(
   type: string,
   user_id: string,
   callback: string,
-  secret: string
+  secret: string,
 ) {
   const response = await fetch(
     `https://api.twitch.tv/helix/eventsub/subscriptions`,
@@ -163,7 +170,7 @@ export async function createSubscription(
           secret: secret,
         },
       }),
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -184,7 +191,7 @@ export async function getSubscriptionsForUser(userId: string) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -197,7 +204,7 @@ export async function getSubscriptionsForUser(userId: string) {
     throw new Error("Could not get subscription!");
   }
 
-  return await subscriptionsResponseSchema.parseAsync(json);
+  return subscriptionsResponseSchema.parseAsync(json);
 }
 
 export async function getStreamsForChannels(channelIds: Array<string>) {
@@ -210,7 +217,7 @@ export async function getStreamsForChannels(channelIds: Array<string>) {
       headers: {
         ...(await getApplicationAuthHeaders()),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -223,7 +230,7 @@ export async function getStreamsForChannels(channelIds: Array<string>) {
     throw new Error("Could not get streams!");
   }
 
-  return await streamsResponseSchema.parseAsync(json);
+  return streamsResponseSchema.parseAsync(json);
 }
 
 const channelsFollowedResponseSchema = z.object({
@@ -234,7 +241,7 @@ const channelsFollowedResponseSchema = z.object({
       broadcaster_login: z.string(),
       broadcaster_name: z.string(),
       followed_at: z.string(),
-    })
+    }),
   ),
   pagination: paginationSchema,
 });
@@ -242,7 +249,7 @@ const channelsFollowedResponseSchema = z.object({
 export async function getUserChannelsFollowed(
   userAccessToken: string,
   userId: string,
-  broadcasterId?: string
+  broadcasterId?: string,
 ) {
   const params = [["user_id", userId]];
 
@@ -252,14 +259,14 @@ export async function getUserChannelsFollowed(
 
   const response = await fetch(
     `https://api.twitch.tv/helix/channels/followed?${new URLSearchParams(
-      params
+      params,
     )}`,
     {
       method: "GET",
       headers: {
         ...(await getUserAuthHeaders(userAccessToken)),
       },
-    }
+    },
   );
 
   if (response.status === 403) {
@@ -272,26 +279,99 @@ export async function getUserChannelsFollowed(
     throw new Error("Could not get channel follows status!");
   }
 
-  return await channelsFollowedResponseSchema.parseAsync(json);
+  return channelsFollowedResponseSchema.parseAsync(json);
 }
 
 export async function getUserFollowsBroadcaster(
   userAccessToken: string,
   userId: string,
-  broadcasterId: string
+  broadcasterId: string,
 ) {
   try {
     const res = await getUserChannelsFollowed(
       userAccessToken,
       userId,
-      broadcasterId
+      broadcasterId,
     );
     if (res.total > 0) {
       return true;
     }
   } catch (e) {
     console.error(e);
+    return true;
   }
 
   return false;
+}
+
+const usersResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string(),
+      login: z.string(),
+      display_name: z.string(),
+      type: z.enum(["staff", "admin", "global_mod", ""]),
+      broadcaster_type: z.enum(["partner", "affiliate", ""]),
+      description: z.string(),
+      profile_image_url: z.string(),
+      offline_image_url: z.string(),
+      view_count: z.number(),
+      email: z.string().email().optional(),
+      created_at: z.string(),
+    }),
+  ),
+});
+
+export async function getUserById(channelId: string) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/users?${new URLSearchParams({
+      id: channelId,
+    })}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getApplicationAuthHeaders()),
+      },
+    },
+  );
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get broadcaster name!");
+  }
+
+  const data = await usersResponseSchema.parseAsync(json);
+  return data?.data?.[0];
+}
+
+export async function getUserByName(userName: string) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/users?${new URLSearchParams({
+      login: userName,
+    })}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getApplicationAuthHeaders()),
+      },
+    },
+  );
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get broadcaster name!");
+  }
+
+  const data = await usersResponseSchema.parseAsync(json);
+  return data?.data?.[0];
 }

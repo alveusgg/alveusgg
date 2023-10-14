@@ -1,7 +1,6 @@
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type FormEvent } from "react";
 import { Duration } from "luxon";
 
-import { env } from "@/env/index.mjs";
 import {
   notificationCategories,
   notificationLinkSuggestions,
@@ -12,9 +11,6 @@ import {
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
-
-import logoImage from "@/assets/push-image/logo.png";
-import defaultBgImage from "@/assets/push-image/default.png";
 
 import IconLoading from "@/icons/IconLoading";
 
@@ -28,8 +24,6 @@ import {
 } from "@/components/shared/form/UploadAttachmentsField";
 import { useFileUpload } from "@/components/shared/hooks/useFileUpload";
 import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
-import { PushImageCanvas } from "@/components/notifications/PushImageCanvas";
-import { Headline } from "@/components/admin/Headline";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
@@ -58,7 +52,7 @@ export function SendNotificationForm() {
     trpc.adminNotifications.createFileUpload.useMutation();
   const upload = useFileUpload<AllowedFileTypes>(
     (signature) => createFileUpload.mutateAsync(signature),
-    { allowedFileTypes }
+    { allowedFileTypes },
   );
   const imageAttachmentData = useUploadAttachmentsData();
   const image = imageAttachmentData.files[0];
@@ -71,7 +65,7 @@ export function SendNotificationForm() {
   const [isScheduled, setIsScheduled] = useState(false);
 
   const submit = useCallback(
-    (event: React.FormEvent<HTMLFormElement>) => {
+    (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const imageUrl = image?.status === "upload.done" ? image.url : undefined;
@@ -93,14 +87,8 @@ export function SendNotificationForm() {
         isDiscord: channels.includes("discord"),
       });
     },
-    [image, isScheduled, createNotification]
+    [image, isScheduled, createNotification],
   );
-
-  const previewImageUrl =
-    (image &&
-      ((image.status === "upload.pending" && image.dataURL) ||
-        (image.status === "upload.done" && image.url))) ||
-    defaultBgImage.src;
 
   return (
     <div>
@@ -203,7 +191,7 @@ export function SendNotificationForm() {
             <div
               className={classes(
                 `flex flex-wrap gap-4 border-l pl-3`,
-                !isScheduled && "hidden"
+                !isScheduled && "hidden",
               )}
             >
               <LocalDateTimeField
@@ -233,7 +221,7 @@ export function SendNotificationForm() {
                   >
                     {options.label}
                   </CheckboxField>
-                )
+                ),
               )}
             </div>
           </Fieldset>
@@ -243,37 +231,6 @@ export function SendNotificationForm() {
           </Button>
         </div>
       </form>
-
-      {env.NEXT_PUBLIC_FEATURE_NOTIFICATIONS_ADVANCED && (
-        <div className="mt-10 flex gap-4 border-t border-black/50 pt-5">
-          <div className="flex-1">
-            <Headline>OpenGraph (Twitter, Facebook etc.)</Headline>
-
-            <div className="overflow-hidden rounded-xl">
-              <PushImageCanvas
-                title={title}
-                text={text}
-                backgroundImageUrl={previewImageUrl}
-                logoImageUrl={logoImage.src}
-              />
-            </div>
-          </div>
-          <div className="flex-1">
-            <Headline>Instagram</Headline>
-
-            <div className="overflow-hidden rounded-xl">
-              <PushImageCanvas
-                title={title}
-                text={text}
-                backgroundImageUrl={previewImageUrl}
-                logoImageUrl={logoImage.src}
-                width={1080}
-                height={1080}
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

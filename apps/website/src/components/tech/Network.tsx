@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import {
   Handle,
   Position,
@@ -47,6 +47,10 @@ const nodeTypes: {
     container: "border-blue-700",
     eyebrow: { name: "Network Switch", color: "text-blue-700" },
   },
+  converter: {
+    container: "border-blue-700 border-dashed",
+    eyebrow: { name: "Media Converter", color: "text-blue-700" },
+  },
   accessPoint: {
     container: "border-blue-400",
     eyebrow: { name: "WiFi Access Point", color: "text-blue-400" },
@@ -59,15 +63,19 @@ const nodeTypes: {
     container: "border-green-400",
     eyebrow: { name: "Microphone", color: "text-green-400" },
   },
+  speaker: {
+    container: "border-green-400",
+    eyebrow: { name: "Speaker", color: "text-green-400" },
+  },
 };
 
-const NetworkNode: React.FC<NodeProps<Data>> = ({
+const NetworkNode = ({
   id,
   data,
   targetPosition = Position.Top,
   sourcePosition = Position.Bottom,
   isConnectable,
-}) => {
+}: NodeProps<Data>) => {
   // Get the source and target edges
   const edges = useEdges();
   let targetEdge, sourceEdge;
@@ -88,14 +96,14 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
             rel: "noopener noreferrer",
           }
         : {},
-    [data.item.url]
+    [data.item.url],
   );
 
   return (
     <Element
       className={classes(
         "group flex h-20 w-44 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
-        nodeTypes[data.item.type].container
+        nodeTypes[data.item.type].container,
       )}
       tabIndex={-1}
       {...linkProps}
@@ -128,7 +136,7 @@ const NetworkNode: React.FC<NodeProps<Data>> = ({
           <span
             className={classes(
               "shrink overflow-hidden text-ellipsis whitespace-nowrap",
-              data.item.url && "group-hover:underline"
+              data.item.url && "group-hover:underline",
             )}
           >
             {data.item.model}
@@ -174,7 +182,7 @@ const edgeTypes: {
   },
 };
 
-const NetworkEdge: React.FC<EdgeProps> = ({
+const NetworkEdge = ({
   source,
   sourceX,
   sourceY,
@@ -183,7 +191,7 @@ const NetworkEdge: React.FC<EdgeProps> = ({
   targetX,
   targetY,
   targetPosition,
-}) => {
+}: EdgeProps) => {
   // Get the source and target nodes
   const nodes = useNodes<Data>();
   let sourceNode, targetNode;
@@ -252,7 +260,7 @@ const NetworkEdge: React.FC<EdgeProps> = ({
         ref={ref}
         className={classes(
           edgeTypes[targetConnection.type].stroke.color,
-          !hovered && !focused && "opacity-75"
+          !hovered && !focused && "opacity-75",
         )}
       >
         <BaseEdge
@@ -284,9 +292,12 @@ const NetworkEdge: React.FC<EdgeProps> = ({
   );
 };
 
-const NetworkList: React.FC<{ items: NetworkItem[]; className?: string }> = ({
+const NetworkList = ({
   items,
   className,
+}: {
+  items: NetworkItem[];
+  className?: string;
 }) => (
   <ul className={className}>
     {items.map((item) => (

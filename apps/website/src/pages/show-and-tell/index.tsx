@@ -1,4 +1,12 @@
-import React, { useCallback, useMemo, useRef, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type WheelEvent,
+  type KeyboardEventHandler,
+} from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -52,6 +60,12 @@ export const getStaticProps = async () => {
   };
 };
 
+const isShowAndTellEntry = (
+  element: Element | null | undefined,
+): element is HTMLElement =>
+  element instanceof HTMLElement &&
+  element.hasAttribute("data-show-and-tell-entry");
+
 const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   entries: initialEntries,
   nextCursor,
@@ -64,7 +78,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         pages: [{ items: initialEntries, nextCursor: nextCursor }],
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-    }
+    },
   );
 
   const [isPresentationView, setIsPresentationView] = useState(false);
@@ -117,12 +131,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }
       }
     },
-    [checkPosition]
+    [checkPosition],
   );
   const intersectionObserverOpts = useMemo(() => ({ threshold: 0.55 }), []);
   const registerObserveElement = useIntersectionObserver(
     onEntryIntersection,
-    intersectionObserverOpts
+    intersectionObserverOpts,
   );
 
   // Scroll an element into the center of the viewport
@@ -133,16 +147,19 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       behavior: "smooth",
       block: "center",
     });
+    element.focus({ preventScroll: true });
   }, []);
   const scrollToPrev = useCallback(() => {
     const prev = currentEntryElementRef.current?.previousElementSibling;
-    if (!(prev instanceof HTMLElement)) return;
-    scrollTo(prev);
+    if (isShowAndTellEntry(prev)) {
+      scrollTo(prev);
+    }
   }, [scrollTo]);
   const scrollToNext = useCallback(() => {
     const next = currentEntryElementRef.current?.nextElementSibling;
-    if (!(next instanceof HTMLElement)) return;
-    scrollTo(next);
+    if (isShowAndTellEntry(next)) {
+      scrollTo(next);
+    }
   }, [scrollTo]);
 
   // Track when the user is manually scrolling
@@ -167,7 +184,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const scrollDebounce = 250; // Milliseconds to wait before snapping
   const scrollThreshold = 0.1; // multiplier of the viewport height
   const onScroll = useCallback(
-    (e: React.WheelEvent<HTMLDivElement>) => {
+    (e: WheelEvent<HTMLDivElement>) => {
       // Ignore the event if we're not in presentation view,
       // or if we're not currently on an entry,
       // or if the user isn't scrolling
@@ -205,15 +222,17 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 : (scroll.previousElementSibling as HTMLElement);
           }
 
-          // Scroll the element to the center of the viewport
-          scrollTo(scroll);
+          if (isShowAndTellEntry(scroll)) {
+            // Scroll the element to the center of the viewport
+            scrollTo(scroll);
+          }
 
           // Reset the debounce
           scrollTrack.current = undefined;
         }, scrollDebounce),
       };
     },
-    [isPresentationView, scrollTo]
+    [isPresentationView, scrollTo],
   );
 
   const togglePresentationView = useCallback(
@@ -226,7 +245,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       transitionBetweenViews(
         value,
         presentationViewRootElementRef.current,
-        scrollTargetElement
+        scrollTargetElement,
       ).then(() => {
         if (value && currentEntryElementRef.current) {
           // If we're entering presentation view, ensure the entry is aligned
@@ -234,7 +253,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         }
       });
     },
-    [isPresentationView, scrollTo]
+    [isPresentationView, scrollTo],
   );
 
   // Enable presentation view if native fullscreen gets activated, but not if it's deactivated
@@ -245,13 +264,59 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           togglePresentationView(currentEntryElementRef.current, true);
         }
       },
-      [togglePresentationView]
-    )
+      [togglePresentationView],
+    ),
   );
 
   const handleTogglePresentationView = useCallback(() => {
     togglePresentationView(currentEntryElementRef.current, !isPresentationView);
   }, [isPresentationView, togglePresentationView]);
+  const entryIdToFocusRef = useRef<string>();
+
+  const handleLoadNext = useCallback(async () => {
+    // Keeping track of the number of pages before starting to load more
+    const pageBefore = entries.data?.pages.length;
+
+    const res = await entries.fetchNextPage();
+
+    const pages = res.data?.pages;
+    if (!pages) return;
+
+    // When loading more, set the focus to the first entry of the newly loaded page
+    // or if no new page was loaded, set the focus to the last entry of the last page,
+    // but we can't focus it directly, because it did not render yet, so we store
+    // the id in a ref.
+    const hasLoadedNewPage = !pageBefore || pages.length > pageBefore;
+    const lastPageItems = pages[pages.length - 1]?.items;
+
+    entryIdToFocusRef.current = hasLoadedNewPage
+      ? lastPageItems?.[0]?.id
+      : lastPageItems?.[lastPageItems.length - 1]?.id;
+  }, [entries]);
+
+  useEffect(() => {
+    // Check if we need to focus an entry after loading more
+    if (entryIdToFocusRef.current) {
+      const element = presentationViewRootElementRef.current?.querySelector(
+        `[data-show-and-tell-entry="${entryIdToFocusRef.current}"]`,
+      );
+      if (isShowAndTellEntry(element)) {
+        scrollTo(element);
+        entryIdToFocusRef.current = undefined;
+      }
+    }
+  }, [entries.data, scrollTo]);
+
+  const handleArrowKeys: KeyboardEventHandler = useCallback(
+    (event) => {
+      if (event.key === "ArrowUp") {
+        scrollToPrev();
+      } else if (event.key === "ArrowDown") {
+        scrollToNext();
+      }
+    },
+    [scrollToPrev, scrollToNext],
+  );
 
   return (
     <>
@@ -292,6 +357,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               ? "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
               : "gap-20 bg-white/0")
           }
+          onKeyDown={handleArrowKeys}
+          tabIndex={-1}
         >
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
@@ -302,7 +369,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 key={entry.id}
                 ref={registerObserveElement}
               />
-            ))
+            )),
           )}
 
           {!isPresentationView && entries.isSuccess && !entries.hasNextPage && (
@@ -312,7 +379,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           {entries.hasNextPage && (
-            <Button onClick={() => entries.fetchNextPage()}>
+            <Button onClick={handleLoadNext}>
               {entries.isFetchingNextPage ? (
                 <>
                   <IconLoading size={20} /> Loading...
@@ -417,7 +484,7 @@ export default ShowAndTellIndexPage;
 async function transitionBetweenViews(
   value: boolean,
   presentationViewRootElement: HTMLElement | null = null,
-  scrollTargetElement: HTMLElement | null = null
+  scrollTargetElement: HTMLElement | null = null,
 ) {
   if (value) {
     // Case 1: Normal view -> Presentation view
@@ -428,7 +495,7 @@ async function transitionBetweenViews(
         presentationViewRootElement.children,
         (child: HTMLElement) => {
           child.style.opacity = "0";
-        }
+        },
       );
     }
 
@@ -465,7 +532,7 @@ async function transitionBetweenViews(
       presentationViewRootElement.children,
       (child: HTMLElement) => {
         child.style.opacity = "1";
-      }
+      },
     );
   }
 }

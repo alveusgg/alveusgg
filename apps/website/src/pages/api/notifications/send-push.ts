@@ -97,8 +97,8 @@ export default createTokenProtectedApiHandler(
         WEB_PUSH_MAX_TTL,
         Math.max(
           0,
-          Math.round((push.expiresAt.getTime() - now.getTime()) / 1000)
-        )
+          Math.round((push.expiresAt.getTime() - now.getTime()) / 1000),
+        ),
       );
 
       const res = await sendWebPushNotification(
@@ -133,7 +133,7 @@ export default createTokenProtectedApiHandler(
           headers: {
             Urgency: getWebPushUrgency(options.urgency),
           },
-        }
+        },
       );
 
       if (res.statusCode) {
@@ -166,9 +166,9 @@ export default createTokenProtectedApiHandler(
             notificationId: options.notificationId,
             subscriptionId: options.subscriptionId,
             failedAt: now,
-          }
+          },
     );
 
     return delivered;
-  }
+  },
 );

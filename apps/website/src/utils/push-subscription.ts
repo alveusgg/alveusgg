@@ -68,7 +68,7 @@ async function getSubscription() {
 }
 
 export function usePushSubscription(
-  notificationsPermission: NotificationPermission | false
+  notificationsPermission: NotificationPermission | false,
 ) {
   const clientSubQuery = useQuery({
     queryKey: ["alveus-push-subscription", notificationsPermission],
@@ -95,7 +95,7 @@ export function usePushSubscription(
         typeof window !== "undefined" &&
         clientSubQuery.status === "success" &&
         endpoint !== undefined,
-    }
+    },
   );
 
   const [tags, setTags] = useState<Record<string, string> | null>(null);
@@ -145,7 +145,7 @@ export function usePushSubscription(
         await utils.pushSubscription.getStatus.invalidate({ endpoint });
       }
     },
-    [endpoint, setTagsMutation, utils.pushSubscription.getStatus]
+    [endpoint, setTagsMutation, utils.pushSubscription.getStatus],
   );
 
   useEffect(() => {
@@ -184,9 +184,9 @@ export function usePushSubscription(
       () =>
         tags ||
         Object.fromEntries(
-          serverQuery.data?.tags.map(({ name, value }) => [name, value]) || []
+          serverQuery.data?.tags.map(({ name, value }) => [name, value]) || [],
         ),
-      [serverQuery.data?.tags, tags]
+      [serverQuery.data?.tags, tags],
     ),
     updateTags,
   };

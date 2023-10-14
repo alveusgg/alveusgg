@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 
 import { createImageUrl } from "@/utils/image";
 
@@ -17,7 +17,7 @@ type VideoProps = {
   threshold?: number;
 };
 
-const Video: React.FC<VideoProps> = ({
+const Video = ({
   autoPlay = false,
   loop = false,
   muted = false,
@@ -27,7 +27,7 @@ const Video: React.FC<VideoProps> = ({
   poster,
   sources,
   threshold = 0.1,
-}) => {
+}: VideoProps) => {
   const [seen, setSeen] = useState(false);
   const observer = useRef<IntersectionObserver>();
   const ref = useCallback(
@@ -52,12 +52,12 @@ const Video: React.FC<VideoProps> = ({
             (entry.target as HTMLVideoElement).pause();
           });
         },
-        { threshold }
+        { threshold },
       );
       obs.observe(node);
       observer.current = obs;
     },
-    [seen, threshold]
+    [seen, threshold],
   );
 
   const computedPoster = poster && createImageUrl({ src: poster, width: 512 });

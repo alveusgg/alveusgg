@@ -20,7 +20,7 @@ type KeyAndNonce = {
 
 export async function computeSecret(
   privateKey: CryptoKey,
-  publicKey: CryptoKey
+  publicKey: CryptoKey,
 ) {
   return crypto.subtle.deriveBits(
     {
@@ -28,7 +28,7 @@ export async function computeSecret(
       public: publicKey,
     },
     privateKey,
-    256
+    256,
   );
 }
 
@@ -40,16 +40,16 @@ export async function HMAC_hash(key: ArrayBuffer, input: ArrayBuffer) {
       key,
       { name: "HMAC", hash: "SHA-256" },
       false,
-      ["sign", "verify"]
+      ["sign", "verify"],
     ),
-    input
+    input,
   );
 }
 
 export async function HKDF_expand(
   pseudoRandomKey: ArrayBuffer,
   info: ArrayBuffer,
-  length: number
+  length: number,
 ) {
   const counterBuffer = new Uint8Array(1);
 
@@ -71,7 +71,7 @@ export async function deriveHmacKey(
   salt: ArrayBuffer,
   inputKeyMaterial: ArrayBuffer,
   info: ArrayBuffer,
-  length: number
+  length: number,
 ) {
   const pseudoRandomKey = await HMAC_hash(salt, inputKeyMaterial);
   return HKDF_expand(pseudoRandomKey, info, length);
@@ -88,7 +88,7 @@ export async function deriveKeyAndNonce(params: {
     params.dh,
     { name: "ECDH", namedCurve: "P-256" },
     true,
-    []
+    [],
   );
 
   const secret = await deriveHmacKey(
@@ -99,7 +99,7 @@ export async function deriveKeyAndNonce(params: {
       params.dh,
       await crypto.subtle.exportKey("raw", params.localKeypair.publicKey),
     ]),
-    SHA_256_LENGTH
+    SHA_256_LENGTH,
   );
 
   const pseudoRandomKey = await HMAC_hash(params.salt, secret);
@@ -107,12 +107,12 @@ export async function deriveKeyAndNonce(params: {
     key: await HKDF_expand(
       pseudoRandomKey,
       new TextEncoder().encode("Content-Encoding: aes128gcm\0"),
-      KEY_LENGTH
+      KEY_LENGTH,
     ),
     nonce: await HKDF_expand(
       pseudoRandomKey,
       new TextEncoder().encode("Content-Encoding: nonce\0"),
-      NONCE_LENGTH
+      NONCE_LENGTH,
     ),
   };
 }
@@ -133,7 +133,7 @@ export async function encryptRecord(
   counter: number,
   buffer: ArrayBuffer,
   pad = 0,
-  last = false
+  last = false,
 ) {
   pad = pad || 0;
   const iv = generateNonce(keyAndNonce.nonce, counter);
@@ -146,7 +146,7 @@ export async function encryptRecord(
       length: 128,
     },
     true,
-    ["encrypt", "decrypt"]
+    ["encrypt", "decrypt"],
   );
 
   const padding = new Uint8Array(pad + PAD_SIZE);
@@ -160,7 +160,7 @@ export async function encryptRecord(
       iv,
     },
     aesKey,
-    concatArrayBuffers([buffer, paddingBuffer])
+    concatArrayBuffers([buffer, paddingBuffer]),
   );
 }
 
@@ -176,7 +176,7 @@ export async function createCipherText(
   localPublicKey: CryptoKey,
   salt: Uint8Array,
   payload: Uint8Array,
-  keyAndNonce: KeyAndNonce
+  keyAndNonce: KeyAndNonce,
 ) {
   const overhead = PAD_SIZE + TAG_LENGTH;
   const recordSize = 4096;
@@ -207,8 +207,8 @@ export async function createCipherText(
         counter++,
         payload.subarray(start, end),
         recordPad,
-        isLast
-      )
+        isLast,
+      ),
     );
 
     if (isLast) break;
@@ -222,26 +222,26 @@ export async function createCipherText(
 export async function encryptContent(
   userPublicKey: string,
   userPrivateKey: string,
-  payload: Uint8Array
+  payload: Uint8Array,
 ) {
   const dh = decodeBase64UrlToArrayBuffer(userPublicKey);
   if (dh.length !== 65) {
     throw new Error(
-      "The subscription p256dh value should be exactly 65 bytes long."
+      "The subscription p256dh value should be exactly 65 bytes long.",
     );
   }
 
   const authSecret = decodeBase64UrlToArrayBuffer(userPrivateKey);
   if (authSecret.length < 16) {
     throw new Error(
-      "The subscription auth key should be at least 16 bytes long"
+      "The subscription auth key should be at least 16 bytes long",
     );
   }
 
   const localKeypair = await crypto.subtle.generateKey(
     { name: "ECDH", namedCurve: "P-256" },
     true,
-    ["deriveKey", "deriveBits"]
+    ["deriveKey", "deriveBits"],
   );
   const salt = crypto.getRandomValues(new Uint8Array(16));
   const keyAndNonce = await deriveKeyAndNonce({

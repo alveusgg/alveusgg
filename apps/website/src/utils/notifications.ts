@@ -80,7 +80,7 @@ export const notificationHelpEntries = {
 
 export function sendWelcomeNotification(
   permission: "default" | "denied" | "granted",
-  swr?: ServiceWorkerRegistration | null
+  swr?: ServiceWorkerRegistration | null,
 ) {
   // If the user accepts, let's create a notification
   if (permission === "granted") {

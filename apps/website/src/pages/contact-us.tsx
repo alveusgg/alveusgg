@@ -1,11 +1,9 @@
 import { type NextPage } from "next";
-import React from "react";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
-import socials from "@/components/shared/data/socials";
 
 const ContactUsPage: NextPage = () => {
   return (
@@ -20,43 +18,87 @@ const ContactUsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section
-        className="flex min-h-[85vh] flex-grow items-center"
+        className="flex min-h-[85vh] flex-grow"
         containerClassName="flex flex-col items-center text-center text-alveus-green"
       >
-        <Heading className="text-6xl">Contact Us</Heading>
+        <div className="my-auto flex flex-col items-center">
+          <Heading className="text-6xl">Contact Us</Heading>
+          <p className="my-3 text-xl font-semibold">
+            We are not openly hiring.
+          </p>
 
-        <p className="my-3 text-xl font-semibold">
-          <Link href="mailto:maya@alveussanctuary.org">
-            maya@alveussanctuary.org
-          </Link>
-        </p>
+          <p className="my-3 text-xl font-semibold">
+            For business inquiries: <br />
+            <Link href="mailto:TeamAlveus@unitedtalent.com">
+              TeamAlveus@unitedtalent.com
+            </Link>
+          </p>
 
-        <p>You can send in a resume to maya@alveussanctuary.org.</p>
-        <p>You will be put on a list for future reference.</p>
+          <div className="flex flex-wrap justify-center gap-x-6">
+            <p className="my-3 text-xl font-semibold">
+              For merch inquiries: <br />
+              <Link href="https://shopalveus.org/pages/contact" external>
+                shopalveus.org/pages/contact
+              </Link>
+            </p>
 
-        <p className="my-3 text-xl font-semibold">We are not openly hiring.</p>
+            <p className="my-3 text-xl font-semibold">
+              For plushie inquiries: <br />
+              <Link href="https://youtooz.com/pages/contact-us" external>
+                youtooz.com/pages/contact-us
+              </Link>
+            </p>
+          </div>
 
-        <p className="my-3 text-xl font-semibold">
-          For business inquiries: <br />
-          <Link href="mailto:TeamAlveus@unitedtalent.com">
-            TeamAlveus@unitedtalent.com
-          </Link>
-        </p>
-
-        <ul className="my-3 flex flex-wrap gap-4">
-          {Object.entries(socials).map(([key, social]) => (
-            <li key={key}>
-              <a
-                className="block rounded-2xl bg-alveus-green p-3 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                href={social.link}
-                target="_blank"
-                rel="noreferrer"
+          <ul className="my-3 flex flex-wrap gap-4">
+            <li>
+              <Link
+                className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                href="/donate"
+                custom
               >
-                <social.icon size={24} />
-              </a>
+                Donate
+              </Link>
             </li>
-          ))}
-        </ul>
+            <li>
+              <Link
+                className="block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                href="/po-box"
+                custom
+              >
+                PO Box
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mt-6 text-sm">
+          <p>
+            For issues with the website or Twitch extension, please open an
+            issue on GitHub:{" "}
+            <Link
+              href="https://github.com/alveusgg/alveusgg/issues/new/choose"
+              external
+            >
+              Website
+            </Link>{" "}
+            or{" "}
+            <Link
+              href="https://github.com/alveusgg/extension/issues/new/choose"
+              external
+            >
+              Twitch Extension
+            </Link>
+          </p>
+
+          <p>
+            If you discover a security vulnerability within the website or
+            Twitch extension, please email us:{" "}
+            <Link href="mailto:opensource@alveussanctuary.org">
+              opensource@alveussanctuary.org
+            </Link>
+          </p>
+        </div>
       </Section>
     </>
   );

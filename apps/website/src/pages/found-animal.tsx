@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Image from "next/image";
 import Section from "@/components/content/Section";
@@ -25,7 +25,7 @@ const FoundAnimalPage: NextPage = () => {
   // Track the current flow state and log of messages
   const [flow, setFlow] = useState<FoundAnimalFlow>(foundAnimal);
   const [log, setLog] = useState<Log[]>(
-    foundAnimal.prompt.map((message) => ({ message, type: "prompt" }))
+    foundAnimal.prompt.map((message) => ({ message, type: "prompt" })),
   );
 
   // Track the current queue of messages to display and the option being loaded
@@ -47,10 +47,10 @@ const FoundAnimalPage: NextPage = () => {
       setLoading(option);
       setLog((prev) => [...prev, { message: option.name, type: "option" }]);
       setQueue(
-        option.flow.prompt.map((message) => ({ message, type: "prompt" }))
+        option.flow.prompt.map((message) => ({ message, type: "prompt" })),
       );
     },
-    [loading]
+    [loading],
   );
 
   // Implement an artificial delay for each message, to make it "natural"
@@ -145,7 +145,7 @@ const FoundAnimalPage: NextPage = () => {
                     log.type === "prompt"
                       ? "self-start bg-alveus-tan-50/75"
                       : "self-end bg-alveus-green-50/75",
-                    "rounded px-2 py-1 text-alveus-green-800"
+                    "rounded px-2 py-1 text-alveus-green-800",
                   )}
                 >
                   {log.message}
@@ -179,7 +179,7 @@ const FoundAnimalPage: NextPage = () => {
                   <button
                     className={classes(
                       !flow.options && "mt-2 self-center py-1",
-                      "px-2 text-alveus-green-400 transition-colors hover:text-alveus-green-800"
+                      "px-2 text-alveus-green-400 transition-colors hover:text-alveus-green-800",
                     )}
                     onClick={reset}
                     type="button"
@@ -205,7 +205,7 @@ const FoundAnimalPage: NextPage = () => {
               There are a bunch of different ways to find a wildlife
               rehabilitator, and it may depend on where you are. A good first
               place to start is by searching online for rehabilitation
-              organisations that are local to you. You can also try calling a
+              organizations that are local to you. You can also try calling a
               local veterinarian who may be able to give you some suggestions
               for who to contact, or you can reach out to your local wildlife
               authority.

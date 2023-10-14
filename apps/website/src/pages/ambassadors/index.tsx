@@ -1,7 +1,13 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type ComponentProps,
+} from "react";
 
 import ambassadors, {
   type AmbassadorKey,
@@ -20,7 +26,10 @@ import {
 import { camelToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
-import { parseAmbassadorDate, sortAmbassadorDate } from "@/utils/datetime";
+import {
+  parsePartialDateString,
+  sortPartialDateString,
+} from "@/utils/datetime";
 import { convertToSlug } from "@/utils/slugs";
 
 import Section from "@/components/content/Section";
@@ -35,7 +44,7 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
-  isActiveAmbassadorEntry
+  isActiveAmbassadorEntry,
 );
 
 // Use a map rather than a group, so we can sort the keys
@@ -60,7 +69,7 @@ const sortByOptions = {
       .sort(
         ([, a], [, b]) =>
           sortAmbassadorClassification(a.class, b.class) ||
-          sortAmbassadorDate(a.arrival, b.arrival)
+          sortPartialDateString(a.arrival, b.arrival),
       )
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
         const classification = getClassification(val.class);
@@ -86,9 +95,9 @@ const sortByOptions = {
   recent: {
     label: "Recent",
     result: [...activeAmbassadors]
-      .sort(([, a], [, b]) => sortAmbassadorDate(a.arrival, b.arrival))
+      .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
       .reduce<AmbassadorsByGroup>((map, [key, val]) => {
-        const year = parseAmbassadorDate(val.arrival)
+        const year = parsePartialDateString(val.arrival)
           ?.getUTCFullYear()
           ?.toString();
         const group = year || "unknown";
@@ -104,7 +113,7 @@ const sortByOptions = {
 type SortByOption = keyof typeof sortByOptions;
 
 const sortByDropdown = Object.fromEntries(
-  Object.entries(sortByOptions).map(([key, val]) => [key, val.label])
+  Object.entries(sortByOptions).map(([key, val]) => [key, val.label]),
 ) as {
   [key in SortByOption]: (typeof sortByOptions)[key]["label"];
 };
@@ -115,10 +124,13 @@ const isSortByOption = (option: string): option is SortByOption =>
 export const ambassadorImageHover =
   "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
 
-const AmbassadorItem: React.FC<{
+const AmbassadorItem = ({
+  ambassador,
+  level = 2,
+}: {
   ambassador: AmbassadorKey;
-  level?: React.ComponentProps<typeof Heading>["level"];
-}> = ({ ambassador, level = 2 }) => {
+  level?: ComponentProps<typeof Heading>["level"];
+}) => {
   const data = useMemo(() => ambassadors[ambassador], [ambassador]);
   const images = useMemo(() => getAmbassadorImages(ambassador), [ambassador]);
 
@@ -147,15 +159,19 @@ const AmbassadorItem: React.FC<{
   );
 };
 
-const AmbassadorItems: React.FC<{
+const AmbassadorItems = ({
+  ambassadors,
+  className,
+  level,
+}: {
   ambassadors: AmbassadorKey[];
   className?: string;
-  level?: React.ComponentProps<typeof Heading>["level"];
-}> = ({ ambassadors, className, level }) => (
+  level?: ComponentProps<typeof Heading>["level"];
+}) => (
   <div
     className={classes(
       "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
-      className
+      className,
     )}
   >
     {ambassadors.map((key) => (
@@ -164,19 +180,25 @@ const AmbassadorItems: React.FC<{
   </div>
 );
 
-const AmbassadorGroup: React.FC<{
+const AmbassadorGroup = ({
+  type,
+  group,
+  name,
+  ambassadors,
+  active = false,
+}: {
   type: string;
   group: string;
   name: string;
   ambassadors: AmbassadorKey[];
   active?: boolean;
-}> = ({ type, group, name, ambassadors, active = false }) => {
+}) => {
   // If this group is the "active" one in the URL, scroll it into view
   const scroll = useCallback(
     (node: HTMLDivElement | null) => {
       if (node && active) node.scrollIntoView({ behavior: "smooth" });
     },
-    [active]
+    [active],
   );
 
   return (
@@ -210,7 +232,7 @@ const AmbassadorsPage: NextPage = () => {
       setActive(
         group && !Array.isArray(option.result) && option.result.has(group)
           ? group
-          : null
+          : null,
       );
     } else {
       setSortBy("all");

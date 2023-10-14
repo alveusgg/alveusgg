@@ -1,7 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { getTwitchConfig, type TwitchConfig } from "@/config/twitch";
 import { calcFormConfig } from "@/utils/forms";
 import { getUserFollowsBroadcaster } from "@/server/utils/twitch-api";
 import {
@@ -16,24 +15,18 @@ export const createFormEntrySchema = formEntrySchema.and(
     formId: z.string().cuid(),
     acceptRules: z.boolean().optional(),
     acceptPrivacy: z.boolean(),
-  })
+  }),
 );
 
 async function checkFollowsChannel(
-  channelConfig: TwitchConfig["channels"][string],
-  twitchAccount: { access_token: string; providerAccountId: string }
+  channelId: string,
+  twitchAccount: { access_token: string; providerAccountId: string },
 ) {
-  const isFollowing = await getUserFollowsBroadcaster(
+  return getUserFollowsBroadcaster(
     twitchAccount.access_token,
     twitchAccount.providerAccountId,
-    channelConfig.id
+    channelId,
   );
-  if (!isFollowing) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: `Your connected Twitch account does not follow ${channelConfig.label}!`,
-    });
-  }
 }
 
 export const formsRouter = router({
@@ -118,17 +111,23 @@ export const formsRouter = router({
       // Perform server side checks if required
       if (config.checks) {
         // TODO: Make the form config granular. Right now the channel follow check is hard-coded here:
-        // NOTE: Does not work, twitch removed API access :(
-        const channelConfig = (await getTwitchConfig()).channels
-          .alveussanctuary;
-        await checkFollowsChannel(channelConfig, {
+        const isFollowing = await checkFollowsChannel("636587384", {
           access_token: accessToken,
           providerAccountId: twitchAccount.providerAccountId,
         });
+
+        if (!isFollowing) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Your connected Twitch account does not follow AlveusSanctuary!`,
+          });
+        }
       }
 
       // Insert entry
-      const entry = await createEntry(userId, form.id, input);
+      const entry = await createEntry(userId, form.id, input, {
+        withMailingAddress: config.requireShippingAddress,
+      });
 
       if (form.outgoingWebhookUrl) {
         try {

@@ -1,4 +1,3 @@
-import React from "react";
 import type { ShowAndTellEntry, User } from "@prisma/client";
 
 import { getEntityStatus } from "@/utils/entity-helpers";

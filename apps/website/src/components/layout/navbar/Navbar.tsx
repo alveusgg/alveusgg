@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
@@ -10,7 +9,7 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 import IconX from "@/icons/IconX";
 import IconMenu from "@/icons/IconMenu";
 
-export const Navbar: React.FC = () => {
+export const Navbar = () => {
   return (
     <Disclosure
       as="header"
@@ -24,7 +23,7 @@ export const Navbar: React.FC = () => {
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center px-1 md:px-2"
+              className="flex items-center px-1 lg:-ml-4 lg:px-0"
               aria-label="Alveus Sanctuary Inc."
             >
               <Image

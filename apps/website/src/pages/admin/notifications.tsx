@@ -1,4 +1,3 @@
-import React from "react";
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
 import { getAdminSSP } from "@/server/utils/admin";
@@ -15,7 +14,7 @@ import { NotificationsLive } from "@/components/admin/notifications/Notification
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(
     context,
-    permissions.manageNotifications
+    permissions.manageNotifications,
   );
   if (!adminProps) {
     return { notFound: true };

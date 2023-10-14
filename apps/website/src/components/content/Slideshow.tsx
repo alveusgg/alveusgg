@@ -1,6 +1,6 @@
 import type { ImageProps } from "next/image";
 import Image from "next/image";
-import React, { type CSSProperties, useCallback, useId, useMemo } from "react";
+import { type CSSProperties, useCallback, useId, useMemo } from "react";
 
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl, type ImageLoaderProps } from "@/utils/image";
@@ -28,11 +28,11 @@ const objToCss = (obj: Record<string, CSSProperties> | CSSProperties): string =>
     })
     .join(" ");
 
-const Slideshow: React.FC<SlideshowProps> = ({
+const Slideshow = ({
   images,
   timing = { fade: 500, delay: 5000 },
   scale = { from: 1.1, to: 1.2 },
-}) => {
+}: SlideshowProps) => {
   // Define the animation keyframes
   const id = useId().replace(/:/g, "");
   const animation = useMemo<{

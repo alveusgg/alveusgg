@@ -33,7 +33,7 @@ async function callWebhookUrl(data: OutgoingWebhookData) {
 
     if (!response.ok) {
       const err = new OutgoingWebhookDeliveryError(
-        "HTTP status code: " + response.status
+        "HTTP status code: " + response.status,
       );
       err.response = String(response);
       err.status = response.status;
@@ -119,7 +119,7 @@ export async function retryOutgoingWebhooks({
   const now = new Date();
 
   const exponentialDelays = new Array(maxAttempts).map(
-    (_, i) => retryDelay * Math.pow(2, i + 1)
+    (_, i) => retryDelay * Math.pow(2, i + 1),
   );
 
   const pendingOutgoingWebhooks = await prisma.outgoingWebhook.findMany({
@@ -143,7 +143,7 @@ export async function retryOutgoingWebhooks({
   });
 
   const tasks = pendingOutgoingWebhooks.map((outgoingWebhook) =>
-    retryOutgoingWebhook(outgoingWebhook)
+    retryOutgoingWebhook(outgoingWebhook),
   );
 
   await Promise.all(tasks);

@@ -16,7 +16,7 @@ export function Announcement({ notification }: { notification: Notification }) {
   const relativeNotificationUrl = `/notifications/${notification.id}`;
   const fullAbsoluteNotificationUrl = new URL(
     relativeNotificationUrl,
-    env.NEXT_PUBLIC_BASE_URL
+    env.NEXT_PUBLIC_BASE_URL,
   ).toString();
   const title = notification.title || "Alveus Sanctuary Announcement";
   const event = useMemo(
@@ -38,7 +38,7 @@ export function Announcement({ notification }: { notification: Notification }) {
       notification.scheduledStartAt,
       notification.scheduledEndAt,
       fullAbsoluteNotificationUrl,
-    ]
+    ],
   );
 
   let heading = (

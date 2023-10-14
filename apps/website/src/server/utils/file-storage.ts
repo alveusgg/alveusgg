@@ -48,7 +48,7 @@ export function getViewUrlForFileStorageObjectKey(key: string) {
 async function sendDeleteObjectCommand(key: string) {
   try {
     await getS3Client().send(
-      new DeleteObjectCommand({ Bucket: env.FILE_STORAGE_BUCKET, Key: key })
+      new DeleteObjectCommand({ Bucket: env.FILE_STORAGE_BUCKET, Key: key }),
     );
     return true;
   } catch (err) {
@@ -150,7 +150,7 @@ export async function checkAndFixUploadedImageFileStorageObject(id: string) {
         uploadedAt: new Date(),
         expiresAt: null,
       },
-    })
+    }),
   );
 
   if (!data.imageMetadata) {
@@ -162,7 +162,7 @@ export async function checkAndFixUploadedImageFileStorageObject(id: string) {
           width: metaData.width,
           height: metaData.height,
         },
-      })
+      }),
     );
   }
 

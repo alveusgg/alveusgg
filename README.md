@@ -1,12 +1,12 @@
 # Alveus Sanctuary website
 
 This is the community-built, open-source website for Alveus Sanctuary.
-You can access the site at https://alveussanctuary.org/ (or https://alveus.gg/).
+You can access the site at [alveussanctuary.org](https://alveussanctuary.org/) (or [alveus.gg](https://alveus.gg/)).
 
 ## See also
 
-- Data repository: https://github.com/alveusgg/data
-- Twitch extension: https://github.com/alveusgg/extension
+- [Data repository](https://github.com/alveusgg/data)
+- [Twitch extension](https://github.com/alveusgg/extension)
 
 ## Tech stack
 
@@ -23,8 +23,8 @@ Website stack (based on [T3 Stack](https://create.t3.gg/)):
 
 - TypeScript
 - Next.js (framework)
-- tRPC (typesafe api)
-- Drizzle (database orm)
+- tRPC (typesafe API)
+- Drizzle (database ORM)
 - Auth.js aka NextAuth.js (auth via OAuth)
 - Tailwind CSS (styling)
 
@@ -35,7 +35,7 @@ Hosting (production):
 - DigitalOcean Spaces (S3-compatible storage)
 - Upstash QStash (Simple Queue Service)
 
-# External APIs
+## External APIs
 
 - Twitch OAuth (application)
 - Twitch EventSub/Helix
@@ -48,9 +48,16 @@ For a more complete overview see: [#9](https://github.com/alveusgg/alveusgg/issu
 
 ## How to contribute
 
-TODO
+Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute.
+
+1. If you find a bug - you can fill out a bug [report](https://github.com/alveusgg/alveusgg/issues/new/choose)
+2. If you have an idea that would make Alveus better - please fill out an idea [issue](https://github.com/alveusgg/alveusgg/issues/new/choose)
+3. If you have development experience, take a look at our issues labeled [good first issue](https://github.com/alveusgg/alveusgg/pulls?q=is%3Aopen+is%3Apr+label%3A%22good+first+issue%22), read our [contributing guide](https://github.com/alveusgg/alveusgg/blob/main/CONTRIBUTING.md) and agree to our [code of conduct](https://github.com/alveusgg/.github/blob/main/CODE_OF_CONDUCT.md) before you get started.
 
 ## How to develop / Getting started
+
+> [!NOTE]
+> If you only want to work on the front end, you may skip the prerequisites and skip configuring a database or file storage (steps 3, 4.i, 4.ii and 5). But you may encounter some errors when running the website without a database or file storage.
 
 ### Prerequisites
 
@@ -58,20 +65,19 @@ TODO
 2. Set up some S3-compatible storage for file uploads:
    - locally (e.g. [Minio](https://min.io/) or [Localstack](https://localstack.cloud/))
    - online (e.g. [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
-3. Optional: Obtain [Open Weathermap](https://openweathermap.org/api) keys if you want those
 
 ### Local development
 
-1. Install Node.js and PNPM (see `engines` in `package.json` for the required versions) or use `fnm`/`nvm` to install the correct version
-2. Install dependencies: `pnpm install`
-3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict`)
+1. Install Node.js (see `engines` in `package.json` for the required versions), or use `fnm`/`nvm` to install the correct version of Node.js, and use `corepack enable` to use PNPM.
+2. Install dependencies: `pnpm install --frozen-lockfile`
+3. Create a [PlanetScale](https://planetscale.com/) account (free) or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict` and `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg/shadow?sslaccept=strict`)
 4. Copy `apps/website/.env.example` to `apps/website/.env`
    - Fill in the S3 section with your S3-compatible storage info
    - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
    - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
    - You may define privileged users once they have signed in via the `SUPER_USER_IDS` variable (using comma separated ids)
 5. Push the database schema to the new database using `pnpm drizzle-kit push:mysql` from within `apps/website`.
-6. Start the dev server: `pnpm run -r dev`
+6. Start the dev server using `pnpm dev` from within `apps/website`
 7. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Also see [T3 Stack](https://create.t3.gg/)
@@ -96,5 +102,5 @@ but has only been tested on Vercel (and PlanetScale) for now.
      - _Root directory_: `apps/website`
      - _Node.js Version_: See `engines` in `package.json` for the required version
    - _Domains_: add your domains
-   - _Git_: connect your git repo
-   - _Environment Variables_: Copy and paste your `apps/website/.env.production` into the first Key field (yes you can simply copy-paste everything at once)
+   - _Git_: connect your Git repo
+   - _Environment Variables_: Copy and paste your `apps/website/.env.production` into the first key field (yes you can simply copy-paste everything at once)

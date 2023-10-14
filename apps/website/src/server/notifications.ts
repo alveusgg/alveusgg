@@ -12,6 +12,7 @@ import { pushBatchSize, pushMaxAttempts, pushRetryDelay } from "@/config/push";
 import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";
 import { triggerDiscordChannelWebhook } from "@/server/discord";
+import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
 import type { RetryPushesOptions } from "@/pages/api/notifications/batched-retry-notification-pushes";
@@ -29,7 +30,7 @@ type CreateNotificationData = {
 };
 
 const exponentialDelays = new Array(pushMaxAttempts).map(
-  (_, i) => pushRetryDelay * Math.pow(2, i + 1)
+  (_, i) => pushRetryDelay * Math.pow(2, i + 1),
 );
 
 export async function createNotification(data: CreateNotificationData) {
@@ -125,8 +126,8 @@ export async function retryPendingNotificationPushes() {
             ...push,
             expiresAt: push.expiresAt.getTime(),
           })),
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -168,8 +169,8 @@ async function createPushNotifications(notification: Notification) {
           notificationId: notification.id,
           expiresAt: notification.expiresAt.getTime(),
           subscriptionIds: subscriptions.map((s) => s.id),
-        }
-      )
+        },
+      ),
     );
   }
 
@@ -200,6 +201,8 @@ async function createDiscordNotifications({
     default:
   }
 
+  message = escapeLinksForDiscord(message);
+
   const tasks = [];
   for (const webhookUrl of webhookUrls) {
     const relativeNotificationUrl = `/notifications/${id}`;
@@ -222,7 +225,7 @@ async function createDiscordNotifications({
           },
         });
         return webhook;
-      })
+      }),
     );
   }
 

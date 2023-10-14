@@ -1,4 +1,4 @@
-import React from "react";
+import { useMemo, type ComponentProps } from "react";
 import NextLink from "next/link";
 
 import { classes } from "@/utils/classes";
@@ -6,43 +6,50 @@ import { classes } from "@/utils/classes";
 import IconExternal from "@/icons/IconExternal";
 
 type LinkProps = {
-  href: string;
-  children: React.ReactNode;
-  onClick?: () => void;
-  className?: string;
   external?: boolean;
   custom?: boolean;
   dark?: boolean;
-  prefetch?: boolean;
-};
+} & ComponentProps<typeof NextLink>;
 
-const Link: React.FC<LinkProps> = ({
-  href,
-  children,
-  onClick,
-  className,
+const Link = ({
   external = false,
   custom = false,
   dark = false,
-  prefetch,
-}) => {
-  const props = {
-    href,
-    onClick,
-    prefetch,
-    className: classes(
-      !custom && "transition-colors hover:underline",
-      !custom &&
-        (dark
-          ? "text-red-200 hover:text-blue-200"
-          : "text-red-600 hover:text-blue-600"),
-      className
-    ),
-    ...(external ? { target: "_blank", rel: "noreferrer" } : {}),
-  };
+  className,
+  target,
+  rel,
+  children,
+  ...props
+}: LinkProps) => {
+  const computedClassName = useMemo(
+    () =>
+      classes(
+        !custom && "transition-colors hover:underline",
+        !custom &&
+          (dark
+            ? "text-red-200 hover:text-blue-200"
+            : "text-red-600 hover:text-blue-600"),
+        className,
+      ),
+    [custom, dark, className],
+  );
+
+  const computedTarget = useMemo(
+    () => (external ? "_blank" : target),
+    [external, target],
+  );
+  const computedRel = useMemo(
+    () => (external ? "noreferrer" : rel),
+    [external, rel],
+  );
 
   return (
-    <NextLink {...props}>
+    <NextLink
+      {...props}
+      className={computedClassName}
+      target={computedTarget}
+      rel={computedRel}
+    >
       {children}
       {external && !custom && (
         <IconExternal

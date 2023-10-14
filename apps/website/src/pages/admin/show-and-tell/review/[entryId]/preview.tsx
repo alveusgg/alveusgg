@@ -1,4 +1,3 @@
-import React from "react";
 import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
 import { useRouter } from "next/router";
 

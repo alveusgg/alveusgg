@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Section from "@/components/content/Section";

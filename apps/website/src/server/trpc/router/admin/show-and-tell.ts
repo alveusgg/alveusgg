@@ -21,7 +21,7 @@ import { deleteFileStorageObject } from "@/server/utils/file-storage";
 import { notEmpty } from "@/utils/helpers";
 
 const permittedProcedure = protectedProcedure.use(
-  createCheckPermissionMiddleware(permissions.manageShowAndTell)
+  createCheckPermissionMiddleware(permissions.manageShowAndTell),
 );
 
 export const adminShowAndTellRouter = router({
@@ -43,10 +43,10 @@ export const adminShowAndTellRouter = router({
 
   markAsSeen: permittedProcedure
     .input(
-      z.object({ id: z.string().cuid(), retroactive: z.boolean().optional() })
+      z.object({ id: z.string().cuid(), retroactive: z.boolean().optional() }),
     )
     .mutation(
-      async ({ input }) => await markPostAsSeen(input.id, input.retroactive)
+      async ({ input }) => await markPostAsSeen(input.id, input.retroactive),
     ),
 
   unmarkAsSeen: permittedProcedure
@@ -77,7 +77,7 @@ export const adminShowAndTellRouter = router({
         filter: z.enum(["approved", "pendingApproval"]).optional(),
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().cuid().nullish(),
-      })
+      }),
     )
     .query(async ({ input }) => {
       const limit = input.limit ?? 20;

@@ -21,7 +21,7 @@ function base64Decode(str: string) {
   return new Uint8Array(
     atob(str)
       .split("")
-      .map((c) => c.charCodeAt(0))
+      .map((c) => c.charCodeAt(0)),
   );
 }
 
@@ -47,13 +47,13 @@ async function importEncryptionKey(key: string) {
     encoder.encode(key),
     { name: KEY_ALGORITHM_NAME },
     false,
-    ["deriveKey"]
+    ["deriveKey"],
   );
 }
 
 export async function deriveSaltedEncryptionKey(
   key: CryptoKey,
-  salt: ArrayBuffer
+  salt: ArrayBuffer,
 ) {
   return crypto.subtle.deriveKey(
     {
@@ -65,20 +65,20 @@ export async function deriveSaltedEncryptionKey(
     key,
     { name: ENCRYPTION_ALGORITHM_NAME, length: ENCRYPTION_ALGORITHM_LENGTH },
     false,
-    ["encrypt", "decrypt"]
+    ["encrypt", "decrypt"],
   );
 }
 
 export async function createSaltedEncryptionKey(salt: ArrayBuffer) {
   const dataEncryptionKey = await importEncryptionKey(
-    env.DATA_ENCRYPTION_PASSPHRASE
+    env.DATA_ENCRYPTION_PASSPHRASE,
   );
   return deriveSaltedEncryptionKey(dataEncryptionKey, salt);
 }
 
 export async function encrypt(
   plainText: string,
-  saltedEncryptionKey: CryptoKey
+  saltedEncryptionKey: CryptoKey,
 ) {
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
   const plainTextBuffer = encoder.encode(plainText);
@@ -86,11 +86,11 @@ export async function encrypt(
   const encryptedCipherTextBuffer = await crypto.subtle.encrypt(
     { name: ENCRYPTION_ALGORITHM_NAME, iv, tagLength: 128 },
     saltedEncryptionKey,
-    plainTextBuffer
+    plainTextBuffer,
   );
 
   const resultBuffer = new Uint8Array(
-    iv.length + encryptedCipherTextBuffer.byteLength
+    iv.length + encryptedCipherTextBuffer.byteLength,
   );
   resultBuffer.set(iv);
   resultBuffer.set(new Uint8Array(encryptedCipherTextBuffer), iv.length);
@@ -101,7 +101,7 @@ export async function encrypt(
 export async function decrypt(
   encryptedText: string,
   saltedEncryptionKey: CryptoKey,
-  { allowEmpty = true } = {}
+  { allowEmpty = true } = {},
 ) {
   if (allowEmpty && encryptedText === "") {
     return "";
@@ -120,7 +120,7 @@ export async function decrypt(
     const decryptedBuffer = await crypto.subtle.decrypt(
       { name: ENCRYPTION_ALGORITHM_NAME, iv, tagLength: 128 },
       saltedEncryptionKey,
-      cipherText
+      cipherText,
     );
     return decoder.decode(decryptedBuffer);
   } catch (e) {

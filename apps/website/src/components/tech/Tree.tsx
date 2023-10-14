@@ -1,4 +1,5 @@
-import React, { useCallback, useMemo } from "react";
+import { useCallback, useMemo } from "react";
+import type { Node as DagreNode } from "dagre";
 import { graphlib, layout } from "dagre";
 import {
   ReactFlow,
@@ -51,7 +52,7 @@ const withPositions = <T,>(
   { nodes, edges }: { nodes: TreeNodeInternal<T>[]; edges: TreeEdgeInternal[] },
   size: { width: number; height: number },
   separation = { ranks: 100, siblings: 50 },
-  direction: "TB" | "LR" = "LR"
+  direction: "TB" | "LR" = "LR",
 ) => {
   // Create the graph
   const dagreGraph = new graphlib.Graph();
@@ -71,7 +72,76 @@ const withPositions = <T,>(
   // Calculate the auto layout
   layout(dagreGraph);
 
-  // Store the nodes positions
+  // Get the nodes where all the children are leaf nodes
+  // For each parent, find the nearest child, and fix any misalignment
+  // Without this, leaf nodes sometimes appear to not be grouped together
+  nodes.forEach(({ id, children }) => {
+    if (!children.length) return;
+    if (children.some((child) => child.children.length)) return;
+
+    // Get the parent node
+    const dagreParent = dagreGraph.node(id);
+    if (!dagreParent) return;
+
+    // Determine which axis we want to align on
+    const axis = direction === "LR" ? "y" : "x";
+    const dimension = direction === "LR" ? "height" : "width";
+
+    // Get the children nodes
+    type ChildNode = { id: string } & DagreNode;
+    const dagreChildren = children
+      .reduce<ChildNode[]>((acc, { id }) => {
+        const node = dagreGraph.node(id);
+        if (!node) return acc;
+        return [...acc, { id, ...node }];
+      }, [])
+      .sort((a, b) => a[axis] - b[axis]);
+    if (!dagreChildren[0]) return;
+
+    // Find the child node that is nearest to the parent
+    const [nearestNode, nearestIdx] = dagreChildren
+      .slice(1)
+      .reduce<[ChildNode, number]>(
+        (acc, child, idx) => {
+          const accDistance = Math.abs(acc[0][axis] - dagreParent[axis]);
+          const childDistance = Math.abs(child[axis] - dagreParent[axis]);
+          return childDistance < accDistance ? [child, idx + 1] : acc;
+        },
+        [dagreChildren[0], 0],
+      );
+
+    let idx: number, pos: number;
+
+    // Walk backwards from the nearest node, and fix any misalignment
+    for (idx = nearestIdx - 1, pos = nearestNode[axis]; idx >= 0; idx--) {
+      const node = dagreChildren[idx];
+      if (!node) continue; // Make TS happy
+
+      // Apply the expected position
+      const expectedPos = pos - node[dimension] - separation.siblings;
+      dagreGraph.setNode(node.id, { ...node, [axis]: expectedPos });
+
+      pos = expectedPos;
+    }
+
+    // Walk forwards from the nearest node, and fix any misalignment
+    for (
+      idx = nearestIdx + 1, pos = nearestNode[axis] + nearestNode[dimension];
+      idx < dagreChildren.length;
+      idx++
+    ) {
+      const node = dagreChildren[idx];
+      if (!node) continue; // Make TS happy
+
+      // Apply the expected position
+      const expectedPos = pos + separation.siblings;
+      dagreGraph.setNode(node.id, { ...node, [axis]: expectedPos });
+
+      pos = expectedPos + node[dimension];
+    }
+  });
+
+  // Store the node positions
   const nodesWithPosition: TreeNodePositioned<T>[] = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
     const isHorizontal = direction === "LR";
@@ -156,7 +226,7 @@ const Tree = <T,>({
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(
     () => withPositions(getNodesEdges(data), nodeSize),
-    [data, nodeSize]
+    [data, nodeSize],
   );
 
   // When the tree loads, center it
@@ -179,13 +249,13 @@ const Tree = <T,>({
         });
       });
     },
-    [nodes, defaultZoom]
+    [nodes, defaultZoom],
   );
 
   // Override the default edge type if one is provided
   const edgeTypes = useMemo(
     () => (edgeType ? { default: edgeType } : undefined),
-    [edgeType]
+    [edgeType],
   );
 
   return (

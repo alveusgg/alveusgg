@@ -15,6 +15,7 @@ import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
+import Merch from "@/components/content/Merch";
 import Consent from "@/components/Consent";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
@@ -35,13 +36,6 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-
-import caseMerchImage from "@/assets/merch/biodegradable-iphone-case-iphone-11-pro-max-case-on-phone.png";
-import toteMerchImage from "@/assets/merch/large-eco-tote-oyster-front.png";
-import tshirtMerchImage from "@/assets/merch/organic-cotton-t-shirt-dress-black-front.png";
-import croptopMerchImage from "@/assets/merch/organic-crop-top-black-front.png";
-import beanieMerchImage from "@/assets/merch/organic-ribbed-beanie-black-front.png";
-import hoodieMerchImage from "@/assets/merch/unisex-essential-eco-hoodie-white-front.png";
 
 const slides = [
   {
@@ -101,47 +95,6 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
     };
   }, {});
 
-const merch = Object.entries({
-  hoodie: {
-    src: hoodieMerchImage,
-    alt: "Unisex Essential Echo Hoodie (White)",
-  },
-  case: {
-    src: caseMerchImage,
-    alt: "Biodegradable iPhone Case (iPhone 11 Pro Max)",
-  },
-  tshirt: {
-    src: tshirtMerchImage,
-    alt: "Organic Cotton T-Shirt Dress (Black)",
-  },
-  croptop: {
-    src: croptopMerchImage,
-    alt: "Organic Crop Top (Black)",
-  },
-  tote: {
-    src: toteMerchImage,
-    alt: "Large Eco Tote (Oyster)",
-  },
-  beanie: {
-    src: beanieMerchImage,
-    alt: "Organic Ribbed Beanie (Black)",
-  },
-}).reduce(
-  (obj, [key, { src, alt }]) => ({
-    ...obj,
-    [key]: (
-      <Image
-        src={src}
-        alt={alt}
-        draggable={false}
-        width={200}
-        className="mx-auto h-auto w-full max-w-[10rem]"
-      />
-    ),
-  }),
-  {}
-);
-
 const help = {
   donate: {
     icon: IconPayPal,
@@ -166,7 +119,7 @@ const help = {
 const getTwitchEmbed = (
   channel: string,
   parent: string,
-  autoPlay = true
+  autoPlay = true,
 ): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("channel", channel);
@@ -188,8 +141,8 @@ const Home: NextPage = () => {
       getTwitchEmbed(
         "alveussanctuary",
         window.location.hostname,
-        !reducedMotion
-      )
+        !reducedMotion,
+      ),
     );
   }, [reducedMotion]);
 
@@ -203,7 +156,7 @@ const Home: NextPage = () => {
         </div>
 
         <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:pt-40">
-          <div className="basis-full p-4 lg:basis-1/2">
+          <div className="basis-full p-4 xl:basis-1/2">
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
               World from the Web
@@ -233,11 +186,11 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="basis-full p-4 lg:basis-1/2">
+          <div className="basis-full p-4 xl:basis-1/2">
             <Consent
               item="live cam feed"
               consent="twitch"
-              className="aspect-video h-auto w-full rounded-2xl"
+              className="aspect-video h-auto w-full max-w-2xl rounded-2xl xl:ml-auto"
             >
               {twitchEmbed && (
                 <Link
@@ -284,12 +237,12 @@ const Home: NextPage = () => {
                 Founded by Maya Higa
               </p>
               <p className="my-4 text-lg">
-                Alveus is a non profit organization founded by Maya Higa that
+                Alveus is a nonprofit organization founded by Maya Higa that
                 functions as an exotic animal sanctuary and as a virtual
                 education center facility to provide permanent homes to
                 non-releasable exotic animals. These animals function as
-                ambassadors so viewers can watch their journeys, get to know the
-                animals and gain an appreciation for their species.
+                ambassadors, so viewers can watch their journeys, get to know
+                the animals, and gain an appreciation for their species.
               </p>
               <p className="my-4 text-lg">
                 Alveus hosts content collaborations where creators can visit and
@@ -367,22 +320,22 @@ const Home: NextPage = () => {
         <Section dark>
           <div className="flex flex-wrap items-center">
             <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2">
-              <Carousel items={merch} />
+              <Merch />
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
-              <Heading level={2}>New Merch Available!</Heading>
+              <Heading level={2}>Alveus Merch!</Heading>
               <p className="my-4">
-                An official merchandise line composed from Recycled, Organic, or
-                Biodegradable Materials!
+                Grab yourself some high-quality merch from Alveus in our
+                limited-time exclusive drops!
               </p>
               <p className="my-4">
-                Hoodies, T-Shirts, T-Shirt Dresses, Crop Tops, Beanies, iPhone
-                Cases, and Tote Bags
+                Or, have your very own ambassador in your home with our
+                plushies!
               </p>
               <p className="my-4">
-                - Every purchase goes directly towards supporting an Alveus
-                Sanctuary Ambassador!
+                All proceeds go directly into Alveus and the support & care of
+                our educational ambassadors!
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
@@ -392,7 +345,7 @@ const Home: NextPage = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Buy Merch!
+                  Explore Merch
                 </Link>
                 <Link
                   className="inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
@@ -400,7 +353,7 @@ const Home: NextPage = () => {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  Buy Plushies!
+                  Buy Plushies
                 </Link>
               </div>
             </div>

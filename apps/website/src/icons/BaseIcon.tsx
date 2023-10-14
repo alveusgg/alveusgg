@@ -1,6 +1,6 @@
-import React from "react";
+import { type SVGProps, type ReactNode } from "react";
 
-export type IconProps = React.SVGProps<SVGSVGElement> & {
+export type IconProps = SVGProps<SVGSVGElement> & {
   size?: number | string;
   className?: string;
   alt?: string;
@@ -8,7 +8,7 @@ export type IconProps = React.SVGProps<SVGSVGElement> & {
 
 export type BaseIconProps = IconProps & {
   viewBox: string;
-  children: React.ReactNode | React.ReactNode[];
+  children: ReactNode | ReactNode[];
 };
 
 export function BaseIcon({

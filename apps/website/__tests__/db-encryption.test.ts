@@ -96,7 +96,7 @@ test("decrypting empty values should not fail", async () => {
   try {
     decryptedRecord = await decryptRecord(
       { key: "", salt: mockEncryptedRecord.salt },
-      ["key"]
+      ["key"],
     );
   } catch (e) {
     failed = true;
@@ -127,7 +127,7 @@ test("decrypting record with empty salt and only empty values should not fail", 
         createdAt: mockEncryptedRecord.createdAt,
         salt: "",
       },
-      ["key"]
+      ["key"],
     );
   } catch (e) {
     failed = true;

@@ -1,4 +1,4 @@
-import React from "react";
+import { type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
 
 import { classes } from "@/utils/classes";
@@ -12,24 +12,23 @@ type PeopleProps = {
       image: ImageProps["src"];
       name: string;
       title: string;
-      description: React.ReactNode;
+      description: ReactNode;
     }
   >;
   columns?: 1 | 2;
   align?: "left" | "center";
 };
 
-const People: React.FC<PeopleProps> = ({
-  people,
-  columns = 1,
-  align = "left",
-}) => (
+const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
   <ul
     className={classes(
       "flex flex-wrap",
       ...(columns === 1
         ? []
-        : ["md:-m-4 md:items-start", align === "center" && "md:justify-center"])
+        : [
+            "md:-m-4 md:items-start",
+            align === "center" && "md:justify-center",
+          ]),
     )}
   >
     {Object.entries(people).map(([key, person]) => (
@@ -42,14 +41,14 @@ const People: React.FC<PeopleProps> = ({
             : [
                 "md:basis-1/2 md:p-4",
                 align === "center" && "items-center text-center",
-              ])
+              ]),
         )}
       >
         <div
           className={classes(
             "w-full flex-shrink-0 p-4",
             align === "center" && "mx-auto",
-            columns === 1 ? "max-w-sm" : "max-w-xs"
+            columns === 1 ? "max-w-sm" : "max-w-xs",
           )}
         >
           <Image
@@ -62,7 +61,7 @@ const People: React.FC<PeopleProps> = ({
         <div
           className={classes(
             "my-auto flex-grow p-4",
-            columns === 1 && align === "center" && "text-center"
+            columns === 1 && align === "center" && "text-center",
           )}
         >
           <Heading level={2} className="text-4xl">

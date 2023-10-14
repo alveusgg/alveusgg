@@ -1,11 +1,11 @@
-import React, { useMemo } from "react";
+import { useMemo, type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
 import Link from "@/components/content/Link";
 
 export type HeadingProps = {
-  children?: React.ReactNode;
+  children?: ReactNode;
   level?: 1 | 2 | 3 | 4 | 5 | 6 | -1;
   className?: string;
   id?: string;
@@ -13,14 +13,14 @@ export type HeadingProps = {
   linkClassName?: string;
 };
 
-const Heading: React.FC<HeadingProps> = ({
+const Heading = ({
   children,
   level = 1,
   className,
   id,
   link = false,
   linkClassName,
-}) => {
+}: HeadingProps) => {
   const Tag = level === -1 ? "p" : (`h${level}` as keyof JSX.IntrinsicElements);
   const headingClass = useMemo(
     () =>
@@ -29,9 +29,9 @@ const Heading: React.FC<HeadingProps> = ({
         !/\btext-(xs|sm|base|lg|[2-6]?xl)\b/.test(className || "") &&
           "text-3xl",
         "font-serif font-bold",
-        className
+        className,
       ),
-    [className]
+    [className],
   );
 
   return (

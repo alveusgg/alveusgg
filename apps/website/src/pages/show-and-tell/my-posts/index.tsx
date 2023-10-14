@@ -1,4 +1,3 @@
-import React from "react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
@@ -115,7 +114,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                   <tbody>
                     {myEntries.data.map((entry) => {
                       const images = entry.attachments.filter(
-                        (a) => a.attachmentType === "image"
+                        (a) => a.attachmentType === "image",
                       );
                       const featuredImage = images[0]?.imageAttachment;
                       const status = getEntityStatus(entry);

@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import { Fragment } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
 import { trpc } from "@/utils/trpc";
@@ -25,7 +25,7 @@ const AdminActivityFeedPage: NextPage<
       {},
       {
         getNextPageParam: (lastPage) => lastPage.nextCursor,
-      }
+      },
     );
 
   return (

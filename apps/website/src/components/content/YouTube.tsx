@@ -1,17 +1,20 @@
-import React, {
+import {
   cloneElement,
   useCallback,
   useEffect,
   useId,
   useMemo,
   useState,
+  type ReactNode,
 } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import {
+  getDefaultPhotoswipeLightboxOptions,
+  resolvePhotoswipeElementProvider,
+} from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl } from "@/utils/image";
-import { type HTMLAttributes } from "@/utils/attrs";
 import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
@@ -20,10 +23,10 @@ import IconYouTube from "@/icons/IconYouTube";
 
 const iframeSrc = (id: string) =>
   `https://www.youtube-nocookie.com/embed/${encodeURIComponent(
-    id
-  )}?modestbranding=1`;
+    id,
+  )}?modestbranding=1&rel=0`;
 
-const iframeAttrs: HTMLAttributes = {
+const iframeAttrs = {
   title: "YouTube video",
   referrerpolicy: "no-referrer",
   allow: "encrypted-media",
@@ -42,7 +45,7 @@ const safeJsonParse = (str: string) => {
 
 export const parseUrl = (url: string) => {
   const match = url.match(
-    /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/
+    /^https:\/\/www\.youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)$/,
   );
   if (!match?.[1]) throw new Error(`Invalid YouTube URL: ${url}`);
   return match[1];
@@ -51,29 +54,36 @@ export const parseUrl = (url: string) => {
 type TriggerProps = {
   videoId: string;
   caption?: string;
+  triggerId?: string;
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 const createTrigger = (id: string) => {
-  const Trigger: React.FC<TriggerProps> = ({
+  const Trigger = ({
     videoId,
     caption,
+    triggerId,
     className,
     children,
-  }) => {
-    return (
-      <a
-        href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
-        target="_blank"
-        rel="noreferrer"
-        className={classes("group/trigger", className)}
-        {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
-      >
-        {children}
-      </a>
-    );
-  };
+  }: TriggerProps) => (
+    <a
+      href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
+      target="_blank"
+      rel="noreferrer"
+      className={classes("group/trigger", className)}
+      {...{
+        [`data-lightbox-${id}`]: JSON.stringify({
+          videoId,
+          caption,
+          triggerId: triggerId ?? videoId,
+        }),
+      }}
+    >
+      {children}
+    </a>
+  );
+  Trigger.displayName = "Trigger";
   return Trigger;
 };
 
@@ -85,16 +95,16 @@ type PreviewProps = {
 const imgSrc = (id: string, type: string) =>
   createImageUrl({
     src: `https://img.youtube.com/vi/${encodeURIComponent(
-      id
+      id,
     )}/${encodeURIComponent(type)}.jpg`,
     width: 1280,
     quality: 100,
   });
 
-export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
+export const Preview = ({ videoId, className }: PreviewProps) => {
   // Handle falling back to hq if there isn't a maxres image
   const [type, setType] = useState<"maxresdefault" | "hqdefault">(
-    "maxresdefault"
+    "maxresdefault",
   );
   const onError = useCallback(() => {
     if (type === "maxresdefault") setType("hqdefault");
@@ -111,7 +121,7 @@ export const Preview: React.FC<PreviewProps> = ({ videoId, className }) => {
         className={classes(
           "pointer-events-none object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
           iframeAttrs.class,
-          className
+          className,
         )}
       />
       <IconYouTube
@@ -131,39 +141,47 @@ type LightboxCtxProps = {
 type LightboxProps = {
   id?: string;
   className?: string;
-  children: React.ReactNode | ((ctx: LightboxCtxProps) => React.ReactNode);
+  children: ReactNode | ((ctx: LightboxCtxProps) => ReactNode);
+  value?: string;
+  onChange?: (value?: string) => void;
 };
 
-export const Lightbox: React.FC<LightboxProps> = ({
+export const Lightbox = ({
   id,
   className,
   children,
-}) => {
+  value,
+  onChange,
+}: LightboxProps) => {
   const { update: updateConsent } = useConsent();
 
+  // Start up Photoswipe lightbox
   const defaultId = useId().replace(/\W/g, "").toLowerCase();
   const photoswipeId = `photoswipe-${id || defaultId}`;
+  const [photoswipe, setPhotoswipe] = useState<PhotoSwipeLightbox>();
+
   useEffect(() => {
-    const lightbox = new PhotoSwipeLightbox({
+    const opts = {
       ...getDefaultPhotoswipeLightboxOptions(),
       gallery: `#${photoswipeId}`,
       mainClass: `pswp--${photoswipeId}`,
       children: `a[data-lightbox-${photoswipeId}]`,
       preloaderDelay: 0,
-    });
+    };
+    const lightbox = new PhotoSwipeLightbox(opts);
 
     // Expose the video id
     lightbox.addFilter("itemData", (itemData) => ({
       ...itemData,
-      youTube: safeJsonParse(
-        itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`) || ""
+      trigger: safeJsonParse(
+        itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`) || "",
       ),
     }));
 
     // Create the lightbox iframe
     lightbox.on("contentLoad", (e) => {
       const { content } = e;
-      if (!content.data.youTube?.videoId) return;
+      if (!content.data.trigger?.videoId) return;
 
       // Prevent the default content load
       e.preventDefault();
@@ -183,7 +201,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
 
       // Create our iframe
       const iframe = document.createElement("iframe");
-      iframe.src = iframeSrc(content.data.youTube.videoId);
+      iframe.src = iframeSrc(content.data.trigger.videoId);
       Object.entries(iframeAttrs).forEach(([key, value]) => {
         iframe.setAttribute(camelToKebab(key), value);
       });
@@ -205,19 +223,77 @@ export const Lightbox: React.FC<LightboxProps> = ({
       wrapper.appendChild(iframe);
 
       // If we have a caption, add it
-      if (content.data.youTube.caption) {
+      if (content.data.trigger.caption) {
         const caption = document.createElement("div");
         caption.className = "text-alveus-tan text-xl my-4 md:mb-0 lg:mt-8";
-        caption.innerHTML = content.data.youTube.caption;
+        caption.innerHTML = content.data.trigger.caption;
         content.element.appendChild(caption);
       }
     });
 
+    // Expose the current slide to the controlled value
+    lightbox.on("contentActivate", ({ content }) => {
+      if (onChange) onChange(content.data.trigger?.triggerId);
+    });
+
+    // When closing, let the controlled value know
+    lightbox.on("close", () => {
+      if (onChange) onChange(undefined);
+    });
+
+    // Initialize the lightbox
     lightbox.init();
+    setPhotoswipe(lightbox);
+
+    // Do the cleanup in the reverse order
     return () => {
+      setPhotoswipe(undefined);
       lightbox.destroy();
     };
-  }, [photoswipeId, updateConsent]);
+  }, [photoswipeId, updateConsent, onChange]);
+
+  // If the controlled value changes, make sure the lightbox and it are in sync
+  useEffect(() => {
+    // If we have no lightbox, do nothing
+    if (!photoswipe) return;
+
+    // If we have no value, close the lightbox
+    if (!value) {
+      photoswipe.pswp?.close();
+      return;
+    }
+
+    // If photoswipe is active and the value is the same, do nothing
+    const active = photoswipe.pswp?.currSlide?.data?.trigger?.triggerId as
+      | string
+      | undefined;
+    if (active === value) return;
+
+    // Get the gallery and children
+    const gallery = resolvePhotoswipeElementProvider(
+      photoswipe.options.gallery,
+    )?.[0];
+    if (!gallery) return;
+    const items = resolvePhotoswipeElementProvider(
+      photoswipe.options.children,
+      gallery,
+    );
+    if (!items) return;
+
+    // Locate the matching trigger and open it
+    // If we can't find it, set the value back to the active slide
+    const match = items.findIndex(
+      (child) =>
+        safeJsonParse(child.getAttribute(`data-lightbox-${photoswipeId}`) || "")
+          ?.triggerId === value,
+    );
+    if (match !== -1)
+      photoswipe.loadAndOpen(
+        match,
+        photoswipe.options.dataSource || { gallery, items },
+      );
+    if (match === -1 && onChange) onChange(active);
+  }, [value, photoswipe, photoswipeId, onChange]);
 
   // Expose the nested components
   const ctx: LightboxCtxProps = useMemo(
@@ -226,7 +302,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
       parseUrl,
       id: photoswipeId,
     }),
-    [photoswipeId]
+    [photoswipeId],
   );
 
   // Allow children to be functions that receive the context
@@ -236,7 +312,7 @@ export const Lightbox: React.FC<LightboxProps> = ({
         const element = typeof child === "function" ? child(ctx) : child;
         return cloneElement(element, { key: index });
       }),
-    [children, ctx]
+    [children, ctx],
   );
 
   return (

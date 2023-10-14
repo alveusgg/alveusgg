@@ -21,12 +21,12 @@ const defaultConfig = {
 
 export function sanitizeUserHtml(
   html: string,
-  config: DOMPurify.Config = defaultConfig
+  config: DOMPurify.Config = defaultConfig,
 ) {
   return String(
     purify.sanitize(html, {
       ...config,
       RETURN_DOM: false,
-    })
+    }),
   );
 }

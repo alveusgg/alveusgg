@@ -18,8 +18,8 @@ writeFileSync(
       .filter(isActiveAmbassadorKey)
       .map((key) => camelToKebab(key)),
     null,
-    2
-  )
+    2,
+  ),
 );
 
 writeFileSync(
@@ -30,6 +30,6 @@ writeFileSync(
       episode: idx + 1,
     })),
     null,
-    2
-  )
+    2,
+  ),
 );

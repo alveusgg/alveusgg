@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import React from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -280,12 +279,7 @@ type ListProps = {
   dark?: boolean;
 };
 
-const List: React.FC<ListProps> = ({
-  items,
-  className,
-  itemClassName,
-  dark,
-}) => (
+const List = ({ items, className, itemClassName, dark }: ListProps) => (
   <ul className={className}>
     {Object.entries(items).map(([key, item], idx) => (
       <li
@@ -293,7 +287,7 @@ const List: React.FC<ListProps> = ({
         className={classes(
           // Add whitespace above if we're nested and not the first item
           idx !== 0 && typeof item === "object" && item.items && "mt-2",
-          itemClassName
+          itemClassName,
         )}
       >
         {typeof item === "string" ? (

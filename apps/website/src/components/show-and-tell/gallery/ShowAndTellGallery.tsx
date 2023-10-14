@@ -1,5 +1,5 @@
 import type { MouseEventHandler, MutableRefObject } from "react";
-import React, { useCallback, useEffect, useId, useMemo, useRef } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
 
@@ -146,12 +146,12 @@ export function ShowAndTellGallery({
   const openLightBox = useCallback(
     (index: number) => {
       const gallery = document.getElementById(
-        photoswipeId
+        photoswipeId,
       ) as HTMLElement | null;
       if (!gallery) return;
       lightboxRef.current?.loadAndOpen(index, { gallery });
     },
-    [photoswipeId]
+    [photoswipeId],
   );
 
   const carouselItems = useMemo(() => {
@@ -213,7 +213,7 @@ export function ShowAndTellGallery({
             )}
           </figure>
         </a>,
-      ]
+      ],
     );
 
     return Object.fromEntries([...videoItems, ...imageItems]);

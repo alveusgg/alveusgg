@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import { useCallback, useState, type ReactNode, type MouseEvent } from "react";
 import Link from "next/link";
 
 import IconTwitch from "@/icons/IconTwitch";
@@ -6,76 +6,108 @@ import IconTwitter from "@/icons/IconTwitter";
 import IconYouTube from "@/icons/IconYouTube";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTikTok from "@/icons/IconTikTok";
-import IconGlobe from "@/icons/IconGlobe";
+import IconShoppingCart from "@/icons/IconShoppingCart";
 
-const GiveawayCheck: React.FC<{
+import { classes } from "@/utils/classes";
+
+const GiveawayCheck = ({
+  name,
+  label,
+  children,
+  url,
+}: {
   name: string;
   label: string;
-  children: React.ReactNode;
+  children: ReactNode;
   url?: string;
-}> = ({ name, label, children, url }) => {
+}) => {
   const [isClicked, setIsClicked] = useState(false);
+  const hasLink = url !== undefined;
 
-  const needsToBeClicked = url !== undefined;
+  // If this is a link, and the user has already clicked once,
+  // then just the children should be the link (not the checkbox)
+  const childrenJsx =
+    hasLink && isClicked ? (
+      <Link
+        rel="noreferrer"
+        target="_blank"
+        href={url}
+        className="flex flex-1 flex-row items-center gap-5 p-5 underline"
+      >
+        {children}
+      </Link>
+    ) : (
+      <span className="flex flex-1 flex-row items-center gap-5 p-5">
+        {children}
+      </span>
+    );
 
-  const handleClick = useCallback(() => {
+  // Disable the checkbox if this is a link, and the user hasn't clicked yet
+  const disabled = hasLink && !isClicked;
+  const handleCheckboxClick = useCallback(
+    (e: MouseEvent<HTMLInputElement>) => {
+      if (disabled) {
+        e.preventDefault();
+      }
+    },
+    [disabled],
+  );
+
+  const checkboxJsx = (
+    <label
+      className={classes(
+        "flex cursor-pointer flex-row items-center px-5",
+        disabled ? "pointer-events-none bg-gray-200" : "bg-white",
+      )}
+    >
+      <span className="sr-only">{label}</span>
+      <input
+        name={`req-${name}`}
+        value="yes"
+        type="checkbox"
+        defaultChecked={hasLink && isClicked}
+        required={true}
+        aria-disabled={disabled}
+        onClick={handleCheckboxClick}
+        className={classes(disabled && "opacity-50")}
+      />
+    </label>
+  );
+
+  const handleLinkClick = useCallback(() => {
     // Wait at least 2 seconds before allowing to check the checkmark
     setTimeout(() => setIsClicked(true), 1000);
   }, []);
 
   const containerClasses =
     "flex flex-row rounded border border-gray-200 bg-white shadow-xl";
-  const disabled = needsToBeClicked && !isClicked;
-  const handleCheckboxClick = useCallback(
-    (e: React.MouseEvent<HTMLInputElement>) => {
-      if (disabled) {
-        e.preventDefault();
-      }
-    },
-    [disabled]
-  );
 
-  const content = (
-    <>
-      <span className="flex flex-1 flex-row items-center gap-5 p-5">
-        {children}
-      </span>
-      <label
-        className={`flex flex-row items-center ${
-          disabled ? "pointer-events-none bg-gray-200" : "bg-white"
-        }  px-5`}
-      >
-        <span className="sr-only">{label}</span>
-        <input
-          name={`req-${name}`}
-          value="yes"
-          type="checkbox"
-          onClick={handleCheckboxClick}
-          defaultChecked={needsToBeClicked && isClicked}
-          required={true}
-        />
-      </label>
-    </>
-  );
-
-  if (needsToBeClicked) {
+  // If we have a link, and the user hasn't clicked yet, then the whole container should be a link
+  if (hasLink && !isClicked) {
     return (
       <Link
         rel="noreferrer"
         target="_blank"
-        onClick={handleClick}
         href={url}
-        className={`${containerClasses} underline`}
+        onClick={handleLinkClick}
+        className={classes(containerClasses, "underline")}
       >
-        {content}
+        {childrenJsx}
+        {checkboxJsx}
       </Link>
     );
-  } else {
-    return <div className={containerClasses}>{content}</div>;
   }
+
+  // Otherwise, just render the container with the checkbox and children
+  return (
+    <div className={containerClasses}>
+      {childrenJsx}
+      {checkboxJsx}
+    </div>
+  );
 };
 
-export const GiveawayChecks: React.FC = () => (
+export const GiveawayChecks = () => (
   <div className="flex flex-col gap-5">
     <GiveawayCheck
       name="twitter"
@@ -89,7 +121,7 @@ export const GiveawayChecks: React.FC = () => (
     <GiveawayCheck
       name="twitter"
       label="Follow @AlveusSanctuary on Twitter"
-      url="https://twitter.com/AlveusSanctuary"
+      url="https://twitter.com/intent/follow?user_id=1349932850632667137"
     >
       <IconTwitter size={32} />
       <span>Follow @AlveusSanctuary on Twitter</span>
@@ -122,13 +154,9 @@ export const GiveawayChecks: React.FC = () => (
       <span>Follow @alveussanctuary on TikTok</span>
     </GiveawayCheck>
 
-    <GiveawayCheck
-      name="website"
-      label="Visit our Website"
-      url="https://alveussanctuary.org/"
-    >
-      <IconGlobe size={32} />
-      <span>Visit our Website</span>
+    <GiveawayCheck name="website" label="Visit our Merch Store" url="/shop">
+      <IconShoppingCart size={32} />
+      <span>Visit our Merch Store</span>
     </GiveawayCheck>
   </div>
 );

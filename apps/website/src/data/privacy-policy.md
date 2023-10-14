@@ -9,7 +9,7 @@ This document can be printed for reference by using the print command in the set
 
 Alveus Sanctuary
 
-**Contact email:** maya@alveussanctuary.org
+**Contact email:** info@alveussanctuary.org
 
 ## Types of Data collected
 
@@ -400,4 +400,4 @@ This privacy statement has been prepared based on provisions of multiple legisla
 
 This privacy policy relates solely to this Website, if not stated otherwise within this document.
 
-Latest update: May 26th, 2023
+Latest update: October 7th, 2023

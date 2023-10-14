@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
@@ -71,8 +71,8 @@ export function ShowAndTellEntryForm({
             url: imageAttachment.url,
             fileStorageObjectId: imageAttachment.fileStorageObjectId,
           })),
-      [entry?.attachments]
-    )
+      [entry?.attachments],
+    ),
   );
   const videoLinksData = useVideoLinksData(
     useMemo(
@@ -82,17 +82,17 @@ export function ShowAndTellEntryForm({
           .map(({ linkAttachment }) => linkAttachment)
           .filter(notEmpty)
           .map(({ url }) => url),
-      [entry?.attachments]
-    )
+      [entry?.attachments],
+    ),
   );
 
   const createFileUpload = trpc.showAndTell.createFileUpload.useMutation();
   const upload = useFileUpload<AllowedFileTypes>(
     (signature) => createFileUpload.mutateAsync(signature),
-    { allowedFileTypes }
+    { allowedFileTypes },
   );
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data: ShowAndTellSubmitInput = {
@@ -120,7 +120,7 @@ export function ShowAndTellEntryForm({
         description: "", // Currently not supported
         caption: String(formData.get(`image[${imageId}][caption]`) || ""),
         alternativeText: String(
-          formData.get(`image[${imageId}][alternativeText]`) || ""
+          formData.get(`image[${imageId}][alternativeText]`) || "",
         ),
       };
 
@@ -163,7 +163,7 @@ export function ShowAndTellEntryForm({
             setError(err.message);
             onUpdate?.();
           },
-        }
+        },
       );
     } else if (action === "review" && entry) {
       review.mutate(
@@ -177,7 +177,7 @@ export function ShowAndTellEntryForm({
             setError(err.message);
             onUpdate?.();
           },
-        }
+        },
       );
     }
 
@@ -260,7 +260,7 @@ export function ShowAndTellEntryForm({
                     ? entry?.attachments.find(
                         ({ imageAttachment }) =>
                           imageAttachment &&
-                          imageAttachment.id === fileReference.id
+                          imageAttachment.id === fileReference.id,
                       )?.imageAttachment
                     : undefined;
 

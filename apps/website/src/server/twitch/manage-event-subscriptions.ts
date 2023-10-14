@@ -1,6 +1,5 @@
-import type { TwitchConfig } from "@/config/twitch";
-import { getTwitchConfig } from "@/config/twitch";
 import { env } from "@/env/index.mjs";
+import { getTwitchChannels } from "@/server/db/twitch-channels";
 import {
   createSubscription,
   getSubscriptions,
@@ -29,7 +28,7 @@ async function updateSubscriptionsForChannel(
   id: string,
   type: string,
   twitchEventSubCallback: string,
-  twitchEventSubSecret: string
+  twitchEventSubSecret: string,
 ) {
   let isEnabled = false;
   let isPending = false;
@@ -75,8 +74,8 @@ async function updateSubscriptionsForChannel(
   const totalRemoved = (
     await Promise.allSettled(
       [...enabledSubs, ...pendingSubs, ...failedSubs].map(
-        async (sub) => await removeSubscription(sub.id)
-      )
+        async (sub) => await removeSubscription(sub.id),
+      ),
     )
   ).reduce((count, removed) => (removed ? count + 1 : count), 0);
 
@@ -87,7 +86,7 @@ async function updateSubscriptionsForChannel(
       type,
       String(id),
       twitchEventSubCallback,
-      twitchEventSubSecret
+      twitchEventSubSecret,
     );
 
     if (created) {
@@ -107,33 +106,30 @@ async function updateSubscriptionsForChannel(
 async function updateSubscriptionsForChannels() {
   const twitchEventSubCallback = env.TWITCH_EVENTSUB_CALLBACK;
   const twitchEventSubSecret = env.TWITCH_EVENTSUB_SECRET;
-  const twitchConfig: TwitchConfig = await getTwitchConfig();
+  const channels = await getTwitchChannels();
 
-  for (const key in twitchConfig.channels) {
-    const channelConfig = twitchConfig.channels[key];
-    if (channelConfig === undefined) {
-      continue;
-    }
-
-    await updateSubscriptionsForChannel(
-      String(channelConfig.id),
+  const tasks = channels.flatMap((channel) => [
+    updateSubscriptionsForChannel(
+      String(channel.channelId),
       "channel.update",
       twitchEventSubCallback,
-      twitchEventSubSecret
-    );
-    await updateSubscriptionsForChannel(
-      String(channelConfig.id),
+      twitchEventSubSecret,
+    ),
+    updateSubscriptionsForChannel(
+      String(channel.channelId),
       "stream.online",
       twitchEventSubCallback,
-      twitchEventSubSecret
-    );
-    await updateSubscriptionsForChannel(
-      String(channelConfig.id),
+      twitchEventSubSecret,
+    ),
+    updateSubscriptionsForChannel(
+      String(channel.channelId),
       "stream.offline",
       twitchEventSubCallback,
-      twitchEventSubSecret
-    );
-  }
+      twitchEventSubSecret,
+    ),
+  ]);
+
+  await Promise.allSettled(tasks);
 }
 
 async function checkSubscriptions() {
@@ -146,7 +142,7 @@ async function checkSubscriptions() {
   });
   if (subscriptions.total_cost >= subscriptions.max_total_cost) {
     console.warn(
-      "Twitch Event Sub: Warning: Reached max cost of event subs for twitch!"
+      "Twitch Event Sub: Warning: Reached max cost of event subs for twitch!",
     );
   }
 }

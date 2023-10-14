@@ -142,6 +142,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/about",
+      destination: "/about/alveus",
+      permanent: true,
+    },
+    {
       source: "/tech",
       destination: "/about/tech",
       permanent: true,
@@ -171,11 +176,41 @@ const config = {
     // External redirects
     {
       source: "/merch",
-      destination: "https://alveussanctuary.myshopify.com",
+      destination: "https://shopalveus.org/",
+      permanent: true,
+    },
+    {
+      source: "/merch-store",
+      destination: "https://shopalveus.org/",
+      permanent: false,
+    },
+    {
+      source: "/shop",
+      destination: "https://shopalveus.org/",
+      permanent: true,
+    },
+    {
+      source: "/store",
+      destination: "https://shopalveus.org/",
+      permanent: true,
+    },
+    {
+      source: "/apparel",
+      destination: "https://shopalveus.org/",
       permanent: true,
     },
     {
       source: "/plushies",
+      destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/plushie",
+      destination: "https://youtooz.com/collections/alveus",
+      permanent: true,
+    },
+    {
+      source: "/plushy",
       destination: "https://youtooz.com/collections/alveus",
       permanent: true,
     },
@@ -261,8 +296,8 @@ const config = {
               "https://streamable.com/",
               // Prezi embeds:
               "https://prezi.com/",
-              // The Giving Block (crypto donations):
-              "https://tgbwidget.com/",
+              // The Giving Block (donation widget):
+              "https://widget.thegivingblock.com/",
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
             ]

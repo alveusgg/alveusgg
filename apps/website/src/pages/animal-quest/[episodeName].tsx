@@ -1,9 +1,10 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import { Fragment, useEffect, useMemo, useState } from "react";
 
 import animalQuest, {
+  hosts,
   type AnimalQuestWithEpisode,
 } from "@alveusgg/data/src/animal-quest";
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
@@ -13,8 +14,9 @@ import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import Consent from "@/components/Consent";
 import Carousel from "@/components/content/Carousel";
+import Link from "@/components/content/Link";
+import Consent from "@/components/Consent";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
@@ -38,7 +40,7 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
       ...obj,
       [sentenceToKebab(episode.edition)]: episode,
     }),
-    {}
+    {},
   );
 
 const getTwitchEmbed = (
@@ -48,7 +50,7 @@ const getTwitchEmbed = (
     start,
     player,
     autoPlay = false,
-  }: Partial<{ start: string; player: string; autoPlay: boolean }> = {}
+  }: Partial<{ start: string; player: string; autoPlay: boolean }> = {},
 ): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("video", video.toString());
@@ -67,6 +69,28 @@ const getPreziEmbed = (id: string): string => {
   const url = new URL(`https://prezi.com/p/embed/${encodeURIComponent(id)}`);
   url.searchParams.set("autoplay", "1");
   return url.toString();
+};
+
+const stringToSeconds = (time: string): number | undefined => {
+  // Attempt to parse as 00h00m00s, or 00:00:00
+  const match =
+    time.match(/^(?:(?:(\d+)h)?(\d+)m)?(\d+)s$/) ??
+    time.match(/^(?:(?:(\d+):)?(\d+):)?(\d+)$/);
+  if (match) {
+    const [, hours, minutes, seconds] = match;
+    return (
+      Number(hours ?? 0) * 3600 + Number(minutes ?? 0) * 60 + Number(seconds)
+    );
+  }
+};
+
+const secondsToString = (seconds: number): string => {
+  const h = Math.floor(seconds / 3600)
+    .toString()
+    .padStart(2, "0");
+  const m = (Math.floor(seconds / 60) % 60).toString().padStart(2, "0");
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${h}h${m}m${s}s`;
 };
 
 type AnimalQuestEpisodePageProps = {
@@ -102,7 +126,7 @@ export const getStaticProps: GetStaticProps<
       ...obj,
       [ambassador]: ambassadors[ambassador],
     }),
-    {}
+    {},
   ) as AnimalQuestEpisodePageProps["featured"];
 
   const related = episode.ambassadors.related.reduce(
@@ -110,7 +134,7 @@ export const getStaticProps: GetStaticProps<
       ...obj,
       [ambassador]: ambassadors[ambassador],
     }),
-    {}
+    {},
   ) as AnimalQuestEpisodePageProps["related"];
 
   return {
@@ -127,14 +151,23 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   featured,
   related,
 }) => {
+  const router = useRouter();
+
+  const start = useMemo(() => {
+    const defaultSeconds = stringToSeconds(episode.video.start || "") ?? 0;
+    const queryString = Array.isArray(router.query.t)
+      ? router.query.t[0]
+      : router.query.t;
+    const querySeconds = stringToSeconds(queryString || "") ?? 0;
+    return secondsToString(Math.max(defaultSeconds, querySeconds));
+  }, [episode.video.start, router.query.t]);
+
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
   useEffect(() => {
     setTwitchEmbed(
-      getTwitchEmbed(episode.video.id, window.location.hostname, {
-        start: episode.video.start,
-      })
+      getTwitchEmbed(episode.video.id, window.location.hostname, { start }),
     );
-  }, [episode.video.id, episode.video.start]);
+  }, [episode.video.id, start]);
 
   const description = useMemo(
     () =>
@@ -142,7 +175,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         episode.description,
         "Each episode of Animal Quest introduces you to an ambassador at Alveus and teaches you about them as well as their species as a whole. We'll look at their importance to the world around us, the risks and misconceptions their species faces, and what we can do to help them.",
       ].filter(Boolean),
-    [episode.description]
+    [episode.description],
   );
 
   const featuredAmbassadors = [
@@ -167,6 +200,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
             className="group text-center transition-colors hover:text-alveus-green-900"
+            custom
           >
             <Image
               src={images[0].src}
@@ -195,6 +229,19 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         ),
       };
     }, {});
+
+  const host = useMemo(() => {
+    const data = hosts[episode.host];
+    const link = data.link.replace(
+      /^https?:\/\/(www.)?alveussanctuary.org/,
+      "",
+    );
+    return {
+      ...data,
+      link,
+      external: /^https?:\/\//.test(link),
+    };
+  }, [episode.host]);
 
   return (
     <>
@@ -309,10 +356,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                       <Fragment key={key}>
                         {/* Retired ambassadors don't have pages */}
                         {isActiveAmbassadorKey(key) ? (
-                          <Link
-                            href={`/ambassadors/${camelToKebab(key)}`}
-                            className="hover:underline"
-                          >
+                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
                             {ambassador.name}
                           </Link>
                         ) : (
@@ -322,7 +366,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                         {idx === arr.length - 2 && arr.length > 2 && ","}
                         {idx === arr.length - 2 && " and "}
                       </Fragment>
-                    )
+                    ),
                   )}
                 </p>
               </div>
@@ -331,7 +375,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 <Heading level={3} className="text-2xl">
                   Host:
                 </Heading>
-                <p>{episode.host}</p>
+                <p>
+                  <Link href={host.link} external={host.external} dark>
+                    {host.name}
+                  </Link>
+                </p>
               </div>
 
               <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
@@ -350,6 +398,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             <Link
               href="/animal-quest"
               className="text-md mt-8 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+              custom
             >
               Discover more episodes
             </Link>
@@ -412,6 +461,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Link
             href="/animal-quest"
             className="text-md inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+            custom
           >
             Discover more episodes
           </Link>

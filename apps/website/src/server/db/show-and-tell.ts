@@ -62,7 +62,7 @@ const createImageAttachmentSchema = attachmentSchema.and(
   z.object({
     fileStorageObjectId: z.string().cuid(),
     name: z.string(),
-  })
+  }),
 );
 
 type VideoLink = z.infer<typeof videoLinkSchema>;
@@ -79,7 +79,7 @@ const imageAttachmentsSchema = z
       Object.keys(update).length + create.length <= MAX_IMAGES,
     {
       message: `Too many image attachments. Max ${MAX_IMAGES}.`,
-    }
+    },
   );
 
 export type ShowAndTellSubmitInput = z.infer<
@@ -101,12 +101,12 @@ export type ShowAndTellUpdateInput = z.infer<
 export const showAndTellUpdateInputSchema = showAndTellSharedInputSchema.and(
   z.object({
     id: z.string().cuid(),
-  })
+  }),
 );
 
 async function revalidateCache(postIdOrIds?: string | string[]) {
   const url = new URL(
-    `${env.NEXT_PUBLIC_BASE_URL}/api/show-and-tell/revalidate`
+    `${env.NEXT_PUBLIC_BASE_URL}/api/show-and-tell/revalidate`,
   );
   url.searchParams.set("secret", env.ACTION_API_SECRET);
 
@@ -115,7 +115,7 @@ async function revalidateCache(postIdOrIds?: string | string[]) {
       url.searchParams.set("postId", postIdOrIds);
     } else {
       postIdOrIds.forEach((postId) =>
-        url.searchParams.append("postId", postId)
+        url.searchParams.append("postId", postId),
       );
     }
   }
@@ -142,7 +142,7 @@ function createLinkAttachmentForVideoUrl(videoUrl: string, idx: number) {
 
 async function createImageAttachment(attachment: CreateImageAttachment) {
   const { error } = await checkAndFixUploadedImageFileStorageObject(
-    attachment.fileStorageObjectId
+    attachment.fileStorageObjectId,
   );
 
   if (error) {
@@ -163,7 +163,7 @@ async function createImageAttachment(attachment: CreateImageAttachment) {
 }
 
 async function createImageAttachments(
-  attachmentsToCreate: Array<CreateImageAttachment>
+  attachmentsToCreate: Array<CreateImageAttachment>,
 ) {
   // Check and fix new uploaded image attachments
   return await Promise.all(attachmentsToCreate.map(createImageAttachment));
@@ -171,14 +171,14 @@ async function createImageAttachments(
 
 function createVideoAttachments(videoLinks: Array<VideoLink>) {
   return videoLinks.map((videoUrl, idx) =>
-    createLinkAttachmentForVideoUrl(videoUrl, idx)
+    createLinkAttachmentForVideoUrl(videoUrl, idx),
   );
 }
 
 export async function createPost(
   input: ShowAndTellSubmitInput,
   authorUserId?: string,
-  importAt?: Date
+  importAt?: Date,
 ) {
   const text = sanitizeUserHtml(input.text);
   const newImages = await createImageAttachments(input.imageAttachments.create);
@@ -212,7 +212,7 @@ export async function createPost(
 export async function getPostById(
   id: string,
   authorUserId?: string,
-  filter?: "published"
+  filter?: "published",
 ) {
   const db = getDatabase();
 
@@ -284,7 +284,7 @@ export async function getAdminPosts({
 export async function updatePost(
   input: ShowAndTellUpdateInput,
   authorUserId?: string,
-  keepApproved?: boolean
+  keepApproved?: boolean,
 ) {
   // check that the user is the owner of the entry
   // and that the entry has not been deleted
@@ -350,7 +350,7 @@ export async function updatePost(
       prisma.imageAttachment.update({
         where: { id },
         data: attachment,
-      })
+      }),
     ),
   ]);
   await revalidateCache(input.id);
@@ -368,7 +368,7 @@ export async function approvePost(id: string, authorUserId?: string) {
 
 export async function removeApprovalFromPost(
   id: string,
-  authorUserId?: string
+  authorUserId?: string,
 ) {
   await prisma.showAndTellEntry.updateMany({
     where: { id, user: authorUserId ? { id: authorUserId } : undefined },

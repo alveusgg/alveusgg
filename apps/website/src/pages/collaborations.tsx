@@ -1,9 +1,9 @@
+import { useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
-import React from "react";
 
 import { formatDateTime } from "@/utils/datetime";
-import { camelToKebab } from "@/utils/string-case";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
@@ -28,6 +28,19 @@ type Collaboration = {
 type Collaborations = Record<string, Collaboration>;
 
 const collaborations = {
+  trihex: {
+    name: "Trihex",
+    link: "https://www.twitch.tv/trihex",
+    date: new Date("2023-09-21"),
+    videoId: "H0gaJrLY5X0",
+  },
+  esfand: {
+    name: "Esfand",
+    link: "https://www.twitch.tv/esfandtv",
+    date: new Date("2023-08-26"),
+    videoId: "9aXebCBRonA",
+    vodId: "o7nyVU62rf8",
+  },
   extraEmily: {
     name: "ExtraEmily",
     link: "https://www.twitch.tv/extraemily",
@@ -38,7 +51,8 @@ const collaborations = {
     name: "Zoil",
     link: "https://www.twitch.tv/zoil",
     date: new Date("2023-06-13"),
-    videoId: "n4KpVaUmrSE",
+    videoId: "8M_qtYuSrys",
+    vodId: "n4KpVaUmrSE",
   },
   peachJars: {
     name: "PeachJars and Jessica Nigri",
@@ -50,7 +64,8 @@ const collaborations = {
     name: "Squeex",
     link: "https://www.twitch.tv/squeex",
     date: new Date("2023-05-19"),
-    videoId: "dCV8b8LcG-0",
+    videoId: "oUJxCDGQDlY",
+    vodId: "dCV8b8LcG-0",
   },
   caroline: {
     name: "Caroline Kwan",
@@ -80,7 +95,8 @@ const collaborations = {
     name: "Dareon",
     link: "https://www.twitch.tv/dareon",
     date: new Date("2023-04-11"),
-    videoId: "RCzMJs9uDSI",
+    videoId: "kqKnhu5zBIY",
+    vodId: "RCzMJs9uDSI",
   },
   yungJeff: {
     name: "YungJeff",
@@ -99,7 +115,8 @@ const collaborations = {
     name: "Russel",
     link: "https://www.twitch.tv/russel",
     date: new Date("2023-03-20"),
-    videoId: "OUaYjkkLeFQ",
+    videoId: "Xizgus_phn4",
+    vodId: "OUaYjkkLeFQ",
   },
   ludwig: {
     name: "Ludwig",
@@ -144,7 +161,7 @@ const collaborations = {
   jackManifold: {
     name: "Jack Manifold",
     link: "https://www.twitch.tv/jackmanifoldtv",
-    date: new Date("2022-04-22"),
+    date: new Date("2022-04-21"),
     videoId: "jzyxhnODe2g",
   },
 } as const satisfies Collaborations;
@@ -159,21 +176,31 @@ const collaborationsByYear: { year: number; collaborations: Collaborations }[] =
           [key]: value,
         },
       }),
-      {}
-    )
+      {},
+    ),
   )
     .map(([year, collaborations]) => ({ year: Number(year), collaborations }))
     .sort((a, b) => b.year - a.year);
 
 type CollaborationsSectionProps = {
   items: Collaborations;
+  year: number;
 };
 
-const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
-  items,
-}) => {
+const CollaborationsSection = ({ items, year }: CollaborationsSectionProps) => {
+  const [open, setOpen] = useState<string>();
+  useEffect(() => {
+    const hash = kebabToCamel(window.location.hash.slice(1));
+    if (hash && items[hash]) setOpen(hash);
+  }, [items]);
+
   return (
-    <Lightbox id="collaborations" className="flex flex-wrap">
+    <Lightbox
+      id={`collaborations-${year}`}
+      className="flex flex-wrap"
+      value={open}
+      onChange={setOpen}
+    >
       {({ Trigger }) => (
         <>
           {Object.entries(items).map(([key, value]) => (
@@ -206,6 +233,7 @@ const CollaborationsSection: React.FC<CollaborationsSectionProps> = ({
                 caption={`${value.name}: ${formatDateTime(value.date, {
                   style: "long",
                 })}`}
+                triggerId={key}
                 className="w-full max-w-2xl"
               >
                 <Preview videoId={value.videoId} />
@@ -286,14 +314,14 @@ const CollaborationsPage: NextPage = () => {
                 level={-1}
                 className={classes(
                   "alveus-green-800 mb-6 mt-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
-                  idx === 0 && "sr-only"
+                  idx === 0 && "sr-only",
                 )}
                 id={year.toString()}
                 link
               >
                 {year}
               </Heading>
-              <CollaborationsSection items={collaborations} />
+              <CollaborationsSection items={collaborations} year={year} />
             </div>
           ))}
         </Section>
