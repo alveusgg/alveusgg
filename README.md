@@ -69,7 +69,7 @@ TODO
    - Fill in the S3 section with your S3-compatible storage info
    - The vapid keys for web notifications have to be generated using `npx web-push generate-vapid-keys`
    - Next Auth secrets, Twitch EventSub API secrets and Action API secrets have to generated using `openssl rand -base64 32`
-   - You may define privileged user once they have signed in via the `SUPER_USER_IDS` variable
+   - You may define privileged users once they have signed in via the `SUPER_USER_IDS` variable (using comma separated ids)
 5. Push the database schema to the new database using `pnpm drizzle-kit push:mysql` from within `apps/website`.
 6. Start the dev server: `pnpm run -r dev`
 7. The website should be running at `http://localhost:3000/` (open in browser)
