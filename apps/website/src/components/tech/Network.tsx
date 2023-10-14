@@ -67,6 +67,10 @@ const nodeTypes: {
     container: "border-green-400",
     eyebrow: { name: "Speaker", color: "text-green-400" },
   },
+  interface: {
+    container: "border-green-400",
+    eyebrow: { name: "Audio I/O Interface", color: "text-green-400" },
+  },
 };
 
 const NetworkNode = ({

@@ -23,7 +23,7 @@ type NetworkItemCore = {
 };
 
 type NetworkItemSwitch = NetworkItemCore & {
-  type: "switch" | "converter";
+  type: "switch" | "converter"  | "interface";
   links: NetworkItem[];
 };
 
@@ -166,18 +166,27 @@ const data: NetworkItem[] = [
                 connection: { type: "ethernet", location: "wall" },
                 links: [
                   {
-                    type: "camera",
-                    name: "Pasture",
-                    model: "Axis Q6135-LE (PTZ)",
-                    url: "https://www.axis.com/products/axis-q6135-le",
+                    type: "interface",
+                    name: "Pasture Audio I/O",
+                    model: "AXIS T6112 Mk II",
+                    url: "https://www.axis.com/products/axis-t6112-mk-ii-audio-and-io-interface",
                     connection: { type: "ethernet", location: "wall" },
-                  },
-                  {
-                    type: "microphone",
-                    name: "Pasture Audio",
-                    model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                    url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
-                    connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Pasture",
+                        model: "Axis Q6135-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6135-le",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "microphone",
+                        name: "Pasture Audio",
+                        model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
                   },
                 ],
               },
@@ -237,11 +246,20 @@ const data: NetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
-                    type: "microphone",
-                    name: "Parrots Audio",
-                    model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                    url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                    type: "interface",
+                    name: "Parrots Audio I/O",
+                    model: "AXIS P8221 I/O Audio Module",
+                    url: "https://www.axis.com/products/axis-p8221-io-audio-module/support",
                     connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "microphone",
+                        name: "Parrots Audio",
+                        model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
                   },
                   {
                     type: "speaker",
@@ -256,7 +274,7 @@ const data: NetworkItem[] = [
                     model: "Ubiquiti UAP-AC-M-Pro",
                     url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
                     connection: { type: "ethernet", location: "wall" },
-                  }
+                  },
                 ],
               },
             ],
@@ -313,11 +331,20 @@ const data: NetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
-                    type: "microphone",
-                    name: "Crows Audio",
-                    model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                    url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                    type: "interface",
+                    name: "Crows Audio I/O",
+                    model: "AXIS P8221 I/O Audio Module",
+                    url: "https://www.axis.com/products/axis-p8221-io-audio-module/support",
                     connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "microphone",
+                        name: "Crows Audio",
+                        model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
                   },
                   {
                     type: "accessPoint",
@@ -350,11 +377,20 @@ const data: NetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
-                    type: "microphone",
-                    name: "Marmosets Audio",
-                    model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                    url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                    type: "interface",
+                    name: "Marmosets Audio I/O",
+                    model: "AXIS D3110 Connectivity Hub",
+                    url: "https://www.axis.com/products/axis-d3110-connectivity-hub",
                     connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "microphone",
+                        name: "Marmosets Audio",
+                        model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                    ],
                   },
                   {
                     type: "accessPoint",
@@ -401,11 +437,20 @@ const data: NetworkItem[] = [
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
-                        type: "microphone",
-                        name: "Foxes Audio",
-                        model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
-                        url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                        type: "interface",
+                        name: "Foxes Audio I/O",
+                        model: "AXIS P8221 I/O Audio Module",
+                        url: "https://www.axis.com/products/axis-p8221-io-audio-module/support",
                         connection: { type: "ethernet", location: "wall" },
+                        links: [
+                          {
+                            type: "microphone",
+                            name: "Foxes Audio",
+                            model: "Axis TU1001-VE w/ Axis P8221 I/O Audio Module",
+                            url: "https://www.axis.com/products/axis-tu1001-ve-microphone",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                        ],
                       },
                       {
                         type: "accessPoint",
