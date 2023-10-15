@@ -25,6 +25,7 @@
   },
   "scripts": {
     "prepare": "husky install",
-    "lint-staged": "lint-staged --relative"
+    "lint-staged": "lint-staged --relative",
+    "prettier": "prettier . --write"
   }
 }

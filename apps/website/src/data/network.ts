@@ -256,7 +256,7 @@ const data: NetworkItem[] = [
                     model: "Ubiquiti UAP-AC-M-Pro",
                     url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
                     connection: { type: "ethernet", location: "wall" },
-                  }
+                  },
                 ],
               },
             ],
