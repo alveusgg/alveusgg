@@ -51,7 +51,7 @@ export const env = createEnv({
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL || str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL_URL ? z.string() : z.string().url()
+      process.env.VERCEL_URL ? z.string() : z.string().url(),
     ),
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),

@@ -1,5 +1,6 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useState } from "react";
 
 import animalQuest, {
@@ -70,6 +71,28 @@ const getPreziEmbed = (id: string): string => {
   return url.toString();
 };
 
+const stringToSeconds = (time: string): number | undefined => {
+  // Attempt to parse as 00h00m00s, or 00:00:00
+  const match =
+    time.match(/^(?:(?:(\d+)h)?(\d+)m)?(\d+)s$/) ??
+    time.match(/^(?:(?:(\d+):)?(\d+):)?(\d+)$/);
+  if (match) {
+    const [, hours, minutes, seconds] = match;
+    return (
+      Number(hours ?? 0) * 3600 + Number(minutes ?? 0) * 60 + Number(seconds)
+    );
+  }
+};
+
+const secondsToString = (seconds: number): string => {
+  const h = Math.floor(seconds / 3600)
+    .toString()
+    .padStart(2, "0");
+  const m = (Math.floor(seconds / 60) % 60).toString().padStart(2, "0");
+  const s = (seconds % 60).toString().padStart(2, "0");
+  return `${h}h${m}m${s}s`;
+};
+
 type AnimalQuestEpisodePageProps = {
   episode: AnimalQuestWithEpisode;
   featured: {
@@ -128,14 +151,23 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   featured,
   related,
 }) => {
+  const router = useRouter();
+
+  const start = useMemo(() => {
+    const defaultSeconds = stringToSeconds(episode.video.start || "") ?? 0;
+    const queryString = Array.isArray(router.query.t)
+      ? router.query.t[0]
+      : router.query.t;
+    const querySeconds = stringToSeconds(queryString || "") ?? 0;
+    return secondsToString(Math.max(defaultSeconds, querySeconds));
+  }, [episode.video.start, router.query.t]);
+
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
   useEffect(() => {
     setTwitchEmbed(
-      getTwitchEmbed(episode.video.id, window.location.hostname, {
-        start: episode.video.start,
-      }),
+      getTwitchEmbed(episode.video.id, window.location.hostname, { start }),
     );
-  }, [episode.video.id, episode.video.start]);
+  }, [episode.video.id, start]);
 
   const description = useMemo(
     () =>

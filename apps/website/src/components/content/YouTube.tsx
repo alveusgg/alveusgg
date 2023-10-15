@@ -9,7 +9,10 @@ import {
 } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import {
+  getDefaultPhotoswipeLightboxOptions,
+  resolvePhotoswipeElementProvider,
+} from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl } from "@/utils/image";
 import { classes } from "@/utils/classes";
@@ -27,7 +30,8 @@ const iframeAttrs = {
   title: "YouTube video",
   referrerpolicy: "no-referrer",
   allow: "encrypted-media",
-  sandbox: "allow-same-origin allow-scripts",
+  sandbox:
+    "allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox",
   loading: "lazy",
   class: "aspect-video w-full rounded-2xl shadow-xl bg-alveus-green-800",
 };
@@ -51,24 +55,36 @@ export const parseUrl = (url: string) => {
 type TriggerProps = {
   videoId: string;
   caption?: string;
+  triggerId?: string;
   className?: string;
   children: ReactNode;
 };
 
 const createTrigger = (id: string) => {
-  const Trigger = ({ videoId, caption, className, children }: TriggerProps) => {
-    return (
-      <a
-        href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
-        target="_blank"
-        rel="noreferrer"
-        className={classes("group/trigger", className)}
-        {...{ [`data-lightbox-${id}`]: JSON.stringify({ videoId, caption }) }}
-      >
-        {children}
-      </a>
-    );
-  };
+  const Trigger = ({
+    videoId,
+    caption,
+    triggerId,
+    className,
+    children,
+  }: TriggerProps) => (
+    <a
+      href={`https://www.youtube.com/watch?v=${encodeURIComponent(videoId)}`}
+      target="_blank"
+      rel="noreferrer"
+      className={classes("group/trigger", className)}
+      {...{
+        [`data-lightbox-${id}`]: JSON.stringify({
+          videoId,
+          caption,
+          triggerId: triggerId ?? videoId,
+        }),
+      }}
+    >
+      {children}
+    </a>
+  );
+  Trigger.displayName = "Trigger";
   return Trigger;
 };
 
@@ -127,26 +143,38 @@ type LightboxProps = {
   id?: string;
   className?: string;
   children: ReactNode | ((ctx: LightboxCtxProps) => ReactNode);
+  value?: string;
+  onChange?: (value?: string) => void;
 };
 
-export const Lightbox = ({ id, className, children }: LightboxProps) => {
+export const Lightbox = ({
+  id,
+  className,
+  children,
+  value,
+  onChange,
+}: LightboxProps) => {
   const { update: updateConsent } = useConsent();
 
+  // Start up Photoswipe lightbox
   const defaultId = useId().replace(/\W/g, "").toLowerCase();
   const photoswipeId = `photoswipe-${id || defaultId}`;
+  const [photoswipe, setPhotoswipe] = useState<PhotoSwipeLightbox>();
+
   useEffect(() => {
-    const lightbox = new PhotoSwipeLightbox({
+    const opts = {
       ...getDefaultPhotoswipeLightboxOptions(),
       gallery: `#${photoswipeId}`,
       mainClass: `pswp--${photoswipeId}`,
       children: `a[data-lightbox-${photoswipeId}]`,
       preloaderDelay: 0,
-    });
+    };
+    const lightbox = new PhotoSwipeLightbox(opts);
 
     // Expose the video id
     lightbox.addFilter("itemData", (itemData) => ({
       ...itemData,
-      youTube: safeJsonParse(
+      trigger: safeJsonParse(
         itemData.element?.getAttribute(`data-lightbox-${photoswipeId}`) || "",
       ),
     }));
@@ -154,7 +182,7 @@ export const Lightbox = ({ id, className, children }: LightboxProps) => {
     // Create the lightbox iframe
     lightbox.on("contentLoad", (e) => {
       const { content } = e;
-      if (!content.data.youTube?.videoId) return;
+      if (!content.data.trigger?.videoId) return;
 
       // Prevent the default content load
       e.preventDefault();
@@ -174,7 +202,7 @@ export const Lightbox = ({ id, className, children }: LightboxProps) => {
 
       // Create our iframe
       const iframe = document.createElement("iframe");
-      iframe.src = iframeSrc(content.data.youTube.videoId);
+      iframe.src = iframeSrc(content.data.trigger.videoId);
       Object.entries(iframeAttrs).forEach(([key, value]) => {
         iframe.setAttribute(camelToKebab(key), value);
       });
@@ -196,19 +224,77 @@ export const Lightbox = ({ id, className, children }: LightboxProps) => {
       wrapper.appendChild(iframe);
 
       // If we have a caption, add it
-      if (content.data.youTube.caption) {
+      if (content.data.trigger.caption) {
         const caption = document.createElement("div");
         caption.className = "text-alveus-tan text-xl my-4 md:mb-0 lg:mt-8";
-        caption.innerHTML = content.data.youTube.caption;
+        caption.innerHTML = content.data.trigger.caption;
         content.element.appendChild(caption);
       }
     });
 
+    // Expose the current slide to the controlled value
+    lightbox.on("contentActivate", ({ content }) => {
+      if (onChange) onChange(content.data.trigger?.triggerId);
+    });
+
+    // When closing, let the controlled value know
+    lightbox.on("close", () => {
+      if (onChange) onChange(undefined);
+    });
+
+    // Initialize the lightbox
     lightbox.init();
+    setPhotoswipe(lightbox);
+
+    // Do the cleanup in the reverse order
     return () => {
+      setPhotoswipe(undefined);
       lightbox.destroy();
     };
-  }, [photoswipeId, updateConsent]);
+  }, [photoswipeId, updateConsent, onChange]);
+
+  // If the controlled value changes, make sure the lightbox and it are in sync
+  useEffect(() => {
+    // If we have no lightbox, do nothing
+    if (!photoswipe) return;
+
+    // If we have no value, close the lightbox
+    if (!value) {
+      photoswipe.pswp?.close();
+      return;
+    }
+
+    // If photoswipe is active and the value is the same, do nothing
+    const active = photoswipe.pswp?.currSlide?.data?.trigger?.triggerId as
+      | string
+      | undefined;
+    if (active === value) return;
+
+    // Get the gallery and children
+    const gallery = resolvePhotoswipeElementProvider(
+      photoswipe.options.gallery,
+    )?.[0];
+    if (!gallery) return;
+    const items = resolvePhotoswipeElementProvider(
+      photoswipe.options.children,
+      gallery,
+    );
+    if (!items) return;
+
+    // Locate the matching trigger and open it
+    // If we can't find it, set the value back to the active slide
+    const match = items.findIndex(
+      (child) =>
+        safeJsonParse(child.getAttribute(`data-lightbox-${photoswipeId}`) || "")
+          ?.triggerId === value,
+    );
+    if (match !== -1)
+      photoswipe.loadAndOpen(
+        match,
+        photoswipe.options.dataSource || { gallery, items },
+      );
+    if (match === -1 && onChange) onChange(active);
+  }, [value, photoswipe, photoswipeId, onChange]);
 
   // Expose the nested components
   const ctx: LightboxCtxProps = useMemo(
