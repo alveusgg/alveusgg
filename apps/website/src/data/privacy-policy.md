@@ -188,6 +188,30 @@ Personal Data is collected for the following purposes and using the following se
 
   This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers
 
+- ### Measuring views (Plausible Analytics)
+
+  To measure views on this website we use the open-source software Plausible Analytics. We minimizes data collection in general and whatever we track is
+  kept fully secured, encrypted and hosted on a server controlled by Alveus Sanctuary in the European Union to ensure it is being covered by the strict
+  laws on data privacy.  We do not use cookies and do not generate any persistent identifiers for the purpose of measuring view.
+  Plausible Analytics generates a random string of letters and numbers that is used to calculate unique visitors on a website and reset this string once per day.
+  All the data is isolated to a single day only, therefore, there is no way to know whether a person comes back to a site on another day.
+  All site measurements are carried out anonymously. Plausible Analytics measures only the most essential data points and nothing else.
+  We collect the pages that get viewed, the referrers that link to this website, name and version of the web browser, name and version of the operating system,
+  device category (desktop, mobile or tablet) and a rough location (country, region and city) derived from the visitor’s IP address.
+  We do not attempt to generate a device-persistent identifier which would be considered personal data under GDPR.
+  We do not use cookies, browser cache nor the local storage. Using Plausible Analytics we generate a daily changing identifier
+  using the visitor’s IP address and User-Agent. To anonymize these datapoints and make them impossible to relate back to the user, Plausible Analytics
+  runs them through a hash function with a rotating salt. This generates a random string of letters and numbers that is used to calculate unique visitor
+  numbers for the day. The raw data IP address and User-Agent are not stored in our databases or anywhere on disk at all. Old salts are deleted every 24
+  hours to avoid the possibility of linking visitor information from one day to the next.
+
+  Personal Data collected: Derived, aggregated and anonymized usage data as described above.
+
+  Place of processing: Germany
+
+  Category of personal data collected according to CCPA: internet information.
+
+
 ## The rights of Users {#rights_subjects}
 
 Users may exercise certain rights regarding their Data processed by the Owner.

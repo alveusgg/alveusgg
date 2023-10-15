@@ -22,6 +22,10 @@ export const userRoles = {
     label: "Manage Twitch",
     description: "Can manage twitch configuration and credentials",
   },
+  stats: {
+    label: "Stats",
+    description: "Can view website stats",
+  },
 } as const satisfies Record<string, UserRoleConfig>;
 
 export function isValidUserRole(role: string) {

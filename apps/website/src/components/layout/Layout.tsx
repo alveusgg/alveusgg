@@ -1,7 +1,9 @@
-import { useEffect, type ReactNode } from "react";
+import { useEffect, useMemo, type ReactNode } from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
+import Script from "next/script";
 
+import { env } from "@/env/index.mjs";
 import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
@@ -29,6 +31,11 @@ const Layout = ({ children }: LayoutProps) => {
   useEffect(() => {
     document.body.classList.add(...fonts.split(" "));
   }, []);
+
+  const statsDomain = useMemo(
+    () => new URL(env.NEXT_PUBLIC_BASE_URL).hostname,
+    [],
+  );
 
   return (
     <>
@@ -84,6 +91,13 @@ const Layout = ({ children }: LayoutProps) => {
         </main>
         <Footer />
       </div>
+
+      <Script
+        defer
+        data-domain={statsDomain}
+        data-api="/stats/api/event"
+        src="/stats/js/script.js"
+      />
     </>
   );
 };

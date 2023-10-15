@@ -33,6 +33,11 @@ const menuItems = [
     permission: permissions.viewActivityFeed,
   },
   {
+    label: "Stats",
+    href: "/admin/stats",
+    permission: permissions.viewStats,
+  },
+  {
     label: "Users & Roles",
     href: "/admin/users",
     permission: permissions.manageUsersAndRoles,
