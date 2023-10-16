@@ -186,6 +186,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               target="_blank"
               rel="noreferrer"
               draggable={false}
+              className="group"
               data-pswp-width={src.width}
               data-pswp-height={src.height}
             >
@@ -194,7 +195,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 alt={alt}
                 draggable={false}
                 width={300}
-                className="aspect-square h-auto w-full rounded-xl object-cover"
+                className="aspect-square h-auto w-full rounded-xl object-cover transition group-hover:scale-102 group-hover:shadow-sm"
                 style={{ objectPosition: position }}
               />
             </a>
