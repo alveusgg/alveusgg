@@ -186,6 +186,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               target="_blank"
               rel="noreferrer"
               draggable={false}
+              className="group"
               data-pswp-width={src.width}
               data-pswp-height={src.height}
             >
@@ -194,7 +195,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 alt={alt}
                 draggable={false}
                 width={300}
-                className="aspect-square h-auto w-full rounded-xl object-cover"
+                className="aspect-square h-auto w-full rounded-xl object-cover transition group-hover:scale-102 group-hover:shadow-sm"
                 style={{ objectPosition: position }}
               />
             </a>
@@ -309,21 +310,36 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               />
             </div>
 
-            {ambassador.plush && "link" in ambassador.plush && merchImage && (
-              <Link
-                href={ambassador.plush.link}
-                className="group mx-auto my-6"
-                external
-                custom
-              >
-                <Image
-                  src={merchImage.src}
-                  width={512}
-                  alt={`${ambassador.name} Plush`}
-                  className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
-                />
-              </Link>
-            )}
+            {ambassador.plush &&
+              merchImage &&
+              ("link" in ambassador.plush ? (
+                <Link
+                  href={ambassador.plush.link}
+                  className="group mx-auto my-6"
+                  external
+                  custom
+                >
+                  <Image
+                    src={merchImage.src}
+                    width={512}
+                    alt={`${ambassador.name} Plush`}
+                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
+                  />
+                </Link>
+              ) : (
+                <div className="group relative mx-auto my-6 cursor-pointer">
+                  <Image
+                    src={merchImage.src}
+                    width={512}
+                    alt={`${ambassador.name} Plush`}
+                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
+                  />
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition group-hover:scale-102 group-hover:opacity-100 group-hover:backdrop-blur-sm">
+                    <p className="text-3xl">Coming Soon</p>
+                    <p className="text-2xl">{ambassador.plush.soon}</p>
+                  </div>
+                </div>
+              ))}
           </div>
         </Section>
       </div>
