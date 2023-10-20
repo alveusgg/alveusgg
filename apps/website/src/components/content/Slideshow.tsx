@@ -137,7 +137,6 @@ const Slideshow = ({
             quality="50"
             loader={qualityLoader}
             priority={idx === 0}
-            placeholder="blur"
             className="h-full w-full object-cover"
             style={{
               animationDelay: `${idx * animation.duration.offset}ms`,
