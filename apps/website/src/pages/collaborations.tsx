@@ -89,7 +89,8 @@ const collaborations = {
     name: "Daily Dose",
     link: "https://www.youtube.com/@DailyDoseOfInternet",
     date: new Date("2023-04-25"),
-    videoId: "j8GxD4adNyk",
+    videoId: "M9BBwvR3i-E",
+    vodId: "j8GxD4adNyk",
   },
   graycen: {
     name: "Graycen",
