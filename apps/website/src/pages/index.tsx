@@ -326,8 +326,8 @@ const Home: NextPage = () => {
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
               <Heading level={2}>Alveus Plushies!</Heading>
               <p className="my-4">
-                Grab yourself your very own ambassador in your home with our
-                plushies!
+                Grab yourself a high-quality plushie and have your very own
+                ambassador in your home!
               </p>
               <p className="my-4">
                 All proceeds go directly into Alveus and the support & care of
