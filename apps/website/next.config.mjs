@@ -173,32 +173,33 @@ const config = {
         permanent: false,
       },
     ]),
-    // External redirects
+    // Temporary redirects (until new merch show is set up)
     {
       source: "/merch",
-      destination: "/", // Temporary redirect to home page until new merch show is set up
+      destination: "/#merch",
       permanent: false,
     },
     {
       source: "/merch-store",
-      destination: "/", // Temporary redirect to home page until new merch show is set up
+      destination: "/#merch",
       permanent: false,
     },
     {
       source: "/shop",
-      destination: "/", // Temporary redirect to home page until new merch show is set up
+      destination: "/#merch",
       permanent: false,
     },
     {
       source: "/store",
-      destination: "/", // Temporary redirect to home page until new merch show is set up
+      destination: "/#merch",
       permanent: false,
     },
     {
       source: "/apparel",
-      destination: "/", // Temporary redirect to home page until new merch show is set up
+      destination: "/#merch",
       permanent: false,
     },
+    // External redirects
     {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",

@@ -324,7 +324,9 @@ const Home: NextPage = () => {
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
-              <Heading level={2}>Alveus Plushies!</Heading>
+              <Heading level={2} id="merch" link>
+                Alveus Plushies!
+              </Heading>
               <p className="my-4">
                 Grab yourself a high-quality plushie and have your very own
                 ambassador in your home!
