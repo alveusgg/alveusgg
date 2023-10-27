@@ -352,8 +352,8 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         key: "summer-camp",
         date: "2023-07-21",
         content: [
-          "Summer Camp and first merch drop",
-          "Alveus hosted a 24-hour long charity stream from the training center, accompanied by our first limited-time merch drop to raise funds for the sanctuary.",
+          "Summer Camp and merch drop",
+          "Alveus hosted a 24-hour long charity stream from the training center, accompanied by a limited-time merch drop to raise funds for the sanctuary.",
         ],
         link: {
           text: "Explore Alveus events",

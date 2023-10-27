@@ -173,32 +173,33 @@ const config = {
         permanent: false,
       },
     ]),
-    // External redirects
+    // Temporary redirects (until new merch show is set up)
     {
       source: "/merch",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/#merch",
+      permanent: false,
     },
     {
       source: "/merch-store",
-      destination: "https://shopalveus.org/",
+      destination: "/#merch",
       permanent: false,
     },
     {
       source: "/shop",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/#merch",
+      permanent: false,
     },
     {
       source: "/store",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/#merch",
+      permanent: false,
     },
     {
       source: "/apparel",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/#merch",
+      permanent: false,
     },
+    // External redirects
     {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",

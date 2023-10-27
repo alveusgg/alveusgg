@@ -6,16 +6,17 @@ export const Promos = () => (
   <div className="flex flex-col flex-wrap gap-12 md:flex-row">
     <div className="flex flex-1 flex-col items-start gap-4">
       <Heading level={2} className="my-0">
-        New Merch Available!
+        Plushies are available!
       </Heading>
 
       <p>
-        Grab yourself a high-quality t-shirt or hoodie to support Alveus, or a
-        plushie of your favorite ambassador! All proceeds go directly into
-        Alveus and the support & care of our educational ambassadors.
+        Grab yourself a plushie of your favorite ambassador! All proceeds go
+        directly into Alveus and the support & care of our educational
+        ambassadors.
       </p>
 
       <div className="flex flex-wrap gap-4">
+        {/*
         <Link
           className="mt-auto inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
           href="/merch"
@@ -24,6 +25,7 @@ export const Promos = () => (
         >
           Merch Store
         </Link>
+        */}
 
         <Link
           className="mt-auto inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
