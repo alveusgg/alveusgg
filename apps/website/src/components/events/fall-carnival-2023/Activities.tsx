@@ -29,12 +29,12 @@ export const activities = (
     {
       key: "nillaWafer",
       ambassador: ambassadors.nillaWafer,
-      activity: "Haunted mace",
+      activity: "Haunted maze",
     },
     {
       key: "chipsAhoy",
       ambassador: ambassadors.chipsAhoy,
-      activity: "Haunted mace",
+      activity: "Haunted maze",
     },
   ] as const
 )
