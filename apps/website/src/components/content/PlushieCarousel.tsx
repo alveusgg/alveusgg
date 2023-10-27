@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+import sirenImage from "@/assets/plushies/siren.png";
 import winnieImage from "@/assets/plushies/winnie.png";
 import georgieImage from "@/assets/plushies/georgie.png";
 import stompyImage from "@/assets/plushies/stompy.png";
@@ -7,6 +8,10 @@ import stompyImage from "@/assets/plushies/stompy.png";
 import Carousel from "./Carousel";
 
 const merch = Object.entries({
+  siren: {
+    src: sirenImage,
+    alt: "Siren",
+  },
   winnie: {
     src: winnieImage,
     alt: "Winnie",
@@ -34,7 +39,7 @@ const merch = Object.entries({
       </div>
     ),
   }),
-  {}
+  {},
 );
 
 const PlushieCarousel = () => (
