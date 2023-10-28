@@ -1,5 +1,9 @@
 import { ticketConfig } from "@/data/events/fall-carnival-2023";
 
+import { getShortBaseUrl } from "@/utils/short-url";
+
+import { QRCode } from "@/components/QrCode";
+
 import type { TicketProps } from "../virtual-ticket/Ticket";
 import { Ticket } from "../virtual-ticket/Ticket";
 
@@ -12,7 +16,25 @@ export function FallCarnival2023Ticket({
   children,
 }: FallCarnival2023TicketProps) {
   return (
-    <Ticket {...ticketConfig} maskImage={ticketConfig.maskImage}>
+    <Ticket
+      {...ticketConfig}
+      maskImage={ticketConfig.maskImage}
+      additionalElements={
+        <QRCode
+          style={{
+            position: "absolute",
+            width: 110,
+            height: 110,
+            top: 122,
+            right: 43,
+            pointerEvents: "none",
+            userSelect: "none",
+            color: "#e0d8d0",
+          }}
+          value={`${getShortBaseUrl()}/fc23/${encodeURIComponent(userName)}`}
+        />
+      }
+    >
       {children}
 
       <div

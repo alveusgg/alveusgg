@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+
 import type { TicketConfig } from "@/utils/virtual-tickets";
 import {
   defaultTicketHeight,
@@ -7,10 +8,12 @@ import {
 
 export type TicketProps = TicketConfig & {
   children?: ReactNode;
+  additionalElements?: ReactNode;
 };
 
 export function Ticket({
   children,
+  additionalElements,
   width = defaultTicketWidth,
   height = defaultTicketHeight,
   canvasOffsetTop = 0,
@@ -53,7 +56,6 @@ export function Ticket({
           draggable={false}
         />
       )}
-
       <div
         style={{
           display: "flex",
@@ -67,7 +69,6 @@ export function Ticket({
       >
         {children}
       </div>
-
       {foregroundImage && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
@@ -87,6 +88,8 @@ export function Ticket({
           draggable={false}
         />
       )}
+
+      {additionalElements}
     </div>
   );
 }
