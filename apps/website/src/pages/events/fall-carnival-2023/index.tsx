@@ -140,16 +140,15 @@ const FallCarnival2023EventPage: NextPage = () => {
                 />
               </div>
 
-              {isDirty ||
-                (myTicket.isLoading && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-alveus-tan text-center italic">
-                    <span>
-                      {myTicket.isLoading
-                        ? "Loading the ticket…"
-                        : "You have unsaved changes!"}
-                    </span>
-                  </div>
-                ))}
+              {(isDirty || myTicket.isLoading) && (
+                <div className="absolute inset-0 flex items-center justify-center bg-alveus-tan text-center italic">
+                  <span>
+                    {myTicket.isLoading
+                      ? "Loading the ticket…"
+                      : "You have unsaved changes!"}
+                  </span>
+                </div>
+              )}
             </div>
 
             <TicketEditor
