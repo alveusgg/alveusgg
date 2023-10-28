@@ -136,15 +136,20 @@ const FallCarnival2023EventPage: NextPage = () => {
                     userName,
                   )}`}
                   title="I claimed my Alveus Fall Carnival ticket"
-                  text="I claimed my Alveus Fall Carnival ticket, November 4th 2023 at 11pm CT, live on twitch.tv/maya"
+                  text="I claimed my Alveus Fall Carnival ticket, November 4th 2023 at 11pm CT live on Twitch!"
                 />
               </div>
 
-              {isDirty && (
-                <div className="absolute inset-0 flex items-center justify-center bg-alveus-tan text-center italic">
-                  <span>You have unsaved changes!</span>
-                </div>
-              )}
+              {isDirty ||
+                (myTicket.isLoading && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-alveus-tan text-center italic">
+                    <span>
+                      {myTicket.isLoading
+                        ? "Loading the ticket…"
+                        : "You have unsaved changes!"}
+                    </span>
+                  </div>
+                ))}
             </div>
 
             <TicketEditor
