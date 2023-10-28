@@ -20,8 +20,8 @@ export function MovableSticker({
   return (
     <Movable
       as="img"
-      width={90}
-      height={90}
+      width={64}
+      height={64}
       src={image}
       x={x}
       y={y}

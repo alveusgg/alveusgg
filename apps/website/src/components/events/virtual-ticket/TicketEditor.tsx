@@ -24,6 +24,7 @@ import {
 } from "@/utils/virtual-tickets";
 
 import { Button } from "@/components/shared/Button";
+import { classes } from "@/utils/classes";
 
 type StickerDataAction =
   | { type: "set"; stickers: Array<string> }
@@ -333,59 +334,67 @@ export function TicketEditor({
         </div>
       </div>
 
-      <div className="mx-auto mt-12 flex max-w-3xl flex-row gap-4">
+      <div className="mx-auto mt-8 flex max-w-[899px] flex-col gap-2 md:mt-12 lg:flex-row lg:gap-4">
         {typeSafeObjectKeys(stickerPack.groups).map((groupId) => {
           const group = stickerPack.groups[groupId]!;
 
           return (
-            <div key={groupId}>
-              <h3 className="text-lg font-bold leading-none">{group.name}</h3>
-              <p className="leading-tight text-gray-800">
-                {group.attribution || <>&nbsp;</>}
-              </p>
-              <ul className="mt-4 flex flex-wrap items-center gap-3">
-                {typeSafeObjectKeys(stickerPack.stickers)
-                  .filter(
-                    (imageId) =>
-                      groupId === stickerPack.stickers[imageId]!.groupId,
-                  )
-                  .map((imageId) => ({
-                    name: stickerPack.stickers[imageId]!.name,
-                    disabled: stickers.includes(imageId),
-                    image: mapStickerIdToPath(stickerPack.stickers, imageId),
-                    imageId,
-                  }))
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map(({ name, disabled, imageId, image }) => (
-                    <li key={imageId}>
-                      <button
-                        className={`select-none rounded-lg p-0.5 shadow-lg transition-transform ${
-                          disabled ? "bg-gray-300" : "bg-white hover:scale-110"
-                        }`}
-                        type="button"
-                        disabled={disabled}
-                        onClick={() => {
-                          if (!disabled) {
-                            addSticker(imageId);
-                            setSelectedSticker(imageId);
-                          }
-                        }}
-                        title={`${disabled ? "" : "Add"} ${name}`}
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={image}
-                          alt=""
-                          className={`aspect-square ${
-                            disabled ? "opacity-50 grayscale" : ""
+            <div key={groupId} className="flex-1">
+              <div className="flex flex-row justify-center gap-1 text-sm leading-tight md:justify-start lg:flex-col lg:gap-0 lg:text-base">
+                <h3 className="font-bold lg:text-lg">{group.name}</h3>
+                <p className="text-gray-800">
+                  {group.attribution || <>&nbsp;</>}
+                </p>
+              </div>
+
+              <div className="w-full overflow-auto md:overflow-hidden">
+                <ul className="flex flex-row items-center gap-1 py-2 md:flex-wrap md:gap-2 lg:gap-3">
+                  {typeSafeObjectKeys(stickerPack.stickers)
+                    .filter(
+                      (imageId) =>
+                        groupId === stickerPack.stickers[imageId]!.groupId,
+                    )
+                    .map((imageId) => ({
+                      name: stickerPack.stickers[imageId]!.name,
+                      disabled: stickers.includes(imageId),
+                      image: mapStickerIdToPath(stickerPack.stickers, imageId),
+                      imageId,
+                    }))
+                    .sort((a, b) => a.name.localeCompare(b.name))
+                    .map(({ name, disabled, imageId, image }) => (
+                      <li key={imageId} className="flex-shrink-0">
+                        <button
+                          className={`select-none rounded-lg p-0.5 shadow-lg transition-transform ${
+                            disabled
+                              ? "bg-gray-300"
+                              : "bg-white hover:scale-110"
                           }`}
-                          width={40}
-                          height={40}
-                        />
-                      </button>
-                    </li>
-                  ))}
-              </ul>
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => {
+                            if (!disabled) {
+                              addSticker(imageId);
+                              setSelectedSticker(imageId);
+                            }
+                          }}
+                          title={`${disabled ? "" : "Add"} ${name}`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={image}
+                            alt=""
+                            className={classes(
+                              `aspect-square h-[28px] w-[28px] lg:h-[40px] lg:w-[40px]`,
+                              disabled && "opacity-50 grayscale",
+                            )}
+                            width={40}
+                            height={40}
+                          />
+                        </button>
+                      </li>
+                    ))}
+                </ul>
+              </div>
             </div>
           );
         })}

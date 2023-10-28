@@ -16,8 +16,8 @@ export function Sticker({ image, x, y }: StickerProps) {
         top: y,
         left: x,
         opacity: 0.95,
-        width: 90,
-        height: 90,
+        width: 64,
+        height: 64,
       }}
       src={image}
       alt=""
