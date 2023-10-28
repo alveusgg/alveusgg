@@ -58,7 +58,7 @@ export function IntroSection({
           Alveus Fall Carnival 2023!
         </Heading>
         <p className="text-lg">
-          November 4th 2023 at 11pm CT live on{" "}
+          November 4th 2023 at 11am CT live on{" "}
           <Link href="https://twitch.tv/maya" dark external>
             twitch.tv/maya
           </Link>

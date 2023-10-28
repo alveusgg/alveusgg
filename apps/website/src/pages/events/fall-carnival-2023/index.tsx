@@ -137,8 +137,8 @@ const FallCarnival2023EventPage: NextPage = () => {
                   url={`${getShortBaseUrl()}/fc23/${encodeURIComponent(
                     userName,
                   )}`}
-                  title="I claimed my Alveus Fall Carnival ticket"
-                  text="I claimed my Alveus Fall Carnival ticket, November 4th 2023 at 11pm CT live on Twitch!"
+                  title="My Alveus Fall Carnival ticket"
+                  text="I claimed my ticket for the Alveus Fall Carnival, November 4th 2023 at 11am CT live on Twitch!"
                 />
               </div>
 
