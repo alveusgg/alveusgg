@@ -123,6 +123,11 @@ const TicketPage: NextPage = () => {
                 alt=""
               />
             </Wiggle>
+
+            <p className="text-center">
+              Sticker art by Mik_MWP (Sub emotes) <br />
+              and LazyGoose (Pixel Ambassadors)
+            </p>
           </>
         )}
       </Section>
