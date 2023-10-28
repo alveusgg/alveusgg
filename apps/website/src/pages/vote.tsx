@@ -1,42 +1,107 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
+import IframeResizer from "iframe-resizer-react";
 
+import Consent from "@/components/Consent";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
 import IconChevronUp from "@/icons/IconChevronUp";
 import IconChevronDown from "@/icons/IconChevronDown";
+import IconExternal from "@/icons/IconExternal";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+
+const embedTypes = {
+  register: "Register to Vote",
+  verify: "Check Your Voting Status",
+  ballot: "Preview Your Ballot",
+} as const;
+
+const VoteEmbed = ({ type }: { type: keyof typeof embedTypes }) => (
+  <Consent item="vote.org form" consent="vote" className="my-4">
+    <IframeResizer
+      className="w-full"
+      src={`https://${type}.vote.org/?partner=111111&campaign=free-tools`}
+      title={embedTypes[type]}
+    />
+  </Consent>
+);
 
 const steps = {
   register: {
     title: "Register to Vote",
     description:
       "If you're not yet registered to vote, you can register online in minutes using this form.",
-    content: <></>,
+    content: (
+      <>
+        <p className="italic">
+          Use this form from Vote.org to register to vote in your state if
+          you&apos;re located in the United States.
+        </p>
+        <VoteEmbed type="register" />
+      </>
+    ),
   },
   status: {
     title: "Check Your Voting Status",
     description:
       "Use this quick form to confirm that you're still all set to vote in your state.",
-    content: <></>,
+    content: (
+      <>
+        <p className="italic">
+          Use this form from Vote.org to check if you&apos;re registered to vote
+          in your state if you&apos;re located in the United States.
+        </p>
+        <VoteEmbed type="verify" />
+      </>
+    ),
   },
   preview: {
     title: "Preview Your Ballot",
     description:
       "Get a preview of your ballot, including the candidates and issues you'll be voting on.",
-    content: <></>,
+    content: (
+      <>
+        <p className="italic">
+          Use this form from Vote.org to preview your upcoming election ballot
+          if you&apos;re located in the United States.
+        </p>
+        <VoteEmbed type="ballot" />
+      </>
+    ),
   },
   early: {
     title: "Explore Early Voting",
     description:
       "Check if your state allows early voting, and if so, when and where you can vote early.",
-    content: <></>,
+    content: (
+      <>
+        <p>
+          If you&apos;re located in the United States, you can use this free
+          resource from Vote.org to check if your state allows early voting, and
+          if so, when and where you can vote early.
+        </p>
+
+        <Link
+          href="https://www.vote.org/early-voting-calendar/"
+          external
+          custom
+          className="mx-auto my-4 inline-block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+        >
+          Check Early Voting Dates
+          <IconExternal
+            size="0.75em"
+            className="ml-1 mr-0.5 inline-block align-baseline"
+          />
+        </Link>
+      </>
+    ),
   },
 };
 
@@ -100,9 +165,9 @@ const VotePage: NextPage = () => {
               <Disclosure key={key}>
                 {({ open }) => (
                   <>
-                    <Disclosure.Button className="mb-2 mt-4 flex w-full rounded-xl bg-alveus-green-100 px-4 py-1 text-start text-alveus-green-800">
-                      <div className="flex grow flex-wrap items-baseline gap-x-4 gap-y-2">
-                        <Heading level={3} className="text-2xl">
+                    <Disclosure.Button className="mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
+                      <div className="flex grow flex-wrap items-baseline gap-x-4">
+                        <Heading level={3} className="my-0 text-2xl">
                           {title}
                         </Heading>
 
@@ -110,13 +175,21 @@ const VotePage: NextPage = () => {
                       </div>
 
                       {open ? (
-                        <IconChevronDown className="m-2 ml-auto" size={32} />
+                        <IconChevronDown
+                          className="box-content flex-shrink-0 p-1"
+                          size={32}
+                        />
                       ) : (
-                        <IconChevronUp className="m-2 ml-auto" size={32} />
+                        <IconChevronUp
+                          className="box-content flex-shrink-0 p-1"
+                          size={32}
+                        />
                       )}
                     </Disclosure.Button>
 
-                    <Disclosure.Panel>{content}</Disclosure.Panel>
+                    <Disclosure.Panel className="mx-4">
+                      {content}
+                    </Disclosure.Panel>
                   </>
                 )}
               </Disclosure>

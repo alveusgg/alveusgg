@@ -52,6 +52,7 @@
     "dompurify": "^3.0.5",
     "framer-motion": "^10.16.4",
     "html-react-parser": "^4.2.2",
+    "iframe-resizer-react": "^1.1.0",
     "jsdom": "^22.1.0",
     "just-debounce-it": "^3.2.0",
     "linkify-it": "^4.0.1",
