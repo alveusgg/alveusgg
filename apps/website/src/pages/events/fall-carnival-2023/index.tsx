@@ -3,9 +3,11 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
+import ogImage from "@/assets/events/fall-carnival-2023/og.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1-fall.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2-fall.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+
 import IconDownload from "@/icons/IconDownload";
 
 import {
@@ -83,7 +85,7 @@ const FallCarnival2023EventPage: NextPage = () => {
       <Meta
         title="Alveus Fall Carnival 2023"
         description="You are invited to the Alveus Fall Carnival 2023 - Customize your ticket!"
-        image="/assets/events/fall-carnival-2023/og.png"
+        image={ogImage.src}
       />
 
       {/* Nav background */}
