@@ -3,8 +3,6 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 
-import { env } from "@/env/index.mjs";
-
 import leafLeftImage1 from "@/assets/floral/leaf-left-1-fall.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2-fall.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -34,6 +32,7 @@ import { MovableSticker } from "@/components/events/virtual-ticket/elements/Mova
 
 import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
 import { Activities } from "@/components/events/fall-carnival-2023/Activities";
+import { getShortBaseUrl } from "@/utils/short-url";
 
 const FallCarnival2023EventPage: NextPage = () => {
   const session = useSession();
@@ -133,9 +132,7 @@ const FallCarnival2023EventPage: NextPage = () => {
 
               <div className={isDirty ? "pointer-events-none opacity-40" : ""}>
                 <ShareButton
-                  url={`${
-                    env.NEXT_PUBLIC_BASE_URL
-                  }/events/fall-carnival-2023/tickets/${encodeURIComponent(
+                  url={`${getShortBaseUrl()}/fc23/${encodeURIComponent(
                     userName,
                   )}`}
                   title="I claimed my Alveus Fall Carnival ticket"
