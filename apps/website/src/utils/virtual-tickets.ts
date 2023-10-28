@@ -13,6 +13,7 @@ export type TicketConfig = {
 export type StickerGroup = {
   name: string;
   attribution?: string;
+  attributionLink?: string;
 };
 
 export type StickerPackItem<GroupId extends string = string> = {

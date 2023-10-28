@@ -16,6 +16,7 @@ const stickerGroups = {
   lazygoose: {
     name: "Pixel Ambassadors",
     attribution: "Art by LazyGoose",
+    attributionLink: "https://www.instagram.com/lazygoosepixels/",
   },
 } as const satisfies StickerPack["groups"];
 

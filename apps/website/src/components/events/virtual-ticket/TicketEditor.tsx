@@ -15,6 +15,7 @@ import IconMinusCircle from "@/icons/IconMinusCircle";
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";
 
+import { classes } from "@/utils/classes";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import type { StickerPack, TicketConfig } from "@/utils/virtual-tickets";
 import {
@@ -24,7 +25,7 @@ import {
 } from "@/utils/virtual-tickets";
 
 import { Button } from "@/components/shared/Button";
-import { classes } from "@/utils/classes";
+import Link from "@/components/content/Link";
 
 type StickerDataAction =
   | { type: "set"; stickers: Array<string> }
@@ -343,7 +344,13 @@ export function TicketEditor({
               <div className="flex flex-row justify-center gap-1 text-sm leading-tight md:justify-start lg:flex-col lg:gap-0 lg:text-base">
                 <h3 className="font-bold lg:text-lg">{group.name}</h3>
                 <p className="text-gray-800">
-                  {group.attribution || <>&nbsp;</>}
+                  {group.attribution && group.attributionLink ? (
+                    <Link external href={group.attributionLink}>
+                      {group.attribution}
+                    </Link>
+                  ) : (
+                    group.attribution || <>&nbsp;</>
+                  )}
                 </p>
               </div>
 

@@ -11,16 +11,17 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2-fall.png";
 
 import { trpc } from "@/utils/trpc";
+import invariant from "@/utils/invariant";
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
 import { Wiggle } from "@/components/events/virtual-ticket/Wiggle";
 
 import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
 import { Activities } from "@/components/events/fall-carnival-2023/Activities";
-import invariant from "@/utils/invariant";
 
 /*
  * NOTE(pje): We use blocking SSR because we want to ensure each page gets its own unique metadata (og:image)
@@ -126,7 +127,11 @@ const TicketPage: NextPage = () => {
 
             <p className="text-center">
               Sticker art by Mik_MWP (Sub emotes) <br />
-              and LazyGoose (Pixel Ambassadors)
+              and{" "}
+              <Link external href="https://www.instagram.com/lazygoosepixels/">
+                LazyGoose
+              </Link>{" "}
+              (Pixel Ambassadors)
             </p>
           </>
         )}
