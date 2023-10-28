@@ -8793,7 +8793,6 @@ packages:
       postcss-value-parser: 4.2.0
       yoga-wasm-web: 0.3.3
     dev: false
-    patched: true
 
   /sax@1.2.4:
     resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
