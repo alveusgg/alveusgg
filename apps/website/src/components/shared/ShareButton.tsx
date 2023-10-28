@@ -287,7 +287,7 @@ export function ShareButton({
 
       <div className="mt-3 border-t">
         <QRCode
-          className="mx-auto my-3 aspect-square max-w-[160px]"
+          className="mx-auto my-3 aspect-square max-w-[120px]"
           value={url}
         />
       </div>
