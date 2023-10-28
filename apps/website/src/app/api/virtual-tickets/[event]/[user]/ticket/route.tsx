@@ -52,7 +52,7 @@ export async function GET(
       ),
     ).then((res) => res.arrayBuffer());
 
-    return new ImageResponse(
+    const imageRes = new ImageResponse(
       (
         <div
           style={{
@@ -99,6 +99,13 @@ export async function GET(
         ],
       },
     );
+
+    imageRes.headers.set(
+      "Cache-Control",
+      "public, max-age=60, s-maxage=31536000, stale-while-revalidate, stale-if-error",
+    );
+
+    return imageRes;
   } catch (e: unknown) {
     console.error(`${(e as Error).message}`);
     return new Response(`Failed to generate the image`, {
