@@ -7,8 +7,10 @@ import { mapStickerIdToPath } from "@/utils/virtual-tickets";
 import { stickerPack, ticketConfig } from "@/data/events/fall-carnival-2023";
 import { virtualTicketCustomizationSchema } from "@/server/db/virtual-tickets";
 
-import type { StickerProps } from "@/components/events/virtual-ticket/elements/Sticker";
-import { Sticker } from "@/components/events/virtual-ticket/elements/Sticker";
+import {
+  Sticker,
+  type StickerProps,
+} from "@/components/events/virtual-ticket/elements/Sticker";
 
 // TODO: Do not hard code the ticket component
 import { FallCarnival2023Ticket } from "@/components/events/fall-carnival-2023/VirtualTicket";

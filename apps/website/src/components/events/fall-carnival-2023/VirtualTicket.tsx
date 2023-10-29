@@ -3,8 +3,10 @@ import { ticketConfig } from "@/data/events/fall-carnival-2023";
 import { getShortBaseUrl } from "@/utils/short-url";
 
 import { QRCode } from "@/components/QrCode";
-
-import { Ticket, type TicketProps } from "../virtual-ticket/Ticket";
+import {
+  Ticket,
+  type TicketProps,
+} from "@/components/events/virtual-ticket/Ticket";
 
 export type FallCarnival2023TicketProps = Pick<TicketProps, "children"> & {
   userName: string;

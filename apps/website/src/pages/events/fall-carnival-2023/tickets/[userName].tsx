@@ -97,7 +97,7 @@ const TicketPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <IntroSection showLinkToClaimTicket={true} />
+        <IntroSection showLinkToClaimTicket />
       </div>
 
       <Section containerClassName="flex flex-col items-center text-center">
