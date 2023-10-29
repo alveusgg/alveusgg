@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import {
+  type ReactNode,
   createContext,
   useCallback,
   useContext,
@@ -15,8 +15,9 @@ import IconMinusCircle from "@/icons/IconMinusCircle";
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";
 
-import type { StickerPack, TicketConfig } from "@/utils/virtual-tickets";
 import {
+  type StickerPack,
+  type TicketConfig,
   defaultTicketHeight,
   defaultTicketWidth,
   mapStickerIdToPath,

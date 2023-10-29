@@ -4,8 +4,7 @@ import { getShortBaseUrl } from "@/utils/short-url";
 
 import { QRCode } from "@/components/QrCode";
 
-import type { TicketProps } from "../virtual-ticket/Ticket";
-import { Ticket } from "../virtual-ticket/Ticket";
+import { Ticket, type TicketProps } from "../virtual-ticket/Ticket";
 
 export type FallCarnival2023TicketProps = Pick<TicketProps, "children"> & {
   userName: string;

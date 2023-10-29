@@ -340,7 +340,7 @@ const EventsPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
         />
 
-        <IntroSection showTicket={true} showLinkToClaimTicket={true} />
+        <IntroSection showTicket showLinkToClaimTicket />
 
         <Section className="flex-grow">
           {Object.entries(events).map(([key, event], idx, arr) => (

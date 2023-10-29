@@ -2,10 +2,11 @@ import { useEffect, type ReactNode } from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
 import Link from "next/link";
-
 import { useRouter } from "next/router";
-import Meta from "@/components/content/Meta";
+
 import IconArrowRight from "@/icons/IconArrowRight";
+
+import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
 import { Footer } from "./footer/Footer";
 

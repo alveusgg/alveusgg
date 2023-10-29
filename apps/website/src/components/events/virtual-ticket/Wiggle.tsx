@@ -1,5 +1,10 @@
-import type { HTMLAttributes, ReactNode } from "react";
-import { useEffect, useMemo, useRef } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  type HTMLAttributes,
+  type ReactNode,
+} from "react";
 
 import throttle from "lodash/throttle";
 

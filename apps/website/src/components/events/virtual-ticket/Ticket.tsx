@@ -1,7 +1,7 @@
 import { type ReactNode } from "react";
 
-import type { TicketConfig } from "@/utils/virtual-tickets";
 import {
+  type TicketConfig,
   defaultTicketHeight,
   defaultTicketWidth,
 } from "@/utils/virtual-tickets";

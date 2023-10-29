@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type { ComponentProps, ReactNode } from "react";
-import { useEffect, useMemo } from "react";
-import type { MotionValue } from "framer-motion";
-import { motion, useMotionValue } from "framer-motion";
+import { useEffect, useMemo, type ComponentProps, type ReactNode } from "react";
+import { motion, useMotionValue, type MotionValue } from "framer-motion";
 
 import { useTicketEditorContext } from "@/components/events/virtual-ticket/TicketEditor";
 

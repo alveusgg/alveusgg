@@ -1,5 +1,11 @@
-import type { ComponentPropsWithoutRef, MouseEventHandler } from "react";
-import { Fragment, useEffect, useId, useState } from "react";
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useState,
+  type ComponentPropsWithoutRef,
+  type MouseEventHandler,
+} from "react";
 
 import { Popover } from "@headlessui/react";
 
