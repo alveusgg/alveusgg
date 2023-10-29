@@ -1,0 +1,87 @@
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { classes } from "@/utils/classes";
+import { mapStickerIdToPath, type StickerPack } from "@/utils/virtual-tickets";
+import Link from "@/components/content/Link";
+
+type StickerPackProps = {
+  stickerPack: StickerPack;
+  selectedStickers: string[];
+  onSelect: (stickerId: string) => void;
+};
+
+export function StickerSelector({
+  selectedStickers,
+  onSelect,
+  stickerPack,
+}: StickerPackProps) {
+  return (
+    <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
+      {typeSafeObjectKeys(stickerPack.groups).map((groupId) => {
+        const group = stickerPack.groups[groupId]!;
+
+        return (
+          <div key={groupId} className="flex-1">
+            <div className="flex flex-row justify-center gap-1 text-sm leading-tight md:justify-start lg:flex-col lg:gap-0 lg:text-base">
+              <h3 className="font-bold lg:text-lg">{group.name}</h3>
+              <p className="text-gray-800">
+                {group.attribution && group.attributionLink ? (
+                  <Link external href={group.attributionLink}>
+                    {group.attribution}
+                  </Link>
+                ) : (
+                  group.attribution || <>&nbsp;</>
+                )}
+              </p>
+            </div>
+
+            <div className="w-full overflow-auto md:overflow-hidden">
+              <ul className="flex flex-row flex-wrap items-center gap-1 py-2 md:gap-2 lg:gap-3">
+                {typeSafeObjectKeys(stickerPack.stickers)
+                  .filter(
+                    (imageId) =>
+                      groupId === stickerPack.stickers[imageId]!.groupId,
+                  )
+                  .map((imageId) => ({
+                    name: stickerPack.stickers[imageId]!.name,
+                    disabled: selectedStickers.includes(imageId),
+                    image: mapStickerIdToPath(stickerPack.stickers, imageId),
+                    imageId,
+                  }))
+                  .sort((a, b) => a.name.localeCompare(b.name))
+                  .map(({ name, disabled, imageId, image }) => (
+                    <li key={imageId} className="flex-shrink-0">
+                      <button
+                        className={`select-none rounded-lg p-0.5 shadow-lg transition-transform ${
+                          disabled ? "bg-gray-300" : "bg-white hover:scale-110"
+                        }`}
+                        type="button"
+                        disabled={disabled}
+                        onClick={() => {
+                          if (!disabled) {
+                            onSelect(imageId);
+                          }
+                        }}
+                        title={`${disabled ? "" : "Add"} ${name}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={image}
+                          alt=""
+                          className={classes(
+                            `aspect-square h-[28px] w-[28px] lg:h-[40px] lg:w-[40px]`,
+                            disabled && "opacity-50 grayscale",
+                          )}
+                          width={40}
+                          height={40}
+                        />
+                      </button>
+                    </li>
+                  ))}
+              </ul>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
