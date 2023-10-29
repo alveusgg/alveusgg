@@ -18,19 +18,24 @@ export function StickerSelector({
     <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
       {typeSafeObjectKeys(stickerPack.groups).map((groupId) => {
         const group = stickerPack.groups[groupId]!;
+        const attribution = group.attribution && `Art by ${group.attribution}`;
 
         return (
           <div key={groupId} className="flex-1">
             <div className="flex flex-row justify-center gap-1 text-sm leading-tight md:justify-start lg:flex-col lg:gap-0 lg:text-base">
               <h3 className="font-bold lg:text-lg">{group.name}</h3>
               <p className="text-gray-800">
-                {group.attribution && group.attributionLink ? (
-                  <Link external href={group.attributionLink}>
-                    {group.attribution}
-                  </Link>
-                ) : (
-                  group.attribution || <>&nbsp;</>
-                )}
+                {group.description}
+                {group.description && attribution && " - "}
+                {attribution &&
+                  (group.attributionLink ? (
+                    <Link external href={group.attributionLink}>
+                      {attribution}
+                    </Link>
+                  ) : (
+                    attribution
+                  ))}
+                &nbsp;
               </p>
             </div>
 

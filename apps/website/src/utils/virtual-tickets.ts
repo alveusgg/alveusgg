@@ -12,6 +12,7 @@ export type TicketConfig = {
 
 export type StickerGroup = {
   name: string;
+  description?: string;
   attribution?: string;
   attributionLink?: string;
 };

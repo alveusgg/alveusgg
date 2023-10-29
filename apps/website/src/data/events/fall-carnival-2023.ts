@@ -7,15 +7,15 @@ export const eventId = "fall-carnival-2023";
 const stickerGroups = {
   fall: {
     name: "Fall Carnival",
-    attribution: "Spooky stickers",
+    description: "Spooky stickers",
   },
   subemotes: {
     name: "Ambassadors",
-    attribution: "Art by Mik_MWP",
+    attribution: "Mik_MWP",
   },
   lazygoose: {
     name: "Pixel Ambassadors",
-    attribution: "Art by LazyGoose",
+    attribution: "LazyGoose",
     attributionLink: "https://www.instagram.com/lazygoosepixels/",
   },
 } as const satisfies StickerPack["groups"];

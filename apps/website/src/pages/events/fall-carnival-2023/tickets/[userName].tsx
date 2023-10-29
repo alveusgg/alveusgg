@@ -4,7 +4,11 @@ import Image from "next/image";
 
 import { env } from "@/env/index.mjs";
 
-import { eventId, ticketConfig } from "@/data/events/fall-carnival-2023";
+import {
+  eventId,
+  stickerPack,
+  ticketConfig,
+} from "@/data/events/fall-carnival-2023";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1-fall.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -16,12 +20,12 @@ import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
 
 import { Wiggle } from "@/components/events/virtual-ticket/Wiggle";
 
 import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
 import { Activities } from "@/components/events/fall-carnival-2023/Activities";
+import { StickerAttribution } from "@/components/events/virtual-ticket/StickerAttribution";
 
 /*
  * NOTE(pje): We use blocking SSR because we want to ensure each page gets its own unique metadata (og:image)
@@ -126,12 +130,7 @@ const TicketPage: NextPage = () => {
             </Wiggle>
 
             <p className="text-center">
-              Sticker art by Mik_MWP (Sub emotes) <br />
-              and{" "}
-              <Link external href="https://www.instagram.com/lazygoosepixels/">
-                LazyGoose
-              </Link>{" "}
-              (Pixel Ambassadors)
+              Sticker art by <StickerAttribution stickerPack={stickerPack} />.
             </p>
           </>
         )}
