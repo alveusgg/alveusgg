@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useMemo, type ComponentProps, type ReactNode } from "react";
 import { motion, useMotionValue, type MotionValue } from "framer-motion";
 
