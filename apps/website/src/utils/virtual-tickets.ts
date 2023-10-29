@@ -19,7 +19,7 @@ export type StickerGroup = {
 export type StickerPackItem<GroupId extends string = string> = {
   name: string;
   groupId: GroupId;
-  fileName: string;
+  filePath: string;
   width: number;
   height: number;
 };
@@ -48,9 +48,9 @@ export function mapStickerIdToPath(
 ) {
   if (!(imageId in stickers)) return;
 
-  const { fileName } = stickers[
+  const { filePath } = stickers[
     imageId as keyof typeof stickers
   ] as StickerPackItem;
 
-  return `/assets/stickers/${fileName}`;
+  return `/assets/stickers/${filePath}`;
 }
