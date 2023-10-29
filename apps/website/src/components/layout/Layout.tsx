@@ -88,7 +88,7 @@ const Layout = ({ children }: LayoutProps) => {
         {showTopHat && (
           <Link
             href="/events/fall-carnival-2023"
-            className="relative z-10 block border-b border-b-[#28122f] bg-[#4E1362] px-4 pb-1 pt-1.5 text-sm text-white"
+            className="relative z-10 block border-b border-b-[#28122f] bg-[#4E1362] px-4 pb-1 pt-1.5 text-sm text-white hover:underline"
           >
             <div className="container mx-auto flex items-center justify-center gap-1">
               Alveus Fall Carnival &middot; Nov. 4th &middot; Get your ticket
