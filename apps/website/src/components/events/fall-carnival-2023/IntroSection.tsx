@@ -2,11 +2,13 @@ import NextLink from "next/link";
 import Image from "next/image";
 
 import teaserImage from "@/assets/events/fall-carnival-2023/teaser2.png";
+import IconArrowRight from "@/icons/IconArrowRight";
+
+import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
-import IconArrowRight from "@/icons/IconArrowRight";
 
 type IntroSectionProps = {
   showTicket?: boolean;
@@ -21,9 +23,10 @@ export function IntroSection({
     <Section
       dark
       className="bg-carnival"
-      containerClassName={`flex flex-col md:flex-row-reverse gap-12 lg:gap-24 items-center justify-center ${
-        showTicket ? "" : "text-center"
-      }`}
+      containerClassName={classes(
+        "flex flex-col md:flex-row-reverse gap-12 lg:gap-24 items-center justify-center",
+        !showTicket && "text-center",
+      )}
     >
       {showTicket && (
         <div>

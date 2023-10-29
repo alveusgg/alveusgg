@@ -285,9 +285,7 @@ export function TicketEditor({
 
         <div className="absolute bottom-0 left-1/2 z-40 -mb-3 flex -translate-x-1/2 gap-1 rounded-2xl bg-white p-0.5 text-sm shadow-xl sm:p-1 md:gap-2 lg:text-base">
           <Button
-            className={`whitespace-nowrap ${
-              isDirty ? "bg-green-600 text-white" : "bg-gray-300 text-gray-900"
-            }`}
+            className="whitespace-nowrap bg-green-600 text-white disabled:bg-gray-300 disabled:text-gray-900"
             width="auto"
             size="small"
             disabled={!isDirty}

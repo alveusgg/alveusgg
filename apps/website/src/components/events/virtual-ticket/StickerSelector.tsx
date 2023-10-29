@@ -39,51 +39,47 @@ export function StickerSelector({
               </p>
             </div>
 
-            <div className="w-full overflow-auto md:overflow-hidden">
-              <ul className="flex flex-row flex-wrap items-center gap-1 py-2 md:gap-2 lg:gap-3">
-                {typeSafeObjectKeys(stickerPack.stickers)
-                  .filter(
-                    (imageId) =>
-                      groupId === stickerPack.stickers[imageId]!.groupId,
-                  )
-                  .map((imageId) => ({
-                    name: stickerPack.stickers[imageId]!.name,
-                    disabled: selectedStickers.includes(imageId),
-                    image: mapStickerIdToPath(stickerPack.stickers, imageId),
-                    imageId,
-                  }))
-                  .sort((a, b) => a.name.localeCompare(b.name))
-                  .map(({ name, disabled, imageId, image }) => (
-                    <li key={imageId} className="flex-shrink-0">
-                      <button
-                        className={`select-none rounded-lg p-0.5 shadow-lg transition-transform ${
-                          disabled ? "bg-gray-300" : "bg-white hover:scale-110"
-                        }`}
-                        type="button"
-                        disabled={disabled}
-                        onClick={() => {
-                          if (!disabled) {
-                            onSelect(imageId);
-                          }
-                        }}
-                        title={`${disabled ? "" : "Add"} ${name}`}
-                      >
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={image}
-                          alt=""
-                          className={classes(
-                            `aspect-square h-[28px] w-[28px] lg:h-[40px] lg:w-[40px]`,
-                            disabled && "opacity-50 grayscale",
-                          )}
-                          width={40}
-                          height={40}
-                        />
-                      </button>
-                    </li>
-                  ))}
-              </ul>
-            </div>
+            <ul className="flex w-full flex-row flex-wrap items-center gap-1 py-2 md:gap-2 lg:gap-3">
+              {typeSafeObjectKeys(stickerPack.stickers)
+                .filter(
+                  (imageId) =>
+                    groupId === stickerPack.stickers[imageId]!.groupId,
+                )
+                .map((imageId) => ({
+                  name: stickerPack.stickers[imageId]!.name,
+                  disabled: selectedStickers.includes(imageId),
+                  image: mapStickerIdToPath(stickerPack.stickers, imageId),
+                  imageId,
+                }))
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map(({ name, disabled, imageId, image }) => (
+                  <li key={imageId} className="flex-shrink-0">
+                    <button
+                      className="disabled select-none rounded-lg bg-white p-0.5 shadow-lg transition-transform enabled:hover:scale-110 disabled:bg-gray-300"
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => {
+                        if (!disabled) {
+                          onSelect(imageId);
+                        }
+                      }}
+                      title={`${disabled ? "" : "Add"} ${name}`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={image}
+                        alt=""
+                        className={classes(
+                          "aspect-square h-[28px] w-[28px] lg:h-[40px] lg:w-[40px]",
+                          disabled && "opacity-50 grayscale",
+                        )}
+                        width={40}
+                        height={40}
+                      />
+                    </button>
+                  </li>
+                ))}
+            </ul>
           </div>
         );
       })}

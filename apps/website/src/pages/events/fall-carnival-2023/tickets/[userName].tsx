@@ -16,6 +16,7 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2-fall.png";
 
 import { trpc } from "@/utils/trpc";
 import invariant from "@/utils/invariant";
+import { classes } from "@/utils/classes";
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 import Section from "@/components/content/Section";
@@ -121,9 +122,10 @@ const TicketPage: NextPage = () => {
 
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                className={`relative w-full opacity-0 transition-opacity ${
-                  showTicket ? "block opacity-100" : "hidden"
-                }`}
+                className={classes(
+                  "relative w-full opacity-0 transition-opacity",
+                  showTicket ? "block opacity-100" : "hidden",
+                )}
                 src={getVirtualTicketImageUrl(eventId, userName)}
                 alt=""
               />

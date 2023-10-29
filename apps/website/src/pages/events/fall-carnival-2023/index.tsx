@@ -16,7 +16,9 @@ import {
   ticketConfig,
 } from "@/data/events/fall-carnival-2023";
 
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import { getShortBaseUrl } from "@/utils/short-url";
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
@@ -34,7 +36,6 @@ import { MovableSticker } from "@/components/events/virtual-ticket/elements/Mova
 
 import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
 import { Activities } from "@/components/events/fall-carnival-2023/Activities";
-import { getShortBaseUrl } from "@/utils/short-url";
 
 const FallCarnival2023EventPage: NextPage = () => {
   const session = useSession();
@@ -119,9 +120,11 @@ const FallCarnival2023EventPage: NextPage = () => {
         {session.status === "authenticated" && userName && (
           <>
             <div className="relative my-8 flex flex-row items-center gap-4 align-middle">
-              <div className={isDirty ? "pointer-events-none opacity-40" : ""}>
+              <div
+                className={classes(isDirty && "pointer-events-none opacity-40")}
+              >
                 <a
-                  className={`flex flex-row items-center justify-center gap-1 rounded-xl bg-gray-700/10 p-1 px-3 text-center hover:bg-gray-700/20`}
+                  className="flex flex-row items-center justify-center gap-1 rounded-xl bg-gray-700/10 p-1 px-3 text-center hover:bg-gray-700/20"
                   href={getVirtualTicketImageUrl(eventId, userName)}
                   download="alveus-fall-carnival-2023-ticket.png"
                   target="_blank"
@@ -132,7 +135,9 @@ const FallCarnival2023EventPage: NextPage = () => {
                 </a>
               </div>
 
-              <div className={isDirty ? "pointer-events-none opacity-40" : ""}>
+              <div
+                className={classes(isDirty && "pointer-events-none opacity-40")}
+              >
                 <ShareButton
                   url={`${getShortBaseUrl()}/fc23/${encodeURIComponent(
                     userName,
