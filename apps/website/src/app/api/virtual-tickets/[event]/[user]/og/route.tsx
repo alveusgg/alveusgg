@@ -1,4 +1,4 @@
-import { ImageResponse } from "@vercel/og";
+import { ImageResponse } from "next/server";
 import { Client } from "@planetscale/database";
 
 import { env } from "@/env/index.mjs";
