@@ -68,7 +68,7 @@ const UpdatesPage: NextPage = () => {
         </div>
       </Section>
 
-      <IntroSection showTicket={true} showLinkToClaimTicket={true} />
+      <IntroSection showTicket showLinkToClaimTicket />
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
