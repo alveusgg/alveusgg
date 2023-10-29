@@ -264,7 +264,7 @@ export function TicketEditor({
       <div className="relative -mx-4 w-[calc(100%+2rem)] bg-black/10">
         <div className="pointer-events-none absolute left-0 right-0 top-0 mt-1 flex flex-row items-center justify-center gap-2 p-2 text-black/50 lg:hidden">
           <IconChevronLeft className="h-4 w-4" />
-          scroll here to move the ticket
+          swipe to move the ticket
           <IconChevronRight className="h-4 w-4" />
         </div>
 
