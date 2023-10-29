@@ -46,17 +46,7 @@ export function IntroSection({
           Upcoming event
         </div>
 
-        <Heading
-          style={{
-            // NOTE: react ts typings don't know about text-wrap yet so we have to disable the rule
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            textWrap: "balance",
-          }}
-        >
-          You are invited to the {showTicket ? <br /> : null}
-          Alveus Fall Carnival 2023!
-        </Heading>
+        <Heading>You are invited to the Alveus Fall Carnival 2023!</Heading>
         <p className="text-lg">
           November 4th 2023 at 11am CT live on{" "}
           <Link href="https://twitch.tv/maya" dark external>
