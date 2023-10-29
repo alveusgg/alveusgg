@@ -11,7 +11,7 @@ export function LoginWithTwitchButton({
 }: LoginWithTwitchButtonProps) {
   return (
     <Button
-      className="bg-[#6441a5] text-white"
+      className="bg-twitch text-white"
       onClick={() => signIn("twitch", { callbackUrl })}
     >
       <IconTwitch />

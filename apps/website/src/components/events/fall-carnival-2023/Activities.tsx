@@ -71,7 +71,7 @@ export const activities = (
 
 export function Activities() {
   return (
-    <Section dark className="bg-[#834a26]">
+    <Section dark className="bg-fall">
       {Object.keys(activities).length > 0 && (
         <>
           <Heading level={2} className="mb-8 mt-0" id="activities" link>

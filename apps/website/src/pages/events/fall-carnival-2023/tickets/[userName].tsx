@@ -87,7 +87,7 @@ const TicketPage: NextPage = () => {
       </Meta>
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-[#4E1362] bg-gradient-to-t from-[#4E1362] to-[#390E47] lg:block" />
+      <div className="-mt-40 hidden h-40 bg-carnival bg-gradient-to-t from-carnival to-carnival-700 lg:block" />
 
       <div className="relative">
         <Image
@@ -115,7 +115,7 @@ const TicketPage: NextPage = () => {
               height={ticketConfig.height}
               maskImage={ticketConfig.maskImage}
             >
-              <div className="absolute inset-0 flex items-center justify-center bg-[#4E1362] text-2xl font-bold text-white">
+              <div className="absolute inset-0 flex items-center justify-center bg-carnival text-2xl font-bold text-white">
                 {!showTicket && <span>Loading ticket…</span>}
               </div>
 

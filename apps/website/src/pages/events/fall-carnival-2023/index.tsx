@@ -89,7 +89,7 @@ const FallCarnival2023EventPage: NextPage = () => {
       />
 
       {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-[#4E1362] bg-gradient-to-t from-[#4E1362] to-[#390E47] lg:block" />
+      <div className="-mt-40 hidden h-40 bg-carnival bg-gradient-to-t from-carnival to-carnival-700 lg:block" />
 
       <div className="relative">
         <Image

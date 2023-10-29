@@ -92,6 +92,13 @@ module.exports = {
         800: "#484D45",
         900: "#2C2F2B",
       },
+      fall: "#834a26",
+      carnival: {
+        DEFAULT: "#4E1362",
+        700: "#390E47",
+        800: "#28122f",
+      },
+      twitch: "#6441a5",
     },
     extend: {
       animation: {

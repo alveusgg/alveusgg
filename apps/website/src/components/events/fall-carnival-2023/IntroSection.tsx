@@ -20,7 +20,7 @@ export function IntroSection({
   return (
     <Section
       dark
-      className="bg-[#4E1362]"
+      className="bg-carnival"
       containerClassName={`flex flex-col md:flex-row-reverse gap-12 lg:gap-24 items-center justify-center ${
         showTicket ? "" : "text-center"
       }`}
@@ -42,7 +42,7 @@ export function IntroSection({
       )}
 
       <div>
-        <div className="mb-2 inline-block rounded-lg bg-white/90 px-2 py-0.5 text-xs uppercase text-[#4E1362]">
+        <div className="mb-2 inline-block rounded-lg bg-white/90 px-2 py-0.5 text-xs uppercase text-carnival">
           Upcoming event
         </div>
 
@@ -57,7 +57,7 @@ export function IntroSection({
         {showLinkToClaimTicket && (
           <div className="mt-6 md:mt-8 lg:mt-14">
             <NextLink
-              className="rounded-full border-2 border-white px-4 py-2 text-lg text-white transition-colors hover:bg-white hover:text-[#4E1362] md:px-4 md:py-2 md:text-xl lg:text-2xl"
+              className="rounded-full border-2 border-white px-4 py-2 text-lg text-white transition-colors hover:bg-white hover:text-carnival md:px-4 md:py-2 md:text-xl lg:text-2xl"
               href="/events/fall-carnival-2023"
             >
               Customize your ticket
