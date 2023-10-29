@@ -11,7 +11,6 @@ export type HeadingProps = {
   id?: string;
   link?: boolean;
   linkClassName?: string;
-  style?: React.CSSProperties;
 };
 
 const Heading = ({
@@ -21,7 +20,6 @@ const Heading = ({
   id,
   link = false,
   linkClassName,
-  style,
 }: HeadingProps) => {
   const Tag = level === -1 ? "p" : (`h${level}` as keyof JSX.IntrinsicElements);
   const headingClass = useMemo(
@@ -37,7 +35,7 @@ const Heading = ({
   );
 
   return (
-    <Tag className={headingClass} id={id} style={style}>
+    <Tag className={headingClass} id={id}>
       {id && link ? (
         <Link href={`#${id}`} custom className={linkClassName}>
           {children}
