@@ -47,7 +47,7 @@ export async function GET(
 
     const fontPtSansBold = await fetch(
       new URL(
-        "../../../../../../assets/fonts/PT_Sans/PTSans-Bold.ttf",
+        "../../../../../../../node_modules/@fontsource/pt-sans/files/pt-sans-latin-700-normal.woff",
         import.meta.url,
       ),
     ).then((res) => res.arrayBuffer());

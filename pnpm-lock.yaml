@@ -92,6 +92,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.414.0
         version: 3.414.0
+      '@fontsource/pt-sans':
+        specifier: ^5.0.8
+        version: 5.0.8
       '@headlessui/react':
         specifier: ^1.7.17
         version: 1.7.17(react-dom@18.2.0)(react@18.2.0)
@@ -1667,6 +1670,10 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
+
+  /@fontsource/pt-sans@5.0.8:
+    resolution: { integrity: sha512-YCn2rcHLdQUNcTzrrHpPzzLqMat2s1TUTcBDXIHgHpUNar3jkrZ9U0wNGczu0C0WgFzUFShDtRUl3PehDi9P+g== }
+    dev: false
 
   /@formatjs/ecma402-abstract@1.17.2:
     resolution: {integrity: sha512-k2mTh0m+IV1HRdU0xXM617tSQTi53tVR2muvYOsBeYcUgEAyxV1FOC7Qj279th3fBVQ+Dj6muvNJZcHSPNdbKg==}

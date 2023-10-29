@@ -4,8 +4,8 @@ import { Client } from "@planetscale/database";
 import { env } from "@/env/index.mjs";
 
 import { mapStickerIdToPath } from "@/utils/virtual-tickets";
-import { virtualTicketCustomizationSchema } from "@/server/db/virtual-tickets";
 import { stickerPack, ticketConfig } from "@/data/events/fall-carnival-2023";
+import { virtualTicketCustomizationSchema } from "@/server/db/virtual-tickets";
 
 import type { StickerProps } from "@/components/events/virtual-ticket/elements/Sticker";
 import { Sticker } from "@/components/events/virtual-ticket/elements/Sticker";
@@ -47,7 +47,7 @@ export async function GET(
 
     const fontPtSansBold = await fetch(
       new URL(
-        "../../../../../../assets/fonts/PT_Sans/PTSans-Bold.ttf",
+        "../../../../../../../node_modules/@fontsource/pt-sans/files/pt-sans-latin-700-normal.woff",
         import.meta.url,
       ),
     ).then((res) => res.arrayBuffer());
