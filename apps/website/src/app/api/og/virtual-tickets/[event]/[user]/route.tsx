@@ -17,6 +17,10 @@ import { FallCarnival2023Ticket } from "@/components/events/fall-carnival-2023/V
 
 export const runtime = "edge";
 
+// Prefer home region to increase cache hits, even if it's farther away from the client because the compute time is
+// much higher than the network time, and we don't anticipate many requests per route:
+export const preferredRegion = "home";
+
 const db = new Client({
   url: env.DATABASE_URL,
 });
