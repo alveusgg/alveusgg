@@ -27,6 +27,7 @@ module.exports = {
     policies: [
       {
         userAgent: "*",
+        allow: process.env.NEXT_PUBLIC_NOINDEX === "true" ? [] : ["/api/og/"],
         disallow:
           process.env.NEXT_PUBLIC_NOINDEX === "true"
             ? ["/"]

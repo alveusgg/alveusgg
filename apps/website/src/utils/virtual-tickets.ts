@@ -38,9 +38,11 @@ export function getVirtualTicketImageUrl(
   userName: string,
   imageType: "og" | "ticket" = "ticket",
 ) {
-  return `/api/virtual-tickets/${eventId}/${encodeURIComponent(
+  const imagePath = `virtual-tickets/${eventId}/${encodeURIComponent(
     userName,
-  )}/${imageType}`;
+  )}`;
+  const prefix = imageType === "og" ? "/api/og/" : "/api/";
+  return `${prefix}${imagePath}`;
 }
 
 export function mapStickerIdToPath(
