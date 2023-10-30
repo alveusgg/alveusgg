@@ -17,8 +17,17 @@ import {
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 function revalidateTicket(eventId: string, userName: string) {
-  revalidatePath(getVirtualTicketImageUrl(eventId, userName, "og"));
-  revalidatePath(getVirtualTicketImageUrl(eventId, userName, "ticket"));
+  try {
+    revalidatePath(getVirtualTicketImageUrl(eventId, userName, "og"));
+  } catch (e) {
+    console.error(e);
+  }
+
+  try {
+    revalidatePath(getVirtualTicketImageUrl(eventId, userName, "ticket"));
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 export const virtualTicketsRouter = router({
