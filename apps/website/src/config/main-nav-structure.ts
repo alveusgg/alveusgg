@@ -97,6 +97,10 @@ export const mainNavStructure: NavStructure = {
         title: "Found an Animal?",
         link: "/found-animal",
       },
+      votersGuide: {
+        title: "Voters' Guide",
+        link: "/voters-guide",
+      },
     },
   },
   merch: {
