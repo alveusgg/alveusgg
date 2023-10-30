@@ -152,6 +152,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/vote",
+      destination: "/voters-guide",
+      permanent: true,
+    },
+    {
       source: "/aq/:path*",
       destination: "/animal-quest/:path*",
       permanent: false,
