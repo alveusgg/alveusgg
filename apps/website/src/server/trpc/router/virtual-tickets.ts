@@ -87,7 +87,7 @@ export const virtualTicketsRouter = router({
           undefined,
           {
             // Give the revalidation some time before we fetch the image:
-            delaySeconds: canQueue() ? 20 : 1,
+            delaySeconds: canQueue() ? 3 : 0.5,
           },
         );
       }

@@ -23,8 +23,8 @@ export async function fetchUrl(
     if (headers.Authorization) {
       headers["Upstash-Forward-Authorization"] = headers.Authorization;
     }
-    if (options?.delaySeconds) {
-      headers["Upstash-Delay"] = `${delay}s`;
+    if (delay) {
+      headers["Upstash-Delay"] = `${Math.round(delay)}s`;
     }
     headers.Authorization = `Bearer ${env.UPSTASH_QSTASH_KEY}`;
 
