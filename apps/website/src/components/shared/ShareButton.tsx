@@ -20,34 +20,11 @@ import IconClipboard from "@/icons/IconClipboard";
 import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
 import { QRCode } from "@/components/QrCode";
-
-function createTwitterLink({ text, url }: { text: string; url: string }) {
-  const link = new URL("https://twitter.com/intent/tweet");
-  link.searchParams.append("text", text);
-  link.searchParams.append("url", url);
-  return link.toString();
-}
-
-function createFacebookLink({ url }: { url: string }) {
-  const link = new URL("https://www.facebook.com/sharer/sharer.php");
-  link.searchParams.append("u", url);
-  return link.toString();
-}
-
-function createEmailLink({
-  title,
-  text,
-  url,
-}: {
-  title: string;
-  text: string;
-  url: string;
-}) {
-  const link = new URL("mailto:");
-  link.searchParams.append("subject", title);
-  link.searchParams.append("body", `${text}\n\n${url}`);
-  return link.toString().replaceAll("+", "%20");
-}
+import {
+  emailShareUrl,
+  facebookShareUrl,
+  twitterShareUrl,
+} from "@/utils/share-url";
 
 function ShareLink({
   className,
@@ -169,18 +146,21 @@ export function ShareButton({
 
       <div className="flex gap-2">
         <ShareLink
-          href={createTwitterLink({ text, url })}
+          href={twitterShareUrl({ url, text, title })}
           title="Share on Twitter"
         >
           <IconTwitter className="h-4 w-4" />
           Twitter
         </ShareLink>
-        <ShareLink href={createFacebookLink({ url })} title="Share on Facebook">
+        <ShareLink
+          href={facebookShareUrl({ url, text, title })}
+          title="Share on Facebook"
+        >
           <IconFacebook className="h-4 w-4" />
           Facebook
         </ShareLink>
         <ShareLink
-          href={createEmailLink({ title, text, url })}
+          href={emailShareUrl({ url, text, title })}
           title="Share via Email"
         >
           <IconEnvelope className="h-4 w-4" />

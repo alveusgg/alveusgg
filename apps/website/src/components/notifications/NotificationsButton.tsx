@@ -47,11 +47,13 @@ export const NotificationsButton = ({
       as="div"
       className={classes("relative flex items-center", containerClassName)}
     >
-      <Popover.Button className={classes("flex gap-2", className)}>
+      <Popover.Button
+        className={classes("flex gap-2", className)}
+        title={!showLabel ? "Push Notifications" : undefined}
+      >
         <Icon />
-        <span className={classes(!showLabel && "sr-only")}>
-          Push Notifications on this device
-        </span>
+
+        {showLabel && <span>Push Notifications on this device</span>}
       </Popover.Button>
 
       <Transition
