@@ -1,20 +1,22 @@
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+
+import { canQueue, fetchUrl } from "@/server/utils/queue";
+import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
+
 import {
   protectedProcedure,
   publicProcedure,
   router,
 } from "@/server/trpc/trpc";
 import { prisma } from "@/server/db/client";
-
 import {
   deleteTicket,
   getTicket,
   saveTicket,
   virtualTicketSchema,
 } from "@/server/db/virtual-tickets";
-import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 function revalidateTicket(eventId: string, userName: string) {
   try {
@@ -79,6 +81,15 @@ export const virtualTicketsRouter = router({
 
       if (ctx.session.user.name) {
         revalidateTicket(input.eventId, ctx.session.user.name);
+        // NOTE: As the revalidation does not render the image, we need to fetch it to warm the cache
+        await fetchUrl(
+          getVirtualTicketImageUrl(input.eventId, ctx.session.user.name, "og"),
+          undefined,
+          {
+            // Give the revalidation some time before we fetch the image:
+            delaySeconds: canQueue() ? 20 : 1,
+          },
+        );
       }
     }),
 
