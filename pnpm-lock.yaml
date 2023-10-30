@@ -84,8 +84,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#0.22.0
-        version: github.com/alveusgg/data/b28015a0b8f0be8abdee7689cbe3ad4e3f36e5e2
+        specifier: github:alveusgg/data#0.23.0
+        version: github.com/alveusgg/data/9d4264158bb2c557260d37ccb3bf26cf5566e32d
       '@aws-sdk/client-s3':
         specifier: ^3.414.0
         version: 3.414.0
@@ -1672,7 +1672,7 @@ packages:
     optional: true
 
   /@fontsource/pt-sans@5.0.8:
-    resolution: { integrity: sha512-YCn2rcHLdQUNcTzrrHpPzzLqMat2s1TUTcBDXIHgHpUNar3jkrZ9U0wNGczu0C0WgFzUFShDtRUl3PehDi9P+g== }
+    resolution: {integrity: sha512-YCn2rcHLdQUNcTzrrHpPzzLqMat2s1TUTcBDXIHgHpUNar3jkrZ9U0wNGczu0C0WgFzUFShDtRUl3PehDi9P+g==}
     dev: false
 
   /@formatjs/ecma402-abstract@1.17.2:
@@ -10070,8 +10070,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/alveusgg/data/b28015a0b8f0be8abdee7689cbe3ad4e3f36e5e2:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/b28015a0b8f0be8abdee7689cbe3ad4e3f36e5e2}
+  github.com/alveusgg/data/9d4264158bb2c557260d37ccb3bf26cf5566e32d:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/9d4264158bb2c557260d37ccb3bf26cf5566e32d}
     name: '@alveusgg/data'
-    version: 0.22.0
+    version: 0.23.0
     dev: false
