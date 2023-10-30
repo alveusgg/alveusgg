@@ -97,6 +97,11 @@ export const env = createEnv({
       .string()
       .url()
       .refine((url) => !url.endsWith("/")),
+    NEXT_PUBLIC_SHORT_BASE_URL: z
+      .string()
+      .url()
+      .refine((url) => !url.endsWith("/"))
+      .optional(),
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z
       .string()
       .superRefine(checkBase64UrlEncoded)
@@ -158,6 +163,7 @@ export const env = createEnv({
     NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_VERCEL_URL
       ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
       : process.env.NEXT_PUBLIC_BASE_URL,
+    NEXT_PUBLIC_SHORT_BASE_URL: process.env.NEXT_PUBLIC_SHORT_BASE_URL,
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,

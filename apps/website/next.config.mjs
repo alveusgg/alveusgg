@@ -173,6 +173,17 @@ const config = {
         permanent: false,
       },
     ]),
+    // Events
+    {
+      source: "/fc23",
+      destination: "/events/fall-carnival-2023",
+      permanent: true,
+    },
+    {
+      source: "/fc23/:user*",
+      destination: "/events/fall-carnival-2023/tickets/:user*",
+      permanent: true,
+    },
     // Temporary redirects (until new merch show is set up)
     {
       source: "/merch",

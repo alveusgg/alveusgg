@@ -10,6 +10,8 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 import usePrefersReducedMotion from "@/hooks/motion";
 
+import { ambassadorImageHover } from "@/pages/ambassadors";
+
 import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
@@ -17,7 +19,6 @@ import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
 import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Consent from "@/components/Consent";
-import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
@@ -223,6 +224,7 @@ const Home: NextPage = () => {
             className="absolute -right-32 h-auto max-h-full w-full"
           />
         </div>
+
         <Image
           src={leafLeftImage3}
           alt=""

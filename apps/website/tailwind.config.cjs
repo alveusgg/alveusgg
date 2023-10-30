@@ -1,6 +1,7 @@
 // @ts-check
 const { fontFamily } = require("tailwindcss/defaultTheme");
 const colors = require("tailwindcss/colors");
+const plugin = require("tailwindcss/plugin");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -91,6 +92,13 @@ module.exports = {
         800: "#484D45",
         900: "#2C2F2B",
       },
+      fall: "#834a26",
+      carnival: {
+        DEFAULT: "#4E1362",
+        700: "#390E47",
+        800: "#28122f",
+      },
+      twitch: "#6441a5",
     },
     extend: {
       animation: {
@@ -128,5 +136,14 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(({ addUtilities }) => {
+      addUtilities({
+        ".text-wrap": { "text-wrap": "wrap" },
+        ".text-nowrap": { "text-wrap": "nowrap" },
+        ".text-balance": { "text-wrap": "balance" },
+        ".text-pretty": { "text-wrap": "pretty" },
+      });
+    }),
+  ],
 };

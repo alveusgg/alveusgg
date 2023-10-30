@@ -1,15 +1,72 @@
-import type { MouseEventHandler } from "react";
-import { Fragment } from "react";
+import {
+  Fragment,
+  useEffect,
+  useId,
+  useState,
+  type ComponentPropsWithoutRef,
+  type MouseEventHandler,
+} from "react";
 
 import { Popover } from "@headlessui/react";
+
+import { classes } from "@/utils/classes";
 
 import IconTwitter from "@/icons/IconTwitter";
 import IconFacebook from "@/icons/IconFacebook";
 import IconShare from "@/icons/IconShare";
 import IconEnvelope from "@/icons/IconEnvelope";
+import IconClipboard from "@/icons/IconClipboard";
 
-import { Button } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
+import { QRCode } from "@/components/QrCode";
+
+function createTwitterLink({ text, url }: { text: string; url: string }) {
+  const link = new URL("https://twitter.com/intent/tweet");
+  link.searchParams.append("text", text);
+  link.searchParams.append("url", url);
+  return link.toString();
+}
+
+function createFacebookLink({ url }: { url: string }) {
+  const link = new URL("https://www.facebook.com/sharer/sharer.php");
+  link.searchParams.append("u", url);
+  return link.toString();
+}
+
+function createEmailLink({
+  title,
+  text,
+  url,
+}: {
+  title: string;
+  text: string;
+  url: string;
+}) {
+  const link = new URL("mailto:");
+  link.searchParams.append("subject", title);
+  link.searchParams.append("body", `${text}\n\n${url}`);
+  return link.toString().replaceAll("+", "%20");
+}
+
+function ShareLink({
+  className,
+  ...attributes
+}: ComponentPropsWithoutRef<"a">) {
+  return (
+    <Popover.Button as={Fragment}>
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        className={classes(
+          "flex gap-1 rounded-lg p-1 text-sm hover:underline",
+          className,
+        )}
+        {...attributes}
+      />
+    </Popover.Button>
+  );
+}
 
 export function ShareButton({
   url,
@@ -29,30 +86,29 @@ export function ShareButton({
         .share({ title, text, url })
         .then()
         .catch((err) => {
-          console.log(err);
+          console.error(err);
         });
     }
   };
 
-  const createTwitterLink = () => {
-    const link = new URL("https://twitter.com/intent/tweet");
-    link.searchParams.append("text", text);
-    link.searchParams.append("url", url);
-    return link.toString();
-  };
-
-  const createFacebookLink = () => {
-    const link = new URL("https://www.facebook.com/sharer/sharer.php");
-    link.searchParams.append("u", url);
-    return link.toString();
-  };
-
-  const createEmailLink = () => {
-    const link = new URL("mailto:");
-    link.searchParams.append("subject", title);
-    link.searchParams.append("body", `${text}\n\n${url}`);
-    return link.toString().replaceAll("+", "%20");
-  };
+  const linkInputId = useId();
+  const [linkCopiedState, setLinkCopiedState] = useState<
+    undefined | "success" | "error"
+  >();
+  const linkCopiedText =
+    linkCopiedState === "success"
+      ? "Copied!"
+      : linkCopiedState === "error"
+      ? "Failed"
+      : "Copy";
+  useEffect(() => {
+    if (linkCopiedState) {
+      const timeout = setTimeout(() => {
+        setLinkCopiedState(undefined);
+      }, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [linkCopiedState]);
 
   return (
     <PopoverButton
@@ -64,48 +120,79 @@ export function ShareButton({
         </>
       }
     >
-      <p className="mb-1">Share this link:</p>
-      <input
-        readOnly={true}
-        type="url"
-        className="mb-2 w-full bg-transparent text-inherit"
-        value={url}
-      />
+      <p className="mb-1">Share this link</p>
+
+      <div className="mb-3 flex items-stretch gap-2">
+        <input
+          id={linkInputId}
+          readOnly={true}
+          type="url"
+          className="w-full flex-grow bg-transparent p-0.5 text-sm text-inherit"
+          value={url}
+          onClick={(e) =>
+            e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+          }
+        />
+
+        <Button
+          width="auto"
+          size="small"
+          className={classes(
+            defaultButtonClasses,
+            "transition-colors hover:bg-gray-900",
+            linkCopiedState === "success" && "bg-green-900",
+            linkCopiedState === "error" && "bg-red-900",
+          )}
+          onClick={() => {
+            const linkInputElement = document.getElementById(
+              linkInputId,
+            ) as HTMLInputElement;
+
+            try {
+              linkInputElement.focus();
+              linkInputElement.setSelectionRange(
+                0,
+                linkInputElement.value.length,
+              );
+              document.execCommand("copy");
+              setLinkCopiedState("success");
+            } catch (e) {
+              setLinkCopiedState("error");
+            }
+          }}
+          title="Copy link to clipboard"
+        >
+          <IconClipboard className="h-4 w-4" />
+          {linkCopiedText}
+        </Button>
+      </div>
 
       <div className="flex gap-2">
-        <Popover.Button as={Fragment}>
-          <Button
-            width="auto"
-            size="small"
-            onClick={() => window.open(createTwitterLink(), "_blank")}
-            title="Share announcement on Twitter"
-          >
-            <IconTwitter className="mr-1 h-4 w-4" />
-            Twitter
-          </Button>
-        </Popover.Button>
-        <Popover.Button as={Fragment}>
-          <Button
-            width="auto"
-            size="small"
-            onClick={() => window.open(createFacebookLink(), "_blank")}
-            title="Share announcement on Facebook"
-          >
-            <IconFacebook className="mr-1 h-4 w-4" />
-            Facebook
-          </Button>
-        </Popover.Button>
-        <Popover.Button as={Fragment}>
-          <Button
-            width="auto"
-            size="small"
-            onClick={() => window.open(createEmailLink())}
-            title="Share announcement on Email"
-          >
-            <IconEnvelope className="mr-1 h-4 w-4" />
-            Email
-          </Button>
-        </Popover.Button>
+        <ShareLink
+          href={createTwitterLink({ text, url })}
+          title="Share on Twitter"
+        >
+          <IconTwitter className="h-4 w-4" />
+          Twitter
+        </ShareLink>
+        <ShareLink href={createFacebookLink({ url })} title="Share on Facebook">
+          <IconFacebook className="h-4 w-4" />
+          Facebook
+        </ShareLink>
+        <ShareLink
+          href={createEmailLink({ title, text, url })}
+          title="Share via Email"
+        >
+          <IconEnvelope className="h-4 w-4" />
+          Email
+        </ShareLink>
+      </div>
+
+      <div className="mt-3 border-t">
+        <QRCode
+          className="mx-auto my-3 aspect-square max-w-[120px]"
+          value={url}
+        />
       </div>
     </PopoverButton>
   );

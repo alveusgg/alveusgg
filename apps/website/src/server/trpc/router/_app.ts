@@ -1,28 +1,31 @@
-import { adminUsersRouter } from "@/server/trpc/router/admin/users";
-import { notificationsRouter } from "@/server/trpc/router/notifications";
 import { router } from "../trpc";
-import { authRouter } from "./auth";
-import { adminNotificationsRouter } from "./admin/notifications";
-import { pushSubscriptionRouter } from "./push/subscription";
-import { formsRouter } from "./forms";
-import { adminFormsRouter } from "./admin/forms";
+
 import { adminActivityFeedRouter } from "./admin/activity-feed";
-import { showAndTellRouter } from "./show-and-tell";
+import { adminFormsRouter } from "./admin/forms";
+import { adminNotificationsRouter } from "./admin/notifications";
 import { adminShowAndTellRouter } from "./admin/show-and-tell";
 import { adminTwitchRouter } from "./admin/twitch";
+import { adminUsersRouter } from "./admin/users";
+import { authRouter } from "./auth";
+import { formsRouter } from "./forms";
+import { notificationsRouter } from "./notifications";
+import { pushSubscriptionRouter } from "./push/subscription";
+import { showAndTellRouter } from "./show-and-tell";
+import { virtualTicketsRouter } from "./virtual-tickets";
 
 export const appRouter = router({
-  auth: authRouter,
   adminActivityFeed: adminActivityFeedRouter,
   adminForms: adminFormsRouter,
   adminNotifications: adminNotificationsRouter,
-  adminTwitch: adminTwitchRouter,
   adminShowAndTell: adminShowAndTellRouter,
+  adminTwitch: adminTwitchRouter,
   adminUsersRouter: adminUsersRouter,
+  auth: authRouter,
+  forms: formsRouter,
   notifications: notificationsRouter,
   pushSubscription: pushSubscriptionRouter,
   showAndTell: showAndTellRouter,
-  forms: formsRouter,
+  virtualTickets: virtualTicketsRouter,
 });
 
 // export type definition of API

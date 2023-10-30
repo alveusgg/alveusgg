@@ -27,5 +27,10 @@
     "prepare": "husky install",
     "lint-staged": "lint-staged --relative",
     "prettier": "prettier . --write"
+  },
+  "pnpm": {
+    "patchedDependencies": {
+      "next@13.5.4": "patches/next@13.5.4.patch"
+    }
   }
 }

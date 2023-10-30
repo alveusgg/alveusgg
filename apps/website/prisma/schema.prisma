@@ -100,6 +100,7 @@ model User {
   outgoingWebhooks   OutgoingWebhook[]
   showAndTellEntries ShowAndTellEntry[]
   roles              UserRole[]
+  virtualTickets     VirtualTicket[]
 }
 
 model VerificationToken {
@@ -384,4 +385,16 @@ model TwitchChannel {
 
   broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
   moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
+}
+
+model VirtualTicket {
+  userId        String
+  eventId       String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
+  customization String   @db.Text
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, eventId])
 }
