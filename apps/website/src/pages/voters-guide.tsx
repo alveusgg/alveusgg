@@ -230,7 +230,8 @@ const VotePage: NextPage = () => {
           </p>
         </div>
 
-        <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4"></div>
+        {/* TODO: Artwork? */}
+        {/* <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4"></div> */}
       </Section>
 
       <div className="relative">
