@@ -31,6 +31,7 @@ import IconLinkedIn from "@/icons/IconLinkedIn";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import IconArrowRight from "@/icons/IconArrowRight";
 
 const embedTypes = {
   register: "Register to Vote",
@@ -50,79 +51,38 @@ const VoteEmbed = ({ type }: { type: keyof typeof embedTypes }) => (
 
 interface Step {
   title: string;
+  link: string;
   description: string;
-  content: React.ReactNode;
+  content?: React.ReactNode;
 }
 
 const steps: Record<string, Step> = {
   register: {
     title: "Register to Vote",
+    link: "https://www.vote.org/register-to-vote/",
     description:
       "If you're not yet registered to vote, you can register online in minutes using this form.",
-    content: (
-      <>
-        <p className="italic">
-          Use this form from Vote.org to register to vote in your state if
-          you&apos;re located in the United States.
-        </p>
-        <VoteEmbed type="register" />
-      </>
-    ),
+    content: <VoteEmbed type="register" />,
   },
   status: {
     title: "Check Your Voting Status",
+    link: "https://www.vote.org/am-i-registered-to-vote/",
     description:
       "Use this quick form to confirm that you're still all set to vote in your state.",
-    content: (
-      <>
-        <p className="italic">
-          Use this form from Vote.org to check if you&apos;re registered to vote
-          in your state if you&apos;re located in the United States.
-        </p>
-        <VoteEmbed type="verify" />
-      </>
-    ),
+    content: <VoteEmbed type="verify" />,
   },
   preview: {
     title: "Preview Your Ballot",
+    link: "https://www.vote.org/ballot-information/",
     description:
       "Get a preview of your ballot, including the candidates and issues you'll be voting on.",
-    content: (
-      <>
-        <p className="italic">
-          Use this form from Vote.org to preview your upcoming election ballot
-          if you&apos;re located in the United States.
-        </p>
-        <VoteEmbed type="ballot" />
-      </>
-    ),
+    content: <VoteEmbed type="ballot" />,
   },
   early: {
     title: "Explore Early Voting",
+    link: "https://www.vote.org/early-voting-calendar/",
     description:
       "Check if your state allows early voting, and if so, when and where you can vote early.",
-    content: (
-      <>
-        <p>
-          If you&apos;re located in the United States, you can use this free
-          resource from Vote.org to check if your state allows early voting, and
-          if so, when and where you can vote early.
-        </p>
-
-        <Link
-          href="https://www.vote.org/early-voting-calendar/"
-          external
-          custom
-          className="mx-auto my-4 inline-block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-        >
-          Check Early Voting Dates
-          <IconExternal
-            size="0.75em"
-            className="ml-1 mr-0.5 inline-block align-baseline"
-          />
-        </Link>
-      </>
-    ),
   },
 };
 
@@ -293,39 +253,71 @@ const VotePage: NextPage = () => {
           </div>
 
           {Object.entries(steps).map(
-            ([key, { title, description, content }]) => (
-              <Disclosure key={key}>
-                {({ open }) => (
-                  <>
-                    <Disclosure.Button className="mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
-                      <div className="flex grow flex-wrap items-baseline gap-x-4">
-                        <Heading level={3} className="my-0 text-2xl">
-                          {title}
-                        </Heading>
+            ([key, { title, link, description, content }]) =>
+              content ? (
+                <Disclosure key={key}>
+                  {({ open }) => (
+                    <>
+                      <Disclosure.Button className="mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
+                        <div className="flex grow flex-wrap items-baseline gap-x-4">
+                          <Link
+                            href={link}
+                            external
+                            custom
+                            className="hover:underline"
+                          >
+                            <Heading level={3} className="my-0 text-2xl">
+                              {title}
+                            </Heading>
+                          </Link>
 
-                        <p>{description}</p>
-                      </div>
+                          <p>{description}</p>
+                        </div>
 
-                      {open ? (
-                        <IconChevronDown
-                          className="box-content flex-shrink-0 p-1"
-                          size={32}
-                        />
-                      ) : (
-                        <IconChevronUp
-                          className="box-content flex-shrink-0 p-1"
-                          size={32}
-                        />
-                      )}
-                    </Disclosure.Button>
+                        {open ? (
+                          <IconChevronDown
+                            className="box-content flex-shrink-0 p-1"
+                            size={32}
+                          />
+                        ) : (
+                          <IconChevronUp
+                            className="box-content flex-shrink-0 p-1"
+                            size={32}
+                          />
+                        )}
+                      </Disclosure.Button>
 
-                    <Disclosure.Panel className="mx-4">
-                      {content}
-                    </Disclosure.Panel>
-                  </>
-                )}
-              </Disclosure>
-            ),
+                      <Disclosure.Panel className="mx-4">
+                        {content}
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              ) : (
+                <Link
+                  key={key}
+                  href={link}
+                  external
+                  custom
+                  className="group mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200"
+                >
+                  <div className="flex grow flex-wrap items-baseline gap-x-4">
+                    <Heading
+                      level={3}
+                      className="my-0 text-2xl group-hover:underline"
+                    >
+                      {title}
+                    </Heading>
+
+                    <p>{description}</p>
+                  </div>
+
+                  <IconArrowRight
+                    className="box-content flex-shrink-0 p-1"
+                    size={32}
+                  />
+                </Link>
+              ),
           )}
         </Section>
       </div>
