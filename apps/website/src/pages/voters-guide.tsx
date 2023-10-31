@@ -2,6 +2,8 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
 import IframeResizer from "iframe-resizer-react";
+import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { getShortBaseUrl } from "@/utils/short-url";
 import {
@@ -10,6 +12,7 @@ import {
   linkedinShareUrl,
   twitterShareUrl,
 } from "@/utils/share-url";
+import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
 import Section from "@/components/content/Section";
@@ -45,7 +48,13 @@ const VoteEmbed = ({ type }: { type: keyof typeof embedTypes }) => (
   </Consent>
 );
 
-const steps = {
+interface Step {
+  title: string;
+  description: string;
+  content: React.ReactNode;
+}
+
+const steps: Record<string, Step> = {
   register: {
     title: "Register to Vote",
     description:
@@ -117,13 +126,95 @@ const steps = {
   },
 };
 
+interface Issue {
+  ambassador: AmbassadorKey;
+  content: React.ReactNode;
+}
+
+const issues: Record<string, Issue> = {
+  climate: {
+    ambassador: "siren",
+    content: (
+      <>
+        <p>
+          Siren wants leaders who will take action to protect the environment
+          and address climate change.
+        </p>
+
+        <p>
+          Deforestation and other climate change factors affect her species and
+          many more, leaving them with no natural habitat and a host of other
+          challenges.
+        </p>
+      </>
+    ),
+  },
+  water: {
+    ambassador: "georgie",
+    content: (
+      <>
+        <p>
+          Georgie would like for leaders to ensure that waterways are clean and
+          safe for both people and wildlife, free from pollution and safeguarded
+          for the future.
+        </p>
+
+        <p>
+          Many species, including his own, live in the water and call it their
+          home, while others&mdash;including us&mdash;depend on it for survival.
+        </p>
+      </>
+    ),
+  },
+  laws: {
+    ambassador: "fenn",
+    content: (
+      <>
+        <p>
+          Fenn wants leaders who create, update, and protect laws that will
+          ensure his species and all other wild animals are protected for
+          generations to come.
+        </p>
+        <p>
+          Laws should not only protect wildlife, but also protect the ability to
+          create and enforce laws in the future, and for us to be able to vote
+          on them.
+        </p>
+      </>
+    ),
+  },
+  land: {
+    ambassador: "abbott",
+    content: (
+      <>
+        <p>
+          Abbott and his friends would like leaders who will protect public
+          land, be that national parks, forests, or other areas, as they are
+          vital habitats for so many.
+        </p>
+        <p>
+          Public land is also important for people, helping keep our air clean
+          and providing places to explore and enjoy nature, disconnect from
+          technology, and relax.
+        </p>
+      </>
+    ),
+  },
+};
+
 const shareData = {
   url: `${getShortBaseUrl()}/vote`,
   title: "Alveus Sanctuary Voters' Guide",
   text: "Our ambassadors can't vote, but you can! Get ready to vote with Alveus Sanctuary's Voters' Guide. Check your voting information, preview your ballot, and understand the issues.",
-};
+} as const;
 
-const share = {
+interface Share {
+  link: string;
+  text: string;
+  icon: React.ComponentType<{ size: number }>;
+}
+
+const share: Record<string, Share> = {
   twitter: {
     link: twitterShareUrl(shareData),
     text: "Share on Twitter",
@@ -239,65 +330,109 @@ const VotePage: NextPage = () => {
         </Section>
       </div>
 
-      <Section dark>
-        <Heading id="issues" level={2} link>
-          Conservation Issues Matter
-        </Heading>
-
-        {/* TODO: Issues list */}
-      </Section>
-
       <div className="relative">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block"
         />
 
-        <Section containerClassName="flex flex-col items-center md:flex-row md:justify-between gap-8">
-          <div>
-            <Heading id="share" level={2} link>
-              Encourage Your Friends
-            </Heading>
+        <Section dark>
+          <Heading id="issues" level={2} link>
+            Conservation Issues Matter
+          </Heading>
 
-            <p className="text-lg">
-              Every voice matters! Share this guide and encourage your friends,
-              family, and colleagues to vote.
-            </p>
-          </div>
+          <ul>
+            {Object.entries(issues).map(([key, { ambassador, content }]) => {
+              const image = getAmbassadorImages(ambassador)[0];
 
-          <div>
-            <ul className="flex justify-center gap-4">
-              {Object.entries(share).map(([key, item]) => (
-                <li key={key}>
+              return (
+                <li
+                  key={key}
+                  className="my-6 flex flex-col items-center gap-x-4 gap-y-2 sm:flex-row"
+                >
                   <Link
-                    href={item.link}
-                    external
+                    href={`/ambassadors/${camelToKebab(ambassador)}`}
+                    className="group z-10 flex-shrink-0 transition-transform hover:scale-102"
                     custom
-                    className="block rounded-2xl bg-alveus-green p-3 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                    title={item.text}
                   >
-                    <item.icon size={32} />
+                    <Image
+                      src={image.src}
+                      alt={image.alt}
+                      className="h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md xl:h-32 xl:w-32"
+                      style={{ objectPosition: image.position }}
+                    />
                   </Link>
-                </li>
-              ))}
-            </ul>
 
-            <input
-              readOnly={true}
-              type="url"
-              className="m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic text-alveus-green-600 outline-none"
-              value={shareData.url}
-              onClick={(e) =>
-                e.currentTarget.setSelectionRange(
-                  0,
-                  e.currentTarget.value.length,
-                )
-              }
-            />
-          </div>
+                  <div className="text-center text-lg sm:text-left xl:text-xl">
+                    {content}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+
+          <p className="mx-auto mt-8 border-t-2 border-t-alveus-green-600 pt-8 text-center text-lg lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl">
+            None of our ambassadors can vote, and they aren&apos;t worried about
+            which party wins.
+            <br className="hidden lg:block" /> They just want to make sure that
+            the people who are in power will do their best to protect their wild
+            friends.
+          </p>
         </Section>
       </div>
+
+      <Section containerClassName="flex flex-col items-center md:flex-row md:justify-between gap-8">
+        <div>
+          <Heading id="share" level={2} link>
+            Encourage Your Friends
+          </Heading>
+
+          <p className="text-lg">
+            Every voice matters! Share this guide and encourage your friends,
+            family, and colleagues to vote.
+          </p>
+
+          <p className="mt-4">
+            Take the time to research the candidates and issues on your ballot,
+            understand their plans to address conservation and how they&apos;ll
+            protect the environment while in office.
+          </p>
+
+          <p>
+            Your vote, and those of people around you, will help determine the
+            future of our planet and all of its inhabitants.
+          </p>
+        </div>
+
+        <div>
+          <ul className="flex justify-center gap-4">
+            {Object.entries(share).map(([key, item]) => (
+              <li key={key}>
+                <Link
+                  href={item.link}
+                  external
+                  custom
+                  className="block rounded-2xl bg-alveus-green p-3 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
+                  title={item.text}
+                >
+                  <item.icon size={32} />
+                </Link>
+              </li>
+            ))}
+          </ul>
+
+          <input
+            readOnly={true}
+            type="url"
+            className="m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic text-alveus-green-600 outline-none"
+            value={shareData.url}
+            onClick={(e) =>
+              e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+            }
+          />
+        </div>
+      </Section>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex flex-grow flex-col">
