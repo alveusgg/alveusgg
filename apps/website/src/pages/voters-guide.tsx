@@ -453,6 +453,18 @@ const VotePage: NextPage = () => {
             on making sure you&apos;re ready to vote, and educating the world
             about conservation.
           </p>
+
+          <p className="mt-4 italic">
+            Our thanks to the National Wildlife Federation for their excellent{" "}
+            <Link href="https://www.nwf.org/Home/VOTE" external dark>
+              Voters&apos; Guide
+            </Link>
+            , which inspired this page, and to the team at{" "}
+            <Link href="https://www.vote.org/" external dark>
+              Vote.org
+            </Link>{" "}
+            for their free voter preparation tools.
+          </p>
         </Section>
       </div>
     </>
