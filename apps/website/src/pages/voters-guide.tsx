@@ -88,12 +88,14 @@ const steps: Record<string, Step> = {
 
 interface Issue {
   ambassador: AmbassadorKey;
+  title: string;
   content: React.ReactNode;
 }
 
 const issues: Record<string, Issue> = {
   climate: {
     ambassador: "siren",
+    title: "Confront Climate Change",
     content: (
       <>
         <p>
@@ -111,6 +113,7 @@ const issues: Record<string, Issue> = {
   },
   water: {
     ambassador: "georgie",
+    title: "Safeguard Waterways",
     content: (
       <>
         <p>
@@ -128,6 +131,7 @@ const issues: Record<string, Issue> = {
   },
   laws: {
     ambassador: "fenn",
+    title: "Protect Wildlife and Voters Rights",
     content: (
       <>
         <p>
@@ -145,6 +149,7 @@ const issues: Record<string, Issue> = {
   },
   land: {
     ambassador: "abbott",
+    title: "Keep Wild Spaces Wild",
     content: (
       <>
         <p>
@@ -335,33 +340,39 @@ const VotePage: NextPage = () => {
           </Heading>
 
           <ul>
-            {Object.entries(issues).map(([key, { ambassador, content }]) => {
-              const image = getAmbassadorImages(ambassador)[0];
+            {Object.entries(issues).map(
+              ([key, { ambassador, title, content }]) => {
+                const image = getAmbassadorImages(ambassador)[0];
 
-              return (
-                <li
-                  key={key}
-                  className="my-6 flex flex-col items-center gap-x-4 gap-y-2 sm:flex-row"
-                >
-                  <Link
-                    href={`/ambassadors/${camelToKebab(ambassador)}`}
-                    className="group z-10 flex-shrink-0 transition-transform hover:scale-102"
-                    custom
+                return (
+                  <li
+                    key={key}
+                    className="my-6 flex flex-col items-center gap-x-4 gap-y-2 sm:flex-row"
                   >
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      className="h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md xl:h-32 xl:w-32"
-                      style={{ objectPosition: image.position }}
-                    />
-                  </Link>
+                    <Link
+                      href={`/ambassadors/${camelToKebab(ambassador)}`}
+                      className="group z-10 flex-shrink-0 transition-transform hover:scale-102"
+                      custom
+                    >
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        className="h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md xl:h-32 xl:w-32"
+                        style={{ objectPosition: image.position }}
+                      />
+                    </Link>
 
-                  <div className="text-center text-lg sm:text-left xl:text-xl">
-                    {content}
-                  </div>
-                </li>
-              );
-            })}
+                    <div className="text-center text-lg sm:text-left xl:text-xl">
+                      <Heading level={3} className="my-0 text-xl xl:text-2xl">
+                        {title}
+                      </Heading>
+
+                      {content}
+                    </div>
+                  </li>
+                );
+              },
+            )}
           </ul>
 
           <p className="mx-auto mt-8 border-t-2 border-t-alveus-green-600 pt-8 text-center text-lg lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl">
