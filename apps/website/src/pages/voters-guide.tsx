@@ -27,11 +27,11 @@ import IconFacebook from "@/icons/IconFacebook";
 import IconTwitter from "@/icons/IconTwitter";
 import IconEnvelope from "@/icons/IconEnvelope";
 import IconLinkedIn from "@/icons/IconLinkedIn";
+import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import IconArrowRight from "@/icons/IconArrowRight";
 
 const embedTypes = {
   register: "Register to Vote",
