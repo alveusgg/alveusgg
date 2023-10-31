@@ -281,12 +281,12 @@ const VotePage: NextPage = () => {
                         </div>
 
                         {open ? (
-                          <IconChevronDown
+                          <IconChevronUp
                             className="box-content flex-shrink-0 p-1"
                             size={32}
                           />
                         ) : (
-                          <IconChevronUp
+                          <IconChevronDown
                             className="box-content flex-shrink-0 p-1"
                             size={32}
                           />
