@@ -140,6 +140,18 @@ Personal Data is collected for the following purposes and using the following se
 
   This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
 
+  #### Vote.org voter information widgets
+
+  Vote.org is a vote information service provided by Vote.org (501(c)(3) registered non-profit organization), that allows this Website to incorporate content of this kind on its pages.
+
+  Personal Data collected: Voter Contact Data; Cookies; Usage Data.
+
+  Place of processing: United States – [Privacy Policy](https://www.vote.org/privacy/)
+
+  Category of personal data collected according to CCPA: identifiers; customer records; internet information.
+
+  This processing constitutes a sale based on the definition under the CCPA. In addition to the information in this clause, the User can find information regarding how to opt out of the sale in the section detailing the rights of Californian consumers.
+
 - ### Traffic optimization and distribution
 
   This type of service allows this Website to distribute their content using servers located across different countries and to optimize their performance.
@@ -400,4 +412,4 @@ This privacy statement has been prepared based on provisions of multiple legisla
 
 This privacy policy relates solely to this Website, if not stated otherwise within this document.
 
-Latest update: October 7th, 2023
+Latest update: October 28th, 2023

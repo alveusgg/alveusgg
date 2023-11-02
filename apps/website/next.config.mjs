@@ -152,6 +152,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/vote",
+      destination: "/voters-guide",
+      permanent: true,
+    },
+    {
       source: "/aq/:path*",
       destination: "/animal-quest/:path*",
       permanent: false,
@@ -310,6 +315,8 @@ const config = {
               "https://prezi.com/",
               // The Giving Block (donation widget):
               "https://widget.thegivingblock.com/",
+              // Vote.org embeds:
+              "https://register.vote.org/ https://verify.vote.org/ https://ballot.vote.org/",
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
             ]

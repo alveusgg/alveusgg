@@ -89,7 +89,7 @@ const Socials = () => {
                   href={social.link}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={social.title}
+                  title={social.title}
                 >
                   <social.icon size={24} />
                 </a>
@@ -116,7 +116,7 @@ const Socials = () => {
                   href={updateChannel.link}
                   target="_blank"
                   rel="noreferrer"
-                  aria-label={updateChannel.title}
+                  title={updateChannel.title}
                 >
                   <updateChannel.icon size={24} />
                 </a>
