@@ -34,9 +34,10 @@ const Layout = ({ children }: LayoutProps) => {
     document.body.classList.add(...fonts.split(" "));
   }, []);
 
-  const showTopHat = !useRouter().pathname.startsWith(
-    "/events/fall-carnival-2023",
-  );
+  const { pathname } = useRouter();
+  const showTopHat =
+    !pathname.startsWith("/events/fall-carnival-2023") &&
+    !pathname.startsWith("/admin");
 
   return (
     <>

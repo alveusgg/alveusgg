@@ -22,55 +22,50 @@ import IconEllipsis from "@/icons/IconEllipsis";
 import IconDownload from "@/icons/IconDownload";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
-type FormWithCount = RouterOutput["adminForms"]["getForms"][number];
+type BingoWithCount = RouterOutput["adminBingos"]["getBingos"][number];
 
 const nf = new Intl.NumberFormat();
 
-type FormProps = {
-  form: FormWithCount;
+type BingoProps = {
+  bingo: BingoWithCount;
   onError: (error: string) => void;
   onUpdate: () => void;
 };
 
-function Form({ form, onError, onUpdate }: FormProps) {
-  const deleteMutation = trpc.adminForms.deleteForm.useMutation({
+function Bingo({ bingo, onError, onUpdate }: BingoProps) {
+  const deleteMutation = trpc.adminBingos.deleteBingo.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
-  const purgeEntriesMutation = trpc.adminForms.purgeFormEntries.useMutation({
+  const purgeEntriesMutation = trpc.adminBingos.purgeBingoEntries.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
-  const anonymizeFormEntriesMutation =
-    trpc.adminForms.anonymizeFormEntries.useMutation({
-      onError: (error) => onError(error.message),
-      onSettled: () => onUpdate(),
-    });
-  const toggleFormStatus = trpc.adminForms.toggleFormStatus.useMutation({
+  const toggleBingoStatus = trpc.adminBingos.toggleBingoStatus.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
 
   const handleToggle = useCallback(() => {
-    toggleFormStatus.mutate({ id: form.id, active: !form.active });
-  }, [form.active, form.id, toggleFormStatus]);
+    toggleBingoStatus.mutate({ id: bingo.id, active: !bingo.active });
+  }, [bingo.active, bingo.id, toggleBingoStatus]);
 
-  const updateFormOutgoingWebhookUrl =
-    trpc.adminForms.updateFormOutgoingWebhookUrl.useMutation({
+  const updateBingoOutgoingWebhookUrl =
+    trpc.adminBingos.updateBingoOutgoingWebhookUrl.useMutation({
       onError: (error) => onError(error.message),
       onSettled: () => onUpdate(),
     });
 
   const handleWebhookUrl = useCallback(() => {
-    const oldUrl = form.outgoingWebhookUrl;
+    const oldUrl = bingo.outgoingWebhookUrl;
     const newUrl = window.prompt("Webhook URL", oldUrl || "");
     if (newUrl !== null && newUrl !== oldUrl) {
-      updateFormOutgoingWebhookUrl.mutate({
-        id: form.id,
+      updateBingoOutgoingWebhookUrl.mutate({
+        id: bingo.id,
         outgoingWebhookUrl: newUrl,
       });
     }
-  }, [form.outgoingWebhookUrl, form.id, updateFormOutgoingWebhookUrl]);
+  }, [bingo.outgoingWebhookUrl, bingo.id, updateBingoOutgoingWebhookUrl]);
 
   return (
     <>
@@ -80,43 +75,50 @@ function Form({ form, onError, onUpdate }: FormProps) {
             size="small"
             width="auto"
             onClick={handleToggle}
-            title={form.active ? "close form" : "open form"}
+            title={bingo.active ? "close bingo" : "open bingo"}
           >
-            {form.active ? "✅" : "❌"}
+            {bingo.active ? "✅" : "❌"}
             <span className="sr-only">
-              {form.active ? "is open" : "is closed"}
+              {bingo.active ? "is open" : "is closed"}
             </span>
           </Button>
         </td>
         <td className="w-1/2 p-1">
           <div className="flex flex-col gap-0.5">
-            <div className="text-xl">{form.label}</div>
+            <div className="text-xl">
+              <Link
+                className="underline"
+                href={`/admin/bingo/${bingo.id}/live`}
+              >
+                {bingo.label}
+              </Link>
+            </div>
             <div className="flex flex-col gap-1">
               <Link
                 className="underline"
-                href={`/forms/${form.slug || form.id}`}
+                href={`/bingo/play/${bingo.slug || bingo.id}`}
                 target="_blank"
               >
-                Public Link: {form.slug || form.id}
+                Public Link: {bingo.slug || bingo.id}
               </Link>
               <button
                 type="button"
                 className="text-left"
                 onClick={handleWebhookUrl}
               >
-                Webhook URL: {form.outgoingWebhookUrl || "-/-"}
+                Webhook URL: {bingo.outgoingWebhookUrl || "-/-"}
               </button>
             </div>
           </div>
         </td>
         <td className="p-1 px-4 text-right tabular-nums">
-          {nf.format(form._count.entries)}
+          {nf.format(bingo._count.entries)}
         </td>
         <td className="p-1 tabular-nums">
-          <DateTime date={form.startAt} format={{ time: "minutes" }} />
+          <DateTime date={bingo.startAt} format={{ time: "minutes" }} />
           <br />
-          {form.endAt ? (
-            <DateTime date={form.endAt} format={{ time: "minutes" }} />
+          {bingo.endAt ? (
+            <DateTime date={bingo.endAt} format={{ time: "minutes" }} />
           ) : (
             "(open end)"
           )}
@@ -125,7 +127,7 @@ function Form({ form, onError, onUpdate }: FormProps) {
           <LinkButton
             size="small"
             width="auto"
-            href={`/admin/forms/${form.id}/edit`}
+            href={`/admin/bingo/${bingo.id}/edit`}
           >
             <IconPencil className="h-4 w-4" />
             Edit
@@ -134,7 +136,16 @@ function Form({ form, onError, onUpdate }: FormProps) {
             size="small"
             width="auto"
             className={secondaryButtonClasses}
-            href={`/api/admin/forms/${form.id}/export-entries`}
+            href={`/api/admin/bingo/${bingo.id}/winners`}
+            target="_blank"
+          >
+            JSON
+          </LinkButton>
+          <LinkButton
+            size="small"
+            width="auto"
+            className={secondaryButtonClasses}
+            href={`/api/admin/bingo/${bingo.id}/export-entries`}
           >
             <IconDownload className="h-4 w-4" />
             CSV
@@ -151,7 +162,7 @@ function Form({ form, onError, onUpdate }: FormProps) {
                   size="small"
                   className={dangerButtonClasses}
                   confirmationMessage="Please confirm deletion!"
-                  onClick={() => deleteMutation.mutate(form.id)}
+                  onClick={() => deleteMutation.mutate(bingo.id)}
                 >
                   <IconTrash className="h-4 w-4" />
                   Delete
@@ -161,18 +172,8 @@ function Form({ form, onError, onUpdate }: FormProps) {
                 <Button
                   size="small"
                   className={dangerButtonClasses}
-                  confirmationMessage="Please confirm removing all PII from entries!"
-                  onClick={() => anonymizeFormEntriesMutation.mutate(form.id)}
-                >
-                  Remove PII
-                </Button>
-              </Menu.Item>
-              <Menu.Item>
-                <Button
-                  size="small"
-                  className={dangerButtonClasses}
                   confirmationMessage="Please confirm purging all entries!"
-                  onClick={() => purgeEntriesMutation.mutate(form.id)}
+                  onClick={() => purgeEntriesMutation.mutate(bingo.id)}
                 >
                   Purge entries
                 </Button>
@@ -185,13 +186,13 @@ function Form({ form, onError, onUpdate }: FormProps) {
   );
 }
 
-export function Forms() {
+export function BingoList() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const forms = trpc.adminForms.getForms.useQuery();
+  const bingos = trpc.adminBingos.getBingos.useQuery();
 
   return (
     <>
-      <Headline>Forms</Headline>
+      <Headline>Bingos</Headline>
 
       {errorMessage && (
         <ModalDialog
@@ -214,20 +215,20 @@ export function Forms() {
             </tr>
           </thead>
           <tbody>
-            {forms.data?.map((form) => (
-              <Form
-                key={form.id}
-                form={form}
+            {bingos.data?.map((bingo) => (
+              <Bingo
+                key={bingo.id}
+                bingo={bingo}
                 onError={(err) => setErrorMessage(err)}
-                onUpdate={() => forms.refetch()}
+                onUpdate={() => bingos.refetch()}
               />
             ))}
           </tbody>
         </table>
 
         <div className="mt-4 flex">
-          <LinkButton href="/admin/forms/create" size="small" width="auto">
-            + Create Form
+          <LinkButton href="/admin/bingo/create" size="small" width="auto">
+            + Create Bingo
           </LinkButton>
         </div>
       </Panel>

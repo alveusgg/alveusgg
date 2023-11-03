@@ -1,4 +1,4 @@
-import { type ReactNode, type ButtonHTMLAttributes } from "react";
+import React, { type ReactNode, type ButtonHTMLAttributes } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 
@@ -11,7 +11,9 @@ type ButtonStyleProps = {
 };
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & ButtonStyleProps;
-type LinkButtonProps = LinkProps & ButtonStyleProps;
+type LinkButtonProps = React.AnchorHTMLAttributes<HTMLAnchorElement> &
+  LinkProps &
+  ButtonStyleProps;
 
 const baseClasses =
   "flex flex-row items-center justify-center text-center disabled:cursor-not-allowed disabled:opacity-50";

@@ -6,8 +6,6 @@ import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 import { checkIsSuperUserSession } from "@/server/utils/auth";
 import { getAllEntriesForForm } from "@/server/db/forms";
 
-type FormEntryCsvExportRow = string[];
-
 const exportFormEntries = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
   const isSuperUser = checkIsSuperUserSession(session);
@@ -19,7 +17,7 @@ const exportFormEntries = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const entries = await getAllEntriesForForm(String(req.query.formId));
 
-  const rows: FormEntryCsvExportRow[] = entries.map((entry) => {
+  const rows = entries.map((entry) => {
     return [
       entry.formId,
       entry.id,
@@ -38,7 +36,7 @@ const exportFormEntries = async (req: NextApiRequest, res: NextApiResponse) => {
       (entry.mailingAddress?.country &&
         getCountryName(entry.mailingAddress.country)) ||
         "",
-    ];
+    ] satisfies string[];
   });
 
   rows.unshift([

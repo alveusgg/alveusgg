@@ -18,6 +18,9 @@ export const permissions = {
   manageForms: {
     requiredRole: "forms",
   },
+  manageBingos: {
+    requiredRole: "bingos",
+  },
   manageTwitchApi: {
     requiredRole: "twitchApi",
   },

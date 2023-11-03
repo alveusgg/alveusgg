@@ -18,6 +18,10 @@ export const userRoles = {
     label: "Forms",
     description: "Can manage forms",
   },
+  bingos: {
+    label: "Bingos",
+    description: "Can manage bingos",
+  },
   twitchApi: {
     label: "Manage Twitch",
     description: "Can manage twitch configuration and credentials",

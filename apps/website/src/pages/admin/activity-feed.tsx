@@ -67,7 +67,7 @@ const AdminActivityFeedPage: NextPage<
             >
               {outgoingWebhooks.isFetchingNextPage ? (
                 <>
-                  <IconLoading size={20} /> Loading...
+                  <IconLoading size={20} /> Loading…
                 </>
               ) : outgoingWebhooks.hasNextPage ? (
                 "Load more"

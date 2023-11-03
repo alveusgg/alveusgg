@@ -23,6 +23,11 @@ const menuItems = [
     permission: permissions.manageForms,
   },
   {
+    label: "Bingo",
+    href: "/admin/bingo",
+    permission: permissions.manageBingos,
+  },
+  {
     label: "Show & Tell",
     href: "/admin/show-and-tell",
     permission: permissions.manageShowAndTell,
