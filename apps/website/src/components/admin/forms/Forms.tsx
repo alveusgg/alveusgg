@@ -134,7 +134,7 @@ function Form({ form, onError, onUpdate }: FormProps) {
             size="small"
             width="auto"
             className={secondaryButtonClasses}
-            href={`/api/forms/${form.id}/export-entries`}
+            href={`/api/admin/forms/${form.id}/export-entries`}
           >
             <IconDownload className="h-4 w-4" />
             CSV
