@@ -29,7 +29,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
       retryDelay: 2000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchInterval: 60_000,
+      refetchInterval: 30_000,
     },
   );
 
@@ -44,7 +44,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
 
       return bingoLiveDataSchema.parseAsync(json);
     },
-    refetchInterval: 4000,
+    refetchInterval: 3000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
