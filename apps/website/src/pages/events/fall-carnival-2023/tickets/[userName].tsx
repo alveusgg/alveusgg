@@ -67,7 +67,7 @@ const TicketPage: NextPage = () => {
     <>
       <Meta
         title="Alveus Fall Carnival 2023"
-        description="You are invited to the Alveus Fall Carnival 2023 - Customize your ticket!"
+        description="Alveus Fall Carnival 2023 - Customize your ticket!"
       >
         {/* preload the ticket */}
         <link

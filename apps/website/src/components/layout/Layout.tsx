@@ -1,10 +1,6 @@
 import { useEffect, type ReactNode } from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
-import Link from "next/link";
-import { useRouter } from "next/router";
-
-import IconArrowRight from "@/icons/IconArrowRight";
 
 import Meta from "@/components/content/Meta";
 import { Navbar } from "./navbar/Navbar";
@@ -34,10 +30,10 @@ const Layout = ({ children }: LayoutProps) => {
     document.body.classList.add(...fonts.split(" "));
   }, []);
 
-  const { pathname } = useRouter();
-  const showTopHat =
-    !pathname.startsWith("/events/fall-carnival-2023") &&
-    !pathname.startsWith("/admin");
+  //const { pathname } = useRouter();
+  //const showTopHat =
+  //  !pathname.startsWith("/events/fall-carnival-2023") &&
+  //  !pathname.startsWith("/admin");
 
   return (
     <>
@@ -87,7 +83,7 @@ const Layout = ({ children }: LayoutProps) => {
           Jump to main navigation
         </a>
 
-        {showTopHat && (
+        {/* showTopHat && (
           <Link
             href="/events/fall-carnival-2023"
             className="relative z-10 block border-b border-b-carnival-800 bg-carnival px-4 pb-1 pt-1.5 text-sm text-white hover:underline"
@@ -97,7 +93,7 @@ const Layout = ({ children }: LayoutProps) => {
               <IconArrowRight className="h-4 w-4" />
             </div>
           </Link>
-        )}
+        ) */}
 
         <Navbar />
         <main tabIndex={-1} id="main" className="flex flex-grow flex-col">

@@ -12,7 +12,6 @@ import { RecentNotifications } from "@/components/notifications/RecentNotificati
 import updateChannels from "@/components/shared/data/updateChannels";
 
 import bellPeepo from "@/assets/bell-peepo.webp";
-import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
 
 const notificationTags = ["stream"];
 
@@ -67,8 +66,6 @@ const UpdatesPage: NextPage = () => {
           />
         </div>
       </Section>
-
-      <IntroSection showTicket showLinkToClaimTicket />
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
