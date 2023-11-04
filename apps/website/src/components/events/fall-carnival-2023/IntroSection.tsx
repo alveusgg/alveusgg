@@ -8,7 +8,6 @@ import { classes } from "@/utils/classes";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
 
 type IntroSectionProps = {
   showTicket?: boolean;
@@ -45,17 +44,8 @@ export function IntroSection({
       )}
 
       <div>
-        <div className="mb-2 inline-block rounded-lg bg-white/90 px-2 py-0.5 text-xs uppercase text-carnival">
-          Upcoming event
-        </div>
-
-        <Heading>You are invited to the Alveus Fall Carnival 2023!</Heading>
-        <p className="text-lg">
-          November 4th 2023 at 11am CT live on{" "}
-          <Link href="https://twitch.tv/maya" dark external>
-            twitch.tv/maya
-          </Link>
-        </p>
+        <Heading>Alveus Fall Carnival 2023</Heading>
+        <p className="text-lg">November 4th 2023 at 11am CT</p>
 
         {showLinkToClaimTicket && (
           <div className="mt-6 md:mt-8 lg:mt-14">
