@@ -24,12 +24,9 @@ const winners = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   const bingoId = String(req.query.bingoId);
-  const entries = await getAllEntriesForBingo(bingoId);
 
   const bingo = await prisma.bingo.findUnique({
-    where: {
-      id: bingoId,
-    },
+    where: { id: bingoId },
   });
   if (!bingo) {
     res
@@ -48,7 +45,11 @@ const winners = async (req: NextApiRequest, res: NextApiResponse) => {
     zeroAsFreespace,
   );
 
+  const onlyClaimed = String(req.query.claimed) === "true";
+
+  const entries = await getAllEntriesForBingo(bingoId);
   const rows = entries
+    .filter((entry) => !onlyClaimed || entry.claimedAt !== null)
     .filter((entry) => cardsWithBingo.includes(entry.permutation))
     .map((entry) => String(entry.user.name));
 

@@ -1,88 +1,26 @@
 import { useSession } from "next-auth/react";
-import { useEffect, useReducer } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { z } from "zod";
 
-import { transposeMatrix } from "@/utils/math";
-import {
-  type BingoValue,
-  bingoLiveDataSchema,
-  bingoValueSchema,
-} from "@/utils/bingo";
+import { bingoLiveDataSchema } from "@/utils/bingo";
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
 
 import IconLoading from "@/icons/IconLoading";
 
+import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
+import { TwitchEmbed } from "@/components/content/TwitchEmbed";
 import { Button } from "@/components/shared/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { BingoCard } from "@/components/bingo/BingoCard";
-import Heading from "@/components/content/Heading";
-
-type BingoLocalState = z.infer<typeof bingoLocalStateSchema>;
-
-const bingoLocalStateSchema = z.object({
-  selectedValues: z.array(bingoValueSchema),
-});
-
-type BingoAction =
-  | {
-      type: "SELECT" | "DESELECT";
-      value: BingoValue;
-    }
-  | {
-      type: "SET";
-      values: BingoValue[];
-    }
-  | {
-      type: "UPDATE_SELECTABLE";
-      selectableValues: BingoValue[];
-    }
-  | {
-      type: "RESET";
-    };
-
-const bingoStateReducer = (state: BingoLocalState, action: BingoAction) => {
-  switch (action.type) {
-    case "SELECT":
-      return {
-        ...state,
-        selectedValues: [...state.selectedValues, action.value],
-      };
-    case "DESELECT":
-      return {
-        ...state,
-        selectedValues: state.selectedValues.filter(
-          (cell) => cell !== action.value,
-        ),
-      };
-    case "UPDATE_SELECTABLE":
-      return {
-        ...state,
-        selectedValues: state.selectedValues.filter((value) =>
-          action.selectableValues.includes(value),
-        ),
-      };
-    case "RESET":
-      return {
-        ...state,
-        selectedValues: [],
-      };
-    case "SET":
-      return {
-        ...state,
-        selectedValues: action.values,
-      };
-    default:
-      return state;
-  }
-};
+import { BingoCard, useBingoLocalState } from "@/components/bingo/BingoCard";
 
 function PlayGame({ bingoId }: { bingoId: string }) {
-  const entryQuery = trpc.bingos.enterBingo.useQuery(
+  const { data, error } = trpc.bingos.enterBingo.useQuery(
     {
       bingoId,
     },
@@ -91,7 +29,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
       retryDelay: 2000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchInterval: 20_000,
+      refetchInterval: 30_000,
     },
   );
 
@@ -106,38 +44,13 @@ function PlayGame({ bingoId }: { bingoId: string }) {
 
       return bingoLiveDataSchema.parseAsync(json);
     },
-    refetchInterval: 2000,
+    refetchInterval: 3000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
 
-  const bingoData = bingoLiveDataQuery.data;
-
-  const localStorageKey = `bingo-${bingoId}`;
-
-  const [state, dispatch] = useReducer(bingoStateReducer, {
-    selectedValues: [],
-  });
-
-  useEffect(() => {
-    const localState = localStorage.getItem(localStorageKey);
-    if (localState) {
-      try {
-        const restoredState = bingoLocalStateSchema.parse(
-          JSON.parse(localState),
-        );
-        dispatch({ type: "SET", values: restoredState.selectedValues });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [localStorageKey]);
-
-  useEffect(() => {
-    localStorage.setItem(localStorageKey, JSON.stringify(state));
-  }, [bingoId, localStorageKey, state]);
-
-  const selectableValues = bingoData?.calledValues;
+  const [state, dispatch] = useBingoLocalState(bingoId);
+  const selectableValues = bingoLiveDataQuery.data?.calledValues;
   useEffect(() => {
     if (selectableValues) {
       dispatch({
@@ -145,9 +58,17 @@ function PlayGame({ bingoId }: { bingoId: string }) {
         selectableValues,
       });
     }
-  }, [selectableValues]);
+  }, [dispatch, selectableValues]);
 
-  if (entryQuery.error) {
+  const claimBingoMutation = trpc.bingos.claimBingo.useMutation();
+  const hasClaimed = useRef(false);
+
+  // Reset the claim state when the card or bingo id changes
+  useEffect(() => {
+    hasClaimed.current = false;
+  }, [data?.bingo.config]);
+
+  if (error) {
     return (
       <MessageBox variant="warning">
         <strong>Bingo not found!</strong>
@@ -158,7 +79,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     );
   }
 
-  if (!entryQuery.data) {
+  if (!data) {
     return (
       <MessageBox variant="default" className="flex items-center">
         <IconLoading className="mr-2 h-5 w-5 animate-spin" />
@@ -167,10 +88,9 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     );
   }
 
-  const permutation = entryQuery.data?.entry.permutation;
-  const config = entryQuery.data.bingo.config;
-  const cells = config.cards[permutation];
-  if (!cells) {
+  const { bingo, entry } = data;
+  const card = bingo.config.cards[entry.permutation];
+  if (!card) {
     return (
       <MessageBox variant="failure">
         Cannot load bingo card (Invalid permutation)!
@@ -178,14 +98,10 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     );
   }
 
-  const size = cells.length;
-  const transposedCells = transposeMatrix(cells);
-
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col">
       <BingoCard
-        size={size}
-        card={transposedCells}
+        card={card}
         selectedValues={state.selectedValues}
         selectableValues={selectableValues ?? []}
         onSelect={(value) => {
@@ -194,12 +110,15 @@ function PlayGame({ bingoId }: { bingoId: string }) {
         onDeselect={(value) => {
           dispatch({ type: "DESELECT", value });
         }}
+        onBingo={() => {
+          if (!hasClaimed.current) {
+            hasClaimed.current = true;
+            claimBingoMutation.mutate({ bingoId });
+          }
+        }}
       />
 
-      <div className="mt-2 flex flex-row flex-wrap items-center gap-2">
-        <p>
-          You have card {permutation + 1} / {config.numberOfCards}
-        </p>
+      <div className="mt-4 flex flex-row gap-2">
         <Button
           size="small"
           width="auto"
@@ -214,10 +133,30 @@ function PlayGame({ bingoId }: { bingoId: string }) {
   );
 }
 
+function smoothScrollTo(selector: string, offset: number) {
+  try {
+    const bingoEl = document.querySelector(selector);
+    if (bingoEl) {
+      const scrollPos =
+        bingoEl.getBoundingClientRect().top +
+        document.documentElement.scrollTop;
+      window.scrollTo({
+        top: scrollPos + offset,
+        behavior: "smooth",
+      });
+      return true;
+    }
+  } catch (e) {}
+
+  return false;
+}
+
 const PlayBingoPage = () => {
   const session = useSession();
   const router = useRouter();
   const bingoId = String(router.query.bingoId);
+
+  const [embedStream, setEmbedStream] = useState(false);
 
   return (
     <>
@@ -226,8 +165,42 @@ const PlayBingoPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section>
-        <Heading className="mb-10">Alveus Bingo</Heading>
+      <nav
+        className="sticky left-0 right-0 top-0 z-20 flex flex-row items-center justify-center py-4"
+        aria-label="Scroll navigation"
+      >
+        <ul className="flex flex-row rounded-2xl bg-white/90 shadow-lg backdrop-blur-md lg:text-lg">
+          <li className="border-l first:border-l-0">
+            <a
+              className="block p-2 px-4"
+              href="#bingo"
+              onClick={(e) => {
+                if (smoothScrollTo("#bingo", -100)) e.preventDefault();
+              }}
+            >
+              Bingo
+            </a>
+          </li>
+          <li className="border-l first:border-l-0">
+            <a
+              className="block p-2 px-4"
+              href="#livestream"
+              onClick={(e) => {
+                if (smoothScrollTo("#livestream", embedStream ? 100 : -100))
+                  e.preventDefault();
+              }}
+            >
+              Livestream & Chat
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+      <Section className="flex min-h-[70vh] flex-grow items-center">
+        <Heading className="mb-10" id="bingo" link>
+          Alveus Bingo
+        </Heading>
+
         {session.status !== "authenticated" && (
           <>
             <MessageBox>
@@ -242,6 +215,47 @@ const PlayBingoPage = () => {
           <PlayGame bingoId={bingoId} />
         )}
       </Section>
+
+      <div className="bg-alveus-green">
+        <Section>
+          <Heading id="livestream">Livestream</Heading>
+
+          <div className="mt-4 flex items-center gap-4">
+            <label className="flex items-center gap-2">
+              <div
+                className={classes(
+                  embedStream ? "bg-alveus-green" : "bg-alveus-green-300",
+                  "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline",
+                )}
+              >
+                <span
+                  className={classes(
+                    embedStream ? "translate-x-6" : "translate-x-1",
+                    "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform",
+                  )}
+                />
+              </div>
+
+              <div className="flex-grow">
+                <p>Embed Twitch</p>
+              </div>
+
+              <input
+                type="checkbox"
+                checked={embedStream}
+                onChange={(e) => setEmbedStream(e.target.checked)}
+                className="peer sr-only"
+              />
+            </label>
+            <span className="italic">or</span>
+
+            <Link href={`https://www.twitch.tv/maya`} external>
+              Open in new tab
+            </Link>
+          </div>
+        </Section>
+        {embedStream && <TwitchEmbed channel="maya" />}
+      </div>
     </>
   );
 };

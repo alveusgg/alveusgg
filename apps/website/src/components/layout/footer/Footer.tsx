@@ -10,14 +10,17 @@ const footerLinkClasses =
 
 export const Footer = () => {
   const router = useRouter();
-  const isAdmin = useMemo(
-    () => router.pathname === "/admin" || router.pathname.startsWith("/admin/"),
+  const hideSocials = useMemo(
+    () =>
+      router.pathname === "/admin" ||
+      router.pathname.startsWith("/admin/") ||
+      router.pathname.startsWith("/bingo/"),
     [router.pathname],
   );
 
   return (
     <>
-      {!isAdmin && <Socials />}
+      {!hideSocials && <Socials />}
 
       <footer className="bg-gray-800 px-2 py-4 text-gray-400 md:px-0 md:py-2">
         <h2 className="sr-only">Page footer</h2>

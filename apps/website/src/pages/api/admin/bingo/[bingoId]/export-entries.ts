@@ -62,6 +62,8 @@ const exportBingoEntries = async (
       String(entry.user.name),
       String(entry.permutation + 1),
       hasWon ? "yes" : "no",
+      entry.claimedAt ? "yes" : "no",
+      entry.claimedAt ? entry.claimedAt.toISOString() : "",
     ] satisfies string[];
   });
 
@@ -72,6 +74,8 @@ const exportBingoEntries = async (
     "username",
     "cardPermutation",
     "hasBingo",
+    "hasClaimed",
+    "claimedAt",
   ]);
 
   const csv = stringify(rows);

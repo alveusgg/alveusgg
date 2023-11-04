@@ -21,7 +21,7 @@ export function BingoCardGrid({
 
   return (
     <div
-      className={classes("grid", className)}
+      className={classes("grid leading-none", className)}
       style={{
         gridTemplateColumns: `repeat(${size}, 2fr)`,
         gridTemplateRows: `${showBingoHeader && `1fr `}repeat(${size}, 2fr)`,
@@ -29,11 +29,21 @@ export function BingoCardGrid({
     >
       {showBingoHeader && (
         <>
-          <div className="flex items-center justify-center text-white">B</div>
-          <div className="flex items-center justify-center text-white">I</div>
-          <div className="flex items-center justify-center text-white">N</div>
-          <div className="flex items-center justify-center text-white">G</div>
-          <div className="flex items-center justify-center text-white">O</div>
+          <div className="flex items-center justify-center text-gray-100">
+            B
+          </div>
+          <div className="flex items-center justify-center text-gray-100">
+            I
+          </div>
+          <div className="flex items-center justify-center text-gray-100">
+            N
+          </div>
+          <div className="flex items-center justify-center text-gray-100">
+            G
+          </div>
+          <div className="flex items-center justify-center text-gray-100">
+            O
+          </div>
         </>
       )}
 

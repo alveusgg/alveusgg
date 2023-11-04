@@ -233,12 +233,11 @@ const AdminEditBingoPage: NextPage<
               </div>
               <div className="flex flex-row flex-wrap gap-2">
                 {config.cards.map((card, index) => {
-                  const size = config.size;
+                  const transposedCard = transposeMatrix(card);
                   const [hasBingo, match] = checkHasBingo(
-                    card,
+                    transposedCard,
                     playData.calledValues,
                   );
-                  const transposedCard = transposeMatrix(card);
 
                   return (
                     <div
@@ -262,7 +261,7 @@ const AdminEditBingoPage: NextPage<
                               hasBingo &&
                               isCellPartOfBingo(
                                 match,
-                                size,
+                                config.size,
                                 rowIndex,
                                 columnIndex,
                               );
