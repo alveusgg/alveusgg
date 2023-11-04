@@ -241,7 +241,24 @@ export function BingoForm({ action, bingo }: BingoFormProps) {
         </FieldGroup>
       </Fieldset>
 
-      <Button type="submit" className={defaultButtonClasses}>
+      {action === "edit" && (
+        <MessageBox variant="warning">
+          Changing the bingo config will invalidate all claimed bingos!
+          <br />
+          If you change the amount of cards, you will need to purge all entries
+          so users get assigned valid cards!
+        </MessageBox>
+      )}
+
+      <Button
+        type="submit"
+        className={defaultButtonClasses}
+        confirmationMessage={
+          action === "edit"
+            ? "Confirm invalidating claimed bingos! See note about changes to the number of cards too!"
+            : undefined
+        }
+      >
         {action === "create" ? "Create" : "Update"}
       </Button>
     </form>

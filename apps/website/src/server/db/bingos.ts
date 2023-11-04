@@ -120,8 +120,16 @@ export async function editBingo(input: z.infer<typeof existingBingoSchema>) {
     });
 
   const { id, config, ...data } = input;
-  return await prisma.bingo.update({
-    where: { id: id },
-    data: { ...data, slug, config: JSON.stringify(config) },
-  });
+  const [res] = await Promise.all([
+    prisma.bingo.update({
+      where: { id: id },
+      data: { ...data, slug, config: JSON.stringify(config) },
+    }),
+    prisma.bingoEntry.updateMany({
+      where: { bingoId: id },
+      data: { claimedAt: null },
+    }),
+  ]);
+
+  return res;
 }
