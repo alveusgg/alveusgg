@@ -301,8 +301,9 @@ model BingoEntry {
   permutation       Int
   outgoingWebhookId String? @unique
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  claimedAt DateTime?
 
   bingo           Bingo            @relation(fields: [bingoId], references: [id])
   user            User             @relation(fields: [userId], references: [id])

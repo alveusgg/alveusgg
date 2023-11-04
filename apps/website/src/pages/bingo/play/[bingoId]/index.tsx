@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import { bingoLiveDataSchema } from "@/utils/bingo";
@@ -56,6 +56,14 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     }
   }, [dispatch, selectableValues]);
 
+  const claimBingoMutation = trpc.bingos.claimBingo.useMutation();
+  const hasClaimed = useRef(false);
+
+  // Reset the claim state when the card or bingo id changes
+  useEffect(() => {
+    hasClaimed.current = false;
+  }, [data?.bingo.config]);
+
   if (error) {
     return (
       <MessageBox variant="warning">
@@ -89,7 +97,6 @@ function PlayGame({ bingoId }: { bingoId: string }) {
   return (
     <div className="flex flex-col">
       <BingoCard
-        bingoId={bingoId}
         card={card}
         selectedValues={state.selectedValues}
         selectableValues={selectableValues ?? []}
@@ -98,6 +105,12 @@ function PlayGame({ bingoId }: { bingoId: string }) {
         }}
         onDeselect={(value) => {
           dispatch({ type: "DESELECT", value });
+        }}
+        onBingo={() => {
+          if (!hasClaimed.current) {
+            hasClaimed.current = true;
+            claimBingoMutation.mutate({ bingoId });
+          }
         }}
       />
 

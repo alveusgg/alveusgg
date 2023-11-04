@@ -139,7 +139,16 @@ function Bingo({ bingo, onError, onUpdate }: BingoProps) {
             href={`/api/admin/bingo/${bingo.id}/winners`}
             target="_blank"
           >
-            JSON
+            Winners (all)
+          </LinkButton>
+          <LinkButton
+            size="small"
+            width="auto"
+            className={secondaryButtonClasses}
+            href={`/api/admin/bingo/${bingo.id}/winners?claimed=true`}
+            target="_blank"
+          >
+            Winners (claimed)
           </LinkButton>
           <LinkButton
             size="small"

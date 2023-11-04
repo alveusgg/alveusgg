@@ -106,25 +106,31 @@ export function useBingoLocalState(bingoId: string) {
 }
 
 type BingCardProps = {
-  bingoId: string;
   card: BingoCard;
   selectedValues: Array<BingoValue>;
   selectableValues?: Array<BingoValue>;
   onSelect: (cellIndex: BingoValue) => void;
   onDeselect: (cellIndex: BingoValue) => void;
+  onBingo: () => void;
 };
 
 export function BingoCard({
-  bingoId,
   card,
   selectedValues,
   selectableValues,
   onSelect,
   onDeselect,
+  onBingo,
 }: BingCardProps) {
   const size = card.length;
   const transposedCells = transposeMatrix(card);
   const [hasBingo, bingoMatch] = checkHasBingo(transposedCells, selectedValues);
+
+  useEffect(() => {
+    if (hasBingo) {
+      onBingo();
+    }
+  }, [hasBingo, onBingo]);
 
   return (
     <div className="flex flex-col items-center justify-stretch gap-4 lg:flex-row lg:gap-12 xl:gap-24">
