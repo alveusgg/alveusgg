@@ -249,12 +249,12 @@ const PlayBingoPage = () => {
             </label>
             <span className="italic">or</span>
 
-            <Link href={`https://www.twitch.tv/alveussanctuary`} external>
+            <Link href={`https://www.twitch.tv/maya`} external>
               Open in new tab
             </Link>
           </div>
         </Section>
-        {embedStream && <TwitchEmbed channel="alveussanctuary" />}
+        {embedStream && <TwitchEmbed channel="maya" />}
       </div>
     </>
   );
