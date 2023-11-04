@@ -40,7 +40,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
 
       return bingoLiveDataSchema.parseAsync(json);
     },
-    refetchInterval: 2000,
+    refetchInterval: 4000,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });
