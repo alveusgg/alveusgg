@@ -1,88 +1,22 @@
 import { useSession } from "next-auth/react";
-import { useEffect, useReducer } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { z } from "zod";
-
-import { transposeMatrix } from "@/utils/math";
-import {
-  type BingoValue,
-  bingoLiveDataSchema,
-  bingoValueSchema,
-} from "@/utils/bingo";
+import { bingoLiveDataSchema } from "@/utils/bingo";
 import { trpc } from "@/utils/trpc";
 
 import IconLoading from "@/icons/IconLoading";
 
+import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
 import { Button } from "@/components/shared/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { BingoCard } from "@/components/bingo/BingoCard";
-import Heading from "@/components/content/Heading";
-
-type BingoLocalState = z.infer<typeof bingoLocalStateSchema>;
-
-const bingoLocalStateSchema = z.object({
-  selectedValues: z.array(bingoValueSchema),
-});
-
-type BingoAction =
-  | {
-      type: "SELECT" | "DESELECT";
-      value: BingoValue;
-    }
-  | {
-      type: "SET";
-      values: BingoValue[];
-    }
-  | {
-      type: "UPDATE_SELECTABLE";
-      selectableValues: BingoValue[];
-    }
-  | {
-      type: "RESET";
-    };
-
-const bingoStateReducer = (state: BingoLocalState, action: BingoAction) => {
-  switch (action.type) {
-    case "SELECT":
-      return {
-        ...state,
-        selectedValues: [...state.selectedValues, action.value],
-      };
-    case "DESELECT":
-      return {
-        ...state,
-        selectedValues: state.selectedValues.filter(
-          (cell) => cell !== action.value,
-        ),
-      };
-    case "UPDATE_SELECTABLE":
-      return {
-        ...state,
-        selectedValues: state.selectedValues.filter((value) =>
-          action.selectableValues.includes(value),
-        ),
-      };
-    case "RESET":
-      return {
-        ...state,
-        selectedValues: [],
-      };
-    case "SET":
-      return {
-        ...state,
-        selectedValues: action.values,
-      };
-    default:
-      return state;
-  }
-};
+import { BingoCard, useBingoLocalState } from "@/components/bingo/BingoCard";
 
 function PlayGame({ bingoId }: { bingoId: string }) {
-  const entryQuery = trpc.bingos.enterBingo.useQuery(
+  const { data, error } = trpc.bingos.enterBingo.useQuery(
     {
       bingoId,
     },
@@ -91,7 +25,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
       retryDelay: 2000,
       refetchOnWindowFocus: false,
       refetchOnReconnect: false,
-      refetchInterval: 20_000,
+      refetchInterval: 60_000,
     },
   );
 
@@ -111,33 +45,8 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     refetchOnReconnect: false,
   });
 
-  const bingoData = bingoLiveDataQuery.data;
-
-  const localStorageKey = `bingo-${bingoId}`;
-
-  const [state, dispatch] = useReducer(bingoStateReducer, {
-    selectedValues: [],
-  });
-
-  useEffect(() => {
-    const localState = localStorage.getItem(localStorageKey);
-    if (localState) {
-      try {
-        const restoredState = bingoLocalStateSchema.parse(
-          JSON.parse(localState),
-        );
-        dispatch({ type: "SET", values: restoredState.selectedValues });
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  }, [localStorageKey]);
-
-  useEffect(() => {
-    localStorage.setItem(localStorageKey, JSON.stringify(state));
-  }, [bingoId, localStorageKey, state]);
-
-  const selectableValues = bingoData?.calledValues;
+  const [state, dispatch] = useBingoLocalState(bingoId);
+  const selectableValues = bingoLiveDataQuery.data?.calledValues;
   useEffect(() => {
     if (selectableValues) {
       dispatch({
@@ -145,9 +54,9 @@ function PlayGame({ bingoId }: { bingoId: string }) {
         selectableValues,
       });
     }
-  }, [selectableValues]);
+  }, [dispatch, selectableValues]);
 
-  if (entryQuery.error) {
+  if (error) {
     return (
       <MessageBox variant="warning">
         <strong>Bingo not found!</strong>
@@ -158,7 +67,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     );
   }
 
-  if (!entryQuery.data) {
+  if (!data) {
     return (
       <MessageBox variant="default" className="flex items-center">
         <IconLoading className="mr-2 h-5 w-5 animate-spin" />
@@ -167,10 +76,9 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     );
   }
 
-  const permutation = entryQuery.data?.entry.permutation;
-  const config = entryQuery.data.bingo.config;
-  const cells = config.cards[permutation];
-  if (!cells) {
+  const { bingo, entry } = data;
+  const card = bingo.config.cards[entry.permutation];
+  if (!card) {
     return (
       <MessageBox variant="failure">
         Cannot load bingo card (Invalid permutation)!
@@ -178,14 +86,11 @@ function PlayGame({ bingoId }: { bingoId: string }) {
     );
   }
 
-  const size = cells.length;
-  const transposedCells = transposeMatrix(cells);
-
   return (
-    <div className="flex flex-col items-center">
+    <div className="flex flex-col">
       <BingoCard
-        size={size}
-        card={transposedCells}
+        bingoId={bingoId}
+        card={card}
         selectedValues={state.selectedValues}
         selectableValues={selectableValues ?? []}
         onSelect={(value) => {
@@ -196,10 +101,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
         }}
       />
 
-      <div className="mt-2 flex flex-row flex-wrap items-center gap-2">
-        <p>
-          You have card {permutation + 1} / {config.numberOfCards}
-        </p>
+      <div className="mt-4 flex flex-row gap-2">
         <Button
           size="small"
           width="auto"
