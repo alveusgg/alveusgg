@@ -9,16 +9,46 @@ import {
 import { router, protectedProcedure } from "@/server/trpc/trpc";
 import {
   createEntry,
-  bingoEntrySchema,
   getBingoEntry,
   findActiveBingo,
 } from "@/server/db/bingos";
 
-export const createBingoEntrySchema = bingoEntrySchema.and(
-  z.object({
-    bingoId: z.string().cuid(),
-  }),
-);
+//  TODO: Do we want to send a webhook when a user enters a bingo and/or a bingo is claimed?
+//import {
+//  type OutgoingWebhookType,
+//  triggerOutgoingWebhook,
+//} from "@/server/outgoing-webhooks";
+//
+//if (bingo.outgoingWebhookUrl) {
+//  try {
+//    // Trigger webhook
+//    const webhook = await triggerOutgoingWebhook({
+//      url: bingo.outgoingWebhookUrl,
+//      type: "bingo-entry",
+//      userId,
+//      body: JSON.stringify({
+//        type: "bingo-entry" as OutgoingWebhookType,
+//        data: {
+//          id: entry.id,
+//          bingoId: bingo.id,
+//          username: entry.user.name,
+//          email: entry.user.email,
+//          createdAt: entry.createdAt,
+//        },
+//      }),
+//    });
+//
+//    // connect the outgoing webhook to the entry
+//    await ctx.prisma.bingoEntry.update({
+//      where: { id: entry.id },
+//      data: {
+//        outgoingWebhook: { connect: { id: webhook.id } },
+//      },
+//    });
+//  } catch (e) {
+//    // ignore failed outgoing webhooks for now
+//  }
+//}
 
 export const bingosRouter = router({
   getMyEntry: protectedProcedure
@@ -70,37 +100,6 @@ export const bingosRouter = router({
         {},
         { numberOfCards: config.numberOfCards },
       );
-
-      if (bingo.outgoingWebhookUrl) {
-        try {
-          // Trigger webhook
-          const webhook = await triggerOutgoingWebhook({
-            url: bingo.outgoingWebhookUrl,
-            type: "bingo-entry",
-            userId,
-            body: JSON.stringify({
-              type: "bingo-entry" as OutgoingWebhookType,
-              data: {
-                id: entry.id,
-                bingoId: bingo.id,
-                username: entry.user.name,
-                email: entry.user.email,
-                createdAt: entry.createdAt,
-              },
-            }),
-          });
-
-          // connect the outgoing webhook to the entry
-          await ctx.prisma.bingoEntry.update({
-            where: { id: entry.id },
-            data: {
-              outgoingWebhook: { connect: { id: webhook.id } },
-            },
-          });
-        } catch (e) {
-          // ignore failed outgoing webhooks for now
-        }
-      }
 
       return {
         bingo: publicBingo,

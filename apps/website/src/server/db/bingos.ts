@@ -22,7 +22,7 @@ export const existingBingoSchema = bingoSchema.and(
   }),
 );
 
-export const bingoEntrySchema = z.object({});
+const bingoEntrySchema = z.object({});
 
 export async function findActiveBingo(bingoSlugOrId: string) {
   const now = new Date();
