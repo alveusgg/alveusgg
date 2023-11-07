@@ -23,8 +23,6 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 
-import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
-
 type Event = {
   name: string;
   date: Date;
@@ -339,8 +337,6 @@ const EventsPage: NextPage = () => {
           alt=""
           className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
         />
-
-        <IntroSection showTicket showLinkToClaimTicket />
 
         <Section className="flex-grow">
           {Object.entries(events).map(([key, event], idx, arr) => (
