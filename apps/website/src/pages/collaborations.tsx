@@ -89,7 +89,8 @@ const collaborations = {
     name: "Lacari",
     link: "https://www.twitch.tv/lacari",
     date: new Date("2023-05-02"),
-    videoId: "mVOypbE5YNs",
+    videoId: "IssAfvy_bmo",
+    vodId: "mVOypbE5YNs",
   },
   dailyDose: {
     name: "Daily Dose",
