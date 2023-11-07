@@ -4,25 +4,30 @@ import sirenImage from "@/assets/plushies/siren.png";
 import winnieImage from "@/assets/plushies/winnie.png";
 import georgieImage from "@/assets/plushies/georgie.png";
 import stompyImage from "@/assets/plushies/stompy.png";
+import mayaImage from "@/assets/plushies/maya.png";
 
 import Carousel from "./Carousel";
 
 const merch = Object.entries({
   siren: {
     src: sirenImage,
-    alt: "Siren",
+    alt: "Siren plushie",
+  },
+  maya: {
+    src: mayaImage,
+    alt: "Maya, holding all the plushies",
   },
   winnie: {
     src: winnieImage,
-    alt: "Winnie",
+    alt: "Winnie plushie",
   },
   georgy: {
     src: georgieImage,
-    alt: "Georgie",
+    alt: "Georgie plushie",
   },
   stompy: {
     src: stompyImage,
-    alt: "Stompy",
+    alt: "Stompy plushie",
   },
 }).reduce(
   (obj, [key, { src, alt }]) => ({
