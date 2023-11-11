@@ -11,6 +11,7 @@ import Heading from "@/components/content/Heading";
 import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
 
+import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
 import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
 import valentines2023Video from "@/assets/events/valentines-2023.mp4";
@@ -32,6 +33,55 @@ type Event = {
 };
 
 const events = {
+  fallCarnival2023: {
+    name: "Fall Carnival 2023",
+    date: new Date("2023-11-04"),
+    video: fallCarnival2023Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$16,057",
+      },
+      signedTickets: {
+        title: "Signed tickets sent to donors",
+        stat: "330",
+      },
+      ambassadorPolaroids: {
+        title: "Ambassador polaroids distributed",
+        stat: "36",
+      },
+      uniqueDonors: {
+        title: "Unique donors during the broadcast",
+        stat: "200",
+      },
+    },
+    info: (
+      <>
+        <p>
+          A fun-filled event at Alveus Sanctuary, where live viewers on the
+          stream could compete against each other and ambassadors at Alveus to
+          earn virtual points. To help raise funds for Alveus, any donation over
+          $25 would get a signed ticket sent to them, and any donation over $250
+          would get a signed polaroid of one of the ambassadors.
+        </p>
+        <p>
+          Live viewers could earn points in a variety of events, including a rat
+          maze with riddles to solve in each room as the ambassadors explored
+          the maze, ring toss with Abbott the crow, and a race with the
+          cockroaches. Throughout the whole event a game of bingo was also being
+          played with the live viewers, with ambassadors around the property
+          picking out numbers.
+        </p>
+        <p>
+          By the end of the 3-hour-long event, we were able to raise $16,057 for
+          Alveus Sanctuary, with 330 signed carnival tickets being sent to the
+          donors and 36 ambassador polaroids being sent out to those that went
+          the extra mile in their donations. Thank you to everyone that watched
+          and supported this spooky event!
+        </p>
+      </>
+    ),
+  },
   summerCamp2023: {
     name: "Summer Camp 2023",
     date: new Date("2023-07-21"),
