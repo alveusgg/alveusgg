@@ -28,6 +28,12 @@ type Collaboration = {
 type Collaborations = Record<string, Collaboration>;
 
 const collaborations = {
+  fanfan: {
+    name: "Fanfan",
+    link: "https://www.twitch.tv/fanfan",
+    date: new Date("2023-11-13"),
+    videoId: "OCf7356WlNo",
+  },
   alluux: {
     name: "Alluux",
     link: "https://www.twitch.tv/alluux",
