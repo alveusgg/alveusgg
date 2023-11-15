@@ -349,6 +349,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         ],
       },
       {
+        key: "lindsay",
+        date: "2023-07",
+        content: [
+          "Lindsay joins the Alveus team",
+          "Bringing a wealth of animal care experience and knowledge, Lindsay joins the team as an Animal Care Coordinator.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
         key: "summer-camp",
         date: "2023-07-21",
         content: [
