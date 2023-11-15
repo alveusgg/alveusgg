@@ -84,8 +84,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#pjeweb/rename-cow-aq
-        version: github.com/alveusgg/data/96236d54f4c7bd1da4ca577d0680e7d3ebf96a44
+        specifier: github:alveusgg/data#0.24.0
+        version: github.com/alveusgg/data/caaba5313859c965528bc1adf71c11e5f740f60b
       '@aws-sdk/client-s3':
         specifier: ^3.414.0
         version: 3.414.0
@@ -10103,8 +10103,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/alveusgg/data/96236d54f4c7bd1da4ca577d0680e7d3ebf96a44:
-    resolution: { tarball: https://codeload.github.com/alveusgg/data/tar.gz/96236d54f4c7bd1da4ca577d0680e7d3ebf96a44 }
+  github.com/alveusgg/data/caaba5313859c965528bc1adf71c11e5f740f60b:
+    resolution: { tarball: https://codeload.github.com/alveusgg/data/tar.gz/caaba5313859c965528bc1adf71c11e5f740f60b }
     name: '@alveusgg/data'
-    version: 0.24.0-0
+    version: 0.24.0
     dev: false
