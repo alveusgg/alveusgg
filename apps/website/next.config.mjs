@@ -178,6 +178,11 @@ const config = {
         permanent: false,
       },
     ]),
+    {
+      source: "/animal-quest/cow-edition",
+      destination: "/animal-quest/beef-edition",
+      permanent: false,
+    },
     // Events
     {
       source: "/fc23",
