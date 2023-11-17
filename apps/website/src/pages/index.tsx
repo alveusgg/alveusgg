@@ -10,14 +10,15 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 import usePrefersReducedMotion from "@/hooks/motion";
 
+import { ambassadorImageHover } from "@/pages/ambassadors";
+
 import Heading from "@/components/content/Heading";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
-import Merch from "@/components/content/Merch";
+import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Consent from "@/components/Consent";
-import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
@@ -223,6 +224,7 @@ const Home: NextPage = () => {
             className="absolute -right-32 h-auto max-h-full w-full"
           />
         </div>
+
         <Image
           src={leafLeftImage3}
           alt=""
@@ -320,18 +322,16 @@ const Home: NextPage = () => {
         <Section dark>
           <div className="flex flex-wrap items-center">
             <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2">
-              <Merch />
+              <PlushieCarousel />
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
-              <Heading level={2}>Alveus Merch!</Heading>
+              <Heading level={2} id="merch" link>
+                Alveus Plushies!
+              </Heading>
               <p className="my-4">
-                Grab yourself some high-quality merch from Alveus in our
-                limited-time exclusive drops!
-              </p>
-              <p className="my-4">
-                Or, have your very own ambassador in your home with our
-                plushies!
+                Grab yourself a high-quality plushie and have your very own
+                ambassador in your home!
               </p>
               <p className="my-4">
                 All proceeds go directly into Alveus and the support & care of
@@ -339,14 +339,6 @@ const Home: NextPage = () => {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  className="inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                  href="/merch"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  Explore Merch
-                </Link>
                 <Link
                   className="inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
                   href="/plushies"

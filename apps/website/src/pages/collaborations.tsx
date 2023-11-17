@@ -28,6 +28,18 @@ type Collaboration = {
 type Collaborations = Record<string, Collaboration>;
 
 const collaborations = {
+  fanfan: {
+    name: "Fanfan",
+    link: "https://www.twitch.tv/fanfan",
+    date: new Date("2023-11-13"),
+    videoId: "OCf7356WlNo",
+  },
+  alluux: {
+    name: "Alluux",
+    link: "https://www.twitch.tv/alluux",
+    date: new Date("2023-11-05"),
+    videoId: "x1KMHDgmsR0",
+  },
   filian: {
     name: "Filian",
     link: "https://www.twitch.tv/filian",
@@ -83,13 +95,15 @@ const collaborations = {
     name: "Lacari",
     link: "https://www.twitch.tv/lacari",
     date: new Date("2023-05-02"),
-    videoId: "mVOypbE5YNs",
+    videoId: "IssAfvy_bmo",
+    vodId: "mVOypbE5YNs",
   },
   dailyDose: {
     name: "Daily Dose",
     link: "https://www.youtube.com/@DailyDoseOfInternet",
     date: new Date("2023-04-25"),
-    videoId: "j8GxD4adNyk",
+    videoId: "M9BBwvR3i-E",
+    vodId: "j8GxD4adNyk",
   },
   graycen: {
     name: "Graycen",

@@ -52,6 +52,11 @@ export const consentData = {
     description: "Embedded donation widget from The Giving Block",
     privacy: "https://thegivingblock.com/about/privacy-policy/",
   },
+  vote: {
+    name: "Vote.org",
+    description: "Embedded voter registration tools from Vote.org",
+    privacy: "https://www.vote.org/privacy/",
+  },
 } as const satisfies Record<string, ConsentData>;
 
 export type ConsentKey = keyof typeof consentData;

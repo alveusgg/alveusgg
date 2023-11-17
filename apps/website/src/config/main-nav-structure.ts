@@ -97,16 +97,20 @@ export const mainNavStructure: NavStructure = {
         title: "Found an Animal?",
         link: "/found-animal",
       },
+      votersGuide: {
+        title: "Voters' Guide",
+        link: "/voters-guide",
+      },
     },
   },
   merch: {
     title: "Merch",
     dropdown: {
-      apparel: {
-        title: "Apparel",
-        link: "/apparel",
-        isExternal: true,
-      },
+      //apparel: {
+      //  title: "Apparel",
+      //  link: "/apparel",
+      //  isExternal: true,
+      //},
       plushies: {
         title: "Plushies",
         link: "/plushies",

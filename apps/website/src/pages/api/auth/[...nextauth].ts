@@ -1,6 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
+import type { TwitchProfile } from "next-auth/providers/twitch";
 import TwitchProvider from "next-auth/providers/twitch";
-// Prisma adapter for NextAuth, optional and can be removed
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
 import { env } from "@/env/index.mjs";
@@ -10,6 +10,21 @@ import { checkIsSuperUserId } from "@/server/utils/auth";
 import { defaultScope } from "@/config/twitch";
 
 const adapter = PrismaAdapter(prisma);
+
+const twitchProvider = TwitchProvider({
+  clientId: env.TWITCH_CLIENT_ID,
+  clientSecret: env.TWITCH_CLIENT_SECRET,
+  authorization: {
+    params: {
+      scope: defaultScope,
+    },
+  },
+});
+
+type ProfileData = {
+  name: string;
+  image?: string | null;
+};
 
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
@@ -25,33 +40,57 @@ export const authOptions: NextAuthOptions = {
         },
       };
     },
-    async signIn({ user, account }) {
-      if (user && account) {
-        try {
-          const userFromDatabase = await adapter.getUser?.(user.id);
+    async signIn({ user, account, profile }) {
+      if (!user || !account) return true;
 
-          if (userFromDatabase) {
-            await prisma.account.update({
-              where: {
-                provider_providerAccountId: {
-                  provider: account.provider,
-                  providerAccountId: account.providerAccountId,
-                },
+      try {
+        const userFromDatabase = await adapter.getUser?.(user.id);
+        if (!userFromDatabase) return true;
+
+        let profileData: ProfileData | undefined;
+        if (account.provider === "twitch") {
+          const { name, image } = await twitchProvider.profile(
+            profile as TwitchProfile,
+            {},
+          );
+          if (name) {
+            profileData = { name, image };
+          }
+        }
+
+        await Promise.all([
+          // Update tokens
+          prisma.account.update({
+            where: {
+              provider_providerAccountId: {
+                provider: account.provider,
+                providerAccountId: account.providerAccountId,
               },
+            },
+            data: {
+              access_token: account.access_token,
+              expires_at: account.expires_at,
+              id_token: account.id_token,
+              refresh_token: account.refresh_token,
+              session_state: account.session_state,
+              scope: account.scope,
+            },
+          }),
+          // Update username/image if it changed
+          profileData &&
+            (userFromDatabase.name !== profileData.name ||
+              userFromDatabase.image !== profileData.image) &&
+            prisma.user.update({
+              where: { id: userFromDatabase.id },
               data: {
-                access_token: account.access_token,
-                expires_at: account.expires_at,
-                id_token: account.id_token,
-                refresh_token: account.refresh_token,
-                session_state: account.session_state,
-                scope: account.scope,
+                name: profileData.name,
+                image: profileData.image,
               },
-            });
-          }
-        } catch (err) {
-          if (err instanceof Error) {
-            console.error(err.message);
-          }
+            }),
+        ]);
+      } catch (err) {
+        if (err instanceof Error) {
+          console.error(err.message);
         }
       }
 
@@ -61,15 +100,7 @@ export const authOptions: NextAuthOptions = {
   adapter,
   providers: [
     // Configure one or more authentication providers
-    TwitchProvider({
-      clientId: env.TWITCH_CLIENT_ID,
-      clientSecret: env.TWITCH_CLIENT_SECRET,
-      authorization: {
-        params: {
-          scope: defaultScope,
-        },
-      },
-    }),
+    twitchProvider,
     // ...add more providers here
   ],
   pages: {

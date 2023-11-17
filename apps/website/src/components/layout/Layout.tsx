@@ -30,6 +30,11 @@ const Layout = ({ children }: LayoutProps) => {
     document.body.classList.add(...fonts.split(" "));
   }, []);
 
+  //const { pathname } = useRouter();
+  //const showTopHat =
+  //  !pathname.startsWith("/events/fall-carnival-2023") &&
+  //  !pathname.startsWith("/admin");
+
   return (
     <>
       <Meta />
@@ -77,6 +82,18 @@ const Layout = ({ children }: LayoutProps) => {
         >
           Jump to main navigation
         </a>
+
+        {/* showTopHat && (
+          <Link
+            href="/events/fall-carnival-2023"
+            className="relative z-10 block border-b border-b-carnival-800 bg-carnival px-4 pb-1 pt-1.5 text-sm text-white hover:underline"
+          >
+            <div className="container mx-auto flex items-center justify-center gap-1">
+              Alveus Fall Carnival &middot; Nov. 4th &middot; Get your ticket
+              <IconArrowRight className="h-4 w-4" />
+            </div>
+          </Link>
+        ) */}
 
         <Navbar />
         <main tabIndex={-1} id="main" className="flex flex-grow flex-col">

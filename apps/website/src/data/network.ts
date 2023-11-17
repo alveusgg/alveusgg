@@ -303,6 +303,13 @@ const data: NetworkItem[] = [
             connection: { type: "ethernet", location: "wall" },
           },
           {
+            type: "camera",
+            name: "Chinchilla",
+            model: "AXIS M1065-L (Fixed)",
+            url: "https://www.axis.com/products/axis-m1065-l/",
+            connection: { type: "ethernet", location: "wall" },
+          },
+          {
             type: "switch",
             name: "Power Distribution",
             model: "Ubiquiti USW-Lite-8-PoE",

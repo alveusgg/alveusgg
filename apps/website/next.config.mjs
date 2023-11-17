@@ -152,6 +152,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/vote",
+      destination: "/voters-guide",
+      permanent: true,
+    },
+    {
       source: "/aq/:path*",
       destination: "/animal-quest/:path*",
       permanent: false,
@@ -173,32 +178,49 @@ const config = {
         permanent: false,
       },
     ]),
-    // External redirects
     {
-      source: "/merch",
-      destination: "https://shopalveus.org/",
+      source: "/animal-quest/cow-edition",
+      destination: "/animal-quest/beef-edition",
+      permanent: false,
+    },
+    // Events
+    {
+      source: "/fc23",
+      destination: "/events/fall-carnival-2023",
       permanent: true,
     },
     {
+      source: "/fc23/:user*",
+      destination: "/events/fall-carnival-2023/tickets/:user*",
+      permanent: true,
+    },
+    // Temporary redirects (until new merch show is set up)
+    {
+      source: "/merch",
+      destination: "/#merch",
+      permanent: false,
+    },
+    {
       source: "/merch-store",
-      destination: "https://shopalveus.org/",
+      destination: "/#merch",
       permanent: false,
     },
     {
       source: "/shop",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/#merch",
+      permanent: false,
     },
     {
       source: "/store",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/#merch",
+      permanent: false,
     },
     {
       source: "/apparel",
-      destination: "https://shopalveus.org/",
-      permanent: true,
+      destination: "/#merch",
+      permanent: false,
     },
+    // External redirects
     {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",
@@ -298,6 +320,8 @@ const config = {
               "https://prezi.com/",
               // The Giving Block (donation widget):
               "https://widget.thegivingblock.com/",
+              // Vote.org embeds:
+              "https://register.vote.org/ https://verify.vote.org/ https://ballot.vote.org/",
               // Imgur embeds:
               //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
             ]

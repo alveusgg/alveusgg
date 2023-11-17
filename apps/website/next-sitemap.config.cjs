@@ -19,6 +19,7 @@ module.exports = {
     "/forms",
     "/forms/*",
     "/show-and-tell/*",
+    "/bingo/play/*",
   ],
   // TODO: Transform to apply proper priority to pages
   // Create a robots txt file, and disallow indexing of some routes
@@ -27,11 +28,13 @@ module.exports = {
     policies: [
       {
         userAgent: "*",
+        allow: process.env.NEXT_PUBLIC_NOINDEX === "true" ? [] : ["/api/og/"],
         disallow:
           process.env.NEXT_PUBLIC_NOINDEX === "true"
             ? ["/"]
             : [
                 "/api/",
+                "/bingo/play/",
                 "/auth/",
                 "/admin/",
                 "/wip/",

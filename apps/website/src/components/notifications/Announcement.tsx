@@ -4,19 +4,21 @@ import Link from "next/link";
 import type { Notification } from "@prisma/client";
 import { DateTime } from "luxon";
 
+import { formatDateTime } from "@/utils/datetime";
+import { getShortBaseUrl } from "@/utils/short-url";
+
+import IconChevronRight from "@/icons/IconChevronRight";
+
 import { NotificationIcon } from "@/components/notifications/NotificationIcon";
 import { ShareButton } from "@/components/shared/ShareButton";
 import DateTimeComponent from "@/components/content/DateTime";
-import { env } from "@/env/index.mjs";
 import { AddEventButton } from "@/components/shared/AddEventButton";
-import { formatDateTime } from "@/utils/datetime";
-import IconChevronRight from "@/icons/IconChevronRight";
 
 export function Announcement({ notification }: { notification: Notification }) {
   const relativeNotificationUrl = `/notifications/${notification.id}`;
   const fullAbsoluteNotificationUrl = new URL(
     relativeNotificationUrl,
-    env.NEXT_PUBLIC_BASE_URL,
+    getShortBaseUrl(),
   ).toString();
   const title = notification.title || "Alveus Sanctuary Announcement";
   const event = useMemo(

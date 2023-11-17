@@ -1,0 +1,27 @@
+# FIXME: https://github.com/vercel/satori/issues/565
+diff --git a/dist/compiled/@vercel/og/index.edge.js b/dist/compiled/@vercel/og/index.edge.js
+index 1f7fc5b22388f95e2b6570f2c1fc0ccbd66754ba..6e981667a4cc7f810903279d219db76eb816e06e 100644
+--- a/dist/compiled/@vercel/og/index.edge.js
++++ b/dist/compiled/@vercel/og/index.edge.js
+@@ -16086,7 +16086,7 @@ async function zn(e, t, n) {
+   let f = $f(s), c = "";
+   for (let p = 0; p < l; p++) {
+     let h = a[p], [d, m] = await Nt({ id: `${f}-${p}`, left: r, top: i, width: o, height: u }, h, n, "mask");
+-    c += m + C("rect", { x: 0, y: 0, width: o, height: u, fill: `url(#${d})` });
++    c += m + C("rect", { x: r, y: i, width: o, height: u, fill: `url(#${d})` });
+   }
+   return c = C("mask", { id: f }, c), [f, c];
+ }
+diff --git a/dist/compiled/@vercel/og/index.node.js b/dist/compiled/@vercel/og/index.node.js
+index 55c7d94015b8ef43244fa1a45c7c479fd65bc06b..265d188776f47c5859e51dccdc341c7d4622b953 100644
+--- a/dist/compiled/@vercel/og/index.node.js
++++ b/dist/compiled/@vercel/og/index.node.js
+@@ -16086,7 +16086,7 @@ async function zn(e, t, n) {
+   let f = $f(s), c = "";
+   for (let p = 0; p < l; p++) {
+     let h = a[p], [d, m] = await Nt({ id: `${f}-${p}`, left: r, top: i, width: o, height: u }, h, n, "mask");
+-    c += m + C("rect", { x: 0, y: 0, width: o, height: u, fill: `url(#${d})` });
++    c += m + C("rect", { x: r, y: i, width: o, height: u, fill: `url(#${d})` });
+   }
+   return c = C("mask", { id: f }, c), [f, c];
+ }

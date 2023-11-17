@@ -93,6 +93,11 @@ const experience = [
       </p>
     ),
   },
+  {
+    key: "whale-dolphin-conservation",
+    date: "January, 2023 – Present",
+    content: <p>Whale and Dolphin Conservation (WDC) Ambassador</p>,
+  },
 ];
 
 const AboutMayaPage: NextPage = () => {
