@@ -54,7 +54,7 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 2. If you have an idea that would make Alveus better - please fill out an idea [issue](https://github.com/alveusgg/alveusgg/issues/new/choose)
 3. If you have development experience, take a look at our issues labeled [good first issue](https://github.com/alveusgg/alveusgg/pulls?q=is%3Aopen+is%3Apr+label%3A%22good+first+issue%22), read our [contributing guide](https://github.com/alveusgg/alveusgg/blob/main/CONTRIBUTING.md) and agree to our [code of conduct](https://github.com/alveusgg/.github/blob/main/CODE_OF_CONDUCT.md) before you get started.
 
-## How to develop / Getting started
+## Development setup
 
 > [!NOTE]
 > If you only want to work on the front end, you may skip the prerequisites and skip configuring a database or file storage (steps 3, 4.i, 4.ii and 5). But you may encounter some errors when running the website without a database or file storage.
@@ -75,8 +75,8 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
    1. Fill the Prisma section with the database info (DSN)
    2. Fill in the S3 section with your S3-compatible storage info
    3. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
-   4. The Next Auth secret (`NEXTAUTH_SECRET`), Twitch EventSub API secret (`TWITCH_EVENTSUB_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See "Generate secrets" below.
-   5. The Data encryption passphase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See "Generate secrets" below.
+   4. The Next Auth secret (`NEXTAUTH_SECRET`), Twitch EventSub API secret (`TWITCH_EVENTSUB_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
+   5. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
    6. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
 6. Start the dev server using `pnpm dev` from within `apps/website`
@@ -87,25 +87,26 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 
 ### Generate secrets
 
-We use Base64-encoded random strings for various secrets. To generate these secrets you can use OpenSSL or Python. OpenSSL should be preinstalled on most Unix-like systems (Linux, macOS, WSL).  If neither is installed on your system, you may need to install it yourself.
+We use Base64-encoded random strings for various secrets. To generate these secrets you can use OpenSSL or Python. OpenSSL should be preinstalled on most Unix-like systems (Linux, macOS, WSL). If neither is installed on your system, you may need to install it yourself.
 
-- Using OpenSSL (Linux, macOS, WSL):
+- Using OpenSSL:
   - Generate a 32-byte secret: `openssl rand -base64 32`
   - Generate a 24-byte secret: `openssl rand -base64 24`
-- Using Python. You might need to use `python`/`python3` on Unix-like systems or `python.exe`/`python3.exe` on Windows depending on how you installed Python):
+- Using Python:
+  _You may need to call `python3` instead depending on your installation._
   - Generate a 32-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode('utf-8'))"`
   - Generate a 24-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(24)).decode('utf-8'))"`
 
-## How to set up your own production instance
+## Production deployment
 
 ### Website
 
 The stack should work on any Node.js server or Next.js capable hosting provider and any MySQL server,
 but has only been tested on Vercel (and PlanetScale) for now.
 
-1. Create a twitch application (see "Getting started" above)
-2. Set up a database (see "Getting started" above)
-3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see "Getting started" above)
+1. Create a twitch application (see [Development setup](#development-setup) above)
+2. Set up a database (see [Development setup](#development-setup) above)
+3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see [Development setup](#development-setup) above)
 4. Push the database schema to the new database using `pnpm prisma db push`.
 5. Get your own domain (optional)
 6. Create a Vercel account
