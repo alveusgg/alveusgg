@@ -89,7 +89,8 @@ const collaborations = {
     name: "Caroline Kwan",
     link: "https://www.twitch.tv/carolinekwan",
     date: new Date("2023-05-09"),
-    videoId: "4MmCFJadSg8",
+    videoId: "H5nV79y-Prg",
+    vodId: "4MmCFJadSg8",
   },
   lacari: {
     name: "Lacari",
