@@ -85,7 +85,7 @@ importers:
     dependencies:
       '@alveusgg/data':
         specifier: github:alveusgg/data#0.24.0
-        version: github.com/alveusgg/data/caaba5313859c965528bc1adf71c11e5f740f60b
+        version: git@github.com+alveusgg/data/caaba5313859c965528bc1adf71c11e5f740f60b
       '@aws-sdk/client-s3':
         specifier: ^3.414.0
         version: 3.414.0
@@ -100,7 +100,7 @@ importers:
         version: 1.7.17(react-dom@18.2.0)(react@18.2.0)
       '@next-auth/prisma-adapter':
         specifier: ^1.0.7
-        version: 1.0.7(@prisma/client@5.3.1)(next-auth@4.23.1)
+        version: 1.0.7(@prisma/client@5.3.1)(next-auth@4.24.5)
       '@next/env':
         specifier: ^13.5.1
         version: 13.5.1
@@ -174,8 +174,8 @@ importers:
         specifier: ^13.5.4
         version: 13.5.4(patch_hash=d5tm63bdtzwoxn5r7efybeoiqm)(@babel/core@7.22.20)(react-dom@18.2.0)(react@18.2.0)
       next-auth:
-        specifier: ^4.23.1
-        version: 4.23.1(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
+        specifier: ^4.24.5
+        version: 4.24.5(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
       next-sitemap:
         specifier: ^4.2.3
         version: 4.2.3(next@13.5.4)
@@ -1807,14 +1807,14 @@ packages:
       '@jridgewell/resolve-uri': 3.1.1
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@next-auth/prisma-adapter@1.0.7(@prisma/client@5.3.1)(next-auth@4.23.1):
+  /@next-auth/prisma-adapter@1.0.7(@prisma/client@5.3.1)(next-auth@4.24.5):
     resolution: {integrity: sha512-Cdko4KfcmKjsyHFrWwZ//lfLUbcLqlyFqjd/nYE2m3aZ7tjMNUjpks47iw7NTCnXf+5UWz5Ypyt1dSs1EP5QJw==}
     peerDependencies:
       '@prisma/client': '>=2.26.0 || >=3'
       next-auth: ^4
     dependencies:
       '@prisma/client': 5.3.1(prisma@5.3.1)
-      next-auth: 4.23.1(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
+      next-auth: 4.24.5(next@13.5.4)(react-dom@18.2.0)(react@18.2.0)
     dev: false
 
   /@next/env@13.5.1:
@@ -4245,7 +4245,7 @@ packages:
     dev: true
 
   /@types/node@18.17.0:
-    resolution: { integrity: sha512-GXZxEtOxYGFchyUzxvKI14iff9KZ2DI+A6a37o6EQevtg6uO9t+aUZKcaC1Te5Ng1OnLM7K9NVVj+FbecD9cJg== }
+    resolution: {integrity: sha512-GXZxEtOxYGFchyUzxvKI14iff9KZ2DI+A6a37o6EQevtg6uO9t+aUZKcaC1Te5Ng1OnLM7K9NVVj+FbecD9cJg==}
 
   /@types/normalize-package-data@2.4.1:
     resolution: {integrity: sha512-Gj7cI7z+98M282Tqmp2K5EIsoouUEzbBJhQQzDE3jSIRk6r9gsz0oUokqIUR4u1R3dMHo0pDHM7sNOHyhulypw==}
@@ -7527,10 +7527,10 @@ packages:
   /neo-async@2.6.2:
     resolution: {integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==}
 
-  /next-auth@4.23.1(next@13.5.4)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-mL083z8KgRtlrIV6CDca2H1kduWJuK/3pTS0Fe2og15KOm4v2kkLGdSDfc2g+019aEBrJUT0pPW2Xx42ImN1WA==}
+  /next-auth@4.24.5(next@13.5.4)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-3RafV3XbfIKk6rF6GlLE4/KxjTcuMCifqrmD+98ejFq73SRoj2rmzoca8u764977lH/Q7jo6Xu6yM+Re1Mz/Og==}
     peerDependencies:
-      next: ^12.2.5 || ^13
+      next: ^12.2.5 || ^13 || ^14
       nodemailer: ^6.6.5
       react: ^17.0.2 || ^18
       react-dom: ^17.0.2 || ^18
@@ -10103,8 +10103,8 @@ packages:
       use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
-  github.com/alveusgg/data/caaba5313859c965528bc1adf71c11e5f740f60b:
-    resolution: { tarball: https://codeload.github.com/alveusgg/data/tar.gz/caaba5313859c965528bc1adf71c11e5f740f60b }
+  git@github.com+alveusgg/data/caaba5313859c965528bc1adf71c11e5f740f60b:
+    resolution: {commit: caaba5313859c965528bc1adf71c11e5f740f60b, repo: git@github.com:alveusgg/data.git, type: git}
     name: '@alveusgg/data'
     version: 0.24.0
     dev: false
