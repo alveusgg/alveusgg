@@ -76,7 +76,8 @@ const collaborations = {
     name: "PeachJars and Jessica Nigri",
     link: "https://www.twitch.tv/peachjars",
     date: new Date("2023-05-21"),
-    videoId: "KF4HIypXiyc",
+    videoId: "-HuS6wbpqzQ",
+    vodId: "KF4HIypXiyc",
   },
   squeex: {
     name: "Squeex",
