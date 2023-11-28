@@ -152,6 +152,8 @@ model Notification {
 
   pushes                            NotificationPush[]
   NotificationDiscordChannelWebhook NotificationDiscordChannelWebhook[]
+
+  @@index([canceledAt, createdAt], name: "Notification_recent")
 }
 
 enum NotificationPushProcessingStatus {
@@ -253,6 +255,7 @@ model Form {
   entries FormEntry[]
 
   @@unique([slug])
+  @@index([active, startAt, endAt, id, slug], name: "Form_public")
 }
 
 model FormEntry {
@@ -369,6 +372,7 @@ model ShowAndTellEntry {
   user        User?                        @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "ShowAndTellEntry_userId")
+  @@index([seenOnStream, approvedAt, updatedAt], name: "ShowAndTellEntry_public")
 }
 
 model ShowAndTellEntryAttachment {
