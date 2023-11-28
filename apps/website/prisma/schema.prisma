@@ -30,6 +30,10 @@ model TaskExecutionEvent {
   task       String
   startedAt  DateTime  @default(now())
   finishedAt DateTime?
+
+  @@index([task], name: "TaskExecutionEvent_task")
+  @@index([startedAt], name: "TaskExecutionEvent_startedAt")
+  @@index([task, startedAt], name: "TaskExecutionEvent_task_startedAt")
 }
 
 model ChannelUpdateEvent {
@@ -102,6 +106,8 @@ model User {
   showAndTellEntries ShowAndTellEntry[]
   roles              UserRole[]
   virtualTickets     VirtualTicket[]
+
+  @@index([name], name: "User_name")
 }
 
 model VerificationToken {
@@ -393,6 +399,9 @@ model FileStorageObject {
 
   imageAttachment ImageAttachment?
   imageMetadata   ImageMetadata?
+
+  @@index([expiresAt, deletedAt], name: "FileStorageObject_cleanup")
+  @@index([expiresAt], name: "FileStorageObject_expiresAt")
 }
 
 model ImageMetadata {
@@ -439,4 +448,5 @@ model VirtualTicket {
   user User @relation(fields: [userId], references: [id])
 
   @@unique([userId, eventId])
+  @@index([eventId], name: "VirtualTicket_eventId")
 }
