@@ -41,6 +41,7 @@ const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
 );
 type ActiveAmbassadorEntry = (typeof activeAmbassadors)[number];
 
+// Allow the user to sort/group by different options
 const sortByOptions = {
   all: {
     label: "All Ambassadors",
@@ -55,47 +56,48 @@ const sortByOptions = {
             sortAmbassadorClassification(a.class, b.class) ||
             sortPartialDateString(a.arrival, b.arrival),
         )
-        .reduce<Grouped<ActiveAmbassadorEntry>>((obj, [key, val]) => {
+        .reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
           const classification = getClassification(val.class);
           const group = convertToSlug(classification);
 
-          return {
-            ...obj,
-            [group]: {
-              name: classification,
-              items: [...(obj[group]?.items || []), [key, val]],
-            },
-          };
-        }, {}),
+          map.set(group, {
+            name: classification,
+            items: [...(map.get(group)?.items || []), [key, val]],
+          });
+          return map;
+        }, new Map()),
   },
-  // enclosures: {
-  //   label: "Enclosures",
-  //   result: activeAmbassadors.reduce<AmbassadorsByGroup>((map, [key, val]) => {
-  //     const group = camelToKebab(val.enclosure);
-  //     map.set(group, {
-  //       name: enclosures[val.enclosure].name,
-  //       items: [...(map.get(group)?.items || []), key],
-  //     });
-  //     return map;
-  //   }, new Map()),
-  // },
-  // recent: {
-  //   label: "Recent",
-  //   result: [...activeAmbassadors]
-  //     .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
-  //     .reduce<AmbassadorsByGroup>((map, [key, val]) => {
-  //       const year = parsePartialDateString(val.arrival)
-  //         ?.getUTCFullYear()
-  //         ?.toString();
-  //       const group = year || "unknown";
-  //       map.set(group, {
-  //         name: year || "Unknown",
-  //         items: [...(map.get(group)?.items || []), key],
-  //       });
-  //       return map;
-  //     }, new Map()),
-  // },
-  // };
+  enclosures: {
+    label: "Enclosures",
+    sort: (ambassadors) =>
+      ambassadors.reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
+        const group = camelToKebab(val.enclosure);
+
+        map.set(group, {
+          name: enclosures[val.enclosure].name,
+          items: [...(map.get(group)?.items || []), [key, val]],
+        });
+        return map;
+      }, new Map()),
+  },
+  recent: {
+    label: "Recent",
+    sort: (ambassadors) =>
+      [...ambassadors]
+        .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
+        .reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
+          const year = parsePartialDateString(val.arrival)
+            ?.getUTCFullYear()
+            ?.toString();
+          const group = year || "unknown";
+
+          map.set(group, {
+            name: year || "Unknown",
+            items: [...(map.get(group)?.items || []), [key, val]],
+          });
+          return map;
+        }, new Map()),
+  },
 } as const satisfies Options<ActiveAmbassadorEntry>;
 
 export const ambassadorImageHover =
@@ -270,7 +272,7 @@ const AmbassadorsPage: NextPage = () => {
             />
           ) : (
             <div className="grid gap-12">
-              {Object.entries(result).map(([key, val]) => (
+              {[...result.entries()].map(([key, val]) => (
                 <AmbassadorGroup
                   key={key}
                   type={option}

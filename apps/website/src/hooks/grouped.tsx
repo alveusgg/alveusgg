@@ -2,7 +2,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 
 type StringKey<T> = Extract<keyof T, string>;
 
-export type Grouped<T> = Record<string, { name: string; items: T[] }>;
+type MapKey<M extends Map<unknown, unknown>> = M extends Map<infer K, unknown>
+  ? K
+  : never;
+
+export type Grouped<T> = Map<string, { name: string; items: T[] }>;
 
 type Items<T> = T[] | Grouped<T>;
 
@@ -32,11 +36,11 @@ type Result<T, O extends Options<T>> = O[StringKey<O>] extends {
 
 // For each sort by option, if the option's sort function returns an object, we want to know the keys of that object
 // Again, this is essentially the same as keyof Grouped<T>, but allows for constraining the type if a constant is passed in
-type Group<T, O extends Options<T>> = O[StringKey<O>] extends {
+type GroupKey<T, O extends Options<T>> = O[StringKey<O>] extends {
   sort: (items: T[]) => infer G;
 }
   ? G extends Grouped<T>
-    ? keyof G
+    ? MapKey<G>
     : never
   : never;
 
@@ -50,7 +54,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
 
   // Track the active group
   // Will be a key from an option that returns an object of items
-  const [group, setGroup] = useState<Group<T, O> | null>(null);
+  const [group, setGroup] = useState<GroupKey<T, O> | null>(null);
 
   // Track the current items
   // Will either be an array of items, or an object of groups of items
@@ -60,7 +64,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
 
   // Allow the user to update the option and group
   const update = useCallback(
-    (newOption: StringKey<O>, newGroup: Group<T, O> | null) => {
+    (newOption: StringKey<O>, newGroup: GroupKey<T, O> | null) => {
       // Store the selected option
       setOption(newOption);
 
@@ -70,7 +74,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
 
       // If we have a group, store it if it exists in the new results
       // `Group<T, O>` gives some type-safety, but represents all possible groups across all options
-      if (newGroup && !Array.isArray(newResult) && newGroup in newResult) {
+      if (newGroup && !Array.isArray(newResult) && newResult.has(newGroup)) {
         setGroup(newGroup);
       } else {
         setGroup(null);
@@ -103,7 +107,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
     // Only continue if the option is valid
     // `update` will ensure that the group is valid
     if (newOption && newOption in options) {
-      update(newOption as StringKey<O>, (newGroup as Group<T, O>) || null);
+      update(newOption as StringKey<O>, (newGroup as GroupKey<T, O>) || null);
     }
 
     // Mark that we've done an initial check
@@ -134,3 +138,28 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
 };
 
 export default useGrouped;
+
+// const {
+//   option,
+//   group,
+//   result,
+//   update,
+//   dropdown,
+// } = useGrouped({
+//   items: [1, 2, 3, 4],
+//   options: {
+//     test: {
+//       label: 'Test',
+//       sort: (items) => items
+//     },
+//     other: {
+//       label: 'Other',
+//       sort: (items) => new Map([['a', { name: 'A', items }]]),
+//     },
+//     more: {
+//       label: 'More',
+//       sort: (items) => new Map([['b', { name: 'B', items: items.filter(x => x % 2 === 0) }], ['c', { name: 'C', items: items.filter(x => x % 2 !== 0) }]]),
+//     },
+//   },
+//   initial: 'test',
+// });
