@@ -1,0 +1,136 @@
+import { useCallback, useEffect, useMemo, useState } from "react";
+
+type StringKey<T> = Extract<keyof T, string>;
+
+export type Grouped<T> = Record<string, { name: string; items: T[] }>;
+
+type Items<T> = T[] | Grouped<T>;
+
+export interface Options<T> {
+  [key: string]: {
+    label: string;
+    sort: (items: T[]) => Items<T>;
+  };
+}
+
+type Props<T, O extends Options<T>, I extends StringKey<O>> = {
+  items: T[];
+  options: O;
+  initial: I;
+};
+
+// For the dropdowns, we want to know the keys and labels of the options
+type Dropdown<T, O extends Options<T>> = { [K in StringKey<O>]: O[K]["label"] };
+
+// For the result, we want to know the type of the items returned by the sort function
+// This is essentially the same as Items<T>, but allows for constraining the type if a constant is passed in
+type Result<T, O extends Options<T>> = O[StringKey<O>] extends {
+  sort: (items: T[]) => infer G;
+}
+  ? G
+  : never;
+
+// For each sort by option, if the option's sort function returns an object, we want to know the keys of that object
+// Again, this is essentially the same as keyof Grouped<T>, but allows for constraining the type if a constant is passed in
+type Group<T, O extends Options<T>> = O[StringKey<O>] extends {
+  sort: (items: T[]) => infer G;
+}
+  ? G extends Grouped<T>
+    ? keyof G
+    : never
+  : never;
+
+const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
+  items,
+  options,
+  initial,
+}: Props<T, O, I>) => {
+  // Track the active option
+  const [option, setOption] = useState<StringKey<O>>(initial);
+
+  // Track the active group
+  // Will be a key from an option that returns an object of items
+  const [group, setGroup] = useState<Group<T, O> | null>(null);
+
+  // Track the current items
+  // Will either be an array of items, or an object of groups of items
+  const [result, setResult] = useState<Result<T, O>>(
+    (options[initial]?.sort(items) || []) as Result<T, O>,
+  );
+
+  // Allow the user to update the option and group
+  const update = useCallback(
+    (newOption: StringKey<O>, newGroup: Group<T, O> | null) => {
+      // Store the selected option
+      setOption(newOption);
+
+      // Store the new results
+      const newResult = options[newOption]?.sort(items) || [];
+      setResult(newResult as Result<T, O>);
+
+      // If we have a group, store it if it exists in the new results
+      // `Group<T, O>` gives some type-safety, but represents all possible groups across all options
+      if (newGroup && !Array.isArray(newResult) && newGroup in newResult) {
+        setGroup(newGroup);
+      } else {
+        setGroup(null);
+      }
+    },
+    [items, options],
+  );
+
+  // Track if we've done an initial anchor check
+  // Ensures we don't immediately overwrite the URL anchor with the initial option
+  const [checked, setChecked] = useState(false);
+
+  // When the option or group changes, update the URL anchor
+  // If the option is the initial and there is no group, remove the anchor
+  useEffect(() => {
+    if (!checked) return;
+
+    const url = new URL(window.location.href);
+    url.hash =
+      group || option !== initial ? `${option}${group ? `:${group}` : ""}` : "";
+    window.history.replaceState({}, "", url.toString());
+  }, [checked, option, group, initial]);
+
+  // When the URL anchor changes, update the option and group
+  const anchor = useCallback(() => {
+    const url = new URL(window.location.href);
+    const hash = url.hash.slice(1);
+    const [newOption, newGroup] = hash.split(":");
+
+    // Only continue if the option is valid
+    // `update` will ensure that the group is valid
+    if (newOption && newOption in options) {
+      update(newOption as StringKey<O>, (newGroup as Group<T, O>) || null);
+    }
+
+    // Mark that we've done an initial check
+    setChecked(true);
+  }, [options, update]);
+  useEffect(() => {
+    anchor();
+    window.addEventListener("hashchange", anchor);
+    return () => window.removeEventListener("hashchange", anchor);
+  }, [anchor]);
+
+  // Expose a clean object for the dropdown
+  const dropdown = useMemo(
+    () =>
+      Object.fromEntries(
+        Object.entries(options).map(([key, val]) => [key, val.label]),
+      ) as Dropdown<T, O>,
+    [options],
+  );
+
+  return {
+    option,
+    group,
+    result,
+    update,
+    dropdown,
+  };
+};
+
+export default useGrouped;
