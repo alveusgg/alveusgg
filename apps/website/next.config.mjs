@@ -194,33 +194,32 @@ const config = {
       destination: "/events/fall-carnival-2023/tickets/:user*",
       permanent: true,
     },
-    // Temporary redirects (until new merch show is set up)
+    // External redirects
     {
       source: "/merch",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/merch-store",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/shop",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/store",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/apparel",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
-    // External redirects
     {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",
