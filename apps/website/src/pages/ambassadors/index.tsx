@@ -3,9 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useMemo, type ComponentProps } from "react";
 
-import ambassadors, {
-  type AmbassadorKey,
-} from "@alveusgg/data/src/ambassadors/core";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import enclosures from "@alveusgg/data/src/enclosures";
@@ -107,15 +105,15 @@ const AmbassadorItem = ({
   ambassador,
   level = 2,
 }: {
-  ambassador: AmbassadorKey;
+  ambassador: ActiveAmbassadorEntry;
   level?: ComponentProps<typeof Heading>["level"];
 }) => {
-  const data = useMemo(() => ambassadors[ambassador], [ambassador]);
-  const images = useMemo(() => getAmbassadorImages(ambassador), [ambassador]);
+  const [key, data] = ambassador;
+  const images = useMemo(() => getAmbassadorImages(key), [key]);
 
   return (
     <div>
-      <Link href={`/ambassadors/${camelToKebab(ambassador)}`} className="group">
+      <Link href={`/ambassadors/${camelToKebab(key)}`} className="group">
         <Image
           src={images[0].src}
           alt={images[0].alt}
@@ -143,7 +141,7 @@ const AmbassadorItems = ({
   className,
   level,
 }: {
-  ambassadors: AmbassadorKey[];
+  ambassadors: ActiveAmbassadorEntry[];
   className?: string;
   level?: ComponentProps<typeof Heading>["level"];
 }) => (
@@ -153,8 +151,12 @@ const AmbassadorItems = ({
       className,
     )}
   >
-    {ambassadors.map((key) => (
-      <AmbassadorItem key={key} ambassador={key} level={level} />
+    {ambassadors.map((ambassador) => (
+      <AmbassadorItem
+        key={ambassador[0]}
+        ambassador={ambassador}
+        level={level}
+      />
     ))}
   </div>
 );
@@ -169,7 +171,7 @@ const AmbassadorGroup = ({
   type: string;
   group: string;
   name: string;
-  ambassadors: AmbassadorKey[];
+  ambassadors: ActiveAmbassadorEntry[];
   active?: boolean;
 }) => {
   // If this group is the "active" one in the URL, scroll it into view
@@ -266,10 +268,7 @@ const AmbassadorsPage: NextPage = () => {
           </div>
 
           {Array.isArray(result) ? (
-            <AmbassadorItems
-              ambassadors={result.map(([key]) => key)}
-              className="mt-8"
-            />
+            <AmbassadorItems ambassadors={result} className="mt-8" />
           ) : (
             <div className="grid gap-12">
               {[...result.entries()].map(([key, val]) => (
@@ -278,7 +277,7 @@ const AmbassadorsPage: NextPage = () => {
                   type={option}
                   group={key}
                   name={val.name}
-                  ambassadors={val.items.map(([key]) => key)}
+                  ambassadors={val.items}
                   active={key === group}
                 />
               ))}
