@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
-type StringKey<T> = Extract<keyof T, string>;
+type ObjectKey<T> = Extract<keyof T, string>;
 
 type MapKey<M extends Map<unknown, unknown>> = M extends Map<infer K, unknown>
   ? K
@@ -17,18 +17,18 @@ export interface Options<T> {
   };
 }
 
-type Props<T, O extends Options<T>, I extends StringKey<O>> = {
+type Props<T, O extends Options<T>, I extends ObjectKey<O>> = {
   items: T[];
   options: O;
   initial: I;
 };
 
 // For the dropdowns, we want to know the keys and labels of the options
-type Dropdown<T, O extends Options<T>> = { [K in StringKey<O>]: O[K]["label"] };
+type Dropdown<T, O extends Options<T>> = { [K in ObjectKey<O>]: O[K]["label"] };
 
 // For the result, we want to know the type of the items returned by the sort function
 // This is essentially the same as Items<T>, but allows for constraining the type if a constant is passed in
-type Result<T, O extends Options<T>> = O[StringKey<O>] extends {
+type Result<T, O extends Options<T>> = O[ObjectKey<O>] extends {
   sort: (items: T[]) => infer G;
 }
   ? G
@@ -36,7 +36,7 @@ type Result<T, O extends Options<T>> = O[StringKey<O>] extends {
 
 // For each sort by option, if the option's sort function returns an object, we want to know the keys of that object
 // Again, this is essentially the same as keyof Grouped<T>, but allows for constraining the type if a constant is passed in
-type GroupKey<T, O extends Options<T>> = O[StringKey<O>] extends {
+type GroupKey<T, O extends Options<T>> = O[ObjectKey<O>] extends {
   sort: (items: T[]) => infer G;
 }
   ? G extends Grouped<T>
@@ -44,13 +44,13 @@ type GroupKey<T, O extends Options<T>> = O[StringKey<O>] extends {
     : never
   : never;
 
-const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
+const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
   items,
   options,
   initial,
 }: Props<T, O, I>) => {
   // Track the active option
-  const [option, setOption] = useState<StringKey<O>>(initial);
+  const [option, setOption] = useState<ObjectKey<O>>(initial);
 
   // Track the active group
   // Will be a key from an option that returns an object of items
@@ -64,7 +64,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
 
   // Allow the user to update the option and group
   const update = useCallback(
-    (newOption: StringKey<O>, newGroup: GroupKey<T, O> | null) => {
+    (newOption: ObjectKey<O>, newGroup: GroupKey<T, O> | null) => {
       // Store the selected option
       setOption(newOption);
 
@@ -73,7 +73,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
       setResult(newResult as Result<T, O>);
 
       // If we have a group, store it if it exists in the new results
-      // `Group<T, O>` gives some type-safety, but represents all possible groups across all options
+      // `GroupKey<T, O>` doesn't give much type safety, so we check here
       if (newGroup && !Array.isArray(newResult) && newResult.has(newGroup)) {
         setGroup(newGroup);
       } else {
@@ -107,7 +107,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
     // Only continue if the option is valid
     // `update` will ensure that the group is valid
     if (newOption && newOption in options) {
-      update(newOption as StringKey<O>, (newGroup as GroupKey<T, O>) || null);
+      update(newOption as ObjectKey<O>, (newGroup as GroupKey<T, O>) || null);
     }
 
     // Mark that we've done an initial check
@@ -119,7 +119,7 @@ const useGrouped = <T, O extends Options<T>, I extends StringKey<O>>({
     return () => window.removeEventListener("hashchange", anchor);
   }, [anchor]);
 
-  // Expose a clean object for the dropdown
+  // Expose a clean, stable object for the dropdown
   const dropdown = useMemo(
     () =>
       Object.fromEntries(
