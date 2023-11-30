@@ -14,7 +14,7 @@ import {
   type AmbassadorImages,
 } from "@alveusgg/data/src/ambassadors/images";
 import {
-  getAmbassadorEpisode,
+  getAmbassadorEpisodes,
   type AnimalQuestWithRelation,
 } from "@alveusgg/data/src/animal-quest";
 import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
@@ -46,7 +46,7 @@ type AmbassadorPageProps = {
   enclosure: Enclosure;
   images: AmbassadorImages;
   merchImage?: AmbassadorImage;
-  animalQuest?: AnimalQuestWithRelation;
+  animalQuest?: AnimalQuestWithRelation[];
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -76,7 +76,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
       enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
-      animalQuest: getAmbassadorEpisode(ambassadorKey), // featured + related
+      animalQuest: getAmbassadorEpisodes(ambassadorKey),
     },
   };
 };
@@ -263,44 +263,48 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               ))}
             </dl>
 
-            {animalQuest && (
-              <Link
-                href={`/animal-quest/${sentenceToKebab(animalQuest.edition)}`}
-                className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
-                custom
-              >
-                <Image
-                  src={animalQuestImage}
-                  alt=""
-                  width={688}
-                  className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
-                />
+            {animalQuest &&
+              animalQuest.map((aq) => (
+                <Link
+                  key={aq.episode}
+                  href={`/animal-quest/${sentenceToKebab(aq.edition)}`}
+                  className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
+                  custom
+                >
+                  <Image
+                    src={animalQuestImage}
+                    alt=""
+                    width={688}
+                    className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
+                  />
 
-                <div>
-                  <Heading
-                    level={2}
-                    className="transition-colors group-hover:text-alveus-green-800"
-                  >
-                    Learn more{" "}
-                    {animalQuest.relation === "featured" &&
-                      `about ${ambassador.name} `}
-                    on{" "}
-                    <span className="min-[320px]:whitespace-nowrap">
-                      Animal Quest
-                    </span>
-                  </Heading>
-                  <p className="text-xl text-alveus-green-800">
-                    Animal Quest Ep. {animalQuest.episode}:{" "}
-                    {animalQuest.edition}
-                  </p>
-                </div>
+                  <div>
+                    <Heading
+                      level={2}
+                      className="transition-colors group-hover:text-alveus-green-800"
+                    >
+                      Animal Quest #{aq.episode}:{" "}
+                      <span className="min-[320px]:whitespace-nowrap">
+                        {aq.edition}
+                      </span>
+                    </Heading>
+                    <p className="text-xl text-alveus-green-800">
+                      Learn more{" "}
+                      {aq.relation === "featured" &&
+                        `about ${ambassador.name} `}
+                      on{" "}
+                      <span className="min-[320px]:whitespace-nowrap">
+                        Animal Quest
+                      </span>
+                    </p>
+                  </div>
 
-                <IconYouTube
-                  size={48}
-                  className="shrink-0 transition-colors group-hover:text-alveus-green-600"
-                />
-              </Link>
-            )}
+                  <IconYouTube
+                    size={48}
+                    className="shrink-0 transition-colors group-hover:text-alveus-green-600"
+                  />
+                </Link>
+              ))}
 
             <div className="pswp-gallery my-6" id={photoswipe}>
               <Carousel
