@@ -22,44 +22,9 @@ export interface Command {
 }
 
 const commands: Record<string, Command> = {
-  ptzir: {
-    description: "Control IR sensor/filter (if supported)",
-    category: "IR",
-    args: [
-      {
-        type: "string",
-        name: "camera",
-        required: false,
-        variadic: false,
-      },
-      {
-        type: "choice",
-        name: "mode",
-        required: true,
-        variadic: false,
-        choices: ["on", "off", "auto"],
-      },
-    ],
-  },
-  ptzirlight: {
-    description: "Control built-in IR light (if supported)",
-    category: "IR",
-    args: [
-      {
-        type: "string",
-        name: "camera",
-        required: false,
-        variadic: false,
-      },
-      {
-        type: "choice",
-        name: "mode",
-        required: true,
-        variadic: false,
-        choices: ["on", "off"],
-      },
-    ],
-  },
+  /**
+   * PTZ
+   */
   ptzpan: {
     description: "Change pan position",
     category: "PTZ",
@@ -144,37 +109,6 @@ const commands: Record<string, Command> = {
       },
     ],
   },
-  ptzhome: {
-    description: "Move to home position",
-    category: "PTZ",
-    args: [
-      {
-        type: "string",
-        name: "camera",
-        required: false,
-        variadic: false,
-      },
-    ],
-  },
-  ptztracking: {
-    description: "Control auto-tracking (if supported)",
-    category: "PTZ",
-    args: [
-      {
-        type: "string",
-        name: "camera",
-        required: false,
-        variadic: false,
-      },
-      {
-        type: "choice",
-        name: "mode",
-        required: true,
-        variadic: false,
-        choices: ["on", "off"],
-      },
-    ],
-  },
   ptzmove: {
     description: "Move in a direction",
     category: "PTZ",
@@ -203,6 +137,18 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  ptzhome: {
+    description: "Move to home position",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
   ptzspeed: {
     description: "Change movement speed",
     category: "PTZ",
@@ -221,6 +167,25 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  ptztracking: {
+    description: "Control auto-tracking (if supported)",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "choice",
+        name: "mode",
+        required: true,
+        variadic: false,
+        choices: ["on", "off"],
+      },
+    ],
+  },
   ptzdry: {
     description: "Trigger quick dry (if supported)",
     category: "PTZ",
@@ -230,6 +195,48 @@ const commands: Record<string, Command> = {
         name: "camera",
         required: false,
         variadic: false,
+      },
+    ],
+  },
+
+  /**
+   * IR
+   */
+  ptzir: {
+    description: "Control IR sensor/filter (if supported)",
+    category: "IR",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "choice",
+        name: "mode",
+        required: true,
+        variadic: false,
+        choices: ["on", "off", "auto"],
+      },
+    ],
+  },
+  ptzirlight: {
+    description: "Control built-in IR light (if supported)",
+    category: "IR",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "choice",
+        name: "mode",
+        required: true,
+        variadic: false,
+        choices: ["on", "off"],
       },
     ],
   },

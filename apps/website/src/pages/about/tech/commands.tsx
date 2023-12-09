@@ -1,22 +1,17 @@
+import { Fragment } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
-import { Fragment } from "react";
-import { classes } from "@/utils/classes";
+import commands, { type Command } from "@/data/commands";
+import { typeSafeObjectEntries } from "@/utils/helpers";
+import { sentenceToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import Network from "@/components/tech/Network";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import commands, { type Argument, type Command } from "@/data/commands";
-import { typeSafeObjectEntries } from "@/utils/helpers";
 
 interface NamedCommand extends Command {
   name: string;
@@ -170,7 +165,12 @@ const AboutTechPage: NextPage = () => {
             {typeSafeObjectEntries(grouped).map(([category, commands]) => (
               <Fragment key={category}>
                 <dt className="mt-6">
-                  <Heading level={3} className="text-2xl">
+                  <Heading
+                    level={3}
+                    className="text-2xl"
+                    id={sentenceToKebab(category)}
+                    link
+                  >
                     {category}
                   </Heading>
                 </dt>
