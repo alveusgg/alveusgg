@@ -152,6 +152,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/commands",
+      destination: "/about/tech/commands",
+      permanent: true,
+    },
+    {
       source: "/vote",
       destination: "/voters-guide",
       permanent: true,
