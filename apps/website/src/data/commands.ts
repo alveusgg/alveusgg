@@ -504,27 +504,29 @@ const commands: Record<string, Command> = {
       [],
     ],
   },
-  muteallcams: {
-    description: "Mute audio for all cameras", // TODO: Is this still a command given `mute all`?
-    category: "Audio",
-    args: [],
-  },
   unmute: {
-    description: "Unmute audio for a camera", // TODO: Should this have an all option?
+    description: "Unmute audio for a camera",
     category: "Audio",
     args: [
-      {
-        type: "string",
-        name: "camera",
-        required: false,
-        variadic: false,
-      },
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+      [],
     ],
-  },
-  unmuteallcams: {
-    description: "Unmute audio for all cameras", // TODO: If `unmute all` is a command, should this be?
-    category: "Audio",
-    args: [],
   },
   getvolume: {
     description: "Get volume for a camera",
@@ -650,7 +652,7 @@ const commands: Record<string, Command> = {
     ],
   },
   camlist: {
-    description: "List all preset camera layouts",
+    description: "Get all preset camera layouts",
     category: "Scenes",
     args: [],
   },
@@ -819,6 +821,95 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+
+  /**
+   * Sources
+   */
+  resetcam: {
+    description: "Reset a camera feed source",
+    category: "Sources",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  resetlivecams: {
+    description: "Reset the camera layout source",
+    category: "Sources",
+    args: [],
+  },
+  resetbackpack: {
+    description: "Reset the backpack source",
+    category: "Sources",
+    args: [],
+  },
+  resetphone: {
+    description: "Reset the phone source",
+    category: "Sources",
+    args: [],
+  },
+  brbscreen: {
+    description: "Switch the stream to the BRB screen with clips",
+    category: "Sources",
+    args: [],
+  },
+  livecams: {
+    description: "Switch the stream to the camera layout",
+    category: "Sources",
+    args: [],
+  },
+
+  /**
+   * Wheel
+   */
+  enablewheel: {
+    description: "Enable the wheel overlay and subscription tracking",
+    category: "Wheel",
+    args: [],
+  },
+  disablewheel: {
+    description: "Disable the wheel overlay and subscription tracking",
+    category: "Wheel",
+    args: [],
+  },
+  resetwheel: {
+    description: "Reset the wheel overlay and subscription count",
+    category: "Wheel",
+    args: [],
+  },
+  resetspins: {
+    description: "Reset the wheel spin count",
+    category: "Wheel",
+    args: [],
+  },
+  setwheelcount: {
+    description: "Set the subscription count for the wheel",
+    category: "Wheel",
+    args: [
+      {
+        type: "number",
+        name: "count",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  setspins: {
+    description: "Set the spin count for the wheel",
+    category: "Wheel",
+    args: [
+      {
+        type: "number",
+        name: "count",
         required: true,
         variadic: false,
       },
