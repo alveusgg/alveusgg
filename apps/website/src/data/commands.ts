@@ -4,21 +4,45 @@ interface BaseArgument {
   variadic: boolean;
 }
 
-interface SimpleArgument extends BaseArgument {
+export interface SimpleArgument extends BaseArgument {
   type: "string" | "number";
 }
 
-interface ChoiceArgument extends BaseArgument {
+export interface ChoiceArgument extends BaseArgument {
   type: "choice";
   choices: string[];
 }
 
 export type Argument = SimpleArgument | ChoiceArgument;
+export const isArgument = (arg: unknown): arg is Argument =>
+  typeof arg === "object" &&
+  arg !== null &&
+  "type" in arg &&
+  "name" in arg &&
+  "required" in arg &&
+  "variadic" in arg;
+
+export type Arguments = [Argument, ...Argument[]];
+export const isArguments = (args: unknown): args is Arguments =>
+  Array.isArray(args) && args.length >= 1 && args.every(isArgument);
+
+export type OverloadedArguments =
+  | [Arguments, Arguments, ...Arguments[]]
+  | [Arguments, ...Arguments[], []];
+export const isOverloadedArguments = (
+  args: unknown,
+): args is OverloadedArguments =>
+  Array.isArray(args) &&
+  args.length >= 2 &&
+  args.every(
+    (arg, idx) =>
+      isArguments(arg) || (idx === args.length - 1 && arg.length === 0),
+  );
 
 export interface Command {
   description: string;
   category: string;
-  args: Argument[];
+  args: [] | Arguments | OverloadedArguments;
 }
 
 const commands: Record<string, Command> = {
@@ -26,7 +50,7 @@ const commands: Record<string, Command> = {
    * PTZ
    */
   ptzpan: {
-    description: "Change pan position",
+    description: "Change relative pan position",
     category: "PTZ",
     args: [
       {
@@ -44,7 +68,7 @@ const commands: Record<string, Command> = {
     ],
   },
   ptztilt: {
-    description: "Change tilt position",
+    description: "Change relative tilt position",
     category: "PTZ",
     args: [
       {
@@ -62,7 +86,7 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzzoom: {
-    description: "Change zoom level",
+    description: "Change relative zoom level",
     category: "PTZ",
     args: [
       {
@@ -80,7 +104,7 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzset: {
-    description: "Change pan/tilt/zoom combination",
+    description: "Change relative pan/tilt/zoom combination",
     category: "PTZ",
     args: [
       {
@@ -150,7 +174,7 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzspeed: {
-    description: "Change movement speed",
+    description: "Change absolute movement speed",
     category: "PTZ",
     args: [
       {
@@ -237,6 +261,566 @@ const commands: Record<string, Command> = {
         required: true,
         variadic: false,
         choices: ["on", "off"],
+      },
+    ],
+  },
+
+  /**
+   * Focus
+   */
+  ptzfocus: {
+    description: "Change absolute focus (if supported)",
+    category: "Focus",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "focus",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzfocusr: {
+    description: "Change relative focus (if supported)",
+    category: "Focus",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "focus",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzgetfocus: {
+    description: "Get current focus (if supported)",
+    category: "Focus",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
+  ptzautofocus: {
+    description: "Control auto-focus (if supported)",
+    category: "Focus",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        name: "mode",
+        type: "choice",
+        required: true,
+        variadic: false,
+        choices: ["on", "off"],
+      },
+    ],
+  },
+
+  /**
+   * Presets
+   */
+  ptzload: {
+    description: "Move to a preset position",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzsave: {
+    description: "Save current position as a preset",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzremove: {
+    description: "Remove a preset position",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzrename: {
+    description: "Rename a preset position",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "old",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "new",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzlist: {
+    description: "Get all preset positions",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
+  ptzroam: {
+    description: "Roam between multiple preset positions",
+    category: "Presets",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: false,
+          variadic: false,
+        },
+        {
+          type: "number",
+          name: "seconds",
+          required: true,
+          variadic: false,
+        },
+        {
+          type: "number",
+          name: "speed",
+          required: false,
+          variadic: false,
+        },
+        {
+          type: "string",
+          name: "presets",
+          required: true,
+          variadic: true,
+        },
+      ],
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: false,
+          variadic: false,
+        },
+        {
+          type: "choice",
+          name: "mode",
+          required: true,
+          variadic: false,
+          choices: ["on", "off"],
+        },
+      ],
+    ],
+  },
+
+  /**
+   * Audio
+   */
+  mute: {
+    description: "Mute audio for a camera",
+    category: "Audio",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+      [],
+    ],
+  },
+  muteallcams: {
+    description: "Mute audio for all cameras", // TODO: Is this still a command given `mute all`?
+    category: "Audio",
+    args: [],
+  },
+  unmute: {
+    description: "Unmute audio for a camera", // TODO: Should this have an all option?
+    category: "Audio",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
+  unmuteallcams: {
+    description: "Unmute audio for all cameras", // TODO: If `unmute all` is a command, should this be?
+    category: "Audio",
+    args: [],
+  },
+  getvolume: {
+    description: "Get volume for a camera",
+    category: "Audio",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+      [],
+    ],
+  },
+  setvolume: {
+    description: "Set volume for a camera",
+    category: "Audio",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "volume",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  resetvolume: {
+    description: "Reset volumes for all cameras",
+    category: "Audio",
+    args: [],
+  },
+  mutemusic: {
+    description: "Mute music",
+    category: "Audio",
+    args: [],
+  },
+  unmutemusic: {
+    description: "Unmute music",
+    category: "Audio",
+    args: [],
+  },
+  musicvolume: {
+    description: "Set music volume",
+    category: "Audio",
+    args: [
+      {
+        type: "number",
+        name: "volume",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+
+  /**
+   * Scenes
+   */
+  customcams: {
+    // TODO: Aliases of ccams, ccam
+    description: "Set cameras to show in layout",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "cameras",
+        required: true,
+        variadic: true,
+      },
+    ],
+  },
+  customcamsbig: {
+    // TODO: Aliases of ccamsbig, ccamb
+    description: "Set cameras to show in layout, with the first being larger",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "cameras",
+        required: true,
+        variadic: true,
+      },
+    ],
+  },
+  camload: {
+    description: "Load a preset camera layout",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  camsave: {
+    description: "Save a preset camera layout",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "preset",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  camlist: {
+    description: "List all preset camera layouts",
+    category: "Scenes",
+    args: [],
+  },
+  swap: {
+    description: "Swap cameras within a layout",
+    category: "Scenes",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+        {
+          type: "number",
+          name: "position",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+        {
+          type: "choice",
+          name: "blank",
+          required: true,
+          variadic: false,
+          choices: ["blank"],
+        },
+      ],
+      [
+        {
+          type: "number",
+          name: "position",
+          required: true,
+          variadic: false,
+        },
+        {
+          type: "number",
+          name: "position",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "number",
+          name: "position",
+          required: true,
+          variadic: false,
+        },
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "number",
+          name: "position",
+          required: true,
+          variadic: false,
+        },
+        {
+          type: "choice",
+          name: "blank",
+          required: true,
+          variadic: false,
+          choices: ["blank"],
+        },
+      ],
+      [],
+    ],
+  },
+  piptl: {
+    // TODO: Aliases of customcamstl, pipul, and variations thereof
+    description:
+      "Show two cameras, with the second picture-in-picture top-left",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  piptr: {
+    description:
+      "Show two cameras, with the second picture-in-picture top-right",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  pipbl: {
+    description:
+      "Show two cameras, with the second picture-in-picture bottom-left",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  pipbr: {
+    description:
+      "Show two cameras, with the second picture-in-picture bottom-right",
+    category: "Scenes",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
       },
     ],
   },

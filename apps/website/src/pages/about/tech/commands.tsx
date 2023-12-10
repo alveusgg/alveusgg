@@ -2,7 +2,11 @@ import { Fragment } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
-import commands, { type Command } from "@/data/commands";
+import commands, {
+  isOverloadedArguments,
+  type Command,
+  type Argument,
+} from "@/data/commands";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { sentenceToKebab } from "@/utils/string-case";
 
@@ -33,70 +37,39 @@ const grouped = typeSafeObjectEntries(commands).reduce<
   {},
 );
 
+const signatureArg = (arg: Argument) =>
+  [
+    arg.required ? "<" : "[",
+    arg.type !== "choice" || arg.choices.length > 1 ? `${arg.name}:` : "",
+    arg.type === "choice"
+      ? arg.choices.map((choice) => `'${choice}'`).join("|")
+      : arg.type,
+    arg.variadic ? "..." : "",
+    arg.required ? ">" : "]",
+  ].join("");
+
 const signature = (command: NamedCommand) => {
   const { name, args } = command;
   const cmd = `!${name}`;
   if (!args) return cmd;
 
-  const cmdArgs = args.map((arg) => {
-    const { name, type, required, variadic } = arg;
+  const cmdArgs = isOverloadedArguments(args)
+    ? args
+        .map(
+          (nestedArgs) =>
+            nestedArgs.map((arg) => signatureArg(arg)).join(" ") || "[]",
+        )
+        .join(`\n${" ".repeat(cmd.length - 1)}| `)
+    : args.map((arg) => signatureArg(arg)).join(" ");
 
-    const core =
-      type === "choice"
-        ? arg.choices.map((choice) => `'${choice}'`).join("|")
-        : type;
-
-    return [
-      required ? "<" : "[",
-      name,
-      ":",
-      core,
-      variadic ? "..." : "",
-      required ? ">" : "]",
-    ].join("");
-  });
-
-  return `${cmd} ${cmdArgs.join(" ")}`;
-};
-
-const example: NamedCommand = {
-  name: "example",
-  args: [
-    {
-      name: "required",
-      type: "string",
-      required: true,
-      variadic: false,
-    },
-    {
-      name: "optional",
-      type: "number",
-      required: false,
-      variadic: false,
-    },
-    {
-      name: "literal",
-      type: "choice",
-      required: false,
-      variadic: false,
-      choices: ["on", "off"],
-    },
-    {
-      name: "multiple",
-      type: "string",
-      required: false,
-      variadic: true,
-    },
-  ],
-  description: "This is an example command.",
-  category: "Example",
+  return `${cmd} ${cmdArgs}`;
 };
 
 const AboutTechPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Commands | Tech at Alveus"
+        title="Chat Commands at Alveus"
         description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing trusted chat members and moderators to control the live cameras."
       />
 
@@ -139,7 +112,60 @@ const AboutTechPage: NextPage = () => {
           <dl>
             <dt>Syntax:</dt>
             <dd className="mx-2">
-              <code className="text-sm">{signature(example)}</code>
+              <pre>
+                <code className="text-sm">
+                  {signature({
+                    name: "example",
+                    args: [
+                      [
+                        {
+                          name: "required",
+                          type: "string",
+                          required: true,
+                          variadic: false,
+                        },
+                        {
+                          name: "optional",
+                          type: "number",
+                          required: false,
+                          variadic: false,
+                        },
+                        {
+                          name: "literal",
+                          type: "choice",
+                          required: false,
+                          variadic: false,
+                          choices: ["on", "off"],
+                        },
+                        {
+                          name: "multiple",
+                          type: "string",
+                          required: false,
+                          variadic: true,
+                        },
+                      ],
+                      [
+                        {
+                          name: "overloaded",
+                          type: "choice",
+                          required: true,
+                          variadic: false,
+                          choices: ["up", "down"],
+                        },
+                        {
+                          name: "values",
+                          type: "number",
+                          required: true,
+                          variadic: true,
+                        },
+                      ],
+                      [],
+                    ],
+                    description: "This is an example command.",
+                    category: "Example",
+                  })}
+                </code>
+              </pre>
             </dd>
 
             <dt>Usage:</dt>
@@ -156,6 +182,12 @@ const AboutTechPage: NextPage = () => {
                 </li>
                 <li>
                   <code className="text-sm">!example foo 30 off bar baz</code>
+                </li>
+                <li>
+                  <code className="text-sm">!example up 40 50</code>
+                </li>
+                <li>
+                  <code className="text-sm">!example</code>
                 </li>
               </ul>
             </dd>
@@ -177,13 +209,20 @@ const AboutTechPage: NextPage = () => {
                 <dd className="mx-2">
                   <dl>
                     {commands.map((command) => (
-                      <div key={command.name} className="flex flex-row gap-2">
+                      <div
+                        key={command.name}
+                        className="flex flex-row items-baseline gap-4"
+                      >
                         <dt>
-                          <code className="text-sm">{signature(command)}</code>
+                          <pre>
+                            <code className="text-sm">
+                              {signature(command)}
+                            </code>
+                          </pre>
                         </dt>
 
                         <dd>
-                          <p className="inline-block text-sm italic text-alveus-green-400">
+                          <p className="text-sm italic text-alveus-green-400">
                             {command.description}
                           </p>
                         </dd>
