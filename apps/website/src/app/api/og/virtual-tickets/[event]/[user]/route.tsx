@@ -1,4 +1,4 @@
-import { ImageResponse } from "next/server";
+import { ImageResponse } from "next/og";
 import { Client } from "@planetscale/database";
 
 import { env } from "@/env/index.mjs";

@@ -20,8 +20,8 @@
   "packageManager": "pnpm@8.6.12",
   "devDependencies": {
     "husky": "^8.0.3",
-    "lint-staged": "^14.0.1",
-    "prettier": "^3.0.3"
+    "lint-staged": "^15.2.0",
+    "prettier": "^3.1.1"
   },
   "scripts": {
     "prepare": "husky install",
@@ -30,7 +30,7 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "next@13.5.4": "patches/next@13.5.4.patch"
+      "next@14.0.4": "patches/next@14.0.4.patch"
     }
   }
 }
