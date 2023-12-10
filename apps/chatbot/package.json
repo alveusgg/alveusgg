@@ -19,9 +19,9 @@
     "@twurple/chat": "^7.0.6",
     "@twurple/easy-bot": "^7.0.6",
     "dotenv": "^16.3.1",
-    "drizzle-orm": "^0.28.6",
-    "read-pkg": "^8.1.0",
-    "tsx": "^3.12.10",
+    "drizzle-orm": "^0.29.1",
+    "read-pkg": "^9.0.1",
+    "tsx": "^4.6.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
