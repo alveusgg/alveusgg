@@ -109,7 +109,7 @@ const AboutTechPage: NextPage = () => {
             Commands
           </Heading>
 
-          <dl>
+          <dl className="max-w-full overflow-x-auto">
             <dt>Syntax:</dt>
             <dd className="mx-2">
               <pre>
@@ -207,11 +207,11 @@ const AboutTechPage: NextPage = () => {
                   </Heading>
                 </dt>
                 <dd className="mx-2">
-                  <dl>
+                  <dl className="max-w-full overflow-x-auto">
                     {commands.map((command) => (
                       <div
                         key={command.name}
-                        className="flex flex-row items-baseline gap-4"
+                        className="mb-4 flex flex-col items-baseline lg:flex-row lg:gap-4"
                       >
                         <dt>
                           <pre>
