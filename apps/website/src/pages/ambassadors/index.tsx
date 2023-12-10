@@ -1,27 +1,18 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-  type ComponentProps,
-} from "react";
+import { useCallback, useMemo, type ComponentProps } from "react";
 
-import ambassadors, {
-  type AmbassadorKey,
-} from "@alveusgg/data/src/ambassadors/core";
-import {
-  isActiveAmbassadorEntry,
-  type ActiveAmbassadorKey,
-} from "@alveusgg/data/src/ambassadors/filters";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import enclosures from "@alveusgg/data/src/enclosures";
 import {
   getClassification,
   sortAmbassadorClassification,
 } from "@alveusgg/data/src/ambassadors/classification";
+
+import useGrouped, { type Grouped, type Options } from "@/hooks/grouped";
 
 import { camelToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -46,80 +37,66 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
   isActiveAmbassadorEntry,
 );
+type ActiveAmbassadorEntry = (typeof activeAmbassadors)[number];
 
-// Use a map rather than a group, so we can sort the keys
-type AmbassadorsByGroup = Map<
-  string,
-  { name: string; items: ActiveAmbassadorKey[] }
->;
-
-type AmbassadorSortOptions = Record<
-  string,
-  { label: string; result: AmbassadorKey[] | AmbassadorsByGroup }
->;
-
+// Allow the user to sort/group by different options
 const sortByOptions = {
   all: {
     label: "All Ambassadors",
-    result: activeAmbassadors.map(([key]) => key),
+    sort: (ambassadors) => ambassadors,
   },
   classification: {
     label: "Classification",
-    result: [...activeAmbassadors]
-      .sort(
-        ([, a], [, b]) =>
-          sortAmbassadorClassification(a.class, b.class) ||
-          sortPartialDateString(a.arrival, b.arrival),
-      )
-      .reduce<AmbassadorsByGroup>((map, [key, val]) => {
-        const classification = getClassification(val.class);
-        const group = convertToSlug(classification);
-        map.set(group, {
-          name: classification,
-          items: [...(map.get(group)?.items || []), key],
-        });
-        return map;
-      }, new Map()),
+    sort: (ambassadors) =>
+      [...ambassadors]
+        .sort(
+          ([, a], [, b]) =>
+            sortAmbassadorClassification(a.class, b.class) ||
+            sortPartialDateString(a.arrival, b.arrival),
+        )
+        .reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
+          const classification = getClassification(val.class);
+          const group = convertToSlug(classification);
+
+          map.set(group, {
+            name: classification,
+            items: [...(map.get(group)?.items || []), [key, val]],
+          });
+          return map;
+        }, new Map()),
   },
   enclosures: {
     label: "Enclosures",
-    result: activeAmbassadors.reduce<AmbassadorsByGroup>((map, [key, val]) => {
-      const group = camelToKebab(val.enclosure);
-      map.set(group, {
-        name: enclosures[val.enclosure].name,
-        items: [...(map.get(group)?.items || []), key],
-      });
-      return map;
-    }, new Map()),
-  },
-  recent: {
-    label: "Recent",
-    result: [...activeAmbassadors]
-      .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
-      .reduce<AmbassadorsByGroup>((map, [key, val]) => {
-        const year = parsePartialDateString(val.arrival)
-          ?.getUTCFullYear()
-          ?.toString();
-        const group = year || "unknown";
+    sort: (ambassadors) =>
+      ambassadors.reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
+        const group = camelToKebab(val.enclosure);
+
         map.set(group, {
-          name: year || "Unknown",
-          items: [...(map.get(group)?.items || []), key],
+          name: enclosures[val.enclosure].name,
+          items: [...(map.get(group)?.items || []), [key, val]],
         });
         return map;
       }, new Map()),
   },
-} as const satisfies AmbassadorSortOptions;
+  recent: {
+    label: "Recent",
+    sort: (ambassadors) =>
+      [...ambassadors]
+        .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
+        .reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
+          const year = parsePartialDateString(val.arrival)
+            ?.getUTCFullYear()
+            ?.toString();
+          const group = year || "unknown";
 
-type SortByOption = keyof typeof sortByOptions;
-
-const sortByDropdown = Object.fromEntries(
-  Object.entries(sortByOptions).map(([key, val]) => [key, val.label]),
-) as {
-  [key in SortByOption]: (typeof sortByOptions)[key]["label"];
-};
-
-const isSortByOption = (option: string): option is SortByOption =>
-  Object.keys(sortByOptions).includes(option);
+          map.set(group, {
+            name: year || "Unknown",
+            items: [...(map.get(group)?.items || []), [key, val]],
+          });
+          return map;
+        }, new Map()),
+  },
+} as const satisfies Options<ActiveAmbassadorEntry>;
 
 export const ambassadorImageHover =
   "transition group-hover:scale-102 group-hover:shadow-lg group-hover:brightness-105 group-hover:contrast-115 group-hover:saturate-110";
@@ -128,15 +105,15 @@ const AmbassadorItem = ({
   ambassador,
   level = 2,
 }: {
-  ambassador: AmbassadorKey;
+  ambassador: ActiveAmbassadorEntry;
   level?: ComponentProps<typeof Heading>["level"];
 }) => {
-  const data = useMemo(() => ambassadors[ambassador], [ambassador]);
-  const images = useMemo(() => getAmbassadorImages(ambassador), [ambassador]);
+  const [key, data] = ambassador;
+  const images = useMemo(() => getAmbassadorImages(key), [key]);
 
   return (
     <div>
-      <Link href={`/ambassadors/${camelToKebab(ambassador)}`} className="group">
+      <Link href={`/ambassadors/${camelToKebab(key)}`} className="group">
         <Image
           src={images[0].src}
           alt={images[0].alt}
@@ -164,7 +141,7 @@ const AmbassadorItems = ({
   className,
   level,
 }: {
-  ambassadors: AmbassadorKey[];
+  ambassadors: ActiveAmbassadorEntry[];
   className?: string;
   level?: ComponentProps<typeof Heading>["level"];
 }) => (
@@ -174,8 +151,12 @@ const AmbassadorItems = ({
       className,
     )}
   >
-    {ambassadors.map((key) => (
-      <AmbassadorItem key={key} ambassador={key} level={level} />
+    {ambassadors.map((ambassador) => (
+      <AmbassadorItem
+        key={ambassador[0]}
+        ambassador={ambassador}
+        level={level}
+      />
     ))}
   </div>
 );
@@ -190,7 +171,7 @@ const AmbassadorGroup = ({
   type: string;
   group: string;
   name: string;
-  ambassadors: AmbassadorKey[];
+  ambassadors: ActiveAmbassadorEntry[];
   active?: boolean;
 }) => {
   // If this group is the "active" one in the URL, scroll it into view
@@ -216,60 +197,11 @@ const AmbassadorGroup = ({
 };
 
 const AmbassadorsPage: NextPage = () => {
-  const [checked, setChecked] = useState(false);
-  const [sortBy, setSortBy] = useState<SortByOption>("all");
-  const [active, setActive] = useState<string | null>(null);
-
-  // Check the hash to see what sort by option should be selected
-  const checkHash = useCallback(() => {
-    const match = window.location.hash.match(/^#([^:]+)(?::(.+))?$/);
-    if (match && match[1] && isSortByOption(match[1])) {
-      setSortBy(match[1]);
-
-      // If we have a group, check if the option has groups and has this one
-      const option = sortByOptions[match[1]];
-      const group = match[2];
-      setActive(
-        group && !Array.isArray(option.result) && option.result.has(group)
-          ? group
-          : null,
-      );
-    } else {
-      setSortBy("all");
-      setActive(null);
-    }
-    setChecked(true);
-  }, []);
-  useEffect(() => {
-    checkHash();
-    window.addEventListener("hashchange", checkHash);
-    return () => window.removeEventListener("hashchange", checkHash);
-  }, [checkHash]);
-
-  // When the tab changes, update the hash
-  useEffect(() => {
-    if (!checked) return;
-
-    const current = window.location.toString();
-    const url = new URL(current);
-
-    if (sortBy === "all") url.hash = "";
-    else if (active) url.hash = `${sortBy}:${active}`;
-    else url.hash = sortBy;
-
-    const updated = url.toString();
-    if (current !== updated) window.history.pushState({}, "", updated);
-  }, [checked, sortBy, active]);
-
-  // When the user picks a new sort by option, reset the active group
-  const selectSortBy = useCallback((val: string) => {
-    if (isSortByOption(val)) {
-      setSortBy(val);
-      setActive(null);
-    }
-  }, []);
-
-  const results = sortByOptions[sortBy].result;
+  const { option, group, result, update, dropdown } = useGrouped({
+    items: activeAmbassadors,
+    options: sortByOptions,
+    initial: "all",
+  });
 
   return (
     <>
@@ -326,27 +258,27 @@ const AmbassadorsPage: NextPage = () => {
             </p>
 
             <Select
-              options={sortByDropdown}
-              value={sortBy}
-              onChange={selectSortBy}
+              options={dropdown}
+              value={option}
+              onChange={(val) => update(val as keyof typeof dropdown, null)}
               label={<span className="sr-only">Sort by</span>}
               align="right"
               className="flex-shrink-0"
             />
           </div>
 
-          {Array.isArray(results) ? (
-            <AmbassadorItems ambassadors={results} className="mt-8" />
+          {Array.isArray(result) ? (
+            <AmbassadorItems ambassadors={result} className="mt-8" />
           ) : (
             <div className="grid gap-12">
-              {[...results.entries()].map(([key, val]) => (
+              {[...result.entries()].map(([key, val]) => (
                 <AmbassadorGroup
                   key={key}
-                  type={sortBy}
+                  type={option}
                   group={key}
                   name={val.name}
                   ambassadors={val.items}
-                  active={key === active}
+                  active={key === group}
                 />
               ))}
             </div>
