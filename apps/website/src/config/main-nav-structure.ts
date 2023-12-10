@@ -106,11 +106,11 @@ export const mainNavStructure: NavStructure = {
   merch: {
     title: "Merch",
     dropdown: {
-      //apparel: {
-      //  title: "Apparel",
-      //  link: "/apparel",
-      //  isExternal: true,
-      //},
+      apparel: {
+        title: "Apparel",
+        link: "/apparel",
+        isExternal: true,
+      },
       plushies: {
         title: "Plushies",
         link: "/plushies",
