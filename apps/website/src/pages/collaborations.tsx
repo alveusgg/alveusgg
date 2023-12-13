@@ -28,6 +28,18 @@ type Collaboration = {
 type Collaborations = Record<string, Collaboration>;
 
 const collaborations = {
+  fanfan: {
+    name: "Fanfan",
+    link: "https://www.twitch.tv/fanfan",
+    date: new Date("2023-11-13"),
+    videoId: "OCf7356WlNo",
+  },
+  alluux: {
+    name: "Alluux",
+    link: "https://www.twitch.tv/alluux",
+    date: new Date("2023-11-05"),
+    videoId: "x1KMHDgmsR0",
+  },
   filian: {
     name: "Filian",
     link: "https://www.twitch.tv/filian",
@@ -64,7 +76,8 @@ const collaborations = {
     name: "PeachJars and Jessica Nigri",
     link: "https://www.twitch.tv/peachjars",
     date: new Date("2023-05-21"),
-    videoId: "KF4HIypXiyc",
+    videoId: "-HuS6wbpqzQ",
+    vodId: "KF4HIypXiyc",
   },
   squeex: {
     name: "Squeex",
@@ -77,13 +90,15 @@ const collaborations = {
     name: "Caroline Kwan",
     link: "https://www.twitch.tv/carolinekwan",
     date: new Date("2023-05-09"),
-    videoId: "4MmCFJadSg8",
+    videoId: "H5nV79y-Prg",
+    vodId: "4MmCFJadSg8",
   },
   lacari: {
     name: "Lacari",
     link: "https://www.twitch.tv/lacari",
     date: new Date("2023-05-02"),
-    videoId: "mVOypbE5YNs",
+    videoId: "IssAfvy_bmo",
+    vodId: "mVOypbE5YNs",
   },
   dailyDose: {
     name: "Daily Dose",

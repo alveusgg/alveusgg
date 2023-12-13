@@ -10,6 +10,7 @@ import { Lightbox, Preview } from "@/components/content/YouTube";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import ellaRocksImage from "@/assets/people/ella-rocks.jpg";
+import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -84,6 +85,26 @@ const staff = {
           into her work at Alveus where she looks forward to seeing the
           ambassadors assist in educating audiences on what they can do for
           their wild counterparts.
+        </p>
+      </>
+    ),
+  },
+  lindsay: {
+    image: lindsayBellawImage,
+    name: "Lindsay Bellaw",
+    title: "Animal Care Coordinator",
+    description: (
+      <>
+        <p>
+          Lindsay graduated college with her Aquatic Biology degree, and her
+          Master&apos;s in Conservation of Marine Predators and Coral Reef
+          Conservation and Aquaculture. She always knew animals were her
+          passion, and loves to travel as much as she can. This brought her to
+          American Eagle Foundation where she grew a love for birds of prey.
+          Meeting new people, it also took her to Alaska and the Midwest to work
+          with a variety of birds. Since moving to Texas, she has grown to love
+          all sorts of animals and loves to learn about them and tell anyone who
+          will listen about them!
         </p>
       </>
     ),

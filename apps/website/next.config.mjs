@@ -152,6 +152,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/commands",
+      destination: "/about/tech/commands",
+      permanent: true,
+    },
+    {
       source: "/vote",
       destination: "/voters-guide",
       permanent: true,
@@ -178,6 +183,11 @@ const config = {
         permanent: false,
       },
     ]),
+    {
+      source: "/animal-quest/cow-edition",
+      destination: "/animal-quest/beef-edition",
+      permanent: false,
+    },
     // Events
     {
       source: "/fc23",
@@ -189,33 +199,32 @@ const config = {
       destination: "/events/fall-carnival-2023/tickets/:user*",
       permanent: true,
     },
-    // Temporary redirects (until new merch show is set up)
+    // External redirects
     {
       source: "/merch",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/merch-store",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/shop",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/store",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
     {
       source: "/apparel",
-      destination: "/#merch",
-      permanent: false,
+      destination: "https://shop.alveussanctuary.org",
+      permanent: true,
     },
-    // External redirects
     {
       source: "/plushies",
       destination: "https://youtooz.com/collections/alveus",

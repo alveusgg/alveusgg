@@ -54,7 +54,7 @@ type ShowAndTellEntryProps = {
 
 const getTextContentRecursive = (node: DOMNode): string => {
   if (node instanceof Element) {
-    return node.children
+    return (node.children as DOMNode[])
       .map((child) => getTextContentRecursive(child))
       .join("");
   }
@@ -72,7 +72,9 @@ const parseOptions: HTMLReactParserOptions = {
   replace: (node) => {
     if (node instanceof Element && node.name === "root") {
       return getTextContentRecursive(node).trim() ? (
-        <Fragment>{domToReact(node.children, parseOptions)}</Fragment>
+        <Fragment>
+          {domToReact(node.children as DOMNode[], parseOptions)}
+        </Fragment>
       ) : (
         <Empty />
       );
@@ -81,7 +83,7 @@ const parseOptions: HTMLReactParserOptions = {
     if (node instanceof Element && node.name === "a" && node.attribs.href) {
       return (
         <Link href={node.attribs.href} external>
-          {domToReact(node.children, parseOptions)}
+          {domToReact(node.children as DOMNode[], parseOptions)}
         </Link>
       );
     }

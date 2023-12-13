@@ -1,5 +1,8 @@
 declare module "remark-heading-id" {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-imports
-  const plugin: import("unified").Plugin;
+  const plugin: Omit<
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
+    import("react-markdown").Options["remarkPlugins"],
+    null | undefined
+  >[number];
   export default plugin;
 }

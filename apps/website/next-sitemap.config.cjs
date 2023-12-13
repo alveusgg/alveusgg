@@ -19,6 +19,7 @@ module.exports = {
     "/forms",
     "/forms/*",
     "/show-and-tell/*",
+    "/bingo/play/*",
   ],
   // TODO: Transform to apply proper priority to pages
   // Create a robots txt file, and disallow indexing of some routes
@@ -33,6 +34,7 @@ module.exports = {
             ? ["/"]
             : [
                 "/api/",
+                "/bingo/play/",
                 "/auth/",
                 "/admin/",
                 "/wip/",

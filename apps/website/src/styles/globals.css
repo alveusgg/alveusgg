@@ -96,6 +96,14 @@
       @apply text-lg;
     }
   }
+
+  .alveus-twitch-embed {
+    @apply relative h-[90vh] w-full lg:h-[calc(56vw-192px)];
+
+    iframe {
+      @apply absolute inset-0 h-full w-full;
+    }
+  }
 }
 
 .pswp {
