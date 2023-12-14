@@ -287,6 +287,12 @@ const config = {
       permanent: true,
     },
     {
+      source: "/vods",
+      destination:
+        "https://youtube.com/playlist?list=PLtQafKoimfLchTIBfjEJvWODYELZf-nuy",
+      permanent: true,
+    },
+    {
       source: "/twitch",
       destination: "https://twitch.tv/alveussanctuary",
       permanent: true,
