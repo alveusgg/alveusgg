@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 
 type ObjectKey<T> = Extract<keyof T, string>;
 
@@ -87,6 +88,8 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
   // Ensures we don't immediately overwrite the URL anchor with the initial option
   const [checked, setChecked] = useState(false);
 
+  const router = useRouter();
+
   // When the option or group changes, update the URL anchor
   // If the option is the initial and there is no group, remove the anchor
   useEffect(() => {
@@ -95,7 +98,8 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
     const url = new URL(window.location.href);
     url.hash =
       group || option !== initial ? `${option}${group ? `:${group}` : ""}` : "";
-    window.history.replaceState({}, "", url.toString());
+
+    router.replace(url.toString(), undefined, { scroll: false });
   }, [checked, option, group, initial]);
 
   // When the URL anchor changes, update the option and group
@@ -113,6 +117,7 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
     // Mark that we've done an initial check
     setChecked(true);
   }, [options, update]);
+
   useEffect(() => {
     anchor();
     window.addEventListener("hashchange", anchor);
