@@ -297,12 +297,15 @@ const AboutTechPage: NextPage = () => {
                     {typeSafeObjectEntries(presets).map(([name, preset]) => (
                       <div
                         key={name}
-                        className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
+                        className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
                       >
                         <dt>
                           <pre>
                             <code className="text-sm">
-                              {`!ptzload ${camera.toLowerCase()} ${name}`}
+                              <span className="opacity-40 group-first/preset:opacity-100">
+                                {`!ptzload ${camera.toLowerCase()} `}
+                              </span>
+                              {name}{" "}
                             </code>
                           </pre>
                         </dt>
