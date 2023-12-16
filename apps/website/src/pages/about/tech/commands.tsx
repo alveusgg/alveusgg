@@ -279,6 +279,11 @@ const AboutTechPage: NextPage = () => {
             Presets
           </Heading>
 
+          <p>
+            These commands will pan, tilt and zoom the respective camera to a
+            preset view described below.
+          </p>
+
           <dl>
             {typeSafeObjectEntries(presets).map(
               ([camera, { title, presets }]) => (
