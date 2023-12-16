@@ -302,7 +302,7 @@ const AboutTechPage: NextPage = () => {
                         <dt>
                           <pre>
                             <code className="text-sm">
-                              {`!ptzload ${camera} ${name}`}
+                              {`!ptzload ${camera.toLowerCase()} ${name}`}
                             </code>
                           </pre>
                         </dt>
