@@ -280,47 +280,52 @@ const AboutTechPage: NextPage = () => {
           </Heading>
 
           <dl>
-            {typeSafeObjectEntries(presets).map(([camera, presets]) => (
-              <Fragment key={camera}>
-                <dt className="mt-6">
-                  <Heading
-                    level={3}
-                    className="text-2xl"
-                    id={`presets-${camelToKebab(camera)}`}
-                    link
-                  >
-                    {camelToTitle(camera)}
-                  </Heading>
-                </dt>
-                <dd className="mx-2">
-                  <dl className="max-w-full overflow-x-auto">
-                    {typeSafeObjectEntries(presets).map(([name, preset]) => (
-                      <div
-                        key={name}
-                        className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
-                      >
-                        <dt>
-                          <pre>
-                            <code className="text-sm">
-                              <span className="opacity-40 group-first/preset:opacity-100">
-                                {`!ptzload ${camera.toLowerCase()} `}
-                              </span>
-                              {name}{" "}
-                            </code>
-                          </pre>
-                        </dt>
+            {typeSafeObjectEntries(presets).map(
+              ([camera, { title, presets }]) => (
+                <Fragment key={camera}>
+                  <dt className="mt-6">
+                    <Heading
+                      level={3}
+                      className="text-2xl"
+                      id={`presets-${camelToKebab(camera)}`}
+                      link
+                    >
+                      {title}
+                      <span className="text-sm italic text-alveus-green-400">
+                        {` (${camera.toLowerCase()})`}
+                      </span>
+                    </Heading>
+                  </dt>
+                  <dd className="mx-2">
+                    <dl className="max-w-full overflow-x-auto">
+                      {typeSafeObjectEntries(presets).map(([name, preset]) => (
+                        <div
+                          key={name}
+                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
+                        >
+                          <dt>
+                            <pre>
+                              <code className="text-sm">
+                                <span className="opacity-40 group-first/preset:opacity-100">
+                                  {`!ptzload ${camera.toLowerCase()} `}
+                                </span>
+                                {name}{" "}
+                              </code>
+                            </pre>
+                          </dt>
 
-                        <dd>
-                          <p className="text-sm italic text-alveus-green-400">
-                            {preset.description}
-                          </p>
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </dd>
-              </Fragment>
-            ))}
+                          <dd>
+                            <p className="text-sm italic text-alveus-green-400">
+                              {preset.description}
+                            </p>
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </dd>
+                </Fragment>
+              ),
+            )}
           </dl>
         </Section>
       </div>
