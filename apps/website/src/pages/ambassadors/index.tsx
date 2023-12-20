@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useMemo, type ComponentProps } from "react";
+import { useMemo, type ComponentProps, forwardRef } from "react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
@@ -12,7 +12,7 @@ import {
   sortAmbassadorClassification,
 } from "@alveusgg/data/src/ambassadors/classification";
 
-import useGrouped, { type Grouped, type Options } from "@/hooks/grouped";
+import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { camelToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -27,6 +27,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Select from "@/components/content/Select";
+import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -54,7 +55,7 @@ const sortByOptions = {
             sortAmbassadorClassification(a.class, b.class) ||
             sortPartialDateString(a.arrival, b.arrival),
         )
-        .reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
+        .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
           const classification = getClassification(val.class);
           const group = convertToSlug(classification);
 
@@ -68,22 +69,25 @@ const sortByOptions = {
   enclosures: {
     label: "Enclosures",
     sort: (ambassadors) =>
-      ambassadors.reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
-        const group = camelToKebab(val.enclosure);
+      ambassadors.reduce<GroupedItems<ActiveAmbassadorEntry>>(
+        (map, [key, val]) => {
+          const group = camelToKebab(val.enclosure);
 
-        map.set(group, {
-          name: enclosures[val.enclosure].name,
-          items: [...(map.get(group)?.items || []), [key, val]],
-        });
-        return map;
-      }, new Map()),
+          map.set(group, {
+            name: enclosures[val.enclosure].name,
+            items: [...(map.get(group)?.items || []), [key, val]],
+          });
+          return map;
+        },
+        new Map(),
+      ),
   },
   recent: {
     label: "Recent",
     sort: (ambassadors) =>
       [...ambassadors]
         .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
-        .reduce<Grouped<ActiveAmbassadorEntry>>((map, [key, val]) => {
+        .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
           const year = parsePartialDateString(val.arrival)
             ?.getUTCFullYear()
             ?.toString();
@@ -136,65 +140,35 @@ const AmbassadorItem = ({
   );
 };
 
-const AmbassadorItems = ({
-  ambassadors,
-  className,
-  level,
-}: {
-  ambassadors: ActiveAmbassadorEntry[];
-  className?: string;
-  level?: ComponentProps<typeof Heading>["level"];
-}) => (
-  <div
-    className={classes(
-      "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
-      className,
-    )}
-  >
-    {ambassadors.map((ambassador) => (
-      <AmbassadorItem
-        key={ambassador[0]}
-        ambassador={ambassador}
-        level={level}
-      />
-    ))}
-  </div>
-);
-
-const AmbassadorGroup = ({
-  type,
-  group,
-  name,
-  ambassadors,
-  active = false,
-}: {
-  type: string;
-  group: string;
-  name: string;
-  ambassadors: ActiveAmbassadorEntry[];
-  active?: boolean;
-}) => {
-  // If this group is the "active" one in the URL, scroll it into view
-  const scroll = useCallback(
-    (node: HTMLDivElement | null) => {
-      if (node && active) node.scrollIntoView({ behavior: "smooth" });
-    },
-    [active],
-  );
-
-  return (
-    <div ref={scroll}>
-      <Heading level={2} className="mb-8" id={`${type}:${group}`} link>
+const AmbassadorItems = forwardRef<
+  HTMLDivElement,
+  GroupedProps<ActiveAmbassadorEntry>
+>(({ items, option, group, name }, ref) => (
+  <>
+    {name && (
+      <Heading level={2} className="mb-8 mt-12" id={`${option}:${group}`} link>
         {name}
       </Heading>
-      <AmbassadorItems
-        ambassadors={ambassadors}
-        className="xl:grid-cols-5"
-        level={3}
-      />
+    )}
+    <div
+      ref={ref}
+      className={classes(
+        "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+        group && "scroll-mt-16 xl:grid-cols-5",
+      )}
+    >
+      {items.map((ambassador) => (
+        <AmbassadorItem
+          key={ambassador[0]}
+          ambassador={ambassador}
+          level={group ? 3 : 2}
+        />
+      ))}
     </div>
-  );
-};
+  </>
+));
+
+AmbassadorItems.displayName = "AmbassadorItems";
 
 const AmbassadorsPage: NextPage = () => {
   const { option, group, result, update, dropdown } = useGrouped({
@@ -267,22 +241,12 @@ const AmbassadorsPage: NextPage = () => {
             />
           </div>
 
-          {Array.isArray(result) ? (
-            <AmbassadorItems ambassadors={result} className="mt-8" />
-          ) : (
-            <div className="grid gap-12">
-              {[...result.entries()].map(([key, val]) => (
-                <AmbassadorGroup
-                  key={key}
-                  type={option}
-                  group={key}
-                  name={val.name}
-                  ambassadors={val.items}
-                  active={key === group}
-                />
-              ))}
-            </div>
-          )}
+          <Grouped
+            option={option}
+            group={group}
+            result={result}
+            component={AmbassadorItems}
+          />
         </Section>
       </div>
     </>
