@@ -22,7 +22,6 @@ import Link from "@/components/content/Link";
 
 import IconChevronUp from "@/icons/IconChevronUp";
 import IconChevronDown from "@/icons/IconChevronDown";
-import IconExternal from "@/icons/IconExternal";
 import IconFacebook from "@/icons/IconFacebook";
 import IconTwitter from "@/icons/IconTwitter";
 import IconEnvelope from "@/icons/IconEnvelope";
