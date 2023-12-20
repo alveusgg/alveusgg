@@ -100,7 +100,7 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
       group || option !== initial ? `${option}${group ? `:${group}` : ""}` : "";
 
     router.replace(url.toString(), undefined, { scroll: false });
-  }, [checked, option, group, initial]);
+  }, [checked, option, group, initial, router]);
 
   // When the URL anchor changes, update the option and group
   const anchor = useCallback(() => {
