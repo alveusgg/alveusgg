@@ -45,12 +45,6 @@ type GroupKey<T, O extends Options<T>> = O[ObjectKey<O>] extends {
     : never
   : never;
 
-type State<T, O extends Options<T>> = {
-  option: ObjectKey<O>;
-  group: GroupKey<T, O> | null;
-  result: Result<T, O>;
-};
-
 const isOptionKey = <T, O extends Options<T>>(
   options: O,
   key: string | undefined,
@@ -62,10 +56,7 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
   initial,
 }: Props<T, O, I>) => {
   const calcState = useCallback(
-    (
-      newOption: ObjectKey<O>,
-      newGroup: GroupKey<T, O> | null = null,
-    ): State<T, O> => {
+    (newOption: ObjectKey<O>, newGroup: GroupKey<T, O> | null = null) => {
       // The current items will either be an array of items, or an object of groups of items
       const newItems = options[newOption]?.sort(items) || [];
 
