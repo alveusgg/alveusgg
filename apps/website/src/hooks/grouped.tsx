@@ -36,7 +36,7 @@ type Result<T, O extends Options<T>> = O[ObjectKey<O>] extends {
   : never;
 
 // For each sort by option, if the option's sort function returns an object, we want to know the keys of that object
-// Again, this is essentially the same as keyof Grouped<T>, but allows for constraining the type if a constant is passed in
+// Again, this is essentially the same as keyof GroupedItems<T>, but allows for constraining the type if a constant is passed in
 type GroupKey<T, O extends Options<T>> = O[ObjectKey<O>] extends {
   sort: (items: T[]) => infer G;
 }
