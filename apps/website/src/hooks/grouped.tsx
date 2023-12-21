@@ -104,8 +104,7 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
 
   // When the URL anchor changes, update the option and group
   const anchor = useCallback(() => {
-    const url = new URL(window.location.href);
-    const hash = url.hash.slice(1);
+    const hash = window.location.hash.slice(1);
     const [newOption, newGroup] = hash.split(":");
 
     // Only continue if the option is valid
