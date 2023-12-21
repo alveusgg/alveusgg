@@ -7,9 +7,9 @@ type MapKey<M extends Map<unknown, unknown>> = M extends Map<infer K, unknown>
   ? K
   : never;
 
-export type Grouped<T> = Map<string, { name: string; items: T[] }>;
+export type GroupedItems<T> = Map<string, { name: string; items: T[] }>;
 
-type Items<T> = T[] | Grouped<T>;
+export type Items<T> = T[] | GroupedItems<T>;
 
 export interface Options<T> {
   [key: string]: {
@@ -40,7 +40,7 @@ type Result<T, O extends Options<T>> = O[ObjectKey<O>] extends {
 type GroupKey<T, O extends Options<T>> = O[ObjectKey<O>] extends {
   sort: (items: T[]) => infer G;
 }
-  ? G extends Grouped<T>
+  ? G extends GroupedItems<T>
     ? MapKey<G>
     : never
   : never;
