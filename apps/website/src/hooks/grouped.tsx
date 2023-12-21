@@ -45,62 +45,62 @@ type GroupKey<T, O extends Options<T>> = O[ObjectKey<O>] extends {
     : never
   : never;
 
+type State<T, O extends Options<T>> = {
+  option: ObjectKey<O>;
+  group: GroupKey<T, O> | null;
+  result: Result<T, O>;
+};
+
+const isOptionKey = <T, O extends Options<T>>(
+  options: O,
+  key: string | undefined,
+): key is ObjectKey<O> => key !== undefined && key in options;
+
 const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
   items,
   options,
   initial,
 }: Props<T, O, I>) => {
-  // Track the active option
-  const [option, setOption] = useState<ObjectKey<O>>(initial);
+  const calcState = useCallback(
+    (newOption: ObjectKey<O>, newGroup: GroupKey<T, O> | null = null) => {
+      // The current items will either be an array of items, or an object of groups of items
+      const newItems = options[newOption]?.sort(items) || [];
 
-  // Track the active group
-  // Will be a key from an option that returns an object of items
-  const [group, setGroup] = useState<GroupKey<T, O> | null>(null);
-
-  // Track the current items
-  // Will either be an array of items, or an object of groups of items
-  const [result, setResult] = useState<Result<T, O>>(
-    (options[initial]?.sort(items) || []) as Result<T, O>,
-  );
-
-  // Allow the user to update the option and group
-  const update = useCallback(
-    (newOption: ObjectKey<O>, newGroup: GroupKey<T, O> | null) => {
-      // Store the selected option
-      setOption(newOption);
-
-      // Store the new results
-      const newResult = options[newOption]?.sort(items) || [];
-      setResult(newResult as Result<T, O>);
-
-      // If we have a group, store it if it exists in the new results
-      // `GroupKey<T, O>` doesn't give much type safety, so we check here
-      if (newGroup && !Array.isArray(newResult) && newResult.has(newGroup)) {
-        setGroup(newGroup);
-      } else {
-        setGroup(null);
-      }
+      return {
+        option: newOption,
+        // If we have a group, store it if it exists in the new results
+        // `GroupKey<T, O>` doesn't give much type safety, so we check here
+        group:
+          newGroup && !Array.isArray(newItems) && newItems.has(newGroup)
+            ? newGroup
+            : null,
+        result: newItems as Result<T, O>,
+      };
     },
     [items, options],
   );
 
-  // Track if we've done an initial anchor check
-  // Ensures we don't immediately overwrite the URL anchor with the initial option
-  const [checked, setChecked] = useState(false);
+  // Track the active option, group and result
+  const [state, setState] = useState<State<T, O>>(() => calcState(initial));
 
   const router = useRouter();
 
-  // When the option or group changes, update the URL anchor
-  // If the option is the initial and there is no group, remove the anchor
-  useEffect(() => {
-    if (!checked) return;
+  // Allow the user to update the option and group
+  const update = useCallback(
+    (newOption: ObjectKey<O>, newGroup: GroupKey<T, O> | null) => {
+      const newState = calcState(newOption, newGroup);
+      setState(newState);
 
-    const url = new URL(window.location.href);
-    url.hash =
-      group || option !== initial ? `${option}${group ? `:${group}` : ""}` : "";
-
-    router.replace(url.toString(), undefined, { scroll: false });
-  }, [checked, option, group, initial, router]);
+      // Update the URL anchor
+      // If the option is the initial and there is no group, remove the anchor
+      const hash =
+        newState.group || newState.option !== initial
+          ? `${newState.option}${newState.group ? `:${newState.group}` : ""}`
+          : "";
+      router.replace({ hash }, undefined, { scroll: false, shallow: true });
+    },
+    [calcState, initial, router],
+  );
 
   // When the URL anchor changes, update the option and group
   const anchor = useCallback(() => {
@@ -110,13 +110,10 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
 
     // Only continue if the option is valid
     // `update` will ensure that the group is valid
-    if (newOption && newOption in options) {
-      update(newOption as ObjectKey<O>, (newGroup as GroupKey<T, O>) || null);
+    if (isOptionKey<T, O>(options, newOption)) {
+      setState(calcState(newOption, (newGroup as GroupKey<T, O>) || null));
     }
-
-    // Mark that we've done an initial check
-    setChecked(true);
-  }, [options, update]);
+  }, [calcState, options]);
 
   useEffect(() => {
     anchor();
@@ -134,9 +131,7 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
   );
 
   return {
-    option,
-    group,
-    result,
+    ...state,
     update,
     dropdown,
   };
