@@ -62,7 +62,10 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
   initial,
 }: Props<T, O, I>) => {
   const calcState = useCallback(
-    (newOption: ObjectKey<O>, newGroup: GroupKey<T, O> | null = null) => {
+    (
+      newOption: ObjectKey<O>,
+      newGroup: GroupKey<T, O> | null = null,
+    ): State<T, O> => {
       // The current items will either be an array of items, or an object of groups of items
       const newItems = options[newOption]?.sort(items) || [];
 
@@ -81,7 +84,7 @@ const useGrouped = <T, O extends Options<T>, I extends ObjectKey<O>>({
   );
 
   // Track the active option, group and result
-  const [state, setState] = useState<State<T, O>>(() => calcState(initial));
+  const [state, setState] = useState(() => calcState(initial));
 
   const router = useRouter();
 
