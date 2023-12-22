@@ -8,11 +8,7 @@ import commands, {
   type Argument,
 } from "@/data/commands";
 import { typeSafeObjectEntries } from "@/utils/helpers";
-import {
-  camelToKebab,
-  camelToTitle,
-  sentenceToKebab,
-} from "@/utils/string-case";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
