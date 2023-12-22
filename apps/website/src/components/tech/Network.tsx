@@ -341,7 +341,7 @@ const NetworkList = ({
             item.model
           )}
         </p>
-        {"connection" in item && item.connection && (
+        {isNestedNetworkItem(item) && (
           <p>Connection: {edgeTypes[item.connection.type].name}</p>
         )}
 
