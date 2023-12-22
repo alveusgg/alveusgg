@@ -225,8 +225,13 @@ const AmbassadorsPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section className="flex-grow pt-0">
-          <div className="mb-4 mt-8 flex flex-col items-center justify-between gap-4 md:flex-row">
+        <Section className="flex-grow pt-8">
+          <div
+            className={classes(
+              "flex flex-col items-center justify-between gap-4 md:flex-row",
+              Array.isArray(result) ? "mb-4" : "-mb-6",
+            )}
+          >
             <p className="flex-shrink text-center text-xl font-semibold">
               Click each ambassador for information and highlights!
             </p>
