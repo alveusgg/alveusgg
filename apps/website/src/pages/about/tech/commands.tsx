@@ -8,14 +8,17 @@ import commands, {
   type Argument,
 } from "@/data/commands";
 import { typeSafeObjectEntries } from "@/utils/helpers";
-import { sentenceToKebab } from "@/utils/string-case";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import presets from "@/data/presets";
+import Link from "@/components/content/Link";
 
 interface NamedCommand extends Command {
   name: string;
@@ -96,15 +99,14 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
-      {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative">
         <Image
-          src={leafLeftImage3}
+          src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-28 -right-8 z-10 hidden h-auto w-1/2 max-w-[10rem] rotate-45 -scale-x-100 select-none lg:block 2xl:max-w-[12rem]"
         />
 
-        <Section className="flex-grow">
+        <Section>
           <Heading level={2} className="mb-2 mt-0" id="commands" link>
             Commands
           </Heading>
@@ -200,7 +202,7 @@ const AboutTechPage: NextPage = () => {
                   <Heading
                     level={3}
                     className="text-2xl"
-                    id={sentenceToKebab(category)}
+                    id={`commands-${sentenceToKebab(category)}`}
                     link
                   >
                     {category}
@@ -211,7 +213,7 @@ const AboutTechPage: NextPage = () => {
                     {commands.map((command) => (
                       <div
                         key={command.name}
-                        className="mb-4 flex flex-col items-baseline lg:flex-row lg:gap-4"
+                        className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
                       >
                         <dt>
                           <pre>
@@ -232,6 +234,99 @@ const AboutTechPage: NextPage = () => {
                 </dd>
               </Fragment>
             ))}
+          </dl>
+        </Section>
+      </div>
+
+      <Section dark>
+        <Heading level={2} className="mb-2 mt-0" id="streamelements" link>
+          StreamElements
+        </Heading>
+
+        <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
+          <p className="text-lg">
+            Alongside the custom chat bot for all the commands above,
+            StreamElements is also used in the Twitch (and YouTube) chat to
+            provide a set of commands that anyone can access, providing easy
+            access to a bunch of common information and links.
+          </p>
+
+          <Link
+            href="https://streamelements.com/alveussanctuary/commands"
+            className="text-md mx-auto inline-block flex-shrink-0 rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+            custom
+            external
+          >
+            Explore StreamElements Commands
+          </Link>
+        </div>
+      </Section>
+
+      {/* Grow the last section to cover the page */}
+      <div className="relative flex flex-grow flex-col">
+        <Image
+          src={leafLeftImage3}
+          alt=""
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+        />
+
+        <Section className="flex-grow">
+          <Heading level={2} className="mb-2 mt-0" id="presets" link>
+            Presets
+          </Heading>
+
+          <p>
+            These commands will pan, tilt and zoom the respective camera to a
+            preset view described below.
+          </p>
+
+          <dl>
+            {typeSafeObjectEntries(presets).map(
+              ([camera, { title, presets }]) => (
+                <Fragment key={camera}>
+                  <dt className="mt-6">
+                    <Heading
+                      level={3}
+                      className="text-2xl"
+                      id={`presets-${camelToKebab(camera)}`}
+                      link
+                    >
+                      {title}
+                      <span className="text-sm italic text-alveus-green-400">
+                        {` (${camera.toLowerCase()})`}
+                      </span>
+                    </Heading>
+                  </dt>
+                  <dd className="mx-2">
+                    <dl className="max-w-full overflow-x-auto">
+                      {typeSafeObjectEntries(presets).map(([name, preset]) => (
+                        <div
+                          key={name}
+                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
+                        >
+                          <dt>
+                            <pre>
+                              <code className="text-sm">
+                                <span className="opacity-40 group-first/preset:opacity-100">
+                                  {`!ptzload ${camera.toLowerCase()} `}
+                                </span>
+                                {name}{" "}
+                              </code>
+                            </pre>
+                          </dt>
+
+                          <dd>
+                            <p className="text-sm italic text-alveus-green-400">
+                              {preset.description}
+                            </p>
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </dd>
+                </Fragment>
+              ),
+            )}
           </dl>
         </Section>
       </div>

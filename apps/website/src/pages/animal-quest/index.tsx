@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Fragment } from "react";
+import { Fragment, forwardRef } from "react";
 
 import animalQuest, {
   type AnimalQuestWithEpisode,
@@ -10,15 +10,24 @@ import ambassadors, {
 } from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import {
+  getClassification,
+  sortAmbassadorClassification,
+} from "@alveusgg/data/src/ambassadors/classification";
+
+import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { formatDateTime } from "@/utils/datetime";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
+import { convertToSlug } from "@/utils/slugs";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Select from "@/components/content/Select";
+import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import IconYouTube from "@/icons/IconYouTube";
 
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
@@ -28,24 +37,86 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
-const episodes: AnimalQuestWithEpisode[] = animalQuest
+const animalQuestEpisodes: AnimalQuestWithEpisode[] = animalQuest
   .map((episode, idx) => ({
     ...episode,
     episode: idx + 1,
   }))
   .reverse();
 
-type AnimalQuestSectionProps = {
-  items: AnimalQuestWithEpisode[];
-};
+// Allow the user to sort/group by different options
+const sortByOptions = {
+  all: {
+    label: "All Episodes",
+    sort: (episodes) => episodes,
+  },
+  classification: {
+    label: "Ambassador Classification",
+    sort: (episodes) =>
+      [...episodes]
+        .map(
+          (episode) =>
+            [episode, ambassadors[episode.ambassadors.featured[0]]] as const,
+        )
+        .sort(
+          ([episodeA, ambassadorA], [episodeB, ambassadorB]) =>
+            sortAmbassadorClassification(
+              ambassadorA.class,
+              ambassadorB.class,
+            ) || episodeB.episode - episodeA.episode,
+        )
+        .reduce<GroupedItems<AnimalQuestWithEpisode>>(
+          (map, [episode, ambassador]) => {
+            const classification = getClassification(ambassador.class);
+            const group = convertToSlug(classification);
 
-const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
-  return (
-    <div className="flex flex-wrap">
+            map.set(group, {
+              name: classification,
+              items: [...(map.get(group)?.items || []), episode],
+            });
+            return map;
+          },
+          new Map(),
+        ),
+  },
+  broadcast: {
+    label: "Broadcast Date",
+    sort: (episodes) =>
+      [...episodes]
+        .sort((a, b) => b.broadcast.getTime() - a.broadcast.getTime())
+        .reduce<GroupedItems<AnimalQuestWithEpisode>>((map, episode) => {
+          const year = episode.broadcast.getUTCFullYear().toString();
+
+          map.set(year, {
+            name: year,
+            items: [...(map.get(year)?.items || []), episode],
+          });
+          return map;
+        }, new Map()),
+  },
+} as const satisfies Options<AnimalQuestWithEpisode>;
+
+const AnimalQuestItems = forwardRef<
+  HTMLDivElement,
+  GroupedProps<AnimalQuestWithEpisode>
+>(({ items, option, group, name }, ref) => (
+  <>
+    {name && (
+      <Heading level={2} className="mt-12" id={`${option}:${group}`} link>
+        {name}
+      </Heading>
+    )}
+    <div
+      ref={ref}
+      className={classes(
+        "flex flex-wrap",
+        group ? "scroll-mt-16" : "justify-center",
+      )}
+    >
       {items.map((episode) => (
         <div
           key={episode.episode}
-          className="mx-auto flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
+          className="flex basis-full items-center gap-4 py-8 md:px-8 lg:gap-8 xl:basis-1/2"
         >
           <Link
             href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
@@ -114,7 +185,7 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
               custom
             >
               <Heading
-                level={2}
+                level={group ? 3 : 2}
                 className="my-0 mb-1.5 scroll-mt-4"
                 id={sentenceToKebab(episode.edition).replace(/-edition$/, "")}
               >
@@ -160,10 +231,18 @@ const AnimalQuestSection = ({ items }: AnimalQuestSectionProps) => {
         </div>
       ))}
     </div>
-  );
-};
+  </>
+));
+
+AnimalQuestItems.displayName = "AnimalQuestItems";
 
 const AnimalQuestPage: NextPage = () => {
+  const { option, group, result, update, dropdown } = useGrouped({
+    items: animalQuestEpisodes,
+    options: sortByOptions,
+    initial: "all",
+  });
+
   return (
     <>
       <Meta
@@ -219,8 +298,29 @@ const AnimalQuestPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
         />
 
-        <Section className="flex-grow">
-          <AnimalQuestSection items={episodes} />
+        <Section className="flex-grow pt-8">
+          <div
+            className={classes(
+              "flex flex-col items-center justify-end gap-4 md:flex-row",
+              Array.isArray(result) ? "mb-4" : "-mb-4 md:-mb-12",
+            )}
+          >
+            <Select
+              options={dropdown}
+              value={option}
+              onChange={(val) => update(val as keyof typeof dropdown, null)}
+              label={<span className="sr-only">Sort by</span>}
+              align="right"
+              className="flex-shrink-0"
+            />
+          </div>
+
+          <Grouped
+            option={option}
+            group={group}
+            result={result}
+            component={AnimalQuestItems}
+          />
         </Section>
       </div>
     </>
