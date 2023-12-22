@@ -15,7 +15,7 @@ import network, {
   isNestedNetworkItem,
   type NestedNetworkItem,
   type NetworkItem,
-} from "@/data/network";
+} from "@/data/tech/network";
 import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
 
