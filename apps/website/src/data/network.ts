@@ -50,36 +50,29 @@ export type NestedNetworkItem = RootNetworkItem & {
 };
 export type NetworkItem = NestedNetworkItem | RootNetworkItem;
 
-export const isNetworkItem = (item: unknown): item is NetworkItem => {
-  return (
-    !!item &&
-    typeof item === "object" &&
-    "type" in item &&
-    typeof item.type === "string" &&
-    "name" in item &&
-    typeof item.name === "string" &&
-    "model" in item &&
-    typeof item.model === "string"
-  );
-};
+export const isNetworkItem = (item: unknown): item is NetworkItem =>
+  !!item &&
+  typeof item === "object" &&
+  "type" in item &&
+  typeof item.type === "string" &&
+  "name" in item &&
+  typeof item.name === "string" &&
+  "model" in item &&
+  typeof item.model === "string" &&
+  (!("url" in item) || typeof item.url === "string") &&
+  (!("links" in item) ||
+    (Array.isArray(item.links) && item.links.every(isNetworkItem))) &&
+  (!("connection" in item) ||
+    (typeof item.connection === "object" &&
+      item.connection !== null &&
+      "type" in item.connection &&
+      typeof item.connection.type === "string"));
 
-export const isRootNetworkItem = (item: unknown): item is RootNetworkItem => {
-  return (
-    isNetworkItem(item) &&
-    (!("connection" in item) || typeof item.connection === "undefined")
-  );
-};
-
+export const isRootNetworkItem = (item: NetworkItem): item is RootNetworkItem =>
+  !("connection" in item);
 export const isNestedNetworkItem = (
-  item: unknown,
-): item is NestedNetworkItem => {
-  return (
-    isNetworkItem(item) &&
-    "connection" in item &&
-    typeof item.connection === "object" &&
-    typeof item.connection.type === "string"
-  );
-};
+  item: NetworkItem,
+): item is NestedNetworkItem => "connection" in item;
 
 const data: RootNetworkItem[] = [
   {
