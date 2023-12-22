@@ -11,7 +11,11 @@ import {
   type EdgeProps,
 } from "reactflow";
 
-import network, { type NetworkItem } from "@/data/network";
+import network, {
+  isNestedNetworkItem,
+  type NestedNetworkItem,
+  type NetworkItem,
+} from "@/data/network";
 import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
 
@@ -70,6 +74,10 @@ const nodeTypes: {
   interface: {
     container: "border-green-400",
     eyebrow: { name: "Audio I/O Interface", color: "text-green-400" },
+  },
+  server: {
+    container: "border-yellow-700",
+    eyebrow: { name: "Server", color: "text-yellow-700" },
   },
 };
 
@@ -156,7 +164,7 @@ const NetworkNode = ({
 };
 
 const edgeTypes: {
-  [k in NetworkItem["connection"]["type"]]: {
+  [k in NestedNetworkItem["connection"]["type"]]: {
     name: string;
     stroke: {
       color: string;
@@ -184,6 +192,13 @@ const edgeTypes: {
       dash: "4 8",
     },
   },
+  cloud: {
+    name: "Cloud",
+    stroke: {
+      color: "stroke-yellow-700",
+      dash: "4 8",
+    },
+  },
 };
 
 const NetworkEdge = ({
@@ -205,6 +220,8 @@ const NetworkEdge = ({
     if (sourceNode && targetNode) break;
   }
   if (!sourceNode || !targetNode) throw new Error("Missing source or target");
+  if (!isNestedNetworkItem(targetNode.data.item))
+    throw new Error("Invalid target");
   const targetConnection = targetNode.data.item.connection;
 
   // Track if the user is hovering, or if the edge is focused
@@ -324,7 +341,9 @@ const NetworkList = ({
             item.model
           )}
         </p>
-        <p>Connection: {edgeTypes[item.connection.type].name}</p>
+        {isNestedNetworkItem(item) && (
+          <p>Connection: {edgeTypes[item.connection.type].name}</p>
+        )}
 
         {"links" in item && item.links && (
           <>
