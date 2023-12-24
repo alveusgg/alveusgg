@@ -139,7 +139,7 @@ const data: RootNetworkItem[] = [
               },
               {
                 type: "switch",
-                name: "Insect",
+                name: "Critter Cave Upper",
                 model: "Ubiquiti USW Lite 8 PoE",
                 url: "https://store.ui.com/us/en/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
@@ -158,11 +158,18 @@ const data: RootNetworkItem[] = [
                     url: "https://www.axis.com/products/axis-m5075-g",
                     connection: { type: "ethernet", location: "wall" },
                   },
+                  {
+                    type: "camera",
+                    name: "Puppy",
+                    model: "AXIS M5075-G (PTZ)",
+                    url: "https://www.axis.com/products/axis-m5075-g",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
                 ],
               },
               {
                 type: "switch",
-                name: "Critter Cave",
+                name: "Critter Cave Lower",
                 model: "Ubiquiti USW-Lite-8-PoE",
                 url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
