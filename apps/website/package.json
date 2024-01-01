@@ -38,6 +38,8 @@
     "@paralleldrive/cuid2": "^2.2.2",
     "@planetscale/database": "^1.11.0",
     "@prisma/client": "^5.7.0",
+    "@react-email/preview": "^0.0.8",
+    "@react-email/render": "^0.0.10",
     "@t3-oss/env-nextjs": "^0.7.1",
     "@tanstack/react-query": "^4.36.1",
     "@trpc/client": "^10.44.1",
@@ -75,10 +77,12 @@
     "react-textarea-autosize": "^8.5.3",
     "reactflow": "^11.10.1",
     "remark-heading-id": "^1.0.1",
+    "resend": "^2.1.0",
     "sharp": "^0.33.0",
     "slugify": "^1.6.6",
     "smooth-scroll-into-view-if-needed": "^2.0.2",
     "superjson": "1.13.3",
+    "svix": "^1.15.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
