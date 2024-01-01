@@ -1,11 +1,4 @@
-import {
-  forwardRef,
-  Fragment,
-  isValidElement,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
+import { forwardRef, useCallback, useRef } from "react";
 import type {
   FileStorageObject,
   ImageAttachment,
@@ -15,21 +8,20 @@ import type {
   ShowAndTellEntryAttachment,
 } from "@prisma/client";
 import Image from "next/image";
-import parse, {
-  domToReact,
-  Element,
-  Text,
-  type DOMNode,
-  type HTMLReactParserOptions,
-} from "html-react-parser";
 
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
-import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
+import {
+  type ParseOptions,
+  createNextLinkReplacer,
+  createRootReplacer,
+  isEmpty,
+  SafeHtml,
+} from "@/components/shared/SafeHtml";
 
 export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
   attachments: Array<
@@ -52,42 +44,11 @@ type ShowAndTellEntryProps = {
   showPermalink?: boolean;
 };
 
-const getTextContentRecursive = (node: DOMNode): string => {
-  if (node instanceof Element) {
-    return (node.children as DOMNode[])
-      .map((child) => getTextContentRecursive(child))
-      .join("");
-  }
+const rootReplacer = createRootReplacer(() => parseOptions);
+const nextLinkReplacer = createNextLinkReplacer(() => parseOptions);
 
-  if (node instanceof Text) {
-    return node.data || "";
-  }
-
-  return "";
-};
-
-const Empty = () => <Fragment />;
-
-const parseOptions: HTMLReactParserOptions = {
-  replace: (node) => {
-    if (node instanceof Element && node.name === "root") {
-      return getTextContentRecursive(node).trim() ? (
-        <Fragment>
-          {domToReact(node.children as DOMNode[], parseOptions)}
-        </Fragment>
-      ) : (
-        <Empty />
-      );
-    }
-
-    if (node instanceof Element && node.name === "a" && node.attribs.href) {
-      return (
-        <Link href={node.attribs.href} external>
-          {domToReact(node.children as DOMNode[], parseOptions)}
-        </Link>
-      );
-    }
-  },
+const parseOptions: ParseOptions = {
+  replace: (node) => rootReplacer(node) || nextLinkReplacer(node),
 };
 
 export const ShowAndTellEntry = forwardRef<
@@ -133,11 +94,6 @@ export const ShowAndTellEntry = forwardRef<
       }
     },
     [forwardedRef],
-  );
-
-  const content = useMemo(
-    () => parse(`<root>${entry.text}</root>`, parseOptions),
-    [entry.text],
   );
 
   const header = (
@@ -229,19 +185,23 @@ export const ShowAndTellEntry = forwardRef<
           videoAttachments={videoAttachments}
         />
 
-        {isValidElement(content) && content.type !== Empty && (
-          <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
-            <div
-              className={`mx-auto w-fit  ${
-                isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
-              }`}
-            >
-              <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
-                {content}
+        <SafeHtml html={entry.text} parseOptions={parseOptions}>
+          {({ content }) =>
+            isEmpty(content) ? null : (
+              <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
+                <div
+                  className={`mx-auto w-fit  ${
+                    isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
+                  }`}
+                >
+                  <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+                    {content}
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        )}
+            )
+          }
+        </SafeHtml>
       </div>
     </article>
   );
