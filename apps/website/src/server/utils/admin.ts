@@ -47,6 +47,11 @@ const menuItems = [
     href: "/admin/twitch",
     permission: permissions.manageTwitchApi,
   },
+  {
+    label: "Emails",
+    href: "/admin/email",
+    permission: permissions.manageEmails,
+  },
 ];
 
 export async function getAdminSSP(

@@ -30,6 +30,9 @@ export const permissions = {
   manageNotifications: {
     requiredRole: "notifications",
   },
+  manageEmails: {
+    requiredRole: "emails",
+  },
 } as const satisfies Record<string, PermissionConfig>;
 
 export function checkRolesGivePermission(
