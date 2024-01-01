@@ -91,7 +91,7 @@ export function RichTextField({
             onChange(value);
           }
         }}
-        className="alveus-rte bg-white"
+        className="alveus-rte bg-white text-black"
         forwardedRef={(ref) => {
           editorRef.current = ref;
           if (ref) {
