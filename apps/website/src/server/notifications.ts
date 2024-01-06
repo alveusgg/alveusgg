@@ -120,7 +120,7 @@ export async function retryPendingNotificationPushes() {
 
     requests.push(
       callEndpoint<RetryPushesOptions>(
-        `/api/notifications/batched-retry-notification-pushes`,
+        "/api/notifications/batched-retry-notification-pushes",
         {
           pushes: pendingPushes.map((push) => ({
             ...push,
@@ -164,7 +164,7 @@ async function createPushNotifications(notification: Notification) {
 
     requests.push(
       callEndpoint<CreatePushesOptions>(
-        `/api/notifications/batched-create-notification-pushes`,
+        "/api/notifications/batched-create-notification-pushes",
         {
           notificationId: notification.id,
           expiresAt: notification.expiresAt.getTime(),
