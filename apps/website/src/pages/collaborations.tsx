@@ -50,7 +50,8 @@ const collaborations = {
     name: "Trihex",
     link: "https://www.twitch.tv/trihex",
     date: new Date("2023-09-21"),
-    videoId: "H0gaJrLY5X0",
+    videoId: "lxks3skYeO4",
+    vodId: "H0gaJrLY5X0",
   },
   esfand: {
     name: "Esfand",
