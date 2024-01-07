@@ -11,15 +11,34 @@ interface Data {
   description?: string;
 }
 
-const toTree = (step: Step): TreeNode<Data> => ({
-  id: step.id,
-  type: "overview",
-  data: {
-    label: step.name,
-    description: step.description,
-  },
-  children: (step.children || []).map(toTree),
-});
+const toTree = (
+  step: Step,
+  cache?: Map<Step, TreeNode<Data>>,
+): TreeNode<Data> => {
+  if (!cache) cache = new Map();
+
+  // If we've already processed this step, return the cached result
+  // This ensures we preserve shared steps
+  const cached = cache.get(step);
+  if (cached) return cached;
+
+  const tree = {
+    id: step.id,
+    type: "overview",
+    data: {
+      label: step.name,
+      description: step.description,
+    },
+    children: [] as TreeNode<Data>[],
+  };
+  cache.set(step, tree);
+
+  // Process the children after we've cached this node
+  // This allows us to handle circular dependencies
+  tree.children = (step.children || []).map((child) => toTree(child, cache));
+
+  return tree;
+};
 
 // The upstream steps need to share the same root node below them
 const stepsTree = toTree(steps);

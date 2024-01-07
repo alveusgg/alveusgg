@@ -18,6 +18,13 @@ export const upstream: Upstream[] = [
   },
 ];
 
+const localBot = {
+  id: "bot-local-obs",
+  name: "Control Bot",
+  description:
+    "Custom Node.js application allowing control of scene/camera layout from Twitch chat.",
+};
+
 const steps: Step = {
   id: "cloud-obs",
   name: "Cloud OBS",
@@ -30,37 +37,27 @@ const steps: Step = {
         "Open Broadcaster Software, running on a local studio server.",
       children: [
         {
-          id: "cameras",
-          name: "Cameras",
-          description:
-            "Live IP cameras around the property, mainly using Axis and OBSBot.",
-          children: [
-            {
-              id: "axis-companion",
-              name: "Axis Companion",
-              description:
-                "Axis IP camera management software allowing PTZ control.",
-            },
-            {
-              id: "bot-cameras",
-              name: "Control Bot",
-              description:
-                "Custom Node.js application allowing PTZ control from Twitch chat.",
-            },
-          ],
-        },
-        {
           id: "overlays",
           name: "Overlays",
           description:
             "Browser-based overlays added to the stream in OBS, providing alerts etc., mainly using StreamElements.",
         },
         {
-          id: "bot-local-obs",
-          name: "Control Bot",
+          id: "cameras",
+          name: "Cameras",
           description:
-            "Custom Node.js application allowing control of scene/camera layout from Twitch chat.",
+            "Live IP cameras around the property, mainly using Axis and OBSBot.",
+          children: [
+            localBot,
+            {
+              id: "axis-companion",
+              name: "Axis Companion",
+              description:
+                "Axis IP camera management software allowing PTZ control.",
+            },
+          ],
         },
+        localBot,
       ],
     },
     {
