@@ -64,30 +64,38 @@ const steps: Step = {
       ],
     },
     {
-      id: "liveu",
-      name: "LiveU Service",
+      id: "psynaps",
+      name: "Psynaps RTMP Server",
       description:
-        "LiveU cloud streaming service, for ingesting remote video from a LiveU Solo.",
+        "Psynaps Super Stream System, a custom RTMP server for ingesting remote video.",
       children: [
         {
-          id: "liveu-camera",
-          name: "Livestream Backpack",
+          id: "liveu",
+          name: "LiveU Service",
           description:
-            "LiveU Solo, a portable video encoder for live streaming, with a DSLR camera.",
+            "LiveU cloud streaming service, for ingesting remote video from a LiveU Solo.",
+          children: [
+            {
+              id: "liveu-camera",
+              name: "Livestream Backpack",
+              description:
+                "LiveU Solo, a portable video encoder for live streaming, with a DSLR camera.",
+            },
+          ],
         },
-      ],
-    },
-    {
-      id: "larix",
-      name: "Larix Broadcaster",
-      description:
-        "Larix Broadcaster, a mobile app for live streaming from a phone.",
-      children: [
         {
-          id: "larix-camera",
-          name: "Mobile Phone",
+          id: "larix",
+          name: "Larix Broadcaster",
           description:
-            "Mobile phone, with Larix Broadcaster app, for on-the-go streaming.",
+            "Larix Broadcaster, a mobile app for live streaming from a phone.",
+          children: [
+            {
+              id: "larix-camera",
+              name: "Mobile Phone",
+              description:
+                "Mobile phone, with Larix Broadcaster app, for on-the-go streaming.",
+            },
+          ],
         },
       ],
     },
