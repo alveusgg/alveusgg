@@ -45,13 +45,14 @@ interface TreeProps<T> {
   nodeTypes?: NodeTypes;
   edgeType?: EdgeTypes[string];
   nodeSize?: { width: number; height: number };
+  nodeSpacing?: { ranks: number; siblings: number };
   defaultZoom?: number;
 }
 
 const withPositions = <T,>(
   { nodes, edges }: { nodes: TreeNodeInternal<T>[]; edges: TreeEdgeInternal[] },
   size: { width: number; height: number },
-  separation = { ranks: 100, siblings: 50 },
+  separation: { ranks: number; siblings: number },
   direction: "TB" | "LR" = "LR",
 ) => {
   // Create the graph
@@ -226,12 +227,13 @@ const Tree = <T,>({
   nodeTypes,
   edgeType,
   nodeSize = { width: 180, height: 40 },
+  nodeSpacing = { ranks: 100, siblings: 50 },
   defaultZoom = 1,
 }: TreeProps<T>) => {
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(
-    () => withPositions(getNodesEdges(data), nodeSize),
-    [data, nodeSize],
+    () => withPositions(getNodesEdges(data), nodeSize, nodeSpacing),
+    [data, nodeSize, nodeSpacing],
   );
 
   // When the tree loads, center it
