@@ -6,19 +6,20 @@ import commands, {
   isOverloadedArguments,
   type Command,
   type Argument,
-} from "@/data/commands";
+} from "@/data/tech/commands";
+import presets from "@/data/tech/presets";
+
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import presets from "@/data/presets";
-import Link from "@/components/content/Link";
 
 interface NamedCommand extends Command {
   name: string;

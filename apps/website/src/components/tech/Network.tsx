@@ -15,7 +15,7 @@ import network, {
   isNestedNetworkItem,
   type NestedNetworkItem,
   type NetworkItem,
-} from "@/data/network";
+} from "@/data/tech/network";
 import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
 
@@ -359,7 +359,7 @@ const NetworkList = ({
 const Network = () => (
   <>
     <div
-      className="h-[80vh] rounded-2xl border border-alveus-green bg-alveus-tan"
+      className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
       aria-hidden
     >
       <Tree
