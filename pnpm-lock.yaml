@@ -84,8 +84,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#0.27.0
-        version: github.com/alveusgg/data/67ff095a6d947d0143e23556742ce5beb7ca62b5
+        specifier: github:alveusgg/data#0.27.2
+        version: github.com/alveusgg/data/adab390c191782399c3eb97b5510b386e3793563
       '@aws-sdk/client-s3':
         specifier: ^3.470.0
         version: 3.470.0
@@ -10638,8 +10638,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  github.com/alveusgg/data/67ff095a6d947d0143e23556742ce5beb7ca62b5:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/67ff095a6d947d0143e23556742ce5beb7ca62b5}
+  github.com/alveusgg/data/adab390c191782399c3eb97b5510b386e3793563:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/adab390c191782399c3eb97b5510b386e3793563}
     name: '@alveusgg/data'
-    version: 0.27.0
+    version: 0.27.2
     dev: false
