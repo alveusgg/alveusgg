@@ -5,6 +5,7 @@ import { classes } from "@/utils/classes";
 
 import Tree, { type TreeNode } from "@/components/tech/Tree";
 import steps, { upstream, type Step } from "@/data/tech/overview";
+import { convertToSlug } from "@/utils/slugs";
 
 interface Data {
   label: string;
@@ -127,10 +128,53 @@ const OverviewNode = ({
   );
 };
 
+interface StepWithUpstream extends Step {
+  upstream: Step[];
+}
+
+const OverviewList = ({
+  items,
+  className,
+}: {
+  items: (Step | StepWithUpstream)[];
+  className?: string;
+}) => (
+  <ul className={className}>
+    {items.map((item) => (
+      <li key={convertToSlug(`${item.name}-${item.type}`)} className="my-2">
+        <p>
+          {nodeTypes[item.type].eyebrow.name}: {item.name}
+        </p>
+
+        {"upstream" in item && item.upstream && (
+          <>
+            <p>Broadcasting to:</p>
+            <OverviewList items={item.upstream} className="ml-4" />
+          </>
+        )}
+
+        {"children" in item && item.children && (
+          <>
+            <p>Connected to:</p>
+            <OverviewList items={item.children} className="ml-4" />
+          </>
+        )}
+      </li>
+    ))}
+  </ul>
+);
+
+const stepsList = [
+  {
+    ...steps,
+    upstream,
+  },
+];
+
 const Overview = () => (
   <>
     <div
-      className="h-[60vh] min-h-[60vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
+      className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
       aria-hidden
     >
       <Tree
@@ -141,6 +185,8 @@ const Overview = () => (
         defaultZoom={0.75}
       />
     </div>
+
+    <OverviewList items={stepsList} className="sr-only" />
   </>
 );
 

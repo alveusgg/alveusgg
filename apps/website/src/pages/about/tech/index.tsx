@@ -365,6 +365,9 @@ const AboutTechPage: NextPage = () => {
 
         <Section containerClassName="flex flex-wrap -mx-4">
           <div className="basis-full px-4 pb-8">
+            <Heading level={2} className="mb-4 mt-0" id="overview" link>
+              System Overview
+            </Heading>
             <Overview />
           </div>
 
