@@ -146,7 +146,14 @@ const data: RootNetworkItem[] = [
                 links: [
                   {
                     type: "camera",
-                    name: "Isopod",
+                    name: "Zebra Isopod",
+                    model: "AXIS M5075-G (PTZ)",
+                    url: "https://www.axis.com/products/axis-m5075-g",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "camera",
+                    name: "Spanish Orange Isopod",
                     model: "AXIS M5075-G (PTZ)",
                     url: "https://www.axis.com/products/axis-m5075-g",
                     connection: { type: "ethernet", location: "wall" },
