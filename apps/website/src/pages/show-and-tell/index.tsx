@@ -78,6 +78,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         pages: [{ items: initialEntries, nextCursor: nextCursor }],
       },
       getNextPageParam: (lastPage) => lastPage.nextCursor,
+      refetchOnWindowFocus: false,
     },
   );
 

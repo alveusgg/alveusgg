@@ -7,6 +7,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Overview from "@/components/tech/Overview";
 import Network from "@/components/tech/Network";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
@@ -363,6 +364,13 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section containerClassName="flex flex-wrap -mx-4">
+          <div className="basis-full px-4 pb-8">
+            <Heading level={2} className="mb-4 mt-0" id="overview" link>
+              System Overview
+            </Heading>
+            <Overview />
+          </div>
+
           <div className="basis-full p-4 lg:basis-1/2">
             <Heading level={2} className="mb-4 mt-0" id="studio" link>
               Broadcast Studio

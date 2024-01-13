@@ -140,7 +140,7 @@ const data: RootNetworkItem[] = [
               {
                 type: "switch",
                 name: "Critter Cave Upper",
-                model: "Ubiquiti USW Lite 8 PoE",
+                model: "Ubiquiti USW-Lite-8-PoE",
                 url: "https://store.ui.com/us/en/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
                 links: [
