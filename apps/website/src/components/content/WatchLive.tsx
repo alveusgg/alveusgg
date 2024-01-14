@@ -22,17 +22,20 @@ const dropdownLinks = [
 ];
 
 const WatchLive = () => (
-  <Link
-    className="group/link inline-block rounded-full border-2 border-white px-4 py-2 text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-    href={defaultLink.href}
-    target="_blank"
-    rel="noreferrer"
-  >
-    Watch Live on{" "}
+  <div className="group/link inline-flex rounded-full border-2 border-white text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green">
+    <Link
+      className="whitespace-pre-wrap py-2 pl-4"
+      href={defaultLink.href}
+      target="_blank"
+      rel="noreferrer"
+    >
+      Watch Live on{" "}
+    </Link>
+
     <Menu as="span" className="relative">
       {({ open }) => (
         <>
-          <Menu.Button className="group/button inline-flex items-center gap-0.5">
+          <Menu.Button className="group/button inline-flex items-center gap-0.5 py-2 pr-4">
             <span className="relative">
               {defaultLink.platform}
 
@@ -89,7 +92,7 @@ const WatchLive = () => (
         </>
       )}
     </Menu>
-  </Link>
+  </div>
 );
 
 export default WatchLive;
