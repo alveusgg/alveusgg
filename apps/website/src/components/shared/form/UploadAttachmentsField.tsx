@@ -231,9 +231,11 @@ export const UploadAttachmentsField = ({
     <div>
       <label htmlFor={id} className="flex flex-row items-end justify-between">
         <span>{label}</span>
-        <span className="text-sm text-gray-600">
-          {files.length} / {maxNumber}
-        </span>
+        {maxNumber && (
+          <span className="text-sm text-gray-600">
+            {files.length} / {maxNumber}
+          </span>
+        )}
       </label>
 
       {error && (
