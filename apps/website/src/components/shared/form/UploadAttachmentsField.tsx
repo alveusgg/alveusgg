@@ -136,7 +136,7 @@ export const UploadAttachmentsField = ({
   upload,
   label = "Attachments",
   multiple = true,
-  maxNumber = 12,
+  maxNumber,
   maxFileSize,
   allowedFileTypes,
   renderAttachment,
@@ -161,7 +161,7 @@ export const UploadAttachmentsField = ({
     if (!filesToAdd) return;
 
     const totalNumber = files.length + filesToAdd.length;
-    if (totalNumber > maxNumber) {
+    if (maxNumber && totalNumber > maxNumber) {
       setError(`Max number of files exceeded (${maxNumber})`);
       return;
     }
