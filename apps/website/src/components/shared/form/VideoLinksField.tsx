@@ -27,7 +27,7 @@ export function VideoLinksField({
   label = "Videos",
   videoUrls,
   setVideoUrls,
-  maxNumber = 4,
+  maxNumber,
   ...props
 }: VideoUrlFieldProps) {
   const [inputValue, setInputValue] = useState<string>("");
