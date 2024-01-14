@@ -2,19 +2,18 @@ import type { NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { Menu } from "@headlessui/react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
-import { classes } from "@/utils/classes";
 import usePrefersReducedMotion from "@/hooks/motion";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import Heading from "@/components/content/Heading";
+import WatchLive from "@/components/content/WatchLive";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
@@ -22,7 +21,6 @@ import { Lightbox } from "@/components/content/YouTube";
 import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Consent from "@/components/Consent";
 
-import IconChevronDown from "@/icons/IconChevronDown";
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
 import IconEnvelope from "@/icons/IconEnvelope";
@@ -179,68 +177,7 @@ const Home: NextPage = () => {
               >
                 Meet the Ambassadors
               </Link>
-              <Link
-                className="group inline-block rounded-full border-2 border-white px-4 py-2 text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-                href="/live"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Watch Live on{" "}
-                <Menu as="span" className="relative">
-                  {({ open }) => (
-                    <>
-                      <Menu.Button className="inline-flex items-center gap-0.5">
-                        Twitch
-                        <IconChevronDown
-                          size={16}
-                          className={classes(
-                            "transition-transform",
-                            open ? "translate-y-1" : "translate-y-0.5",
-                          )}
-                        />
-                      </Menu.Button>
-
-                      <Menu.Items
-                        as="ul"
-                        className="group absolute left-0 top-full z-30 -ml-3 mt-1 flex flex-col rounded  bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
-                      >
-                        <Menu.Item as="li">
-                          {({ active }) => (
-                            <a
-                              href="/live/twitch"
-                              target="_blank"
-                              rel="noreferrer"
-                              className={classes(
-                                "block rounded px-3 py-1 transition-colors hover:bg-alveus-green  hover:text-alveus-tan",
-                                active &&
-                                  "outline-blue-500 group-focus-visible:outline",
-                              )}
-                            >
-                              Twitch
-                            </a>
-                          )}
-                        </Menu.Item>
-                        <Menu.Item as="li">
-                          {({ active }) => (
-                            <a
-                              href="/live/youtube"
-                              target="_blank"
-                              rel="noreferrer"
-                              className={classes(
-                                "block rounded px-3 py-1 transition-colors hover:bg-alveus-green  hover:text-alveus-tan",
-                                active &&
-                                  "outline-blue-500 group-focus-visible:outline",
-                              )}
-                            >
-                              YouTube
-                            </a>
-                          )}
-                        </Menu.Item>
-                      </Menu.Items>
-                    </>
-                  )}
-                </Menu>
-              </Link>
+              <WatchLive />
             </div>
           </div>
 
