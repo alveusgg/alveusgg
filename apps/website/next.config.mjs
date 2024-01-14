@@ -300,7 +300,17 @@ const config = {
     {
       source: "/live",
       destination: "https://twitch.tv/alveussanctuary",
-      permanent: false,
+      permanent: true,
+    },
+    {
+      source: "/live/twitch",
+      destination: "https://twitch.tv/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/live/youtube",
+      destination: "https://www.youtube.com/AlveusSanctuary/live",
+      permanent: true,
     },
   ],
   headers: async () => [
