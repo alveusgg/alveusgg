@@ -31,7 +31,7 @@ export const mainNavStructure: NavStructure = {
     title: "Explore",
     dropdown: {
       live: {
-        title: "Live",
+        title: "Live Cams",
         link: "/live",
         isExternal: true,
       },

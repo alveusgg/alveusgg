@@ -185,9 +185,10 @@ export function DesktopMenu() {
                         {link.title}
                         <IconChevronDown
                           size={16}
-                          className={`${
-                            open ? "translate-y-1" : "translate-y-0.5"
-                          } transition-transform`}
+                          className={classes(
+                            "transition-transform",
+                            open ? "translate-y-1" : "translate-y-0.5",
+                          )}
                         />
                       </Menu.Button>
 

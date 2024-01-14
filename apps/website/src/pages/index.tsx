@@ -13,6 +13,7 @@ import usePrefersReducedMotion from "@/hooks/motion";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import Heading from "@/components/content/Heading";
+import WatchLive from "@/components/content/WatchLive";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
@@ -176,14 +177,7 @@ const Home: NextPage = () => {
               >
                 Meet the Ambassadors
               </Link>
-              <Link
-                className="inline-block rounded-full border-2 border-white px-4 py-2 text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-                href="/live"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Watch Live
-              </Link>
+              <WatchLive />
             </div>
           </div>
 
