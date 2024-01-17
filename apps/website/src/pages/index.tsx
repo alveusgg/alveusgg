@@ -22,8 +22,8 @@ import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
+import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
-import IconEnvelope from "@/icons/IconEnvelope";
 
 import mayaImage from "@/assets/maya.png";
 
@@ -100,20 +100,20 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
 const help = {
   donate: {
     icon: IconPayPal,
-    title: "Donate via PayPal",
-    link: "/paypal",
-    external: true,
+    title: "Donate to Alveus directly",
+    link: "/donate",
+    external: false,
   },
   amazon: {
     icon: IconAmazon,
-    title: "Amazon Wishlist",
+    title: "Gift via our Amazon Wishlist",
     link: "/wishlist",
     external: true,
   },
   contact: {
-    icon: IconEnvelope,
-    title: "Offer Help",
-    link: "/contact-us",
+    icon: IconBox,
+    title: "Send items to our PO Box",
+    link: "/po-box",
     external: false,
   },
 };
