@@ -39,7 +39,6 @@ module.exports = {
                 "/admin/",
                 "/wip/",
                 "/forms/",
-                "/privacy-policy",
               ],
       },
     ],
