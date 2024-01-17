@@ -12,6 +12,7 @@ const PrivacyPolicyPage: NextPage = () => {
       <Meta
         title="Privacy Policy"
         description="At Alveus Sanctuary Inc., one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by Alveus Sanctuary Inc. and how we use it."
+        noindex
       />
 
       {/* Nav background */}
