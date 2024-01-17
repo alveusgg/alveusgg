@@ -32,7 +32,11 @@ export const getStaticProps: GetStaticProps<{
 const FormsPage: NextPage<FormsPageProps> = ({ forms }) => {
   return (
     <>
-      <Meta title="Forms" description="Check out the latest forms at Alveus." />
+      <Meta
+        title="Forms"
+        description="Check out the latest forms at Alveus."
+        noindex
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

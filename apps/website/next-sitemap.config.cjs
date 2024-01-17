@@ -32,14 +32,7 @@ module.exports = {
         disallow:
           process.env.NEXT_PUBLIC_NOINDEX === "true"
             ? ["/"]
-            : [
-                "/api/",
-                "/bingo/play/",
-                "/auth/",
-                "/admin/",
-                "/wip/",
-                "/forms/",
-              ],
+            : ["/api/", "/bingo/play/", "/auth/", "/admin/", "/wip/"],
       },
     ],
   },
