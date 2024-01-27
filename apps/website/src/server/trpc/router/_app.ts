@@ -9,6 +9,7 @@ import { adminNotificationsRouter } from "./admin/notifications";
 import { adminShowAndTellRouter } from "./admin/show-and-tell";
 import { adminTwitchRouter } from "./admin/twitch";
 import { adminUsersRouter } from "./admin/users";
+import { adminClipsRouter } from "./admin/clips";
 import { authRouter } from "./auth";
 import { bingosRouter } from "./bingos";
 import { calendarEventsRouter } from "./calendar-events";
@@ -17,6 +18,7 @@ import { notificationsRouter } from "./notifications";
 import { pushSubscriptionRouter } from "./push/subscription";
 import { showAndTellRouter } from "./show-and-tell";
 import { virtualTicketsRouter } from "./virtual-tickets";
+import { clipsRouter } from "./clips";
 
 export const appRouter = router({
   adminActivityFeed: adminActivityFeedRouter,
@@ -28,6 +30,7 @@ export const appRouter = router({
   adminShowAndTell: adminShowAndTellRouter,
   adminTwitch: adminTwitchRouter,
   adminUsersRouter: adminUsersRouter,
+  adminClips: adminClipsRouter,
   auth: authRouter,
   bingos: bingosRouter,
   calendarEvents: calendarEventsRouter,
@@ -36,6 +39,7 @@ export const appRouter = router({
   pushSubscription: pushSubscriptionRouter,
   showAndTell: showAndTellRouter,
   virtualTickets: virtualTicketsRouter,
+  clips: clipsRouter,
 });
 
 // export type definition of API

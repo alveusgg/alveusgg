@@ -106,6 +106,8 @@ model User {
   showAndTellEntries ShowAndTellEntry[]
   roles              UserRole[]
   virtualTickets     VirtualTicket[]
+  clipVotes          ClipVote[]
+  clips              Clip[]
 
   @@index([name], name: "User_name")
 }
@@ -488,4 +490,32 @@ model VirtualTicket {
 
   @@unique([userId, eventId])
   @@index([eventId], name: "VirtualTicket_eventId")
+}
+
+model Clip {
+  id            String @id @default(cuid())
+  clipSlug      String @unique
+  userId        String?
+  title         String
+  thumbnail     String
+  createdAt     DateTime @default(now())
+  clipCreator   String?
+  submitted     DateTime @default(now())
+  approved      Boolean @default(false)
+  votes         ClipVote[]
+
+  user          User? @relation(fields: [userId], references: [id])
+}
+
+model ClipVote {
+  id            String @id @default(cuid())
+  clipId        String
+  userId        String
+  createdAt     DateTime @default(now())
+
+  clip          Clip @relation(fields: [clipId], references: [id], onDelete: Cascade)
+  user          User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index(fields: [clipId], name: "ClipVote_clipId")
+  @@index(fields: [userId], name: "ClipVote_userId")
 }

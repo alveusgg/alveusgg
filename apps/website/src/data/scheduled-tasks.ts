@@ -6,6 +6,7 @@ import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
 import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
 import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
 import { createRegularCalendarEvents } from "@/server/db/calendar-events";
+import { removeInvalidClips } from "@/server/clips";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 
@@ -68,6 +69,13 @@ const config: ScheduledTasksConfig = {
       label: "Calendar events: Create Regular Events",
       startDateTime: new Date(2024, 7, 21, 0, 8, 0),
       interval: { months: 1 },
+    },
+    {
+      id: "clips.removeInvalid",
+      task: () => removeInvalidClips(),
+      label: "Clips: Remove invalid clips",
+      startDateTime: new Date(2023, 2, 3, 0, 8, 0),
+      interval: { days: 1 },
     },
   ],
 };

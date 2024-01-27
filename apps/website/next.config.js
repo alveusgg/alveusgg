@@ -32,6 +32,11 @@ const config = {
         protocol: "https",
         hostname: "static-cdn.jtvnw.net",
       },
+      // Twitch clip thumbnails
+      {
+        protocol: "https",
+        hostname: "clips-media-assets2.twitch.tv",
+      },
       // YouTube Thumbnails
       {
         protocol: "https",
@@ -361,7 +366,7 @@ const config = {
                 ["development", "preview"].includes(process.env.VERCEL_ENV) &&
                 "https://vercel.live/",
               // Twitch embeds:
-              "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
+              "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/ https://clips.twitch.tv/",
               // YouTube embeds:
               "https://www.youtube-nocookie.com/",
               // Streamable embeds:
