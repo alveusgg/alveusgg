@@ -5,10 +5,12 @@ import type {
 } from "next";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+import { PageNavigation } from "@/components/shared/PageNavigation";
 import { getPostById } from "@/server/db/show-and-tell";
 import Meta from "@/components/content/Meta";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
+
+import { showAndTellNavItems } from "../../";
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const postId = String(params?.postId || "");
@@ -53,7 +55,7 @@ const ShowAndTellEntryPage: NextPage<
             activities.
           </p>
         </div>
-        <ShowAndTellNavigation />
+        <PageNavigation navItems={showAndTellNavItems} />
       </Section>
 
       {/* Grow the last section to cover the page */}

@@ -6,8 +6,10 @@ import Heading from "@/components/content/Heading";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { Button, secondaryButtonClasses } from "@/components/shared/Button";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+import { PageNavigation } from "@/components/shared/PageNavigation";
 import Meta from "@/components/content/Meta";
+
+import { showAndTellNavItems } from ".";
 
 const ShowAndTellSubmitPage: NextPage = () => {
   const session = useSession();
@@ -35,7 +37,7 @@ const ShowAndTellSubmitPage: NextPage = () => {
             related activities. (These will be public and viewed on stream)
           </p>
         </div>
-        <ShowAndTellNavigation />
+        <PageNavigation navItems={showAndTellNavItems} />
       </Section>
 
       {/* Grow the last section to cover the page */}

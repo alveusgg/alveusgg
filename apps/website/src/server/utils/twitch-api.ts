@@ -375,3 +375,59 @@ export async function getUserByName(userName: string) {
   const data = await usersResponseSchema.parseAsync(json);
   return data?.data?.[0];
 }
+
+const clipsResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string(),
+      url: z.string().url(),
+      embed_url: z.string().url(),
+      broadcaster_id: z.string(),
+      broadcaster_name: z.string(),
+      creator_id: z.string(),
+      creator_name: z.string(),
+      video_id: z.string(),
+      game_id: z.string(),
+      language: z.string(),
+      title: z.string(),
+      view_count: z.number(),
+      created_at: z.string(),
+      thumbnail_url: z.string().url(),
+      duration: z.number(),
+      vod_offset: z.nullable(z.number()),
+    }),
+  ),
+  pagination: paginationSchema,
+});
+
+export async function getClipDetails(clipSlug: string | string[]) {
+  const url = new URL("https://api.twitch.tv/helix/clips");
+
+  if (Array.isArray(clipSlug)) {
+    for (const slug of clipSlug) {
+      url.searchParams.append("id", slug);
+    }
+    url.searchParams.set("first", clipSlug.length.toString());
+  } else {
+    url.searchParams.set("id", clipSlug);
+  }
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      ...(await getApplicationAuthHeaders()),
+    },
+  });
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get clip details!");
+  }
+
+  return clipsResponseSchema.parseAsync(json);
+}

@@ -4,9 +4,11 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import { trpc } from "@/utils/trpc";
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
+import { PageNavigation } from "@/components/shared/PageNavigation";
+
+import { showAndTellNavItems } from "../..";
 
 const EditShowAndTellPage: NextPage = () => {
   const router = useRouter();
@@ -34,7 +36,7 @@ const EditShowAndTellPage: NextPage = () => {
             activities.
           </p>
         </div>
-        <ShowAndTellNavigation />
+        <PageNavigation navItems={showAndTellNavItems} />
       </Section>
 
       {/* Grow the last section to cover the page */}

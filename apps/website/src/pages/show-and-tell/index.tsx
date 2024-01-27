@@ -31,15 +31,21 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import { QrCode } from "@/components/show-and-tell/QrCode";
+import { PageNavigation } from "@/components/shared/PageNavigation";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
 >;
 
 const entriesPerPage = 10;
+
+export const showAndTellNavItems = [
+  { href: "/show-and-tell/", label: "Submissions", exact: true },
+  { href: "/show-and-tell/submit-post", label: "Submit Post" },
+  { href: "/show-and-tell/my-posts", label: "My Posts" },
+];
 
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
@@ -343,7 +349,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             .
           </p>
         </div>
-        <ShowAndTellNavigation />
+        <PageNavigation navItems={showAndTellNavItems} />
       </Section>
 
       {/* Grow the last section to cover the page */}

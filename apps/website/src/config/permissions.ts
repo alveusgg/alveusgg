@@ -15,6 +15,9 @@ export const permissions = {
   manageShowAndTell: {
     requiredRole: "showAndTell",
   },
+  manageClips: {
+    requiredRole: "clips",
+  },
   manageForms: {
     requiredRole: "forms",
   },

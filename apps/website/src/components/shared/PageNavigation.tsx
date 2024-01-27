@@ -45,14 +45,24 @@ const NavLink = ({
   );
 };
 
-export function ShowAndTellNavigation() {
+type NavItem = {
+  href: string;
+  label: string;
+  exact?: boolean;
+};
+
+type NavigationProps = {
+  navItems: NavItem[];
+};
+
+export function PageNavigation({ navItems }: NavigationProps) {
   return (
     <div className="-ml-2 mt-5 flex flex-wrap gap-2 md:mt-0 lg:flex-col">
-      <NavLink href="/show-and-tell/" exact>
-        Submissions
-      </NavLink>
-      <NavLink href="/show-and-tell/submit-post">Submit Post</NavLink>
-      <NavLink href="/show-and-tell/my-posts">My Posts</NavLink>
+      {navItems.map((item) => (
+        <NavLink key={item.href} href={item.href} exact={item.exact}>
+          {item.label}
+        </NavLink>
+      ))}
     </div>
   );
 }
