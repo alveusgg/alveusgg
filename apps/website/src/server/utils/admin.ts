@@ -42,6 +42,11 @@ const menuItems = [
     permission: permissions.manageShowAndTell,
   },
   {
+    label: "Clips",
+    href: "/admin/clips",
+    permission: permissions.manageClips,
+  },
+  {
     label: "Activity Feed",
     href: "/admin/activity-feed",
     permission: permissions.viewActivityFeed,
