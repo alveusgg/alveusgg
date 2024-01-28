@@ -45,7 +45,11 @@ const quillConfig: Partial<ReactQuillType.ReactQuillProps> = {
 
 const nf = new Intl.NumberFormat(undefined);
 
-export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
+export function RichTextField({
+  defaultValue,
+  onChange,
+  ...props
+}: FormFieldProps) {
   const ref = useRef<HTMLInputElement>(null);
   const editorRef = useRef<ReactQuillType | null>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
@@ -81,8 +85,13 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
       <ReactQuill
         {...quillConfig}
         value={value}
-        onChange={(value) => setValue(value)}
-        className="alveus-rte bg-white"
+        onChange={(value) => {
+          setValue(value);
+          if (onChange) {
+            onChange(value);
+          }
+        }}
+        className="alveus-rte bg-white text-black"
         forwardedRef={(ref) => {
           editorRef.current = ref;
           if (ref) {

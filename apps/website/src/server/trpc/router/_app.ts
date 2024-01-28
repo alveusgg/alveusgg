@@ -2,6 +2,7 @@ import { router } from "../trpc";
 
 import { adminActivityFeedRouter } from "./admin/activity-feed";
 import { adminBingosRouter } from "./admin/bingos";
+import { adminEmailsRouter } from "./admin/emails";
 import { adminFormsRouter } from "./admin/forms";
 import { adminNotificationsRouter } from "./admin/notifications";
 import { adminShowAndTellRouter } from "./admin/show-and-tell";
@@ -18,6 +19,7 @@ import { virtualTicketsRouter } from "./virtual-tickets";
 export const appRouter = router({
   adminActivityFeed: adminActivityFeedRouter,
   adminBingos: adminBingosRouter,
+  adminEmails: adminEmailsRouter,
   adminForms: adminFormsRouter,
   adminNotifications: adminNotificationsRouter,
   adminShowAndTell: adminShowAndTellRouter,

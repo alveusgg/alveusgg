@@ -87,6 +87,10 @@ export const env = createEnv({
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
     DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfUrlsSchema.optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
+    RESEND_API_KEY: z.string().optional(),
+    RESEND_WEBHOOK_SIGNING_SECRET: z.string().optional(),
+    EMAIL_FROM_NAME: z.string().optional(),
+    EMAIL_FROM_ADDRESS: z.string().email().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -167,6 +171,10 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    RESEND_API_KEY: process.env.RESEND_API_KEY,
+    RESEND_WEBHOOK_SIGNING_SECRET: process.env.RESEND_WEBHOOK_SIGNING_SECRET,
+    EMAIL_FROM_NAME: process.env.EMAIL_FROM_NAME,
+    EMAIL_FROM_ADDRESS: process.env.EMAIL_FROM_ADDRESS,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

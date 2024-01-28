@@ -106,6 +106,7 @@ model User {
   showAndTellEntries ShowAndTellEntry[]
   roles              UserRole[]
   virtualTickets     VirtualTicket[]
+  OutgoingEmail      OutgoingEmail[]
 
   @@index([name], name: "User_name")
 }
@@ -453,4 +454,26 @@ model VirtualTicket {
 
   @@unique([userId, eventId])
   @@index([eventId], name: "VirtualTicket_eventId")
+}
+
+model OutgoingEmail {
+  id           String    @id @default(cuid())
+  type         String
+  provider     String
+  providerId   String?
+  data         String    @db.Text
+  to           String
+  userId       String?
+  createdAt    DateTime  @default(now())
+  sentAt       DateTime?
+  deliveredAt  DateTime?
+  delayedAt    DateTime?
+  complainedAt DateTime?
+  bouncedAt    DateTime?
+  failedAt     DateTime?
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerId], name: "OutgoingEmail_provider_providerId")
+  @@index([userId], name: "OutgoingEmail_userId")
 }
