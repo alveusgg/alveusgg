@@ -5,7 +5,7 @@ import { env } from "@/env/index.mjs";
 
 import { mapStickerIdToPath } from "@/utils/virtual-tickets";
 import { stickerPack, ticketConfig } from "@/data/events/fall-carnival-2023";
-import { virtualTicketCustomizationSchema } from "@/server/db/virtual-tickets";
+import { virtualTicketCustomizationSchema } from "@/server/utils/virtual-tickets";
 
 import {
   Sticker,
