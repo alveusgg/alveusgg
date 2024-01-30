@@ -24,7 +24,7 @@
     "prettier": "^3.2.4"
   },
   "scripts": {
-    "prepare": "husky install",
+    "prepare": "husky",
     "lint-staged": "lint-staged --relative",
     "prettier": "prettier . --write"
   },
