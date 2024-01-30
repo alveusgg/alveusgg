@@ -32,7 +32,8 @@ const collaborations = {
     name: "Hasan",
     link: "https://www.twitch.tv/hasanabi",
     date: new Date("2024-01-26"),
-    videoId: "MnPhxGBoY-I",
+    videoId: "E_iO1ZKlHyM",
+    vodId: "MnPhxGBoY-I",
   },
   fanfan: {
     name: "Fanfan",
