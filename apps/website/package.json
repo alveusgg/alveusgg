@@ -60,7 +60,6 @@
     "next-auth": "^4.24.5",
     "next-sitemap": "^4.2.3",
     "next-superjson-plugin": "^0.6.1",
-    "node-fetch": "^3.3.2",
     "oauth": "^0.10.0",
     "photoswipe": "^5.4.3",
     "probe-image-size": "^7.2.3",
