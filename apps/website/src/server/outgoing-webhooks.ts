@@ -1,4 +1,3 @@
-import fetch from "node-fetch";
 import type { OutgoingWebhook } from "@prisma/client";
 
 import { prisma } from "@/server/db/client";
