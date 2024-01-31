@@ -1,25 +1,10 @@
-import { z } from "zod";
+import type { z } from "zod";
+
 import { prisma } from "@/server/db/client";
-
-const stickerSchema = z.object({
-  imageId: z.string(),
-  x: z.number(),
-  y: z.number(),
-});
-
-export type VirtualTicketCustomization = z.infer<
-  typeof virtualTicketCustomizationSchema
->;
-
-export const virtualTicketCustomizationSchema = z.object({
-  stickers: z.array(stickerSchema),
-});
-
-export const virtualTicketSchema = z.object({
-  userId: z.string().uuid(),
-  eventId: z.string(),
-  customization: virtualTicketCustomizationSchema,
-});
+import {
+  type virtualTicketSchema,
+  deserializeVirtualTicketCustomization,
+} from "@/server/utils/virtual-tickets";
 
 export async function saveTicket({
   userId,
@@ -47,16 +32,6 @@ export async function saveTicket({
   });
 }
 
-function deserializeCustomization(
-  customizationData: string,
-): VirtualTicketCustomization {
-  const customization = virtualTicketCustomizationSchema.safeParse(
-    JSON.parse(customizationData),
-  );
-
-  return customization.success ? customization.data : { stickers: [] };
-}
-
 export async function getTicket(eventId: string, userId: string) {
   const ticketData = await prisma.virtualTicket.findFirst({
     where: {
@@ -69,7 +44,9 @@ export async function getTicket(eventId: string, userId: string) {
   return {
     userId: ticketData.userId,
     eventId: ticketData.eventId,
-    customization: deserializeCustomization(ticketData.customization),
+    customization: deserializeVirtualTicketCustomization(
+      ticketData.customization,
+    ),
   };
 }
 

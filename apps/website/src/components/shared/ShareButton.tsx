@@ -76,8 +76,8 @@ export function ShareButton({
     linkCopiedState === "success"
       ? "Copied!"
       : linkCopiedState === "error"
-      ? "Failed"
-      : "Copy";
+        ? "Failed"
+        : "Copy";
   useEffect(() => {
     if (linkCopiedState) {
       const timeout = setTimeout(() => {

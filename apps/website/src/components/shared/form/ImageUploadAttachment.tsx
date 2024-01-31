@@ -22,8 +22,8 @@ export function ImageUploadAttachment({
     fileReference.status === "saved"
       ? fileReference.url
       : "dataURL" in fileReference
-      ? fileReference.dataURL
-      : undefined;
+        ? fileReference.dataURL
+        : undefined;
 
   const fadeOutImage =
     fileReference.status === "upload.pending" ||

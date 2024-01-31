@@ -123,8 +123,8 @@ const Slideshow = ({
             typeof src === "string"
               ? src
               : "default" in src
-              ? src.default.src
-              : src.src
+                ? src.default.src
+                : src.src
           }
           style={{
             animationDelay: `${idx * animation.duration.offset}ms`,
