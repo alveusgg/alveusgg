@@ -1,6 +1,6 @@
 import type { ChangeEvent, FormEvent } from "react";
 import { useCallback, useMemo } from "react";
-import debounce from "just-debounce-it";
+import debounce from "lodash/debounce";
 
 import { usePushSubscription } from "@/utils/push-subscription";
 import { notificationCategories } from "@/config/notifications";
