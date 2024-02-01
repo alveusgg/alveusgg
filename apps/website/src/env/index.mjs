@@ -30,6 +30,14 @@ const listOfUrlsSchema = z.string().transform((val, ctx) => {
   return urls;
 });
 
+const listOfStringsSchema = z.string().transform((val, ctx) => {
+  if (val.trim() === "") {
+    return [];
+  }
+
+  return val.split(" ");
+});
+
 const optionalBoolSchema = z
   .enum(["true", "false"])
   .optional()
@@ -87,6 +95,7 @@ export const env = createEnv({
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
     DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfUrlsSchema.optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
+    CLIPS_CHANNEL_ALLOWLIST: listOfStringsSchema.optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -157,6 +166,7 @@ export const env = createEnv({
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT,
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION,
+    CLIPS_CHANNEL_ALLOWLIST: process.env.CLIPS_CHANNEL_ALLOWLIST,
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does

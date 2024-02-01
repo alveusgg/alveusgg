@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "@/server/trpc/trpc";
+import { env } from "@/env/index.mjs";
 
 import {
   addClip,
@@ -23,7 +24,7 @@ export const clipsRouter = router({
       // https://m.twitch.tv/channel/clip/slug?query
 
       const clipRegex =
-        /^https?:.+(?:clips\.twitch\.tv|(?:m\.)?twitch\.tv\/(?:clip|.+\/clip))\/?([\w\d-]+)/;
+        /^https?:.+(?:clips\.twitch\.tv|(?:m\.)?twitch\.tv\/(?:clip|.+\/clip))\/?([\w-]+)/;
       const slug = input.url.match(clipRegex)?.[1];
 
       if (!slug) {
@@ -51,24 +52,28 @@ export const clipsRouter = router({
         });
       }
 
-      const channelAllowlist = ["alveussanctuary", "maya"];
+      const channelAllowlist = env.CLIPS_CHANNEL_ALLOWLIST || [];
+      const channelAllowed = channelAllowlist.some(
+        (c: string) =>
+          c.toLowerCase() === clipDetails.broadcaster_name.toLowerCase(),
+      );
 
-      if (
-        !channelAllowlist.includes(clipDetails.broadcaster_name.toLowerCase())
-      ) {
+      if (!channelAllowed) {
         throw new TRPCError({
           code: "BAD_REQUEST",
-          message: "Clip not from AlveusSanctuary or Maya",
+          message:
+            "Clip must be from one of the following channels: " +
+            channelAllowlist.join(", "),
         });
       }
 
       await addClip(
         {
-          clipSlug: slug,
+          slug: slug,
           title: input.title || clipDetails.title,
-          thumbnail: clipDetails.thumbnail_url,
+          thumbnailUrl: clipDetails.thumbnail_url,
           createdAt: new Date(clipDetails.created_at),
-          clipCreator: clipDetails.creator_name,
+          creator: clipDetails.creator_name,
         },
         userId,
       );

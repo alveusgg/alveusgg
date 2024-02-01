@@ -400,16 +400,16 @@ const clipsResponseSchema = z.object({
   pagination: paginationSchema,
 });
 
-export async function getClipDetails(clipSlug: string | string[]) {
+export async function getClipDetails(slug: string | string[]) {
   const url = new URL("https://api.twitch.tv/helix/clips");
 
-  if (Array.isArray(clipSlug)) {
-    for (const slug of clipSlug) {
-      url.searchParams.append("id", slug);
+  if (Array.isArray(slug)) {
+    for (const s of slug) {
+      url.searchParams.append("id", s);
     }
-    url.searchParams.set("first", clipSlug.length.toString());
+    url.searchParams.set("first", slug.length.toString());
   } else {
-    url.searchParams.set("id", clipSlug);
+    url.searchParams.set("id", slug);
   }
 
   const response = await fetch(url, {

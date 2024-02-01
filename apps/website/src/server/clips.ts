@@ -6,7 +6,7 @@ export async function removeInvalidClips() {
   const invalidClipSlugs = [];
 
   for (let i = 0; i < clips.length; i += 100) {
-    const clipSlugs = clips.slice(i, i + 100).map((clip) => clip.clipSlug);
+    const clipSlugs = clips.slice(i, i + 100).map((clip) => clip.slug);
     const details = await getClipDetails(clipSlugs);
 
     // invalid clips are excluded from the response
@@ -27,7 +27,7 @@ export async function removeInvalidClips() {
 
   await prisma.clip.deleteMany({
     where: {
-      clipSlug: {
+      slug: {
         in: invalidClipSlugs,
       },
     },
