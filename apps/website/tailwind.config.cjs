@@ -1,7 +1,6 @@
 // @ts-check
 const { fontFamily } = require("tailwindcss/defaultTheme");
 const colors = require("tailwindcss/colors");
-const plugin = require("tailwindcss/plugin");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -136,14 +135,4 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    plugin(({ addUtilities }) => {
-      addUtilities({
-        ".text-wrap": { "text-wrap": "wrap" },
-        ".text-nowrap": { "text-wrap": "nowrap" },
-        ".text-balance": { "text-wrap": "balance" },
-        ".text-pretty": { "text-wrap": "pretty" },
-      });
-    }),
-  ],
 };
