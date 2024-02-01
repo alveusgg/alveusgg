@@ -23,13 +23,13 @@ import DateTime from "@/components/content/DateTime";
 
 type Clip = {
   id: string;
-  clipSlug: string;
+  slug: string;
   title: string;
   voteCount: number;
-  thumbnail: string;
+  thumbnailUrl: string;
   hasVoted: boolean;
   createdAt: Date;
-  clipCreator: string | null;
+  creator: string | null;
 };
 
 const ClipItem = ({
@@ -78,7 +78,7 @@ const ClipItem = ({
         onClick={() => clipClicked(clip)}
       >
         <Image
-          src={clip.thumbnail}
+          src={clip.thumbnailUrl}
           alt=""
           width={700}
           height={300}
@@ -113,7 +113,7 @@ const ClipModal = ({
   onClose: (e: React.MouseEvent) => void;
 }) => {
   const clipUrl = new URL("https://clips.twitch.tv/embed");
-  clipUrl.searchParams.set("clip", clip.clipSlug);
+  clipUrl.searchParams.set("clip", clip.slug);
   clipUrl.searchParams.set("parent", window.location.hostname);
 
   return (
@@ -160,9 +160,7 @@ const ClipModal = ({
               format={{ style: "short", timezone: false }}
             />
           </p>
-          <p className="lg:flex-1 lg:text-right">
-            Clipped by: {clip.clipCreator}
-          </p>
+          <p className="lg:flex-1 lg:text-right">Clipped by: {clip.creator}</p>
         </div>
       </div>
     </div>

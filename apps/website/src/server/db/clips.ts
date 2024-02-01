@@ -5,11 +5,11 @@ import { prisma } from "@/server/db/client";
 export type ClipSchema = z.infer<typeof clipSchema>;
 
 export const clipSchema = z.object({
-  clipSlug: z.string(),
+  slug: z.string(),
   title: z.string(),
-  thumbnail: z.string(),
+  thumbnailUrl: z.string(),
   createdAt: z.date(),
-  clipCreator: z.string(),
+  creator: z.string(),
 });
 
 export const clipVoteSchema = z.object({
@@ -37,7 +37,7 @@ export async function getClipVotes(clipId: string) {
 export async function addClip(input: ClipSchema, userId?: string) {
   const existingClip = await prisma.clip.findFirst({
     where: {
-      clipSlug: input.clipSlug,
+      slug: input.slug,
     },
   });
 
@@ -50,11 +50,11 @@ export async function addClip(input: ClipSchema, userId?: string) {
 
   return await prisma.clip.create({
     data: {
-      clipSlug: input.clipSlug,
+      slug: input.slug,
       title: input.title,
-      thumbnail: input.thumbnail,
+      thumbnailUrl: input.thumbnailUrl,
       createdAt: input.createdAt,
-      clipCreator: input.clipCreator,
+      creator: input.creator,
       user: userId ? { connect: { id: userId } } : undefined,
     },
   });

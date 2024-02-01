@@ -494,13 +494,13 @@ model VirtualTicket {
 
 model Clip {
   id            String @id @default(cuid())
-  clipSlug      String @unique
+  slug          String @unique
   userId        String?
   title         String
-  thumbnail     String
+  thumbnailUrl  String
   createdAt     DateTime @default(now())
-  clipCreator   String?
-  submitted     DateTime @default(now())
+  creator       String?
+  submittedAt   DateTime @default(now())
   approved      Boolean @default(false)
   votes         ClipVote[]
 
