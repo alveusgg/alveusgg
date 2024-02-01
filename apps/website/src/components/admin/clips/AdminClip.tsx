@@ -46,10 +46,10 @@ export function AdminClip({
         <Button onClick={() => setEmbedShown(!embedShown)}>
           {embedShown ? "Hide Clip" : "View Clip"}
         </Button>
-        {embedShown && <ClipEmbed clipId={clip.clipSlug} />}
+        {embedShown && <ClipEmbed clipId={clip.slug} />}
       </td>
       <td className={`${cellClasses} whitespace-nowrap`}>
-        <DateTime date={clip.submitted} format={{ time: "minutes" }} />
+        <DateTime date={clip.submittedAt} format={{ time: "minutes" }} />
       </td>
       <td className={`${cellClasses} flex flex-col gap-1`}>
         {showApprove && (
