@@ -1,5 +1,5 @@
 import { prisma } from "@/server/db/client";
-import { getClipDetails } from "./utils/twitch-api";
+import { getClipDetails, getClipsByDate } from "./utils/twitch-api";
 
 export async function removeInvalidClips() {
   const clips = await prisma.clip.findMany();
@@ -32,4 +32,49 @@ export async function removeInvalidClips() {
       },
     },
   });
+}
+
+export async function populateClips() {
+  const latestClip = await prisma.clip.findFirst({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const minutesDelay = 30;
+  const minimumViews = 50;
+
+  const startDate = new Date();
+  startDate.setMinutes(startDate.getMinutes() - minutesDelay * 2);
+
+  const endDate = new Date();
+  endDate.setMinutes(endDate.getMinutes() - minutesDelay);
+
+  let clips = undefined;
+  do {
+    clips = await getClipsByDate(
+      "636587384",
+      startDate,
+      endDate,
+      clips ? clips.pagination.cursor : undefined,
+    );
+
+    const clipsToAdd = [];
+    for (const clip of clips.data) {
+      if (clip.view_count < minimumViews) continue;
+
+      clipsToAdd.push({
+        slug: clip.id,
+        title: clip.title,
+        createdAt: new Date(clip.created_at),
+        thumbnailUrl: clip.thumbnail_url,
+        creator: clip.creator_name,
+      });
+    }
+
+    await prisma.clip.createMany({
+      data: clipsToAdd,
+      skipDuplicates: true,
+    });
+  } while (clips.pagination.cursor);
 }

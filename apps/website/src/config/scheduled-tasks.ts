@@ -8,7 +8,7 @@ import { retryPendingNotificationPushes } from "@/server/notifications";
 import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
 import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
 import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
-import { removeInvalidClips } from "@/server/clips";
+import { removeInvalidClips , populateClips } from "@/server/clips";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 
@@ -92,6 +92,14 @@ const config: ScheduledTasksConfig = {
       label: "Clips: Remove invalid clips",
       startDateTime: new Date(2023, 2, 3, 0, 8, 0),
       interval: { days: 1 },
+    },
+    {
+      id: "clips.populate",
+      task: () => populateClips(),
+      label:
+        "Clips: Retrieves all new clips and inserts them into the database",
+      startDateTime: new Date(2023, 2, 3, 0, 8, 0),
+      interval: { minutes: 30 },
     },
   ],
 };
