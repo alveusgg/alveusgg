@@ -20,14 +20,12 @@ import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
 import IconLoading from "@/icons/IconLoading";
 import { PageNavigation } from "@/components/shared/PageNavigation";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 
 const SubmitClipPage: NextPage = () => {
   const add = trpc.clips.addClip.useMutation();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const { data: session, status } = useSession();
 
   const clipsNavigationItems = [
     {
@@ -102,38 +100,25 @@ const SubmitClipPage: NextPage = () => {
         />
 
         <Section className="flex-grow pt-0">
-          {session || status === "loading" ? (
-            <form
-              className="my-5 flex flex-col gap-5 lg:mx-auto lg:w-1/2"
-              onSubmit={handleSubmit}
-            >
-              {error && <MessageBox variant="failure">{error}</MessageBox>}
-              <div className="flex flex-col gap-5 lg:gap-20">
-                <Fieldset legend="Clip Details">
-                  <TextField label="Clip URL" isRequired name="clipUrl" />
-                  <TextField
-                    label="Title (optional)"
-                    name="clipTitle"
-                    placeholder="Optionally provide a custom title for the clip"
-                  />
-                </Fieldset>
-              </div>
-              <Button type="submit">
-                {submitting ? <IconLoading /> : "Submit"}
-              </Button>
-            </form>
-          ) : (
-            <>
-              <h3 className="mt-10 text-center text-lg font-bold">
-                Please log in to submit clips:
-              </h3>
-              <div className="my-4 flex flex-row items-center justify-center">
-                <div className="flex-1">
-                  <LoginWithTwitchButton />
-                </div>
-              </div>
-            </>
-          )}
+          <form
+            className="my-5 flex flex-col gap-5 lg:mx-auto lg:w-1/2"
+            onSubmit={handleSubmit}
+          >
+            {error && <MessageBox variant="failure">{error}</MessageBox>}
+            <div className="flex flex-col gap-5 lg:gap-20">
+              <Fieldset legend="Clip Details">
+                <TextField label="Clip URL" isRequired name="clipUrl" />
+                <TextField
+                  label="Title (optional)"
+                  name="clipTitle"
+                  placeholder="Optionally provide a custom title for the clip"
+                />
+              </Fieldset>
+            </div>
+            <Button type="submit">
+              {submitting ? <IconLoading /> : "Submit"}
+            </Button>
+          </form>
         </Section>
       </div>
     </>
