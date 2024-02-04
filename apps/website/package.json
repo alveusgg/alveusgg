@@ -25,7 +25,8 @@
     "postinstall": "run-p postinstall:*",
     "lint": "next lint",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "initialize-clips": "tsx ./build-scripts/initialize-clips.ts"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data#0.28.0",
