@@ -4,13 +4,14 @@ import { useState } from "react";
 import { Button, dangerButtonClasses } from "@/components/shared/Button";
 import DateTime from "@/components/content/DateTime";
 import IconTrash from "@/icons/IconTrash";
+import IconX from "@/icons/IconX";
 import IconCheck from "@/icons/IconCheck";
 
 type AdminClipProps = {
   clip: Clip;
+  unapproveClip: (clip: Clip) => void;
   approveClip: (clip: Clip) => void;
   deleteClip: (clip: Clip) => void;
-  showApprove: boolean;
 };
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
@@ -32,8 +33,8 @@ const ClipEmbed = ({ clipId }: { clipId: string }) => {
 export function AdminClip({
   clip,
   approveClip,
+  unapproveClip,
   deleteClip,
-  showApprove,
 }: AdminClipProps) {
   const [embedShown, setEmbedShown] = useState(false);
 
@@ -52,7 +53,12 @@ export function AdminClip({
         <DateTime date={clip.submittedAt} format={{ time: "minutes" }} />
       </td>
       <td className={`${cellClasses} flex flex-col gap-1`}>
-        {showApprove && (
+        {clip.approved ? (
+          <Button size="small" onClick={() => unapproveClip(clip)}>
+            <IconX className="h-5 w-5" />
+            Unapprove
+          </Button>
+        ) : (
           <Button size="small" onClick={() => approveClip(clip)}>
             <IconCheck className="h-5 w-5" />
             Approve

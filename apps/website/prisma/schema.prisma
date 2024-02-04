@@ -501,7 +501,7 @@ model Clip {
   createdAt     DateTime @default(now())
   creator       String?
   submittedAt   DateTime @default(now())
-  approved      Boolean @default(false)
+  approved      Boolean @default(true)
   votes         ClipVote[]
 
   user          User? @relation(fields: [userId], references: [id])
