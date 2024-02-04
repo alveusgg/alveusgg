@@ -20,11 +20,11 @@ const AdminClipsPage: NextPage<
       <Meta title="Admin Clips" />
 
       <AdminPageLayout title="Clips" menuItems={menuItems}>
-        <Headline>Clips pending approval</Headline>
-        <AdminClipsPanel filter="pendingApproval" />
-
         <Headline>Approved clips</Headline>
         <AdminClipsPanel filter="approved" />
+
+        <Headline>Unapproved clips</Headline>
+        <AdminClipsPanel filter="unapproved" />
       </AdminPageLayout>
     </>
   );

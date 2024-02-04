@@ -5,13 +5,17 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { approveClip, deleteClip } from "@/server/db/clips";
+import { approveClip, unapproveClip, deleteClip } from "@/server/db/clips";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageClips),
 );
 
 export const adminClipsRouter = router({
+  unapproveClip: permittedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ input }) => await unapproveClip(input)),
+
   approveClip: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ input }) => await approveClip(input)),

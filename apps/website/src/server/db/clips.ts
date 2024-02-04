@@ -140,7 +140,7 @@ export async function getClips({
   cursor?: string;
   sortBy: SortType;
   userId: string | undefined;
-  filter?: "approved" | "pendingApproval";
+  filter?: "approved" | "unapproved";
 }) {
   const clips = await prisma.clip.findMany({
     take: limit + 1,
@@ -185,6 +185,17 @@ export async function approveClip(clipId: string) {
     },
     data: {
       approved: true,
+    },
+  });
+}
+
+export async function unapproveClip(clipId: string) {
+  return prisma.clip.update({
+    where: {
+      id: clipId,
+    },
+    data: {
+      approved: false,
     },
   });
 }

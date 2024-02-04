@@ -7,7 +7,7 @@ import { Panel } from "../Panel";
 import { AdminClip } from "./AdminClip";
 
 type AdminClipsPanelProps = {
-  filter: "pendingApproval" | "approved";
+  filter: "unapproved" | "approved";
 };
 
 export function AdminClipsPanel({ filter }: AdminClipsPanelProps) {
@@ -26,6 +26,16 @@ export function AdminClipsPanel({ filter }: AdminClipsPanelProps) {
       approveClip.mutate(clip.id);
     },
     [approveClip],
+  );
+
+  const unapproveClip = trpc.adminClips.unapproveClip.useMutation({
+    onSettled: () => entries.refetch(),
+  });
+  const handleUnapproveClip = useCallback(
+    (clip: Clip) => {
+      unapproveClip.mutate(clip.id);
+    },
+    [unapproveClip],
   );
 
   const deleteClip = trpc.adminClips.deleteClip.useMutation({
@@ -71,8 +81,8 @@ export function AdminClipsPanel({ filter }: AdminClipsPanelProps) {
                       key={clip.id}
                       clip={clip}
                       approveClip={handleApproveClip}
+                      unapproveClip={handleUnapproveClip}
                       deleteClip={handleDeleteClip}
-                      showApprove={filter === "pendingApproval"}
                     />
                   ))}
                 </Fragment>

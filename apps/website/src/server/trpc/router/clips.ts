@@ -120,7 +120,7 @@ export const clipsRouter = router({
       z.object({
         cursor: z.string().cuid().nullish(),
         sortBy: z.enum(["new", "top", "top_7day", "top_30day"]).default("new"),
-        filter: z.enum(["approved", "pendingApproval"]).default("approved"),
+        filter: z.enum(["approved", "unapproved"]).default("approved"),
       }),
     )
     .query(async ({ ctx, input }) => {
