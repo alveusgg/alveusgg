@@ -27,7 +27,8 @@
     "lint": "next lint",
     "start": "next start",
     "test": "vitest",
-    "format": "prettier . --write && prisma format"
+    "format": "prettier . --write && prisma format",
+    "initialize-clips": "tsx ./build-scripts/initialize-clips.ts"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data#0.38.1",
