@@ -35,12 +35,6 @@ export const clipsRouter = router({
       }
 
       const userId = ctx.session?.user?.id;
-      if (!userId) {
-        throw new TRPCError({
-          code: "UNAUTHORIZED",
-          message: "Not logged in",
-        });
-      }
 
       const details = await getClipDetails(slug);
       const clipDetails = details?.data?.[0];
