@@ -223,3 +223,40 @@ export async function getClipDetails(slug: string | string[]) {
 
   return clipsResponseSchema.parseAsync(json);
 }
+
+export async function getClipsByDate(
+  channel: string,
+  start: Date,
+  end: Date,
+  cursor?: string,
+) {
+  const url = new URL("https://api.twitch.tv/helix/clips");
+
+  url.searchParams.set("broadcaster_id", channel);
+  url.searchParams.set("first", "100");
+  url.searchParams.set("started_at", start.toISOString());
+  url.searchParams.set("ended_at", end.toISOString());
+
+  if (cursor) {
+    url.searchParams.set("after", cursor);
+  }
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      ...(await getApplicationAuthHeaders()),
+    },
+  });
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get clip details!");
+  }
+
+  return clipsResponseSchema.parseAsync(json);
+}
