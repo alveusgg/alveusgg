@@ -1,8 +1,5 @@
 import { z } from "zod";
 
-//import { updateSubscriptions } from "@/server/actions/twitch/manage-event-subscriptions";
-//import { checkLiveStatus } from "@/server/actions/twitch/check-live-status";
-//import { syncRoles } from "@/server/actions/twitch/sync-roles";
 import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 import { retryPendingNotificationPushes } from "@/server/notifications";
 import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
@@ -35,27 +32,6 @@ const scheduledTasksConfigSchema = z.object({
 
 const config: ScheduledTasksConfig = {
   tasks: [
-    //{
-    //  id: "twitch.syncRoles",
-    //  task: syncRoles,
-    //  label: "Twitch: Synchronize User Roles",
-    //  startDateTime: new Date(2022, 11, 18, 0, 6, 0),
-    //  interval: { hours: 1 },
-    //},
-    //{
-    //  id: "twitch.updateEventSubscriptions",
-    //  task: updateSubscriptions,
-    //  label: "Twitch: Update Event Subscriptions",
-    //  startDateTime: new Date(2022, 11, 18, 0, 6, 0),
-    //  interval: { hours: 1 },
-    //},
-    //{
-    //  id: "twitch.checkLiveStatus",
-    //  task: checkLiveStatus,
-    //  label: "Twitch: Check Live Status",
-    //  startDateTime: new Date(2022, 11, 18, 0, 0, 0),
-    //  interval: { minutes: 1 },
-    //},
     {
       id: "fileStorage.cleanup",
       task: () => cleanupFileStorage({ maxItems: 100 }),
