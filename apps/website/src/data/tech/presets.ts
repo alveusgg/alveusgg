@@ -86,6 +86,7 @@ const presets: Record<string, Camera> = {
       home: { description: "zoomed out, showing the entire enclosure" },
       den: { description: "the fox den" },
       table: { description: "table close to the entry" },
+      hillright: { description: "right side of hill" },
     },
   },
   bonusbugs: {
