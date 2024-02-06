@@ -47,6 +47,8 @@ const presets: Record<string, Camera> = {
       angel: { description: "feeder but lower (winnie's begging spot)" },
       barn2hay: { description: "view of barn2 hay bag" },
       fern: { description: "the fern in the middle of the pasture" },
+      feederinspect: { description: "look at feeder output for clogs" },
+      bughunt: { description: "quick starting point for bug hunts" },
     },
   },
   fox: {
@@ -75,8 +77,6 @@ const presets: Record<string, Camera> = {
       lindsaytraining: { description: "lindsays training spot" },
       fennroll: { description: "fennroll's spot" },
       hillrightw: { description: "hill right wide" },
-      feederinspect: { description: "look at feeder output for clogs" },
-      bughunt: { description: "quick starting point for bug hunts" },
       belowplatform: { description: "directly under platform" },
     },
   },
