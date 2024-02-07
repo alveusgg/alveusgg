@@ -203,7 +203,7 @@ const AboutTechPage: NextPage = () => {
                   <Heading
                     level={3}
                     className="text-2xl"
-                    id={`commands-${sentenceToKebab(category)}`}
+                    id={`commands:${sentenceToKebab(category)}`}
                     link
                   >
                     {category}
@@ -289,7 +289,7 @@ const AboutTechPage: NextPage = () => {
                     <Heading
                       level={3}
                       className="text-2xl"
-                      id={`presets-${camelToKebab(camera)}`}
+                      id={`presets:${camelToKebab(camera)}`}
                       link
                     >
                       {title}
