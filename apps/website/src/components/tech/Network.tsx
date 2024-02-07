@@ -81,7 +81,7 @@ const nodeTypes: {
   },
   controlunit: {
     container: "border-red-700",
-    eyebrow: { name: "Camera Control Unit", color: "text-yellow-700" },
+    eyebrow: { name: "Camera Control Unit", color: "text-red-700" },
   },
 };
 
