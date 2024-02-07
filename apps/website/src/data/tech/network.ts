@@ -376,7 +376,7 @@ const data: RootNetworkItem[] = [
                 name: "Rat/Chin Switch",
                 model: "Ubiquiti USW-Lite-8-PoE",
                 url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
-                connection: { type: "ethernet", location: "buried" },
+                connection: { type: "ethernet", location: "wall" },
                 links: [
                   {
                     type: "camera",
