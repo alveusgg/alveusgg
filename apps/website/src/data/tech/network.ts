@@ -3,7 +3,7 @@ type NetworkConnectionCore = {
 };
 
 type NetworkConnectionWired = NetworkConnectionCore & {
-  type: "ethernet" | "fiber";
+  type: "ethernet" | "fiber" | "coax";
   location: "buried" | "overhead" | "wall";
   accessories?: { name: string; model: string; url: string }[];
 };
@@ -22,7 +22,7 @@ type NetworkItemCore = {
 };
 
 type NetworkItemSwitch = NetworkItemCore & {
-  type: "switch" | "converter" | "interface";
+  type: "switch" | "converter" | "interface" | "controlunit";
   links: NestedNetworkItem[];
 };
 
@@ -386,7 +386,7 @@ const data: RootNetworkItem[] = [
                     connection: { type: "ethernet", location: "wall" },
                   },
                   {
-                    type: "switch",
+                    type: "controlunit",
                     name: "Rat Control Module",
                     model: "AXIS F9114",
                     url: "https://www.axis.com/products/axis-f9114-main-unit/",
@@ -397,21 +397,21 @@ const data: RootNetworkItem[] = [
                         name: "Rat (Top Level)",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
-                        connection: { type: "ethernet", location: "wall" },
+                        connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
                         name: "Rat (Middle Level)",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
-                        connection: { type: "ethernet", location: "wall" },
+                        connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
                         name: "Rat (Bottom Level)",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
-                        connection: { type: "ethernet", location: "wall" },
+                        connection: { type: "coax", location: "wall" },
                       },
                     ],
                   },

@@ -79,6 +79,10 @@ const nodeTypes: {
     container: "border-yellow-700",
     eyebrow: { name: "Server", color: "text-yellow-700" },
   },
+  controlunit: {
+    container: "border-red-700",
+    eyebrow: { name: "Camera Control Unit", color: "text-yellow-700" },
+  },
 };
 
 const NetworkNode = ({
@@ -197,6 +201,13 @@ const edgeTypes: {
     stroke: {
       color: "stroke-yellow-700",
       dash: "4 8",
+    },
+  },
+  coax: {
+    name: "Coax",
+    stroke: {
+      color: "stroke-red-700",
+      dash: "16 8",
     },
   },
 };
