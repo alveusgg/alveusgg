@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
-import Link from "next/link";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
 const POBoxPage: NextPage = () => {
   return (
@@ -18,41 +18,53 @@ const POBoxPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section
-        className="flex min-h-[85vh] flex-grow items-center"
+        className="flex min-h-[85vh] flex-grow"
         containerClassName="flex flex-col items-center text-center text-alveus-green"
       >
-        <Heading className="text-6xl">PO Box</Heading>
+        <div className="my-auto flex flex-col items-center">
+          <Heading className="text-6xl">PO Box</Heading>
 
-        <p className="my-3 text-xl font-semibold">
-          500 E Whitestone Blvd #2350, Cedar Park, TX 78613
-        </p>
+          <p className="my-3 text-xl font-semibold">
+            500 E Whitestone Blvd #2350, Cedar Park, TX 78613
+          </p>
 
-        <p>Use our PO Box to send things to Alveus.</p>
-        <p>Perhaps a gift to support the ambassadors?</p>
+          <p>Use our PO Box to send things to Alveus.</p>
+          <p>Perhaps a gift to support the ambassadors?</p>
 
-        <p className="my-3 text-xl font-semibold">
-          Please do not send anything to this address that is not intended for
-          Alveus.
-        </p>
+          <p className="my-3 text-xl font-semibold">
+            Please do not send anything to this address that is not intended for
+            Alveus.
+          </p>
 
-        <ul className="my-3 flex flex-wrap gap-4">
-          <li>
-            <Link
-              className="rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-              href="/donate"
-            >
-              Donate
-            </Link>
-          </li>
-          <li>
-            <Link
-              className="rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-              href="/contact-us"
-            >
-              Contact Us
-            </Link>
-          </li>
-        </ul>
+          <ul className="my-3 flex flex-wrap gap-4">
+            <li>
+              <Link
+                className="rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                href="/donate"
+                custom
+              >
+                Donate
+              </Link>
+            </li>
+            <li>
+              <Link
+                className="rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                href="/wishlist"
+                external
+                custom
+              >
+                Wishlist
+              </Link>
+            </li>
+          </ul>
+        </div>
+
+        <div className="mt-6 text-sm">
+          <p>
+            Need to get in touch with Alveus for other reasons?{" "}
+            <Link href="/contact-us">Contact Us</Link>
+          </p>
+        </div>
       </Section>
     </>
   );

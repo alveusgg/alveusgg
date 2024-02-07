@@ -55,6 +55,7 @@ const FormPage: NextPage<FormPageProps> = ({ form, rules }) => {
       <Meta
         title={`Rules | ${form.label} | Forms`}
         description={`Rules for the ${form.label} form at Alveus.`}
+        noindex
       />
 
       {/* Nav background */}

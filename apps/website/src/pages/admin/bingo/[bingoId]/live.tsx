@@ -273,8 +273,8 @@ const AdminEditBingoPage: NextPage<
                                   isBingoMatch
                                     ? "bg-red-500"
                                     : isCalled
-                                    ? "bg-green-600"
-                                    : "bg-white",
+                                      ? "bg-green-600"
+                                      : "bg-white",
                                 )}
                               >
                                 {transposedCard[rowIndex]![columnIndex]!}

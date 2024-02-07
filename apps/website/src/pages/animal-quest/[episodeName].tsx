@@ -422,6 +422,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             item="episode video"
             consent="twitch"
             className="aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
+            indexable
           >
             {twitchEmbed && (
               <iframe

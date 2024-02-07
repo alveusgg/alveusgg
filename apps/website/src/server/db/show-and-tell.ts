@@ -1,14 +1,17 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
+
+import { env } from "@/env/index.mjs";
+
+import { MAX_IMAGES, MAX_VIDEOS } from "@/config/show-and-tell";
+
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
+
+import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
-import { env } from "@/env/index.mjs";
-
-const MAX_IMAGES = 12;
 
 export const withAttachments = {
   include: {
@@ -36,8 +39,8 @@ function getPostFilter(filter: "approved" | "pendingApproval") {
         ],
       }
     : filter === "approved"
-    ? { approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt } }
-    : {};
+      ? { approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt } }
+      : {};
 }
 
 const postOrderBy = [
@@ -68,7 +71,7 @@ const videoLinksSchema = z.array(videoLinkSchema);
 
 const imageAttachmentsSchema = z
   .object({
-    create: z.array(createImageAttachmentSchema).max(12),
+    create: z.array(createImageAttachmentSchema).max(MAX_IMAGES),
     update: z.record(z.string().cuid(), attachmentSchema),
   })
   .refine(
@@ -87,7 +90,7 @@ const showAndTellSharedInputSchema = z.object({
   title: z.string().max(100),
   text: z.string().max(1_000),
   imageAttachments: imageAttachmentsSchema,
-  videoLinks: videoLinksSchema,
+  videoLinks: videoLinksSchema.max(MAX_VIDEOS),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;

@@ -1,4 +1,4 @@
-import { add, isPast } from "date-fns";
+import { DateTime } from "luxon";
 
 import type { ScheduledTasksConfig } from "@/config/scheduled-tasks";
 import { getScheduledTasksConfig } from "@/config/scheduled-tasks";
@@ -41,8 +41,10 @@ async function checkTaskIsDue(taskConfig: TaskConfig) {
     lastExecutionTime = lastExecutionEvent.startedAt;
   }
 
-  const nextExecutionTime = add(lastExecutionTime, taskConfig.interval);
-  return isPast(nextExecutionTime);
+  const nextExecutionTime = DateTime.fromJSDate(lastExecutionTime).plus(
+    taskConfig.interval,
+  );
+  return nextExecutionTime < DateTime.now();
 }
 
 export async function runScheduledTasks() {

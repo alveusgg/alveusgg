@@ -6,8 +6,8 @@ import {
 } from "@aws-sdk/client-s3";
 import { createId } from "@paralleldrive/cuid2";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import add from "date-fns/add";
 
+import { DateTime } from "luxon";
 import { env } from "@/env/index.mjs";
 import { prisma } from "@/server/db/client";
 import { probeImageMeta } from "@/server/utils/probe-image-meta";
@@ -112,7 +112,7 @@ export async function createFileStorageUpload({
       key: key,
       acl: acl,
       prefix: prefix,
-      expiresAt: add(new Date(), { seconds: expires }),
+      expiresAt: DateTime.now().plus({ seconds: expires }).toJSDate(),
     },
   });
 

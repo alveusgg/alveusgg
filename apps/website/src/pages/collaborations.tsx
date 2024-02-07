@@ -19,7 +19,7 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
 type Collaboration = {
   name: string;
-  link: string;
+  link: string | null;
   date: Date;
   videoId: string;
   vodId?: string;
@@ -28,6 +28,25 @@ type Collaboration = {
 type Collaborations = Record<string, Collaboration>;
 
 const collaborations = {
+  jaidenAnimationsAlpharad: {
+    name: "JaidenAnimations & Alpharad",
+    link: null,
+    date: new Date("2024-02-02"),
+    videoId: "U2HqCEr5_e4",
+  },
+  cinna: {
+    name: "Cinna",
+    link: "https://www.twitch.tv/cinna",
+    date: new Date("2024-01-28"),
+    videoId: "URSbZwAqLNE",
+  },
+  hasan: {
+    name: "Hasan",
+    link: "https://www.twitch.tv/hasanabi",
+    date: new Date("2024-01-26"),
+    videoId: "E_iO1ZKlHyM",
+    vodId: "MnPhxGBoY-I",
+  },
   fanfan: {
     name: "Fanfan",
     link: "https://www.twitch.tv/fanfan",
@@ -234,17 +253,21 @@ const CollaborationsSection = ({ items, year }: CollaborationsSectionProps) => {
             >
               <Heading
                 level={2}
-                className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
+                className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center"
                 id={camelToKebab(key)}
               >
-                <Link
-                  href={value.link}
-                  className="hover:text-alveus-green-600 hover:underline"
-                  external
-                  custom
-                >
-                  {value.name}
-                </Link>
+                {value.link !== null ? (
+                  <Link
+                    href={value.link}
+                    className="hover:text-alveus-green-600 hover:underline"
+                    external
+                    custom
+                  >
+                    {value.name}
+                  </Link>
+                ) : (
+                  value.name
+                )}
                 <small className="text-xl text-alveus-green-600">
                   <Link href={`#${camelToKebab(key)}`} custom>
                     {formatDateTime(value.date, { style: "long" })}

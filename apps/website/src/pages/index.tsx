@@ -13,6 +13,7 @@ import usePrefersReducedMotion from "@/hooks/motion";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import Heading from "@/components/content/Heading";
+import WatchLive from "@/components/content/WatchLive";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
@@ -21,8 +22,8 @@ import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
+import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
-import IconEnvelope from "@/icons/IconEnvelope";
 
 import mayaImage from "@/assets/maya.png";
 
@@ -99,20 +100,20 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
 const help = {
   donate: {
     icon: IconPayPal,
-    title: "Donate via PayPal",
-    link: "/paypal",
-    external: true,
+    title: "Donate to Alveus directly",
+    link: "/donate",
+    external: false,
   },
   amazon: {
     icon: IconAmazon,
-    title: "Amazon Wishlist",
+    title: "Gift via our Amazon Wishlist",
     link: "/wishlist",
     external: true,
   },
   contact: {
-    icon: IconEnvelope,
-    title: "Offer Help",
-    link: "/contact-us",
+    icon: IconBox,
+    title: "Send items to our PO Box",
+    link: "/po-box",
     external: false,
   },
 };
@@ -176,14 +177,7 @@ const Home: NextPage = () => {
               >
                 Meet the Ambassadors
               </Link>
-              <Link
-                className="inline-block rounded-full border-2 border-white px-4 py-2 text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-                href="/live"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Watch Live
-              </Link>
+              <WatchLive />
             </div>
           </div>
 

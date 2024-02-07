@@ -9,13 +9,14 @@ type MetaProps = {
   title?: string;
   description?: string;
   image?: string;
+  noindex?: boolean;
   children?: ReactNode;
 };
 
 // Get our base URL, which will either be specifically set, or from Vercel for preview deployments
 const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 
-const Meta = ({ title, description, image, children }: MetaProps) => {
+const Meta = ({ title, description, image, noindex, children }: MetaProps) => {
   const defaultTitle = "Alveus Sanctuary";
   const defaultDescription =
     "Alveus is a 501(c)(3) nonprofit organization functioning as a wildlife sanctuary & virtual education center following the journeys of our non-releasable ambassadors, aiming to educate and spark an appreciation for them and their wild counterparts.";
@@ -64,7 +65,7 @@ const Meta = ({ title, description, image, children }: MetaProps) => {
         content={computedDescription}
       />
       <meta key="twitter:image" name="twitter:image" content={computedImage} />
-      {env.NEXT_PUBLIC_NOINDEX === "true" && (
+      {(env.NEXT_PUBLIC_NOINDEX === "true" || noindex) && (
         <meta key="robots" name="robots" content="noindex" />
       )}
       {children}

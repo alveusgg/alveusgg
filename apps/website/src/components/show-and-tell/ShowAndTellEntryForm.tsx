@@ -3,6 +3,8 @@ import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
+import { MAX_IMAGES, MAX_VIDEOS } from "@/config/show-and-tell";
+
 import { trpc } from "@/utils/trpc";
 import { notEmpty } from "@/utils/helpers";
 import { getEntityStatus } from "@/utils/entity-helpers";
@@ -247,12 +249,17 @@ export function ShowAndTellEntryForm({
         <div className="flex flex-[2] flex-col gap-5">
           <Fieldset legend="Attachments">
             <div className="lg:mb-10">
-              <VideoLinksField name="videoUrls" {...videoLinksData} />
+              <VideoLinksField
+                name="videoUrls"
+                maxNumber={MAX_VIDEOS}
+                {...videoLinksData}
+              />
             </div>
             <UploadAttachmentsField
               {...imageAttachmentsData}
               label="Pictures"
               upload={upload}
+              maxNumber={MAX_IMAGES}
               allowedFileTypes={allowedFileTypes}
               renderAttachment={({ fileReference, ...props }) => {
                 const initialData =

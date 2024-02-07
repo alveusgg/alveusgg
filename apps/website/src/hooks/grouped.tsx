@@ -3,9 +3,8 @@ import { useRouter } from "next/router";
 
 type ObjectKey<T> = Extract<keyof T, string>;
 
-type MapKey<M extends Map<unknown, unknown>> = M extends Map<infer K, unknown>
-  ? K
-  : never;
+type MapKey<M extends Map<unknown, unknown>> =
+  M extends Map<infer K, unknown> ? K : never;
 
 export type GroupedItems<T> = Map<string, { name: string; items: T[] }>;
 

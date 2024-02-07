@@ -1,6 +1,5 @@
 // @ts-check
 import { resolve } from "path";
-import { withSuperjson } from "next-superjson";
 
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
 import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
@@ -293,6 +292,28 @@ const config = {
       permanent: true,
     },
     {
+      source: "/vods/twitchcon-2023",
+      destination: "https://youtube.com/watch?v=lxK73_PWjI8",
+      permanent: true,
+    },
+    {
+      source: "/vods/non-releasable",
+      destination: "https://youtube.com/watch?v=3UZjgUMuYeM",
+      permanent: true,
+    },
+    {
+      source: "/vods/keeper-talk",
+      destination:
+        "https://youtube.com/playlist?list=PLtQafKoimfLckLZ5aCtRNXInyBVs6IoYF",
+      permanent: true,
+    },
+    {
+      source: "/vods/connor-projects",
+      destination:
+        "https://youtube.com/playlist?list=PLtQafKoimfLdtIla7qiJCFYDd4qDZG6y-",
+      permanent: true,
+    },
+    {
       source: "/twitch",
       destination: "https://twitch.tv/alveussanctuary",
       permanent: true,
@@ -300,7 +321,17 @@ const config = {
     {
       source: "/live",
       destination: "https://twitch.tv/alveussanctuary",
-      permanent: false,
+      permanent: true,
+    },
+    {
+      source: "/live/twitch",
+      destination: "https://twitch.tv/alveussanctuary",
+      permanent: true,
+    },
+    {
+      source: "/live/youtube",
+      destination: "https://www.youtube.com/AlveusSanctuary/live",
+      permanent: true,
     },
   ],
   headers: async () => [
@@ -375,7 +406,8 @@ const config = {
   transpilePackages: ["@alveusgg/data"],
   experimental: {
     scrollRestoration: true,
+    swcPlugins: [["next-superjson-plugin", {}]],
   },
 };
 
-export default withSuperjson()(config);
+export default config;
