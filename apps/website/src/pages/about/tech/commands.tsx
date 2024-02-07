@@ -240,25 +240,25 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       <Section dark>
-        <Heading level={2} className="mb-2 mt-0" id="streamelements" link>
-          StreamElements
+        <Heading level={2} className="mb-2 mt-0" id="fossabot" link>
+          Fossabot
         </Heading>
 
         <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
           <p className="text-lg">
-            Alongside the custom chat bot for all the commands above,
-            StreamElements is also used in the Twitch (and YouTube) chat to
-            provide a set of commands that anyone can access, providing easy
-            access to a bunch of common information and links.
+            Alongside the custom chat bot for all the commands above, Fossabot
+            is also used in the Twitch chat to provide a set of commands that
+            anyone can access, providing easy access to a bunch of common
+            information and links.
           </p>
 
           <Link
-            href="https://streamelements.com/alveussanctuary/commands"
+            href="https://fossabot.com/alveussanctuary/commands"
             className="text-md mx-auto inline-block flex-shrink-0 rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
             custom
             external
           >
-            Explore StreamElements Commands
+            Explore Fossabot Commands
           </Link>
         </div>
       </Section>
