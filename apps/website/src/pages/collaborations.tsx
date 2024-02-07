@@ -32,7 +32,8 @@ const collaborations = {
     name: "JaidenAnimations & Alpharad",
     link: null,
     date: new Date("2024-02-02"),
-    videoId: "U2HqCEr5_e4",
+    videoId: "W74Ub2HR1Y4",
+    vodId: "U2HqCEr5_e4",
   },
   cinna: {
     name: "Cinna",
