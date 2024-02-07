@@ -401,7 +401,7 @@ const data: RootNetworkItem[] = [
                       },
                       {
                         type: "camera",
-                        name: "Rat (Middle Level)",
+                        name: "Rat Middle",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
