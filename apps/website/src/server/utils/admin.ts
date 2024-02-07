@@ -47,6 +47,11 @@ const menuItems = [
     href: "/admin/twitch",
     permission: permissions.manageTwitchApi,
   },
+  {
+    label: "Short links",
+    href: "/admin/short-links",
+    permission: permissions.manageShortLinks,
+  },
 ];
 
 export async function getAdminSSP(
