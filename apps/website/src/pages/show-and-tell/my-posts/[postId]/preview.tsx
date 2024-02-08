@@ -1,15 +1,21 @@
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+
+import { trpc } from "@/utils/trpc";
+
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { MessageBox } from "@/components/shared/MessageBox";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import { trpc } from "@/utils/trpc";
+
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
-import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
 const PreviewShowAndTellPage: NextPage = () => {
+  const session = useSession();
   const router = useRouter();
   const { postId } = router.query;
   const getMyPost = trpc.showAndTell.getMyEntry.useQuery(String(postId), {
@@ -40,12 +46,36 @@ const PreviewShowAndTellPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        {getMyPost.isLoading && <p>Loading...</p>}
-        {getMyPost.isError && (
-          <MessageBox variant="failure">{getMyPost.error.message}</MessageBox>
+        {session?.status !== "authenticated" && (
+          <div>
+            <p>
+              Please log in if you would like to edit or keep track of your
+              posts:
+            </p>
+
+            <div className="my-4 flex flex-row items-center justify-center">
+              <div className="flex-1">
+                <LoginWithTwitchButton />
+              </div>
+            </div>
+          </div>
         )}
-        {getMyPost.data && (
-          <ShowAndTellEntry entry={getMyPost.data} isPresentationView={false} />
+
+        {session?.status === "authenticated" && (
+          <>
+            {getMyPost.isLoading && <p>Loading...</p>}
+            {getMyPost.isError && (
+              <MessageBox variant="failure">
+                {getMyPost.error.message}
+              </MessageBox>
+            )}
+            {getMyPost.data && (
+              <ShowAndTellEntry
+                entry={getMyPost.data}
+                isPresentationView={false}
+              />
+            )}
+          </>
         )}
       </Section>
     </>
