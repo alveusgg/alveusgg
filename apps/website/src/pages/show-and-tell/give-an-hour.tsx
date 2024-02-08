@@ -350,7 +350,8 @@ const GiveAnHourPage: NextPage = () => (
         </Heading>
 
         <p className="text-lg">
-          Share your activities with the community and inspire others, via the{" "}
+          Share the hours you&apos;ve given and what you&apos;ve been doing with
+          the Alveus community and inspire others, via the{" "}
           <Link href="/show-and-tell/submit-post" className="underline">
             Show and Tell
           </Link>{" "}
