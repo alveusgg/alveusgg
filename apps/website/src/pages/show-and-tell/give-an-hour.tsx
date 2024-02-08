@@ -20,6 +20,8 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 
+import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
+
 // Artwork from https://undraw.co
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -147,6 +149,10 @@ const GiveAnHourPage: NextPage = () => (
           </Link>{" "}
           page.
         </p>
+
+        <div className="mt-2">
+          <GiveAnHourProgress hours={0} />
+        </div>
       </div>
 
       <Image
