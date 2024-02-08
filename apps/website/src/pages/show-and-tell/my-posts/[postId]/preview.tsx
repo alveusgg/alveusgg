@@ -14,6 +14,8 @@ import Heading from "@/components/content/Heading";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
+
 const PreviewShowAndTellPage: NextPage = () => {
   const session = useSession();
   const router = useRouter();
@@ -24,7 +26,11 @@ const PreviewShowAndTellPage: NextPage = () => {
 
   return (
     <>
-      <Meta title="Preview Post - Show and Tell" />
+      <Meta
+        title="Preview Post | Show and Tell"
+        description="Sign in and preview your previously submitted post, sharing your conservation and wildlife-related activities."
+        image={showAndTellHeader.src}
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -32,13 +38,16 @@ const PreviewShowAndTellPage: NextPage = () => {
       <Section
         dark
         className="py-12"
-        containerClassName="flex flex-wrap gap-4 justify-between"
+        containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="w-full lg:w-3/5">
+        <div className="w-full flex-grow lg:w-auto">
           <Heading level={1}>Show and Tell: Preview Post</Heading>
           <p className="text-lg">
-            Community submissions of their conservation and wildlife related
-            activities.
+            {session?.status === "authenticated"
+              ? "Preview}"
+              : "Sign in and preview"}{" "}
+            your previously submitted post, sharing your conservation and
+            wildlife-related activities.
           </p>
         </div>
         <ShowAndTellNavigation />

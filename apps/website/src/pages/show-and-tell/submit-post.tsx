@@ -1,13 +1,18 @@
 import { useState } from "react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
+
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { Button, secondaryButtonClasses } from "@/components/shared/Button";
+
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
-import Meta from "@/components/content/Meta";
+
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
 
 const ShowAndTellSubmitPage: NextPage = () => {
   const session = useSession();
@@ -17,7 +22,11 @@ const ShowAndTellSubmitPage: NextPage = () => {
 
   return (
     <>
-      <Meta title="Submit - Show and Tell" />
+      <Meta
+        title="Submit Post | Show and Tell"
+        description="Share any conservation and wildlife-related activities with the Alveus community that you've been up to."
+        image={showAndTellHeader.src}
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -25,16 +34,22 @@ const ShowAndTellSubmitPage: NextPage = () => {
       <Section
         dark
         className="py-12"
-        containerClassName="flex flex-wrap gap-4 justify-between"
+        containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="w-full lg:w-3/5">
+        <div className="w-full flex-grow lg:w-auto">
           <Heading level={1}>Show and Tell: Submit Post</Heading>
           <p className="text-lg">
-            Has stream helped you become more environmental conscious? Please
-            share with the community any of your conservation or wildlife
-            related activities. (These will be public and viewed on stream)
+            Inspired by Alveus streams and the community? Share any conservation
+            and wildlife-related activities with the community that you&apos;ve
+            been up to.
+          </p>
+          <p className="mt-4 text-sm italic">
+            All posts will be reviewed by the moderation team before being shown
+            on the website. Posts will be public for anyone to see on the
+            website, and may also be shown during Alveus streams.
           </p>
         </div>
+
         <ShowAndTellNavigation />
       </Section>
 

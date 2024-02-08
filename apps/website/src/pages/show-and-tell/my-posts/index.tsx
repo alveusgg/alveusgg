@@ -5,8 +5,10 @@ import Image from "next/image";
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
+import IconPencil from "@/icons/IconPencil";
+import IconEye from "@/icons/IconEye";
+import IconTrash from "@/icons/IconTrash";
+
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import {
   Button,
@@ -14,12 +16,15 @@ import {
   dangerButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/Button";
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
 import DateTime from "@/components/content/DateTime";
-import IconPencil from "@/icons/IconPencil";
-import IconEye from "@/icons/IconEye";
-import IconTrash from "@/icons/IconTrash";
+
+import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 
@@ -34,7 +39,11 @@ const MyShowAndTellEntriesPage: NextPage = () => {
 
   return (
     <>
-      <Meta title="Your Posts - Show and Tell" />
+      <Meta
+        title="Your Posts | Show and Tell"
+        description="Sign in and view your previously submitted posts, sharing your conservation and wildlife-related activities."
+        image={showAndTellHeader.src}
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -42,15 +51,17 @@ const MyShowAndTellEntriesPage: NextPage = () => {
       <Section
         dark
         className="py-12"
-        containerClassName="flex flex-wrap gap-4 justify-between"
+        containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="w-full lg:w-3/5">
+        <div className="w-full flex-grow lg:w-auto">
           <Heading level={1}>Show and Tell: Your Posts</Heading>
           <p className="text-lg">
-            Community submissions of their conservation and wildlife related
-            activities.
+            {session?.status === "authenticated" ? "View" : "Sign in and view"}{" "}
+            your previously submitted posts, sharing your conservation and
+            wildlife-related activities.
           </p>
         </div>
+
         <ShowAndTellNavigation />
       </Section>
 

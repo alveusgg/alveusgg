@@ -14,6 +14,8 @@ import Heading from "@/components/content/Heading";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
+
 const EditShowAndTellPage: NextPage = () => {
   const session = useSession();
   const router = useRouter();
@@ -24,7 +26,11 @@ const EditShowAndTellPage: NextPage = () => {
 
   return (
     <>
-      <Meta title="Edit Post - Show and Tell" />
+      <Meta
+        title="Edit Post | Show and Tell"
+        description="Sign in and edit your previously submitted post, sharing your conservation and wildlife-related activities."
+        image={showAndTellHeader.src}
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -32,15 +38,17 @@ const EditShowAndTellPage: NextPage = () => {
       <Section
         dark
         className="py-12"
-        containerClassName="flex flex-wrap gap-4 justify-between"
+        containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="w-full lg:w-3/5">
+        <div className="w-full flex-grow lg:w-auto">
           <Heading level={1}>Show and Tell: Edit Post</Heading>
           <p className="text-lg">
-            Community submissions of their conservation and wildlife related
-            activities.
+            {session?.status === "authenticated" ? "Edit" : "Sign in and edit"}{" "}
+            your previously submitted post, sharing your conservation and
+            wildlife-related activities.
           </p>
         </div>
+
         <ShowAndTellNavigation />
       </Section>
 

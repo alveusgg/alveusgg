@@ -16,14 +16,14 @@ import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
 import { getPosts } from "@/server/db/show-and-tell";
 
-import logoImage from "@/assets/logo.png";
 import IconLoading from "@/icons/IconLoading";
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
+import IconPencil from "@/icons/IconPencil";
 
-import { Button } from "@/components/shared/Button";
+import { Button, LinkButton } from "@/components/shared/Button";
 import { useOnToggleNativeFullscreen } from "@/components/shared/hooks/useOnToggleNativeFullscreen";
 import { useIntersectionObserver } from "@/components/shared/hooks/useIntersectionObserver";
 
@@ -31,9 +31,12 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import { QrCode } from "@/components/show-and-tell/QrCode";
+
+import alveusLogo from "@/assets/logo.png";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -321,29 +324,42 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
   return (
     <>
-      <Meta title="Show and Tell" />
+      <Meta
+        title="Show and Tell"
+        description="See what the Alveus community has been up to as they share their conservation and wildlife-related activities, or share your own activities."
+        image={showAndTellHeader.src}
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <Section
         dark
-        className="py-12"
-        containerClassName="flex flex-wrap gap-4 justify-between"
+        className="py-0"
+        containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="w-full lg:w-3/5">
+        <div className="w-full pb-4 pt-8 md:w-3/5 md:py-24">
           <Heading level={1}>Show and Tell</Heading>
           <p className="text-lg">
-            Community submissions of their conservation and wildlife related
-            activities. If you would like to submit your own story, please head
-            to the{" "}
+            See what the Alveus community has been up to as they share their
+            conservation and wildlife-related activities.
+          </p>
+
+          <p className="text-lg">
+            Been up to something yourself? Share your own activities via the{" "}
             <Link href="/show-and-tell/submit-post" className="underline">
               submission page
             </Link>
             .
           </p>
         </div>
-        <ShowAndTellNavigation />
+
+        <Image
+          src={showAndTellPeepo}
+          width={576}
+          alt=""
+          className="mx-auto w-full max-w-md p-4 pb-16 md:mx-0 md:w-2/5 md:pb-4"
+        />
       </Section>
 
       {/* Grow the last section to cover the page */}
@@ -422,7 +438,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                     Show and Tell
                   </Heading>
                   <Image
-                    src={logoImage}
+                    src={alveusLogo}
                     alt=""
                     height={120}
                     className="-mt-1 h-10 w-auto lg:mt-6 lg:h-28"
@@ -464,14 +480,27 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             >
               {isPresentationView ? (
                 <>
-                  <IconArrowsIn className="h-5 w-5" /> Close Fullscreen
+                  <IconArrowsIn className="h-5 w-5" />
+                  <span>Close Fullscreen</span>
                 </>
               ) : (
                 <>
-                  <IconArrowsOut className="h-5 w-5" /> Open Fullscreen
+                  <IconArrowsOut className="h-5 w-5" />
+                  <span>Open Fullscreen</span>
                 </>
               )}
             </Button>
+
+            <LinkButton
+              href="/show-and-tell/submit-post"
+              className="bg-white shadow-lg"
+            >
+              <IconPencil className="h-5 w-5" />
+              <span>
+                Submit
+                <span className="hidden lg:inline"> Post</span>
+              </span>
+            </LinkButton>
           </div>
         </div>
       </Section>
