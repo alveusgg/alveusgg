@@ -2,6 +2,18 @@ import type { NextPage } from "next";
 import Image, { type ImageProps } from "next/image";
 
 import { classes } from "@/utils/classes";
+import { getShortBaseUrl } from "@/utils/short-url";
+import {
+  emailShareUrl,
+  facebookShareUrl,
+  linkedinShareUrl,
+  twitterShareUrl,
+} from "@/utils/share-url";
+
+import IconFacebook from "@/icons/IconFacebook";
+import IconTwitter from "@/icons/IconTwitter";
+import IconEnvelope from "@/icons/IconEnvelope";
+import IconLinkedIn from "@/icons/IconLinkedIn";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
@@ -11,6 +23,7 @@ import Link from "@/components/content/Link";
 // Artwork from https://undraw.co
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import giveAnHourLogo from "@/assets/show-and-tell/give-an-hour/logo.svg";
 import giveAnHourArt from "@/assets/show-and-tell/give-an-hour/art.svg";
 import giveAnHourEntertainment from "@/assets/show-and-tell/give-an-hour/entertainment.svg";
@@ -18,6 +31,41 @@ import giveAnHourFitness from "@/assets/show-and-tell/give-an-hour/fitness.svg";
 import giveAnHourShopping from "@/assets/show-and-tell/give-an-hour/shopping.svg";
 import giveAnHourWalk from "@/assets/show-and-tell/give-an-hour/walk.svg";
 import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
+
+const shareData = {
+  url: `${getShortBaseUrl()}/give-an-hour`,
+  title: "Give an Hour for Earth with Alveus Sanctuary and WWF",
+  text: "Join the Alveus community and WWF to Give an Hour for Earth! Discover what actions you can take to help the environment and wildlife.",
+} as const;
+
+interface Share {
+  link: string;
+  text: string;
+  icon: React.ComponentType<{ size: number }>;
+}
+
+const share: Record<string, Share> = {
+  twitter: {
+    link: twitterShareUrl(shareData),
+    text: "Share on Twitter",
+    icon: IconTwitter,
+  },
+  facebook: {
+    link: facebookShareUrl(shareData),
+    text: "Share on Facebook",
+    icon: IconFacebook,
+  },
+  linkedIn: {
+    link: linkedinShareUrl(shareData),
+    text: "Share on LinkedIn",
+    icon: IconLinkedIn,
+  },
+  email: {
+    link: emailShareUrl(shareData),
+    text: "Share via Email",
+    icon: IconEnvelope,
+  },
+};
 
 const Card = ({
   heading,
@@ -107,8 +155,7 @@ const GiveAnHourPage: NextPage = () => (
       />
     </Section>
 
-    {/* Grow the last section to cover the page */}
-    <Section className="flex-grow" containerClassName="max-w-6xl">
+    <Section containerClassName="max-w-6xl">
       <div className="mx-auto mb-8 max-w-2xl text-center">
         <Heading level={2} id="why-it-matters" link className="text-4xl">
           Why it matters?
@@ -230,26 +277,86 @@ const GiveAnHourPage: NextPage = () => (
           <p>...then we want to hear about it!</p>
         </Card>
       </div>
+    </Section>
 
-      <Heading level={2} id="share-your-activities" link>
-        Share your activities
-      </Heading>
-      <p>
-        Share your activities with the community and inspire others, via the{" "}
-        <Link href="/show-and-tell/submit-post" className="underline">
-          Show and Tell
-        </Link>{" "}
-        page.
-      </p>
+    <Section
+      dark
+      containerClassName="flex flex-col items-center md:flex-row md:justify-between gap-8"
+    >
+      <div>
+        <Heading id="encourage-your-friends" level={2} link>
+          Encourage your friends
+        </Heading>
 
-      <p>
-        We need more people, more than ever. Individuals, communities,
-        businesses, and governments must all step up their actions for nature,
-        climate, and our one home to secure a Nature Positive world.
-      </p>
+        <p className="text-lg">
+          Every action and every hour matters! Share this guide and encourage
+          your friends, family, and colleagues to get involved and give an hour
+          for Earth.
+        </p>
 
-      {/* TODO: Share this page with short URL (see vote page) */}
-      {/* Download this information as a flyer (see Maya's graphic) */}
+        {/* Download this information as a flyer (see Maya's graphic) */}
+      </div>
+
+      <div>
+        <ul className="flex justify-center gap-4">
+          {Object.entries(share).map(([key, item]) => (
+            <li key={key}>
+              <Link
+                href={item.link}
+                external
+                custom
+                className="block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+                title={item.text}
+              >
+                <item.icon size={32} />
+              </Link>
+            </li>
+          ))}
+        </ul>
+
+        <input
+          readOnly={true}
+          type="url"
+          className="m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic text-alveus-tan outline-none"
+          value={shareData.url}
+          onClick={(e) =>
+            e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
+          }
+        />
+      </div>
+    </Section>
+
+    {/* Grow the last section to cover the page */}
+    <Section
+      className="flex-grow"
+      containerClassName="flex flex-wrap items-center justify-between"
+    >
+      <div className="w-full py-8 md:w-3/5">
+        <Heading level={2} id="share-your-activities" link>
+          Share your activities
+        </Heading>
+
+        <p className="text-lg">
+          Share your activities with the community and inspire others, via the{" "}
+          <Link href="/show-and-tell/submit-post" className="underline">
+            Show and Tell
+          </Link>{" "}
+          page.
+        </p>
+
+        <p className="mt-8 text-lg">
+          We need more people, more than ever. Individuals, communities,
+          businesses, and governments must all step up their actions for nature,
+          climate, and our one home to secure a Nature Positive world.
+        </p>
+      </div>
+
+      <Image
+        src={showAndTellPeepo}
+        width={448}
+        alt=""
+        className="mx-auto w-full max-w-md p-4 md:mx-0 md:w-2/5"
+      />
     </Section>
   </>
 );
