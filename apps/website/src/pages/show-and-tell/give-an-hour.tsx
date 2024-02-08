@@ -160,7 +160,7 @@ const GiveAnHourPage: NextPage = () => (
     <Section containerClassName="max-w-6xl">
       <div className="mx-auto mb-16 max-w-2xl text-center">
         <Heading level={2} id="why-it-matters" link className="text-4xl">
-          Why it matters?
+          Why it Matters?
         </Heading>
 
         <p className="text-lg">
@@ -174,7 +174,7 @@ const GiveAnHourPage: NextPage = () => (
       </div>
 
       <Heading level={2} id="actions" link className="text-center">
-        Actions you can take
+        Actions You Can Take
       </Heading>
 
       <div className="my-8 grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-8">
@@ -287,7 +287,7 @@ const GiveAnHourPage: NextPage = () => (
     >
       <div>
         <Heading id="encourage-your-friends" level={2} link>
-          Encourage your friends
+          Encourage Your Friends
         </Heading>
 
         <p className="text-lg">
@@ -340,7 +340,7 @@ const GiveAnHourPage: NextPage = () => (
     >
       <div className="w-full py-8 md:w-3/5">
         <Heading level={2} id="share-your-activities" link>
-          Share your activities
+          Share Your Activities
         </Heading>
 
         <p className="text-lg">
