@@ -9,7 +9,6 @@ import {
 } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
@@ -30,6 +29,7 @@ import { useIntersectionObserver } from "@/components/shared/hooks/useIntersecti
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import { QrCode } from "@/components/show-and-tell/QrCode";
@@ -348,7 +348,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           <p className="text-lg">
             Been up to something yourself? Share your own activities via the{" "}
-            <Link href="/show-and-tell/submit-post" className="underline">
+            <Link href="/show-and-tell/submit-post" dark className="underline">
               submission page
             </Link>
             .
@@ -356,11 +356,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           <p className="mt-8">
             As a community, we&apos;re tracking the hours we spend giving back
-            to the planet, as part of the{" "}
-            <Link href="/show-and-tell/give-an-hour" className="underline">
-              WWF&apos;s &quot;Give an Hour&quot; initiative
-            </Link>
-            .
+            to the planet, as part of the WWF&apos;s{" "}
+            <Link href="/show-and-tell/give-an-hour" dark className="underline">
+              Give an Hour
+            </Link>{" "}
+            initiative.
           </p>
           <div className="mt-2">
             <GiveAnHourProgress hours={0} />
