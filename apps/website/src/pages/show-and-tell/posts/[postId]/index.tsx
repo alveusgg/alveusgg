@@ -84,7 +84,7 @@ const ShowAndTellEntryPage: NextPage<
 
         <Image
           src={showAndTellPeepo}
-          width={576}
+          width={448}
           alt=""
           className="mx-auto w-full max-w-md p-4 pb-16 md:mx-0 md:w-2/5 md:pb-4"
         />
