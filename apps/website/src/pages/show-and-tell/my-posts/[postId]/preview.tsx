@@ -44,7 +44,7 @@ const PreviewShowAndTellPage: NextPage = () => {
           <Heading level={1}>Show and Tell: Preview Post</Heading>
           <p className="text-lg">
             {session?.status === "authenticated"
-              ? "Preview}"
+              ? "Preview"
               : "Sign in and preview"}{" "}
             your previously submitted post, sharing your conservation and
             wildlife-related activities.
