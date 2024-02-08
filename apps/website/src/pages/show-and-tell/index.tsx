@@ -33,6 +33,7 @@ import Heading from "@/components/content/Heading";
 
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import { QrCode } from "@/components/show-and-tell/QrCode";
+import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
 
 import alveusLogo from "@/assets/logo.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
@@ -352,6 +353,18 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             </Link>
             .
           </p>
+
+          <p className="mt-8">
+            As a community, we&apos;re tracking the hours we spend giving back
+            to the planet, as part of the{" "}
+            <Link href="/show-and-tell/give-an-hour" className="underline">
+              WWF&apos;s &quot;Give an Hour&quot; initiative
+            </Link>
+            .
+          </p>
+          <div className="mt-2">
+            <GiveAnHourProgress hours={0} />
+          </div>
         </div>
 
         <Image
