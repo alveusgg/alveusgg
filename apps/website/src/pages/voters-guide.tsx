@@ -5,13 +5,6 @@ import IframeResizer from "iframe-resizer-react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
-import { getShortBaseUrl } from "@/utils/short-url";
-import {
-  emailShareUrl,
-  facebookShareUrl,
-  linkedinShareUrl,
-  twitterShareUrl,
-} from "@/utils/share-url";
 import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
@@ -19,13 +12,10 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Share from "@/components/content/Share";
 
 import IconChevronUp from "@/icons/IconChevronUp";
 import IconChevronDown from "@/icons/IconChevronDown";
-import IconFacebook from "@/icons/IconFacebook";
-import IconTwitter from "@/icons/IconTwitter";
-import IconEnvelope from "@/icons/IconEnvelope";
-import IconLinkedIn from "@/icons/IconLinkedIn";
 import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -163,41 +153,6 @@ const issues: Record<string, Issue> = {
         </p>
       </>
     ),
-  },
-};
-
-const shareData = {
-  url: `${getShortBaseUrl()}/vote`,
-  title: "Alveus Sanctuary Voters' Guide",
-  text: "Our ambassadors can't vote, but you can! Get ready to vote with Alveus Sanctuary's Voters' Guide. Check your voting information, preview your ballot, and understand the issues.",
-} as const;
-
-interface Share {
-  link: string;
-  text: string;
-  icon: React.ComponentType<{ size: number }>;
-}
-
-const share: Record<string, Share> = {
-  twitter: {
-    link: twitterShareUrl(shareData),
-    text: "Share on Twitter",
-    icon: IconTwitter,
-  },
-  facebook: {
-    link: facebookShareUrl(shareData),
-    text: "Share on Facebook",
-    icon: IconFacebook,
-  },
-  linkedIn: {
-    link: linkedinShareUrl(shareData),
-    text: "Share on LinkedIn",
-    icon: IconLinkedIn,
-  },
-  email: {
-    link: emailShareUrl(shareData),
-    text: "Share via Email",
-    icon: IconEnvelope,
   },
 };
 
@@ -408,33 +363,11 @@ const VotePage: NextPage = () => {
           </p>
         </div>
 
-        <div>
-          <ul className="flex justify-center gap-4">
-            {Object.entries(share).map(([key, item]) => (
-              <li key={key}>
-                <Link
-                  href={item.link}
-                  external
-                  custom
-                  className="block rounded-2xl bg-alveus-green p-3 text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                  title={item.text}
-                >
-                  <item.icon size={32} />
-                </Link>
-              </li>
-            ))}
-          </ul>
-
-          <input
-            readOnly={true}
-            type="url"
-            className="m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic text-alveus-green-600 outline-none"
-            value={shareData.url}
-            onClick={(e) =>
-              e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
-            }
-          />
-        </div>
+        <Share
+          title="Alveus Sanctuary Voters' Guide"
+          text="Our ambassadors can't vote, but you can! Get ready to vote with Alveus Sanctuary's Voters' Guide. Check your voting information, preview your ballot, and understand the issues."
+          path="/vote"
+        />
       </Section>
 
       {/* Grow the last section to cover the page */}

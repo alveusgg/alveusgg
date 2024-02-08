@@ -2,23 +2,12 @@ import type { NextPage } from "next";
 import Image, { type ImageProps } from "next/image";
 
 import { classes } from "@/utils/classes";
-import { getShortBaseUrl } from "@/utils/short-url";
-import {
-  emailShareUrl,
-  facebookShareUrl,
-  linkedinShareUrl,
-  twitterShareUrl,
-} from "@/utils/share-url";
-
-import IconFacebook from "@/icons/IconFacebook";
-import IconTwitter from "@/icons/IconTwitter";
-import IconEnvelope from "@/icons/IconEnvelope";
-import IconLinkedIn from "@/icons/IconLinkedIn";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Share from "@/components/content/Share";
 
 import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
 
@@ -34,41 +23,6 @@ import giveAnHourFitness from "@/assets/show-and-tell/give-an-hour/fitness.svg";
 import giveAnHourShopping from "@/assets/show-and-tell/give-an-hour/shopping.svg";
 import giveAnHourWalk from "@/assets/show-and-tell/give-an-hour/walk.svg";
 import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
-
-const shareData = {
-  url: `${getShortBaseUrl()}/give-an-hour`,
-  title: "Give an Hour for Earth with Alveus Sanctuary and WWF",
-  text: "Join the Alveus community and WWF to Give an Hour for Earth! Discover what actions you can take to help the environment and wildlife.",
-} as const;
-
-interface Share {
-  link: string;
-  text: string;
-  icon: React.ComponentType<{ size: number }>;
-}
-
-const share: Record<string, Share> = {
-  twitter: {
-    link: twitterShareUrl(shareData),
-    text: "Share on Twitter",
-    icon: IconTwitter,
-  },
-  facebook: {
-    link: facebookShareUrl(shareData),
-    text: "Share on Facebook",
-    icon: IconFacebook,
-  },
-  linkedIn: {
-    link: linkedinShareUrl(shareData),
-    text: "Share on LinkedIn",
-    icon: IconLinkedIn,
-  },
-  email: {
-    link: emailShareUrl(shareData),
-    text: "Share via Email",
-    icon: IconEnvelope,
-  },
-};
 
 const Card = ({
   heading,
@@ -310,33 +264,12 @@ const GiveAnHourPage: NextPage = () => (
         </p>
       </div>
 
-      <div>
-        <ul className="flex justify-center gap-4">
-          {Object.entries(share).map(([key, item]) => (
-            <li key={key}>
-              <Link
-                href={item.link}
-                external
-                custom
-                className="block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-                title={item.text}
-              >
-                <item.icon size={32} />
-              </Link>
-            </li>
-          ))}
-        </ul>
-
-        <input
-          readOnly={true}
-          type="url"
-          className="m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic text-alveus-tan outline-none"
-          value={shareData.url}
-          onClick={(e) =>
-            e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
-          }
-        />
-      </div>
+      <Share
+        title="Give an Hour for Earth with Alveus Sanctuary and WWF"
+        text="Join the Alveus community and WWF to Give an Hour for Earth! Discover what actions you can take to help the environment and wildlife."
+        path="/give-an-hour"
+        dark
+      />
     </Section>
 
     {/* Grow the last section to cover the page */}
