@@ -3,7 +3,7 @@ type NetworkConnectionCore = {
 };
 
 type NetworkConnectionWired = NetworkConnectionCore & {
-  type: "ethernet" | "fiber";
+  type: "ethernet" | "fiber" | "coax";
   location: "buried" | "overhead" | "wall";
   accessories?: { name: string; model: string; url: string }[];
 };
@@ -22,7 +22,7 @@ type NetworkItemCore = {
 };
 
 type NetworkItemSwitch = NetworkItemCore & {
-  type: "switch" | "converter" | "interface";
+  type: "switch" | "converter" | "interface" | "controlunit";
   links: NestedNetworkItem[];
 };
 
@@ -372,11 +372,50 @@ const data: RootNetworkItem[] = [
                 connection: { type: "ethernet", location: "wall" },
               },
               {
-                type: "camera",
-                name: "Chinchilla",
-                model: "AXIS M1065-L (Fixed)",
-                url: "https://www.axis.com/products/axis-m1065-l/",
+                type: "switch",
+                name: "Rat/Chin Switch",
+                model: "Ubiquiti USW-Lite-8-PoE",
+                url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
+                links: [
+                  {
+                    type: "camera",
+                    name: "Chinchilla",
+                    model: "AXIS M1065-L (Fixed)",
+                    url: "https://www.axis.com/products/axis-m1065-l/",
+                    connection: { type: "ethernet", location: "wall" },
+                  },
+                  {
+                    type: "controlunit",
+                    name: "Rat Control Module",
+                    model: "AXIS F9114",
+                    url: "https://www.axis.com/products/axis-f9114-main-unit/",
+                    connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Rat Upper",
+                        model: "AXIS F4105-LRE",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Rat Middle",
+                        model: "AXIS F4105-LRE",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Rat Lower",
+                        model: "AXIS F4105-LRE",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                    ],
+                  },
+                ],
               },
               {
                 type: "switch",
