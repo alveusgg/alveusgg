@@ -25,6 +25,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import giveAnHourLogo from "@/assets/show-and-tell/give-an-hour/logo.svg";
+import giveAnHourPoster from "@/assets/show-and-tell/give-an-hour/poster.png";
 import giveAnHourArt from "@/assets/show-and-tell/give-an-hour/art.svg";
 import giveAnHourEntertainment from "@/assets/show-and-tell/give-an-hour/entertainment.svg";
 import giveAnHourFitness from "@/assets/show-and-tell/give-an-hour/fitness.svg";
@@ -118,6 +119,7 @@ const GiveAnHourPage: NextPage = () => (
     <Meta
       title="Give an Hour | Show and Tell"
       description="Join the Alveus community and WWF to Give an Hour for Earth! Discover what actions you can take to help the environment and wildlife."
+      image={giveAnHourPoster.src}
     />
 
     {/* Nav background */}
@@ -156,7 +158,7 @@ const GiveAnHourPage: NextPage = () => (
     </Section>
 
     <Section containerClassName="max-w-6xl">
-      <div className="mx-auto mb-8 max-w-2xl text-center">
+      <div className="mx-auto mb-16 max-w-2xl text-center">
         <Heading level={2} id="why-it-matters" link className="text-4xl">
           Why it matters?
         </Heading>
@@ -294,7 +296,12 @@ const GiveAnHourPage: NextPage = () => (
           for Earth.
         </p>
 
-        {/* Download this information as a flyer (see Maya's graphic) */}
+        <p className="mt-4 text-lg">
+          <Link href={giveAnHourPoster.src} external dark className="underline">
+            Download this guide as a poster
+          </Link>{" "}
+          to share with your community and inspire others to take action.
+        </p>
       </div>
 
       <div>
