@@ -1,3 +1,5 @@
+import { classes } from "@/utils/classes";
+
 const GiveAnHourProgressText = ({
   hours,
   target,
@@ -39,18 +41,19 @@ export const GiveAnHourProgress = ({
         <GiveAnHourProgressText hours={hours} target={computedTarget} />
       )}
 
-      <div className="relative h-8 w-full rounded-full bg-alveus-green-900">
+      <div className="relative my-2 h-10 w-full rounded-full bg-alveus-green-900 shadow-lg">
         <div
-          className="absolute inset-y-0 left-0 min-w-8 rounded-full border-4 border-alveus-green-900 bg-alveus-green"
+          className="absolute inset-y-0 left-0 min-w-8 rounded-full border-4 border-alveus-green-900 bg-alveus-green transition-all duration-[2s] ease-in-out"
           style={{ width: `${(hours / computedTarget || 0) * 100}%` }}
         />
 
-        {hours > 0 && (
-          <div
-            className="absolute inset-y-0 left-0 min-w-8 animate-pulse-slow rounded-full border-4 border-alveus-green-900 bg-alveus-tan"
-            style={{ width: `${(hours / computedTarget || 0) * 100}%` }}
-          />
-        )}
+        <div
+          className={classes(
+            "absolute inset-y-0 left-0 min-w-8 animate-pulse-slow rounded-full border-4 border-alveus-green-900 bg-gradient-to-r from-alveus-tan/70 to-red-600 transition-all duration-[2s] ease-in-out",
+            hours === 0 ? "opacity-0" : "opacity-100",
+          )}
+          style={{ width: `${(hours / computedTarget || 0) * 100}%` }}
+        />
       </div>
 
       {text === "after" && (
