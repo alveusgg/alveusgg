@@ -68,17 +68,12 @@ const ShowAndTellEntryPage: NextPage<
 
           <p className="text-lg">
             Been up to something yourself? Share your own activities via the{" "}
-            <Link href="/show-and-tell/submit-post" className="underline">
-              submission page
-            </Link>
-            .
+            <Link href="/show-and-tell/submit-post">submission page</Link>.
           </p>
 
           <p className="mt-8 text-lg">
             <IconArrowRight className="inline-block h-5 w-5 rotate-180" />{" "}
-            <Link href="/show-and-tell" className="underline">
-              Back to all posts
-            </Link>
+            <Link href="/show-and-tell">Back to all posts</Link>
           </p>
         </div>
 

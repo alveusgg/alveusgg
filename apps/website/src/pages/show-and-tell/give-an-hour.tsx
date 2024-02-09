@@ -108,7 +108,7 @@ const GiveAnHourPage: NextPage = () => {
           <p className="text-md mt-8">
             Given an hour? Share your activities with the community and inspire
             others, via the{" "}
-            <Link href="/show-and-tell/submit-post" dark className="underline">
+            <Link href="/show-and-tell/submit-post" dark>
               Show and Tell
             </Link>{" "}
             page.
@@ -266,12 +266,7 @@ const GiveAnHourPage: NextPage = () => {
           </p>
 
           <p className="mt-4 text-lg">
-            <Link
-              href={giveAnHourPoster.src}
-              external
-              dark
-              className="underline"
-            >
+            <Link href={giveAnHourPoster.src} external dark>
               Download this guide as a poster
             </Link>{" "}
             to share with your community and inspire others to take action.
@@ -299,10 +294,7 @@ const GiveAnHourPage: NextPage = () => {
           <p className="text-lg">
             Share the hours you&apos;ve given and what you&apos;ve been doing
             with the Alveus community and inspire others, via the{" "}
-            <Link href="/show-and-tell/submit-post" className="underline">
-              Show and Tell
-            </Link>{" "}
-            page.
+            <Link href="/show-and-tell/submit-post">Show and Tell</Link> page.
           </p>
 
           <p className="mt-8 text-lg">

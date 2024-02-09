@@ -348,7 +348,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           <p className="text-lg">
             Been up to something yourself? Share your own activities via the{" "}
-            <Link href="/show-and-tell/submit-post" dark className="underline">
+            <Link href="/show-and-tell/submit-post" dark>
               submission page
             </Link>
             .
@@ -357,7 +357,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           <p className="mt-8">
             As a community, we&apos;re tracking the hours we spend giving back
             to the planet, as part of the WWF&apos;s{" "}
-            <Link href="/show-and-tell/give-an-hour" dark className="underline">
+            <Link href="/show-and-tell/give-an-hour" dark>
               Give an Hour
             </Link>{" "}
             initiative.

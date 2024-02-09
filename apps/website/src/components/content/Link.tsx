@@ -24,7 +24,7 @@ const Link = ({
   const computedClassName = useMemo(
     () =>
       classes(
-        !custom && "transition-colors hover:underline",
+        !custom && "transition-colors underline",
         !custom &&
           (dark
             ? "text-red-200 hover:text-blue-200"
