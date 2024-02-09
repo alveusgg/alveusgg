@@ -340,7 +340,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         containerClassName="flex flex-wrap items-center justify-between"
       >
         <div className="w-full pb-4 pt-8 md:w-3/5 md:py-24">
-          <Heading level={1}>Show and Tell</Heading>
+          <Heading>Show and Tell</Heading>
           <p className="text-lg">
             See what the Alveus community has been up to as they share their
             conservation and wildlife-related activities.

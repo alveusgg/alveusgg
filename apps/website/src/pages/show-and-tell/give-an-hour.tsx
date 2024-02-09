@@ -96,8 +96,8 @@ const GiveAnHourPage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="flex w-full flex-col gap-4 pb-4 pt-8 md:w-3/5 md:py-24">
-          <Heading className="my-0">Give an Hour for Earth</Heading>
+        <div className="flex w-full flex-col pb-4 pt-8 md:w-3/5 md:py-24">
+          <Heading>Give an Hour for Earth</Heading>
 
           <p className="text-lg">
             Join the Alveus community and WWF in participating in Give an Hour
@@ -105,7 +105,7 @@ const GiveAnHourPage: NextPage = () => {
             can take to help the environment and wildlife.
           </p>
 
-          <p className="text-md">
+          <p className="text-md mt-8">
             Given an hour? Share your activities with the community and inspire
             others, via the{" "}
             <Link href="/show-and-tell/submit-post" dark className="underline">
@@ -113,7 +113,6 @@ const GiveAnHourPage: NextPage = () => {
             </Link>{" "}
             page.
           </p>
-
           <div className="mt-2" onClick={onClickProgress}>
             <GiveAnHourProgress hours={progressHours} />
           </div>
