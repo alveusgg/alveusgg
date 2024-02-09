@@ -9,7 +9,6 @@ import {
 } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
@@ -30,9 +29,11 @@ import { useIntersectionObserver } from "@/components/shared/hooks/useIntersecti
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import { QrCode } from "@/components/show-and-tell/QrCode";
+import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
 
 import alveusLogo from "@/assets/logo.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
@@ -339,7 +340,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         containerClassName="flex flex-wrap items-center justify-between"
       >
         <div className="w-full pb-4 pt-8 md:w-3/5 md:py-24">
-          <Heading level={1}>Show and Tell</Heading>
+          <Heading>Show and Tell</Heading>
           <p className="text-lg">
             See what the Alveus community has been up to as they share their
             conservation and wildlife-related activities.
@@ -347,11 +348,23 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           <p className="text-lg">
             Been up to something yourself? Share your own activities via the{" "}
-            <Link href="/show-and-tell/submit-post" className="underline">
+            <Link href="/show-and-tell/submit-post" dark className="underline">
               submission page
             </Link>
             .
           </p>
+
+          <p className="mt-8">
+            As a community, we&apos;re tracking the hours we spend giving back
+            to the planet, as part of the WWF&apos;s{" "}
+            <Link href="/show-and-tell/give-an-hour" dark className="underline">
+              Give an Hour
+            </Link>{" "}
+            initiative.
+          </p>
+          <div className="mt-2">
+            <GiveAnHourProgress hours={0} />
+          </div>
         </div>
 
         <Image

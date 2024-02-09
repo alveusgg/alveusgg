@@ -161,6 +161,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/give-an-hour",
+      destination: "/show-and-tell/give-an-hour",
+      permanent: true,
+    },
+    {
       source: "/aq/:path*",
       destination: "/animal-quest/:path*",
       permanent: false,

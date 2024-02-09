@@ -28,7 +28,8 @@ const Heading = ({
         !/\bmy-\d+\b/.test(className || "") && "my-2",
         !/\btext-(xs|sm|base|lg|[2-6]?xl)\b/.test(className || "") &&
           "text-3xl",
-        "text-balance font-serif font-bold",
+        !/\bfont-(sans|serif|mono)\b/.test(className || "") && "font-serif",
+        "text-balance font-bold",
         className,
       ),
     [className],
