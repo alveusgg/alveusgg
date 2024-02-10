@@ -1,7 +1,7 @@
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 
-import type { Form } from "@prisma/client";
+import type { ShortLinks } from "@prisma/client";
 import { useRouter } from "next/router";
 
 import { env } from "@/env/index.mjs";
@@ -18,7 +18,7 @@ import { MessageBox } from "@/components/shared/MessageBox";
 
 type FormFormProps = {
   action: "create" | "edit";
-  form?: Form;
+  form?: ShortLinks;
 };
 
 export function ShortLinkForm({ action, form }: FormFormProps) {
