@@ -11,15 +11,15 @@ export default function Index() {
     const s = router.query["slug"];
     if (typeof s === "string") {
       const slug = s;
-      if (router.isReady && slug) {
+      if (router.isReady && slug && cache) {
         cache.data?.forEach((link) => {
           if (link.slug.toLowerCase() === slug) {
             console.log("Redirecting to " + slug);
             router.push(link.link);
           }
         });
-        router.push("/");
       }
+      router.push("/");
     }
   }, [router.isReady]);
   return (
