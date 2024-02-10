@@ -262,6 +262,7 @@ model ShortLinks {
   id     String @id @default(cuid())
   label  String
   slug   String
+  link   String
   config String @db.Text
 
   createdAt DateTime @default(now())
