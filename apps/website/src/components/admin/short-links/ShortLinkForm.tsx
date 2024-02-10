@@ -9,7 +9,7 @@ import { env } from "@/env/index.mjs";
 import { trpc } from "@/utils/trpc";
 import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 
-import { type FormSchema } from "@/server/db/forms";
+import { type FormSchema } from "@/server/db/short-links";
 
 import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import { TextField } from "@/components/shared/form/TextField";
@@ -33,8 +33,16 @@ export function ShortLinkForm({ action, form }: FormFormProps) {
 
       const formData = new FormData(event.currentTarget);
 
+      //Add https:// if not present
+      const link =
+        String(formData.get("url")).startsWith("http://") ||
+        String(formData.get("url")).startsWith("https://")
+          ? String(formData.get("url"))
+          : "https://" + String(formData.get("url"));
+
       const mutationData: FormSchema = {
         label: String(formData.get("label")),
+        link: link,
         config: {
           checks: formData.get("checks") === "true",
           rules: formData.has("rules")

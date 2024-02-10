@@ -50,6 +50,11 @@ function ShortLinks({ form, onError, onUpdate }: LinkProps) {
             </div>
           </div>
         </td>
+        <td className="">
+          <Link className="underline" href={form.link} target="_blank">
+            {form.link}
+          </Link>
+        </td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton
             size="small"
@@ -80,8 +85,6 @@ export function ShortLink() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const links = trpc.adminShortLinks.getLinks.useQuery();
 
-  console.log(links.data);
-
   return (
     <>
       <Headline>Short links</Headline>
@@ -101,6 +104,7 @@ export function ShortLink() {
             <tr className="border-b border-gray-700">
               <th className="text-left">Active</th>
               <th className="text-left">Name</th>
+              <th className="text-left">Redirects to</th>
               <th className="text-left">Actions</th>
             </tr>
           </thead>
