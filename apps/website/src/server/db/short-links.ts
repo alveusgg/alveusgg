@@ -7,8 +7,11 @@ import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
 export const formSchema = z.object({
   label: z.string(),
   slug: z.string().regex(SLUG_REGEX).optional(),
+  link: z.string(),
   config: shortLinkConfigSchema,
 });
+
+export type FormSchema = z.infer<typeof formSchema>;
 
 export const existingFormSchema = formSchema.and(
   z.object({
