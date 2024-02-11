@@ -1,11 +1,13 @@
-import { useRouter } from "next/router";
+import { useRouter, type NextRouter } from "next/router";
 import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
+import { delay } from "@/utils/delay";
 
 export default function Index() {
   const router = useRouter();
 
   const cache = trpc.adminShortLinks.getLinks.useQuery();
+  const tracking = trpc.adminShortLinks.addClick.useMutation();
 
   useEffect(() => {
     const s = router.query["slug"];
@@ -14,12 +16,12 @@ export default function Index() {
       if (router.isReady && slug && cache) {
         cache.data?.forEach((link) => {
           if (link.slug.toLowerCase() === slug) {
-            console.log("Redirecting to " + slug);
-            router.push(link.link);
+            router.push(link.link).then(() => tracking.mutate(link.id));
+            return;
           }
         });
       }
-      router.push("/");
+      delay(1000).then(() => redirectHome(router));
     }
   }, [router.isReady]);
   return (
@@ -27,4 +29,8 @@ export default function Index() {
       <p>Redirecting...</p>
     </>
   );
+}
+
+async function redirectHome(router: NextRouter) {
+  await router.push("/");
 }

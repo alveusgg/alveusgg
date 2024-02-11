@@ -13,6 +13,7 @@ import { Panel } from "@/components/admin/Panel";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
 import type { AppRouter } from "@/server/trpc/router/_app";
+import formId from "@/pages/forms/[formId]";
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type FormWithCount = RouterOutput["adminShortLinks"]["getLinks"][number];
 
@@ -27,6 +28,7 @@ function ShortLinks({ form, onError, onUpdate }: LinkProps) {
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
+  const clicks = trpc.adminShortLinks.getClicks.useQuery();
 
   return (
     <>
@@ -54,6 +56,9 @@ function ShortLinks({ form, onError, onUpdate }: LinkProps) {
           <Link className="underline" href={form.link} target="_blank">
             {form.link}
           </Link>
+        </td>
+        <td>
+          {clicks.data?.map((c) => (form.id === c.id ? String(c.clicks) : ""))}
         </td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton
@@ -105,6 +110,7 @@ export function ShortLink() {
               <th className="text-left">Active</th>
               <th className="text-left">Name</th>
               <th className="text-left">Redirects to</th>
+              <th className="text-left">Clicks</th>
               <th className="text-left">Actions</th>
             </tr>
           </thead>

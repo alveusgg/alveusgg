@@ -258,16 +258,6 @@ model Form {
   @@index([active, startAt, endAt, id, slug], name: "Form_public")
 }
 
-model ShortLinks {
-  id    String @id @default(cuid())
-  label String
-  slug  String
-  link  String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model FormEntry {
   id                   String  @id @default(cuid())
   formId               String
@@ -290,6 +280,24 @@ model FormEntry {
 
   @@unique([formId, userId])
   @@index([userId], name: "FormEntry_userId")
+}
+
+model ShortLinks {
+  id    String @id @default(cuid())
+  label String
+  slug  String
+  link  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShortLinksTracking {
+  id     String @id @default(cuid())
+  clicks Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Bingo {
