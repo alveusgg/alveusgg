@@ -47,12 +47,12 @@ const NavLink = ({
 
 export function ShowAndTellNavigation() {
   return (
-    <div className="-ml-2 mt-5 flex flex-wrap gap-2 md:mt-0 lg:flex-col">
+    <div className="flex flex-wrap gap-2 whitespace-nowrap lg:flex-col">
       <NavLink href="/show-and-tell/" exact>
-        Submissions
+        All Posts
       </NavLink>
-      <NavLink href="/show-and-tell/submit-post">Submit Post</NavLink>
       <NavLink href="/show-and-tell/my-posts">My Posts</NavLink>
+      <NavLink href="/show-and-tell/submit-post">Submit Post</NavLink>
     </div>
   );
 }

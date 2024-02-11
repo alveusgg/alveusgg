@@ -1,8 +1,9 @@
 import { PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL } from "@/utils/forms";
 
-import Link from "../content/Link";
-import { Fieldset } from "../shared/form/Fieldset";
-import { CheckboxField } from "../shared/form/CheckboxField";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { CheckboxField } from "@/components/shared/form/CheckboxField";
+
+import Link from "@/components/content/Link";
 
 export function ConsentFieldset({
   withShippingAddress = false,
@@ -13,7 +14,7 @@ export function ConsentFieldset({
     <Fieldset legend="Data processing">
       <CheckboxField isRequired={true} name="acceptPrivacy" value="yes">
         I have read and accept the{" "}
-        <Link className="underline" href="/privacy-policy" external>
+        <Link href="/privacy-policy" external>
           Privacy Policy
         </Link>
         .{" "}
