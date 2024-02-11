@@ -43,12 +43,6 @@ export function ShortLinkForm({ action, form }: ShortLinkProps) {
       const mutationData: FormSchema = {
         label: String(formData.get("label")),
         link: link,
-        config: {
-          checks: formData.get("checks") === "true",
-          rules: formData.has("rules")
-            ? String(formData.get("rules"))
-            : undefined,
-        },
       };
 
       const slug = formData.has("slug") && String(formData.get("slug"));

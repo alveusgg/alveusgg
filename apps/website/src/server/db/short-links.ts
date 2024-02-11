@@ -1,14 +1,12 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db/client";
-import { shortLinkConfigSchema } from "@/utils/short-links";
 import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
 
 export const formSchema = z.object({
   label: z.string(),
   slug: z.string().regex(SLUG_REGEX).optional(),
   link: z.string(),
-  config: shortLinkConfigSchema,
 });
 
 export type FormSchema = z.infer<typeof formSchema>;
@@ -31,7 +29,7 @@ export async function createForm(input: z.infer<typeof formSchema>) {
     });
 
   return await prisma.shortLinks.create({
-    data: { ...input, slug, config: JSON.stringify(input.config) },
+    data: { ...input, slug },
   });
 }
 
@@ -46,9 +44,9 @@ export async function editForm(input: z.infer<typeof existingFormSchema>) {
       message: "Slug already exists",
     });
 
-  const { id, config, ...data } = input;
+  const { id, ...data } = input;
   return await prisma.shortLinks.update({
     where: { id: id },
-    data: { ...data, slug, config: JSON.stringify(config) },
+    data: { ...data, slug },
   });
 }
