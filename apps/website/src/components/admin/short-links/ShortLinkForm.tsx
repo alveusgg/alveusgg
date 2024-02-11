@@ -16,12 +16,12 @@ import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
 
-type FormFormProps = {
+type ShortLinkProps = {
   action: "create" | "edit";
   form?: ShortLinks;
 };
 
-export function ShortLinkForm({ action, form }: FormFormProps) {
+export function ShortLinkForm({ action, form }: ShortLinkProps) {
   const router = useRouter();
   const submit = trpc.adminShortLinks.createOrEditForm.useMutation();
 
