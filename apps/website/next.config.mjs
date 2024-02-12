@@ -1,6 +1,5 @@
 // @ts-check
 import { resolve } from "path";
-import { withSuperjson } from "next-superjson";
 
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
 import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
@@ -164,6 +163,11 @@ const config = {
     {
       source: "/vote",
       destination: "/voters-guide",
+      permanent: true,
+    },
+    {
+      source: "/give-an-hour",
+      destination: "/show-and-tell/give-an-hour",
       permanent: true,
     },
     {
@@ -412,7 +416,8 @@ const config = {
   transpilePackages: ["@alveusgg/data"],
   experimental: {
     scrollRestoration: true,
+    swcPlugins: [["next-superjson-plugin", {}]],
   },
 };
 
-export default withSuperjson()(config);
+export default config;

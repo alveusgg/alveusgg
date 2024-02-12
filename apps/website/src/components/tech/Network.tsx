@@ -20,6 +20,9 @@ import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
 
 import IconExternal from "@/icons/IconExternal";
+
+import Link from "@/components/content/Link";
+
 import Tree, { type TreeNode } from "@/components/tech/Tree";
 
 type Data = {
@@ -78,6 +81,10 @@ const nodeTypes: {
   server: {
     container: "border-yellow-700",
     eyebrow: { name: "Server", color: "text-yellow-700" },
+  },
+  controlunit: {
+    container: "border-red-700",
+    eyebrow: { name: "Camera Control Unit", color: "text-red-700" },
   },
 };
 
@@ -197,6 +204,13 @@ const edgeTypes: {
     stroke: {
       color: "stroke-yellow-700",
       dash: "4 8",
+    },
+  },
+  coax: {
+    name: "Coax",
+    stroke: {
+      color: "stroke-red-700",
+      dash: "16 8",
     },
   },
 };
@@ -329,14 +343,9 @@ const NetworkList = ({
         <p>
           Model:{" "}
           {item.url ? (
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
+            <Link href={item.url} external>
               {item.model}
-            </a>
+            </Link>
           ) : (
             item.model
           )}

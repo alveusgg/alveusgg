@@ -57,7 +57,7 @@ type NavigationProps = {
 
 export function PageNavigation({ navItems }: NavigationProps) {
   return (
-    <div className="-ml-2 mt-5 flex flex-wrap gap-2 md:mt-0 lg:flex-col">
+    <div className="flex flex-wrap gap-2 whitespace-nowrap lg:flex-col">
       {navItems.map((item) => (
         <NavLink key={item.href} href={item.href} exact={item.exact}>
           {item.label}

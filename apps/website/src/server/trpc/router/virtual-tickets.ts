@@ -12,8 +12,8 @@ import {
   deleteTicket,
   getTicket,
   saveTicket,
-  virtualTicketSchema,
 } from "@/server/db/virtual-tickets";
+import { virtualTicketSchema } from "@/server/utils/virtual-tickets";
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 function revalidateTicket(eventId: string, userName: string) {

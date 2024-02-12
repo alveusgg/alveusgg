@@ -85,8 +85,9 @@ export function useBingoLocalState(bingoId: string) {
       const localState = localStorage.getItem(localStorageKey);
       if (localState) {
         try {
-          values = bingoLocalStateSchema.parse(JSON.parse(localState))
-            ?.selectedValues;
+          values = bingoLocalStateSchema.parse(
+            JSON.parse(localState),
+          )?.selectedValues;
         } catch (e) {
           console.error("Error restoring local bingo data: " + e);
         }
@@ -185,10 +186,10 @@ export function BingoCard({
                       isBingoMatch
                         ? "bg-red-500"
                         : isSelected
-                        ? "bg-green-800 text-white"
-                        : isSelectable
-                        ? "bg-green-100 hover:scale-105 hover:bg-green-200 hover:shadow-lg lg:bg-green-50"
-                        : "bg-white hover:scale-95 hover:bg-gray-200",
+                          ? "bg-green-800 text-white"
+                          : isSelectable
+                            ? "bg-green-100 hover:scale-105 hover:bg-green-200 hover:shadow-lg lg:bg-green-50"
+                            : "bg-white hover:scale-95 hover:bg-gray-200",
                     )}
                   >
                     {cellValue}

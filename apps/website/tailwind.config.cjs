@@ -1,7 +1,6 @@
 // @ts-check
 const { fontFamily } = require("tailwindcss/defaultTheme");
 const colors = require("tailwindcss/colors");
-const plugin = require("tailwindcss/plugin");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -103,6 +102,7 @@ module.exports = {
     extend: {
       animation: {
         "spin-slow": "spin 3s linear infinite",
+        "pulse-slow": "pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
       fontFamily: {
         sans: ["var(--font-ptsans)", ...fontFamily.sans],
@@ -136,14 +136,4 @@ module.exports = {
       },
     },
   },
-  plugins: [
-    plugin(({ addUtilities }) => {
-      addUtilities({
-        ".text-wrap": { "text-wrap": "wrap" },
-        ".text-nowrap": { "text-wrap": "nowrap" },
-        ".text-balance": { "text-wrap": "balance" },
-        ".text-pretty": { "text-wrap": "pretty" },
-      });
-    }),
-  ],
 };

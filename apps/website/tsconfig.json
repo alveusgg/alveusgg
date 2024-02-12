@@ -18,14 +18,14 @@
     "paths": {
       "@/*": ["./src/*"],
       "photoswipe/lightbox": [
-        "./node_modules/photoswipe/dist/types/lightbox/lightbox.d.ts"
-      ]
+        "./node_modules/photoswipe/dist/types/lightbox/lightbox.d.ts",
+      ],
     },
     "plugins": [
       {
-        "name": "next"
-      }
-    ]
+        "name": "next",
+      },
+    ],
   },
   "include": [
     "next-env.d.ts",
@@ -33,7 +33,7 @@
     "**/*.tsx",
     "**/*.cjs",
     "**/*.mjs",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
   ],
-  "exclude": ["node_modules", "src/sw"]
+  "exclude": ["node_modules", "src/sw"],
 }

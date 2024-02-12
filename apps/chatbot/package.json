@@ -12,26 +12,26 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "dependencies": {
-    "@planetscale/database": "^1.11.0",
-    "@t3-oss/env-core": "^0.6.1",
-    "@twurple/api": "^7.0.6",
-    "@twurple/auth": "^7.0.6",
-    "@twurple/chat": "^7.0.6",
-    "@twurple/easy-bot": "^7.0.6",
-    "dotenv": "^16.3.1",
-    "drizzle-orm": "^0.29.1",
+    "@planetscale/database": "^1.14.0",
+    "@t3-oss/env-core": "^0.8.0",
+    "@twurple/api": "^7.0.8",
+    "@twurple/auth": "^7.0.8",
+    "@twurple/chat": "^7.0.8",
+    "@twurple/easy-bot": "^7.0.8",
+    "dotenv": "^16.4.1",
+    "drizzle-orm": "^0.29.3",
     "read-pkg": "^9.0.1",
-    "tsx": "^4.6.2",
+    "tsx": "^4.7.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "~20.9.5",
     "@types/prettier": "^2.7.3",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
-    "eslint": "^8.49.0",
-    "eslint-plugin-import": "^2.28.1",
-    "typescript": "^5.2.2"
+    "@typescript-eslint/eslint-plugin": "^6.20.0",
+    "@typescript-eslint/parser": "^6.20.0",
+    "eslint": "^8.56.0",
+    "eslint-plugin-import": "^2.29.1",
+    "typescript": "^5.3.3"
   },
   "scripts": {
     "start": "tsx src/server.ts",

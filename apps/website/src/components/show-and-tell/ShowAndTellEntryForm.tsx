@@ -29,6 +29,7 @@ import {
   useVideoLinksData,
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
+import Link from "../content/Link";
 
 export const allowedFileTypes = [
   "image/png",
@@ -305,7 +306,55 @@ export function ShowAndTellEntryForm({
           </Fieldset>
         </div>
       </div>
+
       <div className="flex flex-col gap-4">
+        <Fieldset legend="Give an Hour">
+          <p>
+            Do you want to track hours you spent on this activity as part of the
+            Alveus community total for the WWF&apos;s{" "}
+            <Link href="/show-and-tell/give-an-hour" external>
+              Give an Hour
+            </Link>{" "}
+            initiative?
+          </p>
+
+          <div className="flex items-center gap-8">
+            <label
+              htmlFor="giveAnHourTracked"
+              className="flex cursor-not-allowed items-center gap-4"
+            >
+              <input
+                type="checkbox"
+                id="giveAnHourTracked"
+                name="giveAnHourTracked"
+                disabled
+              />
+              Yes, I want to track my hours
+            </label>
+
+            {/* Text input so we can show "xx hours" */}
+            {/* TODO: This will need an onChange callback to parse/format any provided value? */}
+            <TextField
+              label=""
+              name="giveAnHour"
+              // defaultValue={
+              //   ![undefined, null].includes(entry?.giveAnHour)
+              //     ? `${entry.giveAnHour} hour${entry.giveAnHour === 1 ? "" : "s"}`
+              //     : undefined
+              // }
+              placeholder="0 hours"
+              isDisabled
+              inputClassName="cursor-not-allowed"
+              pattern="^\d+ hours?$"
+            />
+          </div>
+
+          <p className="text-sm italic opacity-75">
+            <strong>Give an Hour</strong> tracking will be available from March
+            1st.
+          </p>
+        </Fieldset>
+
         {error && <MessageBox variant="failure">{error}</MessageBox>}
         {successMessage && (
           <MessageBox variant="success">{successMessage}</MessageBox>
