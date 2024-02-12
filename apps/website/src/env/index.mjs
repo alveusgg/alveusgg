@@ -55,8 +55,6 @@ export const env = createEnv({
     ),
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),
-    TWITCH_EVENTSUB_SECRET: z.string(),
-    TWITCH_EVENTSUB_CALLBACK: z.string(),
     ACTION_API_SECRET: z.string(),
     SUPER_USER_IDS: z.string(),
     WEB_PUSH_VAPID_PRIVATE_KEY: z
@@ -126,8 +124,6 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.VERCEL_URL || process.env.NEXTAUTH_URL,
     TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
     TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
-    TWITCH_EVENTSUB_SECRET: process.env.TWITCH_EVENTSUB_SECRET,
-    TWITCH_EVENTSUB_CALLBACK: process.env.TWITCH_EVENTSUB_CALLBACK,
     ACTION_API_SECRET: process.env.ACTION_API_SECRET,
     SUPER_USER_IDS: process.env.SUPER_USER_IDS,
     WEB_PUSH_VAPID_PRIVATE_KEY: process.env.WEB_PUSH_VAPID_PRIVATE_KEY,
