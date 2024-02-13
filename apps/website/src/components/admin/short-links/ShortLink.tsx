@@ -44,7 +44,7 @@ function ShortLinks({ form, onError, onUpdate }: LinkProps) {
             <div className="flex flex-col gap-1">
               <Link
                 className="underline"
-                href={`/link/${form.slug || form.id}`}
+                href={`/l/${form.slug || form.id}`}
                 target="_blank"
               >
                 Public Link: {form.slug || form.id}
