@@ -13,7 +13,6 @@ import { Panel } from "@/components/admin/Panel";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
 import type { AppRouter } from "@/server/trpc/router/_app";
-import formId from "@/pages/forms/[formId]";
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type FormWithCount = RouterOutput["adminShortLinks"]["getLinks"][number];
 
