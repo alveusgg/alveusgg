@@ -28,7 +28,7 @@ type Collaboration = {
 type Collaborations = Record<string, Collaboration>;
 
 const collaborations = {
-  emilyywang: {
+  emilyWang: {
     name: "Emily Wang",
     link: "https://www.twitch.tv/emilyywang",
     date: new Date("2024-02-13"),
