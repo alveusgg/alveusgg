@@ -12,9 +12,9 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
   const shortLinks = await res.json();
 
   for (const link of shortLinks) {
-    if (req.nextUrl.pathname.startsWith("/l/" + link.slug)) {
+    if (req.nextUrl.pathname === "/l/" + link.slug) {
       event.waitUntil(
-        fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links/add", {
+        fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links/track-click", {
           method: "POST",
           body: JSON.stringify({
             id: link.id,
@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
   }
 
   // If no match is found, redirect the user to the home page
-  return NextResponse.redirect("/");
+  return NextResponse.redirect(env.NEXT_PUBLIC_BASE_URL + "/");
 }
 
 export const config = {
