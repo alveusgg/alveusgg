@@ -75,7 +75,7 @@ export function ShortLinkForm({ action, form }: ShortLinkProps) {
         </MessageBox>
       )}
       {submit.isSuccess && (
-        <MessageBox variant="success">Form updated!</MessageBox>
+        <MessageBox variant="success">Short link updated!</MessageBox>
       )}
 
       <Fieldset legend="Form">
