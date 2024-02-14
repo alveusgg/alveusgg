@@ -20,6 +20,9 @@ const cdnImagesRemotePattern = process.env.FILE_STORAGE_CDN_URL
 const config = {
   reactStrictMode: true,
   swcMinify: true,
+  eslint: {
+    dirs: ["."],
+  },
   images: {
     remotePatterns: [
       // OpenWeatherMap
