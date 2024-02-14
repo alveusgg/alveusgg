@@ -41,10 +41,10 @@ const AdminEditFormPage: NextPage<
 
   return (
     <>
-      <Meta title="Edit Form | Admin" />
+      <Meta title="Edit Short Link | Admin" />
 
-      <AdminPageLayout title="Edit Form" menuItems={menuItems}>
-        <Headline>Edit Form</Headline>
+      <AdminPageLayout title="Edit Short Link" menuItems={menuItems}>
+        <Headline>Edit Short Link</Headline>
 
         <Panel>
           {link.data ? (
