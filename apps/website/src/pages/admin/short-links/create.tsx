@@ -10,7 +10,7 @@ import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 
 export async function getServerSideProps(context: NextPageContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageForms);
+  const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
   if (!adminProps) {
     return { notFound: true };
   }
