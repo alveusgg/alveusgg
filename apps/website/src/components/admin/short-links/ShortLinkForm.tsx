@@ -78,7 +78,7 @@ export function ShortLinkForm({ action, form }: ShortLinkProps) {
         <MessageBox variant="success">Short link updated!</MessageBox>
       )}
 
-      <Fieldset legend="Form">
+      <Fieldset legend="Short link">
         <TextField
           label="Name"
           name="label"
