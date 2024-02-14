@@ -29,22 +29,22 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       ...adminProps,
-      shortLinkId: String(id),
+      formId: String(id),
     },
   };
 }
 
-const AdminEditShortLinkPage: NextPage<
+const AdminEditFormPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({ menuItems, shortLinkId }) => {
-  const link = trpc.adminShortLinks.getLink.useQuery(shortLinkId);
+> = ({ menuItems, formId }) => {
+  const link = trpc.adminShortLinks.getLink.useQuery(formId);
 
   return (
     <>
-      <Meta title="Edit Short link | Admin" />
+      <Meta title="Edit Short Link | Admin" />
 
-      <AdminPageLayout title="Edit Short link" menuItems={menuItems}>
-        <Headline>Edit Short link</Headline>
+      <AdminPageLayout title="Edit Short Link" menuItems={menuItems}>
+        <Headline>Edit Short Link</Headline>
 
         <Panel>
           {link.data ? (
@@ -57,4 +57,4 @@ const AdminEditShortLinkPage: NextPage<
     </>
   );
 };
-export default AdminEditShortLinkPage;
+export default AdminEditFormPage;
