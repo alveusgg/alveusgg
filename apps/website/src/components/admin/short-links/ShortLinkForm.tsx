@@ -18,14 +18,14 @@ import { MessageBox } from "@/components/shared/MessageBox";
 
 type ShortLinkProps = {
   action: "create" | "edit";
-  form?: ShortLinks;
+  shortLink?: ShortLinks;
 };
 
-export function ShortLinkForm({ action, form }: ShortLinkProps) {
+export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
   const router = useRouter();
   const submit = trpc.adminShortLinks.createOrEditForm.useMutation();
 
-  const [label, setLabel] = useState(form?.label || "");
+  const [label, setLabel] = useState(shortLink?.label || "");
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -51,8 +51,8 @@ export function ShortLinkForm({ action, form }: ShortLinkProps) {
       }
 
       if (action === "edit") {
-        if (!form) return;
-        submit.mutate({ action: "edit", id: form.id, ...mutationData });
+        if (!shortLink) return;
+        submit.mutate({ action: "edit", id: shortLink.id, ...mutationData });
       } else {
         submit.mutate(
           { action: "create", ...mutationData },
@@ -64,7 +64,7 @@ export function ShortLinkForm({ action, form }: ShortLinkProps) {
         );
       }
     },
-    [action, form, router, submit],
+    [action, shortLink, router, submit],
   );
 
   return (
@@ -90,7 +90,7 @@ export function ShortLinkForm({ action, form }: ShortLinkProps) {
           name="slug"
           pattern={SLUG_PATTERN}
           inputMode="url"
-          defaultValue={form?.slug || ""}
+          defaultValue={shortLink?.slug || ""}
           inputClassName="font-mono"
           placeholder={convertToSlug(label)}
           prefix={

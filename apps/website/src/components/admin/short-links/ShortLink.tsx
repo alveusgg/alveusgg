@@ -14,15 +14,15 @@ import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
 import type { AppRouter } from "@/server/trpc/router/_app";
 type RouterOutput = inferRouterOutputs<AppRouter>;
-type FormWithCount = RouterOutput["adminShortLinks"]["getLinks"][number];
+type ShortLink = RouterOutput["adminShortLinks"]["getLinks"][number];
 
 type LinkProps = {
-  form: FormWithCount;
+  shortLink: ShortLink;
   onError: (error: string) => void;
   onUpdate: () => void;
 };
 
-function ShortLinks({ form, onError, onUpdate }: LinkProps) {
+function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
   const deleteMutation = trpc.adminShortLinks.deleteLink.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
@@ -39,31 +39,33 @@ function ShortLinks({ form, onError, onUpdate }: LinkProps) {
         </td>
         <td className="w-1/2 p-1">
           <div className="flex flex-col gap-0.5">
-            <div className="text-xl">{form.label}</div>
+            <div className="text-xl">{shortLink.label}</div>
             <div className="flex flex-col gap-1">
               <Link
                 className="underline"
-                href={`/l/${form.slug || form.id}`}
+                href={`/l/${shortLink.slug || shortLink.id}`}
                 target="_blank"
               >
-                Public Link: {form.slug || form.id}
+                Public Link: {shortLink.slug || shortLink.id}
               </Link>
             </div>
           </div>
         </td>
         <td className="">
-          <Link className="underline" href={form.link} target="_blank">
-            {form.link}
+          <Link className="underline" href={shortLink.link} target="_blank">
+            {shortLink.link}
           </Link>
         </td>
         <td>
-          {clicks.data?.map((c) => (form.id === c.id ? String(c.clicks) : ""))}
+          {clicks.data?.map((c) =>
+            shortLink.id === c.id ? String(c.clicks) : "",
+          )}
         </td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton
             size="small"
             width="auto"
-            href={`/admin/short-links/${form.id}/edit`}
+            href={`/admin/short-links/${shortLink.id}/edit`}
           >
             <IconPencil className="h-4 w-4" />
             Edit
@@ -74,7 +76,7 @@ function ShortLinks({ form, onError, onUpdate }: LinkProps) {
             width="auto"
             className={dangerButtonClasses}
             confirmationMessage="Please confirm deletion!"
-            onClick={() => deleteMutation.mutate(form.id)}
+            onClick={() => deleteMutation.mutate(shortLink.id)}
           >
             <IconTrash className="h-4 w-4" />
             Delete
@@ -117,7 +119,7 @@ export function ShortLink() {
             {links.data?.map((link) => (
               <ShortLinks
                 key={link.id}
-                form={link}
+                shortLink={link}
                 onError={(err) => setErrorMessage(err)}
                 onUpdate={() => links.refetch()}
               />

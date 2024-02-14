@@ -48,7 +48,7 @@ const AdminEditFormPage: NextPage<
 
         <Panel>
           {link.data ? (
-            <ShortLinkForm action="edit" form={link.data} />
+            <ShortLinkForm action="edit" shortLink={link.data} />
           ) : (
             <MessageBox>Loading …</MessageBox>
           )}
