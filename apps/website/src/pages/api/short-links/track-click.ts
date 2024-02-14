@@ -14,12 +14,12 @@ export default async function handler(
       where: { id: id },
     });
     if (query) {
-      const clicks: number = query.clicks + 1;
-
-      const tracker = await prisma.shortLinksTracking.update({
+      await prisma.shortLinksTracking.update({
         where: { id: id },
         data: {
-          clicks: clicks,
+          clicks: {
+            increment: 1,
+          },
         },
       });
       res.status(204).send("");
