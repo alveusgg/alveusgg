@@ -12,7 +12,7 @@ const permittedProcedure = protectedProcedure.use(
 );
 
 export const shortLinksRouter = router({
-  createOrEditForm: permittedProcedure
+  createOrEditShortLink: permittedProcedure
     .input(
       z
         .discriminatedUnion("action", [
