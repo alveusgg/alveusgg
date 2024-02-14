@@ -35,4 +35,4 @@ const AdminCreateShortLinkPage: NextPage<
     </>
   );
 };
-export default AdminCreateFormPage;
+export default AdminCreateShortLinkPage;
