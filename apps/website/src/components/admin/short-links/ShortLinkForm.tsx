@@ -9,7 +9,7 @@ import { env } from "@/env/index.mjs";
 import { trpc } from "@/utils/trpc";
 import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 
-import { type FormSchema } from "@/server/db/short-links";
+import { type ShortLinkSchema } from "@/server/db/short-links";
 
 import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import { TextField } from "@/components/shared/form/TextField";
@@ -23,7 +23,7 @@ type ShortLinkProps = {
 
 export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
   const router = useRouter();
-  const submit = trpc.adminShortLinks.createOrEditForm.useMutation();
+  const submit = trpc.adminShortLinks.createOrEditShortLink.useMutation();
 
   const [label, setLabel] = useState(shortLink?.label || "");
 
@@ -40,7 +40,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           ? String(formData.get("url"))
           : "https://" + String(formData.get("url"));
 
-      const mutationData: FormSchema = {
+      const mutationData: ShortLinkSchema = {
         label: String(formData.get("label")),
         link: link,
       };

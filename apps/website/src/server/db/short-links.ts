@@ -3,26 +3,26 @@ import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db/client";
 import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
 
-export const formSchema = z.object({
+export const shortLinkSchema = z.object({
   label: z.string(),
   slug: z.string().regex(SLUG_REGEX).optional(),
   link: z.string(),
 });
 
-export type FormSchema = z.infer<typeof formSchema>;
+export type ShortLinkSchema = z.infer<typeof shortLinkSchema>;
 
-export const existingFormSchema = formSchema.and(
+export const existingShortLinkSchema = shortLinkSchema.and(
   z.object({
     id: z.string().cuid(),
   }),
 );
 
-export async function createForm(input: z.infer<typeof formSchema>) {
+export async function createForm(input: z.infer<typeof shortLinkSchema>) {
   const slug = convertToSlug(input.slug || input.label);
-  const existingFormWithSlug = await prisma.form.findFirst({
+  const existingShortLinkWithSlug = await prisma.form.findFirst({
     where: { slug },
   });
-  if (existingFormWithSlug)
+  if (existingShortLinkWithSlug)
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Slug already exists",
@@ -33,12 +33,12 @@ export async function createForm(input: z.infer<typeof formSchema>) {
   });
 }
 
-export async function editForm(input: z.infer<typeof existingFormSchema>) {
+export async function editForm(input: z.infer<typeof existingShortLinkSchema>) {
   const slug = convertToSlug(input.slug || input.label);
-  const existingFormWithSlug = await prisma.form.findFirst({
+  const existingShortLinkWithSlug = await prisma.form.findFirst({
     where: { slug, id: { not: input.id } },
   });
-  if (existingFormWithSlug)
+  if (existingShortLinkWithSlug)
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: "Slug already exists",

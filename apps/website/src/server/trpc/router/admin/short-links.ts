@@ -5,7 +5,7 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import { permissions } from "@/config/permissions";
-import { createForm, editForm, formSchema } from "@/server/db/short-links";
+import { createForm, editForm, shortLinkSchema } from "@/server/db/short-links";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageShortLinks),
@@ -19,7 +19,7 @@ export const shortLinksRouter = router({
           z.object({ action: z.literal("create") }),
           z.object({ action: z.literal("edit"), id: z.string().cuid() }),
         ])
-        .and(formSchema),
+        .and(shortLinkSchema),
     )
     .mutation(async ({ input }) => {
       switch (input.action) {
