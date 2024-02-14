@@ -10,7 +10,7 @@ import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 
 export async function getServerSideProps(context: NextPageContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageForms);
+  const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
   if (!adminProps) {
     return { notFound: true };
   }
@@ -18,14 +18,14 @@ export async function getServerSideProps(context: NextPageContext) {
   return { props: adminProps };
 }
 
-const AdminCreateFormPage: NextPage<
+const AdminCreateShortLinkPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
 > = ({ menuItems }) => {
   return (
     <>
-      <Meta title="Create Form | Admin" />
+      <Meta title="Create Short Link | Admin" />
 
-      <AdminPageLayout title="Create Form" menuItems={menuItems}>
+      <AdminPageLayout title="Create Short Link" menuItems={menuItems}>
         <Headline>Create new short link</Headline>
 
         <Panel>
