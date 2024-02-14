@@ -6,7 +6,7 @@ import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { ShortLink } from "@/components/admin/short-links/ShortLink";
 
 export async function getServerSideProps(context: NextPageContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageForms);
+  const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
   if (!adminProps) {
     return { notFound: true };
   }
