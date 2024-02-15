@@ -16,7 +16,6 @@ import {
   dangerButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/Button";
-import { PageNavigation } from "@/components/shared/PageNavigation";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
@@ -24,8 +23,7 @@ import Heading from "@/components/content/Heading";
 import DateTime from "@/components/content/DateTime";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
-
-import { showAndTellNavItems } from "..";
+import ShowAndTellNavigation from "@/components/show-and-tell/ShowAndTellNavigation";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 
@@ -63,7 +61,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
           </p>
         </div>
 
-        <PageNavigation navItems={showAndTellNavItems} />
+        <ShowAndTellNavigation />
       </Section>
 
       {/* Grow the last section to cover the page */}

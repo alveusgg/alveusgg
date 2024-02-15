@@ -8,7 +8,6 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Select from "@/components/content/Select";
-import { PageNavigation } from "@/components/shared/PageNavigation";
 
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -20,6 +19,7 @@ import Consent from "@/components/Consent";
 import IconThumbsUp from "@/icons/IconThumbsUp";
 import { classes } from "@/utils/classes";
 import DateTime from "@/components/content/DateTime";
+import ClipsNavigation from "@/components/clips/ClipsNavigation";
 
 type Clip = {
   id: string;
@@ -173,18 +173,6 @@ const ClipsPage: NextPage = () => {
   const lastItemRef = useRef<HTMLDivElement>(null);
   const refLastSeen = useRef<HTMLDivElement | undefined>(undefined);
 
-  const clipsNavigationItems = [
-    {
-      href: "/clips/",
-      label: "Clips",
-      exact: true,
-    },
-    {
-      href: "/clips/submit-clip",
-      label: "Submit Clip",
-    },
-  ];
-
   const sortOptions = {
     top: "Top",
     top_7day: "Top (7 days)",
@@ -260,7 +248,7 @@ const ClipsPage: NextPage = () => {
               Submit and vote for your favorite Alveus clips
             </p>
           </div>
-          <PageNavigation navItems={clipsNavigationItems} />
+          <ClipsNavigation />
         </Section>
       </div>
 

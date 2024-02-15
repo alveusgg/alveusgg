@@ -6,7 +6,6 @@ import { trpc } from "@/utils/trpc";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { MessageBox } from "@/components/shared/MessageBox";
-import { PageNavigation } from "@/components/shared/PageNavigation";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
@@ -15,8 +14,7 @@ import Heading from "@/components/content/Heading";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
-
-import { showAndTellNavItems } from "../..";
+import ShowAndTellNavigation from "@/components/show-and-tell/ShowAndTellNavigation";
 
 const EditShowAndTellPage: NextPage = () => {
   const session = useSession();
@@ -51,7 +49,7 @@ const EditShowAndTellPage: NextPage = () => {
           </p>
         </div>
 
-        <PageNavigation navItems={showAndTellNavItems} />
+        <ShowAndTellNavigation />
       </Section>
 
       {/* Grow the last section to cover the page */}

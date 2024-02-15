@@ -19,25 +19,13 @@ import type { ClipSubmitInput } from "@/server/db/clips";
 import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
 import IconLoading from "@/icons/IconLoading";
-import { PageNavigation } from "@/components/shared/PageNavigation";
+import ClipsNavigation from "@/components/clips/ClipsNavigation";
 
 const SubmitClipPage: NextPage = () => {
   const add = trpc.clips.addClip.useMutation();
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  const clipsNavigationItems = [
-    {
-      href: "/clips/",
-      label: "Clips",
-      exact: true,
-    },
-    {
-      href: "/clips/submit-clip",
-      label: "Submit Clip",
-    },
-  ];
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -82,7 +70,7 @@ const SubmitClipPage: NextPage = () => {
               Submit and vote for your favorite Alveus clips
             </p>
           </div>
-          <PageNavigation navItems={clipsNavigationItems} />
+          <ClipsNavigation />
         </Section>
       </div>
 

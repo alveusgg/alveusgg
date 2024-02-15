@@ -10,11 +10,9 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
-import { PageNavigation } from "@/components/shared/PageNavigation";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
-
-import { showAndTellNavItems } from ".";
+import ShowAndTellNavigation from "@/components/show-and-tell/ShowAndTellNavigation";
 
 const ShowAndTellSubmitPage: NextPage = () => {
   const session = useSession();
@@ -52,7 +50,7 @@ const ShowAndTellSubmitPage: NextPage = () => {
           </p>
         </div>
 
-        <PageNavigation navItems={showAndTellNavItems} />
+        <ShowAndTellNavigation />
       </Section>
 
       {/* Grow the last section to cover the page */}
