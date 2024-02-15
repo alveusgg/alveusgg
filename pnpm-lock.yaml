@@ -84,8 +84,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#0.28.0
-        version: github.com/alveusgg/data/524c0d7ccca3c3dc6d4fabe2d75d72133b06eef5
+        specifier: github:alveusgg/data#pjeweb/pushpop
+        version: github.com/alveusgg/data/30f5f6c4e28f2742bbec8087cb46d1474293abad
       '@aws-sdk/client-s3':
         specifier: ^3.503.1
         version: 3.503.1
@@ -10275,8 +10275,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  github.com/alveusgg/data/524c0d7ccca3c3dc6d4fabe2d75d72133b06eef5:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/524c0d7ccca3c3dc6d4fabe2d75d72133b06eef5}
+  github.com/alveusgg/data/30f5f6c4e28f2742bbec8087cb46d1474293abad:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/30f5f6c4e28f2742bbec8087cb46d1474293abad}
     name: '@alveusgg/data'
     version: 0.28.0
     dev: false
