@@ -2,12 +2,6 @@ import { prisma } from "../src/server/db/client";
 import { getClipsByDate } from "../src/server/utils/twitch-api";
 
 async function populateClips() {
-  const latestClip = await prisma.clip.findFirst({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
   const startDate = new Date(0);
   let belowMinViews = false;
 

@@ -2,7 +2,6 @@ import type { NextPage } from "next";
 import Image from "next/image";
 import type { FormEvent } from "react";
 import { useState } from "react";
-import { useSession } from "next-auth/react";
 
 import { useRouter } from "next/router";
 import Meta from "@/components/content/Meta";

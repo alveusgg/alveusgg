@@ -44,10 +44,16 @@ export function AdminClip({
         <strong>{clip.title}</strong>
       </td>
       <td className={`${cellClasses} font-semibold`}>
-        <Button onClick={() => setEmbedShown(!embedShown)}>
-          {embedShown ? "Hide Clip" : "View Clip"}
-        </Button>
-        {embedShown && <ClipEmbed clipId={clip.slug} />}
+        <div className="flex flex-col items-start gap-1">
+          <Button
+            size="small"
+            width="auto"
+            onClick={() => setEmbedShown(!embedShown)}
+          >
+            {embedShown ? "Hide Clip" : "View Clip"}
+          </Button>
+          {embedShown && <ClipEmbed clipId={clip.slug} />}
+        </div>
       </td>
       <td className={`${cellClasses} whitespace-nowrap`}>
         <DateTime date={clip.submittedAt} format={{ time: "minutes" }} />

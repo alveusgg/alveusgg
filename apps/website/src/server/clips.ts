@@ -35,12 +35,6 @@ export async function removeInvalidClips() {
 }
 
 export async function populateClips() {
-  const latestClip = await prisma.clip.findFirst({
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
   const minutesDelay = 30;
   const minimumViews = 50;
 
