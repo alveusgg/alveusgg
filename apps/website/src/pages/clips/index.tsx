@@ -4,6 +4,7 @@ import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useSession } from "next-auth/react";
+import { Dialog } from "@headlessui/react";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -71,12 +72,8 @@ const ClipItem = ({
     : "hover:fill-green fill:alveus-green-900";
 
   return (
-    <div>
-      <div
-        ref={lastItemRef}
-        className="group cursor-pointer"
-        onClick={() => clipClicked(clip)}
-      >
+    <div ref={lastItemRef}>
+      <a className="group cursor-pointer" onClick={() => clipClicked(clip)}>
         <Image
           src={clip.thumbnailUrl}
           alt=""
@@ -89,16 +86,16 @@ const ClipItem = ({
             {clip.title}
           </p>
         </div>
-      </div>
+      </a>
       <div className="flex justify-between px-4">
         <p className="text-left">Votes: {clip.voteCount}</p>
         {session && (
-          <p
+          <button
             className={classes("cursor-pointer text-right", thumbsClass)}
             onClick={() => handleVote(clip.id)}
           >
             <IconThumbsUp size={20} />
-          </p>
+          </button>
         )}
       </div>
     </div>
@@ -110,35 +107,37 @@ const ClipModal = ({
   onClose,
 }: {
   clip: Clip;
-  onClose: (e: React.MouseEvent) => void;
+  onClose: (value: boolean) => void;
 }) => {
   const clipUrl = new URL("https://clips.twitch.tv/embed");
   clipUrl.searchParams.set("clip", clip.slug);
   clipUrl.searchParams.set("parent", window.location.hostname);
 
   return (
-    <div
+    <Dialog
+      open={true}
+      onClose={() => onClose(false)}
       className="fixed inset-0 z-50 flex overflow-auto bg-black/75"
-      onClickCapture={onClose}
     >
-      <div className="relative m-auto flex max-h-[50vh] w-full flex-col rounded-lg border border-solid border-black bg-white px-2 pb-4 pt-10 sm:px-10 sm:py-10 md:max-w-[75vw] lg:max-h-[75vh] lg:max-w-[60vw] 2xl:max-w-[50vw]">
-        <span className="absolute right-0 top-0 p-2" onClick={onClose}>
+      <Dialog.Panel className="relative m-auto flex max-h-[50vh] w-full flex-col rounded-lg border border-solid border-black bg-white px-2 pb-4 pt-10 sm:px-10 sm:py-10 md:max-w-[75vw] lg:max-h-[75vh] lg:max-w-[60vw] 2xl:max-w-[50vw]">
+        <button
+          className="absolute right-0 top-0 p-2"
+          onClick={() => onClose(false)}
+        >
           <svg
-            onClick={onClose}
             className="h-6 w-6 cursor-pointer text-gray-700"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
             <path
-              onClick={onClose}
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth="2"
               d="M6 18L18 6M6 6l12 12"
             />
           </svg>
-        </span>
+        </button>
         <Consent
           item={`twitch clip embed`}
           consent="twitch"
@@ -150,7 +149,9 @@ const ClipModal = ({
             allowFullScreen
           ></iframe>
         </Consent>
-        <h3 className="mt-4 text-center text-xl lg:text-xl">{clip.title}</h3>
+        <Dialog.Title className="mt-4 text-center text-xl lg:text-xl">
+          {clip.title}
+        </Dialog.Title>
         <div className="direction relative mx-auto flex-col px-4 text-center lg:mx-0 lg:flex lg:flex-row lg:text-left">
           <p className="lg:flex-1">Votes: {clip.voteCount}</p>
           <p className="lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:transform">
@@ -162,8 +163,8 @@ const ClipModal = ({
           </p>
           <p className="lg:flex-1 lg:text-right">Clipped by: {clip.creator}</p>
         </div>
-      </div>
-    </div>
+      </Dialog.Panel>
+    </Dialog>
   );
 };
 
@@ -208,10 +209,8 @@ const ClipsPage: NextPage = () => {
     }
   }, [clips]);
 
-  const closeModal = useCallback((e: React.MouseEvent) => {
-    if (e.target === e.currentTarget) {
-      setCurrentModalClip(null);
-    }
+  const closeModal = useCallback((value: boolean) => {
+    setCurrentModalClip(null);
   }, []);
 
   const clipClicked = useCallback((clip: Clip) => {
@@ -236,21 +235,19 @@ const ClipsPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <div className="relative">
-        <Section
-          dark
-          className="py-24"
-          containerClassName="flex flex-wrap gap-4 justify-between"
-        >
-          <div className="w-full lg:w-3/5">
-            <Heading>Alveus Clips</Heading>
-            <p className="text-lg">
-              Submit and vote for your favorite Alveus clips
-            </p>
-          </div>
-          <ClipsNavigation />
-        </Section>
-      </div>
+      <Section
+        dark
+        className="py-24"
+        containerClassName="flex flex-wrap gap-4 justify-between"
+      >
+        <div className="w-full lg:w-3/5">
+          <Heading>Alveus Clips</Heading>
+          <p className="text-lg">
+            Submit and vote for your favorite Alveus clips
+          </p>
+        </div>
+        <ClipsNavigation />
+      </Section>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex flex-grow flex-col">
