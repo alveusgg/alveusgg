@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 
 import { classes } from "@/utils/classes";
 
+import IconPlus from "@/icons/IconPlus";
+
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -13,12 +15,14 @@ import Share from "@/components/content/Share";
 
 import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
 
-// Artwork from https://undraw.co
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
-import giveAnHourLogo from "@/assets/show-and-tell/give-an-hour/logo.svg";
+import alveusLogo from "@/assets/logo.png";
+import wwfLogo from "@/assets/show-and-tell/give-an-hour/wwf.svg";
 import giveAnHourPoster from "@/assets/show-and-tell/give-an-hour/poster.png";
+
+// Artwork from https://undraw.co
 import giveAnHourArt from "@/assets/show-and-tell/give-an-hour/art.svg";
 import giveAnHourEntertainment from "@/assets/show-and-tell/give-an-hour/entertainment.svg";
 import giveAnHourFitness from "@/assets/show-and-tell/give-an-hour/fitness.svg";
@@ -93,10 +97,10 @@ const GiveAnHourPage: NextPage = () => {
 
       <Section
         dark
-        className="py-8"
-        containerClassName="flex flex-wrap items-center justify-between"
+        className="py-8 lg:py-24"
+        containerClassName="flex flex-wrap items-center lg:flex-nowrap gap-16"
       >
-        <div className="flex w-full flex-col pb-4 pt-8 md:w-3/5 md:py-24">
+        <div className="flex w-full flex-grow flex-col lg:max-w-2/3">
           <Heading>Give an Hour for Earth</Heading>
 
           <p className="text-lg">
@@ -118,12 +122,27 @@ const GiveAnHourPage: NextPage = () => {
           </div>
         </div>
 
-        <Image
-          src={giveAnHourLogo}
-          width={448}
-          alt=""
-          className="mx-auto w-full max-w-md p-4 pb-16 md:mx-0 md:w-2/5 md:pb-4"
-        />
+        <div className="flex flex-grow justify-center">
+          <div className="w-full max-w-48 rounded-xl bg-alveus-tan shadow-lg">
+            <Image
+              src={alveusLogo}
+              width={448}
+              alt="Alveus Logo"
+              className="h-full w-full object-contain p-[12%]"
+            />
+          </div>
+
+          <IconPlus className="mx-2 my-auto h-8 w-8 flex-shrink-0 text-alveus-green-50 sm:mx-4" />
+
+          <div className="w-full max-w-48 rounded-xl bg-white shadow-lg">
+            <Image
+              src={wwfLogo}
+              width={448}
+              alt="WWF Logo"
+              className="h-full w-full object-contain p-[18%]"
+            />
+          </div>
+        </div>
       </Section>
 
       <Section containerClassName="max-w-6xl">
@@ -261,8 +280,8 @@ const GiveAnHourPage: NextPage = () => {
 
           <p className="text-lg">
             Every action and every hour matters! Share this guide and encourage
-            your friends, family, and colleagues to get involved and give an
-            hour for Earth.
+            your friends, family, and colleagues to get involved and Give an
+            Hour for Earth.
           </p>
 
           <p className="mt-4 text-lg">
