@@ -261,8 +261,8 @@ const GiveAnHourPage: NextPage = () => {
 
           <p className="text-lg">
             Every action and every hour matters! Share this guide and encourage
-            your friends, family, and colleagues to get involved and give an
-            hour for Earth.
+            your friends, family, and colleagues to get involved and Give an
+            Hour for Earth.
           </p>
 
           <p className="mt-4 text-lg">
