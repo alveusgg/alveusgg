@@ -11,7 +11,7 @@ import {
   findCardsWithBingo,
   parseBingoPlayData,
 } from "@/utils/bingo";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 const exportBingoEntries = async (
   req: NextApiRequest,

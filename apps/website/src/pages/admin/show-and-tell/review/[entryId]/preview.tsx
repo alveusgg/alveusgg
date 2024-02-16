@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import { trpc } from "@/utils/trpc";
 import { getAdminSSP } from "@/server/utils/admin";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 import Meta from "@/components/content/Meta";
 import Heading from "@/components/content/Heading";
