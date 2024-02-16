@@ -356,7 +356,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
           <p className="mt-8">
             As a community, we&apos;re tracking the hours we spend giving back
-            to the planet, as part of the WWF&apos;s{" "}
+            to the planet, as part of WWF&apos;s{" "}
             <Link href="/show-and-tell/give-an-hour" dark>
               Give an Hour
             </Link>{" "}

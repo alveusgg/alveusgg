@@ -311,7 +311,7 @@ export function ShowAndTellEntryForm({
         <Fieldset legend="Give an Hour">
           <p>
             Do you want to track hours you spent on this activity as part of the
-            Alveus community total for the WWF&apos;s{" "}
+            Alveus community total for WWF&apos;s{" "}
             <Link href="/show-and-tell/give-an-hour" external>
               Give an Hour
             </Link>{" "}
