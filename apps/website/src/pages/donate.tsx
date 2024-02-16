@@ -14,7 +14,7 @@ import IconPayPal from "@/icons/IconPayPal";
 import IconBox from "@/icons/IconBox";
 import IconBitcoin from "@/icons/IconBitcoin";
 import { type IconProps } from "@/icons/BaseIcon";
-import donationEvent from "@/data/donation-event";
+import donationEvent from "@/data/env/donation-event";
 import Link from "@/components/content/Link";
 import IconArrowRight from "@/icons/IconArrowRight";
 

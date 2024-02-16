@@ -8,7 +8,7 @@ import Link from "@/components/content/Link";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
-import globalPromotion from "@/data/global-promotion";
+import globalPromotion from "@/data/env/global-promotion";
 
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
