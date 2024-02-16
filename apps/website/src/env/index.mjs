@@ -103,6 +103,11 @@ export const env = createEnv({
       .superRefine(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_TITLE: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_CTA: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_LINK: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL: optionalBoolSchema,
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -157,6 +162,15 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_DONATION_EVENT_TITLE:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_TITLE,
+    NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION,
+    NEXT_PUBLIC_DONATION_EVENT_CTA: process.env.NEXT_PUBLIC_DONATION_EVENT_CTA,
+    NEXT_PUBLIC_DONATION_EVENT_LINK:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_LINK,
+    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_EXTERNAL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
