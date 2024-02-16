@@ -13,7 +13,7 @@ import {
 } from "@/server/trpc/trpc";
 import type { subscriptionSchema } from "@/server/utils/twitch-api";
 import { getSubscriptions, getUserByName } from "@/server/utils/twitch-api";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 type Subscription = z.infer<typeof subscriptionSchema>;
 

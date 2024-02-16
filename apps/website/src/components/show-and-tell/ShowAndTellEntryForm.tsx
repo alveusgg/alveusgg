@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/config/show-and-tell";
+import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
 
 import { trpc } from "@/utils/trpc";
 import { notEmpty } from "@/utils/helpers";

@@ -10,7 +10,7 @@ import {
   findCardsWithBingo,
   parseBingoPlayData,
 } from "@/utils/bingo";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 const winners = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });

@@ -6,7 +6,7 @@ import type {
 
 import { useMemo } from "react";
 
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
 import {

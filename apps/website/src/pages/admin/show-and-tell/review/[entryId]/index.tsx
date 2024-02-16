@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { getAdminSSP } from "@/server/utils/admin";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";

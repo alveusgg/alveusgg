@@ -8,7 +8,7 @@ import Link from "@/components/content/Link";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
-import promo from "@/data/promo";
+import globalPromotion from "@/data/env/global-promotion";
 
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
@@ -39,7 +39,10 @@ const Layout = ({ children }: LayoutProps) => {
 
   const { pathname } = useRouter();
   const topHat = useMemo(
-    () => (promo && !promo.excluded.includes(pathname) ? promo : null),
+    () =>
+      globalPromotion && !globalPromotion.excluded.includes(pathname)
+        ? globalPromotion
+        : null,
     [pathname],
   );
 
@@ -99,7 +102,7 @@ const Layout = ({ children }: LayoutProps) => {
             custom
           >
             <div className="container mx-auto flex items-center justify-center gap-1">
-              {topHat.title} &middot; {topHat.subtitle}
+              {topHat.title} &middot; {topHat.cta}
               <IconArrowRight className="h-4 w-4" />
             </div>
           </Link>

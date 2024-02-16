@@ -1,13 +1,13 @@
 import type { NotificationUrgency } from "@prisma/client";
 import { z } from "zod";
 
-import { pushTextDir, pushLang, pushMaxAttempts } from "@/config/push";
+import { pushTextDir, pushLang, pushMaxAttempts } from "@/data/env/push";
 import {
   badgeUrl,
   defaultTag,
   defaultTitle,
   iconUrl,
-} from "@/config/notifications";
+} from "@/data/notifications";
 
 import type { NotificationPayload } from "@/utils/notification-payload";
 
