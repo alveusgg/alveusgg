@@ -25,11 +25,6 @@ const config = {
   },
   images: {
     remotePatterns: [
-      // OpenWeatherMap
-      {
-        protocol: "http",
-        hostname: "openweathermap.org",
-      },
       // Twitch CDN (profile images etc.)
       {
         protocol: "https",
