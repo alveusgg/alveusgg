@@ -38,7 +38,6 @@ Hosting (production):
 ## External APIs
 
 - Twitch OAuth (application)
-- Twitch EventSub/Helix
 
 ## Systems overview
 
@@ -75,7 +74,7 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
    1. Fill the Prisma section with the database info (DSN)
    2. Fill in the S3 section with your S3-compatible storage info
    3. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
-   4. The Next Auth secret (`NEXTAUTH_SECRET`), Twitch EventSub API secret (`TWITCH_EVENTSUB_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
+   4. The Next Auth secret (`NEXTAUTH_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
    5. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
    6. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
