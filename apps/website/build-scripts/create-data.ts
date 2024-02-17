@@ -8,9 +8,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { camelToKebab, sentenceToKebab } from "../src/utils/string-case";
 import { typeSafeObjectKeys } from "../src/utils/helpers";
 
-const dirname = new URL(".", import.meta.url).pathname;
-
-mkdirSync(join(dirname, "../src/data/generated").replace("\\", ""), {
+mkdirSync(new URL("../src/data/generated", import.meta.url), {
   recursive: true,
 });
 
