@@ -60,7 +60,7 @@ export const GiveAnHourProgress = ({
         <div
           className={classes(
             barClasses,
-            "bg-alveus-tan bg-gradient-to-r from-alveus-tan to-red-600",
+            "bg-alveus-tan bg-gradient-to-r from-blue-800 to-green-600",
             hours === 0 ? "opacity-0" : "animate-pulse-slow",
           )}
           style={{ width: `${(hours / computedTarget || 0) * 100}%` }}
