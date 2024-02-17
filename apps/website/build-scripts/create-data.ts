@@ -1,5 +1,4 @@
 import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import animalQuest from "@alveusgg/data/src/animal-quest";
@@ -8,17 +7,12 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { camelToKebab, sentenceToKebab } from "../src/utils/string-case";
 import { typeSafeObjectKeys } from "../src/utils/helpers";
 
-const dirname = new URL(".", import.meta.url).pathname;
-
-mkdirSync(join(dirname, "../src/data/generated").replace("\\", ""), {
+mkdirSync(new URL("../src/data/generated", import.meta.url), {
   recursive: true,
 });
 
 writeFileSync(
-  join(dirname, "../src/data/generated/ambassador-slugs.json").replace(
-    "\\",
-    "",
-  ),
+  new URL("../src/data/generated/ambassador-slugs.json", import.meta.url),
   JSON.stringify(
     // We don't want to generate pages for retired ambassadors
     typeSafeObjectKeys(ambassadors)
@@ -30,10 +24,7 @@ writeFileSync(
 );
 
 writeFileSync(
-  join(dirname, "../src/data/generated/animal-quest-episodes.json").replace(
-    "\\",
-    "",
-  ),
+  new URL("../src/data/generated/animal-quest-episodes.json", import.meta.url),
   JSON.stringify(
     animalQuest.map((episode, idx) => ({
       slug: sentenceToKebab(episode.edition),
