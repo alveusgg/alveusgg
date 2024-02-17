@@ -8,10 +8,17 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { camelToKebab, sentenceToKebab } from "../src/utils/string-case";
 import { typeSafeObjectKeys } from "../src/utils/helpers";
 
-mkdirSync(join(__dirname, "../src/data/generated"), { recursive: true });
+const dirname = new URL(".", import.meta.url).pathname;
+
+mkdirSync(join(dirname, "../src/data/generated").replace("\\", ""), {
+  recursive: true,
+});
 
 writeFileSync(
-  join(__dirname, "../src/data/generated/ambassador-slugs.json"),
+  join(dirname, "../src/data/generated/ambassador-slugs.json").replace(
+    "\\",
+    "",
+  ),
   JSON.stringify(
     // We don't want to generate pages for retired ambassadors
     typeSafeObjectKeys(ambassadors)
@@ -23,7 +30,10 @@ writeFileSync(
 );
 
 writeFileSync(
-  join(__dirname, "../src/data/generated/animal-quest-episodes.json"),
+  join(dirname, "../src/data/generated/animal-quest-episodes.json").replace(
+    "\\",
+    "",
+  ),
   JSON.stringify(
     animalQuest.map((episode, idx) => ({
       slug: sentenceToKebab(episode.edition),
