@@ -31,6 +31,8 @@ import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 
+import IconWorld from "@/icons/IconWorld";
+
 export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
   attachments: Array<
     ShowAndTellEntryAttachment & {
@@ -140,6 +142,7 @@ export const ShowAndTellEntry = forwardRef<
     [entry.text],
   );
 
+  const hours = entry.volunteeringMinutes && entry.volunteeringMinutes / 60;
   const header = (
     <header
       className={`p-4 px-10 drop-shadow-xl ${
@@ -171,6 +174,22 @@ export const ShowAndTellEntry = forwardRef<
           { style: "long" },
           { zone: DATETIME_ALVEUS_ZONE },
         )}
+        {entry.volunteeringMinutes ? (
+          <>
+            {` — `}
+            <Link
+              href="/show-and-tell/give-an-hour"
+              className="text-green-700 hover:underline focus:underline"
+              target="_blank"
+              custom
+            >
+              <strong className="bg-gradient-to-br from-blue-800 to-green-600 bg-clip-text font-bold text-transparent">
+                Gave {hours} {hours === 1 ? "Hour" : "Hours"} to Earth
+              </strong>
+              <IconWorld className="ml-1 inline-block h-8 w-8 -translate-y-0.5" />
+            </Link>
+          </>
+        ) : null}
       </p>
     </header>
   );
