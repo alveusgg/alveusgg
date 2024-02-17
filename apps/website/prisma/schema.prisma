@@ -357,22 +357,24 @@ model LinkAttachment {
 }
 
 model ShowAndTellEntry {
-  id             String    @id @default(cuid())
-  userId         String?
-  title          String
-  text           String    @db.Text
-  displayName    String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
-  approvedAt     DateTime?
-  seenOnStreamAt DateTime?
-  seenOnStream   Boolean   @default(false)
+  id                  String    @id @default(cuid())
+  userId              String?
+  title               String
+  text                String    @db.Text
+  displayName         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @default(now())
+  approvedAt          DateTime?
+  seenOnStreamAt      DateTime?
+  seenOnStream        Boolean   @default(false)
+  volunteeringMinutes Int?
 
   attachments ShowAndTellEntryAttachment[]
   user        User?                        @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "ShowAndTellEntry_userId")
   @@index([seenOnStream, approvedAt, updatedAt], name: "ShowAndTellEntry_public")
+  @@index([volunteeringMinutes, approvedAt, createdAt], name: "ShowAndTellEntry_volunteeringMinutes")
 }
 
 model ShowAndTellEntryAttachment {
