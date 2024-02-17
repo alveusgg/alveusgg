@@ -36,6 +36,7 @@ export type NumberFieldProps = AriaNumberFieldProps & {
   name: string;
   className?: string;
   inputClassName?: string;
+  groupClassName?: string;
   labelClassName?: string;
   list?: string;
   prefix?: ReactNode;
@@ -87,15 +88,15 @@ export function NumberField(props: NumberFieldProps) {
       <label className={props.labelClassName} {...labelProps}>
         {props.label}
       </label>
-      <div className="flex" {...groupProps}>
+      <div className={classes("flex", props.groupClassName)} {...groupProps}>
         {props.showButtons && (
           <NumberButton {...decrementButtonProps}>-</NumberButton>
         )}
-        <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
+        <div className="flex w-full items-center justify-center rounded-sm border border-gray-700 bg-white text-gray-500 focus-within:outline">
           {props.prefix}
           <input
             className={classes(
-              "w-full flex-1 bg-white p-1 px-2 text-black",
+              "w-full flex-1 bg-white p-1 px-2 text-black focus:outline-0",
               props.inputClassName,
             )}
             {...inputProps}

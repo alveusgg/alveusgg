@@ -1,4 +1,5 @@
 import { classes } from "@/utils/classes";
+import { trpc } from "@/utils/trpc";
 
 const GiveAnHourProgressText = ({
   hours,
@@ -23,14 +24,20 @@ const barClasses =
   "absolute inset-y-0 left-0 min-w-10 rounded-full border-4 border-alveus-green-900 transition-all duration-[2s] ease-in-out";
 
 export const GiveAnHourProgress = ({
-  hours = 0,
   target,
   text = "after",
 }: {
-  hours?: number;
   target?: number;
   text?: "after" | "before";
 }) => {
+  const hoursQuery = trpc.showAndTell.getGiveAnHourProgress.useQuery(
+    undefined,
+    {
+      refetchInterval: 5 * 60 * 1000,
+    },
+  );
+  const hours = hoursQuery.data ?? 0;
+
   // Round hours up to the nearest multiple of 24
   // Or, if we're greater than 168 hours (7 days), the nearest multiple of 48
   // We'll multiply by 1.2 so that we never actually hit the target itself

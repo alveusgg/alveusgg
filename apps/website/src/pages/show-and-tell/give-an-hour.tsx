@@ -77,13 +77,6 @@ const Card = ({
 );
 
 const GiveAnHourPage: NextPage = () => {
-  // Demo logic for the progress bar
-  const router = useRouter();
-  const [progressHours, setProgressHours] = useState(0);
-  const onClickProgress = useCallback(() => {
-    if ("demo" in router.query) setProgressHours((prev) => prev + 4);
-  }, [router.query.demo]);
-
   return (
     <>
       <Meta
@@ -117,8 +110,8 @@ const GiveAnHourPage: NextPage = () => {
             </Link>{" "}
             page.
           </p>
-          <div className="mt-2" onClick={onClickProgress}>
-            <GiveAnHourProgress hours={progressHours} />
+          <div className="mt-2">
+            <GiveAnHourProgress />
           </div>
         </div>
 
