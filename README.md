@@ -38,6 +38,7 @@ Hosting (production):
 ## External APIs
 
 - Twitch OAuth (application)
+- Twitch Helix
 
 ## Systems overview
 
