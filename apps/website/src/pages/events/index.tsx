@@ -10,7 +10,9 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
+import valentines2024Video from "@/assets/events/valentines-2024.mp4";
 import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
 import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
@@ -33,6 +35,53 @@ type Event = {
 };
 
 const events = {
+  valentines2024: {
+    name: "Valentine's Day 2024",
+    date: new Date("2024-02-14"),
+    video: valentines2024Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$32,697",
+      },
+      signedPostcards: {
+        title: "Signed postcards sent to donors",
+        stat: "467",
+      },
+      plushies: {
+        title: "Hand-crafted plushies distributed",
+        stat: "18",
+      },
+      revealed: {
+        title: "New ambassador revealed",
+        stat: "1",
+      },
+    },
+    info: (
+      <>
+        <p>
+          Celebrating Valentine&apos;s Day once again, live viewers joined us
+          for a short fundraising stream. They were able to donate $25 or more
+          to get a signed postcard with artwork featuring the ambassadors to
+          commemorate the event, and an entry into the raffle. During the event,
+          we were able to raise $32,697 for the sanctuary, with 467 postcards
+          sent out to donors. The top 3 donors during the event were able to
+          pick the plushie they would like, and the remaining 15 plushies, all
+          hand-crafted by Maya, were distributed to random raffle winners from
+          those who donated $25 or more.
+        </p>
+        <p>
+          We also revealed a new ambassador during the event, introducing
+          everyone to <Link href="/ambassadors/push-pop">Push Pop</Link>, our
+          Sulcata Tortoise. Live viewers also got to meet many of our other
+          ambassadors as we headed around the property to distribute
+          Valentine&apos;s-themed enrichment (crafted items to help encourage
+          natural behaviours like foraging) to them. Thanks to everyone that
+          tuned in and supported this event!
+        </p>
+      </>
+    ),
+  },
   fallCarnival2023: {
     name: "Fall Carnival 2023",
     date: new Date("2023-11-04"),
