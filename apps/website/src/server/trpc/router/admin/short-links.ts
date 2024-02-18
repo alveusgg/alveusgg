@@ -5,7 +5,11 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import { permissions } from "@/config/permissions";
-import { createForm, editForm, shortLinkSchema } from "@/server/db/short-links";
+import {
+  createShortLink,
+  editShortLink,
+  shortLinkSchema,
+} from "@/server/db/short-links";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageShortLinks),
@@ -25,12 +29,12 @@ export const shortLinksRouter = router({
       switch (input.action) {
         case "create": {
           const { action: _, ...data } = input;
-          await createForm(data);
+          await createShortLink(data);
           break;
         }
         case "edit": {
           const { action: _, ...data } = input;
-          await editForm(data);
+          await editShortLink(data);
           break;
         }
       }
@@ -38,9 +42,10 @@ export const shortLinksRouter = router({
 
   deleteLink: permittedProcedure
     .input(z.string().cuid())
-    .mutation(async ({ ctx, input: id }) =>
-      ctx.prisma.shortLinks.delete({ where: { id } }),
-    ),
+    .mutation(async ({ ctx, input: id }) => {
+      ctx.prisma.shortLinks.delete({ where: { id: id } });
+      ctx.prisma.shortLinksTracking.delete({ where: { id: id } });
+    }),
 
   getLink: permittedProcedure
     .input(z.string().cuid())
@@ -51,25 +56,6 @@ export const shortLinksRouter = router({
   getLinks: permittedProcedure.query(async ({ ctx }) =>
     ctx.prisma.shortLinks.findMany({}),
   ),
-
-  addClick: permittedProcedure
-    .input(z.string().cuid())
-    .mutation(async ({ ctx, input: id }) => {
-      const entry = await ctx.prisma.shortLinksTracking.findFirst({
-        where: { id },
-      });
-      if (entry) {
-        const clicks = entry.clicks + 1;
-        console.log("Hallo Welt");
-        await ctx.prisma.shortLinksTracking.update({
-          where: { id: id },
-          data: { clicks: clicks },
-        });
-      } else {
-        const clicks: number = 1;
-        await ctx.prisma.shortLinksTracking.create({ data: { id, clicks } });
-      }
-    }),
 
   getClicks: permittedProcedure.query(async ({ ctx }) =>
     ctx.prisma.shortLinksTracking.findMany({}),
