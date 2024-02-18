@@ -14,7 +14,7 @@
   },
   "scripts": {
     "build:next": "next build",
-    "build:next-sitemap": "next-sitemap --config next-sitemap.config.cjs",
+    "build:next-sitemap": "next-sitemap --config next-sitemap.config.js",
     "build:push-sw": "tsup --config sw.tsup.config.ts",
     "build:manifest": "tsx ./build-scripts/create-manifest.ts",
     "dev:next": "next dev",

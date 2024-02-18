@@ -1,6 +1,5 @@
 // @ts-check
-/** @type {import('next-sitemap').IConfig} */
-module.exports = {
+const config = {
   // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
   siteUrl: process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
@@ -35,3 +34,5 @@ module.exports = {
     ],
   },
 };
+
+export default config;
