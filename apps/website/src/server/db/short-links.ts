@@ -35,7 +35,7 @@ export async function createForm(input: z.infer<typeof shortLinkSchema>) {
 
 export async function editForm(input: z.infer<typeof existingShortLinkSchema>) {
   const slug = convertToSlug(input.slug || input.label);
-  const existingShortLinkWithSlug = await prisma.form.findFirst({
+  const existingShortLinkWithSlug = await prisma.shortLinks.findFirst({
     where: { slug, id: { not: input.id } },
   });
   if (existingShortLinkWithSlug)
