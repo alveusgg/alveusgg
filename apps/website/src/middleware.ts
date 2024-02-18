@@ -4,6 +4,8 @@ import {
   NextResponse,
 } from "next/server";
 import { env } from "@/env/index.mjs";
+import { callEndpoint } from "@/server/utils/queue";
+import type { TrackClickSchema } from "@/pages/api/short-links/track-click";
 
 export async function middleware(req: NextRequest, event: NextFetchEvent) {
   const res = await fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links", {
@@ -16,12 +18,8 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
 
   if (shortLink) {
     event.waitUntil(
-      fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links/track-click", {
-        method: "POST",
-        body: JSON.stringify({
-          id: shortLink.id,
-          secret: env.SHORT_LINKS_TRACKING_SECRET,
-        }),
+      callEndpoint<TrackClickSchema>("/api/short-links/track-click", {
+        id: shortLink.id,
       }),
     );
     return NextResponse.redirect(shortLink.link);

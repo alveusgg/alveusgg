@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { z } from "zod";
 import { prisma } from "@/server/db/client";
-import { env } from "@/env/index.mjs";
+
+const trackClickSchema = z.object({ id: z.string().cuid() });
+export type TrackClickSchema = z.infer<typeof trackClickSchema>;
 
 //API for short links tracking
 export default async function handler(
