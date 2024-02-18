@@ -67,7 +67,7 @@ const events = {
           we were able to raise $32,697 for the sanctuary, with 467 postcards
           sent out to donors. The top 3 donors during the event were able to
           pick the plushie they would like, and the remaining 15 plushies, all
-          hand-crafted by Maya, were distributed to random raffle winners from
+          handcrafted by Maya, were distributed to random raffle winners from
           those who donated $25 or more.
         </p>
         <p>
@@ -76,8 +76,8 @@ const events = {
           Sulcata Tortoise. Live viewers also got to meet many of our other
           ambassadors as we headed around the property to distribute
           Valentine&apos;s-themed enrichment (crafted items to help encourage
-          natural behaviours like foraging) to them. Thanks to everyone that
-          tuned in and supported this event!
+          natural behaviors like foraging) to them. Thanks to everyone who tuned
+          in and supported this event!
         </p>
       </>
     ),
@@ -171,7 +171,7 @@ const events = {
           craft auction where viewers could bid and donate on 16 different
           crafts made by the staff for the event, including multiple friendship
           bracelets, two different Summer Camp paintings, a few
-          ambassador-themed hats, two hand-crafted pet rocks, a rubber chicken
+          ambassador-themed hats, two handcrafted pet rocks, a rubber chicken
           and the Summer Camp Spirit Stick itself.
         </p>
         <p>
@@ -256,8 +256,8 @@ const events = {
           To celebrate Valentine&apos;s Day, we hosted a short livestream
           fundraiser. Viewers were able to donate $25 or more to get a signed
           postcard for the event, and the chance to win an ambassador plushie
-          hand-crafted by Maya. We were able to raise $40,076 for Alveus over
-          the 3-hour-long event, with 596 donors claiming a postcard.
+          handcrafted by Maya. We were able to raise $40,076 for Alveus over the
+          3-hour-long event, with 596 donors claiming a postcard.
         </p>
         <p>
           Each donation of $25 or more would also include some 3D-printed
