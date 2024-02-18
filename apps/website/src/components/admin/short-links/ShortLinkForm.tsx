@@ -94,7 +94,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           inputClassName="font-mono"
           placeholder={convertToSlug(label)}
           prefix={
-            <div className="cursor-default select-none pl-2 font-mono">{`${env.NEXT_PUBLIC_BASE_URL}/link/`}</div>
+            <div className="cursor-default select-none pl-2 font-mono">{`${env.NEXT_PUBLIC_BASE_URL}/l/`}</div>
           }
         />
         <TextField
