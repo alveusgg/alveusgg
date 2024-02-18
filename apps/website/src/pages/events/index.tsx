@@ -10,7 +10,9 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
+import valentines2024Video from "@/assets/events/valentines-2024.mp4";
 import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
 import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
@@ -33,6 +35,53 @@ type Event = {
 };
 
 const events = {
+  valentines2024: {
+    name: "Valentine's Day 2024",
+    date: new Date("2024-02-14"),
+    video: valentines2024Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$32,697",
+      },
+      signedPostcards: {
+        title: "Signed postcards sent to donors",
+        stat: "467",
+      },
+      plushies: {
+        title: "Hand-crafted plushies distributed",
+        stat: "18",
+      },
+      revealed: {
+        title: "New ambassador revealed",
+        stat: "1",
+      },
+    },
+    info: (
+      <>
+        <p>
+          Celebrating Valentine&apos;s Day once again, live viewers joined us
+          for a short fundraising stream. They were able to donate $25 or more
+          to get a signed postcard with artwork featuring the ambassadors to
+          commemorate the event, and an entry into the raffle. During the event,
+          we were able to raise $32,697 for the sanctuary, with 467 postcards
+          sent out to donors. The top 3 donors during the event were able to
+          pick the plushie they would like, and the remaining 15 plushies, all
+          handcrafted by Maya, were distributed to random raffle winners from
+          those who donated $25 or more.
+        </p>
+        <p>
+          We also revealed a new ambassador during the event, introducing
+          everyone to <Link href="/ambassadors/push-pop">Push Pop</Link>, our
+          Sulcata Tortoise. Live viewers also got to meet many of our other
+          ambassadors as we headed around the property to distribute
+          Valentine&apos;s-themed enrichment (crafted items to help encourage
+          natural behaviors like foraging) to them. Thanks to everyone who tuned
+          in and supported this event!
+        </p>
+      </>
+    ),
+  },
   fallCarnival2023: {
     name: "Fall Carnival 2023",
     date: new Date("2023-11-04"),
@@ -67,10 +116,13 @@ const events = {
         <p>
           Live viewers could earn points in a variety of events, including a rat
           maze with riddles to solve in each room as the ambassadors explored
-          the maze, ring toss with Abbott the crow, and a race with the
-          cockroaches. Throughout the whole event a game of bingo was also being
-          played with the live viewers, with ambassadors around the property
-          picking out numbers.
+          the maze, ring toss with{" "}
+          <Link href="/ambassadors/abbott">Abbott</Link> the crow, and a race
+          with the{" "}
+          <Link href="/ambassadors/barbara-baked-bean">cockroaches</Link>.
+          Throughout the whole event a game of bingo was also being played with
+          the live viewers, with ambassadors around the property picking out
+          numbers.
         </p>
         <p>
           By the end of the 3-hour-long event, we were able to raise $16,057 for
@@ -119,7 +171,7 @@ const events = {
           craft auction where viewers could bid and donate on 16 different
           crafts made by the staff for the event, including multiple friendship
           bracelets, two different Summer Camp paintings, a few
-          ambassador-themed hats, two hand-crafted pet rocks, a rubber chicken
+          ambassador-themed hats, two handcrafted pet rocks, a rubber chicken
           and the Summer Camp Spirit Stick itself.
         </p>
         <p>
@@ -167,7 +219,8 @@ const events = {
         <p>
           The event raised $63,019 for Alveus Sanctuary over the course of the
           3.5-hour-long event, with $31,500 of that from an incredibly generous
-          donation by Rotary at the end of the event. Georgie was our most
+          donation by Rotary at the end of the event.{" "}
+          <Link href="/ambassadors/georgie">Georgie</Link> was our most
           successful ambassador artist this year, with his four paintings
           raising $4,225 in donations, with the top one selling for $2.1k. Thank
           you to everyone that watched and supported this event!
@@ -203,8 +256,8 @@ const events = {
           To celebrate Valentine&apos;s Day, we hosted a short livestream
           fundraiser. Viewers were able to donate $25 or more to get a signed
           postcard for the event, and the chance to win an ambassador plushie
-          hand-crafted by Maya. We were able to raise $40,076 for Alveus over
-          the 3-hour-long event, with 596 donors claiming a postcard.
+          handcrafted by Maya. We were able to raise $40,076 for Alveus over the
+          3-hour-long event, with 596 donors claiming a postcard.
         </p>
         <p>
           Each donation of $25 or more would also include some 3D-printed

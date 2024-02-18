@@ -11,11 +11,8 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import type { subscriptionSchema } from "@/server/utils/twitch-api";
-import { getSubscriptions, getUserByName } from "@/server/utils/twitch-api";
+import { getUserByName } from "@/server/utils/twitch-api";
 import { permissions } from "@/data/permissions";
-
-type Subscription = z.infer<typeof subscriptionSchema>;
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageTwitchApi),
@@ -26,19 +23,6 @@ const roleToScopePrefixMap: Record<(typeof roles)[number], string> = {
   broadcaster: "channel:",
   moderator: "moderator:",
 };
-
-function sortSubscriptionByBroadcasterId(a: Subscription, b: Subscription) {
-  const idA = a.condition.broadcaster_user_id;
-  const idB = b.condition.broadcaster_user_id;
-
-  if (idA < idB) {
-    return -1;
-  }
-  if (idA > idB) {
-    return 1;
-  }
-  return 0;
-}
 
 export const adminTwitchRouter = router({
   getChannels: permittedProcedure.query(getTwitchChannels),
@@ -167,13 +151,4 @@ export const adminTwitchRouter = router({
 
       return { success: true };
     }),
-
-  getActiveEventSubscriptions: permittedProcedure.query(async () => {
-    const twitchEventSubs = await getSubscriptions();
-    if (twitchEventSubs.data) {
-      twitchEventSubs.data.sort(sortSubscriptionByBroadcasterId);
-      return twitchEventSubs.data;
-    }
-    return null;
-  }),
 });
