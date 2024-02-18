@@ -237,7 +237,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         content: [
           "Fox enclosure constructed",
           "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, and an air-conditioned indoor area.",
-          "Sponsored by QTCinderalla and her community.",
+          "Sponsored by QTCinderella and her community.",
         ],
       },
       {
