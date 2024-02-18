@@ -4,7 +4,7 @@ import { prisma } from "@/server/db/client";
 import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
 
 export const shortLinkSchema = z.object({
-  label: z.string(),
+  label: z.string().min(1),
   slug: z.string().regex(SLUG_REGEX).optional(),
   link: z.string().url(),
 });
