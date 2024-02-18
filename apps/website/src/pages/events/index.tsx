@@ -116,10 +116,13 @@ const events = {
         <p>
           Live viewers could earn points in a variety of events, including a rat
           maze with riddles to solve in each room as the ambassadors explored
-          the maze, ring toss with Abbott the crow, and a race with the
-          cockroaches. Throughout the whole event a game of bingo was also being
-          played with the live viewers, with ambassadors around the property
-          picking out numbers.
+          the maze, ring toss with{" "}
+          <Link href="/ambassadors/abbott">Abbott</Link> the crow, and a race
+          with the{" "}
+          <Link href="/ambassadors/barbara-baked-bean">cockroaches</Link>.
+          Throughout the whole event a game of bingo was also being played with
+          the live viewers, with ambassadors around the property picking out
+          numbers.
         </p>
         <p>
           By the end of the 3-hour-long event, we were able to raise $16,057 for
@@ -216,7 +219,8 @@ const events = {
         <p>
           The event raised $63,019 for Alveus Sanctuary over the course of the
           3.5-hour-long event, with $31,500 of that from an incredibly generous
-          donation by Rotary at the end of the event. Georgie was our most
+          donation by Rotary at the end of the event.{" "}
+          <Link href="/ambassadors/georgie">Georgie</Link> was our most
           successful ambassador artist this year, with his four paintings
           raising $4,225 in donations, with the top one selling for $2.1k. Thank
           you to everyone that watched and supported this event!
