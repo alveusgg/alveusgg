@@ -6,7 +6,7 @@ import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
 export const shortLinkSchema = z.object({
   label: z.string(),
   slug: z.string().regex(SLUG_REGEX).optional(),
-  link: z.string(),
+  link: z.string().url(),
 });
 
 export type ShortLinkSchema = z.infer<typeof shortLinkSchema>;
