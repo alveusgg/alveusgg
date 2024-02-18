@@ -10,24 +10,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
 ) {
-  const body = JSON.parse(req.body);
-  const id = body.id;
-  if (body.secret === env.SHORT_LINKS_TRACKING_SECRET) {
-    const query = await prisma.shortLinksTracking.findFirst({
-      where: { id: id },
-    });
-    if (query) {
-      await prisma.shortLinksTracking.update({
-        where: { id: id },
-        data: {
-          clicks: {
-            increment: 1,
-          },
-        },
-      });
-      res.status(204).send("");
-    }
-  } else {
-    res.status(403).send("Unauthorized");
-  }
+  const id = req.body.id;
+  await prisma.shortLinksTracking.upsert({
+    where: { id: id },
+    create: { id, clicks: 1 },
+    update: { clicks: { increment: 1 } },
+  });
+  res.status(204).send("");
 }
