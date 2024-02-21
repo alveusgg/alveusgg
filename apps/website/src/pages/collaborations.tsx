@@ -70,7 +70,8 @@ const collaborations = {
     name: "Alluux",
     link: "https://www.twitch.tv/alluux",
     date: new Date("2023-11-05"),
-    videoId: "x1KMHDgmsR0",
+    videoId: "L5r1isGll2I",
+    vodId: "x1KMHDgmsR0",
   },
   filian: {
     name: "Filian",
