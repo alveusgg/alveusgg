@@ -5,7 +5,7 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 import { createBingo, editBingo, bingoSchema } from "@/server/db/bingos";
 import type { BingoPlayData } from "@/utils/bingo";
 import { bingoValueSchema, parseBingoPlayData } from "@/utils/bingo";

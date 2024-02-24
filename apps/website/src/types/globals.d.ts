@@ -1,4 +1,4 @@
-import type { TheGivingBlockConfig } from "@/config/the-giving-block";
+import type { TheGivingBlockConfig } from "@/data/the-giving-block";
 
 declare global {
   interface Window {

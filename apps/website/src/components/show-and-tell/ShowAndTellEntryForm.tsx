@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/config/show-and-tell";
+import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
 
 import { trpc } from "@/utils/trpc";
 import { notEmpty } from "@/utils/helpers";
@@ -311,7 +311,7 @@ export function ShowAndTellEntryForm({
         <Fieldset legend="Give an Hour">
           <p>
             Do you want to track hours you spent on this activity as part of the
-            Alveus community total for the WWF&apos;s{" "}
+            Alveus community total for WWF&apos;s{" "}
             <Link href="/show-and-tell/give-an-hour" external>
               Give an Hour
             </Link>{" "}

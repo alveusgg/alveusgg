@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 import { env } from "@/env/index.mjs";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 import { inputValueDatetimeLocalToUtc } from "@/utils/local-datetime";
 

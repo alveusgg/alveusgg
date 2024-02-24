@@ -7,6 +7,8 @@ export interface GroupedProps<T> {
   option: string;
   group: string | null;
   name: string | null;
+  index: number | null;
+  size: number | null;
 }
 
 type Component<T, R extends HTMLElement> = ComponentType<
@@ -17,6 +19,8 @@ const Group = <T, R extends HTMLElement>({
   option,
   group,
   name,
+  index,
+  size,
   items,
   active,
   component: Component,
@@ -24,6 +28,8 @@ const Group = <T, R extends HTMLElement>({
   option: string;
   group: string;
   name: string;
+  index: number;
+  size: number;
   items: T[];
   active: boolean;
   component: Component<T, R>;
@@ -42,6 +48,8 @@ const Group = <T, R extends HTMLElement>({
       items={items}
       option={option}
       group={group}
+      index={index}
+      size={size}
       name={name}
     />
   );
@@ -59,14 +67,23 @@ const Grouped = <T, R extends HTMLElement>({
   component: Component<T, R>;
 }) => {
   return Array.isArray(result) ? (
-    <Component items={result} option={option} group={group} name={null} />
+    <Component
+      items={result}
+      option={option}
+      group={group}
+      name={null}
+      index={null}
+      size={null}
+    />
   ) : (
-    [...result.entries()].map(([key, val]) => (
+    [...result.entries()].map(([key, val], idx) => (
       <Group
         key={key}
         option={option}
         group={key}
         name={val.name}
+        index={idx}
+        size={result.size}
         items={val.items}
         active={key === group}
         component={Component}

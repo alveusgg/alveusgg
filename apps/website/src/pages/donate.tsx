@@ -1,5 +1,4 @@
 import { type NextPage } from "next";
-import Link from "next/link";
 import { type ComponentType } from "react";
 
 import { useConsent } from "@/hooks/consent";
@@ -15,6 +14,9 @@ import IconPayPal from "@/icons/IconPayPal";
 import IconBox from "@/icons/IconBox";
 import IconBitcoin from "@/icons/IconBitcoin";
 import { type IconProps } from "@/icons/BaseIcon";
+import donationEvent from "@/data/env/donation-event";
+import Link from "@/components/content/Link";
+import IconArrowRight from "@/icons/IconArrowRight";
 
 type DonateLink = {
   icon: ComponentType<IconProps>;
@@ -63,7 +65,8 @@ const givingBlock: DonateLink = {
 const DonateItem = ({ link }: { link: DonateLink }) => (
   <Link
     href={link.link}
-    {...(link.external ? { target: "_blank", rel: "noreferrer" } : {})}
+    external={link.external}
+    custom
     className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-102 hover:shadow-2xl"
   >
     <div className="mb-1 flex items-center gap-4">
@@ -91,12 +94,37 @@ const DonatePage: NextPage = () => {
 
       <Section dark>
         <Heading>Donate</Heading>
-        <p>
+        <p className="text-lg">
           Help Alveus carry on its mission to inspire online audiences to engage
           in conservation efforts while providing high-quality animal care to
           our ambassadors.
         </p>
       </Section>
+
+      {donationEvent && (
+        <Section
+          dark
+          className="bg-carnival"
+          containerClassName="flex flex-col md:flex-row gap-8 items-start md:items-end"
+        >
+          <div className="flex-grow">
+            <Heading level={2}>{donationEvent.title}</Heading>
+            {donationEvent.description && (
+              <p className="text-lg">{donationEvent.description}</p>
+            )}
+          </div>
+
+          <Link
+            href={donationEvent.link}
+            external={donationEvent.external}
+            custom
+            className="whitespace-nowrap rounded-full border-2 border-white px-4 py-2 text-lg text-white transition-colors hover:bg-white hover:text-carnival md:px-4 md:py-2 md:text-xl"
+          >
+            {donationEvent.cta}
+            <IconArrowRight className="ml-3 inline-block h-6 w-6" />
+          </Link>
+        </Section>
+      )}
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow" containerClassName="flex flex-wrap">

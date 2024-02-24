@@ -7,7 +7,7 @@ import { env } from "@/env/index.mjs";
 import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
-import { defaultScope } from "@/config/twitch";
+import { defaultScope } from "@/data/twitch";
 
 const adapter = PrismaAdapter(prisma);
 

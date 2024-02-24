@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { defaultTags } from "@/config/notifications";
+import { defaultTags } from "@/data/notifications";
 import { knownPushServicesRegex } from "@/server/web-push/known-push-services";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 

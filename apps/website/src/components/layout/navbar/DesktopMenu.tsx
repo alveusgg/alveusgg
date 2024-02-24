@@ -9,11 +9,8 @@ import {
   type ReactElement,
 } from "react";
 
-import {
-  mainNavStructure,
-  utilityNavStructure,
-} from "@/config/main-nav-structure";
-import { checkRolesGivePermission, permissions } from "@/config/permissions";
+import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
+import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
 
