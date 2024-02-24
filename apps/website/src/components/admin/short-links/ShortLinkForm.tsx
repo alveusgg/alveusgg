@@ -84,6 +84,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           name="label"
           value={label}
           onChange={setLabel}
+          isRequired
         />
         <TextField
           label="Slug (Public URL, alphanumeric, dashes allowed)"
