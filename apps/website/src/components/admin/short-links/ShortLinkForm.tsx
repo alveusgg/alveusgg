@@ -58,7 +58,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           { action: "create", ...mutationData },
           {
             onSuccess: async () => {
-              await router.push(`/admin/short-links`);
+              await router.push("/admin/short-links");
             },
           },
         );
