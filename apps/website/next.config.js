@@ -1,4 +1,3 @@
-// @ts-check
 import { resolve } from "path";
 
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
