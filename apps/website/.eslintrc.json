@@ -46,6 +46,17 @@
       "rules": {
         "@typescript-eslint/no-var-requires": "off"
       }
+    },
+    {
+      "files": [
+        "src/sw/**/*"
+      ],
+      "parserOptions": {
+        "project": "./src/sw/tsconfig.json"
+      }
     }
+  ],
+  "ignorePatterns": [
+    "public/*"
   ]
 }
