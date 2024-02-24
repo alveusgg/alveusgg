@@ -1,3 +1,3 @@
-module.exports = {
+export default {
   "*": "prettier --write --ignore-unknown",
 };
