@@ -4,7 +4,7 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 import { createForm, editForm, formSchema } from "@/server/db/forms";
 
 const permittedProcedure = protectedProcedure.use(
