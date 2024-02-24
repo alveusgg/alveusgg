@@ -91,6 +91,9 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           name="slug"
           pattern={SLUG_PATTERN}
           inputMode="url"
+          isRequired
+          type="url"
+          pattern="https?://.+"
           defaultValue={shortLink?.slug || ""}
           inputClassName="font-mono"
           placeholder={convertToSlug(label)}
