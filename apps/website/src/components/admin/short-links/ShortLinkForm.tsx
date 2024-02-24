@@ -102,6 +102,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           }
         />
         <TextField
+          defaultValue={shortLink?.link || ""}
           label="URL"
           name="url"
           inputMode="url"
