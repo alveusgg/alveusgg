@@ -89,7 +89,6 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
         <TextField
           label="Slug (Public URL, alphanumeric, dashes allowed)"
           name="slug"
-          pattern={SLUG_PATTERN}
           inputMode="url"
           isRequired
           type="url"
