@@ -166,8 +166,6 @@ export function ShowAndTellEntryForm({
         enableTrackGiveAnHour && !isNaN(hours) ? hours * 60 : undefined,
     };
 
-    console.log("handleSubmit", data, formData.get("giveAnHour"));
-
     for (const fileReference of imageAttachmentsData.files) {
       if (
         fileReference.status !== "upload.done" &&
