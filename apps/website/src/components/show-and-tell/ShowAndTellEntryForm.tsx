@@ -163,7 +163,7 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes:
-        enableTrackGiveAnHour && !isNaN(hours) ? hours * 60 : undefined,
+        enableTrackGiveAnHour && !isNaN(hours) ? hours * 60 : null,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
