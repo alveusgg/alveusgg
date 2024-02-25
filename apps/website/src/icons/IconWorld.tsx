@@ -6,8 +6,8 @@ export default function IconWorld(props: IconProps) {
   return (
     <BaseIcon viewBox="0 0 24 24" {...props}>
       <path
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         stroke="currentColor"
         fill="none"
         strokeWidth="2"
