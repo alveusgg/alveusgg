@@ -83,6 +83,10 @@ export function NumberField(props: NumberFieldProps) {
     decrementButtonProps,
   } = useNumberField(customizedProps, state, ref);
 
+  const focusInput = useCallback(() => {
+    ref.current?.focus();
+  }, []);
+
   return (
     <div className={props.className || "flex-1"}>
       <label className={props.labelClassName} {...labelProps}>
@@ -93,19 +97,21 @@ export function NumberField(props: NumberFieldProps) {
           <NumberButton {...decrementButtonProps}>-</NumberButton>
         )}
         <div className="flex w-full items-center justify-center rounded-sm border border-gray-700 bg-white text-gray-500 focus-within:outline">
-          {props.prefix}
-          <input
-            className={classes(
-              "w-full flex-1 bg-white p-1 px-2 text-black focus:outline-0",
-              props.inputClassName,
-            )}
-            {...inputProps}
-            name={props.name}
-            list={props.list}
-            required={props.isRequired}
-            ref={ref}
-          />
-          {props.suffix}
+          <div className="contents" onClick={focusInput}>
+            {props.prefix}
+            <input
+              className={classes(
+                "w-full flex-1 bg-white p-1 px-2 text-black focus:outline-0",
+                props.inputClassName,
+              )}
+              {...inputProps}
+              name={props.name}
+              list={props.list}
+              required={props.isRequired}
+              ref={ref}
+            />
+            {props.suffix}
+          </div>
           {showResetButton && (
             <button className="px-2" type="button" onClick={reset}>
               <IconX className="h-4 w-4" />
