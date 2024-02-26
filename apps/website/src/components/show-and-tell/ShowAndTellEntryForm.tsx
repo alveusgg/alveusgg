@@ -76,7 +76,7 @@ function GiveAnHourInput({
       value={value}
       onChange={setValue}
       step={1}
-      minValue={0}
+      minValue={1}
       maxValue={100}
       inputClassName={classes(
         "text-right min-w-[calc(4ch+1rem)]",
@@ -181,8 +181,7 @@ export function ShowAndTellEntryForm({
       text: formData.get("text") as string,
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
-      volunteeringMinutes:
-        enableTrackGiveAnHour && !isNaN(hours) ? hours * 60 : null,
+      volunteeringMinutes: enableTrackGiveAnHour && hours ? hours * 60 : null,
     };
 
     for (const fileReference of imageAttachmentsData.files) {

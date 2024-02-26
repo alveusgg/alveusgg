@@ -91,7 +91,7 @@ const showAndTellSharedInputSchema = z.object({
   text: z.string().max(1_000),
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
-  volunteeringMinutes: z.number().int().nonnegative().nullable(),
+  volunteeringMinutes: z.number().int().positive().nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
