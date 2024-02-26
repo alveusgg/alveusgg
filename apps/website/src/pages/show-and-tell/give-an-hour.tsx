@@ -1,7 +1,5 @@
-import { useCallback, useState } from "react";
 import type { NextPage } from "next";
 import Image, { type ImageProps } from "next/image";
-import { useRouter } from "next/router";
 
 import { classes } from "@/utils/classes";
 
