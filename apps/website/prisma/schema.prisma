@@ -374,7 +374,7 @@ model ShowAndTellEntry {
 
   @@index([userId], name: "ShowAndTellEntry_userId")
   @@index([seenOnStream, approvedAt, updatedAt], name: "ShowAndTellEntry_public")
-  @@index([volunteeringMinutes, approvedAt, createdAt], name: "ShowAndTellEntry_volunteeringMinutes")
+  @@index([approvedAt, createdAt], name: "ShowAndTellEntry_volunteeringMinutes")
 }
 
 model ShowAndTellEntryAttachment {
