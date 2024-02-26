@@ -184,7 +184,7 @@ export const ShowAndTellEntry = forwardRef<
               custom
             >
               <strong className="bg-gradient-to-br from-blue-800 to-green-600 bg-clip-text font-bold text-transparent">
-                Gave {hours} {hours === 1 ? "Hour" : "Hours"} to Earth
+                Gave {hours} {hours === 1 ? "Hour" : "Hours"} for Earth
               </strong>
               <IconWorld className="ml-1 inline-block h-8 w-8 -translate-y-0.5" />
             </Link>
