@@ -13,6 +13,7 @@ import {
   consentExplainer,
   type ConsentKey,
 } from "@/hooks/consent";
+import useCrawler from "@/hooks/crawler";
 
 import Link from "@/components/content/Link";
 
@@ -34,15 +35,7 @@ const Consent = ({
   // Get the current user consent state
   // If this is "indexable", we'll ignore consent for known crawlers
   const { consent, update, loaded } = useConsent();
-  const crawling = useMemo(
-    () =>
-      indexable &&
-      typeof navigator !== "undefined" &&
-      ["googlebot", "bingbot", "linkedinbot"].some((bot) =>
-        navigator.userAgent.toLowerCase().includes(bot),
-      ),
-    [indexable],
-  );
+  const crawler = useCrawler();
 
   // When the user clicks the consent button, update the state
   const clicked = useCallback<MouseEventHandler<HTMLButtonElement>>(
@@ -61,7 +54,7 @@ const Consent = ({
       )}
     >
       {loaded &&
-        (crawling || consent[key] ? (
+        ((indexable && crawler) || consent[key] ? (
           <>
             <p className="absolute -z-10 m-auto text-2xl" aria-hidden="true">
               Loading {item}...
