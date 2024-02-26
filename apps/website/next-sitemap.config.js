@@ -1,10 +1,4 @@
 // @ts-check
-
-const siteUrl =
-  (process.env.NEXT_PUBLIC_VERCEL_URLnpm
-    ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_BASE_URL) || "http://localhost";
-
 /** @type {import('next-sitemap').IConfig} */
 const config = {
   // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
