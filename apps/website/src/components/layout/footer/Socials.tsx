@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import usePrefersReducedMotion from "@/hooks/motion";
+import useCrawler from "@/hooks/crawler";
 
 import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";
@@ -23,6 +24,10 @@ const buttonClasses =
 const Socials = () => {
   const reducedMotion = usePrefersReducedMotion();
 
+  // If this is a known crawler, we'll not load the video
+  // This is an attempt to stop Google reporting unindexable video pages
+  const crawler = useCrawler();
+
   return (
     <Section dark className="z-0 py-0">
       <div className="flex flex-wrap-reverse gap-y-4 pt-8">
@@ -37,15 +42,25 @@ const Socials = () => {
               <span className="sr-only">
                 Open Instagram post of Georgie, Alveus&apos; African Bullfrog
               </span>
-              <Video
-                sources={reelVideo.sources}
-                poster={reelVideo.poster}
-                className="absolute inset-0"
-                autoPlay={!reducedMotion}
-                loop
-                muted
-                playsInline
-              />
+              {crawler || reducedMotion ? (
+                <Image
+                  src={reelVideo.poster}
+                  alt=""
+                  width={400}
+                  loading="lazy"
+                  className="absolute inset-0"
+                />
+              ) : (
+                <Video
+                  sources={reelVideo.sources}
+                  poster={reelVideo.poster}
+                  className="absolute inset-0"
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              )}
               <IconInstagram
                 className="absolute right-0 top-0 m-3 opacity-60"
                 size={30}
