@@ -2,17 +2,21 @@ import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
 const GiveAnHourProgressText = ({
+  isLoading,
   hours,
   target,
 }: {
+  isLoading?: boolean;
   hours: number;
   target: number;
 }) => (
   <div className="flex justify-between px-2">
     <p className="text-md font-semibold text-alveus-tan">
-      {hours === 0
-        ? "No hours given yet"
-        : `${hours} hour${hours !== 1 ? "s" : ""} already given`}
+      {isLoading
+        ? "Loading hours given…"
+        : hours === 0
+          ? "No hours given yet"
+          : `${hours} hour${hours !== 1 ? "s" : ""} already given`}
     </p>
     <p className="text-md font-medium text-alveus-tan opacity-75">
       {target} hour{target !== 1 ? "s" : ""} target
@@ -48,7 +52,11 @@ export const GiveAnHourProgress = ({
   return (
     <>
       {text === "before" && (
-        <GiveAnHourProgressText hours={hours} target={computedTarget} />
+        <GiveAnHourProgressText
+          isLoading={hoursQuery.isLoading}
+          hours={hours}
+          target={computedTarget}
+        />
       )}
 
       <div className="relative my-1 h-10 w-full rounded-full bg-alveus-green-900 shadow-lg">
@@ -68,7 +76,11 @@ export const GiveAnHourProgress = ({
       </div>
 
       {text === "after" && (
-        <GiveAnHourProgressText hours={hours} target={computedTarget} />
+        <GiveAnHourProgressText
+          isLoading={hoursQuery.isLoading}
+          hours={hours}
+          target={computedTarget}
+        />
       )}
     </>
   );
