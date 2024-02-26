@@ -77,9 +77,8 @@ function GiveAnHourInput({
       step={1}
       minValue={0}
       maxValue={100}
-      className="w-min-content"
       inputClassName={classes(
-        "text-right max-w-[5rem]",
+        "text-right min-w-[calc(4ch+1rem)]",
         enabled ? "" : "opacity-50 cursor-not-allowed",
       )}
       showButtons={true}

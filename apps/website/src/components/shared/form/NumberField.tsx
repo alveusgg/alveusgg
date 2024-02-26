@@ -20,7 +20,7 @@ function NumberButton(
   return (
     <button
       className={classes(
-        "m-1 block w-12 rounded-full bg-gray-700 text-lg text-white",
+        "m-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-gray-700 text-lg text-white",
         props.isDisabled ? "cursor-not-allowed opacity-50" : "",
       )}
       {...buttonProps}
