@@ -105,6 +105,8 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           label="URL"
           name="url"
           inputMode="url"
+          isRequired
+          type="url"
           inputClassName="font-mono"
           placeholder="https://twitch.tv/alveussanctuary"
         />
