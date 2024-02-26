@@ -11,10 +11,10 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import ShowAndTellNavigation from "@/components/show-and-tell/ShowAndTellNavigation";
 
 const EditShowAndTellPage: NextPage = () => {
   const session = useSession();

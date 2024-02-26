@@ -10,9 +10,9 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import ShowAndTellNavigation from "@/components/show-and-tell/ShowAndTellNavigation";
 
 const ShowAndTellSubmitPage: NextPage = () => {
   const session = useSession();

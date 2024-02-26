@@ -22,9 +22,8 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import DateTime from "@/components/content/DateTime";
 
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
-
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import ShowAndTellNavigation from "@/components/show-and-tell/ShowAndTellNavigation";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 

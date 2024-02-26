@@ -107,7 +107,9 @@ const presets: Record<string, Camera> = {
     title: "Roaches",
     presets: {
       home: { description: "zoomed out view showing most of the tank" },
-      stickt: { description: "top of the large stick they spend a lot of time on" },
+      stickt: {
+        description: "top of the large stick they spend a lot of time on",
+      },
       sticktl: { description: "top left view of the stick" },
       stickb: { description: "bottom of the large stick" },
       tippy: { description: "zoomed in view of the top of the stick" },

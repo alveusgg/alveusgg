@@ -11,10 +11,10 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import ShowAndTellNavigation from "@/components/show-and-tell/ShowAndTellNavigation";
 
 const PreviewShowAndTellPage: NextPage = () => {
   const session = useSession();
@@ -50,6 +50,7 @@ const PreviewShowAndTellPage: NextPage = () => {
             wildlife-related activities.
           </p>
         </div>
+
         <ShowAndTellNavigation />
       </Section>
 

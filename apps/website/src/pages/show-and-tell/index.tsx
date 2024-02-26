@@ -45,6 +45,12 @@ export type ShowAndTellPageProps = InferGetStaticPropsType<
 
 const entriesPerPage = 10;
 
+export const showAndTellNavItems = [
+  { href: "/show-and-tell/", label: "All Posts", exact: true },
+  { href: "/show-and-tell/my-posts", label: "My Posts" },
+  { href: "/show-and-tell/submit-post", label: "Submit Post" },
+];
+
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
 export const getStaticProps = async () => {
