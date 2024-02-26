@@ -3,7 +3,7 @@ import { useCallback, useMemo } from "react";
 import debounce from "lodash/debounce";
 
 import { usePushSubscription } from "@/utils/push-subscription";
-import { notificationCategories } from "@/config/notifications";
+import { notificationCategories } from "@/data/notifications";
 
 import IconLoading from "@/icons/IconLoading";
 import type { NotificationPermission } from "./NotificationPermission";

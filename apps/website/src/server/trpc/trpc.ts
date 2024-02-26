@@ -3,7 +3,7 @@ import superjson from "superjson";
 
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 import { type Context } from "@/server/trpc/context";
-import type { PermissionConfig } from "@/config/permissions";
+import type { PermissionConfig } from "@/data/permissions";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,

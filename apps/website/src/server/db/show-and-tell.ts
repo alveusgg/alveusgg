@@ -3,7 +3,7 @@ import { TRPCError } from "@trpc/server";
 
 import { env } from "@/env/index.mjs";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/config/show-and-tell";
+import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
 
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";

@@ -1,4 +1,4 @@
-import { pushMaxAttempts } from "@/config/push";
+import { pushMaxAttempts } from "@/data/env/push";
 
 import { prisma } from "@/server/db/client";
 

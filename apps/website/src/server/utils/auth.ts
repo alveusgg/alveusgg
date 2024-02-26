@@ -1,7 +1,7 @@
 import type { Session } from "next-auth";
 
 import { env } from "@/env/index.mjs";
-import type { PermissionConfig } from "@/config/permissions";
+import type { PermissionConfig } from "@/data/permissions";
 import { getRolesForUser } from "@/server/db/users";
 
 export function getSuperUserIds() {

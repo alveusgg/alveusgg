@@ -4,7 +4,7 @@ import { getAdminSSP } from "@/server/utils/admin";
 import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { AdminShowAndTellEntriesPanel } from "@/components/admin/show-and-tell/AdminShowAndTellEntriesPanel";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {

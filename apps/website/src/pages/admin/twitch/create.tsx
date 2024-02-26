@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 import { getAdminSSP } from "@/server/utils/admin";
 

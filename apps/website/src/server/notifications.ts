@@ -6,8 +6,12 @@ import {
   defaultTag,
   defaultTitle,
   notificationCategories,
-} from "@/config/notifications";
-import { pushBatchSize, pushMaxAttempts, pushRetryDelay } from "@/config/push";
+} from "@/data/notifications";
+import {
+  pushBatchSize,
+  pushMaxAttempts,
+  pushRetryDelay,
+} from "@/data/env/push";
 
 import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";

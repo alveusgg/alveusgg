@@ -1,8 +1,8 @@
 import { Disclosure } from "@headlessui/react";
 import { Fragment } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { mainNavStructure } from "@/config/main-nav-structure";
-import { checkRolesGivePermission, permissions } from "@/config/permissions";
+import { mainNavStructure } from "@/data/navigation";
+import { checkRolesGivePermission, permissions } from "@/data/permissions";
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 import { navLinkClassesSub, NavLinkSub } from "./NavLink";
 

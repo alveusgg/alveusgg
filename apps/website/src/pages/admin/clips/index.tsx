@@ -3,7 +3,7 @@ import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getAdminSSP } from "@/server/utils/admin";
 import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 import Meta from "@/components/content/Meta";
 import { AdminClipsPanel } from "@/components/admin/clips/AdminClipsPanel";
 

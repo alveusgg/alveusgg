@@ -1,16 +1,21 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { type ReactNode } from "react";
+import { forwardRef, useMemo, type ReactNode } from "react";
+
+import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { formatDateTime } from "@/utils/datetime";
-import { camelToKebab } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
+import { convertToSlug } from "@/utils/slugs";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import VideoPlayer from "@/components/content/Video";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
+import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 
+import valentines2024Video from "@/assets/events/valentines-2024.mp4";
 import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
 import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
@@ -32,8 +37,55 @@ type Event = {
   info: ReactNode;
 };
 
-const events = {
-  fallCarnival2023: {
+const events: Event[] = [
+  {
+    name: "Valentine's Day 2024",
+    date: new Date("2024-02-14"),
+    video: valentines2024Video,
+    stats: {
+      totalDonations: {
+        title: "Raised for Alveus Sanctuary",
+        stat: "$32,697",
+      },
+      signedPostcards: {
+        title: "Signed postcards sent to donors",
+        stat: "467",
+      },
+      plushies: {
+        title: "Hand-crafted plushies distributed",
+        stat: "18",
+      },
+      revealed: {
+        title: "New ambassador revealed",
+        stat: "1",
+      },
+    },
+    info: (
+      <>
+        <p>
+          Celebrating Valentine&apos;s Day once again, live viewers joined us
+          for a short fundraising stream. They were able to donate $25 or more
+          to get a signed postcard with artwork featuring the ambassadors to
+          commemorate the event, and an entry into the raffle. During the event,
+          we were able to raise $32,697 for the sanctuary, with 467 postcards
+          sent out to donors. The top 3 donors during the event were able to
+          pick the plushie they would like, and the remaining 15 plushies, all
+          handcrafted by Maya, were distributed to random raffle winners from
+          those who donated $25 or more.
+        </p>
+        <p>
+          We also revealed a new ambassador during the event, introducing
+          everyone to <Link href="/ambassadors/push-pop">Push Pop</Link>, our
+          Sulcata Tortoise. Live viewers also got to meet many of our other
+          ambassadors as we headed around the property to distribute
+          Valentine&apos;s-themed enrichment (crafted items to help encourage
+          natural behaviors like foraging) to them. Thanks to everyone who tuned
+          in and supported this event!
+        </p>
+      </>
+    ),
+  },
+  {
     name: "Fall Carnival 2023",
     date: new Date("2023-11-04"),
     video: fallCarnival2023Video,
@@ -67,10 +119,13 @@ const events = {
         <p>
           Live viewers could earn points in a variety of events, including a rat
           maze with riddles to solve in each room as the ambassadors explored
-          the maze, ring toss with Abbott the crow, and a race with the
-          cockroaches. Throughout the whole event a game of bingo was also being
-          played with the live viewers, with ambassadors around the property
-          picking out numbers.
+          the maze, ring toss with{" "}
+          <Link href="/ambassadors/abbott">Abbott</Link> the crow, and a race
+          with the{" "}
+          <Link href="/ambassadors/barbara-baked-bean">cockroaches</Link>.
+          Throughout the whole event a game of bingo was also being played with
+          the live viewers, with ambassadors around the property picking out
+          numbers.
         </p>
         <p>
           By the end of the 3-hour-long event, we were able to raise $16,057 for
@@ -82,7 +137,7 @@ const events = {
       </>
     ),
   },
-  summerCamp2023: {
+  {
     name: "Summer Camp 2023",
     date: new Date("2023-07-21"),
     video: summerCamp2023Video,
@@ -119,7 +174,7 @@ const events = {
           craft auction where viewers could bid and donate on 16 different
           crafts made by the staff for the event, including multiple friendship
           bracelets, two different Summer Camp paintings, a few
-          ambassador-themed hats, two hand-crafted pet rocks, a rubber chicken
+          ambassador-themed hats, two handcrafted pet rocks, a rubber chicken
           and the Summer Camp Spirit Stick itself.
         </p>
         <p>
@@ -131,7 +186,7 @@ const events = {
       </>
     ),
   },
-  artAuction2023: {
+  {
     name: "Art Auction 2023",
     date: new Date("2023-04-22"),
     video: artAuction2023Video,
@@ -167,7 +222,8 @@ const events = {
         <p>
           The event raised $63,019 for Alveus Sanctuary over the course of the
           3.5-hour-long event, with $31,500 of that from an incredibly generous
-          donation by Rotary at the end of the event. Georgie was our most
+          donation by Rotary at the end of the event.{" "}
+          <Link href="/ambassadors/georgie">Georgie</Link> was our most
           successful ambassador artist this year, with his four paintings
           raising $4,225 in donations, with the top one selling for $2.1k. Thank
           you to everyone that watched and supported this event!
@@ -175,7 +231,7 @@ const events = {
       </>
     ),
   },
-  valentines2023: {
+  {
     name: "Valentine's Day 2023",
     date: new Date("2023-02-14"),
     video: valentines2023Video,
@@ -203,8 +259,8 @@ const events = {
           To celebrate Valentine&apos;s Day, we hosted a short livestream
           fundraiser. Viewers were able to donate $25 or more to get a signed
           postcard for the event, and the chance to win an ambassador plushie
-          hand-crafted by Maya. We were able to raise $40,076 for Alveus over
-          the 3-hour-long event, with 596 donors claiming a postcard.
+          handcrafted by Maya. We were able to raise $40,076 for Alveus over the
+          3-hour-long event, with 596 donors claiming a postcard.
         </p>
         <p>
           Each donation of $25 or more would also include some 3D-printed
@@ -219,7 +275,7 @@ const events = {
       </>
     ),
   },
-  artAuction2022: {
+  {
     name: "Art Auction 2022",
     date: new Date("2022-04-22"),
     video: artAuction2022Video,
@@ -253,7 +309,7 @@ const events = {
       </p>
     ),
   },
-  halloween2021: {
+  {
     name: "Halloween 2021",
     date: new Date("2021-10-31"),
     video: halloween2021Video,
@@ -302,7 +358,7 @@ const events = {
       </>
     ),
   },
-  fundathon2021: {
+  {
     name: "Fund-a-thon 2021",
     date: new Date("2021-02-10"),
     video: fundathon2021Video,
@@ -338,9 +394,132 @@ const events = {
       </p>
     ),
   },
-} as const satisfies Record<string, Event>;
+];
+
+const sortByOptions = {
+  all: {
+    label: "All Events",
+    sort: (events) =>
+      [...events]
+        .sort((a, b) => b.date.getTime() - a.date.getTime())
+        .reduce<GroupedItems<Event>>((map, event) => {
+          const year = event.date.getUTCFullYear().toString();
+
+          map.set(year, {
+            name: year,
+            items: [...(map.get(year)?.items || []), event],
+          });
+          return map;
+        }, new Map()),
+  },
+} as const satisfies Options<Event>;
+
+const EventItems = forwardRef<HTMLDivElement, GroupedProps<Event>>(
+  ({ items, option, group, name, index }, ref) => {
+    const itemsWithSlugs = useMemo(
+      () =>
+        items.reduce(
+          (acc, item) => {
+            const slug = convertToSlug(item.name);
+            return { ...acc, [slug]: item };
+          },
+          {} as Record<string, Event>,
+        ),
+      [items],
+    );
+
+    return (
+      <>
+        {name && (
+          <Heading
+            level={-1}
+            className={classes(
+              "alveus-green-800 mb-6 mt-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
+              index === 0 && "sr-only",
+            )}
+            id={`${option}:${group}`}
+            link
+          >
+            {name}
+          </Heading>
+        )}
+        <div ref={ref}>
+          {Object.entries(itemsWithSlugs).map(([slug, event], idx, arr) => (
+            <div
+              key={slug}
+              className={classes(
+                "flex flex-wrap gap-y-8 pb-12 pt-8",
+                idx === 0 ? "lg:pb-16" : "lg:py-16",
+                idx !== arr.length - 1 &&
+                  "border-b-2 border-alveus-green-300/15",
+              )}
+            >
+              <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
+                <Heading
+                  level={2}
+                  className="my-4 scroll-mt-8 text-center text-4xl"
+                  id={slug}
+                  link
+                  linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
+                >
+                  {event.name}
+                  <small className="text-xl text-alveus-green-600">
+                    {formatDateTime(event.date, { style: "long" })}
+                  </small>
+                </Heading>
+
+                <div className="my-auto flex flex-wrap py-2">
+                  {Object.entries(event.stats).map(([key, stat]) => (
+                    <div
+                      key={key}
+                      className="mx-auto basis-full py-2 text-center sm:basis-1/2 lg:px-2"
+                    >
+                      <p className="text-3xl font-bold">{stat.stat}</p>
+                      <p className="text-xl text-alveus-green-700">
+                        {stat.title}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div
+                className={classes(
+                  "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
+                  idx % 2 === 0 && "lg:order-first",
+                )}
+              >
+                <VideoPlayer
+                  className="my-auto aspect-video w-full rounded-xl"
+                  poster={event.video.poster}
+                  sources={event.video.sources}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+
+              <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
+                {event.info}
+              </div>
+            </div>
+          ))}
+        </div>
+      </>
+    );
+  },
+);
+
+EventItems.displayName = "EventItems";
 
 const EventsPage: NextPage = () => {
+  const { option, group, result } = useGrouped({
+    items: events,
+    options: sortByOptions,
+    initial: "all",
+  });
+
   return (
     <>
       <Meta
@@ -389,67 +568,12 @@ const EventsPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          {Object.entries(events).map(([key, event], idx, arr) => (
-            <div
-              key={key}
-              className={classes(
-                "flex flex-wrap gap-y-8 pb-12 pt-8",
-                idx === 0 ? "lg:pb-16" : "lg:py-16",
-                idx !== arr.length - 1 &&
-                  "border-b-2 border-alveus-green-300/25",
-              )}
-            >
-              <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
-                <Heading
-                  level={2}
-                  className="my-4 scroll-mt-8 text-center text-4xl"
-                  id={camelToKebab(key).replace(/([a-z])([0-9])/gi, "$1-$2")}
-                  link
-                  linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
-                >
-                  {event.name}
-                  <small className="text-xl text-alveus-green-600">
-                    {formatDateTime(event.date, { style: "long" })}
-                  </small>
-                </Heading>
-
-                <div className="my-auto flex flex-wrap py-2">
-                  {Object.entries(event.stats).map(([key, stat]) => (
-                    <div
-                      key={key}
-                      className="mx-auto basis-full py-2 text-center sm:basis-1/2 lg:px-2"
-                    >
-                      <p className="text-3xl font-bold">{stat.stat}</p>
-                      <p className="text-xl text-alveus-green-700">
-                        {stat.title}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div
-                className={classes(
-                  "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
-                  idx % 2 === 0 && "lg:order-first",
-                )}
-              >
-                <VideoPlayer
-                  className="my-auto aspect-video w-full rounded-xl"
-                  poster={event.video.poster}
-                  sources={event.video.sources}
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                />
-              </div>
-
-              <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
-                {event.info}
-              </div>
-            </div>
-          ))}
+          <Grouped
+            option={option}
+            group={group}
+            result={result}
+            component={EventItems}
+          />
         </Section>
       </div>
     </>

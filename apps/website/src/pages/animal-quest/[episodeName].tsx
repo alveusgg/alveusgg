@@ -2,6 +2,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useMemo, useState } from "react";
+import type { Episode } from "schema-dts";
 
 import animalQuest, {
   hosts,
@@ -11,17 +12,22 @@ import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
+import { env } from "@/env/index.mjs";
+
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Link from "@/components/content/Link";
+import JsonLD from "@/components/content/JsonLD";
 import Consent from "@/components/Consent";
+
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { formatDateTime, formatSeconds } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { createImageUrl } from "@/utils/image";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 
@@ -91,6 +97,13 @@ const secondsToString = (seconds: number): string => {
   const m = (Math.floor(seconds / 60) % 60).toString().padStart(2, "0");
   const s = (seconds % 60).toString().padStart(2, "0");
   return `${h}h${m}m${s}s`;
+};
+
+const secondsToIso8601 = (seconds: number): string => {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor(seconds / 60) % 60;
+  const s = seconds % 60;
+  return `PT${h}H${m}M${s}S`;
 };
 
 type AnimalQuestEpisodePageProps = {
@@ -502,6 +515,43 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           </Consent>
         </Section>
       </div>
+
+      <JsonLD<Episode>
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Episode",
+          name: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
+          description: description.join("\n\n"),
+          url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+            episode.edition,
+          )}`,
+          episodeNumber: episode.episode,
+          video: {
+            "@type": "VideoObject",
+            name: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
+            description: description.join("\n\n"),
+            url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+              episode.edition,
+            )}`,
+            thumbnailUrl:
+              env.NEXT_PUBLIC_BASE_URL +
+              createImageUrl({ src: animalQuestFull.src, width: 1200 }),
+            uploadDate: episode.broadcast.toISOString(),
+            duration: secondsToIso8601(episode.length),
+            embedUrl: getTwitchEmbed(episode.video.id, "meta.tag", {
+              start: episode.video.start,
+              player: "google",
+            }),
+          },
+          partOfSeries: {
+            "@type": "CreativeWorkSeries",
+            name: "Animal Quest",
+            description:
+              "Learn about the ambassadors at Alveus through Animal Quest, a series hosted by Maya Higa. Each episode introduces you to a new ambassador and their species' importance to the environment, the risks they face, and what you can do to help them.",
+            url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest`,
+          },
+        }}
+      />
     </>
   );
 };

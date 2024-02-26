@@ -6,7 +6,7 @@ import {
   notificationLinkSuggestions,
   notificationLinkDefault,
   notificationChannels,
-} from "@/config/notifications";
+} from "@/data/notifications";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";

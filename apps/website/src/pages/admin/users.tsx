@@ -4,9 +4,9 @@ import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { trpc } from "@/utils/trpc";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { getAdminSSP } from "@/server/utils/admin";
-import { permissions } from "@/config/permissions";
-import type { UserRole } from "@/config/user-roles";
-import { userRoles } from "@/config/user-roles";
+import { permissions } from "@/data/permissions";
+import type { UserRole } from "@/data/user-roles";
+import { userRoles } from "@/data/user-roles";
 
 import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";

@@ -16,7 +16,7 @@ import {
   unmarkPostAsSeen,
   getAdminPosts,
 } from "@/server/db/show-and-tell";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 import { deleteFileStorageObject } from "@/server/utils/file-storage";
 import { notEmpty } from "@/utils/helpers";
 

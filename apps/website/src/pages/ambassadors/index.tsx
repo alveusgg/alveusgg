@@ -146,7 +146,12 @@ const AmbassadorItems = forwardRef<
 >(({ items, option, group, name }, ref) => (
   <>
     {name && (
-      <Heading level={2} className="mb-8 mt-12" id={`${option}:${group}`} link>
+      <Heading
+        level={2}
+        className="alveus-green-800 mb-8 mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl"
+        id={`${option}:${group}`}
+        link
+      >
         {name}
       </Heading>
     )}

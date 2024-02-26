@@ -71,9 +71,6 @@ export const env = createEnv({
       .superRefine(checkPrivateKey)
       .optional(),
     WEB_PUSH_VAPID_SUBJECT: z.string().superRefine(checkSubject).optional(),
-    OPEN_WEATHER_MAP_API_KEY: z.string().optional(),
-    OPEN_WEATHER_MAP_API_LAT: z.string().optional(),
-    OPEN_WEATHER_MAP_API_LON: z.string().optional(),
     FILE_STORAGE_CDN_URL: z.string().optional(),
     FILE_STORAGE_ENDPOINT: z.string(),
     FILE_STORAGE_KEY: z.string(),
@@ -115,6 +112,16 @@ export const env = createEnv({
       .superRefine(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.string().optional(),
+    NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
+    NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
+    NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
+    NEXT_PUBLIC_GLOBAL_PROMOTION_EXTERNAL: optionalBoolSchema,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_EXCLUDED: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_TITLE: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_CTA: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_LINK: z.string().optional(),
+    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL: optionalBoolSchema,
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -137,9 +144,6 @@ export const env = createEnv({
     SUPER_USER_IDS: process.env.SUPER_USER_IDS,
     WEB_PUSH_VAPID_PRIVATE_KEY: process.env.WEB_PUSH_VAPID_PRIVATE_KEY,
     WEB_PUSH_VAPID_SUBJECT: process.env.WEB_PUSH_VAPID_SUBJECT,
-    OPEN_WEATHER_MAP_API_KEY: process.env.OPEN_WEATHER_MAP_API_KEY,
-    OPEN_WEATHER_MAP_API_LAT: process.env.OPEN_WEATHER_MAP_API_LAT,
-    OPEN_WEATHER_MAP_API_LON: process.env.OPEN_WEATHER_MAP_API_LON,
     FILE_STORAGE_CDN_URL: process.env.FILE_STORAGE_CDN_URL,
     FILE_STORAGE_ENDPOINT: process.env.FILE_STORAGE_ENDPOINT,
     FILE_STORAGE_KEY: process.env.FILE_STORAGE_KEY,
@@ -173,6 +177,25 @@ export const env = createEnv({
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY:
       process.env.NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY,
     NEXT_PUBLIC_NOINDEX: process.env.NEXT_PUBLIC_NOINDEX,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE:
+      process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_CTA:
+      process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_CTA,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_LINK:
+      process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_LINK,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_EXTERNAL:
+      process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_EXTERNAL,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_EXCLUDED:
+      process.env.NEXT_PUBLIC_GLOBAL_PROMOTION_EXCLUDED,
+    NEXT_PUBLIC_DONATION_EVENT_TITLE:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_TITLE,
+    NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION,
+    NEXT_PUBLIC_DONATION_EVENT_CTA: process.env.NEXT_PUBLIC_DONATION_EVENT_CTA,
+    NEXT_PUBLIC_DONATION_EVENT_LINK:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_LINK,
+    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL:
+      process.env.NEXT_PUBLIC_DONATION_EVENT_EXTERNAL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

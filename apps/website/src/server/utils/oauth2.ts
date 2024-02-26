@@ -60,13 +60,13 @@ export async function getClientCredentialsAccessToken(
     oAuth2ServiceUrls[service].accessTokenPath,
     undefined,
   );
-  const cache = await prisma.clientAccessToken.findFirst({
+  const existing = await prisma.clientAccessToken.findFirst({
     where: { client_id: clientId, service },
   });
 
   let accessToken;
-  if (cache && (!cache.expiresAt || cache.expiresAt > new Date())) {
-    accessToken = cache.access_token;
+  if (existing && (!existing.expiresAt || existing.expiresAt > new Date())) {
+    accessToken = existing.access_token;
 
     try {
       await validateAccessToken(service, clientId, accessToken);
@@ -100,8 +100,10 @@ export async function getClientCredentialsAccessToken(
       accessToken = res.access_token;
       console.info("obtained access token", { accessToken });
 
-      await prisma.clientAccessToken.create({
-        data: { service, client_id: clientId, access_token: accessToken },
+      await prisma.clientAccessToken.upsert({
+        where: { service_client_id: { service, client_id: clientId } },
+        create: { service, client_id: clientId, access_token: accessToken },
+        update: { access_token: accessToken },
       });
     }
   }
