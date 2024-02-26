@@ -1,18 +1,13 @@
 // @ts-check
 
-const siteUrl = function () {
-  // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
-  const url = process.env.NEXT_PUBLIC_VERCEL_URL
+const siteUrl =
+  (process.env.NEXT_PUBLIC_VERCEL_URLnpm
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_BASE_URL;
-
-  //Fallback to localhost if no public url is present
-  return url ? url : "http://localhost";
-};
+    : process.env.NEXT_PUBLIC_BASE_URL) || "http://localhost";
 
 /** @type {import('next-sitemap').IConfig} */
 const config = {
-  siteUrl: siteUrl(),
+  siteUrl: siteUrl,
   // Create a single sitemap, and don't list some routes in it
   generateIndexSitemap: false,
   exclude: [
