@@ -90,8 +90,6 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           label="Slug (Public URL, alphanumeric, dashes allowed)"
           name="slug"
           inputMode="url"
-          isRequired
-          type="url"
           pattern={SLUG_PATTERN}
           defaultValue={shortLink?.slug || ""}
           inputClassName="font-mono"
