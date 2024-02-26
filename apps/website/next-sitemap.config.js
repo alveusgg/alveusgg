@@ -1,10 +1,11 @@
 // @ts-check
 /** @type {import('next-sitemap').IConfig} */
-module.exports = {
+const config = {
   // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
-  siteUrl: process.env.NEXT_PUBLIC_VERCEL_URL
+  // Fallback to localhost if we don't have a URL from the env for any reason
+  siteUrl: (process.env.NEXT_PUBLIC_VERCEL_URL
     ? `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`
-    : process.env.NEXT_PUBLIC_BASE_URL,
+    : process.env.NEXT_PUBLIC_BASE_URL) || "http://localhost",
   // Create a single sitemap, and don't list some routes in it
   generateIndexSitemap: false,
   exclude: [
@@ -35,3 +36,5 @@ module.exports = {
     ],
   },
 };
+
+export default config;
