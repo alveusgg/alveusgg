@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent, useEffect } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
@@ -14,11 +14,12 @@ import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 import { notEmpty } from "@/utils/helpers";
 import { getEntityStatus } from "@/utils/entity-helpers";
+import { formatDateTime } from "@/utils/datetime";
+
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
-
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
 import { RichTextField } from "../shared/form/RichTextField";
@@ -103,19 +104,38 @@ export function ShowAndTellEntryForm({
   const review = trpc.adminShowAndTell.review.useMutation();
   const isLoading = create.isLoading || update.isLoading || review.isLoading;
 
-  const [canTrackGiveAnHour, setCanTrackGiveAnHour] = useState(false);
-  const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
-    !!entry?.volunteeringMinutes,
-  );
-  const enableTrackGiveAnHour = canTrackGiveAnHour && wantsToTrackGiveAnHour;
-
+  const [trackingStatus, setTrackingStatus] = useState({
+    active: false,
+    text: "tracking is not active",
+  });
   useEffect(() => {
     // Check local time is in date range
     const now = new Date();
     const start = new Date(giveAnHourStart);
     const end = new Date(giveAnHourEnd);
-    setCanTrackGiveAnHour(now >= start && now <= end);
+    const trackingStatusFrom = formatDateTime(start);
+    const trackingStatusTo = formatDateTime(end);
+
+    let active = true;
+    let verb = "is";
+    if (now < start) {
+      active = false;
+      verb = "will be";
+    } else if (now > end) {
+      active = false;
+      verb = "was";
+    }
+
+    setTrackingStatus({
+      active,
+      text: `tracking ${verb} available from ${trackingStatusFrom} to ${trackingStatusTo}`,
+    });
   }, []);
+
+  const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
+    !!entry?.volunteeringMinutes,
+  );
+  const enableTrackGiveAnHour = trackingStatus.active && wantsToTrackGiveAnHour;
 
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
@@ -382,13 +402,13 @@ export function ShowAndTellEntryForm({
               htmlFor="giveAnHourTracked"
               className={classes(
                 "flex items-center gap-4",
-                !canTrackGiveAnHour && "cursor-not-allowed",
+                !trackingStatus.active && "cursor-not-allowed",
               )}
             >
               <input
                 type="checkbox"
                 id="giveAnHourTracked"
-                disabled={!canTrackGiveAnHour}
+                disabled={!trackingStatus.active}
                 checked={wantsToTrackGiveAnHour}
                 onChange={(e) => setWantsToTrackGiveAnHour(e.target.checked)}
               />
@@ -403,12 +423,9 @@ export function ShowAndTellEntryForm({
             />
           </div>
 
-          {!canTrackGiveAnHour && (
-            <p className="text-sm italic opacity-75">
-              <strong>Give an Hour</strong> tracking will be available from
-              March 1st.
-            </p>
-          )}
+          <p className="text-sm italic opacity-75">
+            <strong>Give an Hour</strong> {trackingStatus.text}
+          </p>
         </Fieldset>
 
         {error && <MessageBox variant="failure">{error}</MessageBox>}
