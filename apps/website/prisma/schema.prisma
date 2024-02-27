@@ -373,8 +373,8 @@ model ShowAndTellEntry {
   user        User?                        @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "ShowAndTellEntry_userId")
+  @@index([approvedAt, createdAt], name: "ShowAndTellEntry_approved")
   @@index([seenOnStream, approvedAt, updatedAt], name: "ShowAndTellEntry_public")
-  @@index([approvedAt, createdAt], name: "ShowAndTellEntry_volunteeringMinutes")
 }
 
 model ShowAndTellEntryAttachment {
