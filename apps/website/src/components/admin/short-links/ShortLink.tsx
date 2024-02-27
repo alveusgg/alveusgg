@@ -50,7 +50,7 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
               >
                 <div className="mr-1.5">Public Link:</div>
                 <div className="underline">
-                  {env.NEXT_PUBLIC_BASE_URL + "/l/" + shortLink.slug}
+                  {env.NEXT_PUBLIC_SHORT_BASE_URL + "/l/" + shortLink.slug}
                 </div>
               </Link>
             </div>
