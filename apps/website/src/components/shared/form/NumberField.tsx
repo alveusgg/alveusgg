@@ -101,7 +101,7 @@ export function NumberField(props: NumberFieldProps) {
             {props.prefix}
             <input
               className={classes(
-                "w-full flex-1 bg-white p-1 px-2 text-black focus:outline-0",
+                "w-full flex-1 bg-white p-1 px-2 text-black outline-none",
                 props.inputClassName,
               )}
               {...inputProps}
