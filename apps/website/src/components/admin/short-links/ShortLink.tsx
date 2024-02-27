@@ -29,6 +29,7 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
     onSettled: () => onUpdate(),
   });
   const clicks = trpc.adminShortLinks.getClicks.useQuery();
+  const clicksMap = new Map(clicks.data?.map((c) => [c.id, c.clicks]));
 
   return (
     <>
@@ -60,11 +61,7 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
             {shortLink.link}
           </Link>
         </td>
-        <td>
-          {clicks.data?.map((c) =>
-            shortLink.id === c.id ? String(c.clicks) : "",
-          )}
-        </td>
+        <td>{clicksMap.get(shortLink.id)}</td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton
             size="small"
