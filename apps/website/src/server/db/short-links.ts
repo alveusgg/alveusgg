@@ -36,7 +36,7 @@ export async function createShortLink(input: z.infer<typeof shortLinkSchema>) {
 export async function editShortLink(
   input: z.infer<typeof existingShortLinkSchema>,
 ) {
-  const slug = convertToSlug(input.slug || input.label);
+  const slug = input.slug || input.label;
   const existingShortLinkWithSlug = await prisma.shortLinks.findFirst({
     where: { slug, id: { not: input.id } },
   });
