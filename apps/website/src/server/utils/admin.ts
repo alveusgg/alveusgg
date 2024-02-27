@@ -18,6 +18,11 @@ const menuItems = [
     permission: permissions.manageNotifications,
   },
   {
+    label: "Short links",
+    href: "/admin/short-links",
+    permission: permissions.manageShortLinks,
+  },
+  {
     label: "Forms",
     href: "/admin/forms",
     permission: permissions.manageForms,
