@@ -41,7 +41,8 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           : "https://" + String(formData.get("url"));
 
       const mutationData: ShortLinkSchema = {
-        label: convertToSlug(String(formData.get("label"))),
+        label: String(formData.get("label")),
+        slug: convertToSlug(String(formData.get("label"))),
         link: link,
       };
 

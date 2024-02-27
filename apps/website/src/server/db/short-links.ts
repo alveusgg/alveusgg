@@ -1,11 +1,11 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db/client";
-import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
+import { SLUG_REGEX } from "@/utils/slugs";
 
 export const shortLinkSchema = z.object({
   label: z.string().min(1),
-  slug: z.string().regex(SLUG_REGEX).optional(),
+  slug: z.string().regex(SLUG_REGEX),
   link: z.string().url(),
 });
 
@@ -18,7 +18,7 @@ export const existingShortLinkSchema = shortLinkSchema.and(
 );
 
 export async function createShortLink(input: z.infer<typeof shortLinkSchema>) {
-  const slug = input.slug || input.label;
+  const slug = input.slug;
   const existingShortLinkWithSlug = await prisma.shortLinks.findFirst({
     where: { slug },
   });
@@ -36,7 +36,7 @@ export async function createShortLink(input: z.infer<typeof shortLinkSchema>) {
 export async function editShortLink(
   input: z.infer<typeof existingShortLinkSchema>,
 ) {
-  const slug = input.slug || input.label;
+  const slug = input.slug;
   const existingShortLinkWithSlug = await prisma.shortLinks.findFirst({
     where: { slug, id: { not: input.id } },
   });
