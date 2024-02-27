@@ -26,7 +26,7 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
   }
 
   // If no match is found, redirect the user to the 404 page
-  return NextResponse.redirect(env.NEXT_PUBLIC_BASE_URL + "/404");
+  return NextResponse.next();
 }
 
 export const config = {
