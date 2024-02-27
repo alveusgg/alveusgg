@@ -107,10 +107,12 @@ export function ShowAndTellEntryForm({
   const trackingStatus = useMemo(() => {
     // Check local time is in date range
     const now = new Date();
+    // Parsing the date time strings without explicit timezone makes it local time
     const start = new Date(giveAnHourStart);
     const end = new Date(giveAnHourEnd);
-    const trackingStatusFrom = formatDateTime(start);
-    const trackingStatusTo = formatDateTime(end);
+    // Using zone: null to display the time in local time (default is UTC)
+    const trackingStatusFrom = formatDateTime(start, undefined, { zone: null });
+    const trackingStatusTo = formatDateTime(end, undefined, { zone: null });
 
     let active = true;
     let verb = "is";
