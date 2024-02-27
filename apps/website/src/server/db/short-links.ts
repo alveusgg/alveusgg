@@ -18,9 +18,8 @@ export const existingShortLinkSchema = shortLinkSchema.and(
 );
 
 export async function createShortLink(input: z.infer<typeof shortLinkSchema>) {
-  const slug = input.slug;
   const existingShortLinkWithSlug = await prisma.shortLinks.findFirst({
-    where: { slug },
+    where: { slug: input.slug },
   });
   if (existingShortLinkWithSlug)
     throw new TRPCError({
@@ -29,7 +28,7 @@ export async function createShortLink(input: z.infer<typeof shortLinkSchema>) {
     });
 
   return await prisma.shortLinks.create({
-    data: { ...input, slug },
+    data: input,
   });
 }
 
