@@ -1,4 +1,4 @@
-import { type FormEvent, useEffect, useMemo, useState } from "react";
+import { type FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
@@ -104,11 +104,7 @@ export function ShowAndTellEntryForm({
   const review = trpc.adminShowAndTell.review.useMutation();
   const isLoading = create.isLoading || update.isLoading || review.isLoading;
 
-  const [trackingStatus, setTrackingStatus] = useState({
-    active: false,
-    text: "tracking is not active",
-  });
-  useEffect(() => {
+  const trackingStatus = useMemo(() => {
     // Check local time is in date range
     const now = new Date();
     const start = new Date(giveAnHourStart);
@@ -126,10 +122,10 @@ export function ShowAndTellEntryForm({
       verb = "was";
     }
 
-    setTrackingStatus({
+    return {
       active,
       text: `tracking ${verb} available from ${trackingStatusFrom} to ${trackingStatusTo}`,
-    });
+    };
   }, []);
 
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
