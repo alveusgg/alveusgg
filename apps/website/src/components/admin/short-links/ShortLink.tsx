@@ -12,6 +12,7 @@ import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
+import { env } from "@/env/index.mjs";
 import type { AppRouter } from "@/server/trpc/router/_app";
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type ShortLink = RouterOutput["adminShortLinks"]["getLinks"][number];
@@ -42,11 +43,14 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
             <div className="text-xl">{shortLink.label}</div>
             <div className="flex flex-col gap-1">
               <Link
-                className="underline"
                 href={`/l/${shortLink.slug}`}
                 target="_blank"
+                className="flex"
               >
-                Public Link: {shortLink.slug}
+                <div className="mr-1.5">Public Link:</div>
+                <div className="underline">
+                  {env.NEXT_PUBLIC_BASE_URL + "/l/" + shortLink.slug}
+                </div>
               </Link>
             </div>
           </div>
