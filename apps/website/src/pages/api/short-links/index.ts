@@ -7,10 +7,9 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   const body = JSON.parse(req.body);
-  const slug = body.slug;
 
   const shortLink = await prisma.shortLinks.findFirst({
-    where: { slug: slug },
+    where: { slug: body.slug },
   });
   res.status(200).json(shortLink);
 }
