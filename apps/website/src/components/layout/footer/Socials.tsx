@@ -47,6 +47,7 @@ const Socials = () => {
                   src={reelVideo.poster}
                   alt=""
                   width={400}
+                  height={680}
                   loading="lazy"
                   className="absolute inset-0"
                 />
