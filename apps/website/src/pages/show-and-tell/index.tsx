@@ -363,7 +363,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             initiative.
           </p>
           <div className="mt-2">
-            <GiveAnHourProgress hours={0} />
+            <GiveAnHourProgress />
           </div>
         </div>
 

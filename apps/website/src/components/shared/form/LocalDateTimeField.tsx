@@ -23,6 +23,7 @@ type DateTimeFieldProps = DetailedHTMLProps<
     label: string;
     className?: string;
     inputClassName?: string;
+    labelClassName?: string;
     prefix?: ReactNode;
     suffix?: ReactNode;
     showResetButton?: boolean;
@@ -55,7 +56,9 @@ export function LocalDateTimeField(props: DateTimeFieldProps) {
 
   return (
     <div className={classes("flex-1", props.className)}>
-      <label {...labelProps}>{props.label}</label>
+      <label className={props.labelClassName} {...labelProps}>
+        {props.label}
+      </label>
       <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
         {props.prefix}
         <input

@@ -91,6 +91,7 @@ const showAndTellSharedInputSchema = z.object({
   text: z.string().max(1_000),
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
+  volunteeringMinutes: z.number().int().positive().nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -198,6 +199,7 @@ export async function createPost(
       displayName: input.displayName,
       title: input.title,
       text,
+      volunteeringMinutes: input.volunteeringMinutes,
       attachments: { create: [...newImages, ...newVideos] },
     },
   });
@@ -240,6 +242,26 @@ export async function getPosts({
     cursor: cursor ? { id: cursor } : undefined,
     take,
   });
+}
+
+export async function getVolunteeringMinutes({
+  from,
+  to,
+}: {
+  from?: Date;
+  to?: Date;
+} = {}) {
+  return (
+    (
+      await prisma.showAndTellEntry.aggregate({
+        _sum: { volunteeringMinutes: true },
+        where: {
+          createdAt: { gte: from, lte: to },
+          approvedAt: { not: null },
+        },
+      })
+    )._sum.volunteeringMinutes ?? 0
+  );
 }
 
 export async function getAdminPosts({
@@ -302,6 +324,7 @@ export async function updatePost(
         displayName: input.displayName,
         title: input.title,
         text,
+        volunteeringMinutes: input.volunteeringMinutes,
         updatedAt: now,
         approvedAt:
           keepApproved && wasApproved ? now : existingEntry.approvedAt,
