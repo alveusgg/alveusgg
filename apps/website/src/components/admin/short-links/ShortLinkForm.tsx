@@ -46,7 +46,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
       };
 
       const slug = formData.has("slug") && String(formData.get("slug"));
-      if (slug && slug !== "") {
+      if (slug) {
         mutationData.slug = slug;
       }
 
