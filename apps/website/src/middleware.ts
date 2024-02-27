@@ -25,8 +25,8 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
     return NextResponse.redirect(shortLink.link);
   }
 
-  // If no match is found, redirect the user to the home page
-  return NextResponse.redirect(env.NEXT_PUBLIC_BASE_URL + "/");
+  // If no match is found, redirect the user to the 404 page
+  return NextResponse.redirect(env.NEXT_PUBLIC_BASE_URL + "/404");
 }
 
 export const config = {
