@@ -15,6 +15,7 @@ import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { getShortBaseUrl } from "@/utils/short-url";
 
 type ShortLinkProps = {
   action: "create" | "edit";
@@ -100,7 +101,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
           inputClassName="font-mono"
           placeholder={convertToSlug(label)}
           prefix={
-            <div className="cursor-default select-none pl-2 font-mono">{`${env.NEXT_PUBLIC_SHORT_BASE_URL}/l/`}</div>
+            <div className="cursor-default select-none pl-2 font-mono">{`${getShortBaseUrl()}/l/`}</div>
           }
         />
         <TextField
