@@ -43,10 +43,10 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
             <div className="flex flex-col gap-1">
               <Link
                 className="underline"
-                href={`/l/${shortLink.slug || shortLink.id}`}
+                href={`/l/${shortLink.slug}`}
                 target="_blank"
               >
-                Public Link: {shortLink.slug || shortLink.id}
+                Public Link: {shortLink.slug}
               </Link>
             </div>
           </div>
