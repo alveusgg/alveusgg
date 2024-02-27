@@ -285,7 +285,7 @@ model FormEntry {
 model ShortLinks {
   id    String @id @default(cuid())
   label String
-  slug  String
+  slug  String @unique
   link  String
 
   createdAt DateTime @default(now())
