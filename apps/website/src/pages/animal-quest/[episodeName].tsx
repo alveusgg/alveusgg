@@ -212,7 +212,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Link
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
-            className="group text-center transition-colors hover:text-alveus-green-900"
+            className="group text-center transition-colors hover:text-alveus-green"
             custom
           >
             <Image
@@ -329,92 +329,120 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
         />
 
-        <Section
-          dark
-          className="py-0"
-          containerClassName="flex flex-wrap items-center justify-between"
-        >
-          <div className="flex w-full flex-col gap-4 pb-16 pt-4 md:w-3/5 md:py-24">
-            <Heading className="flex flex-col">
-              <span className="text-lg">
-                Animal Quest Episode {episode.episode}:{" "}
-              </span>
-              <span>{episode.edition}</span>
-            </Heading>
+        <Section dark>
+          <div className="flex flex-wrap lg:flex-nowrap">
+            <div className="flex w-full flex-shrink-0 flex-col items-start justify-between py-4 lg:max-w-md lg:pl-8">
+              <Heading className="flex flex-col">
+                <span className="text-lg">
+                  Animal Quest Episode {episode.episode}:{" "}
+                </span>
+                <span>{episode.edition}</span>
+              </Heading>
+
+              <div className="flex w-full flex-wrap">
+                <h2 className="sr-only">Episode Information</h2>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Broadcast:
+                  </Heading>
+                  <p>{formatDateTime(episode.broadcast, { style: "long" })}</p>
+                </div>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Featuring:
+                  </Heading>
+                  <p>
+                    {typeSafeObjectEntries(featured).map(
+                      ([key, ambassador], idx, arr) => (
+                        <Fragment key={key}>
+                          {/* Retired ambassadors don't have pages */}
+                          {isActiveAmbassadorKey(key) ? (
+                            <Link
+                              href={`/ambassadors/${camelToKebab(key)}`}
+                              dark
+                            >
+                              {ambassador.name}
+                            </Link>
+                          ) : (
+                            ambassador.name
+                          )}
+                          {idx < arr.length - 2 && ", "}
+                          {idx === arr.length - 2 && arr.length > 2 && ","}
+                          {idx === arr.length - 2 && " and "}
+                        </Fragment>
+                      ),
+                    )}
+                  </p>
+                </div>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Host:
+                  </Heading>
+                  <p>
+                    <Link href={host.link} external={host.external} dark>
+                      {host.name}
+                    </Link>
+                  </p>
+                </div>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Length:
+                  </Heading>
+                  <p title="Video length may appear longer due to intro/outro screen segments">
+                    {formatSeconds(episode.length, {
+                      style: "long",
+                      seconds: false,
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/animal-quest"
+                className="text-md mt-8 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+                custom
+              >
+                Discover more episodes
+              </Link>
+            </div>
+
+            {/* Move the video to the left/top of the flex container with order-first */}
+            {/* Do this in CSS so the episode title is first in the DOM for screen-readers etc. */}
+            <div className="order-first flex w-full flex-grow flex-col gap-4 lg:w-auto">
+              <h2 className="sr-only" id="video">
+                Video
+              </h2>
+
+              <Consent
+                item="episode video"
+                consent="twitch"
+                className="my-auto aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
+                indexable
+              >
+                {twitchEmbed && (
+                  <iframe
+                    src={twitchEmbed}
+                    title="Twitch video"
+                    referrerPolicy="no-referrer"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    sandbox="allow-same-origin allow-scripts"
+                    className="aspect-video h-auto w-full rounded-2xl"
+                  ></iframe>
+                )}
+              </Consent>
+            </div>
+          </div>
+
+          <div className="mt-8 w-full space-y-4">
             {description.map((paragraph) => (
               <p key={paragraph} className="text-lg">
                 {paragraph}
               </p>
             ))}
-          </div>
-
-          <div className="w-full pb-16 pt-4 md:w-2/5 md:py-24 md:pl-8">
-            <div className="flex w-full flex-wrap">
-              <h2 className="sr-only">Episode Information</h2>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Broadcast:
-                </Heading>
-                <p>{formatDateTime(episode.broadcast, { style: "long" })}</p>
-              </div>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Featuring:
-                </Heading>
-                <p>
-                  {typeSafeObjectEntries(featured).map(
-                    ([key, ambassador], idx, arr) => (
-                      <Fragment key={key}>
-                        {/* Retired ambassadors don't have pages */}
-                        {isActiveAmbassadorKey(key) ? (
-                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
-                            {ambassador.name}
-                          </Link>
-                        ) : (
-                          ambassador.name
-                        )}
-                        {idx < arr.length - 2 && ", "}
-                        {idx === arr.length - 2 && arr.length > 2 && ","}
-                        {idx === arr.length - 2 && " and "}
-                      </Fragment>
-                    ),
-                  )}
-                </p>
-              </div>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Host:
-                </Heading>
-                <p>
-                  <Link href={host.link} external={host.external} dark>
-                    {host.name}
-                  </Link>
-                </p>
-              </div>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Length:
-                </Heading>
-                <p title="Video length may appear longer due to intro/outro screen segments">
-                  {formatSeconds(episode.length, {
-                    style: "long",
-                    seconds: false,
-                  })}
-                </p>
-              </div>
-            </div>
-
-            <Link
-              href="/animal-quest"
-              className="text-md mt-8 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-              custom
-            >
-              Discover more episodes
-            </Link>
           </div>
         </Section>
       </div>
@@ -427,45 +455,23 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         />
 
         <Section>
-          <h2 className="sr-only" id="video">
-            Video
-          </h2>
-
-          <Consent
-            item="episode video"
-            consent="twitch"
-            className="aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
-            indexable
-          >
-            {twitchEmbed && (
-              <iframe
-                src={twitchEmbed}
-                title="Twitch video"
-                referrerPolicy="no-referrer"
-                allow="autoplay; encrypted-media; fullscreen"
-                sandbox="allow-same-origin allow-scripts"
-                className="aspect-video h-auto w-full rounded-2xl"
-              ></iframe>
-            )}
-          </Consent>
+          {Object.keys(featuredAmbassadors).length > 0 && (
+            <>
+              <Heading level={2} className="mb-8 mt-0" id="ambassadors" link>
+                Meet the Ambassadors
+              </Heading>
+              <Carousel
+                items={featuredAmbassadors}
+                auto={10000}
+                className="mb-16 mt-4"
+                itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+              />
+            </>
+          )}
         </Section>
       </div>
 
       <Section dark>
-        {Object.keys(featuredAmbassadors).length > 0 && (
-          <>
-            <Heading level={2} className="mb-8 mt-0" id="ambassadors" link>
-              Meet the ambassadors
-            </Heading>
-            <Carousel
-              items={featuredAmbassadors}
-              auto={10000}
-              className="mb-16 mt-4"
-              itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
-            />
-          </>
-        )}
-
         <div className="flex flex-row flex-wrap items-center justify-evenly gap-4">
           <p className="text-xl">
             Learn about more of our ambassadors and their species in other
@@ -497,7 +503,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
 
         <Section className="flex-grow">
           <Heading level={2} className="mb-8 mt-0" id="presentation" link>
-            Presentation
+            Episode Presentation
           </Heading>
           <Consent
             item="episode presentation"
