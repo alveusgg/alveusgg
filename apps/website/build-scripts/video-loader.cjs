@@ -308,8 +308,8 @@ const videoLoader = async (context, content) => {
     cache: cacheDir,
   };
   const files = [];
-  /** @typedef {{src: string, size: int, type: string }} Source */
-  /** @type {{poster: string, sources: Array<Source>}} */
+  /** @typedef {{ src: string, size: int, type: string }} Source */
+  /** @type {{ poster: string, sources: Array<Source> }} */
   const obj = { poster: "", sources: [] };
 
   // Expose the first frame as a poster at 720p
