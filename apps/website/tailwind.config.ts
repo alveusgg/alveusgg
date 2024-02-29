@@ -2,7 +2,7 @@ import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
 
-export default {
+const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     colors: {
@@ -136,3 +136,5 @@ export default {
     },
   },
 } satisfies Config;
+
+export default config;
