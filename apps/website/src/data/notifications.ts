@@ -1,6 +1,6 @@
 import type { NotificationUrgency } from "@prisma/client";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 type NotificationLinkSuggestion = {
   label: string;

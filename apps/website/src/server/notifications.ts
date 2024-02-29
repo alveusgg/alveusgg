@@ -1,6 +1,6 @@
 import type { Notification } from "@prisma/client";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import {
   defaultTag,

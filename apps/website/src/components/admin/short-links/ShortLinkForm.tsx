@@ -4,8 +4,6 @@ import { useCallback, useState } from "react";
 import type { ShortLinks } from "@prisma/client";
 import { useRouter } from "next/router";
 
-import { env } from "@/env/index.mjs";
-
 import { trpc } from "@/utils/trpc";
 import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 

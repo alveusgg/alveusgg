@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
 

@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import type { Bingo } from "@prisma/client";
 import { useRouter } from "next/router";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import { trpc } from "@/utils/trpc";
 import type { BingoType } from "@/utils/bingo";

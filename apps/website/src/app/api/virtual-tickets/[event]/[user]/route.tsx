@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { Client } from "@planetscale/database";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import { mapStickerIdToPath } from "@/utils/virtual-tickets";
 import { stickerPack, ticketConfig } from "@/data/events/fall-carnival-2023";

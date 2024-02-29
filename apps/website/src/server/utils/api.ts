@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import type { ZodType } from "zod/lib/types";
 import type { z } from "zod";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 export function createTokenProtectedApiHandler<T extends ZodType>(
   schema: T,

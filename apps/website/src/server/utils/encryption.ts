@@ -1,5 +1,5 @@
 import { webcrypto as crypto } from "node:crypto";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 const KEY_ALGORITHM_NAME = "PBKDF2";
 const ENCRYPTION_ALGORITHM_NAME = "AES-GCM";
