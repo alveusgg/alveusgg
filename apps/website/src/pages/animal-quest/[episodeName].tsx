@@ -420,8 +420,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               <Consent
                 item="episode video"
                 consent="twitch"
-                className="my-auto aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
                 indexable
+                thumbnail={animalQuestFull}
+                className="my-auto aspect-video h-auto w-full overflow-hidden rounded-2xl bg-alveus-green text-alveus-tan"
               >
                 {twitchEmbed && (
                   <iframe
@@ -430,7 +431,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                     referrerPolicy="no-referrer"
                     allow="autoplay; encrypted-media; fullscreen"
                     sandbox="allow-same-origin allow-scripts"
-                    className="aspect-video h-auto w-full rounded-2xl"
+                    className="aspect-video h-auto w-full"
                   ></iframe>
                 )}
               </Consent>
