@@ -1,10 +1,9 @@
-// @ts-check
 import { resolve } from "path";
 
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
 import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
 
-import "./src/env/index.mjs";
+import "./src/env/index.js";
 
 /** @type {Array<import("next/dist/shared/lib/image-config").RemotePattern>} */
 const cdnImagesRemotePattern = process.env.FILE_STORAGE_CDN_URL

@@ -12,7 +12,7 @@ import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
