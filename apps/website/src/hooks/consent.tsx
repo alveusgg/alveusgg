@@ -19,6 +19,7 @@ import { classes } from "@/utils/classes";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import IconX from "@/icons/IconX";
+import useCrawler from "./crawler";
 
 type ConsentData = {
   name: string;
@@ -129,6 +130,7 @@ ConsentButton.displayName = "ConsentButton";
 const ConsentDialog = ({ context }: { context: ConsentContext }) => {
   const { consent, update, reset, loaded, interacted } = context;
   const router = useRouter();
+  const crawler = useCrawler();
 
   const [open, setOpen] = useState(false);
   const close = useCallback(() => setOpen(false), []);
@@ -149,16 +151,18 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
     // If the user hasn't interacted, and this is the first run, show the dialog
     // But, don't show it if the user is on the privacy page
     // And, don't show it if the user has a GPC/DNT signal
+    // And, don't show it if the user is a known crawler
     if (
       hasInteracted === null &&
       router.pathname !== "/privacy-policy" &&
       navigator.doNotTrack !== "1" &&
-      !navigator.globalPrivacyControl
+      !navigator.globalPrivacyControl &&
+      !crawler
     ) {
       setHasInteracted(false);
       setOpen(true);
     }
-  }, [loaded, open, interacted, hasInteracted, router.pathname]);
+  }, [loaded, open, interacted, hasInteracted, router.pathname, crawler]);
 
   // Allow all consent values to be updated at once
   const updateAll = useCallback(
