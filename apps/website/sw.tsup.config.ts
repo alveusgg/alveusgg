@@ -6,7 +6,6 @@ import { env } from "@/env";
 const config = defineConfig((options) => ({
   entry: {
     "push/alveus/PushServiceWorker": "src/sw/PushServiceWorker.ts",
-    //RootServiceWorker: "src/sw/RootServiceWorker.ts",
   },
   splitting: false,
   sourcemap: true,
