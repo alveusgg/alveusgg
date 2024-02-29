@@ -39,7 +39,7 @@ const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
     () => ({
       twitter: {
         link: twitterShareUrl(data),
-        text: "Share on Twitter",
+        text: "Share on X (Twitter)",
         icon: IconTwitter,
       },
       facebook: {

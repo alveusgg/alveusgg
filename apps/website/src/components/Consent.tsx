@@ -1,4 +1,5 @@
 import { useCallback, type MouseEventHandler, type ReactNode } from "react";
+import Image, { type ImageProps } from "next/image";
 
 import { classes } from "@/utils/classes";
 
@@ -16,6 +17,7 @@ type ConsentProps = {
   item: string;
   consent: ConsentKey;
   indexable?: boolean;
+  thumbnail?: ImageProps["src"];
   className?: string;
   children: ReactNode;
 };
@@ -24,6 +26,7 @@ const Consent = ({
   item,
   consent: key,
   indexable,
+  thumbnail,
   className,
   children,
 }: ConsentProps) => {
@@ -58,6 +61,17 @@ const Consent = ({
           </>
         ) : (
           <>
+            {thumbnail && (
+              <div className="absolute inset-0 -z-10 overflow-hidden">
+                <Image
+                  src={thumbnail}
+                  fill
+                  alt=""
+                  className="h-full w-full object-cover blur brightness-50"
+                />
+              </div>
+            )}
+
             <p className="m-6 mb-3 text-2xl">Loading {item}...</p>
 
             <div className="m-6 mt-3 flex max-w-2xl flex-col gap-4 rounded-lg bg-alveus-tan p-4 text-alveus-green shadow-lg">
