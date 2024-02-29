@@ -78,7 +78,7 @@ const Socials = () => {
                 width={400}
                 height={400}
                 loading="lazy"
-                alt="A picture of Winnie the Moo, Alveus' Red Angus cow, on Twitter"
+                alt="A picture of Winnie the Moo, Alveus' Red Angus cow, on X (Twitter)"
                 className="absolute inset-0"
               />
               <IconTwitter
