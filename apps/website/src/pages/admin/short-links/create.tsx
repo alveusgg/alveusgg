@@ -11,8 +11,13 @@ import { Panel } from "@/components/admin/Panel";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
-  if (!adminProps) {
-    return { notFound: true };
+  if (!adminProps || !adminProps.isSuperUser) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   return { props: adminProps };

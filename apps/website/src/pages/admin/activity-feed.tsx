@@ -14,7 +14,16 @@ import IconLoading from "@/icons/IconLoading";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageForms);
-  return adminProps ? { props: adminProps } : { notFound: true };
+  if (!adminProps || !adminProps.isSuperUser) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: adminProps };
 }
 
 const AdminActivityFeedPage: NextPage<

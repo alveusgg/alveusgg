@@ -15,7 +15,16 @@ import { ChannelConfig } from "@/components/admin/twitch/ChannelConfig";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageTwitchApi);
-  return adminProps ? { props: adminProps } : { notFound: true };
+  if (!adminProps || !adminProps.isSuperUser) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: adminProps };
 }
 
 const AdminTwitchPage: NextPage<

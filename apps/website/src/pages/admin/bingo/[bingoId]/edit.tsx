@@ -17,8 +17,13 @@ import { MessageBox } from "@/components/shared/MessageBox";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const adminProps = await getAdminSSP(context, permissions.manageBingos);
-  if (!adminProps) {
-    return { notFound: true };
+  if (!adminProps || !adminProps.isSuperUser) {
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   const id = context.params?.bingoId;
