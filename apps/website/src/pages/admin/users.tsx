@@ -23,7 +23,7 @@ export async function getServerSideProps(context: NextPageContext) {
     context,
     permissions.manageUsersAndRoles,
   );
-  if (!adminProps || !adminProps.isSuperUser) {
+  if (!adminProps) {
     return {
       redirect: {
         destination: "/auth/signin",

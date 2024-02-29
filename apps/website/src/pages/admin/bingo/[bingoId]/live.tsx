@@ -36,7 +36,7 @@ import { transposeMatrix } from "@/utils/math";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const adminProps = await getAdminSSP(context, permissions.manageBingos);
-  if (!adminProps || !adminProps.isSuperUser) {
+  if (!adminProps) {
     return {
       redirect: {
         destination: "/auth/signin",

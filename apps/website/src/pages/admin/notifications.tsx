@@ -16,7 +16,7 @@ export async function getServerSideProps(context: NextPageContext) {
     context,
     permissions.manageNotifications,
   );
-  if (!adminProps || !adminProps.isSuperUser) {
+  if (!adminProps) {
     return {
       redirect: {
         destination: "/auth/signin",

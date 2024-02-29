@@ -9,7 +9,7 @@ import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
-  if (!adminProps || !adminProps.isSuperUser) {
+  if (!adminProps) {
     return {
       redirect: {
         destination: "/auth/signin",
