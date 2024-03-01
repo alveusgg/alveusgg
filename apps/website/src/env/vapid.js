@@ -1,4 +1,3 @@
-// @ts-check
 import { z } from "zod";
 
 /** @param {string} base64 */

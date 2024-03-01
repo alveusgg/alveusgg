@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 
 import headerImage from "@/assets/header.png";
 import { createImageUrl } from "@/utils/image";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 type MetaProps = {
   title?: string;

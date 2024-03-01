@@ -22,7 +22,7 @@ import {
   withAttachments,
 } from "@/server/db/show-and-tell";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
 import { giveAnHourStart, giveAnHourEnd } from "@/data/show-and-tell";
 import { earliestTimeZone, latestTimeZone } from "@/utils/datetime";

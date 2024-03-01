@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 export default async function handler(
   req: NextApiRequest,

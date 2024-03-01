@@ -8,7 +8,7 @@ import { createId } from "@paralleldrive/cuid2";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
 import { DateTime } from "luxon";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 import { prisma } from "@/server/db/client";
 import { probeImageMeta } from "@/server/utils/probe-image-meta";
 

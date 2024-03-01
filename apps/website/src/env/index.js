@@ -1,7 +1,5 @@
-// @ts-check
 /**
- * This file is included in `/next.config.mjs` which ensures the app isn't built with invalid env vars.
- * It has to be a `.mjs`-file to be imported there.
+ * This file is included in `/next.config.js` which ensures the app isn't built with invalid env vars.
  */
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
@@ -10,7 +8,7 @@ import {
   checkPrivateKey,
   checkPublicKey,
   checkSubject,
-} from "./vapid.mjs";
+} from "./vapid.js";
 
 const listOfUrlsSchema = z.string().transform((val, ctx) => {
   if (val.trim() === "") {

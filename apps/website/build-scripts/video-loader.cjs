@@ -1,3 +1,4 @@
+// @ts-nocheck
 const { tmpdir } = require("os");
 const { randomBytes } = require("crypto");
 const { join, dirname } = require("path");
@@ -55,6 +56,7 @@ const exec = (command) =>
     });
   });
 
+/** @type {import("file-type")} */
 let fileTypeCache;
 
 /**
@@ -245,7 +247,7 @@ const videoPoster = (ctx, { width = undefined, height = undefined }) =>
 /**
  * Get the requested quality from the resource query, or the default options
  *
- * @param {Object} options Webpack loader options
+ * @param {{ quality: string | null }} options Webpack loader options
  * @param {string} query Resource query
  * @return {string | null}
  */
@@ -306,6 +308,8 @@ const videoLoader = async (context, content) => {
     cache: cacheDir,
   };
   const files = [];
+  /** @typedef {{ src: string, size: int, type: string }} Source */
+  /** @type {{ poster: string, sources: Array<Source> }} */
   const obj = { poster: "", sources: [] };
 
   // Expose the first frame as a poster at 720p

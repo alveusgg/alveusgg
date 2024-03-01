@@ -7,7 +7,7 @@ import {
   findCardsWithBingo,
 } from "@/utils/bingo";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 export const runtime = "edge";
 export const revalidate = 2;

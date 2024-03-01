@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 export const config = {
   api: {

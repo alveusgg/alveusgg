@@ -12,7 +12,6 @@ import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
-import { env } from "@/env/index.mjs";
 import type { AppRouter } from "@/server/trpc/router/_app";
 import { getShortBaseUrl } from "@/utils/short-url";
 type RouterOutput = inferRouterOutputs<AppRouter>;
@@ -57,7 +56,7 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
             </div>
           </div>
         </td>
-        <td className="">
+        <td>
           <Link className="underline" href={shortLink.link} target="_blank">
             {shortLink.link}
           </Link>

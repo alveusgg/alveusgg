@@ -1,4 +1,4 @@
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import type { StickerPack, TicketConfig } from "@/utils/virtual-tickets";
 

@@ -3,7 +3,7 @@ import type { TwitchProfile } from "next-auth/providers/twitch";
 import TwitchProvider from "next-auth/providers/twitch";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";

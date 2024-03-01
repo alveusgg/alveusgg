@@ -9,7 +9,7 @@ const getBaseUrl = () => {
   return process.env.NEXT_PUBLIC_BASE_URL;
 };
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", () => {
   console.log("check push support registration", self.registration.pushManager);
 });
 
