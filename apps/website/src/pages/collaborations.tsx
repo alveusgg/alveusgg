@@ -65,7 +65,8 @@ const collaborations: Collaboration[] = [
     name: "Fanfan",
     link: "https://www.twitch.tv/fanfan",
     date: new Date("2023-11-13"),
-    videoId: "OCf7356WlNo",
+    videoId: "qHcy_sBJXmU",
+    vodId: "OCf7356WlNo",
   },
   {
     name: "Alluux",
