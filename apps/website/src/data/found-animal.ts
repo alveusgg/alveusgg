@@ -297,6 +297,33 @@ const data: FoundAnimalFlow = {
           },
         ],
       },
+    },{
+      name: "Cat",
+      flow: {
+        prompt: [
+          "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
+        ],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: [
+                "If the cat appears to be sick, injured, in danger, or if you've found a nursing kitten with no mama in sight please contact an animal welfare organization or shelter that can help you assess the situation",
+              ],
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Many cats that people spot in neighborhoods aren't in need of immediate help. Instead, they are pets who spend some or all of their time outdoors.",
+                "Check for a collar, if the cat has one try and get in contact with the owner, If the cat has no collar you can take the cat to the nearest animal shelter to check for a microchip",
+                "If the cat does not have a microchip, assess whether the cat seems healthy (not injured or visibly ill) and safe (in a secure location, away from any danger) We want a healthy and safe cat to stay where it is while you attempt to find the owner",
+              ],
+            },
+          },
+        ],
+      },
     },
     {
       name: "Raccoon",
@@ -352,34 +379,6 @@ const data: FoundAnimalFlow = {
                     prompt: macros.general.leave("the raccoon"),
                   },
                 },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      name: "Cat",
-      flow: {
-        prompt: [
-          "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
-        ],
-        options: [
-          {
-            name: "Yes",
-            flow: {
-              prompt: [
-                "If the cat appears to be sick, injured, in danger, or if you've found a nursing kitten with no mama in sight please contact an animal welfare organization or shelter that can help you assess the situation",
-              ],
-            },
-          },
-          {
-            name: "No",
-            flow: {
-              prompt: [
-                "Many cats that people spot in neighborhoods aren't in need of immediate help. Instead, they are pets who spend some or all of their time outdoors.",
-                "Check for a collar, if the cat has one try and get in contact with the owner, If the cat has no collar you can take the cat to the nearest animal shelter to check for a microchip",
-                "If the cat does not have a microchip, assess whether the cat seems healthy (not injured or visibly ill) and safe (in a secure location, away from any danger) We want a healthy and safe cat to stay where it is while you attempt to find the owner",
               ],
             },
           },
