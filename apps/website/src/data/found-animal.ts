@@ -297,7 +297,8 @@ const data: FoundAnimalFlow = {
           },
         ],
       },
-    },{
+    },
+    {
       name: "Cat",
       flow: {
         prompt: [
