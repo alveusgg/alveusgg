@@ -537,10 +537,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               createImageUrl({ src: animalQuestFull.src, width: 1200 }),
             uploadDate: episode.broadcast.toISOString(),
             duration: secondsToIso8601(episode.length),
-            embedUrl: getTwitchEmbed(episode.video.id, "meta.tag", {
-              start: episode.video.start,
-              player: "google",
-            }),
+            // Copying the Twitch VOD page behaviour, as with the meta data
+            // Twitch set their embedUrl to be their WWW page, not the player
+            embedUrl: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+              episode.edition,
+            )}`,
           },
           partOfSeries: {
             "@type": "CreativeWorkSeries",
