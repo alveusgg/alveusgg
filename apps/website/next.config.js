@@ -43,6 +43,11 @@ const config = {
         protocol: "https",
         hostname: "cdn-cf-east.streamable.com",
       },
+      // Imgur (stream schedule)
+      {
+        protocol: "https",
+        hostname: "i.imgur.com",
+      },
       // Original Website
       {
         protocol: "https",
