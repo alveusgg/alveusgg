@@ -34,6 +34,12 @@ export async function getActiveAnnouncements() {
   });
 }
 
+export async function getSchedule() {
+  return prisma.shortLinks.findUnique({
+    where: { slug: "schedule" },
+  });
+}
+
 export async function getNotificationById(notificationId: string) {
   const notification = await prisma.notification.findUnique({
     where: { id: notificationId },

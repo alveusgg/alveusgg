@@ -18,6 +18,7 @@ import { Button } from "@/components/shared/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { BingoCard, useBingoLocalState } from "@/components/bingo/BingoCard";
+import Consent from "@/components/Consent";
 
 function PlayGame({ bingoId }: { bingoId: string }) {
   const { data, error } = trpc.bingos.enterBingo.useQuery(
@@ -254,7 +255,18 @@ const PlayBingoPage = () => {
             </Link>
           </div>
         </Section>
-        {embedStream && <TwitchEmbed channel="maya" />}
+        {embedStream && (
+          <Consent
+            item="Maya's stream"
+            consent="twitch"
+            className="relative h-[90vh] w-full rounded-2xl bg-alveus-green text-alveus-tan lg:h-[calc(56vw-192px)]"
+          >
+            <TwitchEmbed
+              channel="maya"
+              className="absolute inset-0 h-full w-full"
+            />
+          </Consent>
+        )}
       </div>
     </>
   );
