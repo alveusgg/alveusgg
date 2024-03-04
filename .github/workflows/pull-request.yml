@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run prettier
-        run: pnpm run prettier --check
+        run: pnpm run lint
 
   tests:
     runs-on: ubuntu-latest
