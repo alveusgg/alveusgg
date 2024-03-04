@@ -1,7 +1,7 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo } from "react";
 import type { Episode } from "schema-dts";
 
 import animalQuest, {
@@ -20,6 +20,7 @@ import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Link from "@/components/content/Link";
 import JsonLD from "@/components/content/JsonLD";
+import { TwitchEmbed } from "@/components/content/TwitchEmbed";
 import Consent from "@/components/Consent";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
@@ -55,14 +56,20 @@ const getTwitchEmbed = (
   {
     start,
     player,
-    autoPlay = false,
-  }: Partial<{ start: string; player: string; autoPlay: boolean }> = {},
+    autoPlay = true,
+    muted = false,
+  }: Partial<{
+    start: string;
+    player: string;
+    autoPlay: boolean;
+    muted: boolean;
+  }> = {},
 ): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("video", video.toString());
   url.searchParams.set("parent", parent);
   url.searchParams.set("autoplay", autoPlay.toString());
-  url.searchParams.set("muted", "false");
+  url.searchParams.set("muted", muted.toString());
   url.searchParams.set("allowfullscreen", "true");
   url.searchParams.set("width", "100%");
   url.searchParams.set("height", "100%");
@@ -175,13 +182,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
     return secondsToString(Math.max(defaultSeconds, querySeconds));
   }, [episode.video.start, router.query.t]);
 
-  const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
-  useEffect(() => {
-    setTwitchEmbed(
-      getTwitchEmbed(episode.video.id, window.location.hostname, { start }),
-    );
-  }, [episode.video.id, start]);
-
   const description = useMemo(
     () =>
       [
@@ -271,7 +271,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           content={getTwitchEmbed(episode.video.id, "meta.tag", {
             start: episode.video.start,
             player: "twitter",
-            autoPlay: true,
           })}
         />
         <meta key="twitter:card" property="twitter:card" content="player" />
@@ -292,7 +291,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           content={getTwitchEmbed(episode.video.id, "meta.tag", {
             start: episode.video.start,
             player: "facebook",
-            autoPlay: true,
           })}
         />
         <meta
@@ -301,7 +299,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           content={getTwitchEmbed(episode.video.id, "meta.tag", {
             start: episode.video.start,
             player: "facebook",
-            autoPlay: true,
           })}
         />
         <meta
@@ -424,16 +421,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 thumbnail={animalQuestFull}
                 className="my-auto aspect-video h-auto w-full overflow-hidden rounded-2xl bg-alveus-green text-alveus-tan"
               >
-                {twitchEmbed && (
-                  <iframe
-                    src={twitchEmbed}
-                    title="Twitch video"
-                    referrerPolicy="no-referrer"
-                    allow="autoplay; encrypted-media; fullscreen"
-                    sandbox="allow-same-origin allow-scripts"
-                    className="aspect-video h-auto w-full"
-                  ></iframe>
-                )}
+                <TwitchEmbed
+                  video={episode.video.id.toString()}
+                  time={start}
+                  className="aspect-video h-auto w-full"
+                />
               </Consent>
             </div>
           </div>
