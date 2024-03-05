@@ -9,6 +9,7 @@ import Meta from "@/components/content/Meta";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
+import { Schedule } from "@/components/notifications/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
 import bellPeepo from "@/assets/bell-peepo.webp";
@@ -70,34 +71,26 @@ const UpdatesPage: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <div className="flex flex-col gap-10 lg:flex-row">
-          <section className="flex-1">
-            <Heading level={3}>Announcements</Heading>
-            <Announcements />
-          </section>
-
-          {/*
-          <div className="flex flex-1 flex-col gap-10">
+          <div className="flex flex-1 flex-col gap-8">
             <section>
-              <Heading level={3}>Upcoming events</Heading>
+              <Heading level={3} id="schedule" link>
+                Upcoming Streams
+              </Heading>
+              <Schedule />
+            </section>
 
-              <div>
-                <div>Static content event teasers?</div>
-              </div>
-
-              <Heading level={3}>Stream schedule</Heading>
-
-              <div>
-                <div>Ella</div>
-                <div>Connor</div>
-                <div>Kayla</div>
-                <div>24/7</div>
-              </div>
+            <section>
+              <Heading level={3} id="announcements" link>
+                Announcements
+              </Heading>
+              <Announcements />
             </section>
           </div>
-          */}
 
           <section className="flex-1">
-            <Heading level={3}>Recent notifications</Heading>
+            <Heading level={3} id="recent" link>
+              Recent Notifications
+            </Heading>
             <RecentNotifications tags={notificationTags} />
           </section>
         </div>
