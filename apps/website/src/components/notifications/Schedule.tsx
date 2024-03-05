@@ -22,9 +22,9 @@ export function Schedule() {
       <Image
         src={schedule.data.link}
         alt=""
-        width={750}
-        height={343}
-        className="h-auto w-full rounded-md border-2 border-alveus-green-900/80 shadow-md transition-shadow group-hover:shadow-xl"
+        width={980}
+        height={675}
+        className="h-auto w-full rounded-md border-2 border-alveus-green-900/80 bg-alveus-green shadow-md transition group-hover:scale-102 group-hover:shadow-xl"
       />
     </Link>
   );

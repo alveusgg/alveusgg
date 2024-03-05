@@ -71,7 +71,7 @@ const UpdatesPage: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <div className="flex flex-col gap-10 lg:flex-row">
-          <div className="flex flex-1 flex-col gap-8">
+          <div className="flex flex-1 grow-[2] flex-col gap-8">
             <section>
               <Heading level={3} id="schedule" link>
                 Upcoming Streams
