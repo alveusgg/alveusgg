@@ -27,9 +27,9 @@ const UpdatesPage: NextPage = () => {
       <Section
         dark
         className="z-10 py-0"
-        containerClassName="flex flex-wrap items-center justify-between"
+        containerClassName="flex flex-wrap items-center justify-between lg:flex-nowrap gap-x-16"
       >
-        <div className="w-full py-8 md:w-2/5">
+        <div className="w-full flex-grow py-8 lg:max-w-2/3">
           <Heading>Announcements and Updates</Heading>
 
           <p className="mt-6">
@@ -58,7 +58,7 @@ const UpdatesPage: NextPage = () => {
           </div>
         </div>
 
-        <div className="w-full max-w-2xl md:w-3/5">
+        <div className="w-full max-w-lg">
           <Image
             src={bellPeepo}
             alt=""
@@ -71,7 +71,7 @@ const UpdatesPage: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <div className="flex flex-col gap-10 lg:flex-row">
-          <div className="flex flex-1 flex-col gap-8">
+          <div className="flex flex-1 grow-[2] flex-col gap-8">
             <section>
               <Heading level={3} id="schedule" link>
                 Upcoming Streams
