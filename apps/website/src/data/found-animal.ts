@@ -247,6 +247,7 @@ const data: FoundAnimalFlow = {
       flow: {
         prompt: [
           "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
+          "For example, is the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
         ],
         options: [
           {
@@ -266,9 +267,10 @@ const data: FoundAnimalFlow = {
                   name: "Yes",
                   flow: {
                     prompt: [
-                      "Many cats that people spot in neighborhoods aren't in need of immediate help. Instead, they are pets who spend some or all of their time outdoors.",
-                      "Check for a collar, if the cat has one try and get in contact with the owner, If the cat has no collar you can take the cat to the nearest animal shelter to check for a microchip",
-                      "If the cat does not have a microchip, assess whether the cat seems healthy (not injured or visibly ill) and safe (in a secure location, away from any danger) We want a healthy and safe cat to stay where it is while you attempt to find the owner",
+                      "Check for a collar, if the cat has one try and get in contact with the owner. If the cat has no collar, you can take the cat to the nearest animal shelter to check for a microchip.",
+                      "If the cat does not have a microchip, leave the cat where it is. You can attempt to locate the owner (ask neighbours, leave out flyers with photos and detailed information about the cat.",
+                      ...macros.general.rehab("the cat",
+                      "If the cat appears to be feral/unowned"),
                     ],
                   },
                 },
@@ -305,7 +307,6 @@ const data: FoundAnimalFlow = {
             name: "No",
             flow: {
               prompt: [
-                "If the squirrel is uninjured the next step is to indentify its age to determine if intervention is needed",
                 "Does the squirrel have a fluffed-out tail, a body longer than 6 inches (excluding the tail), or is approaching humans/pets?",
               ],
               options: [
@@ -333,7 +334,7 @@ const data: FoundAnimalFlow = {
                             "Place uncooked rice or bird seed in a sock and warm in the microwave for 20-30 seconds. Then, wrap the sock in a soft towel and place it with the baby squirrel in an open container (e.g. a box) reheating the rice every two hours.",
                             "Do not attempt to feed or give water to the squirrel, as this may lead to it imprinting on humans and becoming dependent on them.",
                             "Return the squirrel to its nesting tree (usually in the immediate area where the squirrel was found). If you're unsure of the right tree, or if the nest was destroyed, choose a tree closest to where the squirrel was found.",
-                            "Observe for 6-8 hours, reheating the rice every two hours",
+                            "Observe the baby for the next 6-8 hours, reheating the rice every two hours or so to keep it warm.",
                             "Has the mother returned?",
                           ],
                           options: [
@@ -375,7 +376,7 @@ const data: FoundAnimalFlow = {
             flow: {
               prompt: [
                 "Is the raccoon an adult or a baby?",
-                "Baby raccoons can range from 4-14 inches long. Newborns eyes and ears are closed, babies are extremely vocal, growling, hissing, and snorting if disturbed. A full grown adult can be up to 3 feet long. Male's tend to be larger than females",
+                "Baby raccoons are normally between 4 and 14 inches in length, whereas a fully grown adult can be up to 3 feet long. Babies are often extremely vocal, growling, hissing, and snorting if disturbed.",
               ],
               options: [
                 {
