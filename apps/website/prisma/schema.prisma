@@ -300,6 +300,19 @@ model ShortLinksTracking {
   updatedAt DateTime @updatedAt
 }
 
+model CalendarEvent {
+  id          String @id @default(cuid())
+  title       String
+  description String
+  link        String
+  startAt     DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startAt], name: "CalendarEvent_start")
+}
+
 model Bingo {
   id                 String    @id @default(cuid())
   type               String
