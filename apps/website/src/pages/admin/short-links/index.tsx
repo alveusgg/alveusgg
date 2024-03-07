@@ -3,7 +3,7 @@ import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 import Meta from "@/components/content/Meta";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { ShortLink } from "@/components/admin/short-links/ShortLink";
+import { ShortLinks } from "@/components/admin/short-links/ShortLinks";
 
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
@@ -19,9 +19,9 @@ const AdminShortLinksPage: NextPage<
 > = ({ menuItems }) => {
   return (
     <>
-      <Meta title="Links | Admin" />
-      <AdminPageLayout title="Links" menuItems={menuItems}>
-        <ShortLink />
+      <Meta title="Short Links | Admin" />
+      <AdminPageLayout title="Short Links" menuItems={menuItems}>
+        <ShortLinks />
       </AdminPageLayout>
     </>
   );

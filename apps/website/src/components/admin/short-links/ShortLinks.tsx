@@ -23,7 +23,7 @@ type LinkProps = {
   onUpdate: () => void;
 };
 
-function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
+function ShortLink({ shortLink, onError, onUpdate }: LinkProps) {
   const deleteMutation = trpc.adminShortLinks.deleteShortLink.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
@@ -34,11 +34,6 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
   return (
     <>
       <tr className="border-b border-gray-700">
-        <td className="p-1">
-          <Button size="small" width="auto">
-            {"✅"}
-          </Button>
-        </td>
         <td className="w-1/2 p-1">
           <div className="flex flex-col gap-0.5">
             <div className="text-xl">{shortLink.label}</div>
@@ -88,13 +83,13 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
   );
 }
 
-export function ShortLink() {
+export function ShortLinks() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const links = trpc.adminShortLinks.getShortLinks.useQuery();
 
   return (
     <>
-      <Headline>Short links</Headline>
+      <Headline>Short Links</Headline>
 
       {errorMessage && (
         <ModalDialog
@@ -109,7 +104,6 @@ export function ShortLink() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-gray-700">
-              <th className="text-left">Active</th>
               <th className="text-left">Name</th>
               <th className="text-left">Redirects to</th>
               <th className="text-left">Clicks</th>
@@ -118,7 +112,7 @@ export function ShortLink() {
           </thead>
           <tbody>
             {links.data?.map((link) => (
-              <ShortLinks
+              <ShortLink
                 key={link.id}
                 shortLink={link}
                 onError={(err) => setErrorMessage(err)}
@@ -134,7 +128,7 @@ export function ShortLink() {
             size="small"
             width="auto"
           >
-            + Create Short link
+            + Create short link
           </LinkButton>
         </div>
       </Panel>

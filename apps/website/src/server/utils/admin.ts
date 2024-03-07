@@ -23,7 +23,7 @@ const menuItems = [
     permission: permissions.manageCalendarEvents,
   },
   {
-    label: "Short links",
+    label: "Short Links",
     href: "/admin/short-links",
     permission: permissions.manageShortLinks,
   },

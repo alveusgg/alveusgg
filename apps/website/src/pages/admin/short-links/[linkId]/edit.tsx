@@ -29,15 +29,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       ...adminProps,
-      formId: String(id),
+      linkId: String(id),
     },
   };
 }
 
 const AdminEditFormPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({ menuItems, formId }) => {
-  const link = trpc.adminShortLinks.getShortLink.useQuery(formId);
+> = ({ menuItems, linkId }) => {
+  const link = trpc.adminShortLinks.getShortLink.useQuery(linkId);
 
   return (
     <>
