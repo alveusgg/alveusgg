@@ -18,6 +18,11 @@ const menuItems = [
     permission: permissions.manageNotifications,
   },
   {
+    label: "Calendar Events",
+    href: "/admin/calendar-events",
+    permission: permissions.manageCalendarEvents,
+  },
+  {
     label: "Short links",
     href: "/admin/short-links",
     permission: permissions.manageShortLinks,
