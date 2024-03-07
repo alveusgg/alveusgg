@@ -243,6 +243,50 @@ const data: FoundAnimalFlow = {
       },
     },
     {
+      name: "Cat",
+      flow: {
+        prompt: [
+          "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
+          "For example, is the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
+        ],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the cat"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: ["Has the cat been outside for over 24 hours?"],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "Check for a collar, if the cat has one try and get in contact with the owner. If the cat has no collar, you can take the cat to the nearest animal shelter to check for a microchip.",
+                      "If the cat does not have a microchip, leave the cat where it is. You can attempt to locate the owner by asking neighbours, or leaving out flyers with photos and detailed information about the cat.",
+                      ...macros.general.rehab(
+                        "the cat",
+                        "If the cat appears to be feral/unowned",
+                      ),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: macros.general.leave("the cat"),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
       name: "Squirrel",
       flow: {
         prompt: [
@@ -328,9 +372,7 @@ const data: FoundAnimalFlow = {
     {
       name: "Raccoon",
       flow: {
-        prompt: [
-          "Does the raccoon appear to be sick or injured?",
-        ],
+        prompt: ["Does the raccoon appear to be sick or injured?"],
         options: [
           {
             name: "Yes",
@@ -382,50 +424,6 @@ const data: FoundAnimalFlow = {
                   name: "No",
                   flow: {
                     prompt: macros.general.leave("the raccoon"),
-                  },
-                },
-              ],
-            },
-          },
-        ],
-      },
-    },
-    {
-      name: "Cat",
-      flow: {
-        prompt: [
-          "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
-          "For example, is the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
-        ],
-        options: [
-          {
-            name: "Yes",
-            flow: {
-              prompt: macros.general.rehab("the cat"),
-            },
-          },
-          {
-            name: "No",
-            flow: {
-              prompt: [
-                "Has the cat been outside for over 24 hours?",
-              ],
-              options: [
-                {
-                  name: "Yes",
-                  flow: {
-                    prompt: [
-                      "Check for a collar, if the cat has one try and get in contact with the owner. If the cat has no collar, you can take the cat to the nearest animal shelter to check for a microchip.",
-                      "If the cat does not have a microchip, leave the cat where it is. You can attempt to locate the owner (ask neighbours, leave out flyers with photos and detailed information about the cat.",
-                      ...macros.general.rehab("the cat",
-                      "If the cat appears to be feral/unowned"),
-                    ],
-                  },
-                },
-                {
-                  name: "No",
-                  flow: {
-                    prompt: macros.general.leave("the cat"),
                   },
                 },
               ],
