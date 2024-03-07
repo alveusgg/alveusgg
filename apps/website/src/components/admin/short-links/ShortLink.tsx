@@ -15,7 +15,7 @@ import IconTrash from "@/icons/IconTrash";
 import type { AppRouter } from "@/server/trpc/router/_app";
 import { getShortBaseUrl } from "@/utils/short-url";
 type RouterOutput = inferRouterOutputs<AppRouter>;
-type ShortLink = RouterOutput["adminShortLinks"]["getLinks"][number];
+type ShortLink = RouterOutput["adminShortLinks"]["getShortLinks"][number];
 
 type LinkProps = {
   shortLink: ShortLink;
@@ -24,11 +24,11 @@ type LinkProps = {
 };
 
 function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
-  const deleteMutation = trpc.adminShortLinks.deleteLink.useMutation({
+  const deleteMutation = trpc.adminShortLinks.deleteShortLink.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
-  const clicks = trpc.adminShortLinks.getClicks.useQuery();
+  const clicks = trpc.adminShortLinks.getShortLinkClicks.useQuery();
   const clicksMap = new Map(clicks.data?.map((c) => [c.id, c.clicks]));
 
   return (
@@ -90,7 +90,7 @@ function ShortLinks({ shortLink, onError, onUpdate }: LinkProps) {
 
 export function ShortLink() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const links = trpc.adminShortLinks.getLinks.useQuery();
+  const links = trpc.adminShortLinks.getShortLinks.useQuery();
 
   return (
     <>

@@ -37,7 +37,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 const AdminEditFormPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
 > = ({ menuItems, formId }) => {
-  const link = trpc.adminShortLinks.getLink.useQuery(formId);
+  const link = trpc.adminShortLinks.getShortLink.useQuery(formId);
 
   return (
     <>
