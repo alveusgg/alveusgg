@@ -11,6 +11,7 @@ import { adminTwitchRouter } from "./admin/twitch";
 import { adminUsersRouter } from "./admin/users";
 import { authRouter } from "./auth";
 import { bingosRouter } from "./bingos";
+import { calendarEventsRouter } from "./calendar-events";
 import { formsRouter } from "./forms";
 import { notificationsRouter } from "./notifications";
 import { pushSubscriptionRouter } from "./push/subscription";
@@ -29,6 +30,7 @@ export const appRouter = router({
   adminUsersRouter: adminUsersRouter,
   auth: authRouter,
   bingos: bingosRouter,
+  calendarEvents: calendarEventsRouter,
   forms: formsRouter,
   notifications: notificationsRouter,
   pushSubscription: pushSubscriptionRouter,

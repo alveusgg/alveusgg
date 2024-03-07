@@ -1,6 +1,7 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
+import textFillStroke from "tailwindcss-text-fill-stroke";
 
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -135,6 +136,7 @@ const config = {
       },
     },
   },
+  plugins: [textFillStroke],
 } satisfies Config;
 
 export default config;

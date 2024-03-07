@@ -33,3 +33,24 @@ export async function editCalendarEvent(
     data,
   });
 }
+
+export async function getCalendarEvents({
+  start,
+  end,
+}: { start?: Date; end?: Date } = {}) {
+  // If we're not given a start, use the start of the current month
+  const startAt = start ?? new Date(new Date().setDate(1));
+
+  // If we're not given an end, use one month from the start
+  const endAt =
+    end ?? new Date(new Date(startAt).setMonth(startAt.getMonth() + 1));
+
+  return await prisma.calendarEvent.findMany({
+    where: {
+      startAt: {
+        gte: startAt,
+        lt: endAt,
+      },
+    },
+  });
+}
