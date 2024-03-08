@@ -35,12 +35,10 @@ const getColor = (link: string) => {
 };
 
 function Day({
-  day,
-  events = [],
+  children,
   className,
 }: {
-  day?: number;
-  events?: CalendarEvent[];
+  children?: React.ReactNode;
   className?: string;
 }) {
   return (
@@ -50,30 +48,7 @@ function Day({
         className,
       )}
     >
-      {day !== undefined && (
-        <p className="mb-auto text-right font-mono text-sm leading-none">
-          {day}
-        </p>
-      )}
-      {events.map((event) => (
-        <Link
-          key={event.id}
-          className={classes(
-            getColor(event.link),
-            "mb-auto block font-medium leading-none transition-colors text-stroke text-stroke-black text-stroke-4 paint-sfm",
-          )}
-          href={event.link}
-        >
-          <p>{event.title}</p>
-          <p className="text-sm tabular-nums">
-            {event.startAt.toLocaleTimeString("en-US", {
-              hour: "numeric",
-              minute: "2-digit",
-              timeZoneName: "short",
-            })}
-          </p>
-        </Link>
-      ))}
+      {children}
     </div>
   );
 }
@@ -116,25 +91,25 @@ export function Schedule() {
   const endOffset = (7 - ((startOffset + daysInMonth) % 7)) % 7;
 
   return (
-    <div className="p-4">
-      <div className="flex items-center justify-between">
+    <>
+      <div className="flex items-baseline justify-between">
         <p className="text-5xl font-medium">
           {startOfMonth.toLocaleDateString("en-US", { month: "long" })}
         </p>
         <p className="text-2xl font-medium">{startOfMonth.getFullYear()}</p>
       </div>
 
-      {/* Render the days of the week */}
-      {/* Separate grid as we don't want these to match the cell height */}
-      <div className="mt-8 hidden grid-cols-7 rounded-t-md border border-alveus-green-900 bg-alveus-green-900 text-center font-bold uppercase text-alveus-tan md:grid">
+      <div className="mt-2 grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:mt-8 md:grid-cols-7">
+        {/* Render the days of the week for desktop */}
         {Array.from({ length: 7 }, (_, i) => (
-          <div key={i} className="px-2 py-1">
+          <div
+            key={i}
+            className="hidden border border-alveus-green-900 bg-alveus-green-900 px-2 py-1 text-center font-bold uppercase text-alveus-tan md:block"
+          >
             {days[(i + startDay) % 7]}
           </div>
         ))}
-      </div>
 
-      <div className="grid grid-cols-1 rounded-b-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:auto-rows-fr md:grid-cols-7">
         {/* Render empty cells for days in the previous month */}
         {Array.from({ length: startOffset }, (_, i) => (
           <Day key={i} className="hidden bg-alveus-green-200 md:block" />
@@ -142,25 +117,56 @@ export function Schedule() {
 
         {/* Render a cell for each day in this month */}
         {Array.from({ length: daysInMonth }, (_, i) => {
-          const day = i + 1;
-          const date = new Date(
+          const date = i + 1;
+          const fullDate = new Date(
             startOfMonth.getFullYear(),
             startOfMonth.getMonth(),
-            day,
+            date,
           );
-          const dateString = date.toISOString().split("T")[0] as string;
+          const day = fullDate.getDay();
+          const events =
+            byDay[fullDate.toISOString().split("T")[0] as string] || [];
 
           return (
-            <Fragment key={dateString}>
-              {/* If this is the start of the week, we also want the day in here for mobile */}
-              {date.getDay() === startDay && (
-                <div className="bg-alveus-green-700 px-2 py-1 text-center text-sm font-bold uppercase text-alveus-tan md:hidden">
-                  {days[startDay]}
-                </div>
+            <Day
+              key={date}
+              className={classes(
+                // On mobile, we'll position absolute the date + day of week
+                "relative pr-10 md:pr-1",
+                // On mobile, make the weekends have a darker background
+                (day === 0 || day === 6) &&
+                  "bg-alveus-green-400 md:bg-transparent",
               )}
+            >
+              <p className="absolute right-1 top-1 mb-auto flex justify-end gap-1 font-mono text-sm leading-none md:relative">
+                {date.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
 
-              <Day day={day} events={byDay[dateString] || []} />
-            </Fragment>
+                {/* Render the day of the week for mobile */}
+                <span className="md:hidden">
+                  {days[fullDate.getDay()]?.slice(0, 1)}
+                </span>
+              </p>
+
+              {events.map((event) => (
+                <Link
+                  key={event.id}
+                  className={classes(
+                    getColor(event.link),
+                    "mb-auto block font-medium leading-none transition-colors text-stroke text-stroke-black text-stroke-4 paint-sfm",
+                  )}
+                  href={event.link}
+                >
+                  <p>{event.title}</p>
+                  <p className="text-sm tabular-nums">
+                    {event.startAt.toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                      timeZoneName: "short",
+                    })}
+                  </p>
+                </Link>
+              ))}
+            </Day>
           );
         })}
 
@@ -169,6 +175,6 @@ export function Schedule() {
           <Day key={i} className="hidden bg-alveus-green-200 md:block" />
         ))}
       </div>
-    </div>
+    </>
   );
 }
