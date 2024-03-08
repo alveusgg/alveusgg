@@ -54,10 +54,15 @@ function Day({
 }
 
 export function Schedule() {
-  const [startOfMonth, setStartOfMonth] = useState<Date>();
+  const [today, setToday] = useState<Date>();
   useEffect(() => {
-    setStartOfMonth(new Date(new Date().setDate(1)));
+    const now = new Date();
+    setToday(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
   }, []);
+  const startOfMonth = useMemo(
+    () => today && new Date(today.getFullYear(), today.getMonth(), 1),
+    [today],
+  );
   const daysInMonth = useMemo(
     () =>
       startOfMonth &&
@@ -82,7 +87,7 @@ export function Schedule() {
     [events.data],
   );
 
-  if (events.isLoading || !startOfMonth || !daysInMonth)
+  if (events.isLoading || !today || !startOfMonth || !daysInMonth)
     return <p>Loading schedule...</p>;
   if (!events.data) return <p>No schedule is available currently.</p>;
 
@@ -138,7 +143,12 @@ export function Schedule() {
                   "bg-alveus-green-400 md:bg-transparent",
               )}
             >
-              <p className="absolute right-1 top-1 mb-auto flex justify-end gap-1 font-mono text-sm leading-none md:relative">
+              <p
+                className={classes(
+                  "absolute right-1 top-1 mb-auto flex justify-end gap-1 font-mono text-sm leading-none md:relative",
+                  fullDate.getTime() < today.getTime() && "opacity-50",
+                )}
+              >
                 {date.toLocaleString("en-US", { minimumIntegerDigits: 2 })}
 
                 {/* Render the day of the week for mobile */}
@@ -153,6 +163,7 @@ export function Schedule() {
                   className={classes(
                     getColor(event.link),
                     "mb-auto block font-medium leading-none transition-colors text-stroke text-stroke-black text-stroke-4 paint-sfm",
+                    fullDate.getTime() < today.getTime() && "opacity-50",
                   )}
                   href={event.link}
                 >
