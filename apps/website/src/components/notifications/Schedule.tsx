@@ -97,14 +97,14 @@ export function Schedule() {
 
   return (
     <>
-      <div className="flex items-baseline justify-between">
+      <div className="my-2 flex items-baseline justify-between md:my-6">
         <p className="text-5xl font-medium">
           {startOfMonth.toLocaleDateString("en-US", { month: "long" })}
         </p>
         <p className="text-2xl font-medium">{startOfMonth.getFullYear()}</p>
       </div>
 
-      <table className="mt-2 grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:mt-8 md:grid-cols-7">
+      <table className="grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:grid-cols-7">
         <thead className="contents">
           <tr className="contents">
             {/* Render the days of the week for desktop */}
