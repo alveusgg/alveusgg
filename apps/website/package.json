@@ -79,7 +79,6 @@
     "slugify": "^1.6.6",
     "smooth-scroll-into-view-if-needed": "^2.0.2",
     "superjson": "^2.2.1",
-    "tailwindcss-text-fill-stroke": "2.0.0-beta.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

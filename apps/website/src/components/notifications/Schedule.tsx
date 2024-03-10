@@ -25,13 +25,13 @@ const getColor = (link: string) => {
   const normalized = link.toLowerCase();
 
   if (normalized.includes("twitch.tv/maya"))
-    return "text-white hover:text-gray-300";
+    return "bg-gray-200 hover:bg-gray-400";
   if (normalized.includes("twitch.tv/alveussanctuary"))
-    return "text-yellow-600 hover:text-yellow-300";
+    return "bg-yellow-400 hover:bg-yellow-600";
   if (normalized.includes("youtube.com") || normalized.includes("youtu.be"))
-    return "text-red-400 hover:text-red-100";
+    return "bg-red-300 hover:bg-red-500";
 
-  return "text-blue-400 hover:text-blue-100";
+  return "bg-blue-300 hover:bg-blue-500";
 };
 
 function Day({
@@ -158,7 +158,7 @@ export function Schedule() {
                   >
                     <p
                       className={classes(
-                        "absolute right-1 top-1 mb-auto flex justify-end gap-1 font-mono text-sm leading-none md:relative",
+                        "absolute right-1 top-1 mb-auto flex justify-end gap-1 pb-1 font-mono text-sm leading-none md:relative",
                         fullDate.getTime() < today.getTime() && "opacity-50",
                       )}
                     >
@@ -177,12 +177,12 @@ export function Schedule() {
                         key={event.id}
                         className={classes(
                           getColor(event.link),
-                          "mb-auto block font-medium leading-none transition-colors text-stroke text-stroke-black text-stroke-4 paint-sfm",
+                          "mb-auto block rounded-sm p-1 leading-none transition-colors",
                           fullDate.getTime() < today.getTime() && "opacity-50",
                         )}
                         href={event.link}
                       >
-                        <p>{event.title}</p>
+                        <p className="font-semibold">{event.title}</p>
                         <p className="text-sm tabular-nums">
                           {event.startAt.toLocaleTimeString("en-US", {
                             hour: "numeric",
