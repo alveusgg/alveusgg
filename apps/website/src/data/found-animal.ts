@@ -412,7 +412,7 @@ const data: FoundAnimalFlow = {
                   flow: {
                     prompt: [
                       "Be careful not to create an orphan raccoon accidentally. When a baby raccoon is separated from its mother, it will stay where it is until the mother returns.",
-                      "Monitor the baby from a distance to make sure the mother is still caring for it. Do not attempt to feed or otherwise care for the baby, as this may lead to it imprinting on humans and becoming dependent on them.",
+                      "Monitor the baby from a distance to make sure the mother is still caring for it. Do not attempt to feed or otherwise care for the baby, as this may lead to it becoming dependent on humans.",
                       ...macros.general.rehab(
                         "the baby raccoon",
                         "If the mother does return after 24 hours",
