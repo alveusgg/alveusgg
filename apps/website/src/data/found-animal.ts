@@ -129,41 +129,10 @@ const data: FoundAnimalFlow = {
                       {
                         name: "No",
                         flow: {
-                          prompt: [
-                            "If you are sure the nest is not nearby, or isn't in good enough condition to return the bird to, you'll need to construct a makeshift nest.",
-                            "Use a small box (a butter tub or fruit box works well), or a basket. Ensure there are some holes in the bottom for air flow and drainage.",
-                            "Line the box with some natural nesting materials, such as dry grass, pine needles, or parts of the old nest if you located it but it was too damaged to return the bird to.",
-                            "Place the makeshift nest in a tree or bush as close to where you found the bird as possible (or in the same tree if you found the old nest).",
-                          ],
-                          options: [
-                            {
-                              name: "Done",
-                              flow: {
-                                prompt: [
-                                  "Once the nest is in place, carefully put the bird in the nest.",
-                                  "Once returned, leave the bird alone, keeping yourself and any pets away from it, and observe from a distance.",
-                                  "Are the parents still nearby? Are they visiting the nest and showing interest in the bird?",
-                                ],
-                                options: [
-                                  {
-                                    name: "Yes",
-                                    flow: {
-                                      prompt: macros.general.leave("the bird"),
-                                    },
-                                  },
-                                  {
-                                    name: "No",
-                                    flow: {
-                                      prompt: macros.general.rehab(
-                                        "the bird",
-                                        "If you are sure the parents are not nearby, and do not return within a few hours",
-                                      ),
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
+                          prompt: macros.general.rehab(
+                            "the bird",
+                            "If you cannot locate a suitable nest, and if you are sure the parents are not nearby, and do not return within a few hours",
+                          ),
                         },
                       },
                     ],
