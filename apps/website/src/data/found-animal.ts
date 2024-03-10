@@ -19,7 +19,7 @@ const macros = {
     leave: (animal = "it") => [
       `Leave ${animal} alone and keep yourself, and any pets, away from it.`,
       `If you are still concerned, you can monitor ${animal} from a distance to make sure it is doing okay over a few days.`,
-      `Do not feed or otherwise interfere with it, to avoid ${animal} imprinting on humans.`,
+      `Do not feed or otherwise interfere with it, to avoid ${animal} becoming dependent on humans.`,
     ],
   },
 } as const;
