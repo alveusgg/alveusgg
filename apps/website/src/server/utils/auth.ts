@@ -20,7 +20,7 @@ export function checkIsSuperUserSession(session: Session | null) {
   return checkIsSuperUserId(session?.user?.id);
 }
 
-export async function checkPermissions(
+export function checkPermissions(
   permissionConfig: PermissionConfig,
   user: Session["user"],
 ) {

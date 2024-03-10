@@ -69,7 +69,7 @@ export async function getAdminSSP(
     return false;
   }
 
-  const hasPermissions = await checkPermissions(permission, user);
+  const hasPermissions = checkPermissions(permission, user);
   if (!hasPermissions) {
     return false;
   }
