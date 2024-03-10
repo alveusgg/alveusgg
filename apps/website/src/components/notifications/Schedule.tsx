@@ -104,7 +104,7 @@ export function Schedule() {
         <p className="text-2xl font-medium">{startOfMonth.getFullYear()}</p>
       </div>
 
-      <table className="grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:grid-cols-7">
+      <table className="my-2 grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:my-6 md:grid-cols-7">
         <thead className="contents">
           <tr className="contents">
             {/* Render the days of the week for desktop */}
@@ -199,6 +199,11 @@ export function Schedule() {
           ))}
         </tbody>
       </table>
+
+      <p className="italic opacity-50">
+        Events and dates/times are subject to change. Enable notifications to
+        know when streams go live.
+      </p>
     </>
   );
 }
