@@ -81,7 +81,7 @@ export function Schedule() {
   const byDay = useMemo(
     () =>
       events.data?.reduce<Record<string, CalendarEvent[]>>((acc, event) => {
-        const date = event.startAt.toISOString().split("T")[0] as string;
+        const date = `${event.startAt.getFullYear()}-${event.startAt.getMonth()}-${event.startAt.getDate()}`;
         return { ...acc, [date]: [...(acc[date] || []), event] };
       }, {}) || {},
     [events.data],
@@ -141,7 +141,9 @@ export function Schedule() {
                 );
                 const day = fullDate.getDay();
                 const events =
-                  byDay[fullDate.toISOString().split("T")[0] as string] || [];
+                  byDay[
+                    `${fullDate.getFullYear()}-${fullDate.getMonth()}-${fullDate.getDate()}`
+                  ] || [];
 
                 return (
                   <Day
