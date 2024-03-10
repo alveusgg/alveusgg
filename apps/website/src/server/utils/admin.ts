@@ -4,7 +4,6 @@ import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
 import { notEmpty } from "@/utils/helpers";
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
-import { getRolesForUser } from "@/server/db/users";
 
 const menuItems = [
   {
@@ -65,25 +64,28 @@ export async function getAdminSSP(
 ) {
   const session = await getSession(context);
 
-  if (session?.user) {
-    const hasPermissions = await checkPermissions(permission, session.user.id);
-    if (hasPermissions) {
-      const roles = await getRolesForUser(session.user.id);
-      const isSuperUser = checkIsSuperUserSession(session);
-
-      const filteredMenuItems = menuItems
-        .map((item) =>
-          isSuperUser || checkRolesGivePermission(roles, item.permission)
-            ? { label: item.label, href: item.href }
-            : undefined,
-        )
-        .filter(notEmpty);
-
-      return {
-        isSuperUser,
-        menuItems: filteredMenuItems,
-      };
-    }
+  const user = session?.user;
+  if (!user) {
+    return false;
   }
-  return false;
+
+  const hasPermissions = await checkPermissions(permission, user);
+  if (!hasPermissions) {
+    return false;
+  }
+
+  const isSuperUser = checkIsSuperUserSession(session);
+
+  const filteredMenuItems = menuItems
+    .map((item) =>
+      isSuperUser || checkRolesGivePermission(user.roles, item.permission)
+        ? { label: item.label, href: item.href }
+        : undefined,
+    )
+    .filter(notEmpty);
+
+  return {
+    isSuperUser,
+    menuItems: filteredMenuItems,
+  };
 }

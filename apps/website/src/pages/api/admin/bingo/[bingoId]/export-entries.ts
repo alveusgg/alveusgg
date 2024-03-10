@@ -19,7 +19,7 @@ const exportBingoEntries = async (
 ) => {
   const session = await getServerAuthSession({ req, res });
   const hasPermissions = session?.user?.id
-    ? await checkPermissions(permissions.manageBingos, session.user.id)
+    ? await checkPermissions(permissions.manageBingos, session.user)
     : false;
 
   if (!hasPermissions) {
