@@ -167,7 +167,7 @@ export function Schedule() {
                         fullDate.getTime() < today.getTime() && "opacity-50",
                       )}
                     >
-                      {date.toLocaleString("en-US", {
+                      {date.toLocaleString(undefined, {
                         minimumIntegerDigits: 2,
                       })}
 
@@ -191,7 +191,7 @@ export function Schedule() {
                       >
                         <p className="font-semibold">{event.title}</p>
                         <p className="text-sm tabular-nums">
-                          {event.startAt.toLocaleTimeString("en-US", {
+                          {event.startAt.toLocaleTimeString(undefined, {
                             hour: "numeric",
                             minute: "2-digit",
                             timeZoneName: "short",
