@@ -78,10 +78,10 @@ export function Schedule() {
     [startOfMonth],
   );
 
-  const events = trpc.calendarEvents.getCalendarEvents.useQuery({
-    start: startOfMonth,
-    end: endOfMonth,
-  });
+  const events = trpc.calendarEvents.getCalendarEvents.useQuery(
+    { start: startOfMonth, end: endOfMonth },
+    { enabled: startOfMonth !== undefined || endOfMonth !== undefined },
+  );
 
   const byDay = useMemo(
     () =>
