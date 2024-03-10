@@ -47,10 +47,12 @@ export function CalendarEventForm({
 
       const mutationData: CalendarEventSchema = {
         title: String(formData.get("title")),
-        description: String(formData.get("description")),
         link: link,
         startAt: inputValueDatetimeLocalToUtc(String(formData.get("startAt"))),
       };
+
+      if (formData.get("description"))
+        mutationData.description = String(formData.get("description"));
 
       if (action === "edit") {
         if (!calendarEvent) return;
@@ -96,7 +98,6 @@ export function CalendarEventForm({
           label="Description"
           name="description"
           defaultValue={calendarEvent?.description || ""}
-          isRequired
         />
 
         <TextField

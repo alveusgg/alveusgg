@@ -303,7 +303,7 @@ model ShortLinksTracking {
 model CalendarEvent {
   id          String @id @default(cuid())
   title       String
-  description String
+  description String?
   link        String
   startAt     DateTime
 

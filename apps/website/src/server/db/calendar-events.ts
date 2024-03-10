@@ -3,7 +3,7 @@ import { prisma } from "@/server/db/client";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),
-  description: z.string().min(1),
+  description: z.string().min(1).optional(),
   link: z.string().url(),
   startAt: z.date(),
 });
