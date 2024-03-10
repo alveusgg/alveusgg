@@ -4,7 +4,6 @@ import { publicProcedure, router } from "@/server/trpc/trpc";
 import {
   getActiveAnnouncements,
   getRecentNotificationsForTags,
-  getSchedule,
 } from "@/server/db/notifications";
 
 export const notificationsRouter = router({
@@ -15,6 +14,4 @@ export const notificationsRouter = router({
     ),
 
   getActiveAnnouncements: publicProcedure.query(getActiveAnnouncements),
-
-  getSchedule: publicProcedure.query(getSchedule),
 });
