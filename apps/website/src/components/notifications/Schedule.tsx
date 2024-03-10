@@ -1,11 +1,12 @@
-import { Fragment, useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@/server/trpc/router/_app";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
+
+import Link from "@/components/content/Link";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type CalendarEvent =
@@ -181,6 +182,8 @@ export function Schedule() {
                           fullDate.getTime() < today.getTime() && "opacity-50",
                         )}
                         href={event.link}
+                        custom
+                        external
                       >
                         <p className="font-semibold">{event.title}</p>
                         <p className="text-sm tabular-nums">
