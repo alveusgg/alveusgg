@@ -5,6 +5,11 @@ import type { CalendarEvent } from "@prisma/client";
 import { useRouter } from "next/router";
 
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
+import {
+  inputValueDatetimeLocalToUtc,
+  utcToInputValueDatetimeLocal,
+} from "@/utils/local-datetime";
 
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
@@ -16,21 +21,21 @@ import {
 import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
-import {
-  inputValueDatetimeLocalToUtc,
-  utcToInputValueDatetimeLocal,
-} from "@/utils/local-datetime";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
 
 type CalendarEventFormProps = {
   action: "create" | "edit";
   calendarEvent?: CalendarEvent;
+  onCreate?: () => void;
+  className?: string;
 };
 
 export function CalendarEventForm({
   action,
   calendarEvent,
+  onCreate,
+  className,
 }: CalendarEventFormProps) {
   const router = useRouter();
   const submitMutation =
@@ -76,18 +81,23 @@ export function CalendarEventForm({
         submitMutation.mutate(
           { action: "create", ...mutationData },
           {
-            onSuccess: async () => {
-              await router.push("/admin/calendar-events");
-            },
+            onSuccess:
+              onCreate ||
+              (async () => {
+                await router.push("/admin/calendar-events");
+              }),
           },
         );
       }
     },
-    [action, calendarEvent, router, submitMutation],
+    [action, calendarEvent, router, submitMutation, onCreate],
   );
 
   return (
-    <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
+    <form
+      className={classes("flex flex-col gap-10", className)}
+      onSubmit={handleSubmit}
+    >
       {submitMutation.error && (
         <MessageBox variant="failure">
           <pre>{submitMutation.error.message}</pre>
@@ -99,13 +109,17 @@ export function CalendarEventForm({
         </MessageBox>
       )}
       {submitMutation.isSuccess && (
-        <MessageBox variant="success">Calendar event updated!</MessageBox>
+        <MessageBox variant="success">
+          Calendar event {action === "create" ? "created" : "updated"}!
+        </MessageBox>
       )}
       {deleteMutation.isSuccess && (
         <MessageBox variant="success">Calendar event deleted!</MessageBox>
       )}
 
-      <Fieldset legend="Calendar event">
+      <Fieldset
+        legend={`${action === "create" ? "Create" : "Update"} Calendar Event`}
+      >
         <TextField
           label="Title"
           name="title"

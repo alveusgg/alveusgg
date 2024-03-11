@@ -1,12 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { trpc } from "@/utils/trpc";
-import { LinkButton } from "@/components/shared/Button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import Calendar, { getEventLinkColor } from "@/components/content/Calendar";
 import { classes } from "@/utils/classes";
+import { CalendarEventForm } from "./CalendarEventForm";
 
 export function CalendarEvents() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -84,15 +84,11 @@ export function CalendarEvents() {
           />
         )}
 
-        <div className="mt-4 flex gap-2">
-          <LinkButton
-            href="/admin/calendar-events/create"
-            size="small"
-            width="auto"
-          >
-            + Create calendar event
-          </LinkButton>
-        </div>
+        <CalendarEventForm
+          action="create"
+          onCreate={events.refetch}
+          className="mt-8 border-t-2 border-alveus-green pt-8"
+        />
       </Panel>
     </>
   );
