@@ -82,6 +82,7 @@ export function Schedule() {
       month={selected.month}
       year={selected.year}
       onChange={setSelected}
+      className="mt-2 md:mt-6"
     >
       <p className="italic opacity-50">
         Events and dates/times are subject to change. Enable notifications to

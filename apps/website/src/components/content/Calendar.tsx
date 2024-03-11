@@ -88,12 +88,7 @@ const Calendar = ({
   const weeks = Math.ceil((startOffset + daysInMonth) / 7);
 
   return (
-    <div
-      className={classes(
-        "mt-2 flex flex-col gap-2 md:mt-6 md:gap-6",
-        className,
-      )}
-    >
+    <div className={classes("flex flex-col gap-2 md:gap-6", className)}>
       <div className="flex flex-col gap-2">
         <div className="flex items-baseline justify-between">
           <p className="text-5xl font-medium">
@@ -134,7 +129,7 @@ const Calendar = ({
         )}
       </div>
 
-      <table className="grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:grid-cols-7">
+      <table className="grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 text-alveus-green-900 shadow-lg md:grid-cols-7">
         <thead className="contents">
           <tr className="contents">
             {/* Render the days of the week for desktop */}

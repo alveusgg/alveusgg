@@ -8,7 +8,11 @@ import { trpc } from "@/utils/trpc";
 
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import {
+  Button,
+  dangerButtonClasses,
+  defaultButtonClasses,
+} from "@/components/shared/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -29,8 +33,15 @@ export function CalendarEventForm({
   calendarEvent,
 }: CalendarEventFormProps) {
   const router = useRouter();
-  const submit =
+  const submitMutation =
     trpc.adminCalendarEvents.createOrEditCalendarEvent.useMutation();
+
+  const deleteMutation =
+    trpc.adminCalendarEvents.deleteCalendarEvent.useMutation({
+      onSuccess: async () => {
+        await router.push("/admin/calendar-events");
+      },
+    });
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -56,13 +67,13 @@ export function CalendarEventForm({
 
       if (action === "edit") {
         if (!calendarEvent) return;
-        submit.mutate({
+        submitMutation.mutate({
           action: "edit",
           id: calendarEvent.id,
           ...mutationData,
         });
       } else {
-        submit.mutate(
+        submitMutation.mutate(
           { action: "create", ...mutationData },
           {
             onSuccess: async () => {
@@ -72,18 +83,26 @@ export function CalendarEventForm({
         );
       }
     },
-    [action, calendarEvent, router, submit],
+    [action, calendarEvent, router, submitMutation],
   );
 
   return (
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
-      {submit.error && (
+      {submitMutation.error && (
         <MessageBox variant="failure">
-          <pre>{submit.error.message}</pre>
+          <pre>{submitMutation.error.message}</pre>
         </MessageBox>
       )}
-      {submit.isSuccess && (
+      {deleteMutation.error && (
+        <MessageBox variant="failure">
+          <pre>{deleteMutation.error.message}</pre>
+        </MessageBox>
+      )}
+      {submitMutation.isSuccess && (
         <MessageBox variant="success">Calendar event updated!</MessageBox>
+      )}
+      {deleteMutation.isSuccess && (
+        <MessageBox variant="success">Calendar event deleted!</MessageBox>
       )}
 
       <Fieldset legend="Calendar event">
@@ -122,9 +141,22 @@ export function CalendarEventForm({
         </FieldGroup>
       </Fieldset>
 
-      <Button type="submit" className={defaultButtonClasses}>
-        {action === "create" ? "Create" : "Update"}
-      </Button>
+      <Fieldset legend="">
+        <Button type="submit" className={defaultButtonClasses}>
+          {action === "create" ? "Create" : "Update"}
+        </Button>
+
+        {calendarEvent && (
+          <Button
+            type="button"
+            className={dangerButtonClasses}
+            confirmationMessage="Please confirm deletion!"
+            onClick={() => deleteMutation.mutate(calendarEvent.id)}
+          >
+            Delete
+          </Button>
+        )}
+      </Fieldset>
     </form>
   );
 }
