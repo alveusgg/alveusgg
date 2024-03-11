@@ -63,6 +63,7 @@ const config = {
         700: "#3B5A8F",
         800: "#2A4168",
         900: "#1A2840",
+        950: "#0c1626",
       },
       "alveus-tan": {
         DEFAULT: "#FAEEE6",
