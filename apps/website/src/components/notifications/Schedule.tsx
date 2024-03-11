@@ -72,13 +72,11 @@ export function Schedule() {
     [events.data, today],
   );
 
-  if (events.isLoading || !today || !selected || !currentMonth)
-    return <p>Loading schedule...</p>;
-  if (!eventsWithChildren) return <p>No schedule is available currently.</p>;
+  if (!selected) return null;
 
   return (
     <Calendar
-      events={eventsWithChildren}
+      events={eventsWithChildren || []}
       month={selected.month}
       year={selected.year}
       onChange={setSelected}

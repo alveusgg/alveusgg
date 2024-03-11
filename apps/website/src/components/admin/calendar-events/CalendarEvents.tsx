@@ -67,15 +67,13 @@ export function CalendarEvents() {
       )}
 
       <Panel>
-        {eventsWithChildren && selected ? (
+        {selected && (
           <Calendar
-            events={eventsWithChildren}
+            events={eventsWithChildren || []}
             month={selected.month}
             year={selected.year}
             onChange={setSelected}
           />
-        ) : (
-          <p>Loading schedule...</p>
         )}
 
         <div className="mt-4 flex gap-2">
