@@ -87,10 +87,12 @@ const Calendar = ({
 
   const byDay = useMemo(
     () =>
-      events.reduce<Record<string, CalendarEvent[]>>((acc, event) => {
-        const date = `${event.date.getFullYear()}-${event.date.getMonth()}-${event.date.getDate()}`;
-        return { ...acc, [date]: [...(acc[date] || []), event] };
-      }, {}) || {},
+      [...events]
+        .sort((a, b) => a.date.getTime() - b.date.getTime())
+        .reduce<Record<string, CalendarEvent[]>>((acc, event) => {
+          const date = `${event.date.getFullYear()}-${event.date.getMonth()}-${event.date.getDate()}`;
+          return { ...acc, [date]: [...(acc[date] || []), event] };
+        }, {}) || {},
     [events],
   );
 
