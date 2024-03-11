@@ -65,9 +65,7 @@ export function Schedule() {
     [today],
   );
   const endOfMonth = useMemo(
-    () =>
-      today &&
-      new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59),
+    () => today && new Date(today.getFullYear(), today.getMonth() + 1, 1),
     [today],
   );
 
