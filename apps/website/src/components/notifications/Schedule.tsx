@@ -68,6 +68,11 @@ export function Schedule() {
     () => today && new Date(today.getFullYear(), today.getMonth() + 1, 1),
     [today],
   );
+  const daysInMonth = useMemo(
+    () =>
+      today && new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate(),
+    [today],
+  );
 
   const events = trpc.calendarEvents.getCalendarEvents.useQuery(
     { start: startOfMonth, end: endOfMonth },
@@ -83,13 +88,13 @@ export function Schedule() {
     [events.data],
   );
 
-  if (events.isLoading || !today || !startOfMonth || !endOfMonth)
+  if (events.isLoading || !today || !startOfMonth || !daysInMonth)
     return <p>Loading schedule...</p>;
   if (!events.data) return <p>No schedule is available currently.</p>;
 
   const startDay = 1; // 1 = Monday, 0 = Sunday
   const startOffset = (7 + startOfMonth.getDay() - startDay) % 7;
-  const weeks = Math.ceil((startOffset + endOfMonth.getDate()) / 7);
+  const weeks = Math.ceil((startOffset + daysInMonth) / 7);
 
   return (
     <>
@@ -122,7 +127,7 @@ export function Schedule() {
                 const date = i + 1 + week * 7 - startOffset;
 
                 // Render empty cells for days outside of the month
-                if (date < 1 || date > endOfMonth.getDate())
+                if (date < 1 || date > daysInMonth)
                   return (
                     <Day
                       key={date}
