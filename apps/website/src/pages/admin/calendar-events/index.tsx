@@ -3,10 +3,13 @@ import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 import Meta from "@/components/content/Meta";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { ShortLinks } from "@/components/admin/short-links/ShortLinks";
+import { CalendarEvents } from "@/components/admin/calendar-events/CalendarEvents";
 
 export async function getServerSideProps(context: NextPageContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
+  const adminProps = await getAdminSSP(
+    context,
+    permissions.manageCalendarEvents,
+  );
   if (!adminProps) {
     return { notFound: true };
   }
@@ -14,17 +17,17 @@ export async function getServerSideProps(context: NextPageContext) {
   return { props: adminProps };
 }
 
-const AdminShortLinksPage: NextPage<
+const AdminCalendarEventsPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
 > = ({ menuItems }) => {
   return (
     <>
-      <Meta title="Short Links | Admin" />
-      <AdminPageLayout title="Short Links" menuItems={menuItems}>
-        <ShortLinks />
+      <Meta title="Calendar Events | Admin" />
+      <AdminPageLayout title="Calendar Events" menuItems={menuItems}>
+        <CalendarEvents />
       </AdminPageLayout>
     </>
   );
 };
 
-export default AdminShortLinksPage;
+export default AdminCalendarEventsPage;
