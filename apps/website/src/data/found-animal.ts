@@ -327,31 +327,10 @@ const data: FoundAnimalFlow = {
                       {
                         name: "Yes",
                         flow: {
-                          prompt: [
-                            "You've likely found an infant squirrel, who needs to be guided back to their mother.",
-                            "Place uncooked rice or bird seed in a sock and warm in the microwave for 20-30 seconds. Then, wrap the sock in a soft towel and place it with the baby squirrel in an open container (e.g. a box) reheating the rice every two hours.",
-                            "Do not attempt to feed or give water to the squirrel, as this may lead to it imprinting on humans and becoming dependent on them.",
-                            "Return the squirrel to its nesting tree (usually in the immediate area where the squirrel was found). If you're unsure of the right tree, or if the nest was destroyed, choose a tree closest to where the squirrel was found.",
-                            "Observe the baby for the next 6-8 hours, reheating the rice every two hours or so to keep it warm.",
-                            "Has the mother returned?",
-                          ],
-                          options: [
-                            {
-                              name: "Yes",
-                              flow: {
-                                prompt: macros.general.leave("the squirrel"),
-                              },
-                            },
-                            {
-                              name: "No",
-                              flow: {
-                                prompt: macros.general.rehab(
-                                  "the squirrel",
-                                  "If you are sure the parents are not nearby, and do not return within a few hours",
-                                ),
-                              },
-                            },
-                          ],
+                          prompt: macros.general.rehab(
+                            "the squirrel",
+                            "If you are sure the parents are not nearby, and do not return within a few hours",
+                          ),
                         },
                       },
                       {
@@ -377,27 +356,7 @@ const data: FoundAnimalFlow = {
           {
             name: "Yes",
             flow: {
-              prompt: [
-                "Is the raccoon an adult or a baby?",
-                "Baby raccoons are normally between 4 and 14 inches in length, whereas a fully grown adult can be up to 3 feet long. Babies are often extremely vocal, growling, hissing, and snorting if disturbed.",
-              ],
-              options: [
-                {
-                  name: "Adult",
-                  flow: {
-                    prompt: [
-                      "If you have found an injured adult raccoon, although it may be hard to accept, adult raccoons can rarely be caught and successfully treated.",
-                      "If you see an adult raccoon with an injury, leave the animal alone. Even though the injury may take a long time to heal, this is far preferable to the trauma of chase and capture.",
-                    ],
-                  },
-                },
-                {
-                  name: "Baby",
-                  flow: {
-                    prompt: macros.general.rehab("the baby raccoon"),
-                  },
-                },
-              ],
+              prompt: macros.general.rehab("the raccoon"),
             },
           },
           {
