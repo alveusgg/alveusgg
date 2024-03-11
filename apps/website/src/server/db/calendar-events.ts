@@ -52,5 +52,6 @@ export async function getCalendarEvents({
         lt: endAt,
       },
     },
+    orderBy: { startAt: "asc" },
   });
 }
