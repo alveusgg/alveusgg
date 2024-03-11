@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import type { inferRouterOutputs } from "@trpc/server";
 import type { AppRouter } from "@/server/trpc/router/_app";
@@ -39,7 +39,7 @@ function Day({
   children,
   className,
 }: {
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
 }) {
   return (
@@ -64,20 +64,20 @@ export function Schedule() {
     () => today && new Date(today.getFullYear(), today.getMonth(), 1),
     [today],
   );
+  const endOfMonth = useMemo(
+    () => today && new Date(today.getFullYear(), today.getMonth() + 1, 1),
+    [today],
+  );
   const daysInMonth = useMemo(
     () =>
-      startOfMonth &&
-      new Date(
-        startOfMonth.getFullYear(),
-        startOfMonth.getMonth() + 1,
-        0,
-      ).getDate(),
-    [startOfMonth],
+      today && new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate(),
+    [today],
   );
 
-  const events = trpc.calendarEvents.getCalendarEvents.useQuery({
-    start: startOfMonth,
-  });
+  const events = trpc.calendarEvents.getCalendarEvents.useQuery(
+    { start: startOfMonth, end: endOfMonth },
+    { enabled: startOfMonth !== undefined && endOfMonth !== undefined },
+  );
 
   const byDay = useMemo(
     () =>
@@ -163,7 +163,7 @@ export function Schedule() {
                         fullDate.getTime() < today.getTime() && "opacity-50",
                       )}
                     >
-                      {date.toLocaleString("en-US", {
+                      {date.toLocaleString(undefined, {
                         minimumIntegerDigits: 2,
                       })}
 
@@ -187,7 +187,7 @@ export function Schedule() {
                       >
                         <p className="font-semibold">{event.title}</p>
                         <p className="text-sm tabular-nums">
-                          {event.startAt.toLocaleTimeString("en-US", {
+                          {event.startAt.toLocaleTimeString(undefined, {
                             hour: "numeric",
                             minute: "2-digit",
                             timeZoneName: "short",
