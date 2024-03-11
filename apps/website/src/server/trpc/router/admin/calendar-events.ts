@@ -51,8 +51,4 @@ export const adminCalendarEventsRouter = router({
     .query(({ ctx, input: id }) =>
       ctx.prisma.calendarEvent.findUnique({ where: { id } }),
     ),
-
-  getCalendarEvents: permittedProcedure.query(({ ctx }) =>
-    ctx.prisma.calendarEvent.findMany({ orderBy: { startAt: "desc" } }),
-  ),
 });
