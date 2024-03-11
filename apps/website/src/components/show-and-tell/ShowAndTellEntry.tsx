@@ -181,9 +181,9 @@ export const ShowAndTellEntry = forwardRef<
             <Link
               href="/show-and-tell/give-an-hour"
               className={classes(
-                "group text-green-700",
+                "text-green-700",
                 isPresentationView
-                  ? "inline-block text-nowrap rounded-full bg-blue-950/90 px-3 py-1 shadow-lg transition-all hover:scale-102 hover:bg-blue-950 focus:bg-blue-950"
+                  ? "group inline-block text-nowrap rounded-full bg-blue-950/90 px-3 py-1 shadow-lg transition-all hover:scale-102 hover:bg-blue-950 focus:bg-blue-950"
                   : "hover:underline focus:underline",
               )}
               target="_blank"
