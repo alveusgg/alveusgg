@@ -52,7 +52,8 @@ const collaborations: Collaboration[] = [
     name: "Cinna",
     link: "https://www.twitch.tv/cinna",
     date: new Date("2024-01-28"),
-    videoId: "URSbZwAqLNE",
+    videoId: "5YRrm5mDb6o",
+    vodId: "URSbZwAqLNE",
   },
   {
     name: "Hasan",
