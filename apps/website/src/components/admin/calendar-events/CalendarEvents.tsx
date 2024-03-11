@@ -5,14 +5,17 @@ import { LinkButton } from "@/components/shared/Button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import Calendar from "@/components/content/Calendar";
+import Calendar, { getEventLinkColor } from "@/components/content/Calendar";
+import { classes } from "@/utils/classes";
 
 export function CalendarEvents() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const [today, setToday] = useState<Date>();
   const [selected, setSelected] = useState<{ month: number; year: number }>();
   useEffect(() => {
     const now = new Date();
+    setToday(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
     setSelected({ month: now.getMonth(), year: now.getFullYear() });
   }, []);
   const currentMonth = useMemo(
@@ -31,12 +34,17 @@ export function CalendarEvents() {
 
   const eventsWithChildren = useMemo(
     () =>
+      today &&
       events.data?.map((event) => ({
         date: event.startAt,
         children: (
           <Link
             key={event.id}
-            className="mb-auto block rounded-sm bg-alveus-tan p-1 leading-none transition-colors hover:bg-alveus-green hover:text-alveus-tan"
+            className={classes(
+              getEventLinkColor(event.link),
+              "mb-auto block rounded-sm p-1 leading-none transition-colors",
+              event.startAt.getTime() < today.getTime() && "opacity-50",
+            )}
             href={`/admin/calendar-events/${event.id}/edit`}
           >
             <p className="font-semibold">{event.title}</p>
@@ -50,7 +58,7 @@ export function CalendarEvents() {
           </Link>
         ),
       })),
-    [events.data],
+    [events.data, today],
   );
 
   return (

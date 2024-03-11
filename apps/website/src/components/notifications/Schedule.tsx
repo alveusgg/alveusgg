@@ -4,20 +4,7 @@ import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 
 import Link from "@/components/content/Link";
-import Calendar from "@/components/content/Calendar";
-
-const getColor = (link: string) => {
-  const normalized = link.toLowerCase();
-
-  if (normalized.includes("twitch.tv/maya"))
-    return "bg-gray-200 hover:bg-gray-400";
-  if (normalized.includes("twitch.tv/alveussanctuary"))
-    return "bg-yellow-400 hover:bg-yellow-600";
-  if (normalized.includes("youtube.com") || normalized.includes("youtu.be"))
-    return "bg-red-300 hover:bg-red-500";
-
-  return "bg-blue-300 hover:bg-blue-500";
-};
+import Calendar, { getEventLinkColor } from "@/components/content/Calendar";
 
 export function Schedule() {
   const [today, setToday] = useState<Date>();
@@ -50,7 +37,7 @@ export function Schedule() {
           <Link
             key={event.id}
             className={classes(
-              getColor(event.link),
+              getEventLinkColor(event.link),
               "mb-auto block rounded-sm p-1 leading-none transition-colors",
               event.startAt.getTime() < today.getTime() && "opacity-50",
             )}
