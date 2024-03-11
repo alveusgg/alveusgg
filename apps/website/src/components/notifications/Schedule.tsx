@@ -7,6 +7,7 @@ import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 
 import Link from "@/components/content/Link";
+import IconArrowRight from "@/icons/IconArrowRight";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type CalendarEvent =
@@ -104,15 +105,46 @@ export function Schedule() {
   const weeks = Math.ceil((startOffset + daysInMonth) / 7);
 
   return (
-    <>
-      <div className="my-2 flex items-baseline justify-between md:my-6">
-        <p className="text-5xl font-medium">
-          {currentMonth.toLocaleDateString("en-US", { month: "long" })}
-        </p>
-        <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
+    <div className="mt-2 flex flex-col gap-2 md:mt-6 md:gap-6">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-baseline justify-between">
+          <p className="text-5xl font-medium">
+            {currentMonth.toLocaleDateString("en-US", { month: "long" })}
+          </p>
+          <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
+        </div>
+
+        <div className="flex justify-between">
+          <button
+            type="button"
+            onClick={() =>
+              setMonth(
+                (prev) =>
+                  prev &&
+                  (prev[1] > 0 ? [prev[0], prev[1] - 1] : [prev[0] - 1, 11]),
+              )
+            }
+            className="transition-colors hover:text-alveus-green-400"
+          >
+            <IconArrowRight className="h-6 w-6 rotate-180 transform" />
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              setMonth(
+                (prev) =>
+                  prev &&
+                  (prev[1] < 11 ? [prev[0], prev[1] + 1] : [prev[0] + 1, 0]),
+              )
+            }
+            className="transition-colors hover:text-alveus-green-400"
+          >
+            <IconArrowRight className="h-6 w-6" />
+          </button>
+        </div>
       </div>
 
-      <table className="my-2 grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:my-6 md:grid-cols-7">
+      <table className="grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:grid-cols-7">
         <thead className="contents">
           <tr className="contents">
             {/* Render the days of the week for desktop */}
@@ -214,6 +246,6 @@ export function Schedule() {
         Events and dates/times are subject to change. Enable notifications to
         know when streams go live.
       </p>
-    </>
+    </div>
   );
 }
