@@ -66,16 +66,9 @@ export function Schedule() {
   );
   const endOfMonth = useMemo(
     () =>
-      startOfMonth &&
-      new Date(
-        startOfMonth.getFullYear(),
-        startOfMonth.getMonth() + 1,
-        0,
-        23,
-        59,
-        59,
-      ),
-    [startOfMonth],
+      today &&
+      new Date(today.getFullYear(), today.getMonth() + 1, 0, 23, 59, 59),
+    [today],
   );
 
   const events = trpc.calendarEvents.getCalendarEvents.useQuery(
