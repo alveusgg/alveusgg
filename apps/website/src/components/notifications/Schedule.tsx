@@ -56,27 +56,34 @@ function Day({
 
 export function Schedule() {
   const [today, setToday] = useState<Date>();
+  const [month, setMonth] = useState<[number, number]>();
   useEffect(() => {
     const now = new Date();
     setToday(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
+    setMonth([now.getFullYear(), now.getMonth()]);
   }, []);
-  const startOfMonth = useMemo(
-    () => today && new Date(today.getFullYear(), today.getMonth(), 1),
-    [today],
+  const currentMonth = useMemo(
+    () => month && new Date(month[0], month[1], 1),
+    [month],
   );
-  const endOfMonth = useMemo(
-    () => today && new Date(today.getFullYear(), today.getMonth() + 1, 1),
-    [today],
+  const nextMonth = useMemo(
+    () => month && new Date(month[0], month[1] + 1, 1),
+    [month],
   );
   const daysInMonth = useMemo(
     () =>
-      today && new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate(),
-    [today],
+      currentMonth &&
+      new Date(
+        currentMonth.getFullYear(),
+        currentMonth.getMonth() + 1,
+        0,
+      ).getDate(),
+    [currentMonth],
   );
 
   const events = trpc.calendarEvents.getCalendarEvents.useQuery(
-    { start: startOfMonth, end: endOfMonth },
-    { enabled: startOfMonth !== undefined && endOfMonth !== undefined },
+    { start: currentMonth, end: nextMonth },
+    { enabled: currentMonth !== undefined && nextMonth !== undefined },
   );
 
   const byDay = useMemo(
@@ -88,21 +95,21 @@ export function Schedule() {
     [events.data],
   );
 
-  if (events.isLoading || !today || !startOfMonth || !daysInMonth)
+  if (events.isLoading || !today || !currentMonth || !daysInMonth)
     return <p>Loading schedule...</p>;
   if (!events.data) return <p>No schedule is available currently.</p>;
 
   const startDay = 1; // 1 = Monday, 0 = Sunday
-  const startOffset = (7 + startOfMonth.getDay() - startDay) % 7;
+  const startOffset = (7 + currentMonth.getDay() - startDay) % 7;
   const weeks = Math.ceil((startOffset + daysInMonth) / 7);
 
   return (
     <>
       <div className="my-2 flex items-baseline justify-between md:my-6">
         <p className="text-5xl font-medium">
-          {startOfMonth.toLocaleDateString("en-US", { month: "long" })}
+          {currentMonth.toLocaleDateString("en-US", { month: "long" })}
         </p>
-        <p className="text-2xl font-medium">{startOfMonth.getFullYear()}</p>
+        <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
       </div>
 
       <table className="my-2 grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 shadow-lg md:my-6 md:grid-cols-7">
@@ -136,8 +143,8 @@ export function Schedule() {
                   );
 
                 const fullDate = new Date(
-                  startOfMonth.getFullYear(),
-                  startOfMonth.getMonth(),
+                  currentMonth.getFullYear(),
+                  currentMonth.getMonth(),
                   date,
                 );
                 const day = fullDate.getDay();
