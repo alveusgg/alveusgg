@@ -181,9 +181,9 @@ export const ShowAndTellEntry = forwardRef<
             <Link
               href="/show-and-tell/give-an-hour"
               className={classes(
-                "text-green-700",
+                "inline-flex items-center gap-1 text-green-700",
                 isPresentationView
-                  ? "group inline-block text-nowrap rounded-full bg-blue-950/90 px-3 py-1 shadow-lg transition-all hover:scale-102 hover:bg-blue-950 focus:bg-blue-950"
+                  ? "group text-nowrap rounded-full bg-blue-900/95 p-1 text-3xl shadow-lg transition-all hover:scale-102 hover:bg-blue-900 hover:text-green-600 focus:bg-blue-900 focus:text-green-600"
                   : "hover:underline focus:underline",
               )}
               target="_blank"
@@ -193,13 +193,18 @@ export const ShowAndTellEntry = forwardRef<
                 className={classes(
                   "bg-gradient-to-br to-green-600 bg-clip-text font-bold text-transparent",
                   isPresentationView
-                    ? "from-blue-500 transition-colors group-hover:from-blue-400 group-hover:to-green-500"
+                    ? "from-blue-500 pl-2 leading-none transition-colors group-hover:from-blue-400 group-hover:to-green-500"
                     : "from-blue-800",
                 )}
               >
                 Gave {hours} {hours === 1 ? "Hour" : "Hours"} for Earth
               </strong>
-              <IconWorld className="ml-1 inline-block h-8 w-8 -translate-y-0.5" />
+              <IconWorld
+                className={classes(
+                  "inline-block",
+                  isPresentationView ? "h-12 w-12" : "h-8 w-8",
+                )}
+              />
             </Link>
           </>
         ) : null}
