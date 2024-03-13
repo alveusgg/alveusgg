@@ -1,4 +1,5 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
+import { Transition } from "@headlessui/react";
 
 import { classes } from "@/utils/classes";
 
@@ -103,13 +104,23 @@ const Calendar = ({
       return {
         date: new Date(year, month, day + 1),
         children: (
-          <div
-            className={classes(
-              "mb-auto block animate-pulse rounded-sm bg-gray-400/50",
-              delay[Math.floor(Math.random() * delay.length)],
-              height[Math.floor(Math.random() * height.length)],
-            )}
-          />
+          <Transition
+            appear
+            show
+            // Fade these in with a short delay before starting
+            // Delay stops a flash of placeholders if we load quickly
+            enter="transition-opacity duration-500 transition-delay-200"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+          >
+            <div
+              className={classes(
+                "mb-auto block animate-pulse rounded-sm bg-gray-400/50",
+                delay[Math.floor(Math.random() * delay.length)],
+                height[Math.floor(Math.random() * height.length)],
+              )}
+            />
+          </Transition>
         ),
       };
     });

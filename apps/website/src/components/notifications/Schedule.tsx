@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Transition } from "@headlessui/react";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
@@ -76,7 +77,19 @@ export function Schedule() {
           know when streams go live.
         </p>
 
-        {events.isLoading && <p className="animate-pulse">Loading...</p>}
+        <Transition
+          show={events.isLoading}
+          enter="transition-opacity duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          entered="animate-pulse"
+          leave="transition-opacity duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          as="p"
+        >
+          Loading...
+        </Transition>
       </div>
     </Calendar>
   );
