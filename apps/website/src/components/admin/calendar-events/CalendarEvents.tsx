@@ -80,6 +80,7 @@ export function CalendarEvents() {
             events={eventsWithChildren || []}
             month={selected.month}
             year={selected.year}
+            loading={events.isLoading}
             onChange={setSelected}
           />
         )}

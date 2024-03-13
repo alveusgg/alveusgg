@@ -1,6 +1,7 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
+import plugin from "tailwindcss/plugin";
 
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -135,6 +136,22 @@ const config = {
       },
     },
   },
+  plugins: [
+    plugin(({ matchUtilities, theme }) => {
+      matchUtilities(
+        {
+          "animation-delay": (value) => {
+            return {
+              "animation-delay": value,
+            };
+          },
+        },
+        {
+          values: theme("transitionDelay"),
+        },
+      );
+    }),
+  ],
 } satisfies Config;
 
 export default config;

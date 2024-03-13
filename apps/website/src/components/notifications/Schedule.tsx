@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Transition } from "@headlessui/react";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
@@ -66,13 +67,30 @@ export function Schedule() {
       events={eventsWithChildren || []}
       month={selected.month}
       year={selected.year}
+      loading={events.isLoading}
       onChange={setSelected}
       className="mt-2 md:mt-6"
     >
-      <p className="italic opacity-50">
-        Events and dates/times are subject to change. Enable notifications to
-        know when streams go live.
-      </p>
+      <div className="flex justify-between gap-2 italic opacity-50">
+        <p>
+          Events and dates/times are subject to change. Enable notifications to
+          know when streams go live.
+        </p>
+
+        <Transition
+          show={events.isLoading}
+          enter="transition-opacity duration-300"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          entered="animate-pulse"
+          leave="transition-opacity duration-300"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+          as="p"
+        >
+          Loading...
+        </Transition>
+      </div>
     </Calendar>
   );
 }
