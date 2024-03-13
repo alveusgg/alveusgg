@@ -66,13 +66,18 @@ export function Schedule() {
       events={eventsWithChildren || []}
       month={selected.month}
       year={selected.year}
+      loading={events.isLoading}
       onChange={setSelected}
       className="mt-2 md:mt-6"
     >
-      <p className="italic opacity-50">
-        Events and dates/times are subject to change. Enable notifications to
-        know when streams go live.
-      </p>
+      <div className="flex justify-between gap-2 italic opacity-50">
+        <p>
+          Events and dates/times are subject to change. Enable notifications to
+          know when streams go live.
+        </p>
+
+        {events.isLoading && <p className="animate-pulse">Loading...</p>}
+      </div>
     </Calendar>
   );
 }

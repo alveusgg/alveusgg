@@ -55,6 +55,7 @@ type CalendarProps = {
   events: CalendarEvent[];
   month: Month;
   year: Year;
+  loading?: boolean;
   onChange?: ({ year, month }: { year: Year; month: Month }) => void;
   className?: string;
   children?: ReactNode;
@@ -64,6 +65,7 @@ const Calendar = ({
   events,
   month,
   year,
+  loading = false,
   onChange,
   className,
   children,
@@ -85,15 +87,43 @@ const Calendar = ({
     [currentMonth],
   );
 
+  const placeholders = useMemo(() => {
+    const delay = [
+      "animation-delay-0",
+      "animation-delay-200",
+      "animation-delay-300",
+      "animation-delay-500",
+      "animation-delay-700",
+    ];
+    const height = ["h-5", "h-10"];
+    const days = Array.from({ length: daysInMonth }, (_, i) => i);
+    return Array.from({ length: 10 }, () => {
+      const idx = Math.floor(Math.random() * days.length);
+      const day = days.splice(idx, 1)[0] as number;
+      return {
+        date: new Date(year, month, day + 1),
+        children: (
+          <div
+            className={classes(
+              "mb-auto block animate-pulse rounded-sm bg-gray-400/50",
+              delay[Math.floor(Math.random() * delay.length)],
+              height[Math.floor(Math.random() * height.length)],
+            )}
+          />
+        ),
+      };
+    });
+  }, [daysInMonth, month, year]);
+
   const byDay = useMemo(
     () =>
-      [...events]
+      (loading ? [...placeholders] : [...events])
         .sort((a, b) => a.date.getTime() - b.date.getTime())
         .reduce<Record<string, CalendarEvent[]>>((acc, event) => {
           const date = `${event.date.getFullYear()}-${event.date.getMonth()}-${event.date.getDate()}`;
           return { ...acc, [date]: [...(acc[date] || []), event] };
         }, {}) || {},
-    [events],
+    [loading, placeholders, events],
   );
 
   if (!today || !currentMonth || !daysInMonth) return null;
