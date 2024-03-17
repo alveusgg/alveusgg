@@ -231,27 +231,33 @@ const Calendar = ({
                     key={date}
                     className={classes(
                       // On mobile, we'll position absolute the date + day of week
-                      "relative pr-10 md:pr-1",
+                      "relative pr-12 md:pr-1",
                       // On mobile, make the weekends have a darker background
                       (day === 0 || day === 6) &&
                         "bg-alveus-green-400 md:bg-transparent",
                     )}
                   >
-                    <p
-                      className={classes(
-                        "absolute right-1 top-1 mb-auto flex justify-end gap-1 pb-1 font-mono text-sm leading-none md:relative",
-                        fullDate.getTime() < today.getTime() && "opacity-50",
-                      )}
-                    >
-                      {date.toLocaleString(undefined, {
-                        minimumIntegerDigits: 2,
-                      })}
+                    <div className="absolute right-0 top-0 mb-auto flex justify-end md:relative">
+                      <p
+                        className={classes(
+                          "flex gap-1 px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
+                          // Fade out days in the past
+                          fullDate.getTime() < today.getTime() && "opacity-50",
+                          // Show the current day in a pill
+                          fullDate.getTime() === today.getTime() &&
+                            "rounded-bl-lg bg-alveus-green-900 text-alveus-green-100",
+                        )}
+                      >
+                        {date.toLocaleString(undefined, {
+                          minimumIntegerDigits: 2,
+                        })}
 
-                      {/* Render the day of the week for mobile */}
-                      <span className="md:hidden">
-                        {days[fullDate.getDay()]?.slice(0, 1)}
-                      </span>
-                    </p>
+                        {/* Render the day of the week for mobile */}
+                        <span className="md:hidden">
+                          {days[fullDate.getDay()]?.slice(0, 1)}
+                        </span>
+                      </p>
+                    </div>
 
                     {events.map((event) => event.children)}
                   </Day>
