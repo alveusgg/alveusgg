@@ -231,17 +231,16 @@ const Calendar = ({
                     key={date}
                     className={classes(
                       // On mobile, we'll position absolute the date + day of week
-                      "relative pr-10 md:pr-1",
+                      "relative pr-12 md:pr-1",
                       // On mobile, make the weekends have a darker background
                       (day === 0 || day === 6) &&
                         "bg-alveus-green-400 md:bg-transparent",
                     )}
                   >
-                    <div className="absolute right-1 top-1 mb-auto flex items-center justify-end gap-1 pb-1 md:relative">
+                    <div className="absolute right-0 top-0 mb-auto flex justify-end md:relative">
                       <p
                         className={classes(
-                          // Add padding for the pill, but cancel out with negative margin
-                          "-mx-1.5 -mb-1 -mt-1.5 px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-2.5 md:-mt-2.5",
+                          "flex gap-1 px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
                           // Fade out days in the past
                           fullDate.getTime() < today.getTime() && "opacity-50",
                           // Show the current day in a pill
