@@ -222,6 +222,8 @@ const Calendar = ({
                 key={i}
                 className={classes(
                   "hidden border px-2 py-1 text-center font-bold uppercase md:block",
+                  i === 0 && "rounded-tl",
+                  i === 6 && "rounded-tr",
                   theme.heading,
                   theme.border,
                 )}
@@ -238,6 +240,18 @@ const Calendar = ({
               {Array.from({ length: 7 }, (_, i) => {
                 const date = i + 1 + week * 7 - startOffset;
 
+                // If we're on the first week, and the first day of the month, round on mobile
+                // If we're on the last week, and the last day of the month, round on mobile
+                // If we're on the last week, and the first or last day of the row, round on mobile
+                const firstWk = week === 0;
+                const lastWk = week === weeks - 1;
+                const rounded = classes(
+                  firstWk && date === 1 && "rounded-t md:rounded-none",
+                  lastWk && date === daysInMonth && "rounded-b md:rounded-none",
+                  lastWk && i === 0 && "md:rounded-bl",
+                  lastWk && i === 6 && "md:rounded-br",
+                );
+
                 // Render empty cells for days outside of the month
                 if (date < 1 || date > daysInMonth)
                   return (
@@ -246,6 +260,7 @@ const Calendar = ({
                       className={classes(
                         "hidden bg-black/10 md:block",
                         theme.border,
+                        rounded,
                       )}
                     />
                   );
@@ -271,6 +286,7 @@ const Calendar = ({
                       (day === 0 || day === 6) &&
                         "bg-black/15 md:bg-transparent",
                       theme.border,
+                      rounded,
                     )}
                   >
                     <div className="absolute right-0 top-0 mb-auto flex justify-end md:relative">
