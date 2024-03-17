@@ -237,21 +237,28 @@ const Calendar = ({
                         "bg-alveus-green-400 md:bg-transparent",
                     )}
                   >
-                    <p
-                      className={classes(
-                        "absolute right-1 top-1 mb-auto flex justify-end gap-1 pb-1 font-mono text-sm leading-none md:relative",
-                        fullDate.getTime() < today.getTime() && "opacity-50",
-                      )}
-                    >
-                      {date.toLocaleString(undefined, {
-                        minimumIntegerDigits: 2,
-                      })}
+                    <div className="absolute right-1 top-1 mb-auto flex items-center justify-end gap-1 pb-1 md:relative">
+                      <p
+                        className={classes(
+                          // Add padding for the pill, but cancel out with negative margin
+                          "-mx-1.5 -mb-1 -mt-1.5 px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-2.5 md:-mt-2.5",
+                          // Fade out days in the past
+                          fullDate.getTime() < today.getTime() && "opacity-50",
+                          // Show the current day in a pill
+                          fullDate.getTime() === today.getTime() &&
+                            "rounded-bl-lg bg-alveus-green-900 text-alveus-green-100",
+                        )}
+                      >
+                        {date.toLocaleString(undefined, {
+                          minimumIntegerDigits: 2,
+                        })}
 
-                      {/* Render the day of the week for mobile */}
-                      <span className="md:hidden">
-                        {days[fullDate.getDay()]?.slice(0, 1)}
-                      </span>
-                    </p>
+                        {/* Render the day of the week for mobile */}
+                        <span className="md:hidden">
+                          {days[fullDate.getDay()]?.slice(0, 1)}
+                        </span>
+                      </p>
+                    </div>
 
                     {events.map((event) => event.children)}
                   </Day>
