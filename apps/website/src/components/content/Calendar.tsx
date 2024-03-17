@@ -15,7 +15,7 @@ const days = [
   "Saturday",
 ];
 
-export const getEventLinkColor = (link: string) => {
+export const getEventLinkColor = (link: string): string => {
   const normalized = link.toLowerCase();
 
   if (normalized.includes("twitch.tv/maya"))
@@ -28,6 +28,26 @@ export const getEventLinkColor = (link: string) => {
   return "bg-blue-300 hover:bg-blue-500";
 };
 
+type CalendarTheme = {
+  background: string;
+  border: string;
+  heading: string;
+};
+
+const getCalendarTheme = (month?: number): CalendarTheme => {
+  // January: Winter
+  // if (month === 0) return {}
+
+  // February: Valentine's Day
+  // if (month === 1) return {}
+
+  return {
+    background: "bg-alveus-green-100 text-alveus-green-900",
+    border: "border-alveus-green-900",
+    heading: "bg-alveus-green-900 text-alveus-tan",
+  };
+};
+
 type DayProps = {
   children?: ReactNode;
   className?: string;
@@ -36,7 +56,7 @@ type DayProps = {
 const Day = ({ children, className }: DayProps) => (
   <td
     className={classes(
-      "flex min-h-8 flex-col gap-1 border border-alveus-green-900 p-1 md:min-h-24",
+      "flex min-h-8 flex-col gap-1 border p-1 md:min-h-24",
       className,
     )}
   >
@@ -137,6 +157,8 @@ const Calendar = ({
     [loading, placeholders, events],
   );
 
+  const theme = useMemo(() => getCalendarTheme(month), [month]);
+
   if (!today || !currentMonth || !daysInMonth) return null;
 
   const startDay = 1; // 1 = Monday, 0 = Sunday
@@ -185,14 +207,24 @@ const Calendar = ({
         )}
       </div>
 
-      <table className="grid grid-cols-1 overflow-hidden rounded-md border border-alveus-green-900 bg-alveus-green-100 text-alveus-green-900 shadow-lg md:grid-cols-7">
+      <table
+        className={classes(
+          "grid grid-cols-1 overflow-hidden rounded-md border shadow-lg md:grid-cols-7",
+          theme.background,
+          theme.border,
+        )}
+      >
         <thead className="contents">
           <tr className="contents">
             {/* Render the days of the week for desktop */}
             {Array.from({ length: 7 }, (_, i) => (
               <th
                 key={i}
-                className="hidden border border-alveus-green-900 bg-alveus-green-900 px-2 py-1 text-center font-bold uppercase text-alveus-tan md:block"
+                className={classes(
+                  "hidden border px-2 py-1 text-center font-bold uppercase md:block",
+                  theme.heading,
+                  theme.border,
+                )}
               >
                 {days[(i + startDay) % 7]}
               </th>
@@ -211,7 +243,10 @@ const Calendar = ({
                   return (
                     <Day
                       key={date}
-                      className="hidden bg-alveus-green-200 md:block"
+                      className={classes(
+                        "hidden bg-black/10 md:block",
+                        theme.border,
+                      )}
                     />
                   );
 
@@ -234,18 +269,19 @@ const Calendar = ({
                       "relative pr-12 md:pr-1",
                       // On mobile, make the weekends have a darker background
                       (day === 0 || day === 6) &&
-                        "bg-alveus-green-400 md:bg-transparent",
+                        "bg-black/15 md:bg-transparent",
+                      theme.border,
                     )}
                   >
                     <div className="absolute right-0 top-0 mb-auto flex justify-end md:relative">
                       <p
                         className={classes(
-                          "flex gap-1 px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
+                          "flex gap-1 rounded-bl-lg px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
                           // Fade out days in the past
                           fullDate.getTime() < today.getTime() && "opacity-50",
                           // Show the current day in a pill
                           fullDate.getTime() === today.getTime() &&
-                            "rounded-bl-lg bg-alveus-green-900 text-alveus-green-100",
+                            theme.heading,
                         )}
                       >
                         {date.toLocaleString(undefined, {
