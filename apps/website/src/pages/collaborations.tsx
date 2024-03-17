@@ -39,7 +39,8 @@ const collaborations: Collaboration[] = [
     name: "Jinny",
     link: "https://www.twitch.tv/jinnytty",
     date: new Date("2024-02-08"),
-    videoId: "c-EoBOEr1_g",
+    videoId: "lpXtuG87BUM",
+    vodId: "c-EoBOEr1_g",
   },
   {
     name: "JaidenAnimations & Alpharad",
