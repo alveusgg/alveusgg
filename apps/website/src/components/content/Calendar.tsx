@@ -56,7 +56,7 @@ type DayProps = {
 const Day = ({ children, className }: DayProps) => (
   <td
     className={classes(
-      "flex min-h-8 flex-col gap-1 border p-1 md:min-h-24",
+      "flex min-h-8 flex-col gap-1 border p-1 transition-colors md:min-h-24",
       className,
     )}
   >
@@ -209,7 +209,7 @@ const Calendar = ({
 
       <table
         className={classes(
-          "grid grid-cols-1 overflow-hidden rounded-md border shadow-lg md:grid-cols-7",
+          "grid grid-cols-1 overflow-hidden rounded-md border shadow-lg transition-colors md:grid-cols-7",
           theme.background,
           theme.border,
         )}
@@ -221,7 +221,7 @@ const Calendar = ({
               <th
                 key={i}
                 className={classes(
-                  "hidden border px-2 py-1 text-center font-bold uppercase md:block",
+                  "hidden border px-2 py-1 text-center font-bold uppercase transition-colors md:block",
                   i === 0 && "rounded-tl",
                   i === 6 && "rounded-tr",
                   theme.heading,
