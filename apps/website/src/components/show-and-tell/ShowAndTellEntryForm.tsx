@@ -421,7 +421,9 @@ export function ShowAndTellEntryForm({
           </div>
 
           <p className="text-sm italic opacity-75">
-            <strong>Give an Hour</strong> {trackingStatus.text}
+            <strong>Give an Hour</strong> {trackingStatus.text}. Activities
+            submitted with tracked hours must occur while the Give an Hour
+            initiative is active.
           </p>
         </Fieldset>
 

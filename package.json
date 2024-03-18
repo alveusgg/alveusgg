@@ -27,7 +27,8 @@
   "scripts": {
     "prepare": "husky",
     "lint-staged": "lint-staged --relative",
-    "prettier": "prettier . --write"
+    "lint": "prettier . --check",
+    "format": "prettier . --write"
   },
   "pnpm": {
     "patchedDependencies": {

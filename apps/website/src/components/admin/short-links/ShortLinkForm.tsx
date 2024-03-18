@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 import { trpc } from "@/utils/trpc";
 import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 
-import { type ShortLinkSchema } from "@/server/db/short-links";
+import type { ShortLinkSchema } from "@/server/db/short-links";
 
 import { Button, defaultButtonClasses } from "@/components/shared/Button";
 import { TextField } from "@/components/shared/form/TextField";
@@ -15,12 +15,12 @@ import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { getShortBaseUrl } from "@/utils/short-url";
 
-type ShortLinkProps = {
+type ShortLinkFormProps = {
   action: "create" | "edit";
   shortLink?: ShortLinks;
 };
 
-export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
+export function ShortLinkForm({ action, shortLink }: ShortLinkFormProps) {
   const router = useRouter();
   const submit = trpc.adminShortLinks.createOrEditShortLink.useMutation();
 
@@ -32,7 +32,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkProps) {
 
       const formData = new FormData(event.currentTarget);
 
-      //Add https:// if not present
+      // Add https:// if not present
       const link =
         String(formData.get("url")).startsWith("http://") ||
         String(formData.get("url")).startsWith("https://")

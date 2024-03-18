@@ -30,6 +30,10 @@ export const userRoles = {
     label: "Short links",
     description: "Can manage short links",
   },
+  calendarEvents: {
+    label: "Calendar Events",
+    description: "Can manage calendar events",
+  },
 } as const satisfies Record<string, UserRoleConfig>;
 
 export function isValidUserRole(role: string) {

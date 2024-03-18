@@ -15,7 +15,7 @@ const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageShortLinks),
 );
 
-export const shortLinksRouter = router({
+export const adminShortLinksRouter = router({
   createOrEditShortLink: permittedProcedure
     .input(
       z
@@ -40,24 +40,24 @@ export const shortLinksRouter = router({
       }
     }),
 
-  deleteLink: permittedProcedure
+  deleteShortLink: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input: id }) => {
-      ctx.prisma.shortLinks.delete({ where: { id: id } });
-      ctx.prisma.shortLinksTracking.delete({ where: { id: id } });
+      await ctx.prisma.shortLinks.delete({ where: { id: id } });
+      await ctx.prisma.shortLinksTracking.delete({ where: { id: id } });
     }),
 
-  getLink: permittedProcedure
+  getShortLink: permittedProcedure
     .input(z.string().cuid())
-    .query(async ({ ctx, input: id }) =>
+    .query(({ ctx, input: id }) =>
       ctx.prisma.shortLinks.findUnique({ where: { id } }),
     ),
 
-  getLinks: permittedProcedure.query(async ({ ctx }) =>
+  getShortLinks: permittedProcedure.query(({ ctx }) =>
     ctx.prisma.shortLinks.findMany({}),
   ),
 
-  getClicks: permittedProcedure.query(async ({ ctx }) =>
+  getShortLinkClicks: permittedProcedure.query(({ ctx }) =>
     ctx.prisma.shortLinksTracking.findMany({}),
   ),
 });

@@ -256,8 +256,10 @@ export async function getVolunteeringMinutes({
       await prisma.showAndTellEntry.aggregate({
         _sum: { volunteeringMinutes: true },
         where: {
-          createdAt: { gte: from, lte: to },
-          approvedAt: { not: null },
+          AND: [
+            getPostFilter("approved"),
+            { createdAt: { gte: from, lte: to } },
+          ],
         },
       })
     )._sum.volunteeringMinutes ?? 0

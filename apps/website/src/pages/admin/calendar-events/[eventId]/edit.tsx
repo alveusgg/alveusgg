@@ -9,24 +9,22 @@ import { permissions } from "@/data/permissions";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import Meta from "@/components/content/Meta";
-import { ShortLinkForm } from "@/components/admin/short-links/ShortLinkForm";
+import { CalendarEventForm } from "@/components/admin/calendar-events/CalendarEventForm";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
+  const adminProps = await getAdminSSP(
+    context,
+    permissions.manageCalendarEvents,
+  );
   if (!adminProps) {
-    return {
-      redirect: {
-        destination: "/auth/signin",
-        permanent: false,
-      },
-    };
+    return { notFound: true };
   }
 
-  const id = context.params?.linkId;
+  const id = context.params?.eventId;
   if (!id) {
     return { notFound: true };
   }
@@ -34,26 +32,26 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       ...adminProps,
-      linkId: String(id),
+      eventId: String(id),
     },
   };
 }
 
 const AdminEditFormPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({ menuItems, linkId }) => {
-  const link = trpc.adminShortLinks.getShortLink.useQuery(linkId);
+> = ({ menuItems, eventId }) => {
+  const event = trpc.adminCalendarEvents.getCalendarEvent.useQuery(eventId);
 
   return (
     <>
-      <Meta title="Edit Short Link | Admin" />
+      <Meta title="Edit Calendar Event | Admin" />
 
-      <AdminPageLayout title="Edit Short Link" menuItems={menuItems}>
-        <Headline>Edit Short Link</Headline>
+      <AdminPageLayout title="Edit Calendar Event" menuItems={menuItems}>
+        <Headline>Edit Calendar Event</Headline>
 
         <Panel>
-          {link.data ? (
-            <ShortLinkForm action="edit" shortLink={link.data} />
+          {event.data ? (
+            <CalendarEventForm action="edit" calendarEvent={event.data} />
           ) : (
             <MessageBox>Loading …</MessageBox>
           )}

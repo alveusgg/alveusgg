@@ -32,6 +32,7 @@ import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTe
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 
 import IconWorld from "@/icons/IconWorld";
+import { classes } from "@/utils/classes";
 
 export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
   attachments: Array<
@@ -179,14 +180,31 @@ export const ShowAndTellEntry = forwardRef<
             {` — `}
             <Link
               href="/show-and-tell/give-an-hour"
-              className="text-green-700 hover:underline focus:underline"
+              className={classes(
+                "inline-flex items-center gap-1 text-green-700",
+                isPresentationView
+                  ? "group text-nowrap rounded-full bg-blue-900/95 p-1 text-3xl shadow-lg transition-all hover:scale-102 hover:bg-blue-900 hover:text-green-600 focus:bg-blue-900 focus:text-green-600"
+                  : "hover:underline focus:underline",
+              )}
               target="_blank"
               custom
             >
-              <strong className="bg-gradient-to-br from-blue-800 to-green-600 bg-clip-text font-bold text-transparent">
+              <strong
+                className={classes(
+                  "bg-gradient-to-br to-green-600 bg-clip-text font-bold text-transparent",
+                  isPresentationView
+                    ? "from-blue-500 pl-2 leading-none transition-colors group-hover:from-blue-400 group-hover:to-green-500"
+                    : "from-blue-800",
+                )}
+              >
                 Gave {hours} {hours === 1 ? "Hour" : "Hours"} for Earth
               </strong>
-              <IconWorld className="ml-1 inline-block h-8 w-8 -translate-y-0.5" />
+              <IconWorld
+                className={classes(
+                  "inline-block",
+                  isPresentationView ? "h-12 w-12" : "h-8 w-8",
+                )}
+              />
             </Link>
           </>
         ) : null}

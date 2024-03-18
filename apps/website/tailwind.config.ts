@@ -1,6 +1,7 @@
 import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
+import plugin from "tailwindcss/plugin";
 
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -63,6 +64,19 @@ const config = {
         700: "#3B5A8F",
         800: "#2A4168",
         900: "#1A2840",
+      },
+      pink: {
+        DEFAULT: "#EC4899",
+        50: "#FDEEF6",
+        100: "#FBDCEB",
+        200: "#F8B7D7",
+        300: "#F492C2",
+        400: "#F06DAE",
+        500: "#EC4899",
+        600: "#E4187D",
+        700: "#B11261",
+        800: "#7F0D45",
+        900: "#4C0829",
       },
       "alveus-tan": {
         DEFAULT: "#FAEEE6",
@@ -135,6 +149,22 @@ const config = {
       },
     },
   },
+  plugins: [
+    plugin(({ matchUtilities, theme }) => {
+      matchUtilities(
+        {
+          "animation-delay": (value) => {
+            return {
+              "animation-delay": value,
+            };
+          },
+        },
+        {
+          values: theme("transitionDelay"),
+        },
+      );
+    }),
+  ],
 } satisfies Config;
 
 export default config;

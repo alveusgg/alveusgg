@@ -15,6 +15,7 @@ const config = defineConfig((options) => ({
   minify: !options.watch,
   platform: "browser",
   outDir: "public/",
+  format: "esm",
   tsconfig: "src/sw/tsconfig.json",
   esbuildOptions(options, _context) {
     options.define = {

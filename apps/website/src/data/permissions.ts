@@ -33,6 +33,9 @@ export const permissions = {
   manageShortLinks: {
     requiredRole: "shortLinks",
   },
+  manageCalendarEvents: {
+    requiredRole: "calendarEvents",
+  },
 } as const satisfies Record<string, PermissionConfig>;
 
 export function checkRolesGivePermission(
