@@ -15,7 +15,8 @@ const collaborations: Collaboration[] = (
       name: "Jack Manifold",
       link: "https://www.twitch.tv/jackmanifoldtv",
       date: new Date("2024-03-25"),
-      videoId: "3lnIyCsyipE",
+      videoId: "GfAxJsrymEo",
+      vodId: "3lnIyCsyipE",
     },
     {
       name: "Emily Wang",
