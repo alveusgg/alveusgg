@@ -18,7 +18,12 @@ import { MessageBox } from "@/components/shared/MessageBox";
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const adminProps = await getAdminSSP(context, permissions.manageForms);
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   const id = context.params?.formId;

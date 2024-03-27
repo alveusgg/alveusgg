@@ -10,7 +10,12 @@ import Meta from "@/components/content/Meta";
 export async function getServerSideProps(context: NextPageContext) {
   const adminProps = await getAdminSSP(context, permissions.viewDashboard);
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   return { props: adminProps };

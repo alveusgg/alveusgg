@@ -18,7 +18,12 @@ import { TwitchChannelForm } from "@/components/admin/twitch/TwitchChannelForm";
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const adminProps = await getAdminSSP(context, permissions.manageTwitchApi);
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   const id = context.params?.channelId;

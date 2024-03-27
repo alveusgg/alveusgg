@@ -17,7 +17,12 @@ export async function getServerSideProps(context: NextPageContext) {
     permissions.manageNotifications,
   );
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   return { props: { ...adminProps } };

@@ -35,19 +35,16 @@ export type SigninPageProps = InferGetServerSidePropsType<
 export const getServerSideProps = async (context: NextPageContext) => {
   const session = await getSession(context);
 
-  if (session?.user?.id) {
+  if (!session?.user?.isSuperUser) {
     return {
-      redirect: {
-        permanent: false,
-        destination: "/",
-      },
+      props: { message: "You are not authorized to view that page" },
     };
   }
 
   return { props: {} };
 };
 
-const SigninPage: NextPage<SigninPageProps> = () => {
+const SigninPage: NextPage<SigninPageProps> = ({ message }) => {
   const router = useRouter();
   const errorType =
     typeof router.query.error === "string" ? router.query.error : undefined;
@@ -69,6 +66,11 @@ const SigninPage: NextPage<SigninPageProps> = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
+        {message ? (
+          <Heading className="my-2 text-xl text-red-600">{message}</Heading>
+        ) : (
+          ""
+        )}
         <Heading className="my-3 text-3xl">Sign in</Heading>
 
         {error && (

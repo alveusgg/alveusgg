@@ -37,7 +37,12 @@ import { transposeMatrix } from "@/utils/math";
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const adminProps = await getAdminSSP(context, permissions.manageBingos);
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   const id = context.params?.bingoId;

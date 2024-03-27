@@ -24,7 +24,12 @@ export async function getServerSideProps(context: NextPageContext) {
     permissions.manageUsersAndRoles,
   );
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   return { props: adminProps };
