@@ -85,7 +85,7 @@ importers:
     dependencies:
       '@alveusgg/data':
         specifier: github:alveusgg/data#pjeweb/remastered-georgie-aq
-        version: github.com/alveusgg/data/5ed9e179f46cd3e4dd2b65b8e3091805ca4e9118
+        version: github.com/alveusgg/data/40420cc6a3a02791b315287bcda30b33c85a59e3
       '@aws-sdk/client-s3':
         specifier: ^3.503.1
         version: 3.503.1
@@ -10286,8 +10286,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  github.com/alveusgg/data/5ed9e179f46cd3e4dd2b65b8e3091805ca4e9118:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/5ed9e179f46cd3e4dd2b65b8e3091805ca4e9118}
+  github.com/alveusgg/data/40420cc6a3a02791b315287bcda30b33c85a59e3:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/40420cc6a3a02791b315287bcda30b33c85a59e3}
     name: '@alveusgg/data'
     version: 0.31.0
     dev: false
