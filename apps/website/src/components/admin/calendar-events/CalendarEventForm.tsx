@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import { useCallback } from "react";
+import { useState, useCallback } from "react";
 
 import type { CalendarEvent } from "@prisma/client";
 import { useRouter } from "next/router";
@@ -10,6 +10,7 @@ import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
+import { frequentLinks } from "@/data/calendar-events";
 
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
@@ -93,6 +94,9 @@ export function CalendarEventForm({
     [action, calendarEvent, router, submitMutation, onCreate],
   );
 
+  // NOTE: We have to use a controlled value for the link so the reset button works
+  const [link, setLink] = useState(calendarEvent?.link || "");
+
   return (
     <form
       className={classes("flex flex-col gap-10", className)}
@@ -134,16 +138,27 @@ export function CalendarEventForm({
         />
 
         <TextField
-          defaultValue={calendarEvent?.link || ""}
           label="Link"
           name="link"
           inputMode="url"
           isRequired
           type="url"
+          list="calendar-event-link-suggestions"
+          showResetButton={true}
           inputClassName="font-mono"
-          placeholder="https://twitch.tv/alveussanctuary"
+          placeholder={frequentLinks[0]?.url}
+          value={link}
+          onChange={(value) => setLink(value)}
         />
       </Fieldset>
+
+      <datalist id="calendar-event-link-suggestions">
+        {frequentLinks.map((link) => (
+          <option key={link.url} value={link.url}>
+            {link.label}
+          </option>
+        ))}
+      </datalist>
 
       <Fieldset legend="Time and date">
         <FieldGroup>
@@ -151,11 +166,12 @@ export function CalendarEventForm({
             label="Start (Central Time)"
             name="startAt"
             defaultValue={utcToInputValueDatetimeLocal(calendarEvent?.startAt)}
+            className="max-w-[calc(20ch)]"
           />
         </FieldGroup>
       </Fieldset>
 
-      <Fieldset legend="">
+      <div className="flex flex-col gap-2">
         <Button type="submit" className={defaultButtonClasses}>
           {action === "create" ? "Create" : "Update"}
         </Button>
@@ -170,7 +186,7 @@ export function CalendarEventForm({
             Delete
           </Button>
         )}
-      </Fieldset>
+      </div>
     </form>
   );
 }
