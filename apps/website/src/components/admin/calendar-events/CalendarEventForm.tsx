@@ -10,7 +10,7 @@ import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
-import { frequentLinks } from "@/data/calendar-events";
+import { frequentLinks, standardCategories } from "@/data/calendar-events";
 
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
@@ -64,6 +64,7 @@ export function CalendarEventForm({
 
       const mutationData: CalendarEventSchema = {
         title: String(formData.get("title")),
+        category: String(formData.get("category")),
         link: link,
         startAt: inputValueDatetimeLocalToUtc(String(formData.get("startAt"))),
       };
@@ -94,7 +95,8 @@ export function CalendarEventForm({
     [action, calendarEvent, router, submitMutation, onCreate],
   );
 
-  // NOTE: We have to use a controlled value for the link so the reset button works
+  // We have to use a controlled value for inputs with a reset button
+  const [category, setCategory] = useState(calendarEvent?.category || "");
   const [link, setLink] = useState(calendarEvent?.link || "");
 
   return (
@@ -130,6 +132,24 @@ export function CalendarEventForm({
           defaultValue={calendarEvent?.title || ""}
           isRequired
         />
+
+        <TextField
+          label="Category"
+          name="category"
+          list="calendar-event-category-suggestions"
+          showResetButton={true}
+          placeholder={standardCategories[0]?.name}
+          value={category}
+          onChange={(value) => setCategory(value)}
+        />
+
+        <datalist id="calendar-event-category-suggestions">
+          {standardCategories.map((category) => (
+            <option key={category.name} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </datalist>
 
         <TextField
           label="Description"

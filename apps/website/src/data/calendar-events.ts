@@ -1,3 +1,16 @@
+type StandardCategory = {
+  name: string;
+};
+
+export const standardCategories: StandardCategory[] = [
+  { name: "Alveus Regular Stream" },
+  { name: "Alveus Special Stream" },
+  { name: "Alveus YouTube Video" },
+  { name: "Maya Regular Stream" },
+  { name: "Maya YouTube Video" },
+  { name: "Collaboration Stream" },
+] as const;
+
 type FrequentLink = {
   label: string;
   url: string;
