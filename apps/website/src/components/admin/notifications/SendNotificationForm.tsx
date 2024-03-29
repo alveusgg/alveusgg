@@ -148,13 +148,14 @@ export function SendNotificationForm() {
           <TextField
             label="Link"
             name="url"
+            inputMode="url"
             type="url"
-            autoComplete="url"
             list="notification-link-suggestions"
             showResetButton={true}
+            pattern="https?://.*"
+            inputClassName="font-mono"
             value={link}
             onChange={(value) => setLink(value)}
-            pattern="https?://.*"
           />
 
           <datalist id="notification-link-suggestions">
