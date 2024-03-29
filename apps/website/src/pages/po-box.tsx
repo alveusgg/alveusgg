@@ -25,7 +25,11 @@ const POBoxPage: NextPage = () => {
           <Heading className="text-6xl">PO Box</Heading>
 
           <p className="my-3 text-xl font-semibold">
-            500 E Whitestone Blvd #2350, Cedar Park, TX 78613
+            Alveus Sanctuary
+            <br />
+            500 E Whitestone Blvd #2350
+            <br />
+            Cedar Park, TX 78613
           </p>
 
           <p>Use our PO Box to send things to Alveus.</p>
