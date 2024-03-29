@@ -15,19 +15,6 @@ const days = [
   "Saturday",
 ];
 
-export const getEventLinkColor = (link: string): string => {
-  const normalized = link.toLowerCase();
-
-  if (normalized.includes("twitch.tv/maya"))
-    return "bg-gray-200 hover:bg-gray-400";
-  if (normalized.includes("twitch.tv/alveussanctuary"))
-    return "bg-yellow-400 hover:bg-yellow-600";
-  if (normalized.includes("youtube.com") || normalized.includes("youtu.be"))
-    return "bg-red-300 hover:bg-red-500";
-
-  return "bg-blue-300 hover:bg-blue-500";
-};
-
 type CalendarTheme = {
   background: string;
   border: string;
