@@ -71,7 +71,7 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 
 1. Install Node.js (see `engines` in `package.json` for the required versions), or use `fnm`/`nvm` to install the correct version of Node.js, and use `corepack enable` to use PNPM.
 2. Install dependencies: `pnpm install --frozen-lockfile`
-3. Run `docker-compose up -d` from within `apps/website` to start a local MySQL database, and an S3 bucket with MinIO.
+3. Run `docker compose up -d` from within `apps/website` to start a local MySQL database, and an S3 bucket with MinIO.
 4. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
    1. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
    2. The Next Auth secret (`NEXTAUTH_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
