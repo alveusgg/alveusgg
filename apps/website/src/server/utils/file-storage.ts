@@ -12,9 +12,13 @@ import { env } from "@/env";
 import { prisma } from "@/server/db/client";
 import { probeImageMeta } from "@/server/utils/probe-image-meta";
 
-function getBucketUrl() {
+export function getBucketUrl() {
   const endpointUrl = new URL(env.FILE_STORAGE_ENDPOINT);
-  return `https://${env.FILE_STORAGE_BUCKET}.${endpointUrl.hostname}/`;
+  if (env.FILE_STORAGE_PATH_STYLE)
+    endpointUrl.pathname = `/${env.FILE_STORAGE_BUCKET}`;
+  else
+    endpointUrl.hostname = `${env.FILE_STORAGE_BUCKET}.${endpointUrl.hostname}`;
+  return endpointUrl.toString();
 }
 
 let __client: S3Client;
@@ -29,7 +33,7 @@ function getS3Client() {
       throw new Error("File storage: FILE_STORAGE_SECRET is not set");
 
     __client = new S3Client({
-      forcePathStyle: false,
+      forcePathStyle: env.FILE_STORAGE_PATH_STYLE,
       endpoint: env.FILE_STORAGE_ENDPOINT,
       region: env.FILE_STORAGE_REGION,
       credentials: {
