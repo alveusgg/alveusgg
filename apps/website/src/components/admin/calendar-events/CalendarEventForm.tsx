@@ -24,6 +24,7 @@ import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
+import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 
 type CalendarEventFormProps = {
   action: "create" | "edit";
@@ -133,23 +134,18 @@ export function CalendarEventForm({
           isRequired
         />
 
-        <TextField
+        <SelectBoxField
           label="Category"
           name="category"
-          list="calendar-event-category-suggestions"
-          showResetButton={true}
-          placeholder={standardCategories[0]?.name}
           value={category}
-          onChange={(value) => setCategory(value)}
-        />
-
-        <datalist id="calendar-event-category-suggestions">
+          onChange={(event) => setCategory(event.target.value)}
+        >
           {standardCategories.map((category) => (
             <option key={category.name} value={category.name}>
               {category.name}
             </option>
           ))}
-        </datalist>
+        </SelectBoxField>
 
         <TextField
           label="Description"
