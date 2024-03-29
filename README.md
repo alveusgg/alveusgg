@@ -18,7 +18,7 @@ For development:
 - PNPM with workspaces
 - Prettier (code formatting)
 - ESLint (code linting)
-- Docker(-Compose) (local MySQL)
+- Docker(-Compose) (local MySQL + S3 \[MinIO])
 
 Website stack (based on [T3 Stack](https://create.t3.gg/)):
 
@@ -71,13 +71,12 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 
 1. Install Node.js (see `engines` in `package.json` for the required versions), or use `fnm`/`nvm` to install the correct version of Node.js, and use `corepack enable` to use PNPM.
 2. Install dependencies: `pnpm install --frozen-lockfile`
-3. Run `docker-compose up -d db` from within `apps/website` to start a local MySQL database.
+3. Run `docker-compose up -d` from within `apps/website` to start a local MySQL database, and an S3 bucket with MinIO.
 4. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
-   1. Fill in the S3 section with your S3-compatible storage info
-   2. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
-   3. The Next Auth secret (`NEXTAUTH_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
-   4. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
-   5. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
+   1. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
+   2. The Next Auth secret (`NEXTAUTH_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
+   3. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
+   4. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
 6. Start the dev server using `pnpm dev` from within `apps/website`
 7. The website should be running at `http://localhost:3000/` (open in browser)

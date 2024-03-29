@@ -6,3 +6,14 @@ services:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: alveusgg_secret
+
+  s3:
+    image: bitnami/minio:latest
+    ports:
+      - 9000:9000
+    environment:
+      MINIO_ROOT_USER: alveusgg_key
+      MINIO_ROOT_PASSWORD: alveusgg_secret
+      MINIO_DEFAULT_BUCKETS: alveusgg
+    volumes:
+      - ./.s3:/bitnami/minio/data
