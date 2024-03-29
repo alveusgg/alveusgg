@@ -1,11 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
 
+import { getStandardCategoryColor } from "@/data/calendar-events";
+
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 
 import Link from "@/components/content/Link";
-import Calendar, { getEventLinkColor } from "@/components/content/Calendar";
+import Calendar from "@/components/content/Calendar";
 
 export function Schedule() {
   const [today, setToday] = useState<Date>();
@@ -38,7 +40,7 @@ export function Schedule() {
           <Link
             key={event.id}
             className={classes(
-              getEventLinkColor(event.link),
+              getStandardCategoryColor(event.category),
               "mb-auto block rounded-sm p-1 leading-none transition-colors",
               event.startAt.getTime() < today.getTime() && "opacity-50",
             )}
