@@ -304,6 +304,7 @@ model CalendarEvent {
   id          String @id @default(cuid())
   title       String
   description String?
+  category    String
   link        String
   startAt     DateTime
 

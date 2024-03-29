@@ -10,7 +10,7 @@ import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
-import { frequentLinks } from "@/data/calendar-events";
+import { frequentLinks, standardCategories } from "@/data/calendar-events";
 
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
@@ -24,6 +24,7 @@ import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
+import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 
 type CalendarEventFormProps = {
   action: "create" | "edit";
@@ -64,6 +65,7 @@ export function CalendarEventForm({
 
       const mutationData: CalendarEventSchema = {
         title: String(formData.get("title")),
+        category: String(formData.get("category")),
         link: link,
         startAt: inputValueDatetimeLocalToUtc(String(formData.get("startAt"))),
       };
@@ -94,7 +96,8 @@ export function CalendarEventForm({
     [action, calendarEvent, router, submitMutation, onCreate],
   );
 
-  // NOTE: We have to use a controlled value for the link so the reset button works
+  // We have to use a controlled value for inputs with a reset button
+  const [category, setCategory] = useState(calendarEvent?.category || "");
   const [link, setLink] = useState(calendarEvent?.link || "");
 
   return (
@@ -130,6 +133,19 @@ export function CalendarEventForm({
           defaultValue={calendarEvent?.title || ""}
           isRequired
         />
+
+        <SelectBoxField
+          label="Category"
+          name="category"
+          value={category}
+          onChange={(event) => setCategory(event.target.value)}
+        >
+          {standardCategories.map((category) => (
+            <option key={category.name} value={category.name}>
+              {category.name}
+            </option>
+          ))}
+        </SelectBoxField>
 
         <TextField
           label="Description"

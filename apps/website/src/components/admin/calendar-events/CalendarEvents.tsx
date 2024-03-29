@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+
+import { getStandardCategoryColor } from "@/data/calendar-events";
+
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
+
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import Calendar, { getEventLinkColor } from "@/components/content/Calendar";
-import { classes } from "@/utils/classes";
+import Calendar from "@/components/content/Calendar";
+
 import { CalendarEventForm } from "./CalendarEventForm";
 
 export function CalendarEvents() {
@@ -41,7 +46,7 @@ export function CalendarEvents() {
           <Link
             key={event.id}
             className={classes(
-              getEventLinkColor(event.link),
+              getStandardCategoryColor(event.category),
               "mb-auto block rounded-sm p-1 leading-none transition-colors",
               event.startAt.getTime() < today.getTime() && "opacity-50",
             )}
