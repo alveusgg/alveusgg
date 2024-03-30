@@ -27,7 +27,7 @@ import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
-import { Button } from "../shared/Button";
+import { Button } from "../shared/form/Button";
 import { useFileUpload } from "../shared/hooks/useFileUpload";
 import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
 import { MessageBox } from "../shared/MessageBox";

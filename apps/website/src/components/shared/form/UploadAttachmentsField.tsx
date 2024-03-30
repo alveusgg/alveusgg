@@ -10,9 +10,9 @@ import {
 } from "react";
 import { fileToBase64 } from "@/utils/files";
 import IconUploadFiles from "@/icons/IconUploadFiles";
-import { Button, defaultButtonClasses } from "../Button";
 import { MessageBox } from "../MessageBox";
 import { useFileDragAndDrop } from "../hooks/useFileDragAndDrop";
+import { Button, defaultButtonClasses } from "./Button";
 
 export type FileReference =
   | InitialFileReference

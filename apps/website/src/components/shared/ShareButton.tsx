@@ -17,7 +17,7 @@ import IconShare from "@/icons/IconShare";
 import IconEnvelope from "@/icons/IconEnvelope";
 import IconClipboard from "@/icons/IconClipboard";
 
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
 import { QRCode } from "@/components/QrCode";
 import {

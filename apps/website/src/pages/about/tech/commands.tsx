@@ -14,8 +14,8 @@ import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -252,14 +252,14 @@ const AboutTechPage: NextPage = () => {
             information and links.
           </p>
 
-          <Link
+          <Button
             href="https://fossabot.com/alveussanctuary/commands"
-            className="text-md mx-auto inline-block flex-shrink-0 rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-            custom
+            dark
             external
+            className="flex-shrink-0"
           >
             Explore Fossabot Commands
-          </Link>
+          </Button>
         </div>
       </Section>
 

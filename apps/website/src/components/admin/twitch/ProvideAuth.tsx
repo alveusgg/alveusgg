@@ -2,7 +2,7 @@ import { signIn } from "next-auth/react";
 
 import { botScope, defaultScope, scopeLabels } from "@/data/twitch";
 import { trpc } from "@/utils/trpc";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 
 function Scopes({ scopeString }: { scopeString: string }) {
   const scopes = scopeString.split(" ");

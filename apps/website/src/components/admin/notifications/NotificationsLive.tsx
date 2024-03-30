@@ -10,7 +10,7 @@ import IconXCircleOutline from "@/icons/IconXCircleOutline";
 
 import { NotificationEntry } from "@/components/notifications/NotificationEntry";
 import DateTime from "@/components/content/DateTime";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 export function NotificationsLive() {

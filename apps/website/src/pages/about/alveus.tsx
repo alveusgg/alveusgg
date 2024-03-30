@@ -7,6 +7,7 @@ import { formatPartialDateString } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import Timeline from "@/components/content/Timeline";
@@ -570,13 +571,9 @@ const AboutAlveusPage: NextPage = () => {
               conservationist with a passion for educating others.
             </p>
 
-            <Link
-              className="mt-8 inline-block rounded-full border-2 border-alveus-tan px-6 py-2 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-              custom
-              href="/about/maya"
-            >
+            <Button href="/about/maya" dark className="mt-8">
               Learn more about Maya
-            </Link>
+            </Button>
           </div>
         </div>
       </Section>
@@ -649,8 +646,9 @@ const AboutAlveusPage: NextPage = () => {
               non-profit organizations, helping donors and funders make informed
               decisions about their support. Check out our{" "}
               <Link
-                external
                 href="https://www.guidestar.org/profile/86-1772907"
+                external
+                dark
               >
                 non-profit profile on Candid
               </Link>

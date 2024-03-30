@@ -9,7 +9,7 @@ import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 
 import type { ShortLinkSchema } from "@/server/db/short-links";
 
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";

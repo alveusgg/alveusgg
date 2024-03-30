@@ -1,6 +1,6 @@
 import { signIn } from "next-auth/react";
 import IconTwitch from "../../icons/IconTwitch";
-import { Button } from "./Button";
+import { Button } from "./form/Button";
 
 type LoginWithTwitchButtonProps = {
   callbackUrl?: string;
