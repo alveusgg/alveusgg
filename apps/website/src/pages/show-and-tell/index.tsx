@@ -15,6 +15,9 @@ import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
 import { getPosts } from "@/server/db/show-and-tell";
 
+import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
+import useIntersectionObserver from "@/hooks/intersection";
+
 import IconLoading from "@/icons/IconLoading";
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
@@ -22,14 +25,12 @@ import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
 import IconPencil from "@/icons/IconPencil";
 
-import { Button, LinkButton } from "@/components/shared/form/Button";
-import { useOnToggleNativeFullscreen } from "@/components/shared/hooks/useOnToggleNativeFullscreen";
-import { useIntersectionObserver } from "@/components/shared/hooks/useIntersectionObserver";
-
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+
+import { Button, LinkButton } from "@/components/shared/form/Button";
 
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import { QrCode } from "@/components/show-and-tell/QrCode";

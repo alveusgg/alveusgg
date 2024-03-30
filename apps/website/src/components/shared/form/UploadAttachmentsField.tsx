@@ -8,10 +8,14 @@ import {
   type ChangeEvent,
   type Key,
 } from "react";
+
 import { fileToBase64 } from "@/utils/files";
+
 import IconUploadFiles from "@/icons/IconUploadFiles";
+
+import useFileDragAndDrop from "@/hooks/files/drop";
+
 import { MessageBox } from "../MessageBox";
-import { useFileDragAndDrop } from "../hooks/useFileDragAndDrop";
 import { Button, defaultButtonClasses } from "./Button";
 
 export type FileReference =

@@ -14,12 +14,12 @@ type CreateFileUpload<
   signature: FileSignature<AllowedFileTypes[number]>,
 ) => Promise<SignedUploadInfo>;
 
-export function useFileUpload<
+const useFileUpload = <
   AllowedFileTypes extends readonly string[] = readonly string[],
 >(
   createFileUpload: CreateFileUpload<AllowedFileTypes>,
   options: { allowedFileTypes?: AllowedFileTypes } = {},
-) {
+) => {
   return async (file: File) => {
     const fileType = file.type as AllowedFileTypes[number];
     if (
@@ -53,4 +53,6 @@ export function useFileUpload<
 
     return false;
   };
-}
+};
+
+export default useFileUpload;

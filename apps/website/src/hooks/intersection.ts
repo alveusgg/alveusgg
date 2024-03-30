@@ -1,9 +1,9 @@
 import { useEffect, useRef } from "react";
 
-export function useIntersectionObserver(
+const useIntersectionObserver = (
   handleIntersection: (entries: IntersectionObserverEntry[]) => void,
   options: IntersectionObserverInit = { threshold: 0.7 },
-) {
+) => {
   const observerRef = useRef<IntersectionObserver | null>(null);
   const handlerRef = useRef(handleIntersection);
   handlerRef.current = handleIntersection;
@@ -22,4 +22,6 @@ export function useIntersectionObserver(
       observerRef.current.observe(el);
     }
   };
-}
+};
+
+export default useIntersectionObserver;

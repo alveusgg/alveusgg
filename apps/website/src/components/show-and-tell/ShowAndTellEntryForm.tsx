@@ -19,6 +19,8 @@ import { formatDateTime } from "@/utils/datetime";
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
+import useFileUpload from "@/hooks/files/upload";
+
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
@@ -28,7 +30,6 @@ import {
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
 import { Button } from "../shared/form/Button";
-import { useFileUpload } from "../shared/hooks/useFileUpload";
 import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
 import { MessageBox } from "../shared/MessageBox";
 import { TextAreaField } from "../shared/form/TextAreaField";

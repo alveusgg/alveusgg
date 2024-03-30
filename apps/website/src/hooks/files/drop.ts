@@ -1,8 +1,8 @@
 import { useState, type DragEvent } from "react";
 
-export function useFileDragAndDrop(
+const useFileDragAndDrop = (
   addFiles: (filesToAdd: FileList | null) => Promise<void>,
-) {
+) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
 
   const handleDrag = (e: DragEvent<HTMLElement>) => {
@@ -49,4 +49,6 @@ export function useFileDragAndDrop(
       onDragStart: handleDragStart,
     },
   };
-}
+};
+
+export default useFileDragAndDrop;
