@@ -5,6 +5,8 @@ import { Menu, Transition } from "@headlessui/react";
 import IconChevronDown from "@/icons/IconChevronDown";
 import { classes } from "@/utils/classes";
 
+import Button from "./Button";
+
 const defaultLink = {
   href: "/live",
   platform: "Twitch",
@@ -22,7 +24,7 @@ const dropdownLinks = [
 ];
 
 const WatchLive = () => (
-  <div className="group/link inline-flex rounded-full border-2 border-white text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green">
+  <Button as="div" dark className="group/link p-0">
     <Link
       className="whitespace-pre-wrap py-2 pl-4"
       href={defaultLink.href}
@@ -67,7 +69,7 @@ const WatchLive = () => (
           >
             <Menu.Items
               as="ul"
-              className="group/items absolute left-0 top-full z-30 -ml-4 mt-1 flex flex-col rounded  bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
+              className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded  bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
             >
               {dropdownLinks.map((link) => (
                 <Menu.Item key={link.href} as="li">
@@ -92,7 +94,7 @@ const WatchLive = () => (
         </>
       )}
     </Menu>
-  </div>
+  </Button>
 );
 
 export default WatchLive;

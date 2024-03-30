@@ -18,7 +18,7 @@ import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";

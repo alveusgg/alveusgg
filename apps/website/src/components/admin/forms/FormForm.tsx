@@ -20,7 +20,7 @@ import {
 
 import { type FormSchema } from "@/server/db/forms";
 
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import Markdown from "@/components/content/Markdown";
 import { TextField } from "@/components/shared/form/TextField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";

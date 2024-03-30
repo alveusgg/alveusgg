@@ -13,6 +13,7 @@ import usePrefersReducedMotion from "@/hooks/motion";
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import WatchLive from "@/components/content/WatchLive";
 import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
@@ -171,12 +172,9 @@ const Home: NextPage = () => {
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                className="inline-block rounded-full border-2 border-white px-4 py-2 text-lg transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-                href="/ambassadors"
-              >
+              <Button href="/ambassadors" dark>
                 Meet the Ambassadors
-              </Link>
+              </Button>
               <WatchLive />
             </div>
           </div>
@@ -247,12 +245,9 @@ const Home: NextPage = () => {
               </p>
               <Lightbox>
                 {({ Trigger }) => (
-                  <Trigger
-                    videoId="jXTqWIc--jo"
-                    className="inline-block rounded-full border-2 border-alveus-tan px-6 py-4 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                  >
+                  <Button as={Trigger} dark videoId="jXTqWIc--jo">
                     Watch the Video
-                  </Trigger>
+                  </Button>
                 )}
               </Lightbox>
             </div>
@@ -296,12 +291,7 @@ const Home: NextPage = () => {
               audiences to engage in conservation efforts while providing
               high-quality animal care to these ambassadors.
             </p>
-            <Link
-              className="inline-block rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-              href="/donate"
-            >
-              Donate!
-            </Link>
+            <Button href="/donate">Donate Now</Button>
           </div>
         </div>
       </Section>
@@ -333,14 +323,9 @@ const Home: NextPage = () => {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <Link
-                  className="inline-block rounded-full border-2 border-alveus-tan px-4 py-2 text-lg transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-                  href="/plushies"
-                  target="_blank"
-                  rel="noreferrer"
-                >
+                <Button href="/plushies" dark>
                   Buy Plushies
-                </Link>
+                </Button>
               </div>
             </div>
           </div>

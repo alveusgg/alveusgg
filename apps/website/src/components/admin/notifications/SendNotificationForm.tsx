@@ -18,7 +18,7 @@ import IconLoading from "@/icons/IconLoading";
 
 import { TextField } from "@/components/shared/form/TextField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import {
   UploadAttachmentsField,

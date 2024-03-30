@@ -15,8 +15,8 @@ import IconUploadFiles from "@/icons/IconUploadFiles";
 
 import useFileDragAndDrop from "@/hooks/files/drop";
 
-import { Button, defaultButtonClasses } from "../Button";
 import { MessageBox } from "../MessageBox";
+import { Button, defaultButtonClasses } from "./Button";
 
 export type FileReference =
   | InitialFileReference

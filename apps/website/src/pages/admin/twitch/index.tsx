@@ -4,7 +4,7 @@ import { permissions } from "@/data/permissions";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
-import { LinkButton } from "@/components/shared/Button";
+import { LinkButton } from "@/components/shared/form/Button";
 import Meta from "@/components/content/Meta";
 
 import { Headline } from "@/components/admin/Headline";

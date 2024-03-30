@@ -29,7 +29,7 @@ import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
-import { Button } from "../shared/Button";
+import { Button } from "../shared/form/Button";
 import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
 import { MessageBox } from "../shared/MessageBox";
 import { TextAreaField } from "../shared/form/TextAreaField";

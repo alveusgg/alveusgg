@@ -1,21 +1,21 @@
 import { type NextPage } from "next";
-import Link from "next/link";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import IconChevronRight from "@/icons/IconChevronRight";
+import Button from "@/components/content/Button";
 
 const reports = [
-  {
-    key: "2022",
-    title: "2022 Annual Report",
-    link: "/about/annual-reports/2022",
-  },
   {
     key: "2021",
     title: "2021 Annual Report",
     link: "/about/annual-reports/2021",
+  },
+  {
+    key: "2022",
+    title: "2022 Annual Report",
+    link: "/about/annual-reports/2022",
   },
 ];
 
@@ -40,21 +40,24 @@ const AnnualReportsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        <div className="mx-auto flex max-w-xl flex-col gap-8 p-4">
+        <div className="mx-auto flex flex-wrap justify-evenly gap-8 p-4">
           {reports.map(({ key, title, link }) => (
-            <Link
+            <Button
               key={key}
               href={link}
-              className="group flex items-center justify-between gap-2 rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-102 hover:shadow-2xl"
+              className="group inline-flex items-center sm:flex-shrink-0"
             >
-              <Heading level={2} className="my-0">
+              <Heading
+                level={2}
+                className="my-0 font-sans text-2xl font-semibold"
+              >
                 {title}
               </Heading>
               <IconChevronRight
                 size={24}
-                className="text-alveus-green transition-colors group-hover:text-alveus-tan"
+                className="-mr-1 ml-2 mt-1 flex-shrink-0 transition-all group-hover:-mr-2 group-hover:ml-3"
               />
-            </Link>
+            </Button>
           ))}
         </div>
       </Section>

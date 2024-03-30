@@ -25,12 +25,12 @@ import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
 import IconPencil from "@/icons/IconPencil";
 
-import { Button, LinkButton } from "@/components/shared/Button";
-
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+
+import { Button, LinkButton } from "@/components/shared/form/Button";
 
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import { QrCode } from "@/components/show-and-tell/QrCode";

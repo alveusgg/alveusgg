@@ -14,7 +14,7 @@ import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import { TwitchEmbed } from "@/components/content/TwitchEmbed";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { BingoCard, useBingoLocalState } from "@/components/bingo/BingoCard";

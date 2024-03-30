@@ -16,7 +16,7 @@ import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import Meta from "@/components/content/Meta";
 import DateTime from "@/components/content/DateTime";
 import IconTrash from "@/icons/IconTrash";
