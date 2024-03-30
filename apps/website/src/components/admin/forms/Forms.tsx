@@ -15,7 +15,7 @@ import {
   LinkButton,
   dangerButtonClasses,
   secondaryButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 
 import DateTime from "@/components/content/DateTime";

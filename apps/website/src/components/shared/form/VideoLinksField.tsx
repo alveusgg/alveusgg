@@ -2,9 +2,9 @@ import { useCallback, useState } from "react";
 import { parseVideoUrl } from "@/utils/video-urls";
 import IconTrash from "@/icons/IconTrash";
 import IconPlus from "@/icons/IconPlus";
-import { Button, defaultButtonClasses, disabledButtonClasses } from "../Button";
 import { MessageBox } from "../MessageBox";
 import { VideoPlatformIcon } from "../VideoPlatformIcon";
+import { Button, defaultButtonClasses, disabledButtonClasses } from "./Button";
 import type { TextAreaFieldProps } from "./TextAreaField";
 import { TextAreaField } from "./TextAreaField";
 

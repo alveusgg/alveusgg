@@ -11,7 +11,7 @@ import { userRoles } from "@/data/user-roles";
 import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { MessageBox } from "@/components/shared/MessageBox";

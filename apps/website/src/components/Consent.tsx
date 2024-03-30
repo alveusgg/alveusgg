@@ -12,6 +12,7 @@ import {
 import useCrawler from "@/hooks/crawler";
 
 import Link from "@/components/content/Link";
+import Button from "@/components/content/Button";
 
 type ConsentProps = {
   item: string;
@@ -81,13 +82,9 @@ const Consent = ({
               </p>
 
               <div className="flex flex-wrap items-center justify-between gap-4">
-                <button
-                  type="button"
-                  onClick={clicked}
-                  className="rounded-full border-2 border-alveus-green px-4 py-2 transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-                >
+                <Button as="button" type="button" onClick={clicked}>
                   Consent to loading {consentData[key].name}
-                </button>
+                </Button>
 
                 <Link href={consentData[key].privacy} external>
                   Privacy Policy

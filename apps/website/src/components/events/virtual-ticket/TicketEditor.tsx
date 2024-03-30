@@ -23,7 +23,7 @@ import {
   mapStickerIdToPath,
 } from "@/utils/virtual-tickets";
 
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import { StickerSelector } from "./StickerSelector";
 
 type StickerDataAction =

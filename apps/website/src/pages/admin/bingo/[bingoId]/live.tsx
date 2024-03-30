@@ -26,7 +26,7 @@ import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
