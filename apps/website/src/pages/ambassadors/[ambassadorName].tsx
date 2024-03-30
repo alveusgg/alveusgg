@@ -249,16 +249,14 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <dl className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2-auto md:grid-cols-1 lg:grid-cols-2-auto">
               {stats.map(({ title, value }, idx) => (
                 <Fragment key={title}>
                   {idx !== 0 && (
-                    <div className="col-span-full my-2 h-px bg-alveus-green opacity-10" />
+                    <div className="col-span-full h-px bg-alveus-green opacity-10" />
                   )}
-                  <dt className="my-2 self-center text-2xl font-bold">
-                    {title}
-                  </dt>
-                  <dd className="mx-2 my-2 self-center text-xl">{value}</dd>
+                  <dt className="self-center text-2xl font-bold">{title}</dt>
+                  <dd className="self-center text-balance text-xl">{value}</dd>
                 </Fragment>
               ))}
             </dl>
