@@ -1,5 +1,5 @@
+import useIsActivePath from "@/hooks/active";
 import Button from "@/components/content/Button";
-import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
 
 export function ShowAndTellNavigation() {
   return (

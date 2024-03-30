@@ -7,8 +7,9 @@ import Link, { type LinkProps } from "next/link";
 
 import { classes } from "@/utils/classes";
 
+import useIsActivePath from "@/hooks/active";
+
 import { type DefaultPageLayoutProps } from "@/components/DefaultPageLayout";
-import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
 
 export type AdminMenuItem = {
   label: string;
