@@ -150,7 +150,7 @@ export const ShowAndTellEntry = forwardRef<
         isPresentationView ? "" : "text-center"
       }`}
     >
-      {entry.seenOnStreamAt && <SeenOnStreamBadge />}
+      {entry.seenOnStreamAt && <SeenOnStreamBadge dark={isPresentationView} />}
 
       <h2
         className={`mb-3 font-serif ${
