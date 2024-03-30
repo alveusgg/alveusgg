@@ -3,7 +3,10 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { Button, secondaryButtonClasses } from "@/components/shared/Button";
+import {
+  Button,
+  secondaryButtonClasses,
+} from "@/components/shared/form/Button";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";

@@ -11,7 +11,7 @@ import {
   Button,
   dangerButtonClasses,
   LinkButton,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";

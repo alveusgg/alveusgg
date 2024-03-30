@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import type { Form } from "@prisma/client";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 import Markdown from "@/components/content/Markdown";

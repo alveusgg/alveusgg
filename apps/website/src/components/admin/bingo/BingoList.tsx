@@ -11,7 +11,7 @@ import {
   LinkButton,
   dangerButtonClasses,
   secondaryButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";

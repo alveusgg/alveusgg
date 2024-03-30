@@ -15,7 +15,7 @@ import {
   LinkButton,
   dangerButtonClasses,
   secondaryButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";

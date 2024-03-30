@@ -22,7 +22,7 @@ import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
 import IconPencil from "@/icons/IconPencil";
 
-import { Button, LinkButton } from "@/components/shared/Button";
+import { Button, LinkButton } from "@/components/shared/form/Button";
 import { useOnToggleNativeFullscreen } from "@/components/shared/hooks/useOnToggleNativeFullscreen";
 import { useIntersectionObserver } from "@/components/shared/hooks/useIntersectionObserver";
 

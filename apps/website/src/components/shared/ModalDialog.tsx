@@ -1,6 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import type { ReactNode } from "react";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 
 export type ModalDialogProps = {
   title: string;
