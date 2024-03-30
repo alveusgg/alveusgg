@@ -281,21 +281,20 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   <div>
                     <Heading
                       level={2}
-                      className="transition-colors group-hover:text-alveus-green-800"
+                      className="text-balance transition-colors group-hover:text-alveus-green-800"
                     >
-                      Animal Quest #{aq.episode}:{" "}
-                      <span className="min-[320px]:whitespace-nowrap">
-                        {aq.edition}
-                      </span>
+                      <span className="inline-block">Animal Quest</span>{" "}
+                      <span className="inline-block">#{aq.episode}:</span>{" "}
+                      <span className="inline-block">{aq.edition}</span>
                     </Heading>
-                    <p className="text-xl text-alveus-green-800">
-                      Learn more{" "}
-                      {aq.relation === "featured" &&
-                        `about ${ambassador.name} `}
-                      on{" "}
-                      <span className="min-[320px]:whitespace-nowrap">
-                        Animal Quest
-                      </span>
+                    <p className="text-balance text-xl text-alveus-green-800">
+                      <span className="inline-block">
+                        Learn more{" "}
+                        {aq.relation === "featured" &&
+                          `about ${ambassador.name} `}
+                        on
+                      </span>{" "}
+                      <span className="inline-block">Animal Quest</span>
                     </p>
                   </div>
 
