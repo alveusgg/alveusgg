@@ -8,14 +8,14 @@ import Button from "@/components/content/Button";
 
 const reports = [
   {
-    key: "2022",
-    title: "2022 Annual Report",
-    link: "/about/annual-reports/2022",
-  },
-  {
     key: "2021",
     title: "2021 Annual Report",
     link: "/about/annual-reports/2021",
+  },
+  {
+    key: "2022",
+    title: "2022 Annual Report",
+    link: "/about/annual-reports/2022",
   },
 ];
 
@@ -40,12 +40,12 @@ const AnnualReportsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        <div className="mx-auto flex justify-evenly gap-8 p-4">
+        <div className="mx-auto flex flex-wrap justify-evenly gap-8 p-4">
           {reports.map(({ key, title, link }) => (
             <Button
               key={key}
               href={link}
-              className="group inline-flex items-center"
+              className="group inline-flex items-center sm:flex-shrink-0"
             >
               <Heading
                 level={2}
@@ -55,7 +55,7 @@ const AnnualReportsPage: NextPage = () => {
               </Heading>
               <IconChevronRight
                 size={24}
-                className="-mr-1 ml-2 mt-1 transition-all group-hover:-mr-2 group-hover:ml-3"
+                className="-mr-1 ml-2 mt-1 flex-shrink-0 transition-all group-hover:-mr-2 group-hover:ml-3"
               />
             </Button>
           ))}

@@ -10,7 +10,7 @@ const CustomLink = ({
 
 const getClassNames = (className?: string, dark = false, filled = false) =>
   classes(
-    "rounded-full border-2 transition-colors",
+    "rounded-3xl border-2 transition-colors",
     dark
       ? filled
         ? "hover:text-alveus-tan hover:border-alveus-tan hover:bg-transparent border-alveus-tan bg-alveus-tan text-alveus-green"
