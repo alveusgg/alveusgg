@@ -1,9 +1,9 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
 
 import report2021Image from "@/assets/reports/2021.svg";
@@ -24,12 +24,9 @@ const AboutAnnualReport2021Page: NextPage = () => {
         containerClassName="flex flex-wrap gap-4 justify-between items-end"
       >
         <Heading>2021 Annual Report</Heading>
-        <Link
-          href="/about/annual-reports"
-          className="text-md rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-        >
+        <Button href="/about/annual-reports" dark>
           Explore other reports
-        </Link>
+        </Button>
       </Section>
 
       {/* Grow the last section to cover the page */}

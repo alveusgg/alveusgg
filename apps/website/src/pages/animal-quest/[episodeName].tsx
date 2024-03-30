@@ -17,6 +17,7 @@ import { env } from "@/env";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Link from "@/components/content/Link";
 import JsonLD from "@/components/content/JsonLD";
@@ -398,13 +399,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 </div>
               </div>
 
-              <Link
-                href="/animal-quest"
-                className="text-md mt-8 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-                custom
-              >
+              <Button href="/animal-quest" className="mt-8" dark>
                 Discover more episodes
-              </Link>
+              </Button>
             </div>
 
             {/* Move the video to the left/top of the flex container with order-first */}
@@ -471,13 +468,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             episodes of Animal Quest.
           </p>
 
-          <Link
-            href="/animal-quest"
-            className="text-md inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-            custom
-          >
+          <Button href="/animal-quest" dark>
             Discover more episodes
-          </Link>
+          </Button>
         </div>
       </Section>
 
