@@ -18,7 +18,7 @@ For development:
 - PNPM with workspaces
 - Prettier (code formatting)
 - ESLint (code linting)
-- Docker(-Compose) (local MySQL + S3 \[MinIO])
+- Docker (Compose) (local MySQL + S3 \[MinIO])
 
 Website stack (based on [T3 Stack](https://create.t3.gg/)):
 
@@ -53,19 +53,17 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 
 1. If you find a bug - you can fill out a bug [report](https://github.com/alveusgg/alveusgg/issues/new/choose)
 2. If you have an idea that would make Alveus better - please fill out an idea [issue](https://github.com/alveusgg/alveusgg/issues/new/choose)
-3. If you have development experience, take a look at our issues labeled [good first issue](https://github.com/alveusgg/alveusgg/pulls?q=is%3Aopen+is%3Apr+label%3A%22good+first+issue%22), read our [contributing guide](https://github.com/alveusgg/alveusgg/blob/main/CONTRIBUTING.md) and agree to our [code of conduct](https://github.com/alveusgg/.github/blob/main/CODE_OF_CONDUCT.md) before you get started.
+3. If you have development experience, take a look at our issues labeled [good first issue](https://github.com/alveusgg/alveusgg/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22), read our [contributing guide](https://github.com/alveusgg/alveusgg/blob/main/CONTRIBUTING.md) and agree to our [code of conduct](https://github.com/alveusgg/.github/blob/main/CODE_OF_CONDUCT.md) before you get started.
 
 ## Development setup
 
 > [!NOTE]
-> If you only want to work on the front end, you may skip the prerequisites and skip configuring a database or file storage (steps 3, 4.i, 4.ii and 5). But you may encounter some errors when running the website without a database or file storage.
+> If you only want to work on the front end, you may skip the prerequisite and skip setting up a database or file storage (steps 3 and 4.iv).
+> But you may encounter some errors when running the website without a database or file storage.
 
-### Prerequisites
+### Prerequisite
 
-1. Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
-2. Set up some S3-compatible storage for file uploads:
-   - locally (e.g. [Minio](https://min.io/) or [Localstack](https://localstack.cloud/))
-   - online (e.g. [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
+Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
 
 ### Local development
 
@@ -104,16 +102,19 @@ The stack should work on any Node.js server or Next.js capable hosting provider 
 but has only been tested on Vercel (and PlanetScale) for now.
 
 1. Create a twitch application (see [Development setup](#development-setup) above)
-2. Set up a database (see [Development setup](#development-setup) above)
-3. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see [Development setup](#development-setup) above)
-4. Push the database schema to the new database using `pnpm prisma db push`.
-5. Get your own domain (optional)
-6. Create a Vercel account
-7. Create a new Vercel project with these settings:
+2. Create a [PlanetScale](https://planetscale.com/) account or provide your own MySQL server, that should give you two DSN for the main and shadow database (something like `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg?sslaccept=strict` and `mysql://user:pass@us-east.connect.psdb.cloud/alveusgg/shadow?sslaccept=strict`)
+3. Set up some S3-compatible storage for file uploads (e.g. [DigitalOcean Spaces](https://www.digitalocean.com/products/spaces/), [Backblaze R2](https://www.backblaze.com/b2/cloud-storage.html) or [AWS S3](https://aws.amazon.com/s3/))
+4. Go through the `apps/website/.env.example` and create your own `apps/website/.env.production` (see [Development setup](#development-setup) above) and also:
+   1. Fill the Prisma section with the database info (DSN)
+   2. Fill in the S3 section with your S3-compatible storage info
+5. Push the database schema to the new database using `pnpm prisma db push`.
+6. Get your own domain (optional)
+7. Create a Vercel account
+8. Create a new Vercel project with these settings:
    - _General_:
      - _Framework Preset_: `Next.js`, leave the other build/dev settings on the default option
      - _Root directory_: `apps/website`
      - _Node.js Version_: See `engines` in `package.json` for the required version
    - _Domains_: add your domains
    - _Git_: connect your Git repo
-   - _Environment Variables_: Copy and paste your `apps/website/.env.production` into the first key field (yes you can simply copy-paste everything at once)
+   - _Environment Variables_: Copy your `apps/website/.env.production` here
