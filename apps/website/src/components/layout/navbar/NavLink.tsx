@@ -9,7 +9,7 @@ import Link from "next/link";
 
 import { classes } from "@/utils/classes";
 
-import { useIsActivePath } from "@/components/shared/hooks/useIsActivePath";
+import useIsActivePath from "@/hooks/active";
 
 type NavLinkProps = Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,

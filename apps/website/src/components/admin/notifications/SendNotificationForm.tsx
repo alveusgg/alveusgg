@@ -12,6 +12,8 @@ import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 
+import useFileUpload from "@/hooks/files/upload";
+
 import IconLoading from "@/icons/IconLoading";
 
 import { TextField } from "@/components/shared/form/TextField";
@@ -22,7 +24,6 @@ import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "@/components/shared/form/UploadAttachmentsField";
-import { useFileUpload } from "@/components/shared/hooks/useFileUpload";
 import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
