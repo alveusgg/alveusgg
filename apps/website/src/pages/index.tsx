@@ -224,7 +224,7 @@ const Home: NextPage = () => {
 
         <Section dark>
           <div className="flex flex-wrap items-center">
-            <div className="basis-full md:basis-1/2 md:px-4">
+            <div className="basis-full lg:basis-1/2 lg:px-4">
               <Heading level={2}>What is Alveus?</Heading>
               <p className="my-2 font-serif text-lg italic">
                 Founded by Maya Higa
@@ -251,8 +251,8 @@ const Home: NextPage = () => {
               </Lightbox>
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
-              <Maya className="mr-auto h-auto w-full max-w-lg" />
+            <div className="basis-full pt-8 lg:basis-1/2 lg:pl-8 lg:pt-0">
+              <Maya className="mx-auto h-auto w-full max-w-lg lg:ml-0" />
             </div>
           </div>
         </Section>

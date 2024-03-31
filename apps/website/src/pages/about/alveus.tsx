@@ -554,7 +554,7 @@ const AboutAlveusPage: NextPage = () => {
       <Section dark>
         <div className="flex flex-wrap-reverse items-center">
           <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
-            <Maya className="ml-auto h-auto w-full max-w-lg" />
+            <Maya className="mx-auto h-auto w-full max-w-lg lg:mr-0" />
           </div>
 
           <div className="basis-full md:basis-1/2 md:px-4">
