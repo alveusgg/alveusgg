@@ -20,13 +20,12 @@ import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
 import PlushieCarousel from "@/components/content/PlushieCarousel";
+import Maya from "@/components/content/Maya";
 import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
-
-import mayaImage from "@/assets/maya.png";
 
 import sirenHeroImage from "@/assets/hero/siren.png";
 import mileyHeroImage from "@/assets/hero/miley.png";
@@ -253,11 +252,7 @@ const Home: NextPage = () => {
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
-              <Image
-                src={mayaImage}
-                alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-                className="mr-auto h-auto w-full max-w-lg"
-              />
+              <Maya className="mr-auto h-auto w-full max-w-lg" />
             </div>
           </div>
         </Section>

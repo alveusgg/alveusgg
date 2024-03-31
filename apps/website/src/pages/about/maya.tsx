@@ -5,9 +5,9 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Timeline from "@/components/content/Timeline";
+import Maya from "@/components/content/Maya";
 import IconTwitch from "@/icons/IconTwitch";
 
-import mayaImage from "@/assets/maya.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -151,11 +151,7 @@ const AboutMayaPage: NextPage = () => {
         <Section>
           <div className="flex flex-wrap-reverse items-center">
             <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
-              <Image
-                src={mayaImage}
-                alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-                className="ml-auto h-auto w-full max-w-lg"
-              />
+              <Maya className="ml-auto h-auto w-full max-w-lg" />
             </div>
 
             <div className="basis-full md:basis-1/2 md:px-4">
