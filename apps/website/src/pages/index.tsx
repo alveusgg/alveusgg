@@ -5,9 +5,7 @@ import { useEffect, useState } from "react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
-import animalQuest, {
-  type AnimalQuestWithEpisode,
-} from "@alveusgg/data/src/animal-quest";
+import animalQuestEpisodes from "@alveusgg/data/src/animal-quest";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
@@ -102,15 +100,9 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
     };
   }, {});
 
-// TODO: alveusgg/data should just export with the episode number
-const latestAnimalQuest = animalQuest
-  .map((episode, idx) => ({
-    ...episode,
-    episode: idx + 1,
-  }))
-  .sort(
-    (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
-  )[0] as AnimalQuestWithEpisode;
+const latestAnimalQuest = animalQuestEpisodes.toSorted(
+  (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
+)[0];
 
 const help = {
   donate: {
@@ -332,23 +324,25 @@ const Home: NextPage = () => {
             </Button>
           </div>
 
-          <div className="basis-full lg:basis-2/3 lg:px-16 xl:basis-1/2">
-            <Heading
-              level={3}
-              className="my-1 font-sans text-lg font-normal uppercase text-alveus-green-100"
-            >
-              Latest Episode
-            </Heading>
+          {latestAnimalQuest && (
+            <div className="basis-full lg:basis-2/3 lg:px-16 xl:basis-1/2">
+              <Heading
+                level={3}
+                className="my-1 font-sans text-lg font-normal uppercase text-alveus-green-100"
+              >
+                Latest Episode
+              </Heading>
 
-            <AnimalQuest
-              episode={latestAnimalQuest}
-              relation="featured"
-              ambassador={
-                ambassadors[latestAnimalQuest.ambassadors.featured[0]]
-              }
-              heading={-1}
-            />
-          </div>
+              <AnimalQuest
+                episode={latestAnimalQuest}
+                relation="featured"
+                ambassador={
+                  ambassadors[latestAnimalQuest.ambassadors.featured[0]]
+                }
+                heading={-1}
+              />
+            </div>
+          )}
         </div>
       </Section>
 
