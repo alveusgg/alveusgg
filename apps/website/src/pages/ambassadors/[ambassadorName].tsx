@@ -21,21 +21,15 @@ import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
 import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
 
-import animalQuestImage from "@/assets/animal-quest/full.png";
-
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
-import IconYouTube from "@/icons/IconYouTube";
+import AnimalQuest from "@/components/content/AnimalQuest";
 
-import {
-  camelToKebab,
-  kebabToCamel,
-  sentenceToKebab,
-} from "@/utils/string-case";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
@@ -263,44 +257,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
             {animalQuest &&
               animalQuest.map((aq) => (
-                <Link
+                <AnimalQuest
                   key={aq.episode}
-                  href={`/animal-quest/${sentenceToKebab(aq.edition)}`}
-                  className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
-                  custom
-                >
-                  <Image
-                    src={animalQuestImage}
-                    alt=""
-                    width={688}
-                    className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
-                  />
-
-                  <div>
-                    <Heading
-                      level={2}
-                      className="text-balance transition-colors group-hover:text-alveus-green-800"
-                    >
-                      <span className="inline-block">Animal Quest</span>{" "}
-                      <span className="inline-block">#{aq.episode}:</span>{" "}
-                      <span className="inline-block">{aq.edition}</span>
-                    </Heading>
-                    <p className="text-balance text-xl text-alveus-green-800">
-                      <span className="inline-block">
-                        Learn more{" "}
-                        {aq.relation === "featured" &&
-                          `about ${ambassador.name} `}
-                        on
-                      </span>{" "}
-                      <span className="inline-block">Animal Quest</span>
-                    </p>
-                  </div>
-
-                  <IconYouTube
-                    size={48}
-                    className="shrink-0 transition-colors group-hover:text-alveus-green-600"
-                  />
-                </Link>
+                  episode={aq}
+                  relation={aq.relation}
+                  ambassador={ambassador}
+                  className="my-6"
+                />
               ))}
 
             <div className="pswp-gallery my-6" id={photoswipe}>
