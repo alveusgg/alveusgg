@@ -43,8 +43,10 @@ const WatchLive = () => (
 
               <span
                 className={classes(
-                  "absolute inset-x-0 bottom-0 block h-0.5 bg-white transition-all group-hover/link:bg-alveus-green",
-                  open ? "max-w-full" : "max-w-0 group-hover/button:max-w-full",
+                  "absolute inset-x-0 bottom-0 block h-0.5 transition-all",
+                  open
+                    ? "max-w-full bg-alveus-tan group-hover/link:bg-alveus-green"
+                    : "max-w-0 bg-alveus-green group-hover/button:max-w-full",
                 )}
               />
             </span>
