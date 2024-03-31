@@ -147,6 +147,14 @@ const config = {
       spacing: {
         22: "5.5rem",
       },
+      gridTemplateColumns: {
+        ...Object.fromEntries(
+          Array.from({ length: 12 }, (_, i) => [
+            `${i + 1}-auto`,
+            `repeat(${i + 1}, auto)`,
+          ]),
+        ),
+      },
     },
   },
   plugins: [
