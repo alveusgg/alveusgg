@@ -178,7 +178,7 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzgetinfo: {
-    description: "Get current coordinates",
+    description: "Get current pan/tilt/zoom auto-focus state and focus",
     category: "PTZ",
     args: [
       {
