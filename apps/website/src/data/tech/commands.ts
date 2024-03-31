@@ -135,7 +135,7 @@ const commands: Record<string, Command> = {
   },
   ptzseta: {
     description:
-      "Move to coordinates, Control auto-focus (if supported), Change absolute focus (if supported)",
+      "Change absolute pan/tilt/zoom, control auto-focus (if supported), change absolute focus (if supported)",
     category: "PTZ",
     args: [
       {
