@@ -133,6 +133,62 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  ptzseta: {
+    description:
+      "Change absolute pan/tilt/zoom, control auto-focus (if supported), change absolute focus (if supported)",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "pan",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "tilt",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "zoom",
+        required: true,
+        variadic: false,
+      },
+      {
+        name: "mode",
+        type: "choice",
+        required: false,
+        variadic: false,
+        choices: ["on", "off"],
+      },
+      {
+        type: "number",
+        name: "focus",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
+  ptzgetinfo: {
+    description: "Get current pan/tilt/zoom, auto-focus state and focus",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
   ptzmove: {
     description: "Move in a direction",
     category: "PTZ",
