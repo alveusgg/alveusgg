@@ -240,7 +240,9 @@ const Home: NextPage = () => {
         <Section dark>
           <div className="flex flex-wrap items-center">
             <div className="basis-full md:basis-1/2 md:px-4">
-              <Heading level={2}>What is Alveus?</Heading>
+              <Heading level={2} id="alveus" link>
+                What is Alveus?
+              </Heading>
               <p className="my-2 font-serif text-lg italic">
                 Founded by Maya Higa
               </p>
@@ -281,7 +283,9 @@ const Home: NextPage = () => {
         <div className="flex flex-wrap items-center gap-y-8">
           <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2 xl:max-w-2/3 xl:basis-2/3">
             <div className="flex flex-wrap items-center justify-between">
-              <Heading level={2}>Ambassadors:</Heading>
+              <Heading level={2} id="ambassadors" link>
+                Ambassadors:
+              </Heading>
               <Link
                 className="group relative inline-block text-lg uppercase text-alveus-green-900 transition-colors hover:text-alveus-green"
                 href="/ambassadors"
@@ -391,7 +395,7 @@ const Home: NextPage = () => {
         />
 
         <Section dark className="flex-grow bg-alveus-green-900">
-          <Heading level={2} className="text-center">
+          <Heading level={2} id="help" link className="text-center">
             How to Help
           </Heading>
 
