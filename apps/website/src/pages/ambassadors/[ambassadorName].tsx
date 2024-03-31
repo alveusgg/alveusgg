@@ -249,16 +249,14 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <dl className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2-auto md:grid-cols-1 lg:grid-cols-2-auto">
               {stats.map(({ title, value }, idx) => (
                 <Fragment key={title}>
                   {idx !== 0 && (
-                    <div className="col-span-full my-2 h-px bg-alveus-green opacity-10" />
+                    <div className="col-span-full h-px bg-alveus-green opacity-10" />
                   )}
-                  <dt className="my-2 self-center text-2xl font-bold">
-                    {title}
-                  </dt>
-                  <dd className="mx-2 my-2 self-center text-xl">{value}</dd>
+                  <dt className="self-center text-2xl font-bold">{title}</dt>
+                  <dd className="self-center text-balance text-xl">{value}</dd>
                 </Fragment>
               ))}
             </dl>
@@ -281,21 +279,20 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   <div>
                     <Heading
                       level={2}
-                      className="transition-colors group-hover:text-alveus-green-800"
+                      className="text-balance transition-colors group-hover:text-alveus-green-800"
                     >
-                      Animal Quest #{aq.episode}:{" "}
-                      <span className="min-[320px]:whitespace-nowrap">
-                        {aq.edition}
-                      </span>
+                      <span className="inline-block">Animal Quest</span>{" "}
+                      <span className="inline-block">#{aq.episode}:</span>{" "}
+                      <span className="inline-block">{aq.edition}</span>
                     </Heading>
-                    <p className="text-xl text-alveus-green-800">
-                      Learn more{" "}
-                      {aq.relation === "featured" &&
-                        `about ${ambassador.name} `}
-                      on{" "}
-                      <span className="min-[320px]:whitespace-nowrap">
-                        Animal Quest
-                      </span>
+                    <p className="text-balance text-xl text-alveus-green-800">
+                      <span className="inline-block">
+                        Learn more{" "}
+                        {aq.relation === "featured" &&
+                          `about ${ambassador.name} `}
+                        on
+                      </span>{" "}
+                      <span className="inline-block">Animal Quest</span>
                     </p>
                   </div>
 
