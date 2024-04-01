@@ -1,5 +1,6 @@
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
+import { getSession } from "next-auth/react";
 import { permissions } from "@/data/permissions";
 
 import { getAdminSSP } from "@/server/utils/admin";
@@ -14,11 +15,12 @@ import { ProvideAuth } from "@/components/admin/twitch/ProvideAuth";
 import { ChannelConfig } from "@/components/admin/twitch/ChannelConfig";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageTwitchApi);
   if (!adminProps) {
     return {
       redirect: {
-        destination: "/auth/signin",
+        destination: session?.user?.id ? "unauthorized" : "/auth/signin",
         permanent: false,
       },
     };

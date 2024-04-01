@@ -1,4 +1,5 @@
 import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
+import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { trpc } from "@/utils/trpc";
@@ -24,11 +25,12 @@ import IconMinus from "@/icons/IconMinus";
 import IconCheckCircle from "@/icons/IconCheckCircle";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
   if (!adminProps) {
     return {
       redirect: {
-        destination: "/auth/signin",
+        destination: session?.user?.id ? "/admin/unauthorized" : "/auth/signin",
         permanent: false,
       },
     };

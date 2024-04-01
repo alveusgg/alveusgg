@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
+import { getSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
@@ -13,11 +14,12 @@ import Meta from "@/components/content/Meta";
 import IconLoading from "@/icons/IconLoading";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageForms);
   if (!adminProps) {
     return {
       redirect: {
-        destination: "/auth/signin",
+        destination: session?.user?.id ? "/admin/unauthorized" : "/auth/signin",
         permanent: false,
       },
     };
