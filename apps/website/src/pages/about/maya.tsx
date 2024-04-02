@@ -5,9 +5,9 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Timeline from "@/components/content/Timeline";
+import Maya from "@/components/content/Maya";
 import IconTwitch from "@/icons/IconTwitch";
 
-import mayaImage from "@/assets/maya.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -150,15 +150,11 @@ const AboutMayaPage: NextPage = () => {
 
         <Section>
           <div className="flex flex-wrap-reverse items-center">
-            <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
-              <Image
-                src={mayaImage}
-                alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-                className="ml-auto h-auto w-full max-w-lg"
-              />
+            <div className="basis-full pt-8 lg:basis-1/2 lg:pr-8 lg:pt-0">
+              <Maya className="mx-auto h-auto w-full max-w-lg lg:mr-0" />
             </div>
 
-            <div className="basis-full md:basis-1/2 md:px-4">
+            <div className="basis-full lg:basis-1/2 lg:px-4">
               <p className="my-2 text-center font-serif text-4xl font-bold text-alveus-green">
                 <span>&ldquo;</span>I love the natural world with my whole heart
                 and entire being. All I want is to inspire that same love in

@@ -20,15 +20,14 @@ import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
-import PlushieCarousel from "@/components/content/PlushieCarousel";
+import Maya from "@/components/content/Maya";
 import AnimalQuest from "@/components/content/AnimalQuest";
+import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
-
-import mayaImage from "@/assets/maya.png";
 
 import sirenHeroImage from "@/assets/hero/siren.png";
 import mileyHeroImage from "@/assets/hero/miley.png";
@@ -231,7 +230,7 @@ const Home: NextPage = () => {
 
         <Section dark>
           <div className="flex flex-wrap items-center">
-            <div className="basis-full md:basis-1/2 md:px-4">
+            <div className="basis-full lg:basis-1/2 lg:px-4">
               <Heading level={2} id="alveus" link>
                 What is Alveus?
               </Heading>
@@ -260,12 +259,8 @@ const Home: NextPage = () => {
               </Lightbox>
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
-              <Image
-                src={mayaImage}
-                alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-                className="mr-auto h-auto w-full max-w-lg"
-              />
+            <div className="basis-full pt-8 lg:basis-1/2 lg:pl-8 lg:pt-0">
+              <Maya className="mx-auto h-auto w-full max-w-lg lg:ml-0" />
             </div>
           </div>
         </Section>
