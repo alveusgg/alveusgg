@@ -110,7 +110,7 @@ const GiveawayCheck = ({
 export const GiveawayChecks = () => (
   <div className="flex flex-col gap-5">
     <GiveawayCheck
-      name="twitch"
+      name="twitter"
       label="Follow AlveusSanctuary on Twitch"
       url="https://twitch.tv/AlveusSanctuary"
     >
@@ -120,11 +120,11 @@ export const GiveawayChecks = () => (
 
     <GiveawayCheck
       name="twitter"
-      label="Follow @AlveusSanctuary on X (Twitter)"
+      label="Follow @AlveusSanctuary on Twitter"
       url="https://twitter.com/intent/follow?user_id=1349932850632667137"
     >
       <IconTwitter size={32} />
-      <span>Follow @AlveusSanctuary on X (Twitter)</span>
+      <span>Follow @AlveusSanctuary on Twitter</span>
     </GiveawayCheck>
 
     <GiveawayCheck

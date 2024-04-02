@@ -147,9 +147,10 @@ export function ShareButton({
       <div className="flex gap-2">
         <ShareLink
           href={twitterShareUrl({ url, text, title })}
-          title="Share on X (Twitter)"
+          title="Share on Twitter"
         >
-          <IconTwitter className="h-4 w-4" />X (Twitter)
+          <IconTwitter className="h-4 w-4" />
+          Twitter
         </ShareLink>
         <ShareLink
           href={facebookShareUrl({ url, text, title })}

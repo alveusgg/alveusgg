@@ -25,7 +25,7 @@ const socials = {
   },
   twitter: {
     link: "https://twitter.com/AlveusSanctuary",
-    title: "X (Twitter)",
+    title: "Twitter",
     icon: IconTwitter,
   },
   tiktok: {
