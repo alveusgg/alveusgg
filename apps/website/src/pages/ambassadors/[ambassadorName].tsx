@@ -10,6 +10,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
+  getAmbassadorIconImage,
   type AmbassadorImage,
   type AmbassadorImages,
 } from "@alveusgg/data/src/ambassadors/images";
@@ -40,6 +41,7 @@ type AmbassadorPageProps = {
   enclosure: Enclosure;
   images: AmbassadorImages;
   merchImage?: AmbassadorImage;
+  iconImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithRelation[];
 };
 
@@ -70,6 +72,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
       enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
+      iconImage: getAmbassadorIconImage(ambassadorKey),
       animalQuest: getAmbassadorEpisodes(ambassadorKey),
     },
   };
@@ -80,6 +83,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   enclosure,
   images,
   merchImage,
+  iconImage,
   animalQuest,
 }) => {
   const stats = useMemo(
@@ -205,6 +209,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         title={`${ambassador.name} | Ambassadors`}
         description={`${ambassador.name} is an Alveus Ambassador. ${ambassador.story} ${ambassador.mission}`}
         image={images[0].src.src}
+        icon={iconImage?.src?.src}
       />
 
       {/* Nav background */}
