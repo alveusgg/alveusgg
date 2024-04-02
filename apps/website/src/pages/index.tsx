@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import animalQuestEpisodes from "@alveusgg/data/src/animal-quest";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
@@ -19,8 +20,9 @@ import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
-import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Maya from "@/components/content/Maya";
+import AnimalQuest from "@/components/content/AnimalQuest";
+import PlushieCarousel from "@/components/content/PlushieCarousel";
 import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
@@ -96,6 +98,10 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
       ),
     };
   }, {});
+
+const latestAnimalQuest = animalQuestEpisodes.toSorted(
+  (a, b) => b.broadcast.getTime() - a.broadcast.getTime(),
+)[0];
 
 const help = {
   donate: {
@@ -225,7 +231,9 @@ const Home: NextPage = () => {
         <Section dark>
           <div className="flex flex-wrap items-center">
             <div className="basis-full lg:basis-1/2 lg:px-4">
-              <Heading level={2}>What is Alveus?</Heading>
+              <Heading level={2} id="alveus" link>
+                What is Alveus?
+              </Heading>
               <p className="my-2 font-serif text-lg italic">
                 Founded by Maya Higa
               </p>
@@ -259,15 +267,18 @@ const Home: NextPage = () => {
       </div>
 
       <Section>
-        <div className="flex flex-wrap items-center">
+        <div className="flex flex-wrap items-center gap-y-8">
           <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2 xl:max-w-2/3 xl:basis-2/3">
             <div className="flex flex-wrap items-center justify-between">
-              <Heading level={2}>Ambassadors:</Heading>
+              <Heading level={2} id="ambassadors" link>
+                Ambassadors:
+              </Heading>
               <Link
-                className="inline-block text-lg uppercase text-alveus-green-900 transition-colors hover:text-alveus-green"
+                className="group relative inline-block text-lg uppercase text-alveus-green-900 transition-colors hover:text-alveus-green"
                 href="/ambassadors"
               >
-                See all
+                See All
+                <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full" />
               </Link>
             </div>
 
@@ -279,7 +290,7 @@ const Home: NextPage = () => {
             />
           </div>
 
-          <div className="basis-full pt-8 md:basis-1/2 md:px-16 md:pt-0 xl:basis-1/3">
+          <div className="basis-full md:basis-1/2 md:px-16 xl:basis-1/3">
             <Heading level={3}>Do you want to support these animals?</Heading>
             <p className="my-4">
               Donations help Alveus carry on its mission to inspire online
@@ -291,6 +302,45 @@ const Home: NextPage = () => {
         </div>
       </Section>
 
+      <Section dark>
+        <div className="flex flex-wrap items-center gap-y-8">
+          <div className="basis-full lg:basis-1/3 xl:basis-1/2">
+            <Heading level={2} id="animal-quest" link>
+              Animal Quest
+            </Heading>
+            <p className="my-4 text-lg">
+              Hosted by Maya, Animal Quest is an educational video series that
+              introduces you to the ambassadors at Alveus. Each episode focuses
+              on a different ambassador, teaching you about their species and
+              their importance to our environment.
+            </p>
+            <Button href="/animal-quest" dark>
+              View All Episodes
+            </Button>
+          </div>
+
+          {latestAnimalQuest && (
+            <div className="basis-full lg:basis-2/3 lg:px-16 xl:basis-1/2">
+              <Heading
+                level={3}
+                className="my-1 font-sans text-lg font-normal uppercase text-alveus-green-100"
+              >
+                Latest Episode
+              </Heading>
+
+              <AnimalQuest
+                episode={latestAnimalQuest}
+                relation="featured"
+                ambassador={
+                  ambassadors[latestAnimalQuest.ambassadors.featured[0]]
+                }
+                heading={-1}
+              />
+            </div>
+          )}
+        </div>
+      </Section>
+
       <div className="relative">
         <Image
           src={leafRightImage2}
@@ -298,7 +348,7 @@ const Home: NextPage = () => {
           className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-top-52 2xl:max-w-[12rem]"
         />
 
-        <Section dark>
+        <Section>
           <div className="flex flex-wrap items-center">
             <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2">
               <PlushieCarousel />
@@ -318,9 +368,7 @@ const Home: NextPage = () => {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-4">
-                <Button href="/plushies" dark>
-                  Buy Plushies
-                </Button>
+                <Button href="/plushies">Buy Plushies</Button>
               </div>
             </div>
           </div>
@@ -335,8 +383,8 @@ const Home: NextPage = () => {
           className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
         />
 
-        <Section className="flex-grow">
-          <Heading level={2} className="text-center text-alveus-green">
+        <Section dark className="flex-grow bg-alveus-green-900">
+          <Heading level={2} id="help" link className="text-center">
             How to Help
           </Heading>
 
@@ -350,10 +398,10 @@ const Home: NextPage = () => {
                   ? { target: "_blank", rel: "noreferrer" }
                   : {})}
               >
-                <div className="rounded-2xl bg-alveus-green p-3 text-alveus-tan transition-colors group-hover:bg-alveus-tan group-hover:text-alveus-green">
+                <div className="rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
                   <value.icon size={24} />
                 </div>
-                <p className="font-serif text-2xl font-bold text-alveus-green transition-colors group-hover:text-alveus-green-500">
+                <p className="font-serif text-2xl font-bold text-alveus-tan transition-colors group-hover:text-alveus-green-500">
                   {value.title}
                 </p>
               </Link>
