@@ -30,7 +30,10 @@ const Heading = ({
           "text-3xl",
         !/(^|\s)font-(sans|serif|mono)(\s|$)/.test(className || "") &&
           "font-serif",
-        "text-balance font-bold",
+        !/(^|\s)font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)(\s|$)/.test(
+          className || "",
+        ) && "font-bold",
+        "text-balance",
         className,
       ),
     [className],
