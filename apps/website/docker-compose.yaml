@@ -16,4 +16,7 @@ services:
       MINIO_ROOT_PASSWORD: alveusgg_secret
       MINIO_DEFAULT_BUCKETS: alveusgg
     volumes:
-      - ./.s3:/bitnami/minio/data
+      - s3:/bitnami/minio/data
+
+volumes:
+  s3:

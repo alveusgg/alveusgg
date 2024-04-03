@@ -27,6 +27,3 @@ next-env.d.ts
 
 # vercel
 .vercel
-
-# minio
-.s3
