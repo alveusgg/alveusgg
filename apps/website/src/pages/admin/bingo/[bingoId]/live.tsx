@@ -6,6 +6,7 @@ import type {
 
 import { useMemo } from "react";
 
+import { getSession } from "next-auth/react";
 import { permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
@@ -35,9 +36,15 @@ import { BingoCardGrid } from "@/components/bingo/BingoCardGrid";
 import { transposeMatrix } from "@/utils/math";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageBingos);
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: session?.user?.id ? "/admin/unauthorized" : "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   const id = context.params?.bingoId;

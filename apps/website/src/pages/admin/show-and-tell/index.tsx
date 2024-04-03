@@ -6,10 +6,21 @@ import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { AdminShowAndTellEntriesPanel } from "@/components/admin/show-and-tell/AdminShowAndTellEntriesPanel";
 import { permissions } from "@/data/permissions";
 import Meta from "@/components/content/Meta";
+import { getSession } from "next-auth/react";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageShowAndTell);
-  return adminProps ? { props: adminProps } : { notFound: true };
+  if (!adminProps) {
+    return {
+      redirect: {
+        destination: session?.user?.id ? "/admin/unauthorized" : "/auth/signin",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: adminProps };
 }
 
 const AdminShowAndTellPage: NextPage<

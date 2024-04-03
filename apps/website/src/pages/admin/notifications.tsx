@@ -1,5 +1,6 @@
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
+import { getSession } from "next-auth/react";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 
@@ -12,12 +13,18 @@ import { NotificationStats } from "@/components/admin/notifications/Notification
 import { NotificationsLive } from "@/components/admin/notifications/NotificationsLive";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(
     context,
     permissions.manageNotifications,
   );
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: session?.user?.id ? "/admin/unauthorized" : "/auth/signin",
+        permanent: false,
+      },
+    };
   }
 
   return { props: { ...adminProps } };
