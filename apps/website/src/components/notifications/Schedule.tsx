@@ -1,7 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
 
-import { getStandardCategoryColor } from "@/data/calendar-events";
+import {
+  getStandardCategoryColor,
+  standardCategories,
+} from "@/data/calendar-events";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
@@ -92,6 +95,17 @@ export function Schedule() {
         >
           Loading...
         </Transition>
+      </div>
+
+      <div className="grid grid-cols-1 gap-x-4 gap-y-1 md:grid-cols-2 lg:grid-cols-3">
+        {standardCategories.map((category) => (
+          <div key={category.name} className="flex items-center gap-2">
+            <div
+              className={classes(category.color, "rounded-md p-2 shadow-sm")}
+            />
+            <p className="flex-shrink-0 opacity-75">{category.name}</p>
+          </div>
+        ))}
       </div>
     </Calendar>
   );
