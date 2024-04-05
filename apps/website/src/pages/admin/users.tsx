@@ -1,6 +1,7 @@
 import { useCallback, useId, useState } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
+import { getSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { getAdminSSP } from "@/server/utils/admin";
@@ -19,12 +20,20 @@ import Meta from "@/components/content/Meta";
 import IconMinusCircle from "@/icons/IconMinusCircle";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(
     context,
     permissions.manageUsersAndRoles,
   );
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : "/auth/signin?callbackUrl=/admin/users",
+        permanent: false,
+      },
+    };
   }
 
   return { props: adminProps };

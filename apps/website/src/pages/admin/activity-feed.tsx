@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
+import { getSession } from "next-auth/react";
 import { trpc } from "@/utils/trpc";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
@@ -13,8 +14,20 @@ import Meta from "@/components/content/Meta";
 import IconLoading from "@/icons/IconLoading";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageForms);
-  return adminProps ? { props: adminProps } : { notFound: true };
+  if (!adminProps) {
+    return {
+      redirect: {
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : "/auth/signin?callbackUrl=/admin/activity-feed",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: adminProps };
 }
 
 const AdminActivityFeedPage: NextPage<
