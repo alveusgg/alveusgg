@@ -20,9 +20,9 @@
   },
   "packageManager": "pnpm@8.15.5",
   "devDependencies": {
+    "@biomejs/biome": "1.6.4",
     "husky": "^9.0.7",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.2.4"
+    "lint-staged": "^15.2.0"
   },
   "scripts": {
     "prepare": "husky",
