@@ -20,12 +20,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageForms);
   if (!adminProps) {
-    const id = context.params?.formId;
     return {
       redirect: {
         destination: session?.user?.id
           ? "/unauthorized"
-          : `/auth/signin?callbackUrl=/admin/forms${id ? "/" + id + "/edit" : ""}`,
+          : `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
         permanent: false,
       },
     };
