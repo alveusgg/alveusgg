@@ -7,10 +7,7 @@ import Heading from "@/components/content/Heading";
 const UserUnauthorizedPage: NextPage = () => {
   return (
     <>
-      <Meta
-        title="Unauthorized"
-        description="You are not authorized to view this page."
-      />
+      <Meta title="Unauthorized" noindex />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
