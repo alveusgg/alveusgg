@@ -25,7 +25,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (!adminProps) {
     return {
       redirect: {
-        destination: session?.user?.id ? "/admin/unauthorized" : "/auth/signin",
+        destination: session?.user?.id ? "/unauthorized" : "/auth/signin",
         permanent: false,
       },
     };
