@@ -20,9 +20,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageTwitchApi);
   if (!adminProps) {
+    const id = context.params?.channelId;
     return {
       redirect: {
-        destination: session?.user?.id ? "/unauthorized" : "/auth/signin",
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : `/auth/signin?callbackUrl=/admin/twitch${id ? "/" + id + "/edit" : ""}`,
         permanent: false,
       },
     };

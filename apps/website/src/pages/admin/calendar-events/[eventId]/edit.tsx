@@ -23,9 +23,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     permissions.manageCalendarEvents,
   );
   if (!adminProps) {
+    const id = context.params?.eventId;
     return {
       redirect: {
-        destination: session?.user?.id ? "/unauthorized" : "/auth/signin",
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : `/auth/signin?callbackUrl=/admin/calendar-events${id ? "/" + id + "/edit" : ""}`,
         permanent: false,
       },
     };

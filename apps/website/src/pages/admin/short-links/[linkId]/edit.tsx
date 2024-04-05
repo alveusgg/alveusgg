@@ -20,9 +20,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageShortLinks);
   if (!adminProps) {
+    const id = context.params?.linkId;
     return {
       redirect: {
-        destination: session?.user?.id ? "/unauthorized" : "/auth/signin",
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : `/auth/signin?callbackUrl=/admin/short-links${id ? "/" + id + "/edit" : ""}`,
         permanent: false,
       },
     };

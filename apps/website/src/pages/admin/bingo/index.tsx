@@ -14,7 +14,9 @@ export async function getServerSideProps(context: NextPageContext) {
   if (!adminProps) {
     return {
       redirect: {
-        destination: session?.user?.id ? "/unauthorized" : "/auth/signin",
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : "/auth/signin?callbackUrl=/admin/bingo",
         permanent: false,
       },
     };

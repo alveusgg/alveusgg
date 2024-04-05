@@ -20,9 +20,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageBingos);
   if (!adminProps) {
+    const id = context.params?.bingoId;
     return {
       redirect: {
-        destination: session?.user?.id ? "/unauthorized" : "/auth/signin",
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : `/auth/signin?callbackUrl=/admin/bingo${id ? "/" + id + "/edit" : ""}`,
         permanent: false,
       },
     };
