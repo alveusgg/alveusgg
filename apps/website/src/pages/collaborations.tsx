@@ -54,7 +54,7 @@ const Creators = ({ className }: { className?: string }) => {
                 href={`#${slug}`}
                 title={name}
                 custom
-                className="group/creator -ml-4 block cursor-pointer select-none rounded-full transition-all hover:-mt-4 hover:scale-105 hover:px-2 hover:pb-4"
+                className="group/creator -ml-6 block cursor-pointer select-none rounded-full transition-all duration-75 hover:-mt-4 hover:scale-105 hover:px-4 hover:pb-4"
                 onClick={(e) => {
                   e.preventDefault();
                   history.pushState(null, "", `#${slug}`);
@@ -68,7 +68,7 @@ const Creators = ({ className }: { className?: string }) => {
                   <Image
                     src={image}
                     alt=""
-                    className="h-full w-full rounded-full object-cover shadow-md transition-all group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                    className="h-full w-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
                     draggable={false}
                   />
                 </div>
