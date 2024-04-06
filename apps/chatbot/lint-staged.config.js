@@ -2,8 +2,7 @@
 const buildBiomeCommand = (filenames) => `biome check --apply ${filenames.join(" ")}`;
 
 const config = {
-  "schema.prisma": "prisma format",
-  "*.{js,jsx,ts,tsx,cjs}": buildBiomeCommand,
+  "*.{mjs,cjs,js,ts}": buildBiomeCommand,
 };
 
 export default config;
