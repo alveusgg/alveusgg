@@ -2,6 +2,7 @@ import { forwardRef, useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
+import { useRouter } from "next/router";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { formatDateTime } from "@/utils/datetime";
@@ -222,6 +223,13 @@ const CollaborationsPage: NextPage = () => {
                     title={name}
                     custom
                     className="group/creator -ml-4 block rounded-full transition-all hover:-mt-4 hover:scale-105 hover:px-2 hover:pb-4"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      history.pushState(null, "", `#${slug}`);
+                      document.getElementById(slug)?.scrollIntoView({
+                        behavior: "smooth",
+                      });
+                    }}
                   >
                     <div className="h-16 w-16 rounded-full bg-alveus-green shadow-md ring-4 ring-alveus-tan transition-shadow group-hover/creator:shadow-lg">
                       <Image
