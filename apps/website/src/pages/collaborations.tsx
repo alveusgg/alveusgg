@@ -3,6 +3,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
+import useDragScroll from "@/hooks/drag";
 
 import { formatDateTime } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
@@ -38,17 +39,22 @@ const creators = collaborations.reduce(
 );
 
 const Creators = ({ className }: { className?: string }) => {
+  const drag = useDragScroll();
+
   return (
     <div className={classes("flex justify-center", className)}>
       <div className="relative isolate max-w-full">
-        <ul className="scrollbar-none group/creators flex max-w-full flex-row gap-y-4 overflow-x-auto pb-2 pl-12 pr-8 pt-6">
+        <ul
+          className="scrollbar-none group/creators flex max-w-full cursor-grab flex-row gap-y-4 overflow-x-auto pb-2 pl-12 pr-8 pt-6"
+          onMouseDown={drag}
+        >
           {creators.map(({ name, image, slug }, idx) => (
             <li key={slug} style={{ zIndex: creators.length - idx }}>
               <Link
                 href={`#${slug}`}
                 title={name}
                 custom
-                className="group/creator -ml-4 block rounded-full transition-all hover:-mt-4 hover:scale-105 hover:px-2 hover:pb-4"
+                className="group/creator -ml-4 block cursor-pointer select-none rounded-full transition-all hover:-mt-4 hover:scale-105 hover:px-2 hover:pb-4"
                 onClick={(e) => {
                   e.preventDefault();
                   history.pushState(null, "", `#${slug}`);
@@ -56,12 +62,14 @@ const Creators = ({ className }: { className?: string }) => {
                     behavior: "smooth",
                   });
                 }}
+                draggable={false}
               >
-                <div className="h-20 w-20 rounded-full border-4 border-alveus-green bg-alveus-green">
+                <div className="h-20 w-20 rounded-full border-4 border-alveus-green bg-alveus-green-800">
                   <Image
                     src={image}
                     alt=""
                     className="h-full w-full rounded-full object-cover shadow-md transition-all group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                    draggable={false}
                   />
                 </div>
               </Link>
