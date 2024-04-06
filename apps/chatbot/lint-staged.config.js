@@ -1,12 +1,11 @@
 import mainConfig from "../../lint-staged.config.js";
 
 /** @param {string[]} filenames */
-const buildEslintCommand = (filenames) =>
-  `pnpm eslint --fix ${filenames.join(" ")}`;
+const buildBiomeCommand = (filenames) => `biome check --apply ${filenames.join(" ")}`;
 
 const config = {
   ...mainConfig,
-  "*.{mjs,cjs,js,ts}": buildEslintCommand,
+  "*.{mjs,cjs,js,ts}": buildBiomeCommand,
 };
 
 export default config;
