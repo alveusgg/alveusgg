@@ -7,7 +7,10 @@ import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 import { formatDateTime } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
 
-import collaborations, { type Collaboration } from "@/data/collaborations";
+import collaborations, {
+  type Creator,
+  type Collaboration,
+} from "@/data/collaborations";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -20,6 +23,20 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+
+type CreatorWithSlug = Creator & { slug: string };
+
+const creators = collaborations.reduce(
+  (acc, { slug, creators }) => [
+    ...acc,
+    ...creators.map(({ name, image }) => ({
+      name,
+      image,
+      slug,
+    })),
+  ],
+  [] as CreatorWithSlug[],
+);
 
 const sortByOptions = {
   all: {
@@ -196,6 +213,29 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
+          <div className="flex justify-center">
+            <ul className="scrollbar-none group/creators isolate -mt-6 flex max-w-full flex-row gap-y-4 overflow-x-auto px-8 pb-2 pt-6">
+              {creators.map(({ name, image, slug }, idx) => (
+                <li key={slug} style={{ zIndex: creators.length - idx }}>
+                  <Link
+                    href={`#${slug}`}
+                    title={name}
+                    custom
+                    className="group/creator -ml-4 block rounded-full transition-all hover:-mt-4 hover:scale-105 hover:px-2 hover:pb-4"
+                  >
+                    <div className="h-16 w-16 rounded-full bg-alveus-green shadow-md ring-4 ring-alveus-tan transition-shadow group-hover/creator:shadow-lg">
+                      <Image
+                        src={image}
+                        alt=""
+                        className="h-full w-full rounded-full object-cover transition-all group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                      />
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           <Grouped
             option={option}
             group={group}
