@@ -3,7 +3,9 @@ import { useCallback, useState } from "react";
 import { Menu } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
+
 import { trpc } from "@/utils/trpc";
+import { getShortBaseUrl } from "@/utils/short-url";
 
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
@@ -95,9 +97,15 @@ function Form({ form, onError, onUpdate }: FormProps) {
           <div className="flex flex-col gap-0.5">
             <div className="text-xl">{form.label}</div>
             <div className="flex flex-col gap-1">
-              <Link href={`/forms/${form.slug || form.id}`} external>
-                Public Link: {form.slug || form.id}
-              </Link>
+              <div className="flex gap-1">
+                Public Link:
+                <Link
+                  href={`${getShortBaseUrl()}/forms/${form.slug || form.id}`}
+                  external
+                >
+                  {`${getShortBaseUrl()}/forms/${form.slug || form.id}`}
+                </Link>
+              </div>
               <button
                 type="button"
                 className="text-left"
