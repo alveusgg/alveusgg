@@ -14,6 +14,8 @@ import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
 
+import useTheme from "@/hooks/theme";
+
 import {
   NavLink,
   navLinkClassesMain,
@@ -28,6 +30,8 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 
 import IconSignIn from "@/icons/IconSignIn";
 import IconChevronDown from "@/icons/IconChevronDown";
+import IconSun from "@/icons/IconSun";
+import IconMoon from "@/icons/IconMoon";
 
 const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
   <Transition
@@ -66,6 +70,8 @@ export function DesktopMenu() {
     (user.isSuperUser ||
       checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
+  const [theme, toggleTheme] = useTheme();
+
   return (
     <div className="hidden flex-grow flex-col gap-2 lg:flex">
       <div className="flex items-center justify-end gap-2">
@@ -89,6 +95,15 @@ export function DesktopMenu() {
         <div className="h-6 border-r"></div>
 
         <NotificationsButton className="rounded-lg p-2 hover:bg-white hover:text-alveus-green" />
+
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="rounded-lg p-2 hover:bg-white hover:text-alveus-green"
+          title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
+        >
+          {theme === "light" ? <IconMoon /> : <IconSun />}
+        </button>
 
         <div className="h-6 border-r"></div>
 
