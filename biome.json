@@ -14,6 +14,18 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "include": ["apps/website/src/", "apps/chatbot/src/"]
+    "include": ["apps/website/src/", "apps/chatbot/src/"],
+    "ignore": [
+      "node_modules",
+      "apps/website/.next",
+      "apps/website/src/data/generated",
+      "pnpm-lock.yaml"
+    ]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "useIgnoreFile": true
   }
 }
