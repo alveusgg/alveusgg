@@ -2,7 +2,6 @@ import { forwardRef, useEffect, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
-import { useRouter } from "next/router";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { formatDateTime } from "@/utils/datetime";
@@ -20,7 +19,6 @@ import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -178,17 +176,12 @@ const CollaborationsPage: NextPage = () => {
 
       <div className="relative">
         <Image
-          src={leafRightImage1}
-          alt=""
-          className="pointer-events-none absolute -bottom-4 right-0 z-10 hidden h-auto w-1/2 max-w-xs select-none lg:block xl:-bottom-8"
-        />
-        <Image
           src={leafLeftImage3}
           alt=""
           className="pointer-events-none absolute -bottom-16 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section dark className="py-24">
+        <Section dark className="pb-12 pt-24">
           <div className="w-full lg:w-3/5">
             <Heading>Our Collaborations</Heading>
             <p className="text-lg">
@@ -196,6 +189,47 @@ const CollaborationsPage: NextPage = () => {
               audiences, introducing them to the educational ambassadors at
               Alveus and their conservation missions.
             </p>
+          </div>
+
+          <div className="mt-4 flex justify-center">
+            <div className="relative isolate max-w-full">
+              <ul className="scrollbar-none group/creators flex max-w-full flex-row gap-y-4 overflow-x-auto pb-2 pl-12 pr-8 pt-6">
+                {creators.map(({ name, image, slug }, idx) => (
+                  <li key={slug} style={{ zIndex: creators.length - idx }}>
+                    <Link
+                      href={`#${slug}`}
+                      title={name}
+                      custom
+                      className="group/creator -ml-4 block rounded-full transition-all hover:-mt-4 hover:scale-105 hover:px-2 hover:pb-4"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        history.pushState(null, "", `#${slug}`);
+                        document.getElementById(slug)?.scrollIntoView({
+                          behavior: "smooth",
+                        });
+                      }}
+                    >
+                      <div className="h-20 w-20 rounded-full border-4 border-alveus-green bg-alveus-green">
+                        <Image
+                          src={image}
+                          alt=""
+                          className="h-full w-full rounded-full object-cover shadow-md transition-all group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                        />
+                      </div>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+
+              <div
+                className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-l from-transparent to-alveus-green"
+                style={{ zIndex: creators.length + 1 }}
+              />
+              <div
+                className="pointer-events-none absolute inset-y-0 bottom-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-green"
+                style={{ zIndex: creators.length + 1 }}
+              />
+            </div>
           </div>
         </Section>
       </div>
@@ -214,47 +248,6 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          <div className="flex justify-center">
-            <div className="relative isolate max-w-full">
-              <ul className="scrollbar-none group/creators -mt-6 flex max-w-full flex-row gap-y-4 overflow-x-auto pb-2 pl-12 pr-8 pt-6">
-                {creators.map(({ name, image, slug }, idx) => (
-                  <li key={slug} style={{ zIndex: creators.length - idx }}>
-                    <Link
-                      href={`#${slug}`}
-                      title={name}
-                      custom
-                      className="group/creator -ml-4 block rounded-full transition-all hover:-mt-4 hover:scale-105 hover:px-2 hover:pb-4"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        history.pushState(null, "", `#${slug}`);
-                        document.getElementById(slug)?.scrollIntoView({
-                          behavior: "smooth",
-                        });
-                      }}
-                    >
-                      <div className="h-16 w-16 rounded-full bg-alveus-green shadow-md ring-4 ring-alveus-tan transition-shadow group-hover/creator:shadow-lg">
-                        <Image
-                          src={image}
-                          alt=""
-                          className="h-full w-full rounded-full object-cover transition-all group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
-                        />
-                      </div>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              <div
-                className="pointer-events-none absolute -top-6 bottom-0 left-0 w-10 bg-gradient-to-l from-transparent to-alveus-tan"
-                style={{ zIndex: creators.length + 1 }}
-              />
-              <div
-                className="pointer-events-none absolute -top-6 bottom-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-tan"
-                style={{ zIndex: creators.length + 1 }}
-              />
-            </div>
-          </div>
-
           <Grouped
             option={option}
             group={group}
