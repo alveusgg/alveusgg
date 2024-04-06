@@ -11,10 +11,10 @@ const getTheme = (): "light" | "dark" => {
     : "light";
 };
 
-const updateTheme = (theme?: "light" | "dark") => {
-  if (theme) localStorage.setItem("theme", theme);
+const updateTheme = (theme: "light" | "dark", store = false) => {
+  if (store) localStorage.setItem("theme", theme);
 
-  if ((theme || getTheme()) === "dark") {
+  if (theme === "dark") {
     document.documentElement.classList.add("dark");
     document.documentElement.classList.remove("light");
   } else {
@@ -23,17 +23,19 @@ const updateTheme = (theme?: "light" | "dark") => {
   }
 };
 
-const globalCode = () => {
+const globalCode = (update: () => void) => {
   window
     .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => updateTheme());
-  updateTheme();
+    .addEventListener("change", () => update());
+  update();
 };
 
 export const ThemeScript = () => (
+  // Note that we have to do a bit of a hack here, passing in `getTheme` and `updateTheme` to the iife
+  // This is to get around bundling clobbering the method names if they're referenced directly in `globalCode`
   // eslint-disable-next-line @next/next/no-before-interactive-script-outside-document
   <Script id="theme" strategy="beforeInteractive">
-    {`const getTheme = ${getTheme.toString()}; const updateTheme = ${updateTheme.toString()}; (${globalCode.toString()})()`}
+    {`const getTheme = ${getTheme.toString()}; const updateTheme = ${updateTheme.toString()}; (${globalCode.toString()})(() => updateTheme(getTheme()))`}
   </Script>
 );
 
@@ -47,7 +49,7 @@ const useTheme = () => {
   const toggleTheme = useCallback(() => {
     setTheme((prev) => {
       const next = prev === "light" ? "dark" : "light";
-      updateTheme(next);
+      updateTheme(next, true);
       return next;
     });
   }, []);
