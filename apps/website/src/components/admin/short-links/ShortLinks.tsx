@@ -1,7 +1,14 @@
 import { useState } from "react";
-import Link from "next/link";
 import type { inferRouterOutputs } from "@trpc/server";
+
+import type { AppRouter } from "@/server/trpc/router/_app";
+
 import { trpc } from "@/utils/trpc";
+import { getShortBaseUrl } from "@/utils/short-url";
+
+import IconPencil from "@/icons/IconPencil";
+import IconTrash from "@/icons/IconTrash";
+
 import {
   Button,
   dangerButtonClasses,
@@ -10,10 +17,8 @@ import {
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import IconPencil from "@/icons/IconPencil";
-import IconTrash from "@/icons/IconTrash";
-import type { AppRouter } from "@/server/trpc/router/_app";
-import { getShortBaseUrl } from "@/utils/short-url";
+import Link from "@/components/content/Link";
+
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type ShortLink = RouterOutput["adminShortLinks"]["getShortLinks"][number];
 
@@ -37,22 +42,16 @@ function ShortLink({ shortLink, onError, onUpdate }: LinkProps) {
         <td className="w-1/2 p-1">
           <div className="flex flex-col gap-0.5">
             <div className="text-xl">{shortLink.label}</div>
-            <div className="flex flex-col gap-1">
-              <Link
-                href={`/l/${shortLink.slug}`}
-                target="_blank"
-                className="flex"
-              >
-                <div className="mr-1.5">Public Link:</div>
-                <div className="underline">
-                  {getShortBaseUrl() + "/l/" + shortLink.slug}
-                </div>
+            <div className="flex gap-1">
+              Public Link:
+              <Link href={`${getShortBaseUrl()}/l/${shortLink.slug}`} external>
+                {`${getShortBaseUrl()}/l/${shortLink.slug}`}
               </Link>
             </div>
           </div>
         </td>
         <td>
-          <Link className="underline" href={shortLink.link} target="_blank">
+          <Link href={shortLink.link} external>
             {shortLink.link}
           </Link>
         </td>
