@@ -2,7 +2,7 @@ name: Checks
 on: [pull_request]
 
 jobs:
-  prettier:
+  biome:
     runs-on: ubuntu-latest
 
     steps:
@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Setup Biome
-        uses: actions/setup-biome@v2
+        uses: biomejs/setup-biome@v2
         with:
           version: latest
       - name: Run Biome
