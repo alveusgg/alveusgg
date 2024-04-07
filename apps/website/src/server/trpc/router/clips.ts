@@ -14,6 +14,8 @@ import { getClipDetails } from "@/server/utils/twitch-api";
 
 export type SortOptions = "new" | "top" | "top_7day" | "top_30day";
 
+const clipsPerPage = 12;
+
 export const clipsRouter = router({
   addClip: publicProcedure
     .input(clipSubmitInputSchema)
@@ -125,13 +127,13 @@ export const clipsRouter = router({
       const clips = await getClips({
         cursor: cursor || undefined,
         sortBy,
-        limit: 10,
+        limit: clipsPerPage + 1,
         userId,
         filter,
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
-      if (clips.length > 10) {
+      if (clips.length > clipsPerPage) {
         const nextClip = clips.pop();
         nextCursor = nextClip?.id || undefined;
       }
