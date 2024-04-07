@@ -22,6 +22,7 @@ import parse, {
   type DOMNode,
   type HTMLReactParserOptions,
 } from "html-react-parser";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
@@ -171,10 +172,11 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
 };
 
 const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
-  const content = useMemo(
-    () => parse(`<root>${entry.text}</root>`, parseOptions),
-    [entry.text],
-  );
+  const content = useMemo(() => {
+    try {
+      return parse(`<root>${entry.text}</root>`, parseOptions);
+    } catch (e) {}
+  }, [entry.text]);
 
   return (
     isValidElement(content) &&
@@ -186,7 +188,7 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
           }`}
         >
           <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
-            {content}
+            <ErrorBoundary FallbackComponent={Empty}>{content}</ErrorBoundary>
           </div>
         </div>
       </div>
