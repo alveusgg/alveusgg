@@ -93,58 +93,10 @@ const parseOptions: HTMLReactParserOptions = {
   },
 };
 
-export const ShowAndTellEntry = forwardRef<
-  HTMLElement | null,
-  ShowAndTellEntryProps
->(function ShowAndTellEntry(
-  {
-    entry,
-    isPresentationView,
-    //showPermalink = false,
-  },
-  forwardedRef,
-) {
-  const wrapperRef = useRef<HTMLElement | null>(null);
-  const imageAttachments = entry.attachments
-    .filter(({ attachmentType }) => attachmentType === "image")
-    .map(({ imageAttachment }) => imageAttachment)
-    .filter(notEmpty);
-  const videoAttachments = entry.attachments
-    .filter(({ attachmentType }) => attachmentType === "video")
-    .map(({ linkAttachment }) => linkAttachment)
-    .filter(notEmpty);
-
-  let featureImageUrl = imageAttachments[0]?.url;
-  if (!featureImageUrl) {
-    for (const videoAttachment of videoAttachments) {
-      const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
-      if (!parsedVideoUrl) continue;
-      const videoPlatformConfig = videoPlatformConfigs[parsedVideoUrl.platform];
-      if (!("previewUrl" in videoPlatformConfig)) continue;
-      featureImageUrl = videoPlatformConfig.previewUrl(parsedVideoUrl.id);
-      break;
-    }
-  }
-
-  const handleRef = useCallback(
-    (node: HTMLElement) => {
-      wrapperRef.current = node;
-      if (typeof forwardedRef === "function") {
-        forwardedRef(node);
-      } else if (forwardedRef) {
-        forwardedRef.current = node;
-      }
-    },
-    [forwardedRef],
-  );
-
-  const content = useMemo(
-    () => parse(`<root>${entry.text}</root>`, parseOptions),
-    [entry.text],
-  );
-
+const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
   const hours = entry.volunteeringMinutes && entry.volunteeringMinutes / 60;
-  const header = (
+
+  return (
     <header
       className={`p-4 px-10 drop-shadow-xl ${
         isPresentationView ? "" : "text-center"
@@ -216,6 +168,76 @@ export const ShowAndTellEntry = forwardRef<
       </p>
     </header>
   );
+};
+
+const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
+  const content = useMemo(
+    () => parse(`<root>${entry.text}</root>`, parseOptions),
+    [entry.text],
+  );
+
+  return (
+    isValidElement(content) &&
+    content.type !== Empty && (
+      <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
+        <div
+          className={`mx-auto w-fit  ${
+            isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
+          }`}
+        >
+          <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+            {content}
+          </div>
+        </div>
+      </div>
+    )
+  );
+};
+
+export const ShowAndTellEntry = forwardRef<
+  HTMLElement | null,
+  ShowAndTellEntryProps
+>(function ShowAndTellEntry(
+  {
+    entry,
+    isPresentationView,
+    // showPermalink = false,
+  },
+  forwardedRef,
+) {
+  const wrapperRef = useRef<HTMLElement | null>(null);
+  const imageAttachments = entry.attachments
+    .filter(({ attachmentType }) => attachmentType === "image")
+    .map(({ imageAttachment }) => imageAttachment)
+    .filter(notEmpty);
+  const videoAttachments = entry.attachments
+    .filter(({ attachmentType }) => attachmentType === "video")
+    .map(({ linkAttachment }) => linkAttachment)
+    .filter(notEmpty);
+
+  let featureImageUrl = imageAttachments[0]?.url;
+  if (!featureImageUrl) {
+    for (const videoAttachment of videoAttachments) {
+      const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
+      if (!parsedVideoUrl) continue;
+      const videoPlatformConfig = videoPlatformConfigs[parsedVideoUrl.platform];
+      if (!("previewUrl" in videoPlatformConfig)) continue;
+      featureImageUrl = videoPlatformConfig.previewUrl(parsedVideoUrl.id);
+      break;
+    }
+  }
+
+  const handleRef = useCallback(
+    (node: HTMLElement) => {
+      wrapperRef.current = node;
+      if (typeof forwardedRef === "function") {
+        forwardedRef(node);
+      } else if (forwardedRef) {
+        forwardedRef.current = node;
+      }
+    },
+    [forwardedRef],
+  );
 
   return (
     <article
@@ -262,7 +284,7 @@ export const ShowAndTellEntry = forwardRef<
         ) : (
           header
         ) */}
-        {header}
+        <Header entry={entry} isPresentationView={isPresentationView} />
 
         <ShowAndTellGallery
           isPresentationView={isPresentationView}
@@ -271,19 +293,7 @@ export const ShowAndTellEntry = forwardRef<
           videoAttachments={videoAttachments}
         />
 
-        {isValidElement(content) && content.type !== Empty && (
-          <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
-            <div
-              className={`mx-auto w-fit  ${
-                isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
-              }`}
-            >
-              <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
-                {content}
-              </div>
-            </div>
-          </div>
-        )}
+        <Content entry={entry} isPresentationView={isPresentationView} />
       </div>
     </article>
   );
