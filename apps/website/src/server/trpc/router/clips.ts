@@ -88,7 +88,7 @@ export const clipsRouter = router({
         });
       }
 
-      addVote(input.clipId, userId);
+      await addVote(input.clipId, userId);
     }),
 
   removeVote: publicProcedure
@@ -106,7 +106,7 @@ export const clipsRouter = router({
         });
       }
 
-      removeVote(input.clipId, userId);
+      await removeVote(input.clipId, userId);
     }),
 
   getClips: publicProcedure
