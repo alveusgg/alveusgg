@@ -112,6 +112,7 @@ const ClipModal = ({
   const clipUrl = new URL("https://clips.twitch.tv/embed");
   clipUrl.searchParams.set("clip", clip.slug);
   clipUrl.searchParams.set("parent", window.location.hostname);
+  clipUrl.searchParams.set("autoplay", "true");
 
   return (
     <Dialog
