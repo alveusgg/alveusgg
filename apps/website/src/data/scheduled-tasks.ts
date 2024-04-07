@@ -6,7 +6,7 @@ import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
 import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
 import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
 import { createRegularCalendarEvents } from "@/server/db/calendar-events";
-import { removeInvalidClips , populateClips } from "@/server/clips";
+import { removeInvalidClips, populateClips } from "@/server/clips";
 
 export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
 
