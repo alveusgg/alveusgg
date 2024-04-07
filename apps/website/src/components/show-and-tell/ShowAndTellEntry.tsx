@@ -175,8 +175,10 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
   const content = useMemo(() => {
     try {
       return parse(`<root>${entry.text}</root>`, parseOptions);
-    } catch (e) {}
-  }, [entry.text]);
+    } catch (e) {
+      console.error(`Failed to parse Show and Tell entry ${entry.id}`, e);
+    }
+  }, [entry.text, entry.id]);
 
   return (
     isValidElement(content) &&
@@ -188,7 +190,17 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
           }`}
         >
           <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
-            <ErrorBoundary FallbackComponent={Empty}>{content}</ErrorBoundary>
+            <ErrorBoundary
+              FallbackComponent={Empty}
+              onError={(err) =>
+                console.error(
+                  `Failed to render Show and Tell entry ${entry.id}`,
+                  err,
+                )
+              }
+            >
+              {content}
+            </ErrorBoundary>
           </div>
         </div>
       </div>
