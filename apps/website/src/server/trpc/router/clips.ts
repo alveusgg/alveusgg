@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 import { publicProcedure, router } from "@/server/trpc/trpc";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import {
   addClip,

@@ -14,7 +14,7 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import { trpc } from "@/utils/trpc";
 import type { SortType } from "@/server/db/clips";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import IconLoading from "@/icons/IconLoading";
 import Consent from "@/components/Consent";
 import IconThumbsUp from "@/icons/IconThumbsUp";

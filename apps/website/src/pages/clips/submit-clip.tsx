@@ -13,7 +13,7 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { TextField } from "@/components/shared/form/TextField";
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import type { ClipSubmitInput } from "@/server/db/clips";
 import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
