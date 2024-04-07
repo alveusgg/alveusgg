@@ -1,7 +1,7 @@
 import type { Clip } from "@prisma/client";
 
 import { useState } from "react";
-import { Button, dangerButtonClasses } from "@/components/shared/Button";
+import { Button, dangerButtonClasses } from "@/components/shared/form/Button";
 import DateTime from "@/components/content/DateTime";
 import IconTrash from "@/icons/IconTrash";
 import IconX from "@/icons/IconX";

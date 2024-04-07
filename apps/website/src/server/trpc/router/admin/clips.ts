@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
