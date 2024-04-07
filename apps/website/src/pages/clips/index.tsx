@@ -124,6 +124,8 @@ const ClipModal = ({
           className="absolute right-0 top-0 p-2"
           onClick={() => onClose(false)}
         >
+          <span className="sr-only">Close clip</span>
+
           <svg
             className="h-6 w-6 cursor-pointer text-gray-700"
             fill="none"
