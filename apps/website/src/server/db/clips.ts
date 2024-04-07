@@ -93,7 +93,6 @@ export async function removeVote(clipId: string, userId: string) {
 }
 
 export type SortType = "top" | "new" | "top_7day" | "top_30day";
-export type CreatedPeriod = "7day" | "30day";
 
 const getWhereClause = (sortBy: SortType) => {
   const today = new Date();

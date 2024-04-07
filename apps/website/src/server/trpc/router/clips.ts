@@ -12,8 +12,6 @@ import {
 } from "@/server/db/clips";
 import { getClipDetails } from "@/server/utils/twitch-api";
 
-export type SortOptions = "new" | "top" | "top_7day" | "top_30day";
-
 const clipsPerPage = 12;
 
 export const clipsRouter = router({

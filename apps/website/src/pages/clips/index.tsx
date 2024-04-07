@@ -179,7 +179,7 @@ const ClipsPage: NextPage = () => {
     top_7day: "Top (7 days)",
     top_30day: "Top (30 days)",
     new: "New",
-  };
+  } as const satisfies Record<SortType, string>;
 
   const clips = trpc.clips.getClips.useInfiniteQuery(
     {
