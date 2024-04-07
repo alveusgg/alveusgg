@@ -236,12 +236,24 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section dark className="pb-12 pt-24">
-          <div className="w-full lg:w-3/5">
+          <div className="w-full lg:w-4/5">
             <Heading>Our Collaborations</Heading>
-            <p className="text-lg">
+            <p className="text-balance text-lg">
               We work with other content creators to educate our combined
               audiences, introducing them to the educational ambassadors at
               Alveus and their conservation missions.
+            </p>
+
+            <p className="mt-2 text-balance text-lg">
+              We&apos;ve hosted{" "}
+              <abbr
+                title={`Across ${collaborations.length.toLocaleString()} collaboration streams`}
+              >
+                {creators.length.toLocaleString()} creators
+              </abbr>{" "}
+              at the sanctuary since {collaborations.at(-1)!.date.getFullYear()}
+              , bringing audiences from Twitch, YouTube, and other platforms,
+              together to learn about the importance of conservation.
             </p>
           </div>
 
