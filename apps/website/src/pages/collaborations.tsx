@@ -26,17 +26,18 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
 type CreatorWithSlug = Creator & { slug: string };
 
-const creators = collaborations.reduce(
-  (acc, { slug, creators }) => [
-    ...acc,
-    ...creators.map(({ name, image }) => ({
-      name,
-      image,
-      slug,
-    })),
-  ],
-  [] as CreatorWithSlug[],
-);
+const creators = collaborations
+  .reduce(
+    (acc, { slug, creators }) => [
+      ...acc,
+      ...creators.map((creator) => ({
+        ...creator,
+        slug,
+      })),
+    ],
+    [] as CreatorWithSlug[],
+  )
+  .sort((a, b) => b.popularity - a.popularity);
 
 const Creators = ({ className }: { className?: string }) => {
   const drag = useDragScroll();
