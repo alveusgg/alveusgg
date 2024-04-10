@@ -1,10 +1,7 @@
-import mainConfig from "../../lint-staged.config.js";
-
 /** @param {string[]} filenames */
-const buildBiomeCommand = (filenames) => `biome check --apply ${filenames.join(" ")}`;
+const buildBiomeCommand = (filenames) => `pnpm biome check --apply --vcs-client-kind=git --vcs-enabled=true --vcs-use-ignore-file=true --vcs-default-branch=master --files-ignore-unknown=true ${filenames.join(" ")}`;
 
 const config = {
-  ...mainConfig,
   "*.{mjs,cjs,js,ts}": buildBiomeCommand,
 };
 
