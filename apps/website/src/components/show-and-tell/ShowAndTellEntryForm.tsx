@@ -365,10 +365,11 @@ export function ShowAndTellEntryForm({
                         name={`image[${fileReference.id}][alternativeText]`}
                         label={
                           <span className="text-gray-600">
-                            Optional description
+                            Visual Description
                             <br />
                             <em className="text-sm">
-                              visible to screen readers only
+                              Text accessible to visually impaired users to
+                              describe the image
                             </em>
                           </span>
                         }
