@@ -2,6 +2,8 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import eret from "@/assets/collaborations/eret.png";
+import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
 import jackManifold from "@/assets/collaborations/jack-manifold.png";
 import emilyWang from "@/assets/collaborations/emily-wang.png";
 import jinny from "@/assets/collaborations/jinny.png";
@@ -51,6 +53,22 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Eret & Ava",
+      link: "https://www.twitch.tv/eret",
+      date: new Date("2024-04-09"),
+      videoId: "uKq6E747zVM",
+      creators: [
+        {
+          name: "Eret",
+          image: eret,
+        },
+        {
+          name: "Ava Kris Tyson",
+          image: avaKrisTyson,
+        },
+      ],
+    },
     {
       name: "Jack Manifold",
       link: "https://www.twitch.tv/jackmanifoldtv",
