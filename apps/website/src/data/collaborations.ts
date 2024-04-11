@@ -39,6 +39,7 @@ import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 export type Creator = {
   name: string;
   image: StaticImageData;
+  popularity: number;
 };
 
 export type Collaboration = {
@@ -62,10 +63,12 @@ const collaborations: Collaboration[] = (
         {
           name: "Eret",
           image: eret,
+          popularity: 1_200_000, // Twitch followers, 2024-04-11
         },
         {
           name: "Ava Kris Tyson",
           image: avaKrisTyson,
+          popularity: 435_000, // Twitter followers, 2024-04-11
         },
       ],
     },
@@ -79,6 +82,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Jack Manifold",
           image: jackManifold,
+          popularity: 1_900_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -91,6 +95,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Emily Wang",
           image: emilyWang,
+          popularity: 226_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -104,6 +109,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Jinny",
           image: jinny,
+          popularity: 1_000_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -117,10 +123,12 @@ const collaborations: Collaboration[] = (
         {
           name: "JaidenAnimations",
           image: jaidenAnimations,
+          popularity: 12_500_000, // YouTube subscribers, 2024-04-07
         },
         {
           name: "Alpharad",
           image: alpharad,
+          popularity: 3_400_000, // YouTube subscribers, 2024-04-07
         },
       ],
     },
@@ -134,6 +142,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Cinna",
           image: cinna,
+          popularity: 150_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -147,6 +156,7 @@ const collaborations: Collaboration[] = (
         {
           name: "HasanAbi",
           image: hasanAbi,
+          popularity: 2_600_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -160,6 +170,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Fanfan",
           image: fanfan,
+          popularity: 250_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -173,6 +184,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Alluux",
           image: alluux,
+          popularity: 80_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -185,6 +197,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Filian",
           image: filian,
+          popularity: 2_500_000, // YouTube subscribers, 2024-04-07
         },
       ],
     },
@@ -198,6 +211,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Trihex",
           image: trihex,
+          popularity: 420_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -211,6 +225,7 @@ const collaborations: Collaboration[] = (
         {
           name: "EsfandTV",
           image: esfandtv,
+          popularity: 1_300_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -224,6 +239,7 @@ const collaborations: Collaboration[] = (
         {
           name: "ExtraEmily",
           image: extraEmily,
+          popularity: 350_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -237,6 +253,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Zoil",
           image: zoil,
+          popularity: 170_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -250,10 +267,12 @@ const collaborations: Collaboration[] = (
         {
           name: "PeachJars",
           image: peachJars,
+          popularity: 720_000, // Twitter followers, 2024-04-07
         },
         {
           name: "Jessica Nigri",
           image: jessicaNigri,
+          popularity: 1_400_000, // Twitter followers, 2024-04-07
         },
       ],
     },
@@ -267,6 +286,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Squeex",
           image: squeex,
+          popularity: 180_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -280,6 +300,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Caroline Kwan",
           image: carolineKwan,
+          popularity: 110_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -293,6 +314,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Lacari",
           image: lacari,
+          popularity: 340_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -306,6 +328,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Daily Dose",
           image: dailyDose,
+          popularity: 18_000_000, // YouTube subscribers, 2024-04-07
         },
       ],
     },
@@ -318,6 +341,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Graycen",
           image: graycen,
+          popularity: 110_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -331,6 +355,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Dareon",
           image: dareon,
+          popularity: 60_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -343,6 +368,7 @@ const collaborations: Collaboration[] = (
         {
           name: "YungJeff",
           image: yungJeff,
+          popularity: 40_000, // Twitter followers, 2024-04-07
         },
       ],
     },
@@ -356,6 +382,7 @@ const collaborations: Collaboration[] = (
         {
           name: "PointCrow",
           image: pointCrow,
+          popularity: 2_200_000, // YouTube subscribers, 2024-04-07
         },
       ],
     },
@@ -369,6 +396,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Russel",
           image: russel,
+          popularity: 190_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -382,6 +410,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Ludwig",
           image: ludwig,
+          popularity: 5_700_000, // YouTube subscribers, 2024-04-07
         },
       ],
     },
@@ -395,6 +424,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Alinity",
           image: alinity,
+          popularity: 1_500_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -408,6 +438,7 @@ const collaborations: Collaboration[] = (
         {
           name: "ConnorEatsPants",
           image: connorEatsPants,
+          popularity: 690_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -420,6 +451,7 @@ const collaborations: Collaboration[] = (
         {
           name: "The Botez Sisters",
           image: botzSisters,
+          popularity: 1_300_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -432,6 +464,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Knut",
           image: knut,
+          popularity: 400_000, // Twitch followers, 2024-04-07
         },
       ],
     },
@@ -445,6 +478,7 @@ const collaborations: Collaboration[] = (
         {
           name: "MoistCr1TiKaL",
           image: moistCr1TiKaL,
+          popularity: 14_800_000, // YouTube subscribers, 2024-04-07
         },
       ],
     },

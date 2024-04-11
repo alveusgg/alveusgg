@@ -26,17 +26,18 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
 type CreatorWithSlug = Creator & { slug: string };
 
-const creators = collaborations.reduce(
-  (acc, { slug, creators }) => [
-    ...acc,
-    ...creators.map(({ name, image }) => ({
-      name,
-      image,
-      slug,
-    })),
-  ],
-  [] as CreatorWithSlug[],
-);
+const creators = collaborations
+  .reduce(
+    (acc, { slug, creators }) => [
+      ...acc,
+      ...creators.map((creator) => ({
+        ...creator,
+        slug,
+      })),
+    ],
+    [] as CreatorWithSlug[],
+  )
+  .sort((a, b) => b.popularity - a.popularity);
 
 const Creators = ({ className }: { className?: string }) => {
   const drag = useDragScroll();
@@ -235,12 +236,24 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section dark className="pb-12 pt-24">
-          <div className="w-full lg:w-3/5">
+          <div className="w-full lg:w-4/5">
             <Heading>Our Collaborations</Heading>
-            <p className="text-lg">
+            <p className="text-balance text-lg">
               We work with other content creators to educate our combined
               audiences, introducing them to the educational ambassadors at
               Alveus and their conservation missions.
+            </p>
+
+            <p className="mt-2 text-balance text-lg">
+              We&apos;ve hosted{" "}
+              <abbr
+                title={`Across ${collaborations.length.toLocaleString()} collaboration streams`}
+              >
+                {creators.length.toLocaleString()} creators
+              </abbr>{" "}
+              at the sanctuary since {collaborations.at(-1)!.date.getFullYear()}
+              , bringing audiences from Twitch, YouTube, and other platforms,
+              together to learn about the importance of conservation.
             </p>
           </div>
 
