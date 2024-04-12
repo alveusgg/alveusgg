@@ -1,10 +1,16 @@
+import {
+  type RefObject,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import type { NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
-
-import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useSession } from "next-auth/react";
 import { Dialog } from "@headlessui/react";
+
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -14,13 +20,14 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import { trpc } from "@/utils/trpc";
 import type { SortType } from "@/server/db/clips";
+import ContentButton from "@/components/content/Button";
 import { Button } from "@/components/shared/form/Button";
 import IconLoading from "@/icons/IconLoading";
 import Consent from "@/components/Consent";
 import IconThumbsUp from "@/icons/IconThumbsUp";
 import { classes } from "@/utils/classes";
 import DateTime from "@/components/content/DateTime";
-import ClipsNavigation from "@/components/clips/ClipsNavigation";
+import SubmitClipModal from "@/components/clips/SubmitClipModal";
 
 type Clip = {
   id: string;
@@ -35,12 +42,12 @@ type Clip = {
 
 const ClipItem = ({
   clip,
-  clipClicked,
+  selectClip,
   lastItemRef,
 }: {
   clip: Clip;
-  clipClicked: (clip: Clip) => void;
-  lastItemRef: React.RefObject<HTMLDivElement>;
+  selectClip: (clip: Clip) => void;
+  lastItemRef: RefObject<HTMLDivElement>;
 }) => {
   const { data: session } = useSession();
 
@@ -68,27 +75,36 @@ const ClipItem = ({
 
   const [hasVoted, setHasVoted] = useState(clip.hasVoted);
   const thumbsClass = hasVoted
-    ? "hover:fill-alveus-green-900 fill-green"
-    : "hover:fill-green fill:alveus-green-900";
+    ? "fill-green hover:fill-alveus-gray-600"
+    : "fill-gray-600 hover:fill-green";
 
   return (
-    <div ref={lastItemRef}>
-      <a className="group cursor-pointer" onClick={() => clipClicked(clip)}>
+    <div className="flex flex-col justify-between" ref={lastItemRef}>
+      <a
+        href={`https://clips.twitch.tv/${encodeURIComponent(clip.slug)}`}
+        className="group flex grow cursor-pointer flex-col"
+        onClick={(e) => {
+          if (e.ctrlKey || e.metaKey || e.shiftKey) return;
+
+          e.preventDefault();
+          selectClip(clip);
+        }}
+      >
         <Image
           src={clip.thumbnailUrl}
           alt=""
           width={700}
-          height={300}
-          className="h-auto w-full rounded-xl transition group-hover:scale-102 group-hover:shadow-lg"
+          height={400}
+          className="aspect-video w-full rounded-xl transition group-hover:scale-102 group-hover:shadow-lg"
         />
-        <div className="min-h-[4rem]">
-          <p className="text-center text-xl font-medium transition-colors group-hover:text-alveus-green-700 ">
-            {clip.title}
-          </p>
-        </div>
+
+        <p className="block text-balance px-2 pt-1 text-xl font-medium transition-colors group-hover:text-alveus-green-700">
+          {clip.title}
+        </p>
       </a>
-      <div className="flex justify-between px-4">
-        <p className="text-left">Votes: {clip.voteCount}</p>
+
+      <div className="flex justify-between px-2">
+        <p>Votes: {clip.voteCount}</p>
         {session && (
           <button
             className={classes("cursor-pointer text-right", thumbsClass)}
@@ -141,20 +157,23 @@ const ClipModal = ({
             />
           </svg>
         </button>
+
         <Consent
-          item={`twitch clip embed`}
+          item="twitch clip embed"
           consent="twitch"
-          className="alveus-twitch-embed rounded-2xl bg-alveus-green text-alveus-tan"
+          className="alveus-twitch-embed aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
         >
           <iframe
-            src={clipUrl + "&autoplay=true"}
-            className="h-full w-full"
+            src={clipUrl.toString()}
+            className="aspect-video h-auto w-full"
             allowFullScreen
           ></iframe>
         </Consent>
+
         <Dialog.Title className="mt-4 text-center text-xl lg:text-xl">
           {clip.title}
         </Dialog.Title>
+
         <div className="direction relative mx-auto flex-col px-4 text-center lg:mx-0 lg:flex lg:flex-row lg:text-left">
           <p className="lg:flex-1">Votes: {clip.voteCount}</p>
           <p className="lg:absolute lg:left-1/2 lg:-translate-x-1/2 lg:transform">
@@ -174,6 +193,7 @@ const ClipModal = ({
 const ClipsPage: NextPage = () => {
   const [sort, setSort] = useState<SortType>("top");
   const [currentModalClip, setCurrentModalClip] = useState<Clip | null>(null);
+  const [showSubmitForm, setShowSubmitForm] = useState(false);
   const lastItemRef = useRef<HTMLDivElement>(null);
   const refLastSeen = useRef<HTMLDivElement | undefined>(undefined);
 
@@ -198,8 +218,8 @@ const ClipsPage: NextPage = () => {
     if (refLastSeen.current) {
       scrollIntoView(refLastSeen.current, {
         behavior: "smooth",
-        block: "center",
-        scrollMode: "if-needed",
+        block: "start",
+        scrollMode: "always",
       });
       refLastSeen.current = undefined;
     }
@@ -212,11 +232,11 @@ const ClipsPage: NextPage = () => {
     }
   }, [clips]);
 
-  const closeModal = useCallback((value: boolean) => {
+  const closeModal = useCallback(() => {
     setCurrentModalClip(null);
   }, []);
 
-  const clipClicked = useCallback((clip: Clip) => {
+  const selectClip = useCallback((clip: Clip) => {
     setCurrentModalClip(clip);
   }, []);
 
@@ -249,7 +269,20 @@ const ClipsPage: NextPage = () => {
             Submit and vote for your favorite Alveus clips
           </p>
         </div>
-        <ClipsNavigation />
+
+        <div className="flex flex-wrap gap-2 whitespace-nowrap lg:flex-col">
+          <ContentButton
+            as="button"
+            dark
+            onClick={() => setShowSubmitForm(true)}
+          >
+            Submit a Clip
+          </ContentButton>
+          <SubmitClipModal
+            open={showSubmitForm}
+            requestClose={() => setShowSubmitForm(false)}
+          />
+        </div>
       </Section>
 
       {/* Grow the last section to cover the page */}
@@ -265,7 +298,7 @@ const ClipsPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section className="flex-grow pt-0">
+        <Section className="flex-grow pt-4">
           <div className="mb-4 mt-8 flex flex-col items-end">
             <Select
               options={sortOptions}
@@ -276,11 +309,13 @@ const ClipsPage: NextPage = () => {
               className="flex-shrink-0"
             />
           </div>
+
           {(clips.isRefetching || clips.isFetching) && (
             <div className="mt-16 text-center text-3xl font-bold">
               Loading...
             </div>
           )}
+
           <div className="mb-8 mt-8 grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {!clips.isRefetching &&
               clips.data?.pages.flatMap((page) =>
@@ -289,11 +324,12 @@ const ClipsPage: NextPage = () => {
                     lastItemRef={lastItemRef}
                     key={clip.id}
                     clip={clip}
-                    clipClicked={clipClicked}
+                    selectClip={selectClip}
                   />
                 )),
               )}
           </div>
+
           {clips.hasNextPage && (
             <Button onClick={handleNext}>
               {clips.isFetchingNextPage ? (

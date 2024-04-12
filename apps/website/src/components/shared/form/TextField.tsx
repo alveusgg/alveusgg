@@ -50,17 +50,20 @@ export function TextField(props: TextFieldProps) {
       <label className={props.labelClassName} {...labelProps}>
         {props.label}
       </label>
-      <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
+      <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500 has-[:invalid]:border-red-600">
         {props.prefix}
         <input
           className={classes(
-            "w-full flex-1 bg-white p-1 px-2 text-black",
+            "w-full flex-1 bg-white p-1 px-2 text-black invalid:text-red-800 invalid:outline-red",
             props.inputClassName,
           )}
           {...inputProps}
           list={props.list}
           required={props.isRequired}
           ref={ref}
+          onBlur={(e) => {
+            e.currentTarget.reportValidity();
+          }}
         />
         {showResetButton && (
           <button className="px-2" type="button" onClick={reset}>
