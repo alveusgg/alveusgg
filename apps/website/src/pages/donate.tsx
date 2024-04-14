@@ -141,6 +141,15 @@ const DonatePage: NextPage = () => {
             <TheGivingBlockEmbed />
           </Consent>
         </div>
+
+        <div className="mt-6 text-sm text-alveus-green">
+          <p>
+            Alveus Sanctuary will honor any of the giving preferences of donors
+            for any pre-approved program, or project where possible. In the
+            event that this is not possible, donations will be utilized for the
+            general benefit of the sanctuary.
+          </p>
+        </div>
       </Section>
     </>
   );
