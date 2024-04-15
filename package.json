@@ -25,8 +25,8 @@
   },
   "scripts": {
     "prepare": "husky",
-    "lint": "prettier . --check",
-    "format": "prettier . --write"
+    "lint": "biome format .",
+    "format": "biome format --write ."
   },
   "pnpm": {
     "patchedDependencies": {
