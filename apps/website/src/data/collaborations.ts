@@ -58,7 +58,8 @@ const collaborations: Collaboration[] = (
       name: "Eret & Ava",
       link: "https://www.twitch.tv/eret",
       date: new Date("2024-04-09"),
-      videoId: "uKq6E747zVM",
+      videoId: "uha66hFP3oM",
+      vodId: "uKq6E747zVM",
       creators: [
         {
           name: "Eret",
