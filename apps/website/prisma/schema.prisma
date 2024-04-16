@@ -301,7 +301,7 @@ model ShortLinksTracking {
 }
 
 model CalendarEvent {
-  id          String @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
   category    String
@@ -453,12 +453,12 @@ model ImageMetadata {
 
 model ImageAttachment {
   id                  String @id @default(cuid())
-  name                String
-  title               String
-  alternativeText     String
-  caption             String
-  description         String
-  url                 String
+  name                String @db.VarChar(200)
+  title               String @db.VarChar(200)
+  alternativeText     String @db.VarChar(300)
+  caption             String @db.VarChar(200)
+  description         String @db.VarChar(200)
+  url                 String @db.VarChar(200)
   fileStorageObjectId String @unique
 
   fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
