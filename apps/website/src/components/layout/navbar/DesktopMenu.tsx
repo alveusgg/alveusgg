@@ -160,7 +160,7 @@ export function DesktopMenu() {
         className="flex items-center gap-4 border-t border-white pt-2"
       >
         <Link href="/" className="font-serif text-3xl font-bold">
-          Alveus
+          Alveus Sanctuary
         </Link>
         <ul className="flex flex-grow justify-end">
           {Object.entries(mainNavStructure).map(([key, link]) => (
