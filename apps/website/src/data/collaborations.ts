@@ -2,6 +2,9 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import pokimane from "@/assets/collaborations/pokimane.png";
+import ariaSaki from "@/assets/collaborations/aria-saki.png";
+import hyoon from "@/assets/collaborations/hyoon.png";
 import eret from "@/assets/collaborations/eret.png";
 import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
 import jackManifold from "@/assets/collaborations/jack-manifold.png";
@@ -54,6 +57,29 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Pokimane, AriaSaki & Hyoon",
+      link: "https://www.twitch.tv/pokimane",
+      date: new Date("2024-04-18"),
+      videoId: "G45SqJPsrOI",
+      creators: [
+        {
+          name: "Pokimane",
+          image: pokimane,
+          popularity: 9_300_000, // Twitch followers, 2024-04-19
+        },
+        {
+          name: "AriaSaki",
+          image: ariaSaki,
+          popularity: 650_000, // Twitch followers, 2024-04-19
+        },
+        {
+          name: "Hyoon",
+          image: hyoon,
+          popularity: 270_000, // Twitch followers, 2024-04-19
+        },
+      ],
+    },
     {
       name: "Eret & Ava",
       link: "https://www.twitch.tv/eret",
