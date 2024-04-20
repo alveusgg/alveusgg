@@ -28,7 +28,7 @@
     "prepare": "husky",
     "lint-staged": "lint-staged --relative",
     "lint": "prettier . --check",
-    "format": "prettier . --write"
+    "format": "prettier . --write && pnpm dlx prisma format --schema apps/website/prisma/schema.prisma"
   },
   "pnpm": {
     "patchedDependencies": {
