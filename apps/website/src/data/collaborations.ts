@@ -61,7 +61,8 @@ const collaborations: Collaboration[] = (
       name: "Pokimane, AriaSaki & Hyoon",
       link: "https://www.twitch.tv/pokimane",
       date: new Date("2024-04-18"),
-      videoId: "G45SqJPsrOI",
+      videoId: "jKovWYZJ-H8",
+      vodId: "G45SqJPsrOI",
       creators: [
         {
           name: "Pokimane",
