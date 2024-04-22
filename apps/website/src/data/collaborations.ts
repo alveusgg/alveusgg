@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import valkyrae from "@/assets/collaborations/valkyrae.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
 import hyoon from "@/assets/collaborations/hyoon.png";
@@ -57,6 +58,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Valkyrae",
+      link: "https://www.youtube.com/@Valkyrae",
+      date: new Date("2024-04-21"),
+      videoId: "nt7nbMao9c4",
+      creators: [
+        {
+          name: "Valkyrae",
+          image: valkyrae,
+          popularity: 4_000_000, // YouTube subscribers, 2024-04-22
+        },
+      ],
+    },
     {
       name: "Pokimane, AriaSaki & Hyoon",
       link: "https://www.twitch.tv/pokimane",
