@@ -21,7 +21,7 @@
     "indentStyle": "space",
     "indentWidth": 2,
     "lineEnding": "lf",
-    "include": ["apps/website/src/", "apps/chatbot/src/"],
+    "include": ["apps/website/src/", "apps/chatbot/src/", "apps/website/out"],
     "ignore": [
       "node_modules",
       "apps/website/.next",
