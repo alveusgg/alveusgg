@@ -1,11 +1,11 @@
-import {
-  forwardRef,
-  type AnchorHTMLAttributes,
-  type RefAttributes,
-  type ReactNode,
-} from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
+import {
+  type AnchorHTMLAttributes,
+  type ReactNode,
+  type RefAttributes,
+  forwardRef,
+} from "react";
 
 import { classes } from "@/utils/classes";
 

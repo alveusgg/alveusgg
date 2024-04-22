@@ -1,20 +1,20 @@
 import type {
+  GetServerSidePropsContext,
   InferGetStaticPropsType,
   NextPage,
-  GetServerSidePropsContext,
 } from "next";
 
-import { getSession } from "next-auth/react";
-import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
+import { getAdminSSP } from "@/server/utils/admin";
+import { getSession } from "next-auth/react";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import Meta from "@/components/content/Meta";
-import { ShortLinkForm } from "@/components/admin/short-links/ShortLinkForm";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import { trpc } from "@/utils/trpc";
+import { ShortLinkForm } from "@/components/admin/short-links/ShortLinkForm";
+import Meta from "@/components/content/Meta";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { trpc } from "@/utils/trpc";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);
@@ -24,7 +24,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       redirect: {
         destination: session?.user?.id
           ? "/unauthorized"
-          : `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+          : `/auth/signin?callbackUrl=${encodeURIComponent(
+              context.resolvedUrl,
+            )}`,
         permanent: false,
       },
     };

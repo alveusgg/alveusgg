@@ -1,12 +1,12 @@
 import {
+  type ChangeEvent,
+  type Dispatch,
+  type Key,
   useCallback,
   useId,
   useReducer,
   useRef,
   useState,
-  type Dispatch,
-  type ChangeEvent,
-  type Key,
 } from "react";
 
 import { fileToBase64 } from "@/utils/files";

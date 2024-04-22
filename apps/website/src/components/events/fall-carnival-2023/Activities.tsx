@@ -8,10 +8,10 @@ import { camelToKebab } from "@/utils/string-case";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
-import Link from "@/components/content/Link";
-import Heading from "@/components/content/Heading";
-import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Section from "@/components/content/Section";
 
 export const activities = (
   [

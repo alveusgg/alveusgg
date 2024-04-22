@@ -1,24 +1,24 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 import Image from "next/image";
 import { forwardRef } from "react";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
-import { formatDateTime } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
+import { formatDateTime } from "@/utils/datetime";
 
 import events, { type Event } from "@/data/events";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import VideoPlayer from "@/components/content/Video";
-import Meta from "@/components/content/Meta";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import VideoPlayer from "@/components/content/Video";
 
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const sortByOptions = {
   all: {

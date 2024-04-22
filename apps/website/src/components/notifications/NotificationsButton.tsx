@@ -1,18 +1,18 @@
 import { Popover, Transition } from "@headlessui/react";
-import { Fragment } from "react";
 import Link from "next/link";
+import { Fragment } from "react";
 
-import { classes } from "@/utils/classes";
-import IconNotification from "@/icons/IconNotification";
-import IconNotificationOn from "@/icons/IconNotificationOn";
-import IconNotificationOff from "@/icons/IconNotificationOff";
 import IconChevronRight from "@/icons/IconChevronRight";
+import IconNotification from "@/icons/IconNotification";
+import IconNotificationOff from "@/icons/IconNotificationOff";
+import IconNotificationOn from "@/icons/IconNotificationOn";
+import { classes } from "@/utils/classes";
 
+import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
 import {
   NotificationSettings,
   useNotificationStatus,
 } from "@/components/notifications/NotificationSettings";
-import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
 
 export const NotificationsButton = ({
   openDirectionX = "left",

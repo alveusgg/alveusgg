@@ -3,21 +3,21 @@ import type {
   InferGetStaticPropsType,
   NextPage,
 } from "next";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
 import { getPostById } from "@/server/db/show-and-tell";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
+import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
 
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
-import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const postId = String(params?.postId || "");

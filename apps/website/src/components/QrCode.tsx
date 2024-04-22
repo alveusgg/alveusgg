@@ -22,7 +22,7 @@
  * "MIT" license. For details, see src/third-party/qrcodegen.
  */
 
-import React from "react";
+import type React from "react";
 
 import { QrCode } from "@/third-party/qrcodegen";
 
@@ -30,9 +30,9 @@ type Modules = Array<Array<boolean>>;
 
 function modulesToSvgPath(modules: Modules): string {
   const ops: Array<string> = [];
-  modules.forEach(function (row, y) {
+  modules.forEach((row, y) => {
     let start: number | null = null;
-    row.forEach(function (cell, x) {
+    row.forEach((cell, x) => {
       if (!cell && start !== null) {
         // M0 0h7v1H0z injects the space with the move and drops the comma,
         // saving a char per operation

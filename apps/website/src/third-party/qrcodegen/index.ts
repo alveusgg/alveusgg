@@ -1,31 +1,3 @@
-/* eslint-disable */
-// @ts-ignore
-
-/*
- * QR Code generator library (TypeScript)
- *
- * Copyright (c) Project Nayuki. (MIT License)
- * https://www.nayuki.io/page/qr-code-generator-library
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy of
- * this software and associated documentation files (the "Software"), to deal in
- * the Software without restriction, including without limitation the rights to
- * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
- * the Software, and to permit persons to whom the Software is furnished to do so,
- * subject to the following conditions:
- * - The above copyright notice and this permission notice shall be included in
- *   all copies or substantial portions of the Software.
- * - The Software is provided "as is", without warranty of any kind, express or
- *   implied, including but not limited to the warranties of merchantability,
- *   fitness for a particular purpose and noninfringement. In no event shall the
- *   authors or copyright holders be liable for any claim, damages or other
- *   liability, whether in an action of contract, tort or otherwise, arising from,
- *   out of or in connection with the Software or the use or other dealings in the
- *   Software.
- */
-
-"use strict";
-
 type bit = number;
 type byte = number;
 type int = number;
@@ -781,7 +753,11 @@ export class QrSegment {
     for (let i = 0; i < digits.length; ) {
       // Consume up to 3 digits per iteration
       const n: int = Math.min(digits.length - i, 3);
-      appendBits(parseInt(digits.substring(i, i + n), 10), n * 3 + 1, bb);
+      appendBits(
+        Number.parseInt(digits.substring(i, i + n), 10),
+        n * 3 + 1,
+        bb,
+      );
       i += n;
     }
     return new QrSegment(Mode.NUMERIC, digits.length, bb);
@@ -883,10 +859,10 @@ export class QrSegment {
     segs: Readonly<Array<QrSegment>>,
     version: int,
   ): number {
-    let result: number = 0;
+    let result = 0;
     for (const seg of segs) {
       const ccbits: int = seg.mode.numCharCountBits(version);
-      if (seg.numChars >= 1 << ccbits) return Infinity; // The segment's length doesn't fit the field's bit width
+      if (seg.numChars >= 1 << ccbits) return Number.POSITIVE_INFINITY; // The segment's length doesn't fit the field's bit width
       result += 4 + ccbits + seg.bitData.length;
     }
     return result;
@@ -899,7 +875,7 @@ export class QrSegment {
     for (let i = 0; i < str.length; i++) {
       if (str.charAt(i) != "%") result.push(str.charCodeAt(i));
       else {
-        result.push(parseInt(str.substring(i + 1, i + 3), 16));
+        result.push(Number.parseInt(str.substring(i + 1, i + 3), 16));
         i += 2;
       }
     }
