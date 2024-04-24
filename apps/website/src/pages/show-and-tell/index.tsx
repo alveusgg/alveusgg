@@ -13,7 +13,11 @@ import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
-import { getPosts } from "@/server/db/show-and-tell";
+import {
+  getPosts,
+  getPostsCount,
+  getUsersCount,
+} from "@/server/db/show-and-tell";
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
@@ -56,11 +60,15 @@ export const getStaticProps = async () => {
     const nextItem = entries.pop();
     nextCursor = nextItem?.id || undefined;
   }
+  const totalPostsCount = await getPostsCount();
+  const usersCount = await getUsersCount();
 
   return {
     props: {
       entries,
       nextCursor,
+      totalPostsCount,
+      usersCount,
     },
   };
 };
@@ -74,6 +82,8 @@ const isShowAndTellEntry = (
 const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   entries: initialEntries,
   nextCursor,
+  totalPostsCount,
+  usersCount,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
     {},
@@ -391,6 +401,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
+          <h1 className="text-center text-3xl italic">
+            {totalPostsCount} posts by {usersCount} users
+          </h1>
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
               <ShowAndTellEntry
