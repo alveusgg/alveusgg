@@ -401,9 +401,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
-          <h1 className="text-center text-3xl italic">
-            {totalPostsCount} posts by {usersCount} users
-          </h1>
+          <p className="text-center text-3xl italic">
+            {totalPostsCount} posts by {usersCount} community members
+          </p>
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
               <ShowAndTellEntry
