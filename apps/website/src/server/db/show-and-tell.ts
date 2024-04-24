@@ -243,10 +243,14 @@ export async function getPosts({
     take,
   });
 }
+
 export async function getPostsCount() {
-  const totalPosts = await prisma.showAndTellEntry.count();
+  const totalPosts = await prisma.showAndTellEntry.count({
+    where: getPostFilter("approved"),
+  });
   return totalPosts;
 }
+
 export async function getUsersCount() {
   const userCountwithId = await prisma.showAndTellEntry.findMany({
     select: { id: true },
@@ -254,13 +258,19 @@ export async function getUsersCount() {
       userId: {
         not: null,
       },
+      AND: getPostFilter("approved"),
     },
     distinct: ["userId"],
   });
+
   const usersWithNoUserId = await prisma.showAndTellEntry.findMany({
     select: { id: true },
     where: {
       userId: null,
+      approvedAt: {
+        not: null,
+      },
+      AND: getPostFilter("approved"),
     },
     distinct: ["displayName"],
   });
