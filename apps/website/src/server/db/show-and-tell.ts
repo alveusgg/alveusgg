@@ -267,9 +267,6 @@ export async function getUsersCount() {
     select: { id: true },
     where: {
       userId: null,
-      approvedAt: {
-        not: null,
-      },
       AND: getPostFilter("approved"),
     },
     distinct: ["displayName"],
