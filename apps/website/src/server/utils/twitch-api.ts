@@ -167,3 +167,96 @@ export async function getUserByName(userName: string) {
   const data = await usersResponseSchema.parseAsync(json);
   return data?.data?.[0];
 }
+
+const clipsResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string(),
+      url: z.string().url(),
+      embed_url: z.string().url(),
+      broadcaster_id: z.string(),
+      broadcaster_name: z.string(),
+      creator_id: z.string(),
+      creator_name: z.string(),
+      video_id: z.string(),
+      game_id: z.string(),
+      language: z.string(),
+      title: z.string(),
+      view_count: z.number(),
+      created_at: z.string(),
+      thumbnail_url: z.string().url(),
+      duration: z.number(),
+      vod_offset: z.nullable(z.number()),
+    }),
+  ),
+  pagination: paginationSchema,
+});
+
+export async function getClipDetails(slug: string | string[]) {
+  const url = new URL("https://api.twitch.tv/helix/clips");
+
+  if (Array.isArray(slug)) {
+    for (const s of slug) {
+      url.searchParams.append("id", s);
+    }
+    url.searchParams.set("first", slug.length.toString());
+  } else {
+    url.searchParams.set("id", slug);
+  }
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      ...(await getApplicationAuthHeaders()),
+    },
+  });
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get clip details!");
+  }
+
+  return clipsResponseSchema.parseAsync(json);
+}
+
+export async function getClipsByDate(
+  channel: string,
+  start: Date,
+  end: Date,
+  cursor?: string,
+) {
+  const url = new URL("https://api.twitch.tv/helix/clips");
+
+  url.searchParams.set("broadcaster_id", channel);
+  url.searchParams.set("first", "100");
+  url.searchParams.set("started_at", start.toISOString());
+  url.searchParams.set("ended_at", end.toISOString());
+
+  if (cursor) {
+    url.searchParams.set("after", cursor);
+  }
+
+  const response = await fetch(url, {
+    method: "GET",
+    headers: {
+      ...(await getApplicationAuthHeaders()),
+    },
+  });
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get clip details!");
+  }
+
+  return clipsResponseSchema.parseAsync(json);
+}
