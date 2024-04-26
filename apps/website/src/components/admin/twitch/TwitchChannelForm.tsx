@@ -10,6 +10,7 @@ import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 
 type TwitchChannelFormProps = {
   action: "create" | "edit";
@@ -56,7 +57,7 @@ export function TwitchChannelForm({ action, data }: TwitchChannelFormProps) {
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
       {submit.error && (
         <MessageBox variant="failure">
-          <pre>{submit.error.message}</pre>
+          <ProcedureErrorMessage error={submit.error} />
         </MessageBox>
       )}
       {submit.isSuccess && (

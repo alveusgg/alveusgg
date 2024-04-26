@@ -25,11 +25,12 @@ import {
 import { type BingoSchema } from "@/server/db/bingos";
 
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import { TextField } from "@/components/shared/form/TextField";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
-import { MessageBox } from "@/components/shared/MessageBox";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";
 import { NumberField } from "@/components/shared/form/NumberField";
@@ -142,10 +143,10 @@ export function BingoForm({ action, bingo }: BingoFormProps) {
 
   return (
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
-      {(submit.error || error) && (
+      {error && <MessageBox variant="failure">{error}</MessageBox>}
+      {submit.error && (
         <MessageBox variant="failure">
-          {submit.error?.message && <pre>{submit.error.message}</pre>}
-          {error && <pre>{error}</pre>}
+          <ProcedureErrorMessage error={submit.error} />
         </MessageBox>
       )}
       {submit.isSuccess && (

@@ -20,23 +20,24 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 import useFileUpload from "@/hooks/files/upload";
 
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
-import { Fieldset } from "../shared/form/Fieldset";
-import { TextField } from "../shared/form/TextField";
-import { RichTextField } from "../shared/form/RichTextField";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { TextField } from "@/components/shared/form/TextField";
+import { RichTextField } from "@/components/shared/form/RichTextField";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
-} from "../shared/form/UploadAttachmentsField";
-import { Button } from "../shared/form/Button";
-import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
-import { MessageBox } from "../shared/MessageBox";
-import { TextAreaField } from "../shared/form/TextAreaField";
-import { NumberField } from "../shared/form/NumberField";
+} from "@/components/shared/form/UploadAttachmentsField";
+import { Button } from "@/components/shared/form/Button";
+import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
+import { TextAreaField } from "@/components/shared/form/TextAreaField";
+import { NumberField } from "@/components/shared/form/NumberField";
 import {
   useVideoLinksData,
   VideoLinksField,
-} from "../shared/form/VideoLinksField";
-import Link from "../content/Link";
+} from "@/components/shared/form/VideoLinksField";
+import Link from "@/components/content/Link";
 
 export const allowedFileTypes = [
   "image/png",
@@ -197,8 +198,7 @@ export function ShowAndTellEntryForm({
             router.push(`/show-and-tell/my-posts/`);
           }
         },
-        onError: (err) => {
-          setError(err.message);
+        onError: () => {
           onUpdate?.();
         },
       });
@@ -210,8 +210,7 @@ export function ShowAndTellEntryForm({
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
           },
-          onError: (err) => {
-            setError(err.message);
+          onError: () => {
             onUpdate?.();
           },
         },
@@ -224,8 +223,7 @@ export function ShowAndTellEntryForm({
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
           },
-          onError: (err) => {
-            setError(err.message);
+          onError: () => {
             onUpdate?.();
           },
         },
@@ -246,6 +244,12 @@ export function ShowAndTellEntryForm({
     );
   }
 
+  const mutationError =
+    action === "update"
+      ? update.error
+      : action === "create"
+        ? create.error
+        : review.error;
   const wasApproved = entry && getEntityStatus(entry) === "approved";
 
   return (
@@ -259,6 +263,11 @@ export function ShowAndTellEntryForm({
         </MessageBox>
       )}
       {error && <MessageBox variant="failure">{error}</MessageBox>}
+      {mutationError && (
+        <MessageBox variant="failure">
+          <ProcedureErrorMessage error={mutationError} />
+        </MessageBox>
+      )}
       {successMessage && (
         <MessageBox variant="success">{successMessage}</MessageBox>
       )}
@@ -288,7 +297,7 @@ export function ShowAndTellEntryForm({
               placeholder="What's your post about?"
             />
             <RichTextField
-              label="Content"
+              label="Text"
               name="text"
               defaultValue={entry?.text}
               maxLength={getMaxTextLengthForCreatedAt(entry?.createdAt)}
@@ -392,6 +401,11 @@ export function ShowAndTellEntryForm({
         </Fieldset>
 
         {error && <MessageBox variant="failure">{error}</MessageBox>}
+        {mutationError && (
+          <MessageBox variant="failure">
+            <ProcedureErrorMessage error={mutationError} />
+          </MessageBox>
+        )}
         {successMessage && (
           <MessageBox variant="success">{successMessage}</MessageBox>
         )}

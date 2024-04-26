@@ -15,6 +15,7 @@ import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNav
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 
 const PreviewShowAndTellPage: NextPage = () => {
   const session = useSession();
@@ -75,7 +76,7 @@ const PreviewShowAndTellPage: NextPage = () => {
             {getMyPost.isLoading && <p>Loading...</p>}
             {getMyPost.isError && (
               <MessageBox variant="failure">
-                {getMyPost.error.message}
+                <ProcedureErrorMessage error={getMyPost.error} />
               </MessageBox>
             )}
             {getMyPost.data && (
