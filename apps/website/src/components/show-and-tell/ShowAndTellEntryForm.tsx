@@ -34,6 +34,8 @@ import {
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
 
+const dateWhenTextShortened = new Date(2024, 3, 26);
+
 export const allowedFileTypes = [
   "image/png",
   "image/jpeg",
@@ -287,7 +289,11 @@ export function ShowAndTellEntryForm({
               label="Content"
               name="text"
               defaultValue={entry?.text}
-              maxLength={700}
+              maxLength={
+                entry?.createdAt && entry.createdAt < dateWhenTextShortened
+                  ? 700
+                  : 300
+              }
             />
           </Fieldset>
         </div>
