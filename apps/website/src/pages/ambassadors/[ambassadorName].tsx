@@ -10,6 +10,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
+  getAmbassadorIconImage,
   type AmbassadorImage,
   type AmbassadorImages,
 } from "@alveusgg/data/src/ambassadors/images";
@@ -21,21 +22,15 @@ import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
 import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
 
-import animalQuestImage from "@/assets/animal-quest/full.png";
-
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
-import IconYouTube from "@/icons/IconYouTube";
+import AnimalQuest from "@/components/content/AnimalQuest";
 
-import {
-  camelToKebab,
-  kebabToCamel,
-  sentenceToKebab,
-} from "@/utils/string-case";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
@@ -46,6 +41,7 @@ type AmbassadorPageProps = {
   enclosure: Enclosure;
   images: AmbassadorImages;
   merchImage?: AmbassadorImage;
+  iconImage?: AmbassadorImage;
   animalQuest?: AnimalQuestWithRelation[];
 };
 
@@ -76,6 +72,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
       enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
+      iconImage: getAmbassadorIconImage(ambassadorKey),
       animalQuest: getAmbassadorEpisodes(ambassadorKey),
     },
   };
@@ -86,6 +83,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   enclosure,
   images,
   merchImage,
+  iconImage,
   animalQuest,
 }) => {
   const stats = useMemo(
@@ -211,6 +209,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         title={`${ambassador.name} | Ambassadors`}
         description={`${ambassador.name} is an Alveus Ambassador. ${ambassador.story} ${ambassador.mission}`}
         image={images[0].src.src}
+        icon={iconImage?.src?.src}
       />
 
       {/* Nav background */}
@@ -249,61 +248,27 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <dl className="mb-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-1 lg:grid-cols-2">
+            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2-auto md:grid-cols-1 lg:grid-cols-2-auto">
               {stats.map(({ title, value }, idx) => (
                 <Fragment key={title}>
                   {idx !== 0 && (
-                    <div className="col-span-full my-2 h-px bg-alveus-green opacity-10" />
+                    <div className="col-span-full h-px bg-alveus-green opacity-10" />
                   )}
-                  <dt className="my-2 self-center text-2xl font-bold">
-                    {title}
-                  </dt>
-                  <dd className="mx-2 my-2 self-center text-xl">{value}</dd>
+                  <dt className="self-center text-2xl font-bold">{title}</dt>
+                  <dd className="self-center text-balance text-xl">{value}</dd>
                 </Fragment>
               ))}
             </dl>
 
             {animalQuest &&
               animalQuest.map((aq) => (
-                <Link
+                <AnimalQuest
                   key={aq.episode}
-                  href={`/animal-quest/${sentenceToKebab(aq.edition)}`}
-                  className="group relative z-0 my-6 flex flex-wrap items-center justify-between gap-8 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap"
-                  custom
-                >
-                  <Image
-                    src={animalQuestImage}
-                    alt=""
-                    width={688}
-                    className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
-                  />
-
-                  <div>
-                    <Heading
-                      level={2}
-                      className="transition-colors group-hover:text-alveus-green-800"
-                    >
-                      Animal Quest #{aq.episode}:{" "}
-                      <span className="min-[320px]:whitespace-nowrap">
-                        {aq.edition}
-                      </span>
-                    </Heading>
-                    <p className="text-xl text-alveus-green-800">
-                      Learn more{" "}
-                      {aq.relation === "featured" &&
-                        `about ${ambassador.name} `}
-                      on{" "}
-                      <span className="min-[320px]:whitespace-nowrap">
-                        Animal Quest
-                      </span>
-                    </p>
-                  </div>
-
-                  <IconYouTube
-                    size={48}
-                    className="shrink-0 transition-colors group-hover:text-alveus-green-600"
-                  />
-                </Link>
+                  episode={aq}
+                  relation={aq.relation}
+                  ambassador={ambassador}
+                  className="my-6"
+                />
               ))}
 
             <div className="pswp-gallery my-6" id={photoswipe}>

@@ -23,7 +23,7 @@ export const Navbar = () => {
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center px-1 lg:-ml-4 lg:px-0"
+              className="flex flex-shrink-0 items-center px-1 lg:-ml-4 lg:px-0"
               aria-label="Alveus Sanctuary Inc."
             >
               <Image
@@ -38,9 +38,9 @@ export const Navbar = () => {
             <DesktopMenu />
 
             {/* Mobile menu toggle */}
-            <div className="flex flex-grow items-center justify-center lg:hidden">
+            <div className="flex flex-grow items-center justify-center text-center lg:hidden">
               <Link href="/" className="font-serif text-3xl font-bold">
-                Alveus
+                Alveus Sanctuary
               </Link>
             </div>
             <div className="flex items-center lg:hidden">

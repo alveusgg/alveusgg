@@ -20,7 +20,7 @@ const staff = {
   connor: {
     image: connorObrienImage,
     name: "Connor O'Brien",
-    title: "Operations Manager",
+    title: "Director of Operations",
     description: (
       <>
         <p>
@@ -43,7 +43,7 @@ const staff = {
   kayla: {
     image: kaylaJacksonImage,
     name: "Kayla Jackson",
-    title: "Animal Care & Training Manager",
+    title: "Director of Animal Care & Training",
     description: (
       <>
         <p>

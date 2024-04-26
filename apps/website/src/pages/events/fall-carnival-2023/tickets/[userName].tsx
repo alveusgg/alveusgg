@@ -2,7 +2,7 @@ import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import {
   eventId,

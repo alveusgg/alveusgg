@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/config/show-and-tell";
+import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
 
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
@@ -91,6 +91,7 @@ const showAndTellSharedInputSchema = z.object({
   text: z.string().max(1_000),
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
+  volunteeringMinutes: z.number().int().positive().nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -198,6 +199,7 @@ export async function createPost(
       displayName: input.displayName,
       title: input.title,
       text,
+      volunteeringMinutes: input.volunteeringMinutes,
       attachments: { create: [...newImages, ...newVideos] },
     },
   });
@@ -240,6 +242,28 @@ export async function getPosts({
     cursor: cursor ? { id: cursor } : undefined,
     take,
   });
+}
+
+export async function getVolunteeringMinutes({
+  from,
+  to,
+}: {
+  from?: Date;
+  to?: Date;
+} = {}) {
+  return (
+    (
+      await prisma.showAndTellEntry.aggregate({
+        _sum: { volunteeringMinutes: true },
+        where: {
+          AND: [
+            getPostFilter("approved"),
+            { createdAt: { gte: from, lte: to } },
+          ],
+        },
+      })
+    )._sum.volunteeringMinutes ?? 0
+  );
 }
 
 export async function getAdminPosts({
@@ -302,6 +326,7 @@ export async function updatePost(
         displayName: input.displayName,
         title: input.title,
         text,
+        volunteeringMinutes: input.volunteeringMinutes,
         updatedAt: now,
         approvedAt:
           keepApproved && wasApproved ? now : existingEntry.approvedAt,

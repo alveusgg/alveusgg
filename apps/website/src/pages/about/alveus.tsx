@@ -7,14 +7,15 @@ import { formatPartialDateString } from "@/utils/datetime";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import Timeline from "@/components/content/Timeline";
 import { Lightbox, Preview } from "@/components/content/YouTube";
+import Maya from "@/components/content/Maya";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
-import mayaImage from "@/assets/maya.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -237,7 +238,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         content: [
           "Fox enclosure constructed",
           "A 40ft by 26ft wire-mesh enclosure, with a grass/dirt floor, trees + tree-house, and an air-conditioned indoor area.",
-          "Sponsored by QTCinderalla and her community.",
+          "Sponsored by QTCinderella and her community.",
         ],
       },
       {
@@ -553,11 +554,7 @@ const AboutAlveusPage: NextPage = () => {
       <Section dark>
         <div className="flex flex-wrap-reverse items-center">
           <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
-            <Image
-              src={mayaImage}
-              alt="Maya Higa, holding an owl in one photo, and a falcon in the second photo"
-              className="ml-auto h-auto w-full max-w-lg"
-            />
+            <Maya className="mx-auto h-auto w-full max-w-lg lg:mr-0" />
           </div>
 
           <div className="basis-full md:basis-1/2 md:px-4">
@@ -570,13 +567,9 @@ const AboutAlveusPage: NextPage = () => {
               conservationist with a passion for educating others.
             </p>
 
-            <Link
-              className="mt-8 inline-block rounded-full border-2 border-alveus-tan px-6 py-2 text-xl transition-colors hover:bg-alveus-tan hover:text-alveus-green"
-              custom
-              href="/about/maya"
-            >
+            <Button href="/about/maya" dark className="mt-8">
               Learn more about Maya
-            </Link>
+            </Button>
           </div>
         </div>
       </Section>
@@ -649,8 +642,9 @@ const AboutAlveusPage: NextPage = () => {
               non-profit organizations, helping donors and funders make informed
               decisions about their support. Check out our{" "}
               <Link
-                external
                 href="https://www.guidestar.org/profile/86-1772907"
+                external
+                dark
               >
                 non-profit profile on Candid
               </Link>

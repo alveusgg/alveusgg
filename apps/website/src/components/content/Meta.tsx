@@ -3,12 +3,13 @@ import { type ReactNode } from "react";
 
 import headerImage from "@/assets/header.png";
 import { createImageUrl } from "@/utils/image";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 type MetaProps = {
   title?: string;
   description?: string;
   image?: string;
+  icon?: string;
   noindex?: boolean;
   children?: ReactNode;
 };
@@ -16,7 +17,14 @@ type MetaProps = {
 // Get our base URL, which will either be specifically set, or from Vercel for preview deployments
 const BASE_URL = env.NEXT_PUBLIC_BASE_URL;
 
-const Meta = ({ title, description, image, noindex, children }: MetaProps) => {
+const Meta = ({
+  title,
+  description,
+  image,
+  icon,
+  noindex,
+  children,
+}: MetaProps) => {
   const defaultTitle = "Alveus Sanctuary";
   const defaultDescription =
     "Alveus is a 501(c)(3) nonprofit organization functioning as a wildlife sanctuary & virtual education center following the journeys of our non-releasable ambassadors, aiming to educate and spark an appreciation for them and their wild counterparts.";
@@ -38,6 +46,11 @@ const Meta = ({ title, description, image, noindex, children }: MetaProps) => {
         key="description"
         name="description"
         content={computedDescription}
+      />
+      <link
+        key="icon"
+        rel="shortcut icon"
+        href={BASE_URL + (icon || "/favicon-512x512.png")}
       />
       <meta key="og:title" property="og:title" content={computedTitle} />
       <meta

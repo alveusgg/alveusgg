@@ -1,7 +1,8 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, useMemo } from "react";
+import type { Episode } from "schema-dts";
 
 import animalQuest, {
   hosts,
@@ -11,17 +12,24 @@ import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
+import { env } from "@/env";
+
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Link from "@/components/content/Link";
+import JsonLD from "@/components/content/JsonLD";
+import { TwitchEmbed } from "@/components/content/TwitchEmbed";
 import Consent from "@/components/Consent";
+
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { formatDateTime, formatSeconds } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { createImageUrl } from "@/utils/image";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 
@@ -49,14 +57,20 @@ const getTwitchEmbed = (
   {
     start,
     player,
-    autoPlay = false,
-  }: Partial<{ start: string; player: string; autoPlay: boolean }> = {},
+    autoPlay = true,
+    muted = false,
+  }: Partial<{
+    start: string;
+    player: string;
+    autoPlay: boolean;
+    muted: boolean;
+  }> = {},
 ): string => {
   const url = new URL("https://player.twitch.tv");
   url.searchParams.set("video", video.toString());
   url.searchParams.set("parent", parent);
   url.searchParams.set("autoplay", autoPlay.toString());
-  url.searchParams.set("muted", "false");
+  url.searchParams.set("muted", muted.toString());
   url.searchParams.set("allowfullscreen", "true");
   url.searchParams.set("width", "100%");
   url.searchParams.set("height", "100%");
@@ -91,6 +105,13 @@ const secondsToString = (seconds: number): string => {
   const m = (Math.floor(seconds / 60) % 60).toString().padStart(2, "0");
   const s = (seconds % 60).toString().padStart(2, "0");
   return `${h}h${m}m${s}s`;
+};
+
+const secondsToIso8601 = (seconds: number): string => {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor(seconds / 60) % 60;
+  const s = seconds % 60;
+  return `PT${h}H${m}M${s}S`;
 };
 
 type AnimalQuestEpisodePageProps = {
@@ -162,13 +183,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
     return secondsToString(Math.max(defaultSeconds, querySeconds));
   }, [episode.video.start, router.query.t]);
 
-  const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
-  useEffect(() => {
-    setTwitchEmbed(
-      getTwitchEmbed(episode.video.id, window.location.hostname, { start }),
-    );
-  }, [episode.video.id, start]);
-
   const description = useMemo(
     () =>
       [
@@ -199,7 +213,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Link
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
-            className="group text-center transition-colors hover:text-alveus-green-900"
+            className="group text-center transition-colors hover:text-alveus-green"
             custom
           >
             <Image
@@ -258,7 +272,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           content={getTwitchEmbed(episode.video.id, "meta.tag", {
             start: episode.video.start,
             player: "twitter",
-            autoPlay: true,
           })}
         />
         <meta key="twitter:card" property="twitter:card" content="player" />
@@ -279,7 +292,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           content={getTwitchEmbed(episode.video.id, "meta.tag", {
             start: episode.video.start,
             player: "facebook",
-            autoPlay: true,
           })}
         />
         <meta
@@ -288,7 +300,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           content={getTwitchEmbed(episode.video.id, "meta.tag", {
             start: episode.video.start,
             player: "facebook",
-            autoPlay: true,
           })}
         />
         <meta
@@ -316,92 +327,112 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
         />
 
-        <Section
-          dark
-          className="py-0"
-          containerClassName="flex flex-wrap items-center justify-between"
-        >
-          <div className="flex w-full flex-col gap-4 pb-16 pt-4 md:w-3/5 md:py-24">
-            <Heading className="flex flex-col">
-              <span className="text-lg">
-                Animal Quest Episode {episode.episode}:{" "}
-              </span>
-              <span>{episode.edition}</span>
-            </Heading>
+        <Section dark>
+          <div className="flex flex-wrap lg:flex-nowrap">
+            <div className="flex w-full flex-shrink-0 flex-col items-start justify-between py-4 lg:max-w-md lg:pl-8">
+              <Heading className="flex flex-col">
+                <span className="text-lg">
+                  Animal Quest Episode {episode.episode}:{" "}
+                </span>
+                <span>{episode.edition}</span>
+              </Heading>
+
+              <div className="flex w-full flex-wrap">
+                <h2 className="sr-only">Episode Information</h2>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Broadcast:
+                  </Heading>
+                  <p>{formatDateTime(episode.broadcast, { style: "long" })}</p>
+                </div>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Featuring:
+                  </Heading>
+                  <p>
+                    {typeSafeObjectEntries(featured).map(
+                      ([key, ambassador], idx, arr) => (
+                        <Fragment key={key}>
+                          {/* Retired ambassadors don't have pages */}
+                          {isActiveAmbassadorKey(key) ? (
+                            <Link
+                              href={`/ambassadors/${camelToKebab(key)}`}
+                              dark
+                            >
+                              {ambassador.name}
+                            </Link>
+                          ) : (
+                            ambassador.name
+                          )}
+                          {idx < arr.length - 2 && ", "}
+                          {idx === arr.length - 2 && arr.length > 2 && ","}
+                          {idx === arr.length - 2 && " and "}
+                        </Fragment>
+                      ),
+                    )}
+                  </p>
+                </div>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Host:
+                  </Heading>
+                  <p>
+                    <Link href={host.link} external={host.external} dark>
+                      {host.name}
+                    </Link>
+                  </p>
+                </div>
+
+                <div className="w-full sm:w-1/2">
+                  <Heading level={3} className="text-2xl">
+                    Length:
+                  </Heading>
+                  <p title="Video length may appear longer due to intro/outro screen segments">
+                    {formatSeconds(episode.length, {
+                      style: "long",
+                      seconds: false,
+                    })}
+                  </p>
+                </div>
+              </div>
+
+              <Button href="/animal-quest" className="mt-8" dark>
+                Discover more episodes
+              </Button>
+            </div>
+
+            {/* Move the video to the left/top of the flex container with order-first */}
+            {/* Do this in CSS so the episode title is first in the DOM for screen-readers etc. */}
+            <div className="order-first flex w-full flex-grow flex-col gap-4 lg:w-auto">
+              <h2 className="sr-only" id="video">
+                Video
+              </h2>
+
+              <Consent
+                item="episode video"
+                consent="twitch"
+                indexable
+                thumbnail={animalQuestFull}
+                className="my-auto aspect-video h-auto w-full overflow-hidden rounded-2xl bg-alveus-green text-alveus-tan"
+              >
+                <TwitchEmbed
+                  video={episode.video.id.toString()}
+                  time={start}
+                  className="aspect-video h-auto w-full"
+                />
+              </Consent>
+            </div>
+          </div>
+
+          <div className="mt-8 w-full space-y-4">
             {description.map((paragraph) => (
               <p key={paragraph} className="text-lg">
                 {paragraph}
               </p>
             ))}
-          </div>
-
-          <div className="w-full pb-16 pt-4 md:w-2/5 md:py-24 md:pl-8">
-            <div className="flex w-full flex-wrap">
-              <h2 className="sr-only">Episode Information</h2>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Broadcast:
-                </Heading>
-                <p>{formatDateTime(episode.broadcast, { style: "long" })}</p>
-              </div>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Featuring:
-                </Heading>
-                <p>
-                  {typeSafeObjectEntries(featured).map(
-                    ([key, ambassador], idx, arr) => (
-                      <Fragment key={key}>
-                        {/* Retired ambassadors don't have pages */}
-                        {isActiveAmbassadorKey(key) ? (
-                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
-                            {ambassador.name}
-                          </Link>
-                        ) : (
-                          ambassador.name
-                        )}
-                        {idx < arr.length - 2 && ", "}
-                        {idx === arr.length - 2 && arr.length > 2 && ","}
-                        {idx === arr.length - 2 && " and "}
-                      </Fragment>
-                    ),
-                  )}
-                </p>
-              </div>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Host:
-                </Heading>
-                <p>
-                  <Link href={host.link} external={host.external} dark>
-                    {host.name}
-                  </Link>
-                </p>
-              </div>
-
-              <div className="w-full min-[430px]:w-1/2 md:w-full lg:w-1/2">
-                <Heading level={3} className="text-2xl">
-                  Length:
-                </Heading>
-                <p title="Video length may appear longer due to intro/outro screen segments">
-                  {formatSeconds(episode.length, {
-                    style: "long",
-                    seconds: false,
-                  })}
-                </p>
-              </div>
-            </div>
-
-            <Link
-              href="/animal-quest"
-              className="text-md mt-8 inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-              custom
-            >
-              Discover more episodes
-            </Link>
           </div>
         </Section>
       </div>
@@ -414,58 +445,32 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         />
 
         <Section>
-          <h2 className="sr-only" id="video">
-            Video
-          </h2>
-
-          <Consent
-            item="episode video"
-            consent="twitch"
-            className="aspect-video h-auto w-full rounded-2xl bg-alveus-green text-alveus-tan"
-            indexable
-          >
-            {twitchEmbed && (
-              <iframe
-                src={twitchEmbed}
-                title="Twitch video"
-                referrerPolicy="no-referrer"
-                allow="autoplay; encrypted-media; fullscreen"
-                sandbox="allow-same-origin allow-scripts"
-                className="aspect-video h-auto w-full rounded-2xl"
-              ></iframe>
-            )}
-          </Consent>
+          {Object.keys(featuredAmbassadors).length > 0 && (
+            <>
+              <Heading level={2} className="mb-8 mt-0" id="ambassadors" link>
+                Meet the Ambassadors
+              </Heading>
+              <Carousel
+                items={featuredAmbassadors}
+                auto={10000}
+                className="mb-16 mt-4"
+                itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
+              />
+            </>
+          )}
         </Section>
       </div>
 
       <Section dark>
-        {Object.keys(featuredAmbassadors).length > 0 && (
-          <>
-            <Heading level={2} className="mb-8 mt-0" id="ambassadors" link>
-              Meet the ambassadors
-            </Heading>
-            <Carousel
-              items={featuredAmbassadors}
-              auto={10000}
-              className="mb-16 mt-4"
-              itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
-            />
-          </>
-        )}
-
         <div className="flex flex-row flex-wrap items-center justify-evenly gap-4">
           <p className="text-xl">
             Learn about more of our ambassadors and their species in other
             episodes of Animal Quest.
           </p>
 
-          <Link
-            href="/animal-quest"
-            className="text-md inline-block rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-            custom
-          >
+          <Button href="/animal-quest" dark>
             Discover more episodes
-          </Link>
+          </Button>
         </div>
       </Section>
 
@@ -484,7 +489,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
 
         <Section className="flex-grow">
           <Heading level={2} className="mb-8 mt-0" id="presentation" link>
-            Presentation
+            Episode Presentation
           </Heading>
           <Consent
             item="episode presentation"
@@ -502,6 +507,44 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           </Consent>
         </Section>
       </div>
+
+      <JsonLD<Episode>
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Episode",
+          name: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
+          description: description.join("\n\n"),
+          url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+            episode.edition,
+          )}`,
+          episodeNumber: episode.episode,
+          video: {
+            "@type": "VideoObject",
+            name: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
+            description: description.join("\n\n"),
+            url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+              episode.edition,
+            )}`,
+            thumbnailUrl:
+              env.NEXT_PUBLIC_BASE_URL +
+              createImageUrl({ src: animalQuestFull.src, width: 1200 }),
+            uploadDate: episode.broadcast.toISOString(),
+            duration: secondsToIso8601(episode.length),
+            // Copying the Twitch VOD page behaviour, as with the meta data
+            // Twitch set their embedUrl to be their WWW page, not the player
+            embedUrl: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+              episode.edition,
+            )}`,
+          },
+          partOfSeries: {
+            "@type": "CreativeWorkSeries",
+            name: "Animal Quest",
+            description:
+              "Learn about the ambassadors at Alveus through Animal Quest, a series hosted by Maya Higa. Each episode introduces you to a new ambassador and their species' importance to the environment, the risks they face, and what you can do to help them.",
+            url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest`,
+          },
+        }}
+      />
     </>
   );
 };

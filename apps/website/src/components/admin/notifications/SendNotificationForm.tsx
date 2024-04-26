@@ -6,23 +6,24 @@ import {
   notificationLinkSuggestions,
   notificationLinkDefault,
   notificationChannels,
-} from "@/config/notifications";
+} from "@/data/notifications";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 
+import useFileUpload from "@/hooks/files/upload";
+
 import IconLoading from "@/icons/IconLoading";
 
 import { TextField } from "@/components/shared/form/TextField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "@/components/shared/form/UploadAttachmentsField";
-import { useFileUpload } from "@/components/shared/hooks/useFileUpload";
 import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
@@ -148,13 +149,14 @@ export function SendNotificationForm() {
           <TextField
             label="Link"
             name="url"
+            inputMode="url"
             type="url"
-            autoComplete="url"
             list="notification-link-suggestions"
             showResetButton={true}
+            pattern="https?://.*"
+            inputClassName="font-mono"
             value={link}
             onChange={(value) => setLink(value)}
-            pattern="https?://.*"
           />
 
           <datalist id="notification-link-suggestions">

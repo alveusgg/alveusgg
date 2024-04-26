@@ -6,7 +6,8 @@ import type {
 
 import { useMemo } from "react";
 
-import { permissions } from "@/config/permissions";
+import { getSession } from "next-auth/react";
+import { permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
 import {
@@ -26,7 +27,7 @@ import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
@@ -35,9 +36,17 @@ import { BingoCardGrid } from "@/components/bingo/BingoCardGrid";
 import { transposeMatrix } from "@/utils/math";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageBingos);
   if (!adminProps) {
-    return { notFound: true };
+    return {
+      redirect: {
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+        permanent: false,
+      },
+    };
   }
 
   const id = context.params?.bingoId;

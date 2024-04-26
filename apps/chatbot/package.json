@@ -2,6 +2,7 @@
   "name": "@alveusgg/alveusgg-chatbot",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
   "repository": {
     "type": "git",
@@ -25,7 +26,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@types/node": "~20.9.5",
+    "@types/node": "~20.11.30",
     "@types/prettier": "^2.7.3",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",

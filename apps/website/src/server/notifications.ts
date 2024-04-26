@@ -1,13 +1,17 @@
 import type { Notification } from "@prisma/client";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import {
   defaultTag,
   defaultTitle,
   notificationCategories,
-} from "@/config/notifications";
-import { pushBatchSize, pushMaxAttempts, pushRetryDelay } from "@/config/push";
+} from "@/data/notifications";
+import {
+  pushBatchSize,
+  pushMaxAttempts,
+  pushRetryDelay,
+} from "@/data/env/push";
 
 import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";

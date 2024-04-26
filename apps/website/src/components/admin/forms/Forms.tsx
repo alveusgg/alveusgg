@@ -1,25 +1,30 @@
 import type { inferRouterOutputs } from "@trpc/server";
-import Link from "next/link";
 import { useCallback, useState } from "react";
 import { Menu } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
+
 import { trpc } from "@/utils/trpc";
+import { getShortBaseUrl } from "@/utils/short-url";
+
+import IconPencil from "@/icons/IconPencil";
+import IconTrash from "@/icons/IconTrash";
+import IconEllipsis from "@/icons/IconEllipsis";
+import IconDownload from "@/icons/IconDownload";
 
 import {
   Button,
   LinkButton,
   dangerButtonClasses,
   secondaryButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
+
+import DateTime from "@/components/content/DateTime";
+import Link from "@/components/content/Link";
+
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import DateTime from "@/components/content/DateTime";
-import IconPencil from "@/icons/IconPencil";
-import IconTrash from "@/icons/IconTrash";
-import IconEllipsis from "@/icons/IconEllipsis";
-import IconDownload from "@/icons/IconDownload";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type FormWithCount = RouterOutput["adminForms"]["getForms"][number];
@@ -92,13 +97,15 @@ function Form({ form, onError, onUpdate }: FormProps) {
           <div className="flex flex-col gap-0.5">
             <div className="text-xl">{form.label}</div>
             <div className="flex flex-col gap-1">
-              <Link
-                className="underline"
-                href={`/forms/${form.slug || form.id}`}
-                target="_blank"
-              >
-                Public Link: {form.slug || form.id}
-              </Link>
+              <div className="flex gap-1">
+                Public Link:
+                <Link
+                  href={`${getShortBaseUrl()}/forms/${form.slug || form.id}`}
+                  external
+                >
+                  {`${getShortBaseUrl()}/forms/${form.slug || form.id}`}
+                </Link>
+              </div>
               <button
                 type="button"
                 className="text-left"

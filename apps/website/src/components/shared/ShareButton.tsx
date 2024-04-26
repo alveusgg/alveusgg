@@ -17,7 +17,7 @@ import IconShare from "@/icons/IconShare";
 import IconEnvelope from "@/icons/IconEnvelope";
 import IconClipboard from "@/icons/IconClipboard";
 
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
 import { QRCode } from "@/components/QrCode";
 import {
@@ -147,10 +147,9 @@ export function ShareButton({
       <div className="flex gap-2">
         <ShareLink
           href={twitterShareUrl({ url, text, title })}
-          title="Share on Twitter"
+          title="Share on X (Twitter)"
         >
-          <IconTwitter className="h-4 w-4" />
-          Twitter
+          <IconTwitter className="h-4 w-4" />X (Twitter)
         </ShareLink>
         <ShareLink
           href={facebookShareUrl({ url, text, title })}

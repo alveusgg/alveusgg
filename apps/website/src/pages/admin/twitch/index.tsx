@@ -1,10 +1,11 @@
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
-import { permissions } from "@/config/permissions";
+import { getSession } from "next-auth/react";
+import { permissions } from "@/data/permissions";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
-import { LinkButton } from "@/components/shared/Button";
+import { LinkButton } from "@/components/shared/form/Button";
 import Meta from "@/components/content/Meta";
 
 import { Headline } from "@/components/admin/Headline";
@@ -12,11 +13,22 @@ import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
 import { ProvideAuth } from "@/components/admin/twitch/ProvideAuth";
 import { ChannelConfig } from "@/components/admin/twitch/ChannelConfig";
-import { EventSubscriptions } from "@/components/admin/twitch/EventSubscriptions";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageTwitchApi);
-  return adminProps ? { props: adminProps } : { notFound: true };
+  if (!adminProps) {
+    return {
+      redirect: {
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : "/auth/signin?callbackUrl=/admin/twitch",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: adminProps };
 }
 
 const AdminTwitchPage: NextPage<
@@ -39,11 +51,6 @@ const AdminTwitchPage: NextPage<
         <Headline>Provide auth</Headline>
         <Panel>
           <ProvideAuth />
-        </Panel>
-
-        <Headline>Active Twitch Event Subscriptions</Headline>
-        <Panel>
-          <EventSubscriptions />
         </Panel>
       </AdminPageLayout>
     </>

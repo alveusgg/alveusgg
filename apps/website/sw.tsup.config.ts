@@ -1,12 +1,11 @@
-import "./build-scripts/env.mjs";
-
 import { defineConfig } from "tsup";
-import { env } from "@/env/index.mjs";
 
-export default defineConfig((options) => ({
+import "./build-scripts/env";
+import { env } from "@/env";
+
+const config = defineConfig((options) => ({
   entry: {
     "push/alveus/PushServiceWorker": "src/sw/PushServiceWorker.ts",
-    //RootServiceWorker: "src/sw/RootServiceWorker.ts",
   },
   splitting: false,
   sourcemap: true,
@@ -16,6 +15,7 @@ export default defineConfig((options) => ({
   minify: !options.watch,
   platform: "browser",
   outDir: "public/",
+  format: "esm",
   tsconfig: "src/sw/tsconfig.json",
   esbuildOptions(options, _context) {
     options.define = {
@@ -30,3 +30,5 @@ export default defineConfig((options) => ({
     };
   },
 }));
+
+export default config;

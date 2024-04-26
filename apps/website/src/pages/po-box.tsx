@@ -4,6 +4,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Button from "@/components/content/Button";
 
 const POBoxPage: NextPage = () => {
   return (
@@ -25,7 +26,11 @@ const POBoxPage: NextPage = () => {
           <Heading className="text-6xl">PO Box</Heading>
 
           <p className="my-3 text-xl font-semibold">
-            500 E Whitestone Blvd #2350, Cedar Park, TX 78613
+            Alveus Sanctuary
+            <br />
+            500 E Whitestone Blvd #2350
+            <br />
+            Cedar Park, TX 78613
           </p>
 
           <p>Use our PO Box to send things to Alveus.</p>
@@ -38,23 +43,14 @@ const POBoxPage: NextPage = () => {
 
           <ul className="my-3 flex flex-wrap gap-4">
             <li>
-              <Link
-                className="rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-                href="/donate"
-                custom
-              >
+              <Button href="/donate" className="px-6 text-xl">
                 Donate
-              </Link>
+              </Button>
             </li>
             <li>
-              <Link
-                className="rounded-full border-2 border-alveus-green px-6 py-2 text-xl transition-colors hover:bg-alveus-green hover:text-alveus-tan"
-                href="/wishlist"
-                external
-                custom
-              >
+              <Button href="/wishlist" external className="px-6 text-xl">
                 Wishlist
-              </Link>
+              </Button>
             </li>
           </ul>
         </div>

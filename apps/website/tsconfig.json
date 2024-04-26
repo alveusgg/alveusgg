@@ -3,6 +3,7 @@
     "target": "es2017",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
+    "checkJs": true,
     "skipLibCheck": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -32,8 +33,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.cjs",
-    "**/*.mjs",
+    "**/*.js",
     ".next/types/**/*.ts",
   ],
-  "exclude": ["node_modules", "src/sw"],
+  "exclude": ["node_modules", "src/sw", "public"],
 }

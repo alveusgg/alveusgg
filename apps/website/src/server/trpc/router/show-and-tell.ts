@@ -15,14 +15,17 @@ import {
   deletePost,
   getPostById,
   getPosts,
+  getVolunteeringMinutes,
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
   withAttachments,
 } from "@/server/db/show-and-tell";
 import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
+import { giveAnHourStart, giveAnHourEnd } from "@/data/show-and-tell";
+import { earliestTimeZone, latestTimeZone } from "@/utils/datetime";
 
 const uploadPrefix = "show-and-tell/";
 
@@ -52,6 +55,14 @@ export const showAndTellRouter = router({
 
       return { items, nextCursor };
     }),
+
+  getGiveAnHourProgress: publicProcedure.query(async () => {
+    const minutes = await getVolunteeringMinutes({
+      from: new Date(giveAnHourStart + earliestTimeZone),
+      to: new Date(giveAnHourEnd + latestTimeZone),
+    });
+    return Math.round(minutes / 60);
+  }),
 
   create: publicProcedure
     .input(showAndTellCreateInputSchema)

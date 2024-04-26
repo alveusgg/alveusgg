@@ -1,41 +1,84 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useCallback, useId, useState } from "react";
 import Script from "next/script";
 
-import Consent from "@/components/Consent";
+type TwitchEmbedId =
+  | { channel: string }
+  | { video: string; collection?: string }
+  | { collection: string };
 
-export function TwitchEmbed({ channel }: { channel: string }) {
+type TwitchEmbedOptions = TwitchEmbedId & {
+  height?: number | string;
+  width?: number | string;
+  parent?: string[];
+  autoplay?: boolean;
+  muted?: boolean;
+  time?: string;
+};
+
+type TwitchEmbedProps = TwitchEmbedOptions & {
+  className?: string;
+};
+
+export function TwitchEmbed({
+  height = "100%",
+  width = "100%",
+  parent = [],
+  autoplay = true,
+  muted = false,
+  time = "00h00m00s",
+  className,
+  ...ids
+}: TwitchEmbedProps) {
+  const channel = "channel" in ids ? ids.channel : undefined;
+  const video = "video" in ids ? ids.video : undefined;
+  const collection = "collection" in ids ? ids.collection : undefined;
+
   const embedId = "twitch-embed-" + useId();
-
   const [isLoaded, setIsLoaded] = useState(window.Twitch?.Embed !== undefined);
-  const embedRef = useRef(null);
 
-  useEffect(() => {
-    if (!isLoaded && !embedRef.current) return;
+  const embedRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      // If we have no node, don't do anything
+      if (!node) return;
 
-    embedRef.current = new window.Twitch.Embed(embedId, {
-      width: 854,
-      height: 480,
-      channel: channel,
-      // Only needed if this page is going to be embedded on other websites
-      parent: [],
-    });
-  }, [channel, embedId, isLoaded]);
+      // If the Twitch embed script hasn't loaded yet, don't do anything
+      if (!isLoaded) return;
+
+      // Inject the embed into the DOM
+      node.innerHTML = "";
+      new window.Twitch.Embed(node.id, {
+        channel,
+        video,
+        collection,
+        height,
+        width,
+        parent,
+        autoplay,
+        muted,
+        time,
+      });
+    },
+    [
+      isLoaded,
+      channel,
+      video,
+      collection,
+      height,
+      width,
+      parent,
+      autoplay,
+      muted,
+      time,
+    ],
+  );
 
   return (
     <>
-      <Consent
-        item={`embed ${channel}`}
-        consent="twitch"
-        className="alveus-twitch-embed rounded-2xl bg-alveus-green text-alveus-tan"
-      >
-        <div className="contents" id={embedId}></div>
-        <Script
-          src="https://embed.twitch.tv/embed/v1.js"
-          onLoad={() => {
-            setIsLoaded(true);
-          }}
-        />
-      </Consent>
+      <div className={className} id={embedId} ref={embedRef}></div>
+      <Script
+        src="https://embed.twitch.tv/embed/v1.js"
+        onLoad={() => setIsLoaded(true)}
+      />
     </>
   );
 }

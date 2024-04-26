@@ -4,7 +4,7 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import type { Bingo } from "@prisma/client";
 import { useRouter } from "next/router";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import { trpc } from "@/utils/trpc";
 import type { BingoType } from "@/utils/bingo";
@@ -24,7 +24,7 @@ import {
 
 import { type BingoSchema } from "@/server/db/bingos";
 
-import { Button, defaultButtonClasses } from "@/components/shared/Button";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";

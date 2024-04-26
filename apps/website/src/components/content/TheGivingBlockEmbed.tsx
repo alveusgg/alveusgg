@@ -1,7 +1,7 @@
 import Script from "next/script";
 import { useEffect } from "react";
 
-import { theGivingBlockConfig } from "@/config/the-giving-block";
+import { theGivingBlockConfig } from "@/data/the-giving-block";
 
 const TheGivingBlockEmbed = () => {
   useEffect(() => {

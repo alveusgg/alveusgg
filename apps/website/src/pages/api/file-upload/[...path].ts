@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
-import { env } from "@/env/index.mjs";
+import { getBucketUrl } from "@/server/utils/file-storage";
 
 export const config = {
   api: {
@@ -36,8 +36,7 @@ const fileUploadProxy = async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   }
 
-  const storageUrl = new URL(env.FILE_STORAGE_ENDPOINT);
-  storageUrl.hostname = `${env.FILE_STORAGE_BUCKET}.${storageUrl.hostname}`;
+  const storageUrl = new URL(getBucketUrl());
   storageUrl.pathname = path.join("/");
 
   const paramMaps = Object.fromEntries(

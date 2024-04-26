@@ -4,12 +4,12 @@ import {
   useRef,
   useState,
   type ReactNode,
-  type MouseEvent as ReactMouseEvent,
 } from "react";
 
 import { classes } from "@/utils/classes";
 
 import usePrefersReducedMotion from "@/hooks/motion";
+import useDragScroll from "@/hooks/drag";
 
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";
@@ -132,72 +132,7 @@ const Carousel = ({
   }, [scrolled]);
 
   // Allow the user to drag to scroll
-  const drag = useCallback(
-    (event: ReactMouseEvent<HTMLDivElement>) => {
-      const { current } = ref;
-      if (!current) return;
-
-      // Get the current scroll/mouse position
-      const pos = {
-        left: current.scrollLeft,
-        top: current.scrollTop,
-        x: event.clientX,
-        y: event.clientY,
-      };
-
-      const move = (e: MouseEvent) => {
-        // Check how far we've moved
-        const dx = e.clientX - pos.x;
-        const dy = e.clientY - pos.y;
-
-        // Scroll the element
-        current.scrollTop = pos.top - dy;
-        current.scrollLeft = pos.left - dx;
-
-        // If we've moved the mouse, we've interacted
-        if (dx !== 0 || dy !== 0) {
-          interacted();
-
-          // Disable pointer events on the children
-          for (const child of current.children)
-            (child as HTMLDivElement).style.pointerEvents = "none";
-        }
-      };
-      document.addEventListener("mousemove", move);
-
-      const up = () => {
-        // Remove the handlers
-        document.removeEventListener("mousemove", move);
-        document.removeEventListener("mouseup", up);
-
-        // Avoid sharp snapping
-        if (current.children[0]) {
-          const { width, height } = current.children[0].getBoundingClientRect();
-          const dx = current.scrollLeft % width;
-          const dy = current.scrollTop % height;
-          current.scrollBy({
-            left: dx < width / 2 ? -dx : width - dx,
-            top: dy < height / 2 ? -dy : height - dy,
-            behavior: "smooth",
-          });
-        }
-
-        // Reset the cursor and snapping
-        current.style.removeProperty("cursor");
-        current.style.removeProperty("scroll-snap-type");
-
-        // Re-enable pointer events on the children
-        for (const child of current.children)
-          (child as HTMLDivElement).style.removeProperty("pointer-events");
-      };
-      document.addEventListener("mouseup", up);
-
-      // Switch the cursor and disable scroll snapping
-      current.style.cursor = "grabbing";
-      current.style.scrollSnapType = "none";
-    },
-    [interacted],
-  );
+  const drag = useDragScroll(true, interacted);
 
   // Run the auto scroll if requested, and not paused, and not preferring reduced motion
   useEffect(() => {

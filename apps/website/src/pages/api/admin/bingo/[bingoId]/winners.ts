@@ -10,12 +10,12 @@ import {
   findCardsWithBingo,
   parseBingoPlayData,
 } from "@/utils/bingo";
-import { permissions } from "@/config/permissions";
+import { permissions } from "@/data/permissions";
 
 const winners = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
   const hasPermissions = session?.user?.id
-    ? await checkPermissions(permissions.manageBingos, session.user.id)
+    ? checkPermissions(permissions.manageBingos, session.user)
     : false;
 
   if (!hasPermissions) {

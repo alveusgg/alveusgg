@@ -14,7 +14,8 @@
   "rules": {
     "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/no-unused-vars": [
-      "warn", // or "error"
+      "warn",
+      // or "error"
       {
         "argsIgnorePattern": "^_",
         "varsIgnorePattern": "^_",
@@ -44,8 +45,16 @@
     {
       "files": ["**/*.cjs"],
       "rules": {
-        "@typescript-eslint/no-var-requires": "off"
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/ban-ts-comment": "off"
+      }
+    },
+    {
+      "files": ["src/sw/**/*"],
+      "parserOptions": {
+        "project": "./src/sw/tsconfig.json"
       }
     }
-  ]
+  ],
+  "ignorePatterns": ["public/*"]
 }

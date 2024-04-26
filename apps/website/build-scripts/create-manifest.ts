@@ -1,18 +1,18 @@
 import fs from "node:fs";
-import "./env.mjs";
-import { env } from "../src/env/index.mjs";
+import "./env";
+import { env } from "../src/env";
 
 const manifest = {
   name: "Alveus Sanctuary",
   short_name: "Alveus Sanctuary",
   icons: [
     {
-      src: "/android-chrome-192x192.png",
+      src: "/favicon-192x192.png",
       sizes: "192x192",
       type: "image/png",
     },
     {
-      src: "/android-chrome-512x512.png",
+      src: "/favicon-512x512.png",
       sizes: "512x512",
       type: "image/png",
     },

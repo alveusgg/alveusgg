@@ -19,7 +19,7 @@ const macros = {
     leave: (animal = "it") => [
       `Leave ${animal} alone and keep yourself, and any pets, away from it.`,
       `If you are still concerned, you can monitor ${animal} from a distance to make sure it is doing okay over a few days.`,
-      `Do not feed or otherwise interfere with it, to avoid ${animal} imprinting on humans.`,
+      `Do not feed or otherwise interfere with it, to avoid ${animal} becoming dependent on humans.`,
     ],
   },
 } as const;
@@ -129,41 +129,10 @@ const data: FoundAnimalFlow = {
                       {
                         name: "No",
                         flow: {
-                          prompt: [
-                            "If you are sure the nest is not nearby, or isn't in good enough condition to return the bird to, you'll need to construct a makeshift nest.",
-                            "Use a small box (a butter tub or fruit box works well), or a basket. Ensure there are some holes in the bottom for air flow and drainage.",
-                            "Line the box with some natural nesting materials, such as dry grass, pine needles, or parts of the old nest if you located it but it was too damaged to return the bird to.",
-                            "Place the makeshift nest in a tree or bush as close to where you found the bird as possible (or in the same tree if you found the old nest).",
-                          ],
-                          options: [
-                            {
-                              name: "Done",
-                              flow: {
-                                prompt: [
-                                  "Once the nest is in place, carefully put the bird in the nest.",
-                                  "Once returned, leave the bird alone, keeping yourself and any pets away from it, and observe from a distance.",
-                                  "Are the parents still nearby? Are they visiting the nest and showing interest in the bird?",
-                                ],
-                                options: [
-                                  {
-                                    name: "Yes",
-                                    flow: {
-                                      prompt: macros.general.leave("the bird"),
-                                    },
-                                  },
-                                  {
-                                    name: "No",
-                                    flow: {
-                                      prompt: macros.general.rehab(
-                                        "the bird",
-                                        "If you are sure the parents are not nearby, and do not return within a few hours",
-                                      ),
-                                    },
-                                  },
-                                ],
-                              },
-                            },
-                          ],
+                          prompt: macros.general.rehab(
+                            "the bird",
+                            "If you cannot locate a suitable nest, and if you are sure the parents are not nearby, and do not return within a few hours",
+                          ),
                         },
                       },
                     ],
@@ -234,6 +203,155 @@ const data: FoundAnimalFlow = {
                         },
                       },
                     ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "Cat",
+      flow: {
+        prompt: [
+          "Does the cat appear to be sick, injured, in danger, or a nursing kitten with no mama in sight?",
+          "For example, is the cat is lying down and will not get up, is limping, or has blood anywhere on their body.",
+        ],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the cat"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: ["Has the cat been outside for over 24 hours?"],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "Check for a collar, if the cat has one try and get in contact with the owner. If the cat has no collar, you can take the cat to the nearest animal shelter to check for a microchip.",
+                      "If the cat does not have a microchip, leave the cat where it is. You can attempt to locate the owner by asking neighbours, or leaving out flyers with photos and detailed information about the cat.",
+                      ...macros.general.rehab(
+                        "the cat",
+                        "If the cat appears to be feral/unowned",
+                      ),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: macros.general.leave("the cat"),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "Squirrel",
+      flow: {
+        prompt: [
+          "Does any of the following apply to the squirrel?",
+          "- It is bleeding, has an open wound, or has a broken bone.",
+          "- It has been in a cat's or dog's mouth.",
+          "- It is covered in fly eggs (looks like small grains of rice).",
+          "- It is cold, wet, or crying nonstop.",
+        ],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the squirrel"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Does the squirrel have a fluffed-out tail, a body longer than 6 inches (excluding the tail), or is approaching humans/pets?",
+              ],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "This is likely a juvenile squirrel, you do not need to intervene.",
+                      ...macros.general.leave("the squirrel"),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: ["Is the squirrel alone?"],
+                    options: [
+                      {
+                        name: "Yes",
+                        flow: {
+                          prompt: macros.general.rehab(
+                            "the squirrel",
+                            "If you are sure the parents are not nearby, and do not return within a few hours",
+                          ),
+                        },
+                      },
+                      {
+                        name: "No",
+                        flow: {
+                          prompt: macros.general.leave("the squirrel"),
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "Raccoon",
+      flow: {
+        prompt: ["Does the raccoon appear to be sick or injured?"],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the raccoon"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Have you found a baby raccoon that's alone with no mother in sight?",
+              ],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "Be careful not to create an orphan raccoon accidentally. When a baby raccoon is separated from its mother, it will stay where it is until the mother returns.",
+                      "Monitor the baby from a distance to make sure the mother is still caring for it. Do not attempt to feed or otherwise care for the baby, as this may lead to it becoming dependent on humans.",
+                      ...macros.general.rehab(
+                        "the baby raccoon",
+                        "If the mother does return after 24 hours",
+                      ),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: macros.general.leave("the raccoon"),
                   },
                 },
               ],

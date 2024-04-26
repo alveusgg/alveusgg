@@ -9,11 +9,8 @@ import {
   type ReactElement,
 } from "react";
 
-import {
-  mainNavStructure,
-  utilityNavStructure,
-} from "@/config/main-nav-structure";
-import { checkRolesGivePermission, permissions } from "@/config/permissions";
+import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
+import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
 
@@ -163,7 +160,7 @@ export function DesktopMenu() {
         className="flex items-center gap-4 border-t border-white pt-2"
       >
         <Link href="/" className="font-serif text-3xl font-bold">
-          Alveus
+          Alveus Sanctuary
         </Link>
         <ul className="flex flex-grow justify-end">
           {Object.entries(mainNavStructure).map(([key, link]) => (

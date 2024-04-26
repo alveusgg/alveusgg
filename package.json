@@ -2,6 +2,7 @@
   "name": "@alveusgg/alveusgg",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "license": "SEE LICENSE IN LICENSE.md",
   "workspaces": [
     "apps/*"
@@ -14,10 +15,10 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "engines": {
-    "node": "20.9.0",
-    "pnpm": "^8.6.12"
+    "node": "20.11.1",
+    "pnpm": "^8.15.5"
   },
-  "packageManager": "pnpm@8.6.12",
+  "packageManager": "pnpm@8.15.5",
   "devDependencies": {
     "husky": "^9.0.7",
     "lint-staged": "^15.2.0",
@@ -26,7 +27,8 @@
   "scripts": {
     "prepare": "husky",
     "lint-staged": "lint-staged --relative",
-    "prettier": "prettier . --write"
+    "lint": "prettier . --check",
+    "format": "prettier . --write"
   },
   "pnpm": {
     "patchedDependencies": {

@@ -8,7 +8,7 @@ import {
   dangerButtonClasses,
   LinkButton,
   secondaryButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import DateTime from "@/components/content/DateTime";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";

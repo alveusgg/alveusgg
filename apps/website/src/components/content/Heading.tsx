@@ -25,10 +25,15 @@ const Heading = ({
   const headingClass = useMemo(
     () =>
       classes(
-        !/\bmy-\d+\b/.test(className || "") && "my-2",
-        !/\btext-(xs|sm|base|lg|[2-6]?xl)\b/.test(className || "") &&
+        !/(^|\s)my-\d+(\s|$)/.test(className || "") && "my-2",
+        !/(^|\s)text-(xs|sm|base|lg|[2-6]?xl)(\s|$)/.test(className || "") &&
           "text-3xl",
-        "text-balance font-serif font-bold",
+        !/(^|\s)font-(sans|serif|mono)(\s|$)/.test(className || "") &&
+          "font-serif",
+        !/(^|\s)font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)(\s|$)/.test(
+          className || "",
+        ) && "font-bold",
+        "text-balance",
         className,
       ),
     [className],

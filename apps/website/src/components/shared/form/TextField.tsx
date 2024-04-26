@@ -1,6 +1,5 @@
 import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
-import type { AriaTextFieldOptions } from "react-aria";
-import { useTextField } from "react-aria";
+import { type AriaTextFieldOptions, useTextField } from "react-aria";
 
 import { classes } from "@/utils/classes";
 
@@ -10,6 +9,7 @@ export type TextFieldProps = AriaTextFieldOptions<"input"> & {
   label: string;
   className?: string;
   inputClassName?: string;
+  labelClassName?: string;
   list?: string;
   prefix?: ReactNode;
   suffix?: ReactNode;
@@ -47,7 +47,9 @@ export function TextField(props: TextFieldProps) {
 
   return (
     <div className={props.className || "flex-1"}>
-      <label {...labelProps}>{props.label}</label>
+      <label className={props.labelClassName} {...labelProps}>
+        {props.label}
+      </label>
       <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
         {props.prefix}
         <input

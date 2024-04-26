@@ -14,8 +14,8 @@ import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -104,7 +104,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-28 -right-8 z-10 hidden h-auto w-1/2 max-w-[10rem] rotate-45 -scale-x-100 select-none lg:block 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
         />
 
         <Section>
@@ -203,7 +203,7 @@ const AboutTechPage: NextPage = () => {
                   <Heading
                     level={3}
                     className="text-2xl"
-                    id={`commands-${sentenceToKebab(category)}`}
+                    id={`commands:${sentenceToKebab(category)}`}
                     link
                   >
                     {category}
@@ -240,26 +240,26 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       <Section dark>
-        <Heading level={2} className="mb-2 mt-0" id="streamelements" link>
-          StreamElements
+        <Heading level={2} className="mb-2 mt-0" id="fossabot" link>
+          Fossabot
         </Heading>
 
         <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
           <p className="text-lg">
-            Alongside the custom chat bot for all the commands above,
-            StreamElements is also used in the Twitch (and YouTube) chat to
-            provide a set of commands that anyone can access, providing easy
-            access to a bunch of common information and links.
+            Alongside the custom chat bot for all the commands above, Fossabot
+            is also used in the Twitch chat to provide a set of commands that
+            anyone can access, providing easy access to a bunch of common
+            information and links.
           </p>
 
-          <Link
-            href="https://streamelements.com/alveussanctuary/commands"
-            className="text-md mx-auto inline-block flex-shrink-0 rounded-full border-2 border-white px-4 py-2 transition-colors hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
-            custom
+          <Button
+            href="https://fossabot.com/alveussanctuary/commands"
+            dark
             external
+            className="flex-shrink-0"
           >
-            Explore StreamElements Commands
-          </Link>
+            Explore Fossabot Commands
+          </Button>
         </div>
       </Section>
 
@@ -289,7 +289,7 @@ const AboutTechPage: NextPage = () => {
                     <Heading
                       level={3}
                       className="text-2xl"
-                      id={`presets-${camelToKebab(camera)}`}
+                      id={`presets:${camelToKebab(camera)}`}
                       link
                     >
                       {title}

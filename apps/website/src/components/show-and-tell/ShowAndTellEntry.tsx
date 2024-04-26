@@ -22,6 +22,7 @@ import parse, {
   type DOMNode,
   type HTMLReactParserOptions,
 } from "html-react-parser";
+import { ErrorBoundary } from "react-error-boundary";
 
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
@@ -30,6 +31,9 @@ import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
+
+import IconWorld from "@/icons/IconWorld";
+import { classes } from "@/utils/classes";
 
 export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
   attachments: Array<
@@ -90,6 +94,120 @@ const parseOptions: HTMLReactParserOptions = {
   },
 };
 
+const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
+  const hours = entry.volunteeringMinutes && entry.volunteeringMinutes / 60;
+
+  return (
+    <header
+      className={`p-4 px-10 drop-shadow-xl ${
+        isPresentationView ? "" : "text-center"
+      }`}
+    >
+      {entry.seenOnStreamAt && (
+        <SeenOnStreamBadge
+          dark={isPresentationView}
+          pulse={isPresentationView}
+        />
+      )}
+
+      <h2
+        className={`mb-3 font-serif ${
+          isPresentationView ? "text-6xl" : "text-4xl"
+        }`}
+      >
+        {entry.title}
+      </h2>
+
+      <p
+        className={` ${
+          isPresentationView
+            ? "text-4xl text-alveus-tan-200"
+            : "text-2xl text-alveus-green"
+        }`}
+      >
+        <span className="mr-1 italic">by </span>
+        {entry.displayName}
+        {" — "}
+        {formatDateTime(
+          entry.createdAt,
+          { style: "long" },
+          { zone: DATETIME_ALVEUS_ZONE },
+        )}
+        {entry.volunteeringMinutes ? (
+          <>
+            {` — `}
+            <Link
+              href="/show-and-tell/give-an-hour"
+              className={classes(
+                "inline-flex items-center gap-1 text-green-700",
+                isPresentationView
+                  ? "group text-nowrap rounded-full bg-blue-900/95 p-1 text-3xl shadow-lg transition-all hover:scale-102 hover:bg-blue-900 hover:text-green-600 focus:bg-blue-900 focus:text-green-600"
+                  : "hover:underline focus:underline",
+              )}
+              target="_blank"
+              custom
+            >
+              <strong
+                className={classes(
+                  "bg-gradient-to-br to-green-600 bg-clip-text font-bold text-transparent",
+                  isPresentationView
+                    ? "from-blue-500 pl-2 leading-none transition-colors group-hover:from-blue-400 group-hover:to-green-500"
+                    : "from-blue-800",
+                )}
+              >
+                Gave {hours} {hours === 1 ? "Hour" : "Hours"} for Earth
+              </strong>
+              <IconWorld
+                className={classes(
+                  "inline-block",
+                  isPresentationView ? "h-12 w-12" : "h-8 w-8",
+                )}
+              />
+            </Link>
+          </>
+        ) : null}
+      </p>
+    </header>
+  );
+};
+
+const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
+  const content = useMemo(() => {
+    try {
+      return parse(`<root>${entry.text}</root>`, parseOptions);
+    } catch (e) {
+      console.error(`Failed to parse Show and Tell entry ${entry.id}`, e);
+    }
+  }, [entry.text, entry.id]);
+
+  return (
+    isValidElement(content) &&
+    content.type !== Empty && (
+      <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
+        <div
+          className={`mx-auto w-fit  ${
+            isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
+          }`}
+        >
+          <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+            <ErrorBoundary
+              FallbackComponent={Empty}
+              onError={(err) =>
+                console.error(
+                  `Failed to render Show and Tell entry ${entry.id}`,
+                  err,
+                )
+              }
+            >
+              {content}
+            </ErrorBoundary>
+          </div>
+        </div>
+      </div>
+    )
+  );
+};
+
 export const ShowAndTellEntry = forwardRef<
   HTMLElement | null,
   ShowAndTellEntryProps
@@ -97,7 +215,7 @@ export const ShowAndTellEntry = forwardRef<
   {
     entry,
     isPresentationView,
-    //showPermalink = false,
+    // showPermalink = false,
   },
   forwardedRef,
 ) {
@@ -133,46 +251,6 @@ export const ShowAndTellEntry = forwardRef<
       }
     },
     [forwardedRef],
-  );
-
-  const content = useMemo(
-    () => parse(`<root>${entry.text}</root>`, parseOptions),
-    [entry.text],
-  );
-
-  const header = (
-    <header
-      className={`p-4 px-10 drop-shadow-xl ${
-        isPresentationView ? "" : "text-center"
-      }`}
-    >
-      {entry.seenOnStreamAt && <SeenOnStreamBadge />}
-
-      <h2
-        className={`mb-3 font-serif ${
-          isPresentationView ? "text-6xl" : "text-4xl"
-        }`}
-      >
-        {entry.title}
-      </h2>
-
-      <p
-        className={` ${
-          isPresentationView
-            ? "text-4xl text-alveus-tan-200"
-            : "text-2xl text-alveus-green"
-        }`}
-      >
-        <span className="mr-1 italic">by </span>
-        {entry.displayName}
-        {" — "}
-        {formatDateTime(
-          entry.createdAt,
-          { style: "long" },
-          { zone: DATETIME_ALVEUS_ZONE },
-        )}
-      </p>
-    </header>
   );
 
   return (
@@ -220,7 +298,7 @@ export const ShowAndTellEntry = forwardRef<
         ) : (
           header
         ) */}
-        {header}
+        <Header entry={entry} isPresentationView={isPresentationView} />
 
         <ShowAndTellGallery
           isPresentationView={isPresentationView}
@@ -229,19 +307,7 @@ export const ShowAndTellEntry = forwardRef<
           videoAttachments={videoAttachments}
         />
 
-        {isValidElement(content) && content.type !== Empty && (
-          <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
-            <div
-              className={`mx-auto w-fit  ${
-                isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
-              }`}
-            >
-              <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
-                {content}
-              </div>
-            </div>
-          </div>
-        )}
+        <Content entry={entry} isPresentationView={isPresentationView} />
       </div>
     </article>
   );

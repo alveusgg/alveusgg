@@ -1,25 +1,28 @@
 import type { inferRouterOutputs } from "@trpc/server";
-import Link from "next/link";
 import { useCallback, useState } from "react";
 import { Menu } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
+
 import { trpc } from "@/utils/trpc";
+import { getShortBaseUrl } from "@/utils/short-url";
+
+import IconPencil from "@/icons/IconPencil";
+import IconTrash from "@/icons/IconTrash";
+import IconEllipsis from "@/icons/IconEllipsis";
+import IconDownload from "@/icons/IconDownload";
 
 import {
   Button,
   LinkButton,
   dangerButtonClasses,
   secondaryButtonClasses,
-} from "@/components/shared/Button";
+} from "@/components/shared/form/Button";
 import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import DateTime from "@/components/content/DateTime";
-import IconPencil from "@/icons/IconPencil";
-import IconTrash from "@/icons/IconTrash";
-import IconEllipsis from "@/icons/IconEllipsis";
-import IconDownload from "@/icons/IconDownload";
+import Link from "@/components/content/Link";
 
 type RouterOutput = inferRouterOutputs<AppRouter>;
 type BingoWithCount = RouterOutput["adminBingos"]["getBingos"][number];
@@ -86,21 +89,18 @@ function Bingo({ bingo, onError, onUpdate }: BingoProps) {
         <td className="w-1/2 p-1">
           <div className="flex flex-col gap-0.5">
             <div className="text-xl">
-              <Link
-                className="underline"
-                href={`/admin/bingo/${bingo.id}/live`}
-              >
-                {bingo.label}
-              </Link>
+              <Link href={`/admin/bingo/${bingo.id}/live`}>{bingo.label}</Link>
             </div>
             <div className="flex flex-col gap-1">
-              <Link
-                className="underline"
-                href={`/bingo/play/${bingo.slug || bingo.id}`}
-                target="_blank"
-              >
-                Public Link: {bingo.slug || bingo.id}
-              </Link>
+              <div className="flex gap-1">
+                Public Link:
+                <Link
+                  href={`${getShortBaseUrl()}/bingo/play/${bingo.slug || bingo.id}`}
+                  external
+                >
+                  {`${getShortBaseUrl()}/bingo/play/${bingo.slug || bingo.id}`}
+                </Link>
+              </div>
               <button
                 type="button"
                 className="text-left"

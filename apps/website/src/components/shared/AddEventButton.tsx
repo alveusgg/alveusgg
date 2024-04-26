@@ -1,13 +1,13 @@
 import { Fragment } from "react";
 import { Popover } from "@headlessui/react";
 
-import { env } from "@/env/index.mjs";
+import { env } from "@/env";
 
 import IconCalendar from "@/icons/IconCalendar";
 import IconGoogleCalendar from "@/icons/IconGoogleCalendar";
 import IconOutlook from "@/icons/IconOutlook";
 
-import { Button } from "@/components/shared/Button";
+import { Button } from "@/components/shared/form/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
 
 const ICS_FEED_NAME = "Alveus announcement";

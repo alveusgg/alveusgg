@@ -61,8 +61,8 @@ const presets: Record<string, Camera> = {
       center: { description: "center of the fox enclosure" },
       bench: { description: "bench" },
       table: { description: "table" },
-      reed: { description: "reeds spot" },
-      fenn: { description: "fenns spot" },
+      reed: { description: "reeds spot on platform" },
+      fenn: { description: "fenns spot on platform" },
       platform2: { description: "close up of platform" },
       bench2: { description: "zoomed out view of bench" },
       left: { description: "left side of fox enclosure" },
@@ -73,11 +73,13 @@ const presets: Record<string, Camera> = {
       leftfence: { description: "left fence of platform" },
       treehouse: { description: "platform tree" },
       belowramp: { description: "below platform ramp" },
+      belowramp2: { description: "below platform ramp 2" },
       kaylatraining: { description: "kaylas training spot" },
       lindsaytraining: { description: "lindsays training spot" },
       fennroll: { description: "fennroll's spot" },
       hillrightw: { description: "hill right wide" },
       belowplatform: { description: "directly under platform" },
+      down: { description: "View straight down from the cam, below the den" },
     },
   },
   foxCorner: {
@@ -87,9 +89,12 @@ const presets: Record<string, Camera> = {
       den: { description: "the fox den" },
       table: { description: "table close to the entry" },
       hillright: { description: "right side of hill" },
+      tabletop: { description: "top of the spool on far end of main cam" },
+      insidedoor: { description: "view of the door to the inside space" },
+      training: { description: "Training spot by the entrace" },
     },
   },
-  bonusbugs: {
+  bb: {
     title: "Bonus Bugs",
     presets: {
       home: { description: "wide view of most of the enclosure" },
@@ -112,7 +117,7 @@ const presets: Record<string, Camera> = {
       },
       sticktl: { description: "top left view of the stick" },
       stickb: { description: "bottom of the large stick" },
-      tippy: { description: "zoomed in view of the top of the stick" },
+      tip: { description: "zoomed in view of the top of the stick" },
       down: { description: "angle straight down" },
       left: { description: "wider angle of the left side of the enclosure" },
       leftcorner: { description: "left corner of the enclosure" },
@@ -125,18 +130,17 @@ const presets: Record<string, Camera> = {
       window: { description: "upper crow window" },
       water: { description: "water bowl" },
       top: { description: "upper section of the indoor space" },
-      backcorner: {
-        description: "back corner of the upper indoor space",
-      },
+      backcorner: { description: "back corner of the upper indoor space" },
       outside: { description: "outer enclosure" },
       home: { description: "home" },
       entry: { description: "entryway" },
       down: { description: "down to the floor" },
       rightperch: { description: "right perch" },
       backleftcorner: { description: "back left corner perch" },
-      crowsleep: {
-        description: "back perch where the crows usually sleep",
-      },
+      crowsleep: { description: "back perch where the crows usually sleep" },
+      back: { description: "back of the inside space" },
+      hose: { description: "the corner with the hose, not ccovered by entry" },
+      table: { description: "the folding bench by the door" },
     },
   },
   crowOutdoor: {
@@ -155,10 +159,21 @@ const presets: Record<string, Camera> = {
       treet: { description: "left upper tree" },
       treeb: { description: "left tree" },
       tree: { description: "the entirety of the tree" },
-      platforminside: {
-        description: "platform in the indoor enclosure",
-      },
+      platforminside: { description: "platform in the indoor enclosure" },
       groundrc: { description: "right corner floor of the outside enclosure" },
+      entry: { description: "the door and hose" },
+      insideperch: {
+        description: "the inside platform and indoor back corner perch",
+      },
+      cache: {
+        description:
+          "The base of the outdoor platform where both crows cache food",
+      },
+      table: { description: "the folding bench by the door" },
+      groundlc: {
+        description:
+          "view of both the outdoor ground left corner and the back of the inside",
+      },
     },
   },
   marmosetIndoor: {
@@ -246,6 +261,16 @@ const presets: Record<string, Camera> = {
       macaws2bowl: { description: "second macaws water dish" },
       parrotsw: { description: "wide view of both windows" },
       littlesoutside: { description: "Both little trees" },
+      littles2middle: { description: "the middle branch of the little2 tree" },
+      floor: {
+        description:
+          "Wide view of the floor of the nclosure (for mouse hunting",
+      },
+      platform: { description: "alternative view of littlesplatform" },
+      training: {
+        description:
+          "right fence under the littles2 perching where the chickens hang",
+      },
     },
   },
 };

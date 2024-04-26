@@ -3,7 +3,7 @@ import superjson from "superjson";
 
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 import { type Context } from "@/server/trpc/context";
-import type { PermissionConfig } from "@/config/permissions";
+import type { PermissionConfig } from "@/data/permissions";
 
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
@@ -37,10 +37,7 @@ const isAuthed = t.middleware(async ({ ctx, next }) => {
 
 export const createCheckPermissionMiddleware = (permission: PermissionConfig) =>
   isAuthed.unstable_pipe(async ({ ctx, next }) => {
-    const hasPermissions = await checkPermissions(
-      permission,
-      ctx.session.user.id,
-    );
+    const hasPermissions = checkPermissions(permission, ctx.session.user);
     if (!hasPermissions) {
       throw new TRPCError({ code: "UNAUTHORIZED" });
     }

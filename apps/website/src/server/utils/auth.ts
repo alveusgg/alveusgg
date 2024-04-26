@@ -1,8 +1,7 @@
 import type { Session } from "next-auth";
 
-import { env } from "@/env/index.mjs";
-import type { PermissionConfig } from "@/config/permissions";
-import { getRolesForUser } from "@/server/db/users";
+import { env } from "@/env";
+import type { PermissionConfig } from "@/data/permissions";
 
 export function getSuperUserIds() {
   return env.SUPER_USER_IDS.split(",").map((id) => id.trim());
@@ -21,23 +20,21 @@ export function checkIsSuperUserSession(session: Session | null) {
   return checkIsSuperUserId(session?.user?.id);
 }
 
-export async function checkPermissions(
+export function checkPermissions(
   permissionConfig: PermissionConfig,
-  userId?: string,
+  user: Session["user"],
 ) {
-  if (!userId) {
+  if (!user) {
     return false;
   }
 
-  const isSuperUser = checkIsSuperUserId(userId);
+  const isSuperUser = checkIsSuperUserId(user.id);
   if (isSuperUser) {
     return true;
   }
 
   if (!permissionConfig.requiresSuperUser && permissionConfig.requiredRole) {
-    return (await getRolesForUser(userId)).includes(
-      permissionConfig.requiredRole,
-    );
+    return user.roles.includes(permissionConfig.requiredRole);
   }
 
   return false;

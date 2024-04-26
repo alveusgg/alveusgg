@@ -8,7 +8,7 @@ import Link from "@/components/content/Link";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
-import promo from "@/data/promo";
+import globalPromotion from "@/data/env/global-promotion";
 
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
@@ -39,7 +39,10 @@ const Layout = ({ children }: LayoutProps) => {
 
   const { pathname } = useRouter();
   const topHat = useMemo(
-    () => (promo && !promo.excluded.includes(pathname) ? promo : null),
+    () =>
+      globalPromotion && !globalPromotion.excluded.includes(pathname)
+        ? globalPromotion
+        : null,
     [pathname],
   );
 
@@ -50,28 +53,15 @@ const Layout = ({ children }: LayoutProps) => {
       <Head>
         <link
           rel="apple-touch-icon"
-          sizes="180x180"
           href="/apple-touch-icon.png"
+          sizes="180x180"
         />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="32x32"
-          href="/favicon-32x32.png"
-        />
-        <link
-          rel="icon"
-          type="image/png"
-          sizes="16x16"
-          href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
         <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#636a60" />
-        <link rel="shortcut icon" href="/favicon.ico" />
-        <meta name="apple-mobile-web-app-title" content="Alveus Sanctuary" />
-        <meta name="application-name" content="Alveus Sanctuary" />
         <meta name="msapplication-TileColor" content="#636a60" />
         <meta name="theme-color" content="#636a60" />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="apple-mobile-web-app-title" content="Alveus Sanctuary" />
+        <meta name="application-name" content="Alveus Sanctuary" />
       </Head>
 
       <div
@@ -99,7 +89,7 @@ const Layout = ({ children }: LayoutProps) => {
             custom
           >
             <div className="container mx-auto flex items-center justify-center gap-1">
-              {topHat.title} &middot; {topHat.subtitle}
+              {topHat.title} &middot; {topHat.cta}
               <IconArrowRight className="h-4 w-4" />
             </div>
           </Link>

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Notification } from "@prisma/client";
 
-import { pushMaxAttempts } from "@/config/push";
+import { pushMaxAttempts } from "@/data/env/push";
 
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";

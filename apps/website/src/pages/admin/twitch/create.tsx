@@ -1,6 +1,7 @@
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
-import { permissions } from "@/config/permissions";
+import { getSession } from "next-auth/react";
+import { permissions } from "@/data/permissions";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
@@ -11,8 +12,20 @@ import { Panel } from "@/components/admin/Panel";
 import { TwitchChannelForm } from "@/components/admin/twitch/TwitchChannelForm";
 
 export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context);
   const adminProps = await getAdminSSP(context, permissions.manageTwitchApi);
-  return adminProps ? { props: adminProps } : { notFound: true };
+  if (!adminProps) {
+    return {
+      redirect: {
+        destination: session?.user?.id
+          ? "/unauthorized"
+          : "/auth/signin?callbackUrl=/admin/twitch/create",
+        permanent: false,
+      },
+    };
+  }
+
+  return { props: adminProps };
 }
 
 const AdminCreateTwitchChannelPage: NextPage<

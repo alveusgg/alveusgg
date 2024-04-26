@@ -282,6 +282,38 @@ model FormEntry {
   @@index([userId], name: "FormEntry_userId")
 }
 
+model ShortLinks {
+  id    String @id @default(cuid())
+  label String
+  slug  String @unique
+  link  String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ShortLinksTracking {
+  id     String @id @default(cuid())
+  clicks Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CalendarEvent {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  category    String
+  link        String
+  startAt     DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([startAt], name: "CalendarEvent_start")
+}
+
 model Bingo {
   id                 String    @id @default(cuid())
   type               String
@@ -357,21 +389,23 @@ model LinkAttachment {
 }
 
 model ShowAndTellEntry {
-  id             String    @id @default(cuid())
-  userId         String?
-  title          String
-  text           String    @db.Text
-  displayName    String?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @default(now())
-  approvedAt     DateTime?
-  seenOnStreamAt DateTime?
-  seenOnStream   Boolean   @default(false)
+  id                  String    @id @default(cuid())
+  userId              String?
+  title               String
+  text                String    @db.Text
+  displayName         String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @default(now())
+  approvedAt          DateTime?
+  seenOnStreamAt      DateTime?
+  seenOnStream        Boolean   @default(false)
+  volunteeringMinutes Int?
 
   attachments ShowAndTellEntryAttachment[]
   user        User?                        @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "ShowAndTellEntry_userId")
+  @@index([createdAt, approvedAt, updatedAt], name: "ShowAndTellEntry_approvedAndCreatedAt")
   @@index([seenOnStream, approvedAt, updatedAt], name: "ShowAndTellEntry_public")
 }
 
@@ -419,12 +453,12 @@ model ImageMetadata {
 
 model ImageAttachment {
   id                  String @id @default(cuid())
-  name                String
-  title               String
-  alternativeText     String
-  caption             String
-  description         String
-  url                 String
+  name                String @db.VarChar(200)
+  title               String @db.VarChar(200)
+  alternativeText     String @db.VarChar(300)
+  caption             String @db.VarChar(200)
+  description         String @db.VarChar(200)
+  url                 String @db.VarChar(200)
   fileStorageObjectId String @unique
 
   fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)

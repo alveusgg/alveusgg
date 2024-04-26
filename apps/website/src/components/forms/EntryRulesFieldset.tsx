@@ -1,8 +1,9 @@
 import type { Form } from "@prisma/client";
-import Link from "next/link";
 
-import { Fieldset } from "../shared/form/Fieldset";
-import { CheckboxField } from "../shared/form/CheckboxField";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { CheckboxField } from "@/components/shared/form/CheckboxField";
+
+import Link from "@/components/content/Link";
 
 type EntryRulesFieldsetProps = {
   form: Form;
@@ -13,11 +14,7 @@ export function EntryRulesFieldset({ form }: EntryRulesFieldsetProps) {
     <Fieldset legend="Rules">
       <CheckboxField isRequired={true} name="acceptRules" value="yes">
         I agree to the{" "}
-        <Link
-          className="underline"
-          href={`/forms/${form.slug || form.id}/rules`}
-          target="_blank"
-        >
+        <Link href={`/forms/${form.slug || form.id}/rules`} external>
           Official Rules
         </Link>
       </CheckboxField>

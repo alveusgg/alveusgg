@@ -20,6 +20,9 @@ import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
 
 import IconExternal from "@/icons/IconExternal";
+
+import Link from "@/components/content/Link";
+
 import Tree, { type TreeNode } from "@/components/tech/Tree";
 
 type Data = {
@@ -340,14 +343,9 @@ const NetworkList = ({
         <p>
           Model:{" "}
           {item.url ? (
-            <a
-              href={item.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
+            <Link href={item.url} external>
               {item.model}
-            </a>
+            </Link>
           ) : (
             item.model
           )}
