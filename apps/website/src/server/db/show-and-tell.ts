@@ -244,23 +244,12 @@ export async function getPosts({
   });
 }
 
-export async function getVolunteeringMinutes({
-  from,
-  to,
-}: {
-  from?: Date;
-  to?: Date;
-} = {}) {
+export async function getVolunteeringMinutes() {
   return (
     (
       await prisma.showAndTellEntry.aggregate({
         _sum: { volunteeringMinutes: true },
-        where: {
-          AND: [
-            getPostFilter("approved"),
-            { createdAt: { gte: from, lte: to } },
-          ],
-        },
+        where: getPostFilter("approved"),
       })
     )._sum.volunteeringMinutes ?? 0
   );
