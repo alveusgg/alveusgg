@@ -78,7 +78,7 @@ const GiveAnHourPage: NextPage = () => (
   <>
     <Meta
       title="Give an Hour | Show and Tell"
-      description="Join the Alveus community and give an hour for earth! Discover what actions you can take to help the environment and wildlife."
+      description="Join the Alveus community and give an hour for Earth! Discover what actions you can take to help the environment and wildlife."
       image={giveAnHourPoster.src}
     />
 
@@ -94,7 +94,7 @@ const GiveAnHourPage: NextPage = () => (
         <Heading>Give an Hour for Earth</Heading>
 
         <p className="text-lg">
-          Join the Alveus community in giving hours for earth. Discover what
+          Join the Alveus community in giving hours for Earth. Discover what
           actions you can take to help the environment and wildlife. This
           initiative started March 1st to April 22nd as part of WWF&apos;s Give
           an Hour for Earth campaign in 2024 but will continue beyond that date.
@@ -285,7 +285,7 @@ const GiveAnHourPage: NextPage = () => (
 
       <Share
         title="Give an Hour for Earth with Alveus Sanctuary"
-        text="Join the Alveus community to give an hour for earth! Discover what actions you can take to help the environment and wildlife."
+        text="Join the Alveus community to give an hour for Earth! Discover what actions you can take to help the environment and wildlife."
         path="/give-an-hour"
         dark
       />

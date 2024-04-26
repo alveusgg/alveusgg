@@ -359,10 +359,10 @@ export function ShowAndTellEntryForm({
       </div>
 
       <div className="space-y-10">
-        <Fieldset legend="Give an hour for earth">
+        <Fieldset legend="Give an hour for Earth">
           <p>
             Do you want to track hours you spent on this activity as part of the
-            Alveus communities effort to give an hour for earth? This started as
+            Alveus communities effort to give an hour for Earth? This started as
             part of WWF&apos;s{" "}
             <Link href="/show-and-tell/give-an-hour" external>
               Give an Hour
