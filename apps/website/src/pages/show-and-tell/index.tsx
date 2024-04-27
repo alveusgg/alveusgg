@@ -366,6 +366,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           </p>
 
           <p className="mt-8">
+            {usersCount.toLocaleString()} members of the Alveus community have
+            shared their activities in {totalPostsCount.toLocaleString()} posts.
+          </p>
+
+          <p className="mt-8">
             As a community, we&apos;re tracking the hours we spend giving back
             to the planet, originally as part of WWF&apos;s{" "}
             <Link
@@ -405,11 +410,6 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
-          {/* displays posts by users */}
-          <p className="text-center text-3xl italic">
-            {totalPostsCount.toLocaleString()} posts by{" "}
-            {usersCount.toLocaleString()} community members
-          </p>
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
               <ShowAndTellEntry
