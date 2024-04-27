@@ -406,7 +406,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           tabIndex={-1}
         >
           <p className="text-center text-3xl italic">
-            {totalPostsCount} posts by {usersCount} community members
+            {totalPostsCount.toLocaleString()} posts by {usersCount.toLocaleString()} community members
           </p>
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
