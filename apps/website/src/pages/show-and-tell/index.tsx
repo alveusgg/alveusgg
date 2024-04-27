@@ -405,8 +405,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
+          {/* displays posts by users */}
           <p className="text-center text-3xl italic">
-            {totalPostsCount.toLocaleString()} posts by {usersCount.toLocaleString()} community members
+            {totalPostsCount.toLocaleString()} posts by{" "}
+            {usersCount.toLocaleString()} community members
           </p>
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
