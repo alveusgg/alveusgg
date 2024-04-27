@@ -7,6 +7,7 @@ const buildEslintCommand = (filenames) =>
 const config = {
   ...mainConfig,
   "*.{js,jsx,ts,tsx,cjs}": buildEslintCommand,
+  "schema.prisma": "prisma format",
 };
 
 export default config;
