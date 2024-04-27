@@ -5,6 +5,7 @@ import { convertToSlug } from "@/utils/slugs";
 import julien from "@/assets/collaborations/julien.png";
 import fuslie from "@/assets/collaborations/fuslie.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
+import xchocobars from "@/assets/collaborations/xchocobars.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
 import hyoon from "@/assets/collaborations/hyoon.png";
@@ -96,6 +97,19 @@ const collaborations: Collaboration[] = (
           name: "Valkyrae",
           image: valkyrae,
           popularity: 4_000_000, // YouTube subscribers, 2024-04-22
+        },
+      ],
+    },
+    {
+      name: "xChocoBars",
+      link: "https://www.twitch.tv/xchocobars",
+      date: new Date("2024-04-19"),
+      videoId: "WcDYLVD6OC4",
+      creators: [
+        {
+          name: "xChocoBars",
+          image: xchocobars,
+          popularity: 993_000, // Twitch followers, 2024-04-28
         },
       ],
     },
