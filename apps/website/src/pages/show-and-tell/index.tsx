@@ -21,6 +21,7 @@ import {
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
+import useLocaleString from "@/hooks/locale";
 
 import IconLoading from "@/icons/IconLoading";
 import IconArrowUp from "@/icons/IconArrowUp";
@@ -96,6 +97,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       refetchOnWindowFocus: false,
     },
   );
+
+  // Format the stats
+  const totalPostsCountFmt = useLocaleString(totalPostsCount);
+  const usersCountFmt = useLocaleString(usersCount);
 
   const [isPresentationView, setIsPresentationView] = useState(false);
   const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
@@ -366,8 +371,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           </p>
 
           <p className="mt-8">
-            {usersCount.toLocaleString()} members of the Alveus community have
-            shared their activities in {totalPostsCount.toLocaleString()} posts.
+            {usersCountFmt} members of the Alveus community have shared their
+            activities with {totalPostsCountFmt} posts.
           </p>
 
           <p className="mt-8">
