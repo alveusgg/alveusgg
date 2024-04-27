@@ -21,6 +21,7 @@ import {
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
+import useLocaleString from "@/hooks/locale";
 
 import IconLoading from "@/icons/IconLoading";
 import IconArrowUp from "@/icons/IconArrowUp";
@@ -96,6 +97,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       refetchOnWindowFocus: false,
     },
   );
+
+  // Format the stats
+  const totalPostsCountFmt = useLocaleString(totalPostsCount);
+  const usersCountFmt = useLocaleString(usersCount);
 
   const [isPresentationView, setIsPresentationView] = useState(false);
   const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
@@ -366,6 +371,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           </p>
 
           <p className="mt-8">
+            {usersCountFmt} members of the Alveus community have shared their
+            activities with {totalPostsCountFmt} posts.
+          </p>
+
+          <p className="mt-8">
             As a community, we&apos;re tracking the hours we spend giving back
             to the planet, originally as part of WWF&apos;s{" "}
             <Link
@@ -405,11 +415,6 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
-          {/* displays posts by users */}
-          <p className="text-center text-3xl italic">
-            {totalPostsCount.toLocaleString()} posts by{" "}
-            {usersCount.toLocaleString()} community members
-          </p>
           {entries.data?.pages.flatMap((page) =>
             page.items.map((entry) => (
               <ShowAndTellEntry
