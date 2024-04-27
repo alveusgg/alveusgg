@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import julien from "@/assets/collaborations/julien.png";
 import fuslie from "@/assets/collaborations/fuslie.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
@@ -59,6 +60,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Julien",
+      link: "https://www.twitch.tv/julien",
+      date: new Date("2024-04-25"),
+      videoId: "yWtkfbfmNGs",
+      creators: [
+        {
+          name: "Julien",
+          image: julien,
+          popularity: 750_000, // Twitch followers, 2024-04-26
+        },
+      ],
+    },
     {
       name: "Fuslie",
       link: "https://www.youtube.com/@fuslie",

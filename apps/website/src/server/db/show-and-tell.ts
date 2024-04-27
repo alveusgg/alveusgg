@@ -3,7 +3,11 @@ import { TRPCError } from "@trpc/server";
 
 import { env } from "@/env";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
+import {
+  MAX_IMAGES,
+  MAX_VIDEOS,
+  MAX_TEXT_HTML_LENGTH,
+} from "@/data/show-and-tell";
 
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
@@ -88,7 +92,7 @@ export type ShowAndTellSubmitInput = z.infer<
 const showAndTellSharedInputSchema = z.object({
   displayName: z.string().max(100),
   title: z.string().max(100),
-  text: z.string().max(1_000),
+  text: z.string().max(MAX_TEXT_HTML_LENGTH),
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),
@@ -274,23 +278,12 @@ export async function getUsersCount() {
   return userCountwithId.length + usersWithNoUserId.length;
 }
 
-export async function getVolunteeringMinutes({
-  from,
-  to,
-}: {
-  from?: Date;
-  to?: Date;
-} = {}) {
+export async function getVolunteeringMinutes() {
   return (
     (
       await prisma.showAndTellEntry.aggregate({
         _sum: { volunteeringMinutes: true },
-        where: {
-          AND: [
-            getPostFilter("approved"),
-            { createdAt: { gte: from, lte: to } },
-          ],
-        },
+        where: getPostFilter("approved"),
       })
     )._sum.volunteeringMinutes ?? 0
   );
