@@ -95,9 +95,9 @@ const GiveAnHourPage: NextPage = () => (
 
         <p className="text-lg">
           Join the Alveus community in giving hours for Earth. Discover what
-          actions you can take to help the environment and wildlife. This
-          initiative started March 1st to April 22nd as part of WWF&apos;s Give
-          an Hour for Earth campaign in 2024 but will continue beyond that date.
+          actions you can take to help the environment and wildlife. Originally
+          part of WWF&apos;s Give an Hour for Earth campaign in 2024, we&apos;re
+          now tracking everything we do for Earth!
         </p>
 
         <p className="text-md mt-8">
