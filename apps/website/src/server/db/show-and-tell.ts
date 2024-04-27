@@ -248,6 +248,36 @@ export async function getPosts({
   });
 }
 
+export async function getPostsCount() {
+  const totalPosts = await prisma.showAndTellEntry.count({
+    where: getPostFilter("approved"),
+  });
+  return totalPosts;
+}
+
+export async function getUsersCount() {
+  const userCountwithId = await prisma.showAndTellEntry.findMany({
+    select: { id: true },
+    where: {
+      userId: {
+        not: null,
+      },
+      AND: getPostFilter("approved"),
+    },
+    distinct: ["userId"],
+  });
+
+  const usersWithNoUserId = await prisma.showAndTellEntry.findMany({
+    select: { id: true },
+    where: {
+      userId: null,
+      AND: getPostFilter("approved"),
+    },
+    distinct: ["displayName"],
+  });
+  return userCountwithId.length + usersWithNoUserId.length;
+}
+
 export async function getVolunteeringMinutes() {
   return (
     (
