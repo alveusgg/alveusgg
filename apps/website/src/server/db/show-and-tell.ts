@@ -3,7 +3,11 @@ import { TRPCError } from "@trpc/server";
 
 import { env } from "@/env";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
+import {
+  MAX_IMAGES,
+  MAX_VIDEOS,
+  MAX_TEXT_HTML_LENGTH,
+} from "@/data/show-and-tell";
 
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
@@ -88,7 +92,7 @@ export type ShowAndTellSubmitInput = z.infer<
 const showAndTellSharedInputSchema = z.object({
   displayName: z.string().max(100),
   title: z.string().max(100),
-  text: z.string().max(1_000),
+  text: z.string().max(MAX_TEXT_HTML_LENGTH),
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),

@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
+import {
+  MAX_IMAGES,
+  MAX_VIDEOS,
+  getMaxTextLengthForCreatedAt,
+} from "@/data/show-and-tell";
 
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
@@ -33,8 +37,6 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
-
-const dateWhenTextShortened = new Date(2024, 3, 26);
 
 export const allowedFileTypes = [
   "image/png",
@@ -289,11 +291,7 @@ export function ShowAndTellEntryForm({
               label="Content"
               name="text"
               defaultValue={entry?.text}
-              maxLength={
-                entry?.createdAt && entry.createdAt < dateWhenTextShortened
-                  ? 700
-                  : 300
-              }
+              maxLength={getMaxTextLengthForCreatedAt(entry?.createdAt)}
             />
           </Fieldset>
         </div>
