@@ -102,7 +102,7 @@ const collaborations: Collaboration[] = (
       ],
     },
     {
-      name: "Angelskimi",
+      name: "AngelsKimi",
       link: "https://www.twitch.tv/angelskimi",
       date: new Date("2024-04-20"),
       videoId: "qC7Ifq1rZMc",
