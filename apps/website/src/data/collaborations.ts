@@ -92,7 +92,8 @@ const collaborations: Collaboration[] = (
       name: "Valkyrae",
       link: "https://www.youtube.com/@Valkyrae",
       date: new Date("2024-04-21"),
-      videoId: "nt7nbMao9c4",
+      videoId: "jZKupTWDw9U",
+      vodId: "nt7nbMao9c4",
       creators: [
         {
           name: "Valkyrae",
