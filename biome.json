@@ -13,6 +13,13 @@
         "useAriaPropsForRole": "warn",
         "useAltText": "warn",
         "noBlankTarget": "off"
+      },
+      "style": {
+        "noParameterAssign": "warn",
+        "useNodejsImportProtocol": "off"
+      },
+      "suspicious": {
+        "noImplicitAnyLet": "warn"
       }
     }
   },
