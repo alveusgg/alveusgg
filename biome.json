@@ -33,6 +33,7 @@
       "apps/website/.next/",
       "apps/website/src/data/generated",
       "apps/website/out",
+      "apps/website/src/third-party/qrcodegen/index.ts",
       "pnpm-lock.yaml"
     ]
   },
