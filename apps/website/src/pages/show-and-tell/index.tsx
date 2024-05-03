@@ -1,44 +1,49 @@
-import type { InferGetStaticPropsType, NextPage } from "next";
-import Image from "next/image";
 import {
-  type KeyboardEventHandler,
-  type WheelEvent,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
+  type WheelEvent,
+  type KeyboardEventHandler,
 } from "react";
+import type { InferGetStaticPropsType, NextPage } from "next";
+import Image from "next/image";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
-import { getPosts } from "@/server/db/show-and-tell";
 import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
+import {
+  getPosts,
+  getPostsCount,
+  getUsersCount,
+} from "@/server/db/show-and-tell";
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
+import useLocaleString from "@/hooks/locale";
 
-import IconArrowDown from "@/icons/IconArrowDown";
+import IconLoading from "@/icons/IconLoading";
 import IconArrowUp from "@/icons/IconArrowUp";
+import IconArrowDown from "@/icons/IconArrowDown";
 import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
-import IconLoading from "@/icons/IconLoading";
 import IconPencil from "@/icons/IconPencil";
 
-import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 
 import { Button, LinkButton } from "@/components/shared/form/Button";
 
-import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
-import { QrCode } from "@/components/show-and-tell/QrCode";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
+import { QrCode } from "@/components/show-and-tell/QrCode";
+import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
 
 import alveusLogo from "@/assets/logo.png";
-import showAndTellHeader from "@/assets/show-and-tell/header.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -56,11 +61,15 @@ export const getStaticProps = async () => {
     const nextItem = entries.pop();
     nextCursor = nextItem?.id || undefined;
   }
+  const totalPostsCount = await getPostsCount();
+  const usersCount = await getUsersCount();
 
   return {
     props: {
       entries,
       nextCursor,
+      totalPostsCount,
+      usersCount,
     },
   };
 };
@@ -74,6 +83,8 @@ const isShowAndTellEntry = (
 const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   entries: initialEntries,
   nextCursor,
+  totalPostsCount,
+  usersCount,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
     {},
@@ -86,6 +97,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       refetchOnWindowFocus: false,
     },
   );
+
+  // Format the stats
+  const totalPostsCountFmt = useLocaleString(totalPostsCount);
+  const usersCountFmt = useLocaleString(usersCount);
 
   const [isPresentationView, setIsPresentationView] = useState(false);
   const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
@@ -356,9 +371,18 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           </p>
 
           <p className="mt-8">
+            {usersCountFmt} members of the Alveus community have shared their
+            activities with {totalPostsCountFmt} posts.
+          </p>
+
+          <p className="mt-8">
             As a community, we&apos;re tracking the hours we spend giving back
-            to the planet, as part of WWF&apos;s{" "}
-            <Link href="/show-and-tell/give-an-hour" dark>
+            to the planet, originally as part of WWF&apos;s{" "}
+            <Link
+              href="/show-and-tell/give-an-hour"
+              dark
+              className="whitespace-nowrap"
+            >
               Give an Hour
             </Link>{" "}
             initiative.

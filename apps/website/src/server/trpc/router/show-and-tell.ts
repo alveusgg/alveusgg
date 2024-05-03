@@ -1,18 +1,15 @@
+import { z } from "zod";
+import { TRPCError } from "@trpc/server";
+import {
+  createFileStorageUpload,
+  deleteFileStorageObject,
+} from "@/server/utils/file-storage";
 import {
   protectedProcedure,
   publicProcedure,
   router,
 } from "@/server/trpc/trpc";
-import {
-  createFileStorageUpload,
-  deleteFileStorageObject,
-} from "@/server/utils/file-storage";
-import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
-import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
-import { giveAnHourEnd, giveAnHourStart } from "@/data/show-and-tell";
-import { env } from "@/env";
 import {
   createPost,
   deletePost,
@@ -24,7 +21,8 @@ import {
   updatePost,
   withAttachments,
 } from "@/server/db/show-and-tell";
-import { earliestTimeZone, latestTimeZone } from "@/utils/datetime";
+import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
+import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
 
 const uploadPrefix = "show-and-tell/";
@@ -57,10 +55,7 @@ export const showAndTellRouter = router({
     }),
 
   getGiveAnHourProgress: publicProcedure.query(async () => {
-    const minutes = await getVolunteeringMinutes({
-      from: new Date(giveAnHourStart + earliestTimeZone),
-      to: new Date(giveAnHourEnd + latestTimeZone),
-    });
+    const minutes = await getVolunteeringMinutes();
     return Math.round(minutes / 60);
   }),
 

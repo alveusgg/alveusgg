@@ -26,7 +26,8 @@
     "postinstall": "run-p postinstall:*",
     "lint": "next lint",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "format": "prettier . --write && prisma format"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data#0.34.0",

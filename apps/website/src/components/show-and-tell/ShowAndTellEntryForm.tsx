@@ -1,20 +1,18 @@
-import { useRouter } from "next/router";
 import { type FormEvent, useMemo, useState } from "react";
+import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
 import {
   MAX_IMAGES,
   MAX_VIDEOS,
-  giveAnHourEnd,
-  giveAnHourStart,
+  getMaxTextLengthForCreatedAt,
 } from "@/data/show-and-tell";
 
 import { classes } from "@/utils/classes";
-import { formatDateTime } from "@/utils/datetime";
-import { getEntityStatus } from "@/utils/entity-helpers";
-import { notEmpty } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
+import { notEmpty } from "@/utils/helpers";
+import { getEntityStatus } from "@/utils/entity-helpers";
 
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
@@ -22,23 +20,23 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 import useFileUpload from "@/hooks/files/upload";
 
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
-import Link from "../content/Link";
-import { MessageBox } from "../shared/MessageBox";
-import { Button } from "../shared/form/Button";
 import { Fieldset } from "../shared/form/Fieldset";
-import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
-import { NumberField } from "../shared/form/NumberField";
-import { RichTextField } from "../shared/form/RichTextField";
-import { TextAreaField } from "../shared/form/TextAreaField";
 import { TextField } from "../shared/form/TextField";
+import { RichTextField } from "../shared/form/RichTextField";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
+import { Button } from "../shared/form/Button";
+import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
+import { MessageBox } from "../shared/MessageBox";
+import { TextAreaField } from "../shared/form/TextAreaField";
+import { NumberField } from "../shared/form/NumberField";
 import {
-  VideoLinksField,
   useVideoLinksData,
+  VideoLinksField,
 } from "../shared/form/VideoLinksField";
+import Link from "../content/Link";
 
 export const allowedFileTypes = [
   "image/png",
@@ -105,36 +103,9 @@ export function ShowAndTellEntryForm({
   const review = trpc.adminShowAndTell.review.useMutation();
   const isLoading = create.isLoading || update.isLoading || review.isLoading;
 
-  const trackingStatus = useMemo(() => {
-    // Check local time is in date range
-    const now = new Date();
-    // Parsing the date time strings without explicit timezone makes it local time
-    const start = new Date(giveAnHourStart);
-    const end = new Date(giveAnHourEnd);
-    // Using zone: null to display the time in local time (default is UTC)
-    const trackingStatusFrom = formatDateTime(start, undefined, { zone: null });
-    const trackingStatusTo = formatDateTime(end, undefined, { zone: null });
-
-    let active = true;
-    let verb = "is";
-    if (now < start) {
-      active = false;
-      verb = "will be";
-    } else if (now > end) {
-      active = false;
-      verb = "was";
-    }
-
-    return {
-      active,
-      text: `tracking ${verb} available from ${trackingStatusFrom} to ${trackingStatusTo}`,
-    };
-  }, []);
-
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
     !!entry?.volunteeringMinutes,
   );
-  const enableTrackGiveAnHour = trackingStatus.active && wantsToTrackGiveAnHour;
 
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
@@ -173,14 +144,14 @@ export function ShowAndTellEntryForm({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const hours = Number.parseFloat(formData.get("giveAnHour") as string);
+    const hours = parseFloat(formData.get("giveAnHour") as string);
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
       text: formData.get("text") as string,
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
-      volunteeringMinutes: enableTrackGiveAnHour && hours ? hours * 60 : null,
+      volunteeringMinutes: hours ? hours * 60 : null,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -320,7 +291,7 @@ export function ShowAndTellEntryForm({
               label="Content"
               name="text"
               defaultValue={entry?.text}
-              maxLength={700}
+              maxLength={getMaxTextLengthForCreatedAt(entry?.createdAt)}
             />
           </Fieldset>
         </div>
@@ -386,28 +357,25 @@ export function ShowAndTellEntryForm({
       </div>
 
       <div className="space-y-10">
-        <Fieldset legend="Give an Hour">
+        <Fieldset legend="Give an hour for Earth">
           <p>
             Do you want to track hours you spent on this activity as part of the
-            Alveus community total for WWF&apos;s{" "}
+            Alveus community&apos;s effort to give an hour for Earth? Originally
+            part of WWF&apos;s{" "}
             <Link href="/show-and-tell/give-an-hour" external>
               Give an Hour
             </Link>{" "}
-            initiative?
+            initiative.
           </p>
 
           <div className="flex items-center gap-8">
             <label
               htmlFor="giveAnHourTracked"
-              className={classes(
-                "flex items-center gap-4",
-                !trackingStatus.active && "cursor-not-allowed",
-              )}
+              className="flex items-center gap-4"
             >
               <input
                 type="checkbox"
                 id="giveAnHourTracked"
-                disabled={!trackingStatus.active}
                 checked={wantsToTrackGiveAnHour}
                 onChange={(e) => setWantsToTrackGiveAnHour(e.target.checked)}
               />
@@ -415,18 +383,12 @@ export function ShowAndTellEntryForm({
             </label>
 
             <GiveAnHourInput
-              enabled={enableTrackGiveAnHour}
+              enabled
               defaultValue={
                 entry?.volunteeringMinutes ? entry.volunteeringMinutes / 60 : 1
               }
             />
           </div>
-
-          <p className="text-sm italic opacity-75">
-            <strong>Give an Hour</strong> {trackingStatus.text}. Activities
-            submitted with tracked hours must occur while the Give an Hour
-            initiative is active.
-          </p>
         </Fieldset>
 
         {error && <MessageBox variant="failure">{error}</MessageBox>}
