@@ -119,9 +119,9 @@ async function revalidateCache(postIdOrIds?: string | string[]) {
     if (typeof postIdOrIds === "string") {
       url.searchParams.set("postId", postIdOrIds);
     } else {
-      postIdOrIds.forEach((postId) =>
-        url.searchParams.append("postId", postId),
-      );
+      for (const postId of postIdOrIds) {
+        url.searchParams.append("postId", postId);
+      }
     }
   }
 
@@ -327,7 +327,8 @@ export async function updatePost(
     if (!existingEntry.attachments.find((a) => a.imageAttachmentId === id)) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: `Tried to update attachment that is not connected to the entry.`,
+        message:
+          "Tried to update attachment that is not connected to the entry.",
       });
     }
   }

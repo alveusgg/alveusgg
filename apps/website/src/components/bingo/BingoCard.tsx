@@ -89,7 +89,7 @@ export function useBingoLocalState(bingoId: string) {
             JSON.parse(localState),
           )?.selectedValues;
         } catch (e) {
-          console.error("Error restoring local bingo data: " + e);
+          console.error(`Error restoring local bingo data: ${e}`);
         }
       }
     }
@@ -141,7 +141,7 @@ export function BingoCard({
           size={size}
           showBingoHeader
           renderCell={(_, rowIndex, columnIndex) => {
-            const cellValue = transposedCells[rowIndex]![columnIndex]!;
+            const cellValue = transposedCells[rowIndex]?.[columnIndex]!;
             const isSelected = selectedValues.includes(cellValue);
             const isSelectable =
               selectableValues === undefined ||

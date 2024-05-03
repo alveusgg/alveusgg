@@ -26,13 +26,10 @@ type AddEventButtonProps = {
 };
 
 function formatIcsDate(date: Date): string {
-  return (
-    date
-      .toISOString() // UTC
-      .slice(0, -5) // remove MS and Z
-      .replace(/[:\-]/g, "") + // Remove colons and dashes
-    "Z"
-  );
+  return `${date
+    .toISOString() // UTC
+    .slice(0, -5) // remove MS and Z
+    .replace(/[:\-]/g, "")}Z`;
 }
 
 function createIcsEvent(event: IcsEvent): string {
@@ -70,7 +67,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
       "https://www.google.com/calendar/render",
     );
     googleCalendarEventUrl.searchParams.append("action", "TEMPLATE");
-    googleCalendarEventUrl.searchParams.append("text", title + " " + url);
+    googleCalendarEventUrl.searchParams.append("text", `${title} ${url}`);
     googleCalendarEventUrl.searchParams.append(
       "dates",
       `${formatIcsDate(startTime)}/${formatIcsDate(endTime || startTime)}`,

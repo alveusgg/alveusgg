@@ -502,7 +502,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               allow="autoplay; fullscreen"
               sandbox="allow-same-origin allow-scripts"
               className="aspect-video h-auto w-full rounded-2xl"
-            ></iframe>
+            />
           </Consent>
         </Section>
       </div>

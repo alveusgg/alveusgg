@@ -19,7 +19,8 @@
         "useNodejsImportProtocol": "off"
       },
       "suspicious": {
-        "noImplicitAnyLet": "warn"
+        "noImplicitAnyLet": "warn",
+        "noArrayIndexKey": "warn"
       }
     }
   },

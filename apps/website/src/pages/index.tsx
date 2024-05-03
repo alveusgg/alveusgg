@@ -205,7 +205,7 @@ const Home: NextPage = () => {
                     sandbox="allow-same-origin allow-scripts"
                     className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
                     tabIndex={-1}
-                  ></iframe>
+                  />
                 </Link>
               )}
             </Consent>

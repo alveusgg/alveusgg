@@ -10,11 +10,11 @@ const TheGivingBlockEmbed = () => {
 
   return (
     <div className="inline-block [&>*]:max-w-full">
-      <div id="tgb-widget-script"></div>
+      <div id="tgb-widget-script" />
       <Script
         src="https://widget.thegivingblock.com/widget/script.js"
         async={true}
-      ></Script>
+      />
     </div>
   );
 };

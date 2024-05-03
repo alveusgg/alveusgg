@@ -21,7 +21,7 @@ type NavLinkProps = Omit<
     isExternal?: boolean;
   } & RefAttributes<HTMLAnchorElement>;
 
-export const navLinkClasses = `block px-5 h-full transition-colors`;
+export const navLinkClasses = "block px-5 h-full transition-colors";
 export const navLinkClassesMain = `${navLinkClasses} py-3 border-b-2 border-transparent hover:lg:border-white `;
 export const navLinkClassesMainActive = "lg:border-white";
 export const navLinkClassesSub = `${navLinkClasses} py-2 hover:bg-alveus-tan/20 rounded`;

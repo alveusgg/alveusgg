@@ -81,9 +81,10 @@ export const parsePartialDateString = (
   const m = Number.parseInt(arr[1] || "");
   const y = Number.parseInt(arr[0] || "");
 
-  if (!isNaN(d) && !isNaN(m) && !isNaN(y)) return new Date(y, m - 1, d);
-  if (!isNaN(m) && !isNaN(y)) return new Date(y, m - 1);
-  if (!isNaN(y)) return new Date(y, 0);
+  if (!Number.isNaN(d) && !Number.isNaN(m) && !Number.isNaN(y))
+    return new Date(y, m - 1, d);
+  if (!Number.isNaN(m) && !Number.isNaN(y)) return new Date(y, m - 1);
+  if (!Number.isNaN(y)) return new Date(y, 0);
 
   return null;
 };

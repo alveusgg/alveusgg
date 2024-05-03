@@ -9,7 +9,7 @@ export function safeParsePartialURL(maybeUrl: string | undefined | null) {
     try {
       const parsedUrl = new URL(maybeUrl);
       // Check if the URL has a top-level domain, or we assume it's not a URL
-      if (parsedUrl && parsedUrl.hostname.match(/\.\w/)) {
+      if (parsedUrl?.hostname.match(/\.\w/)) {
         return parsedUrl.toString();
       }
     } catch (e) {

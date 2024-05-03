@@ -61,7 +61,7 @@ export function CalendarEventForm({
         String(formData.get("link")).startsWith("http://") ||
         String(formData.get("link")).startsWith("https://")
           ? String(formData.get("link"))
-          : "https://" + String(formData.get("link"));
+          : `https://${String(formData.get("link"))}`;
 
       const mutationData: CalendarEventSchema = {
         title: String(formData.get("title")),

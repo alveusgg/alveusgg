@@ -63,12 +63,12 @@ const withPositions = <T,>(
     nodesep: separation.siblings,
     rankdir: direction,
   });
-  nodes.forEach((node) => {
+  for (const node of nodes) {
     dagreGraph.setNode(node.id, { ...size });
-  });
-  edges.forEach((edge) => {
+  }
+  for (const edge of edges) {
     dagreGraph.setEdge(edge.source, edge.target);
-  });
+  }
 
   // Calculate the auto layout
   layout(dagreGraph);
@@ -76,7 +76,7 @@ const withPositions = <T,>(
   // Get the nodes where all the children are leaf nodes
   // For each parent, find the nearest child, and fix any misalignment
   // Without this, leaf nodes sometimes appear to not be grouped together
-  nodes.forEach(({ id, children }) => {
+  for (const { id, children } of nodes) {
     if (!children.length) return;
     if (children.some((child) => child.children.length)) return;
 
@@ -111,7 +111,8 @@ const withPositions = <T,>(
         [dagreChildren[0], 0],
       );
 
-    let idx: number, pos: number;
+    let pos: number;
+    let idx: number;
 
     // Walk backwards from the nearest node, and fix any misalignment
     for (idx = nearestIdx - 1, pos = nearestNode[axis]; idx >= 0; idx--) {
@@ -140,7 +141,7 @@ const withPositions = <T,>(
 
       pos = expectedPos + node[dimension];
     }
-  });
+  }
 
   // Store the node positions
   const nodesWithPosition: TreeNodePositioned<T>[] = nodes.map((node) => {
@@ -198,7 +199,7 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
       zIndex: depth,
     });
 
-    node.children.forEach((child) => {
+    for (const child of node) {
       // Generate edges to children
       edges.push({
         id: `${node.id}-${child.id}`,
@@ -209,7 +210,7 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
 
       // Queue up the children
       queue.push([child, depth + 1]);
-    });
+    }
   }
 
   return {

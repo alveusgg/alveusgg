@@ -250,7 +250,7 @@ const PlayBingoPage = () => {
             </label>
             <span className="italic">or</span>
 
-            <Link href={`https://www.twitch.tv/maya`} external>
+            <Link href={"https://www.twitch.tv/maya"} external>
               Open in new tab
             </Link>
           </div>

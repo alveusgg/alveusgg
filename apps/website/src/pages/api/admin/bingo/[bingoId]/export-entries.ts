@@ -83,8 +83,8 @@ const exportBingoEntries = async (
   res
     .status(200)
     .setHeader("Content-Type", "text/csv")
-    .setHeader("Content-Disposition", `attachment; filename=bingo-entries.csv`)
-    .send("\ufeff" + csv); // add utf-8 BOM for Excel to correctly open the CSV
+    .setHeader("Content-Disposition", "attachment; filename=bingo-entries.csv")
+    .send(`\ufeff${csv}`); // add utf-8 BOM for Excel to correctly open the CSV
 };
 
 export default exportBingoEntries;

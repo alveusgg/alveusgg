@@ -8,7 +8,7 @@ import {
 } from "next/server";
 
 export async function middleware(req: NextRequest, event: NextFetchEvent) {
-  const res = await fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links", {
+  const res = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/short-links`, {
     method: "POST",
     body: JSON.stringify({
       slug: req.nextUrl.pathname.replace("/l/", "").trim(),

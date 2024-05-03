@@ -25,7 +25,7 @@ export function StickerAttribution({ stickerPack }: StickerPackProps) {
                   {group.attribution}
                 </Link>
               ) : (
-                group.attribution || <>&nbsp;</>
+                group.attribution || "&nbsp;"
               )}
             </span>
           );

@@ -26,7 +26,7 @@ export const OutgoingWebhookFeedEntry = ({
     });
 
   if (item.type === "form-entry") {
-    label = "Form entry: " + item.user?.name;
+    label = `Form entry: ${item.user?.name}`;
     details = <div>User #{item.user?.name}</div>;
   }
 
@@ -38,19 +38,18 @@ export const OutgoingWebhookFeedEntry = ({
       <summary className="flex cursor-pointer flex-row gap-3">
         <span
           className="cursor-help"
-          title={
-            `${item.attempts} attempts, ` +
-            (lastAttemptWasSuccessful
+          title={`${item.attempts} attempts, ${
+            lastAttemptWasSuccessful
               ? `last success: ${item.deliveredAt?.toISOString()}`
-              : `last failure: ${item.failedAt?.toISOString()}`)
-          }
+              : `last failure: ${item.failedAt?.toISOString()}`
+          }`}
         >
           {retryOutgoingWebhook.isLoading ? (
             <IconSync className="h-5 w-5 animate-spin" />
           ) : lastAttemptWasSuccessful ? (
             "✅"
           ) : (
-            `❌`
+            "❌"
           )}
         </span>
         <span className="tabular-nums">

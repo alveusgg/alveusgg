@@ -37,7 +37,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkFormProps) {
         String(formData.get("url")).startsWith("http://") ||
         String(formData.get("url")).startsWith("https://")
           ? String(formData.get("url"))
-          : "https://" + String(formData.get("url"));
+          : `https://${String(formData.get("url"))}`;
 
       const mutationData: ShortLinkSchema = {
         label: String(formData.get("label")),

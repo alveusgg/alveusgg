@@ -194,7 +194,7 @@ export function ShowAndTellEntryForm({
             onUpdate?.();
           } else {
             // Redirect to my posts
-            router.push(`/show-and-tell/my-posts/`);
+            router.push("/show-and-tell/my-posts/");
           }
         },
         onError: (err) => {

@@ -64,12 +64,11 @@ export function NotificationSettingsForm({
   return (
     <form
       onSubmit={submitHandler}
-      className={
-        "pb-2 transition-opacity " +
-        (enableSettings
+      className={`pb-2 transition-opacity ${
+        enableSettings
           ? ""
-          : "pointer-none cursor-default select-none opacity-50")
-      }
+          : "pointer-none cursor-default select-none opacity-50"
+      }`}
     >
       <fieldset className="mx-2 space-y-1">
         <legend className="sr-only">Notifications</legend>

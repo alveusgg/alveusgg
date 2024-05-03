@@ -355,30 +355,29 @@ const config = {
         },
         {
           key: "Content-Security-Policy",
-          value:
-            [
-              "frame-src 'self'",
-              // Allow vercel preview helper (if not in production):
-              process.env.VERCEL_ENV &&
-                ["development", "preview"].includes(process.env.VERCEL_ENV) &&
-                "https://vercel.live/",
-              // Twitch embeds:
-              "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
-              // YouTube embeds:
-              "https://www.youtube-nocookie.com/",
-              // Streamable embeds:
-              "https://streamable.com/",
-              // Prezi embeds:
-              "https://prezi.com/",
-              // The Giving Block (donation widget):
-              "https://widget.thegivingblock.com/",
-              // Vote.org embeds:
-              "https://register.vote.org/ https://verify.vote.org/ https://ballot.vote.org/",
-              // Imgur embeds:
-              //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
-            ]
-              .filter(Boolean)
-              .join(" ") + ";",
+          value: `${[
+            "frame-src 'self'",
+            // Allow vercel preview helper (if not in production):
+            process.env.VERCEL_ENV &&
+              ["development", "preview"].includes(process.env.VERCEL_ENV) &&
+              "https://vercel.live/",
+            // Twitch embeds:
+            "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
+            // YouTube embeds:
+            "https://www.youtube-nocookie.com/",
+            // Streamable embeds:
+            "https://streamable.com/",
+            // Prezi embeds:
+            "https://prezi.com/",
+            // The Giving Block (donation widget):
+            "https://widget.thegivingblock.com/",
+            // Vote.org embeds:
+            "https://register.vote.org/ https://verify.vote.org/ https://ballot.vote.org/",
+            // Imgur embeds:
+            //"http://imgur.com/ https://imgur.com/ https://imgur.io/",
+          ]
+            .filter(Boolean)
+            .join(" ")};`,
         },
       ],
     },

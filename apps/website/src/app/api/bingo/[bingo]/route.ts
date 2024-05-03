@@ -68,7 +68,7 @@ export async function GET(
     });
   } catch (e: unknown) {
     console.error(`${(e as Error).message}`);
-    return new Response(`Failed to load bingo data`, {
+    return new Response("Failed to load bingo data", {
       status: 500,
     });
   }
