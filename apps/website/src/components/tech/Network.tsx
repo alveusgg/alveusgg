@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
-  Handle,
-  Position,
-  useEdges,
-  EdgeLabelRenderer,
-  useNodes,
-  getBezierPath,
   BaseEdge,
-  type NodeProps,
+  EdgeLabelRenderer,
   type EdgeProps,
+  Handle,
+  type NodeProps,
+  Position,
+  getBezierPath,
+  useEdges,
+  useNodes,
 } from "reactflow";
 
 import network, {

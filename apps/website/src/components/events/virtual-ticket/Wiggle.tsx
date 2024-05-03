@@ -1,15 +1,15 @@
 import {
+  type HTMLAttributes,
+  type ReactNode,
   useEffect,
   useMemo,
   useRef,
-  type HTMLAttributes,
-  type ReactNode,
 } from "react";
 
 import throttle from "lodash/throttle";
 
-import { classes } from "@/utils/classes";
 import usePrefersReducedMotion from "@/hooks/motion";
+import { classes } from "@/utils/classes";
 
 export type WiggleProps = {
   children?: ReactNode;

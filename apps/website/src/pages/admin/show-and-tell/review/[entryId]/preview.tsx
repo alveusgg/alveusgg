@@ -1,13 +1,13 @@
-import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
+import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { trpc } from "@/utils/trpc";
-import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
+import { getAdminSSP } from "@/server/utils/admin";
+import { trpc } from "@/utils/trpc";
 
-import Meta from "@/components/content/Meta";
 import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 

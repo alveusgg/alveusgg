@@ -1,0 +1,39 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.7.0/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "a11y": {
+        "useValidAriaProps": "warn",
+        "useValidAriaValues": "warn",
+        "noAriaUnsupportedElements": "warn",
+        "useAriaPropsForRole": "warn",
+        "useAltText": "warn",
+        "noBlankTarget": "off"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "include": ["apps/website/src/", "apps/chatbot/src/"],
+    "ignore": [
+      "node_modules/",
+      "apps/website/.next/",
+      "apps/website/src/data/generated",
+      "apps/website/out",
+      "pnpm-lock.yaml"
+    ]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "useIgnoreFile": true
+  }
+}

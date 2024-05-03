@@ -1,8 +1,8 @@
 import { z } from "zod";
 
+import { prisma } from "@/server/db/client";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
-import { prisma } from "@/server/db/client";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 

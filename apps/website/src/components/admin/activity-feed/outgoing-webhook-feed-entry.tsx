@@ -1,8 +1,8 @@
 import type { FormEntry, OutgoingWebhook, User } from "@prisma/client";
 
-import { trpc } from "@/utils/trpc";
 import DateTime from "@/components/content/DateTime";
 import IconSync from "@/icons/IconSync";
+import { trpc } from "@/utils/trpc";
 
 type OutgoingWebhookWithFormEntry = OutgoingWebhook & {
   user: User | null;
@@ -26,10 +26,8 @@ export const OutgoingWebhookFeedEntry = ({
     });
 
   if (item.type === "form-entry") {
-    {
-      label = "Form entry: " + item.user?.name;
-      details = <div>User #{item.user?.name}</div>;
-    }
+    label = "Form entry: " + item.user?.name;
+    details = <div>User #{item.user?.name}</div>;
   }
 
   const lastAttemptWasSuccessful =

@@ -1,30 +1,30 @@
 import type { FormEvent } from "react";
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
 
 import type { CalendarEvent } from "@prisma/client";
 import { useRouter } from "next/router";
 
-import { trpc } from "@/utils/trpc";
+import { frequentLinks, standardCategories } from "@/data/calendar-events";
 import { classes } from "@/utils/classes";
 import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
-import { frequentLinks, standardCategories } from "@/data/calendar-events";
+import { trpc } from "@/utils/trpc";
 
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
+import { MessageBox } from "@/components/shared/MessageBox";
 import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/form/Button";
-import { TextField } from "@/components/shared/form/TextField";
-import { Fieldset } from "@/components/shared/form/Fieldset";
-import { MessageBox } from "@/components/shared/MessageBox";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
+import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
+import { TextField } from "@/components/shared/form/TextField";
 
 type CalendarEventFormProps = {
   action: "create" | "edit";

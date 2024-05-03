@@ -1,8 +1,6 @@
 import { useEffect, useReducer } from "react";
 import { z } from "zod";
 
-import { transposeMatrix } from "@/utils/math";
-import { classes } from "@/utils/classes";
 import {
   type BingoCard,
   type BingoValue,
@@ -10,6 +8,8 @@ import {
   checkHasBingo,
   isCellPartOfBingo,
 } from "@/utils/bingo";
+import { classes } from "@/utils/classes";
+import { transposeMatrix } from "@/utils/math";
 
 import { BingoCardGrid } from "./BingoCardGrid";
 

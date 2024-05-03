@@ -1,4 +1,4 @@
-import type { PhotoSwipeOptions, ElementProvider } from "photoswipe";
+import type { ElementProvider, PhotoSwipeOptions } from "photoswipe";
 
 export function getDefaultPhotoswipeLightboxOptions() {
   return {

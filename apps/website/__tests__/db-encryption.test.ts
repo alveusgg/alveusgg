@@ -1,5 +1,5 @@
-import { expect, test, vi } from "vitest";
 import { decryptRecord, encryptRecord } from "@/server/db/encryption";
+import { expect, test, vi } from "vitest";
 
 vi.mock("@/env", () => {
   return {

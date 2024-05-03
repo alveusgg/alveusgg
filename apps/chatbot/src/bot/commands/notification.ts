@@ -1,11 +1,11 @@
-import { checkUserIsAllowedToSendNotifications } from "@/users";
 import { getChannelInfoById } from "@/twitch/api";
+import { checkUserIsAllowedToSendNotifications } from "@/users";
 import { safeParsePartialURL } from "@/utils/safeParsePartialURL";
 import { createNotification } from "@/website-api/notifications";
 
 import {
-  createBotCommand,
   type CommandHandler,
+  createBotCommand,
 } from "@/bot/commands/shared/command";
 import { createOptions } from "@/bot/commands/shared/options";
 

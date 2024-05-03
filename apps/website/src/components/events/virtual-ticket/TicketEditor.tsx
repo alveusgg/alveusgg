@@ -9,11 +9,11 @@ import {
   useState,
 } from "react";
 
-import IconTrash from "@/icons/IconTrash";
 import IconCheck from "@/icons/IconCheck";
-import IconMinusCircle from "@/icons/IconMinusCircle";
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";
+import IconMinusCircle from "@/icons/IconMinusCircle";
+import IconTrash from "@/icons/IconTrash";
 
 import {
   type StickerPack,

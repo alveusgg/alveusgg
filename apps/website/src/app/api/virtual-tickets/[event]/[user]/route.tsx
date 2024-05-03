@@ -1,11 +1,11 @@
-import { ImageResponse } from "next/og";
 import { Client } from "@planetscale/database";
+import { ImageResponse } from "next/og";
 
 import { env } from "@/env";
 
-import { mapStickerIdToPath } from "@/utils/virtual-tickets";
 import { stickerPack, ticketConfig } from "@/data/events/fall-carnival-2023";
 import { virtualTicketCustomizationSchema } from "@/server/utils/virtual-tickets";
+import { mapStickerIdToPath } from "@/utils/virtual-tickets";
 
 import {
   Sticker,
@@ -55,39 +55,36 @@ export async function GET(
     ).then((res) => res.arrayBuffer());
 
     const imageRes = new ImageResponse(
-      (
-        <div
-          style={{
-            display: "flex",
-            fontSize: 40,
-            fontFamily: '"PTSans"',
-            color: "black",
-            width: "100%",
-            height: "100%",
-            textAlign: "center",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <FallCarnival2023Ticket userName={user} {...ticketConfig}>
-            {stickers
-              .map((sticker) => ({
-                x: sticker.x,
-                y: sticker.y,
-                image:
-                  env.NEXT_PUBLIC_BASE_URL +
-                  mapStickerIdToPath(stickerPack.stickers, sticker.imageId),
-              }))
-              .filter(
-                (sticker): sticker is StickerProps =>
-                  sticker.image !== undefined,
-              )
-              .map((sticker) => (
-                <Sticker key={sticker.image} {...sticker} />
-              ))}
-          </FallCarnival2023Ticket>
-        </div>
-      ),
+      <div
+        style={{
+          display: "flex",
+          fontSize: 40,
+          fontFamily: '"PTSans"',
+          color: "black",
+          width: "100%",
+          height: "100%",
+          textAlign: "center",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <FallCarnival2023Ticket userName={user} {...ticketConfig}>
+          {stickers
+            .map((sticker) => ({
+              x: sticker.x,
+              y: sticker.y,
+              image:
+                env.NEXT_PUBLIC_BASE_URL +
+                mapStickerIdToPath(stickerPack.stickers, sticker.imageId),
+            }))
+            .filter(
+              (sticker): sticker is StickerProps => sticker.image !== undefined,
+            )
+            .map((sticker) => (
+              <Sticker key={sticker.image} {...sticker} />
+            ))}
+        </FallCarnival2023Ticket>
+      </div>,
       {
         width: 899,
         height: 350,

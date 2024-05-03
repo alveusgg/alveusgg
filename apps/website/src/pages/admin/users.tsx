@@ -1,22 +1,22 @@
-import { useCallback, useId, useState } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
+import { useCallback, useId, useState } from "react";
 
-import { getSession } from "next-auth/react";
-import { trpc } from "@/utils/trpc";
-import { typeSafeObjectKeys } from "@/utils/helpers";
-import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 import type { UserRole } from "@/data/user-roles";
 import { userRoles } from "@/data/user-roles";
+import { getAdminSSP } from "@/server/utils/admin";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
+import { getSession } from "next-auth/react";
 
-import { Headline } from "@/components/admin/Headline";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import { Button } from "@/components/shared/form/Button";
-import { TextField } from "@/components/shared/form/TextField";
-import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
-import { MessageBox } from "@/components/shared/MessageBox";
 import Meta from "@/components/content/Meta";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { Button } from "@/components/shared/form/Button";
+import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
+import { TextField } from "@/components/shared/form/TextField";
 import IconMinusCircle from "@/icons/IconMinusCircle";
 
 export async function getServerSideProps(context: NextPageContext) {

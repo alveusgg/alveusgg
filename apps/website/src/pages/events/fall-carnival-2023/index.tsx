@@ -1,12 +1,12 @@
-import { useCallback, useEffect } from "react";
-import { type NextPage } from "next";
-import Image from "next/image";
+import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import Image from "next/image";
+import { useCallback, useEffect } from "react";
 
 import ogImage from "@/assets/events/fall-carnival-2023/og.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1-fall.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2-fall.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2-fall.png";
 
 import IconDownload from "@/icons/IconDownload";
 
@@ -17,25 +17,25 @@ import {
 } from "@/data/events/fall-carnival-2023";
 
 import { classes } from "@/utils/classes";
-import { trpc } from "@/utils/trpc";
 import { getShortBaseUrl } from "@/utils/short-url";
+import { trpc } from "@/utils/trpc";
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { ShareButton } from "@/components/shared/ShareButton";
 
-import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
+import { FallCarnival2023Ticket } from "@/components/events/fall-carnival-2023/VirtualTicket";
 import {
   TicketEditor,
   useStickerData,
 } from "@/components/events/virtual-ticket/TicketEditor";
-import { FallCarnival2023Ticket } from "@/components/events/fall-carnival-2023/VirtualTicket";
 import { MovableSticker } from "@/components/events/virtual-ticket/elements/MovableSticker";
 
-import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
 import { Activities } from "@/components/events/fall-carnival-2023/Activities";
+import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
 
 const FallCarnival2023EventPage: NextPage = () => {
   const session = useSession();

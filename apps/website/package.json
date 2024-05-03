@@ -95,7 +95,6 @@
     "@types/luxon": "^3.4.2",
     "@types/node": "~20.11.30",
     "@types/oauth": "^0.9.4",
-    "@types/prettier": "^2.7.3",
     "@types/probe-image-size": "^7.2.4",
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
@@ -110,7 +109,6 @@
     "loader-utils": "^3.2.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.33",
-    "prettier-plugin-tailwindcss": "^0.5.11",
     "prisma": "^5.9.1",
     "tailwindcss": "^3.4.1",
     "tsup": "^8.0.1",
@@ -118,11 +116,6 @@
     "typescript": "^5.3.3",
     "vitest": "^1.2.2",
     "webpack": "^5.90.0"
-  },
-  "prettier": {
-    "plugins": [
-      "prettier-plugin-tailwindcss"
-    ]
   },
   "postcss": {
     "plugins": {

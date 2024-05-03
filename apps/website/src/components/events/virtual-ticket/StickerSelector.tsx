@@ -1,6 +1,6 @@
-import { typeSafeObjectKeys } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
-import { mapStickerIdToPath, type StickerPack } from "@/utils/virtual-tickets";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { type StickerPack, mapStickerIdToPath } from "@/utils/virtual-tickets";
 
 import Link from "@/components/content/Link";
 

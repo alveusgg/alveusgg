@@ -1,11 +1,11 @@
-import { Client } from "@planetscale/database";
 import {
-  type BingoType,
   type BingoLiveData,
+  type BingoType,
   calcBingoConfig,
-  parseBingoPlayData,
   findCardsWithBingo,
+  parseBingoPlayData,
 } from "@/utils/bingo";
+import { Client } from "@planetscale/database";
 
 import { env } from "@/env";
 

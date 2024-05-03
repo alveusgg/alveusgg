@@ -1,8 +1,8 @@
+import type { AccessTokenWithUserId } from "@twurple/auth";
 import { and, eq } from "drizzle-orm";
-import { type AccessTokenWithUserId } from "@twurple/auth";
 
 import { getDatabase } from "@/db/index";
-import { accounts, userRoles, users, type Account } from "@/db/schema";
+import { type Account, accounts, userRoles, users } from "@/db/schema";
 
 const DEFAULT_ACCOUNT_PROVIDER = "twitch";
 

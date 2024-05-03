@@ -1,10 +1,10 @@
-import { useCallback, useMemo, useRef, useState, type ReactNode } from "react";
+import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
 import {
-  type AriaNumberFieldProps,
   type AriaButtonOptions,
+  type AriaNumberFieldProps,
+  useButton,
   useLocale,
   useNumberField,
-  useButton,
 } from "react-aria";
 import { useNumberFieldState } from "react-stately";
 

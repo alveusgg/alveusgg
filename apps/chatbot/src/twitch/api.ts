@@ -1,5 +1,5 @@
-import { ApiClient } from "@twurple/api";
 import { getAuthProvider } from "@/twitch/auth";
+import { ApiClient } from "@twurple/api";
 
 let api: ApiClient;
 

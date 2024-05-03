@@ -1,11 +1,11 @@
 import type { LinkAttachment } from "@prisma/client";
-import { type AnchorHTMLAttributes } from "react";
+import type { AnchorHTMLAttributes } from "react";
 
-import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { createImageUrl } from "@/utils/image";
+import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 
-import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 import { Preview } from "@/components/content/YouTube";
+import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 import IconYouTube from "@/icons/IconYouTube";
 
 type VideoThumbnailProps = {
