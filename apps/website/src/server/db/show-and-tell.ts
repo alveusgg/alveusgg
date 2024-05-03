@@ -5,8 +5,8 @@ import { env } from "@/env";
 
 import {
   MAX_IMAGES,
-  MAX_VIDEOS,
   MAX_TEXT_HTML_LENGTH,
+  MAX_VIDEOS,
 } from "@/data/show-and-tell";
 
 import { prisma } from "@/server/db/client";
