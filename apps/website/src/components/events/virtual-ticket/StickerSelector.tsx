@@ -44,10 +44,10 @@ export function StickerSelector({
               {typeSafeObjectKeys(stickerPack.stickers)
                 .filter(
                   (imageId) =>
-                    groupId === stickerPack.stickers[imageId]!.groupId,
+                    groupId === stickerPack.stickers[imageId]?.groupId,
                 )
                 .map((imageId) => ({
-                  name: stickerPack.stickers[imageId]!.name,
+                  name: stickerPack.stickers[imageId]?.name,
                   disabled: selectedStickers.includes(imageId),
                   image: mapStickerIdToPath(stickerPack.stickers, imageId),
                   imageId,

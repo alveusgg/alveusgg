@@ -225,19 +225,17 @@ export function checkHasBingo(
   const size = card.length;
 
   // Check rows
-  let row;
-  if ((row = checkBingoRows(card, calledValues, zeroAsFreespace)) !== false) {
+  const row = checkBingoRows(card, calledValues, zeroAsFreespace);
+  if (row !== false) {
     return [true, { type: "row", index: row }];
   }
   // Check columns by transposing the matrix
-  let column;
-  if (
-    (column = checkBingoRows(
-      transposeMatrix(card),
-      calledValues,
-      zeroAsFreespace,
-    )) !== false
-  ) {
+  const column = checkBingoRows(
+    transposeMatrix(card),
+    calledValues,
+    zeroAsFreespace,
+  );
+  if (column !== false) {
     return [true, { type: "column", index: column }];
   }
 

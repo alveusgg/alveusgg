@@ -318,6 +318,7 @@ export const Lightbox = forwardRef<HTMLDivElement, LightboxProps>(
     return (
       <>
         <style
+          // biome-ignore lint/security/noDangerouslySetInnerHtml:
           dangerouslySetInnerHTML={{
             // Hide the placeholder overlay
             // Ensure we retain the aspect ratio of the video

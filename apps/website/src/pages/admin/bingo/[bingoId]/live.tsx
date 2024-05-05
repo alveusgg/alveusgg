@@ -265,7 +265,7 @@ const AdminEditBingoPage: NextPage<
                           size={config.size}
                           renderCell={(_, rowIndex, columnIndex) => {
                             const cellValue =
-                              transposedCard[rowIndex]![columnIndex]!;
+                              transposedCard[rowIndex]?.[columnIndex]!;
                             const isCalled =
                               playData.calledValues.includes(cellValue);
                             const isBingoMatch =
@@ -288,7 +288,7 @@ const AdminEditBingoPage: NextPage<
                                       : "bg-white",
                                 )}
                               >
-                                {transposedCard[rowIndex]![columnIndex]!}
+                                {transposedCard[rowIndex]?.[columnIndex]!}
                               </div>
                             );
                           }}

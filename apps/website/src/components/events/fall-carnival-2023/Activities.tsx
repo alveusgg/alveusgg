@@ -42,6 +42,7 @@ export const activities = (
   .reduce((obj, { key, ambassador, activity }) => {
     const images = getAmbassadorImages(key);
     return {
+      // biome-ignore lint/performance/noAccumulatingSpread
       ...obj,
       [key]: (
         <Link

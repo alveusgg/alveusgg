@@ -315,6 +315,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       : lastPageItems?.[lastPageItems.length - 1]?.id;
   }, [entries]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
     // Check if we need to focus an entry after loading more
     if (entryIdToFocusRef.current) {

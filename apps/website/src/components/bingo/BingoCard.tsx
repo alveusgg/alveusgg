@@ -2,7 +2,7 @@ import { useEffect, useReducer } from "react";
 import { z } from "zod";
 
 import {
-  type BingoCard,
+  type BingoCard as BingoCardType,
   type BingoValue,
   bingoValueSchema,
   checkHasBingo,
@@ -107,7 +107,7 @@ export function useBingoLocalState(bingoId: string) {
 }
 
 type BingCardProps = {
-  card: BingoCard;
+  card: BingoCardType;
   selectedValues: Array<BingoValue>;
   selectableValues?: Array<BingoValue>;
   onSelect: (cellIndex: BingoValue) => void;
