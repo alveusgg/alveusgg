@@ -31,7 +31,7 @@ export default createTokenProtectedApiHandler(
       }
 
       const calls: Array<Promise<Response>> = [];
-      options.subscriptionIds.forEach((subscriptionId) => {
+      for (const subscriptionId of options.subscriptionIds) {
         calls.push(
           callEndpoint<SendPushOptions>("/api/notifications/send-push", {
             message: notification.message,
@@ -44,7 +44,7 @@ export default createTokenProtectedApiHandler(
             imageUrl: notification.imageUrl || undefined,
           }),
         );
-      });
+      }
 
       await Promise.allSettled(calls);
 

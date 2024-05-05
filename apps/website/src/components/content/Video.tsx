@@ -42,7 +42,7 @@ const Video = ({
 
       const obs = new IntersectionObserver(
         (entries) => {
-          entries.forEach((entry) => {
+          for (entry of entries) {
             if (entry.isIntersecting) {
               if (!seen) setSeen(true);
               (entry.target as HTMLVideoElement).play();
@@ -50,7 +50,7 @@ const Video = ({
             }
 
             (entry.target as HTMLVideoElement).pause();
-          });
+          }
         },
         { threshold },
       );

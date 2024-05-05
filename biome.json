@@ -22,21 +22,28 @@
         "useAltText": "warn",
         "noBlankTarget": "off",
         "useKeyWithClickEvents": "off",
-        "noSvgWithoutTitle": "warn"
+        "noSvgWithoutTitle": "warn",
+        "useValidAnchor": "warn"
       },
       "style": {
         "noParameterAssign": "warn",
         "useNodejsImportProtocol": "off",
-        "noNonNullAssertion": "warn"
+        "noArguments": "warn",
+        "noNonNullAssertion": "warn",
+        "useImportType": "warn"
       },
       "suspicious": {
         "noImplicitAnyLet": "warn",
         "noExplicitAny": "warn",
+        "noAssignInExpressions": "warn",
         "noArrayIndexKey": "warn"
       },
       "correctness": {
         "useJsxKeyInIterable": "warn",
         "useExhaustiveDependencies": "warn"
+      },
+      "performance": {
+        "noAccumulatingSpread": "warn"
       }
     },
     "ignore": [

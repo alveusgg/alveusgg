@@ -251,7 +251,7 @@ const CollaborationsPage: NextPage = () => {
               >
                 {creators.length.toLocaleString()} creators
               </abbr>{" "}
-              at the sanctuary since {collaborations.at(-1)!.date.getFullYear()}
+              at the sanctuary since {collaborations.at(-1)?.date.getFullYear()}
               , bringing audiences from Twitch, YouTube, and other platforms,
               together to learn about the importance of conservation.
             </p>

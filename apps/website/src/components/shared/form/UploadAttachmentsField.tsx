@@ -186,8 +186,8 @@ export const UploadAttachmentsField = ({
       }
 
       newFiles.push(
-        new Promise(async (resolve) => {
-          const dataURL = await fileToBase64(file);
+        new Promise((resolve) => {
+          const dataURL = fileToBase64(file);
           resolve({
             id: `upload-${fileCounter++}`,
             status: "upload.pending",
