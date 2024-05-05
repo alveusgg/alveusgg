@@ -1,7 +1,15 @@
 {
   "$schema": "https://biomejs.dev/schemas/1.7.2/schema.json",
   "organizeImports": {
-    "enabled": true
+    "enabled": true,
+    "ignore": [
+      "node_modules/",
+      "apps/website/.next/",
+      "apps/website/src/data/generated",
+      "apps/website/out",
+      "apps/website/src/third-party/qrcodegen/index.ts",
+      "pnpm-lock.yaml"
+    ]
   },
   "linter": {
     "enabled": true,
@@ -22,7 +30,15 @@
         "noImplicitAnyLet": "warn",
         "noArrayIndexKey": "warn"
       }
-    }
+    },
+    "ignore": [
+      "node_modules/",
+      "apps/website/.next/",
+      "apps/website/src/data/generated",
+      "apps/website/out",
+      "apps/website/src/third-party/qrcodegen/index.ts",
+      "pnpm-lock.yaml"
+    ]
   },
   "formatter": {
     "enabled": true,
