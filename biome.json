@@ -21,7 +21,8 @@
         "useAriaPropsForRole": "warn",
         "useAltText": "warn",
         "noBlankTarget": "off",
-        "useKeyWithClickEvents": "off"
+        "useKeyWithClickEvents": "off",
+        "noSvgWithoutTitle": "warn"
       },
       "style": {
         "noParameterAssign": "warn",
@@ -30,7 +31,12 @@
       },
       "suspicious": {
         "noImplicitAnyLet": "warn",
+        "noExplicitAny": "warn",
         "noArrayIndexKey": "warn"
+      },
+      "correctness": {
+        "useJsxKeyInIterable": "warn",
+        "useExhaustiveDependencies": "warn"
       }
     },
     "ignore": [

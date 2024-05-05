@@ -77,6 +77,7 @@ const AdminActivityFeedPage: NextPage<
                 !outgoingWebhooks.hasNextPage ||
                 outgoingWebhooks.isFetchingNextPage
               }
+              type="button"
             >
               {outgoingWebhooks.isFetchingNextPage ? (
                 <>
