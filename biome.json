@@ -20,11 +20,13 @@
         "noAriaUnsupportedElements": "warn",
         "useAriaPropsForRole": "warn",
         "useAltText": "warn",
-        "noBlankTarget": "off"
+        "noBlankTarget": "off",
+        "useKeyWithClickEvents": "off"
       },
       "style": {
         "noParameterAssign": "warn",
-        "useNodejsImportProtocol": "off"
+        "useNodejsImportProtocol": "off",
+        "noNonNullAssertion": "warn"
       },
       "suspicious": {
         "noImplicitAnyLet": "warn",
