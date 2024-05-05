@@ -60,7 +60,7 @@ export default createTokenProtectedApiHandler(
       const pushRetries = options.pushes.filter(isPushRetry);
       const notificationMap = await getNotificationMapForPushes(pushRetries);
 
-      pushRetries.forEach((push) => {
+      for (const push of pushRetries) {
         const notification = notificationMap.get(push.notificationId);
         if (!notification) {
           tasks.push(
@@ -87,7 +87,7 @@ export default createTokenProtectedApiHandler(
             imageUrl: notification.imageUrl || undefined,
           }),
         );
-      });
+      }
 
       await Promise.allSettled(tasks);
 

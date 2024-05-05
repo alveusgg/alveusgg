@@ -21,11 +21,11 @@ export function NotificationSettingsForm({
   const handlePreferencesChange = useCallback(
     async (data: FormData) => {
       const tags: Record<string, string> = {};
-      notificationCategories.forEach(({ tag }) => {
+      for (const { tag } of notificationCategories) {
         tags[tag] = String(
           data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0",
         );
-      });
+      }
       await updateTags(tags);
     },
     [updateTags],
