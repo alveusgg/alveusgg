@@ -81,6 +81,7 @@ const Meta = ({
       {(env.NEXT_PUBLIC_NOINDEX === "true" || noindex) && (
         <meta key="robots" name="robots" content="noindex" />
       )}
+      <meta name="format-detection" content="telephone=no" />
       {children}
     </Head>
   );
