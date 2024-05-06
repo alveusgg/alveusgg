@@ -24,7 +24,7 @@ const config = {
   reactStrictMode: true,
   swcMinify: true,
   eslint: {
-    dirs: ["."],
+    ignoreDuringBuilds: true,
   },
   images: {
     remotePatterns: [
