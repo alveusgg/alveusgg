@@ -24,7 +24,7 @@
   },
   "scripts": {
     "prepare": "husky",
-    "lint": "biome format .",
+    "lint": "biome check . --apply",
     "format": "biome format --write .",
     "lint-staged": "lint-staged --relative"
   },
