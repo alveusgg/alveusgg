@@ -653,6 +653,11 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  nextsong: {
+    description: "Skips music to the next song",
+    category: "Audio",
+    args: [],
+  },
 
   /**
    * Scenes
