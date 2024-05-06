@@ -42,7 +42,7 @@ const Video = ({
 
       const obs = new IntersectionObserver(
         (entries) => {
-          for (entry of entries) {
+          for (const entry of entries) {
             if (entry.isIntersecting) {
               if (!seen) setSeen(true);
               (entry.target as HTMLVideoElement).play();
