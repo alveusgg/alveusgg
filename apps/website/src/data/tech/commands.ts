@@ -930,6 +930,32 @@ const commands: Record<string, Command> = {
   },
 
   /**
+   * Text
+   */
+  text: {
+    description: "Sets the text to be displayed on stream",
+    category: "Text",
+    args: [
+      {
+        type: "string",
+        name: "text",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  showtext: {
+    description: "Shows text on stream",
+    category: "Text",
+    args: [],
+  },
+  hidetext: {
+    description: "Hides text on stream",
+    category: "Text",
+    args: [],
+  },
+
+  /**
    * Wheel
    */
   enablewheel: {
