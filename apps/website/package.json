@@ -24,10 +24,10 @@
     "postinstall:prisma": "prisma generate",
     "postinstall:create-data": "tsx ./build-scripts/create-data.ts",
     "postinstall": "run-p postinstall:*",
-    "lint": "next lint",
+    "lint": "biome check --apply .",
     "start": "next start",
     "test": "vitest",
-    "format": "prettier . --write && prisma format"
+    "format": "biome format --write . && prisma format"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data#0.36.0",
@@ -102,9 +102,6 @@
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "autoprefixer": "^10.4.17",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "^14.1.0",
-    "eslint-plugin-import": "^2.29.1",
     "file-type": "^19.0.0",
     "loader-utils": "^3.2.1",
     "npm-run-all": "^4.1.5",
