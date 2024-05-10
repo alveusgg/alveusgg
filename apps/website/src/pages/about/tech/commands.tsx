@@ -1,7 +1,8 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
-
+import { useClipboard } from "@/hooks/clipboard";
+import Tooltip from "@/components/Tooltip";
 import commands, {
   isOverloadedArguments,
   type Command,
@@ -20,7 +21,7 @@ import Meta from "@/components/content/Meta";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-
+import IconCopy from "@/icons/IconCopy";
 interface NamedCommand extends Command {
   name: string;
 }
@@ -70,6 +71,8 @@ const signature = (command: NamedCommand) => {
 };
 
 const AboutTechPage: NextPage = () => {
+  const { copyToClipboard } = useClipboard();
+  const [index, setIndex] = useState<string>("");
   return (
     <>
       <Meta
@@ -220,6 +223,15 @@ const AboutTechPage: NextPage = () => {
                           <pre>
                             <code className="text-sm">
                               {signature(command)}
+                              <IconCopy
+                                onClick={() => {
+                                  copyToClipboard(signature(command));
+                                  setIndex(command.description);
+                                  setTimeout(() => {
+                                    setIndex("");
+                                  }, 2000);
+                                }}
+                              />
                             </code>
                           </pre>
                         </dt>
@@ -227,6 +239,12 @@ const AboutTechPage: NextPage = () => {
                         <dd>
                           <p className="text-sm italic text-alveus-green-400">
                             {command.description}
+
+                            <Tooltip
+                              isTooltipOpen={index === command.description}
+                            >
+                              Copied
+                            </Tooltip>
                           </p>
                         </dd>
                       </div>
@@ -311,7 +329,18 @@ const AboutTechPage: NextPage = () => {
                                 <span className="opacity-40 group-first/preset:opacity-100">
                                   {`!ptzload ${camera.toLowerCase()} `}
                                 </span>
-                                {name}{" "}
+                                {name}
+                                <IconCopy
+                                  onClick={() => {
+                                    copyToClipboard(
+                                      `!ptzload ${camera.toLowerCase()} ${name}`,
+                                    );
+                                    setIndex(`${camera.toLowerCase()} ${name}`);
+                                    setTimeout(() => {
+                                      setIndex("");
+                                    }, 2000);
+                                  }}
+                                />
                               </code>
                             </pre>
                           </dt>
@@ -319,6 +348,14 @@ const AboutTechPage: NextPage = () => {
                           <dd>
                             <p className="text-sm italic text-alveus-green-400">
                               {preset.description}
+
+                              <Tooltip
+                                isTooltipOpen={
+                                  index === `${camera.toLowerCase()} ${name}`
+                                }
+                              >
+                                Copied
+                              </Tooltip>
                             </p>
                           </dd>
                         </div>
