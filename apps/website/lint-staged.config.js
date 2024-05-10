@@ -1,6 +1,6 @@
 /** @param {string[]} filenames */
 const buildBiomeCommand = (filenames) =>
-  `biome check --apply ${filenames.join(" ")}`;
+  `biome check --no-errors-on-unmatched --apply ${filenames.join(" ")}`;
 
 const config = {
   "schema.prisma": "prisma format",
