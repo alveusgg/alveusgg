@@ -383,7 +383,7 @@ export function ShowAndTellEntryForm({
             </label>
 
             <GiveAnHourInput
-              enabled
+              enabled={wantsToTrackGiveAnHour}
               defaultValue={
                 entry?.volunteeringMinutes ? entry.volunteeringMinutes / 60 : 1
               }
