@@ -27,7 +27,8 @@
     "lint": "biome check --apply .",
     "start": "next start",
     "test": "vitest",
-    "format": "biome format --write . && prisma format"
+    "format": "biome format --write . && prisma format",
+    "typecheck": "tsc --project tsconfig.json"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data#0.36.0",
