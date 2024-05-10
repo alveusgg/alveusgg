@@ -1,5 +1,9 @@
 import { classes } from "@/utils/classes";
-import { typeSafeObjectKeys } from "@/utils/helpers";
+import {
+  notEmpty,
+  typeSafeObjectEntries,
+  typeSafeObjectKeys,
+} from "@/utils/helpers";
 import { type StickerPack, mapStickerIdToPath } from "@/utils/virtual-tickets";
 
 import Link from "@/components/content/Link";
@@ -17,8 +21,7 @@ export function StickerSelector({
 }: StickerPackProps) {
   return (
     <div className="flex flex-col gap-2 lg:flex-row lg:gap-4">
-      {typeSafeObjectKeys(stickerPack.groups).map((groupId) => {
-        const group = stickerPack.groups[groupId]!;
+      {typeSafeObjectEntries(stickerPack.groups).map(([groupId, group]) => {
         const attribution = group.attribution && `Art by ${group.attribution}`;
 
         return (
@@ -42,16 +45,21 @@ export function StickerSelector({
 
             <ul className="flex w-full flex-row flex-wrap items-center gap-1 py-2 md:gap-2 lg:gap-3">
               {typeSafeObjectKeys(stickerPack.stickers)
-                .filter(
-                  (imageId) =>
-                    groupId === stickerPack.stickers[imageId]?.groupId,
-                )
-                .map((imageId) => ({
-                  name: stickerPack.stickers[imageId]?.name,
-                  disabled: selectedStickers.includes(imageId),
-                  image: mapStickerIdToPath(stickerPack.stickers, imageId),
-                  imageId,
-                }))
+                .map((imageId) => {
+                  const stickerPackItem = stickerPack.stickers[imageId];
+                  return stickerPackItem && groupId === stickerPackItem.groupId
+                    ? {
+                        name: stickerPackItem.name,
+                        disabled: selectedStickers.includes(imageId),
+                        image: mapStickerIdToPath(
+                          stickerPack.stickers,
+                          imageId,
+                        ),
+                        imageId,
+                      }
+                    : undefined;
+                })
+                .filter(notEmpty)
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map(({ name, disabled, imageId, image }) => (
                   <li key={imageId} className="flex-shrink-0">

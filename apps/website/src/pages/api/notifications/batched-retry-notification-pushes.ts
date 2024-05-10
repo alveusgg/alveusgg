@@ -71,7 +71,7 @@ export default createTokenProtectedApiHandler(
               failedAt: new Date(),
             }),
           );
-          return;
+          continue;
         }
 
         tasks.push(
