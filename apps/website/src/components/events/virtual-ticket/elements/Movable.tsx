@@ -1,5 +1,5 @@
-import { useEffect, useMemo, type ComponentProps, type ReactNode } from "react";
-import { motion, useMotionValue, type MotionValue } from "framer-motion";
+import { type MotionValue, motion, useMotionValue } from "framer-motion";
+import { type ComponentProps, type ReactNode, useEffect, useMemo } from "react";
 
 import { useTicketEditorContext } from "@/components/events/virtual-ticket/TicketEditor";
 

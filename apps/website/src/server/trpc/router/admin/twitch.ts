@@ -1,5 +1,4 @@
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
+import { permissions } from "@/data/permissions";
 import {
   createTwitchChannel,
   deleteTwitchChannel,
@@ -12,7 +11,8 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import { getUserByName } from "@/server/utils/twitch-api";
-import { permissions } from "@/data/permissions";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageTwitchApi),
@@ -121,7 +121,7 @@ export const adminTwitchRouter = router({
       const accountId = userWithAccount?.accounts[0]?.id;
       if (!accountId) {
         throw new TRPCError({
-          message: "User does not have scope! " + userId,
+          message: `User does not have scope! ${userId}`,
           code: "BAD_REQUEST",
         });
       }

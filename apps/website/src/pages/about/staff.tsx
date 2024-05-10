@@ -1,15 +1,15 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 import Image from "next/image";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import People from "@/components/content/People";
 import Meta from "@/components/content/Meta";
+import People from "@/components/content/People";
+import Section from "@/components/content/Section";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
-import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import ellaRocksImage from "@/assets/people/ella-rocks.jpg";
+import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 

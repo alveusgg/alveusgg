@@ -1,9 +1,9 @@
-import { z } from "zod";
-import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db/client";
 import type { BingoPlayData } from "@/utils/bingo";
 import { assignCardToUser, bingoConfigSchema, bingoTypes } from "@/utils/bingo";
-import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
+import { SLUG_REGEX, convertToSlug } from "@/utils/slugs";
+import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 export type BingoSchema = z.infer<typeof bingoSchema>;
 

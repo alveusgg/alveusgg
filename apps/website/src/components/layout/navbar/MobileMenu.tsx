@@ -1,10 +1,10 @@
-import { Disclosure } from "@headlessui/react";
-import { Fragment } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 import { mainNavStructure } from "@/data/navigation";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
-import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
-import { navLinkClassesSub, NavLinkSub } from "./NavLink";
+import { Disclosure } from "@headlessui/react";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Fragment } from "react";
+import { NavLinkSub, navLinkClassesSub } from "./NavLink";
 
 export function MobileMenu() {
   const { data: sessionData } = useSession();
@@ -57,7 +57,7 @@ export function MobileMenu() {
             <>
               {showAdminLink && (
                 <li>
-                  <div className="my-3 w-full border-t opacity-30"></div>
+                  <div className="my-3 w-full border-t opacity-30" />
 
                   <Disclosure.Button as={NavLinkSub} href="/admin/dashboard">
                     Admin
@@ -65,7 +65,7 @@ export function MobileMenu() {
                 </li>
               )}
               <li>
-                <div className="my-3 w-full border-t opacity-30"></div>
+                <div className="my-3 w-full border-t opacity-30" />
 
                 <div className="px-5 py-2">
                   <ProfileInfo full />

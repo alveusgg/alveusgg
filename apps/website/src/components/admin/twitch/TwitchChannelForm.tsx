@@ -6,10 +6,10 @@ import { useRouter } from "next/router";
 
 import { trpc } from "@/utils/trpc";
 
-import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
-import { TextField } from "@/components/shared/form/TextField";
-import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { TextField } from "@/components/shared/form/TextField";
 
 type TwitchChannelFormProps = {
   action: "create" | "edit";
@@ -43,7 +43,7 @@ export function TwitchChannelForm({ action, data }: TwitchChannelFormProps) {
           },
           {
             onSuccess: async () => {
-              await router.push(`/admin/twitch`);
+              await router.push("/admin/twitch");
             },
           },
         );

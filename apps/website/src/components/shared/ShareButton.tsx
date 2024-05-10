@@ -1,25 +1,25 @@
 import {
+  type ComponentPropsWithoutRef,
   Fragment,
+  type MouseEventHandler,
   useEffect,
   useId,
   useState,
-  type ComponentPropsWithoutRef,
-  type MouseEventHandler,
 } from "react";
 
 import { Popover } from "@headlessui/react";
 
 import { classes } from "@/utils/classes";
 
-import IconTwitter from "@/icons/IconTwitter";
+import IconClipboard from "@/icons/IconClipboard";
+import IconEnvelope from "@/icons/IconEnvelope";
 import IconFacebook from "@/icons/IconFacebook";
 import IconShare from "@/icons/IconShare";
-import IconEnvelope from "@/icons/IconEnvelope";
-import IconClipboard from "@/icons/IconClipboard";
+import IconTwitter from "@/icons/IconTwitter";
 
-import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
-import { PopoverButton } from "@/components/shared/PopoverButton";
 import { QRCode } from "@/components/QrCode";
+import { PopoverButton } from "@/components/shared/PopoverButton";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import {
   emailShareUrl,
   facebookShareUrl,

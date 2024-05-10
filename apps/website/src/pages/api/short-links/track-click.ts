@@ -1,6 +1,6 @@
+import { prisma } from "@/server/db/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { z } from "zod";
-import { prisma } from "@/server/db/client";
 
 const trackClickSchema = z.object({ id: z.string().cuid() });
 export type TrackClickSchema = z.infer<typeof trackClickSchema>;

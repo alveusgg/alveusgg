@@ -1,34 +1,34 @@
-import { useCallback, useRef, useState, type FormEvent } from "react";
 import { Duration } from "luxon";
+import { type FormEvent, useCallback, useRef, useState } from "react";
 
 import {
   notificationCategories,
-  notificationLinkSuggestions,
-  notificationLinkDefault,
   notificationChannels,
+  notificationLinkDefault,
+  notificationLinkSuggestions,
 } from "@/data/notifications";
 
-import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
 
 import useFileUpload from "@/hooks/files/upload";
 
 import IconLoading from "@/icons/IconLoading";
 
-import { TextField } from "@/components/shared/form/TextField";
-import { TextAreaField } from "@/components/shared/form/TextAreaField";
+import { MessageBox } from "@/components/shared/MessageBox";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+import { CheckboxField } from "@/components/shared/form/CheckboxField";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
+import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
+import { TextAreaField } from "@/components/shared/form/TextAreaField";
+import { TextField } from "@/components/shared/form/TextField";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "@/components/shared/form/UploadAttachmentsField";
-import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
-import { CheckboxField } from "@/components/shared/form/CheckboxField";
-import { Fieldset } from "@/components/shared/form/Fieldset";
-import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
-import { MessageBox } from "@/components/shared/MessageBox";
 
 export const allowedFileTypes = [
   "image/png",
@@ -192,7 +192,7 @@ export function SendNotificationForm() {
 
             <div
               className={classes(
-                `flex flex-wrap gap-4 border-l pl-3`,
+                "flex flex-wrap gap-4 border-l pl-3",
                 !isScheduled && "hidden",
               )}
             >

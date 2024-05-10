@@ -1,15 +1,15 @@
-import { z } from "zod";
-import {
-  createCheckPermissionMiddleware,
-  protectedProcedure,
-  router,
-} from "@/server/trpc/trpc";
 import { permissions } from "@/data/permissions";
 import {
   createShortLink,
   editShortLink,
   shortLinkSchema,
 } from "@/server/db/short-links";
+import {
+  createCheckPermissionMiddleware,
+  protectedProcedure,
+  router,
+} from "@/server/trpc/trpc";
+import { z } from "zod";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageShortLinks),

@@ -4,14 +4,14 @@ import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
 
-import valentines2024Video from "@/assets/events/valentines-2024.mp4";
-import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
-import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
-import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
-import valentines2023Video from "@/assets/events/valentines-2023.mp4";
 import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
-import halloween2021Video from "@/assets/events/halloween-2021.mp4";
+import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
+import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
 import fundathon2021Video from "@/assets/events/fundathon-2021.mp4";
+import halloween2021Video from "@/assets/events/halloween-2021.mp4";
+import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
+import valentines2023Video from "@/assets/events/valentines-2023.mp4";
+import valentines2024Video from "@/assets/events/valentines-2024.mp4";
 
 export type Event = {
   name: string;

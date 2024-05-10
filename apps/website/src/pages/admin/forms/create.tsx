@@ -1,14 +1,14 @@
-import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
+import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
-import { getSession } from "next-auth/react";
-import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
+import { getAdminSSP } from "@/server/utils/admin";
+import { getSession } from "next-auth/react";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import Meta from "@/components/content/Meta";
-import { FormForm } from "@/components/admin/forms/FormForm";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
+import { FormForm } from "@/components/admin/forms/FormForm";
+import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);

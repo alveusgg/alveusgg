@@ -1,6 +1,3 @@
-/* eslint-disable */
-// @ts-ignore
-
 /*
  * QR Code generator library (TypeScript)
  *
@@ -23,8 +20,6 @@
  *   out of or in connection with the Software or the use or other dealings in the
  *   Software.
  */
-
-"use strict";
 
 type bit = number;
 type byte = number;
@@ -781,7 +776,11 @@ export class QrSegment {
     for (let i = 0; i < digits.length; ) {
       // Consume up to 3 digits per iteration
       const n: int = Math.min(digits.length - i, 3);
-      appendBits(parseInt(digits.substring(i, i + n), 10), n * 3 + 1, bb);
+      appendBits(
+        Number.parseInt(digits.substring(i, i + n), 10),
+        n * 3 + 1,
+        bb,
+      );
       i += n;
     }
     return new QrSegment(Mode.NUMERIC, digits.length, bb);
@@ -883,10 +882,10 @@ export class QrSegment {
     segs: Readonly<Array<QrSegment>>,
     version: int,
   ): number {
-    let result: number = 0;
+    let result = 0;
     for (const seg of segs) {
       const ccbits: int = seg.mode.numCharCountBits(version);
-      if (seg.numChars >= 1 << ccbits) return Infinity; // The segment's length doesn't fit the field's bit width
+      if (seg.numChars >= 1 << ccbits) return Number.POSITIVE_INFINITY; // The segment's length doesn't fit the field's bit width
       result += 4 + ccbits + seg.bitData.length;
     }
     return result;
@@ -899,7 +898,7 @@ export class QrSegment {
     for (let i = 0; i < str.length; i++) {
       if (str.charAt(i) != "%") result.push(str.charCodeAt(i));
       else {
-        result.push(parseInt(str.substring(i + 1, i + 3), 16));
+        result.push(Number.parseInt(str.substring(i + 1, i + 3), 16));
         i += 2;
       }
     }

@@ -347,9 +347,9 @@ const videoLoader = async (context, content) => {
   // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack/loaders/next-image-loader/index.ts#L66-L74
   // We don't emit for the server as videos are considered traceable and this breaks things (see https://github.com/vercel/next.js/pull/41554/files)
   if (!options.isServer) {
-    files.forEach(
-      ({ name, content }) => content && context.emitFile(name, content),
-    );
+    for (const { name, content } of files) {
+      content && context.emitFile(name, content);
+    }
   }
 
   // Collect stats on cache/skipped files

@@ -1,10 +1,10 @@
-import { useEffect, type ReactNode, useMemo } from "react";
 import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { type ReactNode, useEffect, useMemo } from "react";
 
-import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 

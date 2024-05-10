@@ -19,7 +19,9 @@ const listOfUrlsSchema = z.string().transform((val, ctx) => {
   for (const url of val.split(" ")) {
     const parsed = z.string().url().safeParse(url.trim());
     if (!parsed.success) {
-      parsed.error.issues.forEach((issue) => ctx.addIssue(issue));
+      for (const issue of parsed.error.issues) {
+        ctx.addIssue(issue);
+      }
       return;
     }
 

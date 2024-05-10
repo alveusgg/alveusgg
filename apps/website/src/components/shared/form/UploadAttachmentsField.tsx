@@ -1,12 +1,12 @@
 import {
+  type ChangeEvent,
+  type Dispatch,
+  type Key,
   useCallback,
   useId,
   useReducer,
   useRef,
   useState,
-  type Dispatch,
-  type ChangeEvent,
-  type Key,
 } from "react";
 
 import { fileToBase64 } from "@/utils/files";
@@ -186,15 +186,15 @@ export const UploadAttachmentsField = ({
       }
 
       newFiles.push(
-        new Promise(async (resolve) => {
+        (async () => {
           const dataURL = await fileToBase64(file);
-          resolve({
+          return {
             id: `upload-${fileCounter++}`,
             status: "upload.pending",
             dataURL,
             file,
-          });
-        }),
+          };
+        })(),
       );
     }
 

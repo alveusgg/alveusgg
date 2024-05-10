@@ -1,8 +1,8 @@
 import type { Country } from "country-list";
 import {
-  overwrite,
   getData as getCountries,
   getName as getCountryName,
+  overwrite,
 } from "country-list";
 
 export { getName as getCountryName } from "country-list";

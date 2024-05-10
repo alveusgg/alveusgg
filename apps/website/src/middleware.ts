@@ -1,14 +1,14 @@
+import { env } from "@/env";
+import type { TrackClickSchema } from "@/pages/api/short-links/track-click";
+import { callEndpoint } from "@/server/utils/queue";
 import {
   type NextFetchEvent,
   type NextRequest,
   NextResponse,
 } from "next/server";
-import { env } from "@/env";
-import { callEndpoint } from "@/server/utils/queue";
-import type { TrackClickSchema } from "@/pages/api/short-links/track-click";
 
 export async function middleware(req: NextRequest, event: NextFetchEvent) {
-  const res = await fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links", {
+  const res = await fetch(`${env.NEXT_PUBLIC_BASE_URL}/api/short-links`, {
     method: "POST",
     body: JSON.stringify({
       slug: req.nextUrl.pathname.replace("/l/", "").trim(),

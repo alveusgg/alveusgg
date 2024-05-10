@@ -1,49 +1,49 @@
+import type { InferGetStaticPropsType, NextPage } from "next";
+import Image from "next/image";
 import {
+  type KeyboardEventHandler,
+  type WheelEvent,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type WheelEvent,
-  type KeyboardEventHandler,
 } from "react";
-import type { InferGetStaticPropsType, NextPage } from "next";
-import Image from "next/image";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
-import { delay } from "@/utils/delay";
-import { trpc } from "@/utils/trpc";
 import {
   getPosts,
   getPostsCount,
   getUsersCount,
 } from "@/server/db/show-and-tell";
+import { delay } from "@/utils/delay";
+import { trpc } from "@/utils/trpc";
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
 import useLocaleString from "@/hooks/locale";
 
-import IconLoading from "@/icons/IconLoading";
-import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
+import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
+import IconLoading from "@/icons/IconLoading";
 import IconPencil from "@/icons/IconPencil";
 
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
 import { Button, LinkButton } from "@/components/shared/form/Button";
 
-import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
-import { QrCode } from "@/components/show-and-tell/QrCode";
 import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
+import { QrCode } from "@/components/show-and-tell/QrCode";
+import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
 import alveusLogo from "@/assets/logo.png";
-import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -315,6 +315,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       : lastPageItems?.[lastPageItems.length - 1]?.id;
   }, [entries]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
     // Check if we need to focus an entry after loading more
     if (entryIdToFocusRef.current) {
@@ -406,12 +407,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           ref={presentationViewRootElementRef}
           onWheel={onUserScroll}
           onScroll={onScroll}
-          className={
-            "scrollbar-none flex flex-col transition-colors duration-200 " +
-            (isPresentationView
+          className={`scrollbar-none flex flex-col transition-colors duration-200 ${
+            isPresentationView
               ? "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
-              : "gap-20 bg-white/0")
-          }
+              : "gap-20 bg-white/0"
+          }`}
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
@@ -459,10 +459,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               )}
               {hasNextEntry && (
                 <button
-                  className={
-                    "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] " +
-                    (hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]")
-                  }
+                  className={`fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] ${
+                    hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]"
+                  }`}
                   type="button"
                   onClick={scrollToNext}
                 >

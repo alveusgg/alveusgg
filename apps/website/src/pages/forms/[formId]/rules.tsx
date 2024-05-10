@@ -7,11 +7,11 @@ import type {
 import type { Form } from "@prisma/client";
 
 import Heading from "@/components/content/Heading";
-import Section from "@/components/content/Section";
-import Meta from "@/components/content/Meta";
-import { calcFormConfig } from "@/utils/forms";
-import { findActiveForm } from "@/server/db/forms";
 import Markdown from "@/components/content/Markdown";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import { findActiveForm } from "@/server/db/forms";
+import { calcFormConfig } from "@/utils/forms";
 
 export type FormPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps

@@ -1,11 +1,11 @@
 import { mkdirSync, writeFileSync } from "node:fs";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import animalQuest from "@alveusgg/data/src/animal-quest";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
+import animalQuest from "@alveusgg/data/src/animal-quest";
 
-import { camelToKebab, sentenceToKebab } from "../src/utils/string-case";
 import { typeSafeObjectKeys } from "../src/utils/helpers";
+import { camelToKebab, sentenceToKebab } from "../src/utils/string-case";
 
 mkdirSync(new URL("../src/data/generated", import.meta.url), {
   recursive: true,

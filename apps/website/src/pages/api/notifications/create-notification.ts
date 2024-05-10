@@ -1,6 +1,6 @@
-import { z } from "zod";
 import { createNotification } from "@/server/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
+import { z } from "zod";
 
 // TODO: move API data schema into a shared package for website and chatbot
 const dateSchema = z.string().pipe(z.coerce.date());

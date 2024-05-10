@@ -1,28 +1,28 @@
-import { forwardRef, useEffect, useState } from "react";
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 import Image from "next/image";
+import { forwardRef, useEffect, useState } from "react";
 
-import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 import useDragScroll from "@/hooks/drag";
+import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
-import { formatDateTime } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
+import { formatDateTime } from "@/utils/datetime";
 
 import collaborations, {
   type Creator,
   type Collaboration,
 } from "@/data/collaborations";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import { Lightbox, Preview } from "@/components/content/YouTube";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type CreatorWithSlug = Creator & { slug: string };
 
@@ -251,7 +251,7 @@ const CollaborationsPage: NextPage = () => {
               >
                 {creators.length.toLocaleString()} creators
               </abbr>{" "}
-              at the sanctuary since {collaborations.at(-1)!.date.getFullYear()}
+              at the sanctuary since {collaborations.at(-1)?.date.getFullYear()}
               , bringing audiences from Twitch, YouTube, and other platforms,
               together to learn about the importance of conservation.
             </p>

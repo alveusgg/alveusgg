@@ -1,13 +1,13 @@
-import { type NextPage } from "next";
-import Link from "next/link";
+import type { NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
-import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
+import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
 import { Schedule } from "@/components/notifications/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";

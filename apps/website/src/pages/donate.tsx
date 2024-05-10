@@ -1,22 +1,22 @@
-import { type NextPage } from "next";
-import { type ComponentType } from "react";
+import type { NextPage } from "next";
+import type { ComponentType } from "react";
 
 import { useConsent } from "@/hooks/consent";
 
-import Section from "@/components/content/Section";
+import Consent from "@/components/Consent";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Consent from "@/components/Consent";
+import Section from "@/components/content/Section";
 import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 
-import IconAmazon from "@/icons/IconAmazon";
-import IconPayPal from "@/icons/IconPayPal";
-import IconBox from "@/icons/IconBox";
-import IconBitcoin from "@/icons/IconBitcoin";
-import { type IconProps } from "@/icons/BaseIcon";
-import donationEvent from "@/data/env/donation-event";
 import Link from "@/components/content/Link";
+import donationEvent from "@/data/env/donation-event";
+import type { IconProps } from "@/icons/BaseIcon";
+import IconAmazon from "@/icons/IconAmazon";
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconBitcoin from "@/icons/IconBitcoin";
+import IconBox from "@/icons/IconBox";
+import IconPayPal from "@/icons/IconPayPal";
 
 type DonateLink = {
   icon: ComponentType<IconProps>;

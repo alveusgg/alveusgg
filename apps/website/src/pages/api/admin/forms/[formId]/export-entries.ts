@@ -1,10 +1,10 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
 import { stringify } from "csv-stringify/sync";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-import { getCountryName } from "@/utils/countries";
 import { getServerAuthSession } from "@/server/common/get-server-auth-session";
-import { checkIsSuperUserSession } from "@/server/utils/auth";
 import { getAllEntriesForForm } from "@/server/db/forms";
+import { checkIsSuperUserSession } from "@/server/utils/auth";
+import { getCountryName } from "@/utils/countries";
 
 const exportFormEntries = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });
@@ -62,8 +62,8 @@ const exportFormEntries = async (req: NextApiRequest, res: NextApiResponse) => {
   res
     .status(200)
     .setHeader("Content-Type", "text/csv")
-    .setHeader("Content-Disposition", `attachment; filename=form-entries.csv`)
-    .send("\ufeff" + csv); // add utf-8 BOM for Excel to correctly open the CSV
+    .setHeader("Content-Disposition", "attachment; filename=form-entries.csv")
+    .send(`\ufeff${csv}`); // add utf-8 BOM for Excel to correctly open the CSV
 };
 
 export default exportFormEntries;
