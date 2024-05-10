@@ -186,15 +186,15 @@ export const UploadAttachmentsField = ({
       }
 
       newFiles.push(
-        new Promise((resolve) => {
-          const dataURL = fileToBase64(file);
-          resolve({
+        (async () => {
+          const dataURL = await fileToBase64(file);
+          return {
             id: `upload-${fileCounter++}`,
             status: "upload.pending",
             dataURL,
             file,
-          });
-        }),
+          };
+        })(),
       );
     }
 

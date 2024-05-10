@@ -93,7 +93,6 @@ const withPositions = <T,>(
     const dagreChildren = children
       .reduce<ChildNode[]>((acc, { id }) => {
         const node = dagreGraph.node(id);
-        if (!node) return acc;
         if (node) acc.push({ id, ...node });
         return acc;
       }, [])

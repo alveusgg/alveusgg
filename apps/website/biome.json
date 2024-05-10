@@ -1,0 +1,14 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.7.3/schema.json",
+  "extends": ["../../biome.json"],
+  "files": {
+    "ignore": [
+      "node_modules/",
+      ".next/",
+      "out/",
+      "public/",
+      "src/data/generated/",
+      "src/third-party/qrcodegen/index.ts"
+    ]
+  }
+}
