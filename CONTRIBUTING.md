@@ -12,8 +12,8 @@ For general questions about the project unrelated to a specific issue, please st
 
 ### Dev Environment
 
-- To start a local dev environment, follow this [guide](https://github.com/alveusgg/alveusgg#how-to-develop--getting-started).
-- To setup a production instance of the website, follow this [guide](https://github.com/alveusgg/alveusgg#how-to-set-up-your-own-production-instance)
+- To start a local dev environment, follow this [guide](https://github.com/alveusgg/alveusgg#development-setup).
+- To setup a production instance of the website, follow this [guide](https://github.com/alveusgg/alveusgg#production-deployment)
 - Overview of architecture, refer to [systems overview](https://github.com/alveusgg/alveusgg#systems-overview).
 - More detailed overview the architecture, refer to [#9](https://github.com/alveusgg/alveusgg/issues/9).
 
