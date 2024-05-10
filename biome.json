@@ -12,15 +12,7 @@
     ]
   },
   "organizeImports": {
-    "enabled": true,
-    "ignore": [
-      "node_modules/",
-      "apps/website/.next/",
-      "apps/website/src/data/generated",
-      "apps/website/out",
-      "apps/website/src/third-party/qrcodegen/index.ts",
-      "pnpm-lock.yaml"
-    ]
+    "enabled": true
   },
   "linter": {
     "enabled": true,
@@ -56,29 +48,13 @@
       "performance": {
         "noAccumulatingSpread": "warn"
       }
-    },
-    "ignore": [
-      "node_modules/",
-      "apps/website/.next/",
-      "apps/website/src/data/generated",
-      "apps/website/out",
-      "apps/website/src/third-party/qrcodegen/index.ts",
-      "pnpm-lock.yaml"
-    ]
+    }
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2,
-    "lineEnding": "lf",
-    "ignore": [
-      "node_modules/",
-      "apps/website/.next/",
-      "apps/website/src/data/generated",
-      "apps/website/out",
-      "apps/website/src/third-party/qrcodegen/index.ts",
-      "pnpm-lock.yaml"
-    ]
+    "lineEnding": "lf"
   },
   "vcs": {
     "enabled": true,
