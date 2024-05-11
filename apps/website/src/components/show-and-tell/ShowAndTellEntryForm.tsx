@@ -151,7 +151,7 @@ export function ShowAndTellEntryForm({
       text: formData.get("text") as string,
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
-      volunteeringMinutes: hours ? hours * 60 : null,
+      volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -383,7 +383,7 @@ export function ShowAndTellEntryForm({
             </label>
 
             <GiveAnHourInput
-              enabled
+              enabled={wantsToTrackGiveAnHour}
               defaultValue={
                 entry?.volunteeringMinutes ? entry.volunteeringMinutes / 60 : 1
               }
