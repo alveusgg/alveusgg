@@ -266,7 +266,7 @@ export async function getPostsCount() {
 }
 
 export async function getUsersCount() {
-  const [userCountWithId, usersWithNoUserId] = await Promise.all([
+  const [countWithUserId, countWithoutUserId] = await Promise.all([
     prisma.showAndTellEntry.findMany({
       select: { id: true },
       where: {
@@ -287,7 +287,7 @@ export async function getUsersCount() {
     }),
   ] as const);
 
-  return userCountWithId.length + usersWithNoUserId.length;
+  return countWithUserId.length + countWithoutUserId.length;
 }
 
 export async function getVolunteeringMinutes() {
