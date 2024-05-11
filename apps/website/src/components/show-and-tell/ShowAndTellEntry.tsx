@@ -35,7 +35,18 @@ import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge"
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
 
-export type ShowAndTellEntryWithAttachments = ShowAndTellEntryModel & {
+export type ShowAndTellEntryWithAttachments = Pick<
+  ShowAndTellEntryModel,
+  | "id"
+  | "displayName"
+  | "title"
+  | "text"
+  | "createdAt"
+  | "updatedAt"
+  | "approvedAt"
+  | "seenOnStream"
+  | "volunteeringMinutes"
+> & {
   attachments: Array<
     ShowAndTellEntryAttachment & {
       linkAttachment: LinkAttachment | null;
@@ -103,7 +114,7 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
         isPresentationView ? "" : "text-center"
       }`}
     >
-      {entry.seenOnStreamAt && (
+      {entry.seenOnStream && (
         <SeenOnStreamBadge
           dark={isPresentationView}
           pulse={isPresentationView}
