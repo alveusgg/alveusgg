@@ -304,11 +304,6 @@ export const ShowAndTellEntry = forwardRef<
             : ""
         }`}
       >
-        {/* showPermalink ? (
-          <Link href={`/show-and-tell/posts/${entry.id}`}>{header}</Link>
-        ) : (
-          header
-        ) */}
         <Header entry={entry} isPresentationView={isPresentationView} />
 
         <ShowAndTellGallery
