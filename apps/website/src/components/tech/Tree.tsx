@@ -77,12 +77,12 @@ const withPositions = <T,>(
   // For each parent, find the nearest child, and fix any misalignment
   // Without this, leaf nodes sometimes appear to not be grouped together
   for (const { id, children } of nodes) {
-    if (!children.length) return;
-    if (children.some((child) => child.children.length)) return;
+    if (!children.length) continue;
+    if (children.some((child) => child.children.length)) continue;
 
     // Get the parent node
     const dagreParent = dagreGraph.node(id);
-    if (!dagreParent) return;
+    if (!dagreParent) continue;
 
     // Determine which axis we want to align on
     const axis = direction === "LR" ? "y" : "x";
@@ -94,10 +94,11 @@ const withPositions = <T,>(
       .reduce<ChildNode[]>((acc, { id }) => {
         const node = dagreGraph.node(id);
         if (!node) return acc;
-        return acc.push({ id, ...node });
+        if (node) acc.push({ id, ...node });
+        return acc;
       }, [])
       .sort((a, b) => a[axis] - b[axis]);
-    if (!dagreChildren[0]) return;
+    if (!dagreChildren[0]) continue;
 
     // Find the child node that is nearest to the parent
     const [nearestNode, nearestIdx] = dagreChildren
@@ -199,7 +200,7 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
       zIndex: depth,
     });
 
-    for (const child of node) {
+    for (const child of node.children) {
       // Generate edges to children
       edges.push({
         id: `${node.id}-${child.id}`,

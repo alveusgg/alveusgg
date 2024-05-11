@@ -1,6 +1,6 @@
 export function transposeMatrix<T = unknown>(matrix: T[][]) {
   const numRows = matrix.length;
-  const numCols = matrix[0]?.length;
+  const numCols = matrix[0]?.length ?? 0;
 
   const transposed: T[][] = Array.from({ length: numCols }).map(() =>
     Array(numRows).fill(0),
