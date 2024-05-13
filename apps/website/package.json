@@ -24,7 +24,8 @@
     "postinstall:prisma": "prisma generate",
     "postinstall:create-data": "tsx ./build-scripts/create-data.ts",
     "postinstall": "run-p postinstall:*",
-    "lint": "biome check --apply .",
+    "lint": "biome check .",
+    "fix": "biome check . --apply",
     "start": "next start",
     "test": "vitest",
     "format": "biome format --write . && prisma format"
