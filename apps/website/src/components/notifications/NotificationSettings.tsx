@@ -79,24 +79,23 @@ export function NotificationSettings() {
               Scroll down the list of options, then tap{" "}
               <em>Add to Home Screen</em>{" "}
               <IconPlus className="inline-block h-6 w-6" />.
+              <div className="rounded-xl border-t bg-white p-4">
+                <Image src={imageIOSShareDialog} alt="" />
+              </div>
+              <p className="mt-4 text-sm">
+                If you don’t see Add to Home Screen, you can add it. Scroll down
+                to the bottom of the list, tap <em>Edit Actions …</em>, then tap{" "}
+                <Image
+                  alt=""
+                  src={imageIOSAddIcon}
+                  className="inline-block h-6 w-6"
+                />{" "}
+                <em>Add to Home Screen</em>. The icon appears only on the device
+                where you add it.
+              </p>
             </li>
+            <li>Open the app from the Home Screen and enable notifications.</li>
           </ol>
-
-          <div className="rounded-xl border-t bg-white p-4">
-            <Image src={imageIOSShareDialog} alt="" />
-          </div>
-
-          <p className="mt-4 text-sm">
-            If you don’t see Add to Home Screen, you can add it. Scroll down to
-            the bottom of the list, tap <em>Edit Actions …</em>, then tap{" "}
-            <Image
-              alt=""
-              src={imageIOSAddIcon}
-              className="inline-block h-6 w-6"
-            />{" "}
-            <em>Add to Home Screen</em>. The icon appears only on the device
-            where you add it.
-          </p>
         </div>
       )}
 

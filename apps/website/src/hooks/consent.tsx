@@ -303,7 +303,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
 
       <button
         type="button"
-        className="group fixed bottom-4 left-4 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-alveus-tan shadow transition-shadow hover:shadow-lg"
+        className="group fixed bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-alveus-tan shadow transition-shadow hover:shadow-lg lg:z-50"
         onClick={() => setOpen(true)}
         title="Manage consent"
       >

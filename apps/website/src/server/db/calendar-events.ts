@@ -7,6 +7,7 @@ export const calendarEventSchema = z.object({
   description: z.string().min(1).optional(),
   link: z.string().url(),
   startAt: z.date(),
+  hasTime: z.boolean().default(true),
 });
 
 export type CalendarEventSchema = z.infer<typeof calendarEventSchema>;
