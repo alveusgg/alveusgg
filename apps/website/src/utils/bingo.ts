@@ -1,6 +1,6 @@
-import { z } from "zod";
 import invariant from "@/utils/invariant";
 import { transposeMatrix } from "@/utils/math";
+import { z } from "zod";
 
 type BingoTypeDef = {
   label: string;
@@ -100,8 +100,8 @@ export function assignCardToUser(
 // NOTE: could be a general util
 async function distributeNameToNumber(
   name: string,
-  min: number = 1,
-  max: number = 50,
+  min = 1,
+  max = 50,
 ): Promise<number> {
   // TODO: Add a salt to the name so users do not always get the same number
 
@@ -225,19 +225,17 @@ export function checkHasBingo(
   const size = card.length;
 
   // Check rows
-  let row;
-  if ((row = checkBingoRows(card, calledValues, zeroAsFreespace)) !== false) {
+  const row = checkBingoRows(card, calledValues, zeroAsFreespace);
+  if (row !== false) {
     return [true, { type: "row", index: row }];
   }
   // Check columns by transposing the matrix
-  let column;
-  if (
-    (column = checkBingoRows(
-      transposeMatrix(card),
-      calledValues,
-      zeroAsFreespace,
-    )) !== false
-  ) {
+  const column = checkBingoRows(
+    transposeMatrix(card),
+    calledValues,
+    zeroAsFreespace,
+  );
+  if (column !== false) {
     return [true, { type: "column", index: column }];
   }
 

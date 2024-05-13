@@ -8,10 +8,10 @@ import { camelToKebab } from "@/utils/string-case";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
-import Link from "@/components/content/Link";
-import Heading from "@/components/content/Heading";
-import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Section from "@/components/content/Section";
 
 export const activities = (
   [
@@ -42,6 +42,7 @@ export const activities = (
   .reduce((obj, { key, ambassador, activity }) => {
     const images = getAmbassadorImages(key);
     return {
+      // biome-ignore lint/performance/noAccumulatingSpread:
       ...obj,
       [key]: (
         <Link

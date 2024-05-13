@@ -4,15 +4,15 @@ import { useCallback, useState } from "react";
 import type { ShortLinks } from "@prisma/client";
 import { useRouter } from "next/router";
 
+import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
 import { trpc } from "@/utils/trpc";
-import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
 
 import type { ShortLinkSchema } from "@/server/db/short-links";
 
-import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
-import { TextField } from "@/components/shared/form/TextField";
-import { Fieldset } from "@/components/shared/form/Fieldset";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { TextField } from "@/components/shared/form/TextField";
 import { getShortBaseUrl } from "@/utils/short-url";
 
 type ShortLinkFormProps = {
@@ -37,7 +37,7 @@ export function ShortLinkForm({ action, shortLink }: ShortLinkFormProps) {
         String(formData.get("url")).startsWith("http://") ||
         String(formData.get("url")).startsWith("https://")
           ? String(formData.get("url"))
-          : "https://" + String(formData.get("url"));
+          : `https://${String(formData.get("url"))}`;
 
       const mutationData: ShortLinkSchema = {
         label: String(formData.get("label")),

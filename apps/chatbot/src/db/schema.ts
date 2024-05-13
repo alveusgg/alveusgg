@@ -1,5 +1,5 @@
+import { type InferModel, relations } from "drizzle-orm";
 import { int, mysqlTable, uniqueIndex, varchar } from "drizzle-orm/mysql-core";
-import { relations, type InferModel } from "drizzle-orm";
 
 export type TwitchChannel = InferModel<typeof twitchChannels, "select">;
 

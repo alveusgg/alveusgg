@@ -1,13 +1,13 @@
+import debounce from "lodash/debounce";
 import type { ChangeEvent, FormEvent } from "react";
 import { useCallback, useMemo } from "react";
-import debounce from "lodash/debounce";
 
-import { usePushSubscription } from "@/utils/push-subscription";
 import { notificationCategories } from "@/data/notifications";
+import { usePushSubscription } from "@/utils/push-subscription";
 
 import IconLoading from "@/icons/IconLoading";
-import type { NotificationPermission } from "./NotificationPermission";
 import { NotificationCategoryCheckbox } from "./NotificationCategoryCheckbox";
+import type { NotificationPermission } from "./NotificationPermission";
 
 export function NotificationSettingsForm({
   notificationPermission,
@@ -21,11 +21,11 @@ export function NotificationSettingsForm({
   const handlePreferencesChange = useCallback(
     async (data: FormData) => {
       const tags: Record<string, string> = {};
-      notificationCategories.forEach(({ tag }) => {
+      for (const { tag } of notificationCategories) {
         tags[tag] = String(
           data.has(`tag-${tag}`) ? data.get(`tag-${tag}`) : "0",
         );
-      });
+      }
       await updateTags(tags);
     },
     [updateTags],
@@ -64,12 +64,11 @@ export function NotificationSettingsForm({
   return (
     <form
       onSubmit={submitHandler}
-      className={
-        "pb-2 transition-opacity " +
-        (enableSettings
+      className={`pb-2 transition-opacity ${
+        enableSettings
           ? ""
-          : "pointer-none cursor-default select-none opacity-50")
-      }
+          : "pointer-none cursor-default select-none opacity-50"
+      }`}
     >
       <fieldset className="mx-2 space-y-1">
         <legend className="sr-only">Notifications</legend>

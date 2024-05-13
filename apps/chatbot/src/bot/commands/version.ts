@@ -1,8 +1,8 @@
 import { readPackage } from "read-pkg";
 
 import {
-  createBotCommand,
   type CommandHandler,
+  createBotCommand,
 } from "@/bot/commands/shared/command";
 
 const versionPromise = readPackage().then(({ version }) => version);

@@ -1,4 +1,4 @@
-import { type GetServerSidePropsContext } from "next";
+import type { GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";
 
 import { authOptions } from "../../pages/api/auth/[...nextauth]";

@@ -4,32 +4,32 @@ import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
 import type { Episode } from "schema-dts";
 
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import animalQuest, {
   hosts,
   type AnimalQuestWithEpisode,
 } from "@alveusgg/data/src/animal-quest";
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
 import { env } from "@/env";
 
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
+import Consent from "@/components/Consent";
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
-import Link from "@/components/content/Link";
+import Heading from "@/components/content/Heading";
 import JsonLD from "@/components/content/JsonLD";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import { TwitchEmbed } from "@/components/content/TwitchEmbed";
-import Consent from "@/components/Consent";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
-import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { formatDateTime, formatSeconds } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 
@@ -133,39 +133,38 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<
-  AnimalQuestEpisodePageProps
-> = async (context) => {
-  const episodeName = context.params?.episodeName;
-  if (typeof episodeName !== "string") return { notFound: true };
+export const getStaticProps: GetStaticProps<AnimalQuestEpisodePageProps> =
+  async (context) => {
+    const episodeName = context.params?.episodeName;
+    if (typeof episodeName !== "string") return { notFound: true };
 
-  const episode = episodes[episodeName];
-  if (!episode) return { notFound: true };
+    const episode = episodes[episodeName];
+    if (!episode) return { notFound: true };
 
-  const featured = episode.ambassadors.featured.reduce(
-    (obj, ambassador) => ({
-      ...obj,
-      [ambassador]: ambassadors[ambassador],
-    }),
-    {},
-  ) as AnimalQuestEpisodePageProps["featured"];
+    const featured = episode.ambassadors.featured.reduce(
+      (obj, ambassador) => ({
+        ...obj,
+        [ambassador]: ambassadors[ambassador],
+      }),
+      {},
+    ) as AnimalQuestEpisodePageProps["featured"];
 
-  const related = episode.ambassadors.related.reduce(
-    (obj, ambassador) => ({
-      ...obj,
-      [ambassador]: ambassadors[ambassador],
-    }),
-    {},
-  ) as AnimalQuestEpisodePageProps["related"];
+    const related = episode.ambassadors.related.reduce(
+      (obj, ambassador) => ({
+        ...obj,
+        [ambassador]: ambassadors[ambassador],
+      }),
+      {},
+    ) as AnimalQuestEpisodePageProps["related"];
 
-  return {
-    props: {
-      episode,
-      featured,
-      related,
-    },
+    return {
+      props: {
+        episode,
+        featured,
+        related,
+      },
+    };
   };
-};
 
 const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   episode,
@@ -503,7 +502,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               allow="autoplay; fullscreen"
               sandbox="allow-same-origin allow-scripts"
               className="aspect-video h-auto w-full rounded-2xl"
-            ></iframe>
+            />
           </Consent>
         </Section>
       </div>
@@ -532,9 +531,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             duration: secondsToIso8601(episode.length),
             // Copying the Twitch VOD page behaviour, as with the meta data
             // Twitch set their embedUrl to be their WWW page, not the player
-            embedUrl: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
-              episode.edition,
-            )}`,
+            embedUrl: `${
+              env.NEXT_PUBLIC_BASE_URL
+            }/animal-quest/${sentenceToKebab(episode.edition)}`,
           },
           partOfSeries: {
             "@type": "CreativeWorkSeries",

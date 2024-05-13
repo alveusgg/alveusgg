@@ -1,22 +1,22 @@
+import PhotoSwipeLightbox from "photoswipe/lightbox";
 import {
+  type ReactNode,
   cloneElement,
+  forwardRef,
   useCallback,
   useEffect,
   useId,
   useMemo,
   useState,
-  forwardRef,
-  type ReactNode,
 } from "react";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 
+import { classes } from "@/utils/classes";
+import { createImageUrl } from "@/utils/image";
 import {
   getDefaultPhotoswipeLightboxOptions,
   resolvePhotoswipeElementProvider,
 } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
-import { createImageUrl } from "@/utils/image";
-import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -199,9 +199,9 @@ export const Lightbox = forwardRef<HTMLDivElement, LightboxProps>(
         // Create our iframe
         const iframe = document.createElement("iframe");
         iframe.src = iframeSrc(content.data.trigger.videoId);
-        Object.entries(iframeAttrs).forEach(([key, value]) => {
+        for (const [key, value] of Object.entries(iframeAttrs)) {
           iframe.setAttribute(camelToKebab(key), value);
-        });
+        }
         iframe.className = classes("pointer-events-auto", iframe.className);
 
         // Allow full-screen for the iframe
@@ -318,6 +318,7 @@ export const Lightbox = forwardRef<HTMLDivElement, LightboxProps>(
     return (
       <>
         <style
+          // biome-ignore lint/security/noDangerouslySetInnerHtml:
           dangerouslySetInnerHTML={{
             // Hide the placeholder overlay
             // Ensure we retain the aspect ratio of the video

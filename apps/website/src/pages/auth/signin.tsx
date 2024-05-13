@@ -3,12 +3,12 @@ import type {
   NextPage,
   NextPageContext,
 } from "next";
-import { useRouter } from "next/router";
 import { getSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
+import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import IconXCircle from "@/icons/IconXCircle";
 
@@ -58,7 +58,7 @@ const SigninPage: NextPage<SigninPageProps> = () => {
 
   const error =
     (errorType && errorMessages[errorType.toLowerCase()]) ||
-    errorMessages["default"];
+    errorMessages.default;
 
   return (
     <>

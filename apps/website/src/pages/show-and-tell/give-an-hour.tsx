@@ -5,28 +5,28 @@ import { classes } from "@/utils/classes";
 
 import IconPlus from "@/icons/IconPlus";
 
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import Share from "@/components/content/Share";
 
 import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
 
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import alveusLogo from "@/assets/logo.png";
-import wwfLogo from "@/assets/show-and-tell/give-an-hour/wwf.svg";
 import giveAnHourPoster from "@/assets/show-and-tell/give-an-hour/poster.png";
+import wwfLogo from "@/assets/show-and-tell/give-an-hour/wwf.svg";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 
 // Artwork from https://undraw.co
 import giveAnHourArt from "@/assets/show-and-tell/give-an-hour/art.svg";
 import giveAnHourEntertainment from "@/assets/show-and-tell/give-an-hour/entertainment.svg";
 import giveAnHourFitness from "@/assets/show-and-tell/give-an-hour/fitness.svg";
+import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
 import giveAnHourShopping from "@/assets/show-and-tell/give-an-hour/shopping.svg";
 import giveAnHourWalk from "@/assets/show-and-tell/give-an-hour/walk.svg";
-import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
 
 const Card = ({
   heading,

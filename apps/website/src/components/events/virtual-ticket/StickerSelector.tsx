@@ -1,6 +1,6 @@
-import { typeSafeObjectKeys } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
-import { mapStickerIdToPath, type StickerPack } from "@/utils/virtual-tickets";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { type StickerPack, mapStickerIdToPath } from "@/utils/virtual-tickets";
 
 import Link from "@/components/content/Link";
 
@@ -44,10 +44,10 @@ export function StickerSelector({
               {typeSafeObjectKeys(stickerPack.stickers)
                 .filter(
                   (imageId) =>
-                    groupId === stickerPack.stickers[imageId]!.groupId,
+                    groupId === stickerPack.stickers[imageId]?.groupId,
                 )
                 .map((imageId) => ({
-                  name: stickerPack.stickers[imageId]!.name,
+                  name: stickerPack.stickers[imageId]?.name,
                   disabled: selectedStickers.includes(imageId),
                   image: mapStickerIdToPath(stickerPack.stickers, imageId),
                   imageId,

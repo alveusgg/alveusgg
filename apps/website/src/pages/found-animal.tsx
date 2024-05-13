@@ -1,20 +1,20 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import Image from "next/image";
-import Section from "@/components/content/Section";
-import Meta from "@/components/content/Meta";
 import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import Image from "next/image";
 
-import { classes } from "@/utils/classes";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import Link from "@/components/content/Link";
 import foundAnimal, {
   type FoundAnimalFlow,
   type FoundAnimalOption,
 } from "@/data/found-animal";
-import Link from "@/components/content/Link";
-import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import { classes } from "@/utils/classes";
 
 type Log = {
   message: string;
@@ -35,6 +35,7 @@ const FoundAnimalPage: NextPage = () => {
 
   // Scroll to the bottom whenever the log changes
   const container = useRef<HTMLDivElement | null>(null);
+  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
     if (!container.current) return;
     container.current.scrollTop = container.current.scrollHeight;
@@ -159,19 +160,18 @@ const FoundAnimalPage: NextPage = () => {
               )}
 
               <ul className="mt-2 flex flex-wrap items-center justify-end gap-4">
-                {flow.options &&
-                  flow.options.map((option, index) => (
-                    <li key={index}>
-                      <button
-                        className="rounded-2xl border border-alveus-green bg-alveus-green px-4 py-1 text-lg text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green disabled:cursor-not-allowed disabled:opacity-50"
-                        onClick={() => click(option)}
-                        disabled={!!loading}
-                        type="button"
-                      >
-                        {option.name}
-                      </button>
-                    </li>
-                  ))}
+                {flow.options?.map((option, index) => (
+                  <li key={index}>
+                    <button
+                      className="rounded-2xl border border-alveus-green bg-alveus-green px-4 py-1 text-lg text-alveus-tan transition-colors hover:bg-alveus-tan hover:text-alveus-green disabled:cursor-not-allowed disabled:opacity-50"
+                      onClick={() => click(option)}
+                      disabled={!!loading}
+                      type="button"
+                    >
+                      {option.name}
+                    </button>
+                  </li>
+                ))}
 
                 <li
                   className={flow.options ? "order-first mr-auto" : "mx-auto"}

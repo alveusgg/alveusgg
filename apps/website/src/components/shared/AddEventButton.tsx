@@ -1,5 +1,5 @@
-import { Fragment } from "react";
 import { Popover } from "@headlessui/react";
+import { Fragment } from "react";
 
 import { env } from "@/env";
 
@@ -7,8 +7,8 @@ import IconCalendar from "@/icons/IconCalendar";
 import IconGoogleCalendar from "@/icons/IconGoogleCalendar";
 import IconOutlook from "@/icons/IconOutlook";
 
-import { Button } from "@/components/shared/form/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
+import { Button } from "@/components/shared/form/Button";
 
 const ICS_FEED_NAME = "Alveus announcement";
 
@@ -26,13 +26,10 @@ type AddEventButtonProps = {
 };
 
 function formatIcsDate(date: Date): string {
-  return (
-    date
-      .toISOString() // UTC
-      .slice(0, -5) // remove MS and Z
-      .replace(/[:\-]/g, "") + // Remove colons and dashes
-    "Z"
-  );
+  return `${date
+    .toISOString() // UTC
+    .slice(0, -5) // remove MS and Z
+    .replace(/[:\-]/g, "")}Z`;
 }
 
 function createIcsEvent(event: IcsEvent): string {
@@ -70,7 +67,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
       "https://www.google.com/calendar/render",
     );
     googleCalendarEventUrl.searchParams.append("action", "TEMPLATE");
-    googleCalendarEventUrl.searchParams.append("text", title + " " + url);
+    googleCalendarEventUrl.searchParams.append("text", `${title} ${url}`);
     googleCalendarEventUrl.searchParams.append(
       "dates",
       `${formatIcsDate(startTime)}/${formatIcsDate(endTime || startTime)}`,

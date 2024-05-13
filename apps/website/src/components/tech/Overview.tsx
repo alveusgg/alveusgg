@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Handle, Position, useEdges, type NodeProps } from "reactflow";
+import { Handle, type NodeProps, Position, useEdges } from "reactflow";
 
 import { classes } from "@/utils/classes";
 
@@ -84,7 +84,8 @@ const OverviewNode = ({
 }: NodeProps<Data>) => {
   // Get the source and target edges
   const edges = useEdges();
-  let targetEdge, sourceEdge;
+  let targetEdge;
+  let sourceEdge;
   for (const edge of edges) {
     if (!targetEdge && edge.target === id) targetEdge = edge;
     if (!sourceEdge && edge.source === id) sourceEdge = edge;

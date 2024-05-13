@@ -1,15 +1,15 @@
-import { useCallback, useMemo } from "react";
 import type { Node as DagreNode } from "dagre";
 import { graphlib, layout } from "dagre";
+import { useCallback, useMemo } from "react";
 import {
-  ReactFlow,
   Background,
   Controls,
-  Position,
-  type NodeTypes,
   type EdgeTypes,
-  type XYPosition,
+  type NodeTypes,
+  Position,
+  ReactFlow,
   type ReactFlowInstance,
+  type XYPosition,
 } from "reactflow";
 import "reactflow/dist/style.css";
 
@@ -63,12 +63,12 @@ const withPositions = <T,>(
     nodesep: separation.siblings,
     rankdir: direction,
   });
-  nodes.forEach((node) => {
+  for (const node of nodes) {
     dagreGraph.setNode(node.id, { ...size });
-  });
-  edges.forEach((edge) => {
+  }
+  for (const edge of edges) {
     dagreGraph.setEdge(edge.source, edge.target);
-  });
+  }
 
   // Calculate the auto layout
   layout(dagreGraph);
@@ -76,13 +76,13 @@ const withPositions = <T,>(
   // Get the nodes where all the children are leaf nodes
   // For each parent, find the nearest child, and fix any misalignment
   // Without this, leaf nodes sometimes appear to not be grouped together
-  nodes.forEach(({ id, children }) => {
-    if (!children.length) return;
-    if (children.some((child) => child.children.length)) return;
+  for (const { id, children } of nodes) {
+    if (!children.length) continue;
+    if (children.some((child) => child.children.length)) continue;
 
     // Get the parent node
     const dagreParent = dagreGraph.node(id);
-    if (!dagreParent) return;
+    if (!dagreParent) continue;
 
     // Determine which axis we want to align on
     const axis = direction === "LR" ? "y" : "x";
@@ -94,10 +94,11 @@ const withPositions = <T,>(
       .reduce<ChildNode[]>((acc, { id }) => {
         const node = dagreGraph.node(id);
         if (!node) return acc;
-        return [...acc, { id, ...node }];
+        if (node) acc.push({ id, ...node });
+        return acc;
       }, [])
       .sort((a, b) => a[axis] - b[axis]);
-    if (!dagreChildren[0]) return;
+    if (!dagreChildren[0]) continue;
 
     // Find the child node that is nearest to the parent
     const [nearestNode, nearestIdx] = dagreChildren
@@ -111,7 +112,8 @@ const withPositions = <T,>(
         [dagreChildren[0], 0],
       );
 
-    let idx: number, pos: number;
+    let pos: number;
+    let idx: number;
 
     // Walk backwards from the nearest node, and fix any misalignment
     for (idx = nearestIdx - 1, pos = nearestNode[axis]; idx >= 0; idx--) {
@@ -140,7 +142,7 @@ const withPositions = <T,>(
 
       pos = expectedPos + node[dimension];
     }
-  });
+  }
 
   // Store the node positions
   const nodesWithPosition: TreeNodePositioned<T>[] = nodes.map((node) => {
@@ -198,7 +200,7 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
       zIndex: depth,
     });
 
-    node.children.forEach((child) => {
+    for (const child of node.children) {
       // Generate edges to children
       edges.push({
         id: `${node.id}-${child.id}`,
@@ -209,7 +211,7 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
 
       // Queue up the children
       queue.push([child, depth + 1]);
-    });
+    }
   }
 
   return {

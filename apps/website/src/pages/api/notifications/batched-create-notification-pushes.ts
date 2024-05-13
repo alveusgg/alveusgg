@@ -1,8 +1,8 @@
 import { z } from "zod";
 
+import { prisma } from "@/server/db/client";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
-import { prisma } from "@/server/db/client";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 
@@ -31,7 +31,7 @@ export default createTokenProtectedApiHandler(
       }
 
       const calls: Array<Promise<Response>> = [];
-      options.subscriptionIds.forEach((subscriptionId) => {
+      for (const subscriptionId of options.subscriptionIds) {
         calls.push(
           callEndpoint<SendPushOptions>("/api/notifications/send-push", {
             message: notification.message,
@@ -44,7 +44,7 @@ export default createTokenProtectedApiHandler(
             imageUrl: notification.imageUrl || undefined,
           }),
         );
-      });
+      }
 
       await Promise.allSettled(calls);
 

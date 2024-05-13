@@ -1,5 +1,5 @@
-import { useCallback, useId, useState } from "react";
 import Script from "next/script";
+import { useCallback, useId, useState } from "react";
 
 type TwitchEmbedId =
   | { channel: string }
@@ -33,7 +33,7 @@ export function TwitchEmbed({
   const video = "video" in ids ? ids.video : undefined;
   const collection = "collection" in ids ? ids.collection : undefined;
 
-  const embedId = "twitch-embed-" + useId();
+  const embedId = `twitch-embed-${useId()}`;
   const [isLoaded, setIsLoaded] = useState(window.Twitch?.Embed !== undefined);
 
   const embedRef = useCallback(
@@ -74,7 +74,7 @@ export function TwitchEmbed({
 
   return (
     <>
-      <div className={className} id={embedId} ref={embedRef}></div>
+      <div className={className} id={embedId} ref={embedRef} />
       <Script
         src="https://embed.twitch.tv/embed/v1.js"
         onLoad={() => setIsLoaded(true)}

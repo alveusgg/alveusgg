@@ -1,6 +1,6 @@
-import { useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 import IconGitHub from "@/icons/IconGitHub";
 import Socials from "./Socials";

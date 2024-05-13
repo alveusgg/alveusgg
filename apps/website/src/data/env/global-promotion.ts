@@ -21,7 +21,8 @@ const globalPromotion: GlobalPromotion | null =
           .split(",")
           .reduce((acc, cur) => {
             const trimmed = cur.trim();
-            return trimmed ? [...acc, trimmed] : acc;
+            if (trimmed) acc.push(trimmed);
+            return acc;
           }, [] as string[]),
       }
     : null;

@@ -1,13 +1,13 @@
-import NextLink from "next/link";
 import Image from "next/image";
+import NextLink from "next/link";
 
 import teaserImage from "@/assets/events/fall-carnival-2023/teaser2.png";
 import IconArrowRight from "@/icons/IconArrowRight";
 
 import { classes } from "@/utils/classes";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
+import Section from "@/components/content/Section";
 
 type IntroSectionProps = {
   showTicket?: boolean;

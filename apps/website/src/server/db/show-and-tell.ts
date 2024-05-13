@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { env } from "@/env";
 
@@ -9,13 +9,13 @@ import {
   MAX_VIDEOS,
 } from "@/data/show-and-tell";
 
-import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
+import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 
-import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export const withAttachments = {
   include: {
@@ -119,9 +119,9 @@ async function revalidateCache(postIdOrIds?: string | string[]) {
     if (typeof postIdOrIds === "string") {
       url.searchParams.set("postId", postIdOrIds);
     } else {
-      postIdOrIds.forEach((postId) =>
-        url.searchParams.append("postId", postId),
-      );
+      for (const postId of postIdOrIds) {
+        url.searchParams.append("postId", postId);
+      }
     }
   }
 
@@ -337,7 +337,8 @@ export async function updatePost(
     if (!existingEntry.attachments.find((a) => a.imageAttachmentId === id)) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: `Tried to update attachment that is not connected to the entry.`,
+        message:
+          "Tried to update attachment that is not connected to the entry.",
       });
     }
   }

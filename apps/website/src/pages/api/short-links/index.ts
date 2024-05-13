@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "@/server/db/client";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 //API for short links middleware function
 export default async function handler(

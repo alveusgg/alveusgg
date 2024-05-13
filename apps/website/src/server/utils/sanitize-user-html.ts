@@ -1,11 +1,11 @@
-import { JSDOM } from "jsdom";
 import DOMPurify from "dompurify";
+import { JSDOM } from "jsdom";
 
 const window = new JSDOM("").window;
 // NOTE: DOMPurify types expect a Window object, but it works with a JSDOM window
 const purify = DOMPurify(window as unknown as Window);
 
-purify.addHook("afterSanitizeAttributes", function (node) {
+purify.addHook("afterSanitizeAttributes", (node) => {
   if ("target" in node || node.nodeName === "A") {
     node.setAttribute("target", "_blank");
     node.setAttribute("rel", "noreferrer");
