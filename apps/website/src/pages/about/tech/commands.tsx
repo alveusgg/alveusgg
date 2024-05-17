@@ -1,8 +1,8 @@
 import { Fragment, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useClipboard } from "@/hooks/clipboard";
-import Tooltip from "@/components/Tooltip";
+import InlineInfoBox from "@/components/InlineInfoBox";
+import CopyButton from "@/components/CopyButton";
 import commands, {
   isOverloadedArguments,
   type Command,
@@ -21,7 +21,6 @@ import Meta from "@/components/content/Meta";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import IconCopy from "@/icons/IconCopy";
 interface NamedCommand extends Command {
   name: string;
 }
@@ -71,8 +70,10 @@ const signature = (command: NamedCommand) => {
 };
 
 const AboutTechPage: NextPage = () => {
-  const { copyToClipboard } = useClipboard();
-  const [index, setIndex] = useState<string>("");
+  const copyToClipboard = (command: string) => {
+    navigator.clipboard.writeText(command);
+  };
+  const [selectedCommand, setSelectedCommand] = useState<string>("");
   return (
     <>
       <Meta
@@ -223,12 +224,21 @@ const AboutTechPage: NextPage = () => {
                           <pre>
                             <code className="text-sm">
                               {signature(command)}
-                              <IconCopy
+                              {/* <IconClipboard
                                 onClick={() => {
                                   copyToClipboard(signature(command));
-                                  setIndex(command.description);
+                                  setSelectedCommand(command.description);
                                   setTimeout(() => {
-                                    setIndex("");
+                                    setSelectedCommand("");
+                                  }, 2000);
+                                }}
+                              /> */}
+                              <CopyButton
+                                clickHandler={() => {
+                                  copyToClipboard(signature(command));
+                                  setSelectedCommand(command.description);
+                                  setTimeout(() => {
+                                    setSelectedCommand("");
                                   }, 2000);
                                 }}
                               />
@@ -240,11 +250,11 @@ const AboutTechPage: NextPage = () => {
                           <p className="text-sm italic text-alveus-green-400">
                             {command.description}
 
-                            <Tooltip
-                              isTooltipOpen={index === command.description}
+                            <InlineInfoBox
+                              isOpen={selectedCommand === command.description}
                             >
                               Copied
-                            </Tooltip>
+                            </InlineInfoBox>
                           </p>
                         </dd>
                       </div>
@@ -330,14 +340,16 @@ const AboutTechPage: NextPage = () => {
                                   {`!ptzload ${camera.toLowerCase()} `}
                                 </span>
                                 {name}
-                                <IconCopy
-                                  onClick={() => {
+                                <CopyButton
+                                  clickHandler={() => {
                                     copyToClipboard(
                                       `!ptzload ${camera.toLowerCase()} ${name}`,
                                     );
-                                    setIndex(`${camera.toLowerCase()} ${name}`);
+                                    setSelectedCommand(
+                                      `${camera.toLowerCase()} ${name}`,
+                                    );
                                     setTimeout(() => {
-                                      setIndex("");
+                                      setSelectedCommand("");
                                     }, 2000);
                                   }}
                                 />
@@ -349,13 +361,14 @@ const AboutTechPage: NextPage = () => {
                             <p className="text-sm italic text-alveus-green-400">
                               {preset.description}
 
-                              <Tooltip
-                                isTooltipOpen={
-                                  index === `${camera.toLowerCase()} ${name}`
+                              <InlineInfoBox
+                                isOpen={
+                                  selectedCommand ===
+                                  `${camera.toLowerCase()} ${name}`
                                 }
                               >
                                 Copied
-                              </Tooltip>
+                              </InlineInfoBox>
                             </p>
                           </dd>
                         </div>
