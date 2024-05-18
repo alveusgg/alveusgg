@@ -120,7 +120,8 @@ const collaborations: Collaboration[] = (
       name: "xChocoBars",
       link: "https://www.twitch.tv/xchocobars",
       date: new Date("2024-04-19"),
-      videoId: "WcDYLVD6OC4",
+      videoId: "Q8kg4ymp7MY",
+      vodId: "WcDYLVD6OC4",
       creators: [
         {
           name: "xChocoBars",
