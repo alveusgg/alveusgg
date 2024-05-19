@@ -15,7 +15,7 @@ import { probeImageMeta } from "@/server/utils/probe-image-meta";
 export function getBucketUrl() {
   const endpointUrl = new URL(env.FILE_STORAGE_ENDPOINT);
   if (env.FILE_STORAGE_PATH_STYLE)
-    endpointUrl.pathname = `/${env.FILE_STORAGE_BUCKET}`;
+    endpointUrl.pathname = `/${env.FILE_STORAGE_BUCKET}/`;
   else
     endpointUrl.hostname = `${env.FILE_STORAGE_BUCKET}.${endpointUrl.hostname}`;
   return endpointUrl.toString();
