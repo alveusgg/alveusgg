@@ -7,3 +7,9 @@ const dateWhenTextShortened = new Date(2024, 3, 27, 15, 19, 0, 0);
 
 export const getMaxTextLengthForCreatedAt = (createdAt?: Date) =>
   createdAt && createdAt < dateWhenTextShortened ? 700 : 300;
+
+export const resizeImageOptions = {
+  maxWidth: 2048,
+  maxHeight: 2048,
+  quality: 90,
+};
