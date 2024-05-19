@@ -72,7 +72,7 @@ Create a [Twitch application](https://dev.twitch.tv/console/apps/create), settin
 3. Run `docker compose up -d` from within `apps/website` to start a local MySQL database, and an S3 bucket with MinIO.
 4. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
    1. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
-   2. The Next Auth secret (`NEXTAUTH_SECRET`) and Action API secret (`ACTION_API_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
+   2. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
    3. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
    4. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
