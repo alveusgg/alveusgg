@@ -9,11 +9,11 @@ export default async function handler(
   res: NextApiResponse,
 ) {
   // Check for secret to confirm this is a valid request
-  const authHeader = req.headers["authorization"];
+  const { authorization } = req.headers;
   if (
     env.CRON_SECRET &&
-    (authHeader === undefined ||
-      !timingSafeCompareString(authHeader, `Bearer ${env.CRON_SECRET}`))
+    (authorization === undefined ||
+      !timingSafeCompareString(authorization, `Bearer ${env.CRON_SECRET}`))
   ) {
     return res.status(401).json({ message: "Invalid token" });
   }
