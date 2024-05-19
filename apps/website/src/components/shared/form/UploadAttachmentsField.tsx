@@ -1,15 +1,22 @@
 import {
+  type Dispatch,
+  type ChangeEvent,
+  type Key,
+  type ReactNode,
   useCallback,
   useId,
   useReducer,
   useRef,
   useState,
-  type Dispatch,
-  type ChangeEvent,
-  type Key,
 } from "react";
 
-import { fileToBase64 } from "@/utils/files";
+import {
+  fileToBase64,
+  getFileEndingForImageMimeType,
+  getImageMimeType,
+  isImageMimeType,
+} from "@/utils/files";
+import { type ResizeImageOptions, resizeImage } from "@/utils/resize-image";
 
 import IconUploadFiles from "@/icons/IconUploadFiles";
 
@@ -76,7 +83,8 @@ type FileUploadingPropsType = {
   multiple?: boolean;
   maxNumber?: number;
   maxFileSize?: number;
-  renderAttachment: (props: FileUploadRenderProps) => JSX.Element;
+  renderAttachment: (props: FileUploadRenderProps) => ReactNode;
+  resizeImageOptions?: Omit<ResizeImageOptions, "type">;
 };
 
 type FileAction =
@@ -134,6 +142,35 @@ export const useUploadAttachmentsData = (
   return { files: fileReferences, dispatch };
 };
 
+async function handleImageResize(
+  file: File,
+  dataURL: string,
+  resizeImageOptions: Omit<ResizeImageOptions, "type">,
+) {
+  let fileName = file.name;
+  let type = getImageMimeType(file.type);
+  if (!type) return;
+
+  const resized = await resizeImage(dataURL, {
+    ...resizeImageOptions,
+    type,
+  });
+  if (!resized) return;
+
+  // Check if the mime type has changed after resizing because the browser
+  // might not support the mime type (notably WebP with Safari as of 2024-05)
+  const resizedType = resized.dataURL.match(/^data:(image\/.*?);/)?.[1];
+  if (resizedType && resizedType !== type && isImageMimeType(resizedType)) {
+    fileName += "." + getFileEndingForImageMimeType(resizedType);
+    type = resizedType;
+  }
+
+  return {
+    dataURL: resized.dataURL,
+    fileToUpload: new File([resized.blob], fileName, { type }),
+  };
+}
+
 export const UploadAttachmentsField = ({
   files,
   dispatch,
@@ -143,6 +180,7 @@ export const UploadAttachmentsField = ({
   maxNumber,
   maxFileSize,
   allowedFileTypes,
+  resizeImageOptions,
   renderAttachment,
 }: FileUploadingPropsType) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -187,12 +225,25 @@ export const UploadAttachmentsField = ({
 
       newFiles.push(
         new Promise(async (resolve) => {
-          const dataURL = await fileToBase64(file);
+          let dataURL = await fileToBase64(file);
+          let fileToUpload = file;
+          if (resizeImageOptions) {
+            const resized = await handleImageResize(
+              fileToUpload,
+              dataURL,
+              resizeImageOptions,
+            );
+            if (resized) {
+              fileToUpload = resized.fileToUpload;
+              dataURL = resized.dataURL;
+            }
+          }
+
           resolve({
             id: `upload-${fileCounter++}`,
             status: "upload.pending",
             dataURL,
-            file,
+            file: fileToUpload,
           });
         }),
       );

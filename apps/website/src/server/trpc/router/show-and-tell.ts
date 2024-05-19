@@ -21,7 +21,7 @@ import {
   updatePost,
   withAttachments,
 } from "@/server/db/show-and-tell";
-import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
+import { imageMimeTypes } from "@/utils/files";
 import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
 
@@ -117,7 +117,7 @@ export const showAndTellRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(allowedFileTypes),
+        fileType: z.enum(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {
