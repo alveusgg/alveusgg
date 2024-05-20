@@ -11,6 +11,7 @@ import {
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
+import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 
 import useFileUpload from "@/hooks/files/upload";
 
@@ -30,13 +31,11 @@ import {
   useUploadAttachmentsData,
 } from "@/components/shared/form/UploadAttachmentsField";
 
-export const allowedFileTypes = [
-  "image/png",
-  "image/jpeg",
-  "image/gif",
-  "image/webp",
-] as const;
-type AllowedFileTypes = typeof allowedFileTypes;
+const resizeImageOptions = {
+  maxWidth: 1920,
+  maxHeight: 1920,
+  quality: 90,
+};
 
 export function SendNotificationForm() {
   const formRef = useRef<HTMLFormElement>(null);
@@ -51,9 +50,9 @@ export function SendNotificationForm() {
 
   const createFileUpload =
     trpc.adminNotifications.createFileUpload.useMutation();
-  const upload = useFileUpload<AllowedFileTypes>(
+  const upload = useFileUpload<ImageMimeType>(
     (signature) => createFileUpload.mutateAsync(signature),
-    { allowedFileTypes },
+    { allowedFileTypes: imageMimeTypes },
   );
   const imageAttachmentData = useUploadAttachmentsData();
   const image = imageAttachmentData.files[0];
@@ -172,7 +171,8 @@ export function SendNotificationForm() {
             {...imageAttachmentData}
             maxNumber={1}
             upload={upload}
-            allowedFileTypes={allowedFileTypes}
+            allowedFileTypes={imageMimeTypes}
+            resizeImageOptions={resizeImageOptions}
             renderAttachment={({ fileReference, ...props }) => (
               <ImageUploadAttachment {...props} fileReference={fileReference} />
             )}

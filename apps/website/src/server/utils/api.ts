@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { z } from "zod";
 import type { ZodType } from "zod/lib/types";
 
+import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
+
 export function createTokenProtectedApiHandler<T extends ZodType>(
   schema: T,
   action: (options: z.infer<T>) => Promise<boolean>,
@@ -16,7 +18,10 @@ export function createTokenProtectedApiHandler<T extends ZodType>(
 
     const { authorization } = req.headers;
 
-    if (authorization !== `Bearer ${env.ACTION_API_SECRET}`) {
+    if (
+      authorization === undefined ||
+      !timingSafeCompareString(authorization, `Bearer ${env.ACTION_API_SECRET}`)
+    ) {
       res.status(401).json({ success: false });
       return;
     }

@@ -4,6 +4,7 @@ import { permissions } from "@/data/permissions";
 import { env } from "@/env";
 
 import { inputValueDatetimeLocalToUtc } from "@/utils/local-datetime";
+import { imageMimeTypes } from "@/utils/files";
 
 import { prisma } from "@/server/db/client";
 import {
@@ -17,8 +18,6 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import { createFileStorageUpload } from "@/server/utils/file-storage";
-
-import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 const uploadPrefix = "notifications/";
 
@@ -92,7 +91,7 @@ export const adminNotificationsRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(allowedFileTypes),
+        fileType: z.enum(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {

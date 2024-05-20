@@ -7,12 +7,14 @@ import {
   MAX_IMAGES,
   MAX_VIDEOS,
   getMaxTextLengthForCreatedAt,
+  resizeImageOptions,
 } from "@/data/show-and-tell";
 
 import { classes } from "@/utils/classes";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
+import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
@@ -37,14 +39,6 @@ import {
   VideoLinksField,
   useVideoLinksData,
 } from "../shared/form/VideoLinksField";
-
-export const allowedFileTypes = [
-  "image/png",
-  "image/jpeg",
-  "image/gif",
-  "image/webp",
-] as const;
-type AllowedFileTypes = typeof allowedFileTypes;
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -136,9 +130,9 @@ export function ShowAndTellEntryForm({
   );
 
   const createFileUpload = trpc.showAndTell.createFileUpload.useMutation();
-  const upload = useFileUpload<AllowedFileTypes>(
+  const upload = useFileUpload<ImageMimeType>(
     (signature) => createFileUpload.mutateAsync(signature),
-    { allowedFileTypes },
+    { allowedFileTypes: imageMimeTypes },
   );
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -309,7 +303,8 @@ export function ShowAndTellEntryForm({
               label="Pictures"
               upload={upload}
               maxNumber={MAX_IMAGES}
-              allowedFileTypes={allowedFileTypes}
+              allowedFileTypes={imageMimeTypes}
+              resizeImageOptions={resizeImageOptions}
               renderAttachment={({ fileReference, ...props }) => {
                 const initialData =
                   fileReference.status === "saved"

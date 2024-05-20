@@ -23,6 +23,8 @@ import {
   updatePost,
   withAttachments,
 } from "@/server/db/show-and-tell";
+import { imageMimeTypes } from "@/utils/files";
+import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
 
 const uploadPrefix = "show-and-tell/";
@@ -117,7 +119,7 @@ export const showAndTellRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(allowedFileTypes),
+        fileType: z.enum(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {
