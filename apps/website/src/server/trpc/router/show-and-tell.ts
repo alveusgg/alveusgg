@@ -24,7 +24,6 @@ import {
   withAttachments,
 } from "@/server/db/show-and-tell";
 import { imageMimeTypes } from "@/utils/files";
-import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
 
 const uploadPrefix = "show-and-tell/";

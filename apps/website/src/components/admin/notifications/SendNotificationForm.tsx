@@ -9,9 +9,9 @@ import {
 } from "@/data/notifications";
 
 import { classes } from "@/utils/classes";
+import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
-import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 
 import useFileUpload from "@/hooks/files/upload";
 

@@ -1,4 +1,3 @@
-import { env } from "@/env";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { env } from "@/env";

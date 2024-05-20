@@ -161,7 +161,7 @@ async function handleImageResize(
   // might not support the mime type (notably WebP with Safari as of 2024-05)
   const resizedType = resized.dataURL.match(/^data:(image\/.*?);/)?.[1];
   if (resizedType && resizedType !== type && isImageMimeType(resizedType)) {
-    fileName += "." + getFileEndingForImageMimeType(resizedType);
+    fileName += `.${getFileEndingForImageMimeType(resizedType)}`;
     type = resizedType;
   }
 

@@ -12,9 +12,9 @@ import {
 
 import { classes } from "@/utils/classes";
 import { getEntityStatus } from "@/utils/entity-helpers";
+import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 import { notEmpty } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
-import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
