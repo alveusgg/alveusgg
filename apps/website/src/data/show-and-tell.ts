@@ -1,5 +1,15 @@
 export const MAX_IMAGES = 16;
 export const MAX_VIDEOS = 6;
 
-export const giveAnHourStart = "2024-03-01T00:00:00";
-export const giveAnHourEnd = "2024-04-22T23:59:59";
+export const MAX_TEXT_HTML_LENGTH = 1_000; // We allow more total html length than characters (ignoring tags)
+
+const dateWhenTextShortened = new Date(2024, 3, 27, 15, 19, 0, 0);
+
+export const getMaxTextLengthForCreatedAt = (createdAt?: Date) =>
+  createdAt && createdAt < dateWhenTextShortened ? 700 : 300;
+
+export const resizeImageOptions = {
+  maxWidth: 2048,
+  maxHeight: 2048,
+  quality: 90,
+};

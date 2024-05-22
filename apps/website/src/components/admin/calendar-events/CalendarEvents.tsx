@@ -53,13 +53,15 @@ export function CalendarEvents() {
             href={`/admin/calendar-events/${event.id}/edit`}
           >
             <p className="font-semibold">{event.title}</p>
-            <p className="text-sm tabular-nums">
-              {event.startAt.toLocaleTimeString(undefined, {
-                hour: "numeric",
-                minute: "2-digit",
-                timeZoneName: "short",
-              })}
-            </p>
+            {event.hasTime && (
+              <p className="text-sm tabular-nums">
+                {event.startAt.toLocaleTimeString(undefined, {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  timeZoneName: "short",
+                })}
+              </p>
+            )}
           </Link>
         ),
       })),

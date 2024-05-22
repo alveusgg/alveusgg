@@ -1,9 +1,6 @@
 import { DateTime } from "luxon";
 import type { PartialDateString } from "@alveusgg/data/src/types";
 
-export const earliestTimeZone = "+14:00";
-export const latestTimeZone = "-12:00";
-
 export type DateTimeFormat = {
   style: "short" | "long";
   time: "minutes" | "seconds" | undefined;

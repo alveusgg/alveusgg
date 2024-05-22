@@ -3,7 +3,11 @@ import { TRPCError } from "@trpc/server";
 
 import { env } from "@/env";
 
-import { MAX_IMAGES, MAX_VIDEOS } from "@/data/show-and-tell";
+import {
+  MAX_IMAGES,
+  MAX_TEXT_HTML_LENGTH,
+  MAX_VIDEOS,
+} from "@/data/show-and-tell";
 
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
@@ -88,7 +92,7 @@ export type ShowAndTellSubmitInput = z.infer<
 const showAndTellSharedInputSchema = z.object({
   displayName: z.string().max(100),
   title: z.string().max(100),
-  text: z.string().max(1_000),
+  text: z.string().max(MAX_TEXT_HTML_LENGTH),
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),
@@ -121,7 +125,7 @@ async function revalidateCache(postIdOrIds?: string | string[]) {
     }
   }
 
-  return await fetch(url);
+  return fetch(url);
 }
 
 function createLinkAttachmentForVideoUrl(videoUrl: string, idx: number) {
@@ -167,7 +171,7 @@ async function createImageAttachments(
   attachmentsToCreate: Array<CreateImageAttachment>,
 ) {
   // Check and fix new uploaded image attachments
-  return await Promise.all(attachmentsToCreate.map(createImageAttachment));
+  return Promise.all(attachmentsToCreate.map(createImageAttachment));
 }
 
 function createVideoAttachments(videoLinks: Array<VideoLink>) {
@@ -237,33 +241,62 @@ export async function getPosts({
 } = {}) {
   return prisma.showAndTellEntry.findMany({
     where: getPostFilter("approved"),
+    select: {
+      id: true,
+      displayName: true,
+      title: true,
+      text: true,
+      volunteeringMinutes: true,
+      seenOnStream: true,
+      createdAt: true,
+      updatedAt: true,
+      approvedAt: true,
+      attachments: withAttachments.include.attachments,
+    },
     orderBy: [...postOrderBy],
-    include: { user: true, attachments: withAttachments.include.attachments },
     cursor: cursor ? { id: cursor } : undefined,
     take,
   });
 }
 
-export async function getVolunteeringMinutes({
-  from,
-  to,
-}: {
-  from?: Date;
-  to?: Date;
-} = {}) {
-  return (
-    (
-      await prisma.showAndTellEntry.aggregate({
-        _sum: { volunteeringMinutes: true },
-        where: {
-          AND: [
-            getPostFilter("approved"),
-            { createdAt: { gte: from, lte: to } },
-          ],
+export async function getPostsCount() {
+  return prisma.showAndTellEntry.count({
+    where: getPostFilter("approved"),
+  });
+}
+
+export async function getUsersCount() {
+  const [countWithUserId, countWithoutUserId] = await Promise.all([
+    prisma.showAndTellEntry.findMany({
+      select: { id: true },
+      where: {
+        userId: {
+          not: null,
         },
-      })
-    )._sum.volunteeringMinutes ?? 0
-  );
+        AND: getPostFilter("approved"),
+      },
+      distinct: ["userId"],
+    }),
+    prisma.showAndTellEntry.findMany({
+      select: { id: true },
+      where: {
+        userId: null,
+        AND: getPostFilter("approved"),
+      },
+      distinct: ["displayName"],
+    }),
+  ] as const);
+
+  return countWithUserId.length + countWithoutUserId.length;
+}
+
+export async function getVolunteeringMinutes() {
+  const res = await prisma.showAndTellEntry.aggregate({
+    _sum: { volunteeringMinutes: true },
+    where: getPostFilter("approved"),
+  });
+
+  return res._sum.volunteeringMinutes ?? 0;
 }
 
 export async function getAdminPosts({
@@ -419,7 +452,6 @@ export async function markPostAsSeen(id: string, retroactive = false) {
   });
 
   await revalidateCache([id, ...ids]);
-  return;
 }
 
 export async function unmarkPostAsSeen(id: string) {
@@ -431,7 +463,6 @@ export async function unmarkPostAsSeen(id: string) {
     },
   });
   await revalidateCache(id);
-  return;
 }
 
 export async function deletePost(id: string, authorUserId?: string) {

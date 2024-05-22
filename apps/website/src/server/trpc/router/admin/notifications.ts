@@ -4,6 +4,7 @@ import { env } from "@/env";
 import { permissions } from "@/data/permissions";
 
 import { inputValueDatetimeLocalToUtc } from "@/utils/local-datetime";
+import { imageMimeTypes } from "@/utils/files";
 
 import {
   createCheckPermissionMiddleware,
@@ -17,8 +18,6 @@ import {
   getRecentNotifications,
 } from "@/server/db/notifications";
 import { prisma } from "@/server/db/client";
-
-import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 const uploadPrefix = "notifications/";
 
@@ -92,7 +91,7 @@ export const adminNotificationsRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(allowedFileTypes),
+        fileType: z.enum(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {

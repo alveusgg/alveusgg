@@ -303,8 +303,8 @@ const data: RootNetworkItem[] = [
                   {
                     type: "switch",
                     name: "Parrot",
-                    model: "Ubiquiti USW-Lite-8-PoE",
-                    url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
+                    model: "Ubiquiti USW-24-PoE",
+                    url: "https://store.ui.com/us/en/collections/unifi-switching-standard-power-over-ethernet/products/usw-24-poe",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {

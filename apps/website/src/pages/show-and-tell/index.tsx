@@ -13,10 +13,15 @@ import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
-import { getPosts } from "@/server/db/show-and-tell";
+import {
+  getPosts,
+  getPostsCount,
+  getUsersCount,
+} from "@/server/db/show-and-tell";
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
+import useLocaleString from "@/hooks/locale";
 
 import IconLoading from "@/icons/IconLoading";
 import IconArrowUp from "@/icons/IconArrowUp";
@@ -56,11 +61,15 @@ export const getStaticProps = async () => {
     const nextItem = entries.pop();
     nextCursor = nextItem?.id || undefined;
   }
+  const totalPostsCount = await getPostsCount();
+  const usersCount = await getUsersCount();
 
   return {
     props: {
       entries,
       nextCursor,
+      totalPostsCount,
+      usersCount,
     },
   };
 };
@@ -74,6 +83,8 @@ const isShowAndTellEntry = (
 const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   entries: initialEntries,
   nextCursor,
+  totalPostsCount,
+  usersCount,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
     {},
@@ -86,6 +97,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       refetchOnWindowFocus: false,
     },
   );
+
+  // Format the stats
+  const totalPostsCountFmt = useLocaleString(totalPostsCount);
+  const usersCountFmt = useLocaleString(usersCount);
 
   const [isPresentationView, setIsPresentationView] = useState(false);
   const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
@@ -356,9 +371,18 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           </p>
 
           <p className="mt-8">
+            {usersCountFmt} members of the Alveus community have shared their
+            activities with {totalPostsCountFmt} posts.
+          </p>
+
+          <p className="mt-8">
             As a community, we&apos;re tracking the hours we spend giving back
-            to the planet, as part of WWF&apos;s{" "}
-            <Link href="/show-and-tell/give-an-hour" dark>
+            to the planet, originally as part of WWF&apos;s{" "}
+            <Link
+              href="/show-and-tell/give-an-hour"
+              dark
+              className="whitespace-nowrap"
+            >
               Give an Hour
             </Link>{" "}
             initiative.

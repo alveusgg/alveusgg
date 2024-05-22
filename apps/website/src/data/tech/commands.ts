@@ -653,6 +653,11 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  nextsong: {
+    description: "Skips music to the next song",
+    category: "Audio",
+    args: [],
+  },
 
   /**
    * Scenes
@@ -921,6 +926,32 @@ const commands: Record<string, Command> = {
   livecams: {
     description: "Switch the stream to the camera layout",
     category: "Sources",
+    args: [],
+  },
+
+  /**
+   * Text
+   */
+  text: {
+    description: "Sets the text to be displayed on stream",
+    category: "Text",
+    args: [
+      {
+        type: "string",
+        name: "text",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  showtext: {
+    description: "Shows text on stream",
+    category: "Text",
+    args: [],
+  },
+  hidetext: {
+    description: "Hides text on stream",
+    category: "Text",
     args: [],
   },
 

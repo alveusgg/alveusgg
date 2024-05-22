@@ -26,10 +26,11 @@
     "postinstall": "run-p postinstall:*",
     "lint": "next lint",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "format": "prettier . --write && prisma format"
   },
   "dependencies": {
-    "@alveusgg/data": "github:alveusgg/data#0.34.0",
+    "@alveusgg/data": "github:alveusgg/data#0.36.0",
     "@aws-sdk/client-s3": "^3.503.1",
     "@aws-sdk/s3-request-presigner": "^3.503.1",
     "@fontsource/pt-sans": "^5.0.8",

@@ -5,6 +5,8 @@ import { convertToSlug } from "@/utils/slugs";
 import julien from "@/assets/collaborations/julien.png";
 import fuslie from "@/assets/collaborations/fuslie.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
+import angelskimi from "@/assets/collaborations/angelskimi.png";
+import xchocobars from "@/assets/collaborations/xchocobars.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
 import hyoon from "@/assets/collaborations/hyoon.png";
@@ -64,7 +66,8 @@ const collaborations: Collaboration[] = (
       name: "Julien",
       link: "https://www.twitch.tv/julien",
       date: new Date("2024-04-25"),
-      videoId: "yWtkfbfmNGs",
+      videoId: "46ECIvC4MUo",
+      vodId: "yWtkfbfmNGs",
       creators: [
         {
           name: "Julien",
@@ -90,12 +93,40 @@ const collaborations: Collaboration[] = (
       name: "Valkyrae",
       link: "https://www.youtube.com/@Valkyrae",
       date: new Date("2024-04-21"),
-      videoId: "nt7nbMao9c4",
+      videoId: "jZKupTWDw9U",
+      vodId: "nt7nbMao9c4",
       creators: [
         {
           name: "Valkyrae",
           image: valkyrae,
           popularity: 4_000_000, // YouTube subscribers, 2024-04-22
+        },
+      ],
+    },
+    {
+      name: "AngelsKimi",
+      link: "https://www.twitch.tv/angelskimi",
+      date: new Date("2024-04-20"),
+      videoId: "qC7Ifq1rZMc",
+      creators: [
+        {
+          name: "AngelsKimi",
+          image: angelskimi,
+          popularity: 426_000, // Twitch followers, 2024-04-28
+        },
+      ],
+    },
+    {
+      name: "xChocoBars",
+      link: "https://www.twitch.tv/xchocobars",
+      date: new Date("2024-04-19"),
+      videoId: "Q8kg4ymp7MY",
+      vodId: "WcDYLVD6OC4",
+      creators: [
+        {
+          name: "xChocoBars",
+          image: xchocobars,
+          popularity: 993_000, // Twitch followers, 2024-04-28
         },
       ],
     },
