@@ -41,7 +41,9 @@ const OverlayPage: NextPage = () => {
 
       setTime({
         time: timeParts.join(""),
-        date: `${year.value}-${month.value}-${day.value}`,
+        date: [year, month, day]
+          .map((part) => part.value.padStart(2, "0"))
+          .join("-"),
       });
     };
 
