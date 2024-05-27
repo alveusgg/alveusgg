@@ -74,7 +74,8 @@ Create a [Twitch application](https://dev.twitch.tv/console/apps/create), settin
    1. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
    2. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
    3. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
-   4. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
+   4. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
+   5. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
 6. Start the dev server using `pnpm dev` from within `apps/website`
 7. The website should be running at `http://localhost:3000/` (open in browser)
@@ -93,6 +94,14 @@ We use Base64-encoded random strings for various secrets. To generate these secr
   _You may need to call `python3` instead depending on your installation._
   - Generate a 32-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(32)).decode('utf-8'))"`
   - Generate a 24-byte secret: `python -c "import os, base64; print(base64.b64encode(os.urandom(24)).decode('utf-8'))"`
+
+### Weather API
+
+Alveus operates a weather station on-site that uploads data to wunderground.com. Wunderground provide an API via api.weather.com that we use to display the weather for the stream overlay (and in the API for the Twitch chat bot). Accessing the API required an API key, which is only granted to users that have a weather station on wunderground.com.
+
+It _seems_ that anyone can sign up for a Wunderground account and register a weather station on the site, at which point you'll be granted access to the API, without ever needing to actually connect a weather station and upload data. It _seems_ you can use this to get an API key to develop with the weather API locally.
+
+_In production, we use the actual API key for the account that is associated with the Alveus weather station, which does upload data to the site._
 
 ## Production deployment
 
