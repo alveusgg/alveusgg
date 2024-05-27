@@ -15,10 +15,60 @@ const getFeelsLike = (
   return temperature;
 };
 
+export type WeatherResponse = {
+  time: {
+    local: string | null;
+    utc: string | null;
+  };
+  uvIndex: number | null;
+  humidity: number | null;
+  temperature: {
+    fahrenheit: number | null;
+    celsius: number | null;
+    heatIndex: {
+      fahrenheit: number | null;
+      celsius: number | null;
+    };
+    windChill: {
+      fahrenheit: number | null;
+      celsius: number | null;
+    };
+    feelsLike: {
+      fahrenheit: number | null;
+      celsius: number | null;
+    };
+  };
+  pressure: {
+    inches: number | null;
+    millibars: number | null;
+  };
+  wind: {
+    speed: {
+      miles: number | null;
+      kilometers: number | null;
+    };
+    gusts: {
+      miles: number | null;
+      kilometers: number | null;
+    };
+    direction: number | null;
+  };
+  precipitation: {
+    rate: {
+      inches: number | null;
+      millimeters: number | null;
+    };
+    total: {
+      inches: number | null;
+      millimeters: number | null;
+    };
+  };
+};
+
 // API for overlay + chat bot
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse,
+  res: NextApiResponse<WeatherResponse | string>,
 ) {
   if (env.WEATHER_STATION_ID && env.WEATHER_API_KEY) {
     try {
