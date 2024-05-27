@@ -24,6 +24,30 @@
     height: 0;
     display: none;
   }
+
+  .paint-order-fsm {
+    paint-order: fill stroke markers;
+  }
+
+  .paint-order-fms {
+    paint-order: fill markers stroke;
+  }
+
+  .paint-order-sfm {
+    paint-order: stroke fill markers;
+  }
+
+  .paint-order-smf {
+    paint-order: stroke markers fill;
+  }
+
+  .paint-order-msf {
+    paint-order: markers stroke fill;
+  }
+
+  .paint-order-mfs {
+    paint-order: markers fill stroke;
+  }
 }
 
 @layer components {
