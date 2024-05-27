@@ -1,6 +1,11 @@
 import { type NextPage } from "next";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+
 import { DATETIME_ALVEUS_ZONE, formatDateTimeParts } from "@/utils/datetime";
+
+import logoImage from "@/assets/logo.png";
+
 import { type WeatherResponse } from "../api/stream/weather";
 
 const OverlayPage: NextPage = () => {
@@ -74,6 +79,20 @@ const OverlayPage: NextPage = () => {
             <span className="text-xl">({weather.temperature.celsius} °C)</span>
           </p>
         )}
+      </div>
+
+      <div className="absolute bottom-2 left-2 flex items-center gap-2">
+        <Image
+          src={logoImage}
+          alt=""
+          height={64}
+          className="h-16 w-auto opacity-50 brightness-125 contrast-200 drop-shadow grayscale saturate-200"
+        />
+
+        <div className="paint-order-sfm text-shadow text-xl font-bold text-white text-stroke-1 text-shadow-x-0 text-shadow-y-0 text-shadow-black">
+          <p>alveussanctuary.org</p>
+          <p>@alveussanctuary</p>
+        </div>
       </div>
     </div>
   );
