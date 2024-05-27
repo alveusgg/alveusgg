@@ -65,7 +65,7 @@ const OverlayPage: NextPage = () => {
 
   return (
     <div className="h-screen w-full">
-      <div className="paint-order-sfm text-shadow absolute right-2 top-2 space-y-1 text-right font-mono font-bold text-white text-stroke-3 text-shadow-x-0 text-shadow-y-0 text-shadow-black">
+      <div className="paint-order-sfm text-shadow absolute right-2 top-2 flex flex-col gap-1 text-right font-bold tabular-nums tracking-widest text-white text-stroke-3 text-shadow-x-0 text-shadow-y-0 text-shadow-black">
         <p className="text-4xl">{time.time}</p>
         <p className="text-4xl">{time.date}</p>
         {weather && (

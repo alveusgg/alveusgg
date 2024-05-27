@@ -1,17 +1,21 @@
+import { useEffect } from "react";
 import { type AppType } from "next/app";
+import { useRouter } from "next/router";
+import Head from "next/head";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-import { useRouter } from "next/router";
-import Head from "next/head";
-import { useEffect } from "react";
 import { trpc } from "@/utils/trpc";
-import "@/styles/globals.css";
-import Layout from "@/components/layout/Layout";
 import { unregisterServiceWorker } from "@/utils/sw";
+
 import { ConsentProvider } from "@/hooks/consent";
+
+import Layout from "@/components/layout/Layout";
+import FontProvider from "@/components/layout/Fonts";
+
+import "@/styles/globals.css";
 
 unregisterServiceWorker();
 
@@ -24,6 +28,7 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   const { pathname } = useRouter();
   const isStream = pathname.startsWith("/stream/");
 
+  // Add stream class to the root for stream pages
   useEffect(() => {
     if (isStream) document.documentElement.classList.add("stream");
     else document.documentElement.classList.remove("stream");
@@ -36,7 +41,9 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
           <meta name="robots" content="noindex" />
         </Head>
 
-        <Component {...pageProps} />
+        <FontProvider>
+          <Component {...pageProps} />
+        </FontProvider>
       </>
     );
   }
@@ -45,10 +52,12 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <ConsentProvider>
-          <Layout>
-            <Component {...pageProps} />
-            <Analytics />
-          </Layout>
+          <FontProvider>
+            <Layout>
+              <Component {...pageProps} />
+              <Analytics />
+            </Layout>
+          </FontProvider>
         </ConsentProvider>
       </QueryClientProvider>
     </SessionProvider>
