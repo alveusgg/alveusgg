@@ -1,4 +1,4 @@
-import { PT_Sans, PT_Serif } from "next/font/google"
+import { PT_Sans, PT_Serif } from "next/font/google";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type ReactNode, useEffect, useMemo } from "react";

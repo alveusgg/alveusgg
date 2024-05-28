@@ -1,23 +1,19 @@
-import { useEffect } from "react";
-import { type AppType } from "next/app";
-import { useRouter } from "next/router";
-import Head from "next/head";
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
-import { Analytics } from "@vercel/analytics/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
+import type { Session } from "next-auth";
+import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 import Layout from "@/components/layout/Layout";
-import { trpc } from "@/utils/trpc";
 import { unregisterServiceWorker } from "@/utils/sw";
+import { trpc } from "@/utils/trpc";
 
 import { ConsentProvider } from "@/hooks/consent";
 import "@/styles/globals.css";
-import { unregisterServiceWorker } from "@/utils/sw";
-import { trpc } from "@/utils/trpc";
 
-import Layout from "@/components/layout/Layout";
 import FontProvider from "@/components/layout/Fonts";
 
 import "@/styles/globals.css";

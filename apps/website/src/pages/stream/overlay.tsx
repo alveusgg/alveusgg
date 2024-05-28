@@ -1,4 +1,4 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
@@ -6,7 +6,7 @@ import { DATETIME_ALVEUS_ZONE, formatDateTimeParts } from "@/utils/datetime";
 
 import logoImage from "@/assets/logo.png";
 
-import { type WeatherResponse } from "../api/stream/weather";
+import type { WeatherResponse } from "../api/stream/weather";
 
 const OverlayPage: NextPage = () => {
   const [time, setTime] = useState<{ time: string; date: string } | null>(null);
