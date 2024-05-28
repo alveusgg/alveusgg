@@ -13,7 +13,7 @@ const getFormat = ({
   timezone,
 }: DateTimeFormat): Intl.DateTimeFormatOptions => {
   const defaults: Partial<Intl.DateTimeFormatOptions> = {
-    timeZoneName: timezone ? "short" : undefined,
+    timeZoneName: timezone ? "shortGeneric" : undefined,
   };
 
   if (time === "seconds") {
@@ -54,9 +54,22 @@ export const formatDateTime = (
 ) =>
   DateTime.fromJSDate(dateTime)
     .setZone(zone ?? undefined)
-    .toLocaleString(getFormat({ style, time, timezone }), {
-      locale: locale ?? undefined,
-    });
+    .reconfigure({ locale: locale ?? undefined })
+    .toLocaleString(getFormat({ style, time, timezone }));
+
+export const formatDateTimeParts = (
+  dateTime: Date,
+  {
+    style = "short",
+    time = undefined,
+    timezone = false,
+  }: Partial<DateTimeFormat> = {},
+  { locale = "en-US", zone = "UTC" }: Partial<DateTimeOptions> = {},
+) =>
+  DateTime.fromJSDate(dateTime)
+    .setZone(zone ?? undefined)
+    .reconfigure({ locale: locale ?? undefined })
+    .toLocaleParts(getFormat({ style, time, timezone }));
 
 export const formatDateTimeLocal = (
   dateTime: Date,

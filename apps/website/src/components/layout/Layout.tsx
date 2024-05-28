@@ -1,4 +1,4 @@
-import { PT_Sans, PT_Serif } from "next/font/google";
+import { PT_Sans, PT_Serif } from "next/font/google"
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type ReactNode, useEffect, useMemo } from "react";
@@ -17,26 +17,7 @@ type LayoutProps = {
   children?: ReactNode;
 };
 
-const ptSans = PT_Sans({
-  subsets: ["latin"],
-  variable: "--font-ptsans",
-  weight: ["400", "700"],
-});
-
-const ptSerif = PT_Serif({
-  subsets: ["latin"],
-  variable: "--font-ptserif",
-  weight: ["400", "700"],
-});
-
-const fonts = `${ptSans.variable} ${ptSerif.variable} font-sans`;
-
 const Layout = ({ children }: LayoutProps) => {
-  // Add fonts to body for portals that do not attach to #app
-  useEffect(() => {
-    document.body.classList.add(...fonts.split(" "));
-  }, []);
-
   const { pathname } = useRouter();
   const topHat = useMemo(
     () =>
@@ -66,7 +47,7 @@ const Layout = ({ children }: LayoutProps) => {
 
       <div
         id="app"
-        className={`flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900 ${fonts}`}
+        className="flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900"
       >
         <a
           href="#main"

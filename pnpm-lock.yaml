@@ -225,6 +225,12 @@ importers:
         specifier: ^3.22.4
         version: 3.22.4
     devDependencies:
+      '@designbycode/tailwindcss-text-shadow':
+        specifier: ^2.0.0
+        version: 2.0.0(tailwindcss@3.4.1)
+      '@designbycode/tailwindcss-text-stroke':
+        specifier: ^1.2.1
+        version: 1.2.1(tailwindcss@3.4.1)
       '@ffmpeg-installer/ffmpeg':
         specifier: ^1.1.0
         version: 1.1.0
@@ -1196,6 +1202,22 @@ packages:
     dependencies:
       tslib: 2.6.2
     dev: false
+
+  /@designbycode/tailwindcss-text-shadow@2.0.0(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-Dm2NZYXMjeyd0NeptuuG5SejLsTNY4YKovmUMSrqkAzn1eehqxfAvS9UsDgHTuOeT/rklXd/Rwg3axB+AyGV6g==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.4.1
+    dev: true
+
+  /@designbycode/tailwindcss-text-stroke@1.2.1(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-6SqiFuMjJaWWv5Mm+RIu8Ui3Kc/8AK3m0qSocPOFhk4yS6aMVioy8QLghAj5KOR/8lsfZe3r7I1uJ7YM1FimUA==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || >=3.0.0-alpha.1'
+    dependencies:
+      tailwindcss: 3.4.1
+    dev: true
 
   /@emnapi/runtime@0.45.0:
     resolution: {integrity: sha512-Txumi3td7J4A/xTTwlssKieHKTGl3j4A1tglBx72auZ49YK7ePY6XZricgIg9mnZT4xPfA+UPCUdnhRuEFDL+w==}

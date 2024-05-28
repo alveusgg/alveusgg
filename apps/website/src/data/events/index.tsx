@@ -6,6 +6,7 @@ import Link from "@/components/content/Link";
 
 import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
+import artAuction2024Video from "@/assets/events/art-auction-2024.mp4";
 import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
 import fundathon2021Video from "@/assets/events/fundathon-2021.mp4";
 import halloween2021Video from "@/assets/events/halloween-2021.mp4";
@@ -24,6 +25,52 @@ export type Event = {
 
 const events: Event[] = (
   [
+    {
+      name: "Art Auction 2024",
+      date: new Date("2024-05-23"),
+      video: artAuction2024Video,
+      stats: {
+        totalDonations: {
+          title: "Raised for Alveus Sanctuary",
+          stat: "$44,181",
+        },
+        paintingsSold: {
+          title: "Paintings sold",
+          stat: "35",
+        },
+        signedPrints: {
+          title: "Signed postcards for donors",
+          stat: "499",
+        },
+        averagePrice: {
+          title: "Average donation for each painting",
+          stat: "$870",
+        },
+      },
+      info: (
+        <>
+          <p>
+            Hosted in the Session Yard at Alveus once again, the annual Art
+            Auction returned and was a great success. 35 unique paintings
+            created by the ambassadors and the staff at the sanctuary were up
+            for auction, with livestream viewers able to bid on them. Viewers
+            could also participate in the fundraising by donating $25 or more to
+            receive a signed postcard as a memento of the event -- by the end of
+            the 4-hour-long event, 499 postcards were sent out to donors.
+          </p>
+          <p>
+            Maya was the most successful artist this year, with her two
+            paintings raising a total of $2,666. Our most successful ambassador
+            artists though were{" "}
+            <Link href="/ambassadors/chips-ahoy">Chips</Link> and{" "}
+            <Link href="/ambassadors/nilla-wafer">Nilla</Link>, our rats, who
+            raised $2,500 with their two paintings. In total, we were able to
+            raise $44,181 for Alveus Sanctuary during the event. Thank you to
+            everyone who watched and supported this event!
+          </p>
+        </>
+      ),
+    },
     {
       name: "Valentine's Day 2024",
       date: new Date("2024-02-14"),
