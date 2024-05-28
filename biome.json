@@ -39,7 +39,8 @@
         "noImplicitAnyLet": "warn",
         "noExplicitAny": "warn",
         "noAssignInExpressions": "warn",
-        "noArrayIndexKey": "warn"
+        "noArrayIndexKey": "warn",
+        "noAsyncPromiseExecutor": "warn"
       },
       "correctness": {
         "useJsxKeyInIterable": "warn",
