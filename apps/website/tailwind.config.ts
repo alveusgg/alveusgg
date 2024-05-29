@@ -3,7 +3,6 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import colors from "tailwindcss/colors";
 import plugin from "tailwindcss/plugin";
-import textShadow from "@designbycode/tailwindcss-text-shadow";
 
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -231,7 +230,6 @@ const config = {
       },
       { theme: { textShadow: { 1: 1, 2: 2, 3: 3, 4: 4 } } },
     ),
-    textShadow,
   ],
 } satisfies Config;
 
