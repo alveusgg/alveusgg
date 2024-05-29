@@ -126,7 +126,7 @@ const OverlayPage: NextPage = () => {
       <div
         className={classes(
           overlayText,
-          "absolute right-2 top-2 flex flex-col gap-1 text-right font-medium tabular-nums tracking-widest text-shadow-blur-4",
+          "absolute right-2 top-2 flex flex-col gap-1 text-right font-mono font-medium text-shadow-blur-4",
         )}
       >
         <p className="text-4xl">{time.time}</p>
