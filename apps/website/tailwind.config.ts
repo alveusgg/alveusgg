@@ -223,12 +223,12 @@ const config = {
             }),
           },
           {
-            values: theme("textShadow"),
+            values: theme("textStroke"),
             type: "number",
           },
         );
       },
-      { theme: { textShadow: { 1: 1, 2: 2, 3: 3, 4: 4 } } },
+      { theme: { textStroke: { 1: 1, 2: 2, 3: 3, 4: 4 } } },
     ),
   ],
 } satisfies Config;
