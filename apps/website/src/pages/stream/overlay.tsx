@@ -190,7 +190,7 @@ const OverlayPage: NextPage = () => {
             src={logoImage}
             alt=""
             height={64}
-            className="h-16 w-auto opacity-50 brightness-125 contrast-200 drop-shadow grayscale saturate-200"
+            className="h-16 w-auto opacity-75 brightness-150 contrast-125 drop-shadow grayscale"
           />
 
           <div className={classes(overlayText, "text-xl font-bold")}>
