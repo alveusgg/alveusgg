@@ -79,18 +79,18 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(weatherInterval.current);
   }, []);
 
-  // Get the events for the next day
+  // Get the events for the next three days
   // Refresh every 60s
-  const [nextDay, setNextDay] = useState<[Date, Date]>();
+  const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
   useEffect(() => {
     const now = new Date();
     const next = new Date(now);
-    next.setDate(next.getDate() + 1);
-    setNextDay([now, next]);
+    next.setDate(next.getDate() + 3);
+    setUpcomingRange([now, next]);
   }, []);
   const events = trpc.calendarEvents.getCalendarEvents.useQuery(
-    { start: nextDay?.[0], end: nextDay?.[1] },
-    { enabled: nextDay !== undefined, refetchInterval: 60 * 1000 },
+    { start: upcomingRange?.[0], end: upcomingRange?.[1] },
+    { enabled: upcomingRange !== undefined, refetchInterval: 60 * 1000 },
   );
   const firstEventId = events.data?.[0]?.id;
 
