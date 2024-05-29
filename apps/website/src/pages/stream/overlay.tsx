@@ -1,15 +1,27 @@
 import type { NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { Transition } from "@headlessui/react";
 
-import { DATETIME_ALVEUS_ZONE, formatDateTimeParts } from "@/utils/datetime";
+import { trpc } from "@/utils/trpc";
+import {
+  DATETIME_ALVEUS_ZONE,
+  formatDateTime,
+  formatDateTimeParts,
+} from "@/utils/datetime";
+import { classes } from "@/utils/classes";
 
 import logoImage from "@/assets/logo.png";
 
 import type { WeatherResponse } from "../api/stream/weather";
 
+const overlayText =
+  "paint-order-sfm text-shadow text-white text-stroke-1 text-shadow-x-0 text-shadow-y-0 text-shadow-black";
+
 const OverlayPage: NextPage = () => {
-  const [time, setTime] = useState<{ time: string; date: string } | null>(null);
+  // Get the current time and date
+  // Refresh every 250ms
+  const [time, setTime] = useState<{ time: string; date: string }>();
   const timeInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
     const updateTime = () => {
@@ -52,7 +64,9 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(timeInterval.current);
   }, []);
 
-  const [weather, setWeather] = useState<WeatherResponse | null>(null);
+  // Get the current weather
+  // Refresh every 60s
+  const [weather, setWeather] = useState<WeatherResponse>();
   const weatherInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
     const fetchWeather = async () => {
@@ -68,34 +82,123 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(weatherInterval.current);
   }, []);
 
+  // Get the events for the next day
+  // Refresh every 60s
+  const [nextDay, setNextDay] = useState<[Date, Date]>();
+  useEffect(() => {
+    const now = new Date();
+    const next = new Date(now);
+    next.setDate(next.getDate() + 1);
+    setNextDay([now, next]);
+  }, []);
+  const events = trpc.calendarEvents.getCalendarEvents.useQuery(
+    { start: nextDay?.[0], end: nextDay?.[1] },
+    { enabled: nextDay !== undefined, refetchInterval: 60 * 1000 },
+  );
+  const firstEventId = events.data?.[0]?.id;
+
+  // If we have an upcoming event, swap socials with it
+  // Swap every 60s
+  const [eventId, setEventId] = useState<string>();
+  const eventInterval = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    if (!firstEventId) {
+      setEventId(undefined);
+      return;
+    }
+
+    const swapEvent = () =>
+      setEventId((prev) => (prev ? undefined : firstEventId));
+    swapEvent();
+    eventInterval.current = setInterval(swapEvent, 60 * 1000);
+    return () => clearInterval(eventInterval.current);
+  }, [firstEventId]);
+  const event = useMemo(
+    () => eventId && events.data?.find((event) => event.id === eventId),
+    [eventId, events.data],
+  );
+
+  // This can be a client-side only page
   if (!time) return null;
 
   return (
     <div className="h-screen w-full">
-      <div className="paint-order-sfm text-shadow absolute right-2 top-2 flex flex-col gap-1 text-right font-bold tabular-nums tracking-widest text-white text-stroke-3 text-shadow-x-0 text-shadow-y-0 text-shadow-black">
-        <p className="text-4xl">{time.time}</p>
-        <p className="text-4xl">{time.date}</p>
+      <div
+        className={classes(
+          overlayText,
+          "absolute right-2 top-2 flex flex-col gap-1 text-right font-medium tabular-nums tracking-widest",
+        )}
+      >
+        <p className="text-4xl text-stroke-3">{time.time}</p>
+        <p className="text-4xl text-stroke-3">{time.date}</p>
         {weather && (
-          <p className="text-3xl">
+          <p className="text-3xl text-stroke-3">
             {weather.temperature.fahrenheit} °F{" "}
             <span className="text-xl">({weather.temperature.celsius} °C)</span>
           </p>
         )}
       </div>
 
-      <div className="absolute bottom-2 left-2 flex items-center gap-2">
-        <Image
-          src={logoImage}
-          alt=""
-          height={64}
-          className="h-16 w-auto opacity-50 brightness-125 contrast-200 drop-shadow grayscale saturate-200"
-        />
+      <Transition
+        show={event !== undefined}
+        enter="transition-opacity duration-700"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-300"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        {event && (
+          <div
+            className={classes(
+              overlayText,
+              "absolute bottom-2 left-2 font-bold",
+            )}
+          >
+            <p>Upcoming:</p>
+            <p className="text-xl text-stroke-2">
+              {event.title}
+              {" @ "}
+              {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
+            </p>
+            <p className="text-xl text-stroke-2">
+              {formatDateTime(
+                event.startAt,
+                {
+                  style: "long",
+                  time: event.hasTime ? "minutes" : undefined,
+                  timezone: event.hasTime,
+                },
+                { zone: DATETIME_ALVEUS_ZONE },
+              )}
+            </p>
+          </div>
+        )}
+      </Transition>
 
-        <div className="paint-order-sfm text-shadow text-xl font-bold text-white text-stroke-1 text-shadow-x-0 text-shadow-y-0 text-shadow-black">
-          <p>alveussanctuary.org</p>
-          <p>@alveussanctuary</p>
+      <Transition
+        show={event === undefined}
+        enter="transition-opacity duration-700"
+        enterFrom="opacity-0"
+        enterTo="opacity-100"
+        leave="transition-opacity duration-300"
+        leaveFrom="opacity-100"
+        leaveTo="opacity-0"
+      >
+        <div className="absolute bottom-2 left-2 flex items-center gap-2">
+          <Image
+            src={logoImage}
+            alt=""
+            height={64}
+            className="h-16 w-auto opacity-50 brightness-125 contrast-200 drop-shadow grayscale saturate-200"
+          />
+
+          <div className={classes(overlayText, "text-xl font-bold")}>
+            <p>alveussanctuary.org</p>
+            <p>@alveussanctuary</p>
+          </div>
         </div>
-      </div>
+      </Transition>
     </div>
   );
 };
