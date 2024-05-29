@@ -15,9 +15,6 @@ import logoImage from "@/assets/logo.png";
 
 import { type WeatherResponse } from "../api/stream/weather";
 
-const overlayText =
-  "text-shadow text-white text-shadow-x-0 text-shadow-y-0 text-shadow-black text-shadow-blur-3";
-
 const OverlayPage: NextPage = () => {
   // Get the current time and date
   // Refresh every 250ms
@@ -123,12 +120,7 @@ const OverlayPage: NextPage = () => {
 
   return (
     <div className="h-screen w-full">
-      <div
-        className={classes(
-          overlayText,
-          "absolute right-2 top-2 flex flex-col gap-1 text-right font-mono font-medium text-shadow-blur-4",
-        )}
-      >
+      <div className="absolute right-2 top-2 flex flex-col gap-1 text-right font-mono font-medium text-white text-stroke-2">
         <p className="text-4xl">{time.time}</p>
         <p className="text-4xl">{time.date}</p>
         {weather && (
@@ -149,12 +141,7 @@ const OverlayPage: NextPage = () => {
         leaveTo="opacity-0"
       >
         {event && (
-          <div
-            className={classes(
-              overlayText,
-              "absolute bottom-2 left-2 font-bold",
-            )}
-          >
+          <div className="text-stroke absolute bottom-2 left-2 font-bold text-white">
             <p>Upcoming:</p>
             <p className="text-xl">
               {event.title}
@@ -193,7 +180,7 @@ const OverlayPage: NextPage = () => {
             className="h-16 w-auto opacity-75 brightness-150 contrast-125 drop-shadow grayscale"
           />
 
-          <div className={classes(overlayText, "text-xl font-bold")}>
+          <div className="text-stroke text-xl font-bold text-white">
             <p>alveussanctuary.org</p>
             <p>@alveussanctuary</p>
           </div>
