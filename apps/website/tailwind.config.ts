@@ -2,7 +2,6 @@ import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import colors from "tailwindcss/colors";
 import plugin from "tailwindcss/plugin";
-import textStroke from "@designbycode/tailwindcss-text-stroke";
 import textShadow from "@designbycode/tailwindcss-text-shadow";
 
 const config = {
@@ -174,7 +173,6 @@ const config = {
         },
       );
     }),
-    textStroke,
     textShadow,
   ],
 } satisfies Config;

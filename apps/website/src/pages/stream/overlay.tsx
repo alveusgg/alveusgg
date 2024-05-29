@@ -16,7 +16,7 @@ import logoImage from "@/assets/logo.png";
 import { type WeatherResponse } from "../api/stream/weather";
 
 const overlayText =
-  "paint-order-sfm text-shadow text-white text-stroke-1 text-shadow-x-0 text-shadow-y-0 text-shadow-black";
+  "text-shadow text-white text-shadow-x-0 text-shadow-y-0 text-shadow-black";
 
 const OverlayPage: NextPage = () => {
   // Get the current time and date
@@ -129,10 +129,10 @@ const OverlayPage: NextPage = () => {
           "absolute right-2 top-2 flex flex-col gap-1 text-right font-medium tabular-nums tracking-widest",
         )}
       >
-        <p className="text-4xl text-stroke-3">{time.time}</p>
-        <p className="text-4xl text-stroke-3">{time.date}</p>
+        <p className="text-4xl">{time.time}</p>
+        <p className="text-4xl">{time.date}</p>
         {weather && (
-          <p className="text-3xl text-stroke-3">
+          <p className="text-3xl">
             {weather.temperature.fahrenheit} °F{" "}
             <span className="text-xl">({weather.temperature.celsius} °C)</span>
           </p>
@@ -156,12 +156,12 @@ const OverlayPage: NextPage = () => {
             )}
           >
             <p>Upcoming:</p>
-            <p className="text-xl text-stroke-2">
+            <p className="text-xl">
               {event.title}
               {" @ "}
               {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
             </p>
-            <p className="text-xl text-stroke-2">
+            <p className="text-xl">
               {formatDateTime(
                 event.startAt,
                 {
