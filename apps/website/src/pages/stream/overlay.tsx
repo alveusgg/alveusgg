@@ -1,15 +1,15 @@
+import { Transition } from "@headlessui/react";
 import type { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Transition } from "@headlessui/react";
 
-import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
 import {
   DATETIME_ALVEUS_ZONE,
   formatDateTime,
   formatDateTimeParts,
 } from "@/utils/datetime";
-import { classes } from "@/utils/classes";
+import { trpc } from "@/utils/trpc";
 
 import logoImage from "@/assets/logo.png";
 
