@@ -78,20 +78,34 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(weatherInterval.current);
   }, []);
 
-  // Get the events for the next three days
+  // Set the range for upcoming events
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
+  const upcomingRangeInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
-    const now = new Date();
-    const next = new Date(now);
-    next.setDate(next.getDate() + 3);
-    setUpcomingRange([now, next]);
+    const updateRange = () => {
+      const now = new Date();
+      const next = new Date(now);
+      next.setDate(next.getDate() + 3);
+      setUpcomingRange([now, next]);
+    };
+
+    updateRange();
+    upcomingRangeInterval.current = setInterval(updateRange, 60 * 1000);
+    return () => clearInterval(upcomingRangeInterval.current);
   }, []);
-  const events = trpc.calendarEvents.getCalendarEvents.useQuery(
-    { start: upcomingRange?.[0], end: upcomingRange?.[1] },
-    { enabled: upcomingRange !== undefined, refetchInterval: 60 * 1000 },
-  );
-  const firstEventId = events.data?.[0]?.id;
+
+  // Get the upcoming events
+  // Refresh when the range changes
+  const { data: events, refetch } =
+    trpc.calendarEvents.getCalendarEvents.useQuery(
+      { start: upcomingRange?.[0], end: upcomingRange?.[1] },
+      { enabled: false },
+    );
+  useEffect(() => {
+    if (upcomingRange) refetch();
+  }, [upcomingRange, refetch]);
+  const firstEventId = events?.[0]?.id;
 
   // If we have an upcoming event, swap socials with it
   // Swap every 60s
@@ -110,8 +124,8 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(eventInterval.current);
   }, [firstEventId]);
   const event = useMemo(
-    () => eventId && events.data?.find((event) => event.id === eventId),
-    [eventId, events.data],
+    () => eventId && events?.find((event) => event.id === eventId),
+    [eventId, events],
   );
 
   // This can be a client-side only page
