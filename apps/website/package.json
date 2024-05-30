@@ -85,8 +85,6 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
-    "@designbycode/tailwindcss-text-shadow": "^2.0.0",
-    "@designbycode/tailwindcss-text-stroke": "^1.2.1",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^2.1.2",
     "@types/country-list": "^2.1.4",
