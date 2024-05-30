@@ -78,7 +78,7 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(weatherInterval.current);
   }, []);
 
-  // Set the range for upcoming events
+  // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
   const upcomingRangeInterval = useRef<NodeJS.Timeout>();
@@ -95,37 +95,44 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(upcomingRangeInterval.current);
   }, []);
 
-  // Get the upcoming events
+  // Get the upcoming events and the first event ID
   // Refresh when the range changes
-  const { data: events, refetch } =
-    trpc.calendarEvents.getCalendarEvents.useQuery(
-      { start: upcomingRange?.[0], end: upcomingRange?.[1] },
-      { enabled: false },
-    );
-  useEffect(() => {
-    if (upcomingRange) refetch();
-  }, [upcomingRange, refetch]);
-  const firstEventId = events?.[0]?.id;
+  const { data: events } = trpc.calendarEvents.getCalendarEvents.useQuery(
+    { start: upcomingRange?.[0], end: upcomingRange?.[1] },
+    { enabled: upcomingRange !== undefined, keepPreviousData: true },
+  );
+  const firstEventId = useMemo(
+    () =>
+      events?.find((event) =>
+        [
+          "alveus regular stream",
+          "alveus special stream",
+          "collaboration stream",
+        ].includes(event.category.toLowerCase()),
+      )?.id,
+    [events],
+  );
 
   // If we have an upcoming event, swap socials with it
   // Swap every 60s
-  const [eventId, setEventId] = useState<string>();
+  const [visibleEventId, setVisibleEventId] = useState<string>();
   const eventInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (!firstEventId) {
-      setEventId(undefined);
+      setVisibleEventId(undefined);
       return;
     }
 
     const swapEvent = () =>
-      setEventId((prev) => (prev ? undefined : firstEventId));
+      setVisibleEventId((prev) => (prev ? undefined : firstEventId));
     swapEvent();
     eventInterval.current = setInterval(swapEvent, 60 * 1000);
     return () => clearInterval(eventInterval.current);
   }, [firstEventId]);
   const event = useMemo(
-    () => eventId && events?.find((event) => event.id === eventId),
-    [eventId, events],
+    () =>
+      visibleEventId && events?.find((event) => event.id === visibleEventId),
+    [visibleEventId, events],
   );
 
   // This can be a client-side only page
