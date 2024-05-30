@@ -90,8 +90,12 @@ export const formatDateTimeRelative = (
   // Determine how many days away the date is
   const dateToday = DateTime.now().setZone(zone ?? undefined);
   const dateGiven = DateTime.fromJSDate(dateTime).setZone(zone ?? undefined);
-  const daysToday = dateToday.startOf("day").toUnixInteger() / (60 * 60 * 24);
-  const daysGiven = dateGiven.startOf("day").toUnixInteger() / (60 * 60 * 24);
+  const daysToday = Math.floor(
+    dateToday.startOf("day").toUnixInteger() / (60 * 60 * 24),
+  );
+  const daysGiven = Math.floor(
+    dateGiven.startOf("day").toUnixInteger() / (60 * 60 * 24),
+  );
 
   // If they are the same, or the given is one day away, show relative
   const days = daysGiven - daysToday;
