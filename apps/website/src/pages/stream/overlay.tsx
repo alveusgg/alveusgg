@@ -2,17 +2,53 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { DateTime } from "luxon";
 
 import { trpc } from "@/utils/trpc";
 import {
   DATETIME_ALVEUS_ZONE,
-  formatDateTime,
+  type DateTimeFormat,
+  type DateTimeOptions,
   formatDateTimeParts,
 } from "@/utils/datetime";
 
 import logoImage from "@/assets/logo.png";
 
 import { type WeatherResponse } from "../api/stream/weather";
+
+const formatDateTimeRelative = (
+  date: Date,
+  format: Partial<DateTimeFormat> = {},
+  options: Partial<DateTimeOptions> = {},
+) => {
+  // Format the date
+  const parts = formatDateTimeParts(date, format, options);
+
+  // Determine how many days away the date is
+  const dateToday = DateTime.now().setZone(options.zone ?? "UTC");
+  const dateGiven = DateTime.fromJSDate(date).setZone(options.zone ?? "UTC");
+  const daysToday = dateToday.startOf("day").toUnixInteger() / (60 * 60 * 24);
+  const daysGiven = dateGiven.startOf("day").toUnixInteger() / (60 * 60 * 24);
+
+  // If they are the same, or the given is one day away, show relative
+  const days = daysGiven - daysToday;
+  if (days === 0 || days === 1) {
+    // Get the year -> day parts
+    const yearIdx = parts.findIndex((part) => part.type === "year");
+    const monthIdx = parts.findIndex((part) => part.type === "month");
+    const dayIdx = parts.findIndex((part) => part.type === "day");
+    const minIdx = Math.min(yearIdx, monthIdx, dayIdx);
+    const maxIdx = Math.max(yearIdx, monthIdx, dayIdx);
+
+    // Replace the year -> day parts with the relative date
+    parts.splice(minIdx, maxIdx - minIdx + 1, {
+      type: "literal",
+      value: days === 0 ? "Today" : "Tomorrow",
+    });
+  }
+
+  return parts.map((part) => part.value).join("");
+};
 
 const OverlayPage: NextPage = () => {
   // Get the current time and date
@@ -162,7 +198,7 @@ const OverlayPage: NextPage = () => {
               {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
             </p>
             <p className="text-xl">
-              {formatDateTime(
+              {formatDateTimeRelative(
                 event.startAt,
                 {
                   style: "long",
