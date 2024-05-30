@@ -138,8 +138,8 @@ const OverlayPage: NextPage = () => {
         <p className="text-4xl">{time.date}</p>
         {weather && (
           <p className="text-3xl">
-            {weather.temperature.fahrenheit} °F{" "}
-            <span className="text-xl">({weather.temperature.celsius} °C)</span>
+            {weather.temperature.fahrenheit}°F{" "}
+            <span className="text-xl">({weather.temperature.celsius}°C)</span>
           </p>
         )}
       </div>
