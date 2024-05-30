@@ -71,6 +71,48 @@ export const formatDateTimeParts = (
     .reconfigure({ locale: locale ?? undefined })
     .toLocaleParts(getFormat({ style, time, timezone }));
 
+export const formatDateTimeRelative = (
+  dateTime: Date,
+  {
+    style = "short",
+    time = undefined,
+    timezone = false,
+  }: Partial<DateTimeFormat> = {},
+  { locale = "en-US", zone = "UTC" }: Partial<DateTimeOptions> = {},
+) => {
+  // Format the date
+  const parts = formatDateTimeParts(
+    dateTime,
+    { style, time, timezone },
+    { locale, zone },
+  );
+
+  // Determine how many days away the date is
+  const dateToday = DateTime.now().setZone(zone ?? undefined);
+  const dateGiven = DateTime.fromJSDate(dateTime).setZone(zone ?? undefined);
+  const daysToday = dateToday.startOf("day").toUnixInteger() / (60 * 60 * 24);
+  const daysGiven = dateGiven.startOf("day").toUnixInteger() / (60 * 60 * 24);
+
+  // If they are the same, or the given is one day away, show relative
+  const days = daysGiven - daysToday;
+  if (days === 0 || days === 1) {
+    // Get the year -> day parts
+    const yearIdx = parts.findIndex((part) => part.type === "year");
+    const monthIdx = parts.findIndex((part) => part.type === "month");
+    const dayIdx = parts.findIndex((part) => part.type === "day");
+    const minIdx = Math.min(yearIdx, monthIdx, dayIdx);
+    const maxIdx = Math.max(yearIdx, monthIdx, dayIdx);
+
+    // Replace the year -> day parts with the relative date
+    parts.splice(minIdx, maxIdx - minIdx + 1, {
+      type: "literal",
+      value: days === 0 ? "Today" : "Tomorrow",
+    });
+  }
+
+  return parts.map((part) => part.value).join("");
+};
+
 export const formatDateTimeLocal = (
   dateTime: Date,
   format: Partial<DateTimeFormat> = {},
