@@ -80,7 +80,8 @@ const collaborations: Collaboration[] = (
       name: "Fuslie",
       link: "https://www.youtube.com/@fuslie",
       date: new Date("2024-04-22"),
-      videoId: "TU6IiUrVPRg",
+      videoId: "0pbV-45_5Ow",
+      vodId: "TU6IiUrVPRg",
       creators: [
         {
           name: "Fuslie",
