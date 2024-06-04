@@ -133,38 +133,39 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
-export const getStaticProps: GetStaticProps<AnimalQuestEpisodePageProps> =
-  async (context) => {
-    const episodeName = context.params?.episodeName;
-    if (typeof episodeName !== "string") return { notFound: true };
+export const getStaticProps: GetStaticProps<
+  AnimalQuestEpisodePageProps
+> = async (context) => {
+  const episodeName = context.params?.episodeName;
+  if (typeof episodeName !== "string") return { notFound: true };
 
-    const episode = episodes[episodeName];
-    if (!episode) return { notFound: true };
+  const episode = episodes[episodeName];
+  if (!episode) return { notFound: true };
 
-    const featured = episode.ambassadors.featured.reduce(
-      (obj, ambassador) => ({
-        ...obj,
-        [ambassador]: ambassadors[ambassador],
-      }),
-      {},
-    ) as AnimalQuestEpisodePageProps["featured"];
+  const featured = episode.ambassadors.featured.reduce(
+    (obj, ambassador) => ({
+      ...obj,
+      [ambassador]: ambassadors[ambassador],
+    }),
+    {},
+  ) as AnimalQuestEpisodePageProps["featured"];
 
-    const related = episode.ambassadors.related.reduce(
-      (obj, ambassador) => ({
-        ...obj,
-        [ambassador]: ambassadors[ambassador],
-      }),
-      {},
-    ) as AnimalQuestEpisodePageProps["related"];
+  const related = episode.ambassadors.related.reduce(
+    (obj, ambassador) => ({
+      ...obj,
+      [ambassador]: ambassadors[ambassador],
+    }),
+    {},
+  ) as AnimalQuestEpisodePageProps["related"];
 
-    return {
-      props: {
-        episode,
-        featured,
-        related,
-      },
-    };
+  return {
+    props: {
+      episode,
+      featured,
+      related,
+    },
   };
+};
 
 const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   episode,

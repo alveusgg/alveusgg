@@ -1,8 +1,7 @@
-import { type Config } from "tailwindcss";
-import { fontFamily } from "tailwindcss/defaultTheme";
-import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+import type { Config } from "tailwindcss";
 import colors from "tailwindcss/colors";
 import { fontFamily } from "tailwindcss/defaultTheme";
+import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import plugin from "tailwindcss/plugin";
 
 const config = {
@@ -176,7 +175,7 @@ const config = {
     }),
     plugin(
       ({ addBase, addComponents, matchUtilities, theme }) => {
-        const generateShadows = (steps: number = 1) => {
+        const generateShadows = (steps = 1) => {
           const classes: string[] = [];
           for (let step = 1; step <= steps; step++) {
             classes.push(
