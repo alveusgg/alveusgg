@@ -39,7 +39,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run Biome
-        run: pnpm biome ci .
+        run: pnpm biome ci && pnpm biome ci --reporter summary
 
   tests:
     runs-on: ubuntu-latest

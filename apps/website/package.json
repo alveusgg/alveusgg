@@ -24,11 +24,11 @@
     "postinstall:prisma": "prisma generate",
     "postinstall:create-data": "tsx ./build-scripts/create-data.ts",
     "postinstall": "run-p postinstall:*",
-    "lint": "biome check .",
-    "fix": "biome check . --apply",
+    "lint": "biome check",
+    "fix": "biome check --write",
     "start": "next start",
     "test": "vitest",
-    "format": "biome format --write . && prisma format"
+    "format": "biome format --write && prisma format"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data#0.36.0",

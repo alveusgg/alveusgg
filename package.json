@@ -18,15 +18,15 @@
   },
   "packageManager": "pnpm@8.15.5",
   "devDependencies": {
-    "@biomejs/biome": "1.7.3",
+    "@biomejs/biome": "1.8.0",
     "husky": "^9.0.7",
     "lint-staged": "^15.2.2"
   },
   "scripts": {
     "prepare": "husky",
     "lint": "biome check .",
-    "fix": "biome check . --apply",
-    "format": "biome format --write .",
+    "fix": "biome check --write",
+    "format": "biome format --write",
     "lint-staged": "lint-staged --relative"
   },
   "pnpm": {

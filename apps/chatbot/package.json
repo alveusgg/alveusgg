@@ -31,7 +31,7 @@
   },
   "scripts": {
     "start": "tsx src/server.ts",
-    "lint": "biome check .",
-    "fix": "biome check . --apply"
+    "lint": "biome check",
+    "fix": "biome check --write"
   }
 }
