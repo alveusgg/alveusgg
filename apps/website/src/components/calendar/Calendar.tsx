@@ -229,6 +229,7 @@ export function Calendar({
   setTimeZone,
 }: CalendarProps) {
   const today = useToday();
+  const todayKey = today && getDateKey(today, timeZone);
   const currentMonth = useMemo(() => new Date(year, month, 1), [month, year]);
   const daysInMonth = useMemo(
     () =>
@@ -419,9 +420,12 @@ export function Calendar({
                   },
                   { zone: timeZone },
                 ).toJSDate();
-                const day = fullDate.getDay();
                 const dateKey = getDateKey(fullDate, timeZone);
                 const events = byDay[dateKey] || [];
+
+                const day = fullDate.getDay();
+                const isPast = fullDate.getTime() < today.getTime();
+                const isToday = dateKey === todayKey;
 
                 return (
                   <Day
@@ -440,17 +444,14 @@ export function Calendar({
                       <p
                         className={classes(
                           "flex gap-1 rounded-bl-lg px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
-                          // Fade out days in the past
-                          fullDate.getTime() < today.getTime() && "opacity-50",
-                          // Show the current day in a pill
-                          fullDate.getTime() === today.getTime() &&
-                            theme.heading,
+                          isPast && "opacity-50",
+                          isToday && theme.heading,
                         )}
                       >
                         {date}
                         {/* Render the day of the week for mobile */}
                         <span className="md:hidden">
-                          {days[fullDate.getDay()]?.slice(0, 1)}
+                          {days[day]?.slice(0, 1)}
                         </span>
                       </p>
                     </div>
