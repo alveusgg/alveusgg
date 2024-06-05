@@ -1,9 +1,11 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
 
+import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import useToday from "@/hooks/today";
 
 const days = [
   "Sunday",
@@ -138,6 +140,36 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   };
 };
 
+export type MonthSelection = { month: number; year: number };
+
+export function useMonthSelection(initialDate?: Date) {
+  const [selected, setSelected] = useState<MonthSelection>();
+  useEffect(() => {
+    if (initialDate)
+      setSelected({
+        month: initialDate.getMonth(),
+        year: initialDate.getFullYear(),
+      });
+  }, [initialDate]);
+  return [selected, setSelected] as const;
+}
+
+export function useCalendarEventsQuery(selected?: MonthSelection) {
+  const start = useMemo(
+    () => selected && new Date(selected.year, selected.month, 1),
+    [selected],
+  );
+  const end = useMemo(
+    () => selected && new Date(selected.year, selected.month + 1, 1),
+    [selected],
+  );
+
+  return trpc.calendarEvents.getCalendarEvents.useQuery(
+    { start, end },
+    { enabled: selected !== undefined },
+  );
+}
+
 type DayProps = {
   children?: ReactNode;
   className?: string;
@@ -172,7 +204,7 @@ type CalendarProps = {
   children?: ReactNode;
 };
 
-const Calendar = ({
+export function Calendar({
   events,
   month,
   year,
@@ -180,12 +212,8 @@ const Calendar = ({
   onChange,
   className,
   children,
-}: CalendarProps) => {
-  const [today, setToday] = useState<Date>();
-  useEffect(() => {
-    const now = new Date();
-    setToday(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-  }, []);
+}: CalendarProps) {
+  const today = useToday();
   const currentMonth = useMemo(() => new Date(year, month, 1), [month, year]);
   const daysInMonth = useMemo(
     () =>
@@ -391,10 +419,7 @@ const Calendar = ({
                             theme.heading,
                         )}
                       >
-                        {date.toLocaleString(undefined, {
-                          minimumIntegerDigits: 2,
-                        })}
-
+                        {date}
                         {/* Render the day of the week for mobile */}
                         <span className="md:hidden">
                           {days[fullDate.getDay()]?.slice(0, 1)}
@@ -414,6 +439,4 @@ const Calendar = ({
       {children}
     </div>
   );
-};
-
-export default Calendar;
+}
