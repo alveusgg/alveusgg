@@ -215,6 +215,7 @@ const Calendar = ({
         date: new Date(year, month, day + 1),
         children: (
           <Transition
+            key={day}
             appear
             show
             // Fade these in with a short delay before starting
