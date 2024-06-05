@@ -18,6 +18,7 @@ export function Schedule() {
   const today = useToday();
   const [selected, setSelected] = useMonthSelection(today);
   const events = useCalendarEventsQuery(selected);
+  const [timeZone, setTimeZone] = useState<string>();
   const eventsWithChildren = useMemo(
     () =>
       today &&
@@ -29,11 +30,12 @@ export function Schedule() {
             event={event}
             today={today}
             href={event.link}
+            timeZone={timeZone}
             external
           />
         ),
       })),
-    [today, events.data],
+    [today, events.data, timeZone],
   );
 
   if (!selected) return null;
@@ -46,6 +48,8 @@ export function Schedule() {
       loading={events.isLoading}
       onChange={setSelected}
       className="mt-2 md:mt-6"
+      timeZone={timeZone}
+      setTimeZone={setTimeZone}
     >
       <div className="flex justify-between gap-2 italic opacity-50">
         <p>

@@ -18,6 +18,7 @@ export function CalendarEvents() {
   const [selected, setSelected] = useMonthSelection(today);
 
   const events = useCalendarEventsQuery(selected);
+  const [timeZone, setTimeZone] = useState<string>();
 
   const eventsWithChildren = useMemo(
     () =>
@@ -30,10 +31,11 @@ export function CalendarEvents() {
             event={event}
             today={today}
             href={`/admin/calendar-events/${event.id}/edit`}
+            timeZone={timeZone}
           />
         ),
       })),
-    [events.data, today],
+    [events.data, today, timeZone],
   );
 
   return (
@@ -48,6 +50,8 @@ export function CalendarEvents() {
             year={selected.year}
             loading={events.isLoading}
             onChange={setSelected}
+            timeZone={timeZone}
+            setTimeZone={setTimeZone}
           />
         )}
 
