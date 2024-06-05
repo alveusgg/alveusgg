@@ -1,8 +1,10 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { DateTime } from "luxon";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 import useToday from "@/hooks/today";
@@ -202,7 +204,18 @@ type CalendarProps = {
   onChange?: ({ year, month }: { year: Year; month: Month }) => void;
   className?: string;
   children?: ReactNode;
+  timeZone?: string;
+  setTimeZone: (timeZone?: string) => void;
 };
+
+function getDateKey(date: Date, timeZone?: string) {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone,
+  });
+}
 
 export function Calendar({
   events,
@@ -212,6 +225,8 @@ export function Calendar({
   onChange,
   className,
   children,
+  timeZone,
+  setTimeZone,
 }: CalendarProps) {
   const today = useToday();
   const currentMonth = useMemo(() => new Date(year, month, 1), [month, year]);
@@ -270,10 +285,10 @@ export function Calendar({
       (loading ? [...placeholders] : [...events])
         .sort((a, b) => a.date.getTime() - b.date.getTime())
         .reduce<Record<string, CalendarEvent[]>>((acc, event) => {
-          const date = `${event.date.getFullYear()}-${event.date.getMonth()}-${event.date.getDate()}`;
-          return { ...acc, [date]: [...(acc[date] || []), event] };
+          const dateKey = getDateKey(event.date, timeZone);
+          return { ...acc, [dateKey]: [...(acc[dateKey] || []), event] };
         }, {}) || {},
-    [loading, placeholders, events],
+    [loading, placeholders, events, timeZone],
   );
 
   const theme = useMemo(() => getCalendarTheme(month), [month]);
@@ -291,6 +306,18 @@ export function Calendar({
           <p className="text-5xl font-medium">
             {currentMonth.toLocaleDateString("en-US", { month: "long" })}
           </p>
+          <label>
+            <input
+              type="checkbox"
+              checked={timeZone === DATETIME_ALVEUS_ZONE}
+              onChange={(e) => {
+                setTimeZone(
+                  e.currentTarget.checked ? DATETIME_ALVEUS_ZONE : undefined,
+                );
+              }}
+            />
+            {" Alveus Time (CT)"}
+          </label>
           <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
         </div>
 
@@ -384,16 +411,17 @@ export function Calendar({
                     />
                   );
 
-                const fullDate = new Date(
-                  currentMonth.getFullYear(),
-                  currentMonth.getMonth(),
-                  date,
-                );
+                const fullDate = DateTime.fromObject(
+                  {
+                    year: currentMonth.getFullYear(),
+                    month: currentMonth.getMonth() + 1,
+                    day: date,
+                  },
+                  { zone: timeZone },
+                ).toJSDate();
                 const day = fullDate.getDay();
-                const events =
-                  byDay[
-                    `${fullDate.getFullYear()}-${fullDate.getMonth()}-${fullDate.getDate()}`
-                  ] || [];
+                const dateKey = getDateKey(fullDate, timeZone);
+                const events = byDay[dateKey] || [];
 
                 return (
                   <Day
