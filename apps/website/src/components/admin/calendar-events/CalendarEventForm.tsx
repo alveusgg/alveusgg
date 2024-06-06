@@ -7,6 +7,8 @@ import { useRouter } from "next/router";
 import { frequentLinks, standardCategories } from "@/data/calendar-events";
 import { classes } from "@/utils/classes";
 import {
+  DATE_LOCAL_INPUT_FORMAT,
+  TIME_LOCAL_INPUT_FORMAT,
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
@@ -22,7 +24,8 @@ import {
 } from "@/components/shared/form/Button";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";
-import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
+import { LocalDateField } from "@/components/shared/form/LocalDateField";
+import { LocalTimeField } from "@/components/shared/form/LocalTimeField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { TextField } from "@/components/shared/form/TextField";
 
@@ -63,11 +66,20 @@ export function CalendarEventForm({
           ? String(formData.get("link"))
           : `https://${String(formData.get("link"))}`;
 
+      const startAtDate = formData.get("startAtDate");
+      const startAtTime = formData.get("startAtTime");
+      const hasTime = startAtTime !== "";
+      const startAt = inputValueDatetimeLocalToUtc(
+        // If there is no time selected, default to noon (12 pm)
+        `${startAtDate}T${hasTime ? startAtTime : "12:00"}`,
+      );
+
       const mutationData: CalendarEventSchema = {
         title: String(formData.get("title")),
         category: String(formData.get("category")),
-        link: link,
-        startAt: inputValueDatetimeLocalToUtc(String(formData.get("startAt"))),
+        link,
+        startAt,
+        hasTime,
       };
 
       if (formData.get("description"))
@@ -178,11 +190,29 @@ export function CalendarEventForm({
 
       <Fieldset legend="Time and date">
         <FieldGroup>
-          <LocalDateTimeField
-            label="Start (Central Time)"
-            name="startAt"
-            defaultValue={utcToInputValueDatetimeLocal(calendarEvent?.startAt)}
+          <LocalDateField
+            label="Start date (Central Time)"
+            name="startAtDate"
+            defaultValue={utcToInputValueDatetimeLocal(
+              calendarEvent?.startAt,
+              DATE_LOCAL_INPUT_FORMAT,
+            )}
             className="max-w-[calc(20ch)]"
+            required
+          />
+          <LocalTimeField
+            label="Start time (Central Time)"
+            name="startAtTime"
+            defaultValue={
+              calendarEvent?.hasTime
+                ? utcToInputValueDatetimeLocal(
+                    calendarEvent?.startAt,
+                    TIME_LOCAL_INPUT_FORMAT,
+                  )
+                : undefined
+            }
+            className="max-w-[calc(20ch)]"
+            showResetButton
           />
         </FieldGroup>
       </Fieldset>
