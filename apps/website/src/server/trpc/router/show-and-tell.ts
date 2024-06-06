@@ -10,7 +10,6 @@ import {
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { allowedFileTypes } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { env } from "@/env";
 import {
   createPost,
