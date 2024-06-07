@@ -6,8 +6,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { classes } from "@/utils/classes";
 import {
   DATETIME_ALVEUS_ZONE,
-  formatDateTime,
   formatDateTimeParts,
+  formatDateTimeRelative,
 } from "@/utils/datetime";
 import { trpc } from "@/utils/trpc";
 
@@ -79,40 +79,61 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(weatherInterval.current);
   }, []);
 
-  // Get the events for the next three days
+  // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
+  const upcomingRangeInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
-    const now = new Date();
-    const next = new Date(now);
-    next.setDate(next.getDate() + 3);
-    setUpcomingRange([now, next]);
+    const updateRange = () => {
+      const now = new Date();
+      const next = new Date(now);
+      next.setDate(next.getDate() + 3);
+      setUpcomingRange([now, next]);
+    };
+
+    updateRange();
+    upcomingRangeInterval.current = setInterval(updateRange, 60 * 1000);
+    return () => clearInterval(upcomingRangeInterval.current);
   }, []);
-  const events = trpc.calendarEvents.getCalendarEvents.useQuery(
+
+  // Get the upcoming events and the first event ID
+  // Refresh when the range changes
+  const { data: events } = trpc.calendarEvents.getCalendarEvents.useQuery(
     { start: upcomingRange?.[0], end: upcomingRange?.[1] },
-    { enabled: upcomingRange !== undefined, refetchInterval: 60 * 1000 },
+    { enabled: upcomingRange !== undefined, keepPreviousData: true },
   );
-  const firstEventId = events.data?.[0]?.id;
+  const firstEventId = useMemo(
+    () =>
+      events?.find((event) =>
+        [
+          "alveus regular stream",
+          "alveus special stream",
+          "collaboration stream",
+        ].includes(event.category.toLowerCase()),
+      )?.id,
+    [events],
+  );
 
   // If we have an upcoming event, swap socials with it
   // Swap every 60s
-  const [eventId, setEventId] = useState<string>();
+  const [visibleEventId, setVisibleEventId] = useState<string>();
   const eventInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (!firstEventId) {
-      setEventId(undefined);
+      setVisibleEventId(undefined);
       return;
     }
 
     const swapEvent = () =>
-      setEventId((prev) => (prev ? undefined : firstEventId));
+      setVisibleEventId((prev) => (prev ? undefined : firstEventId));
     swapEvent();
     eventInterval.current = setInterval(swapEvent, 60 * 1000);
     return () => clearInterval(eventInterval.current);
   }, [firstEventId]);
   const event = useMemo(
-    () => eventId && events.data?.find((event) => event.id === eventId),
-    [eventId, events.data],
+    () =>
+      visibleEventId && events?.find((event) => event.id === visibleEventId),
+    [visibleEventId, events],
   );
 
   // This can be a client-side only page
@@ -125,8 +146,8 @@ const OverlayPage: NextPage = () => {
         <p className="text-4xl">{time.date}</p>
         {weather && (
           <p className="text-3xl">
-            {weather.temperature.fahrenheit} °F{" "}
-            <span className="text-xl">({weather.temperature.celsius} °C)</span>
+            {weather.temperature.fahrenheit}°F{" "}
+            <span className="text-xl">({weather.temperature.celsius}°C)</span>
           </p>
         )}
       </div>
@@ -149,7 +170,7 @@ const OverlayPage: NextPage = () => {
               {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
             </p>
             <p className="text-xl">
-              {formatDateTime(
+              {formatDateTimeRelative(
                 event.startAt,
                 {
                   style: "long",
