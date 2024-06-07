@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import supertf from "@/assets/collaborations/supertf.png";
 import julien from "@/assets/collaborations/julien.png";
 import fuslie from "@/assets/collaborations/fuslie.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
@@ -62,6 +63,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "SuperTF",
+      link: "https://www.twitch.tv/supertf",
+      date: new Date("2024-06-06"),
+      videoId: "ruHHqlc1PY4",
+      creators: [
+        {
+          name: "SuperTF",
+          image: supertf,
+          popularity: 645_000, // Twitch followers, 2024-06-07
+        },
+      ],
+    },
     {
       name: "Julien",
       link: "https://www.twitch.tv/julien",
