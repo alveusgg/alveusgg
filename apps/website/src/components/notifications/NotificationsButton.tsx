@@ -67,7 +67,7 @@ export const NotificationsButton = ({
       >
         <Popover.Panel
           className={classes(
-            "absolute z-30 -mt-0.5 flex min-w-[240px] max-w-[calc(80vw-50px)] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg",
+            "absolute z-30 -mt-0.5 flex min-w-[240px] max-w-fit flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg md:max-w-[calc(80vw-50px)] ",
             openDirectionX === "left" ? "right-0" : "left-0",
             openDirectionY === "top" ? "bottom-full" : "top-full",
           )}

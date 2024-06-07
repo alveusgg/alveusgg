@@ -348,7 +348,9 @@ const videoLoader = async (context, content) => {
   // We don't emit for the server as videos are considered traceable and this breaks things (see https://github.com/vercel/next.js/pull/41554/files)
   if (!options.isServer) {
     for (const { name, content } of files) {
-      content && context.emitFile(name, content);
+      if (content) {
+        context.emitFile(name, content);
+      }
     }
   }
 
