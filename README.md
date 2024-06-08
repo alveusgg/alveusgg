@@ -16,8 +16,7 @@ For development:
 
 - Node.js
 - PNPM with workspaces
-- Prettier (code formatting)
-- ESLint (code linting)
+- Biome (code formatting and linting)
 - Docker (Compose) (local MySQL + S3 \[MinIO])
 
 Website stack (based on [T3 Stack](https://create.t3.gg/)):
