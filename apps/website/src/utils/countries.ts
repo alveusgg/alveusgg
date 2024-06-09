@@ -1,5 +1,5 @@
-import type { Country } from "country-list";
 import {
+  type Country,
   getData as getCountries,
   getName as getCountryName,
   overwrite,

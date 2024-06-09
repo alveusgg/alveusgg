@@ -1,4 +1,5 @@
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
+import { getSession } from "next-auth/react";
 import { useCallback, useId, useState } from "react";
 
 import { permissions } from "@/data/permissions";
@@ -7,7 +8,6 @@ import { userRoles } from "@/data/user-roles";
 import { getAdminSSP } from "@/server/utils/admin";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
-import { getSession } from "next-auth/react";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";

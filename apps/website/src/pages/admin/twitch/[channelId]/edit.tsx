@@ -3,10 +3,10 @@ import type {
   InferGetStaticPropsType,
   NextPage,
 } from "next";
+import { getSession } from "next-auth/react";
 
 import { permissions } from "@/data/permissions";
 import { getAdminSSP } from "@/server/utils/admin";
-import { getSession } from "next-auth/react";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
