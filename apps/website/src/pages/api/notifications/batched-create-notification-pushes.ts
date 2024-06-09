@@ -30,9 +30,8 @@ export default createTokenProtectedApiHandler(
         return false;
       }
 
-      const calls: Array<Promise<Response>> = [];
-      for (const subscriptionId of options.subscriptionIds) {
-        calls.push(
+      const calls: Array<Promise<Response>> = options.subscriptionIds.map(
+        (subscriptionId) => {
           callEndpoint<SendPushOptions>("/api/notifications/send-push", {
             message: notification.message,
             notificationId: notification.id,
@@ -42,9 +41,9 @@ export default createTokenProtectedApiHandler(
             tag: notification.tag || undefined,
             title: notification.title || undefined,
             imageUrl: notification.imageUrl || undefined,
-          }),
-        );
-      }
+          });
+        },
+      );
 
       await Promise.allSettled(calls);
 
