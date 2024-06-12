@@ -16,6 +16,7 @@ import { Button } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import Meta from "@/components/content/Meta";
 import IconMinusCircle from "@/icons/IconMinusCircle";
 
@@ -79,9 +80,9 @@ const AdminUsersPage: NextPage<
       <AdminPageLayout title="Users & Roles" menuItems={menuItems}>
         <Headline>Assign new role</Headline>
         <Panel>
-          {assignRole.isError && (
+          {assignRole.error && (
             <MessageBox variant="failure">
-              Error assigning role: {assignRole.error.message}
+              <ProcedureErrorMessage error={assignRole.error} />
             </MessageBox>
           )}
 
@@ -122,8 +123,10 @@ const AdminUsersPage: NextPage<
         <Headline>Users with roles</Headline>
         <Panel>
           {getUserWithRoles.isLoading && <p>Loading...</p>}
-          {getUserWithRoles.isError && (
-            <p>Error: {getUserWithRoles.error.message}</p>
+          {getUserWithRoles.error && (
+            <MessageBox variant="failure">
+              <ProcedureErrorMessage error={getUserWithRoles.error} />
+            </MessageBox>
           )}
           {getUserWithRoles.isSuccess && (
             <>
