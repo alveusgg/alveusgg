@@ -81,7 +81,8 @@ const collaborations: Collaboration[] = (
       name: "SuperTF",
       link: "https://www.twitch.tv/supertf",
       date: new Date("2024-06-06"),
-      videoId: "ruHHqlc1PY4",
+      videoId: "6i2LEsEm7U8",
+      vodId: "ruHHqlc1PY4",
       creators: [
         {
           name: "SuperTF",
