@@ -19,7 +19,7 @@ import Video from "@/components/content/Video";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
 const buttonClasses =
-  "block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan";
+  "block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan dark:hover:bg-alveus-green-900";
 
 const Socials = () => {
   const reducedMotion = usePrefersReducedMotion();

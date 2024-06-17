@@ -160,7 +160,7 @@ const Home: NextPage = () => {
       <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
         <div className="absolute inset-0 -z-10 bg-alveus-green">
           <Slideshow images={slides} />
-          <div className="absolute inset-0 bg-black/50" />
+          <div className="absolute inset-0 bg-black/50 dark:bg-black/75" />
         </div>
 
         <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:pt-40">
@@ -274,11 +274,11 @@ const Home: NextPage = () => {
                 Ambassadors:
               </Heading>
               <Link
-                className="group relative inline-block text-lg uppercase text-alveus-green-900 transition-colors hover:text-alveus-green"
+                className="group relative inline-block text-lg uppercase text-alveus-green-900 transition-colors hover:text-alveus-green dark:text-alveus-tan dark:hover:text-alveus-green-200"
                 href="/ambassadors"
               >
                 See All
-                <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full" />
+                <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full dark:bg-alveus-green-200" />
               </Link>
             </div>
 
