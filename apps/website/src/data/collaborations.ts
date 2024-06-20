@@ -5,6 +5,11 @@ import { convertToSlug } from "@/utils/slugs";
 import alinity from "@/assets/collaborations/alinity.png";
 import alluux from "@/assets/collaborations/alluux.png";
 import alpharad from "@/assets/collaborations/alpharad.png";
+import bao from "@/assets/collaborations/bao.png";
+import supertf from "@/assets/collaborations/supertf.png";
+import julien from "@/assets/collaborations/julien.png";
+import fuslie from "@/assets/collaborations/fuslie.png";
+import valkyrae from "@/assets/collaborations/valkyrae.png";
 import angelskimi from "@/assets/collaborations/angelskimi.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
 import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
@@ -64,10 +69,24 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Bao The Whale",
+      link: "https://www.twitch.tv/bao",
+      date: new Date("2024-06-11"),
+      videoId: "mOy4_ljLTF0",
+      creators: [
+        {
+          name: "Bao",
+          image: bao,
+          popularity: 540_000, // Twitch followers, 2024-06-13
+        },
+      ],
+    },
+    {
       name: "SuperTF",
       link: "https://www.twitch.tv/supertf",
       date: new Date("2024-06-06"),
-      videoId: "ruHHqlc1PY4",
+      videoId: "6i2LEsEm7U8",
+      vodId: "ruHHqlc1PY4",
       creators: [
         {
           name: "SuperTF",
