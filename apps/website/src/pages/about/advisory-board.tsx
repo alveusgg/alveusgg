@@ -6,11 +6,11 @@ import People from "@/components/content/People";
 import Section from "@/components/content/Section";
 
 import allisonJohnsonImage from "@/assets/people/allison-johnson.jpg";
+import allisonImage from "@/assets/people/allison.jpg";
 import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
 import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
 import synackImage from "@/assets/people/synack.png";
-import allisonImage from "@/assets/people/allison.jpg";
 
 const advisors = {
   michele: {
