@@ -114,7 +114,6 @@ export const Preview = ({ videoId, className }: PreviewProps) => {
 
   return (
     <div className="relative aspect-video w-full">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgSrc(videoId, type)}
         onError={onError}

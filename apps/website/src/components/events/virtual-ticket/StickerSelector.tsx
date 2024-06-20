@@ -74,7 +74,6 @@ export function StickerSelector({
                       }}
                       title={`${disabled ? "" : "Add"} ${name}`}
                     >
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={image}
                         alt=""

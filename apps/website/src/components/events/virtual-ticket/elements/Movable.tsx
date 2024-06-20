@@ -62,7 +62,6 @@ export function Movable<K extends MovableElementName>({
   ...props
 }: MovableProps<K>) {
   const MovableT = motion[T] as MovableElement;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const attributes = props as any;
   const { canvasWidth, canvasHeight } = useTicketEditorContext();
 

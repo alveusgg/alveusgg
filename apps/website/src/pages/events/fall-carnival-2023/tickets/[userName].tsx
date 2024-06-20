@@ -120,7 +120,6 @@ const TicketPage: NextPage = () => {
                 {!showTicket && <span>Loading ticket…</span>}
               </div>
 
-              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className={classes(
                   "relative w-full opacity-0 transition-opacity",

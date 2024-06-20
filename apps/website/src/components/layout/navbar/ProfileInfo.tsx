@@ -8,7 +8,6 @@ export const ProfileInfoImage = () => {
     return (
       // NOTE: Profile avatars make little sense to be optimized as they are only
       //       shown to the user and are probably already cached in their browser
-      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={user.image}
         alt=""

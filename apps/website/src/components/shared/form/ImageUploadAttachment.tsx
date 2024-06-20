@@ -33,7 +33,6 @@ export function ImageUploadAttachment({
     <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
       <div className="py-2">
         <div className="relative h-32 w-32 overflow-hidden rounded-lg bg-gray-200">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
             alt=""

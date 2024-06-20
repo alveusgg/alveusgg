@@ -100,8 +100,6 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "@types/serviceworker": "^0.0.82",
-    "@typescript-eslint/eslint-plugin": "^6.20.0",
-    "@typescript-eslint/parser": "^6.20.0",
     "autoprefixer": "^10.4.17",
     "file-type": "^19.0.0",
     "loader-utils": "^3.2.1",

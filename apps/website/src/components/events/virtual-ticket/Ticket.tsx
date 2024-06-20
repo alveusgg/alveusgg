@@ -39,7 +39,6 @@ export function Ticket({
       }}
     >
       {backgroundImage && (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           style={{
             position: "absolute",
@@ -70,7 +69,6 @@ export function Ticket({
         {children}
       </div>
       {foregroundImage && (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           style={{
             position: "absolute",
