@@ -495,7 +495,7 @@ const data: FoundAnimalFlow = {
           {
             name: "Yes",
             flow: {
-              prompt: macros.general.rehab("the rabbit"),
+              prompt: macros.general.rehab("the opossum"),
             },
           },
           {
