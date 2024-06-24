@@ -428,7 +428,7 @@ const data: FoundAnimalFlow = {
                       "Fox kits will often appear unsupervised for long periods of time while their parents are out hunting. They will play like puppies around the den until the parents decide they are old enough to go hunting. Then they will disappear. Observe the kits from a distance; if they seem energetic and healthy, leave them alone.",
                       ...macros.general.rehab(
                         "the baby fox",
-                        "If they appear sickly or weak, or if you have reason to believe both parents are dead.",
+                        "If they appear sickly or weak, or if you have reason to believe both parents are dead",
                       ),
                     ],
                   },
