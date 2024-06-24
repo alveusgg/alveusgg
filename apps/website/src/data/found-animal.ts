@@ -383,7 +383,7 @@ const data: FoundAnimalFlow = {
                   flow: {
                     prompt: [
                       "Rabbits at least four inches long with open eyes and erect ears that can hop well are independent from their mother and should be allowed to fend for themselves. Uninjured baby rabbits should also be left alone. Although they may look abandoned because their mom isn't around, they are probably fine: Mother rabbits visit their dependent babies only a few times a day to avoid attracting predators.",
-                      "If you are still concerned you can monitor them from a distance over a period of 24 hours, Keep pets and children away from the area, avoid touching the babies",
+                      "If you are still concerned you can monitor them from a distance over a period of 24 hours, keep pets and children away from the area, avoid touching the babies.",
                       ...macros.general.rehab(
                         "the baby rabbit",
                         "If the mother does return after 24 hours",
