@@ -360,6 +360,176 @@ const data: FoundAnimalFlow = {
         ],
       },
     },
+    {
+      name: "Rabbit",
+      flow: {
+        prompt: ["Does the rabbit appear to be sick or injured?"],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the rabbit"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Have you found a baby rabbit that's alone with no mother in sight?",
+              ],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "Rabbits at least four inches long with open eyes and erect ears that can hop well are independent from their mother and should be allowed to fend for themselves. Uninjured baby rabbits should also be left alone. Although they may look abandoned because their mom isn't around, they are probably fine: Mother rabbits visit their dependent babies only a few times a day to avoid attracting predators.",
+                      "If you are still concerned you can monitor them from a distance over a period of 24 hours, Keep pets and children away from the area, avoid touching the babies",
+                      ...macros.general.rehab(
+                        "the baby rabbit",
+                        "If the mother does return after 24 hours",
+                      ),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: macros.general.leave("the rabbit"),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "Fox",
+      flow: {
+        prompt: ["Does the fox appear to be sick or injured,?"],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the fox"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Have you found a baby fox that's alone with no parents in sight?",
+              ],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "Fox kits will often appear unsupervised for long periods of time while their parents are out hunting. They will play like puppies around the den until the parents decide they are old enough to go hunting. Then they will disappear. Observe the kits from a distance; if they seem energetic and healthy, leave them alone.",
+                      ...macros.general.rehab(
+                        "the baby fox",
+                        "If they appear sickly or weak, or if you have reason to believe both parents are dead.",
+                      ),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: macros.general.leave("the fox"),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "Skunk",
+      flow: {
+        prompt: ["Does the skunk appear to be sick or injured?"],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the skunk"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Have you found a baby skunk that's alone with no mother in sight?",
+              ],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "If you see a baby skunk (or a line of baby skunks, nose-to-tail) running around without a mother in sight, they could be orphaned. Skunks have poor eyesight so if something scares the mother and they run off, the babies can quickly lose sight of them.",
+                      "Monitor them from a distance to see if the mother rejoins their young.",
+                      ...macros.general.rehab(
+                        "If no mother comes to retrieve the young",
+                      ),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: macros.general.leave("the skunk"),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    {
+      name: "Opossum",
+      flow: {
+        prompt: ["Does the opposum appear to be sick or injured?"],
+        options: [
+          {
+            name: "Yes",
+            flow: {
+              prompt: macros.general.rehab("the rabbit"),
+            },
+          },
+          {
+            name: "No",
+            flow: {
+              prompt: [
+                "Have you found a baby opossum that's alone with no mother in sight?",
+              ],
+              options: [
+                {
+                  name: "Yes",
+                  flow: {
+                    prompt: [
+                      "Baby opossums are born as embryos, barely larger than a bee, and spend about two months nursing in their mother's pouch.",
+                      "As a general rule, if an opossum is over seven inches long (not including the tail), they're old enough to be on their own.",
+                      ...macros.general.rehab(
+                        "the baby opossum",
+                        "If they are less than seven inches long (not including the tail)",
+                      ),
+                    ],
+                  },
+                },
+                {
+                  name: "No",
+                  flow: {
+                    prompt: macros.general.leave("the opossum"),
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
   ],
 } as const;
 
