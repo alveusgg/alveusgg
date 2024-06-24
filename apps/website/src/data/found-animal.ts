@@ -276,7 +276,7 @@ const data: FoundAnimalFlow = {
             name: "No",
             flow: {
               prompt: [
-                "Does the squirrel have a fluffed-out tail, a body longer than 6 inches (excluding the tail), or is approaching humans/pets?",
+                "Does the squirrel have a fluffed-out tail, a body longer than six inches or fifteen centimeters (excluding the tail), or is approaching humans/pets?",
               ],
               options: [
                 {
@@ -382,7 +382,7 @@ const data: FoundAnimalFlow = {
                   name: "Yes",
                   flow: {
                     prompt: [
-                      "Rabbits at least four inches long with open eyes and erect ears that can hop well are independent from their mother and should be allowed to fend for themselves. Uninjured baby rabbits should also be left alone. Although they may look abandoned because their mom isn't around, they are probably fine: Mother rabbits visit their dependent babies only a few times a day to avoid attracting predators.",
+                      "Rabbits at least four inches or ten centimeters long with open eyes and erect ears that can hop well are independent from their mother and should be allowed to fend for themselves. Uninjured baby rabbits should also be left alone. Although they may look abandoned because their mom isn't around, they are probably fine: Mother rabbits visit their dependent babies only a few times a day to avoid attracting predators.",
                       "If you are still concerned you can monitor them from a distance over a period of 24 hours, keep pets and children away from the area, avoid touching the babies.",
                       ...macros.general.rehab(
                         "the baby rabbit",
@@ -510,7 +510,7 @@ const data: FoundAnimalFlow = {
                   flow: {
                     prompt: [
                       "Baby opossums are born as embryos, barely larger than a bee, and spend about two months nursing in their mother's pouch.",
-                      "As a general rule, if an opossum is over seven inches long (not including the tail), they're old enough to be on their own.",
+                      "As a general rule, if an opossum is over seven inches or eighteen centimeters long (not including the tail), they're old enough to be on their own.",
                       ...macros.general.rehab(
                         "the baby opossum",
                         "If they are less than seven inches long (not including the tail)",
