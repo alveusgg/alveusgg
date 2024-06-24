@@ -406,7 +406,7 @@ const data: FoundAnimalFlow = {
     {
       name: "Fox",
       flow: {
-        prompt: ["Does the fox appear to be sick or injured,?"],
+        prompt: ["Does the fox appear to be sick or injured?"],
         options: [
           {
             name: "Yes",
