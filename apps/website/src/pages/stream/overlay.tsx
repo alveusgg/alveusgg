@@ -78,13 +78,13 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(weatherInterval.current);
   }, []);
 
-  // Remove the weather data if older than 15m
+  // Remove the weather data if older than 10m
   const weatherStaleTimer = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (!weather) return;
 
     const updateWeather = () => setWeather(undefined);
-    weatherStaleTimer.current = setTimeout(updateWeather, 15 * 60 * 1000);
+    weatherStaleTimer.current = setTimeout(updateWeather, 10 * 60 * 1000);
     return () => clearTimeout(weatherStaleTimer.current);
   }, [weather]);
 
