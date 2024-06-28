@@ -1,20 +1,20 @@
-import { prisma } from "@/server/db/client";
-import {
-  protectedProcedure,
-  publicProcedure,
-  router,
-} from "@/server/trpc/trpc";
-import { TRPCError } from "@trpc/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+import { prisma } from "@/server/db/client";
 import {
   deleteTicket,
   getTicket,
   saveTicket,
 } from "@/server/db/virtual-tickets";
+import {
+  protectedProcedure,
+  publicProcedure,
+  router,
+} from "@/server/trpc/trpc";
 import { virtualTicketSchema } from "@/server/utils/virtual-tickets";
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
+import { TRPCError } from "@trpc/server";
 
 function revalidateTicket(eventId: string, userName: string) {
   revalidatePath(getVirtualTicketImageUrl(eventId, userName, "og"));

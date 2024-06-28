@@ -1,8 +1,9 @@
+import { z } from "zod";
+
 import { isValidUserRole } from "@/data/user-roles";
 import { router, superUserProcedure } from "@/server/trpc/trpc";
 import { checkIsSuperUserId, getSuperUserIds } from "@/server/utils/auth";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 export const adminUsersRouter = router({
   searchUsernames: superUserProcedure

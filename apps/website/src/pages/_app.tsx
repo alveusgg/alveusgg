@@ -1,5 +1,3 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Analytics } from "@vercel/analytics/react";
 import type { Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import type { AppType } from "next/app";
@@ -7,15 +5,13 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
+import FontProvider from "@/components/layout/Fonts";
 import Layout from "@/components/layout/Layout";
+import { ConsentProvider } from "@/hooks/consent";
 import { unregisterServiceWorker } from "@/utils/sw";
 import { trpc } from "@/utils/trpc";
-
-import { ConsentProvider } from "@/hooks/consent";
-import "@/styles/globals.css";
-
-import FontProvider from "@/components/layout/Fonts";
-
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import "@/styles/globals.css";
 
 unregisterServiceWorker();

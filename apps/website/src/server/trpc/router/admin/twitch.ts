@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import { permissions } from "@/data/permissions";
 import {
   createTwitchChannel,
@@ -12,7 +14,6 @@ import {
 } from "@/server/trpc/trpc";
 import { getUserByName } from "@/server/utils/twitch-api";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageTwitchApi),

@@ -1,13 +1,3 @@
-import {
-  protectedProcedure,
-  publicProcedure,
-  router,
-} from "@/server/trpc/trpc";
-import {
-  createFileStorageUpload,
-  deleteFileStorageObject,
-} from "@/server/utils/file-storage";
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
 import { env } from "@/env";
@@ -22,8 +12,18 @@ import {
   updatePost,
   withAttachments,
 } from "@/server/db/show-and-tell";
+import {
+  protectedProcedure,
+  publicProcedure,
+  router,
+} from "@/server/trpc/trpc";
+import {
+  createFileStorageUpload,
+  deleteFileStorageObject,
+} from "@/server/utils/file-storage";
 import { imageMimeTypes } from "@/utils/files";
 import { notEmpty } from "@/utils/helpers";
+import { TRPCError } from "@trpc/server";
 
 const uploadPrefix = "show-and-tell/";
 

@@ -1,5 +1,6 @@
-import { prisma } from "@/server/db/client";
 import { z } from "zod";
+
+import { prisma } from "@/server/db/client";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),

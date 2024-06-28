@@ -1,10 +1,11 @@
+import { signIn, signOut, useSession } from "next-auth/react";
+import { Fragment } from "react";
+import { NavLinkSub, navLinkClassesSub } from "./NavLink";
+
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 import { mainNavStructure } from "@/data/navigation";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
 import { Disclosure } from "@headlessui/react";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { Fragment } from "react";
-import { NavLinkSub, navLinkClassesSub } from "./NavLink";
 
 export function MobileMenu() {
   const { data: sessionData } = useSession();

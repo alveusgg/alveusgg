@@ -1,7 +1,8 @@
-import { permissions } from "@/data/permissions";
-import { getAdminSSP } from "@/server/utils/admin";
 import type { NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
+
+import { permissions } from "@/data/permissions";
+import { getAdminSSP } from "@/server/utils/admin";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);

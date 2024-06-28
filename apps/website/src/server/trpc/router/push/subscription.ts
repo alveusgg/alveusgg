@@ -1,7 +1,8 @@
+import { z } from "zod";
+
 import { defaultTags } from "@/data/notifications";
 import { publicProcedure, router } from "@/server/trpc/trpc";
 import { knownPushServicesRegex } from "@/server/web-push/known-push-services";
-import { z } from "zod";
 
 const baseRegistrationSchema = z.object({
   endpoint: z.string().regex(knownPushServicesRegex),

@@ -3,9 +3,6 @@ import type {
   InferGetStaticPropsType,
   NextPage,
 } from "next";
-
-import { permissions } from "@/data/permissions";
-import { getAdminSSP } from "@/server/utils/admin";
 import { getSession } from "next-auth/react";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
@@ -14,6 +11,8 @@ import { Panel } from "@/components/admin/Panel";
 import { BingoForm } from "@/components/admin/bingo/BingoForm";
 import Meta from "@/components/content/Meta";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { permissions } from "@/data/permissions";
+import { getAdminSSP } from "@/server/utils/admin";
 import { trpc } from "@/utils/trpc";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {

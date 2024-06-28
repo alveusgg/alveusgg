@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
 import { prisma } from "@/server/db/client";
 import { decryptRecord, encryptRecord } from "@/server/db/encryption";
@@ -5,7 +7,6 @@ import { isValidCountryCode } from "@/utils/countries";
 import { formConfigSchema } from "@/utils/forms";
 import { SLUG_REGEX, convertToSlug } from "@/utils/slugs";
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
 
 const entryEncryptFields = ["givenName", "familyName"];
 
