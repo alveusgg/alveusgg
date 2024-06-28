@@ -172,7 +172,7 @@ const Home: NextPage = () => {
 
             <p className="mt-8 text-lg">
               Alveus is a virtual education center following the journeys of our
-              non-releasable exotic ambassadors, aiming to educate and spark an
+              non-releasable animal ambassadors, aiming to educate and spark an
               appreciation for them and their wild counterparts.
             </p>
 
@@ -239,11 +239,11 @@ const Home: NextPage = () => {
               </p>
               <p className="my-4 text-lg">
                 Alveus is a nonprofit organization founded by Maya Higa that
-                functions as an exotic animal sanctuary and as a virtual
-                education center facility to provide permanent homes to
-                non-releasable exotic animals. These animals function as
-                ambassadors, so viewers can watch their journeys, get to know
-                the animals, and gain an appreciation for their species.
+                functions as a wildlife sanctuary and as a virtual education
+                center facility to provide permanent homes to non-releasable
+                animal ambassadors. These animals function as ambassadors, so
+                viewers can watch their journeys, get to know the animals, and
+                gain an appreciation for their species.
               </p>
               <p className="my-4 text-lg">
                 Alveus hosts content collaborations where creators can visit and

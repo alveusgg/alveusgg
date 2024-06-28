@@ -14,3 +14,8 @@ export function transposeMatrix<T = unknown>(matrix: T[][]) {
 
   return transposed;
 }
+
+export function rounded(value: number, precision = 0) {
+  const factor = 10 ** precision;
+  return Math.round(value * factor) / factor;
+}

@@ -468,6 +468,75 @@ const data: RootNetworkItem[] = [
                           },
                         ],
                       },
+                      {
+                        type: "switch",
+                        name: "Wolf",
+                        model: "Ubiquiti USW-Pro-24-PoE",
+                        url: "https://store.ui.com/us/en/collections/unifi-switching-pro-power-over-ethernet/products/usw-pro-24-poe",
+                        connection: { type: "ethernet", location: "buried" },
+                        links: [
+                          {
+                            type: "camera",
+                            name: "Wolf Pond",
+                            model: "AXIS Q6318-LE",
+                            url: "https://www.axis.com/products/axis-q6318-le",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "camera",
+                            name: "Wolf Deck",
+                            model: "AXIS Q6318-LE",
+                            url: "https://www.axis.com/products/axis-q6318-le",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "camera",
+                            name: "Wolf Den 1",
+                            model: "AXIS P1435-LE",
+                            url: "https://help.axis.com/en-us/axis-p1435-le",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "speaker",
+                            name: "Wolf Speaker",
+                            model: "AXIS C1610-VE Network Sound Projector",
+                            url: "https://www.axis.com/products/axis-c1610-ve",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "switch",
+                            name: "Wolf Deck",
+                            model: "Ubiquiti USW-Flex",
+                            url: "https://store.ui.com/us/en/collections/unifi-switching-utility-indoor-outdoor/products/usw-flex",
+                            connection: {
+                              type: "ethernet",
+                              location: "buried",
+                            },
+                            links: [
+                              {
+                                type: "camera",
+                                name: "Wolf Den 2",
+                                model: "AXIS P1435-LE",
+                                url: "https://help.axis.com/en-us/axis-p1435-le",
+                                connection: {
+                                  type: "ethernet",
+                                  location: "wall",
+                                },
+                              },
+                              {
+                                type: "accessPoint",
+                                name: "Wolf Deck",
+                                model: "Ubiquiti UAP-AC-M",
+                                url: "https://store.ui.com/us/en/collections/unifi-wifi-outdoor-long-range/products/uap-ac-mesh",
+                                connection: {
+                                  type: "ethernet",
+                                  location: "wall",
+                                },
+                              },
+                            ],
+                          },
+                        ],
+                      },
                     ],
                   },
                   {

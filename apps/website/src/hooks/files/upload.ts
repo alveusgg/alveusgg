@@ -8,24 +8,22 @@ type SignedUploadInfo = {
   viewUrl: string;
 };
 
-type CreateFileUpload<
-  AllowedFileTypes extends readonly string[] = readonly string[],
-> = (
-  signature: FileSignature<AllowedFileTypes[number]>,
+type CreateFileUpload<AllowedFileType extends string = string> = (
+  signature: FileSignature<AllowedFileType>,
 ) => Promise<SignedUploadInfo>;
 
-const useFileUpload = <
-  AllowedFileTypes extends readonly string[] = readonly string[],
->(
-  createFileUpload: CreateFileUpload<AllowedFileTypes>,
-  options: { allowedFileTypes?: AllowedFileTypes } = {},
+const useFileUpload = <AllowedFileType extends string = string>(
+  createFileUpload: CreateFileUpload<AllowedFileType>,
+  options: { allowedFileTypes?: Readonly<AllowedFileType[]> } = {},
 ) => {
+  const isAllowedFileType = (fileType: string): fileType is AllowedFileType =>
+    options.allowedFileTypes
+      ? options.allowedFileTypes.includes(fileType as AllowedFileType)
+      : true;
+
   return async (file: File) => {
-    const fileType = file.type as AllowedFileTypes[number];
-    if (
-      options.allowedFileTypes &&
-      !options.allowedFileTypes.includes(fileType)
-    ) {
+    const fileType = file.type;
+    if (!isAllowedFileType(fileType)) {
       return false;
     }
 
@@ -33,14 +31,14 @@ const useFileUpload = <
       const { uploadUrl, viewUrl, fileStorageObjectId } =
         await createFileUpload({
           fileName: file.name,
-          fileType: fileType,
+          fileType,
         });
 
       const res = await fetch(uploadUrl, {
         method: "PUT",
         body: file,
         headers: {
-          "Content-Type": file.type,
+          "Content-Type": fileType,
           "x-amz-acl": "public-read",
         },
       });

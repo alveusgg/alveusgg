@@ -4,6 +4,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    &.stream {
+      @apply bg-transparent bg-none !important;
+    }
+  }
+}
+
 @layer utilities {
   .scrollbar-none {
     scrollbar-width: none; /* Firefox */

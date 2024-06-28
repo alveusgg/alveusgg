@@ -1,4 +1,3 @@
-version: "3.3"
 services:
   db:
     image: mysql:8
@@ -11,10 +10,11 @@ services:
     image: bitnami/minio:latest
     ports:
       - 9000:9000
+      - 9001:9001
     environment:
       MINIO_ROOT_USER: alveusgg_key
       MINIO_ROOT_PASSWORD: alveusgg_secret
-      MINIO_DEFAULT_BUCKETS: alveusgg
+      MINIO_DEFAULT_BUCKETS: alveusgg:download
     volumes:
       - s3:/bitnami/minio/data
 

@@ -74,7 +74,7 @@ const UpdatesPage: NextPage = () => {
           <div className="flex flex-1 grow-[2] flex-col gap-8">
             <section>
               <Heading level={3} id="schedule" link>
-                Upcoming Streams
+                Schedule
               </Heading>
               <Schedule />
             </section>
