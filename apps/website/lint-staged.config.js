@@ -4,7 +4,7 @@ const buildBiomeCommand = (filenames) =>
 
 const config = {
   "schema.prisma": "prisma format",
-  "*.{js,jsx,ts,tsx,cjs}": buildBiomeCommand,
+  "*": buildBiomeCommand,
 };
 
 export default config;

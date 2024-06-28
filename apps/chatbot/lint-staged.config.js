@@ -1,9 +1,9 @@
 /** @param {string[]} filenames */
 const buildBiomeCommand = (filenames) =>
-  `biome check --apply ${filenames.join(" ")}`;
+  `biome check --no-errors-on-unmatched --apply ${filenames.join(" ")}`;
 
 const config = {
-  "*.{mjs,cjs,js,ts}": buildBiomeCommand,
+  "*": buildBiomeCommand,
 };
 
 export default config;
