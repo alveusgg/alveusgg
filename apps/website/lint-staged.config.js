@@ -1,10 +1,8 @@
-/** @param {string[]} filenames */
-const buildBiomeCommand = (filenames) =>
-  `biome check --no-errors-on-unmatched --apply ${filenames.join(" ")}`;
+import mainConfig from "../../lint-staged.config.js";
 
 const config = {
+  ...mainConfig,
   "schema.prisma": "prisma format",
-  "*": buildBiomeCommand,
 };
 
 export default config;
