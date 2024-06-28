@@ -224,15 +224,6 @@ const AboutTechPage: NextPage = () => {
                           <pre>
                             <code className="text-sm">
                               {signature(command)}
-                              {/* <IconClipboard
-                                onClick={() => {
-                                  copyToClipboard(signature(command));
-                                  setSelectedCommand(command.description);
-                                  setTimeout(() => {
-                                    setSelectedCommand("");
-                                  }, 2000);
-                                }}
-                              /> */}
                               <CopyButton
                                 clickHandler={() => {
                                   copyToClipboard(signature(command));
