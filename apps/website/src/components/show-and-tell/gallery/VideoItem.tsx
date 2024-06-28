@@ -58,7 +58,6 @@ export function VideoItem({
     // Support platforms that have dedicated thumbnail URLs
     content = (
       <div className="relative">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={createImageUrl({ src: urlPreview, width: 720 })}
           alt=""
