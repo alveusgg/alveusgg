@@ -1,7 +1,8 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
-
+import InlineInfoBox from "@/components/InlineInfoBox";
+import CopyButton from "@/components/CopyButton";
 import commands, {
   isOverloadedArguments,
   type Command,
@@ -20,7 +21,6 @@ import Meta from "@/components/content/Meta";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-
 interface NamedCommand extends Command {
   name: string;
 }
@@ -70,6 +70,10 @@ const signature = (command: NamedCommand) => {
 };
 
 const AboutTechPage: NextPage = () => {
+  const copyToClipboard = (command: string) => {
+    navigator.clipboard.writeText(command);
+  };
+  const [selectedCommand, setSelectedCommand] = useState<string>("");
   return (
     <>
       <Meta
@@ -220,6 +224,15 @@ const AboutTechPage: NextPage = () => {
                           <pre>
                             <code className="text-sm">
                               {signature(command)}
+                              <CopyButton
+                                clickHandler={() => {
+                                  copyToClipboard(signature(command));
+                                  setSelectedCommand(command.description);
+                                  setTimeout(() => {
+                                    setSelectedCommand("");
+                                  }, 2000);
+                                }}
+                              />
                             </code>
                           </pre>
                         </dt>
@@ -227,6 +240,12 @@ const AboutTechPage: NextPage = () => {
                         <dd>
                           <p className="text-sm italic text-alveus-green-400">
                             {command.description}
+
+                            <InlineInfoBox
+                              isOpen={selectedCommand === command.description}
+                            >
+                              Copied
+                            </InlineInfoBox>
                           </p>
                         </dd>
                       </div>
@@ -311,7 +330,20 @@ const AboutTechPage: NextPage = () => {
                                 <span className="opacity-40 group-first/preset:opacity-100">
                                   {`!ptzload ${camera.toLowerCase()} `}
                                 </span>
-                                {name}{" "}
+                                {name}
+                                <CopyButton
+                                  clickHandler={() => {
+                                    copyToClipboard(
+                                      `!ptzload ${camera.toLowerCase()} ${name}`,
+                                    );
+                                    setSelectedCommand(
+                                      `${camera.toLowerCase()} ${name}`,
+                                    );
+                                    setTimeout(() => {
+                                      setSelectedCommand("");
+                                    }, 2000);
+                                  }}
+                                />
                               </code>
                             </pre>
                           </dt>
@@ -319,6 +351,15 @@ const AboutTechPage: NextPage = () => {
                           <dd>
                             <p className="text-sm italic text-alveus-green-400">
                               {preset.description}
+
+                              <InlineInfoBox
+                                isOpen={
+                                  selectedCommand ===
+                                  `${camera.toLowerCase()} ${name}`
+                                }
+                              >
+                                Copied
+                              </InlineInfoBox>
                             </p>
                           </dd>
                         </div>
