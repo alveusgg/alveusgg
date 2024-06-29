@@ -1,9 +1,9 @@
-import { type ComponentType } from "react";
+import type { ComponentType } from "react";
 
 import IconInstagram from "@/icons/IconInstagram";
 import IconTikTok from "@/icons/IconTikTok";
-import IconTwitter from "@/icons/IconTwitter";
 import IconTwitch from "@/icons/IconTwitch";
+import IconTwitter from "@/icons/IconTwitter";
 import IconYouTube from "@/icons/IconYouTube";
 
 type SocialLink = {

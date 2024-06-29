@@ -1,12 +1,12 @@
-import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import Link from "next/link";
 
-import type { Form } from "@prisma/client";
 import { prisma } from "@/server/db/client";
+import type { Form } from "@prisma/client";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
 export type FormsPageProps = InferGetStaticPropsType<typeof getStaticProps>;
 

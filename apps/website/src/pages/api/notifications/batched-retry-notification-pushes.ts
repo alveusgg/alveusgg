@@ -1,12 +1,12 @@
-import { z } from "zod";
 import type { Notification } from "@prisma/client";
+import { z } from "zod";
 
 import { pushMaxAttempts } from "@/data/env/push";
 
-import { createTokenProtectedApiHandler } from "@/server/utils/api";
-import { callEndpoint } from "@/server/utils/queue";
 import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
+import { createTokenProtectedApiHandler } from "@/server/utils/api";
+import { callEndpoint } from "@/server/utils/queue";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 
@@ -60,7 +60,7 @@ export default createTokenProtectedApiHandler(
       const pushRetries = options.pushes.filter(isPushRetry);
       const notificationMap = await getNotificationMapForPushes(pushRetries);
 
-      pushRetries.forEach((push) => {
+      for (const push of pushRetries) {
         const notification = notificationMap.get(push.notificationId);
         if (!notification) {
           tasks.push(
@@ -71,7 +71,7 @@ export default createTokenProtectedApiHandler(
               failedAt: new Date(),
             }),
           );
-          return;
+          continue;
         }
 
         tasks.push(
@@ -87,7 +87,7 @@ export default createTokenProtectedApiHandler(
             imageUrl: notification.imageUrl || undefined,
           }),
         );
-      });
+      }
 
       await Promise.allSettled(tasks);
 

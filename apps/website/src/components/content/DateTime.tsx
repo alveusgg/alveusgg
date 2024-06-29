@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { formatDateTimeLocal, type DateTimeFormat } from "@/utils/datetime";
+import { type DateTimeFormat, formatDateTimeLocal } from "@/utils/datetime";
 
 type DateTimeProps = {
   date: Date;

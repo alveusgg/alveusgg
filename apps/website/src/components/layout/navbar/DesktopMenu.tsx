@@ -1,12 +1,12 @@
-import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import {
   Children,
-  cloneElement,
-  forwardRef,
   Fragment,
   type ReactElement,
+  cloneElement,
+  forwardRef,
 } from "react";
 
 import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
@@ -16,9 +16,9 @@ import { classes } from "@/utils/classes";
 
 import {
   NavLink,
+  NavLinkSub,
   navLinkClassesMain,
   navLinkClassesSub,
-  NavLinkSub,
 } from "@/components/layout/navbar/NavLink";
 import {
   ProfileInfo,
@@ -26,8 +26,8 @@ import {
 } from "@/components/layout/navbar/ProfileInfo";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
-import IconSignIn from "@/icons/IconSignIn";
 import IconChevronDown from "@/icons/IconChevronDown";
+import IconSignIn from "@/icons/IconSignIn";
 
 const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
   <Transition
@@ -86,11 +86,11 @@ export function DesktopMenu() {
           ))}
         </ul>
 
-        <div className="h-6 border-r"></div>
+        <div className="h-6 border-r" />
 
         <NotificationsButton className="rounded-lg p-2 hover:bg-white hover:text-alveus-green" />
 
-        <div className="h-6 border-r"></div>
+        <div className="h-6 border-r" />
 
         {/* User menu */}
         <div>
@@ -112,7 +112,7 @@ export function DesktopMenu() {
                 </Menu.Item>
 
                 <Menu.Item disabled>
-                  <div className="border-t opacity-30"></div>
+                  <div className="border-t opacity-30" />
                 </Menu.Item>
 
                 {showAdminLink && (
@@ -122,7 +122,7 @@ export function DesktopMenu() {
                 )}
 
                 <Menu.Item disabled>
-                  <div className="border-t opacity-30"></div>
+                  <div className="border-t opacity-30" />
                 </Menu.Item>
 
                 <Menu.Item>

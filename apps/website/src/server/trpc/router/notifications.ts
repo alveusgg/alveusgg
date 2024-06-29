@@ -1,10 +1,10 @@
 import { z } from "zod";
 
-import { publicProcedure, router } from "@/server/trpc/trpc";
 import {
   getActiveAnnouncements,
   getRecentNotificationsForTags,
 } from "@/server/db/notifications";
+import { publicProcedure, router } from "@/server/trpc/trpc";
 
 export const notificationsRouter = router({
   getRecentNotificationsForTags: publicProcedure

@@ -1,5 +1,5 @@
 import { notEmpty, typeSafeObjectKeys } from "@/utils/helpers";
-import { type StickerPack } from "@/utils/virtual-tickets";
+import type { StickerPack } from "@/utils/virtual-tickets";
 
 import Link from "@/components/content/Link";
 
@@ -25,7 +25,7 @@ export function StickerAttribution({ stickerPack }: StickerPackProps) {
                   {group.attribution}
                 </Link>
               ) : (
-                group.attribution || <>&nbsp;</>
+                group.attribution || "&nbsp;"
               )}
             </span>
           );

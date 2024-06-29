@@ -1,5 +1,5 @@
-import { type FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { type FormEvent, useMemo, useState } from "react";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
@@ -11,10 +11,10 @@ import {
 } from "@/data/show-and-tell";
 
 import { classes } from "@/utils/classes";
-import { trpc } from "@/utils/trpc";
-import { notEmpty } from "@/utils/helpers";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import { notEmpty } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
 
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
@@ -22,23 +22,23 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 import useFileUpload from "@/hooks/files/upload";
 
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
+import Link from "../content/Link";
+import { MessageBox } from "../shared/MessageBox";
+import { Button } from "../shared/form/Button";
 import { Fieldset } from "../shared/form/Fieldset";
-import { TextField } from "../shared/form/TextField";
+import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
+import { NumberField } from "../shared/form/NumberField";
 import { RichTextField } from "../shared/form/RichTextField";
+import { TextAreaField } from "../shared/form/TextAreaField";
+import { TextField } from "../shared/form/TextField";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
-import { Button } from "../shared/form/Button";
-import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
-import { MessageBox } from "../shared/MessageBox";
-import { TextAreaField } from "../shared/form/TextAreaField";
-import { NumberField } from "../shared/form/NumberField";
 import {
-  useVideoLinksData,
   VideoLinksField,
+  useVideoLinksData,
 } from "../shared/form/VideoLinksField";
-import Link from "../content/Link";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -138,7 +138,7 @@ export function ShowAndTellEntryForm({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const hours = parseFloat(formData.get("giveAnHour") as string);
+    const hours = Number.parseFloat(formData.get("giveAnHour") as string);
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
@@ -188,7 +188,7 @@ export function ShowAndTellEntryForm({
             onUpdate?.();
           } else {
             // Redirect to my posts
-            router.push(`/show-and-tell/my-posts/`);
+            router.push("/show-and-tell/my-posts/");
           }
         },
         onError: (err) => {

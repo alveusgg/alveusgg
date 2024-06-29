@@ -1,10 +1,10 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 
-import Section from "@/components/content/Section";
+import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import IconChevronRight from "@/icons/IconChevronRight";
-import Button from "@/components/content/Button";
 
 const reports = [
   {

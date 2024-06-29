@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import type { ReactNode } from "react";
 
 import {
   type TicketConfig,
@@ -33,13 +33,12 @@ export function Ticket({
         width,
         height,
         maskImage: maskImage && `url("${maskImage}")`,
-        maskSize: maskImage && `100% 100%`,
+        maskSize: maskImage && "100% 100%",
         WebkitMaskImage: maskImage && `url("${maskImage}")`,
-        WebkitMaskSize: maskImage && `100% 100%`,
+        WebkitMaskSize: maskImage && "100% 100%",
       }}
     >
       {backgroundImage && (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           style={{
             position: "absolute",
@@ -70,7 +69,6 @@ export function Ticket({
         {children}
       </div>
       {foregroundImage && (
-        // eslint-disable-next-line @next/next/no-img-element
         <img
           style={{
             position: "absolute",

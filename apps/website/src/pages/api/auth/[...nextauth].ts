@@ -1,13 +1,13 @@
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import type { TwitchProfile } from "next-auth/providers/twitch";
 import TwitchProvider from "next-auth/providers/twitch";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
 
+import { defaultScope } from "@/data/twitch";
 import { env } from "@/env";
 import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
-import { defaultScope } from "@/data/twitch";
 
 const adapter = PrismaAdapter(prisma);
 
@@ -29,17 +29,15 @@ type ProfileData = {
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    session: async function ({ session, user }) {
-      return {
-        ...session,
-        user: session.user && {
-          ...session.user,
-          id: user.id,
-          isSuperUser: checkIsSuperUserId(user.id),
-          roles: await getRolesForUser(user.id),
-        },
-      };
-    },
+    session: async ({ session, user }) => ({
+      ...session,
+      user: session.user && {
+        ...session.user,
+        id: user.id,
+        isSuperUser: checkIsSuperUserId(user.id),
+        roles: await getRolesForUser(user.id),
+      },
+    }),
     async signIn({ user, account, profile }) {
       if (!user || !account) return true;
 

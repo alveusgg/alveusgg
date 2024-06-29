@@ -1,14 +1,14 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
-  Handle,
-  Position,
-  useEdges,
-  EdgeLabelRenderer,
-  useNodes,
-  getBezierPath,
   BaseEdge,
-  type NodeProps,
+  EdgeLabelRenderer,
   type EdgeProps,
+  Handle,
+  type NodeProps,
+  Position,
+  getBezierPath,
+  useEdges,
+  useNodes,
 } from "reactflow";
 
 import network, {
@@ -97,7 +97,8 @@ const NetworkNode = ({
 }: NodeProps<Data>) => {
   // Get the source and target edges
   const edges = useEdges();
-  let targetEdge, sourceEdge;
+  let targetEdge;
+  let sourceEdge;
   for (const edge of edges) {
     if (!targetEdge && edge.target === id) targetEdge = edge;
     if (!sourceEdge && edge.source === id) sourceEdge = edge;
@@ -227,7 +228,8 @@ const NetworkEdge = ({
 }: EdgeProps) => {
   // Get the source and target nodes
   const nodes = useNodes<Data>();
-  let sourceNode, targetNode;
+  let sourceNode;
+  let targetNode;
   for (const node of nodes) {
     if (!sourceNode && node.id === source) sourceNode = node;
     if (!targetNode && node.id === target) targetNode = node;
@@ -315,7 +317,7 @@ const NetworkEdge = ({
               transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
               // Ensure the label is always on top of all the nodes
               // (the first node will have the highest z-index)
-              zIndex: ((nodes[0] && nodes[0].zIndex) || 0) + 1,
+              zIndex: (nodes[0]?.zIndex || 0) + 1,
             }}
             className="absolute rounded-xl border-2 border-alveus-green-100 bg-white px-2 py-1 shadow-md"
           >

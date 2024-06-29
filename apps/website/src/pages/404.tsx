@@ -1,4 +1,4 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
