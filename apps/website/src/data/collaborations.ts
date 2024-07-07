@@ -2,49 +2,47 @@ import type { StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
-import alinity from "@/assets/collaborations/alinity.png";
-import alluux from "@/assets/collaborations/alluux.png";
-import alpharad from "@/assets/collaborations/alpharad.png";
+import julien from "@/assets/collaborations/julien.png";
+import fuslie from "@/assets/collaborations/fuslie.png";
+import valkyrae from "@/assets/collaborations/valkyrae.png";
 import angelskimi from "@/assets/collaborations/angelskimi.png";
+import xchocobars from "@/assets/collaborations/xchocobars.png";
+import pokimane from "@/assets/collaborations/pokimane.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
-import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
-import bao from "@/assets/collaborations/bao.png";
-import botzSisters from "@/assets/collaborations/botez-sisters.png";
-import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
-import cinna from "@/assets/collaborations/cinna.png";
-import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
-import dailyDose from "@/assets/collaborations/daily-dose.png";
-import dareon from "@/assets/collaborations/dareon.png";
-import emilyWang from "@/assets/collaborations/emily-wang.png";
+import hyoon from "@/assets/collaborations/hyoon.png";
 import eret from "@/assets/collaborations/eret.png";
+import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
+import jackManifold from "@/assets/collaborations/jack-manifold.png";
+import emilyWang from "@/assets/collaborations/emily-wang.png";
+import jinny from "@/assets/collaborations/jinny.png";
+import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
+import alpharad from "@/assets/collaborations/alpharad.png";
+import cinna from "@/assets/collaborations/cinna.png";
+import hasanAbi from "@/assets/collaborations/hasan-abi.png";
+import fanfan from "@/assets/collaborations/fanfan.png";
+import alluux from "@/assets/collaborations/alluux.png";
+import filian from "@/assets/collaborations/filian.png";
+import trihex from "@/assets/collaborations/trihex.png";
 import esfandtv from "@/assets/collaborations/esfandtv.png";
 import extraEmily from "@/assets/collaborations/extra-emily.png";
-import fanfan from "@/assets/collaborations/fanfan.png";
-import filian from "@/assets/collaborations/filian.png";
-import fuslie from "@/assets/collaborations/fuslie.png";
-import graycen from "@/assets/collaborations/graycen.png";
-import hasanAbi from "@/assets/collaborations/hasan-abi.png";
-import hyoon from "@/assets/collaborations/hyoon.png";
-import jackManifold from "@/assets/collaborations/jack-manifold.png";
-import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
-import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
-import jinny from "@/assets/collaborations/jinny.png";
-import julien from "@/assets/collaborations/julien.png";
-import knut from "@/assets/collaborations/knut.png";
-import lacari from "@/assets/collaborations/lacari.png";
-import ludwig from "@/assets/collaborations/ludwig.png";
-import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
-import peachJars from "@/assets/collaborations/peach-jars.png";
-import pointCrow from "@/assets/collaborations/point-crow.png";
-import pokimane from "@/assets/collaborations/pokimane.png";
-import russel from "@/assets/collaborations/russel.png";
-import squeex from "@/assets/collaborations/squeex.png";
-import supertf from "@/assets/collaborations/supertf.png";
-import trihex from "@/assets/collaborations/trihex.png";
-import valkyrae from "@/assets/collaborations/valkyrae.png";
-import xchocobars from "@/assets/collaborations/xchocobars.png";
-import yungJeff from "@/assets/collaborations/yung-jeff.png";
 import zoil from "@/assets/collaborations/zoil.png";
+import peachJars from "@/assets/collaborations/peach-jars.png";
+import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
+import squeex from "@/assets/collaborations/squeex.png";
+import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
+import lacari from "@/assets/collaborations/lacari.png";
+import dailyDose from "@/assets/collaborations/daily-dose.png";
+import graycen from "@/assets/collaborations/graycen.png";
+import dareon from "@/assets/collaborations/dareon.png";
+import yungJeff from "@/assets/collaborations/yung-jeff.png";
+import pointCrow from "@/assets/collaborations/point-crow.png";
+import russel from "@/assets/collaborations/russel.png";
+import ludwig from "@/assets/collaborations/ludwig.png";
+import alinity from "@/assets/collaborations/alinity.png";
+import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
+import botzSisters from "@/assets/collaborations/botez-sisters.png";
+import knut from "@/assets/collaborations/knut.png";
+import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 
 export type Creator = {
   name: string;
@@ -65,33 +63,6 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
-      name: "Bao The Whale",
-      link: "https://www.twitch.tv/bao",
-      date: new Date("2024-06-11"),
-      videoId: "mOy4_ljLTF0",
-      creators: [
-        {
-          name: "Bao",
-          image: bao,
-          popularity: 540_000, // Twitch followers, 2024-06-13
-        },
-      ],
-    },
-    {
-      name: "SuperTF",
-      link: "https://www.twitch.tv/supertf",
-      date: new Date("2024-06-06"),
-      videoId: "6i2LEsEm7U8",
-      vodId: "ruHHqlc1PY4",
-      creators: [
-        {
-          name: "SuperTF",
-          image: supertf,
-          popularity: 645_000, // Twitch followers, 2024-06-07
-        },
-      ],
-    },
-    {
       name: "Julien",
       link: "https://www.twitch.tv/julien",
       date: new Date("2024-04-25"),
@@ -109,8 +80,7 @@ const collaborations: Collaboration[] = (
       name: "Fuslie",
       link: "https://www.youtube.com/@fuslie",
       date: new Date("2024-04-22"),
-      videoId: "0pbV-45_5Ow",
-      vodId: "TU6IiUrVPRg",
+      videoId: "TU6IiUrVPRg",
       creators: [
         {
           name: "Fuslie",
