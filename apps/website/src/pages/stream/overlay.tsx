@@ -79,6 +79,16 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(weatherInterval.current);
   }, []);
 
+  // Remove the weather data if older than 10m
+  const weatherStaleTimer = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    if (!weather) return;
+
+    const updateWeather = () => setWeather(undefined);
+    weatherStaleTimer.current = setTimeout(updateWeather, 10 * 60 * 1000);
+    return () => clearTimeout(weatherStaleTimer.current);
+  }, [weather]);
+
   // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
