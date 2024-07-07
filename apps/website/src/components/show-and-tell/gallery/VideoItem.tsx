@@ -7,6 +7,7 @@ import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { Preview } from "@/components/content/YouTube";
 import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 import IconYouTube from "@/icons/IconYouTube";
+import { classes } from "@/utils/classes";
 
 type VideoThumbnailProps = {
   videoAttachment: LinkAttachment;
@@ -73,11 +74,13 @@ export function VideoItem({
   } else {
     content = (
       <div
-        className={`flex w-fit flex-col items-center justify-center rounded-lg text-center text-black transition group-hover/trigger:scale-102 ${
-          showPreview
-            ? "gap-2 bg-white p-4 shadow-xl group-hover/trigger:shadow-2xl"
-            : "gap-0.5 bg-white/60 p-2 text-sm shadow-lg group-hover/trigger:shadow-xl"
-        }`}
+        className={classes(
+          "flex w-fit flex-col items-center justify-center rounded-lg text-center text-black transition group-hover/trigger:scale-102",
+          showPreview &&
+            "gap-2 bg-white p-4 shadow-xl group-hover/trigger:shadow-2xl",
+          !showPreview &&
+            "gap-0.5 bg-white/60 p-2 text-sm shadow-lg group-hover/trigger:shadow-xl",
+        )}
       >
         <VideoPlatformIcon
           platform={videoPlatformConfig.key}

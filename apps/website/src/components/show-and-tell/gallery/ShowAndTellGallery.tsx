@@ -17,6 +17,7 @@ import Carousel from "@/components/content/Carousel";
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
 import IconInformationCircle from "@/icons/IconInformationCircle";
+import { classes } from "@/utils/classes";
 
 export function ShowAndTellGallery({
   isPresentationView,
@@ -82,9 +83,11 @@ export function ShowAndTellGallery({
           updateConsent({ [content.data.consent]: true });
 
         content.element = document.createElement("div");
-        content.element.className = `pointer-events-none flex flex-col items-center h-full p-0 md:p-4 lg:p-8 ${
-          lightboxParent ? "w-[80%] mr-[20%]" : "w-[calc(100%-80px)]"
-        }`;
+        content.element.className = classes(
+          "pointer-events-none flex flex-col items-center h-full p-0 md:p-4 lg:p-8",
+          lightboxParent && "w-[80%] mr-[20%]",
+          !lightboxParent && "w-[calc(100%-80px)]",
+        );
 
         // Create our video wrapper
         const wrapper = document.createElement("div");

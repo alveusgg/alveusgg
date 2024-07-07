@@ -6,6 +6,7 @@ import { notificationCategories } from "@/data/notifications";
 import { usePushSubscription } from "@/utils/push-subscription";
 
 import IconLoading from "@/icons/IconLoading";
+import { classes } from "@/utils/classes";
 import { NotificationCategoryCheckbox } from "./NotificationCategoryCheckbox";
 import type { NotificationPermission } from "./NotificationPermission";
 
@@ -64,11 +65,10 @@ export function NotificationSettingsForm({
   return (
     <form
       onSubmit={submitHandler}
-      className={`pb-2 transition-opacity ${
-        enableSettings
-          ? ""
-          : "pointer-none cursor-default select-none opacity-50"
-      }`}
+      className={classes(
+        "pb-2 transition-opacity",
+        enableSettings && "pointer-none cursor-default select-none opacity-50",
+      )}
     >
       <fieldset className="mx-2 space-y-1">
         <legend className="sr-only">Notifications</legend>
