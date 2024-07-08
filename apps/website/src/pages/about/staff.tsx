@@ -12,6 +12,7 @@ import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import ellaRocksImage from "@/assets/people/ella-rocks.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
+import nickImage from "@/assets/people/nick.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -139,6 +140,16 @@ const staff = {
           her a lot of joy - she is excited to do that alongside the Alveus
           community!
         </p>
+      </>
+    ),
+  },
+  nick: {
+    image: nickImage,
+    name: "Nick",
+    title: "Facilities",
+    description: (
+      <>
+        <p>I&apos;m the neighbor.</p>
       </>
     ),
   },
