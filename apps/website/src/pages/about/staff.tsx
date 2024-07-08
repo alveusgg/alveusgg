@@ -273,7 +273,7 @@ const AboutStaffPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          <People people={staff} columns={2} />
+          <People people={staff} />
 
           <p className="mb-4 mt-8 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
             The Alveus team is more than just our on-site staff. We have a
