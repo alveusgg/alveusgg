@@ -122,23 +122,23 @@ const staff = {
           in Biology with a focus on Animal Behavior. As a young volunteer at
           her local zoo, Sruti was fortunate to realize her passion for animal
           behavior, conservation, and environmental education. This passion
-          translated to jobs all over the world participating in field research
-          and education. This trend continued when she moved to Michigan and
+          translated to jobs all over the world, participating in field research
+          and education. That trend continued when she moved to Michigan and
           served as the Mammal Curator for The Creature Conservancy. This
-          opportunity channeled her interest in behavior into training where she
-          trained with animals both big and small for fear-free veterinary care,
-          educational programs, and mental well-being. To further improve her
-          training skills, Sruti studied and worked with K9 Turbo Training to
-          obtain her certification in professional dog training. She specializes
-          in fear and aggression and loves working with families to create a
-          training environment that is supportive, engaging, and fun for
-          everyone!
+          opportunity channeled her interest in behavior into training, where
+          she trained with animals both big and small for fear-free veterinary
+          care, educational programs, and mental well-being. To further improve
+          her training skills, Sruti studied and worked with K9 Turbo Training
+          to obtain her certification in professional dog training. She
+          specializes in fear and aggression and loves working with families to
+          create a training environment that is supportive, engaging, and fun
+          for everyone!
         </p>
         <p>
           Building relationships with animals, continuing that relationship
-          through time/ training, and sharing that experience with others brings
-          her a lot of joy - she is excited to do that alongside the Alveus
-          community!
+          through time and training, and sharing that experience with others
+          brings her a lot of joy - she is excited to do that alongside the
+          Alveus community!
         </p>
       </>
     ),
