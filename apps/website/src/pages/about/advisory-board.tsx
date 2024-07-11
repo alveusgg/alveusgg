@@ -9,7 +9,7 @@ import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
 import synackImage from "@/assets/people/synack.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
-import allisonJohnsonImage from "@/assets/people/allison-johnson.jpg";
+import allisonImage from "@/assets/people/allison.jpg";
 
 const advisors = {
   michele: {
@@ -108,20 +108,17 @@ const advisors = {
     ),
   },
   allison: {
-    image: allisonJohnsonImage,
-    name: "Allison Johnson",
+    image: allisonImage,
+    name: "Allison",
     title: "Advisory Board Member",
     description: (
       <>
         <p>
-          Allison is an entomologist specializing in education, public service,
-          and outreach. She served as the coordinator for an exotic insect zoo
-          and is currently the coordinator of a pesticide safety education
-          program. Dr. Johnson hopes to increase engagement and accessibility of
-          pesticide safety and pollinator protection education by modernizing
-          her program to include streaming, interactive presentations, and
-          offering educational materials in multiple languages. She is all about
-          bugs!
+          Allison is an entomologist specializing in public service, education,
+          and outreach. She served as the coordinator for an insect zoo for
+          several years, where she found her passion for teaching with bugs. Dr.
+          Allison now focuses on pollinator conservation, reducing pesticide use
+          in the environment, and teaching integrated pest management practices.
         </p>
       </>
     ),

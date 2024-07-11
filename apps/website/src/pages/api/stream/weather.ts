@@ -81,7 +81,7 @@ export default async function handler(
 
       res.setHeader(
         "Cache-Control",
-        "max-age=60, s-maxage=300, stale-while-revalidate",
+        "max-age=60, s-maxage=60, stale-while-revalidate=300",
       );
       return res.json({
         time: {

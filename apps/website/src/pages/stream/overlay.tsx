@@ -14,6 +14,17 @@ import logoImage from "@/assets/logo.png";
 
 import { type WeatherResponse } from "../api/stream/weather";
 
+const truncate = (value: string, max: number) => {
+  if (value.length <= max) return value;
+
+  for (const pattern of [" - ", " | ", ": "]) {
+    const index = value.indexOf(pattern);
+    if (index !== -1 && index < max) return value.slice(0, index);
+  }
+
+  return value.slice(0, max - 3) + "…";
+};
+
 const OverlayPage: NextPage = () => {
   // Get the current time and date
   // Refresh every 250ms
@@ -77,6 +88,16 @@ const OverlayPage: NextPage = () => {
     weatherInterval.current = setInterval(fetchWeather, 60 * 1000);
     return () => clearInterval(weatherInterval.current);
   }, []);
+
+  // Remove the weather data if older than 10m
+  const weatherStaleTimer = useRef<NodeJS.Timeout>();
+  useEffect(() => {
+    if (!weather) return;
+
+    const updateWeather = () => setWeather(undefined);
+    weatherStaleTimer.current = setTimeout(updateWeather, 10 * 60 * 1000);
+    return () => clearTimeout(weatherStaleTimer.current);
+  }, [weather]);
 
   // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
@@ -164,7 +185,7 @@ const OverlayPage: NextPage = () => {
           <div className="text-stroke absolute bottom-2 left-2 font-bold text-white">
             <p>Upcoming:</p>
             <p className="text-xl">
-              {event.title}
+              {truncate(event.title, 30)}
               {" @ "}
               {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
             </p>
