@@ -22,7 +22,7 @@ const truncate = (value: string, max: number) => {
     if (index !== -1 && index < max) return value.slice(0, index);
   }
 
-  return value.slice(0, max - 3) + "...";
+  return value.slice(0, max - 3) + "…";
 };
 
 const OverlayPage: NextPage = () => {
