@@ -1,10 +1,10 @@
 import {
-  decrypt,
-  encrypt,
   createSaltedEncryptionKey,
-  generateSalt,
   decodeSalt,
+  decrypt,
   encodeSalt,
+  encrypt,
+  generateSalt,
 } from "@/server/utils/encryption";
 
 type RecordToEncrypt<EncryptionField extends string> = Record<

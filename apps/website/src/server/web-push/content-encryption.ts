@@ -1,11 +1,11 @@
 import { webcrypto as crypto } from "node:crypto";
 
-import { decodeBase64UrlToArrayBuffer } from "@/utils/base64url";
 import {
   concatArrayBuffers,
   createUintArrayBEFromNumber,
   readNumberFromUintArrayBE,
 } from "@/utils/array-buffer";
+import { decodeBase64UrlToArrayBuffer } from "@/utils/base64url";
 
 export const PAD_SIZE = 1;
 export const TAG_LENGTH = 16;

@@ -1,13 +1,13 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import People from "@/components/content/People";
 import Meta from "@/components/content/Meta";
+import People from "@/components/content/People";
+import Section from "@/components/content/Section";
 
-import mayaHigaImage from "@/assets/people/maya-higa.jpg";
 import joeSiegristImage from "@/assets/people/joe-siegrist.jpg";
 import joelPierreImage from "@/assets/people/joel-pierre.jpg";
+import mayaHigaImage from "@/assets/people/maya-higa.jpg";
 
 const directors = {
   maya: {

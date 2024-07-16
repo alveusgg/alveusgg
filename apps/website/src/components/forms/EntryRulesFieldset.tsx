@@ -1,7 +1,7 @@
 import type { Form } from "@prisma/client";
 
-import { Fieldset } from "@/components/shared/form/Fieldset";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
+import { Fieldset } from "@/components/shared/form/Fieldset";
 
 import Link from "@/components/content/Link";
 

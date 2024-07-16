@@ -1,15 +1,11 @@
-import {
-  type AnchorHTMLAttributes,
-  type RefAttributes,
-  type ReactNode,
-} from "react";
 import Link, { type LinkProps } from "next/link";
+import type { AnchorHTMLAttributes, ReactNode, RefAttributes } from "react";
 
 import { classes } from "@/utils/classes";
 
 import useIsActivePath from "@/hooks/active";
 
-import { type DefaultPageLayoutProps } from "@/components/DefaultPageLayout";
+import type { DefaultPageLayoutProps } from "@/components/DefaultPageLayout";
 
 export type AdminMenuItem = {
   label: string;

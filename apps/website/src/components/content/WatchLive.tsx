@@ -1,6 +1,6 @@
-import { Fragment } from "react";
-import Link from "next/link";
 import { Menu, Transition } from "@headlessui/react";
+import Link from "next/link";
+import { Fragment } from "react";
 
 import IconChevronDown from "@/icons/IconChevronDown";
 import { classes } from "@/utils/classes";

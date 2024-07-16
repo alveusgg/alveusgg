@@ -1,5 +1,5 @@
-import { trpc } from "@/utils/trpc";
 import { Announcement } from "@/components/notifications/Announcement";
+import { trpc } from "@/utils/trpc";
 
 export function Announcements() {
   const announcements = trpc.notifications.getActiveAnnouncements.useQuery(

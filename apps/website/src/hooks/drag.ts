@@ -1,4 +1,4 @@
-import { useCallback, type MouseEvent as ReactMouseEvent } from "react";
+import { type MouseEvent as ReactMouseEvent, useCallback } from "react";
 
 const useDragScroll = (snap = false, interacted?: () => void) =>
   useCallback(

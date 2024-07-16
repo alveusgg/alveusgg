@@ -1,6 +1,6 @@
-import type { NotificationOptionsData } from "@/utils/notification-payload";
-import { getIsIos, getIsSafari } from "@/utils/browser-detection";
 import { welcomeMessage, welcomeTitle } from "@/data/notifications";
+import { getIsIos, getIsSafari } from "@/utils/browser-detection";
+import type { NotificationOptionsData } from "@/utils/notification-payload";
 
 if ({} as NotificationOptionsData satisfies NotificationOptions) {
   // Weird test to make sure that the types are compatible
@@ -16,8 +16,8 @@ export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
     return false;
   }
 
-  const majorVersion: number = parseInt(match[1], 10);
-  const minorVersion: number = match[2] ? parseInt(match[2], 10) : 0;
+  const majorVersion: number = Number.parseInt(match[1], 10);
+  const minorVersion: number = match[2] ? Number.parseInt(match[2], 10) : 0;
   if (majorVersion <= 16 && !(majorVersion === 16 && minorVersion >= 4)) {
     return false;
   }

@@ -1,15 +1,16 @@
 import { z } from "zod";
+
+import { permissions } from "@/data/permissions";
+import {
+  calendarEventSchema,
+  createCalendarEvent,
+  editCalendarEvent,
+} from "@/server/db/calendar-events";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { permissions } from "@/data/permissions";
-import {
-  createCalendarEvent,
-  editCalendarEvent,
-  calendarEventSchema,
-} from "@/server/db/calendar-events";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageCalendarEvents),

@@ -12,6 +12,6 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "incremental": false,
-    "noUncheckedIndexedAccess": true,
-  },
+    "noUncheckedIndexedAccess": true
+  }
 }

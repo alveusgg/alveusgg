@@ -72,7 +72,13 @@ export async function getCurrentObservation<T extends boolean>(
   if (!env.WEATHER_API_KEY) throw new Error("WEATHER_API_KEY is not set!");
 
   const response = await fetch(
-    `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
+    `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(
+      stationId,
+    )}&format=json&units=${
+      imperial ? "e" : "m"
+    }&numericPrecision=decimal&apiKey=${encodeURIComponent(
+      env.WEATHER_API_KEY,
+    )}`,
   );
 
   const json = await response.json();

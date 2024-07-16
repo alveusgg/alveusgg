@@ -1,17 +1,17 @@
-import { type NextApiRequest, type NextApiResponse } from "next";
 import { stringify } from "csv-stringify/sync";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "@/server/db/client";
 
+import { permissions } from "@/data/permissions";
 import { getServerAuthSession } from "@/server/common/get-server-auth-session";
-import { checkPermissions } from "@/server/utils/auth";
 import { getAllEntriesForBingo } from "@/server/db/bingos";
+import { checkPermissions } from "@/server/utils/auth";
 import {
   calcBingoConfig,
   findCardsWithBingo,
   parseBingoPlayData,
 } from "@/utils/bingo";
-import { permissions } from "@/data/permissions";
 
 const exportBingoEntries = async (
   req: NextApiRequest,
@@ -83,8 +83,8 @@ const exportBingoEntries = async (
   res
     .status(200)
     .setHeader("Content-Type", "text/csv")
-    .setHeader("Content-Disposition", `attachment; filename=bingo-entries.csv`)
-    .send("\ufeff" + csv); // add utf-8 BOM for Excel to correctly open the CSV
+    .setHeader("Content-Disposition", "attachment; filename=bingo-entries.csv")
+    .send(`\ufeff${csv}`); // add utf-8 BOM for Excel to correctly open the CSV
 };
 
 export default exportBingoEntries;

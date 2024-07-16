@@ -1,15 +1,15 @@
 import { useEffect, useReducer } from "react";
 import { z } from "zod";
 
-import { transposeMatrix } from "@/utils/math";
-import { classes } from "@/utils/classes";
 import {
-  type BingoCard,
+  type BingoCard as BingoCardType,
   type BingoValue,
   bingoValueSchema,
   checkHasBingo,
   isCellPartOfBingo,
 } from "@/utils/bingo";
+import { classes } from "@/utils/classes";
+import { transposeMatrix } from "@/utils/math";
 
 import { BingoCardGrid } from "./BingoCardGrid";
 
@@ -89,7 +89,7 @@ export function useBingoLocalState(bingoId: string) {
             JSON.parse(localState),
           )?.selectedValues;
         } catch (e) {
-          console.error("Error restoring local bingo data: " + e);
+          console.error(`Error restoring local bingo data: ${e}`);
         }
       }
     }
@@ -107,7 +107,7 @@ export function useBingoLocalState(bingoId: string) {
 }
 
 type BingCardProps = {
-  card: BingoCard;
+  card: BingoCardType;
   selectedValues: Array<BingoValue>;
   selectableValues?: Array<BingoValue>;
   onSelect: (cellIndex: BingoValue) => void;
@@ -141,7 +141,7 @@ export function BingoCard({
           size={size}
           showBingoHeader
           renderCell={(_, rowIndex, columnIndex) => {
-            const cellValue = transposedCells[rowIndex]![columnIndex]!;
+            const cellValue = transposedCells[rowIndex]?.[columnIndex]!;
             const isSelected = selectedValues.includes(cellValue);
             const isSelectable =
               selectableValues === undefined ||

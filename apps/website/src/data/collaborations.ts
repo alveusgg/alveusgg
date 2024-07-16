@@ -1,9 +1,7 @@
-import { type StaticImageData } from "next/image";
+import type { StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
-import bao from "@/assets/collaborations/bao.png";
-import supertf from "@/assets/collaborations/supertf.png";
 import julien from "@/assets/collaborations/julien.png";
 import fuslie from "@/assets/collaborations/fuslie.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
@@ -65,33 +63,6 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
-      name: "Bao The Whale",
-      link: "https://www.twitch.tv/bao",
-      date: new Date("2024-06-11"),
-      videoId: "mOy4_ljLTF0",
-      creators: [
-        {
-          name: "Bao",
-          image: bao,
-          popularity: 540_000, // Twitch followers, 2024-06-13
-        },
-      ],
-    },
-    {
-      name: "SuperTF",
-      link: "https://www.twitch.tv/supertf",
-      date: new Date("2024-06-06"),
-      videoId: "6i2LEsEm7U8",
-      vodId: "ruHHqlc1PY4",
-      creators: [
-        {
-          name: "SuperTF",
-          image: supertf,
-          popularity: 645_000, // Twitch followers, 2024-06-07
-        },
-      ],
-    },
-    {
       name: "Julien",
       link: "https://www.twitch.tv/julien",
       date: new Date("2024-04-25"),
@@ -109,8 +80,7 @@ const collaborations: Collaboration[] = (
       name: "Fuslie",
       link: "https://www.youtube.com/@fuslie",
       date: new Date("2024-04-22"),
-      videoId: "0pbV-45_5Ow",
-      vodId: "TU6IiUrVPRg",
+      videoId: "TU6IiUrVPRg",
       creators: [
         {
           name: "Fuslie",

@@ -1,17 +1,17 @@
+import type { Form, FormEntry, MailingAddress } from "@prisma/client";
 import type {
-  NextPage,
-  InferGetServerSidePropsType,
   GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
 } from "next";
 import { getSession } from "next-auth/react";
-import type { Form, FormEntry, MailingAddress } from "@prisma/client";
 
-import { findActiveForm, getFormEntry } from "@/server/db/forms";
-import { EntryForm } from "@/components/forms/EntryForm";
 import Heading from "@/components/content/Heading";
-import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import { EntryForm } from "@/components/forms/EntryForm";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { findActiveForm, getFormEntry } from "@/server/db/forms";
 
 export type FormPageProps = InferGetServerSidePropsType<
   typeof getServerSideProps

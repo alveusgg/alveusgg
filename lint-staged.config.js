@@ -1,5 +1,9 @@
+/** @param {string[]} filenames */
+const buildBiomeCommand = (filenames) =>
+  `biome check --no-errors-on-unmatched --apply ${filenames.join(" ")}`;
+
 const config = {
-  "*": "prettier --write --ignore-unknown",
+  "*": buildBiomeCommand,
 };
 
 export default config;
