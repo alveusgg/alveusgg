@@ -9,7 +9,6 @@ import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
-import ellaRocksImage from "@/assets/people/ella-rocks.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 import nickImage from "@/assets/people/nick.jpg";
@@ -62,31 +61,6 @@ const staff = {
           to build relationships with the Alveus ambassadors to showcase their
           personalities and inspire dedication to their wild counterparts across
           an ever-growing online audience.
-        </p>
-      </>
-    ),
-  },
-  ella: {
-    image: ellaRocksImage,
-    name: "Ella Rocks",
-    title: "Animal Care Coordinator",
-    description: (
-      <>
-        <p>
-          Ella started volunteering at a local wildlife rehabilitation center
-          during high school. After a year of volunteering, she began working at
-          the center as a wildlife care coordinator. As part of her job, Ella
-          communicated with the public when they found potentially injured, ill
-          or orphaned wildlife. She came to realize how important the education
-          part of her job was so that people would know what they can do for
-          their local wildlife and when to leave them alone. Ella and Maya met
-          at the wildlife rehabilitation center and started an ambassador
-          training program after the center received two imprinted non
-          releasable American crows. Working with the ambassadors sparked in her
-          an interest in animal behavior and training. That interest carries on
-          into her work at Alveus where she looks forward to seeing the
-          ambassadors assist in educating audiences on what they can do for
-          their wild counterparts.
         </p>
       </>
     ),
