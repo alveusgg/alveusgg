@@ -318,7 +318,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         ],
       },
       {
-        key: "valentines-day",
+        key: "valentines-day-2023",
         date: "2023-02",
         content: [
           "Valentine's Day fundraiser",
@@ -330,7 +330,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
       {
-        key: "art-auction",
+        key: "art-auction-2023",
         date: "2023-04",
         content: [
           "Art Auction fundraiser",
@@ -362,8 +362,8 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
       {
-        key: "summer-camp",
-        date: "2023-07-21",
+        key: "summer-camp-2023",
+        date: "2023-07",
         content: [
           "Summer Camp and merch drop",
           "Alveus hosted a 24-hour long charity stream from the training center, accompanied by a limited-time merch drop to raise funds for the sanctuary.",
@@ -371,6 +371,70 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         link: {
           text: "Explore Alveus events",
           href: "/events#summer-camp-2023",
+        },
+      },
+      {
+        key: "fall-carnival-2023",
+        date: "2023-11",
+        content: [
+          "Fall Carnival",
+          "To celebrate fall and raise some money for the sanctuary, Alveus hosted ac carnival-themed stream where live viewers could compete against each other and the ambassadors in mini-games.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#fall-carnival-2023",
+        },
+      },
+      {
+        key: "streamer-awards-2024",
+        date: "2024-01",
+        content: [
+          "Nomination for Streamer Awards",
+          "Alveus Sanctuary was nominated, along with three other Twitch channels, for the Streamer Awards 2024 in the category of Best Shared Channel.",
+        ],
+      },
+      {
+        key: "valentines-day-2024",
+        date: "2024-02",
+        content: [
+          "Valentine's Day fundraiser",
+          "Once again, Alveus hosted a fundraiser for Valentine's Day, sending over 450 signed postcards to donors, raising over $32,000 USD.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#valentines-2024",
+        },
+      },
+      {
+        key: "sruti",
+        date: "2024-04",
+        content: [
+          "Sruti joins the Alveus team",
+          "As the number of ambassadors at Alveus continues to grow, Sruti joins the team as an Animal Care Coordinator.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
+        key: "wolf-enclosure",
+        date: "2024-05", // https://youtu.be/wAsLMuj_iLs?t=4925
+        content: [
+          "Wolf enclosure constructed",
+          "Located behind the crow and fox enclosures, the wolf enclosure is a massive open-air 200ft by 65ft enclosure, including a river/pond, with a 30ft by 30ft air-conditioned indoor area on the side.",
+        ],
+      },
+      {
+        key: "art-auction-2024",
+        date: "2024-05",
+        content: [
+          "Art Auction fundraiser",
+          "Once again hosted in the Session Yard at Alveus, the art auction sold 35 paintings from the ambassadors, and just under 500 postcards, raising over $44,000 USD.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#art-auction-2024",
         },
       },
     ],
