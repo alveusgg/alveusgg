@@ -278,7 +278,8 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzclick: {
-    description: "Move the PTZ camera to a specific location based on your click",
+    description:
+      "Move the PTZ camera to a specific location based on your click",
     category: "PTZ",
     args: [
       {
