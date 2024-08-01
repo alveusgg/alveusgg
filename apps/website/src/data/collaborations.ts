@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import agent00 from "@/assets/collaborations/agent00.png";
 import bao from "@/assets/collaborations/bao.png";
 import supertf from "@/assets/collaborations/supertf.png";
 import julien from "@/assets/collaborations/julien.png";
@@ -64,6 +65,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Agent00",
+      link: "https://www.twitch.tv/agent00",
+      date: new Date("2024-07-30"),
+      videoId: "KLjwdWb13Hg",
+      creators: [
+        {
+          name: "Agent00",
+          image: agent00,
+          popularity: 1_800_000, // Twitch followers, 2024-07-31
+        },
+      ],
+    },
     {
       name: "Bao The Whale",
       link: "https://www.twitch.tv/bao",
