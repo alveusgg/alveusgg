@@ -437,6 +437,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/events#art-auction-2024",
         },
       },
+      {
+        key: "summer-camp-2024",
+        date: "2024-07",
+        content: [
+          "Summer Camp and merch drop",
+          "Accompanied by a limited-time merch drop, Alveus hosted a 12-hour long stream for the staff at Alveus to participate in some fun activities, with over 3 million minutes watched live by the end.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#summer-camp-2024",
+        },
+      },
     ],
   },
 ];
