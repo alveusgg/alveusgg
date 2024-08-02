@@ -14,6 +14,7 @@ import scrollIntoView from "smooth-scroll-into-view-if-needed";
 import {
   getPosts,
   getPostsCount,
+  getPostsToShow,
   getUsersCount,
 } from "@/server/db/show-and-tell";
 import { delay } from "@/utils/delay";
@@ -63,12 +64,14 @@ export const getStaticProps = async () => {
   }
   const totalPostsCount = await getPostsCount();
   const usersCount = await getUsersCount();
+  const postsToShowCount = await getPostsToShow();
 
   return {
     props: {
       entries,
       nextCursor,
       totalPostsCount,
+      postsToShowCount,
       usersCount,
     },
   };
@@ -84,6 +87,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   entries: initialEntries,
   nextCursor,
   totalPostsCount,
+  postsToShowCount,
   usersCount,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
@@ -493,6 +497,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit flex-col gap-2">
+            {isPresentationView ? <p>X / {postsToShowCount}</p> : null}
             <div className="flex flex-row gap-2">
               <Button
                 className="bg-white shadow-lg"
