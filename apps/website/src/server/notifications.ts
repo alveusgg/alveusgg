@@ -3,19 +3,19 @@ import type { Notification } from "@prisma/client";
 import { env } from "@/env";
 
 import {
-  pushBatchSize,
-  pushMaxAttempts,
-  pushRetryDelay,
-} from "@/data/env/push";
-import {
   defaultTag,
   defaultTitle,
   notificationCategories,
 } from "@/data/notifications";
+import {
+  pushBatchSize,
+  pushMaxAttempts,
+  pushRetryDelay,
+} from "@/data/env/push";
 
 import { prisma } from "@/server/db/client";
-import { triggerDiscordChannelWebhook } from "@/server/discord";
 import { callEndpoint } from "@/server/utils/queue";
+import { triggerDiscordChannelWebhook } from "@/server/discord";
 import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
