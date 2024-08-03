@@ -490,18 +490,9 @@ export async function deletePost(id: string, authorUserId?: string) {
 }
 
 export async function getPostsToShow() {
-  // Find the latest entry marked as seenOnStream=true
-  const latestSeenEntry = await prisma.showAndTellEntry.findFirst({
-    where: {
-      seenOnStream: true,
-    },
-    orderBy: [...postOrderBy],
-  });
-
-  // Calculate the number of entries since the latest seen entry
   const postsToShow = await prisma.showAndTellEntry.count({
     where: {
-      seenOnStream: false, // Only consider entries that have not been seen on stream
+      AND: [whereApproved, { seenOnStream: false }],
     },
   });
 
