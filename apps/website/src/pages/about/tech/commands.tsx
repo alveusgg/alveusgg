@@ -2,6 +2,7 @@ import { Fragment } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
+import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import commands, {
   isOverloadedArguments,
   type Command,
@@ -220,6 +221,9 @@ const AboutTechPage: NextPage = () => {
                           <pre>
                             <code className="text-sm">
                               {signature(command)}
+                              <CopyToClipboardButton
+                                text={signature(command)}
+                              />
                             </code>
                           </pre>
                         </dt>
@@ -311,7 +315,10 @@ const AboutTechPage: NextPage = () => {
                                 <span className="opacity-40 group-first/preset:opacity-100">
                                   {`!ptzload ${camera.toLowerCase()} `}
                                 </span>
-                                {name}{" "}
+                                {name}
+                                <CopyToClipboardButton
+                                  text={`!ptzload ${camera.toLowerCase()} ${name}`}
+                                />
                               </code>
                             </pre>
                           </dt>
