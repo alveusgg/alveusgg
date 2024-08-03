@@ -91,9 +91,9 @@ model Session {
 }
 
 model User {
-  id                 String             @id @default(cuid())
+  id                 String                  @id @default(cuid())
   name               String?
-  email              String?            @unique
+  email              String?                 @unique
   emailVerified      DateTime?
   image              String?
   accounts           Account[]
@@ -104,6 +104,7 @@ model User {
   bingoEntries       BingoEntry[]
   outgoingWebhooks   OutgoingWebhook[]
   showAndTellEntries ShowAndTellEntry[]
+  modComments        ShowAndTellModComment[]
   roles              UserRole[]
   virtualTickets     VirtualTicket[]
 
@@ -403,6 +404,7 @@ model ShowAndTellEntry {
   volunteeringMinutes Int?
 
   attachments ShowAndTellEntryAttachment[]
+  modComments ShowAndTellModComment[]
   user        User?                        @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "ShowAndTellEntry_userId")
@@ -422,6 +424,22 @@ model ShowAndTellEntryAttachment {
   imageAttachment ImageAttachment? @relation(fields: [imageAttachmentId], references: [id], onDelete: Cascade)
 
   @@index([entryId], name: "ShowAndTellEntryAttachment_entryId")
+}
+
+model ShowAndTellModComment {
+  id         String   @id @default(cuid())
+  entryId    String
+  modId      String
+  comment    String
+  isInternal Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  entry ShowAndTellEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  user  User?            @relation(fields: [modId], references: [id])
+
+  @@index([entryId], name: "ShowAndTellModComment_entryId")
+  @@index([modId], name: "ShowAndTellModComment_modId")
 }
 
 model FileStorageObject {
