@@ -3,19 +3,19 @@ import type { Notification } from "@prisma/client";
 import { env } from "@/env";
 
 import {
-  defaultTag,
-  defaultTitle,
-  notificationCategories,
-} from "@/data/notifications";
-import {
   pushBatchSize,
   pushMaxAttempts,
   pushRetryDelay,
 } from "@/data/env/push";
+import {
+  defaultTag,
+  defaultTitle,
+  notificationCategories,
+} from "@/data/notifications";
 
 import { prisma } from "@/server/db/client";
-import { callEndpoint } from "@/server/utils/queue";
 import { triggerDiscordChannelWebhook } from "@/server/discord";
+import { callEndpoint } from "@/server/utils/queue";
 import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";
@@ -188,6 +188,7 @@ async function createDiscordNotifications({
   message,
   expiresAt,
   linkUrl,
+  imageUrl,
 }: Notification) {
   let webhookUrls: string[] = [];
   let toEveryone = false;
@@ -209,15 +210,12 @@ async function createDiscordNotifications({
 
   const tasks = [];
   for (const webhookUrl of webhookUrls) {
-    const relativeNotificationUrl = `/notifications/${id}`;
-    const link =
-      linkUrl ||
-      new URL(relativeNotificationUrl, env.NEXT_PUBLIC_BASE_URL).toString();
-    const content = `${title}\n${message}\n${link}`;
-
     tasks.push(
       triggerDiscordChannelWebhook({
-        content,
+        contentTitle: title || undefined,
+        contentMessage: message || undefined,
+        contentLink: linkUrl || undefined,
+        imageUrl: imageUrl || undefined,
         webhookUrl,
         expiresAt,
         toEveryone,

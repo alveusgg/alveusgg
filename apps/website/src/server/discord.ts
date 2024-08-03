@@ -1,52 +1,93 @@
 import { env } from "@/env";
-
 import { triggerOutgoingWebhook } from "@/server/outgoing-webhooks";
 
 export const OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL = "discordChannel";
 
 type DiscordWebhookNotificationBody = {
-  // We dont use: files[], embeds, payload_json, attachments, flags, thread_name
   avatar_url: string;
   username: string;
-  content: string;
+  content?: string;
   tts: boolean;
   allowed_mentions: {
     parse?: Array<"everyone" | "roles" | "users">;
     users?: string[];
   };
+  embeds?: Array<{
+    title: string;
+    description: string;
+    color?: number;
+    fields?: Array<{ name: string; value: string; inline?: boolean }>;
+    footer?: { text: string; icon_url?: string };
+    thumbnail?: { url: string };
+    image?: { url: string };
+    author?: { name: string; url?: string; icon_url?: string };
+  }>;
 };
 
 export async function triggerDiscordChannelWebhook({
   webhookUrl,
-  content,
+  contentTitle,
+  contentMessage,
+  contentLink,
+  imageUrl,
   botName: username = env.DISCORD_BOT_NAME,
   expiresAt,
   toEveryone = false,
 }: {
   webhookUrl: string;
-  content: string;
+  contentTitle?: string;
+  contentMessage?: string;
+  contentLink?: string;
+  imageUrl?: string;
   botName?: string;
   expiresAt?: Date;
   toEveryone?: boolean;
 }) {
+  const linkRegex = /twitch\.tv\/(\w+)/;
+  const match = contentLink ? contentLink.match(linkRegex) : null;
+  const formattedLink = match
+    ? `[<:twitch:603947671941546025>/${match[1]}](${contentLink})`
+    : `[Click Here](${contentLink})`;
+
+  const embed = {
+    title: contentTitle || "Notification",
+    description: contentMessage || "",
+    color: 0x636a60, // Custom color
+    fields: contentLink
+      ? [
+          {
+            name: "Link",
+            value: formattedLink,
+            inline: true,
+          },
+        ]
+      : [],
+    footer: {
+      text: "Alveus Sanctuary • Notifications",
+      icon_url: `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`,
+    },
+    image: {
+      url: imageUrl || "",
+    },
+  };
+
   const body: DiscordWebhookNotificationBody = {
     username,
-    content,
     tts: false,
     avatar_url: `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`,
     allowed_mentions: {
       parse: [],
     },
+    embeds: [embed],
   };
 
   if (toEveryone) {
     body.allowed_mentions = { parse: ["everyone"] };
-    body.content = `@everyone ${content}`;
+    body.content = `@everyone ${contentLink}`;
   }
 
   const url = new URL(webhookUrl);
   url.searchParams.set("wait", "true");
-  //url.searchParams.set('thread_id', '1234567890');
 
   return triggerOutgoingWebhook({
     url: url.toString(),
