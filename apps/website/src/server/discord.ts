@@ -21,6 +21,7 @@ type DiscordWebhookNotificationBody = {
     thumbnail?: { url: string };
     image?: { url: string };
     author?: { name: string; url?: string; icon_url?: string };
+    timestamp?: Date;
   }>;
 };
 
@@ -52,20 +53,13 @@ export async function triggerDiscordChannelWebhook({
   const embed = {
     title: contentTitle || "Notification",
     description: contentMessage || "",
-    color: 0x636a60, // Custom color
-    fields: contentLink
-      ? [
-          {
-            name: "Link",
-            value: formattedLink,
-            inline: true,
-          },
-        ]
-      : [],
+    color: 0x636a60,
+    url: contentLink,
     footer: {
-      text: "Alveus Sanctuary • Notifications • alveus.gg/updates",
+      text: "alveus.gg/updates",
       icon_url: `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`,
     },
+    timestamp: new Date(Date.now()),
     image: {
       url: imageUrl || "",
     },
@@ -83,7 +77,7 @@ export async function triggerDiscordChannelWebhook({
 
   if (toEveryone) {
     body.allowed_mentions = { parse: ["everyone"] };
-    body.content = `@everyone ${contentLink}`;
+    body.content = `@everyone ${contentTitle}`;
   }
 
   const url = new URL(webhookUrl);
