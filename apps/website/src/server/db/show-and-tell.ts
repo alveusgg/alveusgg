@@ -220,6 +220,11 @@ export async function getPostById(
     include: {
       ...withAttachments.include,
       user: true,
+      modComments: {
+        include: {
+          user: true,
+        },
+      },
     },
     where: {
       approvedAt:
@@ -506,4 +511,47 @@ export async function getPostsToShow() {
   });
 
   return postsToShow;
+}
+
+// Fetch all mod comments for a specific entry
+export async function getModCommentsForEntry(entryId: string) {
+  return await prisma.showAndTellModComment.findMany({
+    where: { entryId },
+    include: { user: true },
+  });
+}
+
+// Add a new mod comment
+export async function addModComment(
+  entryId: string,
+  modId: string,
+  comment: string,
+  isInternal: boolean,
+) {
+  return await prisma.showAndTellModComment.create({
+    data: {
+      entryId,
+      modId,
+      comment,
+      isInternal,
+    },
+  });
+}
+
+// Delete a mod comment
+export async function deleteModComment(commentId: string) {
+  return await prisma.showAndTellModComment.delete({
+    where: { id: commentId },
+  });
+}
+
+// Toggle comment visibility
+export async function toggleCommentVisibility(
+  commentId: string,
+  isInternal: boolean,
+) {
+  return await prisma.showAndTellModComment.update({
+    where: { id: commentId },
+    data: { isInternal: !isInternal },
+  });
 }
