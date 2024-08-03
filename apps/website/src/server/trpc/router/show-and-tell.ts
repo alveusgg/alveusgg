@@ -1,18 +1,20 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import {
-  createFileStorageUpload,
-  deleteFileStorageObject,
-} from "@/server/utils/file-storage";
+import { z } from "zod";
 import {
   protectedProcedure,
   publicProcedure,
   router,
 } from "@/server/trpc/trpc";
+import {
+  createFileStorageUpload,
+  deleteFileStorageObject,
+} from "@/server/utils/file-storage";
 
+import { env } from "@/env";
 import {
   createPost,
   deletePost,
+  getModCommentsForEntry,
   getPostById,
   getPosts,
   getVolunteeringMinutes,
@@ -22,7 +24,6 @@ import {
   withAttachments,
 } from "@/server/db/show-and-tell";
 import { imageMimeTypes } from "@/utils/files";
-import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
 
 const uploadPrefix = "show-and-tell/";
@@ -146,5 +147,18 @@ export const showAndTellRouter = router({
         uploadUrl: String(uploadUrl),
         fileStorageObjectId: fileStorageObject.id,
       };
+    }),
+
+  getModComments: publicProcedure
+    .input(z.string().cuid())
+    .query(async ({ input }) => {
+      const comments = await getModCommentsForEntry(input);
+      if (!comments) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comments not found",
+        });
+      }
+      return comments.filter((comment) => !comment.isInternal);
     }),
 });
