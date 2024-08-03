@@ -1,7 +1,7 @@
 import { type Config } from "tailwindcss";
-import colors from "tailwindcss/colors";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
+import colors from "tailwindcss/colors";
 import plugin from "tailwindcss/plugin";
 
 const config = {
