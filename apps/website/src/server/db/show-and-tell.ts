@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { env } from "@/env";
 
@@ -9,13 +9,13 @@ import {
   MAX_VIDEOS,
 } from "@/data/show-and-tell";
 
-import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
+import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 
-import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export const withAttachments = {
   include: {
@@ -96,6 +96,7 @@ const showAndTellSharedInputSchema = z.object({
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),
+  azaZoo: z.boolean(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -204,6 +205,7 @@ export async function createPost(
       title: input.title,
       text,
       volunteeringMinutes: input.volunteeringMinutes,
+      azaZoo: input.azaZoo,
       attachments: { create: [...newImages, ...newVideos] },
     },
   });
@@ -247,6 +249,7 @@ export async function getPosts({
       title: true,
       text: true,
       volunteeringMinutes: true,
+      azaZoo: true,
       seenOnStream: true,
       createdAt: true,
       updatedAt: true,
@@ -360,6 +363,7 @@ export async function updatePost(
         title: input.title,
         text,
         volunteeringMinutes: input.volunteeringMinutes,
+        azaZoo: input.azaZoo,
         updatedAt: now,
         approvedAt:
           keepApproved && wasApproved ? now : existingEntry.approvedAt,

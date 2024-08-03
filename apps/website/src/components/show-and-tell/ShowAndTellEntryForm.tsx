@@ -1,20 +1,20 @@
-import { type FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { type FormEvent, useMemo, useState } from "react";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
 import {
+  getMaxTextLengthForCreatedAt,
   MAX_IMAGES,
   MAX_VIDEOS,
-  getMaxTextLengthForCreatedAt,
   resizeImageOptions,
 } from "@/data/show-and-tell";
 
 import { classes } from "@/utils/classes";
-import { trpc } from "@/utils/trpc";
-import { notEmpty } from "@/utils/helpers";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import { notEmpty } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
 
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
@@ -22,23 +22,23 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 import useFileUpload from "@/hooks/files/upload";
 
 import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
+import Link from "../content/Link";
+import { Button } from "../shared/form/Button";
 import { Fieldset } from "../shared/form/Fieldset";
-import { TextField } from "../shared/form/TextField";
+import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
+import { NumberField } from "../shared/form/NumberField";
 import { RichTextField } from "../shared/form/RichTextField";
+import { TextAreaField } from "../shared/form/TextAreaField";
+import { TextField } from "../shared/form/TextField";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
-import { Button } from "../shared/form/Button";
-import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
-import { MessageBox } from "../shared/MessageBox";
-import { TextAreaField } from "../shared/form/TextAreaField";
-import { NumberField } from "../shared/form/NumberField";
 import {
   useVideoLinksData,
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
-import Link from "../content/Link";
+import { MessageBox } from "../shared/MessageBox";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -101,6 +101,8 @@ export function ShowAndTellEntryForm({
     !!entry?.volunteeringMinutes,
   );
 
+  const [isAzaZoo, setIsAzaZoo] = useState(!!entry?.azaZoo);
+
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
       () =>
@@ -146,6 +148,7 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
+      azaZoo: formData.get("azaZoo") === "on",
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -383,6 +386,37 @@ export function ShowAndTellEntryForm({
                 entry?.volunteeringMinutes ? entry.volunteeringMinutes / 60 : 1
               }
             />
+          </div>
+        </Fieldset>
+
+        <Fieldset legend="AZA Zoo">
+          <p>
+            Is this submission related to an accredited zoo? (i.e.{" "}
+            <Link
+              href="https://www.aza.org/find-a-zoo-or-aquarium"
+              target="_blank"
+            >
+              AZA
+            </Link>
+            ,{" "}
+            <Link href="https://www.eaza.net/#map_home" target="_blank">
+              EAZA
+            </Link>
+            ,{" "}
+            <Link href="https://caza.ca/plan-a-visit/" target="_blank">
+              CAZA
+            </Link>
+            , etc)
+          </p>
+          <div className="flex items-center gap-4">
+            <input
+              type="checkbox"
+              id="azaZoo"
+              name="azaZoo"
+              checked={isAzaZoo}
+              onChange={(e) => setIsAzaZoo(e.target.checked)}
+            />
+            <label htmlFor="azaZoo">Yes, it is an accredited zoo.</label>
           </div>
         </Fieldset>
 

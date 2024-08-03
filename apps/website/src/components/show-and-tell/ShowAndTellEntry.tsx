@@ -1,3 +1,19 @@
+import type {
+  FileStorageObject,
+  ImageAttachment,
+  ImageMetadata,
+  LinkAttachment,
+  ShowAndTellEntryAttachment,
+  ShowAndTellEntry as ShowAndTellEntryModel,
+} from "@prisma/client";
+import parse, {
+  domToReact,
+  Element,
+  Text,
+  type DOMNode,
+  type HTMLReactParserOptions,
+} from "html-react-parser";
+import Image from "next/image";
 import {
   forwardRef,
   Fragment,
@@ -6,32 +22,17 @@ import {
   useMemo,
   useRef,
 } from "react";
-import type {
-  FileStorageObject,
-  ImageAttachment,
-  ImageMetadata,
-  LinkAttachment,
-  ShowAndTellEntry as ShowAndTellEntryModel,
-  ShowAndTellEntryAttachment,
-} from "@prisma/client";
-import Image from "next/image";
-import parse, {
-  domToReact,
-  Element,
-  Text,
-  type DOMNode,
-  type HTMLReactParserOptions,
-} from "html-react-parser";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
-import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
+import { notEmpty } from "@/utils/helpers";
+import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 
 import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 
+import IconCheck from "@/icons/IconCheck";
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
 
@@ -46,6 +47,7 @@ export type ShowAndTellEntryWithAttachments = Pick<
   | "approvedAt"
   | "seenOnStream"
   | "volunteeringMinutes"
+  | "azaZoo"
 > & {
   attachments: Array<
     ShowAndTellEntryAttachment & {
@@ -144,7 +146,7 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
           { style: "long" },
           { zone: DATETIME_ALVEUS_ZONE },
         )}
-        {entry.volunteeringMinutes ? (
+        {entry.volunteeringMinutes && (
           <>
             {` — `}
             <Link
@@ -176,7 +178,40 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
               />
             </Link>
           </>
-        ) : null}
+        )}
+        {entry.azaZoo && (
+          <>
+            {` — `}
+            <Link
+              href="https://www.aza.org/about-us"
+              className={classes(
+                "inline-flex items-center gap-1 text-[#e0684b]",
+                isPresentationView
+                  ? "group text-nowrap rounded-full bg-alveus-tan-900/95 p-1 text-3xl shadow-lg transition-all hover:scale-102 hover:bg-alveus-tan-900 focus:bg-alveus-tan-900"
+                  : "hover:underline focus:underline",
+              )}
+              target="_blank"
+              custom
+            >
+              <strong
+                className={classes(
+                  "bg-[#e0684b] bg-clip-text font-bold text-transparent",
+                  isPresentationView
+                    ? "from-blue-500 pl-2 leading-none transition-colors group-hover:from-blue-400 group-hover:to-green-500"
+                    : "from-blue-800",
+                )}
+              >
+                Accredited Zoo
+              </strong>
+              <IconCheck
+                className={classes(
+                  "inline-block",
+                  isPresentationView ? "h-12 w-12" : "h-8 w-8",
+                )}
+              />
+            </Link>
+          </>
+        )}
       </p>
     </header>
   );
