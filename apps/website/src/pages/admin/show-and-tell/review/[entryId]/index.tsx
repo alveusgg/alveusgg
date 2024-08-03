@@ -1,28 +1,29 @@
-import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
-import { getSession } from "next-auth/react";
+import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
+import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { trpc } from "@/utils/trpc";
-import { getEntityStatus } from "@/utils/entity-helpers";
-import { getAdminSSP } from "@/server/utils/admin";
+import { useState } from "react";
 import { permissions } from "@/data/permissions";
+import { getAdminSSP } from "@/server/utils/admin";
+import { getEntityStatus } from "@/utils/entity-helpers";
+import { trpc } from "@/utils/trpc";
 
-import { MessageBox } from "@/components/shared/MessageBox";
-import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
+import DateTime from "@/components/content/DateTime";
+import Meta from "@/components/content/Meta";
 import {
   approveButtonClasses,
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/form/Button";
-import Meta from "@/components/content/Meta";
-import DateTime from "@/components/content/DateTime";
-import IconTrash from "@/icons/IconTrash";
-import IconMinus from "@/icons/IconMinus";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconMinus from "@/icons/IconMinus";
+import IconTrash from "@/icons/IconTrash";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -46,8 +47,20 @@ const AdminReviewShowAndTellPage: NextPage<
 > = ({ menuItems }) => {
   const router = useRouter();
   const { entryId } = router.query;
+  const [newComment, setNewComment] = useState("");
+  const { data: session } = useSession();
+  const modId = session?.user?.id;
+
   const getEntry = trpc.adminShowAndTell.getEntry.useQuery(String(entryId), {
     enabled: !!entryId,
+    select: (entry) =>
+      entry && {
+        ...entry,
+        modComments: entry.modComments.map((comment) => ({
+          ...comment,
+          user: { ...comment.user },
+        })),
+      },
   });
 
   const deleteMutation = trpc.adminShowAndTell.delete.useMutation({
@@ -66,6 +79,48 @@ const AdminReviewShowAndTellPage: NextPage<
         await getEntry.refetch();
       },
     });
+
+  const addModCommentMutation = trpc.adminShowAndTell.addModComment.useMutation(
+    {
+      onSettled: async () => {
+        await getEntry.refetch();
+      },
+    },
+  );
+  const deleteModCommentMutation =
+    trpc.adminShowAndTell.deleteModComment.useMutation({
+      onSettled: async () => {
+        await getEntry.refetch();
+      },
+    });
+  const toggleCommentVisibilityMutation =
+    trpc.adminShowAndTell.toggleCommentVisibility.useMutation({
+      onSettled: async () => {
+        await getEntry.refetch();
+      },
+    });
+
+  const handleAddComment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!entryId || !newComment.trim()) return;
+
+    addModCommentMutation.mutate({
+      entryId: String(entryId),
+      modId, // Replace with actual mod ID
+      comment: newComment,
+      isInternal: true,
+    });
+
+    setNewComment("");
+  };
+
+  const deleteComment = (commentId: string) => {
+    deleteModCommentMutation.mutate(commentId);
+  };
+
+  const toggleCommentVisibility = (commentId: string, isInternal: boolean) => {
+    toggleCommentVisibilityMutation.mutate({ commentId, isInternal });
+  };
 
   const entry = getEntry.data;
   const status = entry && getEntityStatus(entry);
@@ -153,6 +208,63 @@ const AdminReviewShowAndTellPage: NextPage<
             </div>
           )}
         </Panel>
+
+        {entry && (
+          <>
+            <Headline>Mod comments:</Headline>
+            <Panel>
+              {entry.modComments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="flex flex-row items-center justify-between border-b py-2"
+                >
+                  <div>
+                    <span className="font-bold">{comment.user.name}</span> (
+                    <DateTime
+                      date={comment.createdAt}
+                      format={{ time: "minutes" }}
+                    />
+                    ): {comment.comment}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="small"
+                      className={defaultButtonClasses}
+                      onClick={() =>
+                        toggleCommentVisibility(comment.id, comment.isInternal)
+                      }
+                    >
+                      {comment.isInternal ? "Make public" : "Make private"}
+                    </Button>
+                    <Button
+                      size="small"
+                      className={dangerButtonClasses}
+                      onClick={() => deleteComment(comment.id)}
+                    >
+                      <IconTrash className="h-4 w-4" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              ))}
+
+              <form onSubmit={handleAddComment} className="mt-4 flex">
+                <input
+                  type="text"
+                  name="comment"
+                  placeholder="Add a comment..."
+                  className="flex-1 rounded-l border p-2"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  required
+                />
+                <Button type="submit" className="rounded-r">
+                  Send
+                </Button>
+              </form>
+            </Panel>
+          </>
+        )}
 
         {entry && (
           <>

@@ -1,22 +1,26 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+import { permissions } from "@/data/permissions";
+import {
+  addModComment,
+  approvePost,
+  deleteModComment,
+  deletePost,
+  getAdminPosts,
+  getModCommentsForEntry,
+  getPostById,
+  markPostAsSeen,
+  removeApprovalFromPost,
+  showAndTellUpdateInputSchema,
+  toggleCommentVisibility,
+  unmarkPostAsSeen,
+  updatePost,
+} from "@/server/db/show-and-tell";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import {
-  showAndTellUpdateInputSchema,
-  updatePost,
-  approvePost,
-  removeApprovalFromPost,
-  deletePost,
-  getPostById,
-  markPostAsSeen,
-  unmarkPostAsSeen,
-  getAdminPosts,
-} from "@/server/db/show-and-tell";
-import { permissions } from "@/data/permissions";
 import { deleteFileStorageObject } from "@/server/utils/file-storage";
 import { notEmpty } from "@/utils/helpers";
 
@@ -28,6 +32,54 @@ export const adminShowAndTellRouter = router({
   getEntry: permittedProcedure
     .input(z.string().cuid())
     .query(({ input }) => getPostById(input)),
+
+  getModComments: permittedProcedure
+    .input(z.string().cuid())
+    .query(async ({ input }) => {
+      const comments = await getModCommentsForEntry(input);
+      if (!comments) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comments not found",
+        });
+      }
+      return comments;
+    }),
+
+  addModComment: permittedProcedure
+    .input(
+      z.object({
+        entryId: z.string().cuid(),
+        modId: z.string().cuid(),
+        comment: z.string(),
+        isInternal: z.boolean(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      return await addModComment(
+        input.entryId,
+        input.modId,
+        input.comment,
+        input.isInternal,
+      );
+    }),
+
+  deleteModComment: permittedProcedure
+    .input(z.string().cuid())
+    .mutation(async ({ input }) => {
+      await deleteModComment(input);
+    }),
+
+  toggleCommentVisibility: permittedProcedure
+    .input(
+      z.object({
+        commentId: z.string().cuid(),
+        isInternal: z.boolean(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await toggleCommentVisibility(input.commentId, input.isInternal);
+    }),
 
   review: permittedProcedure
     .input(showAndTellUpdateInputSchema)

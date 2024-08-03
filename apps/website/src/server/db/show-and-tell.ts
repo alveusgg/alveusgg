@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { env } from "@/env";
 
@@ -9,13 +9,13 @@ import {
   MAX_VIDEOS,
 } from "@/data/show-and-tell";
 
-import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
+import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 
-import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export const withAttachments = {
   include: {
@@ -220,6 +220,11 @@ export async function getPostById(
     include: {
       ...withAttachments.include,
       user: true,
+      modComments: {
+        include: {
+          user: true,
+        },
+      },
     },
     where: {
       approvedAt:
@@ -487,4 +492,66 @@ export async function deletePost(id: string, authorUserId?: string) {
     }),
   ]);
   await revalidateCache(id);
+}
+
+export async function getPostsToShow() {
+  // Find the latest entry marked as seenOnStream=true
+  const latestSeenEntry = await prisma.showAndTellEntry.findFirst({
+    where: {
+      seenOnStream: true,
+    },
+    orderBy: [...postOrderBy],
+  });
+
+  // Calculate the number of entries since the latest seen entry
+  const postsToShow = await prisma.showAndTellEntry.count({
+    where: {
+      seenOnStream: false, // Only consider entries that have not been seen on stream
+    },
+  });
+
+  return postsToShow;
+}
+
+// Fetch all mod comments for a specific entry
+export async function getModCommentsForEntry(entryId: string) {
+  return await prisma.showAndTellModComment.findMany({
+    where: { entryId },
+    include: { user: true },
+  });
+}
+
+// Add a new mod comment
+export async function addModComment(
+  entryId: string,
+  modId: string,
+  comment: string,
+  isInternal: boolean,
+) {
+  return await prisma.showAndTellModComment.create({
+    data: {
+      entryId,
+      modId,
+      comment,
+      isInternal,
+    },
+  });
+}
+
+// Delete a mod comment
+export async function deleteModComment(commentId: string) {
+  return await prisma.showAndTellModComment.delete({
+    where: { id: commentId },
+  });
+}
+
+// Toggle comment visibility
+export async function toggleCommentVisibility(
+  commentId: string,
+  isInternal: boolean,
+) {
+  return await prisma.showAndTellModComment.update({
+    where: { id: commentId },
+    data: { isInternal: !isInternal },
+  });
 }
