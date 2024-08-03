@@ -1,5 +1,5 @@
-import { TRPCError } from "@trpc/server";
 import { z } from "zod";
+import { TRPCError } from "@trpc/server";
 
 import { env } from "@/env";
 
@@ -9,13 +9,13 @@ import {
   MAX_VIDEOS,
 } from "@/data/show-and-tell";
 
+import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 import { prisma } from "@/server/db/client";
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
-import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 
+import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
-import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export const withAttachments = {
   include: {
