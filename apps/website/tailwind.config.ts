@@ -231,6 +231,7 @@ const config = {
       { theme: { textStroke: { 1: 1, 2: 2, 3: 3, 4: 4 } } },
     ),
   ],
+  darkMode: "selector",
 } satisfies Config;
 
 export default config;
