@@ -37,6 +37,8 @@ import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
+import { Tooltip } from "@/components/shared/Tooltip";
+
 export type ShowAndTellEntryWithAttachments = Pick<
   ShowAndTellEntryModel,
   | "id"
@@ -223,10 +225,19 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
               {content}
               {modComments &&
                 modComments.map((comment) => (
-                  <p key={comment.id} className="italic text-alveus-green">
-                    {" "}
-                    <IconShield className="inline h-6 w-6" /> {comment.comment}
-                  </p>
+                  <Tooltip
+                    key={comment.id}
+                    content={`This is a verified mod comment, last updated ${formatDateTime(
+                      comment.updatedAt,
+                      { style: "short", time: "seconds" },
+                      { zone: DATETIME_ALVEUS_ZONE },
+                    )}`}
+                  >
+                    <p className="italic text-alveus-green">
+                      <IconShield className="inline h-6 w-6" />{" "}
+                      {comment.comment}
+                    </p>
+                  </Tooltip>
                 ))}
             </ErrorBoundary>
           </div>
