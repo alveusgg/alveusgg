@@ -9,7 +9,7 @@ import "./src/env/index.js";
 const cdnImagesRemotePattern = process.env.FILE_STORAGE_CDN_URL
   ? [
       {
-        protocol: "https",
+        protocol: process.env.NODE_ENV === "development" ? "http" : "https",
         hostname: process.env.FILE_STORAGE_CDN_URL.replace(/^https?:\/\//, ""),
       },
     ]
@@ -55,26 +55,6 @@ const config = {
       },
       // S3 - Configured CDN
       ...cdnImagesRemotePattern,
-      // S3 - Production CDN CNAME
-      {
-        protocol: "https",
-        hostname: "files.alveus.site",
-      },
-      // S3 - Development CDN Origin
-      {
-        protocol: "https",
-        hostname: "alveus-files.nyc3.cdn.digitaloceanspaces.com",
-      },
-      // S3 - Production CDN Origin
-      {
-        protocol: "https",
-        hostname: "alveus.nyc3.cdn.digitaloceanspaces.com",
-      },
-      // Local Dev
-      {
-        protocol: "http",
-        hostname: "localhost",
-      },
     ],
   },
   redirects: async () => [
