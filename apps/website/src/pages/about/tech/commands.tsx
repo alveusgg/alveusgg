@@ -21,6 +21,7 @@ import Meta from "@/components/content/Meta";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+
 interface NamedCommand extends Command {
   name: string;
 }
@@ -225,9 +226,9 @@ const AboutTechPage: NextPage = () => {
                             <code className="text-sm">
                               {signature(command)}
                               <CopyButton
-                                clickHandler={() => {
+                                onClick={() => {
                                   copyToClipboard(signature(command));
-                                  setSelectedCommand(command.description);
+                                  setSelectedCommand(command.name);
                                   setTimeout(() => {
                                     setSelectedCommand("");
                                   }, 2000);
@@ -242,7 +243,7 @@ const AboutTechPage: NextPage = () => {
                             {command.description}
 
                             <InlineInfoBox
-                              isOpen={selectedCommand === command.description}
+                              isOpen={selectedCommand === command.name}
                             >
                               Copied
                             </InlineInfoBox>
@@ -332,7 +333,7 @@ const AboutTechPage: NextPage = () => {
                                 </span>
                                 {name}
                                 <CopyButton
-                                  clickHandler={() => {
+                                  onClick={() => {
                                     copyToClipboard(
                                       `!ptzload ${camera.toLowerCase()} ${name}`,
                                     );
