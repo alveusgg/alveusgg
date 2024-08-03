@@ -1,8 +1,8 @@
-import { Fragment, useState } from "react";
+import { Fragment } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
-import InlineInfoBox from "@/components/InlineInfoBox";
-import CopyButton from "@/components/CopyButton";
+
+import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import commands, {
   isOverloadedArguments,
   type Command,
@@ -71,10 +71,6 @@ const signature = (command: NamedCommand) => {
 };
 
 const AboutTechPage: NextPage = () => {
-  const copyToClipboard = (command: string) => {
-    navigator.clipboard.writeText(command);
-  };
-  const [selectedCommand, setSelectedCommand] = useState<string>("");
   return (
     <>
       <Meta
@@ -225,14 +221,8 @@ const AboutTechPage: NextPage = () => {
                           <pre>
                             <code className="text-sm">
                               {signature(command)}
-                              <CopyButton
-                                onClick={() => {
-                                  copyToClipboard(signature(command));
-                                  setSelectedCommand(command.name);
-                                  setTimeout(() => {
-                                    setSelectedCommand("");
-                                  }, 2000);
-                                }}
+                              <CopyToClipboardButton
+                                text={signature(command)}
                               />
                             </code>
                           </pre>
@@ -241,12 +231,6 @@ const AboutTechPage: NextPage = () => {
                         <dd>
                           <p className="text-sm italic text-alveus-green-400">
                             {command.description}
-
-                            <InlineInfoBox
-                              isOpen={selectedCommand === command.name}
-                            >
-                              Copied
-                            </InlineInfoBox>
                           </p>
                         </dd>
                       </div>
@@ -332,18 +316,8 @@ const AboutTechPage: NextPage = () => {
                                   {`!ptzload ${camera.toLowerCase()} `}
                                 </span>
                                 {name}
-                                <CopyButton
-                                  onClick={() => {
-                                    copyToClipboard(
-                                      `!ptzload ${camera.toLowerCase()} ${name}`,
-                                    );
-                                    setSelectedCommand(
-                                      `${camera.toLowerCase()} ${name}`,
-                                    );
-                                    setTimeout(() => {
-                                      setSelectedCommand("");
-                                    }, 2000);
-                                  }}
+                                <CopyToClipboardButton
+                                  text={`!ptzload ${camera.toLowerCase()} ${name}`}
                                 />
                               </code>
                             </pre>
@@ -352,15 +326,6 @@ const AboutTechPage: NextPage = () => {
                           <dd>
                             <p className="text-sm italic text-alveus-green-400">
                               {preset.description}
-
-                              <InlineInfoBox
-                                isOpen={
-                                  selectedCommand ===
-                                  `${camera.toLowerCase()} ${name}`
-                                }
-                              >
-                                Copied
-                              </InlineInfoBox>
                             </p>
                           </dd>
                         </div>
