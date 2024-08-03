@@ -15,6 +15,17 @@ import logoImage from "@/assets/logo.png";
 
 import type { WeatherResponse } from "../api/stream/weather";
 
+const truncate = (value: string, max: number) => {
+  if (value.length <= max) return value;
+
+  for (const pattern of [" - ", " | ", ": "]) {
+    const index = value.indexOf(pattern);
+    if (index !== -1 && index < max) return value.slice(0, index);
+  }
+
+  return value.slice(0, max - 3) + "…";
+};
+
 const OverlayPage: NextPage = () => {
   // Get the current time and date
   // Refresh every 250ms
@@ -175,7 +186,7 @@ const OverlayPage: NextPage = () => {
           <div className="text-stroke absolute bottom-2 left-2 font-bold text-white">
             <p>Upcoming:</p>
             <p className="text-xl">
-              {event.title}
+              {truncate(event.title, 30)}
               {" @ "}
               {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
             </p>

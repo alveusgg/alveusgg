@@ -1,16 +1,17 @@
 import type { NextPage } from "next";
 import Image from "next/image";
 
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import People from "@/components/content/People";
 import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import People from "@/components/content/People";
+import Meta from "@/components/content/Meta";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
-import ellaRocksImage from "@/assets/people/ella-rocks.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
+import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
+import nickImage from "@/assets/people/nick.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -64,31 +65,6 @@ const staff = {
       </>
     ),
   },
-  ella: {
-    image: ellaRocksImage,
-    name: "Ella Rocks",
-    title: "Animal Care Coordinator",
-    description: (
-      <>
-        <p>
-          Ella started volunteering at a local wildlife rehabilitation center
-          during high school. After a year of volunteering, she began working at
-          the center as a wildlife care coordinator. As part of her job, Ella
-          communicated with the public when they found potentially injured, ill
-          or orphaned wildlife. She came to realize how important the education
-          part of her job was so that people would know what they can do for
-          their local wildlife and when to leave them alone. Ella and Maya met
-          at the wildlife rehabilitation center and started an ambassador
-          training program after the center received two imprinted non
-          releasable American crows. Working with the ambassadors sparked in her
-          an interest in animal behavior and training. That interest carries on
-          into her work at Alveus where she looks forward to seeing the
-          ambassadors assist in educating audiences on what they can do for
-          their wild counterparts.
-        </p>
-      </>
-    ),
-  },
   lindsay: {
     image: lindsayBellawImage,
     name: "Lindsay Bellaw",
@@ -106,6 +82,48 @@ const staff = {
           all sorts of animals and loves to learn about them and tell anyone who
           will listen about them!
         </p>
+      </>
+    ),
+  },
+  sruti: {
+    image: srutiJamalapuramImage,
+    name: "Sruti Jamalapuram",
+    title: "Animal Care Coordinator",
+    description: (
+      <>
+        <p>
+          Sruti graduated with a degree in Wildlife Sciences and a Master&apos;s
+          in Biology with a focus on Animal Behavior. As a young volunteer at
+          her local zoo, Sruti was fortunate to realize her passion for animal
+          behavior, conservation, and environmental education. This passion
+          translated to jobs all over the world, participating in field research
+          and education. That trend continued when she moved to Michigan and
+          served as the Mammal Curator for The Creature Conservancy. This
+          opportunity channeled her interest in behavior into training, where
+          she trained with animals both big and small for fear-free veterinary
+          care, educational programs, and mental well-being. To further improve
+          her training skills, Sruti studied and worked with K9 Turbo Training
+          to obtain her certification in professional dog training. She
+          specializes in fear and aggression and loves working with families to
+          create a training environment that is supportive, engaging, and fun
+          for everyone!
+        </p>
+        <p>
+          Building relationships with animals, continuing that relationship
+          through time and training, and sharing that experience with others
+          brings her a lot of joy - she is excited to do that alongside the
+          Alveus community!
+        </p>
+      </>
+    ),
+  },
+  nick: {
+    image: nickImage,
+    name: "Nick",
+    title: "Facilities",
+    description: (
+      <>
+        <p>I&apos;m the neighbor.</p>
       </>
     ),
   },
@@ -229,7 +247,7 @@ const AboutStaffPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          <People people={staff} columns={2} />
+          <People people={staff} />
 
           <p className="mb-4 mt-8 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
             The Alveus team is more than just our on-site staff. We have a
