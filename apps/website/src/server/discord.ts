@@ -44,12 +44,6 @@ export async function triggerDiscordChannelWebhook({
   expiresAt?: Date;
   toEveryone?: boolean;
 }) {
-  const linkRegex = /twitch\.tv\/(\w+)/;
-  const match = contentLink ? contentLink.match(linkRegex) : null;
-  const formattedLink = match
-    ? `[<:twitch:603947671941546025>/${match[1]}](${contentLink})`
-    : `[Click Here](${contentLink})`;
-
   const embed = {
     title: contentTitle || "Notification",
     description: contentMessage || "",
