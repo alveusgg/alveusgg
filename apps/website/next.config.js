@@ -70,11 +70,6 @@ const config = {
         protocol: "https",
         hostname: "alveus.nyc3.cdn.digitaloceanspaces.com",
       },
-      // Local Dev
-      {
-        protocol: "http",
-        hostname: "localhost",
-      },
     ],
   },
   redirects: async () => [
