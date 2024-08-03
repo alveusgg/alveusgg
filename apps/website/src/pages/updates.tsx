@@ -1,18 +1,18 @@
 import { type NextPage } from "next";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
-import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
+import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
 import { Schedule } from "@/components/notifications/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
-import bellPeepo from "@/assets/bell-peepo.webp";
+import bellPeepoStatic from "@/assets/bell-peepo-static.webp";
 
 const notificationTags = ["stream"];
 
@@ -59,12 +59,31 @@ const UpdatesPage: NextPage = () => {
         </div>
 
         <div className="w-full max-w-lg">
-          <Image
-            src={bellPeepo}
-            alt=""
-            className="w-full"
-            unoptimized // Next.js optimization makes this larger than source
-          />
+          {/* Video player shown if no reduced-motion or reduced-data preference */}
+          <video
+            className="video-reduced reduced-motion:hidden reduced-data:hidden"
+            width="100%"
+            height="100%"
+            autoPlay
+            loop
+            muted
+            playsInline
+          >
+            <source src="/assets/bell-peepo.webm" type="video/webm" />
+            <Image
+              src={bellPeepoStatic}
+              alt="Peepo ringing bell"
+              className="w-full"
+            />
+          </video>
+          {/* Static image shown if reduced-motion or reduced-data preference is detected */}
+          <div className="static-image hidden reduced-motion:block reduced-data:block">
+            <Image
+              src={bellPeepoStatic}
+              alt="Peepo ringing bell"
+              className="w-full"
+            />
+          </div>
         </div>
       </Section>
 

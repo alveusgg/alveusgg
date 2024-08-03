@@ -1,7 +1,7 @@
 import { type Config } from "tailwindcss";
+import colors from "tailwindcss/colors";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
-import colors from "tailwindcss/colors";
 import plugin from "tailwindcss/plugin";
 
 const config = {
@@ -124,6 +124,8 @@ const config = {
       },
       screens: {
         twitchSideBySide: "681px",
+        "reduced-motion": { raw: "(prefers-reduced-motion: reduce)" },
+        "reduced-data": { raw: "(prefers-reduced-data: reduce)" },
       },
       maxWidth: {
         "1/3": "33.333333%",
@@ -156,6 +158,11 @@ const config = {
           ]),
         ),
       },
+    },
+  },
+  variants: {
+    extend: {
+      display: ["reduced-motion", "reduced-data"],
     },
   },
   plugins: [
