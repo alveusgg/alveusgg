@@ -63,7 +63,7 @@ export async function triggerDiscordChannelWebhook({
         ]
       : [],
     footer: {
-      text: "Alveus Sanctuary • Notifications",
+      text: "Alveus Sanctuary • Notifications • alveus.gg/updates",
       icon_url: `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`,
     },
     image: {

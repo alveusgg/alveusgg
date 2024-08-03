@@ -212,10 +212,10 @@ async function createDiscordNotifications({
   for (const webhookUrl of webhookUrls) {
     tasks.push(
       triggerDiscordChannelWebhook({
-        contentTitle: title || undefined,
-        contentMessage: message || undefined,
-        contentLink: linkUrl || undefined,
-        imageUrl: imageUrl || undefined,
+        contentTitle: title ?? undefined,
+        contentMessage: message,
+        contentLink: linkUrl ?? undefined,
+        imageUrl: imageUrl ?? undefined,
         webhookUrl,
         expiresAt,
         toEveryone,
