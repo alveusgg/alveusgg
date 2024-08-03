@@ -25,6 +25,8 @@ import DateTime from "@/components/content/DateTime";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
 
@@ -88,10 +90,14 @@ const MyShowAndTellEntriesPage: NextPage = () => {
 
         {session?.status === "authenticated" && (
           <>
-            {myEntries.isLoading && <p>Loading...</p>}
-            {myEntries.isError && <p>Error: {myEntries.error.message}</p>}
+            {myEntries.isLoading && <MessageBox>Loading...</MessageBox>}
+            {myEntries.error && (
+              <MessageBox variant="failure">
+                <ProcedureErrorMessage error={myEntries.error} />
+              </MessageBox>
+            )}
             {myEntries.isSuccess && !myEntries.data.length && (
-              <p>No entries found.</p>
+              <MessageBox>No entries found.</MessageBox>
             )}
 
             {myEntries.data && myEntries.data.length > 0 && (

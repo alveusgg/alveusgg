@@ -6,6 +6,7 @@ import { trpc } from "@/utils/trpc";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
@@ -74,9 +75,9 @@ const EditShowAndTellPage: NextPage = () => {
         {session?.status === "authenticated" && (
           <>
             {getMyPost.isLoading && <p>Loading...</p>}
-            {getMyPost.isError && (
+            {getMyPost.error && (
               <MessageBox variant="failure">
-                {getMyPost.error.message}
+                <ProcedureErrorMessage error={getMyPost.error} />
               </MessageBox>
             )}
             {getMyPost.data && (

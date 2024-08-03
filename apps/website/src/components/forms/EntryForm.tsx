@@ -5,6 +5,7 @@ import type { Form } from "@prisma/client";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { Button } from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 
 import Markdown from "@/components/content/Markdown";
 import Heading from "@/components/content/Heading";
@@ -179,7 +180,7 @@ export const EntryForm = ({
                 {/* Surface errors at the start */}
                 {enterForm.error && (
                   <MessageBox variant="failure">
-                    Error: {enterForm.error.message}
+                    <ProcedureErrorMessage error={enterForm.error} />
                   </MessageBox>
                 )}
 
@@ -205,7 +206,7 @@ export const EntryForm = ({
             {/* Surface errors at the start, if there was no checks section */}
             {!config.checks && enterForm.error && (
               <MessageBox variant="failure">
-                Error: {enterForm.error.message}
+                <ProcedureErrorMessage error={enterForm.error} />
               </MessageBox>
             )}
 

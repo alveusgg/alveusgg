@@ -7,7 +7,6 @@ import { getEntityStatus } from "@/utils/entity-helpers";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 
-import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
@@ -18,6 +17,8 @@ import {
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/form/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import Meta from "@/components/content/Meta";
 import DateTime from "@/components/content/DateTime";
 import IconTrash from "@/icons/IconTrash";
@@ -80,7 +81,9 @@ const AdminReviewShowAndTellPage: NextPage<
         <Panel>
           {getEntry.isLoading && <p>Loading...</p>}
           {getEntry.isError && (
-            <MessageBox variant="failure">{getEntry.error.message}</MessageBox>
+            <MessageBox variant="failure">
+              <ProcedureErrorMessage error={getEntry.error} />
+            </MessageBox>
           )}
           {entry && (
             <div className="flex flex-row">
