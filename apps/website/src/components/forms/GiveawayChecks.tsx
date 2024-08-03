@@ -1,12 +1,12 @@
+import { useCallback, useState, type ReactNode, type MouseEvent } from "react";
 import Link from "next/link";
-import { type MouseEvent, type ReactNode, useCallback, useState } from "react";
 
-import IconInstagram from "@/icons/IconInstagram";
-import IconShoppingCart from "@/icons/IconShoppingCart";
-import IconTikTok from "@/icons/IconTikTok";
 import IconTwitch from "@/icons/IconTwitch";
 import IconTwitter from "@/icons/IconTwitter";
 import IconYouTube from "@/icons/IconYouTube";
+import IconInstagram from "@/icons/IconInstagram";
+import IconTikTok from "@/icons/IconTikTok";
+import IconShoppingCart from "@/icons/IconShoppingCart";
 
 import { classes } from "@/utils/classes";
 

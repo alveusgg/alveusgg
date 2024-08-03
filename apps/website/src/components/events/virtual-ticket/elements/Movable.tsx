@@ -1,5 +1,5 @@
-import { type MotionValue, motion, useMotionValue } from "framer-motion";
-import { type ComponentProps, type ReactNode, useEffect, useMemo } from "react";
+import { useEffect, useMemo, type ComponentProps, type ReactNode } from "react";
+import { motion, useMotionValue, type MotionValue } from "framer-motion";
 
 import { useTicketEditorContext } from "@/components/events/virtual-ticket/TicketEditor";
 
@@ -62,6 +62,7 @@ export function Movable<K extends MovableElementName>({
   ...props
 }: MovableProps<K>) {
   const MovableT = motion[T] as MovableElement;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const attributes = props as any;
   const { canvasWidth, canvasHeight } = useTicketEditorContext();
 

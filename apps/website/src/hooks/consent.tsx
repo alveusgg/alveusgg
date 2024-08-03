@@ -1,20 +1,20 @@
-import { Dialog } from "@headlessui/react";
-import { useRouter } from "next/router";
 import {
+  useCallback,
+  useEffect,
+  useState,
+  createContext,
+  useContext,
+  useMemo,
+  forwardRef,
+  useRef,
   type ReactNode,
   type Ref,
-  createContext,
-  forwardRef,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
 } from "react";
+import { useRouter } from "next/router";
+import { Dialog } from "@headlessui/react";
 
-import { classes } from "@/utils/classes";
 import { safeJSONParse } from "@/utils/helpers";
+import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";

@@ -1,6 +1,8 @@
 import { useEffect, useReducer } from "react";
 import { z } from "zod";
 
+import { transposeMatrix } from "@/utils/math";
+import { classes } from "@/utils/classes";
 import {
   type BingoCard as BingoCardType,
   type BingoValue,
@@ -8,8 +10,6 @@ import {
   checkHasBingo,
   isCellPartOfBingo,
 } from "@/utils/bingo";
-import { classes } from "@/utils/classes";
-import { transposeMatrix } from "@/utils/math";
 
 import { BingoCardGrid } from "./BingoCardGrid";
 
@@ -141,7 +141,7 @@ export function BingoCard({
           size={size}
           showBingoHeader
           renderCell={(_, rowIndex, columnIndex) => {
-            const cellValue = transposedCells[rowIndex]?.[columnIndex]!;
+            const cellValue = transposedCells[rowIndex]![columnIndex]!;
             const isSelected = selectedValues.includes(cellValue);
             const isSelectable =
               selectableValues === undefined ||

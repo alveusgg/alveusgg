@@ -1,9 +1,9 @@
 import { Bot } from "@twurple/easy-bot";
 
-import { createNotificationCommands } from "@/bot/commands/notification";
-import { createVersionCommands } from "@/bot/commands/version";
 import { env } from "@/env";
 import { getAuthProvider } from "@/twitch/auth";
+import { createNotificationCommands } from "@/bot/commands/notification";
+import { createVersionCommands } from "@/bot/commands/version";
 
 export async function startBot() {
   const authProvider = await getAuthProvider();

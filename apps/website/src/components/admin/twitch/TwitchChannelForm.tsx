@@ -6,10 +6,10 @@ import { useRouter } from "next/router";
 
 import { trpc } from "@/utils/trpc";
 
-import { MessageBox } from "@/components/shared/MessageBox";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
-import { Fieldset } from "@/components/shared/form/Fieldset";
 import { TextField } from "@/components/shared/form/TextField";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { MessageBox } from "@/components/shared/MessageBox";
 
 type TwitchChannelFormProps = {
   action: "create" | "edit";

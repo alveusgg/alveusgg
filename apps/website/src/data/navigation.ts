@@ -1,5 +1,5 @@
-import socials from "@/components/shared/data/socials";
 import IconAmazon from "@/icons/IconAmazon";
+import socials from "@/components/shared/data/socials";
 
 export type NavStructureLink = {
   title: string;

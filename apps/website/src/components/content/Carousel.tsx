@@ -1,15 +1,15 @@
 import {
-  type ReactNode,
   useCallback,
   useEffect,
   useRef,
   useState,
+  type ReactNode,
 } from "react";
 
 import { classes } from "@/utils/classes";
 
-import useDragScroll from "@/hooks/drag";
 import usePrefersReducedMotion from "@/hooks/motion";
+import useDragScroll from "@/hooks/drag";
 
 import IconChevronLeft from "@/icons/IconChevronLeft";
 import IconChevronRight from "@/icons/IconChevronRight";

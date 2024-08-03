@@ -1,15 +1,15 @@
 import type {
-  GetServerSidePropsContext,
   InferGetStaticPropsType,
   NextPage,
+  GetServerSidePropsContext,
 } from "next";
 
 import { useMemo } from "react";
 
-import { permissions } from "@/data/permissions";
 import { getSession } from "next-auth/react";
+import { permissions } from "@/data/permissions";
 
-import { getAdminSSP } from "@/server/utils/admin";
+import { classes } from "@/utils/classes";
 import {
   type BingoValue,
   bingoTypeDefs,
@@ -19,20 +19,20 @@ import {
   isCellPartOfBingo,
   parseBingoPlayData,
 } from "@/utils/bingo";
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import { getAdminSSP } from "@/server/utils/admin";
 
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { Headline } from "@/components/admin/Headline";
-import { Panel } from "@/components/admin/Panel";
-import { BingoCardGrid } from "@/components/bingo/BingoCardGrid";
 import Meta from "@/components/content/Meta";
-import { MessageBox } from "@/components/shared/MessageBox";
 import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/form/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import { Headline } from "@/components/admin/Headline";
+import { Panel } from "@/components/admin/Panel";
+import { BingoCardGrid } from "@/components/bingo/BingoCardGrid";
 import { transposeMatrix } from "@/utils/math";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
@@ -265,7 +265,7 @@ const AdminEditBingoPage: NextPage<
                           size={config.size}
                           renderCell={(_, rowIndex, columnIndex) => {
                             const cellValue =
-                              transposedCard[rowIndex]?.[columnIndex]!;
+                              transposedCard[rowIndex]![columnIndex]!;
                             const isCalled =
                               playData.calledValues.includes(cellValue);
                             const isBingoMatch =
@@ -288,7 +288,7 @@ const AdminEditBingoPage: NextPage<
                                       : "bg-white",
                                 )}
                               >
-                                {transposedCard[rowIndex]?.[columnIndex]!}
+                                {transposedCard[rowIndex]![columnIndex]!}
                               </div>
                             );
                           }}

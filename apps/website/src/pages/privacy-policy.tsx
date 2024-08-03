@@ -1,10 +1,10 @@
-import type { NextPage } from "next";
+import { type NextPage } from "next";
 
 import privacyPolicy from "@/data/privacy-policy.md";
 
-import Markdown from "@/components/content/Markdown";
-import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Meta from "@/components/content/Meta";
+import Markdown from "@/components/content/Markdown";
 
 const PrivacyPolicyPage: NextPage = () => {
   return (

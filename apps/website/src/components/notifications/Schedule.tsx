@@ -1,16 +1,16 @@
-import { Transition } from "@headlessui/react";
 import { useEffect, useMemo, useState } from "react";
+import { Transition } from "@headlessui/react";
 
 import {
   getStandardCategoryColor,
   standardCategories,
 } from "@/data/calendar-events";
 
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
 
-import Calendar from "@/components/content/Calendar";
 import Link from "@/components/content/Link";
+import Calendar from "@/components/content/Calendar";
 
 export function Schedule() {
   const [today, setToday] = useState<Date>();

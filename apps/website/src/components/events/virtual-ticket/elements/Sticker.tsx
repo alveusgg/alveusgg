@@ -6,6 +6,7 @@ export type StickerProps = {
 
 export function Sticker({ image, x, y }: StickerProps) {
   return (
+    // eslint-disable-next-line @next/next/no-img-element
     <img
       style={{
         pointerEvents: "none",

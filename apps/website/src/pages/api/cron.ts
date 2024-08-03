@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
 import { env } from "@/env";
-import { runScheduledTasks } from "@/server/scheduler";
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
+import { runScheduledTasks } from "@/server/scheduler";
 
 export default async function handler(
   req: NextApiRequest,

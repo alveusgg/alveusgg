@@ -4,10 +4,10 @@ import {
   otherCountries,
 } from "@/utils/countries";
 
-import { FieldGroup } from "../shared/form/FieldGroup";
 import { Fieldset } from "../shared/form/Fieldset";
-import { SelectBoxField } from "../shared/form/SelectBoxField";
+import { FieldGroup } from "../shared/form/FieldGroup";
 import { TextField } from "../shared/form/TextField";
+import { SelectBoxField } from "../shared/form/SelectBoxField";
 
 export const ShippingAddressFieldset = () => {
   return (

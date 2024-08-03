@@ -1,5 +1,5 @@
-import { getUserRoles } from "@/db/users";
 import { env } from "@/env";
+import { getUserRoles } from "@/db/users";
 
 type UserRoleCacheEntry = {
   roles: string[];

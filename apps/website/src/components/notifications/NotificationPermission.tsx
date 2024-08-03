@@ -1,14 +1,14 @@
 import { useCallback } from "react";
 
-import { typeSafeObjectKeys } from "@/utils/helpers";
-import {
-  notificationHelpEntries,
-  sendWelcomeNotification,
-} from "@/utils/notifications";
 import {
   isNotificationsSupported,
   usePushServiceWorker,
 } from "@/utils/push-subscription";
+import {
+  notificationHelpEntries,
+  sendWelcomeNotification,
+} from "@/utils/notifications";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import { NotificationErrorMessage } from "@/components/notifications/NotificationErrorMessage";
 

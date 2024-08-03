@@ -1,22 +1,22 @@
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 import {
-  type ReactNode,
   cloneElement,
-  forwardRef,
   useCallback,
   useEffect,
   useId,
   useMemo,
   useState,
+  forwardRef,
+  type ReactNode,
 } from "react";
+import PhotoSwipeLightbox from "photoswipe/lightbox";
 
-import { classes } from "@/utils/classes";
-import { createImageUrl } from "@/utils/image";
 import {
   getDefaultPhotoswipeLightboxOptions,
   resolvePhotoswipeElementProvider,
 } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
+import { createImageUrl } from "@/utils/image";
+import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -114,6 +114,7 @@ export const Preview = ({ videoId, className }: PreviewProps) => {
 
   return (
     <div className="relative aspect-video w-full">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgSrc(videoId, type)}
         onError={onError}
@@ -317,7 +318,6 @@ export const Lightbox = forwardRef<HTMLDivElement, LightboxProps>(
     return (
       <>
         <style
-          // biome-ignore lint/security/noDangerouslySetInnerHtml:
           dangerouslySetInnerHTML={{
             // Hide the placeholder overlay
             // Ensure we retain the aspect ratio of the video

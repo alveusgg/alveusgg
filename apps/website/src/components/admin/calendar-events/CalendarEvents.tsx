@@ -1,15 +1,15 @@
-import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 
 import { getStandardCategoryColor } from "@/data/calendar-events";
 
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
 
+import { ModalDialog } from "@/components/shared/ModalDialog";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import Calendar from "@/components/content/Calendar";
-import { ModalDialog } from "@/components/shared/ModalDialog";
 
 import { CalendarEventForm } from "./CalendarEventForm";
 

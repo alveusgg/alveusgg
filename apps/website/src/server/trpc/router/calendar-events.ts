@@ -1,7 +1,7 @@
 import { z } from "zod";
 
-import { getCalendarEvents } from "@/server/db/calendar-events";
 import { publicProcedure, router } from "@/server/trpc/trpc";
+import { getCalendarEvents } from "@/server/db/calendar-events";
 
 export const calendarEventsRouter = router({
   getCalendarEvents: publicProcedure

@@ -1,17 +1,17 @@
-import type { NextPage } from "next";
+import { type NextPage } from "next";
 import Image from "next/image";
 
-import Heading from "@/components/content/Heading";
-import Maya from "@/components/content/Maya";
-import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
 import Timeline from "@/components/content/Timeline";
+import Maya from "@/components/content/Maya";
 import IconTwitch from "@/icons/IconTwitch";
 
-import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
 const experience = [
   {

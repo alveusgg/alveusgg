@@ -22,7 +22,7 @@
  * "MIT" license. For details, see src/third-party/qrcodegen.
  */
 
-import type React from "react";
+import type { SVGAttributes } from "react";
 
 import { QrCode } from "@/third-party/qrcodegen";
 
@@ -70,7 +70,7 @@ export function QRCode({
   children,
   value,
   ...attributes
-}: { value: string } & React.SVGAttributes<SVGSVGElement>) {
+}: { value: string } & SVGAttributes<SVGSVGElement>) {
   const svgModules = QrCode.encodeText(value).getModules();
 
   return (

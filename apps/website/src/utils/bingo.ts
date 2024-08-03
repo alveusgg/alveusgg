@@ -1,6 +1,6 @@
+import { z } from "zod";
 import invariant from "@/utils/invariant";
 import { transposeMatrix } from "@/utils/math";
-import { z } from "zod";
 
 type BingoTypeDef = {
   label: string;

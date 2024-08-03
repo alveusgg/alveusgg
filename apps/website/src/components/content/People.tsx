@@ -1,5 +1,5 @@
+import { type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
-import type { ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 

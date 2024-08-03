@@ -1,6 +1,6 @@
-import { type ComponentType, type RefAttributes, useCallback } from "react";
+import { useCallback, type ComponentType, type RefAttributes } from "react";
 
-import type { Items } from "@/hooks/grouped";
+import { type Items } from "@/hooks/grouped";
 
 export interface GroupedProps<T> {
   items: T[];

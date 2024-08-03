@@ -1,14 +1,15 @@
-import debounce from "lodash/debounce";
 import type { ChangeEvent, FormEvent } from "react";
 import { useCallback, useMemo } from "react";
+import debounce from "lodash/debounce";
+
+import { usePushSubscription } from "@/utils/push-subscription";
+import { classes } from "@/utils/classes";
 
 import { notificationCategories } from "@/data/notifications";
-import { usePushSubscription } from "@/utils/push-subscription";
 
 import IconLoading from "@/icons/IconLoading";
-import { classes } from "@/utils/classes";
-import { NotificationCategoryCheckbox } from "./NotificationCategoryCheckbox";
 import type { NotificationPermission } from "./NotificationPermission";
+import { NotificationCategoryCheckbox } from "./NotificationCategoryCheckbox";
 
 export function NotificationSettingsForm({
   notificationPermission,

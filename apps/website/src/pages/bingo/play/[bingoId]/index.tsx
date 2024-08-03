@@ -1,24 +1,24 @@
-import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 import { useEffect, useRef, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
 
 import { bingoLiveDataSchema } from "@/utils/bingo";
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
 
 import IconLoading from "@/icons/IconLoading";
 
-import Consent from "@/components/Consent";
-import { BingoCard, useBingoLocalState } from "@/components/bingo/BingoCard";
 import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
-import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import { TwitchEmbed } from "@/components/content/TwitchEmbed";
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { MessageBox } from "@/components/shared/MessageBox";
 import { Button } from "@/components/shared/form/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { BingoCard, useBingoLocalState } from "@/components/bingo/BingoCard";
+import Consent from "@/components/Consent";
 
 function PlayGame({ bingoId }: { bingoId: string }) {
   const { data, error } = trpc.bingos.enterBingo.useQuery(

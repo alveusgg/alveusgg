@@ -1,7 +1,7 @@
 import { PLACEHOLDER_ASK_MARKETING_EMAILS_LABEL } from "@/utils/forms";
 
-import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
+import { CheckboxField } from "@/components/shared/form/CheckboxField";
 
 import Link from "@/components/content/Link";
 

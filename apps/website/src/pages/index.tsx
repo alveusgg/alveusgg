@@ -1,45 +1,45 @@
 import type { NextPage } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import animalQuestEpisodes from "@alveusgg/data/src/animal-quest";
 
-import usePrefersReducedMotion from "@/hooks/motion";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
+import usePrefersReducedMotion from "@/hooks/motion";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
-import Consent from "@/components/Consent";
-import AnimalQuest from "@/components/content/AnimalQuest";
-import Button from "@/components/content/Button";
-import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
-import Maya from "@/components/content/Maya";
-import PlushieCarousel from "@/components/content/PlushieCarousel";
-import Section from "@/components/content/Section";
-import Slideshow from "@/components/content/Slideshow";
+import Button from "@/components/content/Button";
 import WatchLive from "@/components/content/WatchLive";
+import Slideshow from "@/components/content/Slideshow";
+import Section from "@/components/content/Section";
+import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
+import Maya from "@/components/content/Maya";
+import AnimalQuest from "@/components/content/AnimalQuest";
+import PlushieCarousel from "@/components/content/PlushieCarousel";
+import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
 
-import miaHeroImage from "@/assets/hero/mia.png";
+import sirenHeroImage from "@/assets/hero/siren.png";
 import mileyHeroImage from "@/assets/hero/miley.png";
+import ticoHeroImage from "@/assets/hero/tico.png";
+import miaHeroImage from "@/assets/hero/mia.png";
 import noodleHeroImage from "@/assets/hero/noodle.png";
 import nuggetHeroImage from "@/assets/hero/nugget.png";
-import sirenHeroImage from "@/assets/hero/siren.png";
-import ticoHeroImage from "@/assets/hero/tico.png";
 
-import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 
 const slides = [
   {

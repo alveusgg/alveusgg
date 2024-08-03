@@ -8,7 +8,7 @@ export function transposeMatrix<T = unknown>(matrix: T[][]) {
 
   for (let i = 0; i < numRows; i++) {
     for (let j = 0; j < numCols; j++) {
-      transposed[j]![i] = matrix[i]?.[j]!;
+      transposed[j]![i] = matrix[i]![j]!;
     }
   }
 

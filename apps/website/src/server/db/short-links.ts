@@ -1,8 +1,7 @@
 import { z } from "zod";
-
+import { TRPCError } from "@trpc/server";
 import { prisma } from "@/server/db/client";
 import { SLUG_REGEX } from "@/utils/slugs";
-import { TRPCError } from "@trpc/server";
 
 export const shortLinkSchema = z.object({
   label: z.string().min(1),

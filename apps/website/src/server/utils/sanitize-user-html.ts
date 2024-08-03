@@ -1,5 +1,5 @@
-import DOMPurify from "dompurify";
 import { JSDOM } from "jsdom";
+import DOMPurify from "dompurify";
 
 const window = new JSDOM("").window;
 // NOTE: DOMPurify types expect a Window object, but it works with a JSDOM window

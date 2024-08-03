@@ -1,10 +1,9 @@
-import { PT_Sans, PT_Serif } from "next/font/google";
+import { type ReactNode, useMemo } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { type ReactNode, useEffect, useMemo } from "react";
 
-import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 

@@ -1,20 +1,20 @@
-import type { NextPage } from "next";
+import { type NextPage } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
 import Image from "next/image";
+import Section from "@/components/content/Section";
+import Meta from "@/components/content/Meta";
+import Heading from "@/components/content/Heading";
 
-import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import Link from "@/components/content/Link";
+import { classes } from "@/utils/classes";
 import foundAnimal, {
   type FoundAnimalFlow,
   type FoundAnimalOption,
 } from "@/data/found-animal";
-import { classes } from "@/utils/classes";
+import Link from "@/components/content/Link";
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 
 type Log = {
   message: string;
@@ -35,7 +35,6 @@ const FoundAnimalPage: NextPage = () => {
 
   // Scroll to the bottom whenever the log changes
   const container = useRef<HTMLDivElement | null>(null);
-  // biome-ignore lint/correctness/useExhaustiveDependencies:
   useEffect(() => {
     if (!container.current) return;
     container.current.scrollTop = container.current.scrollHeight;

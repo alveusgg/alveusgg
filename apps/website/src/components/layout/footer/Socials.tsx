@@ -1,8 +1,8 @@
-import Image from "next/image";
 import Link from "next/link";
+import Image from "next/image";
 
-import useCrawler from "@/hooks/crawler";
 import usePrefersReducedMotion from "@/hooks/motion";
+import useCrawler from "@/hooks/crawler";
 
 import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
 import pic from "@/assets/socials/twitter-pic-winnie.jpg";

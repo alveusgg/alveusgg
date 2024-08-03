@@ -1,8 +1,8 @@
 import type { Notification } from "@prisma/client";
 
-import IconNotificationAlert from "@/icons/IconNotificationAlert";
 import IconTwitch from "@/icons/IconTwitch";
 import IconYouTube from "@/icons/IconYouTube";
+import IconNotificationAlert from "@/icons/IconNotificationAlert";
 
 const iconProps = { className: "h-6 w-6" };
 

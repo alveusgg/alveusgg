@@ -1,13 +1,13 @@
-import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { Fragment } from "react";
+import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 
-import { permissions } from "@/data/permissions";
-import { getAdminSSP } from "@/server/utils/admin";
-import { trpc } from "@/utils/trpc";
 import { getSession } from "next-auth/react";
+import { trpc } from "@/utils/trpc";
+import { getAdminSSP } from "@/server/utils/admin";
+import { permissions } from "@/data/permissions";
 
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
 import { OutgoingWebhookFeedEntry } from "@/components/admin/activity-feed/outgoing-webhook-feed-entry";
 import Meta from "@/components/content/Meta";

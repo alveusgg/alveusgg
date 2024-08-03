@@ -1,23 +1,23 @@
-import Image from "next/image";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 import type { MouseEventHandler, MutableRefObject } from "react";
 import { useCallback, useEffect, useId, useMemo, useRef } from "react";
+import PhotoSwipeLightbox from "photoswipe/lightbox";
+import Image from "next/image";
 
-import { createImageUrl } from "@/utils/image";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import {
   parseVideoUrl,
   validateNormalizedVideoUrl,
   videoPlatformConfigs,
 } from "@/utils/video-urls";
+import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { createImageUrl } from "@/utils/image";
+import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 
 import Carousel from "@/components/content/Carousel";
-import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
+import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import IconInformationCircle from "@/icons/IconInformationCircle";
-import { classes } from "@/utils/classes";
 
 export function ShowAndTellGallery({
   isPresentationView,

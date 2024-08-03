@@ -1,12 +1,12 @@
-import type { Notification } from "@prisma/client";
 import { z } from "zod";
+import type { Notification } from "@prisma/client";
 
 import { pushMaxAttempts } from "@/data/env/push";
 
-import { prisma } from "@/server/db/client";
-import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
+import { prisma } from "@/server/db/client";
+import { updateNotificationPushStatus } from "@/server/db/notifications";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 

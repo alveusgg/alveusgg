@@ -1,11 +1,7 @@
 import { resolve } from "path";
 
-import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert {
-  type: "json",
-};
-import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert {
-  type: "json",
-};
+import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
+import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
 
 import "./src/env/index.js";
 
@@ -24,7 +20,7 @@ const config = {
   reactStrictMode: true,
   swcMinify: true,
   eslint: {
-    ignoreDuringBuilds: true,
+    dirs: ["."],
   },
   images: {
     remotePatterns: [

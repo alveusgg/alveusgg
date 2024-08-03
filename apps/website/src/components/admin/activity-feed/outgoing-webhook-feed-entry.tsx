@@ -1,8 +1,8 @@
 import type { FormEntry, OutgoingWebhook, User } from "@prisma/client";
 
+import { trpc } from "@/utils/trpc";
 import DateTime from "@/components/content/DateTime";
 import IconSync from "@/icons/IconSync";
-import { trpc } from "@/utils/trpc";
 
 type OutgoingWebhookWithFormEntry = OutgoingWebhook & {
   user: User | null;

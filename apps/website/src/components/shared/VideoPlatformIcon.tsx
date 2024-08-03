@@ -1,5 +1,5 @@
-import IconImgur from "@/icons/IconImgur";
 import IconStreamable from "@/icons/IconStreamable";
+import IconImgur from "@/icons/IconImgur";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconYouTube from "@/icons/IconYouTube";
 

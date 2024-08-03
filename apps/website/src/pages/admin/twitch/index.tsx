@@ -1,18 +1,19 @@
-import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
+import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
+
 import { getSession } from "next-auth/react";
 
 import { permissions } from "@/data/permissions";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
-import Meta from "@/components/content/Meta";
 import { LinkButton } from "@/components/shared/form/Button";
+import Meta from "@/components/content/Meta";
 
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Panel } from "@/components/admin/Panel";
-import { ChannelConfig } from "@/components/admin/twitch/ChannelConfig";
 import { ProvideAuth } from "@/components/admin/twitch/ProvideAuth";
+import { ChannelConfig } from "@/components/admin/twitch/ChannelConfig";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);

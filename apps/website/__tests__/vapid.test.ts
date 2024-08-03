@@ -1,7 +1,7 @@
-import { env } from "@/env";
+import { expect, test, vi } from "vitest";
 import { getVapidAuthorizationString } from "@/server/web-push/vapid";
 import { decodeBase64UrlString } from "@/utils/base64url";
-import { expect, test, vi } from "vitest";
+import { env } from "@/env";
 
 vi.mock("@/env", () => {
   return {

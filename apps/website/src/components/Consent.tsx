@@ -1,18 +1,18 @@
+import { useCallback, type MouseEventHandler, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
-import { type MouseEventHandler, type ReactNode, useCallback } from "react";
 
 import { classes } from "@/utils/classes";
 
 import {
-  type ConsentKey,
+  useConsent,
   consentData,
   consentExplainer,
-  useConsent,
+  type ConsentKey,
 } from "@/hooks/consent";
 import useCrawler from "@/hooks/crawler";
 
-import Button from "@/components/content/Button";
 import Link from "@/components/content/Link";
+import Button from "@/components/content/Button";
 
 type ConsentProps = {
   item: string;

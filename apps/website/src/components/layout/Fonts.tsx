@@ -1,5 +1,5 @@
-import { PT_Sans, PT_Serif } from "next/font/google";
 import { useEffect } from "react";
+import { PT_Sans, PT_Serif } from "next/font/google";
 
 const ptSans = PT_Sans({
   subsets: ["latin"],

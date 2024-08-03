@@ -1,40 +1,40 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import { Fragment, useEffect, useId, useMemo } from "react";
+import { useEffect, useId, useMemo, Fragment } from "react";
 
-import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
 import ambassadors, {
   type Ambassador,
 } from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import {
-  type AmbassadorImage,
-  type AmbassadorImages,
-  getAmbassadorIconImage,
   getAmbassadorImages,
   getAmbassadorMerchImage,
+  getAmbassadorIconImage,
+  type AmbassadorImage,
+  type AmbassadorImages,
 } from "@alveusgg/data/src/ambassadors/images";
 import {
-  type AnimalQuestWithRelation,
   getAmbassadorEpisodes,
+  type AnimalQuestWithRelation,
 } from "@alveusgg/data/src/animal-quest";
 import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
+import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
 
-import AnimalQuest from "@/components/content/AnimalQuest";
-import Carousel from "@/components/content/Carousel";
-import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
-import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Carousel from "@/components/content/Carousel";
+import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
+import AnimalQuest from "@/components/content/AnimalQuest";
 
-import { formatPartialDateString } from "@/utils/datetime";
-import { typeSafeObjectKeys } from "@/utils/helpers";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
-import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { convertToSlug } from "@/utils/slugs";
+import { formatPartialDateString } from "@/utils/datetime";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;

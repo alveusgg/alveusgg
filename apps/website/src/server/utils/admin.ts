@@ -3,8 +3,8 @@ import type { GetSessionParams } from "next-auth/react";
 
 import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
-import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 import { notEmpty } from "@/utils/helpers";
+import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 
 const menuItems = [
   {

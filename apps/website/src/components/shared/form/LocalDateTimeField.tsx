@@ -1,14 +1,14 @@
 import {
   type ChangeEvent,
-  type DetailedHTMLProps,
   type InputHTMLAttributes,
+  type DetailedHTMLProps,
   type ReactNode,
-  useCallback,
-  useMemo,
-  useRef,
   useState,
+  useMemo,
+  useCallback,
+  useRef,
 } from "react";
-import { type AriaFieldProps, useField } from "react-aria";
+import { useField, type AriaFieldProps } from "react-aria";
 
 import { classes } from "@/utils/classes";
 

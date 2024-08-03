@@ -1,10 +1,10 @@
-import type { NextPage } from "next";
+import { type NextPage } from "next";
 import Image from "next/image";
 
-import Button from "@/components/content/Button";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Button from "@/components/content/Button";
+import Meta from "@/components/content/Meta";
 
 import report2022Image from "@/assets/reports/2022.svg";
 

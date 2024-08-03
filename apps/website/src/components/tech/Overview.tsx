@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Handle, type NodeProps, Position, useEdges } from "reactflow";
+import { Handle, Position, useEdges, type NodeProps } from "reactflow";
 
 import { classes } from "@/utils/classes";
 

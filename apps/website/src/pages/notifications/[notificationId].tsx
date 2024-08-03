@@ -6,13 +6,13 @@ import type {
 
 import { useEffect } from "react";
 
+import { useRouter } from "next/router";
+import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
-import { useRouter } from "next/router";
 
-import Link from "@/components/content/Link";
 import { getNotificationById } from "@/server/db/notifications";
+import Link from "@/components/content/Link";
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const notificationId = String(params?.notificationId || "");

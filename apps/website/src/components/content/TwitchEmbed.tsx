@@ -1,5 +1,5 @@
-import Script from "next/script";
 import { useCallback, useId, useState } from "react";
+import Script from "next/script";
 
 type TwitchEmbedId =
   | { channel: string }

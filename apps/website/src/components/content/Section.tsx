@@ -1,9 +1,9 @@
-import type { ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
-import dustTexture from "@/assets/textures/dust.svg";
 import topographyTexture from "@/assets/textures/topography.svg";
+import dustTexture from "@/assets/textures/dust.svg";
 
 type SectionProps = {
   children?: ReactNode;

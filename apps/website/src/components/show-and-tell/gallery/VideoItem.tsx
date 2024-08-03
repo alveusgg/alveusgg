@@ -1,13 +1,13 @@
 import type { LinkAttachment } from "@prisma/client";
-import type { AnchorHTMLAttributes } from "react";
+import { type AnchorHTMLAttributes } from "react";
 
-import { createImageUrl } from "@/utils/image";
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
-
-import { Preview } from "@/components/content/YouTube";
-import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
-import IconYouTube from "@/icons/IconYouTube";
+import { createImageUrl } from "@/utils/image";
 import { classes } from "@/utils/classes";
+
+import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
+import { Preview } from "@/components/content/YouTube";
+import IconYouTube from "@/icons/IconYouTube";
 
 type VideoThumbnailProps = {
   videoAttachment: LinkAttachment;
@@ -59,6 +59,7 @@ export function VideoItem({
     // Support platforms that have dedicated thumbnail URLs
     content = (
       <div className="relative">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={createImageUrl({ src: urlPreview, width: 720 })}
           alt=""

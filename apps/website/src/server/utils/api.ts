@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { z } from "zod";
 import type { ZodType } from "zod/lib/types";
+import type { z } from "zod";
 
 import { env } from "@/env";
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";

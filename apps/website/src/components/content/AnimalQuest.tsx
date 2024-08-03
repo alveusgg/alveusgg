@@ -1,13 +1,13 @@
-import type { Ambassador } from "@alveusgg/data/src/ambassadors/core";
-import type {
-  AnimalQuestWithEpisode,
-  AnimalQuestWithRelation,
-} from "@alveusgg/data/src/animal-quest";
+import { type ComponentProps } from "react";
 import Image from "next/image";
-import type { ComponentProps } from "react";
+import {
+  type AnimalQuestWithEpisode,
+  type AnimalQuestWithRelation,
+} from "@alveusgg/data/src/animal-quest";
+import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
 
-import { classes } from "@/utils/classes";
 import { sentenceToKebab } from "@/utils/string-case";
+import { classes } from "@/utils/classes";
 
 import IconYouTube from "@/icons/IconYouTube";
 

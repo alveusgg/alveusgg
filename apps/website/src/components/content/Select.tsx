@@ -1,10 +1,10 @@
-import { Listbox, Transition } from "@headlessui/react";
 import { Fragment, type JSX } from "react";
+import { Listbox, Transition } from "@headlessui/react";
 
+import { typeSafeObjectEntries } from "@/utils/helpers";
+import { classes } from "@/utils/classes";
 import IconCheck from "@/icons/IconCheck";
 import IconChevronVertical from "@/icons/IconChevronVertical";
-import { classes } from "@/utils/classes";
-import { typeSafeObjectEntries } from "@/utils/helpers";
 
 type SelectProps = {
   options: Record<string, string>;

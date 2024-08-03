@@ -1,11 +1,20 @@
+import {
+  forwardRef,
+  Fragment,
+  isValidElement,
+  useCallback,
+  useMemo,
+  useRef,
+} from "react";
 import type {
   FileStorageObject,
   ImageAttachment,
   ImageMetadata,
   LinkAttachment,
-  ShowAndTellEntryAttachment,
   ShowAndTellEntry as ShowAndTellEntryModel,
+  ShowAndTellEntryAttachment,
 } from "@prisma/client";
+import Image from "next/image";
 import parse, {
   domToReact,
   Element,
@@ -13,24 +22,15 @@ import parse, {
   type DOMNode,
   type HTMLReactParserOptions,
 } from "html-react-parser";
-import Image from "next/image";
-import {
-  Fragment,
-  forwardRef,
-  isValidElement,
-  useCallback,
-  useMemo,
-  useRef,
-} from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
-import { notEmpty } from "@/utils/helpers";
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
+import { notEmpty } from "@/utils/helpers";
+import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
 import Link from "@/components/content/Link";
-import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
+import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";

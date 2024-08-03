@@ -1,7 +1,7 @@
-import { createEnv } from "@t3-oss/env-core";
 import { LogLevel } from "@twurple/chat";
-import "dotenv/config";
+import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
+import "dotenv/config";
 
 const transformCommaSeparatedStringToArray = (value: string) =>
   value ? value.split(",").map((v) => v.trim()) : [];

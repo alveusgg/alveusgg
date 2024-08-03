@@ -1,15 +1,14 @@
 import { z } from "zod";
-
-import { permissions } from "@/data/permissions";
-import { bingoSchema, createBingo, editBingo } from "@/server/db/bingos";
+import { TRPCError } from "@trpc/server";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
+import { permissions } from "@/data/permissions";
+import { createBingo, editBingo, bingoSchema } from "@/server/db/bingos";
 import type { BingoPlayData } from "@/utils/bingo";
 import { bingoValueSchema, parseBingoPlayData } from "@/utils/bingo";
-import { TRPCError } from "@trpc/server";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageBingos),

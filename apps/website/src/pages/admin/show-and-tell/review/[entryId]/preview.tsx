@@ -1,13 +1,13 @@
-import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
+import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-import { permissions } from "@/data/permissions";
-import { getAdminSSP } from "@/server/utils/admin";
 import { trpc } from "@/utils/trpc";
+import { getAdminSSP } from "@/server/utils/admin";
+import { permissions } from "@/data/permissions";
 
-import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
@@ -30,10 +30,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
 const AdminPreviewShowAndTellPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = (
-  // biome-ignore lint/correctness/noEmptyPattern:
-  {},
-) => {
+> = ({}) => {
   const router = useRouter();
   const { entryId } = router.query;
   const getEntry = trpc.adminShowAndTell.getEntry.useQuery(String(entryId), {

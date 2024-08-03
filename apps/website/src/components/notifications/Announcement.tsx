@@ -1,18 +1,18 @@
-import type { Notification } from "@prisma/client";
-import { DateTime } from "luxon";
+import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo } from "react";
+import type { Notification } from "@prisma/client";
+import { DateTime } from "luxon";
 
 import { formatDateTime } from "@/utils/datetime";
 import { getShortBaseUrl } from "@/utils/short-url";
 
 import IconChevronRight from "@/icons/IconChevronRight";
 
-import DateTimeComponent from "@/components/content/DateTime";
 import { NotificationIcon } from "@/components/notifications/NotificationIcon";
-import { AddEventButton } from "@/components/shared/AddEventButton";
 import { ShareButton } from "@/components/shared/ShareButton";
+import DateTimeComponent from "@/components/content/DateTime";
+import { AddEventButton } from "@/components/shared/AddEventButton";
 
 export function Announcement({ notification }: { notification: Notification }) {
   const relativeNotificationUrl = `/notifications/${notification.id}`;

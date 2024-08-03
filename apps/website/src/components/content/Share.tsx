@@ -1,18 +1,18 @@
 import { useMemo } from "react";
 
-import { classes } from "@/utils/classes";
+import { getShortBaseUrl } from "@/utils/short-url";
 import {
   emailShareUrl,
   facebookShareUrl,
   linkedinShareUrl,
   twitterShareUrl,
 } from "@/utils/share-url";
-import { getShortBaseUrl } from "@/utils/short-url";
+import { classes } from "@/utils/classes";
 
-import IconEnvelope from "@/icons/IconEnvelope";
 import IconFacebook from "@/icons/IconFacebook";
-import IconLinkedIn from "@/icons/IconLinkedIn";
 import IconTwitter from "@/icons/IconTwitter";
+import IconEnvelope from "@/icons/IconEnvelope";
+import IconLinkedIn from "@/icons/IconLinkedIn";
 
 import Link from "./Link";
 

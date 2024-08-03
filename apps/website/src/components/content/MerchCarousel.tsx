@@ -1,13 +1,13 @@
 import Image from "next/image";
 
-import hoodieBack from "@/assets/merch/hoodie-back.png";
-import hoodieDemoGeorgie from "@/assets/merch/hoodie-demo-georgie.png";
-import hoodieFront from "@/assets/merch/hoodie-front.png";
+import tshirtFront from "@/assets/merch/tshirt-front.png";
+import tshirtDemoGrinder from "@/assets/merch/tshirt-demo-grinder.png";
 import tshirtBack from "@/assets/merch/tshirt-back.png";
 import tshirtDemoAppa from "@/assets/merch/tshirt-demo-appa.png";
-import tshirtDemoGrinder from "@/assets/merch/tshirt-demo-grinder.png";
 import tshirtDemoMia from "@/assets/merch/tshirt-demo-mia.png";
-import tshirtFront from "@/assets/merch/tshirt-front.png";
+import hoodieFront from "@/assets/merch/hoodie-front.png";
+import hoodieBack from "@/assets/merch/hoodie-back.png";
+import hoodieDemoGeorgie from "@/assets/merch/hoodie-demo-georgie.png";
 
 import Carousel from "./Carousel";
 

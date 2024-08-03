@@ -1,20 +1,20 @@
-import type { NextPage } from "next";
+import { type NextPage } from "next";
 import Image from "next/image";
 
 import { classes } from "@/utils/classes";
 
-import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
-import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import Network from "@/components/tech/Network";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
 import Overview from "@/components/tech/Overview";
+import Network from "@/components/tech/Network";
 
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const broadcastStudio: ListItems = {
   software: {

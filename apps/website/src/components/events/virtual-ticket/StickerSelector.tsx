@@ -1,10 +1,10 @@
-import { classes } from "@/utils/classes";
 import {
   notEmpty,
   typeSafeObjectEntries,
   typeSafeObjectKeys,
 } from "@/utils/helpers";
-import { type StickerPack, mapStickerIdToPath } from "@/utils/virtual-tickets";
+import { classes } from "@/utils/classes";
+import { mapStickerIdToPath, type StickerPack } from "@/utils/virtual-tickets";
 
 import Link from "@/components/content/Link";
 
@@ -74,6 +74,7 @@ export function StickerSelector({
                       }}
                       title={`${disabled ? "" : "Add"} ${name}`}
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img
                         src={image}
                         alt=""

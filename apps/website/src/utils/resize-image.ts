@@ -1,5 +1,5 @@
-import type { ImageMimeType } from "@/utils/files";
 import invariant from "@/utils/invariant";
+import type { ImageMimeType } from "@/utils/files";
 
 export type ResizeImageOptions = {
   type: ImageMimeType;

@@ -1,6 +1,6 @@
+import React, { type ReactNode, type ButtonHTMLAttributes } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
-import React, { type ReactNode, type ButtonHTMLAttributes } from "react";
 
 type ButtonStyleProps = {
   className?: string;

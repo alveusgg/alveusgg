@@ -1,6 +1,6 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import Image from "next/image";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 import { env } from "@/env";
 
@@ -14,18 +14,18 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1-fall.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2-fall.png";
 
-import { classes } from "@/utils/classes";
-import invariant from "@/utils/invariant";
 import { trpc } from "@/utils/trpc";
+import invariant from "@/utils/invariant";
+import { classes } from "@/utils/classes";
 import { getVirtualTicketImageUrl } from "@/utils/virtual-tickets";
 
-import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Meta from "@/components/content/Meta";
 
 import { Wiggle } from "@/components/events/virtual-ticket/Wiggle";
 
-import { Activities } from "@/components/events/fall-carnival-2023/Activities";
 import { IntroSection } from "@/components/events/fall-carnival-2023/IntroSection";
+import { Activities } from "@/components/events/fall-carnival-2023/Activities";
 import { StickerAttribution } from "@/components/events/virtual-ticket/StickerAttribution";
 
 /*
@@ -120,6 +120,7 @@ const TicketPage: NextPage = () => {
                 {!showTicket && <span>Loading ticket…</span>}
               </div>
 
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 className={classes(
                   "relative w-full opacity-0 transition-opacity",

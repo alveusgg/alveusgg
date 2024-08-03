@@ -1,7 +1,7 @@
 import type { Session } from "next-auth";
 
-import type { PermissionConfig } from "@/data/permissions";
 import { env } from "@/env";
+import type { PermissionConfig } from "@/data/permissions";
 
 export function getSuperUserIds() {
   return env.SUPER_USER_IDS.split(",").map((id) => id.trim());

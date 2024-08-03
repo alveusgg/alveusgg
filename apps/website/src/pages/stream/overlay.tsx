@@ -1,19 +1,18 @@
-import { Transition } from "@headlessui/react";
-import type { NextPage } from "next";
+import { type NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { Transition } from "@headlessui/react";
 
-import { classes } from "@/utils/classes";
+import { trpc } from "@/utils/trpc";
 import {
   DATETIME_ALVEUS_ZONE,
   formatDateTimeParts,
   formatDateTimeRelative,
 } from "@/utils/datetime";
-import { trpc } from "@/utils/trpc";
 
 import logoImage from "@/assets/logo.png";
 
-import type { WeatherResponse } from "../api/stream/weather";
+import { type WeatherResponse } from "../api/stream/weather";
 
 const truncate = (value: string, max: number) => {
   if (value.length <= max) return value;

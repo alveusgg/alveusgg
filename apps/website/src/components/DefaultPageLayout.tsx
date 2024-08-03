@@ -1,4 +1,4 @@
-import type { JSX, ReactNode } from "react";
+import { type ReactNode, type JSX } from "react";
 import Heading from "./content/Heading";
 
 export type DefaultPageLayoutProps = {

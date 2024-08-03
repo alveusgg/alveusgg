@@ -1,10 +1,10 @@
 import Image from "next/image";
 
-import georgieImage from "@/assets/plushies/georgie.png";
-import mayaImage from "@/assets/plushies/maya.png";
 import sirenImage from "@/assets/plushies/siren.png";
-import stompyImage from "@/assets/plushies/stompy.png";
 import winnieImage from "@/assets/plushies/winnie.png";
+import georgieImage from "@/assets/plushies/georgie.png";
+import stompyImage from "@/assets/plushies/stompy.png";
+import mayaImage from "@/assets/plushies/maya.png";
 
 import Carousel from "./Carousel";
 
