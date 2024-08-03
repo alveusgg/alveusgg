@@ -1,5 +1,5 @@
 import { Transition } from "@headlessui/react";
-import type { ReactNode} from "react";
+import type { ReactNode } from "react";
 import { Fragment, useState } from "react";
 
 export type TooltipProps = {
