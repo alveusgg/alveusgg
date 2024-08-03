@@ -502,9 +502,6 @@ export async function getPostsToShow() {
   const postsToShow = await prisma.showAndTellEntry.count({
     where: {
       seenOnStream: false, // Only consider entries that have not been seen on stream
-      approvedAt: {
-        gte: latestSeenEntry?.seenOnStreamAt ?? new Date(0), // If no entry is seen, count all approved entries from the beginning
-      },
     },
   });
 
