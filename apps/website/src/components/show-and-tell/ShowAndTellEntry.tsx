@@ -32,6 +32,7 @@ import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
 
+import IconShield from "@/icons/IconShield";
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
@@ -222,7 +223,10 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
               {content}
               {modComments &&
                 modComments.map((comment) => (
-                  <p key={comment.id}>[MOD] {comment.comment}</p>
+                  <p key={comment.id} className="italic text-alveus-green">
+                    {" "}
+                    <IconShield className="inline h-6 w-6" /> {comment.comment}
+                  </p>
                 ))}
             </ErrorBoundary>
           </div>
