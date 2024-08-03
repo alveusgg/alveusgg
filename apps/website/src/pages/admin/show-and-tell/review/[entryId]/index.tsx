@@ -22,7 +22,10 @@ import {
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconEye from "@/icons/IconEye";
+import IconEyeSlash from "@/icons/IconEyeSlash";
 import IconMinus from "@/icons/IconMinus";
+import IconPaperAirplane from "@/icons/IconPaperAirplane";
 import IconTrash from "@/icons/IconTrash";
 
 export async function getServerSideProps(context: NextPageContext) {
@@ -106,7 +109,7 @@ const AdminReviewShowAndTellPage: NextPage<
 
     addModCommentMutation.mutate({
       entryId: String(entryId),
-      modId, // Replace with actual mod ID
+      modId: String(modId),
       comment: newComment,
       isInternal: true,
     });
@@ -234,11 +237,20 @@ const AdminReviewShowAndTellPage: NextPage<
                         toggleCommentVisibility(comment.id, comment.isInternal)
                       }
                     >
-                      {comment.isInternal ? "Make public" : "Make private"}
+                      {comment.isInternal ? (
+                        <>
+                          <IconEye className="h-6 w-6" /> Make Public
+                        </>
+                      ) : (
+                        <>
+                          <IconEyeSlash className="h-6 w-6" /> Make Private
+                        </>
+                      )}
                     </Button>
                     <Button
                       size="small"
                       className={dangerButtonClasses}
+                      confirmationMessage="Please confirm deletion!"
                       onClick={() => deleteComment(comment.id)}
                     >
                       <IconTrash className="h-4 w-4" />
@@ -253,14 +265,17 @@ const AdminReviewShowAndTellPage: NextPage<
                   type="text"
                   name="comment"
                   placeholder="Add a comment..."
-                  className="flex-1 rounded-l border p-2"
+                  className="flex-1 rounded-l border p-2 text-black"
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   required
                 />
-                <Button type="submit" className="rounded-r">
-                  Send
-                </Button>
+                <button
+                  type="submit"
+                  className="flex items-center justify-center rounded-r p-2 text-white"
+                >
+                  <IconPaperAirplane className="h-6 w-6" />
+                </button>
               </form>
             </Panel>
           </>
