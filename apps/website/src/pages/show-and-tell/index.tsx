@@ -1,50 +1,50 @@
-import type { InferGetStaticPropsType, NextPage } from "next";
-import Image from "next/image";
 import {
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type KeyboardEventHandler,
   type WheelEvent,
+  type KeyboardEventHandler,
 } from "react";
+import type { InferGetStaticPropsType, NextPage } from "next";
+import Image from "next/image";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
+import { delay } from "@/utils/delay";
+import { trpc } from "@/utils/trpc";
 import {
   getPosts,
   getPostsCount,
   getPostsToShow,
   getUsersCount,
 } from "@/server/db/show-and-tell";
-import { delay } from "@/utils/delay";
-import { trpc } from "@/utils/trpc";
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
 import useLocaleString from "@/hooks/locale";
 
+import IconLoading from "@/icons/IconLoading";
+import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
-import IconArrowUp from "@/icons/IconArrowUp";
-import IconLoading from "@/icons/IconLoading";
 import IconPencil from "@/icons/IconPencil";
 
-import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 
 import { Button, LinkButton } from "@/components/shared/form/Button";
 
-import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
-import { QrCode } from "@/components/show-and-tell/QrCode";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
+import { QrCode } from "@/components/show-and-tell/QrCode";
+import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
 
 import alveusLogo from "@/assets/logo.png";
-import showAndTellHeader from "@/assets/show-and-tell/header.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
