@@ -1,6 +1,7 @@
 import { useCallback, useId, useState } from "react";
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
+
 import { trpc } from "@/utils/trpc";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { getAdminSSP } from "@/server/utils/admin";

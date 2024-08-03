@@ -106,7 +106,6 @@ const Slideshow = ({
   return (
     <div className="relative z-0 h-full w-full">
       <style
-        // biome-ignore lint/security/noDangerouslySetInnerHtml:
         dangerouslySetInnerHTML={{
           __html: [
             `@keyframes slideshow-${id}-container { ${animation.keyframes.container} }`,
