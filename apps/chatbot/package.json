@@ -13,17 +13,17 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "dependencies": {
-    "@planetscale/database": "^1.14.0",
-    "@t3-oss/env-core": "^0.8.0",
-    "@twurple/api": "^7.0.8",
-    "@twurple/auth": "^7.0.8",
-    "@twurple/chat": "^7.0.8",
-    "@twurple/easy-bot": "^7.0.8",
-    "dotenv": "^16.4.1",
-    "drizzle-orm": "^0.29.3",
+    "@planetscale/database": "^1.18.0",
+    "@t3-oss/env-core": "^0.10.1",
+    "@twurple/api": "^7.1.0",
+    "@twurple/auth": "^7.1.0",
+    "@twurple/chat": "^7.1.0",
+    "@twurple/easy-bot": "^7.1.0",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.31.1",
     "read-pkg": "^9.0.1",
-    "tsx": "^4.7.0",
-    "zod": "^3.22.4"
+    "tsx": "^4.12.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/node": "~20.11.30",
