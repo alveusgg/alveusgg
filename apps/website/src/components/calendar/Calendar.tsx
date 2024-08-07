@@ -311,15 +311,6 @@ export function Calendar({
             {currentMonth.toLocaleDateString("en-US", { month: "long" })}
           </p>
 
-          <SwitchField
-            isChecked={isAlveusTimeZone}
-            onClick={(isChecked) =>
-              setTimeZone(isChecked ? DATETIME_ALVEUS_ZONE : undefined)
-            }
-            showLabel
-            title="Alveus Time (CT)"
-          />
-
           <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
         </div>
 
@@ -338,6 +329,16 @@ export function Calendar({
             >
               <IconArrowRight className="h-6 w-6 rotate-180 transform" />
             </button>
+
+            <SwitchField
+              isChecked={isAlveusTimeZone}
+              onClick={(isChecked) =>
+                setTimeZone(isChecked ? DATETIME_ALVEUS_ZONE : undefined)
+              }
+              showLabel
+              title="Alveus Time (CT)"
+            />
+
             <button
               type="button"
               onClick={() =>

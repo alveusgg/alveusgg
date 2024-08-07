@@ -28,7 +28,7 @@ export const SwitchField = ({
       <div
         className={classes(
           isChecked && "bg-alveus-green-300",
-          "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-focus-within:bg-alveus-green group-hover:bg-alveus-green",
+          "relative inline-flex h-4 w-8 items-center rounded-full border-2 border-alveus-green transition-colors group-[:hover:not(:focus-within)]:bg-alveus-green",
         )}
       >
         <span
