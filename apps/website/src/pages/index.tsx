@@ -198,7 +198,7 @@ export const getStaticProps: GetStaticProps = async () => {
     const combinedVideos = videosArrays
       .flat()
       .sort((a, b) => b.published.getTime() - a.published.getTime());
-    const latestVideos = combinedVideos.slice(0, 5);
+    const latestVideos = combinedVideos.slice(0, 4);
 
     return {
       props: {
