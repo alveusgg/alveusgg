@@ -9,11 +9,7 @@ type Video = {
   published: Date;
 };
 
-type YouTubeCarouselProps = {
-  videos: Video[];
-};
-
-const YouTubeCarousel = ({ videos }: YouTubeCarouselProps) => {
+const YouTubeCarousel = ({ videos }: { videos: Video[] }) => {
   const [open, setOpen] = useState<string>();
 
   useEffect(() => {
