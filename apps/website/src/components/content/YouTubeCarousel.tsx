@@ -13,11 +13,11 @@ type Video = {
   vodId?: string;
 };
 
-type YouTubeRowProps = {
+type YouTubeCarouselProps = {
   videos: Video[];
 };
 
-const YouTubeRow: FC<YouTubeRowProps> = ({ videos }) => {
+const YouTubeCarousel: FC<YouTubeCarouselProps> = ({ videos }) => {
   const [open, setOpen] = useState<string>();
 
   useEffect(() => {
@@ -68,26 +68,6 @@ const YouTubeRow: FC<YouTubeRowProps> = ({ videos }) => {
       </Lightbox>
     </div>
   );
-};
-
-const YouTubeCarousel: FC = () => {
-  const [videos, setVideos] = useState<Video[]>([]);
-
-  useEffect(() => {
-    const fetchVideos = async () => {
-      try {
-        const response = await fetch("/api/feeds/youtube");
-        const data: Video[] = await response.json();
-        data.forEach((video) => (video.published = new Date(video.published)));
-        setVideos(data);
-      } catch (error) {
-        console.error("Failed to fetch videos:", error);
-      }
-    };
-    fetchVideos();
-  }, []);
-
-  return <YouTubeRow videos={videos} />;
 };
 
 export default YouTubeCarousel;
