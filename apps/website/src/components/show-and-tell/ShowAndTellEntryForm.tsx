@@ -40,7 +40,7 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
-import Modal from "../shared/Modal";
+import { ModalDialog } from "../shared/ModalDialog";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -433,19 +433,23 @@ export function ShowAndTellEntryForm({
         </Button>
       </div>
 
-      <Modal isOpen={isOpen} closeModal={closeModal} title="Image Preview">
+      <ModalDialog
+        isOpen={isOpen}
+        closeModal={closeModal}
+        title="Image Preview"
+      >
         {modalImageUrl ? (
           <Image
             src={modalImageUrl}
             alt="Uploaded image"
-            width={650}
-            height={650}
+            width={500}
+            height={500}
             className="object-contain"
           />
         ) : (
           <p>Image is not uploaded yet.</p>
         )}
-      </Modal>
+      </ModalDialog>
     </form>
   );
 }
