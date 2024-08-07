@@ -1,6 +1,9 @@
 import type { ReactNode } from "react";
+
 import { classes } from "@/utils/classes";
+
 import IconLoading from "@/icons/IconLoading";
+
 import { Button } from "@/components/shared/form/Button";
 import type { FileReference } from "@/components/shared/form/UploadAttachmentsField";
 import IconTrash from "@/icons/IconTrash";
