@@ -315,7 +315,7 @@ export function ShowAndTellEntryForm({
                       )?.imageAttachment
                     : undefined;
 
-                return (
+                const attachmentContent = (
                   <ImageUploadAttachment
                     {...props}
                     fileReference={fileReference}
@@ -344,6 +344,19 @@ export function ShowAndTellEntryForm({
                       />
                     </div>
                   </ImageUploadAttachment>
+                );
+
+                return fileReference.status === "upload.done" ||
+                  fileReference.status === "saved" ? (
+                  <a
+                    href={fileReference.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {attachmentContent}
+                  </a>
+                ) : (
+                  attachmentContent
                 );
               }}
             />
