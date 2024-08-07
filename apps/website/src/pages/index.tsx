@@ -40,6 +40,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 
 const slides = [
   {
@@ -374,6 +375,15 @@ const Home: NextPage = () => {
           </div>
         </Section>
       </div>
+
+      <Section dark>
+        <div className="flex flex-wrap items-center gap-y-8">
+          <Heading level={2} id="recent-videos" link>
+            Recent Videos
+          </Heading>
+          <YouTubeCarousel />
+        </div>
+      </Section>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex flex-grow flex-col">
