@@ -55,11 +55,11 @@ export function VideoLinksField({
             matches.push(match.normalizedUrl);
           }
         }
-
-        setVideoUrls([...videoUrls, ...matches]);
-        setInputValue(unmatched.join("\n"));
-        setErrors(newErrors);
       }
+
+      setVideoUrls([...videoUrls, ...matches]);
+      setInputValue(unmatched.join("\n"));
+      setErrors(newErrors);
     },
     [setVideoUrls, videoUrls],
   );
@@ -119,7 +119,14 @@ export function VideoLinksField({
                   className="h-5 w-5"
                   platform={parseVideoUrl(url)?.platform}
                 />
-                <span className="min-w-0 flex-1 truncate text-left">{url}</span>
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="min-w-0 flex-1 truncate text-left text-blue-500 hover:underline"
+                >
+                  {url}
+                </a>
                 <Button
                   size="small"
                   width="auto"
