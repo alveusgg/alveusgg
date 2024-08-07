@@ -46,7 +46,7 @@ export async function triggerDiscordChannelWebhook({
 }) {
   const embed = {
     title: contentTitle || "Notification",
-    description: ((contentMessage || "") + (contentLink ? `\n[${contentLink.replace(/^https?:\/\//(www\.)?, "")}](${contentLink})` : "")).trim(),
+    description: ((contentMessage || "") + (contentLink ? `\n[${contentLink.replace(/^https?:\/\/(www\.)?/, "")}](${contentLink})` : "")).trim(),
     color: 0x636a60,
     url: contentLink,
     footer: {
