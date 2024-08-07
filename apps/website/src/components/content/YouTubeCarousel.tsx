@@ -1,23 +1,19 @@
-import type { FC } from "react";
 import { useState, useEffect } from "react";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
 import { formatDateTime } from "@/utils/datetime";
 
 type Video = {
   videoId: string;
   title: string;
   published: Date;
-  link?: string;
-  vodId?: string;
 };
 
 type YouTubeCarouselProps = {
   videos: Video[];
 };
 
-const YouTubeCarousel: FC<YouTubeCarouselProps> = ({ videos }) => {
+const YouTubeCarousel = ({ videos }: YouTubeCarouselProps) => {
   const [open, setOpen] = useState<string>();
 
   useEffect(() => {

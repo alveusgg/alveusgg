@@ -7,7 +7,6 @@ import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import animalQuestEpisodes from "@alveusgg/data/src/animal-quest";
 
-import axios from "axios";
 import { parseStringPromise } from "xml2js";
 import { z } from "zod";
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -166,14 +165,16 @@ const FeedSchema = z.object({
   }),
 });
 
-type Props = {
-  videos: Video[];
-};
-
 const fetchYouTubeFeed = async (channelId: string): Promise<Video[]> => {
   const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-  const response = await axios.get(url);
-  const json = await parseStringPromise(response.data);
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch YouTube feed: ${response.statusText}`);
+  }
+
+  const xml = await response.text();
+  const json = await parseStringPromise(xml);
   const parsedFeed = FeedSchema.parse(json);
 
   return parsedFeed.feed.entry
@@ -183,41 +184,30 @@ const fetchYouTubeFeed = async (channelId: string): Promise<Video[]> => {
       published: new Date(entry.published[0]),
     }))
     .filter((video) => !video.title.includes("#shorts")) // exclude shorts
-    .map((video) => VideoSchema.parse(video)); // Validate each video against the schema
+    .map((video) => VideoSchema.parse(video));
 };
 
 export const getStaticProps: GetStaticProps = async () => {
-  try {
-    const channelIds = ["UCbJ-1yM55NHrR1GS9hhPuvg", "UCfisf6HxiQr8_4mctNBm9cQ"];
-    const fetchPromises = channelIds.map((channelId) =>
-      fetchYouTubeFeed(channelId),
-    );
-    const videosArrays = await Promise.all(fetchPromises);
+  const channelIds = ["UCbJ-1yM55NHrR1GS9hhPuvg", "UCfisf6HxiQr8_4mctNBm9cQ"];
+  const videosArrays = await Promise.all(
+    channelIds.map((channelId) => fetchYouTubeFeed(channelId)),
+  );
 
-    // Combine videos from all channels and sort by published date
-    const combinedVideos = videosArrays
-      .flat()
-      .sort((a, b) => b.published.getTime() - a.published.getTime());
-    const latestVideos = combinedVideos.slice(0, 4);
+  // Combine videos from all channels and sort by published date
+  const combinedVideos = videosArrays
+    .flat()
+    .sort((a, b) => b.published.getTime() - a.published.getTime());
+  const latestVideos = combinedVideos.slice(0, 4);
 
-    return {
-      props: {
-        videos: latestVideos,
-      },
-      revalidate: 1800, // revalidate after 30 minutes
-    };
-  } catch (error) {
-    return {
-      props: {
-        videos: [],
-        error: "Failed to fetch YouTube feed",
-      },
-      revalidate: 300, // revalidate after 5 mins
-    };
-  }
+  return {
+    props: {
+      videos: latestVideos,
+    },
+    revalidate: 1800, // revalidate after 30 minutes
+  };
 };
 
-const Home: NextPage<Props> = ({ videos }) => {
+const Home: NextPage<{ videos: Video[] }> = ({ videos }) => {
   const reducedMotion = usePrefersReducedMotion();
 
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
