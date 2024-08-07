@@ -5,15 +5,18 @@ import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json
 
 import "./src/env/index.js";
 
-/** @type {Array<import("next/dist/shared/lib/image-config").RemotePattern>} */
-const cdnImagesRemotePattern = process.env.FILE_STORAGE_CDN_URL
-  ? [
-      {
-        protocol: "https",
-        hostname: process.env.FILE_STORAGE_CDN_URL.replace(/^https?:\/\//, ""),
-      },
-    ]
-  : [];
+/**
+ * @param {string} url
+ * @returns {import("next/dist/shared/lib/image-config").RemotePattern}
+ */
+function urlOriginAsRemotePattern(url) {
+  const parsed = new URL(url);
+  return {
+    protocol: parsed.protocol === "http:" ? "http" : "https",
+    hostname: parsed.hostname,
+    port: parsed.port,
+  };
+}
 
 /** @type {import("next").NextConfig} */
 const config = {
@@ -53,23 +56,12 @@ const config = {
         protocol: "https",
         hostname: "www.alveussanctuary.org",
       },
-      // S3 - Configured CDN
-      ...cdnImagesRemotePattern,
-      // S3 - Production CDN CNAME
-      {
-        protocol: "https",
-        hostname: "files.alveus.site",
-      },
-      // S3 - Development CDN Origin
-      {
-        protocol: "https",
-        hostname: "alveus-files.nyc3.cdn.digitaloceanspaces.com",
-      },
-      // S3 - Production CDN Origin
-      {
-        protocol: "https",
-        hostname: "alveus.nyc3.cdn.digitaloceanspaces.com",
-      },
+      // S3 - File Storage
+      urlOriginAsRemotePattern(
+        process.env.FILE_STORAGE_CDN_URL ||
+          process.env.FILE_STORAGE_ENDPOINT ||
+          "https://localhost",
+      ),
     ],
   },
   redirects: async () => [
