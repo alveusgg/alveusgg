@@ -204,7 +204,7 @@ export const getStaticProps: GetStaticProps = async () => {
       props: {
         videos: latestVideos,
       },
-      revalidate: 1800, // Revalidate every 30 minutes
+      revalidate: 1800, // revalidate after 30 minutes
     };
   } catch (error) {
     return {
@@ -212,7 +212,7 @@ export const getStaticProps: GetStaticProps = async () => {
         videos: [],
         error: "Failed to fetch YouTube feed",
       },
-      revalidate: 1800,
+      revalidate: 300, // revalidate after 5 mins
     };
   }
 };
