@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Transition } from "@headlessui/react";
 
 import { standardCategories } from "@/data/calendar-events";
@@ -12,13 +12,14 @@ import {
 } from "@/components/calendar/Calendar";
 import { CalendarItem } from "@/components/calendar/CalendarItem";
 
+import useTimezone from "@/hooks/timezone";
 import useToday from "@/hooks/today";
 
 export function Schedule() {
   const today = useToday();
   const [selected, setSelected] = useMonthSelection(today);
   const events = useCalendarEventsQuery(selected);
-  const [timeZone, setTimeZone] = useState<string>();
+  const [timeZone, setTimeZone] = useTimezone();
   const eventsWithChildren = useMemo(
     () =>
       today &&

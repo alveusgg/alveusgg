@@ -8,6 +8,7 @@ import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 import useToday from "@/hooks/today";
+import { SwitchField } from "../shared/form/SwitchField";
 
 const days = [
   "Sunday",
@@ -242,6 +243,8 @@ export function Calendar({
     [currentMonth],
   );
 
+  const isAlveusTimeZone = timeZone === DATETIME_ALVEUS_ZONE;
+
   const placeholders = useMemo(() => {
     const delay = [
       "animation-delay-0",
@@ -307,18 +310,16 @@ export function Calendar({
           <p className="text-5xl font-medium">
             {currentMonth.toLocaleDateString("en-US", { month: "long" })}
           </p>
-          <label>
-            <input
-              type="checkbox"
-              checked={timeZone === DATETIME_ALVEUS_ZONE}
-              onChange={(e) => {
-                setTimeZone(
-                  e.currentTarget.checked ? DATETIME_ALVEUS_ZONE : undefined,
-                );
-              }}
-            />
-            {" Alveus Time (CT)"}
-          </label>
+
+          <SwitchField
+            isChecked={isAlveusTimeZone}
+            onClick={(isChecked) =>
+              setTimeZone(isChecked ? DATETIME_ALVEUS_ZONE : undefined)
+            }
+            showLabel
+            title="Alveus Time (CT)"
+          />
+
           <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
         </div>
 

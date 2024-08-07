@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
@@ -9,6 +9,7 @@ import {
 } from "@/components/calendar/Calendar";
 import { CalendarItem } from "@/components/calendar/CalendarItem";
 
+import useTimezone from "@/hooks/timezone";
 import useToday from "@/hooks/today";
 
 import { CalendarEventForm } from "./CalendarEventForm";
@@ -18,7 +19,7 @@ export function CalendarEvents() {
   const [selected, setSelected] = useMonthSelection(today);
 
   const events = useCalendarEventsQuery(selected);
-  const [timeZone, setTimeZone] = useState<string>();
+  const [timeZone, setTimeZone] = useTimezone();
 
   const eventsWithChildren = useMemo(
     () =>
