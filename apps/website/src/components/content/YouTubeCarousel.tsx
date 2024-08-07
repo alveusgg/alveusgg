@@ -57,9 +57,7 @@ const YouTubeCarousel: FC<YouTubeCarouselProps> = ({ videos }) => {
                 >
                   {video.title}
                   <small className="block text-xl text-alveus-green-600">
-                    <Link href={`#${video.videoId}`} custom>
-                      {formatDateTime(video.published, { style: "long" })}
-                    </Link>
+                    {formatDateTime(video.published, { style: "long" })}
                   </small>
                 </Heading>
               </div>
