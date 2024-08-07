@@ -38,7 +38,7 @@ const YouTubeCarousel: FC<YouTubeCarouselProps> = ({ videos }) => {
             {videos.map((video) => (
               <div
                 key={video.videoId}
-                className="mx-auto flex basis-full flex-col items-center justify-start p-2 sm:basis-1/2 md:basis-1/3 lg:basis-1/5"
+                className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/4"
               >
                 <Trigger
                   videoId={video.videoId}
