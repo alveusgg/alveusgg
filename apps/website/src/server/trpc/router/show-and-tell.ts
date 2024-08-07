@@ -13,6 +13,7 @@ import {
 import {
   createPost,
   deletePost,
+  getModCommentsForEntry,
   getPostById,
   getPosts,
   getVolunteeringMinutes,
@@ -146,5 +147,18 @@ export const showAndTellRouter = router({
         uploadUrl: String(uploadUrl),
         fileStorageObjectId: fileStorageObject.id,
       };
+    }),
+
+  getModComments: publicProcedure
+    .input(z.string().cuid())
+    .query(async ({ input }) => {
+      const comments = await getModCommentsForEntry(input);
+      if (!comments) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Comments not found",
+        });
+      }
+      return comments.filter((comment) => !comment.isInternal);
     }),
 });

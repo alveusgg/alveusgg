@@ -24,6 +24,8 @@ import parse, {
 } from "html-react-parser";
 import { ErrorBoundary } from "react-error-boundary";
 
+import { trpc } from "@/utils/trpc";
+
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
@@ -31,8 +33,10 @@ import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
+import { Tooltip } from "@/components/shared/Tooltip";
 
 import IconWorld from "@/icons/IconWorld";
+import IconShield from "@/icons/IconShield";
 import { classes } from "@/utils/classes";
 
 export type ShowAndTellEntryWithAttachments = Pick<
@@ -191,6 +195,14 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
     }
   }, [entry.text, entry.id]);
 
+  const { data: modComments, error } = trpc.showAndTell.getModComments.useQuery(
+    entry.id,
+  );
+
+  if (error) {
+    console.error("Failed to fetch mod comments:", error);
+  }
+
   return (
     isValidElement(content) &&
     content.type !== Empty && (
@@ -211,6 +223,22 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
               }
             >
               {content}
+              {modComments &&
+                modComments.map((comment) => (
+                  <Tooltip
+                    key={comment.id}
+                    content={`This is a verified mod comment, last updated ${formatDateTime(
+                      comment.updatedAt,
+                      { style: "short", time: "seconds" },
+                      { zone: DATETIME_ALVEUS_ZONE },
+                    )}`}
+                  >
+                    <p className="italic text-alveus-green">
+                      <IconShield className="inline h-6 w-6" />{" "}
+                      {comment.comment}
+                    </p>
+                  </Tooltip>
+                ))}
             </ErrorBoundary>
           </div>
         </div>

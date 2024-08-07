@@ -1,5 +1,6 @@
 import type { NextPage, NextPageContext, InferGetStaticPropsType } from "next";
-import { getSession } from "next-auth/react";
+import { useState } from "react";
+import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import { trpc } from "@/utils/trpc";
@@ -23,6 +24,9 @@ import DateTime from "@/components/content/DateTime";
 import IconTrash from "@/icons/IconTrash";
 import IconMinus from "@/icons/IconMinus";
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconEye from "@/icons/IconEye";
+import IconEyeSlash from "@/icons/IconEyeSlash";
+import IconPaperAirplane from "@/icons/IconPaperAirplane";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -46,8 +50,20 @@ const AdminReviewShowAndTellPage: NextPage<
 > = ({ menuItems }) => {
   const router = useRouter();
   const { entryId } = router.query;
+  const [newComment, setNewComment] = useState("");
+  const { data: session } = useSession();
+  const modId = session?.user?.id;
+
   const getEntry = trpc.adminShowAndTell.getEntry.useQuery(String(entryId), {
     enabled: !!entryId,
+    select: (entry) =>
+      entry && {
+        ...entry,
+        modComments: entry.modComments.map((comment) => ({
+          ...comment,
+          user: { ...comment.user },
+        })),
+      },
   });
 
   const deleteMutation = trpc.adminShowAndTell.delete.useMutation({
@@ -66,6 +82,48 @@ const AdminReviewShowAndTellPage: NextPage<
         await getEntry.refetch();
       },
     });
+
+  const addModCommentMutation = trpc.adminShowAndTell.addModComment.useMutation(
+    {
+      onSettled: async () => {
+        await getEntry.refetch();
+      },
+    },
+  );
+  const deleteModCommentMutation =
+    trpc.adminShowAndTell.deleteModComment.useMutation({
+      onSettled: async () => {
+        await getEntry.refetch();
+      },
+    });
+  const toggleCommentVisibilityMutation =
+    trpc.adminShowAndTell.toggleCommentVisibility.useMutation({
+      onSettled: async () => {
+        await getEntry.refetch();
+      },
+    });
+
+  const handleAddComment = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!entryId || !newComment.trim()) return;
+
+    addModCommentMutation.mutate({
+      entryId: String(entryId),
+      modId: String(modId),
+      comment: newComment,
+      isInternal: true,
+    });
+
+    setNewComment("");
+  };
+
+  const deleteComment = (commentId: string) => {
+    deleteModCommentMutation.mutate(commentId);
+  };
+
+  const toggleCommentVisibility = (commentId: string, isInternal: boolean) => {
+    toggleCommentVisibilityMutation.mutate({ commentId, isInternal });
+  };
 
   const entry = getEntry.data;
   const status = entry && getEntityStatus(entry);
@@ -153,6 +211,75 @@ const AdminReviewShowAndTellPage: NextPage<
             </div>
           )}
         </Panel>
+
+        {entry && (
+          <>
+            <Headline>Mod comments:</Headline>
+            <Panel>
+              {entry.modComments.map((comment) => (
+                <div
+                  key={comment.id}
+                  className="flex flex-row items-center justify-between border-b py-2"
+                >
+                  <div>
+                    <span className="font-bold">{comment.user.name}</span> (
+                    <DateTime
+                      date={comment.createdAt}
+                      format={{ time: "minutes" }}
+                    />
+                    ): {comment.comment}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      size="small"
+                      className={defaultButtonClasses}
+                      onClick={() =>
+                        toggleCommentVisibility(comment.id, comment.isInternal)
+                      }
+                    >
+                      {comment.isInternal ? (
+                        <>
+                          <IconEye className="h-6 w-6" /> Make Public
+                        </>
+                      ) : (
+                        <>
+                          <IconEyeSlash className="h-6 w-6" /> Make Private
+                        </>
+                      )}
+                    </Button>
+                    <Button
+                      size="small"
+                      className={dangerButtonClasses}
+                      confirmationMessage="Please confirm deletion!"
+                      onClick={() => deleteComment(comment.id)}
+                    >
+                      <IconTrash className="h-4 w-4" />
+                      Delete
+                    </Button>
+                  </div>
+                </div>
+              ))}
+
+              <form onSubmit={handleAddComment} className="mt-4 flex">
+                <input
+                  type="text"
+                  name="comment"
+                  placeholder="Add a comment..."
+                  className="flex-1 rounded-l border p-2 text-black"
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  required
+                />
+                <button
+                  type="submit"
+                  className="flex items-center justify-center rounded-r p-2 text-white"
+                >
+                  <IconPaperAirplane className="h-6 w-6" />
+                </button>
+              </form>
+            </Panel>
+          </>
+        )}
 
         {entry && (
           <>
