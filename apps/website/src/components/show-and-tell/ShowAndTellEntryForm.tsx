@@ -101,6 +101,8 @@ export function ShowAndTellEntryForm({
     !!entry?.volunteeringMinutes,
   );
 
+  const [isAzaZoo, setIsAzaZoo] = useState(!!entry?.azaZoo);
+
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
       () =>
@@ -146,6 +148,7 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
+      azaZoo: formData.get("azaZoo") === "on",
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -383,6 +386,37 @@ export function ShowAndTellEntryForm({
                 entry?.volunteeringMinutes ? entry.volunteeringMinutes / 60 : 1
               }
             />
+          </div>
+        </Fieldset>
+
+        <Fieldset legend="AZA Zoo">
+          <p>
+            Is this submission related to an accredited zoo? (i.e.{" "}
+            <Link
+              href="https://www.aza.org/find-a-zoo-or-aquarium"
+              target="_blank"
+            >
+              AZA
+            </Link>
+            ,{" "}
+            <Link href="https://www.eaza.net/#map_home" target="_blank">
+              EAZA
+            </Link>
+            ,{" "}
+            <Link href="https://caza.ca/plan-a-visit/" target="_blank">
+              CAZA
+            </Link>
+            , etc)
+          </p>
+          <div className="flex items-center gap-4">
+            <input
+              type="checkbox"
+              id="azaZoo"
+              name="azaZoo"
+              checked={isAzaZoo}
+              onChange={(e) => setIsAzaZoo(e.target.checked)}
+            />
+            <label htmlFor="azaZoo">Yes, it is an accredited zoo.</label>
           </div>
         </Fieldset>
 
