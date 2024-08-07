@@ -1,4 +1,4 @@
-import type { FC} from "react";
+import type { FC } from "react";
 import { useState, useEffect } from "react";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Heading from "@/components/content/Heading";
@@ -34,11 +34,11 @@ const YouTubeCarousel: FC<YouTubeCarouselProps> = ({ videos }) => {
         onChange={setOpen}
       >
         {({ Trigger }) => (
-          <div className="flex w-full flex-row justify-around">
+          <div className="flex w-full flex-wrap justify-around">
             {videos.map((video) => (
               <div
                 key={video.videoId}
-                className="mx-4 flex flex-col items-center"
+                className="mx-auto flex basis-full flex-col items-center justify-start p-2 sm:basis-1/2 md:basis-1/3 lg:basis-1/5"
               >
                 <Trigger
                   videoId={video.videoId}
@@ -46,6 +46,7 @@ const YouTubeCarousel: FC<YouTubeCarouselProps> = ({ videos }) => {
                     style: "long",
                   })}`}
                   triggerId={video.videoId}
+                  className="w-full max-w-2xl"
                 >
                   <Preview videoId={video.videoId} />
                 </Trigger>
