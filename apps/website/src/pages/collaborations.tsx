@@ -43,17 +43,14 @@ const Creators = ({ className }: { className?: string }) => {
   const drag = useDragScroll();
   const containerRef = useRef<HTMLUListElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [creatorList, setCreatorList] = useState([...creators]);
 
   useEffect(() => {
-    const container = containerRef.current;
+    if (containerRef.current) {
+      const container = containerRef.current;
 
-    if (container) {
       const handleScroll = () => {
-        const maxScrollLeft = container.scrollWidth - container.clientWidth;
-
-        if (container.scrollLeft >= maxScrollLeft) {
-          setCreatorList((prevList) => [...prevList, ...creators]);
+        if (container.scrollLeft >= container.scrollWidth / 2) {
+          container.scrollLeft = 0;
         }
       };
 
@@ -83,7 +80,7 @@ const Creators = ({ className }: { className?: string }) => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {creatorList.map(({ name, image, slug }, idx) => (
+          {[...creators, ...creators].map(({ name, image, slug }, idx) => (
             <li
               key={`${slug}-${idx}`}
               style={{ zIndex: creators.length - (idx % creators.length) }}
