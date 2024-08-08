@@ -43,9 +43,24 @@ const Creators = ({ className }: { className?: string }) => {
   const drag = useDragScroll();
   const containerRef = useRef<HTMLUListElement>(null);
   const [isHovered, setIsHovered] = useState(false);
+  const [supportsHover, setSupportsHover] = useState(false);
 
   useEffect(() => {
-    if (containerRef.current) {
+    const mediaQuery = window.matchMedia("(hover: hover)");
+    setSupportsHover(mediaQuery.matches);
+
+    const handleHoverChange = (event: MediaQueryListEvent) => {
+      setSupportsHover(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleHoverChange);
+    return () => {
+      mediaQuery.removeEventListener("change", handleHoverChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (containerRef.current && supportsHover) {
       const container = containerRef.current;
 
       const handleScroll = () => {
@@ -68,7 +83,7 @@ const Creators = ({ className }: { className?: string }) => {
         container.removeEventListener("scroll", handleScroll);
       };
     }
-  }, [isHovered]);
+  }, [isHovered, supportsHover]);
 
   return (
     <div className={classes("flex justify-center", className)}>
