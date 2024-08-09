@@ -124,6 +124,8 @@ const config = {
       },
       screens: {
         twitchSideBySide: "681px",
+        "reduced-motion": { raw: "(prefers-reduced-motion: reduce)" },
+        "reduced-data": { raw: "(prefers-reduced-data: reduce)" },
       },
       maxWidth: {
         "1/3": "33.333333%",
@@ -156,6 +158,11 @@ const config = {
           ]),
         ),
       },
+    },
+  },
+  variants: {
+    extend: {
+      display: ["reduced-motion", "reduced-data"],
     },
   },
   plugins: [
