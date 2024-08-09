@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Heading from "@/components/content/Heading";
 import { formatDateTime } from "@/utils/datetime";
+import { classes } from "@/utils/classes";
 
 type Video = {
   videoId: string;
@@ -9,7 +10,12 @@ type Video = {
   published: Date;
 };
 
-const YouTubeCarousel = ({ videos }: { videos: Video[] }) => {
+type YouTubeCarouselProps = {
+  videos: Video[];
+  dark?: boolean;
+};
+
+const YouTubeCarousel = ({ videos, dark }: YouTubeCarouselProps) => {
   const [open, setOpen] = useState<string>();
 
   useEffect(() => {
@@ -48,7 +54,13 @@ const YouTubeCarousel = ({ videos }: { videos: Video[] }) => {
                   className="text-center text-2xl"
                 >
                   {video.title}
-                  <small className="block text-xl text-alveus-green-600">
+                  <small
+                    className={classes(
+                      dark ? "text-alveus-green-200" : "text-alveus-green-600",
+                      "block",
+                      "text-xl",
+                    )}
+                  >
                     {formatDateTime(video.published, { style: "long" })}
                   </small>
                 </Heading>
