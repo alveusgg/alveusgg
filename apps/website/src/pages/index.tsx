@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage } from "next";
+import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -207,7 +207,9 @@ export const getStaticProps: GetStaticProps = async () => {
   };
 };
 
-const Home: NextPage<{ videos: Video[] }> = ({ videos }) => {
+const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
+  videos,
+}) => {
   const reducedMotion = usePrefersReducedMotion();
 
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
