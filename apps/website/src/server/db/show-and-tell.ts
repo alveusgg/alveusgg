@@ -488,3 +488,13 @@ export async function deletePost(id: string, authorUserId?: string) {
   ]);
   await revalidateCache(id);
 }
+
+export async function getPostsToShow() {
+  const postsToShow = await prisma.showAndTellEntry.count({
+    where: {
+      AND: [whereApproved, { seenOnStream: false }],
+    },
+  });
+
+  return postsToShow;
+}

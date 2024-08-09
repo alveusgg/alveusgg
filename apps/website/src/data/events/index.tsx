@@ -7,7 +7,7 @@ import Link from "@/components/content/Link";
 import artAuction2024Video from "@/assets/events/art-auction-2024.mp4";
 import valentines2024Video from "@/assets/events/valentines-2024.mp4";
 import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
-import summerCamp2023Video from "@/assets/events/summer-camp-2023.mp4";
+import summerCamp20232024Video from "@/assets/events/summer-camp-2023-2024.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
 import valentines2023Video from "@/assets/events/valentines-2023.mp4";
 import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
@@ -25,6 +25,55 @@ export type Event = {
 
 const events: Event[] = (
   [
+    {
+      name: "Summer Camp 2024",
+      date: new Date("2024-07-13"),
+      video: summerCamp20232024Video,
+      stats: {
+        totalViews: {
+          title: "Total livestream views",
+          stat: "260,896",
+        },
+        signedPrints: {
+          title: "Signed postcards with merch",
+          stat: "1,280",
+        },
+        giveawayWinners: {
+          title: "Giveaway winners",
+          stat: "17",
+        },
+        minutesWatched: {
+          title: "Minutes watched live",
+          stat: "3,365,000",
+        },
+      },
+      info: (
+        <>
+          <p>
+            Summer Camp 2024 was a 12-hour-long event with a variety of
+            activities that the staff at Alveus participated in. Hosted in and
+            around the Session Yard at Alveus, the team had a water balloon
+            catapult war, played a game of human battleships, went hunting for
+            bugs around the property, had a campfire cookout, and more, all
+            streamed live for viewers to watch.
+          </p>
+          <p>
+            This year, as part of Summer Camp, limited-time merch was available
+            for viewers to purchase &mdash; a hoodie or pajama pants. Viewers
+            were also able gift pre-paid merch to the livestream chat where
+            another random viewer would be picked to win it. Each merch purchase
+            or gift also came with a signed postcard from the event, and an
+            entry into the giveaways. Throughout the event giveaways were run
+            for unique items from Summer Camp, with each merch item purchased or
+            gifted giving that viewer an entry to win. By the end of the event
+            17 bits of Summer Camp history had been given away and 1,280
+            postcards had been sent out to viewers who purchased or gifted
+            merch. Thank you to everyone that supported Alveus by watching the
+            stream or checking out the merch!
+          </p>
+        </>
+      ),
+    },
     {
       name: "Art Auction 2024",
       date: new Date("2024-05-23"),
@@ -173,7 +222,7 @@ const events: Event[] = (
     {
       name: "Summer Camp 2023",
       date: new Date("2023-07-21"),
-      video: summerCamp2023Video,
+      video: summerCamp20232024Video,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",

@@ -1,8 +1,5 @@
 import {
   Fragment,
-  useEffect,
-  useId,
-  useState,
   type ComponentPropsWithoutRef,
   type MouseEventHandler,
 } from "react";
@@ -10,6 +7,11 @@ import {
 import { Popover } from "@headlessui/react";
 
 import { classes } from "@/utils/classes";
+import {
+  emailShareUrl,
+  facebookShareUrl,
+  twitterShareUrl,
+} from "@/utils/share-url";
 
 import IconTwitter from "@/icons/IconTwitter";
 import IconFacebook from "@/icons/IconFacebook";
@@ -20,11 +22,8 @@ import IconClipboard from "@/icons/IconClipboard";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { PopoverButton } from "@/components/shared/PopoverButton";
 import { QRCode } from "@/components/QrCode";
-import {
-  emailShareUrl,
-  facebookShareUrl,
-  twitterShareUrl,
-} from "@/utils/share-url";
+
+import { useCopyToClipboard } from "@/hooks/clipboard";
 
 function ShareLink({
   className,
@@ -68,24 +67,11 @@ export function ShareButton({
     }
   };
 
-  const linkInputId = useId();
-  const [linkCopiedState, setLinkCopiedState] = useState<
-    undefined | "success" | "error"
-  >();
-  const linkCopiedText =
-    linkCopiedState === "success"
-      ? "Copied!"
-      : linkCopiedState === "error"
-        ? "Failed"
-        : "Copy";
-  useEffect(() => {
-    if (linkCopiedState) {
-      const timeout = setTimeout(() => {
-        setLinkCopiedState(undefined);
-      }, 2000);
-      return () => clearTimeout(timeout);
-    }
-  }, [linkCopiedState]);
+  const {
+    copy,
+    status: linkCopiedState,
+    statusText: linkCopiedText,
+  } = useCopyToClipboard();
 
   return (
     <PopoverButton
@@ -101,7 +87,6 @@ export function ShareButton({
 
       <div className="mb-3 flex items-stretch gap-2">
         <input
-          id={linkInputId}
           readOnly={true}
           type="url"
           className="w-full flex-grow bg-transparent p-0.5 text-sm text-inherit"
@@ -120,22 +105,8 @@ export function ShareButton({
             linkCopiedState === "success" && "bg-green-900",
             linkCopiedState === "error" && "bg-red-900",
           )}
-          onClick={() => {
-            const linkInputElement = document.getElementById(
-              linkInputId,
-            ) as HTMLInputElement;
-
-            try {
-              linkInputElement.focus();
-              linkInputElement.setSelectionRange(
-                0,
-                linkInputElement.value.length,
-              );
-              document.execCommand("copy");
-              setLinkCopiedState("success");
-            } catch (e) {
-              setLinkCopiedState("error");
-            }
+          onClick={async () => {
+            await copy(url);
           }}
           title="Copy link to clipboard"
         >

@@ -59,11 +59,11 @@ export function getNotificationCategory(tag: string) {
 export const notificationLinkSuggestions = [
   {
     label: "TTV AlveusSanctuary",
-    url: "https://www.twitch.tv/AlveusSanctuary",
+    url: "https://twitch.tv/AlveusSanctuary",
   },
-  { label: "TTV Maya", url: "https://www.twitch.tv/maya" },
+  { label: "TTV Maya", url: "https://twitch.tv/maya" },
   { label: "YT AlveusSanctuary", url: "https://youtube.com/@AlveusSanctuary" },
-  { label: "YT Maya", url: "https://www.youtube.com/@mayahiga" },
+  { label: "YT Maya", url: "https://youtube.com/@mayahiga" },
   { label: "Website", url: "https://www.alveussanctuary.org/" },
   { label: "Twitter page", url: "https://twitter.com/AlveusSanctuary" },
 ] satisfies NotificationLinkSuggestion[];

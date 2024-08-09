@@ -46,14 +46,13 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
       >
         <div
           className={classes(
-            "w-full flex-shrink-0 p-4",
+            "my-auto w-full max-w-xs flex-shrink-0 p-4",
             align === "center" && "mx-auto",
-            columns === 1 ? "max-w-sm" : "max-w-xs",
           )}
         >
           <Image
             src={person.image}
-            width={columns === 1 ? 384 : 320}
+            width={320}
             alt=""
             className="aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover"
           />
@@ -64,7 +63,7 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
             columns === 1 && align === "center" && "text-center",
           )}
         >
-          <Heading level={2} className="text-4xl">
+          <Heading level={2} className="mt-0 text-4xl">
             {person.name}
           </Heading>
           <Heading level={3} className="text-xl">

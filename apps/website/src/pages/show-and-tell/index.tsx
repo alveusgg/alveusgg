@@ -16,6 +16,7 @@ import { trpc } from "@/utils/trpc";
 import {
   getPosts,
   getPostsCount,
+  getPostsToShow,
   getUsersCount,
 } from "@/server/db/show-and-tell";
 
@@ -63,12 +64,14 @@ export const getStaticProps = async () => {
   }
   const totalPostsCount = await getPostsCount();
   const usersCount = await getUsersCount();
+  const postsToShowCount = await getPostsToShow();
 
   return {
     props: {
       entries,
       nextCursor,
       totalPostsCount,
+      postsToShowCount,
       usersCount,
     },
   };
@@ -84,6 +87,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   entries: initialEntries,
   nextCursor,
   totalPostsCount,
+  postsToShowCount,
   usersCount,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
@@ -104,6 +108,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
   const [isPresentationView, setIsPresentationView] = useState(false);
   const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
+
+  const [currentPostIndex, setCurrentPostIndex] = useState(0);
 
   // We use this ref to scroll to the entry when transitioning between presentation view and normal view
   // and when the next/prev buttons are clicked
@@ -130,6 +136,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
     // Update the next/prev buttons
     setHasPrevEntry(currentPos > 0);
     setHasNextEntry(currentPos < entryElements.length - 1);
+
+    // Set the current post index
+    setCurrentPostIndex(currentPos + 1); // Add 1 to make it 1-based index
 
     // Only autoload if we're in presentation view, and if there's a next page
     if (!isPresentationView || !entries.hasNextPage) return;
@@ -483,9 +492,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                   />
                 </div>
                 <p className="text-sm lg:text-base xl:text-lg">
-                  Has stream helped you become more environmental conscious?
+                  Has stream helped you become more environmentally conscious?
                   Please share with the community any of your conservation or
-                  wildlife related activities.
+                  wildlife-related activities.
                 </p>
                 <QrCode className="h-auto max-h-[20vh] w-full max-w-[12vw]" />
               </div>
@@ -493,6 +502,13 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit flex-col gap-2">
+            {isPresentationView && (
+              <p className="text-xl text-alveus-green">
+                {postsToShowCount - currentPostIndex <= 0
+                  ? "Caught up!"
+                  : `${postsToShowCount - currentPostIndex} / ${postsToShowCount} remaining`}
+              </p>
+            )}
             <div className="flex flex-row gap-2">
               <Button
                 className="bg-white shadow-lg"

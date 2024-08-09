@@ -109,6 +109,7 @@ const data: RootNetworkItem[] = [
             url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-24-poe",
             connection: { type: "ethernet", location: "wall" },
             links: [
+              /*
               {
                 type: "camera",
                 name: "Noodle",
@@ -123,6 +124,7 @@ const data: RootNetworkItem[] = [
                 url: "https://www.axis.com/products/axis-p1275",
                 connection: { type: "ethernet", location: "wall" },
               },
+              */
               {
                 type: "camera",
                 name: "Georgie",
@@ -158,6 +160,7 @@ const data: RootNetworkItem[] = [
                     url: "https://www.axis.com/products/axis-m5075-g",
                     connection: { type: "ethernet", location: "wall" },
                   },
+                  /*
                   {
                     type: "camera",
                     name: "Cockroach",
@@ -172,6 +175,7 @@ const data: RootNetworkItem[] = [
                     url: "https://www.axis.com/products/axis-m5075-g",
                     connection: { type: "ethernet", location: "wall" },
                   },
+                  */
                 ],
               },
               {
@@ -227,6 +231,7 @@ const data: RootNetworkItem[] = [
                 url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "overhead" },
                 links: [
+                  /*  
                   {
                     type: "camera",
                     name: "Training Center",
@@ -234,6 +239,7 @@ const data: RootNetworkItem[] = [
                     url: "https://www.axis.com/products/axis-m5075-g",
                     connection: { type: "ethernet", location: "wall" },
                   },
+                  */
                   {
                     type: "accessPoint",
                     name: "Pasture",
@@ -378,6 +384,7 @@ const data: RootNetworkItem[] = [
                 url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
                 links: [
+                  /*
                   {
                     type: "camera",
                     name: "Chinchilla",
@@ -385,6 +392,7 @@ const data: RootNetworkItem[] = [
                     url: "https://www.axis.com/products/axis-m1065-l/",
                     connection: { type: "ethernet", location: "wall" },
                   },
+                  */
                   {
                     type: "controlunit",
                     name: "Rat Control Module",
@@ -497,10 +505,24 @@ const data: RootNetworkItem[] = [
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
+                            type: "camera",
+                            name: "Wolf Indoor",
+                            model: "AXIS P5676-LE",
+                            url: "https://www.axis.com/products/axis-p5676-le",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
                             type: "speaker",
                             name: "Wolf Speaker",
                             model: "AXIS C1610-VE Network Sound Projector",
                             url: "https://www.axis.com/products/axis-c1610-ve",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "accessPoint",
+                            name: "Wolf Indoor",
+                            model: "Ubiquiti UAP-AC-M",
+                            url: "https://store.ui.com/us/en/collections/unifi-wifi-outdoor-long-range/products/uap-ac-mesh",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {

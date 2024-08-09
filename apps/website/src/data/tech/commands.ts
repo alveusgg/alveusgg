@@ -217,6 +217,127 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  ptzspin: {
+    description: "Continuous pan/tilt/zoom",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "pan",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "tilt",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "zoom",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzcenter: {
+    description: "Center on positions x and y",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "x",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "y",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "zoom",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzclick: {
+    description:
+      "Move the PTZ camera to a specific location based on your click",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "x",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "y",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "zoom",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzareazoom: {
+    description: "Center and zoom on position x and y",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "x",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "y",
+        required: true,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "zoom",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
   ptzhome: {
     description: "Move to home position",
     category: "PTZ",
