@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -41,6 +41,49 @@ const creators = collaborations
 
 const Creators = ({ className }: { className?: string }) => {
   const drag = useDragScroll();
+  const containerRef = useRef<HTMLUListElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [supportsHover, setSupportsHover] = useState(false);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(hover: hover)");
+    setSupportsHover(mediaQuery.matches);
+
+    const handleHoverChange = (event: MediaQueryListEvent) => {
+      setSupportsHover(event.matches);
+    };
+
+    mediaQuery.addEventListener("change", handleHoverChange);
+    return () => {
+      mediaQuery.removeEventListener("change", handleHoverChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (containerRef.current && supportsHover) {
+      const container = containerRef.current;
+
+      const handleScroll = () => {
+        if (container.scrollLeft >= container.scrollWidth / 2) {
+          container.scrollLeft = 0;
+        }
+      };
+
+      const intervalId = setInterval(() => {
+        if (!isHovered) {
+          container.scrollLeft += 1;
+          handleScroll();
+        }
+      }, 30);
+
+      container.addEventListener("scroll", handleScroll);
+
+      return () => {
+        clearInterval(intervalId);
+        container.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, [isHovered, supportsHover]);
 
   return (
     <div className={classes("flex justify-center", className)}>
@@ -48,9 +91,15 @@ const Creators = ({ className }: { className?: string }) => {
         <ul
           className="scrollbar-none group/creators flex max-w-full cursor-grab flex-row gap-y-4 overflow-x-auto pb-2 pl-12 pr-8 pt-6"
           onMouseDown={drag}
+          ref={containerRef}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          {creators.map(({ name, image, slug }, idx) => (
-            <li key={slug} style={{ zIndex: creators.length - idx }}>
+          {[...creators, ...creators].map(({ name, image, slug }, idx) => (
+            <li
+              key={`${slug}-${idx}`}
+              style={{ zIndex: creators.length - (idx % creators.length) }}
+            >
               <Link
                 href={`#${slug}`}
                 title={name}
