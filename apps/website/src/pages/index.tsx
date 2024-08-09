@@ -1,4 +1,4 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -7,6 +7,8 @@ import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import animalQuestEpisodes from "@alveusgg/data/src/animal-quest";
 
+import { parseStringPromise } from "xml2js";
+import { z } from "zod";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 import usePrefersReducedMotion from "@/hooks/motion";
@@ -40,6 +42,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 
 const slides = [
   {
@@ -140,7 +143,73 @@ const getTwitchEmbed = (
   return url.toString();
 };
 
-const Home: NextPage = () => {
+// Define the schema for the expected structure of the feed entries
+const VideoSchema = z.object({
+  videoId: z.string(),
+  title: z.string(),
+  published: z.date(),
+});
+
+type Video = z.infer<typeof VideoSchema>;
+
+// Define the schema for the entire feed
+const FeedSchema = z.object({
+  feed: z.object({
+    entry: z.array(
+      z.object({
+        "yt:videoId": z.array(z.string()).nonempty(),
+        title: z.array(z.string()).nonempty(),
+        published: z.array(z.string()).nonempty(),
+      }),
+    ),
+  }),
+});
+
+const fetchYouTubeFeed = async (channelId: string): Promise<Video[]> => {
+  const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch YouTube feed: ${response.statusText}`);
+  }
+
+  const xml = await response.text();
+  const json = await parseStringPromise(xml);
+  const parsedFeed = FeedSchema.parse(json);
+
+  return parsedFeed.feed.entry
+    .map((entry) => ({
+      videoId: entry["yt:videoId"][0],
+      title: entry.title[0],
+      published: new Date(entry.published[0]),
+    }))
+    .filter((video) => !video.title.includes("#shorts")) // exclude shorts
+    .map((video) => VideoSchema.parse(video));
+};
+
+export const getStaticProps: GetStaticProps = async () => {
+  const channelIds = ["UCbJ-1yM55NHrR1GS9hhPuvg", "UCfisf6HxiQr8_4mctNBm9cQ"];
+  const videosArrays = await Promise.all(
+    channelIds.map((channelId) => fetchYouTubeFeed(channelId)),
+  );
+
+  // Combine videos from all channels and sort by published date
+  const combinedVideos = videosArrays
+    .flat()
+    .sort((a, b) => b.published.getTime() - a.published.getTime());
+  const latestVideos = combinedVideos.slice(0, 4);
+
+  return {
+    props: {
+      videos: latestVideos,
+    },
+    revalidate: 1800, // revalidate after 30 minutes
+  };
+};
+
+const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
+  videos,
+}) => {
   const reducedMotion = usePrefersReducedMotion();
 
   const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
@@ -374,6 +443,15 @@ const Home: NextPage = () => {
           </div>
         </Section>
       </div>
+
+      <Section dark>
+        <div className="flex flex-wrap items-center gap-y-8">
+          <Heading level={2} id="recent-videos" link>
+            Recent Videos
+          </Heading>
+          <YouTubeCarousel videos={videos} dark />
+        </div>
+      </Section>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex flex-grow flex-col">
