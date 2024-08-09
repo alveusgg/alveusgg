@@ -138,7 +138,7 @@ export function ShowAndTellEntryForm({
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const hours = parseFloat(formData.get("giveAnHour") as string);
+    const hours = Number.parseFloat(formData.get("giveAnHour") as string);
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
@@ -188,7 +188,7 @@ export function ShowAndTellEntryForm({
             onUpdate?.();
           } else {
             // Redirect to my posts
-            router.push(`/show-and-tell/my-posts/`);
+            router.push("/show-and-tell/my-posts/");
           }
         },
         onError: (err) => {

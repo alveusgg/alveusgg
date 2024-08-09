@@ -86,11 +86,11 @@ export function DesktopMenu() {
           ))}
         </ul>
 
-        <div className="h-6 border-r"></div>
+        <div className="h-6 border-r" />
 
         <NotificationsButton className="rounded-lg p-2 hover:bg-white hover:text-alveus-green" />
 
-        <div className="h-6 border-r"></div>
+        <div className="h-6 border-r" />
 
         {/* User menu */}
         <div>
@@ -112,7 +112,7 @@ export function DesktopMenu() {
                 </Menu.Item>
 
                 <Menu.Item disabled>
-                  <div className="border-t opacity-30"></div>
+                  <div className="border-t opacity-30" />
                 </Menu.Item>
 
                 {showAdminLink && (
@@ -122,7 +122,7 @@ export function DesktopMenu() {
                 )}
 
                 <Menu.Item disabled>
-                  <div className="border-t opacity-30"></div>
+                  <div className="border-t opacity-30" />
                 </Menu.Item>
 
                 <Menu.Item>

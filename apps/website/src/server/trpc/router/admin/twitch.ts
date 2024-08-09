@@ -121,7 +121,7 @@ export const adminTwitchRouter = router({
       const accountId = userWithAccount?.accounts[0]?.id;
       if (!accountId) {
         throw new TRPCError({
-          message: "User does not have scope! " + userId,
+          message: `User does not have scope! ${userId}`,
           code: "BAD_REQUEST",
         });
       }

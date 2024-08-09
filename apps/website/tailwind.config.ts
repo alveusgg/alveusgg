@@ -175,7 +175,7 @@ const config = {
     }),
     plugin(
       ({ addBase, addComponents, matchUtilities, theme }) => {
-        const generateShadows = (steps: number = 1) => {
+        const generateShadows = (steps = 1) => {
           const classes: string[] = [];
           for (let step = 1; step <= steps; step++) {
             classes.push(

@@ -89,18 +89,18 @@ function parseOptionalStartAndEnd(params: string[]): {
   restParams: string[];
 } {
   // YYYY-MM-DD[ HH:II] YYYY-MM-DD[ HH:II]
-  if (params[0] && params[0].match(/^\d{4}-\d{2}-\d{2}/)) {
+  if (params[0]?.match(/^\d{4}-\d{2}-\d{2}/)) {
     let endDateString;
     let startDateString = params.shift();
-    if (params[0] && params[0].match(/^\d{2}:\d{2}/)) {
-      startDateString += "T" + params.shift();
+    if (params[0]?.match(/^\d{2}:\d{2}/)) {
+      startDateString += `T${params.shift()}`;
     }
 
-    if (params[0] && params[0].match(/^\d{4}-\d{2}-\d{2}/)) {
+    if (params[0]?.match(/^\d{4}-\d{2}-\d{2}/)) {
       endDateString = params.shift();
 
-      if (params[0] && params[0].match(/^\d{2}:\d{2}/)) {
-        endDateString += "T" + params.shift();
+      if (params[0]?.match(/^\d{2}:\d{2}/)) {
+        endDateString += `T${params.shift()}`;
       }
     }
 
@@ -161,9 +161,7 @@ export async function createNotificationCommands() {
 
     if (optionValues.help) {
       reply(
-        `Usage: !notify [link] [title] [|text] | ` +
-          `Arguments: link = URL | ` +
-          `Options: ${options.renderHelp()}`,
+        `Usage: !notify [link] [title] [|text] | Arguments: link = URL | Options: ${options.renderHelp()}`,
       );
       return;
     }
@@ -227,9 +225,7 @@ export async function createNotificationCommands() {
 
     if (optionValues.help) {
       reply(
-        `Usage: !announce [link] [start] [end] [title] [|text] | ` +
-          `Arguments: link = URL, start/end = YYYY-MM-DD[ HH:II] | ` +
-          `Options: ${options.renderHelp()}`,
+        `Usage: !announce [link] [start] [end] [title] [|text] | Arguments: link = URL, start/end = YYYY-MM-DD[ HH:II] | Options: ${options.renderHelp()}`,
       );
       return;
     }
@@ -296,7 +292,7 @@ export async function createNotificationCommands() {
       return;
     }
 
-    reply(`Waiting sending notification …`);
+    reply("Waiting sending notification …");
 
     createNotification({
       tag: pendingNotification.tag,

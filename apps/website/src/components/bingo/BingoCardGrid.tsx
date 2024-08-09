@@ -24,7 +24,7 @@ export function BingoCardGrid({
       className={classes("grid leading-none", className)}
       style={{
         gridTemplateColumns: `repeat(${size}, 2fr)`,
-        gridTemplateRows: `${showBingoHeader && `1fr `}repeat(${size}, 2fr)`,
+        gridTemplateRows: `${showBingoHeader && "1fr "}repeat(${size}, 2fr)`,
       }}
     >
       {showBingoHeader && (

@@ -43,7 +43,7 @@ export function TwitchChannelForm({ action, data }: TwitchChannelFormProps) {
           },
           {
             onSuccess: async () => {
-              await router.push(`/admin/twitch`);
+              await router.push("/admin/twitch");
             },
           },
         );

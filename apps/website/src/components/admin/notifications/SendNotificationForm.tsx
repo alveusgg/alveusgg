@@ -192,7 +192,7 @@ export function SendNotificationForm() {
 
             <div
               className={classes(
-                `flex flex-wrap gap-4 border-l pl-3`,
+                "flex flex-wrap gap-4 border-l pl-3",
                 !isScheduled && "hidden",
               )}
             >

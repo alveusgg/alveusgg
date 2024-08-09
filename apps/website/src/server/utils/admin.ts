@@ -1,5 +1,6 @@
 import { getSession } from "next-auth/react";
 import type { GetSessionParams } from "next-auth/react";
+
 import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
 import { notEmpty } from "@/utils/helpers";

@@ -58,7 +58,7 @@ const SigninPage: NextPage<SigninPageProps> = () => {
 
   const error =
     (errorType && errorMessages[errorType.toLowerCase()]) ||
-    errorMessages["default"];
+    errorMessages.default;
 
   return (
     <>

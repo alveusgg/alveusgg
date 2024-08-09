@@ -95,7 +95,9 @@ function Bingo({ bingo, onError, onUpdate }: BingoProps) {
               <div className="flex gap-1">
                 Public Link:
                 <Link
-                  href={`${getShortBaseUrl()}/bingo/play/${bingo.slug || bingo.id}`}
+                  href={`${getShortBaseUrl()}/bingo/play/${
+                    bingo.slug || bingo.id
+                  }`}
                   external
                 >
                   {`${getShortBaseUrl()}/bingo/play/${bingo.slug || bingo.id}`}

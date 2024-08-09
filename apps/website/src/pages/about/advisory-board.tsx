@@ -1,4 +1,4 @@
-import { type NextPage } from "next";
+import type { NextPage } from "next";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";

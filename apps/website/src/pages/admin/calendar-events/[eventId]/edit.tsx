@@ -3,7 +3,6 @@ import type {
   NextPage,
   GetServerSidePropsContext,
 } from "next";
-
 import { getSession } from "next-auth/react";
 import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
@@ -27,7 +26,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       redirect: {
         destination: session?.user?.id
           ? "/unauthorized"
-          : `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+          : `/auth/signin?callbackUrl=${encodeURIComponent(
+              context.resolvedUrl,
+            )}`,
         permanent: false,
       },
     };

@@ -16,8 +16,8 @@ export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
     return false;
   }
 
-  const majorVersion: number = parseInt(match[1], 10);
-  const minorVersion: number = match[2] ? parseInt(match[2], 10) : 0;
+  const majorVersion: number = Number.parseInt(match[1], 10);
+  const minorVersion: number = match[2] ? Number.parseInt(match[2], 10) : 0;
   if (majorVersion <= 16 && !(majorVersion === 16 && minorVersion >= 4)) {
     return false;
   }
