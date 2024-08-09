@@ -1,9 +1,14 @@
 import { type ReactNode, useEffect, useMemo, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { DateTime } from "luxon";
 
+import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import useToday from "@/hooks/today";
+import { SwitchField } from "../shared/form/SwitchField";
 
 const days = [
   "Sunday",
@@ -138,6 +143,36 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   };
 };
 
+export type MonthSelection = { month: number; year: number };
+
+export function useMonthSelection(initialDate?: Date) {
+  const [selected, setSelected] = useState<MonthSelection>();
+  useEffect(() => {
+    if (initialDate)
+      setSelected({
+        month: initialDate.getMonth(),
+        year: initialDate.getFullYear(),
+      });
+  }, [initialDate]);
+  return [selected, setSelected] as const;
+}
+
+export function useCalendarEventsQuery(selected?: MonthSelection) {
+  const start = useMemo(
+    () => selected && new Date(selected.year, selected.month, 1),
+    [selected],
+  );
+  const end = useMemo(
+    () => selected && new Date(selected.year, selected.month + 1, 1),
+    [selected],
+  );
+
+  return trpc.calendarEvents.getCalendarEvents.useQuery(
+    { start, end },
+    { enabled: selected !== undefined },
+  );
+}
+
 type DayProps = {
   children?: ReactNode;
   className?: string;
@@ -170,9 +205,20 @@ type CalendarProps = {
   onChange?: ({ year, month }: { year: Year; month: Month }) => void;
   className?: string;
   children?: ReactNode;
+  timeZone?: string;
+  setTimeZone: (timeZone?: string) => void;
 };
 
-const Calendar = ({
+function getDateKey(date: Date, timeZone?: string) {
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    timeZone,
+  });
+}
+
+export function Calendar({
   events,
   month,
   year,
@@ -180,12 +226,11 @@ const Calendar = ({
   onChange,
   className,
   children,
-}: CalendarProps) => {
-  const [today, setToday] = useState<Date>();
-  useEffect(() => {
-    const now = new Date();
-    setToday(new Date(now.getFullYear(), now.getMonth(), now.getDate()));
-  }, []);
+  timeZone,
+  setTimeZone,
+}: CalendarProps) {
+  const today = useToday();
+  const todayKey = today && getDateKey(today, timeZone);
   const currentMonth = useMemo(() => new Date(year, month, 1), [month, year]);
   const daysInMonth = useMemo(
     () =>
@@ -197,6 +242,8 @@ const Calendar = ({
       ).getDate(),
     [currentMonth],
   );
+
+  const isAlveusTimeZone = timeZone === DATETIME_ALVEUS_ZONE;
 
   const placeholders = useMemo(() => {
     const delay = [
@@ -215,6 +262,7 @@ const Calendar = ({
         date: new Date(year, month, day + 1),
         children: (
           <Transition
+            key={day}
             appear
             show
             // Fade these in with a short delay before starting
@@ -241,10 +289,10 @@ const Calendar = ({
       (loading ? [...placeholders] : [...events])
         .sort((a, b) => a.date.getTime() - b.date.getTime())
         .reduce<Record<string, CalendarEvent[]>>((acc, event) => {
-          const date = `${event.date.getFullYear()}-${event.date.getMonth()}-${event.date.getDate()}`;
-          return { ...acc, [date]: [...(acc[date] || []), event] };
+          const dateKey = getDateKey(event.date, timeZone);
+          return { ...acc, [dateKey]: [...(acc[dateKey] || []), event] };
         }, {}) || {},
-    [loading, placeholders, events],
+    [loading, placeholders, events, timeZone],
   );
 
   const theme = useMemo(() => getCalendarTheme(month), [month]);
@@ -262,6 +310,7 @@ const Calendar = ({
           <p className="text-5xl font-medium">
             {currentMonth.toLocaleDateString("en-US", { month: "long" })}
           </p>
+
           <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
         </div>
 
@@ -280,6 +329,16 @@ const Calendar = ({
             >
               <IconArrowRight className="h-6 w-6 rotate-180 transform" />
             </button>
+
+            <SwitchField
+              isChecked={isAlveusTimeZone}
+              onClick={(isChecked) =>
+                setTimeZone(isChecked ? DATETIME_ALVEUS_ZONE : undefined)
+              }
+              showLabel
+              title="Alveus Time (CT)"
+            />
+
             <button
               type="button"
               onClick={() =>
@@ -355,16 +414,20 @@ const Calendar = ({
                     />
                   );
 
-                const fullDate = new Date(
-                  currentMonth.getFullYear(),
-                  currentMonth.getMonth(),
-                  date,
-                );
+                const fullDate = DateTime.fromObject(
+                  {
+                    year: currentMonth.getFullYear(),
+                    month: currentMonth.getMonth() + 1,
+                    day: date,
+                  },
+                  { zone: timeZone },
+                ).toJSDate();
+                const dateKey = getDateKey(fullDate, timeZone);
+                const events = byDay[dateKey] || [];
+
                 const day = fullDate.getDay();
-                const events =
-                  byDay[
-                    `${fullDate.getFullYear()}-${fullDate.getMonth()}-${fullDate.getDate()}`
-                  ] || [];
+                const isPast = fullDate.getTime() < today.getTime();
+                const isToday = dateKey === todayKey;
 
                 return (
                   <Day
@@ -383,20 +446,14 @@ const Calendar = ({
                       <p
                         className={classes(
                           "flex gap-1 rounded-bl-lg px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
-                          // Fade out days in the past
-                          fullDate.getTime() < today.getTime() && "opacity-50",
-                          // Show the current day in a pill
-                          fullDate.getTime() === today.getTime() &&
-                            theme.heading,
+                          isPast && "opacity-50",
+                          isToday && theme.heading,
                         )}
                       >
-                        {date.toLocaleString(undefined, {
-                          minimumIntegerDigits: 2,
-                        })}
-
+                        {date}
                         {/* Render the day of the week for mobile */}
                         <span className="md:hidden">
-                          {days[fullDate.getDay()]?.slice(0, 1)}
+                          {days[day]?.slice(0, 1)}
                         </span>
                       </p>
                     </div>
@@ -413,6 +470,4 @@ const Calendar = ({
       {children}
     </div>
   );
-};
-
-export default Calendar;
+}

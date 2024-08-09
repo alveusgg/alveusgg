@@ -9,7 +9,7 @@ import Meta from "@/components/content/Meta";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
-import { Schedule } from "@/components/notifications/Schedule";
+import { Schedule } from "@/components/calendar/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
 import bellPeepo from "@/assets/bell-peepo.webp";
