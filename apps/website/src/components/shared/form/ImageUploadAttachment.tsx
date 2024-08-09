@@ -13,10 +13,12 @@ export function ImageUploadAttachment({
   removeFileReference,
   fileReference,
   children = "",
+  onClick,
 }: {
   removeFileReference: (id: string) => void;
   fileReference: FileReference;
   children?: ReactNode | ReactNode[];
+  onClick?: () => void;
 }) {
   const src =
     fileReference.status === "saved"
@@ -32,7 +34,10 @@ export function ImageUploadAttachment({
   return (
     <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
       <div className="py-2">
-        <div className="relative h-32 w-32 overflow-hidden rounded-lg bg-gray-200">
+        <div
+          className="relative h-32 w-32 cursor-pointer overflow-hidden rounded-lg bg-gray-200"
+          onClick={onClick}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}

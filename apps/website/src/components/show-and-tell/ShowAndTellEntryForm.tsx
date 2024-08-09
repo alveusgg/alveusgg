@@ -1,5 +1,6 @@
 import { type FormEvent, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
 
@@ -39,6 +40,7 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
+import { ModalDialog } from "../shared/ModalDialog";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -134,6 +136,18 @@ export function ShowAndTellEntryForm({
     (signature) => createFileUpload.mutateAsync(signature),
     { allowedFileTypes: imageMimeTypes },
   );
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
+
+  function closeModal() {
+    setIsOpen(false);
+  }
+
+  function openModal(url: string) {
+    setModalImageUrl(url);
+    setIsOpen(true);
+  }
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -315,10 +329,20 @@ export function ShowAndTellEntryForm({
                       )?.imageAttachment
                     : undefined;
 
-                return (
+                const handleImageClick = () => {
+                  if (
+                    fileReference.status === "upload.done" ||
+                    fileReference.status === "saved"
+                  ) {
+                    openModal(fileReference.url);
+                  }
+                };
+
+                const attachmentContent = (
                   <ImageUploadAttachment
                     {...props}
                     fileReference={fileReference}
+                    onClick={handleImageClick}
                   >
                     <div className="flex flex-col gap-3">
                       <TextAreaField
@@ -328,7 +352,7 @@ export function ShowAndTellEntryForm({
                         defaultValue={initialData?.caption}
                       />
                       <TextAreaField
-                        name={`image[${fileReference.id}][alternativeText]`}
+                        name={`image[${fileReference.id}][alternativeText}`}
                         label={
                           <span className="text-gray-600">
                             Visual Description
@@ -345,6 +369,8 @@ export function ShowAndTellEntryForm({
                     </div>
                   </ImageUploadAttachment>
                 );
+
+                return attachmentContent;
               }}
             />
           </Fieldset>
@@ -406,6 +432,24 @@ export function ShowAndTellEntryForm({
           )}
         </Button>
       </div>
+
+      <ModalDialog
+        isOpen={isOpen}
+        closeModal={closeModal}
+        title="Image Preview"
+      >
+        {modalImageUrl ? (
+          <Image
+            src={modalImageUrl}
+            alt="Uploaded image"
+            width={500}
+            height={500}
+            className="object-contain"
+          />
+        ) : (
+          <p>Image is not uploaded yet.</p>
+        )}
+      </ModalDialog>
     </form>
   );
 }
