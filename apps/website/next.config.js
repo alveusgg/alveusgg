@@ -160,6 +160,16 @@ const config = {
       permanent: true,
     },
     {
+      source: "/schedule",
+      destination: "/updates",
+      permanent: true,
+    },
+    {
+      source: "/calendar",
+      destination: "/updates",
+      permanent: true,
+    },
+    {
       source: "/aq/:path*",
       destination: "/animal-quest/:path*",
       permanent: false,
