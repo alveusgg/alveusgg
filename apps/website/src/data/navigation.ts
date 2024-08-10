@@ -43,13 +43,13 @@ export const mainNavStructure: NavStructure = {
         title: "Collaborations",
         link: "/collaborations",
       },
-      events: {
-        title: "Events",
-        link: "/events",
-      },
       updates: {
-        title: "Updates",
+        title: "Schedule & Updates",
         link: "/updates",
+      },
+      events: {
+        title: "Fundraising Events",
+        link: "/events",
       },
     },
   },

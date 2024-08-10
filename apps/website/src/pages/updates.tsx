@@ -19,7 +19,10 @@ const notificationTags = ["stream"];
 const UpdatesPage: NextPage = () => {
   return (
     <>
-      <Meta title="Updates" description="Announcements and Updates" />
+      <Meta
+        title="Updates"
+        description="See upcoming streams in the schedule and stay updated with push notifications"
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -30,7 +33,7 @@ const UpdatesPage: NextPage = () => {
         containerClassName="flex flex-wrap items-center justify-between lg:flex-nowrap gap-x-16"
       >
         <div className="w-full flex-grow py-8 lg:max-w-2/3">
-          <Heading>Announcements and Updates</Heading>
+          <Heading>Schedule and Updates</Heading>
 
           <p className="mt-6">
             Stay updated using one of our announcement channels:
