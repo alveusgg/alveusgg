@@ -1,5 +1,19 @@
+import useLocaleString from "@/hooks/locale";
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+
+const useLocaleDays = (hours: number) => {
+  const localeDays = useLocaleString(Math.floor(hours / 24));
+
+  return `${hours % 24 === 0 ? "" : "~"}${localeDays} day${Math.floor(hours / 24) !== 1 ? "s" : ""}`;
+};
+
+const useLocaleHours = (hours: number, showDays: boolean) => {
+  const localeHours = useLocaleString(hours);
+  const localeDays = useLocaleDays(hours);
+
+  return `${localeHours} hour${hours !== 1 ? "s" : ""}${showDays ? ` (${localeDays})` : ""}`;
+};
 
 const GiveAnHourProgressText = ({
   isLoading,
@@ -9,20 +23,27 @@ const GiveAnHourProgressText = ({
   isLoading?: boolean;
   hours: number;
   target: number;
-}) => (
-  <div className="flex justify-between px-2">
-    <p className="text-md font-semibold text-alveus-tan">
-      {isLoading
-        ? "Loading hours given…"
-        : hours === 0
-          ? "No hours given yet"
-          : `${hours} hour${hours !== 1 ? "s" : ""} already given`}
-    </p>
-    <p className="text-md font-medium text-alveus-tan opacity-75">
-      {target} hour{target !== 1 ? "s" : ""} target
-    </p>
-  </div>
-);
+}) => {
+  // Show the equivalent number of days if we're over 72 hours
+  const showDays = target > 72;
+  const localeHours = useLocaleHours(hours, showDays);
+  const localeTarget = useLocaleHours(target, showDays);
+
+  return (
+    <div className="flex justify-between px-2">
+      <p className="text-md font-semibold text-alveus-tan">
+        {isLoading
+          ? "Loading hours given…"
+          : hours === 0
+            ? "No hours given yet"
+            : `${localeHours} already given`}
+      </p>
+      <p className="text-md font-medium text-alveus-tan opacity-75">
+        {localeTarget} target
+      </p>
+    </div>
+  );
+};
 
 const barClasses =
   "absolute inset-y-0 left-0 min-w-10 rounded-full border-4 border-alveus-green-900 transition-all duration-[2s] ease-in-out";
