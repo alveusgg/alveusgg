@@ -4,11 +4,11 @@ import { DateTime } from "luxon";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 import useToday from "@/hooks/today";
-import { SwitchField } from "../shared/form/SwitchField";
+
+import { CalendarTimezoneSwitch } from "./CalendarTimezoneSwitch";
 
 const days = [
   "Sunday",
@@ -243,8 +243,6 @@ export function Calendar({
     [currentMonth],
   );
 
-  const isAlveusTimeZone = timeZone === DATETIME_ALVEUS_ZONE;
-
   const placeholders = useMemo(() => {
     const delay = [
       "animation-delay-0",
@@ -305,7 +303,7 @@ export function Calendar({
 
   return (
     <div className={classes("flex flex-col gap-2 md:gap-6", className)}>
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-4 sm:gap-2">
         <div className="flex items-baseline justify-between">
           <p className="text-5xl font-medium">
             {currentMonth.toLocaleDateString("en-US", { month: "long" })}
@@ -330,13 +328,9 @@ export function Calendar({
               <IconArrowRight className="h-6 w-6 rotate-180 transform" />
             </button>
 
-            <SwitchField
-              isChecked={isAlveusTimeZone}
-              onClick={(isChecked) =>
-                setTimeZone(isChecked ? DATETIME_ALVEUS_ZONE : undefined)
-              }
-              showLabel
-              title="Alveus Time (CT)"
+            <CalendarTimezoneSwitch
+              onChange={(tz) => setTimeZone(tz)}
+              timeZone={timeZone}
             />
 
             <button
