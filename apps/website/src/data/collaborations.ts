@@ -70,7 +70,8 @@ const collaborations: Collaboration[] = (
       name: "itmeJP",
       link: "https://www.twitch.tv/itmejp",
       date: new Date("2024-08-01"),
-      videoId: "xrBHoqXGL44",
+      videoId: "PWRbtRLy3II",
+      vodId: "xrBHoqXGL44",
       creators: [
         {
           name: "itmeJP",
