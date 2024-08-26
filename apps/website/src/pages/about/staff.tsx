@@ -154,17 +154,9 @@ const staff = {
 };
 
 const team = {
-  flip: {
-    name: "Flip (@Station3Media)",
-    title: "Videographer / Photographer",
-  },
   dion: {
     name: "Dion (@Dionysus1911)",
     title: "Illustrator / Animator",
-  },
-  danny: {
-    name: "Danny (@DannyDV)",
-    title: "Post Production Manager",
   },
   max: {
     name: "Max (@maxzillajr)",
