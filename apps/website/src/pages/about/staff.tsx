@@ -166,10 +166,6 @@ const team = {
     name: "Mik (@Mik_MWP)",
     title: "Social Media Manager",
   },
-  abdullah: {
-    name: "Abdullah (@AbdullahMorrison)",
-    title: "Open-Source Developer (Twitch Extension)",
-  },
   paul: {
     name: "Paul (@pjeweb)",
     title: "Open-Source Developer (Website)",
