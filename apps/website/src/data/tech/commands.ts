@@ -103,6 +103,25 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  ptzzoomr: {
+    description:
+      "Zooms by a factor of z/100, greater than 100 zooms in, less than 100 zooms out",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "zoom",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
   ptzset: {
     description: "Change relative pan/tilt/zoom combination",
     category: "PTZ",
