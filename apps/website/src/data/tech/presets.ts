@@ -21,7 +21,7 @@ const presets: Record<string, Camera> = {
       donksleep: { description: "donk sleep spot" },
       feeder: { description: "feeder bin" },
       feedstall: { description: "inside feedstall" },
-      fencel: { description: "fencel" },
+      fencel: { description: "fence left" },
       gate: { description: "feedstall gate" },
       grove: { description: "pasture grove" },
       insidebarn: { description: "inside feed barn" },
@@ -253,7 +253,7 @@ const presets: Record<string, Camera> = {
       table: { description: "training table" },
       top: { description: "view of top shelves" },
       topshelfl: { description: "top shelf left" },
-      topshelfr: { description: "topshelf right" },
+      topshelfr: { description: "top shelf right" },
     },
   },
   parrots: {
