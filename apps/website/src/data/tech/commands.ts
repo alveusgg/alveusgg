@@ -1142,6 +1142,58 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+
+  /**
+   * Notify
+   */
+  notify: {
+    description: "Send a push and discord notification",
+    category: "Notify",
+    args: [
+      {
+        type: "string",
+        name: "link",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "title",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "sub title",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "link",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "--no-discord",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "--no-push",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "custom image link",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
 };
 
 export default commands;
