@@ -1182,7 +1182,7 @@ const commands: Record<string, Command> = {
       },
       {
         type: "string",
-        name: "custom image link",
+        name: "--image=<url>",
         required: false,
         variadic: false,
       },
