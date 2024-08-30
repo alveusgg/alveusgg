@@ -1170,12 +1170,6 @@ const commands: Record<string, Command> = {
       },
       {
         type: "string",
-        name: "link",
-        required: false,
-        variadic: false,
-      },
-      {
-        type: "string",
         name: "--no-discord",
         required: false,
         variadic: false,
