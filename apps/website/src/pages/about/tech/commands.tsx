@@ -20,6 +20,8 @@ import Heading from "@/components/content/Heading";
 import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
 
+import IconChevronRight from "@/icons/IconChevronRight";
+
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -92,7 +94,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm select-none lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
@@ -108,16 +110,20 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
-      <nav className="sticky left-0 top-0 z-20 mt-0 bg-alveus-green-100/70 text-xl font-bold backdrop-blur-2xl">
-        <ul className="flex flex-row items-center justify-center gap-2">
+      <nav className="sticky left-0 top-0 z-20 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl">
+        <div className="container mx-auto flex flex-row items-center gap-2 p-1 px-2">
           {sectionLinks.map(({ name, id }) => (
-            <li key={id}>
-              <a className="block p-2" href={`#${id}`}>
-                {name}
-              </a>
-            </li>
+            <a
+              key={id}
+              className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
+              href={`#${id}`}
+            >
+              <IconChevronRight className="h-5 w-5" />
+
+              {name}
+            </a>
           ))}
-        </ul>
+        </div>
       </nav>
 
       <div className="relative">
@@ -130,7 +136,7 @@ const AboutTechPage: NextPage = () => {
         <Section>
           <Heading
             level={2}
-            className="mb-2 mt-0 scroll-mt-12"
+            className="mb-2 mt-0 scroll-mt-14"
             id="commands"
             link
           >
@@ -237,7 +243,7 @@ const AboutTechPage: NextPage = () => {
                   <dt className="mt-6">
                     <Heading
                       level={3}
-                      className="text-2xl"
+                      className="scroll-mt-14 text-2xl"
                       id={`commands:${sentenceToKebab(categoryId)}`}
                       link
                     >
@@ -283,7 +289,12 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       <Section className="bg-alveus-green-100">
-        <Heading level={2} className="mb-2 mt-0" id="fossabot" link>
+        <Heading
+          level={2}
+          className="mb-2 mt-0 scroll-mt-14"
+          id="fossabot"
+          link
+        >
           Fossabot
         </Heading>
 
@@ -316,7 +327,7 @@ const AboutTechPage: NextPage = () => {
         <Section className="flex-grow">
           <Heading
             level={2}
-            className="mb-2 mt-0 scroll-mt-12"
+            className="mb-2 mt-0 scroll-mt-14"
             id="presets"
             link
           >
@@ -335,7 +346,7 @@ const AboutTechPage: NextPage = () => {
                   <dt className="mt-6">
                     <Heading
                       level={3}
-                      className="text-2xl"
+                      className="scroll-mt-14 text-2xl"
                       id={`presets:${camelToKebab(camera)}`}
                       link
                     >
