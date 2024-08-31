@@ -4,9 +4,11 @@ import Image from "next/image";
 
 import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import commands, {
-  isOverloadedArguments,
-  type Command,
   type Argument,
+  type Command,
+  type CommandCategoryId,
+  commandCategories,
+  isOverloadedArguments,
 } from "@/data/tech/commands";
 import presets from "@/data/tech/presets";
 
@@ -26,9 +28,7 @@ interface NamedCommand extends Command {
   name: string;
 }
 
-const grouped = typeSafeObjectEntries(commands).reduce<
-  Record<string, NamedCommand[]>
->(
+const grouped = typeSafeObjectEntries(commands).reduce(
   (obj, [name, command]) => ({
     ...obj,
     [command.category]: [
@@ -39,7 +39,7 @@ const grouped = typeSafeObjectEntries(commands).reduce<
       },
     ],
   }),
-  {},
+  {} as Record<CommandCategoryId, NamedCommand[]>,
 );
 
 const signatureArg = (arg: Argument) =>
@@ -207,47 +207,55 @@ const AboutTechPage: NextPage = () => {
           </dl>
 
           <dl>
-            {typeSafeObjectEntries(grouped).map(([category, commands]) => (
-              <Fragment key={category}>
-                <dt className="mt-6">
-                  <Heading
-                    level={3}
-                    className="text-2xl"
-                    id={`commands:${sentenceToKebab(category)}`}
-                    link
-                  >
-                    {category}
-                  </Heading>
-                </dt>
-                <dd className="mx-2">
-                  <dl className="max-w-full overflow-x-auto">
-                    {commands.map((command) => (
-                      <div
-                        key={command.name}
-                        className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
-                      >
-                        <dt>
-                          <pre>
-                            <code className="text-sm">
-                              {signature(command)}
-                              <CopyToClipboardButton
-                                text={signature(command)}
-                              />
-                            </code>
-                          </pre>
-                        </dt>
+            {typeSafeObjectEntries(grouped).map(([categoryId, commands]) => {
+              const category = commandCategories[categoryId];
 
-                        <dd>
-                          <p className="text-sm italic text-alveus-green-400">
-                            {command.description}
-                          </p>
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </dd>
-              </Fragment>
-            ))}
+              return (
+                <Fragment key={categoryId}>
+                  <dt className="mt-6">
+                    <Heading
+                      level={3}
+                      className="text-2xl"
+                      id={`commands:${sentenceToKebab(categoryId)}`}
+                      link
+                    >
+                      {category.heading}
+                    </Heading>
+
+                    {"description" in category && (
+                      <p className="mb-4">{category.description}</p>
+                    )}
+                  </dt>
+                  <dd className="mx-2">
+                    <dl className="max-w-full overflow-x-auto">
+                      {commands.map((command) => (
+                        <div
+                          key={command.name}
+                          className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
+                        >
+                          <dt>
+                            <pre>
+                              <code className="text-sm">
+                                {signature(command)}
+                                <CopyToClipboardButton
+                                  text={signature(command)}
+                                />
+                              </code>
+                            </pre>
+                          </dt>
+
+                          <dd>
+                            <p className="text-sm italic text-alveus-green-400">
+                              {command.description}
+                            </p>
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </dd>
+                </Fragment>
+              );
+            })}
           </dl>
         </Section>
       </div>
