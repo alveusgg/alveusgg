@@ -465,7 +465,7 @@ const commands: Record<string, Command> = {
    * Focus
    */
   ptzfocus: {
-    description: "Change absolute focus (if supported)",
+    description: "Change absolute focus, 1 to 9999 (if supported)",
     category: "Focus",
     args: [
       {
@@ -483,7 +483,26 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzfocusr: {
-    description: "Change relative focus (if supported)",
+    description: "Change relative focus, -9999 to 9999 (if supported)",
+    category: "Focus",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "number",
+        name: "focus",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzcfocus: {
+    description:
+      "Continuous focus change, -100 to 100, 0 means stop (if supported)",
     category: "Focus",
     args: [
       {
