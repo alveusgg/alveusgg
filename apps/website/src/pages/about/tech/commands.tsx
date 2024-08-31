@@ -46,10 +46,12 @@ const signatureArg = (arg: Argument) =>
   [
     arg.required ? "<" : "[",
     arg.type !== "choice" || arg.choices.length > 1 ? `${arg.name}:` : "",
+    arg.prefix ? `'${arg.prefix}' + ` : "",
     arg.type === "choice"
       ? arg.choices.map((choice) => `'${choice}'`).join("|")
       : arg.type,
     arg.variadic ? "..." : "",
+    arg.suffix ? ` + '${arg.suffix}'` : "",
     arg.required ? ">" : "]",
   ].join("");
 
@@ -161,6 +163,13 @@ const AboutTechPage: NextPage = () => {
                           type: "number",
                           required: true,
                           variadic: true,
+                        },
+                        {
+                          name: "flag",
+                          type: "number",
+                          required: false,
+                          variadic: false,
+                          prefix: "--speed=",
                         },
                       ],
                       [],

@@ -2,6 +2,8 @@ interface BaseArgument {
   name: string;
   required: boolean;
   variadic: boolean;
+  prefix?: string;
+  suffix?: string;
 }
 
 export interface SimpleArgument extends BaseArgument {
@@ -1167,6 +1169,7 @@ const commands: Record<string, Command> = {
         name: "sub title",
         required: false,
         variadic: false,
+        prefix: "|",
       },
       {
         type: "choice",
@@ -1183,11 +1186,11 @@ const commands: Record<string, Command> = {
         choices: ["--no-push"],
       },
       {
-        type: "choice",
-        name: "--image",
+        type: "string",
+        name: "image url",
         required: false,
         variadic: false,
-        choices: ["--image=<url>"],
+        prefix: "--image=",
       },
     ],
   },
