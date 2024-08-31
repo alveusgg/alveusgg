@@ -2,6 +2,8 @@ interface BaseArgument {
   name: string;
   required: boolean;
   variadic: boolean;
+  prefix?: string;
+  suffix?: string;
 }
 
 export interface SimpleArgument extends BaseArgument {
@@ -1158,6 +1160,56 @@ const commands: Record<string, Command> = {
         name: "count",
         required: true,
         variadic: false,
+      },
+    ],
+  },
+
+  /**
+   * Notify
+   */
+  notify: {
+    description: "Send a push and discord notification",
+    category: "Notify",
+    args: [
+      {
+        type: "string",
+        name: "link",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "title",
+        required: false,
+        variadic: false,
+      },
+      {
+        type: "string",
+        name: "sub title",
+        required: false,
+        variadic: false,
+        prefix: "|",
+      },
+      {
+        type: "choice",
+        name: "--no-discord",
+        required: false,
+        variadic: false,
+        choices: ["--no-discord"],
+      },
+      {
+        type: "choice",
+        name: "--no-push",
+        required: false,
+        variadic: false,
+        choices: ["--no-push"],
+      },
+      {
+        type: "string",
+        name: "image url",
+        required: false,
+        variadic: false,
+        prefix: "--image=",
       },
     ],
   },
