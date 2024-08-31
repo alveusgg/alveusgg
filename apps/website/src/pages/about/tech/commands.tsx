@@ -260,7 +260,7 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section dark>
+      <Section className="bg-alveus-green-100">
         <Heading level={2} className="mb-2 mt-0" id="fossabot" link>
           Fossabot
         </Heading>
@@ -275,7 +275,6 @@ const AboutTechPage: NextPage = () => {
 
           <Button
             href="https://fossabot.com/alveussanctuary/commands"
-            dark
             external
             className="flex-shrink-0"
           >
