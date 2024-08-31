@@ -72,6 +72,11 @@ const signature = (command: NamedCommand) => {
   return `${cmd} ${cmdArgs}`;
 };
 
+const sectionLinks = [
+  { name: "Commands", id: "commands" },
+  { name: "Presets", id: "presets" },
+] as const;
+
 const AboutTechPage: NextPage = () => {
   return (
     <>
@@ -103,6 +108,18 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
+      <nav className="sticky left-0 top-0 z-20 mt-0 bg-alveus-green-100/70 text-xl font-bold backdrop-blur-2xl">
+        <ul className="flex flex-row items-center justify-center gap-2">
+          {sectionLinks.map(({ name, id }) => (
+            <li key={id}>
+              <a className="block p-2" href={`#${id}`}>
+                {name}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
       <div className="relative">
         <Image
           src={leafLeftImage1}
@@ -111,7 +128,12 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section>
-          <Heading level={2} className="mb-2 mt-0" id="commands" link>
+          <Heading
+            level={2}
+            className="mb-2 mt-0 scroll-mt-12"
+            id="commands"
+            link
+          >
             Commands
           </Heading>
 
@@ -292,7 +314,12 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          <Heading level={2} className="mb-2 mt-0" id="presets" link>
+          <Heading
+            level={2}
+            className="mb-2 mt-0 scroll-mt-12"
+            id="presets"
+            link
+          >
             Presets
           </Heading>
 
