@@ -82,7 +82,7 @@ export function BingoForm({ action, bingo }: BingoFormProps) {
         );
 
         if (!parsedCardsData.success) {
-          setError("Invalid cards: " + parsedCardsData.error.message);
+          setError(`Invalid cards: ${parsedCardsData.error.message}`);
           return;
         }
 
@@ -127,7 +127,7 @@ export function BingoForm({ action, bingo }: BingoFormProps) {
             { action: "create", ...mutationData },
             {
               onSuccess: async () => {
-                await router.push(`/admin/bingo`);
+                await router.push("/admin/bingo");
               },
             },
           );

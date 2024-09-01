@@ -57,7 +57,7 @@ export function MobileMenu() {
             <>
               {showAdminLink && (
                 <li>
-                  <div className="my-3 w-full border-t opacity-30"></div>
+                  <div className="my-3 w-full border-t opacity-30" />
 
                   <Disclosure.Button as={NavLinkSub} href="/admin/dashboard">
                     Admin
@@ -65,7 +65,7 @@ export function MobileMenu() {
                 </li>
               )}
               <li>
-                <div className="my-3 w-full border-t opacity-30"></div>
+                <div className="my-3 w-full border-t opacity-30" />
 
                 <div className="px-5 py-2">
                   <ProfileInfo full />

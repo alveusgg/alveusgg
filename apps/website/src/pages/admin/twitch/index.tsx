@@ -1,6 +1,7 @@
 import type { InferGetStaticPropsType, NextPageContext, NextPage } from "next";
 
 import { getSession } from "next-auth/react";
+
 import { permissions } from "@/data/permissions";
 
 import { getAdminSSP } from "@/server/utils/admin";

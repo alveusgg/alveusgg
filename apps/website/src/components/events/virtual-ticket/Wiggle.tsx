@@ -63,8 +63,8 @@ export function Wiggle({
 
         // Calculate the intensity based on distance from center of card
         const distanceToMouse = Math.sqrt(
-          Math.pow(event.clientX - cardCenterX, 2) +
-            Math.pow(event.clientY - cardCenterY, 2),
+          (event.clientX - cardCenterX) ** 2 +
+            (event.clientY - cardCenterY) ** 2,
         );
         const averageRadius = (cardRect.width + cardRect.height) / 4;
         const lightIntensity = Math.min(distanceToMouse / averageRadius, 1);
@@ -157,7 +157,7 @@ export function Wiggle({
             calc(5px * cos(var(--light-angle) + 180deg)) 5px
             rgba(0, 0, 0, calc(0.3 * var(--light-intensity))))`,
         transform: !reducedMotion
-          ? `perspective(1000px) rotateX(var(--rotation-x)) rotateY(var(--rotation-y))`
+          ? "perspective(1000px) rotateX(var(--rotation-x)) rotateY(var(--rotation-y))"
           : "",
         ...style,
       }}

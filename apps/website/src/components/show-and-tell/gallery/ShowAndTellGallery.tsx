@@ -10,6 +10,7 @@ import {
 } from "@/utils/video-urls";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { createImageUrl } from "@/utils/image";
+import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -82,9 +83,11 @@ export function ShowAndTellGallery({
           updateConsent({ [content.data.consent]: true });
 
         content.element = document.createElement("div");
-        content.element.className =
-          "pointer-events-none flex flex-col items-center h-full p-0 md:p-4 lg:p-8 " +
-          (lightboxParent ? "w-[80%] mr-[20%]" : "w-[calc(100%-80px)]");
+        content.element.className = classes(
+          "pointer-events-none flex flex-col items-center h-full p-0 md:p-4 lg:p-8",
+          lightboxParent && "w-[80%] mr-[20%]",
+          !lightboxParent && "w-[calc(100%-80px)]",
+        );
 
         // Create our video wrapper
         const wrapper = document.createElement("div");
@@ -98,7 +101,8 @@ export function ShowAndTellGallery({
         iframe.allow = "fullscreen; encrypted-media";
         iframe.setAttribute("sandbox", "allow-same-origin allow-scripts");
         iframe.draggable = false;
-        iframe.className = `pointer-events-auto w-[calc(100%-80px)] mx-auto aspect-video select-none`;
+        iframe.className =
+          "pointer-events-auto w-[calc(100%-80px)] mx-auto aspect-video select-none";
         iframe.src = content.data.iframeUrl;
 
         // Register the photoswipe load bindings

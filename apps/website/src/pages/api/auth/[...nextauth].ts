@@ -29,17 +29,15 @@ type ProfileData = {
 export const authOptions: NextAuthOptions = {
   // Include user.id on session
   callbacks: {
-    session: async function ({ session, user }) {
-      return {
-        ...session,
-        user: session.user && {
-          ...session.user,
-          id: user.id,
-          isSuperUser: checkIsSuperUserId(user.id),
-          roles: await getRolesForUser(user.id),
-        },
-      };
-    },
+    session: async ({ session, user }) => ({
+      ...session,
+      user: session.user && {
+        ...session.user,
+        id: user.id,
+        isSuperUser: checkIsSuperUserId(user.id),
+        roles: await getRolesForUser(user.id),
+      },
+    }),
     async signIn({ user, account, profile }) {
       if (!user || !account) return true;
 

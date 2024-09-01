@@ -99,7 +99,7 @@ export function FormForm({ action, form }: FormFormProps) {
           { action: "create", ...mutationData },
           {
             onSuccess: async () => {
-              await router.push(`/admin/forms`);
+              await router.push("/admin/forms");
             },
           },
         );

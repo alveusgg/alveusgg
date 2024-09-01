@@ -33,9 +33,9 @@ export function Ticket({
         width,
         height,
         maskImage: maskImage && `url("${maskImage}")`,
-        maskSize: maskImage && `100% 100%`,
+        maskSize: maskImage && "100% 100%",
         WebkitMaskImage: maskImage && `url("${maskImage}")`,
-        WebkitMaskSize: maskImage && `100% 100%`,
+        WebkitMaskSize: maskImage && "100% 100%",
       }}
     >
       {backgroundImage && (

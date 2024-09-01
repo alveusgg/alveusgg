@@ -43,7 +43,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       redirect: {
         destination: session?.user?.id
           ? "/unauthorized"
-          : `/auth/signin?callbackUrl=${encodeURIComponent(context.resolvedUrl)}`,
+          : `/auth/signin?callbackUrl=${encodeURIComponent(
+              context.resolvedUrl,
+            )}`,
         permanent: false,
       },
     };

@@ -119,7 +119,8 @@ export const formsRouter = router({
         if (!isFollowing) {
           throw new TRPCError({
             code: "BAD_REQUEST",
-            message: `Your connected Twitch account does not follow AlveusSanctuary!`,
+            message:
+              "Your connected Twitch account does not follow AlveusSanctuary!",
           });
         }
       }

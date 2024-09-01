@@ -64,7 +64,7 @@ export function CalendarEventForm({
         String(formData.get("link")).startsWith("http://") ||
         String(formData.get("link")).startsWith("https://")
           ? String(formData.get("link"))
-          : "https://" + String(formData.get("link"));
+          : `https://${String(formData.get("link"))}`;
 
       const startAtDate = formData.get("startAtDate");
       const startAtTime = formData.get("startAtTime");

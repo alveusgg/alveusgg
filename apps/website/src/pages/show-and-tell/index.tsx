@@ -13,6 +13,7 @@ import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
 import {
   getPosts,
   getPostsCount,
@@ -415,12 +416,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           ref={presentationViewRootElementRef}
           onWheel={onUserScroll}
           onScroll={onScroll}
-          className={
-            "scrollbar-none flex flex-col transition-colors duration-200 " +
-            (isPresentationView
-              ? "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
-              : "gap-20 bg-white/0")
-          }
+          className={classes(
+            "scrollbar-none flex flex-col transition-colors duration-200",
+            isPresentationView &&
+              "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5",
+            !isPresentationView && "gap-20 bg-white/0",
+          )}
           onKeyDown={handleArrowKeys}
           tabIndex={-1}
         >
@@ -468,10 +469,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               )}
               {hasNextEntry && (
                 <button
-                  className={
-                    "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)] " +
-                    (hasPrevEntry ? "h-[calc(6em/2)]" : "h-[calc(6em-1.25rem)]")
-                  }
+                  className={classes(
+                    "fixed bottom-0 left-5 z-20 w-[calc(80%-2em)]",
+                    hasPrevEntry && "h-[calc(6em/2)]",
+                    !hasPrevEntry && "h-[calc(6em-1.25rem)]",
+                  )}
                   type="button"
                   onClick={scrollToNext}
                 >

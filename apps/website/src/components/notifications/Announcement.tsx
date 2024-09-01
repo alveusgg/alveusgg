@@ -61,9 +61,9 @@ export function Announcement({ notification }: { notification: Notification }) {
               />
             </>
           )}
-          {notification.scheduledStartAt && notification.scheduledEndAt && (
-            <>{" • "}</>
-          )}
+          {notification.scheduledStartAt &&
+            notification.scheduledEndAt &&
+            " • "}
           {notification.scheduledEndAt && (
             <>
               Ends:{" "}

@@ -136,13 +136,14 @@ export const parsePartialDateString = (
   date: PartialDateString,
 ): Date | null => {
   const arr = date.split("-");
-  const d = parseInt(arr[2] || "");
-  const m = parseInt(arr[1] || "");
-  const y = parseInt(arr[0] || "");
+  const d = Number.parseInt(arr[2] || "");
+  const m = Number.parseInt(arr[1] || "");
+  const y = Number.parseInt(arr[0] || "");
 
-  if (!isNaN(d) && !isNaN(m) && !isNaN(y)) return new Date(y, m - 1, d);
-  if (!isNaN(m) && !isNaN(y)) return new Date(y, m - 1);
-  if (!isNaN(y)) return new Date(y, 0);
+  if (!Number.isNaN(d) && !Number.isNaN(m) && !Number.isNaN(y))
+    return new Date(y, m - 1, d);
+  if (!Number.isNaN(m) && !Number.isNaN(y)) return new Date(y, m - 1);
+  if (!Number.isNaN(y)) return new Date(y, 0);
 
   return null;
 };

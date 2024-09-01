@@ -503,7 +503,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               allow="autoplay; fullscreen"
               sandbox="allow-same-origin allow-scripts"
               className="aspect-video h-auto w-full rounded-2xl"
-            ></iframe>
+            />
           </Consent>
         </Section>
       </div>
@@ -532,9 +532,9 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             duration: secondsToIso8601(episode.length),
             // Copying the Twitch VOD page behaviour, as with the meta data
             // Twitch set their embedUrl to be their WWW page, not the player
-            embedUrl: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
-              episode.edition,
-            )}`,
+            embedUrl: `${
+              env.NEXT_PUBLIC_BASE_URL
+            }/animal-quest/${sentenceToKebab(episode.edition)}`,
           },
           partOfSeries: {
             "@type": "CreativeWorkSeries",

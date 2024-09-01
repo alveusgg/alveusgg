@@ -260,16 +260,15 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               ))}
             </dl>
 
-            {animalQuest &&
-              animalQuest.map((aq) => (
-                <AnimalQuest
-                  key={aq.episode}
-                  episode={aq}
-                  relation={aq.relation}
-                  ambassador={ambassador}
-                  className="my-6"
-                />
-              ))}
+            {animalQuest?.map((aq) => (
+              <AnimalQuest
+                key={aq.episode}
+                episode={aq}
+                relation={aq.relation}
+                ambassador={ambassador}
+                className="my-6"
+              />
+            ))}
 
             <div className="pswp-gallery my-6" id={photoswipe}>
               <Carousel
