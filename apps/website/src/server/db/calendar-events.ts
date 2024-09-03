@@ -60,7 +60,7 @@ export async function getCalendarEvents({
   });
 }
 
-export async function createRegularCalendarEvents() {
+export async function createRegularCalendarEvents(date: Date) {
   const animalCareChats = {
     title: "Animal Care Chats",
     description:
@@ -115,7 +115,7 @@ export async function createRegularCalendarEvents() {
   ] as Omit<CalendarEventSchema, "startAt" | "hasTime">[][];
 
   // Walk through each day of the next month and create any events
-  const nextMonth = DateTime.now()
+  const nextMonth = DateTime.fromJSDate(date)
     .plus({ months: 1 })
     .setZone(DATETIME_ALVEUS_ZONE)
     .set({ day: 1, hour: 12, minute: 0, second: 0, millisecond: 0 });

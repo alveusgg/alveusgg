@@ -6,7 +6,10 @@ import { prisma } from "@/server/db/client";
 
 type TaskConfig = ScheduledTasksConfig["tasks"][number];
 
-async function executeTask(taskConfig: TaskConfig) {
+async function executeTask(
+  taskConfig: TaskConfig,
+  nextExecutionTime: DateTime,
+) {
   const startTime = new Date();
   const event = await prisma.taskExecutionEvent.create({
     select: { id: true },
@@ -15,7 +18,7 @@ async function executeTask(taskConfig: TaskConfig) {
       task: taskConfig.id,
     },
   });
-  await taskConfig.task();
+  await taskConfig.task(nextExecutionTime.toJSDate());
   const finishTime = new Date();
   await prisma.taskExecutionEvent.update({
     where: { id: event.id },
@@ -44,7 +47,8 @@ async function checkTaskIsDue(taskConfig: TaskConfig) {
   const nextExecutionTime = DateTime.fromJSDate(lastExecutionTime).plus(
     taskConfig.interval,
   );
-  return nextExecutionTime < DateTime.now();
+  if (nextExecutionTime >= DateTime.now()) return false;
+  return nextExecutionTime;
 }
 
 export async function runScheduledTasks() {
@@ -52,9 +56,9 @@ export async function runScheduledTasks() {
 
   await Promise.allSettled(
     config.tasks.map(async (taskConfig: TaskConfig) => {
-      if (await checkTaskIsDue(taskConfig)) {
-        await executeTask(taskConfig);
-      }
+      const nextExecutionTime = await checkTaskIsDue(taskConfig);
+      if (nextExecutionTime !== false)
+        await executeTask(taskConfig, nextExecutionTime);
     }),
   );
 }

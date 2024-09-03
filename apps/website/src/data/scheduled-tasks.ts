@@ -23,7 +23,7 @@ const scheduledTasksConfigSchema = z.object({
   tasks: z.array(
     z.object({
       id: z.string(),
-      task: z.function().returns(z.promise(z.void())),
+      task: z.function().args(z.date()).returns(z.promise(z.void())),
       label: z.string(),
       interval: durationSchema,
       startDateTime: z.date(),
@@ -64,7 +64,7 @@ const config: ScheduledTasksConfig = {
     },
     {
       id: "calendarEvents.regular",
-      task: () => createRegularCalendarEvents(),
+      task: (date) => createRegularCalendarEvents(date),
       label: "Calendar events: Create Regular Events",
       startDateTime: new Date(2024, 7, 21, 0, 8, 0),
       interval: { months: 1 },
