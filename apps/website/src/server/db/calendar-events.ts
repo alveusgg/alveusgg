@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { DateTime } from "luxon";
 import { prisma } from "@/server/db/client";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),
@@ -56,4 +58,76 @@ export async function getCalendarEvents({
     },
     orderBy: { startAt: "asc" },
   });
+}
+
+export async function createRegularCalendarEvents() {
+  const animalCareChats = {
+    title: "Animal Care Chats",
+    description:
+      "Join animal care staff as they carry out their daily tasks and answer your questions.",
+    category: "Alveus Regular Stream",
+    link: "https://twitch.tv/AlveusSanctuary",
+  };
+
+  const eventsByWeekDay = [
+    // Monday
+    [animalCareChats],
+    // Tuesday
+    [animalCareChats],
+    // Wednesday
+    [
+      animalCareChats,
+      {
+        title: "WAI New Episode",
+        description: "Watch the latest Wine About It episode.",
+        category: "Maya YouTube Video",
+        link: "https://www.youtube.com/@WineAboutItPodcast",
+      },
+    ],
+    // Thursday
+    [
+      {
+        title: "Connor Stream",
+        description: "Join Connor as he gets up to his usual antics.",
+        category: "Alveus Regular Stream",
+        link: "https://twitch.tv/AlveusSanctuary",
+      },
+      {
+        title: "WW New Episode",
+        description: "Watch the latest World's Wildest episode.",
+        category: "Maya YouTube Video",
+        link: "https://www.youtube.com/@worldswildestpodcast",
+      },
+    ],
+    // Friday
+    [animalCareChats],
+    // Saturday
+    [
+      {
+        title: "Nick Stream",
+        description: "Join Nick as he gets work done around the sanctuary.",
+        category: "Alveus Regular Stream",
+        link: "https://twitch.tv/AlveusSanctuary",
+      },
+    ],
+    // Sunday
+    [],
+  ] as Omit<CalendarEventSchema, "startAt" | "hasTime">[][];
+
+  // Walk through each day of the next month and create any events
+  const nextMonth = DateTime.now()
+    .plus({ months: 1 })
+    .setZone(DATETIME_ALVEUS_ZONE)
+    .set({ day: 1, hour: 12, minute: 0, second: 0, millisecond: 0 });
+  for (let day = 1; day <= (nextMonth.daysInMonth || 0); day++) {
+    const date = nextMonth.set({ day });
+    const events = eventsByWeekDay[date.weekday - 1];
+    for (const event of events || []) {
+      await createCalendarEvent({
+        ...event,
+        startAt: date.toJSDate(),
+        hasTime: false,
+      });
+    }
+  }
 }
