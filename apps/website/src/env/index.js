@@ -28,7 +28,7 @@ const listOfUrlsSchema = z.string().transform((val, ctx) => {
   return urls;
 });
 
-const listOfStringsSchema = z.string().transform((val, ctx) => {
+const listOfStringsSchema = z.string().transform((val) => {
   if (val.trim() === "") {
     return [];
   }
