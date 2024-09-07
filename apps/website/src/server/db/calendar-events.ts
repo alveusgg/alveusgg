@@ -20,25 +20,25 @@ export const existingCalendarEventSchema = calendarEventSchema.and(
   }),
 );
 
-export async function createCalendarEvent(
+export function createCalendarEvent(
   input: z.infer<typeof calendarEventSchema>,
 ) {
-  return await prisma.calendarEvent.create({
+  return prisma.calendarEvent.create({
     data: input,
   });
 }
 
-export async function editCalendarEvent(
+export function editCalendarEvent(
   input: z.infer<typeof existingCalendarEventSchema>,
 ) {
   const { id, ...data } = input;
-  return await prisma.calendarEvent.update({
+  return prisma.calendarEvent.update({
     where: { id },
     data,
   });
 }
 
-export async function getCalendarEvents({
+export function getCalendarEvents({
   start,
   end,
 }: { start?: Date; end?: Date } = {}) {
@@ -49,7 +49,7 @@ export async function getCalendarEvents({
   const endAt =
     end ?? new Date(new Date(startAt).setMonth(startAt.getMonth() + 1));
 
-  return await prisma.calendarEvent.findMany({
+  return prisma.calendarEvent.findMany({
     where: {
       startAt: {
         gte: startAt,
