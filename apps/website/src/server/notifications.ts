@@ -33,9 +33,9 @@ type CreateNotificationData = {
   isDiscord?: boolean;
 };
 
-const exponentialDelays = new Array(pushMaxAttempts).map(
-  (_, i) => pushRetryDelay * Math.pow(2, i + 1),
-);
+const exponentialDelays = Array(pushMaxAttempts)
+  .fill(0)
+  .map((_, i) => pushRetryDelay * Math.pow(2, i + 1));
 
 export async function createNotification(data: CreateNotificationData) {
   const tagConfig = notificationCategories.find((cat) => cat.tag === data.tag);
@@ -98,6 +98,11 @@ export async function retryPendingNotificationPushes() {
   const requests = [];
   let i = 0;
   const now = new Date();
+  const retryConditions = exponentialDelays.map((delay, attempts) => ({
+    attempts: attempts,
+    failedAt: { lte: new Date(now.getTime() - delay) },
+  }));
+
   while (true) {
     const pendingPushes = await prisma.notificationPush.findMany({
       select: {
@@ -109,10 +114,7 @@ export async function retryPendingNotificationPushes() {
       where: {
         processingStatus: "PENDING",
         expiresAt: { gte: now },
-        OR: exponentialDelays.map((delay, attempts) => ({
-          attempts: attempts,
-          failedAt: { lte: new Date(now.getTime() - delay) },
-        })),
+        OR: retryConditions,
       },
       take: pushBatchSize,
       skip: pushBatchSize * i++,
