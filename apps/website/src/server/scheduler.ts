@@ -18,7 +18,13 @@ async function executeTask(
       task: taskConfig.id,
     },
   });
-  await taskConfig.task(nextExecutionTime.toJSDate());
+
+  try {
+    await taskConfig.task(nextExecutionTime.toJSDate());
+  } catch (exception) {
+    console.error(`Error executing task ${taskConfig.id}`, exception);
+  }
+
   const finishTime = new Date();
   await prisma.taskExecutionEvent.update({
     where: { id: event.id },
