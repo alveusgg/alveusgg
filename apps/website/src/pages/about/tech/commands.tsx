@@ -4,9 +4,11 @@ import Image from "next/image";
 
 import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import commands, {
-  isOverloadedArguments,
-  type Command,
   type Argument,
+  type Command,
+  type CommandCategoryId,
+  commandCategories,
+  isOverloadedArguments,
 } from "@/data/tech/commands";
 import presets from "@/data/tech/presets";
 
@@ -18,6 +20,8 @@ import Heading from "@/components/content/Heading";
 import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
 
+import IconChevronRight from "@/icons/IconChevronRight";
+
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -26,9 +30,7 @@ interface NamedCommand extends Command {
   name: string;
 }
 
-const grouped = typeSafeObjectEntries(commands).reduce<
-  Record<string, NamedCommand[]>
->(
+const grouped = typeSafeObjectEntries(commands).reduce(
   (obj, [name, command]) => ({
     ...obj,
     [command.category]: [
@@ -39,7 +41,7 @@ const grouped = typeSafeObjectEntries(commands).reduce<
       },
     ],
   }),
-  {},
+  {} as Record<CommandCategoryId, NamedCommand[]>,
 );
 
 const signatureArg = (arg: Argument) =>
@@ -72,6 +74,11 @@ const signature = (command: NamedCommand) => {
   return `${cmd} ${cmdArgs}`;
 };
 
+const sectionLinks = [
+  { name: "Commands", id: "commands" },
+  { name: "Presets", id: "presets" },
+] as const;
+
 const AboutTechPage: NextPage = () => {
   return (
     <>
@@ -87,7 +94,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm select-none lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
@@ -103,6 +110,22 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
+      <nav className="sticky left-0 top-0 z-20 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl">
+        <div className="container mx-auto flex flex-row items-center gap-2 p-1 px-2">
+          {sectionLinks.map(({ name, id }) => (
+            <a
+              key={id}
+              className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
+              href={`#${id}`}
+            >
+              <IconChevronRight className="h-5 w-5" />
+
+              {name}
+            </a>
+          ))}
+        </div>
+      </nav>
+
       <div className="relative">
         <Image
           src={leafLeftImage1}
@@ -111,7 +134,12 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section>
-          <Heading level={2} className="mb-2 mt-0" id="commands" link>
+          <Heading
+            level={2}
+            className="mb-2 mt-0 scroll-mt-14"
+            id="commands"
+            link
+          >
             Commands
           </Heading>
 
@@ -207,53 +235,66 @@ const AboutTechPage: NextPage = () => {
           </dl>
 
           <dl>
-            {typeSafeObjectEntries(grouped).map(([category, commands]) => (
-              <Fragment key={category}>
-                <dt className="mt-6">
-                  <Heading
-                    level={3}
-                    className="text-2xl"
-                    id={`commands:${sentenceToKebab(category)}`}
-                    link
-                  >
-                    {category}
-                  </Heading>
-                </dt>
-                <dd className="mx-2">
-                  <dl className="max-w-full overflow-x-auto">
-                    {commands.map((command) => (
-                      <div
-                        key={command.name}
-                        className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
-                      >
-                        <dt>
-                          <pre>
-                            <code className="text-sm">
-                              {signature(command)}
-                              <CopyToClipboardButton
-                                text={signature(command)}
-                              />
-                            </code>
-                          </pre>
-                        </dt>
+            {typeSafeObjectEntries(grouped).map(([categoryId, commands]) => {
+              const category = commandCategories[categoryId];
 
-                        <dd>
-                          <p className="text-sm italic text-alveus-green-400">
-                            {command.description}
-                          </p>
-                        </dd>
-                      </div>
-                    ))}
-                  </dl>
-                </dd>
-              </Fragment>
-            ))}
+              return (
+                <Fragment key={categoryId}>
+                  <dt className="mt-6">
+                    <Heading
+                      level={3}
+                      className="scroll-mt-14 text-2xl"
+                      id={`commands:${sentenceToKebab(categoryId)}`}
+                      link
+                    >
+                      {category.heading}
+                    </Heading>
+
+                    {"description" in category && (
+                      <p className="mb-4">{category.description}</p>
+                    )}
+                  </dt>
+                  <dd className="mx-2">
+                    <dl className="max-w-full overflow-x-auto">
+                      {commands.map((command) => (
+                        <div
+                          key={command.name}
+                          className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
+                        >
+                          <dt>
+                            <pre>
+                              <code className="text-sm">
+                                {signature(command)}
+                                <CopyToClipboardButton
+                                  text={signature(command)}
+                                />
+                              </code>
+                            </pre>
+                          </dt>
+
+                          <dd>
+                            <p className="text-sm italic text-alveus-green-400">
+                              {command.description}
+                            </p>
+                          </dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </dd>
+                </Fragment>
+              );
+            })}
           </dl>
         </Section>
       </div>
 
-      <Section dark>
-        <Heading level={2} className="mb-2 mt-0" id="fossabot" link>
+      <Section className="bg-alveus-green-100">
+        <Heading
+          level={2}
+          className="mb-2 mt-0 scroll-mt-14"
+          id="fossabot"
+          link
+        >
           Fossabot
         </Heading>
 
@@ -267,7 +308,6 @@ const AboutTechPage: NextPage = () => {
 
           <Button
             href="https://fossabot.com/alveussanctuary/commands"
-            dark
             external
             className="flex-shrink-0"
           >
@@ -285,7 +325,12 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section className="flex-grow">
-          <Heading level={2} className="mb-2 mt-0" id="presets" link>
+          <Heading
+            level={2}
+            className="mb-2 mt-0 scroll-mt-14"
+            id="presets"
+            link
+          >
             Presets
           </Heading>
 
@@ -301,7 +346,7 @@ const AboutTechPage: NextPage = () => {
                   <dt className="mt-6">
                     <Heading
                       level={3}
-                      className="text-2xl"
+                      className="scroll-mt-14 text-2xl"
                       id={`presets:${camelToKebab(camera)}`}
                       link
                     >
