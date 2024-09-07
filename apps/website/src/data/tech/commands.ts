@@ -43,9 +43,54 @@ export const isOverloadedArguments = (
 
 export interface Command {
   description: string;
-  category: string;
+  category: CommandCategoryId;
   args: [] | Arguments | OverloadedArguments;
 }
+
+export type CommandCategoryId = keyof typeof commandCategories;
+
+export interface CommandCategory {
+  heading: string;
+  description?: string;
+}
+
+export const commandCategories = {
+  Example: {
+    heading: "Example",
+  },
+  PTZ: {
+    heading: "PTZ (Pan, Tilt, Zoom)",
+  },
+  IR: {
+    heading: "IR (Infrared)",
+  },
+  Focus: {
+    heading: "Focus",
+  },
+  Presets: {
+    heading: "Presets",
+    description:
+      "These commands will pan, tilt and zoom the respective camera to a preset view. The presets are listed below.",
+  },
+  Audio: {
+    heading: "Audio",
+  },
+  Scenes: {
+    heading: "Scenes",
+  },
+  Sources: {
+    heading: "Sources",
+  },
+  Text: {
+    heading: "Text",
+  },
+  Wheel: {
+    heading: "Wheel",
+  },
+  Notify: {
+    heading: "Notify",
+  },
+} as const satisfies Record<string, CommandCategory>;
 
 const commands: Record<string, Command> = {
   /**
