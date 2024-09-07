@@ -28,27 +28,16 @@ type PendingNotification = {
   end?: DateStr;
 };
 
-type BroadcasterId = string;
-type UserId = string;
-type PendingNotificationKey = `${BroadcasterId}|${UserId}`;
-
 // These URLs are likely not meant to be used as notification links without a path
 const partialUrlFilterList = ["https://twitch.tv/", "https://youtube.com/"];
 
-const createPendingNotificationKey = (
-  broadcasterId: string,
-  userId: string,
-): PendingNotificationKey => `${broadcasterId}|${userId}`;
-
 function createPendingNotification(
-  key: PendingNotificationKey,
   data: Omit<PendingNotification, "expiresAt">,
-) {
-  const pendingNotification: PendingNotification = {
+): PendingNotification {
+  return {
     ...data,
     expiresAt: Date.now() + 60_000,
   };
-  return pendingNotification;
 }
 
 const options = createOptions({
@@ -138,14 +127,11 @@ function renderPendingNotification(notification: PendingNotification) {
 }
 
 export async function createNotificationCommands() {
-  const pendingNotifications = new Map<
-    PendingNotificationKey,
-    PendingNotification
-  >();
+  const pendingNotifications = new Map<string, PendingNotification>();
 
   const notificationCommand: CommandHandler = async (
     params,
-    { broadcasterId, broadcasterName, userName, userId, reply, say },
+    { broadcasterId, broadcasterName, userName, reply },
   ) => {
     const isMod = await checkUserIsAllowedToSendNotifications(userName);
     if (!isMod) {
@@ -180,7 +166,6 @@ export async function createNotificationCommands() {
     let { title, text } = parseTitleAndText(restParams);
 
     if (!title) {
-      reply("Waiting Creating notification...");
       const channelInfo = await getChannelInfoById(broadcasterId);
       if (channelInfo) {
         title = channelInfo.title.split("|")[0];
@@ -190,8 +175,7 @@ export async function createNotificationCommands() {
 
     title = title || defaultNotificationTitle;
 
-    const key = createPendingNotificationKey(broadcasterId, userId);
-    const pendingNotification = createPendingNotification(key, {
+    const pendingNotification = createPendingNotification({
       tag: "stream",
       linkUrl,
       title,
@@ -200,7 +184,7 @@ export async function createNotificationCommands() {
       isDiscord: !optionValues["no-discord"],
       imageUrl: optionValues.image,
     });
-    pendingNotifications.set(key, pendingNotification);
+    pendingNotifications.set(broadcasterId, pendingNotification);
 
     reply(
       `PauseChamp please !confirm: ${renderPendingNotification(
@@ -211,7 +195,7 @@ export async function createNotificationCommands() {
 
   const announcementCommand: CommandHandler = async (
     params,
-    { broadcasterId, broadcasterName, userName, userId, reply },
+    { broadcasterId, broadcasterName, userName, reply },
   ) => {
     const isMod = await checkUserIsAllowedToSendNotifications(userName);
     if (!isMod) {
@@ -255,8 +239,7 @@ export async function createNotificationCommands() {
       return;
     }
 
-    const key = createPendingNotificationKey(broadcasterId, userId);
-    const pendingNotification = createPendingNotification(key, {
+    const pendingNotification = createPendingNotification({
       tag: "announcements",
       text,
       linkUrl,
@@ -267,7 +250,7 @@ export async function createNotificationCommands() {
       isDiscord: !optionValues["no-discord"],
       imageUrl: optionValues.image,
     });
-    pendingNotifications.set(key, pendingNotification);
+    pendingNotifications.set(broadcasterId, pendingNotification);
 
     reply(
       `PauseChamp please !confirm: ${renderPendingNotification(
@@ -278,7 +261,7 @@ export async function createNotificationCommands() {
 
   const confirmCommand: CommandHandler = async (
     params,
-    { broadcasterId, userName, userId, reply },
+    { broadcasterId, userName, reply },
   ) => {
     const isMod = await checkUserIsAllowedToSendNotifications(userName);
     if (!isMod) {
@@ -286,17 +269,14 @@ export async function createNotificationCommands() {
       return;
     }
 
-    const key = createPendingNotificationKey(broadcasterId, userId);
-    const pendingNotification = pendingNotifications.get(key);
+    const pendingNotification = pendingNotifications.get(broadcasterId);
 
     if (!pendingNotification || pendingNotification.expiresAt < Date.now()) {
-      if (pendingNotification) pendingNotifications.delete(key);
+      if (pendingNotification) pendingNotifications.delete(broadcasterId);
 
-      reply("mojjcheck no pending notification for user");
+      reply("mojjcheck no pending notification");
       return;
     }
-
-    reply(`Waiting sending notification …`);
 
     createNotification({
       tag: pendingNotification.tag,
@@ -314,7 +294,7 @@ export async function createNotificationCommands() {
         reply("MADGIES failed to send notification");
       });
 
-    pendingNotifications.delete(key);
+    pendingNotifications.delete(broadcasterId);
   };
 
   return [
