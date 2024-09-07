@@ -285,6 +285,7 @@ export async function createNotificationCommands() {
       title: pendingNotification.title,
       isDiscord: pendingNotification.isDiscord,
       isPush: pendingNotification.isPush,
+      imageUrl: pendingNotification.imageUrl,
     })
       .then(() => {
         reply("poggSpin sent notification");
