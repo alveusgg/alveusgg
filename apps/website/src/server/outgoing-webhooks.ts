@@ -117,9 +117,13 @@ export async function retryOutgoingWebhooks({
 }) {
   const now = new Date();
 
-  const exponentialDelays = new Array(maxAttempts).map(
-    (_, i) => retryDelay * Math.pow(2, i + 1),
-  );
+  const retryConditions = Array(maxAttempts)
+    .fill(0)
+    .map((_, i) => retryDelay * Math.pow(2, i + 1))
+    .map((delay, attempts) => ({
+      attempts: attempts,
+      failedAt: { lte: new Date(now.getTime() - delay) },
+    }));
 
   const pendingOutgoingWebhooks = await prisma.outgoingWebhook.findMany({
     where: {
@@ -129,10 +133,7 @@ export async function retryOutgoingWebhooks({
           OR: [{ expiresAt: null }, { expiresAt: { gte: now } }],
         },
         {
-          OR: exponentialDelays.map((delay, attempts) => ({
-            attempts: attempts,
-            failedAt: { lte: new Date(now.getTime() - delay) },
-          })),
+          OR: retryConditions,
         },
       ],
       retry: true,
