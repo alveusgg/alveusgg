@@ -6,6 +6,8 @@ import { prisma } from "@/server/db/client";
 
 type TaskConfig = ScheduledTasksConfig["tasks"][number];
 
+const MAX_EXECUTION_DURATION = 1000 * 60 * 5; // 5 minutes
+
 async function executeTask(
   taskConfig: TaskConfig,
   nextExecutionTime: DateTime,
@@ -43,11 +45,30 @@ async function checkTaskIsDue(taskConfig: TaskConfig) {
 
   let lastExecutionTime = taskConfig.startDateTime;
   if (lastExecutionEvent) {
+    // Check if the task is still running
     if (lastExecutionEvent.finishedAt === null) {
-      // still running, do not run again
-      return false;
+      const duration = DateTime.now().diff(
+        DateTime.fromJSDate(lastExecutionEvent.startedAt),
+      );
+      // Do not run again if it is still running and not stuck
+      if (duration.toMillis() <= MAX_EXECUTION_DURATION) {
+        return false;
+      }
+
+      // When the task is stuck, use the last successful execution time
+      const lastSuccessfulExecutionEvent =
+        await prisma.taskExecutionEvent.findFirst({
+          select: { startedAt: true },
+          where: { task: taskConfig.id, finishedAt: { not: null } },
+          orderBy: { startedAt: "desc" },
+        });
+      if (lastSuccessfulExecutionEvent) {
+        lastExecutionTime = lastSuccessfulExecutionEvent.startedAt;
+      }
+    } else {
+      // Last execution has finished, use the last execution time
+      lastExecutionTime = lastExecutionEvent.startedAt;
     }
-    lastExecutionTime = lastExecutionEvent.startedAt;
   }
 
   const nextExecutionTime = DateTime.fromJSDate(lastExecutionTime).plus(
