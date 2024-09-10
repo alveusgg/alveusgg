@@ -393,6 +393,8 @@ export function Calendar({
                 const isPast = fullDate.startOf("day") < today.startOf("day");
                 const isToday = dateKey === todayKey;
 
+                const paddedDate = String(date).padStart(2, "0");
+
                 return (
                   <Day
                     key={date}
@@ -414,10 +416,10 @@ export function Calendar({
                           isToday && theme.heading,
                         )}
                       >
-                        {date}
+                        {paddedDate}
                         {/* Render the day of the week for mobile */}
                         <span className="md:hidden">
-                          {days[day - 1]?.slice(0, 1)}
+                          {days[(i + startDay) % 7]?.charAt(0)}
                         </span>
                       </p>
                     </div>
