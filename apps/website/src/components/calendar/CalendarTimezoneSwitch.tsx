@@ -25,7 +25,7 @@ export const CalendarTimezoneSwitchButton = ({
     value={label}
     aria-checked={isSelected}
     className={classes(
-      `relative flex items-center justify-center gap-2 rounded-full border border-alveus-green-900 p-1 text-sm
+      `relative flex items-center justify-center gap-2 rounded-full border border-alveus-green-900 p-1 text-sm text-alveus-green-900
       transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan  max-[420px]:p-0 max-[420px]:text-xs`,
       isSelected ? "bg-alveus-green-900 text-alveus-tan" : "bg-alveus-tan",
       className,
