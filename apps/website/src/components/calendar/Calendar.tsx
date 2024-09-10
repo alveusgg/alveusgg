@@ -145,30 +145,32 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
 
 export type MonthSelection = { month: number; year: number };
 
-export function useMonthSelection(initialDate?: Date) {
-  const [selected, setSelected] = useState<MonthSelection>();
-  useEffect(() => {
-    if (initialDate)
-      setSelected({
-        month: initialDate.getMonth(),
-        year: initialDate.getFullYear(),
-      });
-  }, [initialDate]);
+export function useMonthSelection(initialDate: Date = new Date()) {
+  const [selected, setSelected] = useState<MonthSelection>({
+    month: initialDate.getMonth(),
+    year: initialDate.getFullYear(),
+  });
+
   return [selected, setSelected] as const;
 }
 
-export function useCalendarEventsQuery(selected?: MonthSelection) {
-  const start = useMemo(
-    () => selected && new Date(selected.year, selected.month, 1),
-    [selected],
-  );
-  const end = useMemo(
-    () => selected && new Date(selected.year, selected.month + 1, 1),
-    [selected],
+export function useCalendarEventsQuery(
+  timeZone: string,
+  selected: MonthSelection,
+) {
+  const start = DateTime.fromObject(
+    {
+      year: selected.year,
+      month: selected.month + 1, // luxon uses 1-based months
+      day: 1,
+    },
+    { zone: timeZone },
   );
 
+  const end = start.plus({ months: 1 });
+
   return trpc.calendarEvents.getCalendarEvents.useQuery(
-    { start, end },
+    { start: start.toJSDate(), end: end.toJSDate() },
     { enabled: selected !== undefined },
   );
 }
@@ -210,12 +212,9 @@ type CalendarProps = {
 };
 
 function getDateKey(date: Date, timeZone?: string) {
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    timeZone,
-  });
+  return DateTime.fromJSDate(date, { zone: timeZone })
+    .startOf("day")
+    .toFormat("MM/dd/yyyy");
 }
 
 export function Calendar({
@@ -229,8 +228,9 @@ export function Calendar({
   timeZone,
   setTimeZone,
 }: CalendarProps) {
-  const today = useToday();
+  const today = useToday(timeZone);
   const todayKey = today && getDateKey(today, timeZone);
+
   const currentMonth = useMemo(() => new Date(year, month, 1), [month, year]);
   const daysInMonth = useMemo(
     () =>
@@ -257,7 +257,14 @@ export function Calendar({
       const idx = Math.floor(Math.random() * days.length);
       const day = days.splice(idx, 1)[0] as number;
       return {
-        date: new Date(year, month, day + 1),
+        date: DateTime.fromObject(
+          {
+            year,
+            month: month + 1,
+            day: day + 1,
+          },
+          { zone: timeZone },
+        ).toJSDate(),
         children: (
           <Transition
             key={day}
@@ -280,12 +287,12 @@ export function Calendar({
         ),
       };
     });
-  }, [daysInMonth, month, year]);
+  }, [daysInMonth, month, timeZone, year]);
 
   const byDay = useMemo(
     () =>
-      (loading ? [...placeholders] : [...events])
-        .sort((a, b) => a.date.getTime() - b.date.getTime())
+      (loading ? placeholders : events)
+        .toSorted((a, b) => a.date.getTime() - b.date.getTime())
         .reduce<Record<string, CalendarEvent[]>>((acc, event) => {
           const dateKey = getDateKey(event.date, timeZone);
           return { ...acc, [dateKey]: [...(acc[dateKey] || []), event] };
@@ -420,7 +427,9 @@ export function Calendar({
                 const events = byDay[dateKey] || [];
 
                 const day = fullDate.getDay();
-                const isPast = fullDate.getTime() < today.getTime();
+                const isPast =
+                  DateTime.fromJSDate(fullDate).startOf("day") <
+                  DateTime.fromJSDate(today).startOf("day");
                 const isToday = dateKey === todayKey;
 
                 return (

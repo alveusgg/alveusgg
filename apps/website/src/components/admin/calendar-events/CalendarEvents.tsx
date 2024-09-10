@@ -15,11 +15,11 @@ import useToday from "@/hooks/today";
 import { CalendarEventForm } from "./CalendarEventForm";
 
 export function CalendarEvents() {
-  const today = useToday();
+  const [timeZone, setTimeZone] = useTimezone();
+  const today = useToday(timeZone);
   const [selected, setSelected] = useMonthSelection(today);
 
-  const events = useCalendarEventsQuery(selected);
-  const [timeZone, setTimeZone] = useTimezone();
+  const events = useCalendarEventsQuery(timeZone, selected);
 
   const eventsWithChildren = useMemo(
     () =>

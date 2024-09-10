@@ -16,10 +16,10 @@ import useTimezone from "@/hooks/timezone";
 import useToday from "@/hooks/today";
 
 export function Schedule() {
-  const today = useToday();
-  const [selected, setSelected] = useMonthSelection(today);
-  const events = useCalendarEventsQuery(selected);
   const [timeZone, setTimeZone] = useTimezone();
+  const today = useToday(timeZone);
+  const [selected, setSelected] = useMonthSelection(today);
+  const events = useCalendarEventsQuery(timeZone, selected);
   const eventsWithChildren = useMemo(
     () =>
       today &&
