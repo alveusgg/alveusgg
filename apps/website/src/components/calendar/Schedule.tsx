@@ -18,7 +18,7 @@ import useToday from "@/hooks/today";
 export function Schedule() {
   const [timeZone, setTimeZone] = useTimezone();
   const today = useToday(timeZone);
-  const [selected, setSelected] = useMonthSelection(today);
+  const [selected, setSelected] = useMonthSelection(timeZone, today);
   const events = useCalendarEventsQuery(timeZone, selected);
   const eventsWithChildren = useMemo(
     () =>
@@ -44,8 +44,7 @@ export function Schedule() {
   return (
     <Calendar
       events={eventsWithChildren || []}
-      month={selected.month}
-      year={selected.year}
+      selectedDateTime={selected}
       loading={events.isLoading}
       onChange={setSelected}
       className="mt-2 md:mt-6"

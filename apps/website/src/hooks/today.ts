@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
 
 export default function useToday(timeZone?: string) {
-  const [today, setToday] = useState<Date>();
+  const [today, setToday] = useState<DateTime>();
 
   useEffect(() => {
-    setToday(DateTime.local({ zone: timeZone }).toJSDate());
+    setToday(DateTime.local({ zone: timeZone }));
   }, [timeZone]);
 
   return today;

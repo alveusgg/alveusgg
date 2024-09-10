@@ -17,7 +17,7 @@ import { CalendarEventForm } from "./CalendarEventForm";
 export function CalendarEvents() {
   const [timeZone, setTimeZone] = useTimezone();
   const today = useToday(timeZone);
-  const [selected, setSelected] = useMonthSelection(today);
+  const [selected, setSelected] = useMonthSelection(timeZone, today);
 
   const events = useCalendarEventsQuery(timeZone, selected);
 
@@ -47,8 +47,7 @@ export function CalendarEvents() {
         {selected && (
           <Calendar
             events={eventsWithChildren || []}
-            month={selected.month}
-            year={selected.year}
+            selectedDateTime={selected}
             loading={events.isLoading}
             onChange={setSelected}
             timeZone={timeZone}

@@ -1,5 +1,6 @@
 import type { CalendarEvent } from "@prisma/client";
 
+import type { DateTime } from "luxon";
 import { getStandardCategoryColor } from "@/data/calendar-events";
 import { classes } from "@/utils/classes";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
@@ -8,7 +9,7 @@ import Link from "@/components/content/Link";
 interface CalendarItemProps
   extends Omit<Parameters<typeof Link>[0], "children"> {
   event: CalendarEvent;
-  today: Date;
+  today: DateTime;
   timeZone?: string;
 }
 
@@ -25,7 +26,7 @@ export function CalendarItem({
         className,
         getStandardCategoryColor(event.category),
         "mb-auto block rounded-sm p-1 leading-none transition-colors",
-        event.startAt.getTime() < today.getTime() && "opacity-50",
+        event.startAt.getTime() < today.toMillis() && "opacity-50",
       )}
       custom
       {...props}

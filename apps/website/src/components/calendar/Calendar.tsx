@@ -1,4 +1,11 @@
-import { type ReactNode, useEffect, useMemo, useState } from "react";
+import {
+  type Dispatch,
+  type SetStateAction,
+  type ReactNode,
+  useMemo,
+  useState,
+} from "react";
+
 import { Transition } from "@headlessui/react";
 import { DateTime } from "luxon";
 
@@ -143,27 +150,22 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   };
 };
 
-export type MonthSelection = { month: number; year: number };
+export type MonthSelection = DateTime;
 
-export function useMonthSelection(initialDate: Date = new Date()) {
-  const [selected, setSelected] = useState<MonthSelection>({
-    month: initialDate.getMonth(),
-    year: initialDate.getFullYear(),
-  });
+export function useMonthSelection(timeZone: string, initialDate?: DateTime) {
+  const [selected, setSelected] = useState<MonthSelection>(
+    initialDate || DateTime.local().setZone(timeZone),
+  );
 
   return [selected, setSelected] as const;
 }
 
 export function useCalendarEventsQuery(
   timeZone: string,
-  selected: MonthSelection,
+  { month, year }: MonthSelection,
 ) {
   const start = DateTime.fromObject(
-    {
-      year: selected.year,
-      month: selected.month + 1, // luxon uses 1-based months
-      day: 1,
-    },
+    { month, year, day: 1 },
     { zone: timeZone },
   );
 
@@ -171,7 +173,7 @@ export function useCalendarEventsQuery(
 
   return trpc.calendarEvents.getCalendarEvents.useQuery(
     { start: start.toJSDate(), end: end.toJSDate() },
-    { enabled: selected !== undefined },
+    { enabled: !!month && !!year },
   );
 }
 
@@ -196,31 +198,23 @@ type CalendarEvent = {
   children: ReactNode;
 };
 
-type Month = number;
-type Year = number;
-
 type CalendarProps = {
   events: CalendarEvent[];
-  month: Month;
-  year: Year;
+  selectedDateTime: DateTime;
   loading?: boolean;
-  onChange?: ({ year, month }: { year: Year; month: Month }) => void;
+  onChange?: Dispatch<SetStateAction<MonthSelection>>;
   className?: string;
   children?: ReactNode;
   timeZone?: string;
-  setTimeZone: (timeZone?: string) => void;
+  setTimeZone: Dispatch<SetStateAction<string>>;
 };
 
-function getDateKey(date: Date, timeZone?: string) {
-  return DateTime.fromJSDate(date, { zone: timeZone })
-    .startOf("day")
-    .toFormat("MM/dd/yyyy");
-}
+const getDateKey = (date: DateTime, timeZone?: string) =>
+  date.setZone(timeZone).startOf("day").toFormat("MM/dd/yyyy");
 
 export function Calendar({
   events,
-  month,
-  year,
+  selectedDateTime,
   loading = false,
   onChange,
   className,
@@ -230,18 +224,7 @@ export function Calendar({
 }: CalendarProps) {
   const today = useToday(timeZone);
   const todayKey = today && getDateKey(today, timeZone);
-
-  const currentMonth = useMemo(() => new Date(year, month, 1), [month, year]);
-  const daysInMonth = useMemo(
-    () =>
-      currentMonth &&
-      new Date(
-        currentMonth.getFullYear(),
-        currentMonth.getMonth() + 1,
-        0,
-      ).getDate(),
-    [currentMonth],
-  );
+  const daysInMonth = selectedDateTime.daysInMonth;
 
   const placeholders = useMemo(() => {
     const delay = [
@@ -252,19 +235,13 @@ export function Calendar({
       "animation-delay-700",
     ];
     const height = ["h-5", "h-10"];
-    const days = Array.from({ length: daysInMonth }, (_, i) => i);
+    const days = Array.from({ length: daysInMonth! }, (_, i) => i);
+
     return Array.from({ length: 10 }, () => {
       const idx = Math.floor(Math.random() * days.length);
       const day = days.splice(idx, 1)[0] as number;
       return {
-        date: DateTime.fromObject(
-          {
-            year,
-            month: month + 1,
-            day: day + 1,
-          },
-          { zone: timeZone },
-        ).toJSDate(),
+        date: selectedDateTime.set({ day: day + 1 }).toJSDate(),
         children: (
           <Transition
             key={day}
@@ -287,49 +264,45 @@ export function Calendar({
         ),
       };
     });
-  }, [daysInMonth, month, timeZone, year]);
+  }, [selectedDateTime, daysInMonth]);
 
   const byDay = useMemo(
     () =>
       (loading ? placeholders : events)
         .toSorted((a, b) => a.date.getTime() - b.date.getTime())
         .reduce<Record<string, CalendarEvent[]>>((acc, event) => {
-          const dateKey = getDateKey(event.date, timeZone);
+          const dateKey = getDateKey(DateTime.fromJSDate(event.date), timeZone);
           return { ...acc, [dateKey]: [...(acc[dateKey] || []), event] };
         }, {}) || {},
     [loading, placeholders, events, timeZone],
   );
 
-  const theme = useMemo(() => getCalendarTheme(month), [month]);
+  const theme = useMemo(
+    () => getCalendarTheme(selectedDateTime.month - 1),
+    [selectedDateTime.month],
+  );
 
-  if (!today || !currentMonth || !daysInMonth) return null;
+  if (!today || !selectedDateTime) return null;
 
-  const startDay = 1; // 1 = Monday, 0 = Sunday
-  const startOffset = (7 + currentMonth.getDay() - startDay) % 7;
-  const weeks = Math.ceil((startOffset + daysInMonth) / 7);
+  const startDay = 1; // 1 = Monday, 7 = Sunday
+  const startOffset = (7 + (selectedDateTime.weekday - 1) - startDay - 1) % 7; // Luxon uses 1-based days
+  const weeks = Math.ceil((startOffset + daysInMonth!) / 7);
 
   return (
     <div className={classes("flex flex-col gap-2 md:gap-6", className)}>
       <div className="flex flex-col gap-4 sm:gap-2">
         <div className="flex items-baseline justify-between">
           <p className="text-5xl font-medium">
-            {currentMonth.toLocaleDateString("en-US", { month: "long" })}
+            {selectedDateTime.setLocale("en-US").monthLong}
           </p>
-
-          <p className="text-2xl font-medium">{currentMonth.getFullYear()}</p>
+          <p className="text-2xl font-medium">{selectedDateTime.year}</p>
         </div>
 
         {onChange && (
           <div className="flex justify-between">
             <button
               type="button"
-              onClick={() =>
-                onChange(
-                  month === 0
-                    ? { year: year - 1, month: 11 }
-                    : { year, month: month - 1 },
-                )
-              }
+              onClick={() => onChange(selectedDateTime.minus({ month: 1 }))}
               className="transition-colors hover:text-alveus-green-400"
             >
               <IconArrowRight className="h-6 w-6 rotate-180 transform" />
@@ -342,13 +315,7 @@ export function Calendar({
 
             <button
               type="button"
-              onClick={() =>
-                onChange(
-                  month === 11
-                    ? { year: year + 1, month: 0 }
-                    : { year, month: month + 1 },
-                )
-              }
+              onClick={() => onChange(selectedDateTime.plus({ month: 1 }))}
               className="transition-colors hover:text-alveus-green-400"
             >
               <IconArrowRight className="h-6 w-6" />
@@ -403,7 +370,7 @@ export function Calendar({
                 );
 
                 // Render empty cells for days outside of the month
-                if (date < 1 || date > daysInMonth)
+                if (date < 1 || date > daysInMonth!)
                   return (
                     <Day
                       key={date}
@@ -415,21 +382,15 @@ export function Calendar({
                     />
                   );
 
-                const fullDate = DateTime.fromObject(
-                  {
-                    year: currentMonth.getFullYear(),
-                    month: currentMonth.getMonth() + 1,
-                    day: date,
-                  },
-                  { zone: timeZone },
-                ).toJSDate();
+                const fullDate = selectedDateTime
+                  .setZone(timeZone)
+                  .set({ day: date });
+
                 const dateKey = getDateKey(fullDate, timeZone);
                 const events = byDay[dateKey] || [];
 
-                const day = fullDate.getDay();
-                const isPast =
-                  DateTime.fromJSDate(fullDate).startOf("day") <
-                  DateTime.fromJSDate(today).startOf("day");
+                const day = fullDate.weekday;
+                const isPast = fullDate.startOf("day") < today.startOf("day");
                 const isToday = dateKey === todayKey;
 
                 return (
@@ -439,7 +400,7 @@ export function Calendar({
                       // On mobile, we'll position absolute the date + day of week
                       "relative pr-12 md:pr-1",
                       // On mobile, make the weekends have a darker background
-                      (day === 0 || day === 6) &&
+                      (day === 6 || day === 7) &&
                         "bg-black/15 md:bg-transparent",
                       theme.border,
                       rounded,
@@ -456,7 +417,7 @@ export function Calendar({
                         {date}
                         {/* Render the day of the week for mobile */}
                         <span className="md:hidden">
-                          {days[day]?.slice(0, 1)}
+                          {days[day - 1]?.slice(0, 1)}
                         </span>
                       </p>
                     </div>
