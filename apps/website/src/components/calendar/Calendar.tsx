@@ -154,7 +154,7 @@ export type MonthSelection = DateTime;
 
 export function useMonthSelection(timeZone: string, initialDate?: DateTime) {
   const [selected, setSelected] = useState<MonthSelection>(
-    initialDate || DateTime.local().setZone(timeZone),
+    initialDate || DateTime.local().setZone(timeZone).set({ day: 1 }),
   );
 
   return [selected, setSelected] as const;
@@ -285,7 +285,7 @@ export function Calendar({
   if (!today || !selectedDateTime) return null;
 
   const startDay = 1; // 1 = Monday, 7 = Sunday
-  const startOffset = (7 + (selectedDateTime.weekday - 1) - startDay - 1) % 7; // Luxon uses 1-based days
+  const startOffset = (7 + selectedDateTime.weekday - startDay) % 7; // Luxon uses 1-based days
   const weeks = Math.ceil((startOffset + daysInMonth!) / 7);
 
   return (
