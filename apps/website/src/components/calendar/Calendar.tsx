@@ -154,7 +154,7 @@ export type MonthSelection = DateTime;
 
 export function useMonthSelection(timeZone: string, initialDate?: DateTime) {
   const [selected, setSelected] = useState<MonthSelection>(
-    initialDate || DateTime.local().setZone(timeZone).set({ day: 1 }),
+    initialDate || DateTime.fromObject({ day: 1 }, { zone: timeZone }),
   );
 
   return [selected, setSelected] as const;
@@ -241,7 +241,16 @@ export function Calendar({
       const idx = Math.floor(Math.random() * days.length);
       const day = days.splice(idx, 1)[0] as number;
       return {
-        date: selectedDateTime.set({ day: day + 1 }).toJSDate(),
+        date: DateTime.fromObject(
+          {
+            month: selectedDateTime.month,
+            year: selectedDateTime.year,
+            day: day + 1,
+          },
+          { zone: timeZone },
+        )
+          .startOf("day")
+          .toJSDate(),
         children: (
           <Transition
             key={day}
@@ -382,15 +391,20 @@ export function Calendar({
                     />
                   );
 
-                const fullDate = selectedDateTime
-                  .setZone(timeZone)
-                  .set({ day: date });
+                const fullDate = DateTime.fromObject(
+                  {
+                    month: selectedDateTime.month,
+                    year: selectedDateTime.year,
+                    day: date,
+                  },
+                  { zone: timeZone },
+                );
 
                 const dateKey = getDateKey(fullDate, timeZone);
                 const events = byDay[dateKey] || [];
 
                 const day = fullDate.weekday;
-                const isPast = fullDate.startOf("day") < today.startOf("day");
+                const isPast = fullDate.startOf("day") < today;
                 const isToday = dateKey === todayKey;
 
                 const paddedDate = String(date).padStart(2, "0");
