@@ -109,22 +109,20 @@ const data: RootNetworkItem[] = [
             url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-24-poe",
             connection: { type: "ethernet", location: "wall" },
             links: [
-              /*
               {
                 type: "camera",
                 name: "Noodle",
+                model: "AXIS M5525-E (PTZ)",
+                url: "https://www.axis.com/products/axis-m5525-e",
+                connection: { type: "ethernet", location: "wall" },
+              },
+              {
+                type: "camera",
+                name: "Patchy",
                 model: "AXIS M5075-G (PTZ)",
                 url: "https://www.axis.com/products/axis-m5075-g",
                 connection: { type: "ethernet", location: "wall" },
               },
-              {
-                type: "camera",
-                name: "Noodle Hide",
-                model: "AXIS P1275 (Fixed)",
-                url: "https://www.axis.com/products/axis-p1275",
-                connection: { type: "ethernet", location: "wall" },
-              },
-              */
               {
                 type: "camera",
                 name: "Georgie",
@@ -231,7 +229,7 @@ const data: RootNetworkItem[] = [
                 url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "overhead" },
                 links: [
-                  /*  
+                  /*
                   {
                     type: "camera",
                     name: "Training Center",

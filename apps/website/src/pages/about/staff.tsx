@@ -168,11 +168,11 @@ const team = {
   },
   paul: {
     name: "Paul (@pjeweb)",
-    title: "Open-Source Developer (Website)",
+    title: "Open-Source Developer",
   },
   matt: {
     name: "Matt (@MattIPv4)",
-    title: "Open-Source Developer (Website)",
+    title: "Open-Source Developer",
   },
 };
 
