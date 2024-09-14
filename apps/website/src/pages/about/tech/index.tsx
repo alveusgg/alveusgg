@@ -265,6 +265,11 @@ const openSource = {
     description: "github.com/alveusgg/extension",
     link: "https://github.com/alveusgg/extension",
   },
+  chatbot: {
+    title: "Chatbot (Twitch)",
+    description: "github.com/alveusgg/chatbot",
+    link: "https://github.com/alveusgg/chatbot",
+  },
 };
 
 type ListItems = {
