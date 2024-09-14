@@ -10,6 +10,7 @@ import {
   type NodeProps,
   type EdgeProps,
 } from "reactflow";
+import pluralize from "pluralize";
 
 import network, {
   isNestedNetworkItem,
@@ -18,6 +19,7 @@ import network, {
 } from "@/data/tech/network";
 import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 
 import IconExternal from "@/icons/IconExternal";
 
@@ -44,6 +46,7 @@ const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
 const nodeTypes: {
   [k in NetworkItem["type"]]: {
     container: string;
+    stats: boolean;
     eyebrow: {
       name: string;
       color: string;
@@ -52,38 +55,47 @@ const nodeTypes: {
 } = {
   switch: {
     container: "border-blue-700",
+    stats: true,
     eyebrow: { name: "Network Switch", color: "text-blue-700" },
   },
   converter: {
     container: "border-blue-700 border-dashed",
+    stats: false,
     eyebrow: { name: "Media Converter", color: "text-blue-700" },
   },
   accessPoint: {
     container: "border-blue-400",
+    stats: true,
     eyebrow: { name: "WiFi Access Point", color: "text-blue-400" },
   },
   camera: {
     container: "border-green-700",
+    stats: true,
     eyebrow: { name: "Camera", color: "text-green-700" },
   },
   microphone: {
     container: "border-green-400",
+    stats: true,
     eyebrow: { name: "Microphone", color: "text-green-400" },
   },
   speaker: {
     container: "border-green-400",
+    stats: false,
     eyebrow: { name: "Speaker", color: "text-green-400" },
   },
   interface: {
     container: "border-green-400",
+    stats: false,
     eyebrow: { name: "Audio I/O Interface", color: "text-green-400" },
   },
   server: {
     container: "border-yellow-700",
+    stats: false,
     eyebrow: { name: "Server", color: "text-yellow-700" },
   },
   controlunit: {
     container: "border-red-700",
+    stats: false,
     eyebrow: { name: "Camera Control Unit", color: "text-red-700" },
   },
 };
@@ -365,19 +377,21 @@ const NetworkList = ({
   </ul>
 );
 
+const tree = {
+  data: toTree(network),
+  nodeTypes: { network: NetworkNode },
+  edgeType: NetworkEdge,
+  nodeSize: { width: 176, height: 80 },
+  defaultZoom: 0.75,
+};
+
 const Network = () => (
   <>
     <div
       className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
       aria-hidden
     >
-      <Tree
-        data={useMemo(() => toTree(network), [])}
-        nodeTypes={useMemo(() => ({ network: NetworkNode }), [])}
-        edgeType={NetworkEdge}
-        nodeSize={useMemo(() => ({ width: 176, height: 80 }), [])}
-        defaultZoom={0.75}
-      />
+      <Tree {...tree} />
     </div>
 
     <NetworkList items={network} className="sr-only" />
@@ -385,3 +399,43 @@ const Network = () => (
 );
 
 export default Network;
+
+const toCounts = (items: NetworkItem[]) => {
+  const stats = typeSafeObjectKeys(nodeTypes).reduce(
+    (acc, key) => ({ ...acc, [key]: 0 }),
+    {} as { [k in NetworkItem["type"]]: number },
+  );
+
+  for (const item of items) {
+    stats[item.type] += 1;
+
+    if ("links" in item && item.links) {
+      const nestedStats = toCounts(item.links);
+      for (const [key, value] of typeSafeObjectEntries(nestedStats)) {
+        stats[key] = (stats[key] || 0) + value;
+      }
+    }
+  }
+
+  return stats;
+};
+
+const stats = typeSafeObjectEntries(toCounts(network)).filter(
+  ([key, value]) => nodeTypes[key].stats && value,
+);
+
+export const NetworkStats = ({ className }: { className?: string }) => (
+  <ul
+    className={classes(
+      "flex flex-wrap gap-2 font-mono text-sm text-alveus-green-700",
+      className,
+    )}
+  >
+    {stats.map(([key, value], idx) => (
+      <li key={key}>
+        {value.toLocaleString()} {pluralize(nodeTypes[key].eyebrow.name, value)}
+        {idx < stats.length - 1 && ", "}
+      </li>
+    ))}
+  </ul>
+);

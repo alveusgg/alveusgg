@@ -8,7 +8,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import Overview from "@/components/tech/Overview";
-import Network from "@/components/tech/Network";
+import Network, { NetworkStats } from "@/components/tech/Network";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -425,9 +425,10 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section>
-          <Heading level={2} className="mb-4 mt-0" id="cameras" link>
+          <Heading level={2} className="mb-1 mt-0" id="cameras" link>
             Network + Enclosure Cameras
           </Heading>
+          <NetworkStats className="mb-4" />
           <Network />
         </Section>
       </div>
