@@ -634,7 +634,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/moistcr1tikal",
       date: new Date("2022-04-30"),
       videoId: "pb7MR59s1Z0",
-      vodId: "x-OPvwjGHEU",
+      vodId: "f3jD-cGA-Ds",
       creators: [
         {
           name: "MoistCr1TiKaL",
