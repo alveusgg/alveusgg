@@ -96,6 +96,7 @@ const showAndTellSharedInputSchema = z.object({
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),
+  postLocation: z.string().max(100),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -205,6 +206,7 @@ export async function createPost(
       text,
       volunteeringMinutes: input.volunteeringMinutes,
       attachments: { create: [...newImages, ...newVideos] },
+      postLocation: input.postLocation,
     },
   });
   await revalidateCache(res.id);
@@ -380,6 +382,7 @@ export async function updatePost(
           // Create attachments that are in the creation list
           create: [...newImages, ...newVideos],
         },
+        postLocation: input.postLocation,
       },
     }),
     // Update image attachments that are in the update list

@@ -401,6 +401,7 @@ model ShowAndTellEntry {
   seenOnStreamAt      DateTime?
   seenOnStream        Boolean   @default(false)
   volunteeringMinutes Int?
+  postLocation        String?
 
   attachments ShowAndTellEntryAttachment[]
   user        User?                        @relation(fields: [userId], references: [id])

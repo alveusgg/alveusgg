@@ -46,6 +46,7 @@ export type ShowAndTellEntryWithAttachments = Pick<
   | "approvedAt"
   | "seenOnStream"
   | "volunteeringMinutes"
+  | "postLocation"
 > & {
   attachments: Array<
     ShowAndTellEntryAttachment & {

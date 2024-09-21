@@ -39,6 +39,7 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
+import { LocationPickerField } from "../shared/form/LocationPickerField";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -146,6 +147,7 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
+      postLocation: formData.get("postLocation") as string,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -280,6 +282,15 @@ export function ShowAndTellEntryForm({
               name="title"
               defaultValue={entry?.title}
               placeholder="What's your post about?"
+            />
+            <LocationPickerField
+              label="Location"
+              name="postLocation"
+              placeholder="Where did this post take place?"
+              maxLength={40}
+              queryType="name_startsWith"
+              featureClasses={["p"]}
+              defaultValue={entry?.postLocation || undefined}
             />
             <RichTextField
               label="Content"
