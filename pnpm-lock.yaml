@@ -144,8 +144,8 @@ importers:
         specifier: ^0.8.5
         version: 0.8.5
       dompurify:
-        specifier: ^3.0.8
-        version: 3.0.8
+        specifier: ^3.1.3
+        version: 3.1.3
       framer-motion:
         specifier: ^11.0.3
         version: 11.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -5676,8 +5676,8 @@ packages:
       domelementtype: 2.3.0
     dev: false
 
-  /dompurify@3.0.8:
-    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
+  /dompurify@3.1.3:
+    resolution: {integrity: sha512-5sOWYSNPaxz6o2MUPvtyxTTqR4D3L77pr5rUQoWgD5ROQtVIZQgJkXbo1DLlK3vj11YGw5+LnF4SYti4gZmwng==}
     dev: false
 
   /domutils@3.1.0:
