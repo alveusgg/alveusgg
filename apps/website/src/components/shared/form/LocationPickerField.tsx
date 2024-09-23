@@ -37,7 +37,7 @@ export type LocationPickerFieldProps = {
   className?: string;
   placeholder: string;
   maxLength: number;
-  queryType: "name_startsWith"; // Implement the rest when needed.
+  queryType: string | "name_startsWith";
   featureClasses?: string[];
   featureCodes?: string[];
   defaultValue?: string;

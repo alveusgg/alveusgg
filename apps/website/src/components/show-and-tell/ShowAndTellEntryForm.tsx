@@ -39,7 +39,7 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
-import { LocationPickerField } from "../shared/form/LocationPickerField";
+import { MapPickerField } from "../shared/form/MapPickerField";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -283,15 +283,7 @@ export function ShowAndTellEntryForm({
               defaultValue={entry?.title}
               placeholder="What's your post about?"
             />
-            <LocationPickerField
-              label="Location"
-              name="postLocation"
-              placeholder="Where did this post take place?"
-              maxLength={40}
-              queryType="name_startsWith"
-              featureClasses={["p"]}
-              defaultValue={entry?.postLocation || undefined}
-            />
+            <MapPickerField hidden={true} antialias={true} />
             <RichTextField
               label="Content"
               name="text"
