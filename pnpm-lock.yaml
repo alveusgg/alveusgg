@@ -84,8 +84,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#0.38.1
-        version: github.com/alveusgg/data/4339d3fcdc413a44b050276a394711e23c48fc3a
+        specifier: github:alveusgg/data#0.39.0
+        version: github.com/alveusgg/data/a5718b9309019c50c7dde8daed5b1f0eb52e34b6
       '@aws-sdk/client-s3':
         specifier: ^3.503.1
         version: 3.503.1
@@ -144,8 +144,8 @@ importers:
         specifier: ^0.8.5
         version: 0.8.5
       dompurify:
-        specifier: ^3.0.8
-        version: 3.0.8
+        specifier: ^3.1.3
+        version: 3.1.3
       framer-motion:
         specifier: ^11.0.3
         version: 11.0.3(react-dom@18.2.0)(react@18.2.0)
@@ -5940,8 +5940,8 @@ packages:
       domelementtype: 2.3.0
     dev: false
 
-  /dompurify@3.0.8:
-    resolution: {integrity: sha512-b7uwreMYL2eZhrSCRC4ahLTeZcPZxSmYfmcQGXGkXiZSNW1X85v+SDM5KsWcpivIiUBH47Ji7NtyUdpLeF5JZQ==}
+  /dompurify@3.1.3:
+    resolution: {integrity: sha512-5sOWYSNPaxz6o2MUPvtyxTTqR4D3L77pr5rUQoWgD5ROQtVIZQgJkXbo1DLlK3vj11YGw5+LnF4SYti4gZmwng==}
     dev: false
 
   /domutils@3.1.0:
@@ -10668,8 +10668,8 @@ packages:
     resolution: {integrity: sha512-bXE4cR/kVZhKZX/RjPEflHaKVhUVl85noU3v6b8apfQEc1x4A+zBxjZ4lN8LqGd6WZ3dl98pY4o717VFmoPp+A==}
     dev: false
 
-  github.com/alveusgg/data/4339d3fcdc413a44b050276a394711e23c48fc3a:
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/4339d3fcdc413a44b050276a394711e23c48fc3a}
+  github.com/alveusgg/data/a5718b9309019c50c7dde8daed5b1f0eb52e34b6:
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/a5718b9309019c50c7dde8daed5b1f0eb52e34b6}
     name: '@alveusgg/data'
-    version: 0.38.1
+    version: 0.39.0
     dev: false
