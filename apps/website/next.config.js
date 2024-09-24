@@ -306,6 +306,11 @@ const config = {
       permanent: true,
     },
     {
+      source: "/vods/twitchcon-2024",
+      destination: "https://youtube.com/watch?v=b-d1h-dKEeU",
+      permanent: true,
+    },
+    {
       source: "/vods/non-releasable",
       destination: "https://youtube.com/watch?v=3UZjgUMuYeM",
       permanent: true,
