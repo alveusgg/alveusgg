@@ -1,13 +1,26 @@
-import { useEffect, useRef } from "react";
-import maplibregl, { Map } from "maplibre-gl";
+import { useEffect, useRef, useState } from "react";
+import maplibregl, { LngLat, Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
+import type {
+  MaplibreGeocoderApiConfig,
+} from "@maplibre/maplibre-gl-geocoder";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import IconX from "@/icons/IconX";
+import IconWorld from "@/icons/IconWorld";
+import { CheckboxField } from "./CheckboxField";
 
 export type MapPickerFieldProps = {
   hidden?: boolean;
   center?: [number, number]; // [LAT, LONG]
   zoom?: number;
   antialias?: boolean;
+  allowMultipleMarkers?: boolean;
+};
+
+type MapLocation = {
+  lat: number;
+  lng: number;
+  name: string;
 };
 
 const validCoords = (coords: [number, number]) => {
@@ -20,6 +33,7 @@ const validCoords = (coords: [number, number]) => {
  * Map field with integrated searchbox and geolocalization capabilities
  *
  * @see {@link https://maplibre.org/maplibre-gl-js/docs/API/|MapLibre API Docs}
+ * @see {@link https://maplibre.org/maplibre-gl-geocoder/types/MaplibreGeocoderApi.html|Geocoder API (Search function)}
  * @returns
  */
 export const MapPickerField = ({
@@ -27,15 +41,26 @@ export const MapPickerField = ({
   center = [0, 0],
   zoom = 1,
   antialias = false,
+  allowMultipleMarkers = false,
 }: MapPickerFieldProps) => {
-  const mapContainerRef = useRef(null);
-
   if (!validCoords(center)) {
     center = [0, 0];
   }
 
+  const mapContainerRef = useRef(null);
+  const markersRef = useRef<maplibregl.Marker[]>([]);
+  const [showMap, setShowMap] = useState(!hidden);
+  const [postLocation, setPostLocation] = useState({} as MapLocation);
+  const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(isDragging);
+
+  // To avoid stale closure, onmousemove doesn't work to capture dragging.
   useEffect(() => {
-    console.log("BUILDING MAP");
+    isDraggingRef.current = isDragging;
+  }, [isDragging]);
+
+  useEffect(() => {
+    if (!showMap || !mapContainerRef.current) return;
 
     const map = new Map({
       container: mapContainerRef.current,
@@ -50,7 +75,7 @@ export const MapPickerField = ({
             tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
             tileSize: 256,
             minzoom: 0,
-            maxzoom: 20,
+            maxzoom: 20, // TODO: 20 enables way too much precission
           },
         },
         layers: [
@@ -65,20 +90,35 @@ export const MapPickerField = ({
     });
 
     // Search Service
+    // TODO: move from nominatim to pelias to get suggestions?
     // FIXME: Lupa y Cruz fuera de lugar
+    // forwardGeocode: converts a human readable place into coordinates
+    // reverseGeocode: converts coordinates into a human readable place
     const geocoderApi = {
-      forwardGeocode: async (config) => {
+      forwardGeocode: async (config: MaplibreGeocoderApiConfig) => {
         const features = [];
         try {
-          const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geojson=1&addressdetails=1`;
+          const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geoData=1&addressdetails=1`;
           const response = await fetch(request);
-          const geojson = await response.json();
-          console.log(JSON.stringify(geojson));
-          for (const feature of geojson.features) {
+          const geoData = await response.json();
+
+          for (const feature of geoData.features) {
+            // 0: Top Left
+            // 1: Top Right
+            // 2: Bottom Left
+            // 3: Bottom Right
             const center = [
               feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
               feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
             ];
+
+            console.log(feature);
+            // TODO: better filter? test markers on residential areas, city centers, downtown zoos, etc
+            if (feature.properties.type === "house") {
+              center[0] = center[0].toFixed(2);
+              center[1] = center[1].toFixed(2);
+            }
+
             const point = {
               type: "Feature",
               geometry: {
@@ -90,6 +130,7 @@ export const MapPickerField = ({
               text: feature.properties.display_name,
               place_type: ["place"],
               center,
+              id: feature.properties.placeid,
             };
             features.push(point);
           }
@@ -101,6 +142,12 @@ export const MapPickerField = ({
           features,
         };
       },
+
+      reverseGeocode: async (config: MaplibreGeocoderApiConfig) => {
+        return [];
+      },
+      // TODO: implement reverseGeocode
+      // TODO: implement suggestions. No free services with suggestions?????
     };
 
     // Add searchbox to map
@@ -111,36 +158,97 @@ export const MapPickerField = ({
       }),
     );
 
-    /*
-        // FIXME: useEffect, map.flyTo
-        const browserLocation = navigator.geolocation;
-        if (browserLocation) {
-            console.log("USER LOC: " + JSON.stringify(browserLocation.getCurrentPosition));
-            browserLocation.getCurrentPosition((position) => {
-                map.setCenter([position.coords.latitude, position.coords.longitude]);
-                map.setZoom(5);
+    map.on("mouseup", (e) => {
+      if (isDraggingRef.current) return;
+
+      // TODO: Reverse geocode to get place name
+      const markerLocation = e.lngLat.wrap();
+
+      if (!allowMultipleMarkers && markersRef.current.length > 0) {
+        // There's already a marker on the map, we just update its location.
+        markersRef.current?.at(0)?.setLngLat(markerLocation);
+      } else {
+        // There are no markers yet, let's create one.
+        const marker = new maplibregl.Marker({
+          color: "#636A60", // FIXME: alveus-green
+          draggable: true,
+        })
+          .setLngLat(markerLocation)
+          .addTo(map)
+          .on("dragstart", (e) => {
+            setIsDragging(true);
+          })
+          .on("dragend", (e) => {
+            setPostLocation({
+              lat: marker.getLngLat().lat, // markerLocation stores starting position
+              lng: marker.getLngLat().lng, // updated location is stored in the marker
+              name: "CUSTOM LOCATION BY USER",
             });
-        } else {
-            console.log("USER DIDNT ALLOW GEOLOC");
-        }
-        */
+            setIsDragging(false);
+          });
+        // We add it to the marker list for the future
+        markersRef.current.push(marker);
+      }
+
+      setPostLocation({
+        lat: markerLocation.lat,
+        lng: markerLocation.lng,
+        name: "CLICKED",
+      });
+    });
+
+    // To avoid setting post location on mouse Dragging. Possible headache: if the mouse moves 1 pixel it counts as dragging and no marker is going to get created..
+    map.on("dragstart", () => setIsDragging(true));
+    map.on("dragend", () => setIsDragging(false));
 
     // Clean up on component unmount
     return () => {
-      console.log("REMOVING MAP");
       map.remove();
+      markersRef.current = [];
+      setPostLocation({} as MapLocation);
     };
-  }, []);
+  }, [showMap]);
+
+  const handleLocationClear = () => {
+    setPostLocation({} as MapLocation);
+    markersRef.current.forEach((m) => m.remove());
+    markersRef.current = [];
+  };
 
   return (
-    // TODO: if hidden then dropdown
     <>
-      {hidden && <div>HIDDEN</div>}
-      <div
-        id="mapContainer"
-        ref={mapContainerRef}
-        style={{ width: "100%", height: "500px" }} // You can adjust the map size
-      />
+      <div className="flex items-center justify-between">
+        <CheckboxField className="mr-2" onChange={setShowMap}>
+          Add post location
+        </CheckboxField>
+        {
+          <div className="flex items-center">
+            <IconWorld className="h-6 w-6"></IconWorld>{" "}
+            {showMap && postLocation.name
+              ? JSON.stringify(postLocation)
+              : "No post location set"}
+            {showMap && postLocation && (
+              <button
+                className="px-2"
+                type="button"
+                onClick={handleLocationClear}
+              >
+                <IconX className="h-6 w-6" />
+              </button>
+            )}
+          </div>
+        }
+      </div>
+      {showMap && (
+        <div
+          ref={mapContainerRef}
+          style={{
+            width: "100%",
+            height: "500px",
+            visibility: showMap ? "visible" : "hidden",
+          }}
+        />
+      )}
     </>
   );
 };

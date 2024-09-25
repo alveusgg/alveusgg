@@ -147,7 +147,7 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
-      postLocation: formData.get("postLocation") as string,
+      postLocation: formData.get("postLocation") as string, // TODO: Validate before saving?
     };
 
     for (const fileReference of imageAttachmentsData.files) {
