@@ -147,7 +147,7 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
-      postLocation: formData.get("postLocation") as string, // TODO: Validate before saving?
+      postLocation: formData.get("postLocation") as string,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -283,7 +283,11 @@ export function ShowAndTellEntryForm({
               defaultValue={entry?.title}
               placeholder="What's your post about?"
             />
-            <MapPickerField hidden={true} antialias={true} />
+            <MapPickerField
+              initiallyHidden={true}
+              textToShow="Add post location"
+              antialias={true}
+            />
             <RichTextField
               label="Content"
               name="text"

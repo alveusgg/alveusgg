@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import maplibregl, { LngLat, Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Searchbox CSS
 import type {
+  MaplibreGeocoderApi,
   MaplibreGeocoderApiConfig,
 } from "@maplibre/maplibre-gl-geocoder";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
@@ -10,8 +12,9 @@ import IconWorld from "@/icons/IconWorld";
 import { CheckboxField } from "./CheckboxField";
 
 export type MapPickerFieldProps = {
-  hidden?: boolean;
-  center?: [number, number]; // [LAT, LONG]
+  initiallyHidden?: boolean;
+  textToShow?: string;
+  center?: [number, number]; // [LAT, LNG]
   zoom?: number;
   antialias?: boolean;
   allowMultipleMarkers?: boolean;
@@ -37,7 +40,8 @@ const validCoords = (coords: [number, number]) => {
  * @returns
  */
 export const MapPickerField = ({
-  hidden = false,
+  initiallyHidden = true,
+  textToShow = "Show map",
   center = [0, 0],
   zoom = 1,
   antialias = false,
@@ -49,7 +53,7 @@ export const MapPickerField = ({
 
   const mapContainerRef = useRef(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
-  const [showMap, setShowMap] = useState(!hidden);
+  const [showMap, setShowMap] = useState(!initiallyHidden);
   const [postLocation, setPostLocation] = useState({} as MapLocation);
   const [isDragging, setIsDragging] = useState(false);
   const isDraggingRef = useRef(isDragging);
@@ -94,7 +98,7 @@ export const MapPickerField = ({
     // FIXME: Lupa y Cruz fuera de lugar
     // forwardGeocode: converts a human readable place into coordinates
     // reverseGeocode: converts coordinates into a human readable place
-    const geocoderApi = {
+    const geocoderApi: MaplibreGeocoderApi = {
       forwardGeocode: async (config: MaplibreGeocoderApiConfig) => {
         const features = [];
         try {
@@ -139,12 +143,9 @@ export const MapPickerField = ({
         }
 
         return {
+          type: "FeatureCollection",
           features,
         };
-      },
-
-      reverseGeocode: async (config: MaplibreGeocoderApiConfig) => {
-        return [];
       },
       // TODO: implement reverseGeocode
       // TODO: implement suggestions. No free services with suggestions?????
@@ -152,36 +153,38 @@ export const MapPickerField = ({
 
     // Add searchbox to map
     // FIXME: error geocoderApi => reverseGeocode => API DOC
+    map.addControl(new MaplibreGeocoder(geocoderApi, { maplibregl }));
     map.addControl(
-      new MaplibreGeocoder(geocoderApi, {
-        maplibregl,
+      new maplibregl.GeolocateControl({
+        positionOptions: {
+          enableHighAccuracy: true,
+        },
+        trackUserLocation: true,
       }),
     );
 
-    map.on("mouseup", (e) => {
+    map.on("mouseup", ({ lngLat }) => {
       if (isDraggingRef.current) return;
 
       // TODO: Reverse geocode to get place name
-      const markerLocation = e.lngLat.wrap();
+      const markerLocation = lngLat.wrap();
 
       if (!allowMultipleMarkers && markersRef.current.length > 0) {
         // There's already a marker on the map, we just update its location.
         markersRef.current?.at(0)?.setLngLat(markerLocation);
       } else {
-        // There are no markers yet, let's create one.
+        // There are no markers yet or we allow multiple, so let's create one.
         const marker = new maplibregl.Marker({
           color: "#636A60", // FIXME: alveus-green
           draggable: true,
         })
           .setLngLat(markerLocation)
           .addTo(map)
-          .on("dragstart", (e) => {
-            setIsDragging(true);
-          })
-          .on("dragend", (e) => {
+          .on("dragstart", () => setIsDragging(true))
+          .on("dragend", () => {
             setPostLocation({
-              lat: marker.getLngLat().lat, // markerLocation stores starting position
-              lng: marker.getLngLat().lng, // updated location is stored in the marker
+              lat: marker.getLngLat().lat,
+              lng: marker.getLngLat().lng,
               name: "CUSTOM LOCATION BY USER",
             });
             setIsDragging(false);
@@ -197,7 +200,7 @@ export const MapPickerField = ({
       });
     });
 
-    // To avoid setting post location on mouse Dragging. Possible headache: if the mouse moves 1 pixel it counts as dragging and no marker is going to get created..
+    // To avoid setting post location on mouse Dragging. Possible headache: if the mouse moves 1 pixel it counts as dragging and no marker is going to get created.
     map.on("dragstart", () => setIsDragging(true));
     map.on("dragend", () => setIsDragging(false));
 
@@ -218,16 +221,21 @@ export const MapPickerField = ({
   return (
     <>
       <div className="flex items-center justify-between">
-        <CheckboxField className="mr-2" onChange={setShowMap}>
-          Add post location
+        <CheckboxField
+          className="mr-2"
+          onChange={setShowMap}
+          defaultSelected={!initiallyHidden}
+        >
+          {textToShow}
         </CheckboxField>
+
         {
           <div className="flex items-center">
-            <IconWorld className="h-6 w-6"></IconWorld>{" "}
+            <IconWorld className="h-6 w-6"></IconWorld>
             {showMap && postLocation.name
               ? JSON.stringify(postLocation)
               : "No post location set"}
-            {showMap && postLocation && (
+            {showMap && postLocation.name && (
               <button
                 className="px-2"
                 type="button"
