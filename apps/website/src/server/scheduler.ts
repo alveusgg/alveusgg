@@ -79,7 +79,7 @@ async function checkTaskIsDue(taskConfig: TaskConfig) {
 }
 
 export async function runScheduledTasks() {
-  const config = await getScheduledTasksConfig();
+  const config = getScheduledTasksConfig();
 
   await Promise.allSettled(
     config.tasks.map(async (taskConfig: TaskConfig) => {

@@ -64,6 +64,6 @@ const config: ScheduledTasksConfig = {
   ],
 };
 
-export async function getScheduledTasksConfig() {
+export function getScheduledTasksConfig() {
   return config;
 }
