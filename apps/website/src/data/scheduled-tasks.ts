@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 import { retryPendingNotificationPushes } from "@/server/notifications";
 import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
@@ -7,31 +5,25 @@ import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
 import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
 import { createRegularCalendarEvents } from "@/server/db/calendar-events";
 
-export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
+export type ScheduledTasksConfig = {
+  tasks: {
+    id: string;
+    task: (date: Date) => Promise<void>;
+    label: string;
+    interval: {
+      years?: number;
+      months?: number;
+      weeks?: number;
+      days?: number;
+      hours?: number;
+      minutes?: number;
+      seconds?: number;
+    };
+    startDateTime: Date;
+  }[];
+};
 
-const durationSchema = z.object({
-  years: z.number().optional(),
-  months: z.number().optional(),
-  weeks: z.number().optional(),
-  days: z.number().optional(),
-  hours: z.number().optional(),
-  minutes: z.number().optional(),
-  seconds: z.number().optional(),
-});
-
-const scheduledTasksConfigSchema = z.object({
-  tasks: z.array(
-    z.object({
-      id: z.string(),
-      task: z.function().args(z.date()).returns(z.promise(z.void())),
-      label: z.string(),
-      interval: durationSchema,
-      startDateTime: z.date(),
-    }),
-  ),
-});
-
-const config: ScheduledTasksConfig = {
+export const scheduledTasks: ScheduledTasksConfig = {
   tasks: [
     {
       id: "fileStorage.cleanup",
@@ -71,7 +63,3 @@ const config: ScheduledTasksConfig = {
     },
   ],
 };
-
-export async function getScheduledTasksConfig() {
-  return config;
-}
