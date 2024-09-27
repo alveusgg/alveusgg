@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 
 import type { ScheduledTasksConfig } from "@/data/scheduled-tasks";
-import { getScheduledTasksConfig } from "@/data/scheduled-tasks";
+import { scheduledTasks } from "@/data/scheduled-tasks";
 import { prisma } from "@/server/db/client";
 
 type TaskConfig = ScheduledTasksConfig["tasks"][number];
@@ -79,10 +79,8 @@ async function checkTaskIsDue(taskConfig: TaskConfig) {
 }
 
 export async function runScheduledTasks() {
-  const config = getScheduledTasksConfig();
-
   await Promise.allSettled(
-    config.tasks.map(async (taskConfig: TaskConfig) => {
+    scheduledTasks.tasks.map(async (taskConfig: TaskConfig) => {
       const nextExecutionTime = await checkTaskIsDue(taskConfig);
       if (nextExecutionTime !== false)
         await executeTask(taskConfig, nextExecutionTime);

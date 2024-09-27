@@ -23,7 +23,7 @@ export type ScheduledTasksConfig = {
   }[];
 };
 
-const config: ScheduledTasksConfig = {
+export const scheduledTasks: ScheduledTasksConfig = {
   tasks: [
     {
       id: "fileStorage.cleanup",
@@ -63,7 +63,3 @@ const config: ScheduledTasksConfig = {
     },
   ],
 };
-
-export function getScheduledTasksConfig() {
-  return config;
-}
