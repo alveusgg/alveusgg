@@ -1,5 +1,3 @@
-import { z } from "zod";
-
 import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 import { retryPendingNotificationPushes } from "@/server/notifications";
 import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
@@ -24,28 +22,6 @@ export type ScheduledTasksConfig = {
     startDateTime: Date;
   }[];
 };
-
-const durationSchema = z.object({
-  years: z.number().optional(),
-  months: z.number().optional(),
-  weeks: z.number().optional(),
-  days: z.number().optional(),
-  hours: z.number().optional(),
-  minutes: z.number().optional(),
-  seconds: z.number().optional(),
-});
-
-const scheduledTasksConfigSchema = z.object({
-  tasks: z.array(
-    z.object({
-      id: z.string(),
-      task: z.function().args(z.date()).returns(z.promise(z.void())),
-      label: z.string(),
-      interval: durationSchema,
-      startDateTime: z.date(),
-    }),
-  ),
-});
 
 const config: ScheduledTasksConfig = {
   tasks: [
