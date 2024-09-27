@@ -7,7 +7,23 @@ import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
 import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
 import { createRegularCalendarEvents } from "@/server/db/calendar-events";
 
-export type ScheduledTasksConfig = z.infer<typeof scheduledTasksConfigSchema>;
+export type ScheduledTasksConfig = {
+  tasks: {
+    id: string;
+    task: (date: Date) => Promise<void>;
+    label: string;
+    interval: {
+      years?: number;
+      months?: number;
+      weeks?: number;
+      days?: number;
+      hours?: number;
+      minutes?: number;
+      seconds?: number;
+    };
+    startDateTime: Date;
+  }[];
+};
 
 const durationSchema = z.object({
   years: z.number().optional(),
