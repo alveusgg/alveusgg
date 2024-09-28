@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
+import { prisma } from "@/server/db/client";
 import { whereApproved } from "@/server/db/show-and-tell";
 
 export default async function handler(
@@ -11,7 +12,7 @@ export default async function handler(
   }
 
   const postsWithLocation =
-    (await prisma?.showAndTellEntry.findMany({
+    (await prisma.showAndTellEntry.findMany({
       where: {
         ...whereApproved,
         longitude: { not: null },
