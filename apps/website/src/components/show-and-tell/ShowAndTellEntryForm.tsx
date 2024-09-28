@@ -284,9 +284,11 @@ export function ShowAndTellEntryForm({
               placeholder="What's your post about?"
             />
             <MapPickerField
-              initiallyHidden={true}
+              name="postLocation"
               textToShow="Add post location"
               antialias={true}
+              maxZoom={8}
+              defaultLocation={entry?.postLocation || undefined}
             />
             <RichTextField
               label="Content"
