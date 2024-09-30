@@ -1,33 +1,29 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import maplibregl, { GeolocateControl, LngLat, Map, Marker } from "maplibre-gl";
-import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
-import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Searchbox CSS
+import IconWorld from "@/icons/IconWorld";
+import IconX from "@/icons/IconX";
 import type {
+  CarmenGeojsonFeature,
   MaplibreGeocoderApi,
   MaplibreGeocoderApiConfig,
+  MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import { round } from "lodash";
-import IconX from "@/icons/IconX";
-import IconWorld from "@/icons/IconWorld";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Searchbox CSS
+import maplibregl, { GeolocateControl, Map, Marker } from "maplibre-gl";
+import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
+import { useEffect, useRef, useState } from "react";
+import config from "../../../../tailwind.config";
 import { CheckboxField } from "./CheckboxField";
-
 // TODO: Check for WebGL? https://maplibre.org/maplibre-gl-js/docs/examples/check-for-support/
-// TODO: implement suggestions. No free services with suggestions?????
-
-// FUTURE: if multiple markers... what is the location shown? First? Last? Do we let the user pick one marker (it changes color) and that's the one?
-// FUTURE: export map style to a json file with multiple styles depending on the map application
 
 /**
+ * @param name Unique name of the element
  * @param initiallyHidden Initial state of the checkbox that handles the map visibility
  * @param textToShow Text that appears next to the checkbox
- * @param center Pair of coordinates where the map is initially focused
  * @param initialZoom Self describing
- * @param minZoom The smaller the number the further away you start from earth [0-24]
- * @param maxZoom The bigger the number the more accuracy we allow [0-24]
- * @param antialias It makes the map look better (with a small hit in performance)
  * @param allowMultipleMarkers Do we allow multiple markers in this map?
- * @param coordsPrecission Number of decimals that we'll keep on both coordinates
+ * @param coordsPrecission Number of decimals that we'll keep on the coordinates
+ *
+ * For the rest and additional @see {@link https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/|Map Options}
  */
 export type MapPickerFieldProps = {
   name: string;
@@ -83,7 +79,7 @@ export const MapPickerField = ({
   center = [0, 0],
   initialZoom = 1,
   minZoom = 0,
-  maxZoom = 20,
+  maxZoom = 22,
   antialias = false,
   allowMultipleMarkers = false,
   coordsPrecission = 2,
@@ -114,7 +110,7 @@ export const MapPickerField = ({
       container: mapContainerRef.current,
       style: {
         version: 8,
-        name: "Alveus",
+        name: "Alveus Show and Tell",
         center: center,
         zoom: initialZoom,
         sources: {
@@ -139,31 +135,27 @@ export const MapPickerField = ({
 
     // Search Service
     const geocoderApi: MaplibreGeocoderApi = {
-      forwardGeocode: async (config: MaplibreGeocoderApiConfig) => {
-        const features = [];
+      forwardGeocode: async (
+        config: MaplibreGeocoderApiConfig,
+      ): Promise<MaplibreGeocoderFeatureResults> => {
+        const features: CarmenGeojsonFeature[] = [];
         try {
           const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geoData=1&addressdetails=1`;
           const response = await fetch(request);
           const geoData = await response.json();
 
           for (const feature of geoData.features) {
-            const center = [
-              feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
-              feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
-            ];
-
-            const point = {
+            const point: CarmenGeojsonFeature = {
+              id: feature.properties.placeid,
               type: "Feature",
               geometry: {
                 type: "Point",
-                coordinates: center,
+                coordinates: [feature.bbox[0], feature.bbox[1]],
               },
-              place_name: feature.properties.display_name,
               properties: feature.properties,
-              text: feature.properties.display_name,
+              place_name: feature.properties.display_name,
               place_type: ["place"],
-              center,
-              id: feature.properties.placeid,
+              text: feature.properties.display_name,
             };
             features.push(point);
           }
@@ -176,6 +168,71 @@ export const MapPickerField = ({
           features,
         };
       },
+
+      reverseGeocode: async (
+        config: MaplibreGeocoderApiConfig,
+      ): Promise<MaplibreGeocoderFeatureResults> => {
+        const features: CarmenGeojsonFeature[] = [];
+        try {
+          if (!config.query || config.query.length != 2)
+            return { type: "FeatureCollection", features: [] };
+
+          const lon = config.query[0] as number;
+          const lat = config.query[1] as number;
+
+          const request = `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lon}&addressdetails=1`;
+          const response = await fetch(request);
+          const geoData = await response.json();
+
+          if (geoData && geoData.features) {
+            for (const feature of geoData.features) {
+              const point: CarmenGeojsonFeature = {
+                id: feature.properties.placeid,
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [lon, lat],
+                },
+                properties: feature.properties,
+                place_name: feature.properties.display_name,
+                place_type: ["place"],
+                text: feature.properties.display_name,
+              };
+              features.push(point);
+            }
+          }
+        } catch (e) {
+          console.error(`Failed to reverseGeocode with error: ${e}`);
+        }
+
+        return {
+          type: "FeatureCollection",
+          features,
+        };
+      },
+
+      getSuggestions: async (config: MaplibreGeocoderApiConfig) => {
+        const suggestions = [];
+        try {
+          const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geoData=1&addressdetails=1`;
+          const response = await fetch(request);
+          const data = await response.json();
+
+          for (const feature of data.features) {
+            const suggestion = {
+              placeId: feature.properties.placeid,
+              text: feature.properties.display_name,
+            };
+            suggestions.push(suggestion);
+          }
+        } catch (e) {
+          console.error(`Failed to getSuggestion with error: ${e}`);
+        }
+
+        return {
+          suggestions,
+        };
+      },
     };
 
     // Add searchbox to map
@@ -183,6 +240,11 @@ export const MapPickerField = ({
       new MaplibreGeocoder(geocoderApi, {
         maplibregl,
         marker: false,
+        showResultsWhileTyping: true,
+        showResultMarkers: {
+          color: config.theme.colors["alveus-tan"][500],
+        },
+        // collapsed: true, // TODO: Weird on mobile?
       }).on("result", ({ result }) => {
         handleLocationSet(
           {
@@ -216,8 +278,7 @@ export const MapPickerField = ({
     map.on("dragstart", () => setIsDragging(true));
     map.on("dragend", () => setIsDragging(false));
     map.on("zoom", () => {
-      // I don't like this solution.
-      // TODO? https://maplibre.org/maplibre-gl-js/docs/API/classes/ScrollZoomHandler/
+      // I don't like this solution, but the ScrollZoomHandler doesn't have this functionality.
       if (map.getZoom() > maxZoom) {
         map.setZoom(maxZoom);
       }
@@ -316,7 +377,7 @@ export const MapPickerField = ({
     } else {
       // There are no markers yet or we allow multiple, so let's create one.
       const marker = new Marker({
-        color: "#636A60", // FIXME: alveus-green
+        color: config.theme.colors["alveus-green"].DEFAULT,
         draggable: true,
       })
         .setLngLat(roundedCoords)
