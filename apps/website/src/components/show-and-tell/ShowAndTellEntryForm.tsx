@@ -39,6 +39,7 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
+import type { MapLocation} from "../shared/form/MapPickerField";
 import { MapPickerField } from "../shared/form/MapPickerField";
 
 type ShowAndTellEntryFormProps = {
@@ -102,6 +103,13 @@ export function ShowAndTellEntryForm({
     !!entry?.volunteeringMinutes,
   );
 
+  const [postLocation, setPostLocation] = useState<MapLocation>(
+    {} as MapLocation,
+  );
+  const handlePostLocation = (userSelectedLocation: MapLocation) => {
+    setPostLocation(userSelectedLocation);
+  };
+
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
       () =>
@@ -147,7 +155,9 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
-      postLocation: formData.get("postLocation") as string,
+      location: postLocation?.location as string,
+      latitude: postLocation?.latitude,
+      longitude: postLocation?.longitude,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -288,7 +298,14 @@ export function ShowAndTellEntryForm({
               textToShow="Add post location"
               antialias={true}
               maxZoom={8}
-              defaultLocation={entry?.postLocation || undefined}
+              onLocationChange={handlePostLocation}
+              defaultLocation={
+                {
+                  latitude: entry?.latitude,
+                  longitude: entry?.longitude,
+                  location: entry?.location,
+                } as MapLocation
+              }
             />
             <RichTextField
               label="Content"
