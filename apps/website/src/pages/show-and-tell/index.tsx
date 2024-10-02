@@ -45,6 +45,7 @@ import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgres
 import alveusLogo from "@/assets/logo.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import { CommunityMap } from "@/components/show-and-tell/CommunityMap";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -398,6 +399,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           </p>
           <div className="mt-2">
             <GiveAnHourProgress />
+          </div>
+          <div className="mt-2">
+            <CommunityMap />
           </div>
         </div>
 
