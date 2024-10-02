@@ -15,9 +15,10 @@ import config from "../../../../tailwind.config";
 import { CheckboxField } from "./CheckboxField";
 
 // TODO: Check for WebGL? https://maplibre.org/maplibre-gl-js/docs/examples/check-for-support/
+// TODO: when loading full data if slow then https://maplibre.org/maplibre-style-spec/layers/#icon-allow-overlap turn to true (from https://maplibre.org/maplibre-gl-js/docs/guides/large-data/#visualising-the-data)
 
-// FIXME: some locations (like LA or Madeira) go outside the borders when rounding coords, and they land in water next to the country, so the location only says "USA", instead of "LA, California, USA"
-// FIXME^: will have to check if rounded coords are off the country and round 1 less decimal? so precission-1 and check recursively until you land on the original site.
+// FIXME?: some locations (like LA, San Diego or Madeira) go outside the borders when rounding coords, and they land in water next to the country or in a totally different country.
+// FIXME?: check if rounded coords are off the country and round 1 less decimal? so precission-1 and check recursively until you land on the original site? That defeats the purpose of rounding in the first place.
 
 /**
  * @param name Unique name of the element
@@ -33,7 +34,7 @@ export type MapPickerFieldProps = {
   name: string;
   initiallyHidden?: boolean;
   textToShow?: string;
-  center?: [number, number]; // [LONGITUDE, LATITUDE]
+  center?: [lon: number, lat: number];
   initialZoom?: number;
   minZoom?: number;
   maxZoom?: number;
@@ -61,12 +62,6 @@ type Address = {
   country?: string;
 };
 
-const validCoords = (coords: [number, number]) => {
-  return (
-    coords[0] >= -90 && coords[0] <= 90 && coords[1] >= -180 && coords[1] <= 180
-  );
-};
-
 /**
  * Map field with integrated searchbox and geolocalization capabilities
  *
@@ -75,22 +70,20 @@ const validCoords = (coords: [number, number]) => {
  * @returns
  */
 export const MapPickerField = ({
-  initiallyHidden = true,
+  defaultLocation,
+  initiallyHidden = defaultLocation?.location ? false : true,
   textToShow = "Show map",
-  center = [0, 0],
-  initialZoom = 1,
   minZoom = 0,
   maxZoom = 22,
+  initialZoom = defaultLocation?.location ? maxZoom : 1,
+  center = defaultLocation?.location
+    ? [defaultLocation.longitude, defaultLocation.latitude]
+    : [0, 0],
   antialias = false,
   allowMultipleMarkers = false,
   coordsPrecission = 2,
-  defaultLocation,
   onLocationChange,
 }: MapPickerFieldProps) => {
-  if (!validCoords(center)) {
-    center = [0, 0];
-  }
-
   const mapContainerRef = useRef(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
   const [showMap, setShowMap] = useState(!initiallyHidden);
@@ -109,14 +102,6 @@ export const MapPickerField = ({
     if (!showMap || !mapContainerRef.current) {
       return;
     }
-
-    console.log("INITIALIZING MAP:", mapContainerRef.current);
-
-    // Override defaults if post is being updated / reviewed.
-    center = defaultLocation?.location
-      ? [defaultLocation.longitude, defaultLocation.latitude]
-      : center;
-    initialZoom = defaultLocation?.location ? maxZoom : initialZoom;
 
     const map = new Map({
       container: mapContainerRef.current,
@@ -145,14 +130,36 @@ export const MapPickerField = ({
       antialias: antialias,
     });
 
-    console.log("MAP INITIALIZED");
-
     if (defaultLocation?.location) {
-      handleLocationSet(
-        defaultLocation.latitude,
-        defaultLocation.longitude,
-        map,
-      );
+      if (!allowMultipleMarkers && markersRef.current.length > 0) {
+        markersRef.current
+          ?.at(0)
+          ?.setLngLat([defaultLocation?.longitude, defaultLocation?.latitude]);
+      } else {
+        const marker = new Marker({
+          color: config.theme.colors["alveus-green"].DEFAULT,
+          draggable: true,
+        })
+          .setLngLat([defaultLocation?.longitude, defaultLocation?.latitude])
+          .addTo(map)
+          .on("dragstart", () => setIsDragging(true))
+          .on("dragend", () => {
+            handleLocationSet(
+              map,
+              marker.getLngLat().lat,
+              marker.getLngLat().lng,
+            );
+            setIsDragging(false);
+          });
+        markersRef.current.push(marker);
+      }
+
+      const newPostLocation = {
+        latitude: defaultLocation.latitude,
+        longitude: defaultLocation.longitude,
+        location: defaultLocation.location,
+      };
+      setPostLocation(newPostLocation);
     }
 
     // Search Service
@@ -274,7 +281,7 @@ export const MapPickerField = ({
             geometry: { coordinates },
           },
         }) => {
-          handleLocationSet(coordinates[1], coordinates[0], map);
+          handleLocationSet(map, coordinates[1], coordinates[0]); // FIXME: pasar localización del mismo objeto del que he obtenido coords
         },
       ),
     );
@@ -285,7 +292,7 @@ export const MapPickerField = ({
         showAccuracyCircle: false,
         showUserLocation: false,
       }).on("geolocate", ({ coords }) => {
-        handleLocationSet(coords.latitude, coords.longitude, map);
+        handleLocationSet(map, coords.latitude, coords.longitude); // FIXME: pasar localización del mismo objeto del que he obtenido coords
       }),
     );
 
@@ -293,7 +300,7 @@ export const MapPickerField = ({
     map.on("mouseup", ({ lngLat: { lat, lng } }) => {
       // If the click is part of a click and drag to move around, ignore it.
       if (isDraggingRef.current) return;
-      handleLocationSet(lat, lng, map);
+      handleLocationSet(map, lat, lng);
     });
 
     // To avoid setting post location on mouse Dragging.
@@ -308,8 +315,8 @@ export const MapPickerField = ({
 
     // Clean up on component unmount
     return () => {
-      map.remove();
       handleLocationClear();
+      map.remove();
     };
   }, [showMap]);
 
@@ -386,12 +393,20 @@ export const MapPickerField = ({
    * @param coords Coords where we want to put the marker
    * @param map The rendered map
    */
-  const handleLocationSet = async (lat: number, lon: number, map: Map) => {
+  const handleLocationSet = async (
+    map: Map,
+    lat: number,
+    lon: number,
+    location?: string,
+  ) => {
     const roundedCoords = {
       lat: roundCoord(lat, coordsPrecission),
       lon: roundCoord(lon, coordsPrecission),
     };
-    const location = await reverseSearch(roundedCoords.lat, roundedCoords.lon);
+
+    if (!location) {
+      location = await reverseSearch(roundedCoords.lat, roundedCoords.lon);
+    }
 
     if (!allowMultipleMarkers && markersRef.current.length > 0) {
       // There's already a marker on the map and we don't allow multiple, so we just update its location.
@@ -407,9 +422,9 @@ export const MapPickerField = ({
         .on("dragstart", () => setIsDragging(true))
         .on("dragend", () => {
           handleLocationSet(
+            map,
             marker.getLngLat().lat,
             marker.getLngLat().lng,
-            map,
           );
           setIsDragging(false);
         });
@@ -432,7 +447,7 @@ export const MapPickerField = ({
         <CheckboxField
           className="mr-2"
           onChange={setShowMap}
-          defaultSelected={!initiallyHidden}
+          defaultSelected={showMap}
         >
           {textToShow}
         </CheckboxField>
