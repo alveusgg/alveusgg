@@ -258,6 +258,7 @@ export async function getPosts({
       updatedAt: true,
       approvedAt: true,
       attachments: withAttachments.include.attachments,
+      location: true,
     },
     orderBy: [...postOrderBy],
     cursor: cursor ? { id: cursor } : undefined,

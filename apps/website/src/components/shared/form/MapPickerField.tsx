@@ -160,6 +160,7 @@ export const MapPickerField = ({
         location: defaultLocation.location,
       };
       setPostLocation(newPostLocation);
+      onLocationChange(newPostLocation);
     }
 
     // Search Service

@@ -141,6 +141,12 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
       >
         <span className="mr-1 italic">by </span>
         {entry.displayName}
+        {entry.location && (
+          <>
+            <span className="mr-1 italic"> near </span>
+            {entry.location}
+          </>
+        )}
         {" — "}
         {formatDateTime(
           entry.createdAt,
