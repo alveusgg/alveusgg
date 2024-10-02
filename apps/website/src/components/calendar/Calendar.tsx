@@ -7,7 +7,7 @@ import {
 } from "react";
 
 import { Transition } from "@headlessui/react";
-import { DateTime } from "luxon";
+import { DateTime, Info } from "luxon";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
@@ -292,8 +292,7 @@ export function Calendar({
   );
 
   if (!today || !selectedDateTime) return null;
-
-  const startDay = 1; // 1 = Monday, 7 = Sunday
+  const startDay = Info.getStartOfWeek({ locale: DateTime.local().locale }); // 1 = Monday, 7 = Sunday
   const startOffset = (7 + selectedDateTime.weekday - startDay) % 7; // Luxon uses 1-based days
   const weeks = Math.ceil((startOffset + daysInMonth!) / 7);
 
