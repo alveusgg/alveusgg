@@ -273,7 +273,7 @@ export function Calendar({
         ),
       };
     });
-  }, [selectedDateTime, daysInMonth]);
+  }, [selectedDateTime, daysInMonth, timeZone]);
 
   const byDay = useMemo(
     () =>

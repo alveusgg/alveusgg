@@ -212,11 +212,6 @@ async function createDiscordNotifications({
 
   const tasks = [];
   for (const webhookUrl of webhookUrls) {
-    const relativeNotificationUrl = `/notifications/${id}`;
-    const link =
-      linkUrl ||
-      new URL(relativeNotificationUrl, env.NEXT_PUBLIC_BASE_URL).toString();
-
     tasks.push(
       triggerDiscordChannelWebhook({
         contentTitle: title ?? undefined,
