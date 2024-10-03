@@ -1,5 +1,5 @@
-import IconWorld from "@/icons/IconWorld";
-import IconX from "@/icons/IconX";
+import { useEffect, useRef, useState } from "react";
+import maplibregl, { GeolocateControl, Map, Marker } from "maplibre-gl";
 import type {
   CarmenGeojsonFeature,
   MaplibreGeocoderApi,
@@ -7,10 +7,10 @@ import type {
   MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
+import IconWorld from "@/icons/IconWorld";
+import IconX from "@/icons/IconX";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Searchbox CSS
-import maplibregl, { GeolocateControl, Map, Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
-import { useEffect, useRef, useState } from "react";
 import config from "../../../../tailwind.config";
 import { CheckboxField } from "./CheckboxField";
 
@@ -90,13 +90,7 @@ export const MapPickerField = ({
   const [postLocation, setPostLocation] = useState(
     defaultLocation || ({} as MapLocation),
   );
-  const [isDragging, setIsDragging] = useState(false);
-  const isDraggingRef = useRef(isDragging);
-
-  // To avoid stale closure, onmousemove doesn't work to capture dragging.
-  useEffect(() => {
-    isDraggingRef.current = isDragging;
-  }, [isDragging]);
+  const isDraggingRef = useRef(false);
 
   useEffect(() => {
     if (!showMap || !mapContainerRef.current) {
@@ -142,14 +136,14 @@ export const MapPickerField = ({
         })
           .setLngLat([defaultLocation?.longitude, defaultLocation?.latitude])
           .addTo(map)
-          .on("dragstart", () => setIsDragging(true))
+          .on("dragstart", () => (isDraggingRef.current = true))
           .on("dragend", () => {
             handleLocationSet(
               map,
               marker.getLngLat().lat,
               marker.getLngLat().lng,
             );
-            setIsDragging(false);
+            isDraggingRef.current = false;
           });
         markersRef.current.push(marker);
       }
@@ -282,8 +276,8 @@ export const MapPickerField = ({
     });
 
     // To avoid setting post location on mouse Dragging.
-    map.on("dragstart", () => setIsDragging(true));
-    map.on("dragend", () => setIsDragging(false));
+    map.on("dragstart", () => (isDraggingRef.current = true));
+    map.on("dragend", () => (isDraggingRef.current = false));
     map.on("zoom", () => {
       // I don't like this solution, but the ScrollZoomHandler doesn't have this functionality.
       if (map.getZoom() > maxZoom) {
@@ -397,14 +391,14 @@ export const MapPickerField = ({
       })
         .setLngLat(roundedCoords)
         .addTo(map)
-        .on("dragstart", () => setIsDragging(true))
+        .on("dragstart", () => (isDraggingRef.current = true))
         .on("dragend", () => {
           handleLocationSet(
             map,
             marker.getLngLat().lat,
             marker.getLngLat().lng,
           );
-          setIsDragging(false);
+          isDraggingRef.current = false;
         });
       markersRef.current.push(marker);
     }

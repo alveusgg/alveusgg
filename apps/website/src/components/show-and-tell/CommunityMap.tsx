@@ -1,10 +1,10 @@
+import { useEffect, useState } from "react";
 import { Map, Marker, Popup } from "maplibre-gl";
 import type {
   LocationFeature,
   LocationResponse,
 } from "@/pages/api/show-and-tell/locations";
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
-import { useEffect, useState } from "react";
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 import config from "../../../tailwind.config";

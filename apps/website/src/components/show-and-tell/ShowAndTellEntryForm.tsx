@@ -39,7 +39,7 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
-import type { MapLocation} from "../shared/form/MapPickerField";
+import type { MapLocation } from "../shared/form/MapPickerField";
 import { MapPickerField } from "../shared/form/MapPickerField";
 
 type ShowAndTellEntryFormProps = {
