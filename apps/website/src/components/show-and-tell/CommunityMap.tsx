@@ -14,6 +14,11 @@ import { Button } from "../shared/form/Button";
 export const CommunityMap = () => {
   const [showMap, setShowMap] = useState(false);
   const [locations, setLocations] = useState<LocationResponse["features"]>([]);
+  const [uniqueLocationsCount, setUniqueLocationsCount] = useState(0);
+  const [uniqueCountriesCount, setUniqueCountriesCount] = useState(0);
+  const [calculatingData, setCalculatingData] = useState(true);
+
+  const MAX_ZOOM = 10;
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -21,9 +26,23 @@ export const CommunityMap = () => {
       if (response.ok) {
         const data = await response.json();
         setLocations(data.features);
+
+        const uniqueLocations = new Set(
+          data.features.map((l: LocationFeature) => l.properties.location),
+        );
+        setUniqueLocationsCount(uniqueLocations.size);
+
+        const uniqueCountries = new Set(
+          data.features.map((l: LocationFeature) =>
+            l.properties.location?.substring(
+              l.properties.location.lastIndexOf(","),
+            ),
+          ),
+        );
+        setUniqueCountriesCount(uniqueCountries.size);
       }
+      setCalculatingData(false);
     };
-    console.log(`${locations.length} LOCATIONS`);
     fetchLocations();
   }, []);
 
@@ -43,7 +62,7 @@ export const CommunityMap = () => {
             tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
             tileSize: 256,
             minzoom: 0,
-            maxzoom: 24,
+            maxzoom: MAX_ZOOM + 1,
           },
         },
         layers: [
@@ -55,6 +74,12 @@ export const CommunityMap = () => {
         ],
       },
       antialias: true,
+    });
+
+    map.on("zoom", () => {
+      if (map.getZoom() > MAX_ZOOM) {
+        map.setZoom(MAX_ZOOM);
+      }
     });
 
     // TODO: fullscreen eats ram and cpu cores for breakfast, gotta tinker a bit.
@@ -94,6 +119,16 @@ export const CommunityMap = () => {
       <div className="w-full md:w-3/5">
         <Heading>Community Map</Heading>
         <p className="pb-4 text-lg">Reaching every part of the Globe!</p>
+
+        {!calculatingData &&
+          uniqueLocationsCount > 0 &&
+          uniqueCountriesCount > 0 && (
+            <p className="pb-4">
+              A total of {locations.length} locations have been shared,
+              including {uniqueLocationsCount} unique locations across{" "}
+              {uniqueCountriesCount} countries.
+            </p>
+          )}
       </div>
       <Button onClick={handleButtonClick}>
         {showMap ? "Hide map" : "Show map"}
