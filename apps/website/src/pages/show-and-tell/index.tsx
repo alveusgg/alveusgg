@@ -400,9 +400,6 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           <div className="mt-2">
             <GiveAnHourProgress />
           </div>
-          <div className="mt-2">
-            <CommunityMap />
-          </div>
         </div>
 
         <Image
@@ -411,6 +408,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           alt=""
           className="mx-auto w-full max-w-md p-4 pb-16 md:mx-0 md:w-2/5 md:pb-4"
         />
+
+        <div className="mb-4 w-full">
+          {/* Drop some more info like "X locations shared accross Y countries" */}
+          <CommunityMap />
+        </div>
       </Section>
 
       {/* Grow the last section to cover the page */}

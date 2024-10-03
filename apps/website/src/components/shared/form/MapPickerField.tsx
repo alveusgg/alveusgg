@@ -240,29 +240,6 @@ export const MapPickerField = ({
           features,
         };
       },
-
-      getSuggestions: async (config: MaplibreGeocoderApiConfig) => {
-        const suggestions = [];
-        try {
-          const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geoData=1&addressdetails=1`;
-          const response = await fetch(request);
-          const data = await response.json();
-
-          for (const feature of data.features) {
-            const suggestion = {
-              placeId: feature.properties.placeid,
-              text: feature.properties.display_name,
-            };
-            suggestions.push(suggestion);
-          }
-        } catch (e) {
-          console.error(`Failed to getSuggestion with error: ${e}`);
-        }
-
-        return {
-          suggestions,
-        };
-      },
     };
 
     // Add searchbox to map
@@ -472,14 +449,16 @@ export const MapPickerField = ({
         }
       </div>
       {showMap && (
-        <div
-          ref={mapContainerRef}
-          style={{
-            width: "100%",
-            height: "500px",
-            visibility: showMap ? "visible" : "hidden",
-          }}
-        />
+        <div className="h-[500px] w-full overflow-hidden rounded-lg">
+          <div
+            ref={mapContainerRef}
+            style={{
+              width: "100%",
+              height: "500px",
+              visibility: showMap ? "visible" : "hidden",
+            }}
+          />
+        </div>
       )}
     </>
   );
