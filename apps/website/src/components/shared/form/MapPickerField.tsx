@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
-import maplibregl, { GeolocateControl, Map, Marker } from "maplibre-gl";
-import type {
-  CarmenGeojsonFeature,
-  MaplibreGeocoderApi,
-  MaplibreGeocoderApiConfig,
-  MaplibreGeocoderFeatureResults,
-} from "@maplibre/maplibre-gl-geocoder";
+import { useCallback, useEffect, useRef, useState } from "react";
+import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
 import IconWorld from "@/icons/IconWorld";
 import IconX from "@/icons/IconX";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Searchbox CSS
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
+import {
+  geocoderApi,
+  getDefaultMarker,
+  reverseSearch,
+  roundCoord,
+} from "@/utils/geolocation";
 import config from "../../../../tailwind.config";
 import { CheckboxField } from "./CheckboxField";
 
@@ -51,17 +51,6 @@ export type MapLocation = {
   location: string;
 };
 
-type Address = {
-  municipality?: string;
-  city?: string;
-  town?: string;
-  village?: string;
-  region?: string;
-  state?: string;
-  county?: string;
-  country?: string;
-};
-
 /**
  * Map field with integrated searchbox and geolocalization capabilities
  *
@@ -73,345 +62,196 @@ export const MapPickerField = ({
   defaultLocation,
   initiallyHidden = defaultLocation?.location ? false : true,
   textToShow = "Show map",
-  minZoom = 0,
-  maxZoom = 22,
+  minZoom = 1,
+  maxZoom = 24,
   initialZoom = defaultLocation?.location ? maxZoom : 1,
   center = defaultLocation?.location
     ? [defaultLocation.longitude, defaultLocation.latitude]
     : [0, 0],
-  antialias = false,
+  antialias = true,
   allowMultipleMarkers = false,
   coordsPrecission = 2,
   onLocationChange,
 }: MapPickerFieldProps) => {
-  const mapContainerRef = useRef(null);
-  const markersRef = useRef<maplibregl.Marker[]>([]);
   const [showMap, setShowMap] = useState(!initiallyHidden);
   const [postLocation, setPostLocation] = useState(
     defaultLocation || ({} as MapLocation),
   );
+
+  const mapContainerRef = useRef(null);
+  const mapRef = useRef<Map | null>(null);
+  const markersRef = useRef<Marker[]>([]);
   const isDraggingRef = useRef(false);
 
-  useEffect(() => {
-    if (!showMap || !mapContainerRef.current) {
-      return;
-    }
-
-    const map = new Map({
-      container: mapContainerRef.current,
-      style: {
-        version: 8,
-        name: "Alveus Show and Tell",
-        center: center,
-        zoom: initialZoom,
-        sources: {
-          "raster-tiles": {
-            type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-            tileSize: 256,
-            minzoom: minZoom,
-            maxzoom: maxZoom + 1, // We add one level of rendering zoom so the text is crisp, the actual zoom won't be affected.
+  /**
+   * Creates a map with the props provided to the Component
+   */
+  const createMap = useCallback(() => {
+    console.log("CREATING MAP");
+    if (mapContainerRef.current) {
+      const map = new Map({
+        container: mapContainerRef.current,
+        style: {
+          version: 8,
+          name: "Alveus Map",
+          center,
+          zoom: initialZoom,
+          sources: {
+            "raster-tiles": {
+              type: "raster",
+              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+              tileSize: 256,
+              minzoom: minZoom,
+              maxzoom: maxZoom < 24 ? maxZoom + 1 : maxZoom, // We add one level of rendering zoom so the text is crisp, the actual zoom won't be affected.
+            },
           },
+          layers: [
+            {
+              id: "simple-tiles",
+              type: "raster",
+              source: "raster-tiles",
+            },
+          ],
         },
-        layers: [
-          {
-            id: "simple-tiles",
-            type: "raster",
-            source: "raster-tiles",
-          },
-        ],
-      },
-      antialias: antialias,
-    });
-
-    if (defaultLocation?.location) {
-      if (!allowMultipleMarkers && markersRef.current.length > 0) {
-        markersRef.current
-          ?.at(0)
-          ?.setLngLat([defaultLocation?.longitude, defaultLocation?.latitude]);
-      } else {
-        const marker = new Marker({
-          color: config.theme.colors["alveus-green"].DEFAULT,
-          draggable: true,
-        })
-          .setLngLat([defaultLocation?.longitude, defaultLocation?.latitude])
-          .addTo(map)
-          .on("dragstart", () => (isDraggingRef.current = true))
-          .on("dragend", () => {
-            handleLocationSet(
-              map,
-              marker.getLngLat().lat,
-              marker.getLngLat().lng,
-            );
-            isDraggingRef.current = false;
-          });
-        markersRef.current.push(marker);
-      }
-
-      const newPostLocation = {
-        latitude: defaultLocation.latitude,
-        longitude: defaultLocation.longitude,
-        location: defaultLocation.location,
-      };
-      setPostLocation(newPostLocation);
-      onLocationChange(newPostLocation);
-    }
-
-    // Search Service
-    const geocoderApi: MaplibreGeocoderApi = {
-      forwardGeocode: async (
-        config: MaplibreGeocoderApiConfig,
-      ): Promise<MaplibreGeocoderFeatureResults> => {
-        const features: CarmenGeojsonFeature[] = [];
-        try {
-          const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geoData=1&addressdetails=1`;
-          const response = await fetch(request);
-          const geoData = await response.json();
-
-          for (const feature of geoData.features) {
-            const point: CarmenGeojsonFeature = {
-              id: feature.properties.placeid,
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: [feature.bbox[0], feature.bbox[1]],
+        antialias,
+      })
+        .addControl(
+          new MaplibreGeocoder(geocoderApi, {
+            maplibregl,
+            marker: false,
+            showResultsWhileTyping: true,
+            showResultMarkers: {
+              color: config.theme.colors["alveus-tan"][500],
+            },
+            debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
+          }).on(
+            "result",
+            ({
+              result: {
+                geometry: { coordinates },
               },
-              properties: feature.properties,
-              place_name: feature.properties.display_name,
-              place_type: ["place"],
-              text: feature.properties.display_name,
-            };
-            features.push(point);
+            }) => {
+              handleLocationSet(map, coordinates[1], coordinates[0]); // FIXME: pasar localización del mismo objeto del que he obtenido coords
+            },
+          ),
+        )
+        // Add geolocation button
+        .addControl(
+          new GeolocateControl({
+            showAccuracyCircle: false,
+            showUserLocation: false,
+          }).on("geolocate", ({ coords }) => {
+            handleLocationSet(map, coords.latitude, coords.longitude); // FIXME: pasar localización del mismo objeto del que he obtenido coords
+          }),
+        )
+
+        // When clicking on the map
+        .on("mouseup", ({ lngLat: { lat, lng } }) => {
+          // If the click is part of a click and drag to move around, ignore it.
+          if (isDraggingRef.current) return;
+          handleLocationSet(map, lat, lng);
+        })
+        // To avoid setting post location on mouse Dragging.
+        .on("dragstart", () => (isDraggingRef.current = true))
+        .on("dragend", () => (isDraggingRef.current = false))
+        .on("zoom", () => {
+          // I don't like this solution, but the ScrollZoomHandler doesn't have this functionality.
+          if (map.getZoom() > maxZoom!) {
+            map.setZoom(maxZoom!);
           }
-        } catch (e) {
-          console.error(`Failed to forwardGeocode with error: ${e}`);
-        }
+        });
+      return map;
+    }
+  }, [antialias, center, initialZoom, minZoom, maxZoom]);
 
-        return {
-          type: "FeatureCollection",
-          features,
-        };
-      },
-
-      reverseGeocode: async (
-        config: MaplibreGeocoderApiConfig,
-      ): Promise<MaplibreGeocoderFeatureResults> => {
-        const features: CarmenGeojsonFeature[] = [];
-        try {
-          if (!config.query || config.query.length != 2)
-            return { type: "FeatureCollection", features: [] };
-
-          const lon = config.query[0] as number;
-          const lat = config.query[1] as number;
-
-          const request = `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lon}&addressdetails=1`;
-          const response = await fetch(request);
-          const geoData = await response.json();
-
-          if (geoData && geoData.features) {
-            for (const feature of geoData.features) {
-              const point: CarmenGeojsonFeature = {
-                id: feature.properties.placeid,
-                type: "Feature",
-                geometry: {
-                  type: "Point",
-                  coordinates: [lon, lat],
-                },
-                properties: feature.properties,
-                place_name: feature.properties.display_name,
-                place_type: ["place"],
-                text: feature.properties.display_name,
-              };
-              features.push(point);
-            }
-          }
-        } catch (e) {
-          console.error(`Failed to reverseGeocode with error: ${e}`);
-        }
-
-        return {
-          type: "FeatureCollection",
-          features,
-        };
-      },
-    };
-
-    // Add searchbox to map
-    map.addControl(
-      new MaplibreGeocoder(geocoderApi, {
-        maplibregl,
-        marker: false,
-        showResultsWhileTyping: true,
-        showResultMarkers: {
-          color: config.theme.colors["alveus-tan"][500],
-        },
-        // collapsed: true, // TODO: Weird on mobile?
-      }).on(
-        "result",
-        ({
-          result: {
-            geometry: { coordinates },
-          },
-        }) => {
-          handleLocationSet(map, coordinates[1], coordinates[0]); // FIXME: pasar localización del mismo objeto del que he obtenido coords
-        },
-      ),
-    );
-
-    // Add geolocation button
-    map.addControl(
-      new GeolocateControl({
-        showAccuracyCircle: false,
-        showUserLocation: false,
-      }).on("geolocate", ({ coords }) => {
-        handleLocationSet(map, coords.latitude, coords.longitude); // FIXME: pasar localización del mismo objeto del que he obtenido coords
-      }),
-    );
-
-    // When clicking on the map
-    map.on("mouseup", ({ lngLat: { lat, lng } }) => {
-      // If the click is part of a click and drag to move around, ignore it.
-      if (isDraggingRef.current) return;
-      handleLocationSet(map, lat, lng);
-    });
-
-    // To avoid setting post location on mouse Dragging.
-    map.on("dragstart", () => (isDraggingRef.current = true));
-    map.on("dragend", () => (isDraggingRef.current = false));
-    map.on("zoom", () => {
-      // I don't like this solution, but the ScrollZoomHandler doesn't have this functionality.
-      if (map.getZoom() > maxZoom) {
-        map.setZoom(maxZoom);
-      }
-    });
-
-    // Clean up on component unmount
-    return () => {
-      handleLocationClear();
-      map.remove();
-    };
-  }, [showMap]);
-
-  const handleLocationClear = () => {
+  /**
+   * Clears the markers and resets the location
+   */
+  const handleLocationClear = useCallback(() => {
     setPostLocation({} as MapLocation);
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
-  };
-
-  const roundCoord = (coord: number, precission: number) => {
-    const coordStr = coord.toString();
-    if (coordStr.includes(".")) {
-      const decimals = coordStr.split(".")[1];
-      if (decimals && decimals.length > 0) {
-        return +coord.toFixed(precission);
-      }
-    }
-    return coord;
-  };
-
-  /**
-   * Forms a nice looking address from the reverse search info.
-   * @param address Result of the {@link https://nominatim.org/release-docs/develop/api/Reverse/|API Call}
-   * @see {@link https://nominatim.org/release-docs/develop/api/Output/#addressdetails|Address Details}
-   * @returns
-   */
-  const createAddress = (address: Address) => {
-    const parts = [];
-
-    if (address.municipality) {
-      parts.push(address.municipality);
-    } else if (address.city) {
-      parts.push(address.city);
-    } else if (address.town) {
-      parts.push(address.town);
-    } else if (address.village) {
-      parts.push(address.village);
-    }
-
-    if (address.region) {
-      parts.push(address.region);
-    } else if (address.state) {
-      parts.push(address.state);
-    } else if (address.county) {
-      parts.push(address.county);
-    }
-
-    if (address.country) {
-      parts.push(address.country);
-    }
-
-    return parts.join(", ");
-  };
-
-  /**
-   * Gets a place name from its coordinates
-   * @param coords
-   * @param defaultName
-   * @returns
-   */
-  const reverseSearch = async (lat: number, lon: number) => {
-    const request = `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lon}&addressdetails=1`;
-    const response = await fetch(request);
-    const data = await response.json();
-
-    if (data && data.features) {
-      return createAddress(data.features[0].properties.address);
-    }
-    return "";
-  };
+  }, []);
 
   /**
    * Main method that handles marker position and coordinate rounding
    * @param coords Coords where we want to put the marker
    * @param map The rendered map
    */
-  const handleLocationSet = async (
-    map: Map,
-    lat: number,
-    lon: number,
-    location?: string,
-  ) => {
-    const roundedCoords = {
-      lat: roundCoord(lat, coordsPrecission),
-      lon: roundCoord(lon, coordsPrecission),
-    };
+  const handleLocationSet = useCallback(
+    async (map: Map, lat: number, lon: number, location?: string) => {
+      console.log("HANDLING LOCATION SET");
+      const roundedCoords = {
+        lat: roundCoord(lat, coordsPrecission),
+        lon: roundCoord(lon, coordsPrecission),
+      };
+      if (!location) {
+        console.log("SEARCHING PLACE NAME...");
+        location = await reverseSearch(roundedCoords.lat, roundedCoords.lon);
+        console.log(`GOT ${location}`);
+      }
 
-    if (!location) {
-      location = await reverseSearch(roundedCoords.lat, roundedCoords.lon);
+      if (!allowMultipleMarkers && markersRef.current.length > 0) {
+        // There's already a marker on the map and we don't allow multiple, so we just update its location.
+        markersRef.current[0]?.setLngLat(roundedCoords);
+      } else {
+        // There are no markers yet or we allow multiple, so let's create one.
+        const marker = getDefaultMarker(roundedCoords, mapRef.current);
+
+        if (marker) {
+          marker
+            .on("dragstart", () => (isDraggingRef.current = true))
+            .on("dragend", () => {
+              console.log("DRAG ENDED ON MARKER 2");
+              handleLocationSet(
+                map,
+                marker.getLngLat().lat,
+                marker.getLngLat().lng,
+              );
+              isDraggingRef.current = false;
+            });
+          markersRef.current.push(marker);
+        }
+      }
+
+      const newPostLocation = {
+        latitude: roundedCoords.lat,
+        longitude: roundedCoords.lon,
+        location: location,
+      };
+
+      setPostLocation(newPostLocation);
+      onLocationChange(newPostLocation);
+    },
+    [coordsPrecission, allowMultipleMarkers, onLocationChange],
+  );
+
+  useEffect(() => {
+    // Ensure map container exists and map hasn't been initialized yet
+    if (!showMap || !mapContainerRef.current || mapRef.current) {
+      return;
     }
 
-    if (!allowMultipleMarkers && markersRef.current.length > 0) {
-      // There's already a marker on the map and we don't allow multiple, so we just update its location.
-      markersRef.current?.at(0)?.setLngLat(roundedCoords);
-    } else {
-      // There are no markers yet or we allow multiple, so let's create one.
-      const marker = new Marker({
-        color: config.theme.colors["alveus-green"].DEFAULT,
-        draggable: true,
-      })
-        .setLngLat(roundedCoords)
-        .addTo(map)
-        .on("dragstart", () => (isDraggingRef.current = true))
-        .on("dragend", () => {
-          handleLocationSet(
-            map,
-            marker.getLngLat().lat,
-            marker.getLngLat().lng,
-          );
-          isDraggingRef.current = false;
-        });
-      markersRef.current.push(marker);
+    const map = createMap();
+    if (map) {
+      mapRef.current = map;
+      if (defaultLocation?.location) {
+        handleLocationSet(
+          map,
+          defaultLocation.latitude,
+          defaultLocation.longitude,
+          defaultLocation.location,
+        );
+      }
     }
 
-    const newPostLocation = {
-      latitude: roundedCoords.lat,
-      longitude: roundedCoords.lon,
-      location: location,
+    // Clean up on component unmount
+    return () => {
+      handleLocationClear();
+      mapRef.current?.remove();
+      mapRef.current = null;
     };
-
-    setPostLocation(newPostLocation);
-    onLocationChange(newPostLocation);
-  };
+  }, [showMap]);
 
   return (
     <>

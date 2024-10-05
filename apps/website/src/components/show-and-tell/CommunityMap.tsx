@@ -32,12 +32,14 @@ export const CommunityMap = () => {
         );
         setUniqueLocationsCount(uniqueLocations.size);
 
+        // FIXME: current locations are not generated with nominatim, so the last part of the location may not always be the country.
+        // Maybe check /apps/website/src/utils/countries.ts
         const uniqueCountries = new Set(
-          data.features.map((l: LocationFeature) =>
-            l.properties.location?.substring(
-              l.properties.location.lastIndexOf(","),
-            ),
-          ),
+          data.features.map((l: LocationFeature) => {
+            l.properties.location
+              ?.substring(l.properties.location.lastIndexOf(",") + 1)
+              .trim();
+          }),
         );
         setUniqueCountriesCount(uniqueCountries.size);
       }
