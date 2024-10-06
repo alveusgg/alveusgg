@@ -229,7 +229,7 @@ const collaborations: Collaboration[] = (
         {
           name: "Ava Kris Tyson",
           image: avaKrisTyson,
-          popularity: 426_552, // Twitter followers, 2024-10-4
+          popularity: 426_500, // Twitter followers, 2024-10-4
         },
       ],
     },
