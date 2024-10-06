@@ -8,9 +8,8 @@ import {
 
 import { Transition } from "@headlessui/react";
 import { DateTime } from "luxon";
-
-import { ListBucketInventoryConfigurationsOutputFilterSensitiveLog } from "@aws-sdk/client-s3";
 import { getWeekStartByLocale } from "weekstart/full";
+
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 
