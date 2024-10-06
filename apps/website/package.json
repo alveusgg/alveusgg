@@ -82,6 +82,7 @@
     "slugify": "^1.6.6",
     "smooth-scroll-into-view-if-needed": "^2.0.2",
     "superjson": "^2.2.1",
+    "weekstart": "^2.0.0",
     "xml2js": "^0.6.2",
     "zod": "^3.22.4"
   },

@@ -7,8 +7,10 @@ import {
 } from "react";
 
 import { Transition } from "@headlessui/react";
-import { DateTime, Info } from "luxon";
+import { DateTime } from "luxon";
 
+import { ListBucketInventoryConfigurationsOutputFilterSensitiveLog } from "@aws-sdk/client-s3";
+import { getWeekStartByLocale } from "weekstart/full";
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
 
@@ -292,7 +294,10 @@ export function Calendar({
   );
 
   if (!today || !selectedDateTime) return null;
-  const startDay = Info.getStartOfWeek({ locale: DateTime.local().locale }); // 1 = Monday, 7 = Sunday
+
+  // Get week start (0 = Sunday, 1 = Monday, etc) and adjust Sunday to 7
+  const locale = Intl.DateTimeFormat().resolvedOptions().locale;
+  const startDay = getWeekStartByLocale(locale) || 7; // Convert 0 to 7 for Sunday.
   const startOffset = (7 + selectedDateTime.weekday - startDay) % 7; // Luxon uses 1-based days
   const weeks = Math.ceil((startOffset + daysInMonth!) / 7);
 
