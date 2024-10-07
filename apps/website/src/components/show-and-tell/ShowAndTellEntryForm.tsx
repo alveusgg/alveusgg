@@ -1,4 +1,4 @@
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 
 import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
@@ -103,12 +103,26 @@ export function ShowAndTellEntryForm({
     !!entry?.volunteeringMinutes,
   );
 
+  const initialLocation = useMemo<MapLocation | undefined>(
+    () =>
+      entry && entry.longitude !== null && entry.latitude !== null
+        ? {
+            latitude: entry.latitude,
+            longitude: entry.longitude,
+            location: entry.location || "",
+          }
+        : undefined,
+    [entry],
+  );
   const [postLocation, setPostLocation] = useState<MapLocation>(
     {} as MapLocation,
   );
-  const handlePostLocation = (userSelectedLocation: MapLocation) => {
-    setPostLocation(userSelectedLocation);
-  };
+  const handlePostLocation = useCallback(
+    (userSelectedLocation: MapLocation) => {
+      setPostLocation(userSelectedLocation);
+    },
+    [],
+  );
 
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
@@ -299,13 +313,7 @@ export function ShowAndTellEntryForm({
               antialias={true}
               maxZoom={8}
               onLocationChange={handlePostLocation}
-              defaultLocation={
-                {
-                  latitude: entry?.latitude,
-                  longitude: entry?.longitude,
-                  location: entry?.location,
-                } as MapLocation
-              }
+              initialLocation={initialLocation}
             />
             <RichTextField
               label="Content"
