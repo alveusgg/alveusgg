@@ -3,8 +3,8 @@ import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
 import IconWorld from "@/icons/IconWorld";
 import IconX from "@/icons/IconX";
-import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Searchbox CSS
-import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
+import "maplibre-gl/dist/maplibre-gl.css"; // Actual map CSS
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Map searchbox CSS
 import {
   geocoderApi,
   getDefaultMarker,
@@ -14,11 +14,10 @@ import {
 import config from "../../../../tailwind.config";
 import { CheckboxField } from "./CheckboxField";
 
-// TODO: Check for WebGL? https://maplibre.org/maplibre-gl-js/docs/examples/check-for-support/
 // TODO: when loading full data if slow then https://maplibre.org/maplibre-style-spec/layers/#icon-allow-overlap turn to true (from https://maplibre.org/maplibre-gl-js/docs/guides/large-data/#visualising-the-data)
 
 // FIXME?: some locations (like LA, San Diego or Madeira) go outside the borders when rounding coords, and they land in water next to the country or in a totally different country.
-// FIXME?: check if rounded coords are off the country and round 1 less decimal? so precission-1 and check recursively until you land on the original site? That defeats the purpose of rounding in the first place.
+// FIXME?: check if rounded coords are off the country and round 1 less decimal? so precision-1 and check recursively until you land on the original site? That defeats the purpose of rounding in the first place.
 
 /**
  * @param name Unique name of the element
@@ -26,7 +25,7 @@ import { CheckboxField } from "./CheckboxField";
  * @param textToShow Text that appears next to the checkbox
  * @param initialZoom Self describing
  * @param allowMultipleMarkers Do we allow multiple markers in this map?
- * @param coordsPrecission Number of decimals that we'll keep on the coordinates
+ * @param coordsPrecision Number of decimals that we'll keep on the coordinates
  *
  * For the rest and additional @see {@link https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MapOptions/|Map Options}
  */
@@ -34,14 +33,13 @@ export type MapPickerFieldProps = {
   name: string;
   initiallyHidden?: boolean;
   textToShow?: string;
-  center?: [lon: number, lat: number];
   initialZoom?: number;
   minZoom?: number;
   maxZoom?: number;
   antialias?: boolean;
   allowMultipleMarkers?: boolean;
-  coordsPrecission?: number;
-  defaultLocation?: MapLocation;
+  coordsPrecision?: number;
+  initialLocation?: MapLocation;
   onLocationChange: (userSelectedLocation: MapLocation) => void;
 };
 
@@ -56,113 +54,30 @@ export type MapLocation = {
  *
  * @see {@link https://maplibre.org/maplibre-gl-js/docs/API/|MapLibre API Docs}
  * @see {@link https://maplibre.org/maplibre-gl-geocoder/types/MaplibreGeocoderApi.html|Geocoder API (Search function)}
+ * @see {@link https://support.garmin.com/en-US/?faq=hRMBoCTy5a7HqVkxukhHd8|Must see before changing default precision: "Coords accuracy based on their decimals"}
  * @returns
  */
 export const MapPickerField = ({
-  defaultLocation,
-  initiallyHidden = defaultLocation?.location ? false : true,
+  initialLocation,
+  initiallyHidden = initialLocation?.location ? false : true,
   textToShow = "Show map",
   minZoom = 1,
   maxZoom = 24,
-  initialZoom = defaultLocation?.location ? maxZoom : 1,
-  center = defaultLocation?.location
-    ? [defaultLocation.longitude, defaultLocation.latitude]
-    : [0, 0],
+  initialZoom = initialLocation?.location ? maxZoom : 1,
   antialias = true,
   allowMultipleMarkers = false,
-  coordsPrecission = 2,
+  coordsPrecision = 2, // 2 is around 1.1km precision
   onLocationChange,
 }: MapPickerFieldProps) => {
   const [showMap, setShowMap] = useState(!initiallyHidden);
   const [postLocation, setPostLocation] = useState(
-    defaultLocation || ({} as MapLocation),
+    initialLocation || ({} as MapLocation),
   );
 
   const mapContainerRef = useRef(null);
   const mapRef = useRef<Map | null>(null);
   const markersRef = useRef<Marker[]>([]);
   const isDraggingRef = useRef(false);
-
-  /**
-   * Creates a map with the props provided to the Component
-   */
-  const createMap = useCallback(() => {
-    console.log("CREATING MAP");
-    if (mapContainerRef.current) {
-      const map = new Map({
-        container: mapContainerRef.current,
-        style: {
-          version: 8,
-          name: "Alveus Map",
-          center,
-          zoom: initialZoom,
-          sources: {
-            "raster-tiles": {
-              type: "raster",
-              tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-              tileSize: 256,
-              minzoom: minZoom,
-              maxzoom: maxZoom < 24 ? maxZoom + 1 : maxZoom, // We add one level of rendering zoom so the text is crisp, the actual zoom won't be affected.
-            },
-          },
-          layers: [
-            {
-              id: "simple-tiles",
-              type: "raster",
-              source: "raster-tiles",
-            },
-          ],
-        },
-        antialias,
-      })
-        .addControl(
-          new MaplibreGeocoder(geocoderApi, {
-            maplibregl,
-            marker: false,
-            showResultsWhileTyping: true,
-            showResultMarkers: {
-              color: config.theme.colors["alveus-tan"][500],
-            },
-            debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
-          }).on(
-            "result",
-            ({
-              result: {
-                geometry: { coordinates },
-              },
-            }) => {
-              handleLocationSet(map, coordinates[1], coordinates[0]); // FIXME: pasar localización del mismo objeto del que he obtenido coords
-            },
-          ),
-        )
-        // Add geolocation button
-        .addControl(
-          new GeolocateControl({
-            showAccuracyCircle: false,
-            showUserLocation: false,
-          }).on("geolocate", ({ coords }) => {
-            handleLocationSet(map, coords.latitude, coords.longitude); // FIXME: pasar localización del mismo objeto del que he obtenido coords
-          }),
-        )
-
-        // When clicking on the map
-        .on("mouseup", ({ lngLat: { lat, lng } }) => {
-          // If the click is part of a click and drag to move around, ignore it.
-          if (isDraggingRef.current) return;
-          handleLocationSet(map, lat, lng);
-        })
-        // To avoid setting post location on mouse Dragging.
-        .on("dragstart", () => (isDraggingRef.current = true))
-        .on("dragend", () => (isDraggingRef.current = false))
-        .on("zoom", () => {
-          // I don't like this solution, but the ScrollZoomHandler doesn't have this functionality.
-          if (map.getZoom() > maxZoom!) {
-            map.setZoom(maxZoom!);
-          }
-        });
-      return map;
-    }
-  }, [antialias, center, initialZoom, minZoom, maxZoom]);
 
   /**
    * Clears the markers and resets the location
@@ -180,15 +95,12 @@ export const MapPickerField = ({
    */
   const handleLocationSet = useCallback(
     async (map: Map, lat: number, lon: number, location?: string) => {
-      console.log("HANDLING LOCATION SET");
       const roundedCoords = {
-        lat: roundCoord(lat, coordsPrecission),
-        lon: roundCoord(lon, coordsPrecission),
+        lat: roundCoord(lat, coordsPrecision),
+        lon: roundCoord(lon, coordsPrecision),
       };
       if (!location) {
-        console.log("SEARCHING PLACE NAME...");
         location = await reverseSearch(roundedCoords.lat, roundedCoords.lon);
-        console.log(`GOT ${location}`);
       }
 
       if (!allowMultipleMarkers && markersRef.current.length > 0) {
@@ -202,7 +114,6 @@ export const MapPickerField = ({
           marker
             .on("dragstart", () => (isDraggingRef.current = true))
             .on("dragend", () => {
-              console.log("DRAG ENDED ON MARKER 2");
               handleLocationSet(
                 map,
                 marker.getLngLat().lat,
@@ -223,7 +134,7 @@ export const MapPickerField = ({
       setPostLocation(newPostLocation);
       onLocationChange(newPostLocation);
     },
-    [coordsPrecission, allowMultipleMarkers, onLocationChange],
+    [coordsPrecision, allowMultipleMarkers, onLocationChange],
   );
 
   useEffect(() => {
@@ -232,15 +143,89 @@ export const MapPickerField = ({
       return;
     }
 
-    const map = createMap();
+    const map = new Map({
+      container: mapContainerRef.current,
+      style: {
+        version: 8,
+        name: "Alveus Map",
+        center: initialLocation?.location
+          ? [initialLocation.longitude, initialLocation.latitude]
+          : [0, 0],
+        zoom: initialZoom,
+        sources: {
+          "raster-tiles": {
+            type: "raster",
+            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            tileSize: 256,
+            minzoom: minZoom,
+            maxzoom: maxZoom < 24 ? maxZoom + 1 : maxZoom, // We add one level of rendering zoom so the text is crisp when zooming in.
+          },
+        },
+        layers: [
+          {
+            id: "simple-tiles",
+            type: "raster",
+            source: "raster-tiles",
+          },
+        ],
+      },
+      antialias,
+    })
+      .addControl(
+        new MaplibreGeocoder(geocoderApi, {
+          maplibregl,
+          marker: false,
+          showResultsWhileTyping: true,
+          showResultMarkers: {
+            color: config.theme.colors["alveus-tan"][500],
+          },
+          debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
+        }).on(
+          "result",
+          ({
+            result: {
+              geometry: { coordinates },
+              place_name,
+            },
+          }) => {
+            handleLocationSet(map, coordinates[1], coordinates[0], place_name);
+          },
+        ),
+      )
+      // Add geolocation button
+      .addControl(
+        new GeolocateControl({
+          showAccuracyCircle: false,
+          showUserLocation: false,
+        }).on("geolocate", ({ coords }) => {
+          handleLocationSet(map, coords.latitude, coords.longitude);
+        }),
+      )
+
+      // When clicking on the map
+      .on("mouseup", ({ lngLat: { lat, lng } }) => {
+        // If the click is part of a click and drag to move around, ignore it.
+        if (isDraggingRef.current) return;
+        handleLocationSet(map, lat, lng);
+      })
+      // To avoid setting post location on mouse Dragging.
+      .on("dragstart", () => (isDraggingRef.current = true))
+      .on("dragend", () => (isDraggingRef.current = false))
+      .on("zoom", () => {
+        // I don't like this solution, but the ScrollZoomHandler doesn't have this functionality.
+        if (map.getZoom() > maxZoom!) {
+          map.setZoom(maxZoom!);
+        }
+      });
+
     if (map) {
       mapRef.current = map;
-      if (defaultLocation?.location) {
+      if (initialLocation?.location) {
         handleLocationSet(
           map,
-          defaultLocation.latitude,
-          defaultLocation.longitude,
-          defaultLocation.location,
+          initialLocation.latitude,
+          initialLocation.longitude,
+          initialLocation.location,
         );
       }
     }
@@ -251,7 +236,16 @@ export const MapPickerField = ({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [showMap]);
+  }, [
+    antialias,
+    initialZoom,
+    maxZoom,
+    minZoom,
+    showMap,
+    initialLocation,
+    handleLocationClear,
+    handleLocationSet,
+  ]);
 
   return (
     <>
