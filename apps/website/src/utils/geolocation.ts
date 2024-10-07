@@ -19,17 +19,17 @@ type Address = {
 };
 
 /**
- * Rounds a coordinate to the desired precission
+ * Rounds a coordinate to the desired precision
  * @param coord Longitude or Latitude
- * @param precission Any number.
- * @returns The rounded coord. If the precission is bigger than the coord it just returns the unaltered coord.
+ * @param precision Any number.
+ * @returns The rounded coord. If the precision is bigger than the coord it just returns the unaltered coord.
  */
-export const roundCoord = (coord: number, precission: number) => {
+export const roundCoord = (coord: number, precision: number) => {
   const coordStr = coord.toString();
   if (coordStr.includes(".")) {
     const decimals = coordStr.split(".")[1];
-    if (decimals && decimals.length > 0 && decimals.length > precission) {
-      return +coord.toFixed(precission);
+    if (decimals && decimals.length > 0 && decimals.length > precision) {
+      return +coord.toFixed(precision);
     }
   }
   return coord;
@@ -42,7 +42,6 @@ export const roundCoord = (coord: number, precission: number) => {
  * @returns Place name or empty string if it can't find it.
  */
 export const reverseSearch = async (lat: number, lon: number) => {
-  console.log("REVERSE SEARCHING");
   const request = `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lon}&addressdetails=1`;
   const response = await fetch(request, {
     method: "GET",
@@ -56,11 +55,9 @@ export const reverseSearch = async (lat: number, lon: number) => {
     if (data && data.features) {
       return createAddress(data.features[0].properties.address);
     }
-  } else {
-    console.log(response.status);
   }
 
-  throw new Error(`Couldn't search for that place: ${response.status}`);
+  throw new Error("Couldn't search for that place.");
 };
 
 /**
@@ -102,7 +99,6 @@ const forwardGeocode = async (
 ): Promise<MaplibreGeocoderFeatureResults> => {
   const features: CarmenGeojsonFeature[] = [];
   try {
-    console.log("SEARCHING FORWARD");
     const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geoData=1&addressdetails=1`;
     const response = await fetch(request);
     const geoData = await response.json();
@@ -137,7 +133,6 @@ const reverseGeocode = async (
 ): Promise<MaplibreGeocoderFeatureResults> => {
   const features: CarmenGeojsonFeature[] = [];
   try {
-    console.log("SEARCHING REVERSE");
     if (!config.query || config.query.length != 2)
       return { type: "FeatureCollection", features: [] };
 
