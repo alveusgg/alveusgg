@@ -36,9 +36,10 @@ export const CommunityMap = () => {
         // Maybe check /apps/website/src/utils/countries.ts
         const uniqueCountries = new Set(
           data.features.map((l: LocationFeature) => {
-            l.properties.location
+            return l.properties.location
               ?.substring(l.properties.location.lastIndexOf(",") + 1)
-              .trim();
+              .trim()
+              .toUpperCase();
           }),
         );
         setUniqueCountriesCount(uniqueCountries.size);
@@ -84,7 +85,7 @@ export const CommunityMap = () => {
       }
     });
 
-    // TODO: fullscreen eats ram and cpu cores for breakfast, gotta tinker a bit.
+    // TODO: fullscreen eats ram and cpu cores for breakfast and messes with the fullscreen option of the posts, gotta tinker a bit.
     // .addControl(new FullscreenControl());
 
     locations.forEach((p: LocationFeature) => {
@@ -110,7 +111,7 @@ export const CommunityMap = () => {
     return () => {
       map.remove();
     };
-  }, [showMap]);
+  }, [showMap, locations]);
 
   const handleButtonClick = () => {
     setShowMap(!showMap);
