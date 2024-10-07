@@ -428,7 +428,7 @@ const collaborations: Collaboration[] = (
         {
           name: "PeachJars",
           image: peachJars,
-          popularity: 744_00, // Twitter followers, 2024-10-4
+          popularity: 744_000, // Twitter followers, 2024-10-4
         },
         {
           name: "Jessica Nigri",
