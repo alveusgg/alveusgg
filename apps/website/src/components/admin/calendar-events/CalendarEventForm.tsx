@@ -21,9 +21,10 @@ import {
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/form/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import { TextField } from "@/components/shared/form/TextField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
-import { MessageBox } from "@/components/shared/MessageBox";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { LocalDateField } from "@/components/shared/form/LocalDateField";
 import { LocalTimeField } from "@/components/shared/form/LocalTimeField";
@@ -119,12 +120,12 @@ export function CalendarEventForm({
     >
       {submitMutation.error && (
         <MessageBox variant="failure">
-          <pre>{submitMutation.error.message}</pre>
+          <ProcedureErrorMessage error={submitMutation.error} />
         </MessageBox>
       )}
       {deleteMutation.error && (
         <MessageBox variant="failure">
-          <pre>{deleteMutation.error.message}</pre>
+          <ProcedureErrorMessage error={deleteMutation.error} />
         </MessageBox>
       )}
       {submitMutation.isSuccess && (

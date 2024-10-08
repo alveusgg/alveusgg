@@ -21,6 +21,8 @@ import {
 import { type FormSchema } from "@/server/db/forms";
 
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 import Markdown from "@/components/content/Markdown";
 import { TextField } from "@/components/shared/form/TextField";
 import { TextAreaField } from "@/components/shared/form/TextAreaField";
@@ -28,7 +30,6 @@ import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateTimeField } from "@/components/shared/form/LocalDateTimeField";
-import { MessageBox } from "@/components/shared/MessageBox";
 
 type FormFormProps = {
   action: "create" | "edit";
@@ -112,7 +113,7 @@ export function FormForm({ action, form }: FormFormProps) {
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
       {submit.error && (
         <MessageBox variant="failure">
-          <pre>{submit.error.message}</pre>
+          <ProcedureErrorMessage error={submit.error} />
         </MessageBox>
       )}
       {submit.isSuccess && (

@@ -12,6 +12,7 @@ import { NotificationEntry } from "@/components/notifications/NotificationEntry"
 import DateTime from "@/components/content/DateTime";
 import { Button } from "@/components/shared/form/Button";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ProcedureErrorMessage } from "@/components/shared/ProcedureErrorMessage";
 
 export function NotificationsLive() {
   const recentNotifications =
@@ -55,12 +56,14 @@ export function NotificationsLive() {
       )}
       {resendMutation.isError && (
         <MessageBox variant="failure">
-          Failed to resend notification: {resendMutation.error.message}
+          <p>Failed to resend notification!</p>
+          <ProcedureErrorMessage error={resendMutation.error} />
         </MessageBox>
       )}
       {cancelMutation.isError && (
         <MessageBox variant="failure">
-          Failed to cancel notification: {cancelMutation.error.message}
+          <p>Failed to cancel notification!</p>
+          <ProcedureErrorMessage error={cancelMutation.error} />
         </MessageBox>
       )}
 
