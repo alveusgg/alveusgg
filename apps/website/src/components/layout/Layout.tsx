@@ -9,6 +9,7 @@ import IconArrowRight from "@/icons/IconArrowRight";
 
 import globalPromotion from "@/data/env/global-promotion";
 
+import { ThemeScript } from "@/hooks/theme";
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";
 
@@ -43,6 +44,8 @@ const Layout = ({ children }: LayoutProps) => {
         <meta name="apple-mobile-web-app-title" content="Alveus Sanctuary" />
         <meta name="application-name" content="Alveus Sanctuary" />
       </Head>
+
+      <ThemeScript />
 
       <div
         id="app"
