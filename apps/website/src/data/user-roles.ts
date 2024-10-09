@@ -10,6 +10,10 @@ export const userRoles = {
     label: "Show and Tell",
     description: "Can review, approve and delete Show and Tell submissions",
   },
+  clips: {
+    label: "Clips",
+    description: "Can approve and delete clips",
+  },
   notifications: {
     label: "Notifications",
     description: "Can send notifications to users",

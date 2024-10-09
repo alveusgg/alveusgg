@@ -93,6 +93,10 @@ export const mainNavStructure: NavStructure = {
         title: "Show and Tell",
         link: "/show-and-tell",
       },
+      clips: {
+        title: "Clips",
+        link: "/clips",
+      },
       foundAnimal: {
         title: "Found an Animal?",
         link: "/found-animal",
