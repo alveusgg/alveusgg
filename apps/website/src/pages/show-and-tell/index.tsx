@@ -45,7 +45,6 @@ import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgres
 import alveusLogo from "@/assets/logo.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
-import { CommunityMap } from "@/components/show-and-tell/CommunityMap";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -408,11 +407,6 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           alt=""
           className="mx-auto w-full max-w-md p-4 pb-16 md:mx-0 md:w-2/5 md:pb-4"
         />
-
-        <div className="mb-4 w-full">
-          {/* Drop some more info like "X locations shared accross Y countries" */}
-          <CommunityMap />
-        </div>
       </Section>
 
       {/* Grow the last section to cover the page */}

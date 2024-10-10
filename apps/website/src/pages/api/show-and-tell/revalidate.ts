@@ -18,6 +18,8 @@ export default async function handler(
   try {
     // revalidate index page
     await res.revalidate("/show-and-tell");
+    // revalidate map page
+    await res.revalidate("/show-and-tell/map");
 
     return res.json({ revalidated: true });
   } catch (err) {

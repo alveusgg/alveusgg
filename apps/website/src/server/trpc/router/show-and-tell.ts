@@ -154,21 +154,4 @@ export const showAndTellRouter = router({
         fileStorageObjectId: fileStorageObject.id,
       };
     }),
-
-  communityMapData: publicProcedure.query(async () => {
-    const features = await getMapFeatures();
-    const locations = features.map(({ location }) => location);
-    const countries = locations.map((location) =>
-      location
-        ?.substring(location.lastIndexOf(",") + 1)
-        .trim()
-        .toUpperCase(),
-    );
-
-    return {
-      features,
-      uniqueLocationsCount: countUnique(locations),
-      uniqueCountriesCount: countUnique(countries),
-    };
-  }),
 });
