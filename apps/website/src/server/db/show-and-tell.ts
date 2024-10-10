@@ -1,5 +1,13 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import type {
+  FileStorageObject,
+  ImageAttachment,
+  ImageMetadata,
+  LinkAttachment,
+  ShowAndTellEntry as ShowAndTellEntryModel,
+  ShowAndTellEntryAttachment,
+} from "@prisma/client";
 
 import { env } from "@/env";
 
@@ -16,6 +24,37 @@ import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-s
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+
+export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
+  fileStorageObject:
+    | (FileStorageObject & { imageMetadata: ImageMetadata | null })
+    | null;
+};
+
+export type FullShowAndTellEntryAttachment = ShowAndTellEntryAttachment & {
+  linkAttachment: LinkAttachment | null;
+  imageAttachment: ImageAttachmentWithFileStorageObject | null;
+};
+
+export type ShowAndTellEntryAttachments = Array<FullShowAndTellEntryAttachment>;
+
+export type PublicShowAndTellEntry = Pick<
+  ShowAndTellEntryModel,
+  | "id"
+  | "displayName"
+  | "title"
+  | "text"
+  | "createdAt"
+  | "updatedAt"
+  | "approvedAt"
+  | "seenOnStream"
+  | "volunteeringMinutes"
+  | "location"
+>;
+
+export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
+  attachments: ShowAndTellEntryAttachments;
+};
 
 export const withAttachments = {
   include: {
@@ -96,6 +135,9 @@ const showAndTellSharedInputSchema = z.object({
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),
+  location: z.string().max(MAX_TEXT_HTML_LENGTH), // FIXME: There's no way I need 1000 chars for this
+  longitude: z.number().nullable(),
+  latitude: z.number().nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -205,6 +247,9 @@ export async function createPost(
       text,
       volunteeringMinutes: input.volunteeringMinutes,
       attachments: { create: [...newImages, ...newVideos] },
+      location: input.location,
+      longitude: input.longitude,
+      latitude: input.latitude,
     },
   });
   await revalidateCache(res.id);
@@ -252,6 +297,7 @@ export async function getPosts({
       updatedAt: true,
       approvedAt: true,
       attachments: withAttachments.include.attachments,
+      location: true,
     },
     orderBy: [...postOrderBy],
     cursor: cursor ? { id: cursor } : undefined,
@@ -380,6 +426,9 @@ export async function updatePost(
           // Create attachments that are in the creation list
           create: [...newImages, ...newVideos],
         },
+        location: input.location,
+        longitude: input.longitude,
+        latitude: input.latitude,
       },
     }),
     // Update image attachments that are in the update list
