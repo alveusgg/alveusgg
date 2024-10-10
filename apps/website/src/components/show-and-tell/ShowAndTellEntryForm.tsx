@@ -1,7 +1,11 @@
 import { type FormEvent, useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import type { ShowAndTellEntry } from "@prisma/client";
 
-import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
+import type {
+  ShowAndTellEntryAttachments,
+  ShowAndTellSubmitInput,
+} from "@/server/db/show-and-tell";
 
 import {
   MAX_IMAGES,
@@ -21,7 +25,6 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
 import useFileUpload from "@/hooks/files/upload";
 
-import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
 import { RichTextField } from "../shared/form/RichTextField";
@@ -44,7 +47,7 @@ import { MapPickerField } from "../shared/form/MapPickerField";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
-  entry?: ShowAndTellEntryWithAttachments;
+  entry?: ShowAndTellEntry & { attachments: ShowAndTellEntryAttachments };
   action: "review" | "create" | "update";
   onUpdate?: () => void;
 };

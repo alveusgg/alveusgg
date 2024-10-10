@@ -1,5 +1,13 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import type {
+  FileStorageObject,
+  ImageAttachment,
+  ImageMetadata,
+  LinkAttachment,
+  ShowAndTellEntry as ShowAndTellEntryModel,
+  ShowAndTellEntryAttachment,
+} from "@prisma/client";
 
 import { env } from "@/env";
 
@@ -16,6 +24,37 @@ import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-s
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+
+export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
+  fileStorageObject:
+    | (FileStorageObject & { imageMetadata: ImageMetadata | null })
+    | null;
+};
+
+export type FullShowAndTellEntryAttachment = ShowAndTellEntryAttachment & {
+  linkAttachment: LinkAttachment | null;
+  imageAttachment: ImageAttachmentWithFileStorageObject | null;
+};
+
+export type ShowAndTellEntryAttachments = Array<FullShowAndTellEntryAttachment>;
+
+export type PublicShowAndTellEntry = Pick<
+  ShowAndTellEntryModel,
+  | "id"
+  | "displayName"
+  | "title"
+  | "text"
+  | "createdAt"
+  | "updatedAt"
+  | "approvedAt"
+  | "seenOnStream"
+  | "volunteeringMinutes"
+  | "location"
+>;
+
+export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
+  attachments: ShowAndTellEntryAttachments;
+};
 
 export const withAttachments = {
   include: {

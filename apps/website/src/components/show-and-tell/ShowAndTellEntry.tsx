@@ -6,14 +6,6 @@ import {
   useMemo,
   useRef,
 } from "react";
-import type {
-  FileStorageObject,
-  ImageAttachment,
-  ImageMetadata,
-  LinkAttachment,
-  ShowAndTellEntry as ShowAndTellEntryModel,
-  ShowAndTellEntryAttachment,
-} from "@prisma/client";
 import Image from "next/image";
 import parse, {
   domToReact,
@@ -28,6 +20,8 @@ import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
+import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
+
 import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
@@ -35,37 +29,8 @@ import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge"
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
 
-export type ShowAndTellEntryWithAttachments = Pick<
-  ShowAndTellEntryModel,
-  | "id"
-  | "displayName"
-  | "title"
-  | "text"
-  | "createdAt"
-  | "updatedAt"
-  | "approvedAt"
-  | "seenOnStream"
-  | "volunteeringMinutes"
-  | "location"
-  | "longitude"
-  | "latitude"
-> & {
-  attachments: Array<
-    ShowAndTellEntryAttachment & {
-      linkAttachment: LinkAttachment | null;
-      imageAttachment:
-        | (ImageAttachment & {
-            fileStorageObject:
-              | (FileStorageObject & { imageMetadata: ImageMetadata | null })
-              | null;
-          })
-        | null;
-    }
-  >;
-};
-
 type ShowAndTellEntryProps = {
-  entry: ShowAndTellEntryWithAttachments;
+  entry: PublicShowAndTellEntryWithAttachments;
   isPresentationView: boolean;
   showPermalink?: boolean;
 };
