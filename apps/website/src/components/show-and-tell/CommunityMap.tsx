@@ -8,12 +8,14 @@ import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 import { trpc } from "@/utils/trpc";
+import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
-import Heading from "../content/Heading";
+
+import config from "../../../tailwind.config";
+
 import { Button } from "../shared/form/Button";
 import { ModalDialog } from "../shared/ModalDialog";
-import config from "../../../tailwind.config";
-import Section from "../content/Section";
+import Heading from "../content/Heading";
 
 export const CommunityMap = () => {
   const [showMap, setShowMap] = useState(false);
@@ -118,7 +120,7 @@ export const CommunityMap = () => {
     setShowMap(!showMap);
   };
 
-  const { data } = trpc.adminShowAndTell.getEntry.useQuery(
+  const entryQuery = trpc.showAndTell.getEntry.useQuery(
     String(selectedMarkerId),
     {
       enabled: !!selectedMarkerId,
@@ -158,11 +160,20 @@ export const CommunityMap = () => {
             isOpen={!!selectedMarkerId}
             closeModal={() => setSelectedMarkerId(null)}
           >
-            <Section>
-              {data && (
-                <ShowAndTellEntry entry={data} isPresentationView={false} />
+            <div className="container min-h-[70vh] min-w-[70vw]">
+              {entryQuery.error && (
+                <MessageBox variant="failure">
+                  Failed to load Show and Tell entry!
+                </MessageBox>
               )}
-            </Section>
+              {entryQuery.isLoading && <p>Loading...</p>}
+              {entryQuery.data && (
+                <ShowAndTellEntry
+                  entry={entryQuery.data}
+                  isPresentationView={false}
+                />
+              )}
+            </div>
           </ModalDialog>
         </div>
       )}

@@ -256,21 +256,25 @@ export async function createPost(
   return res;
 }
 
-export async function getPostById(
-  id: string,
-  authorUserId?: string,
-  filter?: "published",
-) {
+export async function getPublicPostById(id: string) {
+  return prisma.showAndTellEntry.findFirst({
+    include: {
+      ...withAttachments.include,
+    },
+    where: {
+      ...whereApproved,
+      id,
+    },
+  });
+}
+
+export async function getPostWithUserById(id: string, authorUserId?: string) {
   return prisma.showAndTellEntry.findFirst({
     include: {
       ...withAttachments.include,
       user: true,
     },
     where: {
-      approvedAt:
-        filter === "published"
-          ? { gte: prisma.showAndTellEntry.fields.updatedAt }
-          : undefined,
       userId: authorUserId,
       id,
     },
@@ -515,7 +519,7 @@ export async function unmarkPostAsSeen(id: string) {
 }
 
 export async function deletePost(id: string, authorUserId?: string) {
-  const post = await getPostById(id, authorUserId);
+  const post = await getPostWithUserById(id, authorUserId);
   if (!post) return false;
 
   await Promise.allSettled([
