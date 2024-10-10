@@ -50,6 +50,7 @@ export const reverseSearch = async (lat: number, lon: number) => {
   url.searchParams.append("lat", String(lat));
   url.searchParams.append("lon", String(lon));
   url.searchParams.append("addressdetails", "1");
+  url.searchParams.append("accept-language", "en-US,en");
 
   const response = await fetch(url, {
     method: "GET",
@@ -112,6 +113,7 @@ const forwardGeocode = async (
     url.searchParams.append("format", "geojson");
     url.searchParams.append("polygon_geoData", "1");
     url.searchParams.append("addressdetails", "1");
+    url.searchParams.append("accept-language", "en-US,en");
 
     const response = await fetch(url);
     const geoData = await response.json();
@@ -157,6 +159,7 @@ const reverseGeocode = async (
     url.searchParams.append("lat", String(lat));
     url.searchParams.append("lon", String(lon));
     url.searchParams.append("addressdetails", "1");
+    url.searchParams.append("accept-language", "en-US,en");
 
     const response = await fetch(url);
     const geoData = await response.json();
