@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Map, Marker, Popup } from "maplibre-gl";
+import { Map, Marker } from "maplibre-gl";
 import type {
   LocationFeature,
   LocationResponse,

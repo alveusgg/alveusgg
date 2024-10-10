@@ -258,23 +258,21 @@ export const MapPickerField = ({
           {textToShow}
         </CheckboxField>
 
-        {
-          <div className="flex items-center">
-            <IconWorld className="h-6 w-6"></IconWorld>
-            {showMap && postLocation.location
-              ? postLocation.location
-              : "No post location set"}
-            {showMap && postLocation.location && (
-              <button
-                className="px-2"
-                type="button"
-                onClick={handleLocationClear}
-              >
-                <IconX className="h-6 w-6" />
-              </button>
-            )}
-          </div>
-        }
+        <div className="flex items-center">
+          <IconWorld className="h-6 w-6"></IconWorld>
+          {showMap && postLocation.location
+            ? postLocation.location
+            : "No post location set"}
+          {showMap && postLocation.location && (
+            <button
+              className="px-2"
+              type="button"
+              onClick={handleLocationClear}
+            >
+              <IconX className="h-6 w-6" />
+            </button>
+          )}
+        </div>
       </div>
       {showMap && (
         <div className="h-[500px] w-full overflow-hidden rounded-lg">
