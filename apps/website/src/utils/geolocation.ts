@@ -5,6 +5,9 @@ import type {
   MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
 import { type Map, Marker } from "maplibre-gl";
+
+import { env } from "@/env";
+
 import config from "../../tailwind.config";
 
 type Address = {
@@ -51,8 +54,8 @@ export const reverseSearch = async (lat: number, lon: number) => {
   const response = await fetch(url, {
     method: "GET",
     headers: {
-      "User-Agent": "OSS dev (fooji23@proton.me)",
-      Referer: "http://localhost:3000",
+      "User-Agent": "alveus.gg",
+      Referer: env.NEXT_PUBLIC_BASE_URL,
     },
   });
   if (response.ok) {
