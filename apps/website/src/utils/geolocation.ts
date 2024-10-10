@@ -42,8 +42,13 @@ export const roundCoord = (coord: number, precision: number) => {
  * @returns Place name or empty string if it can't find it.
  */
 export const reverseSearch = async (lat: number, lon: number) => {
-  const request = `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lon}&addressdetails=1`;
-  const response = await fetch(request, {
+  const url = new URL("https://nominatim.openstreetmap.org/reverse");
+  url.searchParams.append("format", "geojson");
+  url.searchParams.append("lat", String(lat));
+  url.searchParams.append("lon", String(lon));
+  url.searchParams.append("addressdetails", "1");
+
+  const response = await fetch(url, {
     method: "GET",
     headers: {
       "User-Agent": "OSS dev (fooji23@proton.me)",
@@ -99,8 +104,13 @@ const forwardGeocode = async (
 ): Promise<MaplibreGeocoderFeatureResults> => {
   const features: CarmenGeojsonFeature[] = [];
   try {
-    const request = `https://nominatim.openstreetmap.org/search?q=${config.query}&format=geojson&polygon_geoData=1&addressdetails=1`;
-    const response = await fetch(request);
+    const url = new URL("https://nominatim.openstreetmap.org/search");
+    url.searchParams.append("q", String(config.query));
+    url.searchParams.append("format", "geojson");
+    url.searchParams.append("polygon_geoData", "1");
+    url.searchParams.append("addressdetails", "1");
+
+    const response = await fetch(url);
     const geoData = await response.json();
 
     for (const feature of geoData.features) {
@@ -139,8 +149,13 @@ const reverseGeocode = async (
     const lon = config.query[0] as number;
     const lat = config.query[1] as number;
 
-    const request = `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${lat}&lon=${lon}&addressdetails=1`;
-    const response = await fetch(request);
+    const url = new URL("https://nominatim.openstreetmap.org/reverse");
+    url.searchParams.append("format", "geojson");
+    url.searchParams.append("lat", String(lat));
+    url.searchParams.append("lon", String(lon));
+    url.searchParams.append("addressdetails", "1");
+
+    const response = await fetch(url);
     const geoData = await response.json();
 
     if (geoData && geoData.features) {
