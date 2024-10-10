@@ -33,6 +33,7 @@
     "@alveusgg/data": "github:alveusgg/data#0.41.0",
     "@aws-sdk/client-s3": "^3.503.1",
     "@aws-sdk/s3-request-presigner": "^3.503.1",
+    "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
     "@fontsource/pt-sans": "^5.0.8",
     "@headlessui/react": "^1.7.18",
     "@maplibre/maplibre-gl-geocoder": "^1.7.0",

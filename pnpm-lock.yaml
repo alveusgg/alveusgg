@@ -92,6 +92,9 @@ importers:
       '@aws-sdk/s3-request-presigner':
         specifier: ^3.503.1
         version: 3.503.1
+      '@bart-krakowski/get-week-info-polyfill':
+        specifier: ^1.0.8
+        version: 1.0.8
       '@fontsource/pt-sans':
         specifier: ^5.0.8
         version: 5.0.8
@@ -1054,6 +1057,10 @@ packages:
     engines: {node: '>=6.9.0'}
     dependencies:
       regenerator-runtime: 0.14.1
+
+  /@bart-krakowski/get-week-info-polyfill@1.0.8:
+    resolution: {integrity: sha512-Vkp5Skl44AkQ/w+pJ1XrCa5P5whvpK7Ix75KBoZXpGXOEp6CqLVkcAQaWfzY6+rF1R+2cwvJMkxkYF3M4B8HFw==}
+    dev: false
 
   /@corex/deepmerge@4.0.43:
     resolution: {integrity: sha512-N8uEMrMPL0cu/bdboEWpQYb/0i2K5Qn8eCsxzOmxSggJbbQte7ljMRoXm917AbntqTGOzdTu+vP3KOOzoC70HQ==}

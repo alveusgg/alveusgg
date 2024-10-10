@@ -8,6 +8,7 @@ import {
 
 import { Transition } from "@headlessui/react";
 import { DateTime } from "luxon";
+import "@bart-krakowski/get-week-info-polyfill";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
@@ -293,7 +294,13 @@ export function Calendar({
 
   if (!today || !selectedDateTime) return null;
 
-  const startDay = 1; // 1 = Monday, 7 = Sunday
+  const locale = new Intl.Locale(
+    Intl.DateTimeFormat().resolvedOptions().locale,
+  );
+  // Get first day of the week based on Locale.
+  // Defaults to 7 if getWeekInfo is not supported.
+  // 1 = Monday, 7 = Sunday.
+  const startDay = locale.getWeekInfo?.()?.firstDay ?? 7;
   const startOffset = (7 + selectedDateTime.weekday - startDay) % 7; // Luxon uses 1-based days
   const weeks = Math.ceil((startOffset + daysInMonth!) / 7);
 
