@@ -17,6 +17,8 @@ import { Button } from "../shared/form/Button";
 import { ModalDialog } from "../shared/ModalDialog";
 import Heading from "../content/Heading";
 
+const MAX_ZOOM = 8;
+
 export const CommunityMap = () => {
   const [showMap, setShowMap] = useState(false);
   const [locations, setLocations] = useState<LocationResponse["features"]>([]);
@@ -28,8 +30,6 @@ export const CommunityMap = () => {
 
   // To show post info on marker click
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
-
-  const MAX_ZOOM = 10; // Totally arbitrary, I think this level of zoom looks good.
 
   useEffect(() => {
     const fetchLocations = async () => {
