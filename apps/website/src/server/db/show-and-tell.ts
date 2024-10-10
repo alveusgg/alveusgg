@@ -551,3 +551,26 @@ export async function getPostsToShow() {
 
   return postsToShow;
 }
+
+export type LocationFeature = {
+  id: string;
+  location: string;
+  latitude: number;
+  longitude: number;
+};
+
+export async function getMapFeatures() {
+  return (await prisma.showAndTellEntry.findMany({
+    where: {
+      ...whereApproved,
+      longitude: { not: null },
+      latitude: { not: null },
+    },
+    select: {
+      id: true,
+      location: true,
+      latitude: true,
+      longitude: true,
+    },
+  })) as LocationFeature[];
+}

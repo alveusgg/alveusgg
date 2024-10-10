@@ -1,15 +1,13 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Map, Marker } from "maplibre-gl";
-import type {
-  LocationFeature,
-  LocationResponse,
-} from "@/pages/api/show-and-tell/locations";
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
+
 import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
+import type { LocationFeature } from "@/server/db/show-and-tell";
 
 import config from "../../../tailwind.config";
 
@@ -20,43 +18,38 @@ import Heading from "../content/Heading";
 const MAX_ZOOM = 8;
 
 export const CommunityMap = () => {
+  const communityMapData = trpc.showAndTell.communityMapData.useQuery();
   const [showMap, setShowMap] = useState(false);
-  const [locations, setLocations] = useState<LocationResponse["features"]>([]);
-
-  // Some fast, easy to digest data
-  const [uniqueLocationsCount, setUniqueLocationsCount] = useState(0);
-  const [uniqueCountriesCount, setUniqueCountriesCount] = useState(0);
-  const [isCalculatingData, setIsCalculatingData] = useState(true);
 
   // To show post info on marker click
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchLocations = async () => {
-      const response = await fetch("/api/show-and-tell/locations");
-      if (response.ok) {
-        const data = await response.json();
-        setLocations(data.features);
+  const features = communityMapData.data?.features;
 
-        const uniqueLocations = new Set(
-          data.features.map((l: LocationFeature) => l.properties.location),
-        );
-        setUniqueLocationsCount(uniqueLocations.size);
+  const mapRef = useRef<Map | null>(null);
 
-        const uniqueCountries = new Set(
-          data.features.map((l: LocationFeature) => {
-            return l.properties.location
-              ?.substring(l.properties.location.lastIndexOf(",") + 1)
-              .trim()
-              .toUpperCase();
-          }),
-        );
-        setUniqueCountriesCount(uniqueCountries.size);
-      }
-      setIsCalculatingData(false);
-    };
-    fetchLocations();
-  }, []);
+  const renderFeaturesOnMap = useCallback(
+    (features?: Array<LocationFeature>) => {
+      const map = mapRef.current;
+      if (!map || !features) return;
+
+      features?.forEach((feature) => {
+        // Marker on hover popout S&T entry post relevant info (entry.displayName from entry.location)
+        const marker = new Marker({
+          color: config.theme.colors["alveus-green"].DEFAULT,
+          draggable: false,
+        })
+          .setLngLat([feature.longitude, feature.latitude])
+          .addTo(map);
+
+        marker.getElement().setAttribute("data-id", feature.id);
+        marker
+          .getElement()
+          .addEventListener("click", () => setSelectedMarkerId(feature.id));
+      });
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!showMap) return;
@@ -97,26 +90,19 @@ export const CommunityMap = () => {
     // TODO: fullscreen eats ram and cpu cores for breakfast and messes with the fullscreen option of the posts, gotta tinker a bit.
     // .addControl(new FullscreenControl());
 
-    locations.forEach((p: LocationFeature) => {
-      // Marker on hover popout S&T entry post relevant info (entry.displayName from entry.location)
-      const marker = new Marker({
-        color: config.theme.colors["alveus-green"].DEFAULT,
-        draggable: false,
-      })
-        .setLngLat([p.geometry.coordinates[0], p.geometry.coordinates[1]])
-        .addTo(map);
+    mapRef.current = map;
 
-      marker.getElement().setAttribute("data-id", p.properties.id);
-      marker
-        .getElement()
-        .addEventListener("click", () => setSelectedMarkerId(p.properties.id));
-    });
+    renderFeaturesOnMap(features);
 
     // Clean up on component unmount
     return () => {
       map.remove();
     };
-  }, [showMap, locations]);
+  }, [features, renderFeaturesOnMap, showMap]);
+
+  useEffect(() => {
+    renderFeaturesOnMap(features);
+  }, [features, renderFeaturesOnMap]);
 
   const handleButtonClick = () => {
     setShowMap(!showMap);
@@ -135,15 +121,14 @@ export const CommunityMap = () => {
         <Heading>Community Map</Heading>
         <p className="pb-4 text-lg">Reaching every part of the Globe!</p>
 
-        {!isCalculatingData &&
-          uniqueLocationsCount > 0 &&
-          uniqueCountriesCount > 0 && (
-            <p className="pb-4">
-              A total of {locations.length} locations have been shared,
-              including {uniqueLocationsCount} unique locations across{" "}
-              {uniqueCountriesCount} countries.
-            </p>
-          )}
+        {communityMapData.data && (
+          <p className="pb-4">
+            A total of {communityMapData.data.features.length} locations have
+            been shared, including {communityMapData.data.uniqueLocationsCount}{" "}
+            unique locations across {communityMapData.data.uniqueCountriesCount}{" "}
+            countries.
+          </p>
+        )}
       </div>
       <Button onClick={handleButtonClick}>
         {showMap ? "Hide map" : "Show map"}

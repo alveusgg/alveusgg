@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+
 import {
   createFileStorageUpload,
   deleteFileStorageObject,
@@ -9,7 +10,6 @@ import {
   publicProcedure,
   router,
 } from "@/server/trpc/trpc";
-
 import {
   createPost,
   deletePost,
@@ -17,6 +17,7 @@ import {
   getPostWithUserById,
   getPosts,
   getVolunteeringMinutes,
+  getMapFeatures,
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
@@ -25,6 +26,7 @@ import {
 import { imageMimeTypes } from "@/utils/files";
 import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
+import { countUnique } from "@/utils/array";
 
 const uploadPrefix = "show-and-tell/";
 
@@ -152,4 +154,21 @@ export const showAndTellRouter = router({
         fileStorageObjectId: fileStorageObject.id,
       };
     }),
+
+  communityMapData: publicProcedure.query(async () => {
+    const features = await getMapFeatures();
+    const locations = features.map(({ location }) => location);
+    const countries = locations.map((location) =>
+      location
+        ?.substring(location.lastIndexOf(",") + 1)
+        .trim()
+        .toUpperCase(),
+    );
+
+    return {
+      features,
+      uniqueLocationsCount: countUnique(locations),
+      uniqueCountriesCount: countUnique(countries),
+    };
+  }),
 });
