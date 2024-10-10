@@ -156,6 +156,8 @@ export const MapPickerField = ({
           "raster-tiles": {
             type: "raster",
             tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            attribution:
+              "© OpenStreetMap contributors - Open Database License",
             tileSize: 256,
             minzoom: minZoom,
             maxzoom: maxZoom < 24 ? maxZoom + 1 : maxZoom, // We add one level of rendering zoom so the text is crisp when zooming in.

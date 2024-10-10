@@ -72,6 +72,8 @@ export const CommunityMap = () => {
           "raster-tiles": {
             type: "raster",
             tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+            attribution:
+              "© OpenStreetMap contributors - Open Database License",
             tileSize: 256,
             minzoom: 0,
             maxzoom: MAX_ZOOM + 1,
