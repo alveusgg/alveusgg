@@ -17,7 +17,6 @@ import {
   getPostWithUserById,
   getPosts,
   getVolunteeringMinutes,
-  getMapFeatures,
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
@@ -26,7 +25,6 @@ import {
 import { imageMimeTypes } from "@/utils/files";
 import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
-import { countUnique } from "@/utils/array";
 
 const uploadPrefix = "show-and-tell/";
 
