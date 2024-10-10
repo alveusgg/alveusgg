@@ -172,9 +172,9 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
-      location: postLocation?.location as string,
-      latitude: postLocation?.latitude,
-      longitude: postLocation?.longitude,
+      location: postLocation?.location ?? "",
+      latitude: postLocation?.latitude ?? null,
+      longitude: postLocation?.longitude ?? null,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
