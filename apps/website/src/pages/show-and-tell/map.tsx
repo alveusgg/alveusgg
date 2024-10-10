@@ -34,6 +34,7 @@ export const getStaticProps = async () => {
   return {
     props: {
       features,
+      totalLocationsCount: locations.length,
       uniqueLocationsCount: countUnique(locations),
       uniqueCountriesCount: countUnique(countries),
       totalPostsCount,
@@ -44,11 +45,12 @@ export const getStaticProps = async () => {
 
 const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
   features,
+  totalLocationsCount,
   uniqueLocationsCount,
   uniqueCountriesCount,
 }) => {
   // Format the stats
-  const totalFeaturesCountFmt = useLocaleString(features.length);
+  const totalFeaturesCountFmt = useLocaleString(totalLocationsCount);
   const uniqueLocationsCountFmt = useLocaleString(uniqueLocationsCount);
   const uniqueCountriesCountFmt = useLocaleString(uniqueCountriesCount);
 

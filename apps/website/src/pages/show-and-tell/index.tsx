@@ -8,12 +8,15 @@ import {
   type KeyboardEventHandler,
 } from "react";
 import type { InferGetStaticPropsType, NextPage } from "next";
+import NextLink from "next/link";
 import Image from "next/image";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
+import { countUnique } from "@/utils/array";
 import { trpc } from "@/utils/trpc";
 import {
+  getMapFeatures,
   getPosts,
   getPostsCount,
   getPostsToShow,
@@ -29,7 +32,9 @@ import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
+import IconArrowRight from "@/icons/IconArrowRight";
 import IconPencil from "@/icons/IconPencil";
+import IconGlobe from "@/icons/IconGlobe";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
@@ -45,12 +50,19 @@ import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgres
 import alveusLogo from "@/assets/logo.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import mapImage from "@/assets/show-and-tell/map.jpg";
+import IconUserGroup from "@/icons/IconUserGroup";
+import IconMapPin from "@/icons/IconMapPin";
+import { classes } from "@/utils/classes";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
 >;
 
 const entriesPerPage = 10;
+
+const bentoBoxClasses =
+  "rounded-xl bg-alveus-green-600 text-center text-white shadow-lg shadow-black/30 flex flex-col justify-center gap-2 overflow-hidden";
 
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
@@ -66,6 +78,14 @@ export const getStaticProps = async () => {
   const usersCount = await getUsersCount();
   const postsToShowCount = await getPostsToShow();
 
+  const locations = (await getMapFeatures()).map(({ location }) => location);
+  const countries = locations.map((location) =>
+    location
+      ?.substring(location.lastIndexOf(",") + 1)
+      .trim()
+      .toUpperCase(),
+  );
+
   return {
     props: {
       entries,
@@ -73,6 +93,8 @@ export const getStaticProps = async () => {
       totalPostsCount,
       postsToShowCount,
       usersCount,
+      uniqueLocationsCount: countUnique(locations),
+      uniqueCountriesCount: countUnique(countries),
     },
   };
 };
@@ -89,6 +111,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   totalPostsCount,
   postsToShowCount,
   usersCount,
+  uniqueLocationsCount,
+  uniqueCountriesCount,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
     {},
@@ -105,6 +129,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   // Format the stats
   const totalPostsCountFmt = useLocaleString(totalPostsCount);
   const usersCountFmt = useLocaleString(usersCount);
+  const uniqueLocationsCountFmt = useLocaleString(uniqueLocationsCount);
+  const uniqueCountriesCountFmt = useLocaleString(uniqueCountriesCount);
 
   const [isPresentationView, setIsPresentationView] = useState(false);
   const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
@@ -364,49 +390,95 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         className="py-0"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="w-full pb-4 pt-8 md:w-3/5 md:py-24">
+        <div className="w-full pb-4 pt-8 md:w-3/5 md:py-20">
           <Heading>Show and Tell</Heading>
           <p className="text-lg">
-            See what the Alveus community has been up to as they share their
-            conservation and wildlife-related activities.
-          </p>
-
-          <p className="text-lg">
-            Been up to something yourself? Share your own activities via the{" "}
+            The community shares conservation and wildlife-related activities —
+            Share your own via the{" "}
             <Link href="/show-and-tell/submit-post" dark>
               submission page
             </Link>
             .
           </p>
-
-          <p className="mt-8">
-            {usersCountFmt} members of the Alveus community have shared their
-            activities with {totalPostsCountFmt} posts.
-          </p>
-
-          <p className="mt-8">
-            As a community, we&apos;re tracking the hours we spend giving back
-            to the planet, originally as part of WWF&apos;s{" "}
-            <Link
-              href="/show-and-tell/give-an-hour"
-              dark
-              className="whitespace-nowrap"
-            >
-              Give an Hour
-            </Link>{" "}
-            initiative.
-          </p>
-          <div className="mt-2">
-            <GiveAnHourProgress />
-          </div>
         </div>
 
         <Image
           src={showAndTellPeepo}
           width={448}
           alt=""
-          className="mx-auto w-full max-w-md p-4 pb-16 md:mx-0 md:w-2/5 md:pb-4"
+          className="mx-auto w-1/2 max-w-md p-4 pb-16 md:mx-0 md:w-1/4 md:pb-4"
         />
+      </Section>
+
+      <Section className="py-6 md:py-12">
+        <div className="grid-rows-3-auto md:grid-rows-2-auto grid w-full grid-cols-4 gap-4 md:grid-cols-6">
+          <NextLink
+            href="/show-and-tell/map"
+            className={classes(
+              bentoBoxClasses,
+              "group col-span-4 col-start-1 row-start-3 grid grid-cols-1 text-lg transition-transform duration-200 hover:scale-102 md:col-span-2 md:row-span-2",
+            )}
+          >
+            <Image
+              src={mapImage}
+              className="col-start-1 row-start-1 h-full max-h-24 rounded-xl border-4 border-alveus-green-600 object-cover opacity-80 transition-opacity duration-200 group-hover:opacity-90 md:max-h-full"
+              alt=""
+            />
+            <div className="relative col-start-1 row-start-1 flex flex-col items-end justify-end">
+              <div className="flex items-center justify-end gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white">
+                Explore the map
+                <IconArrowRight className="h-8 w-8" />
+              </div>
+            </div>
+          </NextLink>
+          <div
+            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+          >
+            <IconUserGroup className="h-10 w-10" />
+            {usersCountFmt} members
+          </div>
+          <div
+            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+          >
+            <IconPencil className="h-10 w-10" />
+            {totalPostsCountFmt} posts
+          </div>
+          <div
+            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+          >
+            <IconMapPin className="h-10 w-10" />
+            {uniqueLocationsCountFmt} locations
+          </div>
+          <div
+            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+          >
+            <IconGlobe className="h-10 w-10" />
+            {uniqueCountriesCountFmt} countries
+          </div>
+
+          <div
+            className={classes(
+              bentoBoxClasses,
+              "col-start-1 col-end-5 row-start-2 p-4 md:col-start-3 md:col-end-7",
+            )}
+          >
+            <p className="text-left md:text-center">
+              We&apos;re tracking hours spent giving back to the planet,
+              originally as part of WWF&apos;s{" "}
+              <Link
+                href="/show-and-tell/give-an-hour"
+                className="whitespace-nowrap"
+                dark
+              >
+                Give an Hour
+              </Link>{" "}
+              initiative.
+            </p>
+            <div className="mt-2">
+              <GiveAnHourProgress />
+            </div>
+          </div>
+        </div>
       </Section>
 
       {/* Grow the last section to cover the page */}

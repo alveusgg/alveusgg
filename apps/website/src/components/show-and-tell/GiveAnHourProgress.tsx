@@ -30,17 +30,15 @@ const GiveAnHourProgressText = ({
   const localeTarget = useLocaleHours(target, showDays);
 
   return (
-    <div className="flex justify-between px-2">
-      <p className="text-md font-semibold text-alveus-tan">
+    <div className="text-md flex justify-between px-2 ">
+      <p className="font-semibold">
         {isLoading
           ? "Loading hours given…"
           : hours === 0
             ? "No hours given yet"
             : `${localeHours} already given`}
       </p>
-      <p className="text-md font-medium text-alveus-tan opacity-75">
-        {localeTarget} target
-      </p>
+      <p className="font-medium opacity-75">{localeTarget} target</p>
     </div>
   );
 };
