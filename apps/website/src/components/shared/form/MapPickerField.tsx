@@ -154,8 +154,8 @@ export const MapPickerField = ({
         ? [initialLocation.longitude, initialLocation.latitude]
         : [0, 0],
       zoom: initialZoom,
-      minZoom: minZoom,
-      maxZoom: maxZoom < 24 ? maxZoom + 1 : maxZoom, // We add one level of rendering zoom so the text is crisp when zooming in.
+      minZoom,
+      maxZoom,
       antialias,
     })
       .addControl(
@@ -197,13 +197,7 @@ export const MapPickerField = ({
       })
       // To avoid setting post location on mouse Dragging.
       .on("dragstart", () => (isDraggingRef.current = true))
-      .on("dragend", () => (isDraggingRef.current = false))
-      .on("zoom", () => {
-        // I don't like this solution, but the ScrollZoomHandler doesn't have this functionality.
-        if (map.getZoom() > maxZoom!) {
-          map.setZoom(maxZoom!);
-        }
-      });
+      .on("dragend", () => (isDraggingRef.current = false));
 
     if (map) {
       mapRef.current = map;
