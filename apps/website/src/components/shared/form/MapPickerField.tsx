@@ -104,7 +104,12 @@ export const MapPickerField = ({
         lon: roundCoord(lon, coordsPrecision),
       };
       if (!location) {
-        location = await reverseSearch(roundedCoords.lat, roundedCoords.lon);
+        try {
+          location = await reverseSearch(roundedCoords.lat, roundedCoords.lon);
+        } catch (e) {
+          console.error(`Failed to reverseGeocode with error: ${e}`);
+          return;
+        }
       }
 
       if (!allowMultipleMarkers && markersRef.current.length > 0) {
