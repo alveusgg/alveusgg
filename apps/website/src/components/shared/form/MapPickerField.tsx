@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
 import "maplibre-gl/dist/maplibre-gl.css"; // Actual map CSS
-import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Map searchbox CSS
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Map search box CSS
 
 import {
   geocoderApi,
@@ -17,11 +17,6 @@ import IconX from "@/icons/IconX";
 
 import config from "../../../../tailwind.config";
 import { CheckboxField } from "./CheckboxField";
-
-// TODO: when loading full data if slow then https://maplibre.org/maplibre-style-spec/layers/#icon-allow-overlap turn to true (from https://maplibre.org/maplibre-gl-js/docs/guides/large-data/#visualising-the-data)
-
-// FIXME?: some locations (like LA, San Diego or Madeira) go outside the borders when rounding coords, and they land in water next to the country or in a totally different country.
-// FIXME?: check if rounded coords are off the country and round 1 less decimal? so precision-1 and check recursively until you land on the original site? That defeats the purpose of rounding in the first place.
 
 /**
  * @param name Unique name of the element
@@ -266,6 +261,7 @@ export const MapPickerField = ({
           )}
         </div>
       </div>
+
       {showMap && (
         <div className="h-[500px] w-full overflow-hidden rounded-lg">
           <div
