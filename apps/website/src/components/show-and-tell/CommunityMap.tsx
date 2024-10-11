@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Map, Marker } from "maplibre-gl";
+import { Map, type GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
+
+import { env } from "@/env";
 
 import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import type { LocationFeature } from "@/server/db/show-and-tell";
 import mapStyle from "@/data/map-style";
-
-import config from "../../../tailwind.config";
 
 import { ModalDialog } from "../shared/ModalDialog";
 
@@ -25,22 +25,28 @@ export function CommunityMap({ features }: CommunityMapProps) {
   const mapRef = useRef<Map | null>(null);
 
   const renderFeaturesOnMap = useCallback(
-    (features?: Array<LocationFeature>) => {
+    async (features?: Array<LocationFeature>) => {
       const map = mapRef.current;
       if (!map || !features) return;
 
-      features?.forEach((feature) => {
-        // Marker on hover popout S&T entry post relevant info (entry.displayName from entry.location)
-        const marker = new Marker({
-          color: config.theme.colors["alveus-green"].DEFAULT,
-          draggable: false,
-        })
-          .setLngLat([feature.longitude, feature.latitude])
-          .addTo(map);
+      map.on("load", async () => {
+        const source = map.getSource("features") as GeoJSONSource | undefined;
+        if (!source) return;
 
-        marker
-          .getElement()
-          .addEventListener("click", () => setSelectedMarkerId(feature.id));
+        source.setData({
+          type: "FeatureCollection",
+          features: features.map((feature) => ({
+            type: "Feature",
+            properties: {
+              id: feature.id,
+              name: feature.location,
+            },
+            geometry: {
+              type: "Point",
+              coordinates: [feature.longitude, feature.latitude],
+            },
+          })),
+        });
       });
     },
     [],
@@ -55,15 +61,53 @@ export function CommunityMap({ features }: CommunityMapProps) {
       minZoom: 0,
       maxZoom: MAX_ZOOM + 1,
       antialias: true,
-    }).on("zoom", () => {
-      if (map.getZoom() > MAX_ZOOM) {
-        map.setZoom(MAX_ZOOM);
-      }
-    });
+    })
+      .on("zoom", () => {
+        if (map.getZoom() > MAX_ZOOM) {
+          map.setZoom(MAX_ZOOM);
+        }
+      })
+      .on("load", async () => {
+        map.addSource("features", {
+          type: "geojson",
+          data: {
+            type: "FeatureCollection",
+            features: [],
+          },
+        });
+
+        renderFeaturesOnMap(features);
+
+        const image = await map.loadImage(
+          env.NEXT_PUBLIC_BASE_URL + "/assets/map-pin.png",
+        );
+        map.addImage("custom-marker", image.data);
+
+        map.addLayer({
+          id: "features",
+          type: "symbol",
+          source: "features",
+          layout: {
+            "icon-image": "custom-marker",
+            "icon-allow-overlap": true,
+            "icon-size": 1,
+          },
+        });
+      })
+      .on("click", "features", (e) => {
+        const feature = e.features?.[0];
+        if (!feature) return;
+
+        setSelectedMarkerId(feature.properties.id);
+      })
+      .on("mouseenter", "features", () => {
+        map.getCanvas().style.cursor = "pointer";
+      })
+      .on("mouseleave", "features", () => {
+        map.getCanvas().style.cursor = "";
+      });
 
     mapRef.current = map;
-
-    renderFeaturesOnMap(features);
 
     // Clean up on component unmount
     return () => {
