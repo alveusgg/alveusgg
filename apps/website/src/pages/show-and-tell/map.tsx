@@ -10,6 +10,7 @@ import {
 
 import { countUnique } from "@/utils/array";
 import { classes } from "@/utils/classes";
+import { extractCountriesFromLocations } from "@/utils/locations";
 import useLocaleString from "@/hooks/locale";
 
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
@@ -36,14 +37,7 @@ const bentoBoxClasses =
 export const getStaticProps = async () => {
   const features = await getMapFeatures();
   const locations = features.map(({ location }) => location);
-  const countries = locations
-    .map((location) =>
-      location
-        ?.substring(location.lastIndexOf(",") + 1)
-        .trim()
-        .toUpperCase(),
-    )
-    .filter((country) => !["", "OTHER"].includes(country));
+  const countries = extractCountriesFromLocations(locations);
   const totalPostsCount = await getPostsCount();
   const usersCount = await getUsersCount();
 

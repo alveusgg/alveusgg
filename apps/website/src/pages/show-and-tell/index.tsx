@@ -15,6 +15,9 @@ import scrollIntoView from "smooth-scroll-into-view-if-needed";
 import { delay } from "@/utils/delay";
 import { countUnique } from "@/utils/array";
 import { trpc } from "@/utils/trpc";
+import { classes } from "@/utils/classes";
+import { extractCountriesFromLocations } from "@/utils/locations";
+
 import {
   getMapFeatures,
   getPosts,
@@ -53,7 +56,6 @@ import showAndTellHeader from "@/assets/show-and-tell/header.png";
 import mapImage from "@/assets/show-and-tell/map.jpg";
 import IconUserGroup from "@/icons/IconUserGroup";
 import IconMapPin from "@/icons/IconMapPin";
-import { classes } from "@/utils/classes";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -79,12 +81,7 @@ export const getStaticProps = async () => {
   const postsToShowCount = await getPostsToShow();
 
   const locations = (await getMapFeatures()).map(({ location }) => location);
-  const countries = locations.map((location) =>
-    location
-      ?.substring(location.lastIndexOf(",") + 1)
-      .trim()
-      .toUpperCase(),
-  );
+  const countries = extractCountriesFromLocations(locations);
 
   return {
     props: {
