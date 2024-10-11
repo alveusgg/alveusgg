@@ -254,6 +254,7 @@ export const ShowAndTellEntry = forwardRef<
       }}
       ref={handleRef}
       data-show-and-tell-entry={entry.id}
+      data-show-and-tell-author={entry.displayName}
       tabIndex={-1}
     >
       {isPresentationView && featureImageUrl && (
