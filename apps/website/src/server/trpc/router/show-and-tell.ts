@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+
 import {
   createFileStorageUpload,
   deleteFileStorageObject,
@@ -9,11 +10,11 @@ import {
   publicProcedure,
   router,
 } from "@/server/trpc/trpc";
-
 import {
   createPost,
   deletePost,
-  getPostById,
+  getPublicPostById,
+  getPostWithUserById,
   getPosts,
   getVolunteeringMinutes,
   showAndTellCreateInputSchema,
@@ -30,6 +31,10 @@ const uploadPrefix = "show-and-tell/";
 const entriesPerPage = 10;
 
 export const showAndTellRouter = router({
+  getEntry: publicProcedure
+    .input(z.string().cuid())
+    .query(({ input }) => getPublicPostById(input)),
+
   getEntries: publicProcedure
     .input(
       z.object({
@@ -86,7 +91,7 @@ export const showAndTellRouter = router({
   delete: protectedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input }) => {
-      const post = await getPostById(input, ctx.session.user.id);
+      const post = await getPostWithUserById(input, ctx.session.user.id);
       if (!post) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
       }

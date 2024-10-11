@@ -1,5 +1,13 @@
 import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import type {
+  FileStorageObject,
+  ImageAttachment,
+  ImageMetadata,
+  LinkAttachment,
+  ShowAndTellEntry as ShowAndTellEntryModel,
+  ShowAndTellEntryAttachment,
+} from "@prisma/client";
 
 import { env } from "@/env";
 
@@ -7,6 +15,7 @@ import {
   MAX_IMAGES,
   MAX_TEXT_HTML_LENGTH,
   MAX_VIDEOS,
+  MYSQL_MAX_VARCHAR_LENGTH,
 } from "@/data/show-and-tell";
 
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
@@ -16,6 +25,37 @@ import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-s
 import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+
+export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
+  fileStorageObject:
+    | (FileStorageObject & { imageMetadata: ImageMetadata | null })
+    | null;
+};
+
+export type FullShowAndTellEntryAttachment = ShowAndTellEntryAttachment & {
+  linkAttachment: LinkAttachment | null;
+  imageAttachment: ImageAttachmentWithFileStorageObject | null;
+};
+
+export type ShowAndTellEntryAttachments = Array<FullShowAndTellEntryAttachment>;
+
+export type PublicShowAndTellEntry = Pick<
+  ShowAndTellEntryModel,
+  | "id"
+  | "displayName"
+  | "title"
+  | "text"
+  | "createdAt"
+  | "updatedAt"
+  | "approvedAt"
+  | "seenOnStream"
+  | "volunteeringMinutes"
+  | "location"
+>;
+
+export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
+  attachments: ShowAndTellEntryAttachments;
+};
 
 export const withAttachments = {
   include: {
@@ -96,6 +136,9 @@ const showAndTellSharedInputSchema = z.object({
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),
+  location: z.string().max(MYSQL_MAX_VARCHAR_LENGTH).nullable(),
+  longitude: z.number().nullable(),
+  latitude: z.number().nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -205,27 +248,34 @@ export async function createPost(
       text,
       volunteeringMinutes: input.volunteeringMinutes,
       attachments: { create: [...newImages, ...newVideos] },
+      location: input.location,
+      longitude: input.longitude,
+      latitude: input.latitude,
     },
   });
   await revalidateCache(res.id);
   return res;
 }
 
-export async function getPostById(
-  id: string,
-  authorUserId?: string,
-  filter?: "published",
-) {
+export async function getPublicPostById(id: string) {
+  return prisma.showAndTellEntry.findFirst({
+    include: {
+      ...withAttachments.include,
+    },
+    where: {
+      ...whereApproved,
+      id,
+    },
+  });
+}
+
+export async function getPostWithUserById(id: string, authorUserId?: string) {
   return prisma.showAndTellEntry.findFirst({
     include: {
       ...withAttachments.include,
       user: true,
     },
     where: {
-      approvedAt:
-        filter === "published"
-          ? { gte: prisma.showAndTellEntry.fields.updatedAt }
-          : undefined,
       userId: authorUserId,
       id,
     },
@@ -252,6 +302,7 @@ export async function getPosts({
       updatedAt: true,
       approvedAt: true,
       attachments: withAttachments.include.attachments,
+      location: true,
     },
     orderBy: [...postOrderBy],
     cursor: cursor ? { id: cursor } : undefined,
@@ -380,6 +431,9 @@ export async function updatePost(
           // Create attachments that are in the creation list
           create: [...newImages, ...newVideos],
         },
+        location: input.location,
+        longitude: input.longitude,
+        latitude: input.latitude,
       },
     }),
     // Update image attachments that are in the update list
@@ -466,7 +520,7 @@ export async function unmarkPostAsSeen(id: string) {
 }
 
 export async function deletePost(id: string, authorUserId?: string) {
-  const post = await getPostById(id, authorUserId);
+  const post = await getPostWithUserById(id, authorUserId);
   if (!post) return false;
 
   await Promise.allSettled([
@@ -497,4 +551,27 @@ export async function getPostsToShow() {
   });
 
   return postsToShow;
+}
+
+export type LocationFeature = {
+  id: string;
+  location: string;
+  latitude: number;
+  longitude: number;
+};
+
+export async function getMapFeatures() {
+  return (await prisma.showAndTellEntry.findMany({
+    where: {
+      ...whereApproved,
+      longitude: { not: null },
+      latitude: { not: null },
+    },
+    select: {
+      id: true,
+      location: true,
+      latitude: true,
+      longitude: true,
+    },
+  })) as LocationFeature[];
 }

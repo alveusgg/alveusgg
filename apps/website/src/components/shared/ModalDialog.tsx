@@ -1,11 +1,13 @@
 import { Dialog } from "@headlessui/react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/shared/form/Button";
+import { classes } from "@/utils/classes";
 
 export type ModalDialogProps = {
   title: string;
   closeLabel?: string;
   children: ReactNode;
+  panelClassName?: string;
   isOpen?: boolean;
   closeModal: () => void;
 };
@@ -13,6 +15,7 @@ export type ModalDialogProps = {
 export function ModalDialog({
   title,
   children,
+  panelClassName = "max-w-md",
   closeLabel = "Okay",
   isOpen = true,
   closeModal,
@@ -23,14 +26,19 @@ export function ModalDialog({
     <Dialog
       as="div"
       open={isOpen}
-      className="relative z-10"
+      className="relative z-20"
       onClose={closeModal}
     >
       <div className="fixed inset-0 bg-black bg-opacity-25" />
 
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center">
-          <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+          <Dialog.Panel
+            className={classes(
+              "w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
+              panelClassName,
+            )}
+          >
             <Dialog.Title
               as="h3"
               className="text-lg font-medium leading-6 text-gray-900"

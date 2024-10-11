@@ -11,7 +11,7 @@ import {
   approvePost,
   removeApprovalFromPost,
   deletePost,
-  getPostById,
+  getPostWithUserById,
   markPostAsSeen,
   unmarkPostAsSeen,
   getAdminPosts,
@@ -27,7 +27,7 @@ const permittedProcedure = protectedProcedure.use(
 export const adminShowAndTellRouter = router({
   getEntry: permittedProcedure
     .input(z.string().cuid())
-    .query(({ input }) => getPostById(input)),
+    .query(({ input }) => getPostWithUserById(input)),
 
   review: permittedProcedure
     .input(showAndTellUpdateInputSchema)
@@ -56,7 +56,7 @@ export const adminShowAndTellRouter = router({
   delete: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ input }) => {
-      const post = await getPostById(input);
+      const post = await getPostWithUserById(input);
       if (!post) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
       }

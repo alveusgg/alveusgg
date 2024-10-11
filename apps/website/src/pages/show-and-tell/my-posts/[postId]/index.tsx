@@ -22,6 +22,8 @@ const EditShowAndTellPage: NextPage = () => {
   const { postId } = router.query;
   const getMyPost = trpc.showAndTell.getMyEntry.useQuery(String(postId), {
     enabled: Boolean(postId),
+    refetchOnReconnect: false,
+    refetchOnWindowFocus: false,
   });
 
   return (

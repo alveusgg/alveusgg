@@ -2,6 +2,7 @@ import type { MouseEventHandler, MutableRefObject } from "react";
 import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
+import type { LinkAttachment } from "@prisma/client";
 
 import {
   parseVideoUrl,
@@ -11,11 +12,12 @@ import {
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { createImageUrl } from "@/utils/image";
 
+import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
+
 import { useConsent } from "@/hooks/consent";
 
 import Carousel from "@/components/content/Carousel";
 import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
-import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import IconInformationCircle from "@/icons/IconInformationCircle";
 
 export function ShowAndTellGallery({
@@ -26,16 +28,8 @@ export function ShowAndTellGallery({
 }: {
   isPresentationView: boolean;
   lightboxParentRef: MutableRefObject<HTMLElement | null>;
-  imageAttachments: Array<
-    NonNullable<
-      ShowAndTellEntryWithAttachments["attachments"][number]["imageAttachment"]
-    >
-  >;
-  videoAttachments: Array<
-    NonNullable<
-      ShowAndTellEntryWithAttachments["attachments"][number]["linkAttachment"]
-    >
-  >;
+  imageAttachments: Array<ImageAttachmentWithFileStorageObject>;
+  videoAttachments: Array<LinkAttachment>;
 }) {
   const { update: updateConsent } = useConsent();
 

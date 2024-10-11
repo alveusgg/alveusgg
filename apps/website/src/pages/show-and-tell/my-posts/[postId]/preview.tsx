@@ -78,12 +78,7 @@ const PreviewShowAndTellPage: NextPage = () => {
                 {getMyPost.error.message}
               </MessageBox>
             )}
-            {getMyPost.data && (
-              <ShowAndTellEntry
-                entry={getMyPost.data}
-                isPresentationView={false}
-              />
-            )}
+            {getMyPost.data && <ShowAndTellEntry entry={getMyPost.data} />}
           </>
         )}
       </Section>

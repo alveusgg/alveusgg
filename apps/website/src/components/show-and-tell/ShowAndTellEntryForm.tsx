@@ -1,7 +1,11 @@
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import type { ShowAndTellEntry } from "@prisma/client";
 
-import type { ShowAndTellSubmitInput } from "@/server/db/show-and-tell";
+import type {
+  ShowAndTellEntryAttachments,
+  ShowAndTellSubmitInput,
+} from "@/server/db/show-and-tell";
 
 import {
   MAX_IMAGES,
@@ -21,7 +25,6 @@ import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
 import useFileUpload from "@/hooks/files/upload";
 
-import type { ShowAndTellEntryWithAttachments } from "@/components/show-and-tell/ShowAndTellEntry";
 import { Fieldset } from "../shared/form/Fieldset";
 import { TextField } from "../shared/form/TextField";
 import { RichTextField } from "../shared/form/RichTextField";
@@ -39,10 +42,12 @@ import {
   VideoLinksField,
 } from "../shared/form/VideoLinksField";
 import Link from "../content/Link";
+import type { MapLocation } from "../shared/form/MapPickerField";
+import { MapPickerField } from "../shared/form/MapPickerField";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
-  entry?: ShowAndTellEntryWithAttachments;
+  entry?: ShowAndTellEntry & { attachments: ShowAndTellEntryAttachments };
   action: "review" | "create" | "update";
   onUpdate?: () => void;
 };
@@ -101,6 +106,27 @@ export function ShowAndTellEntryForm({
     !!entry?.volunteeringMinutes,
   );
 
+  const initialLocation = useMemo<MapLocation | undefined>(
+    () =>
+      entry && entry.longitude !== null && entry.latitude !== null
+        ? {
+            latitude: entry.latitude,
+            longitude: entry.longitude,
+            location: entry.location || "",
+          }
+        : undefined,
+    [entry],
+  );
+  const [postLocation, setPostLocation] = useState<MapLocation>(
+    {} as MapLocation,
+  );
+  const handlePostLocation = useCallback(
+    (userSelectedLocation: MapLocation) => {
+      setPostLocation(userSelectedLocation);
+    },
+    [],
+  );
+
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
       () =>
@@ -146,6 +172,9 @@ export function ShowAndTellEntryForm({
       imageAttachments: { create: [], update: {} },
       videoLinks: videoLinksData.videoUrls,
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
+      location: postLocation?.location ?? "",
+      latitude: postLocation?.latitude ?? null,
+      longitude: postLocation?.longitude ?? null,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -280,6 +309,14 @@ export function ShowAndTellEntryForm({
               name="title"
               defaultValue={entry?.title}
               placeholder="What's your post about?"
+            />
+            <MapPickerField
+              name="postLocation"
+              textToShow="Add post location"
+              antialias={true}
+              maxZoom={8}
+              onLocationChange={handlePostLocation}
+              initialLocation={initialLocation}
             />
             <RichTextField
               label="Content"
