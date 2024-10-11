@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
-import { Map, type GeoJSONSource } from "maplibre-gl";
+import { Map, type GeoJSONSource, Popup } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css"; // Import the MapLibre CSS
 
 import { env } from "@/env";
@@ -14,6 +14,7 @@ import { ModalDialog } from "../shared/ModalDialog";
 import Section from "../content/Section";
 
 const MAX_ZOOM = 8;
+const TOOLTIP_MIN_ZOOM = 3;
 
 type CommunityMapProps = {
   features: Array<LocationFeature> | undefined;
@@ -54,6 +55,13 @@ export function CommunityMap({ features }: CommunityMapProps) {
   );
 
   useEffect(() => {
+    const popup = new Popup({
+      closeButton: false,
+      closeOnClick: false,
+      anchor: "left",
+      offset: [20, 0],
+    });
+
     const map = new Map({
       container: "mapVisualizerContainer",
       style: mapStyle,
@@ -96,11 +104,31 @@ export function CommunityMap({ features }: CommunityMapProps) {
 
         setSelectedMarkerId(feature.properties.id);
       })
-      .on("mouseenter", "features", () => {
+      .on("mouseenter", "features", (e) => {
         map.getCanvas().style.cursor = "pointer";
+        const feature = e.features?.[0];
+        if (!feature) return;
+
+        if (
+          feature.geometry.type === "Point" &&
+          map.getZoom() >= TOOLTIP_MIN_ZOOM
+        ) {
+          const coordinates = feature.geometry.coordinates.slice() as [
+            number,
+            number,
+          ];
+          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+          }
+          popup
+            .setLngLat(coordinates)
+            .setHTML(feature.properties.name)
+            .addTo(map);
+        }
       })
       .on("mouseleave", "features", () => {
         map.getCanvas().style.cursor = "";
+        popup.remove();
       });
 
     mapRef.current = map;
@@ -126,7 +154,7 @@ export function CommunityMap({ features }: CommunityMapProps) {
     <>
       <div
         id="mapVisualizerContainer"
-        className="h-[60vh] max-h-[800px] w-full overflow-hidden rounded-xl border-4 border-alveus-green bg-gray-400 shadow-2xl"
+        className="alveus-community-map h-[60vh] max-h-[800px] w-full overflow-hidden rounded-xl border-4 border-alveus-green bg-gray-400 shadow-2xl"
       />
 
       <ModalDialog
