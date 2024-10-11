@@ -104,7 +104,7 @@ export function CommunityMap({ features }: CommunityMapProps) {
     <>
       <div
         id="mapVisualizerContainer"
-        style={{ width: "100%", height: "800px" }}
+        className="h-[60vh] max-h-[800px] w-full overflow-hidden rounded-xl border-4 border-alveus-green bg-gray-400 shadow-2xl"
       />
 
       <ModalDialog

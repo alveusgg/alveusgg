@@ -393,7 +393,8 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         <div className="w-full pb-4 pt-8 md:w-3/5 md:py-20">
           <Heading>Show and Tell</Heading>
           <p className="text-lg">
-            The community shares conservation and wildlife-related activities —
+            The community shares conservation and wildlife-related activities.
+            <br />
             Share your own via the{" "}
             <Link href="/show-and-tell/submit-post" dark>
               submission page
@@ -426,7 +427,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             />
             <div className="relative col-start-1 row-start-1 flex flex-col items-end justify-end">
               <div className="flex items-center justify-end gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white">
-                Explore the map
+                Community map
                 <IconArrowRight className="h-8 w-8" />
               </div>
             </div>
