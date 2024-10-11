@@ -26,7 +26,7 @@ export function ModalDialog({
     <Dialog
       as="div"
       open={isOpen}
-      className="relative z-10"
+      className="relative z-20"
       onClose={closeModal}
     >
       <div className="fixed inset-0 bg-black bg-opacity-25" />
