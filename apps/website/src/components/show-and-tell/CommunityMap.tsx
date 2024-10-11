@@ -60,14 +60,9 @@ export function CommunityMap({ features }: CommunityMapProps) {
       center: [0, 15],
       zoom: 1,
       minZoom: 0,
-      maxZoom: MAX_ZOOM + 1,
+      maxZoom: MAX_ZOOM,
       antialias: true,
     })
-      .on("zoom", () => {
-        if (map.getZoom() > MAX_ZOOM) {
-          map.setZoom(MAX_ZOOM);
-        }
-      })
       .on("load", async () => {
         map.addSource("features", {
           type: "geojson",
