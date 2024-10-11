@@ -15,6 +15,7 @@ import {
   MAX_IMAGES,
   MAX_TEXT_HTML_LENGTH,
   MAX_VIDEOS,
+  MYSQL_MAX_VARCHAR_LENGTH,
 } from "@/data/show-and-tell";
 
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
@@ -135,7 +136,7 @@ const showAndTellSharedInputSchema = z.object({
   imageAttachments: imageAttachmentsSchema,
   videoLinks: videoLinksSchema.max(MAX_VIDEOS),
   volunteeringMinutes: z.number().int().positive().nullable(),
-  location: z.string().max(MAX_TEXT_HTML_LENGTH), // FIXME: There's no way I need 1000 chars for this
+  location: z.string().max(MYSQL_MAX_VARCHAR_LENGTH).nullable(),
   longitude: z.number().nullable(),
   latitude: z.number().nullable(),
 });
