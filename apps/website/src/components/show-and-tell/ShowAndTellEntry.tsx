@@ -31,8 +31,8 @@ import { classes } from "@/utils/classes";
 
 type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
-  isPresentationView: boolean;
-  showPermalink?: boolean;
+  isPresentationView?: boolean;
+  withHeight?: boolean;
 };
 
 const getTextContentRecursive = (node: DOMNode): string => {
@@ -197,11 +197,7 @@ export const ShowAndTellEntry = forwardRef<
   HTMLElement | null,
   ShowAndTellEntryProps
 >(function ShowAndTellEntry(
-  {
-    entry,
-    isPresentationView,
-    // showPermalink = false,
-  },
+  { entry, isPresentationView = false, withHeight = true },
   forwardedRef,
 ) {
   const wrapperRef = useRef<HTMLElement | null>(null);
@@ -241,12 +237,14 @@ export const ShowAndTellEntry = forwardRef<
   return (
     <article
       key={entry.id}
-      className={
-        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-none " +
-        (isPresentationView
-          ? "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] select-none snap-center overflow-hidden bg-alveus-green text-white shadow-xl"
-          : "min-h-[70svh] min-h-[70vh] justify-center border-t border-alveus-green/50 first:border-t-0")
-      }
+      className={classes(
+        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-none",
+        isPresentationView &&
+          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] select-none snap-center overflow-hidden bg-alveus-green text-white shadow-xl",
+        !isPresentationView &&
+          "justify-center border-t border-alveus-green/50 first:border-t-0",
+        withHeight && !isPresentationView && "min-h-[70svh] min-h-[70vh]",
+      )}
       onClick={(e) => {
         if (isPresentationView)
           e.currentTarget.scrollIntoView({
