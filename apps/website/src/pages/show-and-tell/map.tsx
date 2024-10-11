@@ -103,23 +103,26 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       <Section className="py-6 md:py-12">
-        <div className="grid-rows-1-auto mb-6 grid w-full grid-cols-4 gap-4 md:grid-cols-6 md:grid-rows-1">
+        <div className="mb-6 grid w-full grid-cols-4 gap-4 md:grid-cols-6">
           <NextLink
             href="/show-and-tell"
             className={classes(
               bentoBoxClasses,
-              "group col-span-4 col-start-1 row-start-2 grid grid-cols-1 text-lg transition-transform duration-200 hover:scale-102 md:row-start-1",
+              "group col-span-2 grid grid-cols-1 text-lg transition-transform duration-200 hover:scale-102 lg:col-span-1",
             )}
           >
-            <div className="relative col-start-1 row-start-1">
-              <div className="flex items-center gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white">
+            <div className="relative col-start-1 row-start-1 flex items-center justify-center">
+              <div className="flex items-center gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-white">
                 <IconArrowRight className="h-8 w-8 rotate-180" />
                 All posts
               </div>
             </div>
           </NextLink>
           <div
-            className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
+            className={classes(
+              bentoBoxClasses,
+              "items-center p-2 md:col-start-5 md:text-lg",
+            )}
           >
             <IconMapPin className="h-10 w-10" />
             {uniqueLocationsCountFmt} locations
