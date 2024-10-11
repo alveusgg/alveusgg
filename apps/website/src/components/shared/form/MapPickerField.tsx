@@ -1,16 +1,20 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import IconWorld from "@/icons/IconWorld";
-import IconX from "@/icons/IconX";
 import "maplibre-gl/dist/maplibre-gl.css"; // Actual map CSS
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Map searchbox CSS
+
 import {
   geocoderApi,
   getDefaultMarker,
   reverseSearch,
   roundCoord,
 } from "@/utils/geolocation";
+import mapStyle from "@/data/map-style";
+
+import IconWorld from "@/icons/IconWorld";
+import IconX from "@/icons/IconX";
+
 import config from "../../../../tailwind.config";
 import { CheckboxField } from "./CheckboxField";
 
@@ -145,32 +149,13 @@ export const MapPickerField = ({
 
     const map = new Map({
       container: mapContainerRef.current,
-      style: {
-        version: 8,
-        name: "Alveus Map",
-        center: initialLocation?.location
-          ? [initialLocation.longitude, initialLocation.latitude]
-          : [0, 0],
-        zoom: initialZoom,
-        sources: {
-          "raster-tiles": {
-            type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-            attribution:
-              "© OpenStreetMap contributors - Open Database License",
-            tileSize: 256,
-            minzoom: minZoom,
-            maxzoom: maxZoom < 24 ? maxZoom + 1 : maxZoom, // We add one level of rendering zoom so the text is crisp when zooming in.
-          },
-        },
-        layers: [
-          {
-            id: "simple-tiles",
-            type: "raster",
-            source: "raster-tiles",
-          },
-        ],
-      },
+      style: mapStyle,
+      center: initialLocation?.location
+        ? [initialLocation.longitude, initialLocation.latitude]
+        : [0, 0],
+      zoom: initialZoom,
+      minZoom: minZoom,
+      maxZoom: maxZoom < 24 ? maxZoom + 1 : maxZoom, // We add one level of rendering zoom so the text is crisp when zooming in.
       antialias,
     })
       .addControl(

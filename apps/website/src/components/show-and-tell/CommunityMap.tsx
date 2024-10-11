@@ -6,6 +6,7 @@ import { trpc } from "@/utils/trpc";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 import type { LocationFeature } from "@/server/db/show-and-tell";
+import mapStyle from "@/data/map-style";
 
 import config from "../../../tailwind.config";
 
@@ -48,30 +49,11 @@ export function CommunityMap({ features }: CommunityMapProps) {
   useEffect(() => {
     const map = new Map({
       container: "mapVisualizerContainer",
-      style: {
-        version: 8,
-        name: "Alveus Community Map",
-        center: [0, 0],
-        zoom: 1,
-        sources: {
-          "raster-tiles": {
-            type: "raster",
-            tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
-            attribution:
-              "© OpenStreetMap contributors - Open Database License",
-            tileSize: 256,
-            minzoom: 0,
-            maxzoom: MAX_ZOOM + 1,
-          },
-        },
-        layers: [
-          {
-            id: "simple-tiles",
-            type: "raster",
-            source: "raster-tiles",
-          },
-        ],
-      },
+      style: mapStyle,
+      center: [0, 15],
+      zoom: 1,
+      minZoom: 0,
+      maxZoom: MAX_ZOOM + 1,
       antialias: true,
     }).on("zoom", () => {
       if (map.getZoom() > MAX_ZOOM) {
