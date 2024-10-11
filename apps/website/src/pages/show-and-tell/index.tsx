@@ -133,6 +133,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
 
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
+  const [currentPostAuthor, setCurrentPostAuthor] = useState("");
 
   // We use this ref to scroll to the entry when transitioning between presentation view and normal view
   // and when the next/prev buttons are clicked
@@ -148,6 +149,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const checkPosition = useCallback(() => {
     const currentEntryElement = currentEntryElementRef.current;
     if (!currentEntryElement) return;
+
+    // Get author from the current entry (using a data attribute)
+    setCurrentPostAuthor(
+      currentEntryElement.getAttribute("data-show-and-tell-author") || "",
+    );
 
     // Get the current position of the current entry
     const allEntries =
@@ -571,6 +577,11 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           )}
 
           <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit flex-col gap-2">
+            {currentPostAuthor && (
+              <p className="text-lg text-alveus-green-100">
+                by {currentPostAuthor}
+              </p>
+            )}
             {isPresentationView && (
               <p className="text-xl text-alveus-green">
                 {postsToShowCount - currentPostIndex <= 0
