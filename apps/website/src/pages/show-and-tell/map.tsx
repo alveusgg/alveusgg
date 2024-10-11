@@ -36,12 +36,14 @@ const bentoBoxClasses =
 export const getStaticProps = async () => {
   const features = await getMapFeatures();
   const locations = features.map(({ location }) => location);
-  const countries = locations.map((location) =>
-    location
-      ?.substring(location.lastIndexOf(",") + 1)
-      .trim()
-      .toUpperCase(),
-  );
+  const countries = locations
+    .map((location) =>
+      location
+        ?.substring(location.lastIndexOf(",") + 1)
+        .trim()
+        .toUpperCase(),
+    )
+    .filter((country) => !["", "OTHER"].includes(country));
   const totalPostsCount = await getPostsCount();
   const usersCount = await getUsersCount();
 
