@@ -11,6 +11,7 @@ import type { LocationFeature } from "@/server/db/show-and-tell";
 import mapStyle from "@/data/map-style";
 
 import { ModalDialog } from "../shared/ModalDialog";
+import Section from "../content/Section";
 
 const MAX_ZOOM = 8;
 
@@ -140,20 +141,19 @@ export function CommunityMap({ features }: CommunityMapProps) {
         isOpen={!!selectedMarkerId}
         closeModal={() => setSelectedMarkerId(null)}
       >
-        <div className="container min-h-[70vh] min-w-[70vw]">
+        <Section className="min-h-[40vh] min-w-[70vw] rounded-xl py-4">
           {entryQuery.error && (
             <MessageBox variant="failure">
               Failed to load Show and Tell entry!
             </MessageBox>
           )}
-          {entryQuery.isLoading && <p>Loading...</p>}
-          {entryQuery.data && (
-            <ShowAndTellEntry
-              entry={entryQuery.data}
-              isPresentationView={false}
-            />
+          {entryQuery.isLoading && (
+            <p className="p-4 text-center text-xl">Loading...</p>
           )}
-        </div>
+          {entryQuery.data && (
+            <ShowAndTellEntry entry={entryQuery.data} withHeight={false} />
+          )}
+        </Section>
       </ModalDialog>
     </>
   );
