@@ -11,6 +11,7 @@ import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
+import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
 import nickImage from "@/assets/people/nick.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
@@ -113,6 +114,27 @@ const staff = {
           through time and training, and sharing that experience with others
           brings her a lot of joy - she is excited to do that alongside the
           Alveus community!
+        </p>
+      </>
+    ),
+  },
+  amanda: {
+    image: amandaDenaroImage,
+    name: "Amanda Denaro",
+    title: "Animal Care Coordinator",
+    description: (
+      <>
+        <p>
+          Amanda knew from a young age that she wanted to work with animals.
+          After graduating with a degree in biology she started her career off
+          as a zookeeper at Zoo Atlanta gaining the opportunity to work with a
+          wide variety of hoofstock, primate, and carnivore species. Her love
+          for educating and inspiring people to learn more about the animals in
+          her care and their wild counterparts grew as well as her desire to
+          build positive relationships with the animals she cared for. When the
+          opportunity arose to work at Alveus, Amanda was beyond excited to be
+          part such of an amazing online community united in the same goal of
+          promoting conservation of our natural world.
         </p>
       </>
     ),
