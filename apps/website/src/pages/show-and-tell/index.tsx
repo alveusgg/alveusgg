@@ -576,9 +576,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             </>
           )}
 
-          <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit flex-col gap-2">
-            {currentPostAuthor && (
-              <p className="text-lg text-alveus-green-100">
+          <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit select-none flex-col gap-2">
+            {isPresentationView && currentPostAuthor && (
+              <p className="max-w-40 text-lg text-alveus-green-300">
                 by {currentPostAuthor}
               </p>
             )}
