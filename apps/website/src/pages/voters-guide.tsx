@@ -392,7 +392,11 @@ const VotePage: NextPage = () => {
 
           <p className="mt-4 italic">
             Our thanks to the National Wildlife Federation for their excellent{" "}
-            <Link href="https://www.nwf.org/Civic-Engagement-and-Democracy" external dark>
+            <Link
+              href="https://www.nwf.org/Civic-Engagement-and-Democracy"
+              external
+              dark
+            >
               Voters&apos; Guide
             </Link>
             , which inspired this page, and to the team at{" "}
