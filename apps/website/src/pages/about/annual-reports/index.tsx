@@ -17,6 +17,11 @@ const reports = [
     title: "2022 Annual Report",
     link: "/about/annual-reports/2022",
   },
+  {
+    key: "2023",
+    title: "2023 Annual Report",
+    link: "/about/annual-reports/2023",
+  },
 ];
 
 const AnnualReportsPage: NextPage = () => {
