@@ -399,7 +399,7 @@ const VotePage: NextPage = () => {
             >
               National Wildlife Federation
             </Link>
-             for their excellent Voters&apos; Guide, which inspired this page, and to the team at{" "}
+            {" "}for their excellent Voters&apos; Guide, which inspired this page, and to the team at{" "}
             <Link href="https://www.vote.org/" external dark>
               Vote.org
             </Link>{" "}
