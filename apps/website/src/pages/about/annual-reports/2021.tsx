@@ -39,11 +39,9 @@ const AboutAnnualReport2021Page: NextPage = () => {
           aria-describedby="report"
         />
 
-        <div className="sr-only" id="report">
+        <div className="srr-only space-y-8" id="report">
           <div>
-            <Heading level={2} className="mt-8">
-              Viewer Demographics
-            </Heading>
+            <Heading level={2}>Viewer Demographics</Heading>
 
             <p>
               Alveus has the unique ability to reach viewers across the world
@@ -147,9 +145,7 @@ const AboutAnnualReport2021Page: NextPage = () => {
           </div>
 
           <div>
-            <Heading level={2} className="mt-8">
-              Financial Report
-            </Heading>
+            <Heading level={2}>Financial Report</Heading>
 
             <p>
               In 2021, Alveus raised a total of $763,380 USD due to generous
@@ -186,10 +182,8 @@ const AboutAnnualReport2021Page: NextPage = () => {
             </dl>
           </div>
 
-          <div>
-            <Heading level={2} className="mt-8">
-              Continuing Our Mission
-            </Heading>
+          <div className="space-y-4">
+            <Heading level={2}>Continuing Our Mission</Heading>
 
             <p>
               The mission of Alveus is to inspire online audiences to engage in

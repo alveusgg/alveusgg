@@ -39,11 +39,9 @@ const AboutAnnualReport2022Page: NextPage = () => {
           aria-describedby="report"
         />
 
-        <div className="sr-only" id="report">
+        <div className="srr-only space-y-8" id="report">
           <div>
-            <Heading level={2} className="mt-8">
-              Followers
-            </Heading>
+            <Heading level={2}>Followers</Heading>
 
             <table className="w-full table-auto">
               <thead>
@@ -85,9 +83,7 @@ const AboutAnnualReport2022Page: NextPage = () => {
           </div>
 
           <div>
-            <Heading level={2} className="mt-8">
-              Twitch Demographics
-            </Heading>
+            <Heading level={2}>Twitch Demographics</Heading>
 
             <div className="flex flex-wrap justify-between gap-8">
               <dl>
@@ -153,9 +149,7 @@ const AboutAnnualReport2022Page: NextPage = () => {
           </div>
 
           <div>
-            <Heading level={2} className="mt-8">
-              Financial Report
-            </Heading>
+            <Heading level={2}>Financial Report</Heading>
 
             <table className="w-full table-auto">
               <tbody>
@@ -365,10 +359,8 @@ const AboutAnnualReport2022Page: NextPage = () => {
             </table>
           </div>
 
-          <div>
-            <Heading level={2} className="mt-8">
-              Continuing Our Mission
-            </Heading>
+          <div className="space-y-4">
+            <Heading level={2}>Continuing Our Mission</Heading>
 
             <p>
               The mission of Alveus is to inspire online audiences to engage in
