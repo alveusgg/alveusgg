@@ -20,6 +20,8 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
     event.waitUntil(
       callEndpoint<TrackClickSchema>("/api/short-links/track-click", {
         id: shortLink.id,
+        slug: shortLink.slug,
+        link: shortLink.link,
       }),
     );
     return NextResponse.redirect(shortLink.link);
