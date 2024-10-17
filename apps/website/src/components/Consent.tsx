@@ -13,6 +13,7 @@ import useCrawler from "@/hooks/crawler";
 
 import Link from "@/components/content/Link";
 import Button from "@/components/content/Button";
+import Box from "@/components/content/Box";
 
 type ConsentProps = {
   item: string;
@@ -75,7 +76,7 @@ const Consent = ({
 
             <p className="m-6 mb-3 text-2xl">Loading {item}...</p>
 
-            <div className="m-6 mt-3 flex max-w-2xl flex-col gap-4 rounded-lg bg-alveus-tan p-4 text-alveus-green shadow-lg">
+            <Box className="m-6 mt-3 flex max-w-2xl flex-col gap-4 p-6 py-4 text-alveus-green">
               <p>
                 This content is from a third party and we need your consent to
                 show it. It {consentExplainer}.
@@ -90,7 +91,7 @@ const Consent = ({
                   Privacy Policy
                 </Link>
               </div>
-            </div>
+            </Box>
           </>
         ))}
     </div>

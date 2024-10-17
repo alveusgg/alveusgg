@@ -38,11 +38,14 @@ import IconArrowsOut from "@/icons/IconArrowsOut";
 import IconArrowRight from "@/icons/IconArrowRight";
 import IconPencil from "@/icons/IconPencil";
 import IconGlobe from "@/icons/IconGlobe";
+import IconUserGroup from "@/icons/IconUserGroup";
+import IconMapPin from "@/icons/IconMapPin";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Box from "@/components/content/Box";
 
 import { Button, LinkButton } from "@/components/shared/form/Button";
 
@@ -54,8 +57,6 @@ import alveusLogo from "@/assets/logo.png";
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
 import mapImage from "@/assets/show-and-tell/map.jpg";
-import IconUserGroup from "@/icons/IconUserGroup";
-import IconMapPin from "@/icons/IconMapPin";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
@@ -63,8 +64,8 @@ export type ShowAndTellPageProps = InferGetStaticPropsType<
 
 const entriesPerPage = 10;
 
-const bentoBoxClasses =
-  "rounded-xl bg-alveus-green-600 text-center text-white shadow-lg shadow-black/30 flex flex-col justify-center gap-2 overflow-hidden";
+export const bentoBoxClasses =
+  "bg-alveus-green-600 text-center text-white flex flex-col justify-center gap-2 overflow-hidden";
 
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
@@ -416,51 +417,61 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
       <Section className="py-6 md:py-12">
         <div className="grid-rows-3-auto md:grid-rows-2-auto grid w-full grid-cols-4 gap-4 md:grid-cols-6">
-          <NextLink
-            href="/show-and-tell/map"
+          <Box
             className={classes(
               bentoBoxClasses,
-              "group col-span-4 col-start-1 row-start-3 grid grid-cols-1 text-lg transition-transform duration-200 hover:scale-102 md:col-span-2 md:row-span-2",
+              "col-span-4 col-start-1 row-start-3 p-0 text-lg transition-transform duration-200 hover:scale-102 md:col-span-2 md:row-span-2",
             )}
           >
-            <Image
-              src={mapImage}
-              className="col-start-1 row-start-1 h-full max-h-24 rounded-xl border-4 border-alveus-green-600 object-cover opacity-80 transition-opacity duration-200 group-hover:opacity-90 md:max-h-full"
-              alt=""
-            />
-            <div className="relative col-start-1 row-start-1 flex flex-col items-end justify-end">
-              <div className="flex items-center justify-end gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white">
-                Community map
-                <IconArrowRight className="h-8 w-8" />
+            <NextLink
+              href="/show-and-tell/map"
+              className="group grid h-full grid-cols-1"
+            >
+              <Image
+                src={mapImage}
+                className="col-start-1 row-start-1 h-full max-h-24 rounded-xl object-cover transition-opacity duration-200 group-hover:opacity-90 md:max-h-full"
+                alt=""
+              />
+              <div className="relative col-start-1 row-start-1 flex flex-col items-end justify-end">
+                <div className="z-10 flex items-center justify-end gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white transition-colors group-hover:bg-alveus-green-700">
+                  Community map
+                  <IconArrowRight className="h-8 w-8" />
+                </div>
               </div>
-            </div>
-          </NextLink>
-          <div
+            </NextLink>
+          </Box>
+
+          <Box
+            dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
             <IconUserGroup className="h-10 w-10" />
             {usersCountFmt} members
-          </div>
-          <div
+          </Box>
+          <Box
+            dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
             <IconPencil className="h-10 w-10" />
             {totalPostsCountFmt} posts
-          </div>
-          <div
+          </Box>
+          <Box
+            dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
             <IconMapPin className="h-10 w-10" />
             {uniqueLocationsCountFmt} locations
-          </div>
-          <div
+          </Box>
+          <Box
+            dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
             <IconGlobe className="h-10 w-10" />
             {uniqueCountriesCountFmt} countries
-          </div>
+          </Box>
 
-          <div
+          <Box
+            dark
             className={classes(
               bentoBoxClasses,
               "col-start-1 col-end-5 row-start-2 p-4 md:col-start-3 md:col-end-7",
@@ -481,7 +492,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             <div className="mt-2">
               <GiveAnHourProgress />
             </div>
-          </div>
+          </Box>
         </div>
       </Section>
 
