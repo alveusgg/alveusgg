@@ -24,15 +24,15 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Box from "@/components/content/Box";
 
 import { CommunityMap } from "@/components/show-and-tell/CommunityMap";
+
+import { bentoBoxClasses } from ".";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps
 >;
-
-const bentoBoxClasses =
-  "rounded-xl bg-alveus-green-600 text-center text-white shadow-lg shadow-black/30 flex flex-col justify-center gap-2 overflow-hidden";
 
 export const getStaticProps = async () => {
   const features = await getMapFeatures();
@@ -99,36 +99,39 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       <Section className="py-6 md:py-12">
-        <div className="mb-6 grid w-full grid-cols-4 gap-4 md:grid-cols-6">
-          <NextLink
-            href="/show-and-tell"
+        <div className="mb-6 grid w-full grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-6">
+          <Box
+            dark
             className={classes(
               bentoBoxClasses,
-              "group col-span-2 grid grid-cols-1 text-lg transition-transform duration-200 hover:scale-102 lg:col-span-1",
+              "col-span-2 p-0 text-lg transition-transform duration-200 hover:scale-102 xl:col-span-1",
             )}
           >
-            <div className="relative col-start-1 row-start-1 flex items-center justify-center">
-              <div className="flex items-center gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-white">
-                <IconArrowRight className="h-8 w-8 rotate-180" />
-                All posts
-              </div>
-            </div>
-          </NextLink>
-          <div
+            <NextLink
+              href="/show-and-tell"
+              className="flex h-full items-center justify-center gap-2 p-8"
+            >
+              <IconArrowRight className="h-8 w-8 rotate-180" />
+              All posts
+            </NextLink>
+          </Box>
+          <Box
+            dark
             className={classes(
               bentoBoxClasses,
-              "items-center p-2 md:col-start-5 md:text-lg",
+              "items-center p-2 md:text-lg lg:col-start-5",
             )}
           >
             <IconMapPin className="h-10 w-10" />
             {uniqueLocationsCountFmt} locations
-          </div>
-          <div
+          </Box>
+          <Box
+            dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
             <IconGlobe className="h-10 w-10" />
             {uniqueCountriesCountFmt} countries
-          </div>
+          </Box>
         </div>
 
         <CommunityMap features={features} />
