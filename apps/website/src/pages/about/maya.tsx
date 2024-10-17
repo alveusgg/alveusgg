@@ -179,7 +179,7 @@ const AboutMayaPage: NextPage = () => {
           containerClassName="flex flex-col items-center"
         >
           <p className="my-2 text-center font-serif text-7xl font-bold">
-            Maya raised over $1,000,000
+            Maya raised over $2,500,000
           </p>
           <p className="my-2 font-serif text-4xl font-bold">Using Twitch!</p>
           <IconTwitch

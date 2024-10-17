@@ -1,23 +1,13 @@
 import { type NextPage } from "next";
 
+import { reportYears } from "@/data/annual-reports";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import IconChevronRight from "@/icons/IconChevronRight";
 import Button from "@/components/content/Button";
 
-const reports = [
-  {
-    key: "2021",
-    title: "2021 Annual Report",
-    link: "/about/annual-reports/2021",
-  },
-  {
-    key: "2022",
-    title: "2022 Annual Report",
-    link: "/about/annual-reports/2022",
-  },
-];
+import IconChevronRight from "@/icons/IconChevronRight";
 
 const AnnualReportsPage: NextPage = () => {
   return (
@@ -41,17 +31,17 @@ const AnnualReportsPage: NextPage = () => {
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
         <div className="mx-auto flex flex-wrap justify-evenly gap-8 p-4">
-          {reports.map(({ key, title, link }) => (
+          {reportYears.map((year) => (
             <Button
-              key={key}
-              href={link}
+              key={year}
+              href={`/about/annual-reports/${year}`}
               className="group inline-flex items-center sm:flex-shrink-0"
             >
               <Heading
                 level={2}
                 className="my-0 font-sans text-2xl font-semibold"
               >
-                {title}
+                {year} Annual Report
               </Heading>
               <IconChevronRight
                 size={24}
