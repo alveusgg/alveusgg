@@ -391,7 +391,7 @@ const VotePage: NextPage = () => {
           </p>
 
           <p className="mt-4 italic">
-            Our thanks to the {" "}
+            Our thanks to the{" "}
             <Link
               href="https://www.nwf.org"
               external
