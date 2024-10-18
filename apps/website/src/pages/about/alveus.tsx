@@ -13,6 +13,7 @@ import Link from "@/components/content/Link";
 import Timeline from "@/components/content/Timeline";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Maya from "@/components/content/Maya";
+import Box from "@/components/content/Box";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
@@ -586,7 +587,7 @@ const AboutAlveusPage: NextPage = () => {
                 key={key}
                 className="basis-full py-4 md:basis-1/2 md:px-4 xl:basis-1/3"
               >
-                <div className="flex h-full flex-col justify-center rounded-2xl bg-alveus-green px-6 py-6 text-alveus-tan shadow-lg transition-shadow hover:shadow-xl">
+                <Box dark className="flex h-full flex-col justify-center">
                   <div className="mx-auto max-w-xs">
                     <p className="text-center text-xl font-bold">
                       {stat.title}
@@ -609,7 +610,7 @@ const AboutAlveusPage: NextPage = () => {
                       </Link>
                     </p>
                   </div>
-                </div>
+                </Box>
               </li>
             ))}
           </ul>
