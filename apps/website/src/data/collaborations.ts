@@ -71,7 +71,8 @@ const collaborations: Collaboration[] = (
       name: "JasonTheWeen",
       link: "https://www.twitch.tv/jasontheween",
       date: new Date("2024-10-08"),
-      videoId: "G2MCXSNy6QI",
+      videoId: "a8MWYs4VAUI",
+      vodId: "G2MCXSNy6QI",
       creators: [
         {
           name: "JasonTheWeen",
