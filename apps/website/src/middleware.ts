@@ -7,6 +7,22 @@ import { env } from "@/env";
 import { callEndpoint } from "@/server/utils/queue";
 import type { TrackClickSchema } from "@/pages/api/short-links/track-click";
 
+const headersToObject = (headers: Headers) =>
+  [...headers.entries()].reduce<Record<string, string | string[]>>(
+    (acc, [key, value]) => {
+      const existing = acc[key];
+      if (existing === undefined) return { ...acc, [key]: value };
+
+      return {
+        ...acc,
+        [key]: Array.isArray(existing)
+          ? [...existing, value]
+          : [existing, value],
+      };
+    },
+    {},
+  );
+
 export async function middleware(req: NextRequest, event: NextFetchEvent) {
   const res = await fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links", {
     method: "POST",
@@ -22,6 +38,7 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
         id: shortLink.id,
         slug: shortLink.slug,
         link: shortLink.link,
+        headers: headersToObject(req.headers),
       }),
     );
     return NextResponse.redirect(shortLink.link);
