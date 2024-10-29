@@ -11,7 +11,7 @@ export const standardCategories: StandardCategory[] = [
     color: "bg-blue-300 hover:bg-blue-500",
   },
   { name: "Alveus YouTube Video", color: "bg-red-300 hover:bg-red-500" },
-  { name: "Maya Regular Stream", color: "bg-gray-200 hover:bg-gray-400" },
+  { name: "Maya Stream", color: "bg-gray-200 hover:bg-gray-400" },
   { name: "Maya YouTube Video", color: "bg-red-200 hover:bg-red-400" },
 ] as const;
 
