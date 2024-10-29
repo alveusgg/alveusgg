@@ -82,6 +82,7 @@ Create a [Twitch application](https://dev.twitch.tv/console/apps/create), settin
 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
 - You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio`
+- You can access a direct MySQL CLI to the database with `docker compose exec db sh -c 'MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql alveusgg'`
 
 ### Generate secrets
 
