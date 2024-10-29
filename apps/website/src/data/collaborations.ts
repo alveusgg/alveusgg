@@ -2,6 +2,8 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import alinity from "@/assets/collaborations/alinity.png";
+import trivi from "@/assets/collaborations/trivi.png";
 import jasonTheWeen from "@/assets/collaborations/jasonTheWeen.png";
 import itmeJP from "@/assets/collaborations/itmeJP.png";
 import agent00 from "@/assets/collaborations/agent00.png";
@@ -43,7 +45,6 @@ import yungJeff from "@/assets/collaborations/yung-jeff.png";
 import pointCrow from "@/assets/collaborations/point-crow.png";
 import russel from "@/assets/collaborations/russel.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
-import alinity from "@/assets/collaborations/alinity.png";
 import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
 import botzSisters from "@/assets/collaborations/botez-sisters.png";
 import knut from "@/assets/collaborations/knut.png";
@@ -67,6 +68,25 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Alinity & Trivi (Valen)",
+      link: "https://www.twitch.tv/alinity",
+      date: new Date("2024-10-15"),
+      videoId: "M-bkSqnXJ4k",
+      vodId: "1SAAVdsNzCI",
+      creators: [
+        {
+          name: "Alinity",
+          image: alinity,
+          popularity: 1_500_000, // Twitch followers, 2024-10-29
+        },
+        {
+          name: "Trivi (Valen)",
+          image: trivi,
+          popularity: 24_000, // Twitch followers, 2024-10-29
+        },
+      ],
+    },
     {
       name: "JasonTheWeen",
       link: "https://www.twitch.tv/jasontheween",
@@ -596,13 +616,7 @@ const collaborations: Collaboration[] = (
       date: new Date("2023-02-09"),
       videoId: "bak3RqjCzE0",
       vodId: "XHTEs94Cf4s",
-      creators: [
-        {
-          name: "Alinity",
-          image: alinity,
-          popularity: 1_500_000, // Twitch followers, 2024-10-4
-        },
-      ],
+      creators: [], // Alinity has a more recent collaboration
     },
     {
       name: "ConnorEatsPants",
