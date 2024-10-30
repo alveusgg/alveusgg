@@ -7,6 +7,10 @@ import { env } from "@/env";
 import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
+import {
+  ExpiredAccessTokenError,
+  refreshAccessToken,
+} from "@/server/utils/oauth2";
 import { defaultScope } from "@/data/twitch";
 
 const adapter = PrismaAdapter(prisma);
@@ -27,9 +31,33 @@ type ProfileData = {
 };
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id on session
   callbacks: {
     session: async function ({ session, user }) {
+      // Check the user's access token is valid, refresh if not
+      const token = await prisma.account.findFirst({
+        where: { userId: user.id, provider: "twitch" },
+        select: { id: true, access_token: true, refresh_token: true },
+      });
+      if (token?.access_token && token?.refresh_token) {
+        try {
+          await refreshAccessToken(
+            "twitch",
+            env.TWITCH_CLIENT_ID,
+            env.TWITCH_CLIENT_SECRET,
+            token.id,
+            token.access_token,
+            token.refresh_token,
+          );
+        } catch (err) {
+          if (!(err instanceof ExpiredAccessTokenError)) console.error(err);
+          return {
+            expires: new Date(0).toISOString(),
+            error: "Twitch auth expired",
+          };
+        }
+      }
+
+      // Include user.id on session
       return {
         ...session,
         user: session.user && {
