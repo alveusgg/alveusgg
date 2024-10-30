@@ -6,6 +6,7 @@ import {
   cloneElement,
   forwardRef,
   Fragment,
+  useEffect,
   type ReactElement,
 } from "react";
 
@@ -65,6 +66,11 @@ export function DesktopMenu() {
     user &&
     (user.isSuperUser ||
       checkRolesGivePermission(user.roles, permissions.viewDashboard));
+
+  // If we have an invalid session (such as a deleted Twitch account), sign out
+  useEffect(() => {
+    if (sessionData?.error) signOut();
+  }, [sessionData?.error]);
 
   return (
     <div className="hidden flex-grow flex-col gap-2 lg:flex">
