@@ -124,12 +124,10 @@ const OverlayPage: NextPage = () => {
   );
   const firstEventId = useMemo(
     () =>
-      events?.find((event) =>
-        [
-          "alveus regular stream",
-          "alveus special stream",
-          "collaboration stream",
-        ].includes(event.category.toLowerCase()),
+      events?.find(
+        (event) =>
+          /\balveus\b/i.test(event.category) &&
+          !/\b(yt|youtube)\b/i.test(event.category),
       )?.id,
     [events],
   );
