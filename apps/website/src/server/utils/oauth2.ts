@@ -40,11 +40,71 @@ async function validateAccessToken(
     },
   );
 
-  if (response.status === 403) {
+  if (response.status === 401) {
     throw new ExpiredAccessTokenError();
   }
 
   return await response.json();
+}
+
+export async function refreshAccessToken(
+  service: OAuth2Service,
+  clientId: string,
+  clientSecret: string,
+  accountId: string,
+  accessToken: string,
+  refreshToken: string,
+  force = false,
+) {
+  // Skip straight to refreshing the token if force is true
+  if (!force) {
+    // Validate the token and only proceed if it's expired
+    const err = await validateAccessToken(service, clientId, accessToken)
+      .then(() => undefined)
+      .catch((error) => error);
+    if (!err || !(err instanceof ExpiredAccessTokenError)) return;
+  }
+
+  // Attempt to refresh the token
+  const oauth2 = new OAuth2(
+    clientId,
+    clientSecret,
+    oAuth2ServiceUrls[service].baseSite,
+    oAuth2ServiceUrls[service].authorizePath,
+    oAuth2ServiceUrls[service].accessTokenPath,
+    undefined,
+  );
+  const res = await new Promise<{
+    error?: { data?: unknown; statusCode: number };
+    access_token?: string;
+    refresh_token?: string;
+    expires_at?: number;
+  }>((resolve) => {
+    oauth2.getOAuthAccessToken(
+      refreshToken,
+      { grant_type: "refresh_token" },
+      (error, access_token, refresh_token, results) => {
+        const expires_at = results?.expires_in
+          ? Math.floor(Date.now() / 1000) + results.expires_in
+          : undefined;
+        resolve({ error, access_token, refresh_token, expires_at });
+      },
+    );
+  });
+  if (res.error) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  // Store the updated token in the database
+  await prisma.account.update({
+    where: { id: accountId, provider: service },
+    data: {
+      access_token: res.access_token,
+      refresh_token: res.refresh_token,
+      expires_at: res.expires_at,
+    },
+  });
+  return res.access_token;
 }
 
 export async function getClientCredentialsAccessToken(
