@@ -79,6 +79,8 @@ export async function refreshAccessToken(
     access_token?: string;
     refresh_token?: string;
     expires_at?: number;
+    scope?: string;
+    token_type?: string;
   }>((resolve) => {
     oauth2.getOAuthAccessToken(
       refreshToken,
@@ -87,7 +89,16 @@ export async function refreshAccessToken(
         const expires_at = results?.expires_in
           ? Math.floor(Date.now() / 1000) + results.expires_in
           : undefined;
-        resolve({ error, access_token, refresh_token, expires_at });
+        const scope = results?.scope?.join(" ");
+        const token_type = results?.token_type;
+        resolve({
+          error,
+          access_token,
+          refresh_token,
+          expires_at,
+          scope,
+          token_type,
+        });
       },
     );
   });
@@ -102,6 +113,8 @@ export async function refreshAccessToken(
       access_token: res.access_token,
       refresh_token: res.refresh_token,
       expires_at: res.expires_at,
+      scope: res.scope,
+      token_type: res.token_type,
     },
   });
   return res.access_token;
