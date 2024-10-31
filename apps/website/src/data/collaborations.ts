@@ -5,7 +5,7 @@ import { convertToSlug } from "@/utils/slugs";
 import theSushiDragon from "@/assets/collaborations/the-sushi-dragon.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import trivi from "@/assets/collaborations/trivi.png";
-import jasonTheWeen from "@/assets/collaborations/jasonTheWeen.png";
+import jasonTheWeen from "@/assets/collaborations/jason-the-ween.png";
 import itmeJP from "@/assets/collaborations/itmeJP.png";
 import agent00 from "@/assets/collaborations/agent00.png";
 import bao from "@/assets/collaborations/bao.png";
