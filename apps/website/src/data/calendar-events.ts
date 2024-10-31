@@ -1,3 +1,5 @@
+import { type CalendarEvent } from "@prisma/client";
+
 type StandardCategory = {
   name: string;
   color: string;
@@ -43,3 +45,27 @@ export const frequentLinks: FrequentLink[] = [
     url: "https://youtube.com/@mayahiga",
   },
 ] as const;
+
+// Used for the overlay + Twitch sync, showing all Alveus events that aren't YT videos
+export const isAlveusEvent = (event: CalendarEvent) =>
+  /\balveus\b/i.test(event.category) &&
+  !/\b(yt|youtube)\b/i.test(event.category);
+
+const truncate = (value: string, max: number) => {
+  if (value.length <= max) return value;
+
+  for (const pattern of [" - ", " | ", ": "]) {
+    const index = value.indexOf(pattern);
+    if (index !== -1 && index < max) return value.slice(0, index);
+  }
+
+  return value.slice(0, max - 3) + "…";
+};
+
+// Used for the overlay + Twitch sync, showing the title + link (if not Alveus Twitch)
+export const getFormattedTitle = (event: CalendarEvent, length?: number) => {
+  const title = length ? truncate(event.title, length) : event.title;
+  return /twitch.tv\/alveussanctuary/i.test(event.link)
+    ? title
+    : `${title} @ ${event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}`;
+};

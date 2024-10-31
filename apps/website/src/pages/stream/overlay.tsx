@@ -9,22 +9,13 @@ import {
   formatDateTimeParts,
   formatDateTimeRelative,
 } from "@/utils/datetime";
+import { getFormattedTitle, isAlveusEvent } from "@/data/calendar-events";
 
 import logoImage from "@/assets/logo.png";
 
 import { type WeatherResponse } from "../api/stream/weather";
 
 const colors = ["#7E7E7E", "#4E3029"];
-const truncate = (value: string, max: number) => {
-  if (value.length <= max) return value;
-
-  for (const pattern of [" - ", " | ", ": "]) {
-    const index = value.indexOf(pattern);
-    if (index !== -1 && index < max) return value.slice(0, index);
-  }
-
-  return value.slice(0, max - 3) + "…";
-};
 
 const OverlayPage: NextPage = () => {
   // Get the current time and date
@@ -137,15 +128,7 @@ const OverlayPage: NextPage = () => {
     { start: upcomingRange?.[0], end: upcomingRange?.[1] },
     { enabled: upcomingRange !== undefined, keepPreviousData: true },
   );
-  const firstEventId = useMemo(
-    () =>
-      events?.find(
-        (event) =>
-          /\balveus\b/i.test(event.category) &&
-          !/\b(yt|youtube)\b/i.test(event.category),
-      )?.id,
-    [events],
-  );
+  const firstEventId = useMemo(() => events?.find(isAlveusEvent)?.id, [events]);
 
   // If we have an upcoming event, swap socials with it
   // Swap every 60s
@@ -197,11 +180,7 @@ const OverlayPage: NextPage = () => {
         {event && (
           <div className="text-stroke absolute bottom-2 left-2 font-bold text-white">
             <p>Upcoming:</p>
-            <p className="text-xl">
-              {truncate(event.title, 30)}
-              {" @ "}
-              {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
-            </p>
+            <p className="text-xl">{getFormattedTitle(event, 30)}</p>
             <p className="text-xl">
               {formatDateTimeRelative(
                 event.startAt,
