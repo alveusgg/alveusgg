@@ -167,3 +167,65 @@ export async function getUserByName(userName: string) {
   const data = await usersResponseSchema.parseAsync(json);
   return data?.data?.[0];
 }
+
+const scheduleResponseSchema = z.object({
+  data: z.object({
+    segments: z.array(
+      z.object({
+        id: z.string(),
+        start_time: z.string().datetime(),
+        end_time: z.string().datetime(),
+        title: z.string(),
+        canceled_until: z.string().datetime().nullable(),
+        category: z
+          .object({
+            id: z.string(),
+            name: z.string(),
+          })
+          .nullable(),
+        is_recurring: z.boolean(),
+      }),
+    ),
+  }),
+});
+
+export async function createScheduleSegment(
+  userAccessToken: string,
+  userId: string,
+  start: Date,
+  timezone: string,
+  duration: number,
+  title: string,
+  category?: number,
+) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/schedule/segment?${new URLSearchParams({
+      broadcaster_id: userId,
+    })}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+      body: JSON.stringify({
+        start_time: start.toISOString(),
+        timezone,
+        duration: duration.toString(),
+        title,
+        category_id: category?.toString(),
+        // TODO: This should be false but I do not have access: `single segment creation not authorized`
+        is_recurring: true,
+      }),
+    },
+  );
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Failed to create schedule segment!");
+  }
+
+  const data = await scheduleResponseSchema.parseAsync(json);
+  return data?.data?.segments?.[0];
+}

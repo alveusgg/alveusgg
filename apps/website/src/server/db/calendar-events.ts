@@ -2,7 +2,9 @@ import { z } from "zod";
 import { type DateObjectUnits, DateTime } from "luxon";
 
 import { prisma } from "@/server/db/client";
+import { createScheduleSegment } from "@/server/utils/twitch-api";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+import { getFormattedTitle, isAlveusEvent } from "@/data/calendar-events";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),
@@ -42,7 +44,8 @@ export function editCalendarEvent(
 export function getCalendarEvents({
   start,
   end,
-}: { start?: Date; end?: Date } = {}) {
+  hasTime,
+}: { start?: Date; end?: Date; hasTime?: boolean } = {}) {
   // If we're not given a start, use the start of the current month
   const startAt = start ?? new Date(new Date().setDate(1));
 
@@ -56,6 +59,7 @@ export function getCalendarEvents({
         gte: startAt,
         lt: endAt,
       },
+      hasTime,
     },
     orderBy: { startAt: "asc" },
   });
@@ -159,5 +163,45 @@ export async function createRegularCalendarEvents(date: Date) {
         hasTime: hasTime,
       });
     }
+  }
+}
+
+export async function syncTwitchSchedule() {
+  // Get auth for the Alveus Twitch account
+  const twitchChannel = await prisma.twitchChannel.findFirst({
+    where: { username: "alveussanctuary" },
+    select: {
+      broadcasterAccount: {
+        select: {
+          providerAccountId: true,
+          access_token: true,
+        },
+      },
+    },
+  });
+  if (!twitchChannel?.broadcasterAccount?.access_token) {
+    throw new Error("No access token found for Alveus Twitch account");
+  }
+
+  // Get all Alveus events from now onwards
+  // TODO: With access to non-recurring events, can we create events in the past?
+  const eventsDB = await getCalendarEvents({
+    start: new Date(),
+    hasTime: true,
+  }).then((events) => events.filter(isAlveusEvent));
+
+  // Write each event to the Twitch API
+  // TODO: Fetch existing events in the future from Twitch
+  // TODO: Determine which events match, and therefore which need to be deleted/created
+  for (const event of eventsDB) {
+    console.log("Syncing event:", event);
+    await createScheduleSegment(
+      twitchChannel.broadcasterAccount.access_token,
+      twitchChannel.broadcasterAccount.providerAccountId,
+      event.startAt,
+      DATETIME_ALVEUS_ZONE,
+      60,
+      getFormattedTitle(event),
+    );
   }
 }
