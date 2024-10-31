@@ -1,7 +1,7 @@
 export const defaultScope =
   "openid user:read:email user:read:follows user:read:subscriptions";
 export const botScope =
-  "chat:edit chat:read moderator:read:followers channel:read:charity channel:read:subscriptions channel:read:vips";
+  "chat:edit chat:read moderator:read:followers channel:read:charity channel:read:subscriptions channel:read:vips channel:manage:schedule";
 
 export const scopeLabels: Record<string, string> = {
   // User
@@ -18,4 +18,5 @@ export const scopeLabels: Record<string, string> = {
   "channel:read:charity": "Channel Charity (Read)",
   "channel:read:subscriptions": "Channel Subscriptions (Read)",
   "channel:read:vips": "Channel VIPs (Read)",
+  "channel:manage:schedule": "Channel Schedule (Manage)",
 };
