@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import theSushiDragon from "@/assets/collaborations/the-sushi-dragon.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import trivi from "@/assets/collaborations/trivi.png";
 import jasonTheWeen from "@/assets/collaborations/jasonTheWeen.png";
@@ -68,6 +69,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "TheSushiDragon",
+      link: "https://www.twitch.tv/thesushidragon",
+      date: new Date("2024-10-30"),
+      videoId: "61_IkfEo7mk",
+      creators: [
+        {
+          name: "TheSushiDragon",
+          image: theSushiDragon,
+          popularity: 303_000, // Twitch followers, 2024-10-31
+        },
+      ],
+    },
     {
       name: "Alinity & Trivi (Valen)",
       link: "https://www.twitch.tv/alinity",
