@@ -62,7 +62,14 @@ export async function refreshAccessToken(
     const err = await validateAccessToken(service, clientId, accessToken)
       .then(() => undefined)
       .catch((error) => error);
-    if (!err || !(err instanceof ExpiredAccessTokenError)) return;
+    if (!err || !(err instanceof ExpiredAccessTokenError)) {
+      // Store that we verified the token
+      await prisma.account.update({
+        where: { id: accountId, provider: service },
+        data: { verified_at: Math.floor(Date.now() / 1000) },
+      });
+      return;
+    }
   }
 
   // Attempt to refresh the token
@@ -113,6 +120,7 @@ export async function refreshAccessToken(
       access_token: res.access_token,
       refresh_token: res.refresh_token,
       expires_at: res.expires_at,
+      verified_at: Math.floor(Date.now() / 1000),
       scope: res.scope,
       token_type: res.token_type,
     },
