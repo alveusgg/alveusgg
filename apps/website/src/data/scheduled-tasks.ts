@@ -4,6 +4,7 @@ import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
 import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
 import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
 import { createRegularCalendarEvents } from "@/server/db/calendar-events";
+import { refreshTwitchChannels } from "@/server/db/twitch-channels";
 
 export type ScheduledTasksConfig = {
   tasks: {
@@ -60,6 +61,13 @@ export const scheduledTasks: ScheduledTasksConfig = {
       label: "Calendar events: Create Regular Events",
       startDateTime: new Date(2024, 7, 21, 0, 8, 0),
       interval: { months: 1 },
+    },
+    {
+      id: "auth.refreshTwitchChannels",
+      task: () => refreshTwitchChannels(),
+      label: "Auth: Refresh Twitch channels access",
+      startDateTime: new Date(2024, 9, 30, 0, 0, 0),
+      interval: { minutes: 30 },
     },
   ],
 };
