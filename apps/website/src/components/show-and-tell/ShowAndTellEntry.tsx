@@ -88,13 +88,15 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
         </Badge>
       )}
 
-      <h2
-        className={`mb-3 font-serif ${
-          isPresentationView ? "text-6xl" : "text-4xl"
-        }`}
-      >
-        {entry.title}
-      </h2>
+      <div className="flex items-center justify-end">
+        <h2
+          className={`mb-3 flex-grow font-serif ${
+            isPresentationView ? "text-6xl" : "text-4xl"
+          }`}
+        >
+          {entry.title}
+        </h2>
+      </div>
 
       <p
         className={` ${
