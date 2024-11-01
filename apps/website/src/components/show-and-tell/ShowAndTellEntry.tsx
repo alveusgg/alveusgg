@@ -82,12 +82,6 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
         isPresentationView ? "" : "text-center"
       }`}
     >
-      {entry.seenOnStream && (
-        <Badge dark={isPresentationView} pulse={isPresentationView}>
-          Seen on stream
-        </Badge>
-      )}
-
       <div className="flex items-center justify-end">
         <h2
           className={`mb-3 flex-grow font-serif ${
@@ -96,6 +90,12 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
         >
           {entry.title}
         </h2>
+
+        {entry.seenOnStream && (
+          <Badge dark={isPresentationView} pulse={isPresentationView}>
+            Seen on stream
+          </Badge>
+        )}
       </div>
 
       <p
