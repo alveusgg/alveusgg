@@ -91,10 +91,19 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
           {entry.title}
         </h2>
 
-        {entry.seenOnStream && (
-          <Badge dark={isPresentationView} pulse={isPresentationView}>
-            Seen on stream
-          </Badge>
+        {(
+          [[entry.seenOnStream, "Seen on stream"]] satisfies [boolean, string][]
+        ).map(
+          ([cond, text], i) =>
+            cond && (
+              <Badge
+                dark={isPresentationView}
+                key={i}
+                pulse={isPresentationView}
+              >
+                {text}
+              </Badge>
+            ),
         )}
       </div>
 
