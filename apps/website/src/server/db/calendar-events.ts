@@ -109,7 +109,16 @@ export const eventsByWeekDay = [
     },
   ],
   // Friday
-  [animalCareChats],
+  [
+    {
+      title: "Show & Tell",
+      description:
+        "Join Maya as she reviews this week's community submissions for Show and Tell.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 14, minute: 30 },
+    },
+  ],
   // Saturday
   [
     {
