@@ -1,6 +1,6 @@
 import { classes } from "@/utils/classes";
 
-const SeenOnStreamBadgeBackground = ({
+const BadgeBackground = ({
   dark = false,
   className,
 }: {
@@ -25,13 +25,10 @@ export const SeenOnStreamBadge = ({ dark = false, pulse = false }) => {
     <div className="absolute right-0 top-0 flex aspect-square w-[80px] rotate-12 items-center">
       {pulse && (
         <div className="absolute inset-0 h-full w-full scale-75 opacity-25 motion-reduce:hidden">
-          <SeenOnStreamBadgeBackground
-            dark={dark}
-            className="scale-150 animate-ping"
-          />
+          <BadgeBackground dark={dark} className="scale-150 animate-ping" />
         </div>
       )}
-      <SeenOnStreamBadgeBackground dark={dark} />
+      <BadgeBackground dark={dark} />
       <span
         className={classes(
           "relative text-center text-sm leading-tight",
