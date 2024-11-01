@@ -83,7 +83,9 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
       }`}
     >
       {entry.seenOnStream && (
-        <Badge dark={isPresentationView} pulse={isPresentationView} />
+        <Badge dark={isPresentationView} pulse={isPresentationView}>
+          Seen on stream
+        </Badge>
       )}
 
       <h2

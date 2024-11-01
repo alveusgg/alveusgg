@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 import { classes } from "@/utils/classes";
 
 const BadgeBackground = ({
@@ -20,7 +22,15 @@ const BadgeBackground = ({
   </svg>
 );
 
-export const Badge = ({ dark = false, pulse = false }) => {
+export const Badge = ({
+  children,
+  dark = false,
+  pulse = false,
+}: {
+  children: ReactNode;
+  dark?: boolean;
+  pulse?: boolean;
+}) => {
   return (
     <div className="absolute right-0 top-0 flex aspect-square w-[80px] rotate-12 items-center">
       {pulse && (
@@ -35,7 +45,7 @@ export const Badge = ({ dark = false, pulse = false }) => {
           dark ? "text-alveus-green-900" : "text-alveus-tan",
         )}
       >
-        Seen on stream
+        {children}
       </span>
     </div>
   );
