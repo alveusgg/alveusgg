@@ -20,7 +20,7 @@ const BadgeBackground = ({
   </svg>
 );
 
-export const SeenOnStreamBadge = ({ dark = false, pulse = false }) => {
+export const Badge = ({ dark = false, pulse = false }) => {
   return (
     <div className="absolute right-0 top-0 flex aspect-square w-[80px] rotate-12 items-center">
       {pulse && (

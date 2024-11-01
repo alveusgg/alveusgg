@@ -24,7 +24,7 @@ import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and
 
 import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
-import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
+import { Badge } from "@/components/show-and-tell/Badge";
 
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
@@ -83,10 +83,7 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
       }`}
     >
       {entry.seenOnStream && (
-        <SeenOnStreamBadge
-          dark={isPresentationView}
-          pulse={isPresentationView}
-        />
+        <Badge dark={isPresentationView} pulse={isPresentationView} />
       )}
 
       <h2
