@@ -32,7 +32,7 @@ export const Badge = ({
   pulse?: boolean;
 }) => {
   return (
-    <div className="flex aspect-square w-[80px] rotate-12 items-center">
+    <div className="flex aspect-square w-[80px] rotate-12 items-center justify-center">
       {pulse && (
         <div className="absolute inset-0 h-full w-full scale-75 opacity-25 motion-reduce:hidden">
           <BadgeBackground dark={dark} className="scale-150 animate-ping" />
@@ -41,7 +41,7 @@ export const Badge = ({
       <BadgeBackground dark={dark} />
       <span
         className={classes(
-          "relative text-center text-sm leading-tight",
+          "relative w-3/4 text-center text-sm leading-tight",
           dark ? "text-alveus-green-900" : "text-alveus-tan",
         )}
       >
