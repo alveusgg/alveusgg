@@ -1,3 +1,6 @@
+const channels = 3;
+const sigBits = 5;
+
 type Range = [number, number];
 const cut = (
   vboxes: {
@@ -34,21 +37,22 @@ const cut = (
 
   let total = 0;
   const partialSums = [];
-  const jChannel = ((maxRange + 1) % 3) as Channel;
-  const kChannel = ((jChannel + 1) % 3) as Channel;
-  const [iStart, iEnd] = ranges[maxRange];
+  const iChannel = maxRange;
+  const jChannel = ((iChannel + 1) % channels) as Channel;
+  const kChannel = ((jChannel + 1) % channels) as Channel;
+  const [iStart, iEnd] = ranges[iChannel];
   const [jStart, jEnd] = ranges[jChannel];
   const [kStart, kEnd] = ranges[kChannel];
   for (let i = iStart; i <= iEnd; i++) {
     let sum = 0;
 
-    const iIdx = i << (5 * (2 - maxRange));
+    const iIdx = i << (sigBits * (2 - iChannel));
 
     for (let j = jStart; j <= jEnd; j++) {
-      const jIdx = iIdx + (j << (5 * (2 - jChannel)));
+      const jIdx = iIdx + (j << (sigBits * (2 - jChannel)));
 
       for (let k = kStart; k <= kEnd; k++) {
-        const histogramIdx = jIdx + (k << (5 * (2 - kChannel)));
+        const histogramIdx = jIdx + (k << (sigBits * (2 - kChannel)));
 
         sum += histogram[histogramIdx] ?? 0;
       }
@@ -103,22 +107,29 @@ const cut = (
   }
 };
 
+// Compresses each channel to 5 bits and stores each pixel in a histogram.
+// Creates a vbox that has the range of each channel as the length of each dimension.
+// Cuts the vbox with the largest population at the median point
+// along the longest dimension three times.
+// Cuts the vbox with the largest product of its volume and population.
+// Returns the average color of the vbox with the largest product.
 export const mmcq = (data: Uint8ClampedArray) => {
-  const histogram = Array(1 << 15);
+  const histogram = Array(1 << (sigBits * channels));
 
-  const blockSize = 4 * 10;
+  // RGBA
+  const channelsInData = 4;
+  const blockSize = channelsInData * 10;
   let population = 0;
-  const ranges = Array.from({ length: 3 }, () => [(1 << 5) - 1, 0]) as [
-    Range,
-    Range,
-    Range,
-  ];
+  const ranges = Array.from({ length: channels }, () => [
+    (1 << sigBits) - 1,
+    0,
+  ]) as [Range, Range, Range];
   for (let i = 0; i < data.length; i += blockSize) {
-    if (data[i + 3]! < 128) continue;
+    if (data[i + (channelsInData - 1)]! < 128) continue;
 
     let histogramIdx = 0;
-    for (let j = 0; j < 3; j++) {
-      const value = data[i + j]! >> 3;
+    for (let j = 0; j < channels; j++) {
+      const value = data[i + j]! >> (8 - sigBits);
 
       if (value < ranges[j]![0]) {
         ranges[j]![0] = value;
@@ -127,7 +138,7 @@ export const mmcq = (data: Uint8ClampedArray) => {
         ranges[j]![1] = value;
       }
 
-      histogramIdx += value << (5 * (2 - j));
+      histogramIdx += value << (sigBits * (2 - j));
     }
 
     histogram[histogramIdx] = (histogram[histogramIdx] ?? 0) + 1;
@@ -174,9 +185,9 @@ export const mmcq = (data: Uint8ClampedArray) => {
   const dominantColor = [0, 0, 0];
   let total = 0;
   for (let r = rRange[0]; r <= rRange[1]; r++) {
-    const rIdx = r << 10;
+    const rIdx = r << (sigBits * 2);
     for (let g = gRange[0]; g <= gRange[1]; g++) {
-      const gIdx = rIdx + (g << 5);
+      const gIdx = rIdx + (g << sigBits);
       for (let b = bRange[0]; b <= bRange[1]; b++) {
         const histogramIdx = gIdx + b;
         const amt = histogram[histogramIdx] ?? 0;
@@ -193,12 +204,12 @@ export const mmcq = (data: Uint8ClampedArray) => {
   }
   if (total > 0) {
     for (let i = 0; i < dominantColor.length; i++) {
-      dominantColor[i] = ~~((dominantColor[i]! << 3) / total);
+      dominantColor[i] = ~~((dominantColor[i]! << (8 - sigBits)) / total);
     }
   } else {
     for (let i = 0; i < dominantColorVbox.ranges.length; i++) {
       const range = dominantColorVbox.ranges[i]!;
-      dominantColor[i] = ~~(((range[0] + range[1] + 1) << 3) / 2);
+      dominantColor[i] = ~~(((range[0] + range[1] + 1) << (8 - sigBits)) / 2);
     }
   }
 
