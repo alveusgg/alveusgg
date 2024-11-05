@@ -20,7 +20,7 @@ import IconArrowRight from "@/icons/IconArrowRight";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import imageGuidestarSeal from "@/assets/guidestar-candid-gold-seal.svg";
+import imageGuidestarSeal from "@/assets/guidestar-candid-seal.svg";
 
 const sources = {
   twitchAdvertising: {
@@ -710,16 +710,16 @@ const AboutAlveusPage: NextPage = () => {
         >
           <div>
             <Heading id="transparency" level={2} link>
-              Gold rated transparency
+              Platinum rated transparency
             </Heading>
 
             <p>
-              Alveus&apos; transparency has been rated gold on Candid
+              Alveus&apos; transparency has been rated platinum on Candid
               (GuideStar). Candid is a leading source of information on
               non-profit organizations, helping donors and funders make informed
               decisions about their support. Check out our{" "}
               <Link
-                href="https://www.guidestar.org/profile/86-1772907"
+                href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
                 external
                 dark
               >
@@ -733,7 +733,7 @@ const AboutAlveusPage: NextPage = () => {
             className="flex-shrink-0"
             external
             custom
-            href="https://www.guidestar.org/profile/86-1772907"
+            href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
           >
             <Image
               className="h-40 w-40"
