@@ -44,7 +44,7 @@ const Socials = () => {
               </span>
               {crawler || reducedMotion ? (
                 <Image
-                  src={reelVideo.poster}
+                  src={reelVideo.poster || ""}
                   alt=""
                   width={400}
                   height={680}

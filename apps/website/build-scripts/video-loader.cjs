@@ -134,12 +134,14 @@ const scaleFilter = (width = undefined, height = undefined) => {
  * @param {number} [width] Optional width for the filter
  * @param {number} [height] Optional height for the filter
  * @param {string[]} [args=[]] Additional arguments to pass to ffmpeg
+ * @param {string[]} [iargs=[]] Additional arguments to pass to ffmpeg (before the input file)
  * @return {Promise<VideoLoaderOutput>}
  */
 const videoResized = async (
   ctx,
   { extension = undefined, width = undefined, height = undefined },
   args = [],
+  iargs = [],
 ) => {
   // Get the original extension
   const originalExtension = interpolateName(ctx.context, "[ext]", {
@@ -161,6 +163,7 @@ const videoResized = async (
           width,
           height,
           ...args,
+          ...iargs,
           getHashDigest(ctx.content, "sha1"),
         ].join(":"),
       ),
@@ -186,6 +189,7 @@ const videoResized = async (
       // Use ffmpeg to change the size to what is requested
       const command = [
         `"${ffmpeg.path}"`,
+        ...iargs,
         "-i",
         `"${ctx.context.resourcePath}"`,
         scale,
@@ -234,17 +238,6 @@ const videoResized = async (
 };
 
 /**
- * Get the first frame of the video as a PNG
- *
- * @param {VideoLoaderContext} ctx Video loader context
- * @param {number} [width] Optional width for the filter
- * @param {number} [height] Optional height for the filter
- * @return {Promise<{ name: string, content: Buffer|null, cached: boolean, skipped: boolean }>}
- */
-const videoPoster = (ctx, { width = undefined, height = undefined }) =>
-  videoResized(ctx, { extension: "png", width, height }, ["-an", "-vframes 1"]);
-
-/**
  * Get the requested quality from the resource query, or the default options
  *
  * @param {{ quality: string | null }} options Webpack loader options
@@ -266,16 +259,37 @@ const defaultTypes = {
     // Heavily compressed h264 720p30 video (no audio)
     {
       size: 720,
-      type: "mp4",
+      type: "video/mp4",
+      ext: "mp4",
       args: ["-an", "-vcodec libx264", "-filter:v fps=30", "-b:v 1200k"],
+      iargs: [],
     },
   ],
   low: [
     // Heavily compressed h264 540p24 video (no audio)
     {
       size: 540,
-      type: "mp4",
+      type: "video/mp4",
+      ext: "mp4",
       args: ["-an", "-vcodec libx264", "-filter:v fps=24", "-b:v 800k"],
+      iargs: [],
+    },
+  ],
+  poster: [
+    // First frame at 720p
+    {
+      size: 720,
+      type: "video/mp4",
+      ext: "png",
+      args: ["-an", "-vframes 1"],
+      iargs: [],
+    },
+    {
+      size: 720,
+      type: "video/webm",
+      ext: "png",
+      args: ["-an", "-vframes 1"],
+      iargs: ["-vcodec libvpx-vp9"],
     },
   ],
 };
@@ -309,32 +323,58 @@ const videoLoader = async (context, content) => {
   };
   const files = [];
   /** @typedef {{ src: string, size: int, type: string }} Source */
-  /** @type {{ poster: string, sources: Array<Source> }} */
-  const obj = { poster: "", sources: [] };
+  /** @type {{ poster: string | undefined, sources: Array<Source> }} */
+  const obj = { poster: undefined, sources: [] };
+
+  // Load the raw video so we know the type
+  const raw = await videoRaw(ctx);
 
   // Expose the first frame as a poster at 720p
-  const poster = await videoPoster(ctx, { height: 720 });
-  files.push(poster);
-  obj.poster = `${base}${poster.name}`;
-
-  if (!options.isDevelopment) {
-    // When not in development mode, process the video
-    for (const { size, type, args } of defaultTypes[quality]) {
-      const video = await videoResized(
-        ctx,
-        { height: size, extension: type },
-        args,
-      );
-      files.push(video);
-      obj.sources.push({
-        src: `${base}${video.name}`,
-        size,
-        type: `video/${type}`,
-      });
-    }
+  const posterOpts = defaultTypes.poster.find(({ type }) => type === raw.type);
+  if (posterOpts) {
+    const poster = await videoResized(
+      ctx,
+      { height: posterOpts.size, extension: posterOpts.ext },
+      posterOpts.args,
+      posterOpts.iargs,
+    );
+    files.push(poster);
+    obj.poster = `${base}${poster.name}`;
   } else {
-    // Otherwise, just expose the original video
-    const raw = await videoRaw(ctx);
+    console.warn(
+      ` ... ${context.resourcePath} no poster options for ${raw.type}`,
+    );
+  }
+
+  // When not in development mode, process the video
+  if (!options.isDevelopment) {
+    const resizeOpts = defaultTypes[quality].filter(
+      ({ type }) => type === raw.type,
+    );
+    if (resizeOpts.length) {
+      for (const { size, type, ext, args, iargs } of resizeOpts) {
+        const video = await videoResized(
+          ctx,
+          { height: size, extension: ext },
+          args,
+          iargs,
+        );
+        files.push(video);
+        obj.sources.push({
+          src: `${base}${video.name}`,
+          size,
+          type,
+        });
+      }
+    } else {
+      console.warn(
+        ` ... ${context.resourcePath} no resize options for ${raw.type}, using raw`,
+      );
+    }
+  }
+
+  // Otherwise, just expose the original video
+  if (!obj.sources.length) {
     files.push(raw);
     obj.sources.push({
       src: `${base}${raw.name}`,
