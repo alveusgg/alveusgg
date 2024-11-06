@@ -85,7 +85,9 @@ const UpdatesPage: NextPage = () => {
             <Video
               sources={bellPeepo.sources}
               poster={bellPeepo.poster}
-              className="w-full"
+              className="h-auto w-full"
+              width={512}
+              height={432}
               autoPlay
               loop
               muted

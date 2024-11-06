@@ -11,8 +11,11 @@ type VideoProps = {
   className?: string;
   title?: string;
   poster?: string;
+  width?: number;
+  height?: number;
   sources: {
     src: string;
+    size: number;
     type: string;
   }[];
   threshold?: number;
@@ -27,6 +30,8 @@ const Video = ({
   className = "",
   title,
   poster,
+  width,
+  height,
   sources,
   threshold = 0.1,
 }: VideoProps) => {
@@ -73,6 +78,8 @@ const Video = ({
       disablePictureInPicture={disablePictureInPicture}
       className={className}
       title={title}
+      width={width}
+      height={height || sources[0]?.size}
       poster={computedPoster}
       ref={ref}
     >
