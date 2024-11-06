@@ -23,6 +23,11 @@ declare module "*.mp4?quality=low" {
   export default Video;
 }
 
+declare module "*.webm" {
+  const src: string;
+  export default src;
+}
+
 declare module "*.md" {
   const content: string;
   export default content;

@@ -1,10 +1,10 @@
 import { type NextPage } from "next";
 import Link from "next/link";
-import Image from "next/image";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Video from "@/components/content/Video";
 
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
@@ -12,7 +12,7 @@ import { RecentNotifications } from "@/components/notifications/RecentNotificati
 import { Schedule } from "@/components/calendar/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
-import bellPeepo from "@/assets/bell-peepo.webp";
+import bellPeepo from "@/assets/bell-peepo.webm";
 
 const notificationTags = ["stream"];
 
@@ -62,11 +62,14 @@ const UpdatesPage: NextPage = () => {
         </div>
 
         <div className="w-full max-w-lg">
-          <Image
-            src={bellPeepo}
-            alt=""
+          <Video
+            sources={[{ src: bellPeepo, type: "video/webm" }]}
             className="w-full"
-            unoptimized // Next.js optimization makes this larger than source
+            autoPlay
+            loop
+            muted
+            playsInline
+            disablePictureInPicture
           />
         </div>
       </Section>

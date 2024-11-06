@@ -410,6 +410,12 @@ const config = {
       type: "asset/source",
     });
 
+    // Load webm files as resources
+    config.module.rules.push({
+      test: /\.webm$/,
+      type: "asset/resource",
+    });
+
     // Disable Webpack caching if not in development
     if (!options.dev && config.cache?.type === "filesystem") {
       config.cache = false;
