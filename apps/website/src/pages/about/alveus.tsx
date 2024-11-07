@@ -680,9 +680,6 @@ const AboutAlveusPage: NextPage = () => {
           <Section key={section.key}>
             <Timeline
               before={"cta" in (history[idx] || {}) ? "-top-20" : undefined}
-              after={
-                "cta" in (history[idx + 2] || {}) ? "-bottom-20" : undefined
-              }
               items={section.items.map(transformHistoryItem)}
             />
           </Section>

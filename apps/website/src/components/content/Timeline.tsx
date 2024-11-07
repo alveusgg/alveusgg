@@ -18,11 +18,17 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
   <div className="relative z-0 mx-auto max-w-6xl">
     <div
       className={classes(
-        "absolute left-5 -z-10 w-1 -translate-x-1/2 bg-alveus-green md:left-1/2",
+        "absolute left-5 -z-10 w-1 -translate-x-1/2 overflow-clip border-x border-alveus-green bg-alveus-green/25 md:left-1/2",
         before || "top-0",
-        after || "bottom-0",
+        after || "-bottom-20",
       )}
-    />
+    >
+      <div
+        className={classes(
+          "sticky inset-x-0 -top-1 bottom-0 -mt-[50vh] h-[calc(50vh+0.25rem)] bg-alveus-green",
+        )}
+      />
+    </div>
     <ol>
       {items.map((item, idx) => (
         <li key={item.key} className="relative my-4 flex items-start">
