@@ -23,58 +23,50 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
         after || "-bottom-20",
       )}
     >
-      <div
-        className={classes(
-          "sticky inset-x-0 -top-1 bottom-0 -mt-[50vh] h-[calc(50vh+0.25rem)] bg-alveus-green",
-        )}
-      />
+      <div className="sticky inset-x-0 -top-1 bottom-0 -mt-[50vh] h-[calc(50vh+0.25rem)] bg-alveus-green" />
     </div>
     <ol>
       {items.map((item, idx) => (
         <li key={item.key} className="relative my-4 flex items-start">
           <div
-            className={`absolute left-5 inline-block ${
-              idx % 2 ? "md:left-1/2" : "md:left-auto md:right-1/2"
-            }`}
+            className={classes(
+              "absolute left-5 inline-block",
+              idx % 2 ? "md:left-1/2" : "md:left-auto md:right-1/2",
+            )}
           >
             <div
-              className={`
-            mt-1
-            hidden
-            border-y-[1rem] border-solid border-y-transparent md:block
-            ${
-              idx % 2
-                ? "ml-6 border-l-0 border-r-[1rem] border-r-alveus-green"
-                : "mr-6 border-l-[1rem] border-r-0 border-l-alveus-green"
-            }`}
+              className={classes(
+                "mt-1 hidden border-y-[1rem] border-solid border-y-transparent md:block",
+                idx % 2
+                  ? "ml-6 border-l-0 border-r-[1rem] border-r-alveus-green"
+                  : "mr-6 border-l-[1rem] border-r-0 border-l-alveus-green",
+              )}
             />
-            <div
-              className={`
-            ml-6
-            mt-1 border-y-[1rem] border-l-0 border-r-[1rem]
-            border-solid border-y-transparent border-r-alveus-green md:hidden`}
-            />
+            <div className="ml-6 mt-1 border-y-[1rem] border-l-0 border-r-[1rem] border-solid border-y-transparent border-r-alveus-green md:hidden" />
           </div>
           <div className="rounded-full bg-alveus-green p-3 text-alveus-tan">
             <IconCalendar size={16} />
           </div>
           <div
-            className={`hidden basis-1/2 px-4 pt-2 md:block ${
-              idx % 2 ? "md:order-first" : "md:order-last"
-            }`}
+            className={classes(
+              "hidden basis-1/2 px-4 pt-2 md:block",
+              idx % 2 ? "md:order-first" : "md:order-last",
+            )}
           >
             <p
-              className={`text-md text-alveus-green-700 ${
-                idx % 2 ? "text-right" : "text-left"
-              }`}
+              className={classes(
+                "text-md text-alveus-green-700",
+                idx % 2 ? "text-right" : "text-left",
+              )}
             >
               {item.date}
             </p>
           </div>
           <div
-            className={`basis-full px-4 md:basis-1/2 ${
-              idx % 2 ? "md:order-last" : "md:order-first"
-            }`}
+            className={classes(
+              "basis-full px-4 md:basis-1/2",
+              idx % 2 ? "md:order-last" : "md:order-first",
+            )}
           >
             <div className="text-md rounded-lg bg-alveus-green p-6 text-alveus-tan">
               <p className="mb-4 md:hidden">{item.date}</p>
