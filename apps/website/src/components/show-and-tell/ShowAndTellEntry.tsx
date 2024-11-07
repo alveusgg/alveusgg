@@ -31,6 +31,7 @@ import { classes } from "@/utils/classes";
 
 type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
+  newLocation: boolean;
   isPresentationView?: boolean;
   withHeight?: boolean;
 };
@@ -166,7 +167,10 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
   );
 };
 
-const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
+const Content = ({
+  entry,
+  isPresentationView,
+}: Omit<ShowAndTellEntryProps, "newLocation">) => {
   const content = useMemo(() => {
     try {
       return parse(`<root>${entry.text}</root>`, parseOptions);
@@ -207,7 +211,7 @@ export const ShowAndTellEntry = forwardRef<
   HTMLElement | null,
   ShowAndTellEntryProps
 >(function ShowAndTellEntry(
-  { entry, isPresentationView = false, withHeight = true },
+  { entry, newLocation, isPresentationView = false, withHeight = true },
   forwardedRef,
 ) {
   const wrapperRef = useRef<HTMLElement | null>(null);
@@ -287,7 +291,11 @@ export const ShowAndTellEntry = forwardRef<
             : ""
         }`}
       >
-        <Header entry={entry} isPresentationView={isPresentationView} />
+        <Header
+          entry={entry}
+          newLocation={newLocation}
+          isPresentationView={isPresentationView}
+        />
 
         <ShowAndTellGallery
           isPresentationView={isPresentationView}
