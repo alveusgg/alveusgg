@@ -24,6 +24,9 @@ const PreviewShowAndTellPage: NextPage = () => {
     enabled: Boolean(postId),
   });
 
+  const getPostsFromANewLocation =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery();
+
   return (
     <>
       <Meta
@@ -72,13 +75,31 @@ const PreviewShowAndTellPage: NextPage = () => {
 
         {session?.status === "authenticated" && (
           <>
-            {getMyPost.isLoading && <p>Loading...</p>}
-            {getMyPost.isError && (
-              <MessageBox variant="failure">
-                {getMyPost.error.message}
-              </MessageBox>
+            {getMyPost.isLoading || getPostsFromANewLocation.isLoading ? (
+              <p>Loading...</p>
+            ) : getMyPost.isError || getPostsFromANewLocation.isError ? (
+              <>
+                {getMyPost.isError && (
+                  <MessageBox variant="failure">
+                    {getMyPost.error.message}
+                  </MessageBox>
+                )}
+                {getPostsFromANewLocation.isError && (
+                  <MessageBox variant="failure">
+                    {getPostsFromANewLocation.error.message}
+                  </MessageBox>
+                )}
+              </>
+            ) : (
+              getMyPost.data && (
+                <ShowAndTellEntry
+                  entry={getMyPost.data}
+                  newLocation={getPostsFromANewLocation.data.has(
+                    getMyPost.data.id,
+                  )}
+                />
+              )
             )}
-            {getMyPost.data && <ShowAndTellEntry entry={getMyPost.data} />}
           </>
         )}
       </Section>
