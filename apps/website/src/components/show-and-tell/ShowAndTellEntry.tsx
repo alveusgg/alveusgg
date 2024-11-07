@@ -74,7 +74,11 @@ const parseOptions: HTMLReactParserOptions = {
   },
 };
 
-const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
+const Header = ({
+  entry,
+  newLocation,
+  isPresentationView,
+}: ShowAndTellEntryProps) => {
   const hours = entry.volunteeringMinutes && entry.volunteeringMinutes / 60;
 
   return (
@@ -93,7 +97,10 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
         </h2>
 
         {(
-          [[entry.seenOnStream, "Seen on stream"]] satisfies [boolean, string][]
+          [
+            [newLocation, "New location"],
+            [entry.seenOnStream, "Seen on stream"],
+          ] satisfies [boolean, string][]
         ).map(
           ([cond, text], i) =>
             cond && (
