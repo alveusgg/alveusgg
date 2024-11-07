@@ -39,6 +39,11 @@ const AdminPreviewShowAndTellPage: NextPage<
 
   const entry = getEntry.data;
 
+  const getPostsFromANewLocation =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery();
+
+  const postsFromANewLocation = getPostsFromANewLocation.data;
+
   return (
     <>
       <Meta title="Preview Submission - Show and Tell" />
@@ -58,7 +63,13 @@ const AdminPreviewShowAndTellPage: NextPage<
 
       {/* Grow the last section to cover the page */}
       <Section className="flex-grow">
-        {entry && <ShowAndTellEntry entry={entry} isPresentationView={false} />}
+        {entry && postsFromANewLocation && (
+          <ShowAndTellEntry
+            entry={entry}
+            newLocation={postsFromANewLocation.has(entry.id)}
+            isPresentationView={false}
+          />
+        )}
       </Section>
     </>
   );
