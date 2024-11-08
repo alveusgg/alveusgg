@@ -44,18 +44,20 @@ const Socials = () => {
               </span>
               {crawler || reducedMotion ? (
                 <Image
-                  src={reelVideo.poster}
+                  src={reelVideo.poster || ""}
                   alt=""
                   width={400}
                   height={680}
                   loading="lazy"
-                  className="absolute inset-0"
+                  className="absolute inset-0 h-full w-full object-cover"
                 />
               ) : (
                 <Video
                   sources={reelVideo.sources}
                   poster={reelVideo.poster}
-                  className="absolute inset-0"
+                  className="absolute inset-0 h-full w-full object-cover"
+                  width={400}
+                  height={680}
                   autoPlay
                   loop
                   muted
