@@ -7,11 +7,15 @@ type VideoProps = {
   loop?: boolean;
   muted?: boolean;
   playsInline?: boolean;
+  disablePictureInPicture?: boolean;
   className?: string;
   title?: string;
   poster?: string;
+  width?: number;
+  height?: number;
   sources: {
     src: string;
+    size: number;
     type: string;
   }[];
   threshold?: number;
@@ -22,9 +26,12 @@ const Video = ({
   loop = false,
   muted = false,
   playsInline = false,
+  disablePictureInPicture = false,
   className = "",
   title,
   poster,
+  width,
+  height,
   sources,
   threshold = 0.1,
 }: VideoProps) => {
@@ -68,8 +75,11 @@ const Video = ({
       loop={loop}
       muted={muted}
       playsInline={playsInline}
+      disablePictureInPicture={disablePictureInPicture}
       className={className}
       title={title}
+      width={width}
+      height={height || sources[0]?.size}
       poster={computedPoster}
       ref={ref}
     >

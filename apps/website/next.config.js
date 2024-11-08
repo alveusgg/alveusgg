@@ -389,7 +389,7 @@ const config = {
   webpack: (config, options) => {
     // Add a custom loader for videos
     config.module.rules.push({
-      test: /\.mp4$/,
+      test: /\.(mp4|webm)$/,
       use: [
         {
           loader: resolve("./build-scripts/video-loader.cjs"),
