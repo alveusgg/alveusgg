@@ -2,9 +2,13 @@ import { type NextPage } from "next";
 import Link from "next/link";
 import Image from "next/image";
 
+import usePrefersReducedMotion from "@/hooks/motion";
+import useCrawler from "@/hooks/crawler";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Video from "@/components/content/Video";
 
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
@@ -12,11 +16,17 @@ import { RecentNotifications } from "@/components/notifications/RecentNotificati
 import { Schedule } from "@/components/calendar/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
-import bellPeepo from "@/assets/bell-peepo.webp";
+import bellPeepo from "@/assets/bell-peepo.webm";
 
 const notificationTags = ["stream"];
 
 const UpdatesPage: NextPage = () => {
+  const reducedMotion = usePrefersReducedMotion();
+
+  // If this is a known crawler, we'll not load the video
+  // This is an attempt to stop Google reporting unindexable video pages
+  const crawler = useCrawler();
+
   return (
     <>
       <Meta
@@ -62,12 +72,29 @@ const UpdatesPage: NextPage = () => {
         </div>
 
         <div className="w-full max-w-lg">
-          <Image
-            src={bellPeepo}
-            alt=""
-            className="w-full"
-            unoptimized // Next.js optimization makes this larger than source
-          />
+          {crawler || reducedMotion ? (
+            <Image
+              src={bellPeepo.poster || ""}
+              alt=""
+              width={512}
+              height={432}
+              loading="lazy"
+              className="w-full"
+            />
+          ) : (
+            <Video
+              sources={bellPeepo.sources}
+              poster={bellPeepo.poster}
+              className="h-auto w-full"
+              width={512}
+              height={432}
+              autoPlay
+              loop
+              muted
+              playsInline
+              disablePictureInPicture
+            />
+          )}
         </div>
       </Section>
 

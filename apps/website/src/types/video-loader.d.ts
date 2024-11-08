@@ -5,7 +5,7 @@ interface VideoSource {
 }
 
 interface Video {
-  poster: string;
+  poster?: string;
   sources: VideoSource[];
 }
 
@@ -20,6 +20,10 @@ declare module "*.mp4?quality=high" {
 }
 
 declare module "*.mp4?quality=low" {
+  export default Video;
+}
+
+declare module "*.webm" {
   export default Video;
 }
 
