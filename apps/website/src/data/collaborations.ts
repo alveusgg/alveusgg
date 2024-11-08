@@ -73,7 +73,8 @@ const collaborations: Collaboration[] = (
       name: "TheSushiDragon",
       link: "https://www.twitch.tv/thesushidragon",
       date: new Date("2024-10-30"),
-      videoId: "61_IkfEo7mk",
+      videoId: "MgVvgBdaESo",
+      vodId: "61_IkfEo7mk",
       creators: [
         {
           name: "TheSushiDragon",
