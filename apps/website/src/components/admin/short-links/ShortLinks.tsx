@@ -44,8 +44,8 @@ function ShortLink({ shortLink, onError, onUpdate }: LinkProps) {
             <div className="text-xl">{shortLink.label}</div>
             <div className="flex gap-1">
               Public Link:
-              <Link href={`${getShortBaseUrl()}/l/${shortLink.slug}`} external>
-                {`${getShortBaseUrl()}/l/${shortLink.slug}`}
+              <Link href={`${getShortBaseUrl()}/go/${shortLink.slug}`} external>
+                {`${getShortBaseUrl()}/go/${shortLink.slug}`}
               </Link>
             </div>
           </div>
