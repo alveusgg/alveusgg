@@ -11,6 +11,7 @@ import {
 } from "@/utils/datetime";
 
 import logoImage from "@/assets/logo.png";
+const colors = ["#7E7E7E", "#4E3029"];
 
 import { type WeatherResponse } from "../api/stream/weather";
 
@@ -28,12 +29,17 @@ const truncate = (value: string, max: number) => {
 const OverlayPage: NextPage = () => {
   // Get the current time and date
   // Refresh every 250ms
-  const [time, setTime] = useState<{ time: string; date: string }>();
+  const [time, setTime] = useState<{
+    time: string;
+    date: string;
+    code: string[];
+  }>();
   const timeInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
     const updateTime = () => {
+      const date = new Date();
       const parts = formatDateTimeParts(
-        new Date(),
+        date,
         { style: "short", time: "seconds", timezone: true },
         { zone: DATETIME_ALVEUS_ZONE },
       );
@@ -58,7 +64,16 @@ const OverlayPage: NextPage = () => {
       const day = parts.find((part) => part.type === "day");
       if (!year || !month || !day) return;
 
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+
+      const code = (minutes * 60 + seconds)
+        .toString(2)
+        .padStart(12, "0")
+        .split("");
+
       setTime({
+        code,
         time: timeParts.join(""),
         date: [year, month, day]
           .map((part) => part.value.padStart(2, "0"))
@@ -225,6 +240,18 @@ const OverlayPage: NextPage = () => {
           </div>
         </div>
       </Transition>
+
+      <div className="absolute bottom-0 right-0 grid grid-cols-12">
+        {time.code.map((bit, idx) => (
+          <div
+            key={idx}
+            style={{
+              backgroundColor: bit === "0" ? colors[0] : colors[1],
+            }}
+            className="h-1 w-1"
+          />
+        ))}
+      </div>
     </div>
   );
 };
