@@ -244,7 +244,7 @@ const OverlayPage: NextPage = () => {
       <div className="absolute bottom-0 right-0 grid grid-cols-12">
         {time.code.map((bit, idx) => (
           <div
-            key={idx}
+            key={bit + idx}
             style={{
               backgroundColor: bit === "0" ? colors[0] : colors[1],
             }}
