@@ -17,7 +17,7 @@ import { Schedule } from "@/components/calendar/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
 import bellPeepo from "@/assets/bell-peepo.webm";
-import useIsSafari from "@/hooks/safari";
+import useIsWebKit from "@/hooks/webkit";
 
 const notificationTags = ["stream"];
 
@@ -28,11 +28,11 @@ const UpdatesPage: NextPage = () => {
   // This is an attempt to stop Google reporting unindexable video pages
   const crawler = useCrawler();
 
-  // If the user is using Safari, we'll not load the video as Safari does not support WebM well
-  // (bad frame rate and no transparency) as of 2024-11-09
-  const mightBeSafari = useIsSafari() !== false; // assume it's Safari until we know
+  // If the user is using WebKit (Safari on Mac and any browser on iOS), we'll not load the video as WebKit does
+  // not support WebM well (bad frame rate and no transparency) as of 2024-11-09
+  const mightBeWebkit = useIsWebKit() !== false; // assume it's WebKit until we know
 
-  const showVideo = !crawler && !reducedMotion && !mightBeSafari;
+  const showVideo = !crawler && !reducedMotion && !mightBeWebkit;
 
   return (
     <>
