@@ -17,6 +17,7 @@ import { Schedule } from "@/components/calendar/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
 import bellPeepo from "@/assets/bell-peepo.webm";
+import useIsWebKit from "@/hooks/webkit";
 
 const notificationTags = ["stream"];
 
@@ -26,6 +27,12 @@ const UpdatesPage: NextPage = () => {
   // If this is a known crawler, we'll not load the video
   // This is an attempt to stop Google reporting unindexable video pages
   const crawler = useCrawler();
+
+  // If the user is using WebKit (Safari on Mac and any browser on iOS), we'll not load the video as WebKit does
+  // not support WebM well (bad frame rate and no transparency) as of 2024-11-09
+  const mightBeWebkit = useIsWebKit() !== false; // assume it's WebKit until we know
+
+  const showVideo = !crawler && !reducedMotion && !mightBeWebkit;
 
   return (
     <>
@@ -72,16 +79,7 @@ const UpdatesPage: NextPage = () => {
         </div>
 
         <div className="w-full max-w-lg">
-          {crawler || reducedMotion ? (
-            <Image
-              src={bellPeepo.poster || ""}
-              alt=""
-              width={512}
-              height={432}
-              loading="lazy"
-              className="w-full"
-            />
-          ) : (
+          {showVideo ? (
             <Video
               sources={bellPeepo.sources}
               poster={bellPeepo.poster}
@@ -93,6 +91,15 @@ const UpdatesPage: NextPage = () => {
               muted
               playsInline
               disablePictureInPicture
+            />
+          ) : (
+            <Image
+              src={bellPeepo.poster || ""}
+              alt=""
+              width={512}
+              height={432}
+              loading="lazy"
+              className="w-full"
             />
           )}
         </div>
