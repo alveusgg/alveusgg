@@ -172,10 +172,10 @@ export const MapPickerField = ({
           ({
             result: {
               geometry: { coordinates },
-              place_name,
+              text,
             },
           }) => {
-            handleLocationSet(map, coordinates[1], coordinates[0], place_name);
+            handleLocationSet(map, coordinates[1], coordinates[0], text);
           },
         ),
       )
