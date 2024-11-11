@@ -39,11 +39,32 @@ const creators = collaborations
   )
   .sort((a, b) => b.popularity - a.popularity);
 
-const dots = 16;
-
 const Creators = ({ className }: { className?: string }) => {
   const ref = useRef<HTMLUListElement>(null);
   const drag = useDragScroll();
+
+  const [dots, setDots] = useState(0);
+  const onResize = useCallback(() => {
+    const elm = ref.current;
+    if (!elm) return;
+
+    // Get the visible width of the scrollable elm
+    // Get the width of 1rem in pixels
+    const visible = elm.clientWidth;
+    const rem = parseInt(getComputedStyle(document.documentElement).fontSize);
+
+    // Calculate the number of dots to show
+    // Only ever fill 80% of the visible width
+    const dot = 0.75 * rem;
+    const gap = 0.5 * rem;
+    const count = Math.floor((visible * 0.8) / (dot + gap));
+    setDots(Math.min(count, 20));
+  }, []);
+  useEffect(() => {
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [onResize]);
 
   const [bar, setBar] = useState({
     start: 0,
@@ -64,9 +85,11 @@ const Creators = ({ className }: { className?: string }) => {
     const start = Math.floor(scroll * (dots - width));
 
     setBar({ start, width });
-  }, []);
+  }, [dots]);
   useEffect(() => {
     onScroll();
+    window.addEventListener("resize", onScroll);
+    return () => window.removeEventListener("resize", onScroll);
   }, [onScroll]);
 
   return (
@@ -119,8 +142,13 @@ const Creators = ({ className }: { className?: string }) => {
           style={{ zIndex: creators.length + 1 }}
         />
 
-        <div className="flex">
-          <div className="relative mx-auto flex">
+        <div className="flex" style={{ zIndex: creators.length + 2 }}>
+          <div
+            className={classes(
+              "relative mx-auto flex transition-opacity",
+              bar.width === dots && "pointer-events-none opacity-0",
+            )}
+          >
             {Array.from({ length: dots }).map((_, idx) => (
               <button
                 key={idx}
