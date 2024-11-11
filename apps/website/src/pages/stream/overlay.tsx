@@ -11,10 +11,10 @@ import {
 } from "@/utils/datetime";
 
 import logoImage from "@/assets/logo.png";
-const colors = ["#7E7E7E", "#4E3029"];
 
 import { type WeatherResponse } from "../api/stream/weather";
 
+const colors = ["#7E7E7E", "#4E3029"];
 const truncate = (value: string, max: number) => {
   if (value.length <= max) return value;
 
@@ -244,7 +244,7 @@ const OverlayPage: NextPage = () => {
       <div className="absolute bottom-0 right-0 grid grid-cols-12">
         {time.code.map((bit, idx) => (
           <div
-            key={bit + idx}
+            key={`${bit}-${idx}`}
             style={{
               backgroundColor: bit === "0" ? colors[0] : colors[1],
             }}
