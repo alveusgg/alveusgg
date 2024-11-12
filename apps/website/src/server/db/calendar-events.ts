@@ -2,7 +2,11 @@ import { z } from "zod";
 import { type DateObjectUnits, DateTime } from "luxon";
 
 import { prisma } from "@/server/db/client";
-import { createScheduleSegment } from "@/server/utils/twitch-api";
+import {
+  createScheduleSegment,
+  getScheduleSegments,
+  type ScheduleSegment,
+} from "@/server/utils/twitch-api";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 import { getFormattedTitle, isAlveusEvent } from "@/data/calendar-events";
 
@@ -166,6 +170,30 @@ export async function createRegularCalendarEvents(date: Date) {
   }
 }
 
+async function getTwitchSchedule(
+  userAccessToken: string,
+  userId: string,
+  start: Date,
+) {
+  let cursor;
+  const segments: ScheduleSegment[] = [];
+
+  while (true) {
+    const response = await getScheduleSegments(
+      userAccessToken,
+      userId,
+      start,
+      cursor,
+    );
+    segments.push(...response.data.segments);
+
+    cursor = response.pagination.cursor;
+    if (!cursor) break;
+  }
+
+  return segments;
+}
+
 export async function syncTwitchSchedule() {
   // Get auth for the Alveus Twitch account
   const twitchChannel = await prisma.twitchChannel.findFirst({
@@ -190,18 +218,49 @@ export async function syncTwitchSchedule() {
     hasTime: true,
   }).then((events) => events.filter(isAlveusEvent));
 
-  // Write each event to the Twitch API
-  // TODO: Fetch existing events in the future from Twitch
-  // TODO: Determine which events match, and therefore which need to be deleted/created
+  // Get all the existing events in the future from Twitch
+  const eventsTwitch = await getTwitchSchedule(
+    twitchChannel.broadcasterAccount.access_token,
+    twitchChannel.broadcasterAccount.providerAccountId,
+    new Date(),
+  );
+
+  // Decide which events in the DB need to be created on Twitch
+  const eventsNew: { title: string; startAt: Date }[] = [];
   for (const event of eventsDB) {
-    console.log("Syncing event:", event);
+    // Look for a matching event in the Twitch API
+    const title = getFormattedTitle(event);
+    const date = event.startAt.toISOString().replace(/\.\d+Z$/, "Z");
+    const idx = eventsTwitch.findIndex(
+      (e) => e.title === title && e.start_time === date,
+    );
+
+    // If we have an existing match, remove it from the list
+    if (idx !== -1) {
+      eventsTwitch.splice(idx, 1);
+      continue;
+    }
+
+    // Otherwise, we need to create this event
+    eventsNew.push({ title, startAt: event.startAt });
+  }
+
+  // TODO: Remove events from Twitch we don't have in the DB
+  for (const event of eventsTwitch) {
+    console.log("Removing event:", event);
+  }
+
+  // Then, create any new events
+  // Do this after the removal to reduce the chance of an overlap error
+  for (const event of eventsNew) {
+    console.log("Creating event:", event);
     await createScheduleSegment(
       twitchChannel.broadcasterAccount.access_token,
       twitchChannel.broadcasterAccount.providerAccountId,
       event.startAt,
       DATETIME_ALVEUS_ZONE,
       60,
-      getFormattedTitle(event),
+      event.title,
     );
   }
 }

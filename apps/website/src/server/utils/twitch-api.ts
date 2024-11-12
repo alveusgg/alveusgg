@@ -189,6 +189,57 @@ const scheduleResponseSchema = z.object({
   }),
 });
 
+const channelScheduleResponseSchema = scheduleResponseSchema.extend({
+  data: scheduleResponseSchema.shape.data.extend({
+    broadcaster_id: z.string(),
+    broadcaster_name: z.string(),
+    vacation: z
+      .object({
+        start_time: z.string().datetime(),
+        end_time: z.string().datetime(),
+      })
+      .nullable(),
+  }),
+  pagination: paginationSchema,
+});
+
+export type ScheduleSegment = z.infer<
+  typeof scheduleResponseSchema
+>["data"]["segments"][0];
+
+export async function getScheduleSegments(
+  userAccessToken: string,
+  userId: string,
+  startDate: Date,
+  after?: string,
+) {
+  const params = new URLSearchParams({
+    broadcaster_id: userId,
+    start_time: startDate.toISOString(),
+    first: "25",
+  });
+
+  if (after) params.append("after", after);
+
+  const response = await fetch(
+    `https://api.twitch.tv/helix/schedule?${params}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    },
+  );
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Failed to create schedule segment!");
+  }
+
+  return channelScheduleResponseSchema.parseAsync(json);
+}
+
 export async function createScheduleSegment(
   userAccessToken: string,
   userId: string,
@@ -214,8 +265,7 @@ export async function createScheduleSegment(
         duration: duration.toString(),
         title,
         category_id: category?.toString(),
-        // TODO: This should be false but I do not have access: `single segment creation not authorized`
-        is_recurring: true,
+        is_recurring: false,
       }),
     },
   );
