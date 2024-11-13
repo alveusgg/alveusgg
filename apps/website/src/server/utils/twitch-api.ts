@@ -279,3 +279,28 @@ export async function createScheduleSegment(
   const data = await scheduleResponseSchema.parseAsync(json);
   return data?.data?.segments?.[0];
 }
+
+export async function removeScheduleSegment(
+  userAccessToken: string,
+  userId: string,
+  segmentId: string,
+) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/schedule/segment?${new URLSearchParams({
+      broadcaster_id: userId,
+      id: segmentId,
+    })}`,
+    {
+      method: "DELETE",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    },
+  );
+
+  if (response.status !== 204) {
+    const json = await response.json();
+    console.error(json);
+    throw new Error("Failed to delete schedule segment!");
+  }
+}

@@ -5,6 +5,7 @@ import { prisma } from "@/server/db/client";
 import {
   createScheduleSegment,
   getScheduleSegments,
+  removeScheduleSegment,
   type ScheduleSegment,
 } from "@/server/utils/twitch-api";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
@@ -213,46 +214,51 @@ export async function syncTwitchSchedule() {
 
   // Get all Alveus events from now onwards
   // TODO: With access to non-recurring events, can we create events in the past?
-  const eventsDB = await getCalendarEvents({
+  const events = await getCalendarEvents({
     start: new Date(),
     hasTime: true,
   }).then((events) => events.filter(isAlveusEvent));
 
-  // Get all the existing events in the future from Twitch
-  const eventsTwitch = await getTwitchSchedule(
+  // Get all the existing segments in the future from Twitch
+  const segments = await getTwitchSchedule(
     twitchChannel.broadcasterAccount.access_token,
     twitchChannel.broadcasterAccount.providerAccountId,
     new Date(),
   );
 
   // Decide which events in the DB need to be created on Twitch
-  const eventsNew: { title: string; startAt: Date }[] = [];
-  for (const event of eventsDB) {
+  const create: { title: string; startAt: Date }[] = [];
+  for (const event of events) {
     // Look for a matching event in the Twitch API
     const title = getFormattedTitle(event);
     const date = event.startAt.toISOString().replace(/\.\d+Z$/, "Z");
-    const idx = eventsTwitch.findIndex(
-      (e) => e.title === title && e.start_time === date,
+    const idx = segments.findIndex(
+      (s) => s.title === title && s.start_time === date,
     );
 
     // If we have an existing match, remove it from the list
     if (idx !== -1) {
-      eventsTwitch.splice(idx, 1);
+      segments.splice(idx, 1);
       continue;
     }
 
     // Otherwise, we need to create this event
-    eventsNew.push({ title, startAt: event.startAt });
+    create.push({ title, startAt: event.startAt });
   }
 
-  // TODO: Remove events from Twitch we don't have in the DB
-  for (const event of eventsTwitch) {
-    console.log("Removing event:", event);
+  // Remove segments from Twitch we don't have in the DB
+  for (const segment of segments) {
+    console.log("Removing segment:", segment);
+    await removeScheduleSegment(
+      twitchChannel.broadcasterAccount.access_token,
+      twitchChannel.broadcasterAccount.providerAccountId,
+      segment.id,
+    );
   }
 
   // Then, create any new events
   // Do this after the removal to reduce the chance of an overlap error
-  for (const event of eventsNew) {
+  for (const event of create) {
     console.log("Creating event:", event);
     await createScheduleSegment(
       twitchChannel.broadcasterAccount.access_token,
