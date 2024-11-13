@@ -2,6 +2,9 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import fazeLacy from "@/assets/collaborations/faze-lacy.png";
+import fazeSilky from "@/assets/collaborations/faze-silky.png";
+import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
 import theSushiDragon from "@/assets/collaborations/the-sushi-dragon.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import trivi from "@/assets/collaborations/trivi.png";
@@ -69,6 +72,37 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "FaZe Lacy",
+      link: "https://www.twitch.tv/lacy",
+      date: new Date("2024-11-11"),
+      videoId: "-2_A1nxic5g",
+      creators: [
+        {
+          name: "FaZe Lacy",
+          image: fazeLacy,
+          popularity: 1_000_000, // Twitch followers, 2024-11-13
+        },
+      ],
+    },
+    {
+      name: "FaZe Silky & Adapt",
+      link: "https://www.twitch.tv/silky",
+      date: new Date("2024-11-10"),
+      videoId: "fr7aon7_YLI",
+      creators: [
+        {
+          name: "FaZe Silky",
+          image: fazeSilky,
+          popularity: 654_000, // Twitch followers, 2024-11-13
+        },
+        {
+          name: "FaZe Adapt",
+          image: fazeAdapt,
+          popularity: 5_900_000, // YouTube subscribers, 2024-11-13
+        },
+      ],
+    },
     {
       name: "TheSushiDragon",
       link: "https://www.twitch.tv/thesushidragon",
