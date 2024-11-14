@@ -167,3 +167,140 @@ export async function getUserByName(userName: string) {
   const data = await usersResponseSchema.parseAsync(json);
   return data?.data?.[0];
 }
+
+const scheduleResponseSchema = z.object({
+  data: z.object({
+    segments: z.array(
+      z.object({
+        id: z.string(),
+        start_time: z.string().datetime(),
+        end_time: z.string().datetime(),
+        title: z.string(),
+        canceled_until: z.string().datetime().nullable(),
+        category: z
+          .object({
+            id: z.string(),
+            name: z.string(),
+          })
+          .nullable(),
+        is_recurring: z.boolean(),
+      }),
+    ),
+  }),
+});
+
+const channelScheduleResponseSchema = scheduleResponseSchema.extend({
+  data: scheduleResponseSchema.shape.data.extend({
+    broadcaster_id: z.string(),
+    broadcaster_name: z.string(),
+    vacation: z
+      .object({
+        start_time: z.string().datetime(),
+        end_time: z.string().datetime(),
+      })
+      .nullable(),
+  }),
+  pagination: paginationSchema,
+});
+
+export type ScheduleSegment = z.infer<
+  typeof scheduleResponseSchema
+>["data"]["segments"][0];
+
+export async function getScheduleSegments(
+  userAccessToken: string,
+  userId: string,
+  startDate: Date,
+  after?: string,
+) {
+  const params = new URLSearchParams({
+    broadcaster_id: userId,
+    start_time: startDate.toISOString(),
+    first: "25",
+  });
+
+  if (after) params.append("after", after);
+
+  const response = await fetch(
+    `https://api.twitch.tv/helix/schedule?${params}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    },
+  );
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Failed to create schedule segment!");
+  }
+
+  return channelScheduleResponseSchema.parseAsync(json);
+}
+
+export async function createScheduleSegment(
+  userAccessToken: string,
+  userId: string,
+  start: Date,
+  timezone: string,
+  duration: number,
+  title: string,
+  category?: number,
+) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/schedule/segment?${new URLSearchParams({
+      broadcaster_id: userId,
+    })}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+      body: JSON.stringify({
+        start_time: start.toISOString(),
+        timezone,
+        duration: duration.toString(),
+        title,
+        category_id: category?.toString(),
+        is_recurring: false,
+      }),
+    },
+  );
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Failed to create schedule segment!");
+  }
+
+  const data = await scheduleResponseSchema.parseAsync(json);
+  return data?.data?.segments?.[0];
+}
+
+export async function removeScheduleSegment(
+  userAccessToken: string,
+  userId: string,
+  segmentId: string,
+) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/schedule/segment?${new URLSearchParams({
+      broadcaster_id: userId,
+      id: segmentId,
+    })}`,
+    {
+      method: "DELETE",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    },
+  );
+
+  if (response.status !== 204) {
+    const json = await response.json();
+    console.error(json);
+    throw new Error("Failed to delete schedule segment!");
+  }
+}

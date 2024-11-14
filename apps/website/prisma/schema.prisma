@@ -69,7 +69,7 @@ model Account {
   expires_at        Int?
   verified_at       Int?
   token_type        String?
-  scope             String?
+  scope             String? @db.Text
   id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)

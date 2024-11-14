@@ -11,7 +11,7 @@ import {
   ExpiredAccessTokenError,
   refreshAccessToken,
 } from "@/server/utils/oauth2";
-import { defaultScope } from "@/data/twitch";
+import { defaultScopes } from "@/data/twitch";
 
 const adapter = PrismaAdapter(prisma);
 
@@ -20,7 +20,7 @@ const twitchProvider = TwitchProvider({
   clientSecret: env.TWITCH_CLIENT_SECRET,
   authorization: {
     params: {
-      scope: defaultScope,
+      scope: defaultScopes.join(" "),
     },
   },
 });
