@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import scarra from "@/assets/collaborations/scarra.png";
 import fazeLacy from "@/assets/collaborations/faze-lacy.png";
 import fazeSilky from "@/assets/collaborations/faze-silky.png";
 import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
@@ -72,6 +73,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Scarra",
+      link: "https://www.twitch.tv/scarra",
+      date: new Date("2024-11-13"),
+      videoId: "TTUtUM_i2nE",
+      creators: [
+        {
+          name: "Scarra",
+          image: scarra,
+          popularity: 1_600_000, // Twitch followers, 2024-11-13
+        },
+      ],
+    },
     {
       name: "FaZe Lacy",
       link: "https://www.twitch.tv/lacy",
