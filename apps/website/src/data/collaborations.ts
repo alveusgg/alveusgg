@@ -3,6 +3,7 @@ import { type StaticImageData } from "next/image";
 import { convertToSlug } from "@/utils/slugs";
 
 import scarra from "@/assets/collaborations/scarra.png";
+import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
 import fazeLacy from "@/assets/collaborations/faze-lacy.png";
 import fazeSilky from "@/assets/collaborations/faze-silky.png";
 import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
@@ -83,6 +84,19 @@ const collaborations: Collaboration[] = (
           name: "Scarra",
           image: scarra,
           popularity: 1_600_000, // Twitch followers, 2024-11-13
+        },
+      ],
+    },
+    {
+      name: "Evan & Katelyn",
+      link: "https://www.twitch.tv/evanandkatelyn",
+      date: new Date("2024-11-12"),
+      videoId: "C8a8c1aM_vI",
+      creators: [
+        {
+          name: "Evan & Katelyn",
+          image: evanAndKatelyn,
+          popularity: 1_500_000, // Twitch followers, 2024-11-14
         },
       ],
     },
