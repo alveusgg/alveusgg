@@ -198,7 +198,7 @@ async function getTwitchSchedule(
 export async function syncTwitchSchedule() {
   // Get auth for the Alveus Twitch account
   const twitchChannel = await prisma.twitchChannel.findFirst({
-    where: { username: "alveussanctuary" },
+    where: { username: "AlveusSanctuary" },
     select: {
       broadcasterAccount: {
         select: {
