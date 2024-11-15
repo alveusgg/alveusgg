@@ -232,6 +232,10 @@ export async function getScheduleSegments(
   );
 
   const json = await response.json();
+  if (response.status === 404) {
+    return null;
+  }
+
   if (response.status !== 200) {
     console.error(json);
     throw new Error("Failed to create schedule segment!");
