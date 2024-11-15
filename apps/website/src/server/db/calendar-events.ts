@@ -221,11 +221,7 @@ export async function syncTwitchSchedule() {
   const events = await getCalendarEvents({
     start: new Date(),
     hasTime: true,
-  }).then((events) =>
-    events.filter((event) =>
-      /https:\/\/(www\.)?twitch\.tv\/AlveusSanctuary/i.test(event.link),
-    ),
-  );
+  }).then((events) => events.filter(isAlveusEvent));
 
   // Get all the existing segments in the future from Twitch
   const segments = await getTwitchSchedule(
