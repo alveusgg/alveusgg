@@ -264,13 +264,17 @@ export async function syncTwitchSchedule() {
   // Do this after the removal to reduce the chance of an overlap error
   for (const event of create) {
     console.log("Creating event:", event);
-    await createScheduleSegment(
-      twitchChannel.broadcasterAccount.access_token,
-      twitchChannel.broadcasterAccount.providerAccountId,
-      event.startAt,
-      DATETIME_ALVEUS_ZONE,
-      60,
-      event.title,
-    );
+    try {
+      await createScheduleSegment(
+        twitchChannel.broadcasterAccount.access_token,
+        twitchChannel.broadcasterAccount.providerAccountId,
+        event.startAt,
+        DATETIME_ALVEUS_ZONE,
+        60,
+        event.title,
+      );
+    } catch (err) {
+      console.error("Error creating segment", event, err);
+    }
   }
 }
