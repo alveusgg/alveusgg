@@ -350,7 +350,7 @@ const config = {
     {
       source: "/updates/ical",
       destination:
-        "webcal://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
       permanent: true,
     },
   ],
