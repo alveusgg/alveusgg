@@ -2,6 +2,8 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import hasanAbi from "@/assets/collaborations/hasan-abi.png";
+import deanSoCool from "@/assets/collaborations/dean-so-cool.png";
 import scarra from "@/assets/collaborations/scarra.png";
 import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
 import fazeLacy from "@/assets/collaborations/faze-lacy.png";
@@ -31,7 +33,6 @@ import jinny from "@/assets/collaborations/jinny.png";
 import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
 import alpharad from "@/assets/collaborations/alpharad.png";
 import cinna from "@/assets/collaborations/cinna.png";
-import hasanAbi from "@/assets/collaborations/hasan-abi.png";
 import fanfan from "@/assets/collaborations/fanfan.png";
 import alluux from "@/assets/collaborations/alluux.png";
 import filian from "@/assets/collaborations/filian.png";
@@ -74,6 +75,24 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Hasan & Dean",
+      link: "https://www.twitch.tv/hasanabi",
+      date: new Date("2024-11-16"),
+      videoId: "xl7HGV1UdlI",
+      creators: [
+        {
+          name: "HasanAbi",
+          image: hasanAbi,
+          popularity: 2_800_000, // Twitch followers, 2024-11-17
+        },
+        {
+          name: "Deansocool",
+          image: deanSoCool,
+          popularity: 340_000, // Twitch followers, 2024-11-17
+        },
+      ],
+    },
     {
       name: "Scarra",
       link: "https://www.twitch.tv/scarra",
@@ -425,13 +444,7 @@ const collaborations: Collaboration[] = (
       date: new Date("2024-01-26"),
       videoId: "E_iO1ZKlHyM",
       vodId: "MnPhxGBoY-I",
-      creators: [
-        {
-          name: "HasanAbi",
-          image: hasanAbi,
-          popularity: 2_700_000, // Twitch followers, 2024-10-4
-        },
-      ],
+      creators: [], // Hasan has a more recent collaboration
     },
     {
       name: "Fanfan",
