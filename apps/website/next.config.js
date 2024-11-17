@@ -347,6 +347,12 @@ const config = {
       destination: "https://www.youtube.com/AlveusSanctuary/live",
       permanent: true,
     },
+    {
+      source: "/updates/ical",
+      destination:
+        "webcal://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+      permanent: true,
+    },
   ],
   headers: async () => [
     {
