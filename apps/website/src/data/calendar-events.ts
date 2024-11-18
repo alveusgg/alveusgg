@@ -46,10 +46,17 @@ export const frequentLinks: FrequentLink[] = [
   },
 ] as const;
 
-// Used for the overlay + Twitch sync, showing all Alveus events that aren't YT videos
-export const isAlveusEvent = (event: CalendarEvent) =>
-  /\balveus\b/i.test(event.category) &&
-  !/\b(yt|youtube)\b/i.test(event.category);
+export const twitchChannels = {
+  alveus: {
+    username: "AlveusSanctuary",
+    filter: (event: CalendarEvent) =>
+      /^alveus\b/i.test(event.category) &&
+      !/\b(yt|youtube)\b/i.test(event.category),
+  },
+} as const satisfies Record<
+  string,
+  { username: string; filter: (event: CalendarEvent) => boolean }
+>;
 
 const truncate = (value: string, max: number) => {
   if (value.length <= max) return value;
@@ -62,10 +69,14 @@ const truncate = (value: string, max: number) => {
   return value.slice(0, max - 3) + "…";
 };
 
-// Used for the overlay + Twitch sync, showing the title + link (if not Alveus Twitch)
-export const getFormattedTitle = (event: CalendarEvent, length?: number) => {
+// Used for the overlay + Twitch sync, showing the title + link (if not the Twitch channel)
+export const getFormattedTitle = (
+  event: CalendarEvent,
+  channel: string,
+  length?: number,
+) => {
   const title = length ? truncate(event.title, length) : event.title;
-  return /twitch.tv\/alveussanctuary/i.test(event.link)
+  return new RegExp(`twitch\\.tv\\/${channel}`, "i").test(event.link)
     ? title
     : `${title} @ ${event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}`;
 };

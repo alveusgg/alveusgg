@@ -10,7 +10,7 @@ import {
   formatDateTimeParts,
   formatDateTimeRelative,
 } from "@/utils/datetime";
-import { getFormattedTitle, isAlveusEvent } from "@/data/calendar-events";
+import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 
 import logoImage from "@/assets/logo.png";
 
@@ -129,7 +129,10 @@ const OverlayPage: NextPage = () => {
     { start: upcomingRange?.[0], end: upcomingRange?.[1] },
     { enabled: upcomingRange !== undefined, placeholderData: keepPreviousData },
   );
-  const firstEventId = useMemo(() => events?.find(isAlveusEvent)?.id, [events]);
+  const firstEventId = useMemo(
+    () => events?.find(twitchChannels.alveus.filter)?.id,
+    [events],
+  );
 
   // If we have an upcoming event, swap socials with it
   // Swap every 60s
@@ -175,7 +178,9 @@ const OverlayPage: NextPage = () => {
 
           {event && (
             <>
-              <p className="text-xl">{getFormattedTitle(event, 30)}</p>
+              <p className="text-xl">
+                {getFormattedTitle(event, twitchChannels.alveus.username, 30)}
+              </p>
               <p className="text-xl">
                 {formatDateTimeRelative(
                   event.startAt,

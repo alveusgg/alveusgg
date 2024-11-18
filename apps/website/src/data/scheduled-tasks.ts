@@ -66,9 +66,9 @@ export const scheduledTasks: ScheduledTasksConfig = {
       interval: { months: 1 },
     },
     {
-      id: "calendarEvents.twitch",
-      task: () => syncTwitchSchedule(),
-      label: "Calendar events: Sync Twitch Schedule",
+      id: "calendarEvents.twitch.alveus",
+      task: () => syncTwitchSchedule("alveus"),
+      label: "Calendar events: Sync Twitch Schedule (Alveus)",
       startDateTime: new Date(2024, 9, 30, 0, 0, 0),
       interval: { minutes: 10 },
     },
