@@ -53,6 +53,12 @@ export const twitchChannels = {
       /^alveus\b/i.test(event.category) &&
       !/\b(yt|youtube)\b/i.test(event.category),
   },
+  maya: {
+    username: "Maya",
+    filter: (event: CalendarEvent) =>
+      /^maya\b/i.test(event.category) &&
+      !/\b(yt|youtube)\b/i.test(event.category),
+  },
 } as const satisfies Record<
   string,
   { username: string; filter: (event: CalendarEvent) => boolean }

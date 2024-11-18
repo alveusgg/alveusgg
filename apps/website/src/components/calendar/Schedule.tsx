@@ -31,8 +31,10 @@ const groupedCategories = standardCategories.reduce(
   {} as Record<string, { name: string; color: string }[]>,
 );
 
+// TODO: Drive this from twitchChannels in @/data/calendar-events (once the redirects themselves are driven from there)
 const webcalUrls: Record<string, string> = {
   Alveus: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical`,
+  Maya: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical/maya`,
 };
 
 export function Schedule() {
