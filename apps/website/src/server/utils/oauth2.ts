@@ -82,7 +82,7 @@ export async function refreshAccessToken(
     undefined,
   );
   const res = await new Promise<{
-    error?: { data?: unknown; statusCode: number };
+    error?: Error | { data?: unknown; statusCode: number };
     access_token?: string;
     refresh_token?: string;
     expires_at?: number;
@@ -164,7 +164,7 @@ export async function getClientCredentialsAccessToken(
     console.info("no cached access token, trying to obtain one");
 
     const res = await new Promise<{
-      error?: { data?: unknown; statusCode: number };
+      error?: Error | { data?: unknown; statusCode: number };
       access_token?: string;
     }>((resolve) => {
       oauth2.getOAuthAccessToken(
