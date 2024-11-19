@@ -71,7 +71,7 @@ const WatchLive = () => (
           >
             <Menu.Items
               as="ul"
-              className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded  bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
+              className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
             >
               {dropdownLinks.map((link) => (
                 <Menu.Item key={link.href} as="li">
@@ -81,7 +81,7 @@ const WatchLive = () => (
                       target="_blank"
                       rel="noreferrer"
                       className={classes(
-                        "block rounded px-4 py-1 transition-colors hover:bg-alveus-green  hover:text-alveus-tan",
+                        "block rounded px-4 py-1 transition-colors hover:bg-alveus-green hover:text-alveus-tan",
                         active &&
                           "outline-blue-500 group-focus-visible/items:outline",
                       )}

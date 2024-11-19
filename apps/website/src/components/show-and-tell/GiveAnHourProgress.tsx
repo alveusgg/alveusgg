@@ -30,7 +30,7 @@ const GiveAnHourProgressText = ({
   const localeTarget = useLocaleHours(target, showDays);
 
   return (
-    <div className="text-md flex justify-between px-2 ">
+    <div className="text-md flex justify-between px-2">
       <p className="font-semibold">
         {isLoading
           ? "Loading hours given…"

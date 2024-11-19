@@ -170,7 +170,7 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
     content.type !== Empty && (
       <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
         <div
-          className={`mx-auto w-fit  ${
+          className={`mx-auto w-fit ${
             isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
           }`}
         >
