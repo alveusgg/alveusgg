@@ -72,7 +72,7 @@ export const GiveAnHourProgress = ({
     <>
       {text === "before" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isLoading}
+          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
         />
@@ -96,7 +96,7 @@ export const GiveAnHourProgress = ({
 
       {text === "after" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isLoading}
+          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
         />

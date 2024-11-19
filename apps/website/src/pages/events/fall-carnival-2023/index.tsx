@@ -148,10 +148,10 @@ const FallCarnival2023EventPage: NextPage = () => {
                 />
               </div>
 
-              {(isDirty || myTicket.isLoading) && (
+              {(isDirty || myTicket.isPending) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-alveus-tan text-center italic">
                   <span>
-                    {myTicket.isLoading
+                    {myTicket.isPending
                       ? "Loading the ticket…"
                       : "You have unsaved changes!"}
                   </span>

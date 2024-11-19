@@ -5,7 +5,7 @@ export function RecentNotifications({ tags }: { tags: Array<string> }) {
   const recentNotifications =
     trpc.notifications.getRecentNotificationsForTags.useQuery({ tags });
 
-  if (recentNotifications.isLoading) {
+  if (recentNotifications.isPending) {
     return <p className="">Loading recent notifications...</p>;
   }
 

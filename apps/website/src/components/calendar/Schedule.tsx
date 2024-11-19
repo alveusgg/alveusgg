@@ -65,7 +65,7 @@ export function Schedule() {
     <Calendar
       events={eventsWithChildren || []}
       selectedDateTime={selected}
-      loading={events.isLoading}
+      loading={events.isPending}
       onChange={setSelected}
       className="mt-2 md:mt-6"
       timeZone={timeZone}
@@ -78,7 +78,7 @@ export function Schedule() {
         </p>
 
         <Transition
-          show={events.isLoading}
+          show={events.isPending}
           enter="transition-opacity duration-300"
           enterFrom="opacity-0"
           enterTo="opacity-100"

@@ -121,7 +121,7 @@ const AdminUsersPage: NextPage<
 
         <Headline>Users with roles</Headline>
         <Panel>
-          {getUserWithRoles.isLoading && <p>Loading...</p>}
+          {getUserWithRoles.isPending && <p>Loading...</p>}
           {getUserWithRoles.isError && (
             <p>Error: {getUserWithRoles.error.message}</p>
           )}
