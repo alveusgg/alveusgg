@@ -26,7 +26,6 @@ function urlOriginAsRemotePattern(url) {
  */
 const config = {
   reactStrictMode: true,
-  swcMinify: true,
   eslint: {
     dirs: ["."],
   },
