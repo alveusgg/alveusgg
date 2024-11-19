@@ -12,7 +12,7 @@ export function safeParsePartialURL(maybeUrl: string | undefined | null) {
       if (parsedUrl && parsedUrl.hostname.match(/\.\w/)) {
         return parsedUrl.toString();
       }
-    } catch (e) {
+    } catch (_) {
       // invalid URL, ignore
     }
   }

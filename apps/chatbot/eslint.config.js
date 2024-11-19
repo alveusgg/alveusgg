@@ -11,6 +11,7 @@ export default tseslint.config(
     name: "eslint/recommended",
     ...eslint.configs.recommended,
   },
+  // eslint-disable-next-line import-x/no-named-as-default-member
   ...tseslint.configs.recommended,
   {
     name: "typescript-eslint/tsconfig",
