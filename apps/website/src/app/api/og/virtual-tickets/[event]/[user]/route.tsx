@@ -27,19 +27,21 @@ export async function GET(
 ) {
   try {
     const conn = db.connection();
-    const row = (
-      await conn.execute(
+    const row = await conn
+      .execute<{
+        customization: string;
+      }>(
         "SELECT vt.customization FROM VirtualTicket vt JOIN User u ON vt.userId = u.id WHERE u.name = ? AND vt.eventId = ? LIMIT 1",
         [user, event],
         { as: "object" },
       )
-    ).rows?.[0];
+      .then(({ rows }) => rows[0]);
     if (!row) {
       return new Response("Row not found", { status: 404 });
     }
 
     const customization = virtualTicketCustomizationSchema.safeParse(
-      JSON.parse((row as { customization: string }).customization),
+      JSON.parse(row.customization),
     );
     if (!customization.success) {
       return new Response("Could not parse customization", { status: 404 });

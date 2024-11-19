@@ -28,18 +28,18 @@ export async function GET(
 ) {
   try {
     const conn = db.connection();
-    const bingo = (
-      await conn.execute(
-        "SELECT * FROM Bingo b WHERE b.active = 1 AND b.startAt > NOW() AND (endAt IS NULL OR b.endAt > NOW()) AND b.id = ? OR b.slug = ? LIMIT 1",
+    const bingo = await conn
+      .execute<{
+        type: BingoType;
+        label: string;
+        config: string;
+        playData: string;
+      }>(
+        "SELECT b.type, b.label, b.config, b.playData FROM Bingo b WHERE b.active = 1 AND b.startAt > NOW() AND (endAt IS NULL OR b.endAt > NOW()) AND b.id = ? OR b.slug = ? LIMIT 1",
         [bingoSlugOrId, bingoSlugOrId],
         { as: "object" },
       )
-    ).rows?.[0] as {
-      type: BingoType;
-      label: string;
-      config: string;
-      playData: string;
-    };
+      .then(({ rows }) => rows[0]);
     if (!bingo) {
       return new Response("Row not found", { status: 404 });
     }
