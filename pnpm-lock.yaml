@@ -9639,7 +9639,7 @@ packages:
   /next-superjson-plugin@0.6.3(next@15.0.3)(superjson@2.2.1):
     resolution: {integrity: sha512-gipGROzbbn1Koq84AZQodIvBdORp9dytIDv07SguwXdxnJb6v05KCmHVNU9L6AWqxjP14qNIWCNdKRDhnGRZrg==}
     peerDependencies:
-      next: ^13.0 || ^14.0
+      next: ^13.0 || ^14.0 || ^15.0
       superjson: ^1 || ^2
     dependencies:
       hoist-non-react-statics: 3.3.2

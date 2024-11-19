@@ -33,6 +33,11 @@
   "pnpm": {
     "patchedDependencies": {
       "next@15.0.3": "patches/next@15.0.3.patch"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "next-superjson-plugin>next": "^15.0"
+      }
     }
   }
 }
