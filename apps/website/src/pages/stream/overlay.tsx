@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import { trpc } from "@/utils/trpc";
 import {
@@ -126,7 +127,7 @@ const OverlayPage: NextPage = () => {
   // Refresh when the range changes
   const { data: events } = trpc.calendarEvents.getCalendarEvents.useQuery(
     { start: upcomingRange?.[0], end: upcomingRange?.[1] },
-    { enabled: upcomingRange !== undefined, keepPreviousData: true },
+    { enabled: upcomingRange !== undefined, placeholderData: keepPreviousData },
   );
   const firstEventId = useMemo(() => events?.find(isAlveusEvent)?.id, [events]);
 
