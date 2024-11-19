@@ -683,7 +683,7 @@ async function transitionBetweenViews(
       try {
         await presentationViewRootElement.requestFullscreen();
         await delay(300);
-      } catch (e) {}
+      } catch (_) {}
     }
   } else {
     // Case 2: Presentation view -> Normal view
@@ -692,7 +692,7 @@ async function transitionBetweenViews(
     if (document.fullscreenElement) {
       try {
         await document.exitFullscreen();
-      } catch (e) {}
+      } catch (_) {}
     }
   }
 

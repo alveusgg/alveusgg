@@ -41,7 +41,7 @@ export function createTokenProtectedApiHandler<T extends ZodType>(
     let success = false;
     try {
       success = await action(options.data);
-    } catch (e) {}
+    } catch (_) {}
 
     res.status(success ? 200 : 500).json({ success });
   };
