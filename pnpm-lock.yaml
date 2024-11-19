@@ -104,6 +104,9 @@ importers:
       '@headlessui/react':
         specifier: ^2.2.0
         version: 2.2.0(react-dom@18.3.1)(react@18.3.1)
+      '@iframe-resizer/react':
+        specifier: ^5.3.2
+        version: 5.3.2(react-dom@18.3.1)(react@18.3.1)
       '@maplibre/maplibre-gl-geocoder':
         specifier: ^1.7.0
         version: 1.7.0(maplibre-gl@4.7.1)
@@ -161,9 +164,6 @@ importers:
       html-react-parser:
         specifier: ^5.1.18
         version: 5.1.18(@types/react@18.3.12)(react@18.3.1)
-      iframe-resizer-react:
-        specifier: ^5.1.5
-        version: 5.1.5(react-dom@18.3.1)(react@18.3.1)
       jsdom:
         specifier: ^25.0.1
         version: 25.0.1
@@ -2159,21 +2159,20 @@ packages:
     engines: {node: '>=18.18'}
     dev: true
 
-  /@iframe-resizer/core@5.1.5:
-    resolution: {integrity: sha512-uu0Ptk+R7vYY7R9HFsc5R4+p68rgGxrsWIq2sK9oanJPBtQ2P9pMYoRseM8F4AfOONHOeHxGByWeBmw7LTXmdA==}
+  /@iframe-resizer/core@5.3.2:
+    resolution: {integrity: sha512-is6VXW1m/9y7ZUwyjUuHu5101TPFa69Rv8jNY0HrT5svwb1ICPZKeaoVzDw0TTBBa5eE7XfEFcXCeiP6UR9W3w==}
     dev: false
 
-  /@iframe-resizer/react@5.1.5(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-klGfad00ZiVHIplWYJ04ACp8vU6xa5ujLSWEJOFcc8SqQyJv7T0UtxuUGPiEXvSGeaP5HgFvYFzua7YOw/blIg==}
+  /@iframe-resizer/react@5.3.2(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-RGPMYj69Kfzpvonfx0pj5JrKc152DNB8MGum2AoXdupjyaKzLJ4Bvi0NHV8ic4xSHlsMb3eqFXYNRekcACcWxA==}
     peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0  || ^19.0.0
     dependencies:
       '@babel/runtime': 7.26.0
-      '@iframe-resizer/core': 5.1.5
+      '@iframe-resizer/core': 5.3.2
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
-      warning: 4.0.3
     dev: false
 
   /@img/sharp-darwin-arm64@0.33.5:
@@ -8401,18 +8400,6 @@ packages:
   /ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
-  /iframe-resizer-react@5.1.5(react-dom@18.3.1)(react@18.3.1):
-    resolution: {integrity: sha512-R7kJgzniX9S16Lc9QWUyc+NYXftQnT0agdroFISojxC+/ARJa+ZhrcSns/3xjzQnsY+nk5TdkafkrRNIpr3Big==}
-    engines: {node: '>=16', npm: '>=5'}
-    peerDependencies:
-      react: ^16.13.1 || >= 18.0.0
-      react-dom: ^16.13.1 || >= 18.0.0
-    dependencies:
-      '@iframe-resizer/react': 5.1.5(react-dom@18.3.1)(react@18.3.1)
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-    dev: false
-
   /ignore@5.3.2:
     resolution: {integrity: sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g==}
     engines: {node: '>= 4'}
@@ -10837,6 +10824,7 @@ packages:
 
   /rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
+    requiresBuild: true
 
   /rollup@4.27.3:
     resolution: {integrity: sha512-SLsCOnlmGt9VoZ9Ek8yBK8tAdmPHeppkw+Xa7yDlCEhDTvwYei03JlWo1fdc7YTfLZ4tD8riJCUyAgTbszk1fQ==}
@@ -12388,12 +12376,6 @@ packages:
     engines: {node: '>=18'}
     dependencies:
       xml-name-validator: 5.0.0
-
-  /warning@4.0.3:
-    resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
-    dependencies:
-      loose-envify: 1.4.0
-    dev: false
 
   /watchpack@2.4.2:
     resolution: {integrity: sha512-TnbFSbcOCcDgjZ4piURLCbJ3nJhznVh9kw6F6iokjiFPl8ONxe9A6nMDVXDiNbrSfLILs6vB07F7wLBrwPYzJw==}

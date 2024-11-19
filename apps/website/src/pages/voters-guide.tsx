@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import { Disclosure } from "@headlessui/react";
-import IframeResizer from "iframe-resizer-react";
+import IframeResizer from "@iframe-resizer/react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
@@ -34,6 +34,7 @@ const VoteEmbed = ({ type }: { type: keyof typeof embedTypes }) => (
       className="w-full"
       src={`https://${type}.vote.org/?partner=111111&campaign=free-tools`}
       title={embedTypes[type]}
+      license="GPLv3"
     />
   </Consent>
 );
