@@ -19,14 +19,16 @@ const db = new Client({
 export async function GET(
   req: Request,
   {
-    params: { bingo: bingoSlugOrId },
+    params,
   }: {
-    params: {
+    params: Promise<{
       bingo: string;
-    };
+    }>;
   },
 ) {
   try {
+    const { bingo: bingoSlugOrId } = await params;
+
     const conn = db.connection();
     const bingo = await conn
       .execute<{

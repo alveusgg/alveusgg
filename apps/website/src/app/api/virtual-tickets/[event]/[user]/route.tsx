@@ -23,9 +23,11 @@ const db = new Client({
 
 export async function GET(
   request: Request,
-  { params: { user, event } }: { params: { user: string; event: string } },
+  { params }: { params: Promise<{ user: string; event: string }> },
 ) {
   try {
+    const { user, event } = await params;
+
     const conn = db.connection();
     const row = await conn
       .execute<{
