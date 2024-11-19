@@ -15,15 +15,15 @@
   "dependencies": {
     "@planetscale/database": "^1.14.0",
     "@t3-oss/env-core": "^0.8.0",
-    "@twurple/api": "^7.0.8",
-    "@twurple/auth": "^7.0.8",
-    "@twurple/chat": "^7.0.8",
-    "@twurple/easy-bot": "^7.0.8",
-    "dotenv": "^16.4.1",
-    "drizzle-orm": "^0.29.3",
+    "@twurple/api": "^7.0.10",
+    "@twurple/auth": "^7.0.10",
+    "@twurple/chat": "^7.0.10",
+    "@twurple/easy-bot": "^7.0.10",
+    "dotenv": "^16.4.5",
+    "drizzle-orm": "^0.29.5",
     "read-pkg": "^9.0.1",
-    "tsx": "^4.7.0",
-    "zod": "^3.22.4"
+    "tsx": "^4.7.3",
+    "zod": "^3.22.5"
   },
   "devDependencies": {
     "@types/node": "~20.11.30",
