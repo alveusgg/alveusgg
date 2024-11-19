@@ -224,7 +224,7 @@ export const UploadAttachmentsField = ({
       }
 
       newFiles.push(
-        new Promise(async (resolve) => {
+        (async () => {
           let dataURL = await fileToBase64(file);
           let fileToUpload = file;
           if (resizeImageOptions) {
@@ -239,13 +239,13 @@ export const UploadAttachmentsField = ({
             }
           }
 
-          resolve({
+          return {
             id: `upload-${fileCounter++}`,
             status: "upload.pending",
             dataURL,
             file: fileToUpload,
-          });
-        }),
+          };
+        })(),
       );
     }
 

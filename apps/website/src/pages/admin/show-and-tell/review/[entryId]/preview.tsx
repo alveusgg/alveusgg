@@ -30,7 +30,7 @@ export async function getServerSideProps(context: NextPageContext) {
 
 const AdminPreviewShowAndTellPage: NextPage<
   InferGetStaticPropsType<typeof getServerSideProps>
-> = ({}) => {
+> = () => {
   const router = useRouter();
   const { entryId } = router.query;
   const getEntry = trpc.adminShowAndTell.getEntry.useQuery(String(entryId), {

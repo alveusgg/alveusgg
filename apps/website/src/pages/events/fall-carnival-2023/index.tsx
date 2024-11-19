@@ -123,6 +123,7 @@ const FallCarnival2023EventPage: NextPage = () => {
               <div
                 className={classes(isDirty && "pointer-events-none opacity-40")}
               >
+                {/* eslint-disable-next-line react/jsx-no-target-blank */}
                 <a
                   className="flex flex-row items-center justify-center gap-1 rounded-xl bg-gray-700/10 p-1 px-3 text-center hover:bg-gray-700/20"
                   href={getVirtualTicketImageUrl(eventId, userName)}

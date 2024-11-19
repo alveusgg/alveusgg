@@ -30,7 +30,7 @@ function formatIcsDate(date: Date): string {
     date
       .toISOString() // UTC
       .slice(0, -5) // remove MS and Z
-      .replace(/[:\-]/g, "") + // Remove colons and dashes
+      .replace(/[:-]/g, "") + // Remove colons and dashes
     "Z"
   );
 }
