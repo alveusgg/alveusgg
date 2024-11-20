@@ -53,34 +53,25 @@ const WatchLive = () => (
         />
       </MenuButton>
 
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-100"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
+      <MenuItems
+        transition
+        className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20 transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+        as="ul"
+        modal={false}
       >
-        <MenuItems
-          as="ul"
-          className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
-          modal={false}
-        >
-          {dropdownLinks.map((link) => (
-            <MenuItem key={link.href} as="li" className="group/item">
-              <a
-                href={link.href}
-                target="_blank"
-                rel="noreferrer"
-                className="block rounded px-4 py-1 transition-colors hover:bg-alveus-green hover:text-alveus-tan group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
-              >
-                {link.platform}
-              </a>
-            </MenuItem>
-          ))}
-        </MenuItems>
-      </Transition>
+        {dropdownLinks.map((link) => (
+          <MenuItem key={link.href} as="li" className="group/item">
+            <a
+              href={link.href}
+              target="_blank"
+              rel="noreferrer"
+              className="block rounded px-4 py-1 transition-colors hover:bg-alveus-green hover:text-alveus-tan group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
+            >
+              {link.platform}
+            </a>
+          </MenuItem>
+        ))}
+      </MenuItems>
     </Menu>
   </Button>
 );

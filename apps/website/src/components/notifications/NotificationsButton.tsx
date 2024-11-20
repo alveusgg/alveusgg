@@ -1,10 +1,4 @@
-import {
-  Popover,
-  PopoverButton,
-  PopoverPanel,
-  Transition,
-} from "@headlessui/react";
-import { Fragment } from "react";
+import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import Link from "next/link";
 
 import { classes } from "@/utils/classes";
@@ -61,42 +55,30 @@ export const NotificationsButton = ({
         {showLabel && <span>Push Notifications on this device</span>}
       </PopoverButton>
 
-      <Transition
-        as={Fragment}
-        enter="transition ease-out duration-200"
-        enterFrom="transform opacity-0 scale-95"
-        enterTo="transform opacity-100 scale-100"
-        leave="transition ease-in duration-75"
-        leaveFrom="transform opacity-100 scale-100"
-        leaveTo="transform opacity-0 scale-95"
+      <PopoverPanel
+        transition
+        className={classes(
+          `absolute z-30 -mt-0.5 flex min-w-[240px] max-w-fit flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-75 md:max-w-[calc(80vw-50px)]`,
+          openDirectionX === "left" ? "right-0" : "left-0",
+          openDirectionY === "top" ? "bottom-full" : "top-full",
+        )}
+        modal={false}
       >
-        <PopoverPanel
-          className={classes(
-            `absolute z-30 -mt-0.5 flex min-w-[240px] max-w-fit flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg md:max-w-[calc(80vw-50px)]`,
-            openDirectionX === "left" ? "right-0" : "left-0",
-            openDirectionY === "top" ? "bottom-full" : "top-full",
-          )}
-          modal={false}
-        >
-          <NotificationSettings />
+        <NotificationSettings />
 
-          <div className="mx-2 border-t opacity-30"></div>
+        <div className="mx-2 border-t opacity-30"></div>
 
-          <p className="px-2 pb-2">
-            <PopoverButton
-              as={Link}
-              href="/updates"
-              className={navLinkClassesSub}
-            >
-              Show all updates
-              <IconChevronRight
-                className="-mt-px ml-1 inline-block"
-                size={18}
-              />
-            </PopoverButton>
-          </p>
-        </PopoverPanel>
-      </Transition>
+        <p className="px-2 pb-2">
+          <PopoverButton
+            as={Link}
+            href="/updates"
+            className={navLinkClassesSub}
+          >
+            Show all updates
+            <IconChevronRight className="-mt-px ml-1 inline-block" size={18} />
+          </PopoverButton>
+        </p>
+      </PopoverPanel>
     </Popover>
   );
 };

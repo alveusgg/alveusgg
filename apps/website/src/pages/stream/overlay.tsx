@@ -169,44 +169,31 @@ const OverlayPage: NextPage = () => {
         )}
       </div>
 
-      <Transition
-        show={event !== undefined}
-        enter="transition-opacity duration-700"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-300"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        {event && (
-          <div className="text-stroke absolute bottom-2 left-2 font-bold text-white">
-            <p>Upcoming:</p>
-            <p className="text-xl">{getFormattedTitle(event, 30)}</p>
-            <p className="text-xl">
-              {formatDateTimeRelative(
-                event.startAt,
-                {
-                  style: "long",
-                  time: event.hasTime ? "minutes" : undefined,
-                  timezone: event.hasTime,
-                },
-                { zone: DATETIME_ALVEUS_ZONE },
-              )}
-            </p>
-          </div>
-        )}
+      <Transition show={event !== undefined}>
+        <div className="text-stroke absolute bottom-2 left-2 font-bold text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
+          <p>Upcoming:</p>
+
+          {event && (
+            <>
+              <p className="text-xl">{getFormattedTitle(event, 30)}</p>
+              <p className="text-xl">
+                {formatDateTimeRelative(
+                  event.startAt,
+                  {
+                    style: "long",
+                    time: event.hasTime ? "minutes" : undefined,
+                    timezone: event.hasTime,
+                  },
+                  { zone: DATETIME_ALVEUS_ZONE },
+                )}
+              </p>
+            </>
+          )}
+        </div>
       </Transition>
 
-      <Transition
-        show={event === undefined}
-        enter="transition-opacity duration-700"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-300"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div className="absolute bottom-2 left-2 flex items-center gap-2">
+      <Transition show={event === undefined}>
+        <div className="absolute bottom-2 left-2 flex items-center gap-2 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
           <Image
             src={logoImage}
             alt=""

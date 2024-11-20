@@ -77,18 +77,10 @@ export function Schedule() {
           know when streams go live.
         </p>
 
-        <Transition
-          show={events.isPending}
-          enter="transition-opacity duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          entered="animate-pulse"
-          leave="transition-opacity duration-300"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          as="p"
-        >
-          Loading...
+        <Transition show={events.isPending}>
+          <p className="animate-pulse transition-opacity duration-300 data-[closed]:animate-none data-[closed]:opacity-0">
+            Loading...
+          </p>
         </Transition>
       </div>
 
