@@ -1,6 +1,6 @@
 import type { inferRouterOutputs } from "@trpc/server";
 import { useCallback, useState } from "react";
-import { Menu } from "@headlessui/react";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 
 import type { AppRouter } from "@/server/trpc/router/_app";
 
@@ -161,15 +161,15 @@ function Bingo({ bingo, onError, onUpdate }: BingoProps) {
           </LinkButton>
 
           <Menu as="div" className="relative inline-block text-left">
-            <Menu.Button as={Button}>
+            <MenuButton as={Button}>
               <IconEllipsis className="h-4 w-4" />
               <span className="sr-only">Open menu with more options</span>
-            </Menu.Button>
-            <Menu.Items
+            </MenuButton>
+            <MenuItems
               className="absolute right-0 z-20 mt-2 flex w-56 origin-top-right flex-col gap-2 rounded-md border border-white/50 bg-gray-800 p-4 shadow-xl"
               modal={false}
             >
-              <Menu.Item>
+              <MenuItem>
                 <Button
                   size="small"
                   className={dangerButtonClasses}
@@ -179,8 +179,8 @@ function Bingo({ bingo, onError, onUpdate }: BingoProps) {
                   <IconTrash className="h-4 w-4" />
                   Delete
                 </Button>
-              </Menu.Item>
-              <Menu.Item>
+              </MenuItem>
+              <MenuItem>
                 <Button
                   size="small"
                   className={dangerButtonClasses}
@@ -189,8 +189,8 @@ function Bingo({ bingo, onError, onUpdate }: BingoProps) {
                 >
                   Purge entries
                 </Button>
-              </Menu.Item>
-            </Menu.Items>
+              </MenuItem>
+            </MenuItems>
           </Menu>
         </td>
       </tr>

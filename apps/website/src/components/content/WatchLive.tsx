@@ -1,6 +1,12 @@
 import { Fragment } from "react";
 import Link from "next/link";
-import { Menu, Transition } from "@headlessui/react";
+import {
+  Menu,
+  MenuButton,
+  MenuItems,
+  MenuItem,
+  Transition,
+} from "@headlessui/react";
 
 import IconChevronDown from "@/icons/IconChevronDown";
 import { classes } from "@/utils/classes";
@@ -37,7 +43,7 @@ const WatchLive = () => (
     <Menu as="span" className="relative">
       {({ open }) => (
         <>
-          <Menu.Button className="group/button inline-flex items-center gap-0.5 py-2 pr-4">
+          <MenuButton className="group/button inline-flex items-center gap-0.5 py-2 pr-4">
             <span className="relative">
               {defaultLink.platform}
 
@@ -58,7 +64,7 @@ const WatchLive = () => (
                 open ? "translate-y-1" : "translate-y-0.5",
               )}
             />
-          </Menu.Button>
+          </MenuButton>
 
           <Transition
             as={Fragment}
@@ -69,13 +75,13 @@ const WatchLive = () => (
             leaveFrom="transform opacity-100 scale-100"
             leaveTo="transform opacity-0 scale-95"
           >
-            <Menu.Items
+            <MenuItems
               as="ul"
               className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
               modal={false}
             >
               {dropdownLinks.map((link) => (
-                <Menu.Item key={link.href} as="li">
+                <MenuItem key={link.href} as="li">
                   {({ active }) => (
                     <a
                       href={link.href}
@@ -90,9 +96,9 @@ const WatchLive = () => (
                       {link.platform}
                     </a>
                   )}
-                </Menu.Item>
+                </MenuItem>
               ))}
-            </Menu.Items>
+            </MenuItems>
           </Transition>
         </>
       )}

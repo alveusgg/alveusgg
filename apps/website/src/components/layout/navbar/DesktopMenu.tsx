@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { Menu, Transition } from "@headlessui/react";
+import {
+  Menu,
+  MenuButton,
+  MenuItems,
+  MenuItem,
+  Transition,
+} from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Children,
@@ -30,7 +36,7 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 import IconSignIn from "@/icons/IconSignIn";
 import IconChevronDown from "@/icons/IconChevronDown";
 
-const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
+const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <Transition
     as={Fragment}
     enter="transition ease-out duration-100"
@@ -40,7 +46,7 @@ const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
     leaveFrom="transform opacity-100 scale-100"
     leaveTo="transform opacity-0 scale-95"
   >
-    <Menu.Items
+    <MenuItems
       as="ul"
       className="group absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg focus:outline-none"
       modal={false}
@@ -103,36 +109,36 @@ export function DesktopMenu() {
         <div>
           {sessionData ? (
             <Menu as="div" className="relative flex h-full items-center">
-              <Menu.Button
+              <MenuButton
                 as="button"
                 className="mx-3 cursor-pointer select-none appearance-none rounded-full"
               >
                 <span className="sr-only">Open user menu</span>
                 <ProfileInfoImage />
-              </Menu.Button>
+              </MenuButton>
 
               <DropdownMenuItems>
-                <Menu.Item disabled>
+                <MenuItem disabled>
                   <div className="px-5 py-2">
                     <ProfileInfo full />
                   </div>
-                </Menu.Item>
+                </MenuItem>
 
-                <Menu.Item disabled>
+                <MenuItem disabled>
                   <div className="border-t opacity-30"></div>
-                </Menu.Item>
+                </MenuItem>
 
                 {showAdminLink && (
-                  <Menu.Item>
+                  <MenuItem>
                     <NavLinkSub href="/admin/dashboard">Admin</NavLinkSub>
-                  </Menu.Item>
+                  </MenuItem>
                 )}
 
-                <Menu.Item disabled>
+                <MenuItem disabled>
                   <div className="border-t opacity-30"></div>
-                </Menu.Item>
+                </MenuItem>
 
-                <Menu.Item>
+                <MenuItem>
                   {({ close }) => (
                     <button
                       className={`text-left ${navLinkClassesSub}`}
@@ -145,7 +151,7 @@ export function DesktopMenu() {
                       Log Out
                     </button>
                   )}
-                </Menu.Item>
+                </MenuItem>
               </DropdownMenuItems>
             </Menu>
           ) : (
@@ -180,7 +186,7 @@ export function DesktopMenu() {
                 <Menu as="div" className="relative">
                   {({ open }) => (
                     <>
-                      <Menu.Button
+                      <MenuButton
                         className={classes(
                           navLinkClassesMain,
                           "flex items-center gap-2",
@@ -194,11 +200,11 @@ export function DesktopMenu() {
                             open ? "translate-y-1" : "translate-y-0.5",
                           )}
                         />
-                      </Menu.Button>
+                      </MenuButton>
 
                       <DropdownMenuItems>
                         {Object.entries(link.dropdown).map(([key, link]) => (
-                          <Menu.Item as={DropdownMenuItem} key={key}>
+                          <MenuItem as={DropdownMenuItem} key={key}>
                             {({ close, active }) => (
                               <NavLinkSub
                                 href={link.link}
@@ -213,7 +219,7 @@ export function DesktopMenu() {
                                 {link.title}
                               </NavLinkSub>
                             )}
-                          </Menu.Item>
+                          </MenuItem>
                         ))}
                       </DropdownMenuItems>
                     </>

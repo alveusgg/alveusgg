@@ -1,5 +1,12 @@
 import { Fragment, type JSX } from "react";
-import { Listbox, Transition } from "@headlessui/react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+  Transition,
+  Label,
+} from "@headlessui/react";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
@@ -28,8 +35,8 @@ const Select = ({
   return (
     <Listbox value={value} onChange={onChange}>
       <div className={classes("relative mt-1 flex flex-col", className)}>
-        {label && <Listbox.Label>{label}</Listbox.Label>}
-        <Listbox.Button
+        {label && <Label>{label}</Label>}
+        <ListboxButton
           className={classes(
             "relative w-full rounded-lg border py-2 pl-3 pr-10 text-left",
             dark
@@ -44,14 +51,14 @@ const Select = ({
               aria-hidden="true"
             />
           </span>
-        </Listbox.Button>
+        </ListboxButton>
         <Transition
           as={Fragment}
           leave="transition ease-in duration-100"
           leaveFrom="opacity-100"
           leaveTo="opacity-0"
         >
-          <Listbox.Options
+          <ListboxOptions
             className={classes(
               "group absolute top-full z-30 mt-1 flex max-h-60 min-w-[10rem] flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg focus:outline-none",
               align === "left" ? "left-0" : "right-0",
@@ -61,7 +68,7 @@ const Select = ({
             )}
           >
             {typeSafeObjectEntries(options).map(([key, value]) => (
-              <Listbox.Option key={key} value={key} as={Fragment}>
+              <ListboxOption key={key} value={key} as={Fragment}>
                 {({ active, selected }) => (
                   <li
                     className={classes(
@@ -82,9 +89,9 @@ const Select = ({
                     )}
                   </li>
                 )}
-              </Listbox.Option>
+              </ListboxOption>
             ))}
-          </Listbox.Options>
+          </ListboxOptions>
         </Transition>
       </div>
     </Listbox>

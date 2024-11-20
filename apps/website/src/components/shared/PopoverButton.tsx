@@ -1,5 +1,9 @@
 import { Fragment, type MouseEventHandler, type ReactNode } from "react";
-import { Popover } from "@headlessui/react";
+import {
+  Popover,
+  PopoverButton as PopeoverButtonHeadless,
+  PopoverPanel,
+} from "@headlessui/react";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 
 export function PopoverButton({
@@ -16,7 +20,7 @@ export function PopoverButton({
       <Popover>
         {({ open }) => (
           <>
-            <Popover.Button as={Fragment}>
+            <PopeoverButtonHeadless as={Fragment}>
               <Button
                 width="auto"
                 size="small"
@@ -29,14 +33,14 @@ export function PopoverButton({
               >
                 {label}
               </Button>
-            </Popover.Button>
+            </PopeoverButtonHeadless>
 
-            <Popover.Panel
+            <PopoverPanel
               className="absolute right-0 z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl"
               modal={false}
             >
               {children}
-            </Popover.Panel>
+            </PopoverPanel>
           </>
         )}
       </Popover>

@@ -1,4 +1,9 @@
-import { Popover, Transition } from "@headlessui/react";
+import {
+  Popover,
+  PopoverButton,
+  PopoverPanel,
+  Transition,
+} from "@headlessui/react";
 import { Fragment } from "react";
 import Link from "next/link";
 
@@ -47,14 +52,14 @@ export const NotificationsButton = ({
       as="div"
       className={classes("relative flex items-center", containerClassName)}
     >
-      <Popover.Button
+      <PopoverButton
         className={classes("flex gap-2", className)}
         title={!showLabel ? "Push Notifications" : undefined}
       >
         <Icon />
 
         {showLabel && <span>Push Notifications on this device</span>}
-      </Popover.Button>
+      </PopoverButton>
 
       <Transition
         as={Fragment}
@@ -65,7 +70,7 @@ export const NotificationsButton = ({
         leaveFrom="transform opacity-100 scale-100"
         leaveTo="transform opacity-0 scale-95"
       >
-        <Popover.Panel
+        <PopoverPanel
           className={classes(
             `absolute z-30 -mt-0.5 flex min-w-[240px] max-w-fit flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg md:max-w-[calc(80vw-50px)]`,
             openDirectionX === "left" ? "right-0" : "left-0",
@@ -78,7 +83,7 @@ export const NotificationsButton = ({
           <div className="mx-2 border-t opacity-30"></div>
 
           <p className="px-2 pb-2">
-            <Popover.Button
+            <PopoverButton
               as={Link}
               href="/updates"
               className={navLinkClassesSub}
@@ -88,9 +93,9 @@ export const NotificationsButton = ({
                 className="-mt-px ml-1 inline-block"
                 size={18}
               />
-            </Popover.Button>
+            </PopoverButton>
           </p>
-        </Popover.Panel>
+        </PopoverPanel>
       </Transition>
     </Popover>
   );
