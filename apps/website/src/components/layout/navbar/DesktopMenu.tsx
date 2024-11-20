@@ -14,6 +14,7 @@ import {
   Fragment,
   useEffect,
   type ReactElement,
+  type LiHTMLAttributes,
 } from "react";
 
 import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
@@ -48,7 +49,7 @@ const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   >
     <MenuItems
       as="ul"
-      className="group absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg focus:outline-none"
+      className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg focus:outline-none"
       modal={false}
       {...props}
     />
@@ -56,13 +57,14 @@ const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
 
-const DropdownMenuItem = forwardRef<HTMLLIElement, { children: ReactElement }>(
-  ({ children, ...props }, ref) => (
-    <li {...props}>
-      {Children.map(children, (child) => cloneElement(child, { ref }))}
-    </li>
-  ),
-);
+const DropdownMenuItem = forwardRef<
+  HTMLLIElement,
+  LiHTMLAttributes<HTMLLIElement> & { children: ReactElement }
+>(({ children, ...props }, ref) => (
+  <li {...props}>
+    {Children.map(children, (child) => cloneElement(child, { ref }))}
+  </li>
+));
 DropdownMenuItem.displayName = "DropdownMenuItem";
 
 export function DesktopMenu() {
@@ -184,46 +186,39 @@ export function DesktopMenu() {
                 </NavLink>
               ) : (
                 <Menu as="div" className="relative">
-                  {({ open }) => (
-                    <>
-                      <MenuButton
-                        className={classes(
-                          navLinkClassesMain,
-                          "flex items-center gap-2",
-                        )}
-                      >
-                        {link.title}
-                        <IconChevronDown
-                          size={16}
-                          className={classes(
-                            "transition-transform",
-                            open ? "translate-y-1" : "translate-y-0.5",
-                          )}
-                        />
-                      </MenuButton>
+                  <MenuButton
+                    className={classes(
+                      navLinkClassesMain,
+                      "group/button flex items-center gap-2",
+                    )}
+                  >
+                    {link.title}
+                    <IconChevronDown
+                      size={16}
+                      className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
+                    />
+                  </MenuButton>
 
-                      <DropdownMenuItems>
-                        {Object.entries(link.dropdown).map(([key, link]) => (
-                          <MenuItem as={DropdownMenuItem} key={key}>
-                            {({ close, active }) => (
-                              <NavLinkSub
-                                href={link.link}
-                                isExternal={link.isExternal}
-                                className={classes(
-                                  active &&
-                                    "outline-blue-500 group-focus-visible:outline",
-                                  "w-full min-w-max",
-                                )}
-                                onClick={close}
-                              >
-                                {link.title}
-                              </NavLinkSub>
-                            )}
-                          </MenuItem>
-                        ))}
-                      </DropdownMenuItems>
-                    </>
-                  )}
+                  <DropdownMenuItems>
+                    {Object.entries(link.dropdown).map(([key, link]) => (
+                      <MenuItem
+                        as={DropdownMenuItem}
+                        key={key}
+                        className="group/item"
+                      >
+                        {({ close }) => (
+                          <NavLinkSub
+                            href={link.link}
+                            isExternal={link.isExternal}
+                            className="w-full min-w-max group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
+                            onClick={close}
+                          >
+                            {link.title}
+                          </NavLinkSub>
+                        )}
+                      </MenuItem>
+                    ))}
+                  </DropdownMenuItems>
                 </Menu>
               )}
             </li>

@@ -69,26 +69,19 @@ const Select = ({
           >
             {typeSafeObjectEntries(options).map(([key, value]) => (
               <ListboxOption key={key} value={key} as={Fragment}>
-                {({ active, selected }) => (
-                  <li
-                    className={classes(
-                      "relative w-full min-w-max cursor-pointer rounded py-2 pl-10 pr-4",
-                      dark
-                        ? "hover:bg-alveus-tan/20"
-                        : "hover:bg-alveus-green/20",
-                      active && "outline-blue-500 group-focus-visible:outline",
-                      selected &&
-                        (dark ? "bg-alveus-tan/10" : "bg-alveus-green/10"),
-                    )}
-                  >
-                    <span className="block">{value}</span>
-                    {selected && (
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <IconCheck className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                    )}
-                  </li>
-                )}
+                <li
+                  className={classes(
+                    "group relative w-full min-w-max cursor-pointer rounded py-2 pl-10 pr-4 data-[focus]:outline-blue-500 data-[focus]:group-focus-visible:outline",
+                    dark
+                      ? "hover:bg-alveus-tan/20 data-[selected]:bg-alveus-tan/10"
+                      : "hover:bg-alveus-green/20 data-[selected]:bg-alveus-green/10",
+                  )}
+                >
+                  <span className="block">{value}</span>
+                  <span className="absolute inset-y-0 left-0 hidden items-center pl-3 group-data-[selected]:flex">
+                    <IconCheck className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                </li>
               </ListboxOption>
             ))}
           </ListboxOptions>
