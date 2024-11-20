@@ -71,6 +71,7 @@ export const NotificationsButton = ({
             openDirectionX === "left" ? "right-0" : "left-0",
             openDirectionY === "top" ? "bottom-full" : "top-full",
           )}
+          modal={false}
         >
           <NotificationSettings />
 

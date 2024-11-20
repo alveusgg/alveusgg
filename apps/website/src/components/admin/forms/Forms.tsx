@@ -152,7 +152,10 @@ function Form({ form, onError, onUpdate }: FormProps) {
               <IconEllipsis className="h-4 w-4" />
               <span className="sr-only">Open menu with more options</span>
             </Menu.Button>
-            <Menu.Items className="absolute right-0 z-20 mt-2 flex w-56 origin-top-right flex-col gap-2 rounded-md border border-white/50 bg-gray-800 p-4 shadow-xl">
+            <Menu.Items
+              className="absolute right-0 z-20 mt-2 flex w-56 origin-top-right flex-col gap-2 rounded-md border border-white/50 bg-gray-800 p-4 shadow-xl"
+              modal={false}
+            >
               <Menu.Item>
                 <Button
                   size="small"

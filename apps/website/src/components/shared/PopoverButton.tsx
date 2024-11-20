@@ -31,7 +31,10 @@ export function PopoverButton({
               </Button>
             </Popover.Button>
 
-            <Popover.Panel className="absolute right-0 z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl">
+            <Popover.Panel
+              className="absolute right-0 z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl"
+              modal={false}
+            >
               {children}
             </Popover.Panel>
           </>

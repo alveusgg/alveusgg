@@ -72,6 +72,7 @@ const WatchLive = () => (
             <Menu.Items
               as="ul"
               className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20"
+              modal={false}
             >
               {dropdownLinks.map((link) => (
                 <Menu.Item key={link.href} as="li">
