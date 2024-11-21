@@ -176,14 +176,6 @@ const staff = {
 };
 
 const team = {
-  dion: {
-    name: "Dion (@Dionysus1911)",
-    title: "Illustrator / Animator",
-  },
-  max: {
-    name: "Max (@maxzillajr)",
-    title: "Video Editor",
-  },
   mik: {
     name: "Mik (@Mik_MWP)",
     title: "Social Media Manager",
@@ -191,6 +183,14 @@ const team = {
   chandler: {
     name: "Chandler",
     title: "TikTok Editor",
+  },
+  max: {
+    name: "Max (@maxzillajr)",
+    title: "Video Editor",
+  },
+  dion: {
+    name: "Dion (@Dionysus1911)",
+    title: "Illustrator / Animator",
   },
   paul: {
     name: "Paul (@pjeweb)",
