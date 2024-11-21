@@ -188,6 +188,10 @@ const team = {
     name: "Mik (@Mik_MWP)",
     title: "Social Media Manager",
   },
+  chandler: {
+    name: "Chandler",
+    title: "TikTok Editor",
+  },
   paul: {
     name: "Paul (@pjeweb)",
     title: "Open-Source Developer",
