@@ -152,7 +152,7 @@ const staff = {
   space: {
     image: spaceVoyageImage,
     name: "SpaceVoyage",
-    title: "Production Tech",
+    title: "Director of Production",
     description: (
       <>
         <p>
