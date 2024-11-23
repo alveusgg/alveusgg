@@ -65,7 +65,7 @@ export function Schedule() {
     <Calendar
       events={eventsWithChildren || []}
       selectedDateTime={selected}
-      loading={events.isLoading}
+      loading={events.isPending}
       onChange={setSelected}
       className="mt-2 md:mt-6"
       timeZone={timeZone}
@@ -77,18 +77,10 @@ export function Schedule() {
           know when streams go live.
         </p>
 
-        <Transition
-          show={events.isLoading}
-          enter="transition-opacity duration-300"
-          enterFrom="opacity-0"
-          enterTo="opacity-100"
-          entered="animate-pulse"
-          leave="transition-opacity duration-300"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
-          as="p"
-        >
-          Loading...
+        <Transition show={events.isPending}>
+          <p className="animate-pulse transition-opacity duration-300 data-[closed]:animate-none data-[closed]:opacity-0">
+            Loading...
+          </p>
         </Transition>
       </div>
 

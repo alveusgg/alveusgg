@@ -4,7 +4,7 @@ import {
   type MouseEventHandler,
 } from "react";
 
-import { Popover } from "@headlessui/react";
+import { PopoverButton as PopoverButtonHeadless } from "@headlessui/react";
 
 import { classes } from "@/utils/classes";
 import {
@@ -30,7 +30,7 @@ function ShareLink({
   ...attributes
 }: ComponentPropsWithoutRef<"a">) {
   return (
-    <Popover.Button as={Fragment}>
+    <PopoverButtonHeadless as={Fragment}>
       <a
         target="_blank"
         rel="noopener noreferrer"
@@ -40,7 +40,7 @@ function ShareLink({
         )}
         {...attributes}
       />
-    </Popover.Button>
+    </PopoverButtonHeadless>
   );
 }
 

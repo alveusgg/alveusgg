@@ -155,7 +155,7 @@ export const formsRouter = router({
               outgoingWebhook: { connect: { id: webhook.id } },
             },
           });
-        } catch (e) {
+        } catch (_) {
           // ignore failed outgoing webhooks for now
         }
       }

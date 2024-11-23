@@ -142,7 +142,7 @@ export const adminTwitchRouter = router({
                 : undefined,
           },
         });
-      } catch (e) {
+      } catch (_) {
         throw new TRPCError({
           message: "Could not update channel config",
           code: "BAD_REQUEST",

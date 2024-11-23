@@ -1,13 +1,13 @@
 import Link from "next/link";
-import { Menu, Transition } from "@headlessui/react";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Children,
   cloneElement,
   forwardRef,
-  Fragment,
   useEffect,
   type ReactElement,
+  type LiHTMLAttributes,
 } from "react";
 
 import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
@@ -30,32 +30,25 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 import IconSignIn from "@/icons/IconSignIn";
 import IconChevronDown from "@/icons/IconChevronDown";
 
-const DropdownMenuItems: typeof Menu.Items = ({ ...props }) => (
-  <Transition
-    as={Fragment}
-    enter="transition ease-out duration-100"
-    enterFrom="transform opacity-0 scale-95"
-    enterTo="transform opacity-100 scale-100"
-    leave="transition ease-in duration-75"
-    leaveFrom="transform opacity-100 scale-100"
-    leaveTo="transform opacity-0 scale-95"
-  >
-    <Menu.Items
-      as="ul"
-      className="group absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg focus:outline-none"
-      {...props}
-    />
-  </Transition>
+const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
+  <MenuItems
+    transition
+    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+    as="ul"
+    modal={false}
+    {...props}
+  />
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
 
-const DropdownMenuItem = forwardRef<HTMLLIElement, { children: ReactElement }>(
-  ({ children, ...props }, ref) => (
-    <li {...props}>
-      {Children.map(children, (child) => cloneElement(child, { ref }))}
-    </li>
-  ),
-);
+const DropdownMenuItem = forwardRef<
+  HTMLLIElement,
+  LiHTMLAttributes<HTMLLIElement> & { children: ReactElement }
+>(({ children, ...props }, ref) => (
+  <li {...props}>
+    {Children.map(children, (child) => cloneElement(child, { ref }))}
+  </li>
+));
 DropdownMenuItem.displayName = "DropdownMenuItem";
 
 export function DesktopMenu() {
@@ -102,36 +95,36 @@ export function DesktopMenu() {
         <div>
           {sessionData ? (
             <Menu as="div" className="relative flex h-full items-center">
-              <Menu.Button
+              <MenuButton
                 as="button"
                 className="mx-3 cursor-pointer select-none appearance-none rounded-full"
               >
                 <span className="sr-only">Open user menu</span>
                 <ProfileInfoImage />
-              </Menu.Button>
+              </MenuButton>
 
               <DropdownMenuItems>
-                <Menu.Item disabled>
+                <MenuItem disabled>
                   <div className="px-5 py-2">
                     <ProfileInfo full />
                   </div>
-                </Menu.Item>
+                </MenuItem>
 
-                <Menu.Item disabled>
+                <MenuItem disabled>
                   <div className="border-t opacity-30"></div>
-                </Menu.Item>
+                </MenuItem>
 
                 {showAdminLink && (
-                  <Menu.Item>
+                  <MenuItem>
                     <NavLinkSub href="/admin/dashboard">Admin</NavLinkSub>
-                  </Menu.Item>
+                  </MenuItem>
                 )}
 
-                <Menu.Item disabled>
+                <MenuItem disabled>
                   <div className="border-t opacity-30"></div>
-                </Menu.Item>
+                </MenuItem>
 
-                <Menu.Item>
+                <MenuItem>
                   {({ close }) => (
                     <button
                       className={`text-left ${navLinkClassesSub}`}
@@ -144,7 +137,7 @@ export function DesktopMenu() {
                       Log Out
                     </button>
                   )}
-                </Menu.Item>
+                </MenuItem>
               </DropdownMenuItems>
             </Menu>
           ) : (
@@ -177,46 +170,39 @@ export function DesktopMenu() {
                 </NavLink>
               ) : (
                 <Menu as="div" className="relative">
-                  {({ open }) => (
-                    <>
-                      <Menu.Button
-                        className={classes(
-                          navLinkClassesMain,
-                          "flex items-center gap-2",
-                        )}
-                      >
-                        {link.title}
-                        <IconChevronDown
-                          size={16}
-                          className={classes(
-                            "transition-transform",
-                            open ? "translate-y-1" : "translate-y-0.5",
-                          )}
-                        />
-                      </Menu.Button>
+                  <MenuButton
+                    className={classes(
+                      navLinkClassesMain,
+                      "group/button flex items-center gap-2",
+                    )}
+                  >
+                    {link.title}
+                    <IconChevronDown
+                      size={16}
+                      className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
+                    />
+                  </MenuButton>
 
-                      <DropdownMenuItems>
-                        {Object.entries(link.dropdown).map(([key, link]) => (
-                          <Menu.Item as={DropdownMenuItem} key={key}>
-                            {({ close, active }) => (
-                              <NavLinkSub
-                                href={link.link}
-                                isExternal={link.isExternal}
-                                className={classes(
-                                  active &&
-                                    "outline-blue-500 group-focus-visible:outline",
-                                  "w-full min-w-max",
-                                )}
-                                onClick={close}
-                              >
-                                {link.title}
-                              </NavLinkSub>
-                            )}
-                          </Menu.Item>
-                        ))}
-                      </DropdownMenuItems>
-                    </>
-                  )}
+                  <DropdownMenuItems>
+                    {Object.entries(link.dropdown).map(([key, link]) => (
+                      <MenuItem
+                        as={DropdownMenuItem}
+                        key={key}
+                        className="group/item"
+                      >
+                        {({ close }) => (
+                          <NavLinkSub
+                            href={link.link}
+                            isExternal={link.isExternal}
+                            className="w-full min-w-max group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
+                            onClick={close}
+                          >
+                            {link.title}
+                          </NavLinkSub>
+                        )}
+                      </MenuItem>
+                    ))}
+                  </DropdownMenuItems>
                 </Menu>
               )}
             </li>

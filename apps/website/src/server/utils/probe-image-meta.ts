@@ -23,7 +23,7 @@ export async function probeImageMeta(url: string) {
       type,
       mimeType: mime,
     };
-  } catch (e) {
+  } catch (_) {
     return false;
   }
 }

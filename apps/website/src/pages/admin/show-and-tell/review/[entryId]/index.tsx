@@ -78,7 +78,7 @@ const AdminReviewShowAndTellPage: NextPage<
         <Headline>Submission</Headline>
 
         <Panel>
-          {getEntry.isLoading && <p>Loading...</p>}
+          {getEntry.isPending && <p>Loading...</p>}
           {getEntry.isError && (
             <MessageBox variant="failure">{getEntry.error.message}</MessageBox>
           )}

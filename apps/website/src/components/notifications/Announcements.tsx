@@ -9,7 +9,7 @@ export function Announcements() {
     },
   );
 
-  if (announcements.isLoading) {
+  if (announcements.isPending) {
     return <p className="">Loading announcements...</p>;
   }
 

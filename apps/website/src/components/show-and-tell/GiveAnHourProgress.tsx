@@ -30,7 +30,7 @@ const GiveAnHourProgressText = ({
   const localeTarget = useLocaleHours(target, showDays);
 
   return (
-    <div className="text-md flex justify-between px-2 ">
+    <div className="text-md flex justify-between px-2">
       <p className="font-semibold">
         {isLoading
           ? "Loading hours given…"
@@ -72,7 +72,7 @@ export const GiveAnHourProgress = ({
     <>
       {text === "before" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isLoading}
+          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
         />
@@ -96,7 +96,7 @@ export const GiveAnHourProgress = ({
 
       {text === "after" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isLoading}
+          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
         />

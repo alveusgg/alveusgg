@@ -1,7 +1,11 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Disclosure } from "@headlessui/react";
-import IframeResizer from "iframe-resizer-react";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
+import IframeResizer from "@iframe-resizer/react";
 import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 
@@ -34,6 +38,7 @@ const VoteEmbed = ({ type }: { type: keyof typeof embedTypes }) => (
       className="w-full"
       src={`https://${type}.vote.org/?partner=111111&campaign=free-tools`}
       title={embedTypes[type]}
+      license="GPLv3"
     />
   </Consent>
 );
@@ -218,7 +223,7 @@ const VotePage: NextPage = () => {
                 <Disclosure key={key}>
                   {({ open }) => (
                     <>
-                      <Disclosure.Button className="mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
+                      <DisclosureButton className="mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
                         <div className="flex grow flex-wrap items-baseline gap-x-4">
                           <Link
                             href={link}
@@ -245,11 +250,11 @@ const VotePage: NextPage = () => {
                             size={32}
                           />
                         )}
-                      </Disclosure.Button>
+                      </DisclosureButton>
 
-                      <Disclosure.Panel className="mx-4">
+                      <DisclosurePanel className="mx-4">
                         {content}
-                      </Disclosure.Panel>
+                      </DisclosurePanel>
                     </>
                   )}
                 </Disclosure>

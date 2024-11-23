@@ -1,4 +1,7 @@
+// @ts-check
+
 import { resolve } from "path";
+import { withSuperjson } from "next-superjson";
 
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
 import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
@@ -18,10 +21,11 @@ function urlOriginAsRemotePattern(url) {
   };
 }
 
-/** @type {import("next").NextConfig} */
+/**
+ * @type {import("next").NextConfig}
+ */
 const config = {
   reactStrictMode: true,
-  swcMinify: true,
   eslint: {
     dirs: ["."],
   },
@@ -426,8 +430,7 @@ const config = {
   transpilePackages: ["@alveusgg/data"],
   experimental: {
     scrollRestoration: true,
-    swcPlugins: [["next-superjson-plugin", {}]],
   },
 };
 
-export default config;
+export default withSuperjson()(config);

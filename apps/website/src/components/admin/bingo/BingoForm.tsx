@@ -133,7 +133,7 @@ export function BingoForm({ action, bingo }: BingoFormProps) {
           );
         }
         setError(null);
-      } catch (e) {
+      } catch (_) {
         setError("Failed to parse cards JSON");
       }
     },

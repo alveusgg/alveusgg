@@ -1,9 +1,12 @@
-import { Disclosure } from "@headlessui/react";
+import { DisclosurePanel, DisclosureButton } from "@headlessui/react";
 import { Fragment } from "react";
 import { signIn, signOut, useSession } from "next-auth/react";
+
 import { mainNavStructure } from "@/data/navigation";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
+
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
+
 import { navLinkClassesSub, NavLinkSub } from "./NavLink";
 
 export function MobileMenu() {
@@ -16,34 +19,34 @@ export function MobileMenu() {
       checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
   return (
-    <Disclosure.Panel>
+    <DisclosurePanel>
       <div className="space-y-1 p-2 pb-4 lg:hidden">
         <ul className="flex flex-col">
           {Object.entries(mainNavStructure).map(([key, link]) => (
             <li key={key}>
               {"link" in link ? (
-                <Disclosure.Button
+                <DisclosureButton
                   as={NavLinkSub}
                   href={link.link}
                   isExternal={link.isExternal}
                   className="w-full"
                 >
                   {link.title}
-                </Disclosure.Button>
+                </DisclosureButton>
               ) : (
                 <>
                   <p className="px-5 py-3 opacity-80">{link.title}</p>
                   <ul className="ml-4">
                     {Object.entries(link.dropdown).map(([key, link]) => (
                       <li key={key}>
-                        <Disclosure.Button
+                        <DisclosureButton
                           as={NavLinkSub}
                           href={link.link}
                           isExternal={link.isExternal}
                           className="w-full"
                         >
                           {link.title}
-                        </Disclosure.Button>
+                        </DisclosureButton>
                       </li>
                     ))}
                   </ul>
@@ -59,9 +62,9 @@ export function MobileMenu() {
                 <li>
                   <div className="my-3 w-full border-t opacity-30"></div>
 
-                  <Disclosure.Button as={NavLinkSub} href="/admin/dashboard">
+                  <DisclosureButton as={NavLinkSub} href="/admin/dashboard">
                     Admin
-                  </Disclosure.Button>
+                  </DisclosureButton>
                 </li>
               )}
               <li>
@@ -71,7 +74,7 @@ export function MobileMenu() {
                   <ProfileInfo full />
                 </div>
 
-                <Disclosure.Button as={Fragment}>
+                <DisclosureButton as={Fragment}>
                   <button
                     className={`${navLinkClassesSub} w-full text-left`}
                     type="button"
@@ -79,12 +82,12 @@ export function MobileMenu() {
                   >
                     Log Out
                   </button>
-                </Disclosure.Button>
+                </DisclosureButton>
               </li>
             </>
           ) : (
             <li>
-              <Disclosure.Button as={Fragment}>
+              <DisclosureButton as={Fragment}>
                 <button
                   className={`${navLinkClassesSub} w-full text-left`}
                   type="button"
@@ -92,11 +95,11 @@ export function MobileMenu() {
                 >
                   Sign In
                 </button>
-              </Disclosure.Button>
+              </DisclosureButton>
             </li>
           )}
         </ul>
       </div>
-    </Disclosure.Panel>
+    </DisclosurePanel>
   );
 }

@@ -49,7 +49,7 @@ const AdminActivityFeedPage: NextPage<
         <Headline>Outgoing webhook calls</Headline>
 
         <Panel>
-          {outgoingWebhooks.isLoading && <p>Loading …</p>}
+          {outgoingWebhooks.isPending && <p>Loading …</p>}
           {outgoingWebhooks.status === "error" && (
             <p>Error fetching activity feed!</p>
           )}
