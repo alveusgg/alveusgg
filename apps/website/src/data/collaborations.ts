@@ -79,7 +79,8 @@ const collaborations: Collaboration[] = (
       name: "Hasan & Dean",
       link: "https://www.twitch.tv/hasanabi",
       date: new Date("2024-11-16"),
-      videoId: "xl7HGV1UdlI",
+      videoId: "blZePb-3DU0",
+      vodId: "xl7HGV1UdlI",
       creators: [
         {
           name: "HasanAbi",
