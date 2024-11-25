@@ -168,29 +168,26 @@ export async function getUserByName(userName: string) {
   return data?.data?.[0];
 }
 
-const scheduleResponseSchema = z.object({
-  data: z.object({
-    segments: z.array(
-      z.object({
-        id: z.string(),
-        start_time: z.string().datetime(),
-        end_time: z.string().datetime(),
-        title: z.string(),
-        canceled_until: z.string().datetime().nullable(),
-        category: z
-          .object({
-            id: z.string(),
-            name: z.string(),
-          })
-          .nullable(),
-        is_recurring: z.boolean(),
-      }),
-    ),
-  }),
+const scheduleSegmentSchema = z.object({
+  id: z.string(),
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
+  title: z.string(),
+  canceled_until: z.string().datetime().nullable(),
+  category: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+    })
+    .nullable(),
+  is_recurring: z.boolean(),
 });
 
-const channelScheduleResponseSchema = scheduleResponseSchema.extend({
-  data: scheduleResponseSchema.shape.data.extend({
+export type ScheduleSegment = z.infer<typeof scheduleSegmentSchema>;
+
+const channelScheduleResponseSchema = z.object({
+  data: z.object({
+    segments: z.array(scheduleSegmentSchema).nullable(),
     broadcaster_id: z.string(),
     broadcaster_name: z.string(),
     vacation: z
@@ -202,10 +199,6 @@ const channelScheduleResponseSchema = scheduleResponseSchema.extend({
   }),
   pagination: paginationSchema,
 });
-
-export type ScheduleSegment = z.infer<
-  typeof scheduleResponseSchema
->["data"]["segments"][0];
 
 export async function getScheduleSegments(
   userAccessToken: string,
@@ -244,6 +237,20 @@ export async function getScheduleSegments(
   return channelScheduleResponseSchema.parseAsync(json);
 }
 
+const createScheduleResponseSchema = z.object({
+  data: z.object({
+    segments: z.array(scheduleSegmentSchema).length(1),
+    broadcaster_id: z.string(),
+    broadcaster_name: z.string(),
+    vacation: z
+      .object({
+        start_time: z.string().datetime(),
+        end_time: z.string().datetime(),
+      })
+      .nullable(),
+  }),
+});
+
 export async function createScheduleSegment(
   userAccessToken: string,
   userId: string,
@@ -280,7 +287,7 @@ export async function createScheduleSegment(
     throw new Error("Failed to create schedule segment!");
   }
 
-  const data = await scheduleResponseSchema.parseAsync(json);
+  const data = await createScheduleResponseSchema.parseAsync(json);
   return data?.data?.segments?.[0];
 }
 
