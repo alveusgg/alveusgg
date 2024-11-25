@@ -351,10 +351,25 @@ const config = {
       destination: "https://www.youtube.com/AlveusSanctuary/live",
       permanent: true,
     },
+    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id + a default flag)
     {
       source: "/updates/ical",
       destination:
         "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+      permanent: true,
+    },
+    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
+    {
+      source: "/updates/ical/alveus",
+      destination:
+        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+      permanent: true,
+    },
+    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
+    {
+      source: "/updates/ical/maya",
+      destination:
+        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=235835559",
       permanent: true,
     },
   ],

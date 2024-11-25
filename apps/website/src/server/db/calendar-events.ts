@@ -9,7 +9,7 @@ import {
   type ScheduleSegment,
 } from "@/server/utils/twitch-api";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
-import { getFormattedTitle, isAlveusEvent } from "@/data/calendar-events";
+import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),
@@ -199,10 +199,12 @@ async function getTwitchSchedule(
   return segments;
 }
 
-export async function syncTwitchSchedule() {
-  // Get auth for the Alveus Twitch account
+export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
+  const { username, filter } = twitchChannels[channel];
+
+  // Get auth for the Twitch account
   const twitchChannel = await prisma.twitchChannel.findFirst({
-    where: { username: "AlveusSanctuary" },
+    where: { username },
     select: {
       broadcasterAccount: {
         select: {
@@ -213,15 +215,15 @@ export async function syncTwitchSchedule() {
     },
   });
   if (!twitchChannel?.broadcasterAccount?.access_token) {
-    throw new Error("No access token found for Alveus Twitch account");
+    throw new Error(`No access token found for ${username} Twitch account`);
   }
 
-  // Get all Alveus events from now onwards
+  // Get all events from now onwards for the channel
   // TODO: With access to non-recurring events, can we create events in the past?
   const events = await getCalendarEvents({
     start: new Date(),
     hasTime: true,
-  }).then((events) => events.filter(isAlveusEvent));
+  }).then((events) => events.filter(filter));
 
   // Get all the existing segments in the future from Twitch
   const segments = await getTwitchSchedule(
@@ -234,7 +236,7 @@ export async function syncTwitchSchedule() {
   const create: { title: string; startAt: Date }[] = [];
   for (const event of events) {
     // Look for a matching event in the Twitch API
-    const title = getFormattedTitle(event);
+    const title = getFormattedTitle(event, username);
     const date = event.startAt.toISOString().replace(/\.\d+Z$/, "Z");
     const idx = segments.findIndex(
       (s) => s.title === title && s.start_time === date,
