@@ -33,16 +33,13 @@ const AdminPreviewShowAndTellPage: NextPage<
 > = () => {
   const router = useRouter();
   const { entryId } = router.query;
-  const getEntry = trpc.adminShowAndTell.getEntry.useQuery(String(entryId), {
-    enabled: !!entryId,
-  });
+  const { data: entry } = trpc.adminShowAndTell.getEntry.useQuery(
+    String(entryId),
+    { enabled: !!entryId },
+  );
 
-  const entry = getEntry.data;
-
-  const getPostsFromANewLocation =
+  const { data: postsFromANewLocation } =
     trpc.showAndTell.getPostsFromANewLocation.useQuery();
-
-  const postsFromANewLocation = getPostsFromANewLocation.data;
 
   return (
     <>
