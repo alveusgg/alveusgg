@@ -1,3 +1,5 @@
+// Derived from modified mean cut quantizer by Leptonica.
+
 const channels = 3;
 const sigBits = 5;
 
@@ -107,12 +109,25 @@ const cut = (
   }
 };
 
-// Compresses each channel to 5 bits and stores each pixel in a histogram.
-// Creates a vbox that has the range of each channel as the length of each dimension.
-// Cuts the vbox with the largest population at the median point
-// along the longest dimension three times.
-// Cuts the vbox with the largest product of its volume and population.
-// Returns the average color of the vbox with the largest product.
+// MMCQ divides an image's colors into "vboxes".
+
+// A histogram is created containing the amount of every possible color.
+// To reduce its size, only the 5 most significant bits of each channel are used.
+// A color's index in the histogram is a combination of its channels.
+// Take rgb(99, 106, 96) for example:
+// The red channel is 99. 99 is 01100011 in binary. We only need the first
+// 5 bits: 01100. Green turns into 01101. Blue: 01100.
+// The color's index would be 011000110101100, or 12716 in decimal.
+
+// With all the colors counted, a vbox can be created containing all colors.
+// The length of each dimension is the range of each channel.
+
+// The vbox is then cut at the median point along the longest dimension.
+// This process is repeated on the vbox with the largest population until
+// there are 4 vboxes. Then, the vbox with the largest product of its volume and
+// population is cut again.
+
+// The average color of the vbox with the largest product is returned.
 export const mmcq = (data: Uint8ClampedArray) => {
   const histogram = Array(1 << (sigBits * channels));
 
