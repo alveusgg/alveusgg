@@ -19,6 +19,9 @@ import { trpc } from "@/utils/trpc";
 import { notEmpty } from "@/utils/helpers";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import { createImageUrl } from "@/utils/image";
+import { extractColorFromImage, resizeImage } from "@/utils/process-image";
+import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
@@ -139,6 +142,8 @@ export function ShowAndTellEntryForm({
             id: imageAttachment.id,
             url: imageAttachment.url,
             fileStorageObjectId: imageAttachment.fileStorageObjectId,
+            extractColor: extractColorFromImage,
+            file: { name: imageAttachment.name },
           })),
       [entry?.attachments],
     ),
@@ -161,7 +166,7 @@ export function ShowAndTellEntryForm({
     { allowedFileTypes: imageMimeTypes },
   );
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const hours = parseFloat(formData.get("giveAnHour") as string);
@@ -177,7 +182,9 @@ export function ShowAndTellEntryForm({
       longitude: postLocation?.longitude ?? null,
     };
 
-    for (const fileReference of imageAttachmentsData.files) {
+    for (let i = 0; i < imageAttachmentsData.files.length; i++) {
+      const fileReference = imageAttachmentsData.files[i]!;
+
       if (
         fileReference.status !== "upload.done" &&
         fileReference.status !== "saved"
@@ -187,7 +194,15 @@ export function ShowAndTellEntryForm({
       }
 
       const imageId = fileReference.id;
-      const linkAttachmentData = {
+      const linkAttachmentData: {
+        url: string;
+        fileStorageObjectId: string;
+        title: string;
+        description: string;
+        caption: string;
+        alternativeText: string;
+        dominantColor?: string;
+      } = {
         url: fileReference.url,
         fileStorageObjectId: fileReference.fileStorageObjectId,
         title: "", // Currently not supported
@@ -198,6 +213,17 @@ export function ShowAndTellEntryForm({
         ),
       };
 
+      if (i === 0) {
+        linkAttachmentData.dominantColor = await fileReference.extractColor(
+          fileReference.url,
+        );
+
+        data.featuredImage = {
+          ...linkAttachmentData,
+          name: fileReference.file.name,
+        };
+      }
+
       if (fileReference.status === "saved") {
         data.imageAttachments.update[imageId] = linkAttachmentData;
       } else {
@@ -205,6 +231,74 @@ export function ShowAndTellEntryForm({
           ...linkAttachmentData,
           name: fileReference.file.name,
         });
+      }
+    }
+
+    if (!data.featuredImage) {
+      for (const videoUrl of videoLinksData.videoUrls) {
+        const parsedVideoUrl = parseVideoUrl(videoUrl);
+        if (!parsedVideoUrl) continue;
+        const videoPlatformConfig =
+          videoPlatformConfigs[parsedVideoUrl.platform];
+        if (!("previewUrl" in videoPlatformConfig)) continue;
+        const src = videoPlatformConfig.previewUrl(parsedVideoUrl.id);
+
+        let res = await fetch(
+          createImageUrl({ src, width: 1280, quality: 100 }),
+        );
+
+        if (!res.ok && parsedVideoUrl.platform === "youtube") {
+          res = await fetch(
+            createImageUrl({
+              src: `https://img.youtube.com/vi/${parsedVideoUrl.id}/hqdefault.jpg`,
+              width: 1280,
+              quality: 100,
+            }),
+          );
+        }
+
+        if (!res.ok) {
+          setError(`Unable to get thumbnail for ${videoUrl}`);
+          return;
+        }
+
+        const blob = await res.blob();
+
+        const objectURL = URL.createObjectURL(blob);
+
+        const image = await resizeImage(objectURL, {
+          ...resizeImageOptions,
+          type: "image/jpeg",
+        });
+
+        if (image === null) {
+          setError(`Unable to process thumbnail for ${videoUrl}`);
+          return;
+        }
+
+        const fileName = `${parsedVideoUrl.id}-thumbnail`;
+
+        const uploaded = await upload(
+          new File([image.blob], fileName, { type: "image/jpeg" }),
+        );
+
+        if (!uploaded) {
+          setError(`Unable to upload thumbnail for ${videoUrl}`);
+          return;
+        }
+
+        data.featuredImage = {
+          url: uploaded.viewUrl,
+          fileStorageObjectId: uploaded.fileStorageObjectId,
+          title: "", // Currently not supported
+          description: "", // Currently not supported
+          caption: "",
+          alternativeText: "",
+          dominantColor: image.extractColor(),
+          name: fileName,
+        };
+
+        break;
       }
     }
 
