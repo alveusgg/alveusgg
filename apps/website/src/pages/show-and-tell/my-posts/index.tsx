@@ -124,10 +124,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                   </thead>
                   <tbody>
                     {myEntries.data.map((entry) => {
-                      const images = entry.attachments.filter(
-                        (a) => a.attachmentType === "image",
-                      );
-                      const featuredImage = images[0]?.imageAttachment;
+                      const { featuredImage } = entry;
                       const status = getEntityStatus(entry);
 
                       return (
