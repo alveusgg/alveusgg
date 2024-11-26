@@ -19,6 +19,7 @@
 
 # next.js
 /.next/
+/.swc/
 /out/
 next-env.d.ts
 

@@ -170,7 +170,7 @@ export function CommunityMap({ features }: CommunityMapProps) {
               Failed to load Show and Tell entry!
             </MessageBox>
           )}
-          {entryQuery.isLoading && (
+          {entryQuery.isPending && (
             <p className="p-4 text-center text-xl">Loading...</p>
           )}
           {entryQuery.data && (

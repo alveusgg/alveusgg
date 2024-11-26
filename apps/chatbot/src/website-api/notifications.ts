@@ -8,6 +8,7 @@ type NotificationData = z.infer<typeof notificationSchema>;
 // TODO: move API data schema into a shared package for website and chatbot
 const dateSchema = z.string().pipe(z.coerce.date());
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const notificationSchema = z.object({
   tag: z.string(),
   text: z.string().optional(),

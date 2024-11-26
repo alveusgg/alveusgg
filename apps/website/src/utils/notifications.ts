@@ -2,9 +2,9 @@ import type { NotificationOptionsData } from "@/utils/notification-payload";
 import { getIsIos, getIsSafari } from "@/utils/browser-detection";
 import { welcomeMessage, welcomeTitle } from "@/data/notifications";
 
-if ({} as NotificationOptionsData satisfies NotificationOptions) {
-  // Weird test to make sure that the types are compatible
-}
+// Weird test to make sure that the types are compatible
+const assert = <_A, _B extends _A>() => {};
+assert<NotificationOptions, NotificationOptionsData>();
 
 export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
   if (!getIsSafari() || !getIsIos()) {

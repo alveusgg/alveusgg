@@ -2,12 +2,12 @@ import { timingSafeEqual } from "node:crypto";
 
 // Perform a timing-safe string comparison
 export default function timingSafeCompareString(a: string, b: string) {
-  const bufferA = Buffer.from(a, "utf16le");
-  const bufferB = Buffer.from(b, "utf16le");
-  if (bufferA.byteLength !== bufferB.byteLength) {
-    timingSafeEqual(bufferA, bufferA);
+  const arrayA = new TextEncoder().encode(a);
+  const arrayB = new TextEncoder().encode(b);
+  if (arrayA.length !== arrayB.length) {
+    timingSafeEqual(arrayA, arrayA);
     return false;
   }
 
-  return timingSafeEqual(bufferA, bufferB);
+  return timingSafeEqual(arrayA, arrayB);
 }

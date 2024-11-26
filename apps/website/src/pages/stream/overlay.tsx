@@ -2,6 +2,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Transition } from "@headlessui/react";
+import { keepPreviousData } from "@tanstack/react-query";
 
 import { trpc } from "@/utils/trpc";
 import {
@@ -9,31 +10,28 @@ import {
   formatDateTimeParts,
   formatDateTimeRelative,
 } from "@/utils/datetime";
+import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 
 import logoImage from "@/assets/logo.png";
 
 import { type WeatherResponse } from "../api/stream/weather";
 
-const truncate = (value: string, max: number) => {
-  if (value.length <= max) return value;
-
-  for (const pattern of [" - ", " | ", ": "]) {
-    const index = value.indexOf(pattern);
-    if (index !== -1 && index < max) return value.slice(0, index);
-  }
-
-  return value.slice(0, max - 3) + "…";
-};
+const colors = ["#7E7E7E", "#4E3029"];
 
 const OverlayPage: NextPage = () => {
   // Get the current time and date
   // Refresh every 250ms
-  const [time, setTime] = useState<{ time: string; date: string }>();
+  const [time, setTime] = useState<{
+    time: string;
+    date: string;
+    code: string[];
+  }>();
   const timeInterval = useRef<NodeJS.Timeout>();
   useEffect(() => {
     const updateTime = () => {
+      const date = new Date();
       const parts = formatDateTimeParts(
-        new Date(),
+        date,
         { style: "short", time: "seconds", timezone: true },
         { zone: DATETIME_ALVEUS_ZONE },
       );
@@ -58,7 +56,16 @@ const OverlayPage: NextPage = () => {
       const day = parts.find((part) => part.type === "day");
       if (!year || !month || !day) return;
 
+      const minutes = date.getMinutes();
+      const seconds = date.getSeconds();
+
+      const code = (minutes * 60 + seconds)
+        .toString(2)
+        .padStart(12, "0")
+        .split("");
+
       setTime({
+        code,
         time: timeParts.join(""),
         date: [year, month, day]
           .map((part) => part.value.padStart(2, "0"))
@@ -120,17 +127,10 @@ const OverlayPage: NextPage = () => {
   // Refresh when the range changes
   const { data: events } = trpc.calendarEvents.getCalendarEvents.useQuery(
     { start: upcomingRange?.[0], end: upcomingRange?.[1] },
-    { enabled: upcomingRange !== undefined, keepPreviousData: true },
+    { enabled: upcomingRange !== undefined, placeholderData: keepPreviousData },
   );
   const firstEventId = useMemo(
-    () =>
-      events?.find((event) =>
-        [
-          "alveus regular stream",
-          "alveus special stream",
-          "collaboration stream",
-        ].includes(event.category.toLowerCase()),
-      )?.id,
+    () => events?.find(twitchChannels.alveus.filter)?.id,
     [events],
   );
 
@@ -172,48 +172,33 @@ const OverlayPage: NextPage = () => {
         )}
       </div>
 
-      <Transition
-        show={event !== undefined}
-        enter="transition-opacity duration-700"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-300"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        {event && (
-          <div className="text-stroke absolute bottom-2 left-2 font-bold text-white">
-            <p>Upcoming:</p>
-            <p className="text-xl">
-              {truncate(event.title, 30)}
-              {" @ "}
-              {event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}
-            </p>
-            <p className="text-xl">
-              {formatDateTimeRelative(
-                event.startAt,
-                {
-                  style: "long",
-                  time: event.hasTime ? "minutes" : undefined,
-                  timezone: event.hasTime,
-                },
-                { zone: DATETIME_ALVEUS_ZONE },
-              )}
-            </p>
-          </div>
-        )}
+      <Transition show={event !== undefined}>
+        <div className="text-stroke absolute bottom-2 left-2 font-bold text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
+          <p>Upcoming:</p>
+
+          {event && (
+            <>
+              <p className="text-xl">
+                {getFormattedTitle(event, twitchChannels.alveus.username, 30)}
+              </p>
+              <p className="text-xl">
+                {formatDateTimeRelative(
+                  event.startAt,
+                  {
+                    style: "long",
+                    time: event.hasTime ? "minutes" : undefined,
+                    timezone: event.hasTime,
+                  },
+                  { zone: DATETIME_ALVEUS_ZONE },
+                )}
+              </p>
+            </>
+          )}
+        </div>
       </Transition>
 
-      <Transition
-        show={event === undefined}
-        enter="transition-opacity duration-700"
-        enterFrom="opacity-0"
-        enterTo="opacity-100"
-        leave="transition-opacity duration-300"
-        leaveFrom="opacity-100"
-        leaveTo="opacity-0"
-      >
-        <div className="absolute bottom-2 left-2 flex items-center gap-2">
+      <Transition show={event === undefined}>
+        <div className="absolute bottom-2 left-2 flex items-center gap-2 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
           <Image
             src={logoImage}
             alt=""
@@ -227,6 +212,18 @@ const OverlayPage: NextPage = () => {
           </div>
         </div>
       </Transition>
+
+      <div className="absolute bottom-0 right-0 grid grid-cols-12">
+        {time.code.map((bit, idx) => (
+          <div
+            key={`${bit}-${idx}`}
+            style={{
+              backgroundColor: bit === "0" ? colors[0] : colors[1],
+            }}
+            className="h-1 w-1"
+          />
+        ))}
+      </div>
     </div>
   );
 };

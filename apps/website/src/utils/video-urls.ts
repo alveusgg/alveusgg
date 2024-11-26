@@ -14,8 +14,8 @@ export const videoPlatformConfigs = {
     replacement: (id: string) => `https://www.youtube.com/watch?v=${id}`,
     example: "https://www.youtube.com/watch?v=zEbsSAkVMpQ",
     regex:
-      /(?:https?:)?(?:\/\/)?(?:(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/(?:(?:watch)?\?(?:app=[a-z]+&)?(?:feature=\w*&)?vi?=|embed\/|vi?\/|e\/|shorts\/)|youtu.be\/)([\w\-]{10,20})/i,
-    normalizedRegex: /https:\/\/www\.youtube\.com\/watch\?v=([\w\-]{10,20})/,
+      /(?:https?:)?(?:\/\/)?(?:(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/(?:(?:watch)?\?(?:app=[a-z]+&)?(?:feature=\w*&)?vi?=|embed\/|vi?\/|e\/|shorts\/)|youtu.be\/)([\w-]{10,20})/i,
+    normalizedRegex: /https:\/\/www\.youtube\.com\/watch\?v=([\w-]{10,20})/,
     embedUrl: (id: string) =>
       `https://www.youtube-nocookie.com/embed/${id}?modestbranding=1`,
     previewUrl: (id: string) =>

@@ -47,10 +47,10 @@ export function NotificationsLive() {
 
   return (
     <div className="flex flex-col gap-4">
-      {resendMutation.isLoading && (
+      {resendMutation.isPending && (
         <MessageBox>Resending notification …</MessageBox>
       )}
-      {cancelMutation.isLoading && (
+      {cancelMutation.isPending && (
         <MessageBox>Cancelling notification …</MessageBox>
       )}
       {resendMutation.isError && (

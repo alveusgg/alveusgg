@@ -74,7 +74,7 @@ test("decrypting empty value should not fail", async () => {
     expect(key).toBeDefined();
 
     decrypted = await decrypt(encrypted, key);
-  } catch (e) {
+  } catch (_) {
     failed = true;
   }
 

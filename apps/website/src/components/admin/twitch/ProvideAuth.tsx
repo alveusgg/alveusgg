@@ -1,6 +1,6 @@
 import { signIn } from "next-auth/react";
 
-import { botScope, defaultScope, scopeLabels } from "@/data/twitch";
+import { botScopes, defaultScopes, isScope, scopeLabels } from "@/data/twitch";
 import { trpc } from "@/utils/trpc";
 import { Button } from "@/components/shared/form/Button";
 
@@ -10,7 +10,7 @@ function Scopes({ scopeString }: { scopeString: string }) {
   return (
     <ul className="ml-8 list-disc">
       {scopes.map((scope) => {
-        const label = scope in scopeLabels ? scopeLabels[scope] : scope;
+        const label = isScope(scope) ? scopeLabels[scope] : scope;
 
         return (
           <li key={scope}>
@@ -49,7 +49,7 @@ export function ProvideAuth() {
             "twitch",
             { redirect: false },
             {
-              scope: `${defaultScope} ${botScope}`,
+              scope: [...defaultScopes, ...botScopes].join(" "),
             },
           )
         }

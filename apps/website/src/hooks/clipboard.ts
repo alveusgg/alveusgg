@@ -23,7 +23,7 @@ export function useCopyToClipboard({
     try {
       await navigator.clipboard.writeText(value);
       setStatus("success");
-    } catch (err) {
+    } catch (_) {
       setStatus("error");
     }
   }, []);

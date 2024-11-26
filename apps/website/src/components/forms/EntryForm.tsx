@@ -229,7 +229,7 @@ export const EntryForm = ({
             </div>
 
             <div className="mt-7">
-              <Button type="submit" disabled={enterForm.isLoading}>
+              <Button type="submit" disabled={enterForm.isPending}>
                 {config.submitButtonText || "Enter to Win"}
               </Button>
             </div>

@@ -7,7 +7,11 @@ import { env } from "@/env";
 import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
-import { defaultScope } from "@/data/twitch";
+import {
+  ExpiredAccessTokenError,
+  refreshAccessToken,
+} from "@/server/utils/oauth2";
+import { defaultScopes } from "@/data/twitch";
 
 const adapter = PrismaAdapter(prisma);
 
@@ -16,7 +20,7 @@ const twitchProvider = TwitchProvider({
   clientSecret: env.TWITCH_CLIENT_SECRET,
   authorization: {
     params: {
-      scope: defaultScope,
+      scope: defaultScopes.join(" "),
     },
   },
 });
@@ -27,9 +31,43 @@ type ProfileData = {
 };
 
 export const authOptions: NextAuthOptions = {
-  // Include user.id on session
   callbacks: {
     session: async function ({ session, user }) {
+      // If we're over an hour since we last verified the Twitch token, check it
+      const token = await prisma.account.findFirst({
+        where: { userId: user.id, provider: "twitch" },
+        select: {
+          id: true,
+          access_token: true,
+          refresh_token: true,
+          verified_at: true,
+        },
+      });
+      if (token?.access_token && token?.refresh_token) {
+        if (
+          !token.verified_at ||
+          token.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
+        ) {
+          try {
+            await refreshAccessToken(
+              "twitch",
+              env.TWITCH_CLIENT_ID,
+              env.TWITCH_CLIENT_SECRET,
+              token.id,
+              token.access_token,
+              token.refresh_token,
+            );
+          } catch (err) {
+            if (!(err instanceof ExpiredAccessTokenError)) console.error(err);
+            return {
+              expires: new Date(0).toISOString(),
+              error: "Twitch auth expired",
+            };
+          }
+        }
+      }
+
+      // Include user.id on session
       return {
         ...session,
         user: session.user && {
@@ -70,6 +108,7 @@ export const authOptions: NextAuthOptions = {
             data: {
               access_token: account.access_token,
               expires_at: account.expires_at,
+              verified_at: Math.floor(Date.now() / 1000),
               id_token: account.id_token,
               refresh_token: account.refresh_token,
               session_state: account.session_state,

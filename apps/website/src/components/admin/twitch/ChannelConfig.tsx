@@ -184,7 +184,7 @@ export function ChannelConfig() {
         <MessageBox variant="failure">Error loading channels …</MessageBox>
       )}
 
-      {channels.isLoading && <p>Loading channels …</p>}
+      {channels.isPending && <p>Loading channels …</p>}
 
       {channels.isSuccess &&
         (channels.data?.length ? (

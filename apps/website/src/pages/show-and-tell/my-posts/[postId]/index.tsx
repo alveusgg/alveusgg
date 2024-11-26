@@ -75,7 +75,7 @@ const EditShowAndTellPage: NextPage = () => {
 
         {session?.status === "authenticated" && (
           <>
-            {getMyPost.isLoading && <p>Loading...</p>}
+            {getMyPost.isPending && <p>Loading...</p>}
             {getMyPost.isError && (
               <MessageBox variant="failure">
                 {getMyPost.error.message}

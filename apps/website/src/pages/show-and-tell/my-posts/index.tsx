@@ -88,7 +88,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
 
         {session?.status === "authenticated" && (
           <>
-            {myEntries.isLoading && <p>Loading...</p>}
+            {myEntries.isPending && <p>Loading...</p>}
             {myEntries.isError && <p>Error: {myEntries.error.message}</p>}
             {myEntries.isSuccess && !myEntries.data.length && (
               <p>No entries found.</p>

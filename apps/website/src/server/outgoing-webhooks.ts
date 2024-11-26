@@ -47,7 +47,7 @@ export async function tryToCallOutgoingWebhook(data: OutgoingWebhookData) {
   try {
     await callWebhookUrl(data);
     success = true;
-  } catch (e) {}
+  } catch (_) {}
   return success;
 }
 
@@ -90,7 +90,7 @@ export async function retryOutgoingWebhook(outgoingWebhook: OutgoingWebhook) {
   let success = false;
   try {
     success = await tryToCallOutgoingWebhook(outgoingWebhook);
-  } catch (e) {}
+  } catch (_) {}
 
   await prisma.outgoingWebhook.update({
     where: { id: outgoingWebhook.id },

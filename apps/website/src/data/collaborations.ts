@@ -2,9 +2,17 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import hasanAbi from "@/assets/collaborations/hasan-abi.png";
+import deanSoCool from "@/assets/collaborations/dean-so-cool.png";
+import scarra from "@/assets/collaborations/scarra.png";
+import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
+import fazeLacy from "@/assets/collaborations/faze-lacy.png";
+import fazeSilky from "@/assets/collaborations/faze-silky.png";
+import fazeAdapt from "@/assets/collaborations/faze-adapt.png";
+import theSushiDragon from "@/assets/collaborations/the-sushi-dragon.png";
 import alinity from "@/assets/collaborations/alinity.png";
 import trivi from "@/assets/collaborations/trivi.png";
-import jasonTheWeen from "@/assets/collaborations/jasonTheWeen.png";
+import jasonTheWeen from "@/assets/collaborations/jason-the-ween.png";
 import itmeJP from "@/assets/collaborations/itmeJP.png";
 import agent00 from "@/assets/collaborations/agent00.png";
 import bao from "@/assets/collaborations/bao.png";
@@ -25,7 +33,6 @@ import jinny from "@/assets/collaborations/jinny.png";
 import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
 import alpharad from "@/assets/collaborations/alpharad.png";
 import cinna from "@/assets/collaborations/cinna.png";
-import hasanAbi from "@/assets/collaborations/hasan-abi.png";
 import fanfan from "@/assets/collaborations/fanfan.png";
 import alluux from "@/assets/collaborations/alluux.png";
 import filian from "@/assets/collaborations/filian.png";
@@ -68,6 +75,96 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Hasan & Dean",
+      link: "https://www.twitch.tv/hasanabi",
+      date: new Date("2024-11-16"),
+      videoId: "blZePb-3DU0",
+      vodId: "xl7HGV1UdlI",
+      creators: [
+        {
+          name: "HasanAbi",
+          image: hasanAbi,
+          popularity: 2_800_000, // Twitch followers, 2024-11-17
+        },
+        {
+          name: "Deansocool",
+          image: deanSoCool,
+          popularity: 340_000, // Twitch followers, 2024-11-17
+        },
+      ],
+    },
+    {
+      name: "Scarra",
+      link: "https://www.twitch.tv/scarra",
+      date: new Date("2024-11-13"),
+      videoId: "TTUtUM_i2nE",
+      creators: [
+        {
+          name: "Scarra",
+          image: scarra,
+          popularity: 1_600_000, // Twitch followers, 2024-11-13
+        },
+      ],
+    },
+    {
+      name: "Evan & Katelyn",
+      link: "https://www.twitch.tv/evanandkatelyn",
+      date: new Date("2024-11-12"),
+      videoId: "C8a8c1aM_vI",
+      creators: [
+        {
+          name: "Evan & Katelyn",
+          image: evanAndKatelyn,
+          popularity: 1_500_000, // Twitch followers, 2024-11-14
+        },
+      ],
+    },
+    {
+      name: "FaZe Lacy",
+      link: "https://www.twitch.tv/lacy",
+      date: new Date("2024-11-11"),
+      videoId: "-2_A1nxic5g",
+      creators: [
+        {
+          name: "FaZe Lacy",
+          image: fazeLacy,
+          popularity: 1_000_000, // Twitch followers, 2024-11-13
+        },
+      ],
+    },
+    {
+      name: "FaZe Silky & Adapt",
+      link: "https://www.twitch.tv/silky",
+      date: new Date("2024-11-10"),
+      videoId: "fr7aon7_YLI",
+      creators: [
+        {
+          name: "FaZe Silky",
+          image: fazeSilky,
+          popularity: 654_000, // Twitch followers, 2024-11-13
+        },
+        {
+          name: "FaZe Adapt",
+          image: fazeAdapt,
+          popularity: 5_900_000, // YouTube subscribers, 2024-11-13
+        },
+      ],
+    },
+    {
+      name: "TheSushiDragon",
+      link: "https://www.twitch.tv/thesushidragon",
+      date: new Date("2024-10-30"),
+      videoId: "MgVvgBdaESo",
+      vodId: "61_IkfEo7mk",
+      creators: [
+        {
+          name: "TheSushiDragon",
+          image: theSushiDragon,
+          popularity: 303_000, // Twitch followers, 2024-10-31
+        },
+      ],
+    },
     {
       name: "Alinity & Trivi (Valen)",
       link: "https://www.twitch.tv/alinity",
@@ -348,13 +445,7 @@ const collaborations: Collaboration[] = (
       date: new Date("2024-01-26"),
       videoId: "E_iO1ZKlHyM",
       vodId: "MnPhxGBoY-I",
-      creators: [
-        {
-          name: "HasanAbi",
-          image: hasanAbi,
-          popularity: 2_700_000, // Twitch followers, 2024-10-4
-        },
-      ],
+      creators: [], // Hasan has a more recent collaboration
     },
     {
       name: "Fanfan",

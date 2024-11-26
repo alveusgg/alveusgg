@@ -58,7 +58,7 @@ export function AdminShowAndTellEntriesPanel({
 
   return (
     <Panel>
-      {entries.isLoading && <p>Loading …</p>}
+      {entries.isPending && <p>Loading …</p>}
       {entries.status === "error" && <p>Error fetching entries!</p>}
       {entries.data?.pages && entries.data.pages.length > 0 && (
         <>

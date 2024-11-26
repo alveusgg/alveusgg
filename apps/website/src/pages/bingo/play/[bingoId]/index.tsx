@@ -147,7 +147,7 @@ function smoothScrollTo(selector: string, offset: number) {
       });
       return true;
     }
-  } catch (e) {}
+  } catch (_) {}
 
   return false;
 }

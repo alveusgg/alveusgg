@@ -22,6 +22,7 @@ export const existingBingoSchema = bingoSchema.and(
   }),
 );
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const bingoEntrySchema = z.object({});
 
 export async function findActiveBingo(bingoSlugOrId: string) {

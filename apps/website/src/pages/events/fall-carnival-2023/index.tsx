@@ -123,6 +123,7 @@ const FallCarnival2023EventPage: NextPage = () => {
               <div
                 className={classes(isDirty && "pointer-events-none opacity-40")}
               >
+                {/* eslint-disable-next-line react/jsx-no-target-blank */}
                 <a
                   className="flex flex-row items-center justify-center gap-1 rounded-xl bg-gray-700/10 p-1 px-3 text-center hover:bg-gray-700/20"
                   href={getVirtualTicketImageUrl(eventId, userName)}
@@ -147,10 +148,10 @@ const FallCarnival2023EventPage: NextPage = () => {
                 />
               </div>
 
-              {(isDirty || myTicket.isLoading) && (
+              {(isDirty || myTicket.isPending) && (
                 <div className="absolute inset-0 flex items-center justify-center bg-alveus-tan text-center italic">
                   <span>
-                    {myTicket.isLoading
+                    {myTicket.isPending
                       ? "Loading the ticket…"
                       : "You have unsaved changes!"}
                   </span>

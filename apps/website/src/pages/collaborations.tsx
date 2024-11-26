@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -40,7 +40,57 @@ const creators = collaborations
   .sort((a, b) => b.popularity - a.popularity);
 
 const Creators = ({ className }: { className?: string }) => {
+  const ref = useRef<HTMLUListElement>(null);
   const drag = useDragScroll();
+
+  const [dots, setDots] = useState(0);
+  const onResize = useCallback(() => {
+    const elm = ref.current;
+    if (!elm) return;
+
+    // Get the visible width of the scrollable elm
+    // Get the width of 1rem in pixels
+    const visible = elm.clientWidth;
+    const rem = parseInt(getComputedStyle(document.documentElement).fontSize);
+
+    // Calculate the number of dots to show
+    // Only ever fill 80% of the visible width
+    const dot = 0.75 * rem;
+    const gap = 0.5 * rem;
+    const count = Math.floor((visible * 0.8) / (dot + gap));
+    setDots(Math.min(count, 20));
+  }, []);
+  useEffect(() => {
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, [onResize]);
+
+  const [bar, setBar] = useState({
+    start: 0,
+    width: 0,
+  });
+  const onScroll = useCallback(() => {
+    const elm = ref.current;
+    if (!elm) return;
+
+    // Get the % of the scrollable elm that is visible
+    // Use that to determine how many dots to show
+    const visible = elm.clientWidth / elm.scrollWidth;
+    const width = Math.ceil(dots * visible);
+
+    // Determine how far the user has scrolled
+    // Use that to determine which dots to show
+    const scroll = elm.scrollLeft / (elm.scrollWidth - elm.clientWidth);
+    const start = Math.floor(scroll * (dots - width));
+
+    setBar({ start, width });
+  }, [dots]);
+  useEffect(() => {
+    onScroll();
+    window.addEventListener("resize", onScroll);
+    return () => window.removeEventListener("resize", onScroll);
+  }, [onScroll]);
 
   return (
     <div className={classes("flex justify-center", className)}>
@@ -48,9 +98,14 @@ const Creators = ({ className }: { className?: string }) => {
         <ul
           className="scrollbar-none group/creators flex max-w-full cursor-grab flex-row gap-y-4 overflow-x-auto pb-2 pl-12 pr-8 pt-6"
           onMouseDown={drag}
+          onScroll={onScroll}
+          ref={ref}
         >
           {creators.map(({ name, image, slug }, idx) => (
-            <li key={slug} style={{ zIndex: creators.length - idx }}>
+            <li
+              key={`${slug}-${name}`}
+              style={{ zIndex: creators.length - idx }}
+            >
               <Link
                 href={`#${slug}`}
                 title={name}
@@ -83,9 +138,46 @@ const Creators = ({ className }: { className?: string }) => {
           style={{ zIndex: creators.length + 1 }}
         />
         <div
-          className="pointer-events-none absolute inset-y-0 bottom-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-green"
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-green"
           style={{ zIndex: creators.length + 1 }}
         />
+
+        <div className="flex" style={{ zIndex: creators.length + 2 }}>
+          <div
+            className={classes(
+              "relative mx-auto flex transition-opacity",
+              bar.width === dots && "pointer-events-none opacity-0",
+            )}
+          >
+            {Array.from({ length: dots }).map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className="z-0 p-1"
+                onClick={() => {
+                  const elm = ref.current;
+                  if (!elm) return;
+
+                  const scroll = idx / (dots - 1);
+                  elm.scrollTo({
+                    left: scroll * (elm.scrollWidth - elm.clientWidth),
+                    behavior: "smooth",
+                  });
+                }}
+              >
+                <div className="h-3 w-3 rounded-full bg-alveus-green-300 shadow-sm" />
+              </button>
+            ))}
+
+            <div
+              className="pointer-events-none absolute inset-y-0 z-10 m-1 h-3 rounded-full bg-alveus-green-900 shadow-sm transition-[left]"
+              style={{
+                left: `calc((0.75rem * ${bar.start}) + (0.5rem * ${bar.start}))`,
+                width: `calc((0.75rem * ${bar.width}) + (0.5rem * (${bar.width} - 1)))`,
+              }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -3,7 +3,7 @@
  * TODO: Check expirationTime?
  */
 
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { env } from "@/env";
@@ -100,14 +100,11 @@ export function usePushSubscription(
 
   const [tags, setTags] = useState<Record<string, string> | null>(null);
 
-  const queryClient = useQueryClient();
-  const utils = trpc.useContext();
+  const utils = trpc.useUtils();
   const register = trpc.pushSubscription.register.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       if (endpoint) {
-        queryClient.invalidateQueries({
-          queryKey: trpc.pushSubscription.getStatus.getQueryKey({ endpoint }),
-        });
+        await utils.pushSubscription.getStatus.invalidate({ endpoint });
       }
     },
   });
@@ -115,11 +112,8 @@ export function usePushSubscription(
   const setTagsMutation = trpc.pushSubscription.setTags.useMutation({
     onMutate: async ({ endpoint, tags: newTags }) => {
       setTags(newTags); // optimistic update
-      const statusKey = trpc.pushSubscription.getStatus.getQueryKey({
-        endpoint,
-      });
-      const previous = queryClient.getQueryData(statusKey);
-      await queryClient.cancelQueries(statusKey);
+      const previous = utils.pushSubscription.getStatus.getData({ endpoint });
+      await utils.pushSubscription.getStatus.cancel({ endpoint });
       return { previous };
     },
     onError: () => {
@@ -127,10 +121,7 @@ export function usePushSubscription(
     },
     onSettled: async () => {
       if (endpoint) {
-        const statusKey = trpc.pushSubscription.getStatus.getQueryKey({
-          endpoint,
-        });
-        await queryClient.invalidateQueries({ queryKey: statusKey });
+        await utils.pushSubscription.getStatus.invalidate({ endpoint });
       }
     },
   });
