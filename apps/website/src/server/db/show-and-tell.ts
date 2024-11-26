@@ -55,6 +55,7 @@ export type PublicShowAndTellEntry = Pick<
 
 export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
   attachments: ShowAndTellEntryAttachments;
+  featuredImage?: ImageAttachment;
 };
 
 export const withAttachments = {
@@ -104,6 +105,7 @@ const attachmentSchema = z.object({
 type CreateImageAttachment = z.infer<typeof createImageAttachmentSchema>;
 const createImageAttachmentSchema = attachmentSchema.and(
   z.object({
+    dominantColor: z.string().min(5).max(11).optional(),
     fileStorageObjectId: z.string().cuid(),
     name: z.string(),
   }),
@@ -139,6 +141,7 @@ const showAndTellSharedInputSchema = z.object({
   location: z.string().max(MYSQL_MAX_VARCHAR_LENGTH).nullable(),
   longitude: z.number().nullable(),
   latitude: z.number().nullable(),
+  featuredImage: createImageAttachmentSchema.optional(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -251,6 +254,16 @@ export async function createPost(
       location: input.location,
       longitude: input.longitude,
       latitude: input.latitude,
+      featuredImage: input.featuredImage
+        ? {
+            connectOrCreate: {
+              where: {
+                fileStorageObjectId: input.featuredImage.fileStorageObjectId,
+              },
+              create: input.featuredImage,
+            },
+          }
+        : undefined,
     },
   });
   await revalidateCache(res.id);
@@ -303,6 +316,7 @@ export async function getPosts({
       approvedAt: true,
       attachments: withAttachments.include.attachments,
       location: true,
+      featuredImage: true,
     },
     orderBy: [...postOrderBy],
     cursor: cursor ? { id: cursor } : undefined,
@@ -434,6 +448,17 @@ export async function updatePost(
         location: input.location,
         longitude: input.longitude,
         latitude: input.latitude,
+        featuredImage: {
+          delete: true,
+          connectOrCreate: input.featuredImage
+            ? {
+                where: {
+                  fileStorageObjectId: input.featuredImage.fileStorageObjectId,
+                },
+                create: input.featuredImage,
+              }
+            : undefined,
+        },
       },
     }),
     // Update image attachments that are in the update list
