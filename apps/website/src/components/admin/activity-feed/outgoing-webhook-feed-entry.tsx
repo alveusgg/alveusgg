@@ -47,7 +47,7 @@ export const OutgoingWebhookFeedEntry = ({
               : `last failure: ${item.failedAt?.toISOString()}`)
           }
         >
-          {retryOutgoingWebhook.isLoading ? (
+          {retryOutgoingWebhook.isPending ? (
             <IconSync className="h-5 w-5 animate-spin" />
           ) : lastAttemptWasSuccessful ? (
             "✅"

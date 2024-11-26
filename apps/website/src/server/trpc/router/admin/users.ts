@@ -54,7 +54,7 @@ export const adminUsersRouter = router({
             },
           },
         });
-      } catch (error) {
+      } catch (_) {
         throw new TRPCError({
           code: "BAD_REQUEST",
           message: "Role could not be assigned",

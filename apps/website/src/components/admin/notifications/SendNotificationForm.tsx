@@ -93,7 +93,7 @@ export function SendNotificationForm() {
   return (
     <div>
       <form ref={formRef} onSubmit={submit}>
-        {createNotification.isLoading && (
+        {createNotification.isPending && (
           <MessageBox variant="default" className="flex items-center">
             <IconLoading className="mr-2 h-5 w-5 animate-spin" />
             Notification is being published…

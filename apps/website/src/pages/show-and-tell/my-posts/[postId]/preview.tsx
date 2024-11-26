@@ -75,7 +75,7 @@ const PreviewShowAndTellPage: NextPage = () => {
 
         {session?.status === "authenticated" && (
           <>
-            {getMyPost.isLoading || getPostsFromANewLocation.isLoading ? (
+            {getMyPost.isPending || getPostsFromANewLocation.isPending ? (
               <p>Loading...</p>
             ) : getMyPost.isError || getPostsFromANewLocation.isError ? (
               <>

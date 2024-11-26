@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
   const res = await fetch(env.NEXT_PUBLIC_BASE_URL + "/api/short-links", {
     method: "POST",
     body: JSON.stringify({
-      slug: req.nextUrl.pathname.replace("/l/", "").trim(),
+      slug: req.nextUrl.pathname.replace(/^\/(l|go)\//, ""),
     }),
   });
   const shortLink = await res.json();
@@ -49,5 +49,5 @@ export async function middleware(req: NextRequest, event: NextFetchEvent) {
 }
 
 export const config = {
-  matcher: "/l/:path*",
+  matcher: ["/go/:path*", "/l/:path*"],
 };

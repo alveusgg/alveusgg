@@ -38,7 +38,7 @@ export function checkSubject(subject, ctx) {
         });
         return false;
       }
-    } catch (e) {
+    } catch (_) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
         message: "Vapid subject is not a valid url or mailto url!",

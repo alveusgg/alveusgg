@@ -34,7 +34,7 @@ const DEFAULT_TTL = WEB_PUSH_MAX_TTL;
 
 async function generateRequestDetails(
   subscription: PushNotificationBase64Url,
-  payload: string | Buffer | null,
+  payload: string | null,
   options: PushRequestOptions,
 ) {
   if (subscription.endpoint.length === 0) {
@@ -64,7 +64,7 @@ async function generateRequestDetails(
   const body = await encryptContent(
     subscription.keys.p256dh,
     subscription.keys.auth,
-    Buffer.from(payload || ""),
+    new TextEncoder().encode(payload || ""),
   );
 
   return {
@@ -85,7 +85,7 @@ async function generateRequestDetails(
 
 export async function sendWebPushNotification(
   subscription: PushNotificationBase64Url,
-  payload: string | Buffer | null,
+  payload: string | null,
   options: HttpsPushRequestOptions,
 ) {
   const { endpoint, body, headers } = await generateRequestDetails(

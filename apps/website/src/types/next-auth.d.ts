@@ -10,5 +10,6 @@ declare module "next-auth" {
       roles: string[];
       isSuperUser: boolean;
     } & DefaultSession["user"];
+    error?: string;
   }
 }

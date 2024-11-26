@@ -1,4 +1,7 @@
+// @ts-check
+
 import { resolve } from "path";
+import { withSuperjson } from "next-superjson";
 
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
 import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
@@ -18,10 +21,11 @@ function urlOriginAsRemotePattern(url) {
   };
 }
 
-/** @type {import("next").NextConfig} */
+/**
+ * @type {import("next").NextConfig}
+ */
 const config = {
   reactStrictMode: true,
-  swcMinify: true,
   eslint: {
     dirs: ["."],
   },
@@ -347,6 +351,27 @@ const config = {
       destination: "https://www.youtube.com/AlveusSanctuary/live",
       permanent: true,
     },
+    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id + a default flag)
+    {
+      source: "/updates/ical",
+      destination:
+        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+      permanent: true,
+    },
+    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
+    {
+      source: "/updates/ical/alveus",
+      destination:
+        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+      permanent: true,
+    },
+    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
+    {
+      source: "/updates/ical/maya",
+      destination:
+        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=235835559",
+      permanent: true,
+    },
   ],
   headers: async () => [
     {
@@ -389,7 +414,7 @@ const config = {
   webpack: (config, options) => {
     // Add a custom loader for videos
     config.module.rules.push({
-      test: /\.mp4$/,
+      test: /\.(mp4|webm)$/,
       use: [
         {
           loader: resolve("./build-scripts/video-loader.cjs"),
@@ -420,8 +445,7 @@ const config = {
   transpilePackages: ["@alveusgg/data"],
   experimental: {
     scrollRestoration: true,
-    swcPlugins: [["next-superjson-plugin", {}]],
   },
 };
 
-export default config;
+export default withSuperjson()(config);

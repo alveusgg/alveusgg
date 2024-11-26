@@ -66,7 +66,7 @@ function parseOptionParams<TOptions extends GenericOptions>(
       const maybeUrl = param.slice(2 + paramName.length + 1);
       try {
         values[optionName] = new URL(maybeUrl).toString();
-      } catch (e) {
+      } catch (_) {
         errors.push(`Invalid URL for ${String(optionName)}`);
       }
     }

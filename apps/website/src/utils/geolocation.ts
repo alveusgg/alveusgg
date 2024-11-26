@@ -110,7 +110,6 @@ const forwardGeocode = async (
     const url = new URL("https://nominatim.openstreetmap.org/search");
     url.searchParams.append("q", String(config.query));
     url.searchParams.append("format", "geojson");
-    url.searchParams.append("polygon_geoData", "1");
     url.searchParams.append("addressdetails", "1");
     url.searchParams.append("accept-language", "en-US,en");
 
@@ -121,14 +120,12 @@ const forwardGeocode = async (
       const point: CarmenGeojsonFeature = {
         id: feature.properties.placeid,
         type: "Feature",
-        geometry: {
-          type: "Point",
-          coordinates: [feature.bbox[0], feature.bbox[1]],
-        },
+        geometry: feature.geometry,
         properties: feature.properties,
         place_name: feature.properties.display_name,
         place_type: ["place"],
-        text: feature.properties.display_name,
+        text: createAddress(feature.properties.address),
+        bbox: feature.bbox,
       };
       features.push(point);
     }
@@ -175,7 +172,8 @@ const reverseGeocode = async (
           properties: feature.properties,
           place_name: feature.properties.display_name,
           place_type: ["place"],
-          text: feature.properties.display_name,
+          language: "en",
+          text: createAddress(feature.properties.address),
         };
         features.push(point);
       }

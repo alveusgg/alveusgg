@@ -1,21 +1,20 @@
 import type { PlanetScaleDatabase } from "drizzle-orm/planetscale-serverless";
 import { drizzle } from "drizzle-orm/planetscale-serverless";
-import type { Connection } from "@planetscale/database";
-import { connect } from "@planetscale/database";
+import { Client } from "@planetscale/database";
 
 import { env } from "@/env";
 
-let connection: Connection;
+let client: Client;
 let db: PlanetScaleDatabase;
 
 export function getDatabase() {
-  if (!connection) {
-    connection = connect({
+  if (!client) {
+    client = new Client({
       url: env.DATABASE_URL,
     });
   }
   if (!db) {
-    db = drizzle(connection);
+    db = drizzle(client);
   }
 
   return db;

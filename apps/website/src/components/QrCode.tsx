@@ -22,7 +22,7 @@
  * "MIT" license. For details, see src/third-party/qrcodegen.
  */
 
-import React from "react";
+import type React from "react";
 
 import { QrCode } from "@/third-party/qrcodegen";
 

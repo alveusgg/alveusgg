@@ -11,7 +11,12 @@ import {
   type Ref,
 } from "react";
 import { useRouter } from "next/router";
-import { Dialog } from "@headlessui/react";
+import {
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+  Description,
+} from "@headlessui/react";
 
 import { safeJSONParse } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
@@ -195,8 +200,8 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <Dialog.Panel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan px-4 shadow-2xl">
-            <Dialog.Title
+          <DialogPanel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan px-4 shadow-2xl">
+            <DialogTitle
               as={Heading}
               level={2}
               className="flex items-start gap-2"
@@ -217,14 +222,14 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               >
                 <IconX />
               </button>
-            </Dialog.Title>
+            </DialogTitle>
 
-            <Dialog.Description>
+            <Description>
               We embed some third-party content on our website, and need your
               consent to do so. These third parties {consentExplainer}. Please
               select which third-party content you would like to allow on our
               website:
-            </Dialog.Description>
+            </Description>
 
             <div className="mt-4 flex flex-col gap-y-2">
               {Object.entries(consentData).map(([key, data]) => (
@@ -297,7 +302,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
                 </ConsentButton>
               </div>
             </div>
-          </Dialog.Panel>
+          </DialogPanel>
         </div>
       </Dialog>
 

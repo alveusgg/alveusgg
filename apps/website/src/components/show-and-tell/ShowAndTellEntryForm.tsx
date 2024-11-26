@@ -100,7 +100,7 @@ export function ShowAndTellEntryForm({
   const create = trpc.showAndTell.create.useMutation();
   const update = trpc.showAndTell.update.useMutation();
   const review = trpc.adminShowAndTell.review.useMutation();
-  const isLoading = create.isLoading || update.isLoading || review.isLoading;
+  const isLoading = create.isPending || update.isPending || review.isPending;
 
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
     !!entry?.volunteeringMinutes,

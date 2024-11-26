@@ -1,5 +1,11 @@
-import { Fragment, type JSX } from "react";
-import { Listbox, Transition } from "@headlessui/react";
+import { type JSX } from "react";
+import {
+  Listbox,
+  ListboxButton,
+  ListboxOptions,
+  ListboxOption,
+  Label,
+} from "@headlessui/react";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
@@ -28,8 +34,8 @@ const Select = ({
   return (
     <Listbox value={value} onChange={onChange}>
       <div className={classes("relative mt-1 flex flex-col", className)}>
-        {label && <Listbox.Label>{label}</Listbox.Label>}
-        <Listbox.Button
+        {label && <Label>{label}</Label>}
+        <ListboxButton
           className={classes(
             "relative w-full rounded-lg border py-2 pl-3 pr-10 text-left",
             dark
@@ -44,48 +50,37 @@ const Select = ({
               aria-hidden="true"
             />
           </span>
-        </Listbox.Button>
-        <Transition
-          as={Fragment}
-          leave="transition ease-in duration-100"
-          leaveFrom="opacity-100"
-          leaveTo="opacity-0"
+        </ListboxButton>
+        <ListboxOptions
+          transition
+          className={classes(
+            "group absolute top-full z-30 mt-1 flex max-h-60 min-w-[10rem] flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-none data-[closed]:opacity-0",
+            align === "left" ? "left-0" : "right-0",
+            dark
+              ? "border-alveus-tan/20 bg-alveus-green text-alveus-tan"
+              : "border-alveus-green/20 bg-alveus-tan text-alveus-green",
+          )}
+          as="ul"
         >
-          <Listbox.Options
-            className={classes(
-              "group absolute top-full z-30 mt-1 flex max-h-60 min-w-[10rem] flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg focus:outline-none",
-              align === "left" ? "left-0" : "right-0",
-              dark
-                ? "border-alveus-tan/20 bg-alveus-green text-alveus-tan"
-                : "border-alveus-green/20 bg-alveus-tan text-alveus-green",
-            )}
-          >
-            {typeSafeObjectEntries(options).map(([key, value]) => (
-              <Listbox.Option key={key} value={key} as={Fragment}>
-                {({ active, selected }) => (
-                  <li
-                    className={classes(
-                      "relative w-full min-w-max cursor-pointer rounded py-2 pl-10 pr-4",
-                      dark
-                        ? "hover:bg-alveus-tan/20"
-                        : "hover:bg-alveus-green/20",
-                      active && "outline-blue-500 group-focus-visible:outline",
-                      selected &&
-                        (dark ? "bg-alveus-tan/10" : "bg-alveus-green/10"),
-                    )}
-                  >
-                    <span className="block">{value}</span>
-                    {selected && (
-                      <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-                        <IconCheck className="h-5 w-5" aria-hidden="true" />
-                      </span>
-                    )}
-                  </li>
-                )}
-              </Listbox.Option>
-            ))}
-          </Listbox.Options>
-        </Transition>
+          {typeSafeObjectEntries(options).map(([key, value]) => (
+            <ListboxOption
+              key={key}
+              value={key}
+              className={classes(
+                "group relative w-full min-w-max cursor-pointer rounded py-2 pl-10 pr-4 data-[focus]:outline-blue-500 data-[focus]:group-focus-visible:outline",
+                dark
+                  ? "hover:bg-alveus-tan/20 data-[selected]:bg-alveus-tan/10"
+                  : "hover:bg-alveus-green/20 data-[selected]:bg-alveus-green/10",
+              )}
+              as="li"
+            >
+              <span className="block">{value}</span>
+              <span className="absolute inset-y-0 left-0 hidden items-center pl-3 group-data-[selected]:flex">
+                <IconCheck className="h-5 w-5" aria-hidden="true" />
+              </span>
+            </ListboxOption>
+          ))}
+        </ListboxOptions>
       </div>
     </Listbox>
   );

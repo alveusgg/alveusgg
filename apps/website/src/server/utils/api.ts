@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { ZodType } from "zod/lib/types";
-import type { z } from "zod";
+import type { z, ZodType } from "zod";
 
 import { env } from "@/env";
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
@@ -42,7 +41,7 @@ export function createTokenProtectedApiHandler<T extends ZodType>(
     let success = false;
     try {
       success = await action(options.data);
-    } catch (e) {}
+    } catch (_) {}
 
     res.status(success ? 200 : 500).json({ success });
   };

@@ -20,9 +20,9 @@
   },
   "packageManager": "pnpm@8.15.5",
   "devDependencies": {
-    "husky": "^9.0.7",
-    "lint-staged": "^15.2.0",
-    "prettier": "^3.2.4"
+    "husky": "^9.1.7",
+    "lint-staged": "^15.2.10",
+    "prettier": "^3.3.3"
   },
   "scripts": {
     "prepare": "husky",
@@ -32,7 +32,12 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "next@14.1.0": "patches/next@14.1.0.patch"
+      "next@15.0.3": "patches/next@15.0.3.patch"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "next-superjson-plugin>next": "^15.0"
+      }
     }
   }
 }

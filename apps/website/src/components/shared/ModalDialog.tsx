@@ -1,4 +1,4 @@
-import { Dialog } from "@headlessui/react";
+import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import type { ReactNode } from "react";
 import { Button } from "@/components/shared/form/Button";
 import { classes } from "@/utils/classes";
@@ -33,18 +33,18 @@ export function ModalDialog({
 
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center">
-          <Dialog.Panel
+          <DialogPanel
             className={classes(
               "w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
               panelClassName,
             )}
           >
-            <Dialog.Title
+            <DialogTitle
               as="h3"
               className="text-lg font-medium leading-6 text-gray-900"
             >
               {title}
-            </Dialog.Title>
+            </DialogTitle>
             <div className="mt-2">{children}</div>
 
             <div className="mt-4">
@@ -52,7 +52,7 @@ export function ModalDialog({
                 {closeLabel}
               </Button>
             </div>
-          </Dialog.Panel>
+          </DialogPanel>
         </div>
       </div>
     </Dialog>

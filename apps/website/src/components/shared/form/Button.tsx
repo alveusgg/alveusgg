@@ -1,4 +1,5 @@
-import React, { type ReactNode, type ButtonHTMLAttributes } from "react";
+import type React from "react";
+import { type ReactNode, type ButtonHTMLAttributes } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 

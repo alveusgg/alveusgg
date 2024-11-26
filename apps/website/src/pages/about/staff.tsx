@@ -152,7 +152,7 @@ const staff = {
   space: {
     image: spaceVoyageImage,
     name: "SpaceVoyage",
-    title: "Production Tech",
+    title: "Director of Production",
     description: (
       <>
         <p>
@@ -176,17 +176,21 @@ const staff = {
 };
 
 const team = {
-  dion: {
-    name: "Dion (@Dionysus1911)",
-    title: "Illustrator / Animator",
+  mik: {
+    name: "Mik (@Mik_MWP)",
+    title: "Social Media Manager",
+  },
+  chandler: {
+    name: "Chandler",
+    title: "TikTok Editor",
   },
   max: {
     name: "Max (@maxzillajr)",
     title: "Video Editor",
   },
-  mik: {
-    name: "Mik (@Mik_MWP)",
-    title: "Social Media Manager",
+  dion: {
+    name: "Dion (@Dionysus1911)",
+    title: "Illustrator / Animator",
   },
   paul: {
     name: "Paul (@pjeweb)",

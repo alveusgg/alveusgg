@@ -1,3 +1,5 @@
+import { type CalendarEvent } from "@prisma/client";
+
 type StandardCategory = {
   name: string;
   color: string;
@@ -43,3 +45,44 @@ export const frequentLinks: FrequentLink[] = [
     url: "https://youtube.com/@mayahiga",
   },
 ] as const;
+
+export const twitchChannels = {
+  alveus: {
+    username: "AlveusSanctuary",
+    filter: (event: CalendarEvent) =>
+      /^alveus\b/i.test(event.category) &&
+      !/\b(yt|youtube)\b/i.test(event.category),
+  },
+  maya: {
+    username: "Maya",
+    filter: (event: CalendarEvent) =>
+      /^maya\b/i.test(event.category) &&
+      !/\b(yt|youtube)\b/i.test(event.category),
+  },
+} as const satisfies Record<
+  string,
+  { username: string; filter: (event: CalendarEvent) => boolean }
+>;
+
+const truncate = (value: string, max: number) => {
+  if (value.length <= max) return value;
+
+  for (const pattern of [" - ", " | ", ": "]) {
+    const index = value.indexOf(pattern);
+    if (index !== -1 && index < max) return value.slice(0, index);
+  }
+
+  return value.slice(0, max - 3) + "…";
+};
+
+// Used for the overlay + Twitch sync, showing the title + link (if not the Twitch channel)
+export const getFormattedTitle = (
+  event: CalendarEvent,
+  channel: string,
+  length?: number,
+) => {
+  const title = length ? truncate(event.title, length) : event.title;
+  return new RegExp(`twitch\\.tv\\/${channel}`, "i").test(event.link)
+    ? title
+    : `${title} @ ${event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}`;
+};
