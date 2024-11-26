@@ -15,11 +15,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        id: pnpm-install
-        with:
-          version: 8
-          run_install: false
+        uses: pnpm/action-setup@v4
 
       - name: Get pnpm store directory
         id: pnpm-cache
@@ -54,11 +50,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v3
-        id: pnpm-install
-        with:
-          version: 8
-          run_install: false
+        uses: pnpm/action-setup@v4
 
       - name: Get pnpm store directory
         id: pnpm-cache
