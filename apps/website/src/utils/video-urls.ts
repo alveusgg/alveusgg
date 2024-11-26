@@ -52,7 +52,12 @@ export const videoPlatformConfigs = {
     regex: /(?:https?:)?(?:\/\/)?(?:(?:www|i)\.)?imgur\.com\/([a-z0-9]+)/i,
     normalizedRegex: /https:\/\/imgur\.com\/([a-z0-9]+)/,
   },
-} as const;
+} as const satisfies {
+  [key: string]: {
+    previewUrl?: (id: string) => `${string}.jpg`;
+    [key: string]: unknown;
+  };
+};
 
 export function validateNormalizedVideoUrl(url: string) {
   for (const config of Object.values(videoPlatformConfigs)) {
