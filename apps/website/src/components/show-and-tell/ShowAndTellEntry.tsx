@@ -5,7 +5,6 @@ import {
   useCallback,
   useMemo,
   useRef,
-  useState,
 } from "react";
 import Image from "next/image";
 import parse, {
@@ -17,7 +16,6 @@ import parse, {
 } from "html-react-parser";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
@@ -29,7 +27,6 @@ import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge"
 
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
-import { mmcq } from "@/utils/mmcq";
 
 type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
@@ -212,17 +209,7 @@ export const ShowAndTellEntry = forwardRef<
     .map(({ linkAttachment }) => linkAttachment)
     .filter(notEmpty);
 
-  let featureImageUrl = imageAttachments[0]?.url;
-  if (!featureImageUrl) {
-    for (const videoAttachment of videoAttachments) {
-      const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
-      if (!parsedVideoUrl) continue;
-      const videoPlatformConfig = videoPlatformConfigs[parsedVideoUrl.platform];
-      if (!("previewUrl" in videoPlatformConfig)) continue;
-      featureImageUrl = videoPlatformConfig.previewUrl(parsedVideoUrl.id);
-      break;
-    }
-  }
+  const { featuredImage } = entry;
 
   const handleRef = useCallback(
     (node: HTMLElement) => {
@@ -235,8 +222,6 @@ export const ShowAndTellEntry = forwardRef<
     },
     [forwardedRef],
   );
-
-  const [backgroundColor, setBackgroundColor] = useState<string>();
 
   return (
     <article
@@ -261,12 +246,15 @@ export const ShowAndTellEntry = forwardRef<
       data-show-and-tell-author={entry.displayName}
       tabIndex={-1}
       style={
-        isPresentationView
-          ? { backgroundColor, transitionProperty: "background-color, opacity" }
+        isPresentationView && featuredImage
+          ? {
+              backgroundColor: `oklch(from rgb(${featuredImage.dominantColor}) min(l, 0.5) c h)`,
+              transitionProperty: "background-color, opacity",
+            }
           : undefined
       }
     >
-      {isPresentationView && featureImageUrl && (
+      {isPresentationView && featuredImage && (
         <div className="absolute top-0 z-0 h-full w-full overflow-hidden rounded-xl">
           <Image
             loading="lazy"
@@ -274,45 +262,8 @@ export const ShowAndTellEntry = forwardRef<
             height={1080}
             draggable={false}
             className="pointer-events-none absolute inset-0 -m-2 h-[calc(100%+4em)] w-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
-            src={featureImageUrl}
+            src={featuredImage.url}
             alt=""
-            onLoad={(e) => {
-              if (
-                typeof backgroundColor !== "undefined" ||
-                !window.CanvasRenderingContext2D
-              )
-                return;
-
-              const { currentTarget } = e;
-              const { naturalHeight, naturalWidth } = currentTarget;
-
-              const canvas = document.createElement("canvas");
-              canvas.height = naturalHeight;
-              canvas.width = naturalWidth;
-
-              const context = canvas.getContext("2d")!;
-
-              context.drawImage(
-                currentTarget,
-                0,
-                0,
-                naturalWidth,
-                naturalHeight,
-              );
-
-              const { data } = context.getImageData(
-                0,
-                0,
-                naturalWidth,
-                naturalHeight,
-              );
-
-              const dominantColor = mmcq(data);
-
-              setBackgroundColor(
-                `oklch(from rgb(${dominantColor}) min(l, 0.5) c h)`,
-              );
-            }}
           />
         </div>
       )}
