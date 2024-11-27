@@ -25,6 +25,7 @@
     "postinstall:create-data": "tsx ./build-scripts/create-data.ts",
     "postinstall": "run-p postinstall:*",
     "lint": "next lint",
+    "types": "tsc --noEmit",
     "start": "next start",
     "test": "vitest",
     "format": "prettier . --write && prisma format"
