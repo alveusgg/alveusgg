@@ -47,6 +47,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Prepare next-env.d.ts
+        run: DIR=$(mktemp -d) && pnpm run lint:next --quiet --dir $DIR && rm -rf $DIR
+        working-directory: apps/website
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
+
       - name: Run linting
         run: pnpm -r run lint
 
@@ -70,6 +76,12 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
+
+      - name: Prepare next-env.d.ts
+        run: DIR=$(mktemp -d) && pnpm run lint:next --quiet --dir $DIR && rm -rf $DIR
+        working-directory: apps/website
+        env:
+          NEXT_TELEMETRY_DISABLED: 1
 
       - name: Check types
         run: pnpm -r run types
