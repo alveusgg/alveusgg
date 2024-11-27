@@ -3,8 +3,8 @@
 import { resolve } from "path";
 import { withSuperjson } from "next-superjson";
 
-import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
-import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
+import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" with { type: "json" };
+import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" with { type: "json" };
 
 import "./src/env/index.js";
 
