@@ -186,11 +186,9 @@ async function getTwitchSchedule(
       start,
       cursor,
     );
-    // no segments found
-    if (response === null) {
-      break;
-    }
-    segments.push(...response.data.segments);
+    if (response === null) break;
+
+    segments.push(...(response.data.segments || []));
 
     cursor = response.pagination.cursor;
     if (!cursor) break;
