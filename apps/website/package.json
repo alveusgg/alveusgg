@@ -24,11 +24,15 @@
     "postinstall:prisma": "prisma generate",
     "postinstall:create-data": "tsx ./build-scripts/create-data.ts",
     "postinstall": "run-p postinstall:*",
-    "lint": "next lint",
+    "lint:next": "next lint",
+    "lint:prisma:validate": "prisma validate",
+    "lint:prisma:format": "prisma format --check",
+    "lint:prisma": "run-p lint:prisma:*",
+    "lint": "run-p lint:*",
     "types": "tsc --noEmit",
     "start": "next start",
     "test": "vitest",
-    "format": "prettier . --write && prisma format"
+    "format": "prisma format"
   },
   "dependencies": {
     "@alveusgg/data": "github:alveusgg/data#0.43.0",
