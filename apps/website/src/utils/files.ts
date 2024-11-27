@@ -1,6 +1,5 @@
 export type ImageMimeType = (typeof imageMimeTypes)[number];
 export const imageMimeTypes = [
-  "image/jpg",
   "image/jpeg",
   "image/png",
   "image/gif",
