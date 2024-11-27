@@ -75,9 +75,10 @@ const PreviewShowAndTellPage: NextPage = () => {
 
         {session?.status === "authenticated" && (
           <>
-            {getMyPost.isPending || getPostsFromANewLocation.isPending ? (
+            {(getMyPost.isPending || getPostsFromANewLocation.isPending) && (
               <p>Loading...</p>
-            ) : getMyPost.isError || getPostsFromANewLocation.isError ? (
+            )}
+            {(getMyPost.isError || getPostsFromANewLocation.isError) && (
               <>
                 {getMyPost.isError && (
                   <MessageBox variant="failure">
@@ -90,15 +91,14 @@ const PreviewShowAndTellPage: NextPage = () => {
                   </MessageBox>
                 )}
               </>
-            ) : (
-              getMyPost.data && (
-                <ShowAndTellEntry
-                  entry={getMyPost.data}
-                  newLocation={getPostsFromANewLocation.data.has(
-                    getMyPost.data.id,
-                  )}
-                />
-              )
+            )}
+            {getMyPost.data && getPostsFromANewLocation.data && (
+              <ShowAndTellEntry
+                entry={getMyPost.data}
+                newLocation={getPostsFromANewLocation.data.has(
+                  getMyPost.data.id,
+                )}
+              />
             )}
           </>
         )}
