@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: weekly
       day: wednesday
-      time: 00:00
+      time: "00:00"
 
   - package-ecosystem: npm
     directories:
@@ -14,7 +14,7 @@ updates:
     schedule:
       interval: weekly
       day: wednesday
-      time: 00:00
+      time: "00:00"
 
     # Ensure the new version is stored in `package.json`
     versioning-strategy: increase
