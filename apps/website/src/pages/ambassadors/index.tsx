@@ -148,7 +148,7 @@ const AmbassadorItems = forwardRef<
     {name && (
       <Heading
         level={2}
-        className="alveus-green-800 mb-8 mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl"
+        className="mb-8 mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
@@ -201,7 +201,7 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-36 -left-8 z-10 hidden h-auto w-1/2 max-w-[8rem] rotate-45 -scale-y-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-36 -left-8 z-10 hidden h-auto w-1/2 max-w-32 rotate-45 -scale-y-100 select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -218,26 +218,26 @@ const AmbassadorsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
-        <Section className="flex-grow pt-8">
+        <Section className="grow pt-8">
           <div
             className={classes(
               "flex flex-col items-center justify-between gap-4 md:flex-row",
               Array.isArray(result) ? "mb-4" : "-mb-6",
             )}
           >
-            <p className="flex-shrink text-center text-xl font-semibold">
+            <p className="shrink text-center text-xl font-semibold">
               Click each ambassador for information and highlights!
             </p>
 
@@ -247,7 +247,7 @@ const AmbassadorsPage: NextPage = () => {
               onChange={(val) => update(val as keyof typeof dropdown, null)}
               label={<span className="sr-only">Sort by</span>}
               align="right"
-              className="flex-shrink-0"
+              className="shrink-0"
             />
           </div>
 

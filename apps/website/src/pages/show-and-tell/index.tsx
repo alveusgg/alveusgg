@@ -435,7 +435,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               <div className="relative col-start-1 row-start-1 flex flex-col items-end justify-end">
                 <div className="z-10 flex items-center justify-end gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white transition-colors group-hover:bg-alveus-green-700">
                   Community map
-                  <IconArrowRight className="h-8 w-8" />
+                  <IconArrowRight className="size-8" />
                 </div>
               </div>
             </NextLink>
@@ -445,28 +445,28 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconUserGroup className="h-10 w-10" />
+            <IconUserGroup className="size-10" />
             {usersCountFmt} members
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconPencil className="h-10 w-10" />
+            <IconPencil className="size-10" />
             {totalPostsCountFmt} posts
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconMapPin className="h-10 w-10" />
+            <IconMapPin className="size-10" />
             {uniqueLocationsCountFmt} locations
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconGlobe className="h-10 w-10" />
+            <IconGlobe className="size-10" />
             {uniqueCountriesCountFmt} countries
           </Box>
 
@@ -497,7 +497,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow" offsetParent={!isPresentationView}>
+      <Section className="grow" offsetParent={!isPresentationView}>
         <div
           ref={presentationViewRootElementRef}
           onWheel={onUserScroll}
@@ -606,7 +606,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 disabled={!hasPrevEntry}
                 onClick={scrollToPrev}
               >
-                <IconArrowUp className="h-5 w-5" />
+                <IconArrowUp className="size-5" />
                 <span className="sr-only">Previous Post</span>
               </Button>
               <Button
@@ -614,7 +614,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 disabled={!hasNextEntry}
                 onClick={scrollToNext}
               >
-                <IconArrowDown className="h-5 w-5" />
+                <IconArrowDown className="size-5" />
                 <span className="sr-only">Next Post</span>
               </Button>
             </div>
@@ -625,12 +625,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             >
               {isPresentationView ? (
                 <>
-                  <IconArrowsIn className="h-5 w-5" />
+                  <IconArrowsIn className="size-5" />
                   <span>Close Fullscreen</span>
                 </>
               ) : (
                 <>
-                  <IconArrowsOut className="h-5 w-5" />
+                  <IconArrowsOut className="size-5" />
                   <span>Open Fullscreen</span>
                 </>
               )}
@@ -640,7 +640,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               href="/show-and-tell/submit-post"
               className="bg-white shadow-lg"
             >
-              <IconPencil className="h-5 w-5" />
+              <IconPencil className="size-5" />
               <span>
                 Submit
                 <span className="hidden lg:inline"> Post</span>

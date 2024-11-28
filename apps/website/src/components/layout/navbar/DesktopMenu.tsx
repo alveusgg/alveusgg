@@ -33,7 +33,7 @@ import IconChevronDown from "@/icons/IconChevronDown";
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
     transition
-    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
     as="ul"
     modal={false}
     {...props}
@@ -66,7 +66,7 @@ export function DesktopMenu() {
   }, [sessionData?.error]);
 
   return (
-    <div className="hidden flex-grow flex-col gap-2 lg:flex">
+    <div className="hidden grow flex-col gap-2 lg:flex">
       <div className="flex items-center justify-end gap-2">
         <ul className="contents">
           {Object.entries(utilityNavStructure).map(([key, link]) => (
@@ -161,7 +161,7 @@ export function DesktopMenu() {
         <Link href="/" className="font-serif text-3xl font-bold">
           Alveus Sanctuary
         </Link>
-        <ul className="flex flex-grow justify-end">
+        <ul className="flex grow justify-end">
           {Object.entries(mainNavStructure).map(([key, link]) => (
             <li key={key}>
               {"link" in link ? (

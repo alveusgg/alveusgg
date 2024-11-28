@@ -62,7 +62,7 @@ function ShortLink({ shortLink, onError, onUpdate }: LinkProps) {
             width="auto"
             href={`/admin/short-links/${shortLink.id}/edit`}
           >
-            <IconPencil className="h-4 w-4" />
+            <IconPencil className="size-4" />
             Edit
           </LinkButton>
 
@@ -73,7 +73,7 @@ function ShortLink({ shortLink, onError, onUpdate }: LinkProps) {
             confirmationMessage="Please confirm deletion!"
             onClick={() => deleteMutation.mutate(shortLink.id)}
           >
-            <IconTrash className="h-4 w-4" />
+            <IconTrash className="size-4" />
             Delete
           </Button>
         </td>

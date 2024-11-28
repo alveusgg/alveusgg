@@ -258,13 +258,13 @@ export const ShowAndTellEntry = forwardRef<
       tabIndex={-1}
     >
       {isPresentationView && featureImageUrl && (
-        <div className="absolute top-0 z-0 h-full w-full overflow-hidden rounded-xl">
+        <div className="absolute top-0 z-0 size-full overflow-hidden rounded-xl">
           <Image
             loading="lazy"
             width={1920}
             height={1080}
             draggable={false}
-            className="pointer-events-none absolute inset-0 -m-2 h-[calc(100%+4em)] w-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
+            className="pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
             src={featureImageUrl}
             alt=""
           />

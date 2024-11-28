@@ -225,7 +225,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               src={images[0].src}
               alt={images[0].alt}
               placeholder="blur"
-              className="absolute inset-x-0 top-0 h-full w-full object-cover md:sticky md:h-screen md:max-h-full"
+              className="absolute inset-x-0 top-0 size-full object-cover md:sticky md:h-screen md:max-h-full"
               style={{ objectPosition: images[0].position }}
             />
           </div>
@@ -271,13 +271,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 />
               ))}
 
-            <div className="pswp-gallery my-6" id={photoswipe}>
-              <Carousel
-                items={carousel}
-                auto={null}
-                itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
-              />
-            </div>
+            <Carousel
+              id={photoswipe}
+              items={carousel}
+              auto={null}
+              className="my-6"
+              itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+            />
 
             {ambassador.plush &&
               merchImage &&

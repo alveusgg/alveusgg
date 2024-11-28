@@ -120,11 +120,11 @@ const Creators = ({ className }: { className?: string }) => {
                 }}
                 draggable={false}
               >
-                <div className="h-20 w-20 rounded-full border-4 border-alveus-green bg-alveus-green-800">
+                <div className="size-20 rounded-full border-4 border-alveus-green bg-alveus-green-800">
                   <Image
                     src={image}
                     alt=""
-                    className="h-full w-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                    className="size-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
                     draggable={false}
                   />
                 </div>
@@ -165,7 +165,7 @@ const Creators = ({ className }: { className?: string }) => {
                   });
                 }}
               >
-                <div className="h-3 w-3 rounded-full bg-alveus-green-300 shadow-sm" />
+                <div className="size-3 rounded-full bg-alveus-green-300 shadow-sm" />
               </button>
             ))}
 
@@ -324,7 +324,7 @@ const CollaborationsPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-16 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-16 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
         <Section dark className="pb-12 pt-24">
@@ -354,19 +354,19 @@ const CollaborationsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <Grouped
             option={option}
             group={group}

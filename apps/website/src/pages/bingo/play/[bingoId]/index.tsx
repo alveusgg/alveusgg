@@ -83,7 +83,7 @@ function PlayGame({ bingoId }: { bingoId: string }) {
   if (!data) {
     return (
       <MessageBox variant="default" className="flex items-center">
-        <IconLoading className="mr-2 h-5 w-5 animate-spin" />
+        <IconLoading className="mr-2 size-5 animate-spin" />
         Checking your entry…
       </MessageBox>
     );
@@ -167,7 +167,7 @@ const PlayBingoPage = () => {
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       <nav
-        className="sticky left-0 right-0 top-0 z-20 flex flex-row items-center justify-center py-4"
+        className="sticky inset-x-0 top-0 z-20 flex flex-row items-center justify-center py-4"
         aria-label="Scroll navigation"
       >
         <ul className="flex flex-row rounded-2xl bg-white/90 shadow-lg backdrop-blur-md lg:text-lg">
@@ -197,7 +197,7 @@ const PlayBingoPage = () => {
         </ul>
       </nav>
 
-      <Section className="flex min-h-[70vh] flex-grow items-center">
+      <Section className="flex min-h-[70vh] grow items-center">
         <Heading className="mb-10" id="bingo" link>
           Alveus Bingo
         </Heading>
@@ -237,7 +237,7 @@ const PlayBingoPage = () => {
                 />
               </div>
 
-              <div className="flex-grow">
+              <div className="grow">
                 <p>Embed Twitch</p>
               </div>
 
@@ -263,7 +263,7 @@ const PlayBingoPage = () => {
           >
             <TwitchEmbed
               channel="maya"
-              className="absolute inset-0 h-full w-full"
+              className="absolute inset-0 size-full"
             />
           </Consent>
         )}

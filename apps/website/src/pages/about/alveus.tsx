@@ -561,7 +561,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section className="text-center">
@@ -655,7 +655,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section>
@@ -693,16 +693,16 @@ const AboutAlveusPage: NextPage = () => {
       {/* TODO: CTA slice for ambassadors? */}
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section
           dark
-          className="flex-grow bg-alveus-green-900"
+          className="grow bg-alveus-green-900"
           containerClassName="flex flex-col-reverse md:flex-row-reverse gap-4 md:gap-10"
         >
           <div>
@@ -727,13 +727,13 @@ const AboutAlveusPage: NextPage = () => {
           </div>
 
           <Link
-            className="flex-shrink-0"
+            className="shrink-0"
             external
             custom
             href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
           >
             <Image
-              className="h-40 w-40"
+              className="size-40"
               src={imageGuidestarSeal}
               width={200}
               height={200}

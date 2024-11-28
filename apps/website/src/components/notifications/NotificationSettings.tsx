@@ -72,13 +72,13 @@ export function NotificationSettings() {
 
           <ol className="list-decimal pl-5">
             <li className="my-3">
-              Tap the <IconUpload className="inline-block h-6 w-6" /> Share
+              Tap the <IconUpload className="inline-block size-6" /> Share
               button in the menu bar.
             </li>
             <li className="my-3">
               Scroll down the list of options, then tap{" "}
               <em>Add to Home Screen</em>{" "}
-              <IconPlus className="inline-block h-6 w-6" />.
+              <IconPlus className="inline-block size-6" />.
               <div className="rounded-xl border-t bg-white p-4">
                 <Image src={imageIOSShareDialog} alt="" />
               </div>
@@ -88,7 +88,7 @@ export function NotificationSettings() {
                 <Image
                   alt=""
                   src={imageIOSAddIcon}
-                  className="inline-block h-6 w-6"
+                  className="inline-block size-6"
                 />{" "}
                 <em>Add to Home Screen</em>. The icon appears only on the device
                 where you add it.

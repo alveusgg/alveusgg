@@ -12,7 +12,7 @@ const UserUnauthorizedPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section className="flex-grow">
+      <Section className="grow">
         <Heading className="my-3 text-3xl text-red-500">Unauthorized</Heading>
         <p className="my-3 text-xl">
           You are not authorized to view this page!

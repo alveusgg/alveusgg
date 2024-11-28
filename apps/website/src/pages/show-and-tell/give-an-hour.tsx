@@ -60,7 +60,7 @@ const Card = ({
       )}
     </div>
 
-    <div className="flex-grow text-lg">
+    <div className="grow text-lg">
       <Heading
         level={3}
         id={id}
@@ -90,7 +90,7 @@ const GiveAnHourPage: NextPage = () => (
       className="py-8 lg:py-24"
       containerClassName="flex flex-wrap items-center lg:flex-nowrap gap-16"
     >
-      <div className="flex w-full flex-grow flex-col lg:max-w-2/3">
+      <div className="flex w-full grow flex-col lg:max-w-2/3">
         <Heading>Give an Hour for Earth</Heading>
 
         <p className="text-lg">
@@ -100,7 +100,7 @@ const GiveAnHourPage: NextPage = () => (
           now tracking everything we do for Earth!
         </p>
 
-        <p className="text-md mt-8">
+        <p className="mt-8">
           Given an hour? Share your activities with the community and inspire
           others, via the{" "}
           <Link href="/show-and-tell/submit-post" dark>
@@ -113,24 +113,24 @@ const GiveAnHourPage: NextPage = () => (
         </div>
       </div>
 
-      <div className="flex flex-grow justify-center">
+      <div className="flex grow justify-center">
         <div className="w-full max-w-48 rounded-xl bg-alveus-tan shadow-lg">
           <Image
             src={alveusLogo}
             width={448}
             alt="Alveus Logo"
-            className="h-full w-full object-contain p-[12%]"
+            className="size-full object-contain p-[12%]"
           />
         </div>
 
-        <IconPlus className="mx-2 my-auto h-8 w-8 flex-shrink-0 text-alveus-green-50 sm:mx-4" />
+        <IconPlus className="mx-2 my-auto size-8 shrink-0 text-alveus-green-50 sm:mx-4" />
 
         <div className="w-full max-w-48 rounded-xl bg-white shadow-lg">
           <Image
             src={wwfLogo}
             width={448}
             alt="WWF Logo"
-            className="h-full w-full object-contain p-[18%]"
+            className="size-full object-contain p-[18%]"
           />
         </div>
       </div>
@@ -175,7 +175,7 @@ const GiveAnHourPage: NextPage = () => (
           <Image
             src={leafRightImage2}
             alt=""
-            className="pointer-events-none absolute -bottom-14 right-0 -z-10 h-auto w-1/2 max-w-[12rem] select-none lg:-bottom-32 lg:-left-20 lg:right-auto lg:max-w-[10rem]"
+            className="pointer-events-none absolute -bottom-14 right-0 -z-10 h-auto w-1/2 max-w-48 select-none lg:-bottom-32 lg:-left-20 lg:right-auto lg:max-w-40"
           />
 
           <Card
@@ -225,7 +225,7 @@ const GiveAnHourPage: NextPage = () => (
           <Image
             src={leafLeftImage3}
             alt=""
-            className="pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2 max-w-[12rem] -scale-x-100 -scale-y-100 select-none lg:-right-32 lg:max-w-[10rem] lg:scale-x-100"
+            className="pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2 max-w-48 -scale-100 select-none lg:-right-32 lg:max-w-40 lg:scale-x-100"
           />
 
           <Card
@@ -293,7 +293,7 @@ const GiveAnHourPage: NextPage = () => (
 
     {/* Grow the last section to cover the page */}
     <Section
-      className="flex-grow"
+      className="grow"
       containerClassName="flex flex-wrap items-center justify-between"
     >
       <div className="w-full py-8 md:w-3/5">

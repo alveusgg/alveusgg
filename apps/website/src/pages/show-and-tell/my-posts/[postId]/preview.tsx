@@ -40,7 +40,7 @@ const PreviewShowAndTellPage: NextPage = () => {
         className="py-12"
         containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="w-full flex-grow lg:w-auto">
+        <div className="w-full grow lg:w-auto">
           <Heading level={1}>Show and Tell: Preview Post</Heading>
           <p className="text-lg">
             {session?.status === "authenticated"
@@ -54,7 +54,7 @@ const PreviewShowAndTellPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         {session?.status !== "authenticated" && (
           <div>
             <p>

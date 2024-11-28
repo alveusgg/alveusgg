@@ -76,7 +76,7 @@ const FormPage: NextPage<FormPageProps> = ({ form, ...props }) => (
     {"error" in props ? (
       <>
         {/* Grow the last section to cover the page */}
-        <Section className="flex-grow" containerClassName="max-w-lg">
+        <Section className="grow" containerClassName="max-w-lg">
           <header>
             <Heading className="my-3 text-3xl">{form.label}</Heading>
           </header>

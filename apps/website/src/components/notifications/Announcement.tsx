@@ -92,7 +92,7 @@ export function Announcement({ notification }: { notification: Notification }) {
       <h3 className="text-2xl font-bold">
         {title}
         {notification.linkUrl && (
-          <IconChevronRight className="ml-0.5 inline-block h-4 w-4" />
+          <IconChevronRight className="ml-0.5 inline-block size-4" />
         )}
       </h3>
     </>
