@@ -96,6 +96,13 @@ export default tseslint.config(
   },
   ...tailwindPlugin.configs["flat/recommended"],
   {
+    name: "tailwindcss/custom",
+    rules: {
+      // Rely on prettier for ordering (eslint breaks interpolated classes)
+      "tailwindcss/classnames-order": "off",
+    },
+  },
+  {
     name: "custom/ignores",
     ignores: ["public/*", ".next/*"],
   },
