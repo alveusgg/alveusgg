@@ -100,7 +100,7 @@ const GiveAnHourPage: NextPage = () => (
           now tracking everything we do for Earth!
         </p>
 
-        <p className="text-md mt-8">
+        <p className="mt-8">
           Given an hour? Share your activities with the community and inspire
           others, via the{" "}
           <Link href="/show-and-tell/submit-post" dark>

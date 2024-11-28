@@ -104,7 +104,7 @@ const AnimalQuestItems = forwardRef<
     {name && (
       <Heading
         level={2}
-        className="alveus-green-800 mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl"
+        className="mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >

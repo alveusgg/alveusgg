@@ -55,7 +55,7 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
           >
             <p
               className={classes(
-                "text-md text-alveus-green-700",
+                "text-alveus-green-700",
                 idx % 2 ? "text-right" : "text-left",
               )}
             >
@@ -68,7 +68,7 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
               idx % 2 ? "md:order-last" : "md:order-first",
             )}
           >
-            <div className="text-md rounded-lg bg-alveus-green p-6 text-alveus-tan">
+            <div className="rounded-lg bg-alveus-green p-6 text-alveus-tan">
               <p className="mb-4 md:hidden">{item.date}</p>
               {item.content}
             </div>
