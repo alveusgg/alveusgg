@@ -49,7 +49,7 @@ const UpdatesPage: NextPage = () => {
         className="z-10 py-0"
         containerClassName="flex flex-wrap items-center justify-between lg:flex-nowrap gap-x-16"
       >
-        <div className="w-full flex-grow py-8 lg:max-w-2/3">
+        <div className="w-full grow py-8 lg:max-w-2/3">
           <Heading>Schedule and Updates</Heading>
 
           <p className="mt-6">
@@ -106,7 +106,7 @@ const UpdatesPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         <div className="flex flex-col gap-10 xl:flex-row">
           <div className="flex flex-1 grow-[2] flex-col gap-8">
             <section>

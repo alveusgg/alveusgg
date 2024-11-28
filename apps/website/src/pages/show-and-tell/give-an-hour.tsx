@@ -60,7 +60,7 @@ const Card = ({
       )}
     </div>
 
-    <div className="flex-grow text-lg">
+    <div className="grow text-lg">
       <Heading
         level={3}
         id={id}
@@ -90,7 +90,7 @@ const GiveAnHourPage: NextPage = () => (
       className="py-8 lg:py-24"
       containerClassName="flex flex-wrap items-center lg:flex-nowrap gap-16"
     >
-      <div className="flex w-full flex-grow flex-col lg:max-w-2/3">
+      <div className="flex w-full grow flex-col lg:max-w-2/3">
         <Heading>Give an Hour for Earth</Heading>
 
         <p className="text-lg">
@@ -113,7 +113,7 @@ const GiveAnHourPage: NextPage = () => (
         </div>
       </div>
 
-      <div className="flex flex-grow justify-center">
+      <div className="flex grow justify-center">
         <div className="w-full max-w-48 rounded-xl bg-alveus-tan shadow-lg">
           <Image
             src={alveusLogo}
@@ -123,7 +123,7 @@ const GiveAnHourPage: NextPage = () => (
           />
         </div>
 
-        <IconPlus className="mx-2 my-auto h-8 w-8 flex-shrink-0 text-alveus-green-50 sm:mx-4" />
+        <IconPlus className="mx-2 my-auto h-8 w-8 shrink-0 text-alveus-green-50 sm:mx-4" />
 
         <div className="w-full max-w-48 rounded-xl bg-white shadow-lg">
           <Image
@@ -293,7 +293,7 @@ const GiveAnHourPage: NextPage = () => (
 
     {/* Grow the last section to cover the page */}
     <Section
-      className="flex-grow"
+      className="grow"
       containerClassName="flex flex-wrap items-center justify-between"
     >
       <div className="w-full py-8 md:w-3/5">

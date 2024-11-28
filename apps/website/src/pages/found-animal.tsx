@@ -101,7 +101,7 @@ const FoundAnimalPage: NextPage = () => {
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafRightImage1}
           alt=""
@@ -114,7 +114,7 @@ const FoundAnimalPage: NextPage = () => {
         />
 
         <Section
-          className="flex flex-grow items-center pb-16 pt-4"
+          className="flex grow items-center pb-16 pt-4"
           containerClassName="flex flex-wrap items-center xl:flex-nowrap gap-16"
         >
           <Image

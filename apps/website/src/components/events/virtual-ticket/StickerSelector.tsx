@@ -54,7 +54,7 @@ export function StickerSelector({
                 }))
                 .sort((a, b) => a.name.localeCompare(b.name))
                 .map(({ name, disabled, imageId, image }) => (
-                  <li key={imageId} className="flex-shrink-0">
+                  <li key={imageId} className="shrink-0">
                     <button
                       className="disabled select-none rounded-lg bg-white p-0.5 shadow-lg transition-transform enabled:hover:scale-110 disabled:bg-gray-300"
                       type="button"

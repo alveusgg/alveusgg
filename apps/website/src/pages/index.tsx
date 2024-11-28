@@ -232,7 +232,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:pt-40">
+        <div className="container mx-auto flex grow flex-wrap items-center text-white lg:pt-40">
           <div className="basis-full p-4 xl:basis-1/2">
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
@@ -283,7 +283,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none overflow-clip lg:block xl:max-w-md 2xl:max-w-lg">
+        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none text-clip lg:block xl:max-w-md 2xl:max-w-lg">
           <Image
             src={leafRightImage1}
             alt=""
@@ -454,14 +454,14 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
           className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
         />
 
-        <Section dark className="flex-grow bg-alveus-green-900">
+        <Section dark className="grow bg-alveus-green-900">
           <Heading level={2} id="help" link className="text-center">
             How to Help
           </Heading>

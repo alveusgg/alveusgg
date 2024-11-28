@@ -162,7 +162,7 @@ const EventsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
@@ -174,7 +174,7 @@ const EventsPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <Grouped
             option={option}
             group={group}

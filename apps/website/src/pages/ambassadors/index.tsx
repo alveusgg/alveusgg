@@ -218,7 +218,7 @@ const AmbassadorsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafRightImage2}
           alt=""
@@ -230,14 +230,14 @@ const AmbassadorsPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section className="flex-grow pt-8">
+        <Section className="grow pt-8">
           <div
             className={classes(
               "flex flex-col items-center justify-between gap-4 md:flex-row",
               Array.isArray(result) ? "mb-4" : "-mb-6",
             )}
           >
-            <p className="flex-shrink text-center text-xl font-semibold">
+            <p className="shrink text-center text-xl font-semibold">
               Click each ambassador for information and highlights!
             </p>
 
@@ -247,7 +247,7 @@ const AmbassadorsPage: NextPage = () => {
               onChange={(val) => update(val as keyof typeof dropdown, null)}
               label={<span className="sr-only">Sort by</span>}
               align="right"
-              className="flex-shrink-0"
+              className="shrink-0"
             />
           </div>
 

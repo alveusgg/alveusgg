@@ -135,7 +135,7 @@ export function Schedule() {
                     "rounded-md p-2 shadow-sm",
                   )}
                 />
-                <p className="flex-shrink-0 opacity-75">{category.name}</p>
+                <p className="shrink-0 opacity-75">{category.name}</p>
               </div>
             ))}
           </div>

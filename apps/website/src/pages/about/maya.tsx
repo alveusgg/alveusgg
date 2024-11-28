@@ -190,14 +190,14 @@ const AboutMayaPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage3}
           alt=""
           className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <Heading
             level={2}
             className="mb-16 text-center text-5xl text-alveus-green"

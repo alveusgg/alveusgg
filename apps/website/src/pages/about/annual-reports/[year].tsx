@@ -67,7 +67,7 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         <Image
           src={report.image}
           quality={100}

@@ -179,7 +179,7 @@ const Carousel = ({
         {Object.entries(items).map(([key, item]) => (
           <div
             key={key}
-            className={`${itemClassName} flex-shrink-0 snap-start`}
+            className={`${itemClassName} shrink-0 snap-start`}
             draggable={false}
           >
             {item}

@@ -76,7 +76,7 @@ const Layout = ({ children }: LayoutProps) => {
         )}
 
         <Navbar />
-        <main tabIndex={-1} id="main" className="flex flex-grow flex-col">
+        <main tabIndex={-1} id="main" className="flex grow flex-col">
           {children}
         </main>
         <Footer />

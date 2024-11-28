@@ -66,7 +66,7 @@ export function DesktopMenu() {
   }, [sessionData?.error]);
 
   return (
-    <div className="hidden flex-grow flex-col gap-2 lg:flex">
+    <div className="hidden grow flex-col gap-2 lg:flex">
       <div className="flex items-center justify-end gap-2">
         <ul className="contents">
           {Object.entries(utilityNavStructure).map(([key, link]) => (
@@ -161,7 +161,7 @@ export function DesktopMenu() {
         <Link href="/" className="font-serif text-3xl font-bold">
           Alveus Sanctuary
         </Link>
-        <ul className="flex flex-grow justify-end">
+        <ul className="flex grow justify-end">
           {Object.entries(mainNavStructure).map(([key, link]) => (
             <li key={key}>
               {"link" in link ? (

@@ -125,7 +125,7 @@ const AnimalQuestItems = forwardRef<
         >
           <Link
             href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
-            className="group relative order-last flex-shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
+            className="group relative order-last shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
             custom
           >
             {(() => {
@@ -183,7 +183,7 @@ const AnimalQuestItems = forwardRef<
               })()}
           </Link>
 
-          <div className="flex-grow">
+          <div className="grow">
             <Link
               href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
               className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
@@ -291,7 +291,7 @@ const AnimalQuestPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
@@ -303,7 +303,7 @@ const AnimalQuestPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
         />
 
-        <Section className="flex-grow pt-8">
+        <Section className="grow pt-8">
           <div
             className={classes(
               "flex flex-col items-center justify-end gap-4 md:flex-row",
@@ -316,7 +316,7 @@ const AnimalQuestPage: NextPage = () => {
               onChange={(val) => update(val as keyof typeof dropdown, null)}
               label={<span className="sr-only">Sort by</span>}
               align="right"
-              className="flex-shrink-0"
+              className="shrink-0"
             />
           </div>
 

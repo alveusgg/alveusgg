@@ -314,7 +314,7 @@ export function Calendar({
               onClick={() => onChange(selectedDateTime.minus({ month: 1 }))}
               className="transition-colors hover:text-alveus-green-400"
             >
-              <IconArrowRight className="h-6 w-6 rotate-180 transform" />
+              <IconArrowRight className="h-6 w-6 rotate-180" />
             </button>
 
             <CalendarTimezoneSwitch

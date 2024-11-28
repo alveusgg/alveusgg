@@ -439,14 +439,14 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage3}
           alt=""
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
         />
 
-        <Section dark className="flex-grow bg-alveus-green-800">
+        <Section dark className="grow bg-alveus-green-800">
           <Heading level={2} className="mb-2 mt-0" id="open-source" link>
             Open-source
           </Heading>

@@ -89,7 +89,7 @@ export function ShareButton({
         <input
           readOnly={true}
           type="url"
-          className="w-full flex-grow bg-transparent p-0.5 text-sm text-inherit"
+          className="w-full grow bg-transparent p-0.5 text-sm text-inherit"
           value={url}
           onClick={(e) =>
             e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)

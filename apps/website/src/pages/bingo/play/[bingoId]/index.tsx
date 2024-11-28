@@ -197,7 +197,7 @@ const PlayBingoPage = () => {
         </ul>
       </nav>
 
-      <Section className="flex min-h-[70vh] flex-grow items-center">
+      <Section className="flex min-h-[70vh] grow items-center">
         <Heading className="mb-10" id="bingo" link>
           Alveus Bingo
         </Heading>
@@ -237,7 +237,7 @@ const PlayBingoPage = () => {
                 />
               </div>
 
-              <div className="flex-grow">
+              <div className="grow">
                 <p>Embed Twitch</p>
               </div>
 

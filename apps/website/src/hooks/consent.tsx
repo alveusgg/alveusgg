@@ -206,7 +206,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               level={2}
               className="flex items-start gap-2"
             >
-              <div className="my-2 flex-grow">
+              <div className="my-2 grow">
                 {!hasInteracted && (
                   <small className="block text-lg leading-snug text-alveus-green">
                     Welcome to Alveus
@@ -217,7 +217,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               <button
                 type="button"
                 onClick={close}
-                className="-mr-2 flex-shrink-0 p-2 transition-colors hover:text-alveus-green"
+                className="-mr-2 shrink-0 p-2 transition-colors hover:text-alveus-green"
                 title="Close"
               >
                 <IconX />
@@ -234,7 +234,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
             <div className="mt-4 flex flex-col gap-y-2">
               {Object.entries(consentData).map(([key, data]) => (
                 <label key={key} className="flex items-center">
-                  <div className="flex-grow">
+                  <div className="grow">
                     <p>{data.name}</p>
                     <p className="text-sm text-alveus-green">
                       {data.description}

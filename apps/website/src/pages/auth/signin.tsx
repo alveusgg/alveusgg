@@ -68,13 +68,13 @@ const SigninPage: NextPage<SigninPageProps> = () => {
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         <Heading className="my-3 text-3xl">Sign in</Heading>
 
         {error && (
           <div className="mb-6 rounded-md bg-red-50 p-4">
             <div className="flex">
-              <div className="flex-shrink-0">
+              <div className="shrink-0">
                 <IconXCircle
                   className="h-5 w-5 text-red-400"
                   aria-hidden="true"

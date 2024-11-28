@@ -693,7 +693,7 @@ const AboutAlveusPage: NextPage = () => {
       {/* TODO: CTA slice for ambassadors? */}
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage2}
           alt=""
@@ -702,7 +702,7 @@ const AboutAlveusPage: NextPage = () => {
 
         <Section
           dark
-          className="flex-grow bg-alveus-green-900"
+          className="grow bg-alveus-green-900"
           containerClassName="flex flex-col-reverse md:flex-row-reverse gap-4 md:gap-10"
         >
           <div>
@@ -727,7 +727,7 @@ const AboutAlveusPage: NextPage = () => {
           </div>
 
           <Link
-            className="flex-shrink-0"
+            className="shrink-0"
             external
             custom
             href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"

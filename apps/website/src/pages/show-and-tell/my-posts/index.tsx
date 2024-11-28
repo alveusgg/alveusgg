@@ -53,7 +53,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
         className="py-12"
         containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="w-full flex-grow lg:w-auto">
+        <div className="w-full grow lg:w-auto">
           <Heading level={1}>Show and Tell: Your Posts</Heading>
           <p className="text-lg">
             {session?.status === "authenticated" ? "View" : "Sign in and view"}{" "}
@@ -66,7 +66,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         <header>
           <Heading level={2}>Your Show and Tell submissions</Heading>
         </header>

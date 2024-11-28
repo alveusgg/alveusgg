@@ -241,12 +241,12 @@ const VotePage: NextPage = () => {
 
                         {open ? (
                           <IconChevronUp
-                            className="box-content flex-shrink-0 p-1"
+                            className="box-content shrink-0 p-1"
                             size={32}
                           />
                         ) : (
                           <IconChevronDown
-                            className="box-content flex-shrink-0 p-1"
+                            className="box-content shrink-0 p-1"
                             size={32}
                           />
                         )}
@@ -278,7 +278,7 @@ const VotePage: NextPage = () => {
                   </div>
 
                   <IconArrowRight
-                    className="box-content flex-shrink-0 p-1"
+                    className="box-content shrink-0 p-1"
                     size={32}
                   />
                 </Link>
@@ -311,7 +311,7 @@ const VotePage: NextPage = () => {
                   >
                     <Link
                       href={`/ambassadors/${camelToKebab(ambassador)}`}
-                      className="group z-10 flex-shrink-0 transition-transform hover:scale-102"
+                      className="group z-10 shrink-0 transition-transform hover:scale-102"
                       custom
                     >
                       <Image
@@ -376,14 +376,14 @@ const VotePage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage2}
           alt=""
           className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
         />
 
-        <Section dark className="flex-grow bg-alveus-green-900">
+        <Section dark className="grow bg-alveus-green-900">
           <Heading id="non-profit" level={2} link>
             Alveus Sanctuary is a non-profit
           </Heading>

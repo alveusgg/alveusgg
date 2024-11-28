@@ -118,7 +118,7 @@ const Slideshow = ({
       />
       {images.map(({ src, alt }, idx) => (
         <div
-          className={`absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`}
+          className={`absolute inset-0 z-0 text-clip opacity-0 slideshow-${id}-container`}
           key={
             typeof src === "string"
               ? src

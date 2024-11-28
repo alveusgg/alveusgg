@@ -497,7 +497,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow" offsetParent={!isPresentationView}>
+      <Section className="grow" offsetParent={!isPresentationView}>
         <div
           ref={presentationViewRootElementRef}
           onWheel={onUserScroll}
