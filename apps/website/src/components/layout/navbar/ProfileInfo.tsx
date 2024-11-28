@@ -12,7 +12,7 @@ export const ProfileInfoImage = () => {
       <img
         src={user.image}
         alt=""
-        className="h-8 w-8 overflow-hidden rounded-full"
+        className="size-8 overflow-hidden rounded-full"
       />
     );
   }

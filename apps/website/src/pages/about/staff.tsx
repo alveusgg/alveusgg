@@ -248,19 +248,19 @@ const AboutStaffPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -left-8 -top-52 z-10 hidden h-auto w-1/2 max-w-[10rem] -rotate-45 select-none lg:block"
+          className="pointer-events-none absolute -left-8 -top-52 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 select-none lg:block"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-52 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-52 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <People people={staff} />
 
           <p className="mb-4 mt-8 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">

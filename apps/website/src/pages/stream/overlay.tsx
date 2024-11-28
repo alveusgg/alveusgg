@@ -220,7 +220,7 @@ const OverlayPage: NextPage = () => {
             style={{
               backgroundColor: bit === "0" ? colors[0] : colors[1],
             }}
-            className="h-1 w-1"
+            className="size-1"
           />
         ))}
       </div>

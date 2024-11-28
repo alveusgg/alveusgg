@@ -118,7 +118,7 @@ const AboutTechPage: NextPage = () => {
               className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
               href={`#${id}`}
             >
-              <IconChevronRight className="h-5 w-5" />
+              <IconChevronRight className="size-5" />
 
               {name}
             </a>
@@ -130,7 +130,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none lg:block"
         />
 
         <Section>
@@ -309,7 +309,7 @@ const AboutTechPage: NextPage = () => {
           <Button
             href="https://fossabot.com/alveussanctuary/commands"
             external
-            className="flex-shrink-0"
+            className="shrink-0"
           >
             Explore Fossabot Commands
           </Button>
@@ -317,14 +317,14 @@ const AboutTechPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <Heading
             level={2}
             className="mb-2 mt-0 scroll-mt-14"

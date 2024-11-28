@@ -104,7 +104,7 @@ const Slideshow = ({
   }, []);
 
   return (
-    <div className="relative z-0 h-full w-full">
+    <div className="relative z-0 size-full">
       <style
         dangerouslySetInnerHTML={{
           __html: [
@@ -118,7 +118,8 @@ const Slideshow = ({
       />
       {images.map(({ src, alt }, idx) => (
         <div
-          className={`absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`}
+          // eslint-disable-next-line tailwindcss/no-custom-classname
+          className={`absolute inset-0 z-0 text-clip opacity-0 slideshow-${id}-container`}
           key={
             typeof src === "string"
               ? src
@@ -137,7 +138,7 @@ const Slideshow = ({
             quality="50"
             loader={qualityLoader}
             priority={idx === 0}
-            className="h-full w-full object-cover"
+            className="size-full object-cover"
             style={{
               animationDelay: `${idx * animation.duration.offset}ms`,
             }}

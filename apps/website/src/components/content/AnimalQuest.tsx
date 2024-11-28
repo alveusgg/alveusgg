@@ -43,7 +43,7 @@ const AnimalQuest = ({
       src={animalQuestImage}
       alt=""
       width={688}
-      className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
+      className="absolute inset-0 -z-10 size-full rounded-2xl bg-alveus-tan object-cover opacity-10"
     />
 
     <div>

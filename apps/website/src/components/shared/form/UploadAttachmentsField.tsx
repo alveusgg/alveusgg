@@ -326,7 +326,7 @@ export const UploadAttachmentsField = ({
           onClick={onFileUpload}
           {...dragProps}
         >
-          <IconUploadFiles className="h-5 w-5" />
+          <IconUploadFiles className="size-5" />
           Click or Drop here
         </Button>
       </div>

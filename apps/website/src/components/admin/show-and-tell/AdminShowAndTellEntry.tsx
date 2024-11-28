@@ -59,7 +59,7 @@ export function AdminShowAndTellEntry({
             title={formatDateTimeLocal(entry.seenOnStreamAt)}
             className="bg-transparent"
           >
-            <IconCheck className="h-5 w-5" />
+            <IconCheck className="size-5" />
           </Button>
         )}
         {!entry.seenOnStreamAt && status === "approved" && (
@@ -70,7 +70,7 @@ export function AdminShowAndTellEntry({
               onClick={() => markSeen(entry)}
               title="Mark post as seen on stream"
             >
-              <IconPlus className="h-5 w-5" /> Seen
+              <IconPlus className="size-5" /> Seen
             </Button>
 
             <Button
@@ -83,7 +83,7 @@ export function AdminShowAndTellEntry({
               }}
               title="Mark all posts until here as seen on stream"
             >
-              <IconArrowDown className="h-5 w-5" /> All
+              <IconArrowDown className="size-5" /> All
             </Button>
           </div>
         )}
@@ -94,7 +94,7 @@ export function AdminShowAndTellEntry({
           size="small"
           href={`/admin/show-and-tell/review/${entry.id}`}
         >
-          <IconPencil className="h-5 w-5" />
+          <IconPencil className="size-5" />
           Review
         </LinkButton>
         <div className="flex gap-1">
@@ -103,7 +103,7 @@ export function AdminShowAndTellEntry({
             className={secondaryButtonClasses}
             href={`/admin/show-and-tell/review/${entry.id}/preview`}
           >
-            <IconEye className="h-5 w-5" />
+            <IconEye className="size-5" />
             Preview
           </LinkButton>
           <Button
@@ -112,7 +112,7 @@ export function AdminShowAndTellEntry({
             confirmationMessage="Please confirm deletion!"
             onClick={() => deletePost(entry)}
           >
-            <IconTrash className="h-5 w-5" />
+            <IconTrash className="size-5" />
             Delete
           </Button>
         </div>

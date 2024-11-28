@@ -60,7 +60,7 @@ const AdminActivityFeedPage: NextPage<
                 {page.items.map((item) => (
                   <li
                     key={item.id}
-                    className="border-gry-600 border-b last:border-b-0"
+                    className="border-b border-gray-600 last:border-b-0"
                   >
                     <OutgoingWebhookFeedEntry item={item} />
                   </li>

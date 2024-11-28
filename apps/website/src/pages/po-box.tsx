@@ -19,7 +19,7 @@ const POBoxPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section
-        className="flex min-h-[85vh] flex-grow"
+        className="flex min-h-[85vh] grow"
         containerClassName="flex flex-col items-center text-center text-alveus-green"
       >
         <div className="my-auto flex flex-col items-center">

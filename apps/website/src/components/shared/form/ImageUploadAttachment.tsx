@@ -32,7 +32,7 @@ export function ImageUploadAttachment({
   return (
     <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
       <div className="py-2">
-        <div className="relative h-32 w-32 overflow-hidden rounded-lg bg-gray-200">
+        <div className="relative size-32 overflow-hidden rounded-lg bg-gray-200">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
@@ -50,7 +50,7 @@ export function ImageUploadAttachment({
           )}
           {fileReference.status === "upload.failed" && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-red/20 text-black">
-              <IconWarningTriangle className="h-5 w-5" />
+              <IconWarningTriangle className="size-5" />
               <span>Failed</span>
             </div>
           )}
@@ -60,7 +60,7 @@ export function ImageUploadAttachment({
             size="small"
             onClick={() => removeFileReference(fileReference.id)}
           >
-            <IconTrash className="h-5 w-5" />
+            <IconTrash className="size-5" />
             Remove
           </Button>
         </div>

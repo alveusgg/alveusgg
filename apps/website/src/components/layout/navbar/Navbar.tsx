@@ -25,7 +25,7 @@ export const Navbar = () => {
             {/* Logo */}
             <Link
               href="/"
-              className="flex flex-shrink-0 items-center px-1 lg:-ml-4 lg:px-0"
+              className="flex shrink-0 items-center px-1 lg:-ml-4 lg:px-0"
               aria-label="Alveus Sanctuary Inc."
             >
               <Image
@@ -40,7 +40,7 @@ export const Navbar = () => {
             <DesktopMenu />
 
             {/* Mobile menu toggle */}
-            <div className="flex flex-grow items-center justify-center text-center lg:hidden">
+            <div className="flex grow items-center justify-center text-center lg:hidden">
               <Link href="/" className="font-serif text-3xl font-bold">
                 Alveus Sanctuary
               </Link>
@@ -53,9 +53,9 @@ export const Navbar = () => {
                   {open ? "Close main menu" : "Open main menu"}
                 </span>
                 {open ? (
-                  <IconX className="block h-6 w-6" aria-hidden="true" />
+                  <IconX className="block size-6" aria-hidden="true" />
                 ) : (
-                  <IconMenu className="block h-6 w-6" aria-hidden="true" />
+                  <IconMenu className="block size-6" aria-hidden="true" />
                 )}
               </DisclosureButton>
             </div>
