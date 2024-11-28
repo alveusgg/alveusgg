@@ -261,7 +261,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             >
               {twitchEmbed && (
                 <Link
-                  className="block h-full w-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
+                  className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
                   href="/live"
                   target="_blank"
                   rel="noreferrer"

@@ -70,7 +70,7 @@ const Layout = ({ children }: LayoutProps) => {
           >
             <div className="container mx-auto flex items-center justify-center gap-1">
               {topHat.title} &middot; {topHat.cta}
-              <IconArrowRight className="h-4 w-4" />
+              <IconArrowRight className="size-4" />
             </div>
           </Link>
         )}

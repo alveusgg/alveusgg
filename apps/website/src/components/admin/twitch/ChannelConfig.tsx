@@ -69,7 +69,7 @@ function ChannelConfigRow({
             size="small"
             width="auto"
           >
-            <IconPencil className="h-4 w-4" />
+            <IconPencil className="size-4" />
             Edit
           </LinkButton>
 
@@ -80,7 +80,7 @@ function ChannelConfigRow({
             confirmationMessage="Do you really want to delete the channel configuration?"
             onClick={() => deleteMutation.mutate(channel.channelId)}
           >
-            <IconTrash className="h-4 w-4" />
+            <IconTrash className="size-4" />
             Delete
           </Button>
         </div>

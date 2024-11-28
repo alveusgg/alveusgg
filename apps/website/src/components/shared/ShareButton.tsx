@@ -78,7 +78,7 @@ export function ShareButton({
       onClick={handleClick}
       label={
         <>
-          <IconShare className="mr-1 h-5 w-5" />
+          <IconShare className="mr-1 size-5" />
           Share
         </>
       }
@@ -110,7 +110,7 @@ export function ShareButton({
           }}
           title="Copy link to clipboard"
         >
-          <IconClipboard className="h-4 w-4" />
+          <IconClipboard className="size-4" />
           {linkCopiedText}
         </Button>
       </div>
@@ -120,20 +120,20 @@ export function ShareButton({
           href={twitterShareUrl({ url, text, title })}
           title="Share on X (Twitter)"
         >
-          <IconTwitter className="h-4 w-4" />X (Twitter)
+          <IconTwitter className="size-4" />X (Twitter)
         </ShareLink>
         <ShareLink
           href={facebookShareUrl({ url, text, title })}
           title="Share on Facebook"
         >
-          <IconFacebook className="h-4 w-4" />
+          <IconFacebook className="size-4" />
           Facebook
         </ShareLink>
         <ShareLink
           href={emailShareUrl({ url, text, title })}
           title="Share via Email"
         >
-          <IconEnvelope className="h-4 w-4" />
+          <IconEnvelope className="size-4" />
           Email
         </ShareLink>
       </div>

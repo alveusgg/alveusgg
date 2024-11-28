@@ -131,7 +131,7 @@ const FallCarnival2023EventPage: NextPage = () => {
                   target="_blank"
                   rel="download"
                 >
-                  <IconDownload className="mr-1 h-5 w-5" />
+                  <IconDownload className="mr-1 size-5" />
                   Download
                 </a>
               </div>

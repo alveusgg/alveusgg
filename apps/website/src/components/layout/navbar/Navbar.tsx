@@ -53,9 +53,9 @@ export const Navbar = () => {
                   {open ? "Close main menu" : "Open main menu"}
                 </span>
                 {open ? (
-                  <IconX className="block h-6 w-6" aria-hidden="true" />
+                  <IconX className="block size-6" aria-hidden="true" />
                 ) : (
-                  <IconMenu className="block h-6 w-6" aria-hidden="true" />
+                  <IconMenu className="block size-6" aria-hidden="true" />
                 )}
               </DisclosureButton>
             </div>

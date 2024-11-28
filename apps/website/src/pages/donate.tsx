@@ -121,7 +121,7 @@ const DonatePage: NextPage = () => {
             className="whitespace-nowrap rounded-full border-2 border-white px-4 py-2 text-lg text-white transition-colors hover:bg-white hover:text-carnival md:px-4 md:py-2 md:text-xl"
           >
             {donationEvent.cta}
-            <IconArrowRight className="ml-3 inline-block h-6 w-6" />
+            <IconArrowRight className="ml-3 inline-block size-6" />
           </Link>
         </Section>
       )}

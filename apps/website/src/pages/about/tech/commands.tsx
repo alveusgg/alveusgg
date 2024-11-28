@@ -118,7 +118,7 @@ const AboutTechPage: NextPage = () => {
               className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
               href={`#${id}`}
             >
-              <IconChevronRight className="h-5 w-5" />
+              <IconChevronRight className="size-5" />
 
               {name}
             </a>

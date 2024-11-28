@@ -183,7 +183,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               size="small"
                               href={`/show-and-tell/my-posts/${entry.id}`}
                             >
-                              <IconPencil className="h-5 w-5" />
+                              <IconPencil className="size-5" />
                               Edit
                             </LinkButton>
                             <LinkButton
@@ -192,7 +192,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               className={secondaryButtonClasses}
                               href={`/show-and-tell/my-posts/${entry.id}/preview`}
                             >
-                              <IconEye className="h-5 w-5" />
+                              <IconEye className="size-5" />
                               Preview
                             </LinkButton>
                             <Button
@@ -202,7 +202,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               confirmationMessage="Please confirm deletion!"
                               onClick={() => deleteMutation.mutate(entry.id)}
                             >
-                              <IconTrash className="h-5 w-5" />
+                              <IconTrash className="size-5" />
                               Delete
                             </Button>
                           </td>

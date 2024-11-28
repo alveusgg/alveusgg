@@ -104,7 +104,7 @@ const Slideshow = ({
   }, []);
 
   return (
-    <div className="relative z-0 h-full w-full">
+    <div className="relative z-0 size-full">
       <style
         dangerouslySetInnerHTML={{
           __html: [
@@ -137,7 +137,7 @@ const Slideshow = ({
             quality="50"
             loader={qualityLoader}
             priority={idx === 0}
-            className="h-full w-full object-cover"
+            className="size-full object-cover"
             style={{
               animationDelay: `${idx * animation.duration.offset}ms`,
             }}

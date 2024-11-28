@@ -263,10 +263,10 @@ export function TicketEditor({
   return (
     <ticketEditorContext.Provider value={contextValue}>
       <div className="relative -mx-4 w-[calc(100%+2rem)] bg-black/10">
-        <div className="pointer-events-none absolute left-0 right-0 top-0 mt-1 flex flex-row items-center justify-center gap-2 p-2 text-black/50 lg:hidden">
-          <IconChevronLeft className="h-4 w-4" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 mt-1 flex flex-row items-center justify-center gap-2 p-2 text-black/50 lg:hidden">
+          <IconChevronLeft className="size-4" />
           swipe to move the ticket
-          <IconChevronRight className="h-4 w-4" />
+          <IconChevronRight className="size-4" />
         </div>
 
         <div className="w-full overflow-x-auto">
@@ -297,7 +297,7 @@ export function TicketEditor({
               "Save ticket"
             ) : (
               <>
-                <IconCheck className="h-6 w-6" />
+                <IconCheck className="size-6" />
                 Saved
               </>
             )}
@@ -315,7 +315,7 @@ export function TicketEditor({
               }
             }}
           >
-            <IconMinusCircle className="h-6 w-6" />
+            <IconMinusCircle className="size-6" />
             Remove sticker
           </Button>
 
@@ -326,7 +326,7 @@ export function TicketEditor({
             confirmationMessage="Are you sure you want to remove all stickers?"
             onClick={resetStickers}
           >
-            <IconTrash className="h-6 w-6" />
+            <IconTrash className="size-6" />
             Reset
           </Button>
         </div>

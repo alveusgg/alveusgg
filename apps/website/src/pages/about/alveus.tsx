@@ -733,7 +733,7 @@ const AboutAlveusPage: NextPage = () => {
             href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
           >
             <Image
-              className="h-40 w-40"
+              className="size-40"
               src={imageGuidestarSeal}
               width={200}
               height={200}

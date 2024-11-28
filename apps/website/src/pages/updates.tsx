@@ -71,7 +71,7 @@ const UpdatesPage: NextPage = () => {
                 className="flex rounded-lg bg-alveus-green-800 px-4 py-2 hover:bg-alveus-green-900"
                 href={updateChannel.link}
               >
-                <updateChannel.icon size={24} className="mr-2 h-6 w-6" />
+                <updateChannel.icon size={24} className="mr-2 size-6" />
                 {updateChannel.title}
               </Link>
             ))}

@@ -225,7 +225,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               src={images[0].src}
               alt={images[0].alt}
               placeholder="blur"
-              className="absolute inset-x-0 top-0 h-full w-full object-cover md:sticky md:h-screen md:max-h-full"
+              className="absolute inset-x-0 top-0 size-full object-cover md:sticky md:h-screen md:max-h-full"
               style={{ objectPosition: images[0].position }}
             />
           </div>

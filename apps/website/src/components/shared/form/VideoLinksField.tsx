@@ -105,7 +105,7 @@ export function VideoLinksField({
           }
           disabled={inputValue.length === 0}
         >
-          <IconPlus className="h-6 w-6" /> Add Videos
+          <IconPlus className="size-6" /> Add Videos
         </Button>
 
         {videoUrls.length > 0 && (
@@ -116,7 +116,7 @@ export function VideoLinksField({
                 className="flex flex-row items-center justify-between gap-2 rounded-xl bg-white p-1 px-3 shadow-xl"
               >
                 <VideoPlatformIcon
-                  className="h-5 w-5"
+                  className="size-5"
                   platform={parseVideoUrl(url)?.platform}
                 />
                 <span className="min-w-0 flex-1 truncate text-left">{url}</span>
@@ -127,7 +127,7 @@ export function VideoLinksField({
                     setVideoUrls(videoUrls.filter((item) => item !== url));
                   }}
                 >
-                  <IconTrash className="h-6 w-6" /> Remove
+                  <IconTrash className="size-6" /> Remove
                 </Button>
               </li>
             ))}

@@ -64,7 +64,7 @@ export function TextField(props: TextFieldProps) {
         />
         {showResetButton && (
           <button className="px-2" type="button" onClick={reset}>
-            <IconX className="h-4 w-4" />
+            <IconX className="size-4" />
           </button>
         )}
         {props.suffix}

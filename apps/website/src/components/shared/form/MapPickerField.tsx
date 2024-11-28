@@ -240,7 +240,7 @@ export const MapPickerField = ({
         </CheckboxField>
 
         <div className="flex items-center">
-          <IconWorld className="h-6 w-6"></IconWorld>
+          <IconWorld className="size-6"></IconWorld>
           {showMap && postLocation.location
             ? postLocation.location
             : "No post location set"}
@@ -250,7 +250,7 @@ export const MapPickerField = ({
               type="button"
               onClick={handleLocationClear}
             >
-              <IconX className="h-6 w-6" />
+              <IconX className="size-6" />
             </button>
           )}
         </div>

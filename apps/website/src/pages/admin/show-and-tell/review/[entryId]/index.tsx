@@ -126,7 +126,7 @@ const AdminReviewShowAndTellPage: NextPage<
                     confirmationMessage="Please confirm removing the approval!"
                     onClick={() => removeApprovalMutation.mutate(entry.id)}
                   >
-                    <IconMinus className="h-4 w-4" />
+                    <IconMinus className="size-4" />
                     Remove approval
                   </Button>
                 )}
@@ -136,7 +136,7 @@ const AdminReviewShowAndTellPage: NextPage<
                     className={approveButtonClasses}
                     onClick={() => approveMutation.mutate(entry.id)}
                   >
-                    <IconCheckCircle className="h-4 w-4" />
+                    <IconCheckCircle className="size-4" />
                     Approve
                   </Button>
                 )}
@@ -146,7 +146,7 @@ const AdminReviewShowAndTellPage: NextPage<
                   confirmationMessage="Please confirm deletion!"
                   onClick={() => deleteMutation.mutate(entry.id)}
                 >
-                  <IconTrash className="h-4 w-4" />
+                  <IconTrash className="size-4" />
                   Delete
                 </Button>
               </div>

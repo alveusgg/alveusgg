@@ -119,18 +119,18 @@ const GiveAnHourPage: NextPage = () => (
             src={alveusLogo}
             width={448}
             alt="Alveus Logo"
-            className="h-full w-full object-contain p-[12%]"
+            className="size-full object-contain p-[12%]"
           />
         </div>
 
-        <IconPlus className="mx-2 my-auto h-8 w-8 shrink-0 text-alveus-green-50 sm:mx-4" />
+        <IconPlus className="mx-2 my-auto size-8 shrink-0 text-alveus-green-50 sm:mx-4" />
 
         <div className="w-full max-w-48 rounded-xl bg-white shadow-lg">
           <Image
             src={wwfLogo}
             width={448}
             alt="WWF Logo"
-            className="h-full w-full object-contain p-[18%]"
+            className="size-full object-contain p-[18%]"
           />
         </div>
       </div>
@@ -225,7 +225,7 @@ const GiveAnHourPage: NextPage = () => (
           <Image
             src={leafLeftImage3}
             alt=""
-            className="pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2 max-w-[12rem] -scale-x-100 -scale-y-100 select-none lg:-right-32 lg:max-w-[10rem] lg:scale-x-100"
+            className="pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2 max-w-[12rem] -scale-100 select-none lg:-right-32 lg:max-w-[10rem] lg:scale-x-100"
           />
 
           <Card

@@ -76,7 +76,7 @@ const SigninPage: NextPage<SigninPageProps> = () => {
             <div className="flex">
               <div className="shrink-0">
                 <IconXCircle
-                  className="h-5 w-5 text-red-400"
+                  className="size-5 text-red-400"
                   aria-hidden="true"
                 />
               </div>

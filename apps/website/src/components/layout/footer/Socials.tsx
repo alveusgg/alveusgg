@@ -32,7 +32,7 @@ const Socials = () => {
     <Section dark className="z-0 py-0">
       <div className="flex flex-wrap-reverse gap-y-4 pt-8">
         <div className="mt-auto basis-full md:basis-1/2 md:pr-8">
-          <div className="relative mx-auto aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden">
+          <div className="relative mx-auto aspect-[1.1/1] size-full max-w-lg overflow-hidden">
             <Link
               href="https://www.instagram.com/p/CoIq_hvOxiQ/"
               rel="noreferrer"
@@ -49,13 +49,13 @@ const Socials = () => {
                   width={400}
                   height={680}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 size-full object-cover"
                 />
               ) : (
                 <Video
                   sources={reelVideo.sources}
                   poster={reelVideo.poster}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 size-full object-cover"
                   width={400}
                   height={680}
                   autoPlay

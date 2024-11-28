@@ -97,7 +97,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
     <PopoverButton
       label={
         <>
-          <IconCalendar className="mr-1 h-5 w-5" />
+          <IconCalendar className="mr-1 size-5" />
           Add to calendar
         </>
       }
@@ -110,7 +110,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
             onClick={handleGCalClick}
             title="Save event to Google calendar"
           >
-            <IconGoogleCalendar className="mr-2 h-5 w-5" />
+            <IconGoogleCalendar className="mr-2 size-5" />
             Google
           </Button>
         </PopeoverButtonHeadless>
@@ -121,7 +121,7 @@ export function AddEventButton({ event }: AddEventButtonProps) {
             onClick={handleIcsClick}
             title="Save event to Apple/Outlook calendar"
           >
-            <IconOutlook className="mr-2 h-5 w-5" />
+            <IconOutlook className="mr-2 size-5" />
             Apple/Outlook
           </Button>
         </PopeoverButtonHeadless>

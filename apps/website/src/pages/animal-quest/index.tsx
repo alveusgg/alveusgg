@@ -159,7 +159,7 @@ const AnimalQuestItems = forwardRef<
                   <Image
                     src={img.src}
                     alt={img.alt}
-                    className="absolute -bottom-2 -right-2 hidden h-12 w-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                    className="absolute -bottom-2 -right-2 hidden size-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
                     width={256}
                     style={{ objectPosition: img.position }}
                   />
@@ -175,7 +175,7 @@ const AnimalQuestItems = forwardRef<
                   <Image
                     src={img.src}
                     alt={img.alt}
-                    className="absolute -bottom-2 -left-2 hidden h-12 w-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                    className="absolute -bottom-2 -left-2 hidden size-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
                     width={256}
                     style={{ objectPosition: img.position }}
                   />

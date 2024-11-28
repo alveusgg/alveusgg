@@ -120,11 +120,11 @@ const Creators = ({ className }: { className?: string }) => {
                 }}
                 draggable={false}
               >
-                <div className="h-20 w-20 rounded-full border-4 border-alveus-green bg-alveus-green-800">
+                <div className="size-20 rounded-full border-4 border-alveus-green bg-alveus-green-800">
                   <Image
                     src={image}
                     alt=""
-                    className="h-full w-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
+                    className="size-full rounded-full object-cover shadow-md transition-all duration-75 group-hover/creator:shadow-lg group-hover/creator:!brightness-105 group-hover/creator:contrast-115 group-hover/creator:!saturate-110 group-has-[:hover]/creators:brightness-75 group-has-[:hover]/creators:saturate-50"
                     draggable={false}
                   />
                 </div>
@@ -165,7 +165,7 @@ const Creators = ({ className }: { className?: string }) => {
                   });
                 }}
               >
-                <div className="h-3 w-3 rounded-full bg-alveus-green-300 shadow-sm" />
+                <div className="size-3 rounded-full bg-alveus-green-300 shadow-sm" />
               </button>
             ))}
 
