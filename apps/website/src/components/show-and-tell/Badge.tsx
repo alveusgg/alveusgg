@@ -1,6 +1,8 @@
+import type { ReactNode } from "react";
+
 import { classes } from "@/utils/classes";
 
-const SeenOnStreamBadgeBackground = ({
+const BadgeBackground = ({
   dark = false,
   className,
 }: {
@@ -20,25 +22,30 @@ const SeenOnStreamBadgeBackground = ({
   </svg>
 );
 
-export const SeenOnStreamBadge = ({ dark = false, pulse = false }) => {
+export const Badge = ({
+  children,
+  dark = false,
+  pulse = false,
+}: {
+  children: ReactNode;
+  dark?: boolean;
+  pulse?: boolean;
+}) => {
   return (
-    <div className="absolute right-0 top-0 flex aspect-square w-[80px] rotate-12 items-center">
+    <div className="flex aspect-square w-[80px] rotate-12 items-center justify-center">
       {pulse && (
         <div className="absolute inset-0 h-full w-full scale-75 opacity-25 motion-reduce:hidden">
-          <SeenOnStreamBadgeBackground
-            dark={dark}
-            className="scale-150 animate-ping"
-          />
+          <BadgeBackground dark={dark} className="scale-150 animate-ping" />
         </div>
       )}
-      <SeenOnStreamBadgeBackground dark={dark} />
+      <BadgeBackground dark={dark} />
       <span
         className={classes(
-          "relative text-center text-sm leading-tight",
+          "relative w-3/4 text-center text-sm leading-tight",
           dark ? "text-alveus-green-900" : "text-alveus-tan",
         )}
       >
-        Seen on stream
+        {children}
       </span>
     </div>
   );

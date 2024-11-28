@@ -8,9 +8,8 @@ import {
   getUsersCount,
 } from "@/server/db/show-and-tell";
 
-import { countUnique } from "@/utils/array";
 import { classes } from "@/utils/classes";
-import { extractCountriesFromLocations } from "@/utils/locations";
+import { extractInfoFromMapFeatures } from "@/utils/locations";
 import useLocaleString from "@/hooks/locale";
 
 import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
@@ -36,18 +35,20 @@ export type ShowAndTellPageProps = InferGetStaticPropsType<
 
 export const getStaticProps = async () => {
   const features = await getMapFeatures();
-  const locations = features.map(({ location }) => location);
-  const countries = extractCountriesFromLocations(locations);
+  const { locations, countries, postsFromANewLocation } =
+    extractInfoFromMapFeatures(features);
+
   const totalPostsCount = await getPostsCount();
   const usersCount = await getUsersCount();
 
   return {
     props: {
       features,
-      uniqueLocationsCount: countUnique(locations),
-      uniqueCountriesCount: countUnique(countries),
+      uniqueLocationsCount: locations.size,
+      uniqueCountriesCount: countries.size,
       totalPostsCount,
       usersCount,
+      postsFromANewLocation,
     },
   };
 };
@@ -56,6 +57,7 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
   features,
   uniqueLocationsCount,
   uniqueCountriesCount,
+  postsFromANewLocation,
 }) => {
   // Format the stats
   const uniqueLocationsCountFmt = useLocaleString(uniqueLocationsCount);
@@ -134,7 +136,10 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
           </Box>
         </div>
 
-        <CommunityMap features={features} />
+        <CommunityMap
+          features={features}
+          postsFromANewLocation={postsFromANewLocation}
+        />
       </Section>
     </>
   );
