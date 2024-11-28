@@ -12,7 +12,7 @@ const Maya = ({ className }: { className?: string }) => (
       alt="Maya Higa, with Winnie the Moo resting her head on Maya's shoulder"
       width={300}
       height={300}
-      className="z-10 -mr-[10%] h-auto w-2/5 max-w-64 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+      className="z-10 mr-[-10%] h-auto w-2/5 max-w-64 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
     />
     <Image
       src={mayaHiga}

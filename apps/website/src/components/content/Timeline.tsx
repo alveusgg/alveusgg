@@ -23,7 +23,7 @@ const Timeline = ({ items, before, after }: TimelineProps) => (
         after || "-bottom-20",
       )}
     >
-      <div className="sticky inset-x-0 -top-1 bottom-0 -mt-[50vh] h-[calc(50vh+0.25rem)] bg-alveus-green" />
+      <div className="sticky inset-x-0 -top-1 bottom-0 mt-[-50vh] h-[calc(50vh+0.25rem)] bg-alveus-green" />
     </div>
     <ol>
       {items.map((item, idx) => (
