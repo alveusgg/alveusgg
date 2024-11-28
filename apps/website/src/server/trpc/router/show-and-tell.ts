@@ -78,7 +78,7 @@ export const showAndTellRouter = router({
 
   getMyEntries: protectedProcedure.query(({ ctx }) =>
     ctx.prisma.showAndTellEntry.findMany({
-      ...withAttachments,
+      include: { featuredImage: true },
       where: {
         userId: ctx.session.user.id,
       },
