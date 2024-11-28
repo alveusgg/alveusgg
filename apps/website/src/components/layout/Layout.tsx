@@ -46,7 +46,7 @@ const Layout = ({ children }: LayoutProps) => {
 
       <div
         id="app"
-        className="flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900"
+        className="flex h-full min-h-screen flex-col bg-alveus-tan text-alveus-green-900"
       >
         <a
           href="#main"

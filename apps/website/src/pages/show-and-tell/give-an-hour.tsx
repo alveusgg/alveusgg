@@ -175,7 +175,7 @@ const GiveAnHourPage: NextPage = () => (
           <Image
             src={leafRightImage2}
             alt=""
-            className="pointer-events-none absolute -bottom-14 right-0 -z-10 h-auto w-1/2 max-w-[12rem] select-none lg:-bottom-32 lg:-left-20 lg:right-auto lg:max-w-[10rem]"
+            className="pointer-events-none absolute -bottom-14 right-0 -z-10 h-auto w-1/2 max-w-48 select-none lg:-bottom-32 lg:-left-20 lg:right-auto lg:max-w-40"
           />
 
           <Card
@@ -225,7 +225,7 @@ const GiveAnHourPage: NextPage = () => (
           <Image
             src={leafLeftImage3}
             alt=""
-            className="pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2 max-w-[12rem] -scale-100 select-none lg:-right-32 lg:max-w-[10rem] lg:scale-x-100"
+            className="pointer-events-none absolute -top-20 right-0 -z-10 h-auto w-1/2 max-w-48 -scale-100 select-none lg:-right-32 lg:max-w-40 lg:scale-x-100"
           />
 
           <Card

@@ -224,7 +224,7 @@ export function BingoCard({
             ? selectableValues.map((value) => (
                 <div
                   key={value}
-                  className="m-1 inline-flex min-w-[2rem] items-center justify-center rounded-full bg-white p-2 leading-none"
+                  className="m-1 inline-flex min-w-8 items-center justify-center rounded-full bg-white p-2 leading-none"
                 >
                   <span>{value}</span>
                 </div>

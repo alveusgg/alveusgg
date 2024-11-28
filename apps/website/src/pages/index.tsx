@@ -88,7 +88,7 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
             alt={images[0].alt}
             draggable={false}
             width={200}
-            className={`mx-auto aspect-square h-auto w-full max-w-[10rem] rounded-xl object-cover ${ambassadorImageHover}`}
+            className={`mx-auto aspect-square h-auto w-full max-w-40 rounded-xl object-cover ${ambassadorImageHover}`}
             style={{ objectPosition: images[0].position }}
           />
           <Heading level={3} className="text-center text-xl transition-colors">
@@ -294,7 +294,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
         <Section dark>
@@ -414,7 +414,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-top-52 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-top-52 2xl:max-w-48"
         />
 
         <Section>
@@ -458,7 +458,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section dark className="grow bg-alveus-green-900">

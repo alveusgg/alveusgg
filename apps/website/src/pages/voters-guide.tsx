@@ -197,7 +197,7 @@ const VotePage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section>
@@ -291,7 +291,7 @@ const VotePage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block"
         />
 
         <Section dark>
@@ -380,7 +380,7 @@ const VotePage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section dark className="grow bg-alveus-green-900">

@@ -107,7 +107,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                       </th>
                       <th
                         scope="col"
-                        className={`${cellClasses} w-[40%] text-left`}
+                        className={`${cellClasses} w-2/5 text-left`}
                       >
                         Title
                       </th>
@@ -142,7 +142,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               />
                             )}
                           </td>
-                          <td className={`${cellClasses} w-[40%]`}>
+                          <td className={`${cellClasses} w-2/5`}>
                             {entry.title}
                           </td>
                           <td className={cellClasses}>

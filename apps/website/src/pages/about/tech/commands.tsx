@@ -130,7 +130,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none lg:block"
         />
 
         <Section>
@@ -321,7 +321,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
         <Section className="grow">
