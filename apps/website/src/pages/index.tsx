@@ -283,7 +283,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none text-clip lg:block xl:max-w-md 2xl:max-w-lg">
+        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none overflow-clip lg:block xl:max-w-md 2xl:max-w-lg">
           <Image
             src={leafRightImage1}
             alt=""
