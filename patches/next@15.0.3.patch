@@ -1,3 +1,4 @@
+# FIXME: https://github.com/vercel/satori/issues/565 / https://github.com/vercel/next.js/issues/72940
 diff --git a/dist/compiled/@vercel/og/index.edge.js b/dist/compiled/@vercel/og/index.edge.js
 index 089354ce4b62dde0fed3482e028ffade3d34b750..8d9115fc53d7a6d0eadc503cbc9fe50b138172ab 100644
 --- a/dist/compiled/@vercel/og/index.edge.js
