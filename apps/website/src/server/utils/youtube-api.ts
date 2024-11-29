@@ -1,13 +1,51 @@
 import { parseStringPromise } from "xml2js";
 import { z } from "zod";
 
-const FeedSchema = z.object({
-  feed: z.object({
-    entry: z.array(
+const ItemSchema = z.object({
+  id: z
+    .array(z.string())
+    .nonempty()
+    .transform((x) => x[0]),
+  title: z
+    .array(z.string())
+    .nonempty()
+    .transform((x) => x[0]),
+  author: z
+    .array(
       z.object({
-        "yt:videoId": z.array(z.string()).nonempty(),
-        title: z.array(z.string()).nonempty(),
-        published: z.array(z.string()).nonempty(),
+        name: z
+          .array(z.string())
+          .nonempty()
+          .transform((x) => x[0]),
+        uri: z
+          .array(z.string())
+          .nonempty()
+          .transform((x) => x[0]),
+      }),
+    )
+    .nonempty()
+    .transform((x) => x[0]),
+  published: z
+    .array(z.string().datetime({ offset: true }))
+    .nonempty()
+    .transform((x) => new Date(x[0])),
+});
+
+const FeedSchema = z.object({
+  feed: ItemSchema.extend({
+    entry: z.array(
+      ItemSchema.extend({
+        "media:group": z
+          .array(
+            z.object({
+              "media:description": z
+                .array(z.string())
+                .nonempty()
+                .transform((x) => x[0]),
+            }),
+          )
+          .nonempty()
+          .transform((x) => x[0]),
       }),
     ),
   }),
@@ -17,22 +55,23 @@ export const fetchYouTubeFeed = async (
   type: "channel" | "playlist",
   id: string,
 ) => {
-  const url = `https://www.youtube.com/feeds/videos.xml?${type}_id=${id}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch YouTube feed: ${response.statusText}`);
+  const resp = await fetch(
+    `https://www.youtube.com/feeds/videos.xml?${type}_id=${id}`,
+  );
+  if (!resp.ok) {
+    throw new Error(`Failed to fetch YouTube feed: ${resp.statusText}`);
   }
 
-  const xml = await response.text();
+  const xml = await resp.text();
   const json = await parseStringPromise(xml);
-  console.log(json);
   return FeedSchema.parse(json).feed.entry;
 };
 
 export interface YouTubeVideo {
   id: string;
   title: string;
+  description: string;
+  author: { name: string; uri: string };
   published: Date;
 }
 
@@ -48,9 +87,11 @@ export const fetchYouTubeVideos = async (
   return fetchYouTubeFeed("playlist", channelId.replace(/^UC/, "UULF")).then(
     (feed) =>
       feed.map((entry) => ({
-        id: entry["yt:videoId"][0],
-        title: entry.title[0],
-        published: new Date(entry.published[0]),
+        id: entry.id.replace(/^yt:video:/, ""),
+        title: entry.title,
+        description: entry["media:group"]["media:description"],
+        author: entry.author,
+        published: entry.published,
       })),
   );
 };
