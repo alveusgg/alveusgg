@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
+import type { NextPage, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -143,7 +143,7 @@ const getTwitchEmbed = (
   return url.toString();
 };
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getStaticProps = async () => {
   const channels = [
     // Alveus Sanctuary
     "UCbJ-1yM55NHrR1GS9hhPuvg",
