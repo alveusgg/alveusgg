@@ -1,0 +1,16 @@
+diff --git a/lib/rules/migration-from-tailwind-2.js b/lib/rules/migration-from-tailwind-2.js
+index 5de0f0f72dae06e27ce28e035f350320a1cc8ebb..01d3a2e05503464a4ef602bb4a5c5e38767f768d 100644
+--- a/lib/rules/migration-from-tailwind-2.js
++++ b/lib/rules/migration-from-tailwind-2.js
+@@ -168,9 +168,9 @@ module.exports = {
+           notNeeded.push(cls);
+           return false;
+         }
+-        let overflowRes = /^overflow\-(?<value>clip|ellipsis)$/i.exec(suffix);
++        let overflowRes = /^overflow\-(?<value>ellipsis)$/i.exec(suffix);
+         if (overflowRes && overflowRes.groups && overflowRes.groups.value) {
+-          outdated.push([cls, cls.replace(/overflow\-(clip|ellipsis)$/i, `text-${overflowRes.groups.value}`)]);
++          outdated.push([cls, cls.replace(/overflow\-(ellipsis)$/i, `text-${overflowRes.groups.value}`)]);
+         }
+         let growShrinkRes = /flex\-(?<prop>grow|shrink)(\-(?<value>${flexVal}))?/i.exec(suffix);
+         if (growShrinkRes && growShrinkRes.groups && growShrinkRes.groups.prop) {
