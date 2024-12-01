@@ -6,6 +6,7 @@ import {
   defaultTag,
   defaultTitle,
   notificationCategories,
+  NotificationCategory,
 } from "@/data/notifications";
 import {
   pushBatchSize,
@@ -37,14 +38,22 @@ const exponentialDelays = Array(pushMaxAttempts)
   .fill(0)
   .map((_, i) => pushRetryDelay * Math.pow(2, i + 1));
 
+function getNotificationExpiration(data: CreateNotificationData, tagConfig: NotificationCategory) {
+  if (data.scheduledEndAt) {
+    return new Date(data.scheduledEndAt.getTime() + tagConfig.ttl_after_event * 1000);
+  } else {
+    const now = new Date();
+    return new Date(now.getTime() + tagConfig.ttl * 1000);
+  }
+}
+
 export async function createNotification(data: CreateNotificationData) {
   const tagConfig = notificationCategories.find((cat) => cat.tag === data.tag);
   if (tagConfig === undefined) {
     throw Error("Notification tag unknown!");
   }
 
-  const now = new Date();
-  const expiresAt = new Date(now.getTime() + tagConfig.ttl * 1000);
+  const expiresAt = getNotificationExpiration(data, tagConfig);
   const notification = await prisma.notification.create({
     data: {
       title: data.title,
