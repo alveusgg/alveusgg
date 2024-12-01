@@ -2,11 +2,12 @@ import type { Notification } from "@prisma/client";
 
 import { env } from "@/env";
 
+import type {
+  NotificationCategory} from "@/data/notifications";
 import {
   defaultTag,
   defaultTitle,
-  notificationCategories,
-  NotificationCategory,
+  notificationCategories
 } from "@/data/notifications";
 import {
   pushBatchSize,
@@ -38,9 +39,14 @@ const exponentialDelays = Array(pushMaxAttempts)
   .fill(0)
   .map((_, i) => pushRetryDelay * Math.pow(2, i + 1));
 
-function getNotificationExpiration(data: CreateNotificationData, tagConfig: NotificationCategory) {
+function getNotificationExpiration(
+  data: CreateNotificationData,
+  tagConfig: NotificationCategory,
+) {
   if (data.scheduledEndAt) {
-    return new Date(data.scheduledEndAt.getTime() + tagConfig.ttl_after_event * 1000);
+    return new Date(
+      data.scheduledEndAt.getTime() + tagConfig.ttl_after_event * 1000,
+    );
   } else {
     const now = new Date();
     return new Date(now.getTime() + tagConfig.ttl * 1000);
