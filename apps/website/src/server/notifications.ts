@@ -2,12 +2,11 @@ import type { Notification } from "@prisma/client";
 
 import { env } from "@/env";
 
-import type {
-  NotificationCategory} from "@/data/notifications";
+import type { NotificationCategory } from "@/data/notifications";
 import {
   defaultTag,
   defaultTitle,
-  notificationCategories
+  notificationCategories,
 } from "@/data/notifications";
 import {
   pushBatchSize,
