@@ -24,10 +24,11 @@ export const defaultTags = {
   announcements: "1",
 } as const satisfies Record<NotificationTag, string>;
 
-type NotificationCategory = {
+export type NotificationCategory = {
   tag: string;
   label: string;
   ttl: number;
+  ttl_after_event: number;
   urgency: NotificationUrgency;
 };
 
@@ -36,6 +37,7 @@ export const notificationCategories = [
     tag: "stream",
     label: "Stream notifications",
     ttl: 30 * 60, // 30 minutes
+    ttl_after_event: 30 * 60, // 30 mintutes
     urgency: "HIGH",
   },
   //{
@@ -48,6 +50,7 @@ export const notificationCategories = [
     tag: "announcements",
     label: "Announcements",
     ttl: 5 * 24 * 60 * 60, // 5 days
+    ttl_after_event: 2 * 60 * 60, // 2 hours
     urgency: "HIGH",
   },
 ] satisfies NotificationCategory[];
