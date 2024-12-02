@@ -137,7 +137,8 @@ const collaborations: Collaboration[] = (
       name: "FaZe Silky & Adapt",
       link: "https://www.twitch.tv/silky",
       date: new Date("2024-11-10"),
-      videoId: "fr7aon7_YLI",
+      videoId: "WZ8A_SKwW5s",
+      vodId: "fr7aon7_YLI",
       creators: [
         {
           name: "FaZe Silky",
