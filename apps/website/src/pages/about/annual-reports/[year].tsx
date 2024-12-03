@@ -13,6 +13,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
+import Transparency from "@/components/content/Transparency";
 
 type AboutAnnualReportYearPageProps = {
   year: ReportYear;
@@ -66,8 +67,7 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
         </Button>
       </Section>
 
-      {/* Grow the last section to cover the page */}
-      <Section className="grow">
+      <Section>
         <Image
           src={report.image}
           quality={100}
@@ -80,6 +80,9 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
           {report.alt}
         </div>
       </Section>
+
+      {/* Grow the last section to cover the page */}
+      <Transparency className="grow" />
     </>
   );
 };
