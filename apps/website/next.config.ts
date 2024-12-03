@@ -1,6 +1,6 @@
-// @ts-check
-
 import { resolve } from "path";
+import type { NextConfig } from "next";
+import type { RemotePattern } from "next/dist/shared/lib/image-config";
 import { withSuperjson } from "next-superjson";
 
 import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" with { type: "json" };
@@ -8,11 +8,7 @@ import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json
 
 import "./src/env/index.js";
 
-/**
- * @param {string} url
- * @returns {import("next/dist/shared/lib/image-config").RemotePattern}
- */
-function urlOriginAsRemotePattern(url) {
+function urlOriginAsRemotePattern(url: string): RemotePattern {
   const parsed = new URL(url);
   return {
     protocol: parsed.protocol === "http:" ? "http" : "https",
@@ -21,10 +17,7 @@ function urlOriginAsRemotePattern(url) {
   };
 }
 
-/**
- * @type {import("next").NextConfig}
- */
-const config = {
+const config: NextConfig = {
   reactStrictMode: true,
   eslint: {
     dirs: ["."],
