@@ -20,8 +20,7 @@ import IconArrowRight from "@/icons/IconArrowRight";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import imageGuidestarSeal from "@/assets/guidestar-candid-seal.svg";
-import imageCharityNavigatorBadge from "@/assets/charity-navigator-badge.svg";
+import Transparency from "@/components/content/Transparency";
 
 const sources = {
   twitchAdvertising: {
@@ -701,87 +700,7 @@ const AboutAlveusPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
-        <Section
-          dark
-          className="grow bg-alveus-green-900"
-          containerClassName="space-y-4"
-        >
-          <div className="flex flex-col gap-4 md:flex-row-reverse md:items-center md:gap-10">
-            <div>
-              <Heading id="transparency" level={2} link>
-                Platinum rated transparency
-              </Heading>
-
-              <p>
-                Alveus&apos; transparency has been rated platinum on Candid
-                (GuideStar). Candid is a leading source of information on
-                non-profit organizations, helping donors and funders make
-                informed decisions about their support. Check out our{" "}
-                <Link
-                  href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
-                  external
-                  dark
-                >
-                  non-profit profile on Candid
-                </Link>
-                .
-              </p>
-            </div>
-
-            <Link
-              className="shrink-0"
-              external
-              custom
-              href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
-            >
-              <Image
-                className="size-40"
-                src={imageGuidestarSeal}
-                width={200}
-                height={200}
-                alt="Gold Transparency Seal 2023 by Candid"
-              />
-            </Link>
-          </div>
-
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:gap-10">
-            <div>
-              <Heading level={2}>Three-star charity rating</Heading>
-
-              <p>
-                Alveus has also attained a three-star rating from Charity
-                Navigator, a powerful trust indicator recognizing our commitment
-                to accountability and transparency. Charity Navigator is
-                America&apos;s largest and most-utilized independent charity
-                evaluator, an unbiased and trusted source of information for
-                more than 11 million donors annually. Explore our{" "}
-                <Link
-                  href="https://www.charitynavigator.org/ein/861772907"
-                  external
-                  dark
-                >
-                  Charity Navigator profile
-                </Link>
-                .
-              </p>
-            </div>
-
-            <Link
-              className="shrink-0"
-              external
-              custom
-              href="https://www.charitynavigator.org/ein/861772907"
-            >
-              <Image
-                className="size-40"
-                src={imageCharityNavigatorBadge}
-                width={200}
-                height={200}
-                alt="Three-Star Charity Rating Badge by Charity Navigator"
-              />
-            </Link>
-          </div>
-        </Section>
+        <Transparency className="grow" />
       </div>
     </>
   );
