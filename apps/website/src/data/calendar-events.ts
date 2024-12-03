@@ -49,19 +49,21 @@ export const frequentLinks: FrequentLink[] = [
 export const twitchChannels = {
   alveus: {
     username: "AlveusSanctuary",
+    id: "636587384",
     filter: (event: CalendarEvent) =>
       /^alveus\b/i.test(event.category) &&
       !/\b(yt|youtube)\b/i.test(event.category),
   },
   maya: {
     username: "Maya",
+    id: "235835559",
     filter: (event: CalendarEvent) =>
       /^maya\b/i.test(event.category) &&
       !/\b(yt|youtube)\b/i.test(event.category),
   },
 } as const satisfies Record<
   string,
-  { username: string; filter: (event: CalendarEvent) => boolean }
+  { username: string; id: string; filter: (event: CalendarEvent) => boolean }
 >;
 
 const truncate = (value: string, max: number) => {

@@ -8,7 +8,9 @@ import animalQuest from "@alveusgg/data/src/animal-quest";
 import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
-import { typeSafeObjectKeys } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
+
+import { twitchChannels } from "@/data/calendar-events";
 
 import "@/env/index.js";
 
@@ -366,27 +368,16 @@ const config: NextConfig = {
       destination: "https://www.youtube.com/AlveusSanctuary/live",
       permanent: true,
     },
-    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id + a default flag)
     {
       source: "/updates/ical",
-      destination:
-        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${twitchChannels.alveus.id}`,
       permanent: true,
     },
-    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
-    {
-      source: "/updates/ical/alveus",
-      destination:
-        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+    ...typeSafeObjectEntries(twitchChannels).map(([key, { id }]) => ({
+      source: `/updates/ical/${key}`,
+      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
       permanent: true,
-    },
-    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
-    {
-      source: "/updates/ical/maya",
-      destination:
-        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=235835559",
-      permanent: true,
-    },
+    })),
   ],
   headers: async () => [
     {
