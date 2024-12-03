@@ -52,7 +52,7 @@ const Transparency = ({ className }: TransparencyProps) => (
           src={imageGuidestarSeal}
           width={200}
           height={200}
-          alt="Gold Transparency Seal 2023 by Candid"
+          alt="Platinum Transparency Seal 2024 by Candid"
         />
       </Link>
     </div>
