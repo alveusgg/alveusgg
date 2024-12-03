@@ -3,10 +3,14 @@ import type { NextConfig } from "next";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
 import { withSuperjson } from "next-superjson";
 
-import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" with { type: "json" };
-import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" with { type: "json" };
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import animalQuest from "@alveusgg/data/src/animal-quest";
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 
-import "./src/env/index.js";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+
+import "@/env/index.js";
 
 function urlOriginAsRemotePattern(url: string): RemotePattern {
   const parsed = new URL(url);
@@ -181,23 +185,31 @@ const config: NextConfig = {
       destination: "/animal-quest/:path*",
       permanent: false,
     },
-    ...ambassadorSlugs.map((slug) => ({
-      source: `/${slug}`,
-      destination: `/ambassadors/${slug}`,
-      permanent: false,
-    })),
-    ...animalQuestEpisodes.flatMap(({ slug, episode }) => [
-      {
-        source: `/animal-quest/${episode}`,
-        destination: `/animal-quest/${slug}`,
+    ...typeSafeObjectKeys(ambassadors)
+      .filter(isActiveAmbassadorKey) // We don't want to generate pages for retired ambassadors
+      .map((key) => camelToKebab(key))
+      .map((slug) => ({
+        source: `/${slug}`,
+        destination: `/ambassadors/${slug}`,
         permanent: false,
-      },
-      {
-        source: `/animal-quest/episode-${episode}`,
-        destination: `/animal-quest/${slug}`,
-        permanent: false,
-      },
-    ]),
+      })),
+    ...animalQuest
+      .map((episode, idx) => ({
+        slug: sentenceToKebab(episode.edition),
+        episode: idx + 1,
+      }))
+      .flatMap(({ slug, episode }) => [
+        {
+          source: `/animal-quest/${episode}`,
+          destination: `/animal-quest/${slug}`,
+          permanent: false,
+        },
+        {
+          source: `/animal-quest/episode-${episode}`,
+          destination: `/animal-quest/${slug}`,
+          permanent: false,
+        },
+      ]),
     {
       source: "/animal-quest/cow-edition",
       destination: "/animal-quest/beef-edition",
