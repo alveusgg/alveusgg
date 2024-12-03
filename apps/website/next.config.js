@@ -144,6 +144,16 @@ const config = {
       permanent: true,
     },
     {
+      source: "/annual-reports/:path*",
+      destination: "/about/annual-reports/:path*",
+      permanent: true,
+    },
+    {
+      source: "/reports/:path*",
+      destination: "/about/annual-reports/:path*",
+      permanent: true,
+    },
+    {
       source: "/tech",
       destination: "/about/tech",
       permanent: true,

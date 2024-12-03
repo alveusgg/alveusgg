@@ -6,6 +6,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Button from "@/components/content/Button";
+import Transparency from "@/components/content/Transparency";
 
 import IconChevronRight from "@/icons/IconChevronRight";
 
@@ -28,8 +29,7 @@ const AnnualReportsPage: NextPage = () => {
         </p>
       </Section>
 
-      {/* Grow the last section to cover the page */}
-      <Section className="grow">
+      <Section>
         <div className="mx-auto flex flex-wrap justify-evenly gap-8 p-4">
           {reportYears.map((year) => (
             <Button
@@ -51,6 +51,9 @@ const AnnualReportsPage: NextPage = () => {
           ))}
         </div>
       </Section>
+
+      {/* Grow the last section to cover the page */}
+      <Transparency className="grow" />
     </>
   );
 };
