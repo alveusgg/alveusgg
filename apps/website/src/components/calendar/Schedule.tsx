@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Transition } from "@headlessui/react";
 
-import { standardCategories } from "@/data/calendar-events";
+import { standardCategories, twitchChannels } from "@/data/calendar-events";
 
 import { classes } from "@/utils/classes";
 import { getShortBaseUrl } from "@/utils/short-url";
@@ -22,7 +22,7 @@ import useToday from "@/hooks/today";
 
 const groupedCategories = standardCategories.reduce(
   (acc, category) => {
-    const group = category.name.split(" ")[0]!;
+    const group = category.name.split(" ")[0]!.toLowerCase();
     return {
       ...acc,
       [group]: [...(acc[group] || []), category],
@@ -31,11 +31,13 @@ const groupedCategories = standardCategories.reduce(
   {} as Record<string, { name: string; color: string }[]>,
 );
 
-// TODO: Drive this from twitchChannels in @/data/calendar-events (once the redirects themselves are driven from there)
-const webcalUrls: Record<string, string> = {
-  Alveus: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical`,
-  Maya: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical/maya`,
-};
+const webcalUrls = Object.keys(twitchChannels).reduce(
+  (acc, key) => ({
+    ...acc,
+    [key]: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical${key === "alveus" ? "" : `/${key}`}`,
+  }),
+  {} as Record<string, string>,
+);
 
 export function Schedule() {
   const [timeZone, setTimeZone] = useTimezone();
