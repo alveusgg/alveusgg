@@ -28,6 +28,27 @@ const listOfUrlsSchema = z.string().transform((val, ctx) => {
   return urls;
 });
 
+const listOfIdsSchema = z.string().transform((val, ctx) => {
+  if (val.trim() === "") {
+    return [];
+  }
+
+  const ids = [];
+  for (const id of val.split(" ")) {
+    const parsed = z
+      .string()
+      .regex(/^[0-9]+$/)
+      .safeParse(id.trim());
+    if (!parsed.success) {
+      parsed.error.issues.forEach((issue) => ctx.addIssue(issue));
+      return;
+    }
+
+    ids.push(parsed.data);
+  }
+  return ids;
+});
+
 const optionalBoolSchema = z
   .enum(["true", "false"])
   .optional()
@@ -78,6 +99,8 @@ export const env = createEnv({
     PUSH_BATCH_SIZE: z.number().int().min(1).optional(),
     PUSH_MAX_ATTEMPTS: z.number().int().min(1).optional(),
     PUSH_RETRY_DELAY_MS: z.number().int().min(1).optional(),
+    DISCORD_BOT_TOKEN: z.string().optional(),
+    DISCORD_CALENDAR_EVENT_GUILD_IDS: listOfIdsSchema.optional(),
     DISCORD_BOT_NAME: z.string().default("Alveus Updates"),
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
       listOfUrlsSchema.optional(),
@@ -154,6 +177,9 @@ export const env = createEnv({
     PUSH_BATCH_SIZE: process.env.PUSH_BATCH_SIZE,
     PUSH_MAX_ATTEMPTS: process.env.PUSH_MAX_ATTEMPTS,
     PUSH_RETRY_DELAY_MS: process.env.PUSH_RETRY_DELAY_MS,
+    DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
+    DISCORD_CALENDAR_EVENT_GUILD_IDS:
+      process.env.DISCORD_CALENDAR_EVENT_GUILD_IDS,
     DISCORD_BOT_NAME: process.env.DISCORD_BOT_NAME,
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION,
