@@ -31,7 +31,7 @@ export async function triggerDiscordChannelWebhook({
   contentMessage,
   contentLink,
   imageUrl,
-  botName: username = env.DISCORD_BOT_NAME,
+  botName: username = env.DISCORD_CHANNEL_WEBHOOK_NAME,
   expiresAt,
   toEveryone = false,
 }: {

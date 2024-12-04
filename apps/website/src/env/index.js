@@ -101,7 +101,7 @@ export const env = createEnv({
     PUSH_RETRY_DELAY_MS: z.number().int().min(1).optional(),
     DISCORD_BOT_TOKEN: z.string().optional(),
     DISCORD_CALENDAR_EVENT_GUILD_IDS: listOfIdsSchema.optional(),
-    DISCORD_BOT_NAME: z.string().default("Alveus Updates"),
+    DISCORD_CHANNEL_WEBHOOK_NAME: z.string().default("Alveus Updates"),
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
       listOfUrlsSchema.optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
@@ -180,7 +180,7 @@ export const env = createEnv({
     DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
     DISCORD_CALENDAR_EVENT_GUILD_IDS:
       process.env.DISCORD_CALENDAR_EVENT_GUILD_IDS,
-    DISCORD_BOT_NAME: process.env.DISCORD_BOT_NAME,
+    DISCORD_CHANNEL_WEBHOOK_NAME: process.env.DISCORD_CHANNEL_WEBHOOK_NAME,
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION,
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT:
