@@ -6,6 +6,7 @@ import { standardCategories, twitchChannels } from "@/data/calendar-events";
 import { classes } from "@/utils/classes";
 import { getShortBaseUrl } from "@/utils/short-url";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { sentenceToTitle } from "@/utils/string-case";
 
 import Link from "@/components/content/Link";
 import {
@@ -91,7 +92,9 @@ export function Schedule() {
       {typeSafeObjectEntries(groupedCategories).map(([group, categories]) => (
         <div key={group}>
           <div className="mb-1 flex flex-wrap items-end justify-end gap-2">
-            <h4 className="mr-auto text-lg font-bold">{group}</h4>
+            <h4 className="mr-auto text-lg font-bold">
+              {sentenceToTitle(group)}
+            </h4>
 
             {webcalUrls[group] && (
               <>
