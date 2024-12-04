@@ -11,7 +11,7 @@ function getAuthHeaders() {
   };
 }
 
-const createScheduledEventResponseSchema = z.object({
+const scheduledEventSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().nullable(),
@@ -22,6 +22,23 @@ const createScheduledEventResponseSchema = z.object({
     location: z.string(),
   }), // TODO: What is this when not provided?
 });
+
+export async function getScheduledGuildEvents(guildId: string) {
+  const response = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/scheduled-events`,
+    {
+      headers: getAuthHeaders(),
+    },
+  );
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(JSON.stringify(json, null, 2));
+    throw new Error("Failed to fetch guild events!");
+  }
+
+  return scheduledEventSchema.array().parseAsync(json);
+}
 
 export async function createScheduledGuildEvent(
   guildId: string,
@@ -57,5 +74,5 @@ export async function createScheduledGuildEvent(
     throw new Error("Failed to create guild event!");
   }
 
-  return createScheduledEventResponseSchema.parseAsync(json);
+  return scheduledEventSchema.parseAsync(json);
 }

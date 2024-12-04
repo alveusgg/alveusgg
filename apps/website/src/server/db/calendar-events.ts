@@ -8,7 +8,10 @@ import {
   removeScheduleSegment,
   type ScheduleSegment,
 } from "@/server/utils/twitch-api";
-import { createScheduledGuildEvent } from "@/server/utils/discord-api";
+import {
+  createScheduledGuildEvent,
+  getScheduledGuildEvents,
+} from "@/server/utils/discord-api";
 
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
@@ -291,29 +294,43 @@ export async function syncDiscordEvents(guildId: string) {
     hasTime: true,
   });
 
-  // TODO: Get all the existing events in the future from Discord
-  // const existing = await getScheduledGuildEvents(guildId);
+  // Get all the existing events in the future from Discord
+  const existing = await getScheduledGuildEvents(guildId);
 
-  // TODO: Decide which events in the DB need to be created on Discord
-  // const create: { title: string; link: string; description?: string; startAt: Date }[] = [];
-  // for (const event of events) {
-  //   // Look for a matching event in the Discord API
-  //   const title = getFormattedTitle(event);
-  //   const description = event.description ?? undefined;
-  //   const date = event.startAt.toISOString().replace(/\.\d+Z$/, "Z");
-  //   const idx = existing.findIndex(
-  //     (e) => e.title === title && e.link === event.link && e.description === description && e.start_time === date,
-  //   );
+  // Decide which events in the DB need to be created on Discord
+  const create: {
+    title: string;
+    link: string;
+    description?: string;
+    startAt: Date;
+  }[] = [];
+  for (const event of events) {
+    // Look for a matching event in the Discord API
+    const title = getFormattedTitle(event);
+    const description = event.description || undefined;
+    const date = event.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
+    const idx = existing.findIndex(
+      (e) =>
+        e.name === title &&
+        e.entity_metadata.location === event.link &&
+        (e.description || undefined) === description &&
+        e.scheduled_start_time === date,
+    );
 
-  //   // If we have an existing match, remove it from the list
-  //   if (idx !== -1) {
-  //     existing.splice(idx, 1);
-  //     continue;
-  //   }
+    // If we have an existing match, remove it from the list
+    if (idx !== -1) {
+      existing.splice(idx, 1);
+      continue;
+    }
 
-  //   // Otherwise, we need to create this event
-  //   create.push({ title, link: event.link, description, startAt: event.startAt });
-  // }
+    // Otherwise, we need to create this event
+    create.push({
+      title,
+      link: event.link,
+      description,
+      startAt: event.startAt,
+    });
+  }
 
   // TODO: Remove events from Discord we don't have in the DB
   // for (const event of existing) {
@@ -326,16 +343,16 @@ export async function syncDiscordEvents(guildId: string) {
 
   // Then, create any new events
   // Do this after the removal to reduce the chance of an overlap error
-  for (const event of events) {
+  for (const event of create) {
     console.log("Creating guild event:", event);
     try {
       await createScheduledGuildEvent(
         guildId,
         event.startAt,
         new Date(event.startAt.getTime() + 60 * 60 * 1000),
-        getFormattedTitle(event),
+        event.title,
         event.link,
-        event.description ?? undefined,
+        event.description,
       );
 
       // Delay to avoid rate limiting (5/60s)
