@@ -76,3 +76,22 @@ export async function createScheduledGuildEvent(
 
   return scheduledEventSchema.parseAsync(json);
 }
+
+export async function removeScheduledGuildEvent(
+  guildId: string,
+  eventId: string,
+) {
+  const response = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/scheduled-events/${eventId}`,
+    {
+      method: "DELETE",
+      headers: getAuthHeaders(),
+    },
+  );
+
+  if (response.status !== 204) {
+    const json = await response.json();
+    console.error(JSON.stringify(json, null, 2));
+    throw new Error("Failed to delete guild event!");
+  }
+}

@@ -11,6 +11,7 @@ import {
 import {
   createScheduledGuildEvent,
   getScheduledGuildEvents,
+  removeScheduledGuildEvent,
 } from "@/server/utils/discord-api";
 
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
@@ -332,14 +333,14 @@ export async function syncDiscordEvents(guildId: string) {
     });
   }
 
-  // TODO: Remove events from Discord we don't have in the DB
-  // for (const event of existing) {
-  //   console.log("Removing guild event:", event);
-  //   await removeScheduledGuildEvent(
-  //     guildId,
-  //     event.id,
-  //   );
-  // }
+  // Remove events from Discord we don't have in the DB
+  for (const event of existing) {
+    console.log("Removing guild event:", event);
+    await removeScheduledGuildEvent(guildId, event.id);
+
+    // Delay to avoid rate limiting (5/60s)
+    await new Promise((resolve) => setTimeout(resolve, 60_000 / 5));
+  }
 
   // Then, create any new events
   // Do this after the removal to reduce the chance of an overlap error
