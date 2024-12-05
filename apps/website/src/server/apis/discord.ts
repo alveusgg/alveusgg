@@ -13,11 +13,11 @@ const scheduledEventSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   scheduled_start_time: z.string().datetime({ offset: true }),
-  scheduled_end_time: z.string().datetime({ offset: true }),
+  scheduled_end_time: z.string().datetime({ offset: true }).nullable(),
   entity_type: z.number(),
   entity_metadata: z.object({
-    location: z.string(),
-  }), // TODO: What is this when not provided?
+    location: z.string().optional(),
+  }),
 });
 
 export async function getScheduledGuildEvents(guildId: string) {
