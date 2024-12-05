@@ -1,7 +1,9 @@
 import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 import { retryPendingNotificationPushes } from "@/server/notifications";
-import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
-import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
+import {
+  retryOutgoingWebhooks,
+  OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL,
+} from "@/server/outgoing-webhooks";
 
 import {
   createRegularCalendarEvents,
