@@ -7,12 +7,12 @@ import {
   getScheduleSegments,
   removeScheduleSegment,
   type ScheduleSegment,
-} from "@/server/utils/twitch-api";
+} from "@/server/apis/twitch";
 import {
   createScheduledGuildEvent,
   getScheduledGuildEvents,
   removeScheduledGuildEvent,
-} from "@/server/utils/discord-api";
+} from "@/server/apis/discord";
 
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 

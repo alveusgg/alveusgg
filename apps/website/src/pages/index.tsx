@@ -7,7 +7,7 @@ import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import animalQuestEpisodes from "@alveusgg/data/src/animal-quest";
 
-import { fetchYouTubeVideos } from "@/server/utils/youtube-api";
+import { fetchYouTubeVideos } from "@/server/apis/youtube";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";

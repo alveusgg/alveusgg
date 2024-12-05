@@ -2,9 +2,6 @@ import { z } from "zod";
 
 import { env } from "@/env";
 
-// TODO: Move webhook logic from discord.ts to here
-// TODO: Move all -api.ts files into dedicated directory
-
 function getAuthHeaders() {
   return {
     Authorization: `Bot ${env.DISCORD_BOT_TOKEN}`,
