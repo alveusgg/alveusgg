@@ -19,8 +19,8 @@
     "@twurple/auth": "^7.2.0",
     "@twurple/chat": "^7.2.0",
     "@twurple/easy-bot": "^7.2.0",
-    "dotenv": "^16.4.5",
-    "drizzle-orm": "^0.36.3",
+    "dotenv": "^16.4.7",
+    "drizzle-orm": "^0.37.0",
     "read-pkg": "^9.0.1",
     "tsx": "^4.19.2",
     "zod": "^3.23.8"
