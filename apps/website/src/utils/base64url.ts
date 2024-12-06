@@ -8,7 +8,7 @@ function base64ToArrayBuffer(base64: string) {
   return bytes;
 }
 
-function arrayBufferToBase64(buffer: ArrayBuffer) {
+function arrayBufferToBase64(buffer: ArrayBufferLike) {
   let binary = "";
   const bytes = new Uint8Array(buffer);
   for (let i = 0; i < bytes.byteLength; i++) {
@@ -21,7 +21,7 @@ export function base64toBase64Url(base64: string) {
   return base64.replace(/\//g, "_").replace(/\+/g, "-").replace(/=+$/, "");
 }
 
-export function encodeArrayBufferToBase64Url(src: ArrayBuffer) {
+export function encodeArrayBufferToBase64Url(src: ArrayBufferLike) {
   return base64toBase64Url(arrayBufferToBase64(src));
 }
 
