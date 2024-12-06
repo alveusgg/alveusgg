@@ -8,9 +8,7 @@ updates:
       time: "00:00"
 
   - package-ecosystem: npm
-    directories:
-      - /
-      - /apps/*
+    directory: /
     schedule:
       interval: weekly
       day: wednesday
