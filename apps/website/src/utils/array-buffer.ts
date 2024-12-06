@@ -1,4 +1,4 @@
-export function concatArrayBuffers(buffers: ArrayBuffer[]) {
+export function concatArrayBuffers(buffers: ArrayBufferLike[]) {
   const totalLength = buffers.reduce((acc, buf) => acc + buf.byteLength, 0);
   const result = new Uint8Array(totalLength);
   let offset = 0;

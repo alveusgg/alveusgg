@@ -53,7 +53,7 @@ async function importEncryptionKey(key: string) {
 
 export async function deriveSaltedEncryptionKey(
   key: CryptoKey,
-  salt: ArrayBuffer,
+  salt: BufferSource,
 ) {
   return crypto.subtle.deriveKey(
     {
@@ -69,7 +69,7 @@ export async function deriveSaltedEncryptionKey(
   );
 }
 
-export async function createSaltedEncryptionKey(salt: ArrayBuffer) {
+export async function createSaltedEncryptionKey(salt: BufferSource) {
   const dataEncryptionKey = await importEncryptionKey(
     env.DATA_ENCRYPTION_PASSPHRASE,
   );

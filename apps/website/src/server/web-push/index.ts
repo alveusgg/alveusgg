@@ -64,7 +64,7 @@ async function generateRequestDetails(
   const body = await encryptContent(
     subscription.keys.p256dh,
     subscription.keys.auth,
-    new TextEncoder().encode(payload || ""),
+    new TextEncoder().encode(payload || "").buffer,
   );
 
   return {

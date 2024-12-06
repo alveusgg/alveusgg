@@ -62,7 +62,7 @@ test("HMAC_hash", async () => {
 });
 
 test("HKDF_expand", async () => {
-  const res = await HKDF_expand(salt, data, SHA_256_LENGTH);
+  const res = await HKDF_expand(salt, data.buffer, SHA_256_LENGTH);
   expect(res).toStrictEqual(
     new Uint8Array([
       29, 219, 22, 29, 64, 36, 132, 133, 194, 12, 161, 243, 182, 128, 234, 166,
@@ -72,7 +72,7 @@ test("HKDF_expand", async () => {
 });
 
 test("HKDF_expand 512", async () => {
-  const res = await HKDF_expand(salt, data, 512);
+  const res = await HKDF_expand(salt, data.buffer, 512);
   expect(res).toStrictEqual(
     new Uint8Array([
       29, 219, 22, 29, 64, 36, 132, 133, 194, 12, 161, 243, 182, 128, 234, 166,
@@ -113,7 +113,12 @@ test("HKDF_expand 512", async () => {
 });
 
 test("createCipherText", async () => {
-  const cipherText = await createCipherText(publicKey, salt, data, keyAndNonce);
+  const cipherText = await createCipherText(
+    publicKey,
+    salt,
+    data.buffer,
+    keyAndNonce,
+  );
 
   const cipherSalt = cipherText.slice(0, 16);
   const recordSize = cipherText.slice(16, 20);
@@ -123,7 +128,7 @@ test("createCipherText", async () => {
 
   const reportedRecordSize = new DataView(recordSize).getUint32(0, false);
 
-  expect(cipherSalt).toStrictEqual(salt.buffer);
+  expect(new Uint8Array(cipherSalt)).toStrictEqual(salt);
   expect(reportedRecordSize).toStrictEqual(4096);
   expect(new DataView(keySize).getUint8(0)).toStrictEqual(65);
   expect(cipherPublicKey).toStrictEqual(
@@ -143,14 +148,14 @@ test("encryptContent", async () => {
   const cipherText = await encryptContent(
     dhStr,
     authSecretStr,
-    new TextEncoder().encode("hello world"),
+    new TextEncoder().encode("hello world").buffer,
   );
 
   expect(cipherText).toBeDefined();
 });
 
 test("writeHeader", () => {
-  const publicKeyBuffer = new TextEncoder().encode("Hallo");
+  const publicKeyBuffer = new TextEncoder().encode("Hallo").buffer;
   const res = createCipherHeader(publicKeyBuffer, 4096);
 
   expect(concatArrayBuffers(res)).toStrictEqual(
@@ -177,8 +182,8 @@ test("deriveNonce", async () => {
       {
         kty: "EC",
         crv: "P-256",
-        x: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(1, 33)),
-        y: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(33, 65)),
+        x: encodeArrayBufferToBase64Url(publicKeyBuffer.buffer.slice(1, 33)),
+        y: encodeArrayBufferToBase64Url(publicKeyBuffer.buffer.slice(33, 65)),
         d: "4rVU9zZHMXO9dYJ4i45Xodx8TyOH-BP4iAE-aDZwRww",
       },
       { name: "ECDH", namedCurve: "P-256" },
