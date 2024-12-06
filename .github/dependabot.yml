@@ -18,11 +18,19 @@ updates:
     versioning-strategy: increase
 
     # Update `dependencies` and `devDependencies` separately
+    # Create grouped PRs for minor/patch updates
+    # Major version updates will get individual PRs
     groups:
       production:
         dependency-type: production
+        update-types:
+          - patch
+          - minor
       development:
         dependency-type: development
+        update-types:
+          - patch
+          - minor
 
     # Manually update major versions of `@types/node` with the version specified within .nvmrc
     ignore:
