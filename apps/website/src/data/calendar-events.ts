@@ -80,11 +80,11 @@ const truncate = (value: string, max: number) => {
 // Used for the overlay + Twitch sync, showing the title + link (if not the Twitch channel)
 export const getFormattedTitle = (
   event: CalendarEvent,
-  channel: string,
+  channel?: string,
   length?: number,
 ) => {
   const title = length ? truncate(event.title, length) : event.title;
-  return new RegExp(`twitch\\.tv\\/${channel}`, "i").test(event.link)
+  return channel && new RegExp(`twitch\\.tv\\/${channel}`, "i").test(event.link)
     ? title
     : `${title} @ ${event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}`;
 };
