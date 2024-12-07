@@ -284,9 +284,6 @@ importers:
       '@types/dagre':
         specifier: ^0.7.52
         version: 0.7.52
-      '@types/dompurify':
-        specifier: ^3.2.0
-        version: 3.2.0
       '@types/eslint-config-prettier':
         specifier: ^6.11.3
         version: 6.11.3
@@ -2738,10 +2735,6 @@ packages:
 
   '@types/debug@4.1.12':
     resolution: {integrity: sha512-vIChWdVG3LG1SMxEvI/AK+FWJthlrqlTu7fbrlywTkkaONwk/UAGaULXRlf8vkzFBLVm0zkMdCquhL5aOjhXPQ==}
-
-  '@types/dompurify@3.2.0':
-    resolution: {integrity: sha512-Fgg31wv9QbLDA0SpTOXO3MaxySc4DKGLi8sna4/Utjo4r3ZRPdCt4UQee8BWr+Q5z21yifghREPJGYaEOEIACg==}
-    deprecated: This is a stub types definition. dompurify provides its own type definitions, so you do not need this installed.
 
   '@types/eslint-config-prettier@6.11.3':
     resolution: {integrity: sha512-3wXCiM8croUnhg9LdtZUJQwNcQYGWxxdOWDjPe1ykCqJFPVpzAKfs/2dgSoCtAvdPeaponcWPI7mPcGGp9dkKQ==}
@@ -9510,10 +9503,6 @@ snapshots:
   '@types/debug@4.1.12':
     dependencies:
       '@types/ms': 0.7.34
-
-  '@types/dompurify@3.2.0':
-    dependencies:
-      dompurify: 3.2.2
 
   '@types/eslint-config-prettier@6.11.3': {}
 
