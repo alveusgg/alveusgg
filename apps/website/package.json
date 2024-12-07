@@ -100,7 +100,6 @@
     "@next/eslint-plugin-next": "^15.0.4",
     "@types/country-list": "^2.1.4",
     "@types/dagre": "^0.7.52",
-    "@types/dompurify": "^3.2.0",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
     "@types/jsdom": "^21.1.7",
