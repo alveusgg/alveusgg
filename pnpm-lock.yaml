@@ -92,8 +92,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#0.45.0
-        version: https://codeload.github.com/alveusgg/data/tar.gz/54f4a52eef313924b8b4d14c1f97ee0be9b266de
+        specifier: github:alveusgg/data#0.46.0
+        version: https://codeload.github.com/alveusgg/data/tar.gz/c6d032d680fa2156947e4f87926e8eaeb5ca0b28
       '@aws-sdk/client-s3':
         specifier: ^3.705.0
         version: 3.705.0
@@ -406,9 +406,9 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@https://codeload.github.com/alveusgg/data/tar.gz/54f4a52eef313924b8b4d14c1f97ee0be9b266de':
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/54f4a52eef313924b8b4d14c1f97ee0be9b266de}
-    version: 0.45.0
+  '@alveusgg/data@https://codeload.github.com/alveusgg/data/tar.gz/c6d032d680fa2156947e4f87926e8eaeb5ca0b28':
+    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/c6d032d680fa2156947e4f87926e8eaeb5ca0b28}
+    version: 0.46.0
 
   '@aws-crypto/crc32@5.2.0':
     resolution: {integrity: sha512-nLbCWqQNgUiwwtFsen1AdzAtvuLRsQS8rYgMuxCrdKf9kOssamGLuPwyTY9wyYblNr9+1XM8v6zoDTPPSIeANg==}
@@ -6402,7 +6402,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@https://codeload.github.com/alveusgg/data/tar.gz/54f4a52eef313924b8b4d14c1f97ee0be9b266de': {}
+  '@alveusgg/data@https://codeload.github.com/alveusgg/data/tar.gz/c6d032d680fa2156947e4f87926e8eaeb5ca0b28': {}
 
   '@aws-crypto/crc32@5.2.0':
     dependencies:
