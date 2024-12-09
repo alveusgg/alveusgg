@@ -7,8 +7,15 @@ import {
   getScheduleSegments,
   removeScheduleSegment,
   type ScheduleSegment,
-} from "@/server/utils/twitch-api";
+} from "@/server/apis/twitch";
+import {
+  createScheduledGuildEvent,
+  getScheduledGuildEvents,
+  removeScheduledGuildEvent,
+} from "@/server/apis/discord";
+
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+
 import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 
 export const calendarEventSchema = z.object({
@@ -263,7 +270,7 @@ export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
   // Then, create any new events
   // Do this after the removal to reduce the chance of an overlap error
   for (const event of create) {
-    console.log("Creating event:", event);
+    console.log("Creating segment:", event);
     try {
       await createScheduleSegment(
         twitchChannel.broadcasterAccount.access_token,
@@ -275,6 +282,84 @@ export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
       );
     } catch (err) {
       console.error("Error creating segment", event, err);
+    }
+  }
+}
+
+// TODO: Can this and the Twitch logic above be abstracted into a method that takes get/create/delete functions?
+export async function syncDiscordEvents(guildId: string) {
+  // Get all events from now onwards
+  // Unlike for Twitch, we'll show all events (with a time) on Discord
+  const events = await getCalendarEvents({
+    start: new Date(),
+    hasTime: true,
+  });
+
+  // Get all the existing events in the future from Discord
+  const existing = await getScheduledGuildEvents(guildId);
+
+  // Decide which events in the DB need to be created on Discord
+  const create: {
+    title: string;
+    link: string;
+    description?: string;
+    startAt: Date;
+  }[] = [];
+  for (const event of events) {
+    // Look for a matching event in the Discord API
+    const title = getFormattedTitle(event);
+    const description = event.description || undefined;
+    const date = event.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
+    const idx = existing.findIndex(
+      (e) =>
+        e.name === title &&
+        e.entity_metadata.location === event.link &&
+        (e.description || undefined) === description &&
+        e.scheduled_start_time === date,
+    );
+
+    // If we have an existing match, remove it from the list
+    if (idx !== -1) {
+      existing.splice(idx, 1);
+      continue;
+    }
+
+    // Otherwise, we need to create this event
+    create.push({
+      title,
+      link: event.link,
+      description,
+      startAt: event.startAt,
+    });
+  }
+
+  // Remove events from Discord we don't have in the DB
+  for (const event of existing) {
+    console.log("Removing guild event:", event);
+    await removeScheduledGuildEvent(guildId, event.id);
+
+    // Delay to avoid rate limiting (5/60s)
+    await new Promise((resolve) => setTimeout(resolve, 60_000 / 5));
+  }
+
+  // Then, create any new events
+  // Do this after the removal to reduce the chance of an overlap error
+  for (const event of create) {
+    console.log("Creating guild event:", event);
+    try {
+      await createScheduledGuildEvent(
+        guildId,
+        event.startAt,
+        new Date(event.startAt.getTime() + 60 * 60 * 1000),
+        event.title,
+        event.link,
+        event.description,
+      );
+
+      // Delay to avoid rate limiting (5/60s)
+      await new Promise((resolve) => setTimeout(resolve, 60_000 / 5));
+    } catch (err) {
+      console.error("Error creating guild event", event, err);
     }
   }
 }

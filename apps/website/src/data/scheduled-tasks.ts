@@ -1,14 +1,19 @@
 import { cleanupFileStorage } from "@/server/file-storage/cleanup";
 import { retryPendingNotificationPushes } from "@/server/notifications";
-import { retryOutgoingWebhooks } from "@/server/outgoing-webhooks";
-import { OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL } from "@/server/discord";
+import {
+  retryOutgoingWebhooks,
+  OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL,
+} from "@/server/outgoing-webhooks";
 
 import {
   createRegularCalendarEvents,
+  syncDiscordEvents,
   syncTwitchSchedule,
 } from "@/server/db/calendar-events";
 import { refreshTwitchChannels } from "@/server/db/twitch-channels";
 import { cleanupExpiredNotificationPushes } from "@/server/db/notifications";
+
+import { env } from "@/env";
 
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
@@ -75,6 +80,13 @@ export const scheduledTasks: ScheduledTasksConfig = {
       task: () => syncTwitchSchedule(channel),
       label: `Calendar events: Sync Twitch Schedule (${channel})`,
       startDateTime: new Date(2024, 9, 30, 0, 0, 0),
+      interval: { minutes: 10 },
+    })),
+    ...(env.DISCORD_CALENDAR_EVENT_GUILD_IDS || []).map((guildId) => ({
+      id: `calendarEvents.discord.${guildId}`,
+      task: () => syncDiscordEvents(guildId),
+      label: `Calendar events: Sync Discord Events (${guildId})`,
+      startDateTime: new Date(2024, 11, 4, 0, 0, 0),
       interval: { minutes: 10 },
     })),
     {

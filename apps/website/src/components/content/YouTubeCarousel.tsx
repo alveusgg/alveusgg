@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import type { YouTubeVideo } from "@/server/utils/youtube-api";
+import type { YouTubeVideo } from "@/server/apis/youtube";
 
 import { formatDateTime } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
