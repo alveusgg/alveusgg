@@ -32,7 +32,7 @@ export async function computeSecret(
   );
 }
 
-export async function HMAC_hash(key: ArrayBuffer, input: ArrayBuffer) {
+export async function HMAC_hash(key: BufferSource, input: BufferSource) {
   return crypto.subtle.sign(
     "HMAC",
     await crypto.subtle.importKey(
@@ -47,8 +47,8 @@ export async function HMAC_hash(key: ArrayBuffer, input: ArrayBuffer) {
 }
 
 export async function HKDF_expand(
-  pseudoRandomKey: ArrayBuffer,
-  info: ArrayBuffer,
+  pseudoRandomKey: BufferSource,
+  info: ArrayBufferLike,
   length: number,
 ) {
   const counterBuffer = new Uint8Array(1);
@@ -58,7 +58,7 @@ export async function HKDF_expand(
   let counter = 0;
   while (output.byteLength < length) {
     counterBuffer[0] = ++counter;
-    const input = concatArrayBuffers([lastHash, info, counterBuffer]);
+    const input = concatArrayBuffers([lastHash, info, counterBuffer.buffer]);
     const hash = await HMAC_hash(pseudoRandomKey, input);
     output = concatArrayBuffers([output, hash]);
     lastHash = hash;
@@ -68,9 +68,9 @@ export async function HKDF_expand(
 }
 
 export async function deriveHmacKey(
-  salt: ArrayBuffer,
-  inputKeyMaterial: ArrayBuffer,
-  info: ArrayBuffer,
+  salt: BufferSource,
+  inputKeyMaterial: BufferSource,
+  info: ArrayBufferLike,
   length: number,
 ) {
   const pseudoRandomKey = await HMAC_hash(salt, inputKeyMaterial);
@@ -78,9 +78,9 @@ export async function deriveHmacKey(
 }
 
 export async function deriveKeyAndNonce(params: {
-  salt: ArrayBuffer;
-  authSecret: ArrayBuffer;
-  dh: ArrayBuffer;
+  salt: BufferSource;
+  authSecret: BufferSource;
+  dh: Uint8Array;
   localKeypair: { privateKey: CryptoKey; publicKey: CryptoKey };
 }): Promise<KeyAndNonce> {
   const userPublicKey = await crypto.subtle.importKey(
@@ -95,8 +95,8 @@ export async function deriveKeyAndNonce(params: {
     params.authSecret,
     await computeSecret(params.localKeypair.privateKey, userPublicKey),
     concatArrayBuffers([
-      new TextEncoder().encode("WebPush: info\0"),
-      params.dh,
+      new TextEncoder().encode("WebPush: info\0").buffer,
+      params.dh.buffer,
       await crypto.subtle.exportKey("raw", params.localKeypair.publicKey),
     ]),
     SHA_256_LENGTH,
@@ -106,12 +106,12 @@ export async function deriveKeyAndNonce(params: {
   return {
     key: await HKDF_expand(
       pseudoRandomKey,
-      new TextEncoder().encode("Content-Encoding: aes128gcm\0"),
+      new TextEncoder().encode("Content-Encoding: aes128gcm\0").buffer,
       KEY_LENGTH,
     ),
     nonce: await HKDF_expand(
       pseudoRandomKey,
-      new TextEncoder().encode("Content-Encoding: nonce\0"),
+      new TextEncoder().encode("Content-Encoding: nonce\0").buffer,
       NONCE_LENGTH,
     ),
   };
@@ -131,7 +131,7 @@ export function generateNonce(base: ArrayBuffer, counter: number) {
 export async function encryptRecord(
   keyAndNonce: KeyAndNonce,
   counter: number,
-  buffer: ArrayBuffer,
+  buffer: ArrayBufferLike,
   pad = 0,
   last = false,
 ) {
@@ -164,18 +164,18 @@ export async function encryptRecord(
   );
 }
 
-export function createCipherHeader(keyId: ArrayBuffer, recordSize: number) {
+export function createCipherHeader(keyId: ArrayBufferLike, recordSize: number) {
   const sizes = new ArrayBuffer(5);
   const dv = new DataView(sizes);
   dv.setUint32(0, recordSize, false);
   dv.setUint8(4, keyId.byteLength);
-  return [sizes, keyId];
+  return [sizes, keyId] as const satisfies ArrayBufferLike[];
 }
 
 export async function createCipherText(
   localPublicKey: CryptoKey,
   salt: Uint8Array,
-  payload: Uint8Array,
+  payload: ArrayBufferLike,
   keyAndNonce: KeyAndNonce,
 ) {
   const overhead = PAD_SIZE + TAG_LENGTH;
@@ -183,7 +183,7 @@ export async function createCipherText(
 
   const publicKeyBuffer = await crypto.subtle.exportKey("raw", localPublicKey);
 
-  const buffers: Array<ArrayBuffer> = [
+  const buffers = [
     salt.buffer,
     ...createCipherHeader(publicKeyBuffer, recordSize),
   ];
@@ -200,12 +200,12 @@ export async function createCipherText(
     pad -= recordPad;
 
     const end = start + recordSize - overhead - recordPad;
-    const isLast = end >= payload.length && pad <= 0;
+    const isLast = end >= payload.byteLength && pad <= 0;
     buffers.push(
       await encryptRecord(
         keyAndNonce,
         counter++,
-        payload.subarray(start, end),
+        payload.slice(start, end),
         recordPad,
         isLast,
       ),
@@ -222,7 +222,7 @@ export async function createCipherText(
 export async function encryptContent(
   userPublicKey: string,
   userPrivateKey: string,
-  payload: Uint8Array,
+  payload: ArrayBufferLike,
 ) {
   const dh = decodeBase64UrlToArrayBuffer(userPublicKey);
   if (dh.length !== 65) {
