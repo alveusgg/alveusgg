@@ -23,14 +23,14 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
-const sectionLinks = {
-  "Twitch.tv": "#twitch",
-  Founding: "#maya",
-  "History ": "#history",
-  "Tour Part 1": "#tour-part-1",
-  "Tour Part 2": "#tour-part-2",
-  Transparency: "#transparency",
-};
+const sectionLinks = [
+  { name: "Twitch.tv", href: "#twitch" },
+  { name: "Founding", href: "#maya" },
+  { name: "History ", href: "#history" },
+  { name: "Tour Part 1", href: "#tour-part-1" },
+  { name: "Tour Part 2", href: "#tour-part-2" },
+  { name: "Transparency", href: "#transparency" },
+];
 
 const sources = {
   twitchAdvertising: {

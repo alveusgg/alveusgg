@@ -75,7 +75,10 @@ const signature = (command: NamedCommand) => {
   return `${cmd} ${cmdArgs}`;
 };
 
-const sectionLinks = { Commands: "#commands", Presets: "#presets" };
+const sectionLinks = [
+  { name: "Commands", href: "#commands" },
+  { name: "Presets", href: "#presets" },
+];
 
 const AboutTechPage: NextPage = () => {
   return (
