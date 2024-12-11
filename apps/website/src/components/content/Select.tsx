@@ -46,7 +46,7 @@ const Select = ({
           <span className="block">{options[value]}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <IconChevronVertical
-              className="h-5 w-5 opacity-75"
+              className="size-5 opacity-75"
               aria-hidden="true"
             />
           </span>
@@ -76,7 +76,7 @@ const Select = ({
             >
               <span className="block">{value}</span>
               <span className="absolute inset-y-0 left-0 hidden items-center pl-3 group-data-[selected]:flex">
-                <IconCheck className="h-5 w-5" aria-hidden="true" />
+                <IconCheck className="size-5" aria-hidden="true" />
               </span>
             </ListboxOption>
           ))}

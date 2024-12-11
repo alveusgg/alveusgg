@@ -120,7 +120,7 @@ const OverviewNode = ({
         {nodeTypes[data.step.type].eyebrow.name}
       </p>
       <div className="my-auto">
-        <p className="overflow-hidden text-ellipsis whitespace-nowrap text-lg text-alveus-green-900">
+        <p className="truncate text-lg text-alveus-green-900">
           {data.step.name}
         </p>
       </div>

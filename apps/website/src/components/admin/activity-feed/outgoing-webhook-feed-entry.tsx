@@ -48,7 +48,7 @@ export const OutgoingWebhookFeedEntry = ({
           }
         >
           {retryOutgoingWebhook.isPending ? (
-            <IconSync className="h-5 w-5 animate-spin" />
+            <IconSync className="size-5 animate-spin" />
           ) : lastAttemptWasSuccessful ? (
             "✅"
           ) : (

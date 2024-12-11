@@ -57,7 +57,7 @@ const AdminPreviewShowAndTellPage: NextPage<
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         {entry && <ShowAndTellEntry entry={entry} isPresentationView={false} />}
       </Section>
     </>

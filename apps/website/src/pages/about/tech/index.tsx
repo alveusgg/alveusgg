@@ -365,7 +365,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-[10rem] -rotate-45 select-none lg:block 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 select-none lg:block 2xl:max-w-48"
         />
 
         <Section containerClassName="flex flex-wrap -mx-4">
@@ -396,7 +396,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
         <Section dark>
@@ -426,7 +426,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-20 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section>
@@ -439,14 +439,14 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
-        <Section dark className="flex-grow bg-alveus-green-800">
+        <Section dark className="grow bg-alveus-green-800">
           <Heading level={2} className="mb-2 mt-0" id="open-source" link>
             Open-source
           </Heading>

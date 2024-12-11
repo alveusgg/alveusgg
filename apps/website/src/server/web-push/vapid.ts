@@ -55,8 +55,8 @@ export async function createSignedJWT(payload: unknown) {
     {
       kty: "EC",
       crv: "P-256",
-      x: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(1, 33)),
-      y: encodeArrayBufferToBase64Url(publicKeyBuffer.subarray(33, 65)),
+      x: encodeArrayBufferToBase64Url(publicKeyBuffer.buffer.slice(1, 33)),
+      y: encodeArrayBufferToBase64Url(publicKeyBuffer.buffer.slice(33, 65)),
       d: privateKey,
     },
     { name: "ECDSA", namedCurve: "P-256" },

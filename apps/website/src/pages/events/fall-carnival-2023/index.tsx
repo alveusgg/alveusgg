@@ -96,7 +96,7 @@ const FallCarnival2023EventPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
         <IntroSection />
@@ -131,7 +131,7 @@ const FallCarnival2023EventPage: NextPage = () => {
                   target="_blank"
                   rel="download"
                 >
-                  <IconDownload className="mr-1 h-5 w-5" />
+                  <IconDownload className="mr-1 size-5" />
                   Download
                 </a>
               </div>
@@ -185,12 +185,12 @@ const FallCarnival2023EventPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -left-8 top-32 z-10 hidden h-auto w-1/3 max-w-[7rem] -rotate-45 select-none lg:block"
+          className="pointer-events-none absolute -left-8 top-32 z-10 hidden h-auto w-1/3 max-w-28 -rotate-45 select-none lg:block"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -top-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -top-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Activities />

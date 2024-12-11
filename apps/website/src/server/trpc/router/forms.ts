@@ -2,7 +2,7 @@ import { z } from "zod";
 import { TRPCError } from "@trpc/server";
 
 import { calcFormConfig } from "@/utils/forms";
-import { getUserFollowsBroadcaster } from "@/server/utils/twitch-api";
+import { getUserFollowsBroadcaster } from "@/server/apis/twitch";
 import {
   type OutgoingWebhookType,
   triggerOutgoingWebhook,

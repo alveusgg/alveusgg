@@ -104,7 +104,7 @@ const AnimalQuestItems = forwardRef<
     {name && (
       <Heading
         level={2}
-        className="alveus-green-800 mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl"
+        className="mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
@@ -125,7 +125,7 @@ const AnimalQuestItems = forwardRef<
         >
           <Link
             href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
-            className="group relative order-last flex-shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
+            className="group relative order-last shrink-0 rounded-full bg-alveus-tan transition-transform hover:scale-102 lg:order-first"
             custom
           >
             {(() => {
@@ -159,7 +159,7 @@ const AnimalQuestItems = forwardRef<
                   <Image
                     src={img.src}
                     alt={img.alt}
-                    className="absolute -bottom-2 -right-2 hidden h-12 w-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                    className="absolute -bottom-2 -right-2 hidden size-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
                     width={256}
                     style={{ objectPosition: img.position }}
                   />
@@ -175,7 +175,7 @@ const AnimalQuestItems = forwardRef<
                   <Image
                     src={img.src}
                     alt={img.alt}
-                    className="absolute -bottom-2 -left-2 hidden h-12 w-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:h-16 md:w-16"
+                    className="absolute -bottom-2 -left-2 hidden size-12 rounded-full object-cover shadow-[10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
                     width={256}
                     style={{ objectPosition: img.position }}
                   />
@@ -183,7 +183,7 @@ const AnimalQuestItems = forwardRef<
               })()}
           </Link>
 
-          <div className="flex-grow">
+          <div className="grow">
             <Link
               href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
               className="group flex items-start justify-between gap-x-8 transition-colors hover:text-alveus-green-600"
@@ -263,7 +263,7 @@ const AnimalQuestPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
         />
 
         <Section
@@ -291,19 +291,19 @@ const AnimalQuestPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-64 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
-        <Section className="flex-grow pt-8">
+        <Section className="grow pt-8">
           <div
             className={classes(
               "flex flex-col items-center justify-end gap-4 md:flex-row",
@@ -316,7 +316,7 @@ const AnimalQuestPage: NextPage = () => {
               onChange={(val) => update(val as keyof typeof dropdown, null)}
               label={<span className="sr-only">Sort by</span>}
               align="right"
-              className="flex-shrink-0"
+              className="shrink-0"
             />
           </div>
 

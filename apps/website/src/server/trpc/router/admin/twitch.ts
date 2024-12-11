@@ -11,7 +11,7 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { getUserByName } from "@/server/utils/twitch-api";
+import { getUserByName } from "@/server/apis/twitch";
 import { permissions } from "@/data/permissions";
 
 const permittedProcedure = protectedProcedure.use(

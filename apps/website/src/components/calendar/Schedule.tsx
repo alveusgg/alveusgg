@@ -1,11 +1,12 @@
 import { useMemo } from "react";
 import { Transition } from "@headlessui/react";
 
-import { standardCategories } from "@/data/calendar-events";
+import { standardCategories, twitchChannels } from "@/data/calendar-events";
 
 import { classes } from "@/utils/classes";
 import { getShortBaseUrl } from "@/utils/short-url";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { sentenceToTitle } from "@/utils/string-case";
 
 import Link from "@/components/content/Link";
 import {
@@ -22,7 +23,7 @@ import useToday from "@/hooks/today";
 
 const groupedCategories = standardCategories.reduce(
   (acc, category) => {
-    const group = category.name.split(" ")[0]!;
+    const group = category.name.split(" ")[0]!.toLowerCase();
     return {
       ...acc,
       [group]: [...(acc[group] || []), category],
@@ -31,11 +32,13 @@ const groupedCategories = standardCategories.reduce(
   {} as Record<string, { name: string; color: string }[]>,
 );
 
-// TODO: Drive this from twitchChannels in @/data/calendar-events (once the redirects themselves are driven from there)
-const webcalUrls: Record<string, string> = {
-  Alveus: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical`,
-  Maya: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical/maya`,
-};
+const webcalUrls = Object.keys(twitchChannels).reduce(
+  (acc, key) => ({
+    ...acc,
+    [key]: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical${key === "alveus" ? "" : `/${key}`}`,
+  }),
+  {} as Record<string, string>,
+);
 
 export function Schedule() {
   const [timeZone, setTimeZone] = useTimezone();
@@ -89,7 +92,9 @@ export function Schedule() {
       {typeSafeObjectEntries(groupedCategories).map(([group, categories]) => (
         <div key={group}>
           <div className="mb-1 flex flex-wrap items-end justify-end gap-2">
-            <h4 className="mr-auto text-lg font-bold">{group}</h4>
+            <h4 className="mr-auto text-lg font-bold">
+              {sentenceToTitle(group)}
+            </h4>
 
             {webcalUrls[group] && (
               <>
@@ -135,7 +140,7 @@ export function Schedule() {
                     "rounded-md p-2 shadow-sm",
                   )}
                 />
-                <p className="flex-shrink-0 opacity-75">{category.name}</p>
+                <p className="shrink-0 opacity-75">{category.name}</p>
               </div>
             ))}
           </div>

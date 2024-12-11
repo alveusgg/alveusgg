@@ -369,7 +369,7 @@ export function ShowAndTellEntryForm({
     <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
       {action === "update" && wasApproved && (
         <MessageBox variant="warning" className="my-4 flex items-center gap-2">
-          <IconWarningTriangle className="h-6 w-6 text-yellow-900" />
+          <IconWarningTriangle className="size-6 text-yellow-900" />
           You are modifying a previously approved post. Upon submitting your
           edits, the post will be unpublished until the changes have been
           reviewed and approved.
@@ -525,7 +525,7 @@ export function ShowAndTellEntryForm({
         <Button type="submit">
           {isLoading ? (
             <>
-              <IconLoading className="h-5 w-5" />
+              <IconLoading className="size-5" />
               Saving …
             </>
           ) : action === "create" ? (

@@ -225,7 +225,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               src={images[0].src}
               alt={images[0].alt}
               placeholder="blur"
-              className="absolute inset-x-0 top-0 h-full w-full object-cover md:sticky md:h-screen md:max-h-full"
+              className="absolute inset-x-0 top-0 size-full object-cover md:sticky md:h-screen md:max-h-full"
               style={{ objectPosition: images[0].position }}
             />
           </div>
@@ -248,7 +248,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <dl className="sm:grid-cols-2-auto lg:grid-cols-2-auto mb-4 grid grid-cols-1 gap-4 md:grid-cols-1">
+            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2-auto md:grid-cols-1 lg:grid-cols-2-auto">
               {stats.map(({ title, value }, idx) => (
                 <Fragment key={title}>
                   {idx !== 0 && (
@@ -271,13 +271,13 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 />
               ))}
 
-            <div className="pswp-gallery my-6" id={photoswipe}>
-              <Carousel
-                items={carousel}
-                auto={null}
-                itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
-              />
-            </div>
+            <Carousel
+              id={photoswipe}
+              items={carousel}
+              auto={null}
+              className="my-6"
+              itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+            />
 
             {ambassador.plush &&
               merchImage &&

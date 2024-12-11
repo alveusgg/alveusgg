@@ -54,7 +54,7 @@ export function IntroSection({
               href="/events/fall-carnival-2023"
             >
               Customize your ticket
-              <IconArrowRight className="ml-3 inline-block h-6 w-6" />
+              <IconArrowRight className="ml-3 inline-block size-6" />
             </NextLink>
           </div>
         )}

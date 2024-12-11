@@ -20,7 +20,7 @@ import IconArrowRight from "@/icons/IconArrowRight";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import imageGuidestarSeal from "@/assets/guidestar-candid-seal.svg";
+import Transparency from "@/components/content/Transparency";
 
 const sources = {
   twitchAdvertising: {
@@ -561,7 +561,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section className="text-center">
@@ -655,7 +655,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section>
@@ -693,54 +693,14 @@ const AboutAlveusPage: NextPage = () => {
       {/* TODO: CTA slice for ambassadors? */}
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
-        <Section
-          dark
-          className="flex-grow bg-alveus-green-900"
-          containerClassName="flex flex-col-reverse md:flex-row-reverse gap-4 md:gap-10"
-        >
-          <div>
-            <Heading id="transparency" level={2} link>
-              Platinum rated transparency
-            </Heading>
-
-            <p>
-              Alveus&apos; transparency has been rated platinum on Candid
-              (GuideStar). Candid is a leading source of information on
-              non-profit organizations, helping donors and funders make informed
-              decisions about their support. Check out our{" "}
-              <Link
-                href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
-                external
-                dark
-              >
-                non-profit profile on Candid
-              </Link>
-              .
-            </p>
-          </div>
-
-          <Link
-            className="flex-shrink-0"
-            external
-            custom
-            href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
-          >
-            <Image
-              className="h-40 w-40"
-              src={imageGuidestarSeal}
-              width={200}
-              height={200}
-              alt="Gold Transparency Seal 2023 by Candid"
-            />
-          </Link>
-        </Section>
+        <Transparency className="grow" />
       </div>
     </>
   );

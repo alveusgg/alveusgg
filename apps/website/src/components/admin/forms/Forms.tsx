@@ -134,7 +134,7 @@ function Form({ form, onError, onUpdate }: FormProps) {
             width="auto"
             href={`/admin/forms/${form.id}/edit`}
           >
-            <IconPencil className="h-4 w-4" />
+            <IconPencil className="size-4" />
             Edit
           </LinkButton>
           <LinkButton
@@ -143,13 +143,13 @@ function Form({ form, onError, onUpdate }: FormProps) {
             className={secondaryButtonClasses}
             href={`/api/admin/forms/${form.id}/export-entries`}
           >
-            <IconDownload className="h-4 w-4" />
+            <IconDownload className="size-4" />
             CSV
           </LinkButton>
 
           <Menu as="div" className="relative inline-block text-left">
             <MenuButton as={Button}>
-              <IconEllipsis className="h-4 w-4" />
+              <IconEllipsis className="size-4" />
               <span className="sr-only">Open menu with more options</span>
             </MenuButton>
             <MenuItems
@@ -163,7 +163,7 @@ function Form({ form, onError, onUpdate }: FormProps) {
                   confirmationMessage="Please confirm deletion!"
                   onClick={() => deleteMutation.mutate(form.id)}
                 >
-                  <IconTrash className="h-4 w-4" />
+                  <IconTrash className="size-4" />
                   Delete
                 </Button>
               </MenuItem>

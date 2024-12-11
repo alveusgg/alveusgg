@@ -89,14 +89,11 @@ export function NotificationsLive() {
                   className="flex items-center gap-3 border-t border-t-white/20 p-1 px-2 first:border-t-0 hover:bg-black"
                 >
                   {isActive ? (
-                    <IconBolt
-                      alt="Notification is active"
-                      className="h-4 w-4"
-                    />
+                    <IconBolt alt="Notification is active" className="size-4" />
                   ) : (
                     <IconArchive
                       alt="Notification is inactive"
-                      className="h-4 w-4"
+                      className="size-4"
                     />
                   )}
                   <div className="flex-1 pl-2">
@@ -112,7 +109,7 @@ export function NotificationsLive() {
                         cancelMutation.mutate(notification.id);
                       }}
                     >
-                      <IconXCircleOutline className="h-5 w-5" />
+                      <IconXCircleOutline className="size-5" />
                     </Button>
                     <Button
                       width="auto"
@@ -123,7 +120,7 @@ export function NotificationsLive() {
                         resendMutation.mutate(notification.id);
                       }}
                     >
-                      <IconSync className="h-5 w-5" />
+                      <IconSync className="size-5" />
                     </Button>
                   </div>
                 </li>

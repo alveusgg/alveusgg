@@ -53,7 +53,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
         className="py-12"
         containerClassName="flex flex-wrap gap-y-8 gap-x-4 justify-between lg:flex-nowrap"
       >
-        <div className="w-full flex-grow lg:w-auto">
+        <div className="w-full grow lg:w-auto">
           <Heading level={1}>Show and Tell: Your Posts</Heading>
           <p className="text-lg">
             {session?.status === "authenticated" ? "View" : "Sign in and view"}{" "}
@@ -66,7 +66,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         <header>
           <Heading level={2}>Your Show and Tell submissions</Heading>
         </header>
@@ -107,7 +107,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                       </th>
                       <th
                         scope="col"
-                        className={`${cellClasses} w-[40%] text-left`}
+                        className={`${cellClasses} w-2/5 text-left`}
                       >
                         Title
                       </th>
@@ -139,7 +139,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               />
                             )}
                           </td>
-                          <td className={`${cellClasses} w-[40%]`}>
+                          <td className={`${cellClasses} w-2/5`}>
                             {entry.title}
                           </td>
                           <td className={cellClasses}>
@@ -180,7 +180,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               size="small"
                               href={`/show-and-tell/my-posts/${entry.id}`}
                             >
-                              <IconPencil className="h-5 w-5" />
+                              <IconPencil className="size-5" />
                               Edit
                             </LinkButton>
                             <LinkButton
@@ -189,7 +189,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               className={secondaryButtonClasses}
                               href={`/show-and-tell/my-posts/${entry.id}/preview`}
                             >
-                              <IconEye className="h-5 w-5" />
+                              <IconEye className="size-5" />
                               Preview
                             </LinkButton>
                             <Button
@@ -199,7 +199,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               confirmationMessage="Please confirm deletion!"
                               onClick={() => deleteMutation.mutate(entry.id)}
                             >
-                              <IconTrash className="h-5 w-5" />
+                              <IconTrash className="size-5" />
                               Delete
                             </Button>
                           </td>

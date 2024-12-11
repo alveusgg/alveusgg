@@ -24,7 +24,7 @@ const CopyToClipboardButton = ({
   return (
     <div className="group relative inline-block">
       <button onClick={onClick} title="Copy to clipboard">
-        <IconClipboard className="ml-2 inline h-4 w-4 cursor-pointer text-alveus-green-400 duration-300 hover:text-black" />
+        <IconClipboard className="ml-2 inline size-4 cursor-pointer text-alveus-green-400 duration-300 hover:text-black" />
       </button>
 
       <span
