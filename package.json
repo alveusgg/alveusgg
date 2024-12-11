@@ -32,7 +32,6 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "next@15.0.3": "patches/next@15.0.3.patch",
       "eslint-plugin-tailwindcss@3.17.5": "patches/eslint-plugin-tailwindcss@3.17.5.patch"
     },
     "peerDependencyRules": {

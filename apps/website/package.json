@@ -65,7 +65,7 @@
     "lodash": "^4.17.21",
     "luxon": "^3.5.0",
     "maplibre-gl": "^4.7.1",
-    "next": "^15.0.3",
+    "next": "^15.1.0",
     "next-auth": "^4.24.11",
     "next-sitemap": "^4.2.3",
     "next-superjson": "^1.0.7",
