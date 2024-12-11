@@ -25,6 +25,7 @@ import IconChevronRight from "@/icons/IconChevronRight";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import SubNav from "@/components/content/SubNav";
 
 interface NamedCommand extends Command {
   name: string;
@@ -74,10 +75,7 @@ const signature = (command: NamedCommand) => {
   return `${cmd} ${cmdArgs}`;
 };
 
-const sectionLinks = [
-  { name: "Commands", id: "commands" },
-  { name: "Presets", id: "presets" },
-] as const;
+const sectionLinks = { Commands: "#commands", Presets: "#presets" };
 
 const AboutTechPage: NextPage = () => {
   return (
@@ -110,21 +108,7 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
-      <nav className="sticky left-0 top-0 z-20 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl">
-        <div className="container mx-auto flex flex-row items-center gap-2 p-1 px-2">
-          {sectionLinks.map(({ name, id }) => (
-            <a
-              key={id}
-              className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
-              href={`#${id}`}
-            >
-              <IconChevronRight className="size-5" />
-
-              {name}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <SubNav links={sectionLinks} />
 
       <div className="relative">
         <Image
