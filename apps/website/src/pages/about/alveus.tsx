@@ -14,13 +14,23 @@ import Timeline from "@/components/content/Timeline";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Maya from "@/components/content/Maya";
 import Box from "@/components/content/Box";
+import Transparency from "@/components/content/Transparency";
+import SubNav from "@/components/content/SubNav";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import Transparency from "@/components/content/Transparency";
+
+const sectionLinks = {
+  "Twitch.tv": "#twitch",
+  Founding: "#maya",
+  "History ": "#history",
+  "Tour Part 1": "#tour-part-1",
+  "Tour Part 2": "#tour-part-2",
+  Transparency: "#transparency",
+};
 
 const sources = {
   twitchAdvertising: {
@@ -163,7 +173,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     cta: (
       <div className="flex flex-wrap items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-1" level={3} className="italic">
+          <Heading id="tour-part-1" level={3} className="scroll-mt-52 italic">
             Alveus Tour Part 1
           </Heading>
 
@@ -293,7 +303,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-2" level={3} className="italic">
+          <Heading id="tour-part-2" level={3} className="scroll-mt-52 italic">
             Alveus Tour Part 2
           </Heading>
 
@@ -557,15 +567,17 @@ const AboutAlveusPage: NextPage = () => {
         </div>
       </Section>
 
+      <SubNav links={sectionLinks} />
+
       <div className="relative">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section className="text-center">
-          <Heading id="twitch" level={2} link>
+          <Heading id="twitch" level={2} link className="scroll-mt-14">
             Why Twitch.tv
           </Heading>
 
@@ -635,7 +647,7 @@ const AboutAlveusPage: NextPage = () => {
           </div>
 
           <div className="basis-full md:basis-1/2 md:px-4">
-            <Heading id="maya" level={2} className="italic" link>
+            <Heading id="maya" level={2} className="scroll-mt-32 italic" link>
               Maya Higa founded Alveus in February 2021
             </Heading>
             <p>
@@ -662,7 +674,7 @@ const AboutAlveusPage: NextPage = () => {
           <Heading
             id="history"
             level={2}
-            className="mb-16 text-center text-5xl text-alveus-green"
+            className="mb-16 scroll-mt-14 text-center text-5xl text-alveus-green"
             link
           >
             Alveus&apos; History
