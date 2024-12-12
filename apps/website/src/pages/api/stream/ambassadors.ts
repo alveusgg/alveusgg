@@ -71,5 +71,27 @@ export default async function handler(
     "Cache-Control",
     "max-age=1800, s-maxage=1800, stale-while-revalidate=300",
   );
+
+  // Allow localhost + *.ext-twitch.tv to access
+  res.setHeader("Vary", "Origin");
+  if (req.headers.origin && URL.canParse(req.headers.origin)) {
+    const url = new URL(req.headers.origin);
+    if (
+      url.hostname === "localhost" ||
+      url.hostname.endsWith(".ext-twitch.tv")
+    ) {
+      res.setHeader("Access-Control-Allow-Origin", req.headers.origin);
+    }
+  }
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    res.setHeader("Access-Control-Allow-Methods", "GET");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Max-Age", "86400");
+    return res.status(200).end();
+  }
+
+  // Return the actual data
   return res.json({ ambassadors });
 }
