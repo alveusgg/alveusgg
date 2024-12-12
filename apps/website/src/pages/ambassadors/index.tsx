@@ -28,12 +28,12 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Select from "@/components/content/Select";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import SubNav from "@/components/content/SubNav";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
-import SubNav from "@/components/content/SubNav";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
@@ -230,7 +230,9 @@ const AmbassadorsPage: NextPage = () => {
         </Section>
       </div>
 
-      <SubNav links={sectionLinks} className="z-20" />
+      {sectionLinks.length !== 0 && (
+        <SubNav links={sectionLinks} className="z-20" />
+      )}
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">

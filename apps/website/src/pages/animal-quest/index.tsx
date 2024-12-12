@@ -28,6 +28,8 @@ import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import Select from "@/components/content/Select";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import SubNav from "@/components/content/SubNav";
+
 import IconYouTube from "@/icons/IconYouTube";
 
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
@@ -36,7 +38,6 @@ import animalQuestFull from "@/assets/animal-quest/full.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import SubNav from "@/components/content/SubNav";
 
 const animalQuestEpisodes: AnimalQuestWithEpisode[] = animalQuest
   .map((episode, idx) => ({
@@ -302,7 +303,11 @@ const AnimalQuestPage: NextPage = () => {
           />
         </Section>
       </div>
-      <SubNav links={sectionLinks} className="z-20" />
+
+      {sectionLinks.length !== 0 && (
+        <SubNav links={sectionLinks} className="z-20" />
+      )}
+
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image
