@@ -214,7 +214,7 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-36 -left-8 z-30 hidden h-auto w-1/2 max-w-32 rotate-45 -scale-y-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-36 -left-16 z-30 hidden h-auto w-1/2 max-w-32 rotate-45 -scale-y-100 select-none lg:block"
         />
 
         <Section dark className="py-24">

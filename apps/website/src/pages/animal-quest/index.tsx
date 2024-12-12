@@ -277,7 +277,7 @@ const AnimalQuestPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto w-1/2 max-w-36 rotate-[20deg] -scale-y-100 select-none lg:block"
         />
 
         <Section
