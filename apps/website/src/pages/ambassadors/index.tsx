@@ -33,6 +33,7 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import SubNav from "@/components/content/SubNav";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
@@ -148,7 +149,7 @@ const AmbassadorItems = forwardRef<
     {name && (
       <Heading
         level={2}
-        className="mb-8 mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+        className="mb-8 mt-16 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
@@ -182,6 +183,18 @@ const AmbassadorsPage: NextPage = () => {
     initial: "all",
   });
 
+  const sectionLinks = useMemo(
+    () =>
+      result instanceof Map
+        ? [...result.entries()].map(([key, value]) => ({
+            name: value.name,
+            href: `#${option}:${key}`,
+          }))
+        : [],
+
+    [result, option],
+  );
+
   return (
     <>
       <Meta
@@ -196,12 +209,12 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-4 right-0 z-10 hidden h-auto w-1/2 max-w-xs select-none lg:block"
+          className="pointer-events-none absolute -bottom-4 right-0 z-30 hidden h-auto w-1/2 max-w-xs select-none lg:block"
         />
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-36 -left-8 z-10 hidden h-auto w-1/2 max-w-32 rotate-45 -scale-y-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-36 -left-8 z-30 hidden h-auto w-1/2 max-w-32 rotate-45 -scale-y-100 select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -216,7 +229,7 @@ const AmbassadorsPage: NextPage = () => {
           </div>
         </Section>
       </div>
-
+      <SubNav links={sectionLinks} className="z-20" />
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image
