@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Fragment, forwardRef } from "react";
+import { useMemo, Fragment, forwardRef } from "react";
 
 import animalQuest, {
   type AnimalQuestWithEpisode,
@@ -36,6 +36,7 @@ import animalQuestFull from "@/assets/animal-quest/full.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import SubNav from "@/components/content/SubNav";
 
 const animalQuestEpisodes: AnimalQuestWithEpisode[] = animalQuest
   .map((episode, idx) => ({
@@ -248,6 +249,18 @@ const AnimalQuestPage: NextPage = () => {
     initial: "all",
   });
 
+  const sectionLinks = useMemo(
+    () =>
+      result instanceof Map
+        ? [...result.entries()].map(([key, value]) => ({
+            name: value.name,
+            href: `#${option}:${key}`,
+          }))
+        : [],
+
+    [result, option],
+  );
+
   return (
     <>
       <Meta
@@ -263,7 +276,7 @@ const AnimalQuestPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
+          className="pointer-events-none absolute -bottom-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section
@@ -289,7 +302,7 @@ const AnimalQuestPage: NextPage = () => {
           />
         </Section>
       </div>
-
+      <SubNav links={sectionLinks} className="z-20" />
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image
