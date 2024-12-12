@@ -19,13 +19,11 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
-
-import IconChevronRight from "@/icons/IconChevronRight";
+import SubNav from "@/components/content/SubNav";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import SubNav from "@/components/content/SubNav";
 
 interface NamedCommand extends Command {
   name: string;

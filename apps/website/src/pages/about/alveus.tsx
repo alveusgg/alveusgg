@@ -26,7 +26,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 const sectionLinks = [
   { name: "Twitch.tv", href: "#twitch" },
   { name: "Founding", href: "#maya" },
-  { name: "History ", href: "#history" },
+  { name: "History", href: "#history" },
   { name: "Tour Part 1", href: "#tour-part-1" },
   { name: "Tour Part 2", href: "#tour-part-2" },
   { name: "Transparency", href: "#transparency" },
