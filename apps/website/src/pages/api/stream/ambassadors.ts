@@ -12,6 +12,8 @@ import {
 import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
 
+import { env } from "@/env";
+
 import {
   typeSafeObjectEntries,
   typeSafeObjectFromEntries,
@@ -40,10 +42,10 @@ const ambassadors = typeSafeObjectFromEntries(
           ...val,
           image: {
             ...image,
-            src: createImageUrl({
+            src: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({
               src: image.src.src,
               width: 600,
-            }),
+            })}`,
           },
           iucn: {
             ...val.iucn,
