@@ -13,7 +13,7 @@ type SubNavProps = {
 const SubNav = ({ links, className }: SubNavProps) => (
   <nav
     className={classes(
-      "sticky left-0 top-0 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl",
+      "sticky inset-x-0 top-0 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl",
       className,
     )}
   >
