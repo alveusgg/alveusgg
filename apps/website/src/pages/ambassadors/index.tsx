@@ -229,7 +229,9 @@ const AmbassadorsPage: NextPage = () => {
           </div>
         </Section>
       </div>
+
       <SubNav links={sectionLinks} className="z-20" />
+
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image
