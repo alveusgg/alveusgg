@@ -228,7 +228,7 @@ const CollaborationItems = forwardRef<
           level={-1}
           className={classes(
             "alveus-green-800 mb-6 mt-8 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
-            index === 0 && "sr-only",
+            index === 0 && "sr-only-linkable",
           )}
           id={`${option}:${group}`}
           link
