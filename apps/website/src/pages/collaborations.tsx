@@ -227,7 +227,7 @@ const CollaborationItems = forwardRef<
         <Heading
           level={-1}
           className={classes(
-            "text-alveus-green-800 mb-6 mt-8 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
+            "mb-6 mt-8 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
             index === 0 && "sr-only-linkable",
           )}
           id={`${option}:${group}`}

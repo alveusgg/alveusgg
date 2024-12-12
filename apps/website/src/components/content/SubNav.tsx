@@ -17,7 +17,7 @@ const SubNav = ({ links, className }: SubNavProps) => (
       className,
     )}
   >
-    <div className="container mx-auto flex flex-row items-center gap-2 py-1 px-2">
+    <div className="container mx-auto flex flex-row items-center gap-2 px-2 py-1">
       {links.map(({ name, href }) => (
         <Link
           key={name}
