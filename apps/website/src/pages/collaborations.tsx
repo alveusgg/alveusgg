@@ -368,7 +368,7 @@ const CollaborationsPage: NextPage = () => {
           <Creators className="mt-6" />
         </Section>
       </div>
-      <SubNav links={sectionLinks} />
+      <SubNav links={sectionLinks} className="z-20" />
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">

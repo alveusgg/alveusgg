@@ -1,4 +1,5 @@
 import IconChevronRight from "@/icons/IconChevronRight";
+import { classes } from "@/utils/classes";
 import Link from "./Link";
 
 type SubNavProps = {
@@ -6,10 +7,16 @@ type SubNavProps = {
     name: string;
     href: string;
   }[];
+  className?: string;
 };
 
-const SubNav = ({ links }: SubNavProps) => (
-  <nav className="sticky left-0 top-0 z-20 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl">
+const SubNav = ({ links, className }: SubNavProps) => (
+  <nav
+    className={classes(
+      "sticky left-0 top-0 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl",
+      className,
+    )}
+  >
     <div className="container mx-auto flex flex-row items-center gap-2 p-1 px-2">
       {links.map(({ name, href }) => (
         <Link

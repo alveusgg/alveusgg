@@ -567,7 +567,7 @@ const AboutAlveusPage: NextPage = () => {
         </div>
       </Section>
 
-      <SubNav links={sectionLinks} />
+      <SubNav links={sectionLinks} className="z-20" />
 
       <div className="relative">
         <Image
