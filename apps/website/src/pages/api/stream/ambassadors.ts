@@ -65,9 +65,11 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<AmbassadorsResponse | string>,
 ) {
+  // Response can be cached for 30 minutes
+  // And can be stale for 5 minutes while revalidating
   res.setHeader(
     "Cache-Control",
-    "max-age=60, s-maxage=60, stale-while-revalidate=300",
+    "max-age=1800, s-maxage=1800, stale-while-revalidate=300",
   );
   return res.json({ ambassadors });
 }
