@@ -10,6 +10,27 @@ type SubNavProps = {
   className?: string;
 };
 
+const SubNavInner = ({ links, className }: SubNavProps) => (
+  <div
+    className={classes(
+      "container mx-auto flex flex-row flex-wrap items-center gap-2 px-2 py-1",
+      className,
+    )}
+  >
+    {links.map(({ name, href }) => (
+      <Link
+        key={name}
+        href={href}
+        custom
+        className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
+      >
+        <IconChevronRight className="size-5" />
+        {name}
+      </Link>
+    ))}
+  </div>
+);
+
 const SubNav = ({ links, className }: SubNavProps) => (
   <nav
     className={classes(
@@ -17,20 +38,7 @@ const SubNav = ({ links, className }: SubNavProps) => (
       className,
     )}
   >
-    <div className="container mx-auto flex flex-row flex-wrap items-center gap-2 px-2 py-1">
-      {links.map(({ name, href }) => (
-        <Link
-          key={name}
-          href={href}
-          custom
-          className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
-        >
-          <IconChevronRight className="size-5" />
-          {name}
-        </Link>
-      ))}
-    </div>
+    <SubNavInner links={links} className={"max-lg:hidden"} />
   </nav>
 );
-
 export default SubNav;
