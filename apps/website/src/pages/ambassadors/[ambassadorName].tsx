@@ -78,6 +78,10 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   };
 };
 
+const stringifyLifespan = (value: number | { min: number; max: number }) => {
+  return typeof value === "number" ? `${value}` : `${value.min}-${value.max}`;
+};
+
 const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   ambassador,
   enclosure,
@@ -127,6 +131,25 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
       {
         title: "Native To",
         value: <p>{ambassador.native.text}</p>,
+      },
+      {
+        title: "Species Lifespan",
+        value: (
+          <>
+            <p>
+              Wild:{" "}
+              {ambassador.lifespan.wild
+                ? `${stringifyLifespan(ambassador.lifespan.wild)} years`
+                : "Unknown"}
+            </p>
+            <p>
+              Captivity:{" "}
+              {ambassador.lifespan.captivity
+                ? `${stringifyLifespan(ambassador.lifespan.captivity)} years`
+                : "Unknown"}
+            </p>
+          </>
+        ),
       },
       {
         title: "Date of Birth",
