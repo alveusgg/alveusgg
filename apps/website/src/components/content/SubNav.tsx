@@ -3,9 +3,11 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import IconChevronRight from "@/icons/IconChevronRight";
 import { classes } from "@/utils/classes";
+
+import IconChevronRight from "@/icons/IconChevronRight";
 import IconMenu from "@/icons/IconMenu";
+
 import Link from "./Link";
 
 type SubNavProps = {
