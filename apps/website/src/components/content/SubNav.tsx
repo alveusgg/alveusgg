@@ -47,7 +47,7 @@ const SubNav = ({ links, className }: SubNavProps) => (
         <DisclosurePanel className="text-gray-500">
           <SubNavInner links={links} className={""} />
         </DisclosurePanel>
-        <DisclosureButton className="ml-auto py-1.5">
+        <DisclosureButton className="ml-auto p-1.5">
           <IconMenu />
         </DisclosureButton>
       </Disclosure>
