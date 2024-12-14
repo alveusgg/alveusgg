@@ -149,7 +149,7 @@ const AmbassadorItems = forwardRef<
     {name && (
       <Heading
         level={2}
-        className="mb-8 mt-16 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+        className="mb-8 mt-16 scroll-mt-22 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
