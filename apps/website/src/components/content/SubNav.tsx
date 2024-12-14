@@ -57,4 +57,5 @@ const SubNav = ({ links, className }: SubNavProps) => (
     </div>
   </nav>
 );
+
 export default SubNav;
