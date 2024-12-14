@@ -42,7 +42,7 @@ const SubNav = ({ links, className }: SubNavProps) => (
     )}
   >
     <div className="container mx-auto px-2 py-1">
-      <SubNavInner links={links} className={"max-lg:hidden"} />
+      <SubNavInner links={links} className="max-lg:hidden" />
       <Disclosure as="div" className="flex flex-row items-start lg:hidden">
         <DisclosurePanel className="text-gray-500">
           <SubNavInner links={links} className={""} />
