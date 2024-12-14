@@ -45,7 +45,7 @@ const SubNav = ({ links, className }: SubNavProps) => (
         className="hidden flex-row flex-wrap items-center lg:flex"
       />
       <Disclosure as="div" className="flex flex-row items-start lg:hidden">
-        <DisclosurePanel className="text-gray-500">
+        <DisclosurePanel as={Fragment}>
           <SubNavInner links={links} className="flex flex-col" />
         </DisclosurePanel>
         <DisclosureButton className="ml-auto p-1.5">
