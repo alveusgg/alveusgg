@@ -17,9 +17,7 @@ type SubNavProps = {
 };
 
 const SubNavInner = ({ links, className }: SubNavProps) => (
-  <div
-    className={classes("flex flex-row flex-wrap items-center gap-2", className)}
-  >
+  <div className={classes("gap-2", className)}>
     {links.map(({ name, href }) => (
       <Link
         key={name}
@@ -42,10 +40,13 @@ const SubNav = ({ links, className }: SubNavProps) => (
     )}
   >
     <div className="container mx-auto px-2 py-1">
-      <SubNavInner links={links} className="max-lg:hidden" />
+      <SubNavInner
+        links={links}
+        className="hidden flex-row flex-wrap items-center lg:flex"
+      />
       <Disclosure as="div" className="flex flex-row items-start lg:hidden">
         <DisclosurePanel className="text-gray-500">
-          <SubNavInner links={links} className={""} />
+          <SubNavInner links={links} className="flex flex-col" />
         </DisclosurePanel>
         <DisclosureButton className="ml-auto p-1.5">
           <IconMenu />
