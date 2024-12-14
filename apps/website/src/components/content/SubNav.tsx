@@ -1,5 +1,11 @@
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import IconChevronRight from "@/icons/IconChevronRight";
 import { classes } from "@/utils/classes";
+import IconMenu from "@/icons/IconMenu";
 import Link from "./Link";
 
 type SubNavProps = {
@@ -12,10 +18,7 @@ type SubNavProps = {
 
 const SubNavInner = ({ links, className }: SubNavProps) => (
   <div
-    className={classes(
-      "container mx-auto flex flex-row flex-wrap items-center gap-2 px-2 py-1",
-      className,
-    )}
+    className={classes("flex flex-row flex-wrap items-center gap-2", className)}
   >
     {links.map(({ name, href }) => (
       <Link
@@ -38,7 +41,17 @@ const SubNav = ({ links, className }: SubNavProps) => (
       className,
     )}
   >
-    <SubNavInner links={links} className={"max-lg:hidden"} />
+    <div className="container mx-auto px-2 py-1">
+      <SubNavInner links={links} className={"max-lg:hidden"} />
+      <Disclosure as="div" className="flex flex-row items-start lg:hidden">
+        <DisclosurePanel className="text-gray-500">
+          <SubNavInner links={links} className={""} />
+        </DisclosurePanel>
+        <DisclosureButton className="ml-auto py-1.5">
+          <IconMenu />
+        </DisclosureButton>
+      </Disclosure>
+    </div>
   </nav>
 );
 export default SubNav;
