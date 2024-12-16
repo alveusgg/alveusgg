@@ -93,7 +93,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm select-none lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm select-none drop-shadow-md lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
@@ -115,7 +115,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none drop-shadow-md lg:block"
         />
 
         <Section>
@@ -306,7 +306,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
         <Section className="grow">

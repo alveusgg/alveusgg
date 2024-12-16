@@ -252,12 +252,12 @@ const AboutStaffPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -left-8 -top-52 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 select-none lg:block"
+          className="pointer-events-none absolute -left-8 -top-52 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 select-none drop-shadow-md lg:block"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-52 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-52 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow">
