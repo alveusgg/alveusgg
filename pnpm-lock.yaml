@@ -4,7 +4,7 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: wtq2iv2r2ygbtlnhhjvlb2roda
+pnpmfileChecksum: urn4mmnpyjudaqso7jbqi45omq
 
 patchedDependencies:
   eslint-plugin-tailwindcss@3.17.5:

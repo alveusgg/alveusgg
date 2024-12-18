@@ -15,12 +15,12 @@ const afterAllResolved = (lockfile, context) => {
     const tar = `https://codeload.github.com/${match[2]}/tar.gz/${match[3]}`;
 
     delete lockfile.packages[pkg];
-    lockfile.packages[`${match[1]}@${tar}${match[4]}`] = {
+    lockfile.packages[`${match[1]}@${tar}${match[4] ?? ""}`] = {
       ...data,
       resolution: { tarball: tar },
     };
 
-    context.log(`Replaced ${pkg} with ${match[1]}@${tar}${match[4]}`);
+    context.log(`Replaced ${pkg} with ${match[1]}@${tar}${match[4] ?? ""}`);
   }
 
   for (const pkg in lockfile.importers) {
