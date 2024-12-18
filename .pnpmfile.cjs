@@ -7,7 +7,7 @@ const afterAllResolved = (lockfile, context) => {
 
   for (const pkg in lockfile.packages) {
     const match = pkg.match(
-      /^(.+)@git\+https:\/\/git@github\.com:(.+)\.git#(.+)$/,
+      /^(.+)@git\+https:\/\/git@github\.com:(.+)\.git#([0-9a-f]+)(\(.+\))?$/,
     );
     if (!match) continue;
 
@@ -15,12 +15,12 @@ const afterAllResolved = (lockfile, context) => {
     const tar = `https://codeload.github.com/${match[2]}/tar.gz/${match[3]}`;
 
     delete lockfile.packages[pkg];
-    lockfile.packages[`${match[1]}@${tar}`] = {
+    lockfile.packages[`${match[1]}@${tar}${match[4]}`] = {
       ...data,
       resolution: { tarball: tar },
     };
 
-    context.log(`Replaced ${pkg} with ${match[1]}@${tar}`);
+    context.log(`Replaced ${pkg} with ${match[1]}@${tar}${match[4]}`);
   }
 
   for (const pkg in lockfile.importers) {
