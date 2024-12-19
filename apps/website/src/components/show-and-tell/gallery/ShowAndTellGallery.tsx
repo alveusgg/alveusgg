@@ -1,4 +1,4 @@
-import type { MouseEventHandler, MutableRefObject, JSX } from "react";
+import type { MouseEventHandler, RefObject, JSX } from "react";
 import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
@@ -27,7 +27,7 @@ export function ShowAndTellGallery({
   videoAttachments,
 }: {
   isPresentationView: boolean;
-  lightboxParentRef: MutableRefObject<HTMLElement | null>;
+  lightboxParentRef: RefObject<HTMLElement | null>;
   imageAttachments: Array<ImageAttachmentWithFileStorageObject>;
   videoAttachments: Array<LinkAttachment>;
 }) {
