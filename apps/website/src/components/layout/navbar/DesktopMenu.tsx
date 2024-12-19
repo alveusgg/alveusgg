@@ -4,10 +4,10 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Children,
   cloneElement,
-  forwardRef,
   useEffect,
   type ReactElement,
   type LiHTMLAttributes,
+  type Ref,
 } from "react";
 
 import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
@@ -41,15 +41,18 @@ const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
 
-const DropdownMenuItem = forwardRef<
-  HTMLLIElement,
-  LiHTMLAttributes<HTMLLIElement> & { children: ReactElement }
->(({ children, ...props }, ref) => (
+const DropdownMenuItem = ({
+  children,
+  ref,
+  ...props
+}: LiHTMLAttributes<HTMLLIElement> & {
+  children: ReactElement<{ ref?: Ref<HTMLElement> }>;
+  ref?: Ref<HTMLElement>;
+}) => (
   <li {...props}>
     {Children.map(children, (child) => cloneElement(child, { ref }))}
   </li>
-));
-DropdownMenuItem.displayName = "DropdownMenuItem";
+);
 
 export function DesktopMenu() {
   const { data: sessionData } = useSession();

@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useMemo, Fragment, forwardRef } from "react";
+import { useMemo, Fragment } from "react";
 
 import animalQuest, {
   type AnimalQuestWithEpisode,
@@ -98,10 +98,13 @@ const sortByOptions = {
   },
 } as const satisfies Options<AnimalQuestWithEpisode>;
 
-const AnimalQuestItems = forwardRef<
-  HTMLDivElement,
-  GroupedProps<AnimalQuestWithEpisode>
->(({ items, option, group, name }, ref) => (
+const AnimalQuestItems = ({
+  items,
+  option,
+  group,
+  name,
+  ref,
+}: GroupedProps<AnimalQuestWithEpisode, HTMLDivElement>) => (
   <>
     {name && (
       <Heading
@@ -239,9 +242,7 @@ const AnimalQuestItems = forwardRef<
       ))}
     </div>
   </>
-));
-
-AnimalQuestItems.displayName = "AnimalQuestItems";
+);
 
 const AnimalQuestPage: NextPage = () => {
   const { option, group, result, update, dropdown } = useGrouped({
