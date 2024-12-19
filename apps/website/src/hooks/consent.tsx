@@ -377,10 +377,10 @@ export const ConsentProvider = ({ children }: { children: ReactNode }) => {
   }, [value]);
 
   return (
-    <Context.Provider value={value}>
+    <Context value={value}>
       {children}
       <ConsentDialog context={value} />
-    </Context.Provider>
+    </Context>
   );
 };
 
