@@ -200,7 +200,7 @@ export const ShowAndTellEntry = forwardRef<
   { entry, isPresentationView = false, withHeight = true },
   forwardedRef,
 ) {
-  const wrapperRef = useRef<HTMLElement | null>(null);
+  const wrapperRef = useRef<HTMLElement>(null);
   const imageAttachments = entry.attachments
     .filter(({ attachmentType }) => attachmentType === "image")
     .map(({ imageAttachment }) => imageAttachment)

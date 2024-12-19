@@ -46,7 +46,7 @@ const nf = new Intl.NumberFormat(undefined);
 
 export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
   const ref = useRef<HTMLInputElement>(null);
-  const editorRef = useRef<ReactQuillType | null>(null);
+  const editorRef = useRef<ReactQuillType>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const { labelProps, inputProps } = useTextField(props, ref);
   const [value, setValue] = useState(defaultValue || "");

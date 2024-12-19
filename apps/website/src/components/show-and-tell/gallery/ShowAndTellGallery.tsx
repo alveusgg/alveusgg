@@ -33,7 +33,7 @@ export function ShowAndTellGallery({
 }) {
   const { update: updateConsent } = useConsent();
 
-  const lightboxRef = useRef<PhotoSwipeLightbox>();
+  const lightboxRef = useRef<PhotoSwipeLightbox>(null);
   const photoswipeId = `photoswipe-${useId().replace(/\W/g, "")}`;
   useEffect(() => {
     const defaultConfig = getDefaultPhotoswipeLightboxOptions();

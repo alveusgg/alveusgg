@@ -18,7 +18,7 @@ export const TextAreaField = forwardRef(function TextAreaField(
   props: TextAreaFieldProps,
   forwardedRef,
 ) {
-  const ownRef = useRef<HTMLTextAreaElement | null>(null);
+  const ownRef = useRef<HTMLTextAreaElement>(null);
   const { labelProps, inputProps } = useTextField(props, ownRef);
   const { style: _, ...textareaProps } = inputProps;
 

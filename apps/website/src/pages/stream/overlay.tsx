@@ -26,7 +26,7 @@ const OverlayPage: NextPage = () => {
     date: string;
     code: string[];
   }>();
-  const timeInterval = useRef<NodeJS.Timeout>();
+  const timeInterval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     const updateTime = () => {
       const date = new Date();
@@ -75,13 +75,13 @@ const OverlayPage: NextPage = () => {
 
     updateTime();
     timeInterval.current = setInterval(updateTime, 250);
-    return () => clearInterval(timeInterval.current);
+    return () => clearInterval(timeInterval.current ?? undefined);
   }, []);
 
   // Get the current weather
   // Refresh every 60s
   const [weather, setWeather] = useState<WeatherResponse>();
-  const weatherInterval = useRef<NodeJS.Timeout>();
+  const weatherInterval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     const fetchWeather = async () => {
       const response = await fetch("/api/stream/weather");
@@ -93,23 +93,23 @@ const OverlayPage: NextPage = () => {
 
     fetchWeather();
     weatherInterval.current = setInterval(fetchWeather, 60 * 1000);
-    return () => clearInterval(weatherInterval.current);
+    return () => clearInterval(weatherInterval.current ?? undefined);
   }, []);
 
   // Remove the weather data if older than 10m
-  const weatherStaleTimer = useRef<NodeJS.Timeout>();
+  const weatherStaleTimer = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     if (!weather) return;
 
     const updateWeather = () => setWeather(undefined);
     weatherStaleTimer.current = setTimeout(updateWeather, 10 * 60 * 1000);
-    return () => clearTimeout(weatherStaleTimer.current);
+    return () => clearTimeout(weatherStaleTimer.current ?? undefined);
   }, [weather]);
 
   // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
-  const upcomingRangeInterval = useRef<NodeJS.Timeout>();
+  const upcomingRangeInterval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     const updateRange = () => {
       const now = new Date();
@@ -120,7 +120,7 @@ const OverlayPage: NextPage = () => {
 
     updateRange();
     upcomingRangeInterval.current = setInterval(updateRange, 60 * 1000);
-    return () => clearInterval(upcomingRangeInterval.current);
+    return () => clearInterval(upcomingRangeInterval.current ?? undefined);
   }, []);
 
   // Get the upcoming events and the first event ID
@@ -137,7 +137,7 @@ const OverlayPage: NextPage = () => {
   // If we have an upcoming event, swap socials with it
   // Swap every 60s
   const [visibleEventId, setVisibleEventId] = useState<string>();
-  const eventInterval = useRef<NodeJS.Timeout>();
+  const eventInterval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
     if (!firstEventId) {
       setVisibleEventId(undefined);
@@ -148,7 +148,7 @@ const OverlayPage: NextPage = () => {
       setVisibleEventId((prev) => (prev ? undefined : firstEventId));
     swapEvent();
     eventInterval.current = setInterval(swapEvent, 60 * 1000);
-    return () => clearInterval(eventInterval.current);
+    return () => clearInterval(eventInterval.current ?? undefined);
   }, [firstEventId]);
   const event = useMemo(
     () =>
