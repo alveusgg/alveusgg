@@ -131,14 +131,14 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const uniqueCountriesCountFmt = useLocaleString(uniqueCountriesCount);
 
   const [isPresentationView, setIsPresentationView] = useState(false);
-  const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
+  const presentationViewRootElementRef = useRef<HTMLDivElement>(null);
 
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
   const [currentPostAuthor, setCurrentPostAuthor] = useState("");
 
   // We use this ref to scroll to the entry when transitioning between presentation view and normal view
   // and when the next/prev buttons are clicked
-  const currentEntryElementRef = useRef<HTMLElement | null>(null);
+  const currentEntryElementRef = useRef<HTMLElement>(null);
 
   // We use these states to control whether the next/prev buttons are enabled
   // and whether the click regions are visible in presentation view
@@ -224,7 +224,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
   // Track when the user is manually scrolling
   const userScrolling = useRef(false);
-  const userScrollingTimeout = useRef<NodeJS.Timeout>();
+  const userScrollingTimeout = useRef<NodeJS.Timeout>(null);
   const userScrollingTimeoutMs = 100;
   const onUserScroll = useCallback(() => {
     userScrolling.current = true;
@@ -240,7 +240,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
     element: HTMLElement;
     scroll: number;
     timer: NodeJS.Timeout;
-  }>();
+  }>(null);
   const scrollDebounce = 250; // Milliseconds to wait before snapping
   const scrollThreshold = 0.1; // multiplier of the viewport height
   const onScroll = useCallback(
@@ -288,7 +288,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           }
 
           // Reset the debounce
-          scrollTrack.current = undefined;
+          scrollTrack.current = null;
         }, scrollDebounce),
       };
     },
@@ -331,7 +331,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const handleTogglePresentationView = useCallback(() => {
     togglePresentationView(currentEntryElementRef.current, !isPresentationView);
   }, [isPresentationView, togglePresentationView]);
-  const entryIdToFocusRef = useRef<string>();
+  const entryIdToFocusRef = useRef<string>(null);
 
   const handleLoadNext = useCallback(async () => {
     // Keeping track of the number of pages before starting to load more
@@ -349,9 +349,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
     const hasLoadedNewPage = !pageBefore || pages.length > pageBefore;
     const lastPageItems = pages[pages.length - 1]?.items;
 
-    entryIdToFocusRef.current = hasLoadedNewPage
-      ? lastPageItems?.[0]?.id
-      : lastPageItems?.[lastPageItems.length - 1]?.id;
+    entryIdToFocusRef.current =
+      (hasLoadedNewPage
+        ? lastPageItems?.[0]?.id
+        : lastPageItems?.[lastPageItems.length - 1]?.id) ?? null;
   }, [entries]);
 
   useEffect(() => {
@@ -362,7 +363,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       );
       if (isShowAndTellEntry(element)) {
         scrollTo(element);
-        entryIdToFocusRef.current = undefined;
+        entryIdToFocusRef.current = null;
       }
     }
   }, [entries.data, scrollTo]);

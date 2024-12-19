@@ -24,7 +24,7 @@ export function CommunityMap({ features }: CommunityMapProps) {
   // To show post info on marker click
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
 
-  const mapRef = useRef<Map | null>(null);
+  const mapRef = useRef<Map>(null);
 
   const renderFeaturesOnMap = useCallback(
     async (features?: Array<LocationFeature>) => {

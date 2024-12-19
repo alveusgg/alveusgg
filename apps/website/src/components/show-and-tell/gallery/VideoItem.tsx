@@ -1,5 +1,5 @@
 import type { LinkAttachment } from "@prisma/client";
-import { type AnchorHTMLAttributes } from "react";
+import type { AnchorHTMLAttributes, JSX } from "react";
 
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { createImageUrl } from "@/utils/image";

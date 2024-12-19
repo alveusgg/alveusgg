@@ -1,19 +1,18 @@
-import { useCallback, type ComponentType, type RefAttributes } from "react";
+import { useCallback, type ComponentType, type Ref } from "react";
 
 import { type Items } from "@/hooks/grouped";
 
-export interface GroupedProps<T> {
+export interface GroupedProps<T, R extends HTMLElement> {
   items: T[];
   option: string;
   group: string | null;
   name: string | null;
   index: number | null;
   size: number | null;
+  ref?: Ref<R>;
 }
 
-type Component<T, R extends HTMLElement> = ComponentType<
-  GroupedProps<T> & RefAttributes<R>
->;
+type Component<T, R extends HTMLElement> = ComponentType<GroupedProps<T, R>>;
 
 const Group = <T, R extends HTMLElement>({
   option,

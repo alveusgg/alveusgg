@@ -1,11 +1,4 @@
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -210,10 +203,14 @@ const sortByOptions = {
   },
 } as const satisfies Options<Collaboration>;
 
-const CollaborationItems = forwardRef<
-  HTMLDivElement,
-  GroupedProps<Collaboration>
->(({ items, option, group, name, index }, ref) => {
+const CollaborationItems = ({
+  items,
+  option,
+  group,
+  name,
+  index,
+  ref,
+}: GroupedProps<Collaboration, HTMLDivElement>) => {
   const [open, setOpen] = useState<string>();
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -307,9 +304,7 @@ const CollaborationItems = forwardRef<
       </Lightbox>
     </>
   );
-});
-
-CollaborationItems.displayName = "CollaborationItems";
+};
 
 const CollaborationsPage: NextPage = () => {
   const { option, group, result } = useGrouped({

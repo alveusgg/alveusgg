@@ -35,7 +35,7 @@ const Carousel = ({
 
   // Allow the user to scroll to the next/previous image
   const ref = useRef<HTMLDivElement>(null);
-  const last = useRef<{ left: number; right: number } | null>(null);
+  const last = useRef<{ left: number; right: number }>(null);
   const move = useCallback((direction: "left" | "right") => {
     const { current } = ref;
     if (!current || !current.children[0]) return;
@@ -77,7 +77,7 @@ const Carousel = ({
 
   // If the user interacts, we want to pause the auto-scroll for a bit
   const [paused, setPaused] = useState(false);
-  const pausedTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pausedTimeout = useRef<NodeJS.Timeout>(null);
   const interacted = useCallback(() => {
     if (auto) {
       setPaused(true);

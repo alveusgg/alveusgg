@@ -1,8 +1,8 @@
 import { type LegacyRef, useRef, useState } from "react";
 import { type AriaTextFieldOptions, useTextField } from "react-aria";
 import dynamic from "next/dynamic";
-import type { default as ReactQuillType } from "react-quill";
-import "react-quill/dist/quill.snow.css";
+import type { default as ReactQuillType } from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 
 import { classes } from "@/utils/classes";
 
@@ -12,7 +12,7 @@ const ReactQuill = dynamic<
   }
 >(
   async () => {
-    const { default: RQ } = await import("react-quill");
+    const { default: RQ } = await import("react-quill-new");
 
     return function DynamicReactQuill({ forwardedRef, ...props }) {
       return <RQ ref={forwardedRef} {...props} />;
@@ -46,7 +46,7 @@ const nf = new Intl.NumberFormat(undefined);
 
 export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
   const ref = useRef<HTMLInputElement>(null);
-  const editorRef = useRef<ReactQuillType | null>(null);
+  const editorRef = useRef<ReactQuillType>(null);
   const counterRef = useRef<HTMLSpanElement>(null);
   const { labelProps, inputProps } = useTextField(props, ref);
   const [value, setValue] = useState(defaultValue || "");

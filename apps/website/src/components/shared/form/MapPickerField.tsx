@@ -73,8 +73,8 @@ export const MapPickerField = ({
     initialLocation || ({} as MapLocation),
   );
 
-  const mapContainerRef = useRef(null);
-  const mapRef = useRef<Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<Map>(null);
   const markersRef = useRef<Marker[]>([]);
   const isDraggingRef = useRef(false);
 

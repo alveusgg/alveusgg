@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, type ComponentProps, forwardRef } from "react";
+import { useMemo, type ComponentProps } from "react";
 
 import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
@@ -141,10 +141,13 @@ const AmbassadorItem = ({
   );
 };
 
-const AmbassadorItems = forwardRef<
-  HTMLDivElement,
-  GroupedProps<ActiveAmbassadorEntry>
->(({ items, option, group, name }, ref) => (
+const AmbassadorItems = ({
+  items,
+  option,
+  group,
+  name,
+  ref,
+}: GroupedProps<ActiveAmbassadorEntry, HTMLDivElement>) => (
   <>
     {name && (
       <Heading
@@ -172,9 +175,7 @@ const AmbassadorItems = forwardRef<
       ))}
     </div>
   </>
-));
-
-AmbassadorItems.displayName = "AmbassadorItems";
+);
 
 const AmbassadorsPage: NextPage = () => {
   const { option, group, result, update, dropdown } = useGrouped({
