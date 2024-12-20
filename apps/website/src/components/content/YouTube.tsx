@@ -327,19 +327,19 @@ export const Lightbox = ({
           // Ensure we retain the aspect ratio of the video
           __html: `
 .pswp--${photoswipeId} .pswp__img--placeholder {
-display: none;
+  display: none;
 }
 
 .pswp--${photoswipeId} .pswp__item[aria-hidden="false"] .pswp--${photoswipeId}-wrapper {
-container-type: size;
-container-name: photoswipe-${photoswipeId};
+  container-type: size;
+  container-name: photoswipe-${photoswipeId};
 }
 
 @container photoswipe-${photoswipeId} (aspect-ratio > 16/9) {
-.pswp--${photoswipeId} .pswp__item[aria-hidden="false"] .pswp--${photoswipeId}-wrapper iframe {
-  width: auto;
-  height: 100%;
-}
+  .pswp--${photoswipeId} .pswp__item[aria-hidden="false"] .pswp--${photoswipeId}-wrapper iframe {
+    width: auto;
+    height: 100%;
+  }
 }
 `,
         }}
