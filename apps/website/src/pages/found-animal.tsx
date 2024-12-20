@@ -31,10 +31,10 @@ const FoundAnimalPage: NextPage = () => {
   // Track the current queue of messages to display and the option being loaded
   const [queue, setQueue] = useState<Log[]>([]);
   const [loading, setLoading] = useState<FoundAnimalOption | null>(null);
-  const timer = useRef<NodeJS.Timeout | null>(null);
+  const timer = useRef<NodeJS.Timeout>(null);
 
   // Scroll to the bottom whenever the log changes
-  const container = useRef<HTMLDivElement | null>(null);
+  const container = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!container.current) return;
     container.current.scrollTop = container.current.scrollHeight;

@@ -1,10 +1,10 @@
 import {
-  forwardRef,
   Fragment,
   isValidElement,
   useCallback,
   useMemo,
   useRef,
+  type Ref,
 } from "react";
 import Image from "next/image";
 import parse, {
@@ -33,6 +33,7 @@ type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
   isPresentationView?: boolean;
   withHeight?: boolean;
+  ref?: Ref<HTMLElement>;
 };
 
 const getTextContentRecursive = (node: DOMNode): string => {
@@ -193,14 +194,13 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
   );
 };
 
-export const ShowAndTellEntry = forwardRef<
-  HTMLElement | null,
-  ShowAndTellEntryProps
->(function ShowAndTellEntry(
-  { entry, isPresentationView = false, withHeight = true },
-  forwardedRef,
-) {
-  const wrapperRef = useRef<HTMLElement | null>(null);
+export const ShowAndTellEntry = ({
+  entry,
+  isPresentationView = false,
+  withHeight = true,
+  ref: forwardedRef,
+}: ShowAndTellEntryProps) => {
+  const wrapperRef = useRef<HTMLElement>(null);
   const imageAttachments = entry.attachments
     .filter(({ attachmentType }) => attachmentType === "image")
     .map(({ imageAttachment }) => imageAttachment)
@@ -290,4 +290,4 @@ export const ShowAndTellEntry = forwardRef<
       </div>
     </article>
   );
-});
+};

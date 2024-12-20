@@ -1,4 +1,4 @@
-import { useRef, type ReactNode, forwardRef } from "react";
+import { useRef, type ReactNode, type Ref } from "react";
 import { type AriaTextFieldOptions, useTextField } from "react-aria";
 import { default as TextareaAutosize } from "react-textarea-autosize";
 
@@ -12,15 +12,13 @@ export type TextAreaFieldProps = Omit<
   className?: string;
   inputClassName?: string;
   labelClassName?: string;
+  ref?: Ref<HTMLTextAreaElement>;
 };
 
-export const TextAreaField = forwardRef(function TextAreaField(
-  props: TextAreaFieldProps,
-  forwardedRef,
-) {
-  const ownRef = useRef<HTMLTextAreaElement | null>(null);
+export const TextAreaField = (props: TextAreaFieldProps) => {
+  const ownRef = useRef<HTMLTextAreaElement>(null);
   const { labelProps, inputProps } = useTextField(props, ownRef);
-  const { style: _, ...textareaProps } = inputProps;
+  const { style: _, ref: forwardedRef, ...textareaProps } = inputProps;
 
   return (
     <div className={classes("flex-1", props.className)}>
@@ -45,4 +43,4 @@ export const TextAreaField = forwardRef(function TextAreaField(
       />
     </div>
   );
-});
+};

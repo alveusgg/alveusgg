@@ -5,7 +5,6 @@ import {
   createContext,
   useContext,
   useMemo,
-  forwardRef,
   useRef,
   type ReactNode,
   type Ref,
@@ -106,15 +105,17 @@ declare global {
 
 const Context = createContext<ConsentContext | undefined>(undefined);
 
-const ConsentButton = forwardRef<
-  HTMLButtonElement,
-  {
-    onClick: () => void;
-    children: ReactNode;
-    disabled?: boolean;
-    ref?: Ref<HTMLButtonElement>;
-  }
->(({ onClick, children, disabled }, ref) => (
+const ConsentButton = ({
+  onClick,
+  children,
+  disabled,
+  ref,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+  disabled?: boolean;
+  ref?: Ref<HTMLButtonElement>;
+}) => (
   <button
     type="button"
     className={[
@@ -129,8 +130,7 @@ const ConsentButton = forwardRef<
   >
     {children}
   </button>
-));
-ConsentButton.displayName = "ConsentButton";
+);
 
 const ConsentDialog = ({ context }: { context: ConsentContext }) => {
   const { consent, update, reset, loaded, interacted } = context;
@@ -377,10 +377,10 @@ export const ConsentProvider = ({ children }: { children: ReactNode }) => {
   }, [value]);
 
   return (
-    <Context.Provider value={value}>
+    <Context value={value}>
       {children}
       <ConsentDialog context={value} />
-    </Context.Provider>
+    </Context>
   );
 };
 
