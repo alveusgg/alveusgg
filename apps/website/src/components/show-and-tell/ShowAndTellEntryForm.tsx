@@ -472,13 +472,14 @@ export function ShowAndTellEntryForm({
         isOpen={imageModalIsOpen}
         closeModal={closeImageModal}
         closeLabel="Close"
+        panelClassName="max-w-4xl"
       >
         {modalImageUrl ? (
           <Image
             src={modalImageUrl}
             alt="Uploaded image"
-            width={500}
-            height={500}
+            width={896}
+            height={896}
             className="object-contain"
           />
         ) : (
