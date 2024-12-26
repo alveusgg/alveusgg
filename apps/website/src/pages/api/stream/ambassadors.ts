@@ -1,33 +1,52 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import allAmbassadors from "@alveusgg/data/src/ambassadors/core";
-import {
-  isActiveAmbassadorEntry,
-  type ActiveAmbassador,
-} from "@alveusgg/data/src/ambassadors/filters";
-import {
-  getAmbassadorImages,
-  type AmbassadorImage,
-} from "@alveusgg/data/src/ambassadors/images";
-import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
-import { getIUCNStatus } from "@alveusgg/data/src/iucn";
-
 import { env } from "@/env";
-
 import {
   typeSafeObjectEntries,
   typeSafeObjectFromEntries,
 } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
+import allAmbassadors from "../../../../../../../data/src/ambassadors/core";
+import {
+  isActiveAmbassadorEntry,
+  type ActiveAmbassador,
+} from "../../../../../../../data/src/ambassadors/filters";
+import {
+  getAmbassadorImages,
+  type AmbassadorImage,
+} from "../../../../../../../data/src/ambassadors/images";
+import { getClassification } from "../../../../../../../data/src/ambassadors/classification";
+import type {
+  Species} from "../../../../../../../data/src/ambassadors/species";
+import {
+  getSpecies
+} from "../../../../../../../data/src/ambassadors/species";
+import { getIUCNStatus } from "../../../../../../../data/src/iucn";
+
+
 
 // If these types change, the extension schema MUST be updated as well
-type Ambassador = Omit<ActiveAmbassador, "iucn" | "class"> & {
+type Ambassador = Omit<ActiveAmbassador, "class" | "species"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
-  iucn: ActiveAmbassador["iucn"] & { title: string };
+  species: string;
+  scientific: string;
+  iucn: Species["iucn"] & { title: string };
+  native: Species["native"];
+  lifespan: Species["lifespan"];
   class: { name: ActiveAmbassador["class"]; title: string };
 };
+
+type AmbassadorV2 = Omit<ActiveAmbassador, "class" | "species"> & {
+  image: Omit<AmbassadorImage, "src"> & { src: string };
+  species: Omit<Species, "iucn"> & {
+    iucn: Species["iucn"] & { title: string };
+  };
+  class: { name: ActiveAmbassador["class"]; title: string };
+};
+
 export type AmbassadorsResponse = {
   ambassadors: Record<string, Ambassador>;
+  v2: Record<string, AmbassadorV2>;
 };
 
 const ambassadors = typeSafeObjectFromEntries(
@@ -35,6 +54,42 @@ const ambassadors = typeSafeObjectFromEntries(
     .filter(isActiveAmbassadorEntry)
     .map<[string, Ambassador]>(([key, val]) => {
       const image = getAmbassadorImages(key)[0];
+      const species = getSpecies(val.species);
+
+      return [
+        key,
+        {
+          ...val,
+          species: species.name,
+          scientific: species.scientificName,
+          image: {
+            ...image,
+            src: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({
+              src: image.src.src,
+              width: 600,
+            })}`,
+          },
+          iucn: {
+            ...species.iucn,
+            title: getIUCNStatus(species.iucn.status),
+          },
+          native: species.native,
+          lifespan: species.lifespan,
+          class: {
+            name: val.class,
+            title: getClassification(val.class),
+          },
+        },
+      ];
+    }),
+);
+
+const ambassadorsV2 = typeSafeObjectFromEntries(
+  typeSafeObjectEntries(allAmbassadors)
+    .filter(isActiveAmbassadorEntry)
+    .map<[string, AmbassadorV2]>(([key, val]) => {
+      const image = getAmbassadorImages(key)[0];
+      const species = getSpecies(val.species);
 
       return [
         key,
@@ -47,9 +102,12 @@ const ambassadors = typeSafeObjectFromEntries(
               width: 600,
             })}`,
           },
-          iucn: {
-            ...val.iucn,
-            title: getIUCNStatus(val.iucn.status),
+          species: {
+            ...species,
+            iucn: {
+              ...species.iucn,
+              title: getIUCNStatus(species.iucn.status),
+            },
           },
           class: {
             name: val.class,
@@ -85,5 +143,5 @@ export default async function handler(
   }
 
   // Return the actual data
-  return res.json({ ambassadors });
+  return res.json({ ambassadors, v2: ambassadorsV2 });
 }
