@@ -149,26 +149,21 @@ export default createTokenProtectedApiHandler(
       console.error("Failed to send push notification", e);
     }
 
-    const done = delivered || expired;
-    await updateNotificationPushStatus(
-      done
-        ? {
-            processingStatus: "DONE",
-            notificationId: options.notificationId,
-            subscriptionId: options.subscriptionId,
-            deliveredAt: delivered ? now : undefined,
-          }
-        : {
-            processingStatus:
-              options.attempt && options.attempt >= pushMaxAttempts
-                ? "DONE"
-                : "PENDING",
-            notificationId: options.notificationId,
-            subscriptionId: options.subscriptionId,
-            failedAt: now,
-          },
-    );
+    const status =
+      delivered ||
+      expired ||
+      (options.attempt && options.attempt >= pushMaxAttempts)
+        ? "DONE"
+        : "PENDING";
 
-    return delivered;
+    await updateNotificationPushStatus({
+      processingStatus: status,
+      notificationId: options.notificationId,
+      subscriptionId: options.subscriptionId,
+      deliveredAt: delivered ? now : undefined,
+      failedAt: delivered ? undefined : now,
+    });
+
+    return true;
   },
 );
