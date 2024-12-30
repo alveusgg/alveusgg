@@ -5,8 +5,7 @@ import { DATETIME_ALVEUS_ZONE, formatDateTimeParts } from "@/utils/datetime";
 
 import Event from "@/components/overlay/Event";
 import Weather from "@/components/overlay/Weather";
-
-const colors = ["#7E7E7E", "#4E3029"];
+import Timecode from "@/components/overlay/Timecode";
 
 const OverlayPage: NextPage = () => {
   // Get the current time and date
@@ -14,7 +13,6 @@ const OverlayPage: NextPage = () => {
   const [time, setTime] = useState<{
     time: string;
     date: string;
-    code: string[];
   }>();
   const timeInterval = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
@@ -46,16 +44,7 @@ const OverlayPage: NextPage = () => {
       const day = parts.find((part) => part.type === "day");
       if (!year || !month || !day) return;
 
-      const minutes = date.getMinutes();
-      const seconds = date.getSeconds();
-
-      const code = (minutes * 60 + seconds)
-        .toString(2)
-        .padStart(12, "0")
-        .split("");
-
       setTime({
-        code,
         time: timeParts.join(""),
         date: [year, month, day]
           .map((part) => part.value.padStart(2, "0"))
@@ -82,17 +71,7 @@ const OverlayPage: NextPage = () => {
 
       <Event className="absolute bottom-2 left-2" />
 
-      <div className="absolute bottom-0 right-0 grid grid-cols-12">
-        {time.code.map((bit, idx) => (
-          <div
-            key={`${bit}-${idx}`}
-            style={{
-              backgroundColor: bit === "0" ? colors[0] : colors[1],
-            }}
-            className="size-1"
-          />
-        ))}
-      </div>
+      <Timecode className="absolute bottom-0 right-0" />
     </div>
   );
 };
