@@ -4,8 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { DATETIME_ALVEUS_ZONE, formatDateTimeParts } from "@/utils/datetime";
 
 import Event from "@/components/overlay/Event";
-
-import { type WeatherResponse } from "../api/stream/weather";
+import Weather from "@/components/overlay/Weather";
 
 const colors = ["#7E7E7E", "#4E3029"];
 
@@ -69,34 +68,6 @@ const OverlayPage: NextPage = () => {
     return () => clearInterval(timeInterval.current ?? undefined);
   }, []);
 
-  // Get the current weather
-  // Refresh every 60s
-  const [weather, setWeather] = useState<WeatherResponse>();
-  const weatherInterval = useRef<NodeJS.Timeout>(null);
-  useEffect(() => {
-    const fetchWeather = async () => {
-      const response = await fetch("/api/stream/weather");
-      if (response.ok) {
-        const data = await response.json();
-        setWeather(data);
-      }
-    };
-
-    fetchWeather();
-    weatherInterval.current = setInterval(fetchWeather, 60 * 1000);
-    return () => clearInterval(weatherInterval.current ?? undefined);
-  }, []);
-
-  // Remove the weather data if older than 10m
-  const weatherStaleTimer = useRef<NodeJS.Timeout>(null);
-  useEffect(() => {
-    if (!weather) return;
-
-    const updateWeather = () => setWeather(undefined);
-    weatherStaleTimer.current = setTimeout(updateWeather, 10 * 60 * 1000);
-    return () => clearTimeout(weatherStaleTimer.current ?? undefined);
-  }, [weather]);
-
   // This can be a client-side only page
   if (!time) return null;
 
@@ -105,12 +76,8 @@ const OverlayPage: NextPage = () => {
       <div className="absolute right-2 top-2 flex flex-col gap-1 text-right font-mono font-medium text-white text-stroke-2">
         <p className="text-4xl">{time.time}</p>
         <p className="text-4xl">{time.date}</p>
-        {weather && (
-          <p className="text-3xl">
-            {weather.temperature.fahrenheit}°F{" "}
-            <span className="text-xl">({weather.temperature.celsius}°C)</span>
-          </p>
-        )}
+
+        <Weather />
       </div>
 
       <Event className="absolute bottom-2 left-2" />
