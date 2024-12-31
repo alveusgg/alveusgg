@@ -3,7 +3,6 @@ import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { useEffect, useId, useMemo, Fragment } from "react";
 
-
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
@@ -17,27 +16,25 @@ import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { formatPartialDateString } from "@/utils/datetime";
-import { getClassification } from "../../../../../../data/src/ambassadors/classification";
-import { getIUCNStatus } from "../../../../../../data/src/iucn";
-import enclosures, {
-  type Enclosure,
-} from "../../../../../../data/src/enclosures";
+import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
+import { getIUCNStatus } from "@alveusgg/data/src/iucn";
+import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
 import {
   getAmbassadorEpisodes,
   type AnimalQuestWithRelation,
-} from "../../../../../../data/src/animal-quest";
+} from "@alveusgg/data/src/animal-quest";
 import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
   getAmbassadorIconImage,
   type AmbassadorImage,
   type AmbassadorImages,
-} from "../../../../../../data/src/ambassadors/images";
-import { isActiveAmbassadorKey } from "../../../../../../data/src/ambassadors/filters";
+} from "@alveusgg/data/src/ambassadors/images";
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 import ambassadors, {
   type Ambassador,
-} from "../../../../../../data/src/ambassadors/core";
-import { getSpecies } from "../../../../../../data/src/ambassadors/species";
+} from "@alveusgg/data/src/ambassadors/core";
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
@@ -106,10 +103,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               {species.scientificName} (
               <Link
                 href={`/ambassadors#classification:${convertToSlug(
-                  getClassification(ambassador.class),
+                  getClassification(species.class),
                 )}`}
               >
-                {getClassification(ambassador.class)}
+                {getClassification(species.class)}
               </Link>
               )
             </p>

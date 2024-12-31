@@ -10,11 +10,11 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
-import { type Ambassador } from "../../../../../../data/src/ambassadors/core";
+import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
 import {
   type AnimalQuestWithEpisode,
   type AnimalQuestWithRelation,
-} from "../../../../../../data/src/animal-quest";
+} from "@alveusgg/data/src/animal-quest";
 
 type AnimalQuestProps = {
   episode: AnimalQuestWithEpisode;

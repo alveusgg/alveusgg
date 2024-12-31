@@ -6,24 +6,19 @@ import {
   typeSafeObjectFromEntries,
 } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
-import allAmbassadors from "../../../../../../../data/src/ambassadors/core";
+import allAmbassadors from "@alveusgg/data/src/ambassadors/core";
 import {
   isActiveAmbassadorEntry,
   type ActiveAmbassador,
-} from "../../../../../../../data/src/ambassadors/filters";
+} from "@alveusgg/data/src/ambassadors/filters";
 import {
   getAmbassadorImages,
   type AmbassadorImage,
-} from "../../../../../../../data/src/ambassadors/images";
-import { getClassification } from "../../../../../../../data/src/ambassadors/classification";
-import type {
-  Species} from "../../../../../../../data/src/ambassadors/species";
-import {
-  getSpecies
-} from "../../../../../../../data/src/ambassadors/species";
-import { getIUCNStatus } from "../../../../../../../data/src/iucn";
-
-
+} from "@alveusgg/data/src/ambassadors/images";
+import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
+import type { Species } from "@alveusgg/data/src/ambassadors/species";
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
+import { getIUCNStatus } from "@alveusgg/data/src/iucn";
 
 // If these types change, the extension schema MUST be updated as well
 type Ambassador = Omit<ActiveAmbassador, "class" | "species"> & {
@@ -33,15 +28,15 @@ type Ambassador = Omit<ActiveAmbassador, "class" | "species"> & {
   iucn: Species["iucn"] & { title: string };
   native: Species["native"];
   lifespan: Species["lifespan"];
-  class: { name: ActiveAmbassador["class"]; title: string };
+  class: { name: Species["class"]; title: string };
 };
 
-type AmbassadorV2 = Omit<ActiveAmbassador, "class" | "species"> & {
+type AmbassadorV2 = Omit<ActiveAmbassador, "species"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
-  species: Omit<Species, "iucn"> & {
+  species: Omit<Species, "iucn" | "class"> & {
     iucn: Species["iucn"] & { title: string };
+    class: { name: Species["class"]; title: string };
   };
-  class: { name: ActiveAmbassador["class"]; title: string };
 };
 
 export type AmbassadorsResponse = {
@@ -76,8 +71,8 @@ const ambassadors = typeSafeObjectFromEntries(
           native: species.native,
           lifespan: species.lifespan,
           class: {
-            name: val.class,
-            title: getClassification(val.class),
+            name: species.class,
+            title: getClassification(species.class),
           },
         },
       ];
@@ -108,10 +103,10 @@ const ambassadorsV2 = typeSafeObjectFromEntries(
               ...species.iucn,
               title: getIUCNStatus(species.iucn.status),
             },
-          },
-          class: {
-            name: val.class,
-            title: getClassification(val.class),
+            class: {
+              name: species.class,
+              title: getClassification(species.class),
+            },
           },
         },
       ];
