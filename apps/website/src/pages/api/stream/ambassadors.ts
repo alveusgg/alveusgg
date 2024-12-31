@@ -10,9 +10,9 @@ import {
   type AmbassadorImage,
 } from "@alveusgg/data/src/ambassadors/images";
 import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
-import type { Species } from "@alveusgg/data/src/ambassadors/species";
-import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
+import { getSpecies, type Species } from "@alveusgg/data/src/ambassadors/species";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
+
 import { createImageUrl } from "@/utils/image";
 import {
   typeSafeObjectEntries,
