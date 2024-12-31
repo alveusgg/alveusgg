@@ -15,6 +15,7 @@ import {
   sortAmbassadorClassification,
 } from "@alveusgg/data/src/ambassadors/classification";
 
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { formatDateTime } from "@/utils/datetime";
@@ -60,16 +61,19 @@ const sortByOptions = {
           (episode) =>
             [episode, ambassadors[episode.ambassadors.featured[0]]] as const,
         )
-        .sort(
-          ([episodeA, ambassadorA], [episodeB, ambassadorB]) =>
-            sortAmbassadorClassification(
-              ambassadorA.class,
-              ambassadorB.class,
-            ) || episodeB.episode - episodeA.episode,
-        )
+        .sort(([episodeA, ambassadorA], [episodeB, ambassadorB]) => {
+          const speciesA = getSpecies(ambassadorA.species);
+          const speciesB = getSpecies(ambassadorB.species);
+
+          return (
+            sortAmbassadorClassification(speciesA.class, speciesB.class) ||
+            episodeB.episode - episodeA.episode
+          );
+        })
         .reduce<GroupedItems<AnimalQuestWithEpisode>>(
           (map, [episode, ambassador]) => {
-            const classification = getClassification(ambassador.class);
+            const species = getSpecies(ambassador.species);
+            const classification = getClassification(species.class);
             const group = convertToSlug(classification);
 
             map.set(group, {

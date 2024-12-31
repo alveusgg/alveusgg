@@ -3,6 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, type ComponentProps } from "react";
 
+import {
+  getClassification,
+  sortAmbassadorClassification,
+} from "@alveusgg/data/src/ambassadors/classification";
+import enclosures from "@alveusgg/data/src/enclosures";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { camelToKebab } from "@/utils/string-case";
@@ -25,15 +34,6 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
-import {
-  getClassification,
-  sortAmbassadorClassification,
-} from "@alveusgg/data/src/ambassadors/classification";
-import enclosures from "@alveusgg/data/src/enclosures";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
-import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(
@@ -51,13 +51,18 @@ const sortByOptions = {
     label: "Classification",
     sort: (ambassadors) =>
       [...ambassadors]
-        .sort(
-          ([, a], [, b]) =>
-            sortAmbassadorClassification(a.class, b.class) ||
-            sortPartialDateString(a.arrival, b.arrival),
-        )
+        .sort(([, a], [, b]) => {
+          const aSpecies = getSpecies(a.species);
+          const bSpecies = getSpecies(b.species);
+
+          return (
+            sortAmbassadorClassification(aSpecies.class, bSpecies.class) ||
+            sortPartialDateString(a.arrival, b.arrival)
+          );
+        })
         .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
-          const classification = getClassification(val.class);
+          const species = getSpecies(val.species);
+          const classification = getClassification(species.class);
           const group = convertToSlug(classification);
 
           map.set(group, {

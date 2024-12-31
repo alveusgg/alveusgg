@@ -1,6 +1,11 @@
 import { type ComponentProps } from "react";
 import Image from "next/image";
 
+import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
+import {
+  type AnimalQuestWithEpisode,
+  type AnimalQuestWithRelation,
+} from "@alveusgg/data/src/animal-quest";
 import { sentenceToKebab } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 
@@ -10,11 +15,6 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
-import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
-import {
-  type AnimalQuestWithEpisode,
-  type AnimalQuestWithRelation,
-} from "@alveusgg/data/src/animal-quest";
 
 type AnimalQuestProps = {
   episode: AnimalQuestWithEpisode;

@@ -3,19 +3,6 @@ import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { useEffect, useId, useMemo, Fragment } from "react";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Carousel from "@/components/content/Carousel";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import { Lightbox, Preview } from "@/components/content/YouTube";
-import AnimalQuest from "@/components/content/AnimalQuest";
-
-import { camelToKebab, kebabToCamel } from "@/utils/string-case";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
-import { typeSafeObjectKeys } from "@/utils/helpers";
-import { convertToSlug } from "@/utils/slugs";
-import { formatPartialDateString } from "@/utils/datetime";
 import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
 import { getIUCNStatus } from "@alveusgg/data/src/iucn";
 import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
@@ -35,6 +22,19 @@ import ambassadors, {
   type Ambassador,
 } from "@alveusgg/data/src/ambassadors/core";
 import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
+import Section from "@/components/content/Section";
+import Heading from "@/components/content/Heading";
+import Carousel from "@/components/content/Carousel";
+import Meta from "@/components/content/Meta";
+import Link from "@/components/content/Link";
+import { Lightbox, Preview } from "@/components/content/YouTube";
+import AnimalQuest from "@/components/content/AnimalQuest";
+
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { convertToSlug } from "@/utils/slugs";
+import { formatPartialDateString } from "@/utils/datetime";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
