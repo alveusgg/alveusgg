@@ -460,6 +460,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/events#summer-camp-2024",
         },
       },
+      {
+        key: "amanda",
+        date: "2024-07",
+        content: [
+          "Amanda joins the Alveus team",
+          "Revealed during the Summer Camp stream, Amanda joins the team as another Animal Care Coordinator.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
     ],
   },
 ];
