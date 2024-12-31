@@ -3,15 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, type ComponentProps } from "react";
 
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
-import enclosures from "@alveusgg/data/src/enclosures";
 import {
   getClassification,
   sortAmbassadorClassification,
 } from "@alveusgg/data/src/ambassadors/classification";
-
+import enclosures from "@alveusgg/data/src/enclosures";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { camelToKebab } from "@/utils/string-case";
@@ -51,13 +51,18 @@ const sortByOptions = {
     label: "Classification",
     sort: (ambassadors) =>
       [...ambassadors]
-        .sort(
-          ([, a], [, b]) =>
-            sortAmbassadorClassification(a.class, b.class) ||
-            sortPartialDateString(a.arrival, b.arrival),
-        )
+        .sort(([, a], [, b]) => {
+          const aSpecies = getSpecies(a.species);
+          const bSpecies = getSpecies(b.species);
+
+          return (
+            sortAmbassadorClassification(aSpecies.class, bSpecies.class) ||
+            sortPartialDateString(a.arrival, b.arrival)
+          );
+        })
         .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
-          const classification = getClassification(val.class);
+          const species = getSpecies(val.species);
+          const classification = getClassification(species.class);
           const group = convertToSlug(classification);
 
           map.set(group, {
@@ -114,6 +119,7 @@ const AmbassadorItem = ({
   level?: ComponentProps<typeof Heading>["level"];
 }) => {
   const [key, data] = ambassador;
+  const species = getSpecies(data.species);
   const images = useMemo(() => getAmbassadorImages(key), [key]);
 
   return (
@@ -134,7 +140,7 @@ const AmbassadorItem = ({
           {data.name}
         </Heading>
         <p className="text-center text-xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400">
-          {data.species}
+          {species.name}
         </p>
       </Link>
     </div>
