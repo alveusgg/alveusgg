@@ -389,7 +389,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2023-11",
         content: [
           "Fall Carnival",
-          "To celebrate fall and raise some money for the sanctuary, Alveus hosted ac carnival-themed stream where live viewers could compete against each other and the ambassadors in mini-games.",
+          "To celebrate fall and raise some money for the sanctuary, Alveus hosted a carnival-themed stream where live viewers could compete against each other and the ambassadors in mini-games.",
         ],
         link: {
           text: "Explore Alveus events",
@@ -470,6 +470,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         link: {
           text: "Meet our staff",
           href: "/about/staff",
+        },
+      },
+      {
+        key: "fall-carnival-2024",
+        date: "2024-11",
+        content: [
+          "Fall Carnival",
+          "Celebrating fall and halloween once again, live viewers tuned in to a fundraising stream at Alveus where they could participate in games and activities with the ambassadors.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#fall-carnival-2024",
         },
       },
     ],
