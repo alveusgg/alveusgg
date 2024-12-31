@@ -6,7 +6,7 @@ import Link from "@/components/content/Link";
 
 import artAuction2024Video from "@/assets/events/art-auction-2024.mp4";
 import valentines2024Video from "@/assets/events/valentines-2024.mp4";
-import fallCarnival2023Video from "@/assets/events/fall-carnival-2023.mp4";
+import fallCarnival20232024Video from "@/assets/events/fall-carnival-2023-2024.mp4";
 import summerCamp20232024Video from "@/assets/events/summer-camp-2023-2024.mp4";
 import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
 import valentines2023Video from "@/assets/events/valentines-2023.mp4";
@@ -25,6 +25,52 @@ export type Event = {
 
 const events: Event[] = (
   [
+    {
+      name: "Fall Carnival 2024",
+      date: new Date("2024-11-04"),
+      video: fallCarnival20232024Video,
+      stats: {
+        uniqueViewers: {
+          title: "Unique viewers tuned in",
+          stat: "62,713",
+        },
+        totalDonations: {
+          title: "Raised for Alveus Sanctuary",
+          stat: "$29,989",
+        },
+        postcardsSent: {
+          title: "Postcards sent to donors",
+          stat: "320",
+        },
+        bingoPlayers: {
+          title: "Viewers played virtual bingo",
+          stat: "1,056",
+        },
+      },
+      info: (
+        <>
+          <p>
+            Celebrating fall and halloween, the Fall Carnival was a 3-hour-long
+            livestreamed event with a variety of games for the ambassadors at
+            Alveus, and the viewers watching along, to participate in. Visiting
+            multiple enclosures around the property, games included virtual
+            bingo, a race with the cockroaches, card tricks with the crows, and
+            more, all where the live stream viewers could earn points by
+            guessing the outcomes of the games.
+          </p>
+          <p>
+            Any donation of $25 or more during the event would get a signed
+            postcard sent to the donor, and by the end of the event 320
+            postcards had been sent out. The first game of the afternoon was a
+            game of virtual bingo with the marmosets, where over 1,000 viewers
+            joined in at home. By the end of the event, over 60,000 unique
+            viewers had tuned in to watch the activities and had raised $29,989
+            for Alveus Sanctuary. Thank you to everyone that watched and
+            supported this event!
+          </p>
+        </>
+      ),
+    },
     {
       name: "Summer Camp 2024",
       date: new Date("2024-07-13"),
@@ -170,7 +216,7 @@ const events: Event[] = (
     {
       name: "Fall Carnival 2023",
       date: new Date("2023-11-04"),
-      video: fallCarnival2023Video,
+      video: fallCarnival20232024Video,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
