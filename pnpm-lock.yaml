@@ -101,8 +101,8 @@ importers:
         specifier: ^1.0.8
         version: 1.0.8
       '@fontsource/pt-sans':
-        specifier: ^5.1.0
-        version: 5.1.0
+        specifier: ^5.1.1
+        version: 5.1.1
       '@headlessui/react':
         specifier: ^2.2.0
         version: 2.2.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -1248,8 +1248,8 @@ packages:
   '@floating-ui/utils@0.2.8':
     resolution: {integrity: sha512-kym7SodPp8/wloecOpcmSnWJsK7M0E5Wg8UcFA+uO4B9s5d0ywXOEro/8HM9x0rW+TljRzul/14UYz3TleT3ig==}
 
-  '@fontsource/pt-sans@5.1.0':
-    resolution: {integrity: sha512-6dOBVZHC2NHSEF4e6Js/LTocoKHCHf6zcbypm85350WWAcdXBtCDabVUa2R5SPAofJVLz82uhQyVsG04tVWZfg==}
+  '@fontsource/pt-sans@5.1.1':
+    resolution: {integrity: sha512-bDvDgbc8Dmr6iaR0tE1v1jwTFZsM2vXenjzY93N4g7NfJUIplqUthvtvCXlj5JRVS7SW/PXP7UOe7+G9UYz6OA==}
 
   '@formatjs/ecma402-abstract@1.18.2':
     resolution: {integrity: sha512-+QoPW4csYALsQIl8GbN14igZzDbuwzcpWrku9nyMXlaqAlwRBgl5V+p0vWMGFqHOw37czNXaP/lEk4wbLgcmtA==}
@@ -7462,7 +7462,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.8': {}
 
-  '@fontsource/pt-sans@5.1.0': {}
+  '@fontsource/pt-sans@5.1.1': {}
 
   '@formatjs/ecma402-abstract@1.18.2':
     dependencies:

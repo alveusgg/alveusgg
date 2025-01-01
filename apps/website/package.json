@@ -38,7 +38,7 @@
     "@aws-sdk/client-s3": "^3.717.0",
     "@aws-sdk/s3-request-presigner": "^3.717.0",
     "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
-    "@fontsource/pt-sans": "^5.1.0",
+    "@fontsource/pt-sans": "^5.1.1",
     "@headlessui/react": "^2.2.0",
     "@iframe-resizer/react": "^5.3.2",
     "@maplibre/maplibre-gl-geocoder": "^1.7.0",
