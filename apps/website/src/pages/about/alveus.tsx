@@ -29,6 +29,7 @@ const sectionLinks = [
   { name: "History", href: "#history" },
   { name: "Tour Part 1", href: "#tour-part-1" },
   { name: "Tour Part 2", href: "#tour-part-2" },
+  { name: "Recap 2024", href: "#recap-2024" },
   { name: "Transparency", href: "#transparency" },
 ];
 
@@ -485,6 +486,35 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
     ],
+  },
+  {
+    key: "recap-2024",
+    cta: (
+      <div className="flex flex-wrap-reverse items-center gap-y-16">
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Lightbox>
+            {({ Trigger }) => (
+              <Trigger videoId="y8jQPL_jO2s">
+                <Preview videoId="y8jQPL_jO2s" />
+              </Trigger>
+            )}
+          </Lightbox>
+        </div>
+
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Heading id="recap-2024" level={3} className="scroll-mt-52 italic">
+            Alveus Recap 2024
+          </Heading>
+
+          <p className="mt-4 text-lg">
+            Join Connor in this video as he recaps the progress at Alveus in
+            2024, reviewing the additions to the sanctuary as well as the data
+            behind the growth of the organization. He also takes a look back at
+            how it all started and shares some of the plans for the coming year.
+          </p>
+        </div>
+      </div>
+    ),
   },
 ];
 
