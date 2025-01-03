@@ -69,7 +69,9 @@ export function CommunityMap({ features }: CommunityMapProps) {
       zoom: 1,
       minZoom: 0,
       maxZoom: MAX_ZOOM,
-      antialias: true,
+      canvasContextAttributes: {
+        antialias: true,
+      },
     });
 
     map.on("load", async () => {

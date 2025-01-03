@@ -155,7 +155,9 @@ export const MapPickerField = ({
       zoom: initialZoom,
       minZoom,
       maxZoom,
-      antialias,
+      canvasContextAttributes: {
+        antialias,
+      },
     });
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
