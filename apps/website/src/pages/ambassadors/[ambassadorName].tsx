@@ -180,7 +180,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         ),
       },
     ],
-    [ambassador, enclosure],
+    [ambassador, species, enclosure],
   );
 
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
