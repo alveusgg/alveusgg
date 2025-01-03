@@ -13,10 +13,12 @@ export function ImageUploadAttachment({
   removeFileReference,
   fileReference,
   children = "",
+  onClick,
 }: {
   removeFileReference: (id: string) => void;
   fileReference: FileReference;
   children?: ReactNode | ReactNode[];
+  onClick?: () => void;
 }) {
   const src =
     fileReference.status === "saved"
@@ -32,7 +34,11 @@ export function ImageUploadAttachment({
   return (
     <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
       <div className="py-2">
-        <div className="relative size-32 overflow-hidden rounded-lg bg-gray-200">
+        <button
+          className="relative size-32 cursor-pointer overflow-hidden rounded-lg bg-gray-200"
+          title="Click to view image"
+          onClick={onClick}
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={src}
@@ -54,7 +60,7 @@ export function ImageUploadAttachment({
               <span>Failed</span>
             </div>
           )}
-        </div>
+        </button>
         <div className="p-2">
           <Button
             size="small"
