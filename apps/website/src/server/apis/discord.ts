@@ -43,7 +43,7 @@ export async function createScheduledGuildEvent(
   end: Date,
   title: string,
   location: string,
-  description?: string,
+  description: string | null,
 ) {
   const response = await fetch(
     `https://discord.com/api/v10/guilds/${guildId}/scheduled-events`,
