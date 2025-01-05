@@ -77,13 +77,11 @@ export function CalendarEventForm({
       const mutationData: CalendarEventSchema = {
         title: String(formData.get("title")),
         category: String(formData.get("category")),
+        description: String(formData.get("description")) || null,
         link,
         startAt,
         hasTime,
       };
-
-      if (formData.get("description"))
-        mutationData.description = String(formData.get("description"));
 
       if (action === "edit") {
         if (!calendarEvent) return;
