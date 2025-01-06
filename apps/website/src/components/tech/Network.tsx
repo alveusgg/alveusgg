@@ -251,11 +251,11 @@ const NetworkEdge = ({
   // Track if the user is hovering, or if the edge is focused
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
-  const cleanup = useRef<() => void>();
+  const cleanup = useRef<() => void>(null);
   const ref = useCallback((node: SVGGElement | null) => {
     if (cleanup.current) {
       cleanup.current();
-      cleanup.current = undefined;
+      cleanup.current = null;
     }
 
     if (node) {

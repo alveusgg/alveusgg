@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { forwardRef } from "react";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
@@ -36,89 +35,90 @@ const sortByOptions = {
   },
 } as const satisfies Options<Event>;
 
-const EventItems = forwardRef<HTMLDivElement, GroupedProps<Event>>(
-  ({ items, option, group, name, index }, ref) => (
-    <>
-      {name && (
-        <Heading
-          level={-1}
+const EventItems = ({
+  items,
+  option,
+  group,
+  name,
+  index,
+  ref,
+}: GroupedProps<Event, HTMLDivElement>) => (
+  <>
+    {name && (
+      <Heading
+        level={-1}
+        className={classes(
+          "alveus-green-800 mb-6 mt-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
+          index === 0 && "sr-only",
+        )}
+        id={`${option}:${group}`}
+        link
+      >
+        {name}
+      </Heading>
+    )}
+    <div ref={ref}>
+      {items.map((event, idx, arr) => (
+        <div
+          key={event.slug}
           className={classes(
-            "alveus-green-800 mb-6 mt-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
-            index === 0 && "sr-only",
+            "flex flex-wrap gap-y-8 pb-12 pt-8",
+            idx === 0 ? "lg:pb-16" : "lg:py-16",
+            idx !== arr.length - 1 && "border-b-2 border-alveus-green-300/15",
           )}
-          id={`${option}:${group}`}
-          link
         >
-          {name}
-        </Heading>
-      )}
-      <div ref={ref}>
-        {items.map((event, idx, arr) => (
-          <div
-            key={event.slug}
-            className={classes(
-              "flex flex-wrap gap-y-8 pb-12 pt-8",
-              idx === 0 ? "lg:pb-16" : "lg:py-16",
-              idx !== arr.length - 1 && "border-b-2 border-alveus-green-300/15",
-            )}
-          >
-            <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
-              <Heading
-                level={2}
-                className="my-4 scroll-mt-8 text-center text-4xl"
-                id={event.slug}
-                link
-                linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
-              >
-                {event.name}
-                <small className="text-xl text-alveus-green-600">
-                  {formatDateTime(event.date, { style: "long" })}
-                </small>
-              </Heading>
-
-              <div className="my-auto flex flex-wrap py-2">
-                {Object.entries(event.stats).map(([key, stat]) => (
-                  <div
-                    key={key}
-                    className="mx-auto basis-full py-2 text-center sm:basis-1/2 lg:px-2"
-                  >
-                    <p className="text-3xl font-bold">{stat.stat}</p>
-                    <p className="text-xl text-alveus-green-700">
-                      {stat.title}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div
-              className={classes(
-                "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
-                idx % 2 === 0 && "lg:order-first",
-              )}
+          <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
+            <Heading
+              level={2}
+              className="my-4 scroll-mt-8 text-center text-4xl"
+              id={event.slug}
+              link
+              linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
             >
-              <VideoPlayer
-                className="my-auto aspect-video w-full rounded-xl"
-                poster={event.video.poster}
-                sources={event.video.sources}
-                autoPlay
-                loop
-                muted
-                playsInline
-              />
-            </div>
+              {event.name}
+              <small className="text-xl text-alveus-green-600">
+                {formatDateTime(event.date, { style: "long" })}
+              </small>
+            </Heading>
 
-            <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
-              {event.info}
+            <div className="my-auto flex flex-wrap py-2">
+              {Object.entries(event.stats).map(([key, stat]) => (
+                <div
+                  key={key}
+                  className="mx-auto basis-full py-2 text-center sm:basis-1/2 lg:px-2"
+                >
+                  <p className="text-3xl font-bold">{stat.stat}</p>
+                  <p className="text-xl text-alveus-green-700">{stat.title}</p>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
-    </>
-  ),
-);
 
-EventItems.displayName = "EventItems";
+          <div
+            className={classes(
+              "mx-auto flex basis-full flex-col px-8 lg:basis-1/2",
+              idx % 2 === 0 && "lg:order-first",
+            )}
+          >
+            <VideoPlayer
+              className="my-auto aspect-video w-full rounded-xl"
+              poster={event.video.poster}
+              sources={event.video.sources}
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          </div>
+
+          <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
+            {event.info}
+          </div>
+        </div>
+      ))}
+    </div>
+  </>
+);
 
 const EventsPage: NextPage = () => {
   const { option, group, result } = useGrouped({
@@ -141,12 +141,12 @@ const EventsPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none lg:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none drop-shadow-md lg:block"
         />
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
         <Section dark className="py-24">
@@ -166,12 +166,12 @@ const EventsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 select-none lg:block 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 select-none drop-shadow-md lg:block 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow">

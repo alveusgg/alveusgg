@@ -1,4 +1,4 @@
-import { forwardRef, useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -19,6 +19,7 @@ import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import SubNav from "@/components/content/SubNav";
 
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -202,10 +203,14 @@ const sortByOptions = {
   },
 } as const satisfies Options<Collaboration>;
 
-const CollaborationItems = forwardRef<
-  HTMLDivElement,
-  GroupedProps<Collaboration>
->(({ items, option, group, name, index }, ref) => {
+const CollaborationItems = ({
+  items,
+  option,
+  group,
+  name,
+  index,
+  ref,
+}: GroupedProps<Collaboration, HTMLDivElement>) => {
   const [open, setOpen] = useState<string>();
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -219,8 +224,8 @@ const CollaborationItems = forwardRef<
         <Heading
           level={-1}
           className={classes(
-            "alveus-green-800 mb-6 mt-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl",
-            index === 0 && "sr-only",
+            "mb-6 mt-8 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
+            index === 0 && "sr-only-linkable",
           )}
           id={`${option}:${group}`}
           link
@@ -299,9 +304,7 @@ const CollaborationItems = forwardRef<
       </Lightbox>
     </>
   );
-});
-
-CollaborationItems.displayName = "CollaborationItems";
+};
 
 const CollaborationsPage: NextPage = () => {
   const { option, group, result } = useGrouped({
@@ -309,6 +312,15 @@ const CollaborationsPage: NextPage = () => {
     options: sortByOptions,
     initial: "all",
   });
+
+  const sectionLinks = useMemo(
+    () =>
+      [...result.entries()].map(([key, value]) => ({
+        name: value.name,
+        href: `#${option}:${key}`,
+      })),
+    [result, option],
+  );
 
   return (
     <>
@@ -324,7 +336,7 @@ const CollaborationsPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-16 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
+          className="pointer-events-none absolute -bottom-16 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
         <Section dark className="pb-12 pt-24">
@@ -348,10 +360,11 @@ const CollaborationsPage: NextPage = () => {
               together to learn about the importance of conservation.
             </p>
           </div>
-
           <Creators className="mt-6" />
         </Section>
       </div>
+
+      <SubNav links={sectionLinks} className="z-20" />
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">

@@ -21,7 +21,7 @@ import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 export const calendarEventSchema = z.object({
   title: z.string().min(1),
   category: z.string().min(1),
-  description: z.string().min(1).optional(),
+  description: z.string().min(1).nullable(),
   link: z.string().url(),
   startAt: z.date(),
   hasTime: z.boolean().default(true),
@@ -302,19 +302,19 @@ export async function syncDiscordEvents(guildId: string) {
   const create: {
     title: string;
     link: string;
-    description?: string;
+    description: string | null;
     startAt: Date;
   }[] = [];
   for (const event of events) {
     // Look for a matching event in the Discord API
     const title = getFormattedTitle(event);
-    const description = event.description || undefined;
+    const description = event.description;
     const date = event.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
     const idx = existing.findIndex(
       (e) =>
         e.name === title &&
         e.entity_metadata.location === event.link &&
-        (e.description || undefined) === description &&
+        e.description === description &&
         e.scheduled_start_time === date,
     );
 

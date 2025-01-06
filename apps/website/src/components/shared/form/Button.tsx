@@ -1,5 +1,5 @@
 import type React from "react";
-import { type ReactNode, type ButtonHTMLAttributes, forwardRef } from "react";
+import { type ReactNode, type ButtonHTMLAttributes, type Ref } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 
@@ -11,7 +11,8 @@ type ButtonStyleProps = {
   confirmationMessage?: string;
 };
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & ButtonStyleProps;
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+  ButtonStyleProps & { ref?: Ref<HTMLButtonElement> };
 type LinkButtonProps = React.AnchorHTMLAttributes<HTMLAnchorElement> &
   LinkProps &
   ButtonStyleProps;
@@ -59,42 +60,35 @@ export function LinkButton({
   );
 }
 
-export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      children,
-      type = "button",
-      size = "default",
-      width = "full",
-      className = defaultButtonClasses,
-      confirmationMessage,
-      ...props
-    },
-    ref,
-  ) => {
-    const buttonProps = { ...props };
-    if (confirmationMessage) {
-      buttonProps.onClick = (e) => {
-        if (confirm(confirmationMessage)) {
-          props.onClick?.(e);
-        } else {
-          e.preventDefault();
-        }
-      };
-    }
+export const Button = ({
+  children,
+  type = "button",
+  size = "default",
+  width = "full",
+  className = defaultButtonClasses,
+  confirmationMessage,
+  ...props
+}: ButtonProps) => {
+  const buttonProps = { ...props };
+  if (confirmationMessage) {
+    buttonProps.onClick = (e) => {
+      if (confirm(confirmationMessage)) {
+        props.onClick?.(e);
+      } else {
+        e.preventDefault();
+      }
+    };
+  }
 
-    return (
-      <button
-        type={type}
-        ref={ref}
-        className={`${baseClasses} ${getWidthClasses(width)} ${getSizeClasses(
-          size,
-        )} ${className}`}
-        {...buttonProps}
-      >
-        {children}
-      </button>
-    );
-  },
-);
-Button.displayName = "Button";
+  return (
+    <button
+      type={type}
+      className={`${baseClasses} ${getWidthClasses(width)} ${getSizeClasses(
+        size,
+      )} ${className}`}
+      {...buttonProps}
+    >
+      {children}
+    </button>
+  );
+};

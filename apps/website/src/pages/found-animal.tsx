@@ -31,10 +31,10 @@ const FoundAnimalPage: NextPage = () => {
   // Track the current queue of messages to display and the option being loaded
   const [queue, setQueue] = useState<Log[]>([]);
   const [loading, setLoading] = useState<FoundAnimalOption | null>(null);
-  const timer = useRef<NodeJS.Timeout | null>(null);
+  const timer = useRef<NodeJS.Timeout>(null);
 
   // Scroll to the bottom whenever the log changes
-  const container = useRef<HTMLDivElement | null>(null);
+  const container = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (!container.current) return;
     container.current.scrollTop = container.current.scrollHeight;
@@ -105,12 +105,12 @@ const FoundAnimalPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-72 select-none lg:block xl:hidden 2xl:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-72 select-none drop-shadow-md lg:block xl:hidden 2xl:block"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block"
         />
 
         <Section
@@ -120,7 +120,7 @@ const FoundAnimalPage: NextPage = () => {
           <Image
             src={leafLeftImage1}
             alt=""
-            className="pointer-events-none absolute left-0 top-[40vh] -z-10 h-auto w-1/2 max-w-40 select-none"
+            className="pointer-events-none absolute left-0 top-[40vh] -z-10 h-auto w-1/2 max-w-40 select-none drop-shadow-md"
           />
 
           <div className="mx-auto flex h-[80vh] w-full max-w-lg shrink-0 flex-col overflow-hidden rounded-xl border border-alveus-green bg-alveus-tan/75 shadow-lg backdrop-blur xl:mx-0">

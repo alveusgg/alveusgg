@@ -73,8 +73,8 @@ export const MapPickerField = ({
     initialLocation || ({} as MapLocation),
   );
 
-  const mapContainerRef = useRef(null);
-  const mapRef = useRef<Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<Map>(null);
   const markersRef = useRef<Marker[]>([]);
   const isDraggingRef = useRef(false);
 
@@ -115,16 +115,15 @@ export const MapPickerField = ({
         const marker = getDefaultMarker(roundedCoords, mapRef.current);
 
         if (marker) {
-          marker
-            .on("dragstart", () => (isDraggingRef.current = true))
-            .on("dragend", () => {
-              handleLocationSet(
-                map,
-                marker.getLngLat().lat,
-                marker.getLngLat().lng,
-              );
-              isDraggingRef.current = false;
-            });
+          marker.on("dragstart", () => (isDraggingRef.current = true));
+          marker.on("dragend", () => {
+            handleLocationSet(
+              map,
+              marker.getLngLat().lat,
+              marker.getLngLat().lng,
+            );
+            isDraggingRef.current = false;
+          });
           markersRef.current.push(marker);
         }
       }
@@ -156,59 +155,61 @@ export const MapPickerField = ({
       zoom: initialZoom,
       minZoom,
       maxZoom,
-      antialias,
-    })
-      .addControl(
-        new MaplibreGeocoder(geocoderApi, {
-          maplibregl,
-          marker: false,
-          showResultsWhileTyping: true,
-          showResultMarkers: {
-            color: tailwindConfig.theme.colors["alveus-tan"][500],
-          },
-          debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
-        }).on(
-          "result",
-          ({
-            result: {
-              geometry: { coordinates },
-              text,
-            },
-          }) => {
-            handleLocationSet(map, coordinates[1], coordinates[0], text);
-          },
-        ),
-      )
-      // Add geolocation button
-      .addControl(
-        new GeolocateControl({
-          showAccuracyCircle: false,
-          showUserLocation: false,
-        }).on("geolocate", ({ coords }) => {
-          handleLocationSet(map, coords.latitude, coords.longitude);
-        }),
-      )
+      canvasContextAttributes: {
+        antialias,
+      },
+    });
 
-      // When clicking on the map
-      .on("mouseup", ({ lngLat: { lat, lng } }) => {
-        // If the click is part of a click and drag to move around, ignore it.
-        if (isDraggingRef.current) return;
-        handleLocationSet(map, lat, lng);
-      })
-      // To avoid setting post location on mouse Dragging.
-      .on("dragstart", () => (isDraggingRef.current = true))
-      .on("dragend", () => (isDraggingRef.current = false));
+    const geocoder = new MaplibreGeocoder(geocoderApi, {
+      maplibregl,
+      marker: false,
+      showResultsWhileTyping: true,
+      showResultMarkers: {
+        color: tailwindConfig.theme.colors["alveus-tan"][500],
+      },
+      debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
+    });
+    geocoder.on(
+      "result",
+      ({
+        result: {
+          geometry: { coordinates },
+          text,
+        },
+      }) => {
+        handleLocationSet(map, coordinates[1], coordinates[0], text);
+      },
+    );
+    map.addControl(geocoder);
 
-    if (map) {
-      mapRef.current = map;
-      if (initialLocation?.location) {
-        handleLocationSet(
-          map,
-          initialLocation.latitude,
-          initialLocation.longitude,
-          initialLocation.location,
-        );
-      }
+    // Add geolocation button
+    const geolocate = new GeolocateControl({
+      showAccuracyCircle: false,
+      showUserLocation: false,
+    });
+    geolocate.on("geolocate", ({ coords }) => {
+      handleLocationSet(map, coords.latitude, coords.longitude);
+    });
+    map.addControl(geolocate);
+
+    // When clicking on the map
+    map.on("mouseup", ({ lngLat: { lat, lng } }) => {
+      // If the click is part of a click and drag to move around, ignore it.
+      if (isDraggingRef.current) return;
+      handleLocationSet(map, lat, lng);
+    });
+    // To avoid setting post location on mouse Dragging.
+    map.on("dragstart", () => (isDraggingRef.current = true));
+    map.on("dragend", () => (isDraggingRef.current = false));
+
+    mapRef.current = map;
+    if (initialLocation?.location) {
+      handleLocationSet(
+        map,
+        initialLocation.latitude,
+        initialLocation.longitude,
+        initialLocation.location,
+      );
     }
 
     // Clean up on component unmount

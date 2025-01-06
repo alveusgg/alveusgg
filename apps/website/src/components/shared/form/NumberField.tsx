@@ -15,7 +15,7 @@ import IconX from "@/icons/IconX";
 function NumberButton(
   props: AriaButtonOptions<"button"> & { children: ReactNode },
 ) {
-  const ref = useRef(null);
+  const ref = useRef<HTMLButtonElement>(null);
   const { buttonProps } = useButton(props, ref);
   return (
     <button

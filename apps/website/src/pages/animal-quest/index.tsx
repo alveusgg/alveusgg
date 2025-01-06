@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Fragment, forwardRef } from "react";
+import { useMemo, Fragment } from "react";
 
 import animalQuest, {
   type AnimalQuestWithEpisode,
@@ -14,6 +14,7 @@ import {
   getClassification,
   sortAmbassadorClassification,
 } from "@alveusgg/data/src/ambassadors/classification";
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
@@ -28,6 +29,8 @@ import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import Select from "@/components/content/Select";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import SubNav from "@/components/content/SubNav";
+
 import IconYouTube from "@/icons/IconYouTube";
 
 import animalQuestLogo from "@/assets/animal-quest/logo.png";
@@ -58,16 +61,19 @@ const sortByOptions = {
           (episode) =>
             [episode, ambassadors[episode.ambassadors.featured[0]]] as const,
         )
-        .sort(
-          ([episodeA, ambassadorA], [episodeB, ambassadorB]) =>
-            sortAmbassadorClassification(
-              ambassadorA.class,
-              ambassadorB.class,
-            ) || episodeB.episode - episodeA.episode,
-        )
+        .sort(([episodeA, ambassadorA], [episodeB, ambassadorB]) => {
+          const speciesA = getSpecies(ambassadorA.species);
+          const speciesB = getSpecies(ambassadorB.species);
+
+          return (
+            sortAmbassadorClassification(speciesA.class, speciesB.class) ||
+            episodeB.episode - episodeA.episode
+          );
+        })
         .reduce<GroupedItems<AnimalQuestWithEpisode>>(
           (map, [episode, ambassador]) => {
-            const classification = getClassification(ambassador.class);
+            const species = getSpecies(ambassador.species);
+            const classification = getClassification(species.class);
             const group = convertToSlug(classification);
 
             map.set(group, {
@@ -96,10 +102,13 @@ const sortByOptions = {
   },
 } as const satisfies Options<AnimalQuestWithEpisode>;
 
-const AnimalQuestItems = forwardRef<
-  HTMLDivElement,
-  GroupedProps<AnimalQuestWithEpisode>
->(({ items, option, group, name }, ref) => (
+const AnimalQuestItems = ({
+  items,
+  option,
+  group,
+  name,
+  ref,
+}: GroupedProps<AnimalQuestWithEpisode, HTMLDivElement>) => (
   <>
     {name && (
       <Heading
@@ -237,9 +246,7 @@ const AnimalQuestItems = forwardRef<
       ))}
     </div>
   </>
-));
-
-AnimalQuestItems.displayName = "AnimalQuestItems";
+);
 
 const AnimalQuestPage: NextPage = () => {
   const { option, group, result, update, dropdown } = useGrouped({
@@ -247,6 +254,18 @@ const AnimalQuestPage: NextPage = () => {
     options: sortByOptions,
     initial: "all",
   });
+
+  const sectionLinks = useMemo(
+    () =>
+      result instanceof Map
+        ? [...result.entries()].map(([key, value]) => ({
+            name: value.name,
+            href: `#${option}:${key}`,
+          }))
+        : [],
+
+    [result, option],
+  );
 
   return (
     <>
@@ -263,7 +282,7 @@ const AnimalQuestPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
+          className="pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto w-1/2 max-w-36 rotate-[20deg] -scale-y-100 select-none drop-shadow-md lg:block"
         />
 
         <Section
@@ -290,17 +309,21 @@ const AnimalQuestPage: NextPage = () => {
         </Section>
       </div>
 
+      {sectionLinks.length !== 0 && (
+        <SubNav links={sectionLinks} className="z-20" />
+      )}
+
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow pt-8">

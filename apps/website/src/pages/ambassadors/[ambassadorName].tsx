@@ -3,10 +3,13 @@ import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { useEffect, useId, useMemo, Fragment } from "react";
 
-import ambassadors, {
-  type Ambassador,
-} from "@alveusgg/data/src/ambassadors/core";
-import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
+import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
+import { getIUCNStatus } from "@alveusgg/data/src/iucn";
+import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
+import {
+  getAmbassadorEpisodes,
+  type AnimalQuestWithRelation,
+} from "@alveusgg/data/src/animal-quest";
 import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
@@ -14,14 +17,11 @@ import {
   type AmbassadorImage,
   type AmbassadorImages,
 } from "@alveusgg/data/src/ambassadors/images";
-import {
-  getAmbassadorEpisodes,
-  type AnimalQuestWithRelation,
-} from "@alveusgg/data/src/animal-quest";
-import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
-import { getIUCNStatus } from "@alveusgg/data/src/iucn";
-import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
-
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
+import ambassadors, {
+  type Ambassador,
+} from "@alveusgg/data/src/ambassadors/core";
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";
@@ -78,6 +78,10 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   };
 };
 
+const stringifyLifespan = (value: number | { min: number; max: number }) => {
+  return typeof value === "number" ? `${value}` : `${value.min}-${value.max}`;
+};
+
 const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   ambassador,
   enclosure,
@@ -86,21 +90,23 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   iconImage,
   animalQuest,
 }) => {
+  const species = getSpecies(ambassador.species);
+
   const stats = useMemo(
     () => [
       {
         title: "Species",
         value: (
           <>
-            <p>{ambassador.species}</p>
+            <p>{species.name}</p>
             <p className="italic text-alveus-green-700">
-              {ambassador.scientific} (
+              {species.scientificName} (
               <Link
                 href={`/ambassadors#classification:${convertToSlug(
-                  getClassification(ambassador.class),
+                  getClassification(species.class),
                 )}`}
               >
-                {getClassification(ambassador.class)}
+                {getClassification(species.class)}
               </Link>
               )
             </p>
@@ -111,22 +117,41 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         title: "Conservation Status",
         value: (
           <p>
-            {ambassador.iucn.id ? (
+            {species.iucn.id ? (
               <Link
-                href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${ambassador.iucn.id}`}
+                href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${species.iucn.id}`}
                 external
               >
-                IUCN: {getIUCNStatus(ambassador.iucn.status)}
+                IUCN: {getIUCNStatus(species.iucn.status)}
               </Link>
             ) : (
-              <>IUCN: {getIUCNStatus(ambassador.iucn.status)}</>
+              <>IUCN: {getIUCNStatus(species.iucn.status)}</>
             )}
           </p>
         ),
       },
       {
         title: "Native To",
-        value: <p>{ambassador.native.text}</p>,
+        value: <p>{species.native.text}</p>,
+      },
+      {
+        title: "Species Lifespan",
+        value: (
+          <>
+            <p>
+              Wild:{" "}
+              {species.lifespan.wild
+                ? `${stringifyLifespan(species.lifespan.wild)} years`
+                : "Unknown"}
+            </p>
+            <p>
+              Captivity:{" "}
+              {species.lifespan.captivity
+                ? `${stringifyLifespan(species.lifespan.captivity)} years`
+                : "Unknown"}
+            </p>
+          </>
+        ),
       },
       {
         title: "Date of Birth",
@@ -155,7 +180,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         ),
       },
     ],
-    [ambassador, enclosure],
+    [ambassador, species, enclosure],
   );
 
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;

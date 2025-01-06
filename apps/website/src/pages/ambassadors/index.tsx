@@ -1,17 +1,17 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, type ComponentProps, forwardRef } from "react";
+import { useMemo, type ComponentProps } from "react";
 
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
-import enclosures from "@alveusgg/data/src/enclosures";
 import {
   getClassification,
   sortAmbassadorClassification,
 } from "@alveusgg/data/src/ambassadors/classification";
-
+import enclosures from "@alveusgg/data/src/enclosures";
+import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { camelToKebab } from "@/utils/string-case";
@@ -28,6 +28,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Select from "@/components/content/Select";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import SubNav from "@/components/content/SubNav";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -50,13 +51,18 @@ const sortByOptions = {
     label: "Classification",
     sort: (ambassadors) =>
       [...ambassadors]
-        .sort(
-          ([, a], [, b]) =>
-            sortAmbassadorClassification(a.class, b.class) ||
-            sortPartialDateString(a.arrival, b.arrival),
-        )
+        .sort(([, a], [, b]) => {
+          const aSpecies = getSpecies(a.species);
+          const bSpecies = getSpecies(b.species);
+
+          return (
+            sortAmbassadorClassification(aSpecies.class, bSpecies.class) ||
+            sortPartialDateString(a.arrival, b.arrival)
+          );
+        })
         .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
-          const classification = getClassification(val.class);
+          const species = getSpecies(val.species);
+          const classification = getClassification(species.class);
           const group = convertToSlug(classification);
 
           map.set(group, {
@@ -113,6 +119,7 @@ const AmbassadorItem = ({
   level?: ComponentProps<typeof Heading>["level"];
 }) => {
   const [key, data] = ambassador;
+  const species = getSpecies(data.species);
   const images = useMemo(() => getAmbassadorImages(key), [key]);
 
   return (
@@ -133,22 +140,25 @@ const AmbassadorItem = ({
           {data.name}
         </Heading>
         <p className="text-center text-xl text-alveus-green-700 transition-colors group-hover:text-alveus-green-400">
-          {data.species}
+          {species.name}
         </p>
       </Link>
     </div>
   );
 };
 
-const AmbassadorItems = forwardRef<
-  HTMLDivElement,
-  GroupedProps<ActiveAmbassadorEntry>
->(({ items, option, group, name }, ref) => (
+const AmbassadorItems = ({
+  items,
+  option,
+  group,
+  name,
+  ref,
+}: GroupedProps<ActiveAmbassadorEntry, HTMLDivElement>) => (
   <>
     {name && (
       <Heading
         level={2}
-        className="mb-8 mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+        className="mb-8 mt-16 scroll-mt-22 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
@@ -171,9 +181,7 @@ const AmbassadorItems = forwardRef<
       ))}
     </div>
   </>
-));
-
-AmbassadorItems.displayName = "AmbassadorItems";
+);
 
 const AmbassadorsPage: NextPage = () => {
   const { option, group, result, update, dropdown } = useGrouped({
@@ -181,6 +189,18 @@ const AmbassadorsPage: NextPage = () => {
     options: sortByOptions,
     initial: "all",
   });
+
+  const sectionLinks = useMemo(
+    () =>
+      result instanceof Map
+        ? [...result.entries()].map(([key, value]) => ({
+            name: value.name,
+            href: `#${option}:${key}`,
+          }))
+        : [],
+
+    [result, option],
+  );
 
   return (
     <>
@@ -196,12 +216,12 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-4 right-0 z-10 hidden h-auto w-1/2 max-w-xs select-none lg:block"
+          className="pointer-events-none absolute -bottom-4 right-0 z-30 hidden h-auto w-1/2 max-w-xs select-none drop-shadow-md lg:block"
         />
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-36 -left-8 z-10 hidden h-auto w-1/2 max-w-32 rotate-45 -scale-y-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-36 -left-16 z-30 hidden h-auto w-1/2 max-w-32 rotate-45 -scale-y-100 select-none drop-shadow-md lg:block"
         />
 
         <Section dark className="py-24">
@@ -217,17 +237,21 @@ const AmbassadorsPage: NextPage = () => {
         </Section>
       </div>
 
+      {sectionLinks.length !== 0 && (
+        <SubNav links={sectionLinks} className="z-20" />
+      )}
+
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
         <Section className="grow pt-8">

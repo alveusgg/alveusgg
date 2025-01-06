@@ -17,10 +17,19 @@ updates:
     # Ensure the new version is stored in `package.json`
     versioning-strategy: increase
 
-    # Update `dependencies` and `devDependencies` separately
-    # Create grouped PRs for minor/patch updates
-    # Major version updates will get individual PRs
     groups:
+      # Create dedicated (grouped) PRs for Next.js + trpc dependencies
+      next:
+        patterns:
+          - "next"
+          - "@next/*"
+      trpc:
+        patterns:
+          - "@trpc/*"
+
+      # Update `dependencies` and `devDependencies` separately
+      # Create grouped PRs for minor/patch updates
+      # Major version updates will get individual PRs
       production:
         dependency-type: production
         update-types:

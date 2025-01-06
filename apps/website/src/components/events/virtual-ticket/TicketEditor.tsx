@@ -50,7 +50,7 @@ export type TicketEditorContextValue = {
   ) => void;
 };
 
-const ticketEditorContext = createContext<TicketEditorContextValue>({
+const TicketEditorContext = createContext<TicketEditorContextValue>({
   canvasWidth: 0,
   canvasHeight: 0,
   selectedSticker: null,
@@ -201,7 +201,7 @@ export function useStickerData(
 }
 
 export function useTicketEditorContext() {
-  return useContext(ticketEditorContext);
+  return useContext(TicketEditorContext);
 }
 
 export function TicketEditor({
@@ -261,7 +261,7 @@ export function TicketEditor({
   }, []);
 
   return (
-    <ticketEditorContext.Provider value={contextValue}>
+    <TicketEditorContext value={contextValue}>
       <div className="relative -mx-4 w-[calc(100%+2rem)] bg-black/10">
         <div className="pointer-events-none absolute inset-x-0 top-0 mt-1 flex flex-row items-center justify-center gap-2 p-2 text-black/50 lg:hidden">
           <IconChevronLeft className="size-4" />
@@ -342,6 +342,6 @@ export function TicketEditor({
           }}
         />
       </div>
-    </ticketEditorContext.Provider>
+    </TicketEditorContext>
   );
 }
