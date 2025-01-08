@@ -129,7 +129,7 @@
     "npm-run-all2": "^7.0.2",
     "postcss": "^8.4.49",
     "prettier-plugin-tailwindcss": "^0.6.9",
-    "prisma": "^6.2.0",
+    "prisma": "^6.2.1",
     "tailwindcss": "^3.4.17",
     "tsup": "^8.3.5",
     "tsx": "^4.19.2",
