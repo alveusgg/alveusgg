@@ -42,11 +42,13 @@ function Upload({ preSignedUploadUrl }: { preSignedUploadUrl: string }) {
       body: formData,
     });
 
-    console.log(response.status);
+    if (!response.ok) {
+      throw new Error("Failed to upload file");
+    }
 
     return {
-      viewUrl: "",
-      fileStorageObjectId: "",
+      viewUrl: "", // We do not get a view URL back from the server
+      fileStorageObjectId: "", // Does not apply here
     };
   };
 
