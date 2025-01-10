@@ -1,5 +1,9 @@
 import IconAmazon from "@/icons/IconAmazon";
 import socials from "@/components/shared/data/socials";
+import {
+  typeSafeObjectEntries,
+  typeSafeObjectFromEntries,
+} from "@/utils/helpers";
 
 export type NavStructureLink = {
   title: string;
@@ -129,6 +133,15 @@ export const utilityNavStructure = {
     link: "/wishlist",
     title: "Amazon Wishlist",
     icon: IconAmazon,
+    rel: "noreferrer",
   },
-  ...socials,
+  ...typeSafeObjectFromEntries(
+    typeSafeObjectEntries(socials).map(([key, value]) => [
+      key,
+      {
+        ...value,
+        rel: "noreferrer me",
+      },
+    ]),
+  ),
 };

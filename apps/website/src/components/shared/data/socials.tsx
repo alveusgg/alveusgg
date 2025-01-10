@@ -5,6 +5,7 @@ import IconTikTok from "@/icons/IconTikTok";
 import IconTwitter from "@/icons/IconTwitter";
 import IconTwitch from "@/icons/IconTwitch";
 import IconYouTube from "@/icons/IconYouTube";
+import IconBluesky from "@/icons/IconBluesky";
 
 type SocialLink = {
   link: string;
@@ -27,6 +28,11 @@ const socials = {
     link: "https://twitter.com/AlveusSanctuary",
     title: "X (Twitter)",
     icon: IconTwitter,
+  },
+  bluesky: {
+    link: "https://bsky.app/profile/alveussanctuary.org",
+    title: "Bluesky",
+    icon: IconBluesky,
   },
   tiktok: {
     link: "https://www.tiktok.com/@alveussanctuary",
