@@ -25,7 +25,7 @@ const socials = {
     title: "TikTok",
   },
   youtube: {
-    link: "https://www.youtube.com/c/AlveusSanctuary",
+    link: "https://www.youtube.com/AlveusSanctuary",
     title: "YouTube",
   },
 } as const satisfies Record<string, SocialLink>;
