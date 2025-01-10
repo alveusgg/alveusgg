@@ -1,4 +1,4 @@
-import { pushMaxAttempts } from "@/data/env/push";
+import { env } from "@/env";
 
 import { prisma } from "@/server/db/client";
 
@@ -123,7 +123,7 @@ export async function cleanupExpiredNotificationPushes() {
       OR: [
         { subscription: { deletedAt: { not: null } } },
         { expiresAt: { lte: now } },
-        { attempts: { gt: pushMaxAttempts } },
+        { attempts: { gt: env.PUSH_MAX_ATTEMPTS } },
       ],
     },
   });
