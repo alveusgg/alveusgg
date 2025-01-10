@@ -3,6 +3,7 @@ import { getSession } from "next-auth/react";
 
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 
 export async function getServerSideProps(context: NextPageContext) {
   const session = await getSession(context);
@@ -63,7 +64,10 @@ const BookClubPage: NextPage<
         {isLoggedIn && preSignedUploadUrl ? (
           <Upload preSignedUploadUrl={preSignedUploadUrl} />
         ) : (
-          "Need to be logged in to upload"
+          <>
+            <h3>Need to be logged in to upload</h3>
+            <LoginWithTwitchButton />
+          </>
         )}
       </Section>
     </>
