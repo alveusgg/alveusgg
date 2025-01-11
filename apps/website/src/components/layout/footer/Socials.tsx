@@ -106,7 +106,7 @@ const Socials = () => {
                   className={buttonClasses}
                   href={social.link}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noreferrer me"
                   title={social.title}
                 >
                   <social.icon size={24} />
