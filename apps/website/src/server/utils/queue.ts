@@ -1,6 +1,6 @@
 import { env } from "@/env";
 
-export function callEndpoint<T>(endpoint: string, body: T) {
+export async function callEndpoint<T>(endpoint: string, body: T) {
   const bodyText = JSON.stringify(body);
   const fullEndpointUrl = new URL(
     endpoint,
@@ -9,7 +9,7 @@ export function callEndpoint<T>(endpoint: string, body: T) {
 
   // Use queue
   if (env.UPSTASH_QSTASH_URL && env.UPSTASH_QSTASH_KEY) {
-    return fetch(`${env.UPSTASH_QSTASH_URL}${fullEndpointUrl}`, {
+    const resp = await fetch(`${env.UPSTASH_QSTASH_URL}${fullEndpointUrl}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -18,6 +18,8 @@ export function callEndpoint<T>(endpoint: string, body: T) {
       },
       body: bodyText,
     });
+    await new Promise((res) => setTimeout(res, 1000 / 100)); // Naive 100 rps limit
+    return resp;
   }
 
   // Call directly
