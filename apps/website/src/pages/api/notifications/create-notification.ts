@@ -2,6 +2,10 @@ import { z } from "zod";
 import { createNotification } from "@/server/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 
+export const config = {
+  maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan
+};
+
 // TODO: move API data schema into a shared package for website and chatbot
 const dateSchema = z.string().pipe(z.coerce.date());
 
