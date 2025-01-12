@@ -1,5 +1,5 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { type Clip, getClips } from "@/server/apis/twitch";
 import { prisma } from "@/server/db/client";
@@ -178,14 +178,30 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 
   return (
-    <div className="h-screen w-full">
+    <div className="flex h-screen w-full">
       {clip && (
-        <iframe
-          src={getTwitchEmbed(clip.id, window.location.hostname)}
-          onLoad={onLoad}
-          onError={onError}
-          className="size-full"
-        />
+        <div className="relative my-auto aspect-video h-auto w-full">
+          <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur">
+            <h1 className="text-4xl">
+              {clip.title}
+              <span className="ml-1 text-2xl">
+                {" "}
+                (
+                {new Date(clip.created).toLocaleDateString(undefined, {
+                  dateStyle: "long",
+                })}
+                )
+              </span>
+            </h1>
+            <p className="text-xl">Clipped by {clip.creator}</p>
+          </div>
+          <iframe
+            src={getTwitchEmbed(clip.id, window.location.hostname)}
+            onLoad={onLoad}
+            onError={onError}
+            className="size-full rounded"
+          />
+        </div>
       )}
     </div>
   );
