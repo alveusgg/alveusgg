@@ -101,12 +101,6 @@ export const getStaticProps: GetStaticProps<{
   };
 };
 
-const random = <T,>(array: [T, ...T[]]): T =>
-  array[Math.floor(Math.random() * array.length)]!;
-
-const isPopulatedArray = <T,>(array: T[]): array is [T, ...T[]] =>
-  array.length > 0;
-
 const getTwitchEmbed = (clip: string, parent: string): string => {
   const url = new URL("https://clips.twitch.tv/embed");
   url.searchParams.set("clip", clip);
@@ -122,11 +116,18 @@ const getTwitchEmbed = (clip: string, parent: string): string => {
 const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   clips,
 }) => {
-  // Pick a random clip on first load
-  const [clip, setClip] = useState<ClipData | null>(null);
+  // Once mounted, randomize the clips
+  const [randomClips, setRandomClips] = useState<ClipData[]>([]);
   useEffect(() => {
-    if (isPopulatedArray(clips)) setClip(random(clips));
+    setRandomClips(clips.slice().sort(() => Math.random() - 0.5));
   }, [clips]);
+
+  const [idx, setIdx] = useState<number>(0);
+  const clip = randomClips[idx];
+  const increment = useCallback(
+    () => setIdx((idx) => (idx + 1) % clips.length),
+    [clips.length],
+  );
 
   // As a fallback, set a timer for 150% of the duration of the clip
   const fallbackTimer = useRef<NodeJS.Timeout>(null);
@@ -135,12 +136,10 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
     if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
     fallbackTimer.current = setTimeout(
-      () => {
-        if (isPopulatedArray(clips)) setClip(random(clips));
-      },
+      () => increment(),
       clip.duration * 1000 * 1.5,
     );
-  }, [clip, clips]);
+  }, [clip, increment]);
 
   // As soon as the clip loads, start a timer to randomize when the clip ends
   const loadedTimer = useRef<NodeJS.Timeout>(null);
@@ -152,12 +151,10 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
     if (loadedTimer.current) clearTimeout(loadedTimer.current);
     loadedTimer.current = setTimeout(
-      () => {
-        if (isPopulatedArray(clips)) setClip(random(clips));
-      },
+      () => increment(),
       clip.duration * 1000 + 2 * 1000, // Fudge factor of 2 seconds for clip loading
     );
-  }, [clip, clips]);
+  }, [clip, increment]);
 
   // If the clip fails to load, randomize after 2 seconds
   const errorTimer = useRef<NodeJS.Timeout>(null);
@@ -167,10 +164,8 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     if (loadedTimer.current) clearTimeout(loadedTimer.current);
 
     if (errorTimer.current) clearTimeout(errorTimer.current);
-    errorTimer.current = setTimeout(() => {
-      if (isPopulatedArray(clips)) setClip(random(clips));
-    }, 2000);
-  }, [clips]);
+    errorTimer.current = setTimeout(() => increment(), 2000);
+  }, [increment]);
 
   // When we unmount, clear all timers
   useEffect(
@@ -182,16 +177,11 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     [],
   );
 
-  const url = useMemo(
-    () => clip && getTwitchEmbed(clip.id, window.location.hostname),
-    [clip],
-  );
-
   return (
     <div className="h-screen w-full">
-      {url && (
+      {clip && (
         <iframe
-          src={url}
+          src={getTwitchEmbed(clip.id, window.location.hostname)}
           onLoad={onLoad}
           onError={onError}
           className="size-full"
