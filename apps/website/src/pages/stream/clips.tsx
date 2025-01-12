@@ -64,7 +64,13 @@ export const getStaticProps: GetStaticProps<{
     },
   });
   if (!twitchChannel?.broadcasterAccount?.access_token) {
-    throw new Error(`No access token found for Twitch account`);
+    console.error("No Twitch account found");
+    return {
+      props: {
+        clips: [],
+      },
+      revalidate: 60, // revalidate after 1 minute
+    };
   }
 
   // Get clips within the last year, older than a week, with at least 100 views
@@ -95,8 +101,11 @@ export const getStaticProps: GetStaticProps<{
   };
 };
 
-const random = <T,>(array: T[]): T =>
+const random = <T,>(array: [T, ...T[]]): T =>
   array[Math.floor(Math.random() * array.length)]!;
+
+const isPopulatedArray = <T,>(array: T[]): array is [T, ...T[]] =>
+  array.length > 0;
 
 const getTwitchEmbed = (clip: string, parent: string): string => {
   const url = new URL("https://clips.twitch.tv");
@@ -116,7 +125,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   // Pick a random clip on first load
   const [clip, setClip] = useState<ClipData | null>(null);
   useEffect(() => {
-    setClip(random(clips));
+    if (isPopulatedArray(clips)) setClip(random(clips));
   }, [clips]);
 
   // As a fallback, set a timer for 150% of the duration of the clip
@@ -127,7 +136,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
     fallbackTimer.current = setTimeout(
       () => {
-        setClip(random(clips));
+        if (isPopulatedArray(clips)) setClip(random(clips));
       },
       clip.duration * 1000 * 1.5,
     );
@@ -144,8 +153,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     if (loadedTimer.current) clearTimeout(loadedTimer.current);
     loadedTimer.current = setTimeout(
       () => {
-        console.log("Timer ended");
-        setClip(random(clips));
+        if (isPopulatedArray(clips)) setClip(random(clips));
       },
       clip.duration * 1000 + 2 * 1000, // Fudge factor of 2 seconds for clip loading
     );
@@ -160,7 +168,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
     if (errorTimer.current) clearTimeout(errorTimer.current);
     errorTimer.current = setTimeout(() => {
-      setClip(random(clips));
+      if (isPopulatedArray(clips)) setClip(random(clips));
     }, 2000);
   }, [clips]);
 
