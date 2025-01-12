@@ -108,7 +108,7 @@ const isPopulatedArray = <T,>(array: T[]): array is [T, ...T[]] =>
   array.length > 0;
 
 const getTwitchEmbed = (clip: string, parent: string): string => {
-  const url = new URL("https://clips.twitch.tv");
+  const url = new URL("https://clips.twitch.tv/embed");
   url.searchParams.set("clip", clip);
   url.searchParams.set("parent", parent);
   url.searchParams.set("autoplay", "true");
