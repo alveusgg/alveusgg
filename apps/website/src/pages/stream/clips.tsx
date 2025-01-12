@@ -1,4 +1,5 @@
-import type { InferGetStaticPropsType, NextPage } from "next";
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { type Clip, getClips } from "@/server/apis/twitch";
 import { prisma } from "@/server/db/client";
@@ -40,7 +41,17 @@ async function getTwitchClips(
   return clips;
 }
 
-export const getStaticProps = async () => {
+interface ClipData {
+  id: string;
+  title: string;
+  creator: string;
+  created: string;
+  duration: number;
+}
+
+export const getStaticProps: GetStaticProps<{
+  clips: ClipData[];
+}> = async () => {
   // Get auth for the Twitch account
   const twitchChannel = await prisma.twitchChannel.findFirst({
     where: { username: twitchChannels.alveus.username },
@@ -68,12 +79,12 @@ export const getStaticProps = async () => {
     end,
     100,
   );
-  console.log(clips[0], clips.length);
+  console.log(`Fetched ${clips.length} clips`);
 
   return {
     props: {
       clips: clips.map((clip) => ({
-        url: clip.embed_url,
+        id: clip.id,
         title: clip.title,
         creator: clip.creator_name,
         created: clip.created_at,
@@ -84,10 +95,102 @@ export const getStaticProps = async () => {
   };
 };
 
+const random = <T,>(array: T[]): T =>
+  array[Math.floor(Math.random() * array.length)]!;
+
+const getTwitchEmbed = (clip: string, parent: string): string => {
+  const url = new URL("https://clips.twitch.tv");
+  url.searchParams.set("clip", clip);
+  url.searchParams.set("parent", parent);
+  url.searchParams.set("autoplay", "true");
+  url.searchParams.set("muted", "false");
+  url.searchParams.set("allowfullscreen", "false");
+  url.searchParams.set("width", "100%");
+  url.searchParams.set("height", "100%");
+  return url.toString();
+};
+
 const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   clips,
 }) => {
-  return null;
+  // Pick a random clip on first load
+  const [clip, setClip] = useState<ClipData | null>(null);
+  useEffect(() => {
+    setClip(random(clips));
+  }, [clips]);
+
+  // As a fallback, set a timer for 150% of the duration of the clip
+  const fallbackTimer = useRef<NodeJS.Timeout>(null);
+  useEffect(() => {
+    if (!clip) return;
+
+    if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
+    fallbackTimer.current = setTimeout(
+      () => {
+        setClip(random(clips));
+      },
+      clip.duration * 1000 * 1.5,
+    );
+  }, [clip, clips]);
+
+  // As soon as the clip loads, start a timer to randomize when the clip ends
+  const loadedTimer = useRef<NodeJS.Timeout>(null);
+  const onLoad = useCallback(() => {
+    if (!clip) return;
+
+    // We can clear the fallback timer as the clip has loaded
+    if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
+
+    if (loadedTimer.current) clearTimeout(loadedTimer.current);
+    loadedTimer.current = setTimeout(
+      () => {
+        console.log("Timer ended");
+        setClip(random(clips));
+      },
+      clip.duration * 1000 + 2 * 1000, // Fudge factor of 2 seconds for clip loading
+    );
+  }, [clip, clips]);
+
+  // If the clip fails to load, randomize after 2 seconds
+  const errorTimer = useRef<NodeJS.Timeout>(null);
+  const onError = useCallback(() => {
+    // Clear any other timers
+    if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
+    if (loadedTimer.current) clearTimeout(loadedTimer.current);
+
+    if (errorTimer.current) clearTimeout(errorTimer.current);
+    errorTimer.current = setTimeout(() => {
+      setClip(random(clips));
+    }, 2000);
+  }, [clips]);
+
+  // When we unmount, clear all timers
+  useEffect(
+    () => () => {
+      if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
+      if (loadedTimer.current) clearTimeout(loadedTimer.current);
+      if (errorTimer.current) clearTimeout(errorTimer.current);
+    },
+    [],
+  );
+
+  const url = useMemo(
+    () => clip && getTwitchEmbed(clip.id, window.location.hostname),
+    [clip],
+  );
+
+  return (
+    <div className="h-screen w-full">
+      {url && (
+        <iframe
+          src={url}
+          onLoad={onLoad}
+          onError={onError}
+          className="size-full"
+        />
+      )}
+    </div>
+  );
 };
 
 export default ClipsPage;
