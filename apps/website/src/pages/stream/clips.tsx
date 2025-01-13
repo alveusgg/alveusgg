@@ -200,34 +200,36 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 
   return (
-    <div className="flex h-screen w-full p-8">
+    <div className="flex h-screen w-full items-center justify-center p-8">
       {clip && (
-        <div className="relative my-auto aspect-video h-auto w-full">
-          <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
+        <div className="flex aspect-video h-full max-w-full items-center justify-center">
+          <div className="relative flex aspect-video w-full items-center justify-center">
+            <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
 
-          <Transition show={details}>
-            <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
-              <h1 className="text-4xl">
-                {clip.title}
-                <span className="ml-1 text-2xl">
-                  {" "}
-                  (
-                  {new Date(clip.created).toLocaleDateString(undefined, {
-                    dateStyle: "long",
-                  })}
-                  )
-                </span>
-              </h1>
-              <p className="text-xl">Clipped by {clip.creator}</p>
-            </div>
-          </Transition>
+            <Transition show={details}>
+              <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
+                <h1 className="text-4xl">
+                  {clip.title}
+                  <span className="ml-1 text-2xl">
+                    {" "}
+                    (
+                    {new Date(clip.created).toLocaleDateString(undefined, {
+                      dateStyle: "long",
+                    })}
+                    )
+                  </span>
+                </h1>
+                <p className="text-xl">Clipped by {clip.creator}</p>
+              </div>
+            </Transition>
 
-          <iframe
-            src={getTwitchEmbed(clip.id, window.location.hostname)}
-            onLoad={onLoad}
-            onError={onError}
-            className="size-full rounded-lg"
-          />
+            <iframe
+              src={getTwitchEmbed(clip.id, window.location.hostname)}
+              onLoad={onLoad}
+              onError={onError}
+              className="size-full rounded-lg"
+            />
+          </div>
         </div>
       )}
     </div>
