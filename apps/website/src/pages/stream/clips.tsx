@@ -120,7 +120,12 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   // Once mounted, randomize the clips
   const [randomClips, setRandomClips] = useState<ClipData[]>([]);
   useEffect(() => {
-    setRandomClips(clips.slice().sort(() => Math.random() - 0.5));
+    const shuffled = clips.slice();
+    for (let i = shuffled.length - 1; i >= 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
+    }
+    setRandomClips(shuffled);
   }, [clips]);
 
   const [idx, setIdx] = useState<number>(0);
