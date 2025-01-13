@@ -1,5 +1,6 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { Transition } from "@headlessui/react";
 
 import { type Clip, getClips } from "@/server/apis/twitch";
 import { prisma } from "@/server/db/client";
@@ -129,6 +130,12 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     [clips.length],
   );
 
+  // When we pick a clip, show the details
+  const [details, setDetails] = useState(false);
+  useEffect(() => {
+    setDetails(true);
+  }, [clip]);
+
   // As a fallback, set a timer for 150% of the duration of the clip
   const fallbackTimer = useRef<NodeJS.Timeout>(null);
   useEffect(() => {
@@ -142,7 +149,9 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   }, [clip, increment]);
 
   // As soon as the clip loads, start a timer to randomize when the clip ends
+  // Also, after a short while, hide the details of the clip
   const loadedTimer = useRef<NodeJS.Timeout>(null);
+  const detailsTimer = useRef<NodeJS.Timeout>(null);
   const onLoad = useCallback(() => {
     if (!clip) return;
 
@@ -154,6 +163,9 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       () => increment(),
       clip.duration * 1000 + 2 * 1000, // Fudge factor of 2 seconds for clip loading
     );
+
+    if (detailsTimer.current) clearTimeout(detailsTimer.current);
+    detailsTimer.current = setTimeout(() => setDetails(false), 10 * 1000);
   }, [clip, increment]);
 
   // If the clip fails to load, randomize after 2 seconds
@@ -172,6 +184,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     () => () => {
       if (fallbackTimer.current) clearTimeout(fallbackTimer.current);
       if (loadedTimer.current) clearTimeout(loadedTimer.current);
+      if (detailsTimer.current) clearTimeout(detailsTimer.current);
       if (errorTimer.current) clearTimeout(errorTimer.current);
     },
     [],
@@ -181,20 +194,22 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     <div className="flex h-screen w-full">
       {clip && (
         <div className="relative my-auto aspect-video h-auto w-full">
-          <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur">
-            <h1 className="text-4xl">
-              {clip.title}
-              <span className="ml-1 text-2xl">
-                {" "}
-                (
-                {new Date(clip.created).toLocaleDateString(undefined, {
-                  dateStyle: "long",
-                })}
-                )
-              </span>
-            </h1>
-            <p className="text-xl">Clipped by {clip.creator}</p>
-          </div>
+          <Transition show={details}>
+            <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
+              <h1 className="text-4xl">
+                {clip.title}
+                <span className="ml-1 text-2xl">
+                  {" "}
+                  (
+                  {new Date(clip.created).toLocaleDateString(undefined, {
+                    dateStyle: "long",
+                  })}
+                  )
+                </span>
+              </h1>
+              <p className="text-xl">Clipped by {clip.creator}</p>
+            </div>
+          </Transition>
           <iframe
             src={getTwitchEmbed(clip.id, window.location.hostname)}
             onLoad={onLoad}
