@@ -153,7 +153,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     );
   }, [clip, increment]);
 
-  // As soon as the clip loads, start a timer to randomize when the clip ends
+  // As soon as the clip loads, start a timer for when the clip ends
   // Also, after a short while, hide the details of the clip
   const loadedTimer = useRef<NodeJS.Timeout>(null);
   const detailsTimer = useRef<NodeJS.Timeout>(null);
@@ -173,7 +173,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     detailsTimer.current = setTimeout(() => setDetails(false), 10 * 1000);
   }, [clip, increment]);
 
-  // If the clip fails to load, randomize after 2 seconds
+  // If the clip fails to load, show another after 2 seconds
   const errorTimer = useRef<NodeJS.Timeout>(null);
   const onError = useCallback(() => {
     // Clear any other timers
