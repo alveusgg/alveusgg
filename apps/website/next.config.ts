@@ -378,7 +378,7 @@ const config: NextConfig = {
                 ["development", "preview"].includes(process.env.VERCEL_ENV) &&
                 "https://vercel.live/",
               // Twitch embeds:
-              "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
+              "https://embed.twitch.tv/ https://player.twitch.tv/ https://clips.twitch.tv/ https://www.twitch.tv/",
               // YouTube embeds:
               "https://www.youtube-nocookie.com/",
               // Streamable embeds:

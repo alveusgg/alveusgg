@@ -231,7 +231,7 @@ export async function getScheduleSegments(
 
   if (response.status !== 200) {
     console.error(json);
-    throw new Error("Failed to create schedule segment!");
+    throw new Error("Failed to get schedule segments!");
   }
 
   return channelScheduleResponseSchema.parseAsync(json);
@@ -314,4 +314,63 @@ export async function removeScheduleSegment(
     console.error(json);
     throw new Error("Failed to delete schedule segment!");
   }
+}
+
+const clipSchema = z.object({
+  id: z.string(),
+  url: z.string(),
+  embed_url: z.string(),
+  broadcaster_id: z.string(),
+  broadcaster_name: z.string(),
+  creator_id: z.string(),
+  creator_name: z.string(),
+  video_id: z.string(),
+  game_id: z.string(),
+  language: z.string(),
+  title: z.string(),
+  view_count: z.number(),
+  created_at: z.string().datetime(),
+  thumbnail_url: z.string(),
+  duration: z.number(),
+  vod_offset: z.number().nullable(),
+  is_featured: z.boolean(),
+});
+
+export type Clip = z.infer<typeof clipSchema>;
+
+const clipsResponseSchema = z.object({
+  data: z.array(clipSchema),
+  pagination: paginationSchema,
+});
+
+export async function getClips(
+  userAccessToken: string,
+  userId: string,
+  startDate?: Date,
+  endDate?: Date,
+  after?: string,
+) {
+  const params = new URLSearchParams({
+    broadcaster_id: userId,
+    first: "100",
+  });
+
+  if (startDate) params.append("started_at", startDate.toISOString());
+  if (endDate) params.append("ended_at", endDate.toISOString());
+  if (after) params.append("after", after);
+
+  const response = await fetch(`https://api.twitch.tv/helix/clips?${params}`, {
+    method: "GET",
+    headers: {
+      ...(await getUserAuthHeaders(userAccessToken)),
+    },
+  });
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Failed to get clips!");
+  }
+
+  return clipsResponseSchema.parseAsync(json);
 }
