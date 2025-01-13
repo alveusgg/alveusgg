@@ -81,7 +81,10 @@ const NationalHatDayPage: NextPage<
 > = ({ preSignedUploadUrl }) => {
   return (
     <>
-      <Meta title="National Hat Day 2025" description="Submit your screenshots for National Hat Day" />
+      <Meta
+        title="National Hat Day 2025"
+        description="Submit your screenshots for National Hat Day"
+      />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
