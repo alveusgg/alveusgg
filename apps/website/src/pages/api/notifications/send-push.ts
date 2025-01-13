@@ -1,7 +1,8 @@
 import type { NotificationUrgency } from "@prisma/client";
 import { z } from "zod";
 
-import { pushTextDir, pushLang, pushMaxAttempts } from "@/data/env/push";
+import { env } from "@/env";
+
 import {
   badgeUrl,
   defaultTag,
@@ -21,6 +22,10 @@ import { sendWebPushNotification } from "@/server/web-push";
 import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
+
+export const config = {
+  maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan
+};
 
 export type SendPushOptions = z.infer<typeof sendPushSchema>;
 
@@ -122,8 +127,8 @@ export default createTokenProtectedApiHandler(
               subscriptionId: options.subscriptionId,
             },
             image: options.imageUrl,
-            dir: pushTextDir,
-            lang: pushLang,
+            dir: env.PUSH_TEXT_DIR,
+            lang: env.PUSH_LANG,
             icon: iconUrl,
             badge: badgeUrl,
           },
@@ -152,7 +157,7 @@ export default createTokenProtectedApiHandler(
     const status =
       delivered ||
       expired ||
-      (options.attempt && options.attempt >= pushMaxAttempts)
+      (options.attempt && options.attempt >= env.PUSH_MAX_ATTEMPTS)
         ? "DONE"
         : "PENDING";
 

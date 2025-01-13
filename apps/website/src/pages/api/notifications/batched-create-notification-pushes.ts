@@ -8,6 +8,10 @@ import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 
 export type CreatePushesOptions = z.infer<typeof createPushesSchema>;
 
+export const config = {
+  maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan
+};
+
 const createPushesSchema = z.object({
   notificationId: z.string().cuid(),
   expiresAt: z.number(),
