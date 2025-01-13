@@ -53,19 +53,50 @@ interface ClipData {
 export const getStaticProps: GetStaticProps<{
   clips: ClipData[];
 }> = async () => {
-  // Get auth for the Twitch account
-  const twitchChannel = await prisma.twitchChannel.findFirst({
-    where: { username: twitchChannels.alveus.username },
-    select: {
-      broadcasterAccount: {
-        select: {
-          access_token: true,
+  try {
+    // Get auth for the Twitch account
+    const twitchChannel = await prisma.twitchChannel.findFirst({
+      where: { username: twitchChannels.alveus.username },
+      select: {
+        broadcasterAccount: {
+          select: {
+            access_token: true,
+          },
         },
       },
-    },
-  });
-  if (!twitchChannel?.broadcasterAccount?.access_token) {
-    console.error("No Twitch account found");
+    });
+    if (!twitchChannel?.broadcasterAccount?.access_token) {
+      throw new Error("No Twitch account found");
+    }
+
+    // Get clips within the last year, older than a week, with at least 100 views
+    const start = new Date();
+    start.setFullYear(start.getFullYear() - 1);
+    const end = new Date();
+    end.setDate(end.getDate() - 7);
+    const clips = await getTwitchClips(
+      twitchChannel.broadcasterAccount.access_token,
+      twitchChannels.alveus.id,
+      start,
+      end,
+      100,
+    );
+    console.log(`Fetched ${clips.length} clips`);
+
+    return {
+      props: {
+        clips: clips.map((clip) => ({
+          id: clip.id,
+          title: clip.title,
+          creator: clip.creator_name,
+          created: clip.created_at,
+          duration: clip.duration,
+        })),
+      },
+      revalidate: 1800, // revalidate after 30 minutes
+    };
+  } catch (error) {
+    console.error("Failed to fetch clips", error);
     return {
       props: {
         clips: [],
@@ -73,33 +104,6 @@ export const getStaticProps: GetStaticProps<{
       revalidate: 60, // revalidate after 1 minute
     };
   }
-
-  // Get clips within the last year, older than a week, with at least 100 views
-  const start = new Date();
-  start.setFullYear(start.getFullYear() - 1);
-  const end = new Date();
-  end.setDate(end.getDate() - 7);
-  const clips = await getTwitchClips(
-    twitchChannel.broadcasterAccount.access_token,
-    twitchChannels.alveus.id,
-    start,
-    end,
-    100,
-  );
-  console.log(`Fetched ${clips.length} clips`);
-
-  return {
-    props: {
-      clips: clips.map((clip) => ({
-        id: clip.id,
-        title: clip.title,
-        creator: clip.creator_name,
-        created: clip.created_at,
-        duration: clip.duration,
-      })),
-    },
-    revalidate: 1800, // revalidate after 30 minutes
-  };
 };
 
 const getTwitchEmbed = (clip: string, parent: string): string => {
