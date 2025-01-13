@@ -191,9 +191,11 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 
   return (
-    <div className="flex h-screen w-full">
+    <div className="flex h-screen w-full p-8">
       {clip && (
         <div className="relative my-auto aspect-video h-auto w-full">
+          <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
+
           <Transition show={details}>
             <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
               <h1 className="text-4xl">
@@ -210,11 +212,12 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <p className="text-xl">Clipped by {clip.creator}</p>
             </div>
           </Transition>
+
           <iframe
             src={getTwitchEmbed(clip.id, window.location.hostname)}
             onLoad={onLoad}
             onError={onError}
-            className="size-full rounded"
+            className="size-full rounded-lg"
           />
         </div>
       )}
