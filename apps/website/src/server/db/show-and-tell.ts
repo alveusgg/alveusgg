@@ -286,6 +286,7 @@ export async function getPostWithUserById(id: string, authorUserId?: string) {
   return prisma.showAndTellEntry.findFirst({
     include: {
       ...withAttachments.include,
+      featuredImage: true,
       user: true,
     },
     where: {
