@@ -18,7 +18,7 @@ updates:
     versioning-strategy: increase
 
     groups:
-      # Create dedicated (grouped) PRs for Next.js + trpc dependencies
+      # Create dedicated (grouped) PRs for Next.js/trpc/prisma dependencies
       next:
         patterns:
           - "next"
@@ -26,6 +26,11 @@ updates:
       trpc:
         patterns:
           - "@trpc/*"
+          - "@tanstack/react-query"
+      prisma:
+        patterns:
+          - "prisma"
+          - "@prisma/*"
 
       # Update `dependencies` and `devDependencies` separately
       # Create grouped PRs for minor/patch updates
