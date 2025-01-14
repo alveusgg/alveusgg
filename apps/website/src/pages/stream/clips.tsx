@@ -200,7 +200,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 
   return (
-    <div className="flex h-screen w-full items-center justify-center p-8">
+    <div className="flex h-screen w-full items-center justify-center p-20">
       {clip && (
         <div className="flex aspect-video h-full max-w-full items-center justify-center">
           <div className="relative flex aspect-video w-full items-center justify-center">
@@ -208,9 +208,9 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
             <Transition show={details}>
               <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
-                <h1 className="text-4xl">
+                <h1 className="text-5xl">
                   {clip.title}
-                  <span className="ml-1 text-2xl">
+                  <span className="ml-1 text-4xl">
                     {" "}
                     (
                     {new Date(clip.created).toLocaleDateString(undefined, {
@@ -219,7 +219,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                     )
                   </span>
                 </h1>
-                <p className="text-xl">Clipped by {clip.creator}</p>
+                <p className="text-2xl">Clipped by {clip.creator}</p>
               </div>
             </Transition>
 
