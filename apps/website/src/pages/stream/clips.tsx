@@ -6,6 +6,7 @@ import { type Clip, getClips } from "@/server/apis/twitch";
 import { prisma } from "@/server/db/client";
 
 import { twitchChannels } from "@/data/calendar-events";
+import { env } from "@/env";
 
 async function getTwitchClips(
   userAccessToken: string,
@@ -83,9 +84,14 @@ export const getStaticProps: GetStaticProps<{
     );
     console.log(`Fetched ${clips.length} clips`);
 
+    // Filter out any clips marked to be excluded
+    const excluded = new Set(env.TWITCH_EXCLUDED_CLIPS);
+    const filtered = clips.filter((clip) => !excluded.has(clip.id));
+    console.log(`Filtered ${clips.length - filtered.length} clips`);
+
     return {
       props: {
-        clips: clips.map((clip) => ({
+        clips: filtered.map((clip) => ({
           id: clip.id,
           title: clip.title,
           creator: clip.creator_name,
