@@ -4,6 +4,7 @@ import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
 import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
+import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 
 const menuItems = [
@@ -65,7 +66,7 @@ export async function getAdminSSP(
 ) {
   const session =
     env.NODE_ENV === "development" && env.DISABLE_ADMIN_AUTH
-      ? { user: {} }
+      ? DEV_ADMIN_SESSION
       : await getSession(context);
 
   const user = session?.user;

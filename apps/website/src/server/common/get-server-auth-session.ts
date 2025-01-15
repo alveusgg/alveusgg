@@ -1,5 +1,6 @@
 import { type GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";
+import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
 import { env } from "@/env";
 
 import { authOptions } from "../../pages/api/auth/[...nextauth]";
@@ -12,6 +13,6 @@ export const getServerAuthSession = async (ctx: {
   res: GetServerSidePropsContext["res"];
 }) => {
   return env.NODE_ENV === "development" && env.DISABLE_ADMIN_AUTH
-    ? { user: {} }
+    ? DEV_ADMIN_SESSION
     : await unstable_getServerSession(ctx.req, ctx.res, authOptions);
 };
