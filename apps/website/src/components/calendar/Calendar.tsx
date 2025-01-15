@@ -38,7 +38,8 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   // January: Winter
   if (month === 0)
     return {
-      background: "bg-gradient-to-b from-blue-100 to-blue-400 text-gray-900",
+      background:
+        "bg-gradient-to-b from-blue-100 to-blue-400 text-alveus-green-900",
       border: "border-blue-900",
       heading: "bg-blue-900 text-alveus-tan",
     };
@@ -46,7 +47,8 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   // February: Valentine's Day
   if (month === 1)
     return {
-      background: "bg-gradient-to-b from-pink-100 to-pink-400 text-gray-900",
+      background:
+        "bg-gradient-to-b from-pink-100 to-pink-400 text-alveus-green-900",
       border: "border-pink-900",
       heading: "bg-pink-900 text-alveus-tan",
     };
@@ -54,7 +56,8 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   // March: St. Patrick's Day
   if (month === 2)
     return {
-      background: "bg-gradient-to-b from-green-200 to-green-600 text-gray-900",
+      background:
+        "bg-gradient-to-b from-green-200 to-green-600 text-alveus-green-900",
       border: "border-green-900",
       heading: "bg-green-900 text-alveus-tan",
     };
@@ -63,7 +66,7 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   if (month === 3)
     return {
       background:
-        "bg-gradient-to-b from-pink-200 via-pink-200 to-blue-100 text-gray-900",
+        "bg-gradient-to-b from-pink-200 via-pink-200 to-blue-100 text-alveus-green-900",
       border: "border-pink-900",
       heading: "bg-pink-900 text-alveus-tan",
     };
@@ -71,7 +74,8 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   // May: Spring
   if (month === 4)
     return {
-      background: "bg-gradient-to-b from-blue-400 to-blue-100 text-gray-900",
+      background:
+        "bg-gradient-to-b from-blue-400 to-blue-100 text-alveus-green-900",
       border: "border-blue-900",
       heading: "bg-blue-900 text-alveus-tan",
     };
@@ -80,7 +84,7 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   if (month === 5)
     return {
       background:
-        "bg-gradient-to-b from-green-400 via-green-200 to-blue-200 text-gray-900",
+        "bg-gradient-to-b from-green-400 via-green-200 to-blue-200 text-alveus-green-900",
       border: "border-green-900",
       heading: "bg-green-900 text-alveus-tan",
     };
@@ -89,7 +93,7 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   if (month === 6)
     return {
       background:
-        "bg-gradient-to-b from-blue-400 via-blue-200 to-green-200 text-gray-900",
+        "bg-gradient-to-b from-blue-400 via-blue-200 to-green-200 text-alveus-green-900",
       border: "border-blue-900",
       heading: "bg-blue-900 text-alveus-tan",
     };
@@ -98,7 +102,7 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   if (month === 7)
     return {
       background:
-        "bg-gradient-to-b from-green-200 via-green-300 to-alveus-green-400 text-gray-900",
+        "bg-gradient-to-b from-green-200 via-green-300 to-alveus-green-400 text-alveus-green-900",
       border: "border-alveus-green-900",
       heading: "bg-alveus-green-900 text-alveus-tan",
     };
@@ -107,7 +111,7 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   if (month === 8)
     return {
       background:
-        "bg-gradient-to-b from-yellow-300 to-yellow-600 text-gray-900",
+        "bg-gradient-to-b from-yellow-300 to-yellow-600 text-alveus-green-900",
       border: "border-alveus-tan-800",
       heading: "bg-alveus-tan-800 text-alveus-tan",
     };
@@ -116,7 +120,7 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   if (month === 9)
     return {
       background:
-        "bg-gradient-to-b from-yellow-400 to-alveus-tan-400 text-gray-900",
+        "bg-gradient-to-b from-yellow-400 to-alveus-tan-400 text-alveus-green-900",
       border: "border-blue-900",
       heading: "bg-blue-900 text-alveus-tan",
     };
@@ -125,7 +129,7 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   if (month === 10)
     return {
       background:
-        "bg-gradient-to-b from-alveus-tan-300 to-alveus-tan-500 text-gray-900",
+        "bg-gradient-to-b from-alveus-tan-300 to-alveus-tan-500 text-alveus-green-900",
       border: "border-alveus-tan-800",
       heading: "bg-alveus-tan-800 text-alveus-tan",
     };
@@ -133,14 +137,15 @@ const getCalendarTheme = (month?: number): CalendarTheme => {
   // December: Christmas
   if (month === 11)
     return {
-      background: "bg-gradient-to-b from-green-600 to-green-300 text-gray-900",
+      background:
+        "bg-gradient-to-b from-green-600 to-green-300 text-alveus-green-900",
       border: "border-red-800",
       heading: "bg-red-800 text-alveus-tan",
     };
 
   // Default: Alveus standard colors
   return {
-    background: "bg-alveus-green-100 text-gray-900",
+    background: "bg-alveus-green-100 text-alveus-green-900",
     border: "border-alveus-green-900",
     heading: "bg-alveus-green-900 text-alveus-tan",
   };
