@@ -137,7 +137,7 @@ export function Schedule() {
                 <div
                   className={classes(
                     category.color,
-                    "rounded-md p-2 shadow-sm",
+                    "rounded-md border-2 border-gray-400 p-2",
                   )}
                 />
                 <p className="shrink-0 opacity-75">{category.name}</p>

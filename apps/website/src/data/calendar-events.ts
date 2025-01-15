@@ -6,15 +6,15 @@ type StandardCategory = {
 };
 
 export const standardCategories: StandardCategory[] = [
-  { name: "Alveus Regular Stream", color: "bg-yellow-400 hover:bg-yellow-600" },
-  { name: "Alveus Special Stream", color: "bg-green-300 hover:bg-green-500" },
+  { name: "Alveus Regular Stream", color: "bg-yellow-200 hover:bg-yellow-300" },
+  { name: "Alveus Special Stream", color: "bg-green-100 hover:bg-green-200" },
   {
     name: "Alveus Collaboration Stream",
-    color: "bg-blue-300 hover:bg-blue-500",
+    color: "bg-blue-100 hover:bg-blue-50",
   },
-  { name: "Alveus YouTube Video", color: "bg-red-300 hover:bg-red-500" },
-  { name: "Maya Stream", color: "bg-gray-200 hover:bg-gray-400" },
-  { name: "Maya YouTube Video", color: "bg-red-200 hover:bg-red-400" },
+  { name: "Alveus YouTube Video", color: "bg-red-50 hover:bg-red-100" },
+  { name: "Maya Stream", color: "bg-gray-200 hover:bg-gray-300" },
+  { name: "Maya YouTube Video", color: "bg-red-100 hover:bg-red-50" },
 ] as const;
 
 export const getStandardCategoryColor = (category: string) =>
