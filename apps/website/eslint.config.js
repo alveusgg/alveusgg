@@ -56,23 +56,19 @@ export default tseslint.config(
       ],
     },
   },
-  /** @type {import("eslint").Linter.Config} */
-  ({
+  {
     name: "react/recommended",
-    // @ts-expect-error - incorrect types
     ...reactPlugin.configs.flat.recommended,
     settings: {
       react: {
         version: "detect",
       },
     },
-  }),
-  /** @type {import("eslint").Linter.Config} */
-  ({
+  },
+  {
     name: "react/jsx-runtime",
-    // @ts-expect-error - incorrect types
     ...reactPlugin.configs.flat["jsx-runtime"],
-  }),
+  },
   {
     name: "react-hooks/recommended",
     plugins: {
