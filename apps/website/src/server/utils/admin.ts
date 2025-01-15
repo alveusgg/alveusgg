@@ -2,6 +2,7 @@ import { getSession } from "next-auth/react";
 import type { GetSessionParams } from "next-auth/react";
 import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
+import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 
@@ -62,7 +63,10 @@ export async function getAdminSSP(
   context: GetSessionParams,
   permission: PermissionConfig,
 ) {
-  const session = await getSession(context);
+  const session =
+    env.NODE_ENV === "development" && env.DISABLE_ADMIN_AUTH
+      ? { user: {} }
+      : await getSession(context);
 
   const user = session?.user;
   if (!user) {
