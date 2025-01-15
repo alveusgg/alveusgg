@@ -74,10 +74,11 @@ export function DesktopMenu() {
         <ul className="contents">
           {Object.entries(utilityNavStructure).map(([key, link]) => (
             <li key={key}>
+              {/* eslint-disable-next-line react/jsx-no-target-blank */}
               <a
                 className="block rounded-xl bg-transparent p-2 text-white transition-colors hover:bg-white hover:text-alveus-green"
                 target="_blank"
-                rel="noreferrer"
+                rel={link.rel}
                 href={link.link}
                 title={link.title}
               >

@@ -94,11 +94,12 @@ export const env = createEnv({
     FILE_STORAGE_PATH_STYLE: optionalBoolSchema,
     UPSTASH_QSTASH_URL: z.string().url().optional(),
     UPSTASH_QSTASH_KEY: z.string().optional(),
-    PUSH_LANG: z.string().optional(),
-    PUSH_TEXT_DIR: z.enum(["ltr", "rtl"]).optional(),
-    PUSH_BATCH_SIZE: z.number().int().min(1).optional(),
-    PUSH_MAX_ATTEMPTS: z.number().int().min(1).optional(),
-    PUSH_RETRY_DELAY_MS: z.number().int().min(1).optional(),
+    PUSH_LANG: z.string().default("en"),
+    PUSH_TEXT_DIR: z.enum(["ltr", "rtl"]).default("ltr"),
+    PUSH_BATCH_SIZE: z.coerce.number().int().min(1).default(50),
+    PUSH_BATCH_DELAY_MS: z.coerce.number().int().min(1).default(1_000),
+    PUSH_MAX_ATTEMPTS: z.coerce.number().int().min(1).default(5),
+    PUSH_RETRY_DELAY_MS: z.coerce.number().int().min(1).default(10_000),
     DISCORD_BOT_TOKEN: z.string().optional(),
     DISCORD_CALENDAR_EVENT_GUILD_IDS: listOfIdsSchema.optional(),
     DISCORD_CHANNEL_WEBHOOK_NAME: z.string().default("Alveus Updates"),
@@ -107,6 +108,8 @@ export const env = createEnv({
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
     DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfUrlsSchema.optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
+    COMMUNITY_PHOTOS_URL: z.string().url().optional(),
+    COMMUNITY_PHOTOS_KEY: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -175,6 +178,7 @@ export const env = createEnv({
     PUSH_LANG: process.env.PUSH_LANG,
     PUSH_TEXT_DIR: process.env.PUSH_TEXT_DIR,
     PUSH_BATCH_SIZE: process.env.PUSH_BATCH_SIZE,
+    PUSH_BATCH_DELAY_MS: process.env.PUSH_BATCH_DELAY_MS,
     PUSH_MAX_ATTEMPTS: process.env.PUSH_MAX_ATTEMPTS,
     PUSH_RETRY_DELAY_MS: process.env.PUSH_RETRY_DELAY_MS,
     DISCORD_BOT_TOKEN: process.env.DISCORD_BOT_TOKEN,
@@ -189,6 +193,8 @@ export const env = createEnv({
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT,
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION,
+    COMMUNITY_PHOTOS_URL: process.env.COMMUNITY_PHOTOS_URL,
+    COMMUNITY_PHOTOS_KEY: process.env.COMMUNITY_PHOTOS_KEY,
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does

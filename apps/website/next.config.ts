@@ -11,6 +11,7 @@ import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 
 import { twitchChannels } from "@/data/calendar-events";
+import socials from "@/data/socials";
 
 import "@/env/index.js";
 
@@ -295,26 +296,11 @@ const config: NextConfig = {
       destination: "https://bio.link/alveussanctuary",
       permanent: true,
     },
-    {
-      source: "/instagram",
-      destination: "https://www.instagram.com/alveussanctuary",
+    ...typeSafeObjectEntries(socials).map(([key, { link }]) => ({
+      source: `/${key}`,
+      destination: link,
       permanent: true,
-    },
-    {
-      source: "/twitter",
-      destination: "https://twitter.com/AlveusSanctuary",
-      permanent: true,
-    },
-    {
-      source: "/youtube",
-      destination: "https://www.youtube.com/AlveusSanctuary",
-      permanent: true,
-    },
-    {
-      source: "/tiktok",
-      destination: "https://www.tiktok.com/@alveussanctuary",
-      permanent: true,
-    },
+    })),
     {
       source: "/vods",
       destination:
@@ -346,11 +332,6 @@ const config: NextConfig = {
       source: "/vods/connor-projects",
       destination:
         "https://youtube.com/playlist?list=PLtQafKoimfLdtIla7qiJCFYDd4qDZG6y-",
-      permanent: true,
-    },
-    {
-      source: "/twitch",
-      destination: "https://twitch.tv/alveussanctuary",
       permanent: true,
     },
     {
@@ -397,7 +378,7 @@ const config: NextConfig = {
                 ["development", "preview"].includes(process.env.VERCEL_ENV) &&
                 "https://vercel.live/",
               // Twitch embeds:
-              "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
+              "https://embed.twitch.tv/ https://player.twitch.tv/ https://clips.twitch.tv/ https://www.twitch.tv/",
               // YouTube embeds:
               "https://www.youtube-nocookie.com/",
               // Streamable embeds:

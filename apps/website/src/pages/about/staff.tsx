@@ -176,21 +176,21 @@ const staff = {
 };
 
 const team = {
-  mik: {
-    name: "Mik (@Mik_MWP)",
+  jeff: {
+    name: "Jeff (@YungJeff)",
     title: "Social Media Manager",
+  },
+  colton: {
+    name: "Colton (@ColtonActually)",
+    title: "Post-Production Manager",
   },
   chandler: {
     name: "Chandler",
     title: "TikTok Editor",
   },
-  max: {
-    name: "Max (@maxzillajr)",
-    title: "Video Editor",
-  },
   dion: {
     name: "Dion (@Dionysus1911)",
-    title: "Illustrator / Animator",
+    title: "Lead Artist",
   },
   paul: {
     name: "Paul (@pjeweb)",

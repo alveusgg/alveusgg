@@ -8,11 +8,6 @@ import {
   defaultTitle,
   notificationCategories,
 } from "@/data/notifications";
-import {
-  pushBatchSize,
-  pushMaxAttempts,
-  pushRetryDelay,
-} from "@/data/env/push";
 
 import { prisma } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";
@@ -34,9 +29,9 @@ type CreateNotificationData = {
   isDiscord?: boolean;
 };
 
-const exponentialDelays = Array(pushMaxAttempts)
+const exponentialDelays = Array(env.PUSH_MAX_ATTEMPTS)
   .fill(0)
-  .map((_, i) => pushRetryDelay * Math.pow(2, i + 1));
+  .map((_, i) => env.PUSH_RETRY_DELAY_MS * Math.pow(2, i + 1));
 
 function getNotificationExpiration(
   data: CreateNotificationData,
@@ -130,8 +125,8 @@ export async function retryPendingNotificationPushes() {
         expiresAt: { gte: now },
         OR: retryConditions,
       },
-      take: pushBatchSize,
-      skip: pushBatchSize * i++,
+      take: env.PUSH_BATCH_SIZE,
+      skip: env.PUSH_BATCH_SIZE * i++,
     });
 
     if (pendingPushes.length === 0) {
@@ -174,8 +169,8 @@ async function createPushNotifications(notification: Notification) {
             }
           : undefined,
       },
-      take: pushBatchSize,
-      skip: pushBatchSize * i++,
+      take: env.PUSH_BATCH_SIZE,
+      skip: env.PUSH_BATCH_SIZE * i++,
     });
 
     if (subscriptions.length === 0) {
@@ -191,6 +186,11 @@ async function createPushNotifications(notification: Notification) {
           subscriptionIds: subscriptions.map((s) => s.id),
         },
       ),
+    );
+
+    // Delay between batches to avoid rate limiting
+    await new Promise((resolve) =>
+      setTimeout(resolve, env.PUSH_BATCH_DELAY_MS),
     );
   }
 
