@@ -124,7 +124,7 @@ const AboutMayaPage: NextPage = () => {
             <p className="text-lg">
               Maya Higa is one of the top female streamers on Twitch and has
               amassed over 1 million subscribers on YouTube. She integrates her
-              passion of wildlife conservation and education into her content
+              passion for wildlife conservation and education into her content
               regularly, creating some of the most unique content on Twitch.
               Maya has experience as a licensed falconer, wildlife
               rehabilitator, zookeeper, and conservation outreach educator. Her
