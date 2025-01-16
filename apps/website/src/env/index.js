@@ -64,6 +64,7 @@ export const env = createEnv({
     CRON_SECRET: z.string().optional(),
     WEATHER_API_KEY: z.string().optional(),
     WEATHER_STATION_ID: z.string().optional(),
+    DISABLE_ADMIN_AUTH: optionalBoolSchema,
     SUPER_USER_IDS: z.string(),
     WEB_PUSH_VAPID_PRIVATE_KEY: z
       .string()
@@ -155,6 +156,7 @@ export const env = createEnv({
     CRON_SECRET: process.env.CRON_SECRET,
     WEATHER_API_KEY: process.env.WEATHER_API_KEY,
     WEATHER_STATION_ID: process.env.WEATHER_STATION_ID,
+    DISABLE_ADMIN_AUTH: process.env.DISABLE_ADMIN_AUTH,
     SUPER_USER_IDS: process.env.SUPER_USER_IDS,
     WEB_PUSH_VAPID_PRIVATE_KEY: process.env.WEB_PUSH_VAPID_PRIVATE_KEY,
     WEB_PUSH_VAPID_SUBJECT: process.env.WEB_PUSH_VAPID_SUBJECT,
