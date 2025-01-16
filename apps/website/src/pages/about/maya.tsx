@@ -105,7 +105,7 @@ const AboutMayaPage: NextPage = () => {
     <>
       <Meta
         title="About Maya"
-        description="Maya Higa is one of the top female streamers on Twitch and a rising star on YouTube. Maya founded Alveus Sanctuary, a non-profit wildlife sanctuary and virtual education center in central Texas, and raised more than $500,000 during her first fundraising stream thanks to her amazing community and fellow streamers."
+        description="Maya Higa is one of the top female streamers on Twitch and has amassed a large following on YouTube and other social platforms. Maya has experience as a licensed falconer, wildlife rehabilitator, zookeeper, and conservation outreach educator. In 2021, Maya founded Alveus Sanctuary, a non-profit wildlife sanctuary and virtual education center in central Texas."
       />
 
       {/* Nav background */}
