@@ -17,21 +17,23 @@ const directors = {
     description: (
       <>
         <p>
-          Maya Higa is one of the top female streamers on Twitch whose passions
-          include wildlife conservation and education, which she integrates into
-          her content regularly. Maya is a licensed falconer and wildlife
-          conservationist. Her livestreams feature falconry, wildlife rehab,
-          conservation education, and charity fundraising. She created a
-          conservation podcast in 2019 which has since aired more than 60
-          episodes on her channel and raised more than $92,000 for wildlife
-          protection organizations around the globe.
+          Maya Higa is one of the top female streamers on Twitch and has amassed
+          over 1 million subscribers on YouTube. She integrates her passion of
+          wildlife conservation and education into her content regularly,
+          creating some of the most unique content on Twitch. Maya has
+          experience as a licensed falconer, wildlife rehabilitator, zookeeper,
+          and conservation outreach educator. Her livestreams and videos feature
+          conservation education and charity fundraising. She created a
+          conservation podcast in 2019 which aired more than 60 episodes and
+          raised more than $92,000 for conservation organizations around the
+          globe.
         </p>
         <p>
           At the beginning of 2021, Higa founded Alveus Sanctuary, a non-profit
           wildlife sanctuary and virtual education center in central Texas.
         </p>
         <p>
-          Among this, Higa’s accomplishments include earning a Bachelor of
+          Among this, Higa&apos;s accomplishments include earning a Bachelor of
           Science in Agricultural Education and Communication at Cal-Poly
           University at San Luis Obispo, as well as being on the Board of
           Directors for a wildlife rehabilitation center in Central Texas,
