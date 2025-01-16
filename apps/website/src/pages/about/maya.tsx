@@ -105,7 +105,7 @@ const AboutMayaPage: NextPage = () => {
     <>
       <Meta
         title="About Maya"
-        description="Maya Higa is one of the top female streamers on Twitch and a rising star on YouTube. Maya founded Alveus Sanctuary, a non-profit wildlife sanctuary and virtual education center in central Texas, and raised more than $500,000 during her first fundraising stream thanks to her amazing community and fellow streamers."
+        description="Maya Higa is one of the top female streamers on Twitch and has amassed a large following on YouTube and other social platforms. Maya has experience as a licensed falconer, wildlife rehabilitator, zookeeper, and conservation outreach educator. In 2021, Maya founded Alveus Sanctuary, a non-profit wildlife sanctuary and virtual education center in central Texas."
       />
 
       {/* Nav background */}
@@ -122,20 +122,18 @@ const AboutMayaPage: NextPage = () => {
           <div className="w-full lg:w-3/5">
             <Heading level={1}>About Maya Higa</Heading>
             <p className="text-lg">
-              Maya Higa is one of the top female streamers on Twitch and a
-              rising star on YouTube. Her passions include wildlife conservation
-              and education, and she integrates these into her content
+              Maya Higa is one of the top female streamers on Twitch and has
+              amassed over 1 million subscribers on YouTube. She integrates her
+              passion for wildlife conservation and education into her content
               regularly, creating some of the most unique content on Twitch.
-              Maya is a licensed falconer and wildlife conservationist. Her
-              livestreams feature falconry, wildlife rehab, conservation
-              education, and charity fundraising. She created a conservation
-              podcast in 2019 which has since aired more than 60 episodes on her
-              channel and raised more than $92,000 for wildlife protection
-              organizations around the globe. Maya founded Alveus Sanctuary, a
-              non-profit wildlife sanctuary and virtual education center in
-              central Texas and raised more than $500,000 during her first
-              fundraising stream thanks to her amazing community and fellow
-              streamers.
+              Maya has experience as a licensed falconer, wildlife
+              rehabilitator, zookeeper, and conservation outreach educator. Her
+              livestreams and videos feature conservation education and charity
+              fundraising. She created a conservation podcast in 2019 which
+              aired more than 60 episodes and raised more than $92,000 for
+              conservation organizations around the globe. In 2021, Maya founded
+              Alveus Sanctuary, a non-profit wildlife sanctuary and virtual
+              education center in central Texas.
             </p>
           </div>
         </Section>

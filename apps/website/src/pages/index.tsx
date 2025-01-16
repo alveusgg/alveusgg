@@ -12,6 +12,7 @@ import { fetchYouTubeVideos } from "@/server/apis/youtube";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 import usePrefersReducedMotion from "@/hooks/motion";
+import { channels as youTubeChannels } from "@/data/youtube";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
@@ -25,6 +26,7 @@ import { Lightbox } from "@/components/content/YouTube";
 import Maya from "@/components/content/Maya";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import PlushieCarousel from "@/components/content/PlushieCarousel";
+import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
@@ -42,7 +44,6 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 
 const slides = [
   {
@@ -144,12 +145,7 @@ const getTwitchEmbed = (
 };
 
 export const getStaticProps = async () => {
-  const channels = [
-    // Alveus Sanctuary
-    "UCbJ-1yM55NHrR1GS9hhPuvg",
-    // Alveus Sanctuary Highlights
-    "UCfisf6HxiQr8_4mctNBm9cQ",
-  ];
+  const channels = [youTubeChannels.alveus.id, youTubeChannels.highlights.id];
   const latestVideos = await Promise.all(
     channels.map((channelId) => fetchYouTubeVideos(channelId)),
   ).then((feeds) =>
