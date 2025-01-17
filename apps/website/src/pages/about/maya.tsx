@@ -28,7 +28,7 @@ const experience = [
     key: "zoo-intern",
     date: "June, 2018",
     content: (
-      <p>Outreach Education and Exotic Animal Husbandry intern at a Zoo</p>
+      <p>Outreach Education and Exotic Animal Husbandry intern at a zoo</p>
     ),
   },
   {
