@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import type { ShowAndTellEntry } from "@prisma/client";
 
 import type {
-  ShowAndTellEntryAttachments,
+  PublicShowAndTellEntryWithAttachments,
   ShowAndTellSubmitInput,
 } from "@/server/db/show-and-tell";
 
@@ -47,7 +47,7 @@ import { MapPickerField } from "../shared/form/MapPickerField";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
-  entry?: ShowAndTellEntry & { attachments: ShowAndTellEntryAttachments };
+  entry?: PublicShowAndTellEntryWithAttachments & Partial<ShowAndTellEntry>;
   action: "review" | "create" | "update";
   onUpdate?: () => void;
 };
@@ -108,7 +108,9 @@ export function ShowAndTellEntryForm({
 
   const initialLocation = useMemo<MapLocation | undefined>(
     () =>
-      entry && entry.longitude !== null && entry.latitude !== null
+      entry &&
+      typeof entry.latitude === "number" &&
+      typeof entry.longitude === "number"
         ? {
             latitude: entry.latitude,
             longitude: entry.longitude,
