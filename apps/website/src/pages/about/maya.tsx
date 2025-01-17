@@ -25,22 +25,19 @@ const experience = [
     content: <p>County 4-H All Star Ambassador</p>,
   },
   {
-    key: "zoo-to-you",
+    key: "zoo-intern",
     date: "June, 2018",
     content: (
-      <p>
-        Outreach Education and Exotic Animal Husbandry intern at Zoo to You
-        Conservation Ambassadors
-      </p>
+      <p>Outreach Education and Exotic Animal Husbandry intern at a zoo</p>
     ),
   },
   {
-    key: "charles-paddock-zoo",
+    key: "aza-intern",
     date: "January, 2019",
     content: (
       <p>
-        Outreach Education and Exotic Animal Husbandry intern at Charles Paddock
-        Zoo
+        Outreach Education and Exotic Animal Husbandry intern at an AZA
+        accredited zoo facility
       </p>
     ),
   },
@@ -52,11 +49,9 @@ const experience = [
     ),
   },
   {
-    key: "free-flight-exotic-bird-sanctuary",
+    key: "exotic-bird-sanctuary",
     date: "June, 2019",
-    content: (
-      <p>Education and Husbandry intern at Free Flight Exotic Bird Sanctuary</p>
-    ),
+    content: <p>Education and Husbandry intern at an exotic bird sanctuary</p>,
   },
   {
     key: "cal-poly-graduation",
