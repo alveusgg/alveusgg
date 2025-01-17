@@ -1,5 +1,4 @@
 import type { Notification } from "@prisma/client";
-import { waitUntil } from "@vercel/functions";
 
 import { env } from "@/env";
 
@@ -55,7 +54,7 @@ export async function createNotification(data: CreateNotificationData) {
   }
 
   const expiresAt = getNotificationExpiration(data, tagConfig);
-  const notification = await prisma.notification.create({
+  return prisma.notification.create({
     data: {
       title: data.title,
       expiresAt: expiresAt,
@@ -70,21 +69,16 @@ export async function createNotification(data: CreateNotificationData) {
       isDiscord: data.isDiscord || false,
     },
   });
-
-  const tasks = [];
-
-  if (notification.isPush) {
-    tasks.push(createPushNotifications(notification));
-  }
-
-  if (notification.isDiscord) {
-    tasks.push(createDiscordNotifications(notification));
-  }
-
-  await Promise.allSettled(tasks);
 }
 
-export async function resendNotification(notificationId: string) {
+export async function sendNotification(notification: Notification) {
+  await Promise.allSettled([
+    notification.isPush && sendNotificationPushes(notification),
+    notification.isDiscord && sendDiscordNotifications(notification),
+  ]);
+}
+
+export async function copyNotification(notificationId: string) {
   const oldNotification = await prisma.notification.findUnique({
     where: { id: notificationId },
   });
@@ -150,7 +144,7 @@ export async function retryPendingNotificationPushes() {
   await Promise.allSettled(requests);
 }
 
-async function createPushNotifications(notification: Notification) {
+async function sendNotificationPushes(notification: Notification) {
   // Get subscriptions in batches and delegate them to separate workers
   const requests = [];
   let i = 0;
@@ -195,10 +189,10 @@ async function createPushNotifications(notification: Notification) {
     );
   }
 
-  waitUntil(Promise.allSettled(requests));
+  await Promise.allSettled(requests);
 }
 
-async function createDiscordNotifications({
+async function sendDiscordNotifications({
   tag,
   id,
   title,
@@ -248,5 +242,5 @@ async function createDiscordNotifications({
     );
   }
 
-  waitUntil(Promise.allSettled(tasks));
+  await Promise.allSettled(tasks);
 }

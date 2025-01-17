@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { waitUntil } from "@vercel/functions";
 
 import { env } from "@/env";
 import { permissions } from "@/data/permissions";
@@ -11,7 +12,11 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { createNotification, resendNotification } from "@/server/notifications";
+import {
+  createNotification,
+  copyNotification,
+  sendNotification,
+} from "@/server/notifications";
 import { createFileStorageUpload } from "@/server/utils/file-storage";
 import {
   cancelNotification,
@@ -45,7 +50,10 @@ export const adminNotificationsRouter = router({
         isDiscord: z.boolean().optional(),
       }),
     )
-    .mutation(async ({ input }) => createNotification(input)),
+    .mutation(async ({ input }) => {
+      const notification = await createNotification(input);
+      waitUntil(sendNotification(notification));
+    }),
 
   getStats: permittedProcedure.query(async () => {
     const [totalNotifications, totalPushes, totalSubscriptions, pendingPushes] =
@@ -85,7 +93,15 @@ export const adminNotificationsRouter = router({
 
   resendNotification: permittedProcedure
     .input(z.string().cuid())
-    .mutation(async ({ input }) => resendNotification(input)),
+    .mutation(async ({ input }) => {
+      const notification = await copyNotification(input);
+      if (notification) {
+        waitUntil(sendNotification(notification));
+        return true;
+      }
+
+      return false;
+    }),
 
   createFileUpload: permittedProcedure
     .input(
