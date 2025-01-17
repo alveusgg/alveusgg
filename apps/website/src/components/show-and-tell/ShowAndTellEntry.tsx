@@ -162,9 +162,20 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
     try {
       return parse(`<root>${entry.text}</root>`, parseOptions);
     } catch (e) {
-      console.error(`Failed to parse Show and Tell entry ${entry.id}`, e);
+      console.error(`Failed to parse Show and Tell entry text ${entry.id}`, e);
     }
   }, [entry.text, entry.id]);
+
+  const note = useMemo(() => {
+    try {
+      return (
+        entry.notePublic &&
+        parse(`<root>${entry.notePublic}</root>`, parseOptions)
+      );
+    } catch (e) {
+      console.error(`Failed to parse Show and Tell entry note ${entry.id}`, e);
+    }
+  }, [entry.notePublic, entry.id]);
 
   return (
     isValidElement(content) &&
@@ -180,7 +191,7 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
               FallbackComponent={Empty}
               onError={(err) =>
                 console.error(
-                  `Failed to render Show and Tell entry ${entry.id}`,
+                  `Failed to render Show and Tell entry text ${entry.id}`,
                   err,
                 )
               }
@@ -188,6 +199,28 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
               {content}
             </ErrorBoundary>
           </div>
+
+          {note && (
+            <div className="opacity-75">
+              <h3 className="-mb-4 mt-4 text-xs font-bold uppercase text-alveus-green-600 xl:text-sm">
+                Mod Note
+              </h3>
+
+              <div className="alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg">
+                <ErrorBoundary
+                  FallbackComponent={Empty}
+                  onError={(err) =>
+                    console.error(
+                      `Failed to render Show and Tell entry note ${entry.id}`,
+                      err,
+                    )
+                  }
+                >
+                  {note}
+                </ErrorBoundary>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )
