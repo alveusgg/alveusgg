@@ -143,14 +143,22 @@ const showAndTellSharedInputSchema = z.object({
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
 
-export type ShowAndTellUpdateInput = z.infer<
-  typeof showAndTellUpdateInputSchema
->;
 export const showAndTellUpdateInputSchema = showAndTellSharedInputSchema.and(
   z.object({
     id: z.string().cuid(),
   }),
 );
+
+export const showAndTellReviewInputSchema = showAndTellUpdateInputSchema.and(
+  z.object({
+    notePrivate: z.string().nullable(),
+    notePublic: z.string().nullable(),
+  }),
+);
+
+export type ShowAndTellUpdateInput =
+  | z.infer<typeof showAndTellUpdateInputSchema>
+  | z.infer<typeof showAndTellReviewInputSchema>;
 
 async function revalidateCache(postIdOrIds?: string | string[]) {
   const url = new URL(
@@ -394,6 +402,14 @@ export async function updatePost(
   }
 
   const text = sanitizeUserHtml(input.text);
+  const notePrivate =
+    "notePrivate" in input
+      ? sanitizeUserHtml(input.notePrivate || "")
+      : undefined;
+  const notePublic =
+    "notePublic" in input
+      ? sanitizeUserHtml(input.notePublic || "")
+      : undefined;
   const newImages = await createImageAttachments(input.imageAttachments.create);
   const newVideos = createVideoAttachments(input.videoLinks);
 
@@ -434,6 +450,8 @@ export async function updatePost(
         location: input.location,
         longitude: input.longitude,
         latitude: input.latitude,
+        notePrivate,
+        notePublic,
       },
     }),
     // Update image attachments that are in the update list

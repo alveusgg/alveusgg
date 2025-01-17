@@ -6,7 +6,7 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import {
-  showAndTellUpdateInputSchema,
+  showAndTellReviewInputSchema,
   updatePost,
   approvePost,
   removeApprovalFromPost,
@@ -30,7 +30,7 @@ export const adminShowAndTellRouter = router({
     .query(({ input }) => getPostWithUserById(input)),
 
   review: permittedProcedure
-    .input(showAndTellUpdateInputSchema)
+    .input(showAndTellReviewInputSchema)
     .mutation(async ({ input }) => await updatePost(input, undefined, true)),
 
   approve: permittedProcedure

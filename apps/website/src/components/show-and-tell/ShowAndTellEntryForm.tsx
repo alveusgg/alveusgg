@@ -241,7 +241,12 @@ export function ShowAndTellEntryForm({
       );
     } else if (action === "review" && entry) {
       review.mutate(
-        { ...data, id: entry.id },
+        {
+          ...data,
+          id: entry.id,
+          notePrivate: (formData.get("notePrivate") as string) ?? "",
+          notePublic: (formData.get("notePublic") as string) ?? "",
+        },
         {
           onSuccess: () => {
             setSuccessMessage("Entry updated successfully!");
@@ -422,6 +427,24 @@ export function ShowAndTellEntryForm({
             />
           </div>
         </Fieldset>
+
+        {action === "review" && (
+          <Fieldset legend="Moderator Notes">
+            <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
+              <RichTextField
+                label="Private Note (only visible to moderators)"
+                name="notePrivate"
+                defaultValue={entry?.notePrivate || undefined}
+              />
+
+              <RichTextField
+                label="Public Note (visible on the post)"
+                name="notePublic"
+                defaultValue={entry?.notePublic || undefined}
+              />
+            </div>
+          </Fieldset>
+        )}
 
         {error && <MessageBox variant="failure">{error}</MessageBox>}
         {successMessage && (
