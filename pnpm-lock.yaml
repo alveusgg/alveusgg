@@ -148,6 +148,9 @@ importers:
       '@vercel/analytics':
         specifier: ^1.4.1
         version: 1.4.1(next@15.1.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
+      '@vercel/functions':
+        specifier: ^1.5.2
+        version: 1.5.2(@aws-sdk/credential-provider-web-identity@3.723.0(@aws-sdk/client-sts@3.726.1))
       country-list:
         specifier: ^2.3.0
         version: 2.3.0
@@ -2999,6 +3002,15 @@ packages:
       vue:
         optional: true
       vue-router:
+        optional: true
+
+  '@vercel/functions@1.5.2':
+    resolution: {integrity: sha512-9XuynFoM/J1X+LSahgjhuAZCbZ96vm9mpXapCkSS1MX890U7zLh7n2RW/2KLNuxsXt8u8h2dOCw+Njtg+7pXgQ==}
+    engines: {node: '>= 16'}
+    peerDependencies:
+      '@aws-sdk/credential-provider-web-identity': '*'
+    peerDependenciesMeta:
+      '@aws-sdk/credential-provider-web-identity':
         optional: true
 
   '@vitest/expect@2.1.8':
@@ -9729,6 +9741,10 @@ snapshots:
     optionalDependencies:
       next: 15.1.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
+
+  '@vercel/functions@1.5.2(@aws-sdk/credential-provider-web-identity@3.723.0(@aws-sdk/client-sts@3.726.1))':
+    optionalDependencies:
+      '@aws-sdk/credential-provider-web-identity': 3.723.0(@aws-sdk/client-sts@3.726.1)
 
   '@vitest/expect@2.1.8':
     dependencies:

@@ -1,4 +1,5 @@
 import type { Notification } from "@prisma/client";
+import { waitUntil } from "@vercel/functions";
 
 import { env } from "@/env";
 
@@ -80,7 +81,7 @@ export async function createNotification(data: CreateNotificationData) {
     tasks.push(createDiscordNotifications(notification));
   }
 
-  await Promise.all(tasks);
+  await Promise.allSettled(tasks);
 }
 
 export async function resendNotification(notificationId: string) {
@@ -194,7 +195,7 @@ async function createPushNotifications(notification: Notification) {
     );
   }
 
-  return Promise.allSettled(requests);
+  waitUntil(Promise.allSettled(requests));
 }
 
 async function createDiscordNotifications({
@@ -247,5 +248,5 @@ async function createDiscordNotifications({
     );
   }
 
-  return Promise.all(tasks);
+  waitUntil(Promise.allSettled(tasks));
 }
