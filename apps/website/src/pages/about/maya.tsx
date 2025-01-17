@@ -51,7 +51,7 @@ const experience = [
   {
     key: "exotic-bird-sanctuary",
     date: "June, 2019",
-    content: <p>Education and Husbandry intern at an Exotic Bird Sanctuary</p>,
+    content: <p>Education and Husbandry intern at an exotic bird sanctuary</p>,
   },
   {
     key: "cal-poly-graduation",
