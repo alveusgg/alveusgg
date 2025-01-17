@@ -11,10 +11,10 @@ import {
   approvePost,
   removeApprovalFromPost,
   deletePost,
-  getPostWithUserById,
   markPostAsSeen,
   unmarkPostAsSeen,
   getAdminPosts,
+  getAdminPost,
 } from "@/server/db/show-and-tell";
 import { permissions } from "@/data/permissions";
 import { deleteFileStorageObject } from "@/server/utils/file-storage";
@@ -27,7 +27,7 @@ const permittedProcedure = protectedProcedure.use(
 export const adminShowAndTellRouter = router({
   getEntry: permittedProcedure
     .input(z.string().cuid())
-    .query(({ input }) => getPostWithUserById(input)),
+    .query(({ input }) => getAdminPost(input)),
 
   review: permittedProcedure
     .input(showAndTellReviewInputSchema)
@@ -56,7 +56,7 @@ export const adminShowAndTellRouter = router({
   delete: permittedProcedure
     .input(z.string().cuid())
     .mutation(async ({ input }) => {
-      const post = await getPostWithUserById(input);
+      const post = await getAdminPost(input);
       if (!post) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
       }

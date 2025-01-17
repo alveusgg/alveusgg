@@ -20,7 +20,7 @@ import { extractCountriesFromLocations } from "@/utils/locations";
 
 import {
   getMapFeatures,
-  getPosts,
+  getPublicPosts,
   getPostsCount,
   getPostsToShow,
   getUsersCount,
@@ -70,7 +70,7 @@ export const bentoBoxClasses =
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
 export const getStaticProps = async () => {
-  const entries = await getPosts({ take: entriesPerPage + 1 });
+  const entries = await getPublicPosts({ take: entriesPerPage + 1 });
 
   let nextCursor: string | undefined = undefined;
   if (entries.length > entriesPerPage) {
