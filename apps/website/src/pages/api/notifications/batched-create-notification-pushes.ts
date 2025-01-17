@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { waitUntil } from "@vercel/functions";
 
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
@@ -50,7 +51,7 @@ export default createTokenProtectedApiHandler(
         );
       });
 
-      await Promise.allSettled(calls);
+      waitUntil(Promise.allSettled(calls));
 
       return true;
     } catch (e) {

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { waitUntil } from "@vercel/functions";
 import type { Notification } from "@prisma/client";
 
 import { env } from "@/env";
@@ -93,7 +94,7 @@ export default createTokenProtectedApiHandler(
         );
       });
 
-      await Promise.allSettled(tasks);
+      waitUntil(Promise.allSettled(tasks));
 
       return true;
     } catch (e) {

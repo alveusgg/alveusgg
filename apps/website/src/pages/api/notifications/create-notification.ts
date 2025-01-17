@@ -1,5 +1,7 @@
 import { z } from "zod";
-import { createNotification } from "@/server/notifications";
+import { waitUntil } from "@vercel/functions";
+
+import { createNotification, sendNotification } from "@/server/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 
 export const config = {
@@ -25,7 +27,8 @@ export default createTokenProtectedApiHandler(
   notificationSchema,
   async (options) => {
     try {
-      await createNotification(options);
+      const notification = await createNotification(options);
+      waitUntil(sendNotification(notification));
       return true;
     } catch (e) {
       console.error("Failed to create notification", e);
