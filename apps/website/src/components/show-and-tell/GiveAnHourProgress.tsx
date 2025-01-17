@@ -15,12 +15,7 @@ const useLocaleHours = (hours: number, showDays: boolean) => {
   return `${localeHours} hour${hours !== 1 ? "s" : ""}${showDays ? ` (${localeDays})` : ""}`;
 };
 
-const targetIntervals = [
-  4320, // 180 days
-  2160, // 90 days
-  720, // 30 days
-  48, // 2 days
-];
+const targetIntervals = [24 * 180, 24 * 90, 24 * 30, 24 * 2];
 
 const getTarget = (hours: number) => {
   const multiple = targetIntervals.find((interval) => interval <= hours) ?? 24;
