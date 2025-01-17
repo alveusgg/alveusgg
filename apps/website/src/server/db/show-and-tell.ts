@@ -39,25 +39,30 @@ export type FullShowAndTellEntryAttachment = ShowAndTellEntryAttachment & {
 
 export type ShowAndTellEntryAttachments = Array<FullShowAndTellEntryAttachment>;
 
+const PublicShowAndTellFields = [
+  "id",
+  "displayName",
+  "title",
+  "text",
+  "createdAt",
+  "updatedAt",
+  "approvedAt",
+  "seenOnStream",
+  "volunteeringMinutes",
+  "location",
+  "notePublic",
+] as const satisfies (keyof ShowAndTellEntryModel)[];
+
 export type PublicShowAndTellEntry = Pick<
   ShowAndTellEntryModel,
-  | "id"
-  | "displayName"
-  | "title"
-  | "text"
-  | "createdAt"
-  | "updatedAt"
-  | "approvedAt"
-  | "seenOnStream"
-  | "volunteeringMinutes"
-  | "location"
+  (typeof PublicShowAndTellFields)[number]
 >;
 
 export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
   attachments: ShowAndTellEntryAttachments;
 };
 
-export const withAttachments = {
+const withAttachments = {
   include: {
     attachments: {
       include: {
@@ -70,7 +75,12 @@ export const withAttachments = {
   },
 };
 
-export const whereApproved = {
+const selectPublic = PublicShowAndTellFields.reduce(
+  (acc, field) => ({ ...acc, [field]: true }),
+  {} as { [K in (typeof PublicShowAndTellFields)[number]]: true },
+);
+
+const whereApproved = {
   approvedAt: { gte: prisma.showAndTellEntry.fields.updatedAt },
 };
 
@@ -143,14 +153,22 @@ const showAndTellSharedInputSchema = z.object({
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
 
-export type ShowAndTellUpdateInput = z.infer<
-  typeof showAndTellUpdateInputSchema
->;
 export const showAndTellUpdateInputSchema = showAndTellSharedInputSchema.and(
   z.object({
     id: z.string().cuid(),
   }),
 );
+
+export const showAndTellReviewInputSchema = showAndTellUpdateInputSchema.and(
+  z.object({
+    notePrivate: z.string().nullable(),
+    notePublic: z.string().nullable(),
+  }),
+);
+
+export type ShowAndTellUpdateInput =
+  | z.infer<typeof showAndTellUpdateInputSchema>
+  | z.infer<typeof showAndTellReviewInputSchema>;
 
 async function revalidateCache(postIdOrIds?: string | string[]) {
   const url = new URL(
@@ -259,8 +277,9 @@ export async function createPost(
 
 export async function getPublicPostById(id: string) {
   return prisma.showAndTellEntry.findFirst({
-    include: {
-      ...withAttachments.include,
+    select: {
+      ...selectPublic,
+      attachments: withAttachments.include.attachments,
     },
     where: {
       ...whereApproved,
@@ -269,20 +288,7 @@ export async function getPublicPostById(id: string) {
   });
 }
 
-export async function getPostWithUserById(id: string, authorUserId?: string) {
-  return prisma.showAndTellEntry.findFirst({
-    include: {
-      ...withAttachments.include,
-      user: true,
-    },
-    where: {
-      userId: authorUserId,
-      id,
-    },
-  });
-}
-
-export async function getPosts({
+export async function getPublicPosts({
   take,
   cursor,
 }: {
@@ -292,21 +298,28 @@ export async function getPosts({
   return prisma.showAndTellEntry.findMany({
     where: getPostFilter("approved"),
     select: {
-      id: true,
-      displayName: true,
-      title: true,
-      text: true,
-      volunteeringMinutes: true,
-      seenOnStream: true,
-      createdAt: true,
-      updatedAt: true,
-      approvedAt: true,
+      ...selectPublic,
       attachments: withAttachments.include.attachments,
-      location: true,
     },
     orderBy: [...postOrderBy],
     cursor: cursor ? { id: cursor } : undefined,
     take,
+  });
+}
+
+export async function getUserPosts(authorUserId: string, postId?: string) {
+  return prisma.showAndTellEntry.findMany({
+    select: {
+      ...selectPublic,
+      attachments: withAttachments.include.attachments,
+    },
+    where: {
+      userId: authorUserId,
+      id: postId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
   });
 }
 
@@ -368,6 +381,19 @@ export async function getAdminPosts({
   });
 }
 
+export async function getAdminPost(id: string, authorUserId?: string) {
+  return prisma.showAndTellEntry.findFirst({
+    include: {
+      ...withAttachments.include,
+      user: true,
+    },
+    where: {
+      userId: authorUserId,
+      id,
+    },
+  });
+}
+
 export async function updatePost(
   input: ShowAndTellUpdateInput,
   authorUserId?: string,
@@ -394,6 +420,14 @@ export async function updatePost(
   }
 
   const text = sanitizeUserHtml(input.text);
+  const notePrivate =
+    "notePrivate" in input
+      ? sanitizeUserHtml(input.notePrivate || "")
+      : undefined;
+  const notePublic =
+    "notePublic" in input
+      ? sanitizeUserHtml(input.notePublic || "")
+      : undefined;
   const newImages = await createImageAttachments(input.imageAttachments.create);
   const newVideos = createVideoAttachments(input.videoLinks);
 
@@ -434,6 +468,8 @@ export async function updatePost(
         location: input.location,
         longitude: input.longitude,
         latitude: input.latitude,
+        notePrivate,
+        notePublic,
       },
     }),
     // Update image attachments that are in the update list
@@ -520,7 +556,7 @@ export async function unmarkPostAsSeen(id: string) {
 }
 
 export async function deletePost(id: string, authorUserId?: string) {
-  const post = await getPostWithUserById(id, authorUserId);
+  const post = await getAdminPost(id, authorUserId);
   if (!post) return false;
 
   await Promise.allSettled([
