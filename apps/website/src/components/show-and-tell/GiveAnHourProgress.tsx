@@ -24,7 +24,7 @@ const targetIntervals = [
 
 const getTarget = (hours: number) => {
   const multiple = targetIntervals.find((interval) => interval <= hours) ?? 24;
-  return Math.ceil((hours || 1) / multiple) * multiple;
+  return Math.ceil((hours + 1) / multiple) * multiple;
 };
 
 const GiveAnHourProgressText = ({
