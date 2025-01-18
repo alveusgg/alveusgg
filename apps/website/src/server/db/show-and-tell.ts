@@ -60,7 +60,7 @@ export type PublicShowAndTellEntry = Pick<
 
 export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
   attachments: ShowAndTellEntryAttachments;
-  featuredImage?: ImageAttachment;
+  featuredImage?: ImageAttachment | null;
 };
 
 const withAttachments = {

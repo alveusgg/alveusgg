@@ -197,7 +197,7 @@ export const mmcq = (data: Uint8ClampedArray) => {
 
   const [rRange, gRange, bRange] = dominantColorVbox.ranges;
 
-  const dominantColor = [0, 0, 0];
+  const dominantColor: [number, number, number] = [0, 0, 0];
   let total = 0;
   for (let r = rRange[0]; r <= rRange[1]; r++) {
     const rIdx = r << (sigBits * 2);
