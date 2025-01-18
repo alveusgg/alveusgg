@@ -27,6 +27,7 @@ const config = {
       },
       aspectRatio: {
         "4/3": "4 / 3",
+        book: "1 / 1.5",
       },
       saturate: {
         110: "1.1",
