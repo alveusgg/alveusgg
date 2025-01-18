@@ -21,3 +21,5 @@ export const safeJSONParse = (val: string): unknown => {
     return undefined;
   }
 };
+
+export type AllOrNone<T> = Required<T> | Partial<Record<keyof T, undefined>>;

@@ -9,6 +9,7 @@ import type { PartialDateString } from "@alveusgg/data/src/types";
 
 import { formatPartialDateString } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
+import type { AllOrNone } from "@/utils/helpers";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -69,6 +70,52 @@ const books: BookInfo[] = [
   },
 ];
 
+const Cover = ({
+  title,
+  author,
+  image,
+  className,
+}: AllOrNone<Pick<BookInfo, "title" | "author" | "image">> & {
+  className?: string;
+}) => (
+  <div
+    className={classes(
+      "relative aspect-book h-auto w-full rounded-l rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
+      className,
+    )}
+  >
+    {/* Bookmark (hover) */}
+    <div className="absolute right-3 top-0 z-20 h-16 overflow-hidden drop-shadow-md">
+      <div className="relative -top-8 h-0 w-8 bg-alveus-green transition-all group-hover:h-full group-focus:h-full">
+        <div className="absolute top-full border-0 border-b-[2rem] border-l-[2rem] border-solid border-y-transparent border-l-alveus-green" />
+        <div className="absolute top-full border-0 border-b-[2rem] border-r-[2rem] border-solid border-y-transparent border-r-alveus-green" />
+      </div>
+    </div>
+
+    {/* Shine (hover) */}
+    <div className="absolute inset-x-0 top-0 z-10 h-64 max-h-full bg-gradient-to-b from-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100" />
+
+    {/* Crease */}
+    <div className="absolute inset-y-0 left-0 w-1.5 bg-gradient-to-r from-black/10 via-black/10 to-white/30" />
+    <div className="absolute inset-y-0 left-1.5 w-1.5 bg-gradient-to-r from-white/30 to-white/0" />
+    <div className="absolute inset-y-0 left-2.5 w-1.5 bg-gradient-to-r from-black/0 via-black/10 to-white/10" />
+    <div className="absolute inset-y-0 left-4 w-1.5 bg-gradient-to-r from-white/10 via-white/30 to-white/0" />
+
+    {/* Edges */}
+    <div className="absolute left-5 right-0 top-0 h-2 bg-gradient-to-b from-white/20 to-white/0" />
+    <div className="absolute bottom-0 left-5 right-0 h-2 bg-gradient-to-t from-white/20 to-white/0" />
+    <div className="absolute inset-y-0 right-0 w-2 bg-gradient-to-l from-white/20 to-white/0" />
+
+    {image && (
+      <Image
+        src={image}
+        alt={`${title} by ${author}`}
+        className="size-full rounded-l rounded-r-xl object-cover"
+      />
+    )}
+  </div>
+);
+
 const Book = ({
   title,
   author,
@@ -77,25 +124,20 @@ const Book = ({
   link,
   thickness,
   color,
-}: BookInfo) => (
-  <Disclosure as="div" className="w-64">
+  className,
+}: BookInfo & { className?: string }) => (
+  <Disclosure as="div" className={className}>
     <DisclosureButton className="group overflow-visible perspective-500 focus:outline-none">
-      <div className="relative origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
-        <div className="absolute right-3 top-0 z-20 h-16 overflow-hidden drop-shadow-md">
-          <div className="relative -top-8 h-0 w-8 bg-alveus-green transition-all group-hover:h-full group-focus:h-full">
-            <div className="absolute top-full border-0 border-b-[2rem] border-l-[2rem] border-solid border-y-transparent border-l-alveus-green" />
-            <div className="absolute top-full border-0 border-b-[2rem] border-r-[2rem] border-solid border-y-transparent border-r-alveus-green" />
-          </div>
-        </div>
-        <div className="absolute inset-x-0 top-0 z-10 h-64 max-h-full bg-gradient-to-b from-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100" />
-        <Image
-          src={image}
-          alt={`${title} by ${author}`}
-          className="aspect-book h-auto w-full rounded-xl object-cover transition-transform duration-1000 group-data-[open]:translate-x-0.5 group-data-[open]:-translate-z-0.5"
+      <div className="origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
+        <Cover
+          title={title}
+          author={author}
+          image={image}
+          className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
         />
         <div
           className={classes(
-            "w-full origin-top rounded-l-xl rounded-r-sm border-4 border-r-0 border-solid bg-white transition-transform duration-1000 -translate-y-0.5 rotate-x-90 scale-x-95 group-data-[open]:scale-x-100",
+            "w-full origin-top rounded-l-xl rounded-r-sm border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 -translate-y-0.5 rotate-x-90 scale-x-95 group-data-[open]:scale-x-100",
             thickness,
             color,
           )}
@@ -170,11 +212,15 @@ const BookClubPage: NextPage = () => {
 
         <Section
           className="grow pt-8"
-          containerClassName="flex flex-row gap-8 overflow-x-auto overflow-y-clip"
+          containerClassName="flex flex-row gap-8 flex-wrap"
         >
           {books.map((book) => (
-            <Book key={book.title} {...book} />
+            <Book key={book.title} {...book} className="w-64" />
           ))}
+
+          <div className="group w-64">
+            <Cover />
+          </div>
         </Section>
       </div>
     </>
