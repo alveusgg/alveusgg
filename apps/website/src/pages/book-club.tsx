@@ -80,7 +80,14 @@ const Book = ({
 }: BookInfo) => (
   <Disclosure as="div" className="w-64">
     <DisclosureButton className="group overflow-visible perspective-500 focus:outline-none">
-      <div className="origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
+      <div className="relative origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
+        <div className="absolute right-3 top-0 z-20 h-16 overflow-hidden drop-shadow-md">
+          <div className="relative -top-8 h-0 w-8 bg-alveus-green transition-all group-hover:h-full group-focus:h-full">
+            <div className="absolute top-full border-0 border-b-[2rem] border-l-[2rem] border-solid border-y-transparent border-l-alveus-green" />
+            <div className="absolute top-full border-0 border-b-[2rem] border-r-[2rem] border-solid border-y-transparent border-r-alveus-green" />
+          </div>
+        </div>
+        <div className="absolute inset-x-0 top-0 z-10 h-64 max-h-full bg-gradient-to-b from-white/20 to-white/0 opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100" />
         <Image
           src={image}
           alt={`${title} by ${author}`}
