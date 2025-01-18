@@ -404,6 +404,8 @@ model ShowAndTellEntry {
   location            String?
   longitude           Float?
   latitude            Float?
+  notePrivate         String?   @db.Text
+  notePublic          String?   @db.Text
 
   attachments   ShowAndTellEntryAttachment[]
   featuredImage ImageAttachment?

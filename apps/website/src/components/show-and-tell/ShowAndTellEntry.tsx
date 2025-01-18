@@ -159,34 +159,71 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
 const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
   const content = useMemo(() => {
     try {
-      return parse(`<root>${entry.text}</root>`, parseOptions);
+      return entry.text && parse(`<root>${entry.text}</root>`, parseOptions);
     } catch (e) {
-      console.error(`Failed to parse Show and Tell entry ${entry.id}`, e);
+      console.error(`Failed to parse Show and Tell entry text ${entry.id}`, e);
     }
   }, [entry.text, entry.id]);
 
+  const note = useMemo(() => {
+    try {
+      return (
+        entry.notePublic &&
+        parse(`<root>${entry.notePublic}</root>`, parseOptions)
+      );
+    } catch (e) {
+      console.error(`Failed to parse Show and Tell entry note ${entry.id}`, e);
+    }
+  }, [entry.notePublic, entry.id]);
+
+  const hasContent = isValidElement(content) && content.type !== Empty;
+  const hasNote = isValidElement(note) && note.type !== Empty;
+
   return (
-    isValidElement(content) &&
-    content.type !== Empty && (
+    (hasContent || hasNote) && (
       <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
         <div
           className={`mx-auto w-fit ${
             isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
           }`}
         >
-          <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
-            <ErrorBoundary
-              FallbackComponent={Empty}
-              onError={(err) =>
-                console.error(
-                  `Failed to render Show and Tell entry ${entry.id}`,
-                  err,
-                )
-              }
-            >
-              {content}
-            </ErrorBoundary>
-          </div>
+          {hasContent && (
+            <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+              <ErrorBoundary
+                FallbackComponent={Empty}
+                onError={(err) =>
+                  console.error(
+                    `Failed to render Show and Tell entry text ${entry.id}`,
+                    err,
+                  )
+                }
+              >
+                {content}
+              </ErrorBoundary>
+            </div>
+          )}
+
+          {hasNote && (
+            <div className="opacity-75">
+              <h3 className="-mb-4 mt-4 text-xs font-bold uppercase text-alveus-green-600 xl:text-sm">
+                Mod Note
+              </h3>
+
+              <div className="alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg">
+                <ErrorBoundary
+                  FallbackComponent={Empty}
+                  onError={(err) =>
+                    console.error(
+                      `Failed to render Show and Tell entry note ${entry.id}`,
+                      err,
+                    )
+                  }
+                >
+                  {note}
+                </ErrorBoundary>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )

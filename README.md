@@ -58,12 +58,12 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 ## Development setup
 
 > [!NOTE]
-> If you only want to work on the front end, you may skip the prerequisite and skip setting up a database or file storage (steps 3 and 4.iv).
+> If you only want to work on the front end, you may skip the prerequisite and skip setting up a database or file storage (step 3).
 > But you may encounter some errors when running the website without a database or file storage.
 
 ### Prerequisite
 
-Create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
+If you aren't working on features related to Twitch authentication, you can set the `DISABLE_ADMIN_AUTH` to `true` in your `apps/website/.env` file (see step 4 and 4.i) in order to use the admin dashboard immediately. Otherwise, create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
 
 ### Local development
 
@@ -71,11 +71,12 @@ Create a [Twitch application](https://dev.twitch.tv/console/apps/create), settin
 2. Install dependencies: `pnpm install --frozen-lockfile`
 3. Run `docker compose up -d` from within `apps/website` to start a local MySQL database, and an S3 bucket with MinIO.
 4. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
-   1. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
-   2. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
-   3. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
-   4. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
-   5. You may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
+   1. If your feature is not related to Twitch authentication, you can set `DISABLE_ADMIN_AUTH` to `true` in order to use the admin dashboard without authentication. Otherwise, fill in `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` as mentioned above.
+   2. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
+   3. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
+   4. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
+   5. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
+   6. If you are using Twitch authentication, you may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
 5. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
 6. Start the dev server using `pnpm dev` from within `apps/website`
 7. The website should be running at `http://localhost:3000/` (open in browser)

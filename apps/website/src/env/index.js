@@ -10,44 +10,29 @@ import {
   checkSubject,
 } from "./vapid.js";
 
-const listOfUrlsSchema = z.string().transform((val, ctx) => {
-  if (val.trim() === "") {
-    return [];
-  }
-
-  const urls = [];
-  for (const url of val.split(" ")) {
-    const parsed = z.string().url().safeParse(url.trim());
-    if (!parsed.success) {
-      parsed.error.issues.forEach((issue) => ctx.addIssue(issue));
-      return;
+/**
+ * @template {import("zod").ZodTypeAny} T
+ * @param {T} schema
+ * @returns {import("zod").ZodEffects<import("zod").ZodString, import("zod").infer<T>[]>}
+ */
+const listOfSchema = (schema) =>
+  z.string().transform((val, ctx) => {
+    if (val.trim() === "") {
+      return [];
     }
 
-    urls.push(parsed.data);
-  }
-  return urls;
-});
+    const items = [];
+    for (const item of val.split(" ")) {
+      const parsed = schema.safeParse(item.trim());
+      if (!parsed.success) {
+        parsed.error.issues.forEach((issue) => ctx.addIssue(issue));
+        return z.NEVER;
+      }
 
-const listOfIdsSchema = z.string().transform((val, ctx) => {
-  if (val.trim() === "") {
-    return [];
-  }
-
-  const ids = [];
-  for (const id of val.split(" ")) {
-    const parsed = z
-      .string()
-      .regex(/^[0-9]+$/)
-      .safeParse(id.trim());
-    if (!parsed.success) {
-      parsed.error.issues.forEach((issue) => ctx.addIssue(issue));
-      return;
+      items.push(parsed.data);
     }
-
-    ids.push(parsed.data);
-  }
-  return ids;
-});
+    return items;
+  });
 
 const optionalBoolSchema = z
   .enum(["true", "false"])
@@ -74,10 +59,12 @@ export const env = createEnv({
     ),
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),
+    TWITCH_EXCLUDED_CLIPS: listOfSchema(z.string()).optional(),
     ACTION_API_SECRET: z.string(),
     CRON_SECRET: z.string().optional(),
     WEATHER_API_KEY: z.string().optional(),
     WEATHER_STATION_ID: z.string().optional(),
+    DISABLE_ADMIN_AUTH: optionalBoolSchema,
     SUPER_USER_IDS: z.string(),
     WEB_PUSH_VAPID_PRIVATE_KEY: z
       .string()
@@ -101,12 +88,17 @@ export const env = createEnv({
     PUSH_MAX_ATTEMPTS: z.coerce.number().int().min(1).default(5),
     PUSH_RETRY_DELAY_MS: z.coerce.number().int().min(1).default(10_000),
     DISCORD_BOT_TOKEN: z.string().optional(),
-    DISCORD_CALENDAR_EVENT_GUILD_IDS: listOfIdsSchema.optional(),
+    DISCORD_CALENDAR_EVENT_GUILD_IDS: listOfSchema(
+      z.string().regex(/^[0-9]+$/),
+    ).optional(),
     DISCORD_CHANNEL_WEBHOOK_NAME: z.string().default("Alveus Updates"),
-    DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION:
-      listOfUrlsSchema.optional(),
+    DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION: listOfSchema(
+      z.string().url(),
+    ).optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
-    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfUrlsSchema.optional(),
+    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfSchema(
+      z.string().url(),
+    ).optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
     COMMUNITY_PHOTOS_URL: z.string().url().optional(),
     COMMUNITY_PHOTOS_KEY: z.string().optional(),
@@ -159,10 +151,12 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.VERCEL_URL || process.env.NEXTAUTH_URL,
     TWITCH_CLIENT_ID: process.env.TWITCH_CLIENT_ID,
     TWITCH_CLIENT_SECRET: process.env.TWITCH_CLIENT_SECRET,
+    TWITCH_EXCLUDED_CLIPS: process.env.TWITCH_EXCLUDED_CLIPS,
     ACTION_API_SECRET: process.env.ACTION_API_SECRET,
     CRON_SECRET: process.env.CRON_SECRET,
     WEATHER_API_KEY: process.env.WEATHER_API_KEY,
     WEATHER_STATION_ID: process.env.WEATHER_STATION_ID,
+    DISABLE_ADMIN_AUTH: process.env.DISABLE_ADMIN_AUTH,
     SUPER_USER_IDS: process.env.SUPER_USER_IDS,
     WEB_PUSH_VAPID_PRIVATE_KEY: process.env.WEB_PUSH_VAPID_PRIVATE_KEY,
     WEB_PUSH_VAPID_SUBJECT: process.env.WEB_PUSH_VAPID_SUBJECT,

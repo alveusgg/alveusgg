@@ -705,9 +705,10 @@ const AboutAlveusPage: NextPage = () => {
               Maya Higa founded Alveus in February 2021
             </Heading>
             <p>
-              She is a top streamer on Twitch.tv, with a large following across
-              many social platforms. She is a licensed falconer and wildlife
-              conservationist with a passion for educating others.
+              She is one of the top female streamers on Twitch and has amassed a
+              large following on YouTube and other social platforms. She has
+              experience as a licensed falconer, wildlife rehabilitator,
+              zookeeper, and conservation outreach educator.
             </p>
 
             <Button href="/about/maya" dark className="mt-8">

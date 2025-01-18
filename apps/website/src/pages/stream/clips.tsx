@@ -6,6 +6,7 @@ import { type Clip, getClips } from "@/server/apis/twitch";
 import { prisma } from "@/server/db/client";
 
 import { twitchChannels } from "@/data/calendar-events";
+import { env } from "@/env";
 
 async function getTwitchClips(
   userAccessToken: string,
@@ -83,9 +84,14 @@ export const getStaticProps: GetStaticProps<{
     );
     console.log(`Fetched ${clips.length} clips`);
 
+    // Filter out any clips marked to be excluded
+    const excluded = new Set(env.TWITCH_EXCLUDED_CLIPS);
+    const filtered = clips.filter((clip) => !excluded.has(clip.id));
+    console.log(`Filtered ${clips.length - filtered.length} clips`);
+
     return {
       props: {
-        clips: clips.map((clip) => ({
+        clips: filtered.map((clip) => ({
           id: clip.id,
           title: clip.title,
           creator: clip.creator_name,
@@ -200,7 +206,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 
   return (
-    <div className="flex h-screen w-full items-center justify-center p-8">
+    <div className="flex h-screen w-full items-center justify-center p-20">
       {clip && (
         <div className="flex aspect-video h-full max-w-full items-center justify-center">
           <div className="relative flex aspect-video w-full items-center justify-center">
@@ -208,9 +214,9 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
             <Transition show={details}>
               <div className="absolute left-2 top-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
-                <h1 className="text-4xl">
+                <h1 className="text-5xl">
                   {clip.title}
-                  <span className="ml-1 text-2xl">
+                  <span className="ml-1 text-4xl">
                     {" "}
                     (
                     {new Date(clip.created).toLocaleDateString(undefined, {
@@ -219,7 +225,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                     )
                   </span>
                 </h1>
-                <p className="text-xl">Clipped by {clip.creator}</p>
+                <p className="text-2xl">Clipped by {clip.creator}</p>
               </div>
             </Transition>
 

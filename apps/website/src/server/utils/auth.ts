@@ -8,6 +8,10 @@ export function getSuperUserIds() {
 }
 
 export function checkIsSuperUserId(id?: string) {
+  if (env.NODE_ENV === "development" && env.DISABLE_ADMIN_AUTH) {
+    return true;
+  }
+
   if (!id) {
     return false;
   }
