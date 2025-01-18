@@ -3,6 +3,7 @@ import { fontFamily } from "tailwindcss/defaultTheme";
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import plugin from "tailwindcss/plugin";
 import alveusgg from "@alveusgg/data/src/tailwind";
+import tailwind3D from "tailwindcss-3d";
 
 const config = {
   content: ["./src/**/*.{js,ts,jsx,tsx}"],
@@ -118,6 +119,7 @@ const config = {
       },
       { theme: { textStroke: { 1: 1, 2: 2, 3: 3, 4: 4 } } },
     ),
+    tailwind3D,
   ],
 } satisfies Config;
 

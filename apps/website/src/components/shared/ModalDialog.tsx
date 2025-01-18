@@ -35,7 +35,7 @@ export function ModalDialog({
         <div className="flex min-h-full items-center justify-center p-4 text-center">
           <DialogPanel
             className={classes(
-              "w-full transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all",
+              "w-full overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all transform",
               panelClassName,
             )}
           >

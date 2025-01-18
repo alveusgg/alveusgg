@@ -185,7 +185,7 @@ const FallCarnival2023EventPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -left-8 top-32 z-10 hidden h-auto w-1/3 max-w-28 -rotate-45 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -left-8 top-32 z-10 hidden h-auto w-1/3 max-w-28 select-none drop-shadow-md -rotate-45 lg:block"
         />
         <Image
           src={leafRightImage2}

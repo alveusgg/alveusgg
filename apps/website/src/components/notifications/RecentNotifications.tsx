@@ -14,7 +14,7 @@ export function RecentNotifications({ tags }: { tags: Array<string> }) {
       {recentNotifications.data?.map((notification) => (
         <li
           key={notification.id}
-          className="flex items-center gap-3 rounded-xl bg-alveus-green/30 px-4 py-2 transition-transform hover:scale-102 hover:bg-alveus-green/40"
+          className="flex items-center gap-3 rounded-xl bg-alveus-green/30 px-4 py-2 transition-transform hover:bg-alveus-green/40 hover:scale-102"
         >
           <NotificationEntry notification={notification} />
         </li>
