@@ -115,10 +115,10 @@ const Book = ({
   width,
   className,
 }: BookInfo & { width?: number; className?: string }) => (
-  <Disclosure as="div" className={classes("group", className)}>
+  <Disclosure as="div" className={className}>
     {({ open }) => (
       <>
-        <DisclosureButton className="group overflow-visible perspective-500 focus:outline-none">
+        <DisclosureButton className="group overflow-visible text-start perspective-500 focus:outline-none">
           <div className="origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
             <Cover
               title={title}
@@ -135,15 +135,15 @@ const Book = ({
               )}
             />
           </div>
-        </DisclosureButton>
 
-        <Heading
-          level={2}
-          className="relative transition-all duration-1000 group-data-[open]:text-lg"
-        >
-          <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
-          {formatPartialDateString(month)}
-        </Heading>
+          <Heading
+            level={2}
+            className="relative mt-4 transition-[color,font-size] duration-[150ms,1000ms] group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700 group-data-[open]:text-lg"
+          >
+            <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
+            {formatPartialDateString(month)}
+          </Heading>
+        </DisclosureButton>
 
         <TransitionHeight
           show={open}
