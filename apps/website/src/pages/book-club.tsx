@@ -228,7 +228,7 @@ const BookClubPage: NextPage = () => {
         />
 
         <Section className="grow">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
             {books.map((book) => (
               <Book
                 key={book.title}
@@ -245,7 +245,7 @@ const BookClubPage: NextPage = () => {
                   key={i}
                   className={classes(
                     "group mx-auto w-64",
-                    i !== 0 && "hidden md:block",
+                    i !== 0 && "hidden xl:block",
                   )}
                 >
                   <Cover />
