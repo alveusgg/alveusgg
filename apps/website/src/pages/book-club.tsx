@@ -138,7 +138,7 @@ const Book = ({
 
           <Heading
             level={2}
-            className="relative mt-4 transition-[color,font-size] duration-[150ms,1000ms] group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700 group-data-[open]:text-lg"
+            className="relative mb-0 mt-4 transition-[color,font-size] duration-[150ms,1000ms] group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700 group-data-[open]:text-lg"
           >
             <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
             {formatPartialDateString(month)}
@@ -238,19 +238,21 @@ const BookClubPage: NextPage = () => {
               />
             ))}
 
-            {/* Placeholders (fills row on desktop, single on mobile) */}
-            {books.length % 4 !== 0 &&
-              Array.from({ length: 4 - (books.length % 4) }).map((_, i) => (
+            {/* Pad with placeholders to a multiple of 4 */}
+            {Array.from({ length: (4 - (books.length % 4)) % 4 }).map(
+              (_, i) => (
                 <div
                   key={i}
                   className={classes(
-                    "group mx-auto w-64",
-                    i !== 0 && "hidden xl:block",
+                    "group mx-auto hidden w-64",
+                    // If we're not the first placeholder, we're for desktop only
+                    i > 0 ? "xl:block" : "md:block",
                   )}
                 >
                   <Cover />
                 </div>
-              ))}
+              ),
+            )}
           </div>
 
           <p className="mt-16 text-center text-xs italic text-alveus-green">
