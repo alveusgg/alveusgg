@@ -9,7 +9,6 @@ import type { PartialDateString } from "@alveusgg/data/src/types";
 
 import { formatPartialDateString } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
-import type { AllOrNone } from "@/utils/helpers";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
@@ -53,12 +52,17 @@ const books: BookInfo[] = [
   },
 ];
 
+type CoverInfo = Pick<BookInfo, "title" | "author" | "image"> & {
+  width?: number;
+};
+
 const Cover = ({
   title,
   author,
   image,
+  width,
   className,
-}: AllOrNone<Pick<BookInfo, "title" | "author" | "image">> & {
+}: (CoverInfo | Partial<Record<keyof CoverInfo, undefined>>) & {
   className?: string;
 }) => (
   <div
@@ -93,6 +97,7 @@ const Cover = ({
       <Image
         src={image}
         alt={`${title} by ${author}`}
+        width={width}
         className="size-full rounded-l rounded-r-xl object-cover"
       />
     )}
@@ -107,8 +112,9 @@ const Book = ({
   link,
   thickness,
   color,
+  width,
   className,
-}: BookInfo & { className?: string }) => (
+}: BookInfo & { width?: number; className?: string }) => (
   <Disclosure as="div" className={classes("group", className)}>
     {({ open }) => (
       <>
@@ -118,6 +124,7 @@ const Book = ({
               title={title}
               author={author}
               image={image}
+              width={width}
               className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
             />
             <div
@@ -144,7 +151,7 @@ const Book = ({
           leave="duration-500"
         >
           <DisclosurePanel static>
-            <Heading level={3} className="mb-0">
+            <Heading level={3} className="my-0">
               {title}
             </Heading>
             <p>
@@ -223,7 +230,7 @@ const BookClubPage: NextPage = () => {
         <Section className="grow">
           <div className="flex flex-row flex-wrap gap-8">
             {books.map((book) => (
-              <Book key={book.title} {...book} className="w-64" />
+              <Book key={book.title} {...book} width={256} className="w-64" />
             ))}
 
             <div className="group w-64">
