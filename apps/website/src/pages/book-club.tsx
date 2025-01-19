@@ -15,6 +15,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
+import TransitionHeight from "@/components/content/TransitionHeight";
 
 import hIsForHawk from "@/assets/books/h-is-for-hawk.jpg";
 
@@ -127,32 +128,42 @@ const Book = ({
   className,
 }: BookInfo & { className?: string }) => (
   <Disclosure as="div" className={className}>
-    <DisclosureButton className="group overflow-visible perspective-500 focus:outline-none">
-      <div className="origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
-        <Cover
-          title={title}
-          author={author}
-          image={image}
-          className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
-        />
-        <div
-          className={classes(
-            "w-full origin-top rounded-l-xl rounded-r-sm border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 -translate-y-0.5 rotate-x-90 scale-x-95 group-data-[open]:scale-x-100",
-            thickness,
-            color,
-          )}
-        />
-      </div>
-    </DisclosureButton>
+    {({ open }) => (
+      <>
+        <DisclosureButton className="group overflow-visible perspective-500 focus:outline-none">
+          <div className="origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
+            <Cover
+              title={title}
+              author={author}
+              image={image}
+              className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
+            />
+            <div
+              className={classes(
+                "w-full origin-top rounded-l-xl rounded-r-sm border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 -translate-y-0.5 rotate-x-90 scale-x-95 group-data-[open]:scale-x-100",
+                thickness,
+                color,
+              )}
+            />
+          </div>
+        </DisclosureButton>
 
-    <p>{formatPartialDateString(month)}</p>
+        <p>{formatPartialDateString(month)}</p>
 
-    <DisclosurePanel>
-      <Heading>{title}</Heading>
-      <p>{author}</p>
+        <TransitionHeight
+          show={open}
+          enter="duration-500 delay-500"
+          leave="duration-500"
+        >
+          <DisclosurePanel static>
+            <Heading>{title}</Heading>
+            <p>{author}</p>
 
-      <Link href={link}>Buy</Link>
-    </DisclosurePanel>
+            <Link href={link}>Buy</Link>
+          </DisclosurePanel>
+        </TransitionHeight>
+      </>
+    )}
   </Disclosure>
 );
 
