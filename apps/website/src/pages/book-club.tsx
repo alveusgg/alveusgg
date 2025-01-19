@@ -228,7 +228,7 @@ const BookClubPage: NextPage = () => {
         />
 
         <Section className="grow">
-          <div className="flex flex-row flex-wrap gap-8">
+          <div className="flex flex-col items-center gap-8 md:flex-row md:flex-wrap md:items-start">
             {books.map((book) => (
               <Book key={book.title} {...book} width={256} className="w-64" />
             ))}
