@@ -47,7 +47,7 @@ const books: BookInfo[] = [
     image: hIsForHawk,
     month: "2025-01",
     link: "https://amzn.to/4a2ByGQ",
-    thickness: thickness.xs,
+    thickness: thickness.md,
     color: "border-black",
   },
 ];
@@ -228,14 +228,29 @@ const BookClubPage: NextPage = () => {
         />
 
         <Section className="grow">
-          <div className="flex flex-col items-center gap-8 md:flex-row md:flex-wrap md:items-start">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
             {books.map((book) => (
-              <Book key={book.title} {...book} width={256} className="w-64" />
+              <Book
+                key={book.title}
+                {...book}
+                width={256}
+                className="mx-auto w-64"
+              />
             ))}
 
-            <div className="group w-64">
-              <Cover />
-            </div>
+            {/* Placeholders (fills row on desktop, single on mobile) */}
+            {books.length % 4 !== 0 &&
+              Array.from({ length: 4 - (books.length % 4) }).map((_, i) => (
+                <div
+                  key={i}
+                  className={classes(
+                    "group mx-auto w-64",
+                    i !== 0 && "hidden md:block",
+                  )}
+                >
+                  <Cover />
+                </div>
+              ))}
           </div>
 
           <p className="mt-16 text-center text-xs italic text-alveus-green">
