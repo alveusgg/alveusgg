@@ -14,7 +14,7 @@ import type { AllOrNone } from "@/utils/helpers";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
+import Button from "@/components/content/Button";
 import TransitionHeight from "@/components/content/TransitionHeight";
 
 import hIsForHawk from "@/assets/books/h-is-for-hawk.jpg";
@@ -49,24 +49,6 @@ const books: BookInfo[] = [
     month: "2025-01",
     link: "https://amzn.to/4a2ByGQ",
     thickness: thickness.xs,
-    color: "border-black",
-  },
-  {
-    title: "H is for Hawk",
-    author: "Helen Macdonald",
-    image: hIsForHawk,
-    month: "2025-01",
-    link: "https://amzn.to/4a2ByGQ",
-    thickness: thickness.md,
-    color: "border-black",
-  },
-  {
-    title: "H is for Hawk",
-    author: "Helen Macdonald",
-    image: hIsForHawk,
-    month: "2025-01",
-    link: "https://amzn.to/4a2ByGQ",
-    thickness: thickness.xl,
     color: "border-black",
   },
 ];
@@ -127,7 +109,7 @@ const Book = ({
   color,
   className,
 }: BookInfo & { className?: string }) => (
-  <Disclosure as="div" className={className}>
+  <Disclosure as="div" className={classes("group", className)}>
     {({ open }) => (
       <>
         <DisclosureButton className="group overflow-visible perspective-500 focus:outline-none">
@@ -148,7 +130,13 @@ const Book = ({
           </div>
         </DisclosureButton>
 
-        <p>{formatPartialDateString(month)}</p>
+        <Heading
+          level={2}
+          className="relative transition-all duration-1000 group-data-[open]:text-lg"
+        >
+          <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
+          {formatPartialDateString(month)}
+        </Heading>
 
         <TransitionHeight
           show={open}
@@ -156,10 +144,17 @@ const Book = ({
           leave="duration-500"
         >
           <DisclosurePanel static>
-            <Heading>{title}</Heading>
-            <p>{author}</p>
+            <Heading level={3} className="mb-0">
+              {title}
+            </Heading>
+            <p>
+              <span className="text-sm opacity-50">by </span>
+              {author}
+            </p>
 
-            <Link href={link}>Buy</Link>
+            <Button href={link} className="mt-8" external>
+              Buy on Amazon.com
+            </Button>
           </DisclosurePanel>
         </TransitionHeight>
       </>
@@ -195,7 +190,11 @@ const BookClubPage: NextPage = () => {
             <p className="text-lg">
               Join the staff at Alveus and the community in reading a book
               together each month. At the end of each month we&apos;ll all meet
-              together in a livestream chat to discuss the book.
+              together in a livestream chat to discuss the book. Head to your
+              local library or bookstore to pick up a copy of the book, or use
+              the links below to purchase a copy online. If reading isn&apos;t
+              your thing, we also encourage listening to the audiobook version
+              each month.
             </p>
           </div>
 
@@ -213,7 +212,7 @@ const BookClubPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-32 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-40"
         />
         <Image
           src={leafRightImage2}
@@ -221,17 +220,21 @@ const BookClubPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
-        <Section
-          className="grow pt-8"
-          containerClassName="flex flex-row gap-8 flex-wrap"
-        >
-          {books.map((book) => (
-            <Book key={book.title} {...book} className="w-64" />
-          ))}
+        <Section className="grow">
+          <div className="flex flex-row flex-wrap gap-8">
+            {books.map((book) => (
+              <Book key={book.title} {...book} className="w-64" />
+            ))}
 
-          <div className="group w-64">
-            <Cover />
+            <div className="group w-64">
+              <Cover />
+            </div>
           </div>
+
+          <p className="mt-16 text-center text-xs italic text-alveus-green">
+            Amazon.com links provided are affiliate links. Purchases made
+            through these links help support Alveus Sanctuary.
+          </p>
         </Section>
       </div>
     </>
