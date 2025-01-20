@@ -42,13 +42,13 @@ const WatchLive = () => (
 
         <IconChevronDown
           size={16}
-          className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
+          className="transition-transform translate-y-0.5 group-data-[active]/button:translate-y-1"
         />
       </MenuButton>
 
       <MenuItems
         transition
-        className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20 transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+        className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20 transition ease-in-out data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[closed]:scale-95"
         as="ul"
         modal={false}
       >

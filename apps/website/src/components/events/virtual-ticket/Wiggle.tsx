@@ -144,7 +144,7 @@ export function Wiggle({
   return (
     <div
       className={classes(
-        "origin-center transform overflow-hidden transition-transform duration-100 ease-in-out [--light-angle:90deg] [--light-intensity:0] [--rotation-x:0deg] [--rotation-y:0deg]",
+        "origin-center overflow-hidden transition-transform duration-100 ease-in-out transform [--light-angle:90deg] [--light-intensity:0] [--rotation-x:0deg] [--rotation-y:0deg]",
         className,
       )}
       style={{

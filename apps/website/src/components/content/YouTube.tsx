@@ -121,14 +121,14 @@ export const Preview = ({ videoId, className }: PreviewProps) => {
         alt=""
         loading="lazy"
         className={classes(
-          "pointer-events-none object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
+          "pointer-events-none object-cover transition group-hover/trigger:shadow-2xl group-hover/trigger:scale-102",
           iframeAttrs.class,
           className,
         )}
       />
       <IconYouTube
         size={80}
-        className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
+        className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition group-hover/trigger:drop-shadow-xl group-hover/trigger:scale-110"
       />
     </div>
   );
