@@ -16,6 +16,9 @@ import Meta from "@/components/content/Meta";
 import Button from "@/components/content/Button";
 import TransitionHeight from "@/components/content/TransitionHeight";
 
+import bookClubLogo from "@/assets/book-club/logo.png";
+import bookClubFull from "@/assets/book-club/full.png";
+
 import hIsForHawk from "@/assets/books/h-is-for-hawk.jpg";
 
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -175,6 +178,7 @@ const BookClubPage: NextPage = () => {
       <Meta
         title="Book Club"
         description="Join the staff at Alveus and the community in reading and discussing a book together each month."
+        image={bookClubFull.src}
       />
 
       {/* Nav background */}
@@ -205,12 +209,12 @@ const BookClubPage: NextPage = () => {
             </p>
           </div>
 
-          {/* <Image
-            src={}
+          <Image
+            src={bookClubLogo}
             width={576}
             alt=""
-            className="mx-auto w-full max-w-xl p-4 pt-8 md:mx-0 md:w-2/5 md:pt-4"
-          /> */}
+            className="mx-auto w-full max-w-xl md:mx-0 md:w-2/5"
+          />
         </Section>
       </div>
 
