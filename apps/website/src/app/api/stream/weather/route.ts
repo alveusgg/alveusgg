@@ -164,3 +164,8 @@ export async function GET(request: Request) {
 
   return new Response("Weather data not available", { status: 500 });
 }
+
+// Cache the response for 1 minute
+export const dynamic = "force-static";
+export const revalidate = 60;
+export const runtime = "edge";
