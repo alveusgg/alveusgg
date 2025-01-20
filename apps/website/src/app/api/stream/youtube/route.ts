@@ -12,22 +12,25 @@ export type YouTubeResponse = {
   [key in Keys]: YouTubeVideo | null;
 };
 
+export const getYouTubeResponse = async (): Promise<YouTubeResponse> => {
+  // Fetch the latest video for each channel
+  const latestVideos: [Keys, YouTubeVideo | null][] = await Promise.all(
+    typeSafeObjectEntries(channels).map(async ([key, { id }]) => {
+      const videos = await fetchYouTubeVideos(id);
+      const latest = videos.sort(
+        (a, b) => b.published.getTime() - a.published.getTime(),
+      )[0];
+      return [key, latest ?? null];
+    }),
+  );
+
+  return typeSafeObjectFromEntries(latestVideos);
+};
+
 // API for chat bot
 export async function GET(request: Request) {
   try {
-    // Fetch the latest video for each channel
-    const latestVideos: [Keys, YouTubeVideo | null][] = await Promise.all(
-      typeSafeObjectEntries(channels).map(async ([key, { id }]) => {
-        const videos = await fetchYouTubeVideos(id);
-        const latest = videos.sort(
-          (a, b) => b.published.getTime() - a.published.getTime(),
-        )[0];
-        return [key, latest ?? null];
-      }),
-    );
-
-    // Return the actual data
-    const resp: YouTubeResponse = typeSafeObjectFromEntries(latestVideos);
+    const resp = await getYouTubeResponse();
     return Response.json(resp, {
       headers: {
         // Response can be cached for 30 minutes
