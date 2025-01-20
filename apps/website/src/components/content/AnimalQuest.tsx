@@ -34,7 +34,7 @@ const AnimalQuest = ({
   <Link
     href={`/animal-quest/${sentenceToKebab(episode.edition)}`}
     className={classes(
-      "group relative z-0 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:scale-102 hover:shadow-2xl sm:flex-nowrap md:flex-wrap xl:flex-nowrap",
+      "group relative z-0 flex flex-wrap items-center justify-between gap-x-8 gap-y-2 rounded-2xl bg-alveus-tan px-6 py-4 shadow-xl transition hover:shadow-2xl hover:scale-102 sm:flex-nowrap md:flex-wrap xl:flex-nowrap",
       className,
     )}
     custom

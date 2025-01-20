@@ -166,7 +166,7 @@ const EventsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 select-none drop-shadow-md lg:block 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-32 -left-8 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md -rotate-45 lg:block 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}

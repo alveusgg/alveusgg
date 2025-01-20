@@ -627,7 +627,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
         />
 
         <Section className="text-center">
@@ -764,7 +764,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
         />
 
         <Transparency className="grow" />
