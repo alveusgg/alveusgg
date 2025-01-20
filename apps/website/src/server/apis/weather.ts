@@ -100,57 +100,7 @@ const getFeelsLike = (
   return temperature;
 };
 
-export type Weather = {
-  time: {
-    local: string | null;
-    utc: string | null;
-  };
-  uvIndex: number | null;
-  humidity: number | null;
-  temperature: {
-    fahrenheit: number | null;
-    celsius: number | null;
-    heatIndex: {
-      fahrenheit: number | null;
-      celsius: number | null;
-    };
-    windChill: {
-      fahrenheit: number | null;
-      celsius: number | null;
-    };
-    feelsLike: {
-      fahrenheit: number | null;
-      celsius: number | null;
-    };
-  };
-  pressure: {
-    inches: number | null;
-    millibars: number | null;
-  };
-  wind: {
-    speed: {
-      miles: number | null;
-      kilometers: number | null;
-    };
-    gusts: {
-      miles: number | null;
-      kilometers: number | null;
-    };
-    direction: number | null;
-  };
-  precipitation: {
-    rate: {
-      inches: number | null;
-      millimeters: number | null;
-    };
-    total: {
-      inches: number | null;
-      millimeters: number | null;
-    };
-  };
-};
-
-export async function getWeather(): Promise<Weather> {
+export async function getWeather() {
   invariant(env.WEATHER_STATION_ID, "WEATHER_STATION_ID is required");
   invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
