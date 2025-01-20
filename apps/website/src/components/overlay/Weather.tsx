@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-import { type WeatherResponse } from "@/pages/api/stream/weather";
+import { type WeatherResponse } from "@/app/api/stream/weather/route";
 
 const Weather = () => {
   // Get the current weather
