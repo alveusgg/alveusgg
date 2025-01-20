@@ -141,7 +141,7 @@ const Book = ({
 
           <Heading
             level={2}
-            className="relative mb-0 mt-4 transition-[color,font-size] duration-[150ms,1000ms] group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700 group-data-[open]:text-lg"
+            className="relative mb-0 mt-4 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700 group-data-[open]:text-lg"
           >
             <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
             {formatPartialDateString(month)}
