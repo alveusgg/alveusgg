@@ -1,4 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "@/env";
 import { getCurrentObservation } from "@/server/apis/weather";
 import { rounded } from "@/utils/math";
@@ -66,10 +65,7 @@ export type WeatherResponse = {
 };
 
 // API for overlay + chat bot
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<WeatherResponse | string>,
-) {
+export async function GET(request: Request) {
   if (env.WEATHER_STATION_ID && env.WEATHER_API_KEY) {
     try {
       const weather = await getCurrentObservation(env.WEATHER_STATION_ID, true);
@@ -79,11 +75,7 @@ export default async function handler(
         weather.imperial.windChill,
       );
 
-      res.setHeader(
-        "Cache-Control",
-        "max-age=60, s-maxage=60, stale-while-revalidate=300",
-      );
-      return res.json({
+      const resp: WeatherResponse = {
         time: {
           local: weather.obsTimeLocal,
           utc: weather.obsTimeUtc,
@@ -155,11 +147,20 @@ export default async function handler(
                 : null,
           },
         },
+      };
+
+      return Response.json(resp, {
+        headers: {
+          // Response can be cached for 1 minute
+          // And can be stale for 5 minutes while revalidating
+          "Cache-Control":
+            "max-age=60, s-maxage=60, stale-while-revalidate=300",
+        },
       });
     } catch (err) {
       console.error("Error getting weather", err);
     }
   }
 
-  return res.status(500).send("Error getting weather");
+  return new Response("Weather data not available", { status: 500 });
 }

@@ -1,5 +1,3 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-
 import allAmbassadors from "@alveusgg/data/src/ambassadors/core";
 import {
   isActiveAmbassadorEntry,
@@ -116,30 +114,32 @@ const ambassadorsV2 = typeSafeObjectFromEntries(
     }),
 );
 
-// API for extension
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<AmbassadorsResponse | string>,
-) {
+const headers = {
   // Response can be cached for 30 minutes
   // And can be stale for 5 minutes while revalidating
-  res.setHeader(
-    "Cache-Control",
-    "max-age=1800, s-maxage=1800, stale-while-revalidate=300",
-  );
+  "Cache-Control": "max-age=1800, s-maxage=1800, stale-while-revalidate=300",
 
   // Vercel doesn't respect Vary so we allow all origins to use this
   // Ideally we'd just allow specifically localhost + *.ext-twitch.tv
-  res.setHeader("Access-Control-Allow-Origin", "*");
+  "Access-Control-Allow-Origin": "*",
+};
 
+// API for extension
+export async function GET(request: Request) {
   // Handle preflight requests
-  if (req.method === "OPTIONS") {
-    res.setHeader("Access-Control-Allow-Methods", "GET");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-    res.setHeader("Access-Control-Max-Age", "86400");
-    return res.status(200).end();
+  if (request.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        ...headers,
+        "Access-Control-Allow-Methods": "GET",
+        "Access-Control-Allow-Headers": "Content-Type",
+        "Access-Control-Max-Age": "86400",
+      },
+    });
   }
 
-  // Return the actual data
-  return res.json({ ambassadors, v2: ambassadorsV2 });
+  // Otherwise, return the data
+  const resp: AmbassadorsResponse = { ambassadors, v2: ambassadorsV2 };
+  return Response.json(resp, { headers });
 }
