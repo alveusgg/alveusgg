@@ -1,10 +1,12 @@
 import { getWeather } from "@/server/apis/weather";
 
-// API for overlay + chat bot
+// API for chat bot
 export async function GET(request: Request) {
   try {
-    const resp = await getWeather();
-    return Response.json(resp, {
+    const data = await getWeather();
+    const resp = `Alveus Weather: ${data.temperature.fahrenheit} °F (${data.temperature.celsius} °C). Feels like ${data.temperature.feelsLike.fahrenheit} °F (${data.temperature.feelsLike.celsius} °C). ${data.humidity}% humidity. ${data.wind.speed.miles} mph winds. ${data.precipitation.total.inches} in of rain.`;
+
+    return new Response(resp, {
       headers: {
         // Response can be cached for 1 minute
         // And can be stale for 5 minutes while revalidating
