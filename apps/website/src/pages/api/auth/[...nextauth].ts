@@ -11,7 +11,7 @@ import {
   ExpiredAccessTokenError,
   refreshAccessToken,
 } from "@/server/utils/oauth2";
-import { defaultScopes } from "@/data/twitch";
+import { botScopes, defaultScopes } from "@/data/twitch";
 import invariant from "@/utils/invariant";
 
 const adapter = PrismaAdapter(prisma);
@@ -42,9 +42,17 @@ export const authOptions: NextAuthOptions = {
           access_token: true,
           refresh_token: true,
           verified_at: true,
+          scope: true,
         },
       });
-      if (token?.access_token && token?.refresh_token) {
+      if (!token) {
+        return {
+          expires: new Date(0).toISOString(),
+          error: "Account not found",
+        };
+      }
+
+      if (token.access_token && token.refresh_token) {
         if (
           !token.verified_at ||
           token.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
@@ -65,6 +73,35 @@ export const authOptions: NextAuthOptions = {
               error: "Twitch auth expired",
             };
           }
+        }
+      }
+
+      // Check if we need to ask the client to re-authenticate with additional scopes
+      // Accounts tied to channels in the DB need more scopes for API access
+      const linked = await prisma.twitchChannel.findFirst({
+        where: {
+          OR: [
+            {
+              broadcasterAccount: {
+                userId: user.id,
+              },
+            },
+            {
+              moderatorAccount: {
+                userId: user.id,
+              },
+            },
+          ],
+        },
+      });
+      if (linked) {
+        const scopes = new Set(token.scope?.split(" "));
+        const missingScopes = botScopes.filter((scope) => !scopes.has(scope));
+        if (missingScopes.length > 0) {
+          return {
+            expires: new Date(0).toISOString(),
+            error: "Additional scopes required",
+          };
         }
       }
 
