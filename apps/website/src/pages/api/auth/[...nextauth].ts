@@ -12,6 +12,7 @@ import {
   refreshAccessToken,
 } from "@/server/utils/oauth2";
 import { defaultScopes } from "@/data/twitch";
+import invariant from "@/utils/invariant";
 
 const adapter = PrismaAdapter(prisma);
 
@@ -79,22 +80,26 @@ export const authOptions: NextAuthOptions = {
       };
     },
     async signIn({ user, account, profile }) {
-      if (!user || !account) return true;
-
       try {
+        invariant(
+          account?.provider === "twitch",
+          "Must be authenticating with Twitch",
+        );
+
+        // Check if the user has signed in before
+        // If they haven't, we don't need to do anything
         const userFromDatabase = await adapter.getUser?.(user.id);
         if (!userFromDatabase) return true;
 
-        let profileData: ProfileData | undefined;
-        if (account.provider === "twitch") {
-          const { name, image } = await twitchProvider.profile(
-            profile as TwitchProfile,
-            {},
-          );
-          if (name) {
-            profileData = { name, image };
-          }
-        }
+        // Otherwise, we want to update their profile data
+        // And we'll also store the new tokens
+        const { name, image } = await twitchProvider.profile(
+          profile as TwitchProfile,
+          {},
+        );
+        const profileData: ProfileData | undefined = name
+          ? { name, image }
+          : undefined;
 
         await Promise.all([
           // Update tokens
@@ -127,13 +132,15 @@ export const authOptions: NextAuthOptions = {
               },
             }),
         ]);
+
+        return true;
       } catch (err) {
         if (err instanceof Error) {
           console.error(err.message);
         }
-      }
 
-      return true;
+        return false;
+      }
     },
   },
   adapter,
@@ -145,7 +152,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
     //signOut: '/auth/signout',
-    //error: '/auth/error', // Error code passed in query string as ?error=
+    error: "/auth/signin", // Error code passed in query string as ?error=
     //verifyRequest: '/auth/verify-request', // (used for check email message)
     //newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   },
