@@ -3,7 +3,7 @@ import { type AppType } from "next/app";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
+import { SessionProvider, signOut, useSession } from "next-auth/react";
 import { Analytics } from "@vercel/analytics/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -20,6 +20,17 @@ import "@/styles/globals.css";
 unregisterServiceWorker();
 
 const queryClient = new QueryClient();
+
+const SessionChecker = ({ children }: { children: React.ReactNode }) => {
+  const { data } = useSession();
+
+  // If we have an invalid session (such as a deleted Twitch account), sign out
+  useEffect(() => {
+    if (data?.error) signOut();
+  }, [data?.error]);
+
+  return children;
+};
 
 const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -50,16 +61,18 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
 
   return (
     <SessionProvider session={session}>
-      <QueryClientProvider client={queryClient}>
-        <ConsentProvider>
-          <FontProvider>
-            <Layout>
-              <Component {...pageProps} />
-              <Analytics />
-            </Layout>
-          </FontProvider>
-        </ConsentProvider>
-      </QueryClientProvider>
+      <SessionChecker>
+        <QueryClientProvider client={queryClient}>
+          <ConsentProvider>
+            <FontProvider>
+              <Layout>
+                <Component {...pageProps} />
+                <Analytics />
+              </Layout>
+            </FontProvider>
+          </ConsentProvider>
+        </QueryClientProvider>
+      </SessionChecker>
     </SessionProvider>
   );
 };
