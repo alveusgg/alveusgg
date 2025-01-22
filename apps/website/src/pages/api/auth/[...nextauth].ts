@@ -34,8 +34,8 @@ type ProfileData = {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async function ({ session, user }) {
-      // If we're over an hour since we last verified the Twitch token, check it
-      const token = await prisma.account.findFirst({
+      // Find the full account for the user
+      const account = await prisma.account.findFirst({
         where: { userId: user.id, provider: "twitch" },
         select: {
           id: true,
@@ -43,28 +43,35 @@ export const authOptions: NextAuthOptions = {
           refresh_token: true,
           verified_at: true,
           scope: true,
+          twitchChannelBroadcaster: {
+            select: { channelId: true },
+          },
+          twitchChannelModerator: {
+            select: { channelId: true },
+          },
         },
       });
-      if (!token) {
+      if (!account) {
         return {
           expires: new Date(0).toISOString(),
           error: "Account not found",
         };
       }
 
-      if (token.access_token && token.refresh_token) {
+      // If we're over an hour since we last verified the Twitch token, check it
+      if (account.access_token && account.refresh_token) {
         if (
-          !token.verified_at ||
-          token.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
+          !account.verified_at ||
+          account.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
         ) {
           try {
             await refreshAccessToken(
               "twitch",
               env.TWITCH_CLIENT_ID,
               env.TWITCH_CLIENT_SECRET,
-              token.id,
-              token.access_token,
-              token.refresh_token,
+              account.id,
+              account.access_token,
+              account.refresh_token,
             );
           } catch (err) {
             if (!(err instanceof ExpiredAccessTokenError)) console.error(err);
@@ -78,24 +85,11 @@ export const authOptions: NextAuthOptions = {
 
       // Check if we need to ask the client to re-authenticate with additional scopes
       // Accounts tied to channels in the DB need more scopes for API access
-      const linked = await prisma.twitchChannel.findFirst({
-        where: {
-          OR: [
-            {
-              broadcasterAccount: {
-                userId: user.id,
-              },
-            },
-            {
-              moderatorAccount: {
-                userId: user.id,
-              },
-            },
-          ],
-        },
-      });
-      if (linked) {
-        const scopes = new Set(token.scope?.split(" "));
+      if (
+        account.twitchChannelBroadcaster.length ||
+        account.twitchChannelModerator.length
+      ) {
+        const scopes = new Set(account.scope?.split(" "));
         const missingScopes = botScopes.filter((scope) => !scopes.has(scope));
         if (missingScopes.length > 0) {
           return {
