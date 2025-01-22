@@ -63,11 +63,6 @@ export function DesktopMenu() {
     (user.isSuperUser ||
       checkRolesGivePermission(user.roles, permissions.viewDashboard));
 
-  // If we have an invalid session (such as a deleted Twitch account), sign out
-  useEffect(() => {
-    if (sessionData?.error) signOut();
-  }, [sessionData?.error]);
-
   return (
     <div className="hidden grow flex-col gap-2 lg:flex">
       <div className="flex items-center justify-end gap-2">
