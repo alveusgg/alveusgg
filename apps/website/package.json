@@ -124,7 +124,7 @@
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
     "eslint-plugin-tailwindcss": "^3.17.5",
-    "file-type": "^19.6.0",
+    "file-type": "^20.0.0",
     "globals": "^15.14.0",
     "loader-utils": "^3.3.1",
     "npm-run-all2": "^7.0.2",
