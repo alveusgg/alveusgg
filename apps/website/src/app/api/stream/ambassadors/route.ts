@@ -84,6 +84,10 @@ export async function GET() {
   return Response.json(resp, { headers });
 }
 
+export async function OPTIONS() {
+  return new Response(null, { status: 204, headers });
+}
+
 // Cache the response for 30 minutes
 export const dynamic = "force-static";
 export const revalidate = 1800;
