@@ -79,21 +79,7 @@ const headers = {
 };
 
 // API for extension
-export async function GET(request: Request) {
-  // Handle preflight requests
-  if (request.method === "OPTIONS") {
-    return new Response(null, {
-      status: 204,
-      headers: {
-        ...headers,
-        "Access-Control-Allow-Methods": "GET",
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Max-Age": "86400",
-      },
-    });
-  }
-
-  // Otherwise, return the data
+export async function GET() {
   const resp: AmbassadorsResponse = { v2: ambassadorsV2 };
   return Response.json(resp, { headers });
 }
@@ -101,4 +87,4 @@ export async function GET(request: Request) {
 // Cache the response for 30 minutes
 export const dynamic = "force-static";
 export const revalidate = 1800;
-export const runtime = "nodejs";
+export const runtime = "edge";
