@@ -86,7 +86,14 @@ export async function GET() {
 }
 
 export async function OPTIONS() {
-  return new Response(null, { status: 204, headers });
+  return new Response(null, {
+    status: 204,
+    headers: {
+      ...headers,
+      "Access-Control-Allow-Methods": "GET",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
 }
 
 // Cache the response for 30 minutes
