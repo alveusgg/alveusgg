@@ -76,6 +76,7 @@ const headers = {
   // Vercel doesn't respect Vary so we allow all origins to use this
   // Ideally we'd just allow specifically localhost + *.ext-twitch.tv
   "Access-Control-Allow-Origin": "*",
+  "Access-Control-Max-Age": "86400",
 };
 
 // API for extension
