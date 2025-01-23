@@ -3,9 +3,9 @@ import type { NextConfig } from "next";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
 import { withSuperjson } from "next-superjson";
 
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import animalQuest from "@alveusgg/data/src/animal-quest";
-import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
+import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import animalQuest from "@alveusgg/data/build/animal-quest";
+import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";

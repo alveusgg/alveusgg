@@ -6,8 +6,8 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import IframeResizer from "@iframe-resizer/react";
-import { type ActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import { type ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { camelToKebab } from "@/utils/string-case";
 

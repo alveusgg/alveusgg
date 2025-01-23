@@ -1,18 +1,18 @@
-import allAmbassadors from "@alveusgg/data/src/ambassadors/core";
+import allAmbassadors from "@alveusgg/data/build/ambassadors/core";
 import {
   isActiveAmbassadorEntry,
   type ActiveAmbassador,
-} from "@alveusgg/data/src/ambassadors/filters";
+} from "@alveusgg/data/build/ambassadors/filters";
 import {
   getAmbassadorImages,
   type AmbassadorImage,
-} from "@alveusgg/data/src/ambassadors/images";
-import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
+} from "@alveusgg/data/build/ambassadors/images";
+import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
 import {
   getSpecies,
   type Species,
-} from "@alveusgg/data/src/ambassadors/species";
-import { getIUCNStatus } from "@alveusgg/data/src/iucn";
+} from "@alveusgg/data/build/ambassadors/species";
+import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { createImageUrl } from "@/utils/image";
 import {

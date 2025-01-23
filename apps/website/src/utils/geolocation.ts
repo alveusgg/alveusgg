@@ -5,7 +5,7 @@ import type {
   MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
 import { type Map, Marker } from "maplibre-gl";
-import tailwindConfig from "@alveusgg/data/src/tailwind";
+import tailwindConfig from "@alveusgg/data/build/tailwind";
 
 import { env } from "@/env";
 

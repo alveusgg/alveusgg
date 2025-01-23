@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import type { PartialDateString } from "@alveusgg/data/src/types";
+import type { PartialDateString } from "@alveusgg/data/build/types";
 
 export type DateTimeFormat = {
   style: "short" | "long";

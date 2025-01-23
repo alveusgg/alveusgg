@@ -1,11 +1,11 @@
 import { type ComponentProps } from "react";
 import Image from "next/image";
 
-import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
+import { type Ambassador } from "@alveusgg/data/build/ambassadors/core";
 import {
   type AnimalQuestWithEpisode,
   type AnimalQuestWithRelation,
-} from "@alveusgg/data/src/animal-quest";
+} from "@alveusgg/data/build/animal-quest";
 import { sentenceToKebab } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 

@@ -3,25 +3,25 @@ import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import { useEffect, useId, useMemo, Fragment } from "react";
 
-import { getClassification } from "@alveusgg/data/src/ambassadors/classification";
-import { getIUCNStatus } from "@alveusgg/data/src/iucn";
-import enclosures, { type Enclosure } from "@alveusgg/data/src/enclosures";
+import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
+import { getIUCNStatus } from "@alveusgg/data/build/iucn";
+import enclosures, { type Enclosure } from "@alveusgg/data/build/enclosures";
 import {
   getAmbassadorEpisodes,
   type AnimalQuestWithRelation,
-} from "@alveusgg/data/src/animal-quest";
+} from "@alveusgg/data/build/animal-quest";
 import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
   getAmbassadorIconImage,
   type AmbassadorImage,
   type AmbassadorImages,
-} from "@alveusgg/data/src/ambassadors/images";
-import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
+} from "@alveusgg/data/build/ambassadors/images";
+import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import ambassadors, {
   type Ambassador,
-} from "@alveusgg/data/src/ambassadors/core";
-import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
+} from "@alveusgg/data/build/ambassadors/core";
+import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Carousel from "@/components/content/Carousel";

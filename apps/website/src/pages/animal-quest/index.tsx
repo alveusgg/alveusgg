@@ -4,17 +4,17 @@ import { useMemo, Fragment } from "react";
 
 import animalQuest, {
   type AnimalQuestWithEpisode,
-} from "@alveusgg/data/src/animal-quest";
+} from "@alveusgg/data/build/animal-quest";
 import ambassadors, {
   type AmbassadorKey,
-} from "@alveusgg/data/src/ambassadors/core";
-import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+} from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 import {
   getClassification,
   sortAmbassadorClassification,
-} from "@alveusgg/data/src/ambassadors/classification";
-import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
+} from "@alveusgg/data/build/ambassadors/classification";
+import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
