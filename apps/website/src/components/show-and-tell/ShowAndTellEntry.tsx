@@ -277,7 +277,7 @@ export const ShowAndTellEntry = ({
       className={classes(
         "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-none",
         isPresentationView &&
-          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] select-none snap-center overflow-hidden bg-alveus-green text-white shadow-xl",
+          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl",
         !isPresentationView &&
           "justify-center border-t border-alveus-green/50 first:border-t-0",
         withHeight && !isPresentationView && "min-h-[70svh] min-h-[70vh]",
