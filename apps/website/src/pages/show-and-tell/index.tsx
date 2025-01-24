@@ -13,10 +13,9 @@ import Image from "next/image";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import { delay } from "@/utils/delay";
-import { countUnique } from "@/utils/array";
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
-import { extractCountriesFromLocations } from "@/utils/locations";
+import { extractInfoFromMapFeatures } from "@/utils/locations";
 
 import {
   getMapFeatures,
@@ -81,8 +80,8 @@ export const getStaticProps = async () => {
   const usersCount = await getUsersCount();
   const postsToShowCount = await getPostsToShow();
 
-  const locations = (await getMapFeatures()).map(({ location }) => location);
-  const countries = extractCountriesFromLocations(locations);
+  const { locations, countries, postsFromANewLocation } =
+    extractInfoFromMapFeatures(await getMapFeatures());
 
   return {
     props: {
@@ -91,8 +90,9 @@ export const getStaticProps = async () => {
       totalPostsCount,
       postsToShowCount,
       usersCount,
-      uniqueLocationsCount: countUnique(locations),
-      uniqueCountriesCount: countUnique(countries),
+      uniqueLocationsCount: locations.size,
+      uniqueCountriesCount: countries.size,
+      postsFromANewLocation,
     },
   };
 };
@@ -111,6 +111,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   usersCount,
   uniqueLocationsCount,
   uniqueCountriesCount,
+  postsFromANewLocation,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
     {},
@@ -519,6 +520,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 isPresentationView={isPresentationView}
                 key={entry.id}
                 ref={registerObserveElement}
+                newLocation={postsFromANewLocation.has(entry.id)}
               />
             )),
           )}

@@ -609,5 +609,6 @@ export async function getMapFeatures() {
       latitude: true,
       longitude: true,
     },
+    orderBy: { createdAt: "asc" },
   })) as LocationFeature[];
 }

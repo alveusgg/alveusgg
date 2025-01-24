@@ -24,13 +24,14 @@ import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and
 
 import Link from "@/components/content/Link";
 import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
-import { SeenOnStreamBadge } from "@/components/show-and-tell/SeenOnStreamBadge";
+import { Badge } from "@/components/show-and-tell/Badge";
 
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
 
 type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
+  newLocation: boolean;
   isPresentationView?: boolean;
   withHeight?: boolean;
   ref?: Ref<HTMLElement>;
@@ -74,7 +75,11 @@ const parseOptions: HTMLReactParserOptions = {
   },
 };
 
-const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
+const Header = ({
+  entry,
+  newLocation,
+  isPresentationView,
+}: ShowAndTellEntryProps) => {
   const hours = entry.volunteeringMinutes && entry.volunteeringMinutes / 60;
 
   return (
@@ -83,20 +88,33 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
         isPresentationView ? "" : "text-center"
       }`}
     >
-      {entry.seenOnStream && (
-        <SeenOnStreamBadge
-          dark={isPresentationView}
-          pulse={isPresentationView}
-        />
-      )}
+      <div className="flex items-center justify-end">
+        <h2
+          className={`mb-3 grow font-serif ${
+            isPresentationView ? "text-6xl" : "text-4xl"
+          }`}
+        >
+          {entry.title}
+        </h2>
 
-      <h2
-        className={`mb-3 font-serif ${
-          isPresentationView ? "text-6xl" : "text-4xl"
-        }`}
-      >
-        {entry.title}
-      </h2>
+        {(
+          [
+            [newLocation, "New location"],
+            [entry.seenOnStream, "Seen on stream"],
+          ] satisfies [boolean, string][]
+        ).map(
+          ([cond, text], i) =>
+            cond && (
+              <Badge
+                dark={isPresentationView}
+                key={i}
+                pulse={isPresentationView}
+              >
+                {text}
+              </Badge>
+            ),
+        )}
+      </div>
 
       <p
         className={` ${
@@ -157,7 +175,10 @@ const Header = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
   );
 };
 
-const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
+const Content = ({
+  entry,
+  isPresentationView,
+}: Omit<ShowAndTellEntryProps, "newLocation">) => {
   const content = useMemo(() => {
     try {
       return entry.text && parse(`<root>${entry.text}</root>`, parseOptions);
@@ -233,6 +254,7 @@ const Content = ({ entry, isPresentationView }: ShowAndTellEntryProps) => {
 
 export const ShowAndTellEntry = ({
   entry,
+  newLocation,
   isPresentationView = false,
   withHeight = true,
   ref: forwardedRef,
@@ -314,7 +336,11 @@ export const ShowAndTellEntry = ({
             : ""
         }`}
       >
-        <Header entry={entry} isPresentationView={isPresentationView} />
+        <Header
+          entry={entry}
+          newLocation={newLocation}
+          isPresentationView={isPresentationView}
+        />
 
         <ShowAndTellGallery
           isPresentationView={isPresentationView}

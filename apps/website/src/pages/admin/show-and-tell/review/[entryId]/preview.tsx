@@ -33,11 +33,13 @@ const AdminPreviewShowAndTellPage: NextPage<
 > = () => {
   const router = useRouter();
   const { entryId } = router.query;
-  const getEntry = trpc.adminShowAndTell.getEntry.useQuery(String(entryId), {
-    enabled: !!entryId,
-  });
+  const { data: entry } = trpc.adminShowAndTell.getEntry.useQuery(
+    String(entryId),
+    { enabled: !!entryId },
+  );
 
-  const entry = getEntry.data;
+  const { data: postsFromANewLocation } =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery();
 
   return (
     <>
@@ -58,7 +60,13 @@ const AdminPreviewShowAndTellPage: NextPage<
 
       {/* Grow the last section to cover the page */}
       <Section className="grow">
-        {entry && <ShowAndTellEntry entry={entry} isPresentationView={false} />}
+        {entry && postsFromANewLocation && (
+          <ShowAndTellEntry
+            entry={entry}
+            newLocation={postsFromANewLocation.has(entry.id)}
+            isPresentationView={false}
+          />
+        )}
       </Section>
     </>
   );
