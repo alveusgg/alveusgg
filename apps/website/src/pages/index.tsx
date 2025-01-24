@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
+import type { NextPage, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -7,11 +7,12 @@ import ambassadors from "@alveusgg/data/src/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
 import animalQuestEpisodes from "@alveusgg/data/src/animal-quest";
 
-import { parseStringPromise } from "xml2js";
-import { z } from "zod";
+import { fetchYouTubeVideos } from "@/server/apis/youtube";
+
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 import usePrefersReducedMotion from "@/hooks/motion";
+import { channels as youTubeChannels } from "@/data/youtube";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
@@ -25,6 +26,7 @@ import { Lightbox } from "@/components/content/YouTube";
 import Maya from "@/components/content/Maya";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import PlushieCarousel from "@/components/content/PlushieCarousel";
+import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 import Consent from "@/components/Consent";
 
 import IconAmazon from "@/icons/IconAmazon";
@@ -42,7 +44,6 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 
 const slides = [
   {
@@ -88,7 +89,7 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
             alt={images[0].alt}
             draggable={false}
             width={200}
-            className={`mx-auto aspect-square h-auto w-full max-w-[10rem] rounded-xl object-cover ${ambassadorImageHover}`}
+            className={`mx-auto aspect-square h-auto w-full max-w-40 rounded-xl object-cover ${ambassadorImageHover}`}
             style={{ objectPosition: images[0].position }}
           />
           <Heading level={3} className="text-center text-xl transition-colors">
@@ -143,61 +144,16 @@ const getTwitchEmbed = (
   return url.toString();
 };
 
-// Define the schema for the expected structure of the feed entries
-const VideoSchema = z.object({
-  videoId: z.string(),
-  title: z.string(),
-  published: z.date(),
-});
-
-type Video = z.infer<typeof VideoSchema>;
-
-// Define the schema for the entire feed
-const FeedSchema = z.object({
-  feed: z.object({
-    entry: z.array(
-      z.object({
-        "yt:videoId": z.array(z.string()).nonempty(),
-        title: z.array(z.string()).nonempty(),
-        published: z.array(z.string()).nonempty(),
-      }),
-    ),
-  }),
-});
-
-const fetchYouTubeFeed = async (channelId: string): Promise<Video[]> => {
-  const url = `https://www.youtube.com/feeds/videos.xml?channel_id=${channelId}`;
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch YouTube feed: ${response.statusText}`);
-  }
-
-  const xml = await response.text();
-  const json = await parseStringPromise(xml);
-  const parsedFeed = FeedSchema.parse(json);
-
-  return parsedFeed.feed.entry
-    .map((entry) => ({
-      videoId: entry["yt:videoId"][0],
-      title: entry.title[0],
-      published: new Date(entry.published[0]),
-    }))
-    .filter((video) => !video.title.includes("#shorts")) // exclude shorts
-    .map((video) => VideoSchema.parse(video));
-};
-
-export const getStaticProps: GetStaticProps = async () => {
-  const channelIds = ["UCbJ-1yM55NHrR1GS9hhPuvg", "UCfisf6HxiQr8_4mctNBm9cQ"];
-  const videosArrays = await Promise.all(
-    channelIds.map((channelId) => fetchYouTubeFeed(channelId)),
+export const getStaticProps = async () => {
+  const channels = [youTubeChannels.alveus.id, youTubeChannels.highlights.id];
+  const latestVideos = await Promise.all(
+    channels.map((channelId) => fetchYouTubeVideos(channelId)),
+  ).then((feeds) =>
+    feeds
+      .flat()
+      .sort((a, b) => b.published.getTime() - a.published.getTime())
+      .slice(0, 4),
   );
-
-  // Combine videos from all channels and sort by published date
-  const combinedVideos = videosArrays
-    .flat()
-    .sort((a, b) => b.published.getTime() - a.published.getTime());
-  const latestVideos = combinedVideos.slice(0, 4);
 
   return {
     props: {
@@ -232,7 +188,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="container mx-auto flex flex-grow flex-wrap items-center text-white lg:pt-40">
+        <div className="container mx-auto flex grow flex-wrap items-center text-white lg:pt-40">
           <div className="basis-full p-4 xl:basis-1/2">
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
@@ -261,7 +217,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             >
               {twitchEmbed && (
                 <Link
-                  className="block h-full w-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
+                  className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
                   href="/live"
                   target="_blank"
                   rel="noreferrer"
@@ -287,14 +243,14 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <Image
             src={leafRightImage1}
             alt=""
-            className="absolute -right-32 h-auto max-h-full w-full"
+            className="absolute -right-32 h-auto max-h-full w-full drop-shadow-md"
           />
         </div>
 
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
         <Section dark>
@@ -414,7 +370,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-top-52 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-top-52 2xl:max-w-48"
         />
 
         <Section>
@@ -454,14 +410,14 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
-        <Section dark className="flex-grow bg-alveus-green-900">
+        <Section dark className="grow bg-alveus-green-900">
           <Heading level={2} id="help" link className="text-center">
             How to Help
           </Heading>

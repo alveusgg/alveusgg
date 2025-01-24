@@ -10,6 +10,7 @@ import nextPlugin from "@next/eslint-plugin-next";
 import reactPlugin from "eslint-plugin-react";
 // @ts-expect-error - no types
 import hooksPlugin from "eslint-plugin-react-hooks";
+import tailwindPlugin from "eslint-plugin-tailwindcss";
 
 import globals from "globals";
 
@@ -55,23 +56,19 @@ export default tseslint.config(
       ],
     },
   },
-  /** @type {import("eslint").Linter.Config} */
-  ({
+  {
     name: "react/recommended",
-    // @ts-expect-error - incorrect types
     ...reactPlugin.configs.flat.recommended,
     settings: {
       react: {
         version: "detect",
       },
     },
-  }),
-  /** @type {import("eslint").Linter.Config} */
-  ({
+  },
+  {
     name: "react/jsx-runtime",
-    // @ts-expect-error - incorrect types
     ...reactPlugin.configs.flat["jsx-runtime"],
-  }),
+  },
   {
     name: "react-hooks/recommended",
     plugins: {
@@ -92,6 +89,14 @@ export default tseslint.config(
   {
     name: "prettier/config",
     ...prettiereslint,
+  },
+  ...tailwindPlugin.configs["flat/recommended"],
+  {
+    name: "tailwindcss/custom",
+    rules: {
+      // Rely on prettier for ordering (eslint breaks interpolated classes)
+      "tailwindcss/classnames-order": "off",
+    },
   },
   {
     name: "custom/ignores",

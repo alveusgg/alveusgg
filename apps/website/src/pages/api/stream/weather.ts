@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { env } from "@/env";
-import { getCurrentObservation } from "@/server/utils/weather-api";
+import { getCurrentObservation } from "@/server/apis/weather";
 import { rounded } from "@/utils/math";
 
 const getFeelsLike = (

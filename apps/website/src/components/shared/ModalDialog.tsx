@@ -29,7 +29,7 @@ export function ModalDialog({
       className="relative z-20"
       onClose={closeModal}
     >
-      <div className="fixed inset-0 bg-black bg-opacity-25" />
+      <div className="fixed inset-0 bg-black/25" />
 
       <div className="fixed inset-0 overflow-y-auto">
         <div className="flex min-h-full items-center justify-center p-4 text-center">

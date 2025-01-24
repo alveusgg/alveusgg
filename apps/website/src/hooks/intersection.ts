@@ -4,7 +4,7 @@ const useIntersectionObserver = (
   handleIntersection: (entries: IntersectionObserverEntry[]) => void,
   options: IntersectionObserverInit = { threshold: 0.7 },
 ) => {
-  const observerRef = useRef<IntersectionObserver | null>(null);
+  const observerRef = useRef<IntersectionObserver>(null);
   const handlerRef = useRef(handleIntersection);
   handlerRef.current = handleIntersection;
 

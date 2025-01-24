@@ -59,7 +59,7 @@ const AdminPreviewShowAndTellPage: NextPage<
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         {entry && postsFromANewLocation && (
           <ShowAndTellEntry
             entry={entry}

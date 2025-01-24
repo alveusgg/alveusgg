@@ -5,7 +5,6 @@ import {
   createContext,
   useContext,
   useMemo,
-  forwardRef,
   useRef,
   type ReactNode,
   type Ref,
@@ -106,15 +105,17 @@ declare global {
 
 const Context = createContext<ConsentContext | undefined>(undefined);
 
-const ConsentButton = forwardRef<
-  HTMLButtonElement,
-  {
-    onClick: () => void;
-    children: ReactNode;
-    disabled?: boolean;
-    ref?: Ref<HTMLButtonElement>;
-  }
->(({ onClick, children, disabled }, ref) => (
+const ConsentButton = ({
+  onClick,
+  children,
+  disabled,
+  ref,
+}: {
+  onClick: () => void;
+  children: ReactNode;
+  disabled?: boolean;
+  ref?: Ref<HTMLButtonElement>;
+}) => (
   <button
     type="button"
     className={[
@@ -129,8 +130,7 @@ const ConsentButton = forwardRef<
   >
     {children}
   </button>
-));
-ConsentButton.displayName = "ConsentButton";
+);
 
 const ConsentDialog = ({ context }: { context: ConsentContext }) => {
   const { consent, update, reset, loaded, interacted } = context;
@@ -206,7 +206,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               level={2}
               className="flex items-start gap-2"
             >
-              <div className="my-2 flex-grow">
+              <div className="my-2 grow">
                 {!hasInteracted && (
                   <small className="block text-lg leading-snug text-alveus-green">
                     Welcome to Alveus
@@ -217,7 +217,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               <button
                 type="button"
                 onClick={close}
-                className="-mr-2 flex-shrink-0 p-2 transition-colors hover:text-alveus-green"
+                className="-mr-2 shrink-0 p-2 transition-colors hover:text-alveus-green"
                 title="Close"
               >
                 <IconX />
@@ -234,7 +234,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
             <div className="mt-4 flex flex-col gap-y-2">
               {Object.entries(consentData).map(([key, data]) => (
                 <label key={key} className="flex items-center">
-                  <div className="flex-grow">
+                  <div className="grow">
                     <p>{data.name}</p>
                     <p className="text-sm text-alveus-green">
                       {data.description}
@@ -308,7 +308,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
 
       <button
         type="button"
-        className="group fixed bottom-4 left-4 flex h-12 w-12 items-center justify-center rounded-full bg-alveus-tan shadow transition-shadow hover:shadow-lg lg:z-50"
+        className="group fixed bottom-4 left-4 flex size-12 items-center justify-center rounded-full bg-alveus-tan shadow transition-shadow hover:shadow-lg lg:z-50"
         onClick={() => setOpen(true)}
         title="Manage consent"
       >
@@ -377,10 +377,10 @@ export const ConsentProvider = ({ children }: { children: ReactNode }) => {
   }, [value]);
 
   return (
-    <Context.Provider value={value}>
+    <Context value={value}>
       {children}
       <ConsentDialog context={value} />
-    </Context.Provider>
+    </Context>
   );
 };
 

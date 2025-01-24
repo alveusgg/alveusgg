@@ -1,5 +1,5 @@
 import { Fragment } from "react";
-import { PopoverButton as PopeoverButtonHeadless } from "@headlessui/react";
+import { PopoverButton as PopoverButtonHeadless } from "@headlessui/react";
 
 import { env } from "@/env";
 
@@ -97,34 +97,34 @@ export function AddEventButton({ event }: AddEventButtonProps) {
     <PopoverButton
       label={
         <>
-          <IconCalendar className="mr-1 h-5 w-5" />
+          <IconCalendar className="mr-1 size-5" />
           Add to calendar
         </>
       }
     >
       <div className="flex gap-2">
-        <PopeoverButtonHeadless as={Fragment}>
+        <PopoverButtonHeadless as={Fragment}>
           <Button
             width="auto"
             size="small"
             onClick={handleGCalClick}
             title="Save event to Google calendar"
           >
-            <IconGoogleCalendar className="mr-2 h-5 w-5" />
+            <IconGoogleCalendar className="mr-2 size-5" />
             Google
           </Button>
-        </PopeoverButtonHeadless>
-        <PopeoverButtonHeadless as={Fragment}>
+        </PopoverButtonHeadless>
+        <PopoverButtonHeadless as={Fragment}>
           <Button
             width="auto"
             size="small"
             onClick={handleIcsClick}
             title="Save event to Apple/Outlook calendar"
           >
-            <IconOutlook className="mr-2 h-5 w-5" />
+            <IconOutlook className="mr-2 size-5" />
             Apple/Outlook
           </Button>
-        </PopeoverButtonHeadless>
+        </PopoverButtonHeadless>
       </div>
     </PopoverButton>
   );

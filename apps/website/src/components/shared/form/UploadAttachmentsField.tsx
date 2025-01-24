@@ -85,6 +85,7 @@ type FileUploadingPropsType = {
   maxFileSize?: number;
   renderAttachment: (props: FileUploadRenderProps) => ReactNode;
   resizeImageOptions?: Omit<ResizeImageOptions, "type">;
+  attachmentsClassName?: string;
 };
 
 type FileAction =
@@ -182,6 +183,7 @@ export const UploadAttachmentsField = ({
   allowedFileTypes,
   resizeImageOptions,
   renderAttachment,
+  attachmentsClassName = "my-3 flex flex-col gap-3",
 }: FileUploadingPropsType) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
@@ -310,7 +312,7 @@ export const UploadAttachmentsField = ({
       />
       <div>
         {files.length > 0 && (
-          <div className="my-3 flex flex-col gap-3">
+          <div className={attachmentsClassName}>
             {files.map((file) =>
               renderAttachment({
                 key: file.id,
@@ -326,7 +328,7 @@ export const UploadAttachmentsField = ({
           onClick={onFileUpload}
           {...dragProps}
         >
-          <IconUploadFiles className="h-5 w-5" />
+          <IconUploadFiles className="size-5" />
           Click or Drop here
         </Button>
       </div>

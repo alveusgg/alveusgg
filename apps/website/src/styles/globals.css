@@ -24,6 +24,13 @@
     height: 0;
     display: none;
   }
+
+  .sr-only-linkable {
+    @apply sr-only relative m-0 -ml-px -mt-px overflow-clip;
+
+    font-size: 0;
+    line-height: 0;
+  }
 }
 
 @layer components {

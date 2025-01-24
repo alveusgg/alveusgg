@@ -1,10 +1,10 @@
 import {
-  forwardRef,
   Fragment,
   isValidElement,
   useCallback,
   useMemo,
   useRef,
+  type Ref,
 } from "react";
 import Image from "next/image";
 import parse, {
@@ -34,6 +34,7 @@ type ShowAndTellEntryProps = {
   newLocation: boolean;
   isPresentationView?: boolean;
   withHeight?: boolean;
+  ref?: Ref<HTMLElement>;
 };
 
 const getTextContentRecursive = (node: DOMNode): string => {
@@ -89,7 +90,7 @@ const Header = ({
     >
       <div className="flex items-center justify-end">
         <h2
-          className={`mb-3 flex-grow font-serif ${
+          className={`mb-3 grow font-serif ${
             isPresentationView ? "text-6xl" : "text-4xl"
           }`}
         >
@@ -180,48 +181,85 @@ const Content = ({
 }: Omit<ShowAndTellEntryProps, "newLocation">) => {
   const content = useMemo(() => {
     try {
-      return parse(`<root>${entry.text}</root>`, parseOptions);
+      return entry.text && parse(`<root>${entry.text}</root>`, parseOptions);
     } catch (e) {
-      console.error(`Failed to parse Show and Tell entry ${entry.id}`, e);
+      console.error(`Failed to parse Show and Tell entry text ${entry.id}`, e);
     }
   }, [entry.text, entry.id]);
 
+  const note = useMemo(() => {
+    try {
+      return (
+        entry.notePublic &&
+        parse(`<root>${entry.notePublic}</root>`, parseOptions)
+      );
+    } catch (e) {
+      console.error(`Failed to parse Show and Tell entry note ${entry.id}`, e);
+    }
+  }, [entry.notePublic, entry.id]);
+
+  const hasContent = isValidElement(content) && content.type !== Empty;
+  const hasNote = isValidElement(note) && note.type !== Empty;
+
   return (
-    isValidElement(content) &&
-    content.type !== Empty && (
+    (hasContent || hasNote) && (
       <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
         <div
           className={`mx-auto w-fit ${
             isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
           }`}
         >
-          <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
-            <ErrorBoundary
-              FallbackComponent={Empty}
-              onError={(err) =>
-                console.error(
-                  `Failed to render Show and Tell entry ${entry.id}`,
-                  err,
-                )
-              }
-            >
-              {content}
-            </ErrorBoundary>
-          </div>
+          {hasContent && (
+            <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+              <ErrorBoundary
+                FallbackComponent={Empty}
+                onError={(err) =>
+                  console.error(
+                    `Failed to render Show and Tell entry text ${entry.id}`,
+                    err,
+                  )
+                }
+              >
+                {content}
+              </ErrorBoundary>
+            </div>
+          )}
+
+          {hasNote && (
+            <div className="opacity-75">
+              <h3 className="-mb-4 mt-4 text-xs font-bold uppercase text-alveus-green-600 xl:text-sm">
+                Mod Note
+              </h3>
+
+              <div className="alveus-ugc max-w-[1100px] hyphens-auto xl:text-lg">
+                <ErrorBoundary
+                  FallbackComponent={Empty}
+                  onError={(err) =>
+                    console.error(
+                      `Failed to render Show and Tell entry note ${entry.id}`,
+                      err,
+                    )
+                  }
+                >
+                  {note}
+                </ErrorBoundary>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     )
   );
 };
 
-export const ShowAndTellEntry = forwardRef<
-  HTMLElement | null,
-  ShowAndTellEntryProps
->(function ShowAndTellEntry(
-  { entry, newLocation, isPresentationView = false, withHeight = true },
-  forwardedRef,
-) {
-  const wrapperRef = useRef<HTMLElement | null>(null);
+export const ShowAndTellEntry = ({
+  entry,
+  newLocation,
+  isPresentationView = false,
+  withHeight = true,
+  ref: forwardedRef,
+}: ShowAndTellEntryProps) => {
+  const wrapperRef = useRef<HTMLElement>(null);
   const imageAttachments = entry.attachments
     .filter(({ attachmentType }) => attachmentType === "image")
     .map(({ imageAttachment }) => imageAttachment)
@@ -279,13 +317,13 @@ export const ShowAndTellEntry = forwardRef<
       tabIndex={-1}
     >
       {isPresentationView && featureImageUrl && (
-        <div className="absolute top-0 z-0 h-full w-full overflow-hidden rounded-xl">
+        <div className="absolute top-0 z-0 size-full overflow-hidden rounded-xl">
           <Image
             loading="lazy"
             width={1920}
             height={1080}
             draggable={false}
-            className="pointer-events-none absolute inset-0 -m-2 h-[calc(100%+4em)] w-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
+            className="pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
             src={featureImageUrl}
             alt=""
           />
@@ -315,4 +353,4 @@ export const ShowAndTellEntry = forwardRef<
       </div>
     </article>
   );
-});
+};

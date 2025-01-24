@@ -64,7 +64,7 @@ const merch = Object.entries({
   (obj, [key, { src, alt, pip }]) => ({
     ...obj,
     [key]: (
-      <div className="relative mx-auto h-auto w-full max-w-[10rem]">
+      <div className="relative mx-auto h-auto w-full max-w-40">
         <Image
           src={src}
           alt={alt}
@@ -79,7 +79,7 @@ const merch = Object.entries({
             alt={pip.alt}
             draggable={false}
             width={80}
-            className="absolute -bottom-2 -right-2 h-auto w-1/2 max-w-[5rem] drop-shadow"
+            className="absolute -bottom-2 -right-2 h-auto w-1/2 max-w-20 drop-shadow"
           />
         )}
       </div>

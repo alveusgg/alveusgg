@@ -1,7 +1,8 @@
 import type { NotificationUrgency } from "@prisma/client";
 import { z } from "zod";
 
-import { pushTextDir, pushLang, pushMaxAttempts } from "@/data/env/push";
+import { env } from "@/env";
+
 import {
   badgeUrl,
   defaultTag,
@@ -21,6 +22,10 @@ import { sendWebPushNotification } from "@/server/web-push";
 import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
+
+export const config = {
+  maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan
+};
 
 export type SendPushOptions = z.infer<typeof sendPushSchema>;
 
@@ -122,8 +127,8 @@ export default createTokenProtectedApiHandler(
               subscriptionId: options.subscriptionId,
             },
             image: options.imageUrl,
-            dir: pushTextDir,
-            lang: pushLang,
+            dir: env.PUSH_TEXT_DIR,
+            lang: env.PUSH_LANG,
             icon: iconUrl,
             badge: badgeUrl,
           },
@@ -149,26 +154,21 @@ export default createTokenProtectedApiHandler(
       console.error("Failed to send push notification", e);
     }
 
-    const done = delivered || expired;
-    await updateNotificationPushStatus(
-      done
-        ? {
-            processingStatus: "DONE",
-            notificationId: options.notificationId,
-            subscriptionId: options.subscriptionId,
-            deliveredAt: delivered ? now : undefined,
-          }
-        : {
-            processingStatus:
-              options.attempt && options.attempt >= pushMaxAttempts
-                ? "DONE"
-                : "PENDING",
-            notificationId: options.notificationId,
-            subscriptionId: options.subscriptionId,
-            failedAt: now,
-          },
-    );
+    const status =
+      delivered ||
+      expired ||
+      (options.attempt && options.attempt >= env.PUSH_MAX_ATTEMPTS)
+        ? "DONE"
+        : "PENDING";
 
-    return delivered;
+    await updateNotificationPushStatus({
+      processingStatus: status,
+      notificationId: options.notificationId,
+      subscriptionId: options.subscriptionId,
+      deliveredAt: delivered ? now : undefined,
+      failedAt: delivered ? undefined : now,
+    });
+
+    return true;
   },
 );

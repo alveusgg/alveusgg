@@ -76,7 +76,7 @@ export function NotificationSettingsForm({
 
         {notificationPermission === "granted" && !isRegistered && (
           <p className="flex items-center gap-2 p-2 pt-0 italic text-gray-300">
-            <IconLoading className="h-4 w-4 animate-spin" />
+            <IconLoading className="size-4 animate-spin" />
             Setting up notifications…
           </p>
         )}

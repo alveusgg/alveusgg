@@ -1,17 +1,15 @@
 import { useState, useEffect } from "react";
-import { Lightbox, Preview } from "@/components/content/YouTube";
-import Heading from "@/components/content/Heading";
+
+import type { YouTubeVideo } from "@/server/apis/youtube";
+
 import { formatDateTime } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
 
-type Video = {
-  videoId: string;
-  title: string;
-  published: Date;
-};
+import { Lightbox, Preview } from "@/components/content/YouTube";
+import Heading from "@/components/content/Heading";
 
 type YouTubeCarouselProps = {
-  videos: Video[];
+  videos: YouTubeVideo[];
   dark?: boolean;
 };
 
@@ -20,7 +18,7 @@ const YouTubeCarousel = ({ videos, dark }: YouTubeCarouselProps) => {
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (videos.some((video) => video.videoId === hash)) setOpen(hash);
+    if (videos.some((video) => video.id === hash)) setOpen(hash);
   }, [videos]);
 
   return (
@@ -35,22 +33,22 @@ const YouTubeCarousel = ({ videos, dark }: YouTubeCarouselProps) => {
           <div className="flex w-full flex-wrap justify-around">
             {videos.map((video) => (
               <div
-                key={video.videoId}
+                key={video.id}
                 className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/4"
               >
                 <Trigger
-                  videoId={video.videoId}
+                  videoId={video.id}
                   caption={`${video.title}: ${formatDateTime(video.published, {
                     style: "long",
                   })}`}
-                  triggerId={video.videoId}
+                  triggerId={video.id}
                   className="w-full max-w-2xl"
                 >
-                  <Preview videoId={video.videoId} />
+                  <Preview videoId={video.id} />
                 </Trigger>
                 <Heading
                   level={2}
-                  id={video.videoId}
+                  id={video.id}
                   className="text-center text-2xl"
                 >
                   {video.title}

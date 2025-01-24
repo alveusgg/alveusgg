@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import type { ShowAndTellEntry } from "@prisma/client";
 
 import type {
-  ShowAndTellEntryAttachments,
+  PublicShowAndTellEntryWithAttachments,
   ShowAndTellSubmitInput,
 } from "@/server/db/show-and-tell";
 
@@ -47,7 +47,7 @@ import { MapPickerField } from "../shared/form/MapPickerField";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
-  entry?: ShowAndTellEntry & { attachments: ShowAndTellEntryAttachments };
+  entry?: PublicShowAndTellEntryWithAttachments & Partial<ShowAndTellEntry>;
   action: "review" | "create" | "update";
   onUpdate?: () => void;
 };
@@ -108,7 +108,9 @@ export function ShowAndTellEntryForm({
 
   const initialLocation = useMemo<MapLocation | undefined>(
     () =>
-      entry && entry.longitude !== null && entry.latitude !== null
+      entry &&
+      typeof entry.latitude === "number" &&
+      typeof entry.longitude === "number"
         ? {
             latitude: entry.latitude,
             longitude: entry.longitude,
@@ -241,7 +243,12 @@ export function ShowAndTellEntryForm({
       );
     } else if (action === "review" && entry) {
       review.mutate(
-        { ...data, id: entry.id },
+        {
+          ...data,
+          id: entry.id,
+          notePrivate: (formData.get("notePrivate") as string) ?? "",
+          notePublic: (formData.get("notePublic") as string) ?? "",
+        },
         {
           onSuccess: () => {
             setSuccessMessage("Entry updated successfully!");
@@ -275,7 +282,7 @@ export function ShowAndTellEntryForm({
     <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
       {action === "update" && wasApproved && (
         <MessageBox variant="warning" className="my-4 flex items-center gap-2">
-          <IconWarningTriangle className="h-6 w-6 text-yellow-900" />
+          <IconWarningTriangle className="size-6 text-yellow-900" />
           You are modifying a previously approved post. Upon submitting your
           edits, the post will be unpublished until the changes have been
           reviewed and approved.
@@ -423,6 +430,24 @@ export function ShowAndTellEntryForm({
           </div>
         </Fieldset>
 
+        {action === "review" && (
+          <Fieldset legend="Moderator Notes">
+            <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
+              <RichTextField
+                label="Private Note (only visible to moderators)"
+                name="notePrivate"
+                defaultValue={entry?.notePrivate || undefined}
+              />
+
+              <RichTextField
+                label="Public Note (visible on the post)"
+                name="notePublic"
+                defaultValue={entry?.notePublic || undefined}
+              />
+            </div>
+          </Fieldset>
+        )}
+
         {error && <MessageBox variant="failure">{error}</MessageBox>}
         {successMessage && (
           <MessageBox variant="success">{successMessage}</MessageBox>
@@ -431,7 +456,7 @@ export function ShowAndTellEntryForm({
         <Button type="submit">
           {isLoading ? (
             <>
-              <IconLoading className="h-5 w-5" />
+              <IconLoading className="size-5" />
               Saving …
             </>
           ) : action === "create" ? (

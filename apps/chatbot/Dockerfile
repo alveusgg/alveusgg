@@ -1,4 +1,4 @@
-FROM node:20.11.1-alpine
+FROM node:22-alpine
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
@@ -8,6 +8,7 @@ WORKDIR /app
 COPY package.json .
 COPY pnpm-lock.yaml .
 COPY pnpm-workspace.yaml .
+COPY .pnpmfile.cjs .
 COPY patches ./patches
 
 ## Copy chatbot files

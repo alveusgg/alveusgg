@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { waitUntil } from "@vercel/functions";
 
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
@@ -7,6 +8,10 @@ import { prisma } from "@/server/db/client";
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
 
 export type CreatePushesOptions = z.infer<typeof createPushesSchema>;
+
+export const config = {
+  maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan
+};
 
 const createPushesSchema = z.object({
   notificationId: z.string().cuid(),
@@ -46,7 +51,7 @@ export default createTokenProtectedApiHandler(
         );
       });
 
-      await Promise.allSettled(calls);
+      waitUntil(Promise.allSettled(calls));
 
       return true;
     } catch (e) {

@@ -1,8 +1,8 @@
 import { JSDOM } from "jsdom";
-import DOMPurify, { type Config } from "dompurify";
+import domPurify, { type Config } from "dompurify";
 
 const window = new JSDOM("").window;
-const purify = DOMPurify(window);
+const purify = domPurify(window);
 
 purify.addHook("afterSanitizeAttributes", function (node) {
   if (node instanceof window.HTMLAnchorElement) {

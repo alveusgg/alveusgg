@@ -62,7 +62,7 @@ const FormPage: NextPage<FormPageProps> = ({ form, rules }) => {
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow">
+      <Section className="grow">
         <header>
           <Heading className="my-3 text-3xl">Rules - {form.label}</Heading>
         </header>

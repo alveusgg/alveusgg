@@ -1,6 +1,12 @@
 import { z } from "zod";
-import { createNotification } from "@/server/notifications";
+import { waitUntil } from "@vercel/functions";
+
+import { createNotification, sendNotification } from "@/server/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
+
+export const config = {
+  maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan
+};
 
 // TODO: move API data schema into a shared package for website and chatbot
 const dateSchema = z.string().pipe(z.coerce.date());
@@ -21,7 +27,8 @@ export default createTokenProtectedApiHandler(
   notificationSchema,
   async (options) => {
     try {
-      await createNotification(options);
+      const notification = await createNotification(options);
+      waitUntil(sendNotification(notification));
       return true;
     } catch (e) {
       console.error("Failed to create notification", e);

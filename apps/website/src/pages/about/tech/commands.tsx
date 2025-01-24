@@ -19,8 +19,7 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
-
-import IconChevronRight from "@/icons/IconChevronRight";
+import SubNav from "@/components/content/SubNav";
 
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -75,9 +74,9 @@ const signature = (command: NamedCommand) => {
 };
 
 const sectionLinks = [
-  { name: "Commands", id: "commands" },
-  { name: "Presets", id: "presets" },
-] as const;
+  { name: "Commands", href: "#commands" },
+  { name: "Presets", href: "#presets" },
+];
 
 const AboutTechPage: NextPage = () => {
   return (
@@ -94,7 +93,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm select-none lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm select-none drop-shadow-md lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
@@ -110,27 +109,13 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
-      <nav className="sticky left-0 top-0 z-20 mt-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl">
-        <div className="container mx-auto flex flex-row items-center gap-2 p-1 px-2">
-          {sectionLinks.map(({ name, id }) => (
-            <a
-              key={id}
-              className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
-              href={`#${id}`}
-            >
-              <IconChevronRight className="h-5 w-5" />
-
-              {name}
-            </a>
-          ))}
-        </div>
-      </nav>
+      <SubNav links={sectionLinks} className="z-20" />
 
       <div className="relative">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none drop-shadow-md lg:block"
         />
 
         <Section>
@@ -309,7 +294,7 @@ const AboutTechPage: NextPage = () => {
           <Button
             href="https://fossabot.com/alveussanctuary/commands"
             external
-            className="flex-shrink-0"
+            className="shrink-0"
           >
             Explore Fossabot Commands
           </Button>
@@ -317,14 +302,14 @@ const AboutTechPage: NextPage = () => {
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <Heading
             level={2}
             className="mb-2 mt-0 scroll-mt-14"

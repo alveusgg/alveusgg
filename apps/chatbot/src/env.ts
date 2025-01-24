@@ -75,4 +75,5 @@ export const env = createEnv({
     TWITCH_CLIENT_SECRET: z.string(),
   },
   runtimeEnv: process.env, // Assuming we run in Node.js otherwise you would pass a record of environment variables
+  skipValidation: !!process.env.SKIP_ENV_VALIDATION,
 });

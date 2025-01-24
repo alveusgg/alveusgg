@@ -135,7 +135,7 @@ export function BingoCard({
 
   return (
     <div className="flex flex-col items-center justify-stretch gap-4 lg:flex-row lg:gap-12 xl:gap-24">
-      <div className="relative flex w-full max-w-[600px] flex-shrink-0 flex-col">
+      <div className="relative flex w-full max-w-[600px] shrink-0 flex-col">
         <BingoCardGrid
           className="w-full select-none gap-2 rounded-lg border border-white bg-black/80 p-2 text-lg font-bold tabular-nums shadow-2xl sm:text-4xl"
           size={size}
@@ -224,7 +224,7 @@ export function BingoCard({
             ? selectableValues.map((value) => (
                 <div
                   key={value}
-                  className="m-1 inline-flex min-w-[2rem] items-center justify-center rounded-full bg-white p-2 leading-none"
+                  className="m-1 inline-flex min-w-8 items-center justify-center rounded-full bg-white p-2 leading-none"
                 >
                   <span>{value}</span>
                 </div>

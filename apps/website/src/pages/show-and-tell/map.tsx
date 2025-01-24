@@ -113,7 +113,7 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
               href="/show-and-tell"
               className="flex h-full items-center justify-center gap-2 p-8"
             >
-              <IconArrowRight className="h-8 w-8 rotate-180" />
+              <IconArrowRight className="size-8 rotate-180" />
               All posts
             </NextLink>
           </Box>
@@ -124,14 +124,14 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
               "items-center p-2 md:text-lg lg:col-start-5",
             )}
           >
-            <IconMapPin className="h-10 w-10" />
+            <IconMapPin className="size-10" />
             {uniqueLocationsCountFmt} locations
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconGlobe className="h-10 w-10" />
+            <IconGlobe className="size-10" />
             {uniqueCountriesCountFmt} countries
           </Box>
         </div>

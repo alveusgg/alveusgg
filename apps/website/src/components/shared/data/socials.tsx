@@ -5,39 +5,32 @@ import IconTikTok from "@/icons/IconTikTok";
 import IconTwitter from "@/icons/IconTwitter";
 import IconTwitch from "@/icons/IconTwitch";
 import IconYouTube from "@/icons/IconYouTube";
+import IconBluesky from "@/icons/IconBluesky";
 
-type SocialLink = {
-  link: string;
-  title: string;
-  icon: ComponentType;
-};
+import socials from "@/data/socials";
 
-const socials = {
-  twitch: {
-    link: "https://twitch.tv/alveussanctuary",
-    title: "Twitch.tv",
-    icon: IconTwitch,
-  },
-  instagram: {
-    link: "https://www.instagram.com/alveussanctuary",
-    title: "Instagram",
-    icon: IconInstagram,
-  },
-  twitter: {
-    link: "https://twitter.com/AlveusSanctuary",
-    title: "X (Twitter)",
-    icon: IconTwitter,
-  },
-  tiktok: {
-    link: "https://www.tiktok.com/@alveussanctuary",
-    title: "TikTok",
-    icon: IconTikTok,
-  },
-  youtube: {
-    link: "https://www.youtube.com/c/AlveusSanctuary",
-    title: "YouTube",
-    icon: IconYouTube,
-  },
-} satisfies Record<string, SocialLink>;
+import {
+  typeSafeObjectEntries,
+  typeSafeObjectFromEntries,
+} from "@/utils/helpers";
 
-export default socials;
+const icons = {
+  twitch: IconTwitch,
+  instagram: IconInstagram,
+  twitter: IconTwitter,
+  bluesky: IconBluesky,
+  tiktok: IconTikTok,
+  youtube: IconYouTube,
+} as const satisfies Record<keyof typeof socials, ComponentType>;
+
+const links = typeSafeObjectFromEntries(
+  typeSafeObjectEntries(socials).map(([key, social]) => [
+    key,
+    {
+      ...social,
+      icon: icons[key],
+    },
+  ]),
+);
+
+export default links;

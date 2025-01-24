@@ -15,6 +15,13 @@ const useLocaleHours = (hours: number, showDays: boolean) => {
   return `${localeHours} hour${hours !== 1 ? "s" : ""}${showDays ? ` (${localeDays})` : ""}`;
 };
 
+const targetIntervals = [24 * 180, 24 * 90, 24 * 30, 24 * 2];
+
+const getTarget = (hours: number) => {
+  const multiple = targetIntervals.find((interval) => interval <= hours) ?? 24;
+  return Math.ceil((hours + 1) / multiple) * multiple;
+};
+
 const GiveAnHourProgressText = ({
   isLoading,
   hours,
@@ -30,7 +37,7 @@ const GiveAnHourProgressText = ({
   const localeTarget = useLocaleHours(target, showDays);
 
   return (
-    <div className="text-md flex justify-between px-2">
+    <div className="flex justify-between px-2">
       <p className="font-semibold">
         {isLoading
           ? "Loading hours given…"
@@ -60,13 +67,7 @@ export const GiveAnHourProgress = ({
     },
   );
   const hours = hoursQuery.data ?? 0;
-
-  // Round hours up to the nearest multiple of 24
-  // Or, if we're greater than 168 hours (7 days), the nearest multiple of 48
-  // We'll multiply by 1.2 so that we never actually hit the target itself
-  const multiple = hours > 168 ? 48 : 24;
-  const computedTarget =
-    target ?? Math.ceil(((hours || 1) * 1.2) / multiple) * multiple;
+  const computedTarget = target ?? getTarget(hours);
 
   return (
     <>

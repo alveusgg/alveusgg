@@ -25,22 +25,19 @@ const experience = [
     content: <p>County 4-H All Star Ambassador</p>,
   },
   {
-    key: "zoo-to-you",
+    key: "zoo-intern",
     date: "June, 2018",
     content: (
-      <p>
-        Outreach Education and Exotic Animal Husbandry intern at Zoo to You
-        Conservation Ambassadors
-      </p>
+      <p>Outreach Education and Exotic Animal Husbandry intern at a zoo</p>
     ),
   },
   {
-    key: "charles-paddock-zoo",
+    key: "aza-intern",
     date: "January, 2019",
     content: (
       <p>
-        Outreach Education and Exotic Animal Husbandry intern at Charles Paddock
-        Zoo
+        Outreach Education and Exotic Animal Husbandry intern at an AZA
+        accredited zoo facility
       </p>
     ),
   },
@@ -52,11 +49,9 @@ const experience = [
     ),
   },
   {
-    key: "free-flight-exotic-bird-sanctuary",
+    key: "exotic-bird-sanctuary",
     date: "June, 2019",
-    content: (
-      <p>Education and Husbandry intern at Free Flight Exotic Bird Sanctuary</p>
-    ),
+    content: <p>Education and Husbandry intern at an exotic bird sanctuary</p>,
   },
   {
     key: "cal-poly-graduation",
@@ -105,7 +100,7 @@ const AboutMayaPage: NextPage = () => {
     <>
       <Meta
         title="About Maya"
-        description="Maya Higa is one of the top female streamers on Twitch and a rising star on YouTube. Maya founded Alveus Sanctuary, a non-profit wildlife sanctuary and virtual education center in central Texas, and raised more than $500,000 during her first fundraising stream thanks to her amazing community and fellow streamers."
+        description="Maya Higa is one of the top female streamers on Twitch and has amassed a large following on YouTube and other social platforms. Maya has experience as a licensed falconer, wildlife rehabilitator, zookeeper, and conservation outreach educator. In 2021, Maya founded Alveus Sanctuary, a non-profit wildlife sanctuary and virtual education center in central Texas."
       />
 
       {/* Nav background */}
@@ -115,27 +110,25 @@ const AboutMayaPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none lg:block xl:max-w-lg"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-md select-none drop-shadow-md lg:block xl:max-w-lg"
         />
 
         <Section dark className="py-24">
           <div className="w-full lg:w-3/5">
             <Heading level={1}>About Maya Higa</Heading>
             <p className="text-lg">
-              Maya Higa is one of the top female streamers on Twitch and a
-              rising star on YouTube. Her passions include wildlife conservation
-              and education, and she integrates these into her content
+              Maya Higa is one of the top female streamers on Twitch and has
+              amassed over 1 million subscribers on YouTube. She integrates her
+              passion for wildlife conservation and education into her content
               regularly, creating some of the most unique content on Twitch.
-              Maya is a licensed falconer and wildlife conservationist. Her
-              livestreams feature falconry, wildlife rehab, conservation
-              education, and charity fundraising. She created a conservation
-              podcast in 2019 which has since aired more than 60 episodes on her
-              channel and raised more than $92,000 for wildlife protection
-              organizations around the globe. Maya founded Alveus Sanctuary, a
-              non-profit wildlife sanctuary and virtual education center in
-              central Texas and raised more than $500,000 during her first
-              fundraising stream thanks to her amazing community and fellow
-              streamers.
+              Maya has experience as a licensed falconer, wildlife
+              rehabilitator, zookeeper, and conservation outreach educator. Her
+              livestreams and videos feature conservation education and charity
+              fundraising. She created a conservation podcast in 2019 which
+              aired more than 60 episodes and raised more than $92,000 for
+              conservation organizations around the globe. In 2021, Maya founded
+              Alveus Sanctuary, a non-profit wildlife sanctuary and virtual
+              education center in central Texas.
             </p>
           </div>
         </Section>
@@ -145,7 +138,7 @@ const AboutMayaPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section>
@@ -170,7 +163,7 @@ const AboutMayaPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
         <Section
@@ -190,14 +183,14 @@ const AboutMayaPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <Heading
             level={2}
             className="mb-16 text-center text-5xl text-alveus-green"

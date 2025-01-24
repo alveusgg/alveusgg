@@ -324,12 +324,12 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none drop-shadow-md lg:block"
         />
 
         <Section dark>
           <div className="flex flex-wrap lg:flex-nowrap">
-            <div className="flex w-full flex-shrink-0 flex-col items-start justify-between py-4 lg:max-w-md lg:pl-8">
+            <div className="flex w-full shrink-0 flex-col items-start justify-between py-4 lg:max-w-md lg:pl-8">
               <Heading className="flex flex-col">
                 <span className="text-lg">
                   Animal Quest Episode {episode.episode}:{" "}
@@ -406,7 +406,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
 
             {/* Move the video to the left/top of the flex container with order-first */}
             {/* Do this in CSS so the episode title is first in the DOM for screen-readers etc. */}
-            <div className="order-first flex w-full flex-grow flex-col gap-4 lg:w-auto">
+            <div className="order-first flex w-full grow flex-col gap-4 lg:w-auto">
               <h2 className="sr-only" id="video">
                 Video
               </h2>
@@ -441,7 +441,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-22 left-0 z-10 hidden h-auto w-1/2 max-w-[12rem] select-none lg:block"
+          className="pointer-events-none absolute -bottom-22 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
         />
 
         <Section>
@@ -475,19 +475,19 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-16 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -top-16 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none drop-shadow-md lg:block"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-56 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-56 left-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 select-none drop-shadow-md lg:block"
         />
 
-        <Section className="flex-grow">
+        <Section className="grow">
           <Heading level={2} className="mb-8 mt-0" id="presentation" link>
             Episode Presentation
           </Heading>

@@ -6,3 +6,6 @@ export const kebabToCamel = (str: string) =>
 
 export const sentenceToKebab = (str: string) =>
   str.replace(/\s+/g, "-").toLowerCase();
+
+export const sentenceToTitle = (str: string) =>
+  str.replace(/\b\w/g, (g) => g.toUpperCase());

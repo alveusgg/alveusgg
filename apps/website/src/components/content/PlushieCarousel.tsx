@@ -33,7 +33,7 @@ const merch = Object.entries({
   (obj, [key, { src, alt }]) => ({
     ...obj,
     [key]: (
-      <div className="relative mx-auto h-auto w-full max-w-[10rem]">
+      <div className="relative mx-auto h-auto w-full max-w-40">
         <Image
           src={src}
           alt={alt}

@@ -171,7 +171,7 @@ const AdminUsersPage: NextPage<
                                       })
                                     }
                                   >
-                                    <IconMinusCircle className="h-4 w-4" />
+                                    <IconMinusCircle className="size-4" />
                                     <span className="sr-only">Remove role</span>
                                   </Button>
                                 </li>

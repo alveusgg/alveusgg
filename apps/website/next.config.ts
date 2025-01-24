@@ -1,18 +1,21 @@
-// @ts-check
-
 import { resolve } from "path";
+import type { NextConfig } from "next";
+import type { RemotePattern } from "next/dist/shared/lib/image-config";
 import { withSuperjson } from "next-superjson";
 
-import ambassadorSlugs from "./src/data/generated/ambassador-slugs.json" assert { type: "json" };
-import animalQuestEpisodes from "./src/data/generated/animal-quest-episodes.json" assert { type: "json" };
+import ambassadors from "@alveusgg/data/src/ambassadors/core";
+import animalQuest from "@alveusgg/data/src/animal-quest";
+import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
 
-import "./src/env/index.js";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 
-/**
- * @param {string} url
- * @returns {import("next/dist/shared/lib/image-config").RemotePattern}
- */
-function urlOriginAsRemotePattern(url) {
+import { twitchChannels } from "@/data/calendar-events";
+import socials from "@/data/socials";
+
+import "@/env/index.js";
+
+function urlOriginAsRemotePattern(url: string): RemotePattern {
   const parsed = new URL(url);
   return {
     protocol: parsed.protocol === "http:" ? "http" : "https",
@@ -21,10 +24,7 @@ function urlOriginAsRemotePattern(url) {
   };
 }
 
-/**
- * @type {import("next").NextConfig}
- */
-const config = {
+const config: NextConfig = {
   reactStrictMode: true,
   eslint: {
     dirs: ["."],
@@ -144,6 +144,16 @@ const config = {
       permanent: true,
     },
     {
+      source: "/annual-reports/:path*",
+      destination: "/about/annual-reports/:path*",
+      permanent: true,
+    },
+    {
+      source: "/reports/:path*",
+      destination: "/about/annual-reports/:path*",
+      permanent: true,
+    },
+    {
       source: "/tech",
       destination: "/about/tech",
       permanent: true,
@@ -178,23 +188,31 @@ const config = {
       destination: "/animal-quest/:path*",
       permanent: false,
     },
-    ...ambassadorSlugs.map((slug) => ({
-      source: `/${slug}`,
-      destination: `/ambassadors/${slug}`,
-      permanent: false,
-    })),
-    ...animalQuestEpisodes.flatMap(({ slug, episode }) => [
-      {
-        source: `/animal-quest/${episode}`,
-        destination: `/animal-quest/${slug}`,
+    ...typeSafeObjectKeys(ambassadors)
+      .filter(isActiveAmbassadorKey) // We don't want to generate pages for retired ambassadors
+      .map((key) => camelToKebab(key))
+      .map((slug) => ({
+        source: `/${slug}`,
+        destination: `/ambassadors/${slug}`,
         permanent: false,
-      },
-      {
-        source: `/animal-quest/episode-${episode}`,
-        destination: `/animal-quest/${slug}`,
-        permanent: false,
-      },
-    ]),
+      })),
+    ...animalQuest
+      .map((episode, idx) => ({
+        slug: sentenceToKebab(episode.edition),
+        episode: idx + 1,
+      }))
+      .flatMap(({ slug, episode }) => [
+        {
+          source: `/animal-quest/${episode}`,
+          destination: `/animal-quest/${slug}`,
+          permanent: false,
+        },
+        {
+          source: `/animal-quest/episode-${episode}`,
+          destination: `/animal-quest/${slug}`,
+          permanent: false,
+        },
+      ]),
     {
       source: "/animal-quest/cow-edition",
       destination: "/animal-quest/beef-edition",
@@ -278,26 +296,11 @@ const config = {
       destination: "https://bio.link/alveussanctuary",
       permanent: true,
     },
-    {
-      source: "/instagram",
-      destination: "https://www.instagram.com/alveussanctuary",
+    ...typeSafeObjectEntries(socials).map(([key, { link }]) => ({
+      source: `/${key}`,
+      destination: link,
       permanent: true,
-    },
-    {
-      source: "/twitter",
-      destination: "https://twitter.com/AlveusSanctuary",
-      permanent: true,
-    },
-    {
-      source: "/youtube",
-      destination: "https://www.youtube.com/AlveusSanctuary",
-      permanent: true,
-    },
-    {
-      source: "/tiktok",
-      destination: "https://www.tiktok.com/@alveussanctuary",
-      permanent: true,
-    },
+    })),
     {
       source: "/vods",
       destination:
@@ -332,11 +335,6 @@ const config = {
       permanent: true,
     },
     {
-      source: "/twitch",
-      destination: "https://twitch.tv/alveussanctuary",
-      permanent: true,
-    },
-    {
       source: "/live",
       destination: "https://twitch.tv/alveussanctuary",
       permanent: true,
@@ -351,27 +349,16 @@ const config = {
       destination: "https://www.youtube.com/AlveusSanctuary/live",
       permanent: true,
     },
-    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id + a default flag)
     {
       source: "/updates/ical",
-      destination:
-        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${twitchChannels.alveus.id}`,
       permanent: true,
     },
-    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
-    {
-      source: "/updates/ical/alveus",
-      destination:
-        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=636587384",
+    ...typeSafeObjectEntries(twitchChannels).map(([key, { id }]) => ({
+      source: `/updates/ical/${key}`,
+      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
       permanent: true,
-    },
-    // TODO: Drive this from twitchChannels in @/data/calendar-events (store id)
-    {
-      source: "/updates/ical/maya",
-      destination:
-        "https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=235835559",
-      permanent: true,
-    },
+    })),
   ],
   headers: async () => [
     {
@@ -391,7 +378,7 @@ const config = {
                 ["development", "preview"].includes(process.env.VERCEL_ENV) &&
                 "https://vercel.live/",
               // Twitch embeds:
-              "https://embed.twitch.tv/ https://player.twitch.tv/ https://www.twitch.tv/",
+              "https://embed.twitch.tv/ https://player.twitch.tv/ https://clips.twitch.tv/ https://www.twitch.tv/",
               // YouTube embeds:
               "https://www.youtube-nocookie.com/",
               // Streamable embeds:

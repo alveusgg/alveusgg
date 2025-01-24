@@ -15,14 +15,14 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "engines": {
-    "node": "20.11.1",
-    "pnpm": "^8.15.5"
+    "node": "22.x",
+    "pnpm": "^9.14.2"
   },
-  "packageManager": "pnpm@8.15.5",
+  "packageManager": "pnpm@9.14.2",
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.10",
-    "prettier": "^3.3.3"
+    "lint-staged": "^15.3.0",
+    "prettier": "^3.4.2"
   },
   "scripts": {
     "prepare": "husky",
@@ -32,7 +32,7 @@
   },
   "pnpm": {
     "patchedDependencies": {
-      "next@15.0.3": "patches/next@15.0.3.patch"
+      "eslint-plugin-tailwindcss@3.17.5": "patches/eslint-plugin-tailwindcss@3.17.5.patch"
     },
     "peerDependencyRules": {
       "allowedVersions": {

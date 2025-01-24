@@ -19,7 +19,7 @@ import { extractInfoFromMapFeatures } from "@/utils/locations";
 
 import {
   getMapFeatures,
-  getPosts,
+  getPublicPosts,
   getPostsCount,
   getPostsToShow,
   getUsersCount,
@@ -69,7 +69,7 @@ export const bentoBoxClasses =
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
 export const getStaticProps = async () => {
-  const entries = await getPosts({ take: entriesPerPage + 1 });
+  const entries = await getPublicPosts({ take: entriesPerPage + 1 });
 
   let nextCursor: string | undefined = undefined;
   if (entries.length > entriesPerPage) {
@@ -132,14 +132,14 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const uniqueCountriesCountFmt = useLocaleString(uniqueCountriesCount);
 
   const [isPresentationView, setIsPresentationView] = useState(false);
-  const presentationViewRootElementRef = useRef<HTMLDivElement | null>(null);
+  const presentationViewRootElementRef = useRef<HTMLDivElement>(null);
 
   const [currentPostIndex, setCurrentPostIndex] = useState(0);
   const [currentPostAuthor, setCurrentPostAuthor] = useState("");
 
   // We use this ref to scroll to the entry when transitioning between presentation view and normal view
   // and when the next/prev buttons are clicked
-  const currentEntryElementRef = useRef<HTMLElement | null>(null);
+  const currentEntryElementRef = useRef<HTMLElement>(null);
 
   // We use these states to control whether the next/prev buttons are enabled
   // and whether the click regions are visible in presentation view
@@ -225,7 +225,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
   // Track when the user is manually scrolling
   const userScrolling = useRef(false);
-  const userScrollingTimeout = useRef<NodeJS.Timeout>();
+  const userScrollingTimeout = useRef<NodeJS.Timeout>(null);
   const userScrollingTimeoutMs = 100;
   const onUserScroll = useCallback(() => {
     userScrolling.current = true;
@@ -241,7 +241,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
     element: HTMLElement;
     scroll: number;
     timer: NodeJS.Timeout;
-  }>();
+  }>(null);
   const scrollDebounce = 250; // Milliseconds to wait before snapping
   const scrollThreshold = 0.1; // multiplier of the viewport height
   const onScroll = useCallback(
@@ -289,7 +289,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           }
 
           // Reset the debounce
-          scrollTrack.current = undefined;
+          scrollTrack.current = null;
         }, scrollDebounce),
       };
     },
@@ -332,7 +332,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   const handleTogglePresentationView = useCallback(() => {
     togglePresentationView(currentEntryElementRef.current, !isPresentationView);
   }, [isPresentationView, togglePresentationView]);
-  const entryIdToFocusRef = useRef<string>();
+  const entryIdToFocusRef = useRef<string>(null);
 
   const handleLoadNext = useCallback(async () => {
     // Keeping track of the number of pages before starting to load more
@@ -350,9 +350,10 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
     const hasLoadedNewPage = !pageBefore || pages.length > pageBefore;
     const lastPageItems = pages[pages.length - 1]?.items;
 
-    entryIdToFocusRef.current = hasLoadedNewPage
-      ? lastPageItems?.[0]?.id
-      : lastPageItems?.[lastPageItems.length - 1]?.id;
+    entryIdToFocusRef.current =
+      (hasLoadedNewPage
+        ? lastPageItems?.[0]?.id
+        : lastPageItems?.[lastPageItems.length - 1]?.id) ?? null;
   }, [entries]);
 
   useEffect(() => {
@@ -363,7 +364,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       );
       if (isShowAndTellEntry(element)) {
         scrollTo(element);
-        entryIdToFocusRef.current = undefined;
+        entryIdToFocusRef.current = null;
       }
     }
   }, [entries.data, scrollTo]);
@@ -417,7 +418,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       <Section className="py-6 md:py-12">
-        <div className="grid-rows-3-auto md:grid-rows-2-auto grid w-full grid-cols-4 gap-4 md:grid-cols-6">
+        <div className="grid w-full grid-cols-4 grid-rows-3-auto gap-4 md:grid-cols-6 md:grid-rows-2-auto">
           <Box
             className={classes(
               bentoBoxClasses,
@@ -436,7 +437,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               <div className="relative col-start-1 row-start-1 flex flex-col items-end justify-end">
                 <div className="z-10 flex items-center justify-end gap-2 rounded-tl-xl bg-alveus-green-600 p-2 px-4 text-right text-white transition-colors group-hover:bg-alveus-green-700">
                   Community map
-                  <IconArrowRight className="h-8 w-8" />
+                  <IconArrowRight className="size-8" />
                 </div>
               </div>
             </NextLink>
@@ -446,28 +447,28 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconUserGroup className="h-10 w-10" />
+            <IconUserGroup className="size-10" />
             {usersCountFmt} members
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconPencil className="h-10 w-10" />
+            <IconPencil className="size-10" />
             {totalPostsCountFmt} posts
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconMapPin className="h-10 w-10" />
+            <IconMapPin className="size-10" />
             {uniqueLocationsCountFmt} locations
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconGlobe className="h-10 w-10" />
+            <IconGlobe className="size-10" />
             {uniqueCountriesCountFmt} countries
           </Box>
 
@@ -498,7 +499,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="flex-grow" offsetParent={!isPresentationView}>
+      <Section className="grow" offsetParent={!isPresentationView}>
         <div
           ref={presentationViewRootElementRef}
           onWheel={onUserScroll}
@@ -608,7 +609,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 disabled={!hasPrevEntry}
                 onClick={scrollToPrev}
               >
-                <IconArrowUp className="h-5 w-5" />
+                <IconArrowUp className="size-5" />
                 <span className="sr-only">Previous Post</span>
               </Button>
               <Button
@@ -616,7 +617,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 disabled={!hasNextEntry}
                 onClick={scrollToNext}
               >
-                <IconArrowDown className="h-5 w-5" />
+                <IconArrowDown className="size-5" />
                 <span className="sr-only">Next Post</span>
               </Button>
             </div>
@@ -627,12 +628,12 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             >
               {isPresentationView ? (
                 <>
-                  <IconArrowsIn className="h-5 w-5" />
+                  <IconArrowsIn className="size-5" />
                   <span>Close Fullscreen</span>
                 </>
               ) : (
                 <>
-                  <IconArrowsOut className="h-5 w-5" />
+                  <IconArrowsOut className="size-5" />
                   <span>Open Fullscreen</span>
                 </>
               )}
@@ -642,7 +643,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               href="/show-and-tell/submit-post"
               className="bg-white shadow-lg"
             >
-              <IconPencil className="h-5 w-5" />
+              <IconPencil className="size-5" />
               <span>
                 Submit
                 <span className="hidden lg:inline"> Post</span>

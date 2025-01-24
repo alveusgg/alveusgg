@@ -28,7 +28,7 @@ export function CommunityMap({
   // To show post info on marker click
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
 
-  const mapRef = useRef<Map | null>(null);
+  const mapRef = useRef<Map>(null);
 
   const renderFeaturesOnMap = useCallback(
     async (features?: Array<LocationFeature>) => {
@@ -73,67 +73,73 @@ export function CommunityMap({
       zoom: 1,
       minZoom: 0,
       maxZoom: MAX_ZOOM,
-      antialias: true,
-    })
-      .on("load", async () => {
-        map.addSource("features", {
-          type: "geojson",
-          data: {
-            type: "FeatureCollection",
-            features: [],
-          },
-        });
+      canvasContextAttributes: {
+        antialias: true,
+      },
+    });
 
-        renderFeaturesOnMap(features);
-
-        const image = await map.loadImage(
-          env.NEXT_PUBLIC_BASE_URL + "/assets/map-pin.png",
-        );
-        map.addImage("custom-marker", image.data);
-
-        map.addLayer({
-          id: "features",
-          type: "symbol",
-          source: "features",
-          layout: {
-            "icon-image": "custom-marker",
-            "icon-allow-overlap": true,
-            "icon-size": 1,
-          },
-        });
-      })
-      .on("click", "features", (e) => {
-        const feature = e.features?.[0];
-        if (!feature) return;
-
-        setSelectedMarkerId(feature.properties.id);
-      })
-      .on("mouseenter", "features", (e) => {
-        map.getCanvas().style.cursor = "pointer";
-        const feature = e.features?.[0];
-        if (!feature) return;
-
-        if (
-          feature.geometry.type === "Point" &&
-          map.getZoom() >= TOOLTIP_MIN_ZOOM
-        ) {
-          const coordinates = feature.geometry.coordinates.slice() as [
-            number,
-            number,
-          ];
-          while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
-            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
-          }
-          popup
-            .setLngLat(coordinates)
-            .setHTML(feature.properties.name)
-            .addTo(map);
-        }
-      })
-      .on("mouseleave", "features", () => {
-        map.getCanvas().style.cursor = "";
-        popup.remove();
+    map.on("load", async () => {
+      map.addSource("features", {
+        type: "geojson",
+        data: {
+          type: "FeatureCollection",
+          features: [],
+        },
       });
+
+      renderFeaturesOnMap(features);
+
+      const image = await map.loadImage(
+        env.NEXT_PUBLIC_BASE_URL + "/assets/map-pin.png",
+      );
+      map.addImage("custom-marker", image.data);
+
+      map.addLayer({
+        id: "features",
+        type: "symbol",
+        source: "features",
+        layout: {
+          "icon-image": "custom-marker",
+          "icon-allow-overlap": true,
+          "icon-size": 1,
+        },
+      });
+    });
+
+    map.on("click", "features", (e) => {
+      const feature = e.features?.[0];
+      if (!feature) return;
+
+      setSelectedMarkerId(feature.properties.id);
+    });
+
+    map.on("mouseenter", "features", (e) => {
+      map.getCanvas().style.cursor = "pointer";
+      const feature = e.features?.[0];
+      if (!feature) return;
+
+      if (
+        feature.geometry.type === "Point" &&
+        map.getZoom() >= TOOLTIP_MIN_ZOOM
+      ) {
+        const coordinates = feature.geometry.coordinates.slice() as [
+          number,
+          number,
+        ];
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+          coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360;
+        }
+        popup
+          .setLngLat(coordinates)
+          .setHTML(feature.properties.name)
+          .addTo(map);
+      }
+    });
+
+    map.on("mouseleave", "features", () => {
+      map.getCanvas().style.cursor = "";
+      popup.remove();
+    });
 
     mapRef.current = map;
 

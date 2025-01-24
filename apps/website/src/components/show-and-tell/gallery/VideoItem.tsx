@@ -1,5 +1,5 @@
 import type { LinkAttachment } from "@prisma/client";
-import { type AnchorHTMLAttributes } from "react";
+import type { AnchorHTMLAttributes, JSX } from "react";
 
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { createImageUrl } from "@/utils/image";
@@ -82,7 +82,7 @@ export function VideoItem({
       >
         <VideoPlatformIcon
           platform={videoPlatformConfig.key}
-          className="h-5 w-5"
+          className="size-5"
         />
         {showPreview && "Open "}
         {videoPlatformConfig.label}

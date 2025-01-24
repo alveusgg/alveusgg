@@ -36,13 +36,13 @@ const Video = ({
   threshold = 0.1,
 }: VideoProps) => {
   const [seen, setSeen] = useState(false);
-  const observer = useRef<IntersectionObserver>();
+  const observer = useRef<IntersectionObserver>(null);
   const ref = useCallback(
     (node: HTMLVideoElement) => {
       if (!node) {
         if (observer.current) {
           observer.current.disconnect();
-          observer.current = undefined;
+          observer.current = null;
         }
         return;
       }

@@ -14,13 +14,12 @@ import {
   createPost,
   deletePost,
   getPublicPostById,
-  getPostWithUserById,
-  getPosts,
+  getPublicPosts,
+  getUserPosts,
   getVolunteeringMinutes,
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
-  withAttachments,
   getMapFeatures,
 } from "@/server/db/show-and-tell";
 import { imageMimeTypes } from "@/utils/files";
@@ -47,7 +46,7 @@ export const showAndTellRouter = router({
     .query(async ({ input }) => {
       const { cursor } = input;
 
-      const items = await getPosts({
+      const items = await getPublicPosts({
         take: entriesPerPage + 1,
         cursor: cursor || undefined,
       });
@@ -79,21 +78,23 @@ export const showAndTellRouter = router({
     ),
 
   getMyEntries: protectedProcedure.query(({ ctx }) =>
-    ctx.prisma.showAndTellEntry.findMany({
-      ...withAttachments,
-      where: {
-        userId: ctx.session.user.id,
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    }),
+    getUserPosts(ctx.session.user.id),
   ),
+
+  getMyEntry: protectedProcedure
+    .input(z.string().cuid())
+    .query(({ ctx, input }) =>
+      getUserPosts(ctx.session.user.id, input).then(
+        (posts) => posts[0] ?? null,
+      ),
+    ),
 
   delete: protectedProcedure
     .input(z.string().cuid())
     .mutation(async ({ ctx, input }) => {
-      const post = await getPostWithUserById(input, ctx.session.user.id);
+      const post = await getUserPosts(ctx.session.user.id, input).then(
+        (posts) => posts[0] ?? null,
+      );
       if (!post) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
       }
@@ -107,18 +108,6 @@ export const showAndTellRouter = router({
           .map((id) => deleteFileStorageObject(id)),
       ]);
     }),
-
-  getMyEntry: protectedProcedure
-    .input(z.string().cuid())
-    .query(({ ctx, input }) =>
-      ctx.prisma.showAndTellEntry.findFirst({
-        ...withAttachments,
-        where: {
-          userId: ctx.session.user.id,
-          id: input,
-        },
-      }),
-    ),
 
   createFileUpload: publicProcedure
     .input(

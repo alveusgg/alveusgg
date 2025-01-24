@@ -1,11 +1,11 @@
 import { type ComponentProps } from "react";
 import Image from "next/image";
+
+import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
 import {
   type AnimalQuestWithEpisode,
   type AnimalQuestWithRelation,
 } from "@alveusgg/data/src/animal-quest";
-import { type Ambassador } from "@alveusgg/data/src/ambassadors/core";
-
 import { sentenceToKebab } from "@/utils/string-case";
 import { classes } from "@/utils/classes";
 
@@ -43,7 +43,7 @@ const AnimalQuest = ({
       src={animalQuestImage}
       alt=""
       width={688}
-      className="absolute inset-0 -z-10 h-full w-full rounded-2xl bg-alveus-tan object-cover opacity-10"
+      className="absolute inset-0 -z-10 size-full rounded-2xl bg-alveus-tan object-cover opacity-10"
     />
 
     <div>

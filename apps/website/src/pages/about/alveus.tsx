@@ -14,13 +14,24 @@ import Timeline from "@/components/content/Timeline";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 import Maya from "@/components/content/Maya";
 import Box from "@/components/content/Box";
+import Transparency from "@/components/content/Transparency";
+import SubNav from "@/components/content/SubNav";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import imageGuidestarSeal from "@/assets/guidestar-candid-seal.svg";
+
+const sectionLinks = [
+  { name: "Twitch.tv", href: "#twitch" },
+  { name: "Founding", href: "#maya" },
+  { name: "History", href: "#history" },
+  { name: "Tour Part 1", href: "#tour-part-1" },
+  { name: "Tour Part 2", href: "#tour-part-2" },
+  { name: "Recap 2024", href: "#recap-2024" },
+  { name: "Transparency", href: "#transparency" },
+];
 
 const sources = {
   twitchAdvertising: {
@@ -163,7 +174,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     cta: (
       <div className="flex flex-wrap items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-1" level={3} className="italic">
+          <Heading id="tour-part-1" level={3} className="scroll-mt-52 italic">
             Alveus Tour Part 1
           </Heading>
 
@@ -293,7 +304,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Heading id="tour-part-2" level={3} className="italic">
+          <Heading id="tour-part-2" level={3} className="scroll-mt-52 italic">
             Alveus Tour Part 2
           </Heading>
 
@@ -379,7 +390,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         date: "2023-11",
         content: [
           "Fall Carnival",
-          "To celebrate fall and raise some money for the sanctuary, Alveus hosted ac carnival-themed stream where live viewers could compete against each other and the ambassadors in mini-games.",
+          "To celebrate fall and raise some money for the sanctuary, Alveus hosted a carnival-themed stream where live viewers could compete against each other and the ambassadors in mini-games.",
         ],
         link: {
           text: "Explore Alveus events",
@@ -450,7 +461,60 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/events#summer-camp-2024",
         },
       },
+      {
+        key: "amanda",
+        date: "2024-07",
+        content: [
+          "Amanda joins the Alveus team",
+          "Revealed during the Summer Camp stream, Amanda joins the team as another Animal Care Coordinator.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
+        key: "fall-carnival-2024",
+        date: "2024-11",
+        content: [
+          "Fall Carnival",
+          "Celebrating fall and halloween once again, live viewers tuned in to a fundraising stream at Alveus where they could participate in games and activities with the ambassadors.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#fall-carnival-2024",
+        },
+      },
     ],
+  },
+  {
+    key: "recap-2024",
+    cta: (
+      <div className="flex flex-wrap-reverse items-center gap-y-16">
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Lightbox>
+            {({ Trigger }) => (
+              <Trigger videoId="y8jQPL_jO2s">
+                <Preview videoId="y8jQPL_jO2s" />
+              </Trigger>
+            )}
+          </Lightbox>
+        </div>
+
+        <div className="basis-full md:basis-1/2 md:px-4">
+          <Heading id="recap-2024" level={3} className="scroll-mt-52 italic">
+            Alveus Recap 2024
+          </Heading>
+
+          <p className="mt-4 text-lg">
+            Join Connor in this video as he recaps the progress at Alveus in
+            2024, reviewing the additions to the sanctuary as well as the data
+            behind the growth of the organization. He also takes a look back at
+            how it all started and shares some of the plans for the coming year.
+          </p>
+        </div>
+      </div>
+    ),
   },
 ];
 
@@ -557,15 +621,17 @@ const AboutAlveusPage: NextPage = () => {
         </div>
       </Section>
 
+      <SubNav links={sectionLinks} className="z-20" />
+
       <div className="relative">
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none drop-shadow-md lg:block"
         />
 
         <Section className="text-center">
-          <Heading id="twitch" level={2} link>
+          <Heading id="twitch" level={2} link className="scroll-mt-14">
             Why Twitch.tv
           </Heading>
 
@@ -635,13 +701,14 @@ const AboutAlveusPage: NextPage = () => {
           </div>
 
           <div className="basis-full md:basis-1/2 md:px-4">
-            <Heading id="maya" level={2} className="italic" link>
+            <Heading id="maya" level={2} className="scroll-mt-32 italic" link>
               Maya Higa founded Alveus in February 2021
             </Heading>
             <p>
-              She is a top streamer on Twitch.tv, with a large following across
-              many social platforms. She is a licensed falconer and wildlife
-              conservationist with a passion for educating others.
+              She is one of the top female streamers on Twitch and has amassed a
+              large following on YouTube and other social platforms. She has
+              experience as a licensed falconer, wildlife rehabilitator,
+              zookeeper, and conservation outreach educator.
             </p>
 
             <Button href="/about/maya" dark className="mt-8">
@@ -655,14 +722,14 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-[10rem] select-none lg:block 2xl:-bottom-48 2xl:max-w-[12rem]"
+          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section>
           <Heading
             id="history"
             level={2}
-            className="mb-16 text-center text-5xl text-alveus-green"
+            className="mb-16 scroll-mt-14 text-center text-5xl text-alveus-green"
             link
           >
             Alveus&apos; History
@@ -693,54 +760,14 @@ const AboutAlveusPage: NextPage = () => {
       {/* TODO: CTA slice for ambassadors? */}
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex flex-grow flex-col">
+      <div className="relative flex grow flex-col">
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-[12rem] -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none drop-shadow-md lg:block"
         />
 
-        <Section
-          dark
-          className="flex-grow bg-alveus-green-900"
-          containerClassName="flex flex-col-reverse md:flex-row-reverse gap-4 md:gap-10"
-        >
-          <div>
-            <Heading id="transparency" level={2} link>
-              Platinum rated transparency
-            </Heading>
-
-            <p>
-              Alveus&apos; transparency has been rated platinum on Candid
-              (GuideStar). Candid is a leading source of information on
-              non-profit organizations, helping donors and funders make informed
-              decisions about their support. Check out our{" "}
-              <Link
-                href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
-                external
-                dark
-              >
-                non-profit profile on Candid
-              </Link>
-              .
-            </p>
-          </div>
-
-          <Link
-            className="flex-shrink-0"
-            external
-            custom
-            href="https://www.guidestar.org/profile/shared/520ab07a-b688-42a0-b9ec-417861b54b13"
-          >
-            <Image
-              className="h-40 w-40"
-              src={imageGuidestarSeal}
-              width={200}
-              height={200}
-              alt="Gold Transparency Seal 2023 by Candid"
-            />
-          </Link>
-        </Section>
+        <Transparency className="grow" />
       </div>
     </>
   );

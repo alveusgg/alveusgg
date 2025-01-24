@@ -68,7 +68,7 @@ export function AdminShowAndTellEntriesPanel({
                 <th scope="col" className="text-left">
                   Name
                 </th>
-                <th scope="col" className="w-[60%] text-left">
+                <th scope="col" className="w-3/5 text-left">
                   Title
                 </th>
                 <th scope="col" className="text-left">

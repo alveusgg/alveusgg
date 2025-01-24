@@ -32,12 +32,12 @@ const Socials = () => {
     <Section dark className="z-0 py-0">
       <div className="flex flex-wrap-reverse gap-y-4 pt-8">
         <div className="mt-auto basis-full md:basis-1/2 md:pr-8">
-          <div className="relative mx-auto aspect-[1.1/1] h-full w-full max-w-lg overflow-hidden">
+          <div className="relative mx-auto aspect-[1.1/1] size-full max-w-lg overflow-hidden">
             <Link
               href="https://www.instagram.com/p/CoIq_hvOxiQ/"
               rel="noreferrer"
               target="_blank"
-              className="absolute left-[8%] top-[5%] aspect-[4/6.8] w-[60%] rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-102"
+              className="absolute left-[8%] top-[5%] aspect-[4/6.8] w-3/5 rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-102"
             >
               <span className="sr-only">
                 Open Instagram post of Georgie, Alveus&apos; African Bullfrog
@@ -49,13 +49,13 @@ const Socials = () => {
                   width={400}
                   height={680}
                   loading="lazy"
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 size-full object-cover"
                 />
               ) : (
                 <Video
                   sources={reelVideo.sources}
                   poster={reelVideo.poster}
-                  className="absolute inset-0 h-full w-full object-cover"
+                  className="absolute inset-0 size-full object-cover"
                   width={400}
                   height={680}
                   autoPlay
@@ -106,7 +106,7 @@ const Socials = () => {
                   className={buttonClasses}
                   href={social.link}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noreferrer me"
                   title={social.title}
                 >
                   <social.icon size={24} />

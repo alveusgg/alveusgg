@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { waitUntil } from "@vercel/functions";
 import type { Notification } from "@prisma/client";
 
-import { pushMaxAttempts } from "@/data/env/push";
+import { env } from "@/env";
 
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
@@ -9,6 +10,10 @@ import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
+
+export const config = {
+  maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan
+};
 
 export type RetryPushesOptions = z.infer<typeof retryPushesSchema>;
 
@@ -47,7 +52,7 @@ function isPushRetry<T extends { attempts: number | null }>(
   return (
     push.attempts !== null &&
     push.attempts > 0 &&
-    push.attempts < pushMaxAttempts
+    push.attempts < env.PUSH_MAX_ATTEMPTS
   );
 }
 
@@ -89,7 +94,7 @@ export default createTokenProtectedApiHandler(
         );
       });
 
-      await Promise.allSettled(tasks);
+      waitUntil(Promise.allSettled(tasks));
 
       return true;
     } catch (e) {

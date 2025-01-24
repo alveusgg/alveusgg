@@ -67,6 +67,14 @@ export const Footer = () => {
                     Privacy Policy
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    className={footerLinkClasses}
+                    href="/about/land-acknowledgement"
+                  >
+                    Land Acknowledgement
+                  </Link>
+                </li>
               </ul>
             </li>
             <li className="basis-full p-2 md:basis-1/3 md:text-right">

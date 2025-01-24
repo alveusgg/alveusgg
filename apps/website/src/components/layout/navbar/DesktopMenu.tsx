@@ -4,10 +4,10 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Children,
   cloneElement,
-  forwardRef,
   useEffect,
   type ReactElement,
   type LiHTMLAttributes,
+  type Ref,
 } from "react";
 
 import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
@@ -33,7 +33,7 @@ import IconChevronDown from "@/icons/IconChevronDown";
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
     transition
-    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-[10rem] flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
     as="ul"
     modal={false}
     {...props}
@@ -41,15 +41,18 @@ const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
 );
 DropdownMenuItems.displayName = "DropdownMenuItems";
 
-const DropdownMenuItem = forwardRef<
-  HTMLLIElement,
-  LiHTMLAttributes<HTMLLIElement> & { children: ReactElement }
->(({ children, ...props }, ref) => (
+const DropdownMenuItem = ({
+  children,
+  ref,
+  ...props
+}: LiHTMLAttributes<HTMLLIElement> & {
+  children: ReactElement<{ ref?: Ref<HTMLElement> }>;
+  ref?: Ref<HTMLElement>;
+}) => (
   <li {...props}>
     {Children.map(children, (child) => cloneElement(child, { ref }))}
   </li>
-));
-DropdownMenuItem.displayName = "DropdownMenuItem";
+);
 
 export function DesktopMenu() {
   const { data: sessionData } = useSession();
@@ -66,15 +69,16 @@ export function DesktopMenu() {
   }, [sessionData?.error]);
 
   return (
-    <div className="hidden flex-grow flex-col gap-2 lg:flex">
+    <div className="hidden grow flex-col gap-2 lg:flex">
       <div className="flex items-center justify-end gap-2">
         <ul className="contents">
           {Object.entries(utilityNavStructure).map(([key, link]) => (
             <li key={key}>
+              {/* eslint-disable-next-line react/jsx-no-target-blank */}
               <a
                 className="block rounded-xl bg-transparent p-2 text-white transition-colors hover:bg-white hover:text-alveus-green"
                 target="_blank"
-                rel="noreferrer"
+                rel={link.rel}
                 href={link.link}
                 title={link.title}
               >
@@ -161,7 +165,7 @@ export function DesktopMenu() {
         <Link href="/" className="font-serif text-3xl font-bold">
           Alveus Sanctuary
         </Link>
-        <ul className="flex flex-grow justify-end">
+        <ul className="flex grow justify-end">
           {Object.entries(mainNavStructure).map(([key, link]) => (
             <li key={key}>
               {"link" in link ? (

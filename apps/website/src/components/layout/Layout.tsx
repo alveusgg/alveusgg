@@ -46,7 +46,7 @@ const Layout = ({ children }: LayoutProps) => {
 
       <div
         id="app"
-        className="flex h-full min-h-[100vh] flex-col bg-alveus-tan text-alveus-green-900"
+        className="flex h-full min-h-screen flex-col bg-alveus-tan text-alveus-green-900"
       >
         <a
           href="#main"
@@ -70,13 +70,13 @@ const Layout = ({ children }: LayoutProps) => {
           >
             <div className="container mx-auto flex items-center justify-center gap-1">
               {topHat.title} &middot; {topHat.cta}
-              <IconArrowRight className="h-4 w-4" />
+              <IconArrowRight className="size-4" />
             </div>
           </Link>
         )}
 
         <Navbar />
-        <main tabIndex={-1} id="main" className="flex flex-grow flex-col">
+        <main tabIndex={-1} id="main" className="flex grow flex-col">
           {children}
         </main>
         <Footer />

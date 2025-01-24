@@ -1,5 +1,5 @@
 import type React from "react";
-import { type ReactNode, type ButtonHTMLAttributes } from "react";
+import { type ReactNode, type ButtonHTMLAttributes, type Ref } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
 
@@ -11,7 +11,8 @@ type ButtonStyleProps = {
   confirmationMessage?: string;
 };
 
-type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & ButtonStyleProps;
+type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> &
+  ButtonStyleProps & { ref?: Ref<HTMLButtonElement> };
 type LinkButtonProps = React.AnchorHTMLAttributes<HTMLAnchorElement> &
   LinkProps &
   ButtonStyleProps;
@@ -59,7 +60,7 @@ export function LinkButton({
   );
 }
 
-export function Button({
+export const Button = ({
   children,
   type = "button",
   size = "default",
@@ -67,7 +68,7 @@ export function Button({
   className = defaultButtonClasses,
   confirmationMessage,
   ...props
-}: ButtonProps) {
+}: ButtonProps) => {
   const buttonProps = { ...props };
   if (confirmationMessage) {
     buttonProps.onClick = (e) => {
@@ -90,4 +91,4 @@ export function Button({
       {children}
     </button>
   );
-}
+};

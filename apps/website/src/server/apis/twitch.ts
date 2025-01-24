@@ -168,29 +168,26 @@ export async function getUserByName(userName: string) {
   return data?.data?.[0];
 }
 
-const scheduleResponseSchema = z.object({
-  data: z.object({
-    segments: z.array(
-      z.object({
-        id: z.string(),
-        start_time: z.string().datetime(),
-        end_time: z.string().datetime(),
-        title: z.string(),
-        canceled_until: z.string().datetime().nullable(),
-        category: z
-          .object({
-            id: z.string(),
-            name: z.string(),
-          })
-          .nullable(),
-        is_recurring: z.boolean(),
-      }),
-    ),
-  }),
+const scheduleSegmentSchema = z.object({
+  id: z.string(),
+  start_time: z.string().datetime(),
+  end_time: z.string().datetime(),
+  title: z.string(),
+  canceled_until: z.string().datetime().nullable(),
+  category: z
+    .object({
+      id: z.string(),
+      name: z.string(),
+    })
+    .nullable(),
+  is_recurring: z.boolean(),
 });
 
-const channelScheduleResponseSchema = scheduleResponseSchema.extend({
-  data: scheduleResponseSchema.shape.data.extend({
+export type ScheduleSegment = z.infer<typeof scheduleSegmentSchema>;
+
+const channelScheduleResponseSchema = z.object({
+  data: z.object({
+    segments: z.array(scheduleSegmentSchema).nullable(),
     broadcaster_id: z.string(),
     broadcaster_name: z.string(),
     vacation: z
@@ -202,10 +199,6 @@ const channelScheduleResponseSchema = scheduleResponseSchema.extend({
   }),
   pagination: paginationSchema,
 });
-
-export type ScheduleSegment = z.infer<
-  typeof scheduleResponseSchema
->["data"]["segments"][0];
 
 export async function getScheduleSegments(
   userAccessToken: string,
@@ -238,11 +231,25 @@ export async function getScheduleSegments(
 
   if (response.status !== 200) {
     console.error(json);
-    throw new Error("Failed to create schedule segment!");
+    throw new Error("Failed to get schedule segments!");
   }
 
   return channelScheduleResponseSchema.parseAsync(json);
 }
+
+const createScheduleResponseSchema = z.object({
+  data: z.object({
+    segments: z.array(scheduleSegmentSchema).length(1),
+    broadcaster_id: z.string(),
+    broadcaster_name: z.string(),
+    vacation: z
+      .object({
+        start_time: z.string().datetime(),
+        end_time: z.string().datetime(),
+      })
+      .nullable(),
+  }),
+});
 
 export async function createScheduleSegment(
   userAccessToken: string,
@@ -280,7 +287,7 @@ export async function createScheduleSegment(
     throw new Error("Failed to create schedule segment!");
   }
 
-  const data = await scheduleResponseSchema.parseAsync(json);
+  const data = await createScheduleResponseSchema.parseAsync(json);
   return data?.data?.segments?.[0];
 }
 
@@ -307,4 +314,63 @@ export async function removeScheduleSegment(
     console.error(json);
     throw new Error("Failed to delete schedule segment!");
   }
+}
+
+const clipSchema = z.object({
+  id: z.string(),
+  url: z.string(),
+  embed_url: z.string(),
+  broadcaster_id: z.string(),
+  broadcaster_name: z.string(),
+  creator_id: z.string(),
+  creator_name: z.string(),
+  video_id: z.string(),
+  game_id: z.string(),
+  language: z.string(),
+  title: z.string(),
+  view_count: z.number(),
+  created_at: z.string().datetime(),
+  thumbnail_url: z.string(),
+  duration: z.number(),
+  vod_offset: z.number().nullable(),
+  is_featured: z.boolean(),
+});
+
+export type Clip = z.infer<typeof clipSchema>;
+
+const clipsResponseSchema = z.object({
+  data: z.array(clipSchema),
+  pagination: paginationSchema,
+});
+
+export async function getClips(
+  userAccessToken: string,
+  userId: string,
+  startDate?: Date,
+  endDate?: Date,
+  after?: string,
+) {
+  const params = new URLSearchParams({
+    broadcaster_id: userId,
+    first: "100",
+  });
+
+  if (startDate) params.append("started_at", startDate.toISOString());
+  if (endDate) params.append("ended_at", endDate.toISOString());
+  if (after) params.append("after", after);
+
+  const response = await fetch(`https://api.twitch.tv/helix/clips?${params}`, {
+    method: "GET",
+    headers: {
+      ...(await getUserAuthHeaders(userAccessToken)),
+    },
+  });
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Failed to get clips!");
+  }
+
+  return clipsResponseSchema.parseAsync(json);
 }
