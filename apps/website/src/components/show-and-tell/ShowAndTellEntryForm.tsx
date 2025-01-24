@@ -434,7 +434,7 @@ export function ShowAndTellEntryForm({
           <Fieldset legend="Moderator Notes">
             <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
               <RichTextField
-                label="Private Note (only visible to moderators)"
+                label="Private Note (only visible in review mode)"
                 name="notePrivate"
                 defaultValue={entry?.notePrivate || undefined}
               />
