@@ -97,6 +97,10 @@ export const mainNavStructure: NavStructure = {
         title: "Show and Tell",
         link: "/show-and-tell",
       },
+      bookClub: {
+        title: "Alveus Book Club",
+        link: "/book-club",
+      },
       foundAnimal: {
         title: "Found an Animal?",
         link: "/found-animal",

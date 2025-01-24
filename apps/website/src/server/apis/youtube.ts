@@ -1,51 +1,26 @@
-import { parseStringPromise } from "xml2js";
+import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
 
 const ItemSchema = z.object({
-  id: z
-    .array(z.string())
-    .nonempty()
-    .transform((x) => x[0]),
-  title: z
-    .array(z.string())
-    .nonempty()
-    .transform((x) => x[0]),
-  author: z
-    .array(
-      z.object({
-        name: z
-          .array(z.string())
-          .nonempty()
-          .transform((x) => x[0]),
-        uri: z
-          .array(z.string())
-          .nonempty()
-          .transform((x) => x[0]),
-      }),
-    )
-    .nonempty()
-    .transform((x) => x[0]),
+  id: z.string(),
+  title: z.string(),
+  author: z.object({
+    name: z.string(),
+    uri: z.string().url(),
+  }),
   published: z
-    .array(z.string().datetime({ offset: true }))
-    .nonempty()
-    .transform((x) => new Date(x[0])),
+    .string()
+    .datetime({ offset: true })
+    .transform((x) => new Date(x)),
 });
 
 const FeedSchema = z.object({
   feed: ItemSchema.extend({
     entry: z.array(
       ItemSchema.extend({
-        "media:group": z
-          .array(
-            z.object({
-              "media:description": z
-                .array(z.string())
-                .nonempty()
-                .transform((x) => x[0]),
-            }),
-          )
-          .nonempty()
-          .transform((x) => x[0]),
+        "media:group": z.object({
+          "media:description": z.string(),
+        }),
       }),
     ),
   }),
@@ -63,7 +38,8 @@ export const fetchYouTubeFeed = async (
   }
 
   const xml = await resp.text();
-  const json = await parseStringPromise(xml);
+  const parser = new XMLParser();
+  const json = parser.parse(xml);
   return FeedSchema.parse(json).feed.entry;
 };
 

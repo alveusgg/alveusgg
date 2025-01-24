@@ -182,14 +182,14 @@ export function BingoCard({
                     }}
                     disabled={!isSelectable}
                     className={classes(
-                      "flex w-full transform items-center justify-center rounded transition-all",
+                      "flex w-full items-center justify-center rounded transition-all transform",
                       isBingoMatch
                         ? "bg-red-500"
                         : isSelected
                           ? "bg-green-800 text-white"
                           : isSelectable
-                            ? "bg-green-100 hover:scale-105 hover:bg-green-200 hover:shadow-lg lg:bg-green-50"
-                            : "bg-white hover:scale-95 hover:bg-gray-200",
+                            ? "bg-green-100 hover:bg-green-200 hover:shadow-lg hover:scale-105 lg:bg-green-50"
+                            : "bg-white hover:bg-gray-200 hover:scale-95",
                     )}
                   >
                     {cellValue}

@@ -111,7 +111,7 @@ const Creators = ({ className }: { className?: string }) => {
                 href={`#${slug}`}
                 title={name}
                 custom
-                className="group/creator -ml-6 block cursor-pointer select-none rounded-full transition-all duration-75 hover:-mt-4 hover:scale-105 hover:px-4 hover:pb-4"
+                className="group/creator -ml-6 block cursor-pointer select-none rounded-full transition-all duration-75 hover:-mt-4 hover:px-4 hover:pb-4 hover:scale-105"
                 onClick={(e) => {
                   e.preventDefault();
                   history.pushState(null, "", `#${slug}`);
@@ -336,7 +336,7 @@ const CollaborationsPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-16 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -bottom-16 right-0 z-30 hidden h-auto w-1/2 max-w-48 select-none -scale-x-100 lg:block"
         />
 
         <Section dark className="pb-12 pt-24">

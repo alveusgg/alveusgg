@@ -22,12 +22,12 @@ const SeenOnStreamBadgeBackground = ({
 
 export const SeenOnStreamBadge = ({ dark = false, pulse = false }) => {
   return (
-    <div className="absolute right-0 top-0 flex aspect-square w-[80px] rotate-12 items-center">
+    <div className="absolute right-0 top-0 flex aspect-square w-[80px] items-center rotate-12">
       {pulse && (
-        <div className="absolute inset-0 size-full scale-75 opacity-25 motion-reduce:hidden">
+        <div className="absolute inset-0 size-full opacity-25 scale-75 motion-reduce:hidden">
           <SeenOnStreamBadgeBackground
             dark={dark}
-            className="scale-150 animate-ping"
+            className="animate-ping scale-150"
           />
         </div>
       )}
