@@ -11,7 +11,8 @@ import {
   ExpiredAccessTokenError,
   refreshAccessToken,
 } from "@/server/utils/oauth2";
-import { defaultScopes } from "@/data/twitch";
+import { botScopes, defaultScopes } from "@/data/twitch";
+import invariant from "@/utils/invariant";
 
 const adapter = PrismaAdapter(prisma);
 
@@ -33,29 +34,44 @@ type ProfileData = {
 export const authOptions: NextAuthOptions = {
   callbacks: {
     session: async function ({ session, user }) {
-      // If we're over an hour since we last verified the Twitch token, check it
-      const token = await prisma.account.findFirst({
+      // Find the full account for the user
+      const account = await prisma.account.findFirst({
         where: { userId: user.id, provider: "twitch" },
         select: {
           id: true,
           access_token: true,
           refresh_token: true,
           verified_at: true,
+          scope: true,
+          twitchChannelBroadcaster: {
+            select: { channelId: true },
+          },
+          twitchChannelModerator: {
+            select: { channelId: true },
+          },
         },
       });
-      if (token?.access_token && token?.refresh_token) {
+      if (!account) {
+        return {
+          expires: new Date(0).toISOString(),
+          error: "Account not found",
+        };
+      }
+
+      // If we're over an hour since we last verified the Twitch token, check it
+      if (account.access_token && account.refresh_token) {
         if (
-          !token.verified_at ||
-          token.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
+          !account.verified_at ||
+          account.verified_at < Math.floor(Date.now() / 1000) - 60 * 60
         ) {
           try {
             await refreshAccessToken(
               "twitch",
               env.TWITCH_CLIENT_ID,
               env.TWITCH_CLIENT_SECRET,
-              token.id,
-              token.access_token,
-              token.refresh_token,
+              account.id,
+              account.access_token,
+              account.refresh_token,
             );
           } catch (err) {
             if (!(err instanceof ExpiredAccessTokenError)) console.error(err);
@@ -64,6 +80,22 @@ export const authOptions: NextAuthOptions = {
               error: "Twitch auth expired",
             };
           }
+        }
+      }
+
+      // Check if we need to ask the client to re-authenticate with additional scopes
+      // Accounts tied to channels in the DB need more scopes for API access
+      if (
+        account.twitchChannelBroadcaster.length ||
+        account.twitchChannelModerator.length
+      ) {
+        const scopes = new Set(account.scope?.split(" "));
+        const missingScopes = botScopes.filter((scope) => !scopes.has(scope));
+        if (missingScopes.length > 0) {
+          return {
+            expires: new Date(0).toISOString(),
+            error: "Additional scopes required",
+          };
         }
       }
 
@@ -79,22 +111,26 @@ export const authOptions: NextAuthOptions = {
       };
     },
     async signIn({ user, account, profile }) {
-      if (!user || !account) return true;
-
       try {
+        invariant(
+          account?.provider === "twitch",
+          "Must be authenticating with Twitch",
+        );
+
+        // Check if the user has signed in before
+        // If they haven't, we don't need to do anything
         const userFromDatabase = await adapter.getUser?.(user.id);
         if (!userFromDatabase) return true;
 
-        let profileData: ProfileData | undefined;
-        if (account.provider === "twitch") {
-          const { name, image } = await twitchProvider.profile(
-            profile as TwitchProfile,
-            {},
-          );
-          if (name) {
-            profileData = { name, image };
-          }
-        }
+        // Otherwise, we want to update their profile data
+        // And we'll also store the new tokens
+        const { name, image } = await twitchProvider.profile(
+          profile as TwitchProfile,
+          {},
+        );
+        const profileData: ProfileData | undefined = name
+          ? { name, image }
+          : undefined;
 
         await Promise.all([
           // Update tokens
@@ -127,13 +163,15 @@ export const authOptions: NextAuthOptions = {
               },
             }),
         ]);
+
+        return true;
       } catch (err) {
         if (err instanceof Error) {
           console.error(err.message);
         }
-      }
 
-      return true;
+        return false;
+      }
     },
   },
   adapter,
@@ -145,7 +183,7 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
     //signOut: '/auth/signout',
-    //error: '/auth/error', // Error code passed in query string as ?error=
+    error: "/auth/signin", // Error code passed in query string as ?error=
     //verifyRequest: '/auth/verify-request', // (used for check email message)
     //newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   },

@@ -33,7 +33,7 @@ import IconChevronDown from "@/icons/IconChevronDown";
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
     transition
-    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[closed]:scale-95"
     as="ul"
     modal={false}
     {...props}
@@ -62,11 +62,6 @@ export function DesktopMenu() {
     user &&
     (user.isSuperUser ||
       checkRolesGivePermission(user.roles, permissions.viewDashboard));
-
-  // If we have an invalid session (such as a deleted Twitch account), sign out
-  useEffect(() => {
-    if (sessionData?.error) signOut();
-  }, [sessionData?.error]);
 
   return (
     <div className="hidden grow flex-col gap-2 lg:flex">
@@ -183,7 +178,7 @@ export function DesktopMenu() {
                     {link.title}
                     <IconChevronDown
                       size={16}
-                      className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
+                      className="transition-transform translate-y-0.5 group-data-[active]/button:translate-y-1"
                     />
                   </MenuButton>
 

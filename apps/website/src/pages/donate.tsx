@@ -67,7 +67,7 @@ const DonateItem = ({ link }: { link: DonateLink }) => (
     href={link.link}
     external={link.external}
     custom
-    className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-102 hover:shadow-2xl"
+    className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:shadow-2xl hover:scale-102"
   >
     <div className="mb-1 flex items-center gap-4">
       <div className="block rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">

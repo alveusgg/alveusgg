@@ -145,7 +145,7 @@ const Header = ({
               className={classes(
                 "inline-flex items-center gap-1 text-green-700",
                 isPresentationView
-                  ? "group text-nowrap rounded-full bg-blue-900/95 p-1 text-3xl shadow-lg transition-all hover:scale-102 hover:bg-blue-900 hover:text-green-600 focus:bg-blue-900 focus:text-green-600"
+                  ? "group text-nowrap rounded-full bg-blue-900/95 p-1 text-3xl shadow-lg transition-all hover:bg-blue-900 hover:text-green-600 hover:scale-102 focus:bg-blue-900 focus:text-green-600"
                   : "hover:underline focus:underline",
               )}
               target="_blank"
