@@ -6,12 +6,12 @@ import { useMemo, type ComponentProps } from "react";
 import {
   getClassification,
   sortAmbassadorClassification,
-} from "@alveusgg/data/src/ambassadors/classification";
-import enclosures from "@alveusgg/data/src/enclosures";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
-import { isActiveAmbassadorEntry } from "@alveusgg/data/src/ambassadors/filters";
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import { getSpecies } from "@alveusgg/data/src/ambassadors/species";
+} from "@alveusgg/data/build/ambassadors/classification";
+import enclosures from "@alveusgg/data/build/enclosures";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
+import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import { camelToKebab } from "@/utils/string-case";

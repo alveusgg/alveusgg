@@ -5,7 +5,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
-import type { PartialDateString } from "@alveusgg/data/src/types";
+import type { PartialDateString } from "@alveusgg/data/build/types";
 
 import { formatPartialDateString } from "@/utils/datetime";
 import { classes } from "@/utils/classes";

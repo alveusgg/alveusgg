@@ -4,8 +4,6 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
-pnpmfileChecksum: urn4mmnpyjudaqso7jbqi45omq
-
 patchedDependencies:
   eslint-plugin-tailwindcss@3.17.5:
     hash: ffbd4ayk5rqu3ipt6gp4marery
@@ -89,8 +87,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: github:alveusgg/data#0.50.0
-        version: https://codeload.github.com/alveusgg/data/tar.gz/5d75dccfd4ab2358e57f2030942c45b03f6cd4df(tailwindcss@3.4.17)(zod@3.24.1)
+        specifier: ^0.51.0
+        version: 0.51.0(tailwindcss@3.4.17)(zod@3.24.1)
       '@aws-sdk/client-s3':
         specifier: ^3.732.0
         version: 3.732.0
@@ -409,9 +407,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@https://codeload.github.com/alveusgg/data/tar.gz/5d75dccfd4ab2358e57f2030942c45b03f6cd4df':
-    resolution: {tarball: https://codeload.github.com/alveusgg/data/tar.gz/5d75dccfd4ab2358e57f2030942c45b03f6cd4df}
-    version: 0.50.0
+  '@alveusgg/data@0.51.0':
+    resolution: {integrity: sha512-ofhuJDluQZ+z6KRYaH7ISii3JrX51HTVJpmkNGLMnF8ItdVT8PKwR2GKJ3YCgs/oFOvsxG42SZ2CmuV6eoRcKA==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.51.0/d9478d31c937b5deeb48e943cc5f0cb8b42b10b2}
     peerDependencies:
       tailwindcss: ^3.0.0
       zod: ^3.0.0
@@ -6372,7 +6369,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@https://codeload.github.com/alveusgg/data/tar.gz/5d75dccfd4ab2358e57f2030942c45b03f6cd4df(tailwindcss@3.4.17)(zod@3.24.1)':
+  '@alveusgg/data@0.51.0(tailwindcss@3.4.17)(zod@3.24.1)':
     dependencies:
       zod: 3.24.1
     optionalDependencies:

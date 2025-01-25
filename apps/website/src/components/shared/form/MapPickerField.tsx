@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import tailwindConfig from "@alveusgg/data/src/tailwind";
+import tailwindConfig from "@alveusgg/data/build/tailwind";
 import "maplibre-gl/dist/maplibre-gl.css"; // Actual map CSS
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Map search box CSS
 

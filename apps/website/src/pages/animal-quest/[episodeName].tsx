@@ -7,10 +7,10 @@ import type { Episode } from "schema-dts";
 import animalQuest, {
   hosts,
   type AnimalQuestWithEpisode,
-} from "@alveusgg/data/src/animal-quest";
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+} from "@alveusgg/data/build/animal-quest";
+import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { env } from "@/env";
 

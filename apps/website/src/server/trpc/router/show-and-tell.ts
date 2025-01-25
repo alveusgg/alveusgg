@@ -20,10 +20,12 @@ import {
   showAndTellCreateInputSchema,
   showAndTellUpdateInputSchema,
   updatePost,
+  getMapFeatures,
 } from "@/server/db/show-and-tell";
 import { imageMimeTypes } from "@/utils/files";
 import { env } from "@/env";
 import { notEmpty } from "@/utils/helpers";
+import { extractInfoFromMapFeatures } from "@/utils/locations";
 
 const uploadPrefix = "show-and-tell/";
 
@@ -141,4 +143,10 @@ export const showAndTellRouter = router({
         fileStorageObjectId: fileStorageObject.id,
       };
     }),
+
+  getPostsFromANewLocation: publicProcedure.query(async () => {
+    const mapFeatures = await getMapFeatures();
+
+    return extractInfoFromMapFeatures(mapFeatures).postsFromANewLocation;
+  }),
 });

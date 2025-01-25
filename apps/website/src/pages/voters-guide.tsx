@@ -6,8 +6,8 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import IframeResizer from "@iframe-resizer/react";
-import { type AmbassadorKey } from "@alveusgg/data/src/ambassadors/core";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import { type ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { camelToKebab } from "@/utils/string-case";
 
@@ -17,6 +17,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import Share from "@/components/content/Share";
+import Button from "@/components/content/Button";
 
 import IconChevronUp from "@/icons/IconChevronUp";
 import IconChevronDown from "@/icons/IconChevronDown";
@@ -81,7 +82,7 @@ const steps: Record<string, Step> = {
 };
 
 interface Issue {
-  ambassador: AmbassadorKey;
+  ambassador: ActiveAmbassadorKey;
   title: string;
   content: React.ReactNode;
 }
@@ -335,13 +336,33 @@ const VotePage: NextPage = () => {
             )}
           </ul>
 
-          <p className="mx-auto mt-8 border-t-2 border-t-alveus-green-600 pt-8 text-center text-lg lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl">
-            None of our ambassadors can vote, and they aren&apos;t worried about
-            which party wins.
-            <br className="hidden lg:block" /> They just want to make sure that
-            the people who are in power will do their best to protect their wild
-            friends.
-          </p>
+          <div className="mx-auto lg:max-w-2xl xl:max-w-4xl 2xl:max-w-6xl">
+            <p className="my-12 border-y-2 border-y-alveus-green-600 py-8 text-center text-lg">
+              None of our ambassadors can vote, and they aren&apos;t worried
+              about which party wins.
+              <br className="hidden lg:block" /> They just want to make sure
+              that the people who are in power will do their best to protect
+              their wild friends.
+            </p>
+
+            <div className="flex flex-col items-start gap-x-8 gap-y-4 lg:flex-row">
+              <p className="grow">
+                If you&apos;re in the United States, you can use the National
+                Caucus of Environmental Legislators&apos; Bill Tracker to
+                explore and keep track on the progress of environment policies
+                across the country and in your state.
+              </p>
+
+              <Button
+                href="https://www.ncelenviro.org/bill-tracking"
+                external
+                dark
+                className="shrink-0 text-base"
+              >
+                Explore the Bill Tracker
+              </Button>
+            </div>
+          </div>
         </Section>
       </div>
 
@@ -400,12 +421,16 @@ const VotePage: NextPage = () => {
             <Link href="https://www.nwf.org" external dark>
               National Wildlife Federation
             </Link>{" "}
-            for their excellent Voters&apos; Guide, which inspired this page,
-            and to the team at{" "}
+            for their excellent Voters&apos; Guide, which inspired this page, to
+            the team at{" "}
             <Link href="https://www.vote.org/" external dark>
               Vote.org
             </Link>{" "}
-            for their free voter preparation tools.
+            for their free voter preparation tools, and the{" "}
+            <Link href="https://www.ncelenviro.org/" external dark>
+              National Caucus of Environmental Legislators
+            </Link>{" "}
+            for their bill tracker.
           </p>
         </Section>
       </div>

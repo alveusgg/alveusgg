@@ -18,9 +18,13 @@ const TOOLTIP_MIN_ZOOM = 3;
 
 type CommunityMapProps = {
   features: Array<LocationFeature> | undefined;
+  postsFromANewLocation: Set<string>;
 };
 
-export function CommunityMap({ features }: CommunityMapProps) {
+export function CommunityMap({
+  features,
+  postsFromANewLocation,
+}: CommunityMapProps) {
   // To show post info on marker click
   const [selectedMarkerId, setSelectedMarkerId] = useState<string | null>(null);
 
@@ -180,7 +184,11 @@ export function CommunityMap({ features }: CommunityMapProps) {
             <p className="p-4 text-center text-xl">Loading...</p>
           )}
           {entryQuery.data && (
-            <ShowAndTellEntry entry={entryQuery.data} withHeight={false} />
+            <ShowAndTellEntry
+              entry={entryQuery.data}
+              newLocation={postsFromANewLocation.has(entryQuery.data.id)}
+              withHeight={false}
+            />
           )}
         </Section>
       </ModalDialog>
