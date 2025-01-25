@@ -1,7 +1,7 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import { type ReactNode } from "react";
-import type { PartialDateString } from "@alveusgg/data/src/types";
+import type { PartialDateString } from "@alveusgg/data/build/types";
 
 import { formatPartialDateString } from "@/utils/datetime";
 

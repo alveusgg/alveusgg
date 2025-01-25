@@ -1,8 +1,8 @@
 import Image from "next/image";
 
-import ambassadors from "@alveusgg/data/src/ambassadors/core";
-import { isActiveAmbassadorKey } from "@alveusgg/data/src/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/src/ambassadors/images";
+import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { camelToKebab } from "@/utils/string-case";
 

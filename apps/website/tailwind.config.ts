@@ -2,7 +2,7 @@ import { type Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import plugin from "tailwindcss/plugin";
-import alveusgg from "@alveusgg/data/src/tailwind";
+import alveusgg from "@alveusgg/data/build/tailwind";
 import tailwind3D from "tailwindcss-3d";
 
 const config = {
