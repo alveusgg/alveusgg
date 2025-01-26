@@ -58,7 +58,7 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 ## Development setup
 
 > [!NOTE]
-> If you only want to work on the front end, you may skip the prerequisite and skip setting up a database or file storage (step 3).
+> If you only want to work on the front end, you may skip the prerequisite and skip setting up a database or file storage (step 4).
 > But you may encounter some errors when running the website without a database or file storage.
 
 ### Prerequisite
