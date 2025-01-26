@@ -58,31 +58,32 @@ Hey there! Welcome to Alveus.gg! There's a few ways that you can help contribute
 ## Development setup
 
 > [!NOTE]
-> If you only want to work on the front end, you may skip the prerequisite and skip setting up a database or file storage (step 4).
+> If you only want to work on the front end, you may skip the prerequisite and skip setting up a database or file storage (step 5).
 > But you may encounter some errors when running the website without a database or file storage.
 
 ### Prerequisite
 
-If you aren't working on features related to Twitch authentication, you can set the `DISABLE_ADMIN_AUTH` to `true` in your `apps/website/.env` file (see step 4 and 4.i) in order to use the admin dashboard immediately. Otherwise, create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
+If you aren't working on features related to Twitch authentication, you can set the `DISABLE_ADMIN_AUTH` to `true` in your `apps/website/.env` file (see step 6 and 6.i) in order to use the admin dashboard immediately. Otherwise, create a [Twitch application](https://dev.twitch.tv/console/apps/create), setting the OAuth callback to be `http://localhost:3000/api/auth/callback/twitch`. Note down your client ID and client secret.
 
 ### Local development
 
-1. Install Node.js (see `engines` in `package.json` for the required versions), or use `fnm`/`nvm` to install the correct version of Node.js, and use `corepack enable` to use PNPM.
-2. Authenticate with the GitHub Package Registry: `npm login --auth-type=legacy --registry=https://npm.pkg.github.com`
+1. Install Node.js using a version manager like [`nvm`](https://github.com/nvm-sh/nvm) or [`fnm`](https://github.com/Schniz/fnm). The version manager will install the version needed. Run `nvm install` or `fnm install` in the project directory. See [nodejs.org](https://nodejs.org/en/download) for other options to download and install Node.js. You can see what version we need in `package.json` under `engines`.
+2. Use `corepack enable` to use PNPM as the package manager. Corepack is a tool provided with Node.js that makes it easy for you to use the specific package manager we expect.
+3. Authenticate with the GitHub Package Registry: `npm login --auth-type=legacy --registry=https://npm.pkg.github.com`
    1. Use your GitHub username (lowercase) as the username when prompted
    2. Create a [GitHub personal access token (classic)](https://github.com/settings/tokens/new) with the `read:packages` scope and use it as the password when prompted
-3. Install dependencies: `pnpm install --frozen-lockfile`
-4. Run `docker compose up -d` from within `apps/website` to start a local MySQL database, and an S3 bucket with MinIO.
-5. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
+4. Install dependencies: `pnpm install --frozen-lockfile`
+5. Run `docker compose up -d` from within `apps/website` to start a local MySQL database, and an S3 bucket with MinIO.
+6. Copy `apps/website/.env.example` to `apps/website/.env` and open your copy in a text editor and fill it:
    1. If your feature is not related to Twitch authentication, you can set `DISABLE_ADMIN_AUTH` to `true` in order to use the admin dashboard without authentication. Otherwise, fill in `TWITCH_CLIENT_ID` and `TWITCH_CLIENT_SECRET` as mentioned above.
    2. The vapid keys for web notifications have to be generated using `pnpx web-push generate-vapid-keys`
    3. The Next Auth secret (`NEXTAUTH_SECRET`), Action API secret (`ACTION_API_SECRET`) and Vercel Cron Secret (`CRON_SECRET`) have to be filled with 32-byte Base64-encoded secrets. See [Generate secrets](#generate-secrets) below.
    4. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
    5. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
    6. If you are using Twitch authentication, you may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
-6. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
-7. Start the dev server using `pnpm dev` from within `apps/website`
-8. The website should be running at `http://localhost:3000/` (open in browser)
+7. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
+8. Start the dev server using `pnpm dev` from within `apps/website`
+9. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
 - You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio`
