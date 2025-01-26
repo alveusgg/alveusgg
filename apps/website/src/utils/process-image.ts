@@ -1,4 +1,5 @@
 import invariant from "@/utils/invariant";
+import { mmcq } from "@/utils/mmcq";
 import type { ImageMimeType } from "@/utils/files";
 
 export type ResizeImageOptions = {
@@ -11,7 +12,7 @@ export type ResizeImageOptions = {
 export async function resizeImage(
   imageSrc: string,
   { type, maxWidth, maxHeight, quality }: ResizeImageOptions,
-): Promise<null | { blob: Blob; dataURL: string }> {
+): Promise<null | { blob: Blob; dataURL: string; extractColor: () => string }> {
   return new Promise((resolve) => {
     const image = new Image();
     image.src = imageSrc;
@@ -28,16 +29,41 @@ export async function resizeImage(
         height = maxHeight;
       }
 
-      const canvas = renderImageCanvas(image, { width, height });
+      const { canvas, ctx } = renderImageCanvas(image, { width, height });
       const dataURL = canvas.toDataURL(type, quality / 100);
+      const extractColor = () => {
+        const { data } = ctx.getImageData(0, 0, width, height);
+
+        const dominantColor = mmcq(data);
+
+        return dominantColor.join(",");
+      };
       canvas.toBlob(
         (blob) => {
-          resolve(blob ? { blob, dataURL } : null);
+          resolve(blob ? { blob, dataURL, extractColor } : null);
         },
         type,
         quality / 100,
       );
     };
+  });
+}
+
+export async function extractColorFromImage(imageSrc: string) {
+  return new Promise<string>((resolve) => {
+    const image = new Image();
+    image.onload = () => {
+      const { height, width } = image;
+
+      const { ctx } = renderImageCanvas(image, { height, width });
+
+      const { data } = ctx.getImageData(0, 0, width, height);
+
+      const dominantColor = mmcq(data);
+
+      resolve(dominantColor.join(","));
+    };
+    image.src = imageSrc;
   });
 }
 
@@ -57,5 +83,5 @@ function renderImageCanvas(
   }
 
   ctx.drawImage(image, 0, 0, width, height);
-  return canvas;
+  return { canvas, ctx };
 }

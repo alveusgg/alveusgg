@@ -102,6 +102,15 @@ const AdminReviewShowAndTellPage: NextPage<
                   <em>Anonymous</em>
                 )}
                 <br />
+                Featured image:
+                {entry.featuredImage ? (
+                  <img className="max-w-xs" src={entry.featuredImage.url} />
+                ) : (
+                  <>
+                    {" N/A"}
+                    <br />
+                  </>
+                )}
                 Submitted:{" "}
                 <DateTime date={entry.createdAt} format={{ time: "minutes" }} />
                 <br />

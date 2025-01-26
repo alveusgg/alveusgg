@@ -16,7 +16,6 @@ import parse, {
 } from "html-react-parser";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
@@ -269,17 +268,7 @@ export const ShowAndTellEntry = ({
     .map(({ linkAttachment }) => linkAttachment)
     .filter(notEmpty);
 
-  let featureImageUrl = imageAttachments[0]?.url;
-  if (!featureImageUrl) {
-    for (const videoAttachment of videoAttachments) {
-      const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
-      if (!parsedVideoUrl) continue;
-      const videoPlatformConfig = videoPlatformConfigs[parsedVideoUrl.platform];
-      if (!("previewUrl" in videoPlatformConfig)) continue;
-      featureImageUrl = videoPlatformConfig.previewUrl(parsedVideoUrl.id);
-      break;
-    }
-  }
+  const { featuredImage } = entry;
 
   const handleRef = useCallback(
     (node: HTMLElement) => {
@@ -315,8 +304,16 @@ export const ShowAndTellEntry = ({
       data-show-and-tell-entry={entry.id}
       data-show-and-tell-author={entry.displayName}
       tabIndex={-1}
+      style={
+        isPresentationView && featuredImage
+          ? {
+              backgroundColor: `oklch(from rgb(${featuredImage.dominantColor}) min(l, 0.5) c h)`,
+              transitionProperty: "background-color, opacity",
+            }
+          : undefined
+      }
     >
-      {isPresentationView && featureImageUrl && (
+      {isPresentationView && featuredImage && (
         <div className="absolute top-0 z-0 size-full overflow-hidden rounded-xl">
           <Image
             loading="lazy"
@@ -324,7 +321,7 @@ export const ShowAndTellEntry = ({
             height={1080}
             draggable={false}
             className="pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
-            src={featureImageUrl}
+            src={featuredImage.url}
             alt=""
           />
         </div>
