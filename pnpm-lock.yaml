@@ -87,8 +87,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: ^0.51.0
-        version: 0.51.0(tailwindcss@3.4.17)(zod@3.24.1)
+        specifier: 0.52.0
+        version: 0.52.0(tailwindcss@3.4.17)(zod@3.24.1)
       '@aws-sdk/client-s3':
         specifier: ^3.732.0
         version: 3.732.0
@@ -338,7 +338,7 @@ importers:
         version: 3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3))(eslint-plugin-import@2.31.0)(eslint@9.18.0(jiti@1.21.6))
       eslint-plugin-import:
         specifier: ^2.31.0
-        version: 2.31.0(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6))
+        version: 2.31.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6))
       eslint-plugin-import-x:
         specifier: ^4.6.1
         version: 4.6.1(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3)
@@ -407,14 +407,11 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.51.0':
-    resolution: {integrity: sha512-ofhuJDluQZ+z6KRYaH7ISii3JrX51HTVJpmkNGLMnF8ItdVT8PKwR2GKJ3YCgs/oFOvsxG42SZ2CmuV6eoRcKA==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.51.0/d9478d31c937b5deeb48e943cc5f0cb8b42b10b2}
+  '@alveusgg/data@0.52.0':
+    resolution: {integrity: sha512-OykmijogmOt84kd4nwDUBorKY7bHtdseg0QcTDcvqXtGxxKmPMLegpUxuSzjAwoW5NXnKx9aTdHGwlIo3Xdy1g==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.52.0/fe22dc907d72b0c62d17ba67214f0bae6825a6d6}
     peerDependencies:
       tailwindcss: ^3.0.0
       zod: ^3.0.0
-    peerDependenciesMeta:
-      tailwindcss:
-        optional: true
 
   '@asamuzakjp/css-color@2.8.2':
     resolution: {integrity: sha512-RtWv9jFN2/bLExuZgFFZ0I3pWWeezAHGgrmjqGGWclATl1aDe3yhCUaI0Ilkp6OCk9zX7+FjvDasEX8Q9Rxc5w==}
@@ -493,6 +490,7 @@ packages:
   '@aws-sdk/middleware-flexible-checksums@3.732.0':
     resolution: {integrity: sha512-MIbF6cYWg5noRO1kRZNC0vewj6qzSYL/BGNlPxRQcqb6egUiGrhPEi8Y/qqweB7MlBHsqSO5YNPwH/Py8ToSVw==}
     engines: {node: '>=18.0.0'}
+    deprecated: Please upgrade to >=3.735.0, which contains fixes for checksum validation in S3 getObject calls. Details https://github.com/aws/aws-sdk-js-v3/issues/6827
 
   '@aws-sdk/middleware-host-header@3.731.0':
     resolution: {integrity: sha512-ndAJsm5uWPPJRZowLKpB1zuL17qWlWVtCJP4I/ynBkq1PU1DijDXBul2UZaG6Mpvsgms1NXo/h9noHuK7T3v8w==}
@@ -4694,6 +4692,7 @@ packages:
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -6369,11 +6368,10 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.51.0(tailwindcss@3.4.17)(zod@3.24.1)':
+  '@alveusgg/data@0.52.0(tailwindcss@3.4.17)(zod@3.24.1)':
     dependencies:
-      zod: 3.24.1
-    optionalDependencies:
       tailwindcss: 3.4.17
+      zod: 3.24.1
 
   '@asamuzakjp/css-color@2.8.2':
     dependencies:
@@ -10655,15 +10653,16 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6))
       eslint-plugin-import-x: 4.6.1(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
+      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3)
       eslint: 9.18.0(jiti@1.21.6)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3))(eslint-plugin-import@2.31.0)(eslint@9.18.0(jiti@1.21.6))
@@ -10690,7 +10689,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-import@2.31.0(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -10701,7 +10700,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.18.0(jiti@1.21.6)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.21.0(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.18.0(jiti@1.21.6))
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -10712,6 +10711,8 @@ snapshots:
       semver: 6.3.1
       string.prototype.trimend: 1.0.8
       tsconfig-paths: 3.15.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 8.21.0(eslint@9.18.0(jiti@1.21.6))(typescript@5.7.3)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
