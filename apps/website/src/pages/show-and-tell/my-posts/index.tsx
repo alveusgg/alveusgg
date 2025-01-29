@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
+import { splitAttachments } from "@/utils/split-attachments";
 
 import IconPencil from "@/icons/IconPencil";
 import IconEye from "@/icons/IconEye";
@@ -124,7 +125,10 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                   </thead>
                   <tbody>
                     {myEntries.data.map((entry) => {
-                      const { featuredImage } = entry;
+                      const { featuredImage } = splitAttachments(
+                        entry.attachments,
+                      );
+
                       const status = getEntityStatus(entry);
 
                       return (
