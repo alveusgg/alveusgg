@@ -174,7 +174,7 @@ export function ShowAndTellEntryForm({
     const formData = new FormData(e.currentTarget);
     const hours = parseFloat(formData.get("giveAnHour") as string);
     let dominantColor = formData.get("dominantColor") as string | null;
-    if (dominantColor !== null) {
+    if (dominantColor) {
       const r = parseInt(dominantColor.slice(1, 3), 16);
       const g = parseInt(dominantColor.slice(3, 5), 16);
       const b = parseInt(dominantColor.slice(5, 7), 16);
@@ -215,7 +215,7 @@ export function ShowAndTellEntryForm({
         ),
       };
 
-      if (data.dominantColor === null) {
+      if (!data.dominantColor) {
         data.dominantColor = await fileReference.extractColor();
       }
 
@@ -229,7 +229,7 @@ export function ShowAndTellEntryForm({
       }
     }
 
-    if (data.dominantColor === null) {
+    if (!data.dominantColor) {
       const { featuredImage } = splitAttachments(
         // @ts-expect-error - only essential properties are defined
         videoLinksData.videoUrls.map((url) => ({
@@ -240,7 +240,7 @@ export function ShowAndTellEntryForm({
         })),
       );
 
-      if (typeof featuredImage !== "undefined") {
+      if (featuredImage) {
         data.dominantColor = await extractColorFromImage(
           createImageUrl({ src: featuredImage.url, width: 1280, quality: 100 }),
         );
