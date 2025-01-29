@@ -150,7 +150,11 @@ const showAndTellSharedInputSchema = z.object({
   location: z.string().max(MYSQL_MAX_VARCHAR_LENGTH).nullable(),
   longitude: z.number().nullable(),
   latitude: z.number().nullable(),
-  dominantColor: z.string().min(5).max(11).nullable(),
+  dominantColor: z
+    .string()
+    .regex(/^\d{1,3},\d{1,3},\d{1,3}$/)
+    .refine((val) => val.split(",").every((num) => Number(num) < 256))
+    .nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
