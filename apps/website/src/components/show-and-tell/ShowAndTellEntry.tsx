@@ -298,9 +298,9 @@ export const ShowAndTellEntry = ({
       data-show-and-tell-author={entry.displayName}
       tabIndex={-1}
       style={
-        isPresentationView && featuredImage
+        isPresentationView && entry.dominantColor !== null
           ? {
-              backgroundColor: `oklch(from rgb(${featuredImage.dominantColor}) min(l, 0.5) c h)`,
+              backgroundColor: `oklch(from rgb(${entry.dominantColor}) min(l, 0.5) c h)`,
               transitionProperty: "background-color, opacity",
             }
           : undefined
