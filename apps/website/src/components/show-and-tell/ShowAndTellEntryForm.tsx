@@ -144,8 +144,8 @@ export function ShowAndTellEntryForm({
             id: imageAttachment.id,
             url: imageAttachment.url,
             fileStorageObjectId: imageAttachment.fileStorageObjectId,
-            extractColor: extractColorFromImage,
-            file: { name: imageAttachment.name },
+            extractColor: async () =>
+              await extractColorFromImage(imageAttachment.url),
           })),
       [entry?.attachments],
     ),
