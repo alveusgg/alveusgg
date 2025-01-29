@@ -60,7 +60,7 @@
     "dagre": "^0.8.5",
     "dompurify": "^3.2.3",
     "fast-xml-parser": "^4.5.1",
-    "framer-motion": "^11.18.0",
+    "framer-motion": "^12.0.6",
     "html-react-parser": "^5.2.2",
     "jsdom": "^26.0.0",
     "linkify-it": "^5.0.0",
