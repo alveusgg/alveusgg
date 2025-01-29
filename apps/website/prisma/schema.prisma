@@ -406,10 +406,10 @@ model ShowAndTellEntry {
   latitude            Float?
   notePrivate         String?   @db.Text
   notePublic          String?   @db.Text
+  dominantColor       String?
 
-  attachments   ShowAndTellEntryAttachment[]
-  featuredImage ImageAttachment?
-  user          User?                        @relation(fields: [userId], references: [id])
+  attachments ShowAndTellEntryAttachment[]
+  user        User?                        @relation(fields: [userId], references: [id])
 
   @@index([userId], name: "ShowAndTellEntry_userId")
   @@index([createdAt, approvedAt, updatedAt], name: "ShowAndTellEntry_approvedAndCreatedAt")
@@ -459,18 +459,15 @@ model ImageMetadata {
 }
 
 model ImageAttachment {
-  id                  String  @id @default(cuid())
-  name                String  @db.VarChar(200)
-  title               String  @db.VarChar(200)
-  alternativeText     String  @db.VarChar(300)
-  caption             String  @db.VarChar(200)
-  description         String  @db.VarChar(200)
-  url                 String  @db.VarChar(200)
-  fileStorageObjectId String  @unique
-  entryId             String? @unique
-  dominantColor       String?
+  id                  String @id @default(cuid())
+  name                String @db.VarChar(200)
+  title               String @db.VarChar(200)
+  alternativeText     String @db.VarChar(300)
+  caption             String @db.VarChar(200)
+  description         String @db.VarChar(200)
+  url                 String @db.VarChar(200)
+  fileStorageObjectId String @unique
 
-  entry                      ShowAndTellEntry?           @relation(fields: [entryId], references: [id], onDelete: Cascade)
   fileStorageObject          FileStorageObject           @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
   showAndTellEntryAttachment ShowAndTellEntryAttachment?
 }
