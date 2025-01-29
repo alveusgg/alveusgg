@@ -48,8 +48,7 @@ export type SavedFileReference = {
   status: "saved";
   url: string;
   fileStorageObjectId: string;
-  extractColor: (imageSrc: string) => Promise<string>;
-  file: { name: string };
+  extractColor: () => Promise<string>;
 } & BaseFileReference;
 
 type UploadFileReference = {
