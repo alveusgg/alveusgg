@@ -20,7 +20,9 @@ export function splitAttachments(attachments: ShowAndTellEntryAttachments) {
     }
   }
 
-  let featuredImage = imageAttachments[0];
+  let featuredImage:
+    | (typeof imageAttachments | typeof videoAttachments)[number]
+    | undefined = imageAttachments[0];
   if (typeof featuredImage === "undefined") {
     for (const videoAttachment of videoAttachments) {
       const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
@@ -29,8 +31,6 @@ export function splitAttachments(attachments: ShowAndTellEntryAttachments) {
       if (!("previewUrl" in videoPlatformConfig)) continue;
       featuredImage = {
         ...videoAttachment,
-        fileStorageObjectId: "",
-        fileStorageObject: null,
         name: `${parsedVideoUrl.id}-thumbnail`,
         url: videoPlatformConfig.previewUrl(parsedVideoUrl.id),
       };
