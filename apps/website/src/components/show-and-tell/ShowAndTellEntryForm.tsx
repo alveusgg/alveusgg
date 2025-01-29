@@ -231,12 +231,24 @@ export function ShowAndTellEntryForm({
 
     if (!data.dominantColor) {
       const { featuredImage } = splitAttachments(
-        // @ts-expect-error - only essential properties are defined
         videoLinksData.videoUrls.map((url) => ({
+          id: "",
+          entryId: "",
           attachmentType: "video",
+          linkAttachmentId: "",
+          imageAttachmentId: null,
+
           linkAttachment: {
+            id: "",
+            type: "",
+            name: "",
+            title: "",
+            alternativeText: "",
+            caption: "",
+            description: "",
             url,
           },
+          imageAttachment: null,
         })),
       );
 
