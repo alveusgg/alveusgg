@@ -184,9 +184,7 @@ export function ShowAndTellEntryForm({
       longitude: postLocation?.longitude ?? null,
     };
 
-    for (let i = 0; i < imageAttachmentsData.files.length; i++) {
-      const fileReference = imageAttachmentsData.files[i]!;
-
+    for (const fileReference of imageAttachmentsData.files) {
       if (
         fileReference.status !== "upload.done" &&
         fileReference.status !== "saved"
@@ -196,15 +194,7 @@ export function ShowAndTellEntryForm({
       }
 
       const imageId = fileReference.id;
-      const linkAttachmentData: {
-        url: string;
-        fileStorageObjectId: string;
-        title: string;
-        description: string;
-        caption: string;
-        alternativeText: string;
-        dominantColor?: string;
-      } = {
+      const linkAttachmentData = {
         url: fileReference.url,
         fileStorageObjectId: fileReference.fileStorageObjectId,
         title: "", // Currently not supported
