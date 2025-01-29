@@ -16,7 +16,6 @@ import parse, {
 } from "html-react-parser";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
 import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
@@ -27,6 +26,7 @@ import { Badge } from "@/components/show-and-tell/Badge";
 
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
+import { splitAttachments } from "@/utils/split-attachments";
 
 type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
@@ -259,16 +259,6 @@ export const ShowAndTellEntry = ({
   ref: forwardedRef,
 }: ShowAndTellEntryProps) => {
   const wrapperRef = useRef<HTMLElement>(null);
-  const imageAttachments = entry.attachments
-    .filter(({ attachmentType }) => attachmentType === "image")
-    .map(({ imageAttachment }) => imageAttachment)
-    .filter(notEmpty);
-  const videoAttachments = entry.attachments
-    .filter(({ attachmentType }) => attachmentType === "video")
-    .map(({ linkAttachment }) => linkAttachment)
-    .filter(notEmpty);
-
-  const { featuredImage } = entry;
 
   const handleRef = useCallback(
     (node: HTMLElement) => {
@@ -281,6 +271,9 @@ export const ShowAndTellEntry = ({
     },
     [forwardedRef],
   );
+
+  const { featuredImage, imageAttachments, videoAttachments } =
+    splitAttachments(entry.attachments);
 
   return (
     <article
