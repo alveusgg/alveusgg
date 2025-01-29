@@ -51,6 +51,7 @@ const PublicShowAndTellFields = [
   "volunteeringMinutes",
   "location",
   "notePublic",
+  "dominantColor",
 ] as const satisfies (keyof ShowAndTellEntryModel)[];
 
 export type PublicShowAndTellEntry = Pick<
@@ -60,7 +61,6 @@ export type PublicShowAndTellEntry = Pick<
 
 export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
   attachments: ShowAndTellEntryAttachments;
-  featuredImage?: ImageAttachment | null;
 };
 
 const withAttachments = {
@@ -115,7 +115,6 @@ const attachmentSchema = z.object({
 type CreateImageAttachment = z.infer<typeof createImageAttachmentSchema>;
 const createImageAttachmentSchema = attachmentSchema.and(
   z.object({
-    dominantColor: z.string().min(5).max(11).optional(),
     fileStorageObjectId: z.string().cuid(),
     name: z.string(),
   }),
@@ -151,7 +150,7 @@ const showAndTellSharedInputSchema = z.object({
   location: z.string().max(MYSQL_MAX_VARCHAR_LENGTH).nullable(),
   longitude: z.number().nullable(),
   latitude: z.number().nullable(),
-  featuredImage: createImageAttachmentSchema.optional(),
+  dominantColor: z.string().min(5).max(11).nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -272,16 +271,7 @@ export async function createPost(
       location: input.location,
       longitude: input.longitude,
       latitude: input.latitude,
-      featuredImage: input.featuredImage
-        ? {
-            connectOrCreate: {
-              where: {
-                fileStorageObjectId: input.featuredImage.fileStorageObjectId,
-              },
-              create: input.featuredImage,
-            },
-          }
-        : undefined,
+      dominantColor: input.dominantColor,
     },
   });
   await revalidateCache(res.id);
@@ -313,7 +303,6 @@ export async function getPublicPosts({
     select: {
       ...selectPublic,
       attachments: withAttachments.include.attachments,
-      featuredImage: true,
     },
     orderBy: [...postOrderBy],
     cursor: cursor ? { id: cursor } : undefined,
@@ -326,7 +315,6 @@ export async function getUserPosts(authorUserId: string, postId?: string) {
     select: {
       ...selectPublic,
       attachments: withAttachments.include.attachments,
-      featuredImage: true,
     },
     where: {
       userId: authorUserId,
@@ -400,7 +388,6 @@ export async function getAdminPost(id: string, authorUserId?: string) {
   return prisma.showAndTellEntry.findFirst({
     include: {
       ...withAttachments.include,
-      featuredImage: true,
       user: true,
     },
     where: {
@@ -486,17 +473,7 @@ export async function updatePost(
         latitude: input.latitude,
         notePrivate,
         notePublic,
-        featuredImage: {
-          delete: true,
-          connectOrCreate: input.featuredImage
-            ? {
-                where: {
-                  fileStorageObjectId: input.featuredImage.fileStorageObjectId,
-                },
-                create: input.featuredImage,
-              }
-            : undefined,
-        },
+        dominantColor: input.dominantColor,
       },
     }),
     // Update image attachments that are in the update list
