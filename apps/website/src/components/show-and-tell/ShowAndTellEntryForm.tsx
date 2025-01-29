@@ -47,6 +47,7 @@ import {
 import Link from "../content/Link";
 import type { MapLocation } from "../shared/form/MapPickerField";
 import { MapPickerField } from "../shared/form/MapPickerField";
+import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {
   isAnonymous?: boolean;
@@ -172,6 +173,14 @@ export function ShowAndTellEntryForm({
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const hours = parseFloat(formData.get("giveAnHour") as string);
+    let dominantColor = formData.get("dominantColor") as string | null;
+    if (dominantColor !== null) {
+      const r = parseInt(dominantColor.slice(1, 3), 16);
+      const g = parseInt(dominantColor.slice(3, 5), 16);
+      const b = parseInt(dominantColor.slice(5, 7), 16);
+
+      dominantColor = [r, g, b].join();
+    }
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
@@ -182,7 +191,7 @@ export function ShowAndTellEntryForm({
       location: postLocation?.location ?? "",
       latitude: postLocation?.latitude ?? null,
       longitude: postLocation?.longitude ?? null,
-      dominantColor: null,
+      dominantColor,
     };
 
     for (const fileReference of imageAttachmentsData.files) {
@@ -459,21 +468,29 @@ export function ShowAndTellEntryForm({
         </Fieldset>
 
         {action === "review" && (
-          <Fieldset legend="Moderator Notes">
-            <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
-              <RichTextField
-                label="Private Note (only visible in review mode)"
-                name="notePrivate"
-                defaultValue={entry?.notePrivate || undefined}
-              />
+          <>
+            <Fieldset legend="Moderator Notes">
+              <div className="flex flex-col gap-5 lg:flex-row lg:gap-20">
+                <RichTextField
+                  label="Private Note (only visible in review mode)"
+                  name="notePrivate"
+                  defaultValue={entry?.notePrivate || undefined}
+                />
 
-              <RichTextField
-                label="Public Note (visible on the post)"
-                name="notePublic"
-                defaultValue={entry?.notePublic || undefined}
-              />
-            </div>
-          </Fieldset>
+                <RichTextField
+                  label="Public Note (visible on the post)"
+                  name="notePublic"
+                  defaultValue={entry?.notePublic || undefined}
+                />
+              </div>
+            </Fieldset>
+
+            <DominantColorFieldset
+              savedColor={
+                entry?.dominantColor ? `rgb(${entry.dominantColor})` : undefined
+              }
+            />
+          </>
         )}
 
         {error && <MessageBox variant="failure">{error}</MessageBox>}
