@@ -51,6 +51,7 @@ const PublicShowAndTellFields = [
   "volunteeringMinutes",
   "location",
   "notePublic",
+  "dominantColor",
 ] as const satisfies (keyof ShowAndTellEntryModel)[];
 
 export type PublicShowAndTellEntry = Pick<
@@ -149,6 +150,11 @@ const showAndTellSharedInputSchema = z.object({
   location: z.string().max(MYSQL_MAX_VARCHAR_LENGTH).nullable(),
   longitude: z.number().nullable(),
   latitude: z.number().nullable(),
+  dominantColor: z
+    .string()
+    .regex(/^\d{1,3},\d{1,3},\d{1,3}$/)
+    .refine((val) => val.split(",").every((num) => Number(num) < 256))
+    .nullable(),
 });
 
 export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
@@ -269,6 +275,7 @@ export async function createPost(
       location: input.location,
       longitude: input.longitude,
       latitude: input.latitude,
+      dominantColor: input.dominantColor,
     },
   });
   await revalidateCache(res.id);
@@ -470,6 +477,7 @@ export async function updatePost(
         latitude: input.latitude,
         notePrivate,
         notePublic,
+        dominantColor: input.dominantColor,
       },
     }),
     // Update image attachments that are in the update list

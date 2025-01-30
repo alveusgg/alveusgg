@@ -16,7 +16,11 @@ import {
   getImageMimeType,
   isImageMimeType,
 } from "@/utils/files";
-import { type ResizeImageOptions, resizeImage } from "@/utils/resize-image";
+import {
+  type ResizeImageOptions,
+  extractColorFromImage,
+  resizeImage,
+} from "@/utils/process-image";
 
 import IconUploadFiles from "@/icons/IconUploadFiles";
 
@@ -44,10 +48,12 @@ export type SavedFileReference = {
   status: "saved";
   url: string;
   fileStorageObjectId: string;
+  extractColor: () => Promise<string>;
 } & BaseFileReference;
 
 type UploadFileReference = {
   dataURL: string;
+  extractColor: () => string | Promise<string>;
   file: File;
 } & BaseFileReference;
 
@@ -168,6 +174,7 @@ async function handleImageResize(
 
   return {
     dataURL: resized.dataURL,
+    extractColor: resized.extractColor,
     fileToUpload: new File([resized.blob], fileName, { type }),
   };
 }
@@ -228,6 +235,8 @@ export const UploadAttachmentsField = ({
       newFiles.push(
         (async () => {
           let dataURL = await fileToBase64(file);
+          let extractColor: PendingUploadFileReference["extractColor"] =
+            async () => await extractColorFromImage(dataURL);
           let fileToUpload = file;
           if (resizeImageOptions) {
             const resized = await handleImageResize(
@@ -238,6 +247,7 @@ export const UploadAttachmentsField = ({
             if (resized) {
               fileToUpload = resized.fileToUpload;
               dataURL = resized.dataURL;
+              extractColor = resized.extractColor;
             }
           }
 
@@ -245,6 +255,7 @@ export const UploadAttachmentsField = ({
             id: `upload-${fileCounter++}`,
             status: "upload.pending",
             dataURL,
+            extractColor,
             file: fileToUpload,
           };
         })(),

@@ -16,8 +16,6 @@ import parse, {
 } from "html-react-parser";
 import { ErrorBoundary } from "react-error-boundary";
 
-import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
-import { notEmpty } from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
 
 import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
@@ -28,6 +26,7 @@ import { Badge } from "@/components/show-and-tell/Badge";
 
 import IconWorld from "@/icons/IconWorld";
 import { classes } from "@/utils/classes";
+import { splitAttachments } from "@/utils/split-attachments";
 
 type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
@@ -260,26 +259,6 @@ export const ShowAndTellEntry = ({
   ref: forwardedRef,
 }: ShowAndTellEntryProps) => {
   const wrapperRef = useRef<HTMLElement>(null);
-  const imageAttachments = entry.attachments
-    .filter(({ attachmentType }) => attachmentType === "image")
-    .map(({ imageAttachment }) => imageAttachment)
-    .filter(notEmpty);
-  const videoAttachments = entry.attachments
-    .filter(({ attachmentType }) => attachmentType === "video")
-    .map(({ linkAttachment }) => linkAttachment)
-    .filter(notEmpty);
-
-  let featureImageUrl = imageAttachments[0]?.url;
-  if (!featureImageUrl) {
-    for (const videoAttachment of videoAttachments) {
-      const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
-      if (!parsedVideoUrl) continue;
-      const videoPlatformConfig = videoPlatformConfigs[parsedVideoUrl.platform];
-      if (!("previewUrl" in videoPlatformConfig)) continue;
-      featureImageUrl = videoPlatformConfig.previewUrl(parsedVideoUrl.id);
-      break;
-    }
-  }
 
   const handleRef = useCallback(
     (node: HTMLElement) => {
@@ -293,13 +272,16 @@ export const ShowAndTellEntry = ({
     [forwardedRef],
   );
 
+  const { featuredImage, imageAttachments, videoAttachments } =
+    splitAttachments(entry.attachments);
+
   return (
     <article
       key={entry.id}
       className={classes(
         "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-none",
         isPresentationView &&
-          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl",
+          "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl transition-[background-color,opacity]",
         !isPresentationView &&
           "justify-center border-t border-alveus-green/50 first:border-t-0",
         withHeight && !isPresentationView && "min-h-[70svh] min-h-[70vh]",
@@ -315,8 +297,15 @@ export const ShowAndTellEntry = ({
       data-show-and-tell-entry={entry.id}
       data-show-and-tell-author={entry.displayName}
       tabIndex={-1}
+      style={
+        isPresentationView && entry.dominantColor !== null
+          ? {
+              backgroundColor: `oklch(from rgb(${entry.dominantColor}) min(l, 0.5) c h)`,
+            }
+          : undefined
+      }
     >
-      {isPresentationView && featureImageUrl && (
+      {isPresentationView && featuredImage && (
         <div className="absolute top-0 z-0 size-full overflow-hidden rounded-xl">
           <Image
             loading="lazy"
@@ -324,7 +313,7 @@ export const ShowAndTellEntry = ({
             height={1080}
             draggable={false}
             className="pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
-            src={featureImageUrl}
+            src={featuredImage.url}
             alt=""
           />
         </div>
