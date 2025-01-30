@@ -406,6 +406,7 @@ model ShowAndTellEntry {
   latitude            Float?
   notePrivate         String?   @db.Text
   notePublic          String?   @db.Text
+  dominantColor       String?
 
   attachments ShowAndTellEntryAttachment[]
   user        User?                        @relation(fields: [userId], references: [id])
