@@ -75,3 +75,7 @@ updates:
       - dependency-name: "@types/node"
         update-types:
           - version-update:semver-major
+
+    # Manually request rebases for each PR as we get to it
+    # Avoids spamming Vercel with extra builds when there are lots of Dependabot PRs
+    rebase-strategy: disabled
