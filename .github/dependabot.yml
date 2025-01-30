@@ -79,3 +79,6 @@ updates:
     # Manually request rebases for each PR as we get to it
     # Avoids spamming Vercel with extra builds when there are lots of Dependabot PRs
     rebase-strategy: disabled
+
+    # Allow enough PRs for all the groups plus some major version PRs
+    open-pull-requests-limit: 10
