@@ -203,14 +203,14 @@ const data: RootNetworkItem[] = [
           },
           {
             type: "switch",
-            name: "House",
+            name: "HQ",
             model: "Ubiquiti USW-16-PoE",
             url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-16-poe",
             connection: { type: "ethernet", location: "buried" },
             links: [
               {
                 type: "accessPoint",
-                name: "House",
+                name: "HQ",
                 model: "Ubiquiti UAP-FlexHD",
                 url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-flexhd",
                 connection: { type: "ethernet", location: "wall" },
@@ -377,7 +377,7 @@ const data: RootNetworkItem[] = [
               },
               {
                 type: "switch",
-                name: "Rat/Chin Switch",
+                name: "Wall Switch",
                 model: "Ubiquiti USW-Lite-8-PoE",
                 url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
@@ -393,28 +393,58 @@ const data: RootNetworkItem[] = [
                   */
                   {
                     type: "controlunit",
-                    name: "Rat Control Module",
+                    name: "Spare Control Module",
                     model: "AXIS F9114",
                     url: "https://www.axis.com/products/axis-f9114-main-unit/",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {
                         type: "camera",
-                        name: "Rat Upper",
+                        name: "Spare Upper",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
-                        name: "Rat Middle",
+                        name: "Spare Middle",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
-                        name: "Rat Lower",
+                        name: "Spare Lower",
+                        model: "AXIS F4105-LRE",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                    ],
+                  },
+                  {
+                    type: "controlunit",
+                    name: "Chin Control Module",
+                    model: "AXIS F9114",
+                    url: "https://www.axis.com/products/axis-f9114-main-unit/",
+                    connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Chin Upper",
+                        model: "AXIS F4105-LRE",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Chin Middle",
+                        model: "AXIS F4105-LRE",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Chin Lower",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
@@ -481,6 +511,13 @@ const data: RootNetworkItem[] = [
                         url: "https://store.ui.com/us/en/collections/unifi-switching-pro-power-over-ethernet/products/usw-pro-24-poe",
                         connection: { type: "ethernet", location: "buried" },
                         links: [
+                          {
+                            type: "camera",
+                            name: "Wolf SwitchPen",
+                            model: "AXIS Q6155-E",
+                            url: "https://www.axis.com/products/axis-q6115-e/",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
                           {
                             type: "camera",
                             name: "Wolf Pond",
