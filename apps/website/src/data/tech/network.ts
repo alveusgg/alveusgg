@@ -125,6 +125,13 @@ const data: RootNetworkItem[] = [
               },
               {
                 type: "camera",
+                name: "Toast",
+                model: "AXIS M5075-G (PTZ)",
+                url: "https://www.axis.com/products/axis-m5075-g",
+                connection: { type: "ethernet", location: "wall" },
+              },
+              {
+                type: "camera",
                 name: "Georgie",
                 model: "AXIS M5075-G (PTZ)",
                 url: "https://www.axis.com/products/axis-m5075-g",
@@ -203,14 +210,14 @@ const data: RootNetworkItem[] = [
           },
           {
             type: "switch",
-            name: "House",
+            name: "HQ",
             model: "Ubiquiti USW-16-PoE",
             url: "https://store.ui.com/us/en/pro/category/switching-standard/products/usw-16-poe",
             connection: { type: "ethernet", location: "buried" },
             links: [
               {
                 type: "accessPoint",
-                name: "House",
+                name: "HQ",
                 model: "Ubiquiti UAP-FlexHD",
                 url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/uap-flexhd",
                 connection: { type: "ethernet", location: "wall" },
@@ -377,7 +384,7 @@ const data: RootNetworkItem[] = [
               },
               {
                 type: "switch",
-                name: "Rat/Chin Switch",
+                name: "Wall Switch",
                 model: "Ubiquiti USW-Lite-8-PoE",
                 url: "https://store.ui.com/us/en/pro/category/switching-utility/products/usw-lite-8-poe",
                 connection: { type: "ethernet", location: "wall" },
@@ -393,29 +400,59 @@ const data: RootNetworkItem[] = [
                   */
                   {
                     type: "controlunit",
-                    name: "Rat Control Module",
+                    name: "Spare Control Module",
                     model: "AXIS F9114",
                     url: "https://www.axis.com/products/axis-f9114-main-unit/",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {
                         type: "camera",
-                        name: "Rat Upper",
-                        model: "AXIS F4105-LRE",
+                        name: "Spare Upper",
+                        model: "AXIS F4105-LRE (Fixed)",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
-                        name: "Rat Middle",
-                        model: "AXIS F4105-LRE",
+                        name: "Spare Middle",
+                        model: "AXIS F4105-LRE (Fixed)",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
-                        name: "Rat Lower",
-                        model: "AXIS F4105-LRE",
+                        name: "Spare Lower",
+                        model: "AXIS F4105-LRE (Fixed)",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                    ],
+                  },
+                  {
+                    type: "controlunit",
+                    name: "Chin Control Module",
+                    model: "AXIS F9114",
+                    url: "https://www.axis.com/products/axis-f9114-main-unit/",
+                    connection: { type: "ethernet", location: "wall" },
+                    links: [
+                      {
+                        type: "camera",
+                        name: "Chin Upper",
+                        model: "AXIS F4105-LRE (Fixed)",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Chin Middle",
+                        model: "AXIS F4105-LRE (Fixed)",
+                        url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
+                        connection: { type: "coax", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Chin Lower",
+                        model: "AXIS F4105-LRE (Fixed)",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
                       },
@@ -483,29 +520,36 @@ const data: RootNetworkItem[] = [
                         links: [
                           {
                             type: "camera",
+                            name: "Wolf SwitchPen",
+                            model: "AXIS Q6155-E (PTZ)",
+                            url: "https://www.axis.com/products/axis-q6115-e/",
+                            connection: { type: "ethernet", location: "wall" },
+                          },
+                          {
+                            type: "camera",
                             name: "Wolf Pond",
-                            model: "AXIS Q6318-LE",
+                            model: "AXIS Q6318-LE (PTZ)",
                             url: "https://www.axis.com/products/axis-q6318-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
                             type: "camera",
                             name: "Wolf Deck",
-                            model: "AXIS Q6318-LE",
+                            model: "AXIS Q6318-LE (PTZ)",
                             url: "https://www.axis.com/products/axis-q6318-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
                             type: "camera",
                             name: "Wolf Den 1",
-                            model: "AXIS P1435-LE",
+                            model: "AXIS P1435-LE (Fixed)",
                             url: "https://help.axis.com/en-us/axis-p1435-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
                             type: "camera",
                             name: "Wolf Indoor",
-                            model: "AXIS P5676-LE",
+                            model: "AXIS P5676-LE (PTZ)",
                             url: "https://www.axis.com/products/axis-p5676-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
@@ -536,8 +580,8 @@ const data: RootNetworkItem[] = [
                               {
                                 type: "camera",
                                 name: "Wolf Den 2",
-                                model: "AXIS P1435-LE",
-                                url: "https://help.axis.com/en-us/axis-p1435-le",
+                                model: "AXIS P1455-LE (Fixed)",
+                                url: "https://help.axis.com/en-us/axis-p1455-le",
                                 connection: {
                                   type: "ethernet",
                                   location: "wall",
