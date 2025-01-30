@@ -43,18 +43,32 @@ updates:
           - "@prisma/*"
 
       # Update `dependencies` and `devDependencies` separately
-      # Create grouped PRs for minor/patch updates
-      # Major version updates will get individual PRs
+      # Create grouped PRs for minor/patch updates with majors getting dedicated PRs
+      # Ignore the above groups/dependencies to avoid issues when Dependabot rebases
       production:
         dependency-type: production
         update-types:
           - patch
           - minor
+        exclude-patterns:
+          - "next"
+          - "@next/*"
+          - "@trpc/*"
+          - "@tanstack/react-query"
+          - "prisma"
+          - "@prisma/*"
       development:
         dependency-type: development
         update-types:
           - patch
           - minor
+        exclude-patterns:
+          - "next"
+          - "@next/*"
+          - "@trpc/*"
+          - "@tanstack/react-query"
+          - "prisma"
+          - "@prisma/*"
 
     # Manually update major versions of `@types/node` with the version specified within .nvmrc
     ignore:
