@@ -393,28 +393,28 @@ const data: RootNetworkItem[] = [
                   */
                   {
                     type: "controlunit",
-                    name: "Enclosure 1 Control Module",
+                    name: "Spare Control Module",
                     model: "AXIS F9114",
                     url: "https://www.axis.com/products/axis-f9114-main-unit/",
                     connection: { type: "ethernet", location: "wall" },
                     links: [
                       {
                         type: "camera",
-                        name: "Enclosure 1 Upper",
+                        name: "Spare Upper",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
-                        name: "Enclosure 1 Middle",
+                        name: "Spare Middle",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
                       },
                       {
                         type: "camera",
-                        name: "Enclosure 1 Lower",
+                        name: "Spare Lower",
                         model: "AXIS F4105-LRE",
                         url: "https://www.axis.com/products/axis-f4105-lre-dome-sensor/",
                         connection: { type: "coax", location: "wall" },
