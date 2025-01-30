@@ -32,7 +32,7 @@ export const Badge = ({
   pulse?: boolean;
 }) => {
   return (
-    <div className="flex aspect-square w-[80px] items-center justify-center rotate-12">
+    <div className="flex aspect-square w-20 min-w-20 items-center justify-center rotate-12">
       {pulse && (
         <div className="absolute inset-0 size-full opacity-25 scale-75 motion-reduce:hidden">
           <BadgeBackground dark={dark} className="animate-ping scale-150" />
