@@ -273,7 +273,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2-auto md:grid-cols-1 lg:grid-cols-2-auto">
+            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 md:grid-cols-1 lg:grid-cols-auto-2">
               {stats.map(({ title, value }, idx) => (
                 <Fragment key={title}>
                   {idx !== 0 && (
