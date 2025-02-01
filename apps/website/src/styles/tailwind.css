@@ -1,47 +1,16 @@
+@import "tailwindcss";
+@import "@alveusgg/data/build/tailwind.css";
 @import "photoswipe/dist/photoswipe.css";
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
 @layer base {
   html {
     &.stream {
-      @apply bg-transparent bg-none !important;
+      @apply !bg-transparent !bg-none;
     }
   }
 }
 
-@layer utilities {
-  .scrollbar-none {
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* Internet Explorer 10+ */
-  }
-
-  .scrollbar-none::-webkit-scrollbar {
-    /* Safari and Chrome */
-    width: 0;
-    height: 0;
-    display: none;
-  }
-
-  .sr-only-linkable {
-    @apply sr-only relative m-0 -ml-px -mt-px overflow-clip;
-
-    font-size: 0;
-    line-height: 0;
-  }
-}
-
 @layer components {
-  details > summary {
-    list-style: none;
-  }
-
-  details > summary::-webkit-details-marker {
-    display: none;
-  }
-
   /* Some basic styles for user generated HTML */
   .alveus-ugc,
   .alveus-rte .ql-editor {
@@ -111,22 +80,41 @@
       @apply text-lg;
     }
   }
-}
 
-.pswp {
-  @apply font-sans;
+  .pswp {
+    @apply font-sans;
 
-  &__alveus-caption {
-    @apply absolute bottom-0 left-1/2 w-fit max-w-[calc(100%-80px)] bg-black/80 p-4 leading-tight text-white -translate-x-1/2 empty:hidden;
+    &__alveus-caption {
+      @apply absolute bottom-0 left-1/2 w-fit max-w-[calc(100%-80px)] -translate-x-1/2 bg-black/80 p-4 leading-tight text-white empty:hidden;
+    }
+  }
+
+  .alveus-community-map {
+    .maplibregl-popup-content {
+      padding: 3px 6px !important;
+    }
+
+    .maplibregl-popup-tip {
+      display: none;
+    }
   }
 }
 
-.alveus-community-map {
-  .maplibregl-popup-content {
-    padding: 3px 6px !important;
-  }
+@utility scrollbar-none {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* Internet Explorer 10+ */
 
-  .maplibregl-popup-tip {
+  &::-webkit-scrollbar {
+    /* Safari and Chrome */
+    width: 0;
+    height: 0;
     display: none;
   }
+}
+
+@utility sr-only-linkable {
+  @apply sr-only relative m-0 -mt-px -ml-px overflow-clip;
+
+  font-size: 0;
+  line-height: 0;
 }
