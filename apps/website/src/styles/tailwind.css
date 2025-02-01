@@ -131,3 +131,7 @@
   font-size: 0;
   line-height: 0;
 }
+
+@utility animation-delay-* {
+  animation-delay: calc(--value(integer, [integer]) * 1ms);
+}
