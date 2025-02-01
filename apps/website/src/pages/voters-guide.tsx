@@ -318,7 +318,7 @@ const VotePage: NextPage = () => {
                       <Image
                         src={image.src}
                         alt={image.alt}
-                        className="size-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md xl:size-32"
+                        className="size-24 rounded-full object-cover shadow-sm transition-shadow group-hover:shadow-md xl:size-32"
                         style={{ objectPosition: image.position }}
                       />
                     </Link>

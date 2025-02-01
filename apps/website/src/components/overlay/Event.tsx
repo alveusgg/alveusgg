@@ -104,7 +104,7 @@ const Event = ({ className }: { className?: string }) => {
             src={logoImage}
             alt=""
             height={64}
-            className="h-16 w-auto opacity-75 brightness-150 contrast-125 drop-shadow grayscale"
+            className="h-16 w-auto opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
           />
 
           <div className="text-stroke text-xl font-bold text-white">
