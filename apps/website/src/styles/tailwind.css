@@ -2,6 +2,19 @@
 @import "@alveusgg/data/build/tailwind.css";
 @import "photoswipe/dist/photoswipe.css";
 
+/* FIXME: https://github.com/tailwindlabs/tailwindcss/discussions/15253 */
+@theme inline {
+  --font-sans: var(--font-ptsans), ui-sans-serif, system-ui, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: var(--font-ptserif), ui-serif, Georgia, Cambria,
+    "Times New Roman", Times, serif;
+}
+
+@theme {
+  --animate-spin-slow: spin 3s linear infinite;
+  --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 @layer base {
   html {
     &.stream {
