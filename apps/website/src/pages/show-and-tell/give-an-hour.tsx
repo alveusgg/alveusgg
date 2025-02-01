@@ -41,7 +41,7 @@ const Card = ({
   number?: number;
   children: React.ReactNode;
 }) => (
-  <div className="flex h-full gap-6 rounded-xl bg-white/75 p-6 shadow-lg backdrop-blur">
+  <div className="flex h-full gap-6 rounded-xl bg-white/75 p-6 shadow-lg backdrop-blur-sm">
     <div
       className={classes(
         "flex flex-shrink-0 flex-col items-center justify-between gap-4",

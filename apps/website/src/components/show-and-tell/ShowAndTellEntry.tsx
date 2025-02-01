@@ -202,7 +202,7 @@ const Content = ({
 
   return (
     (hasContent || hasNote) && (
-      <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-sm">
+      <div className="-m-4 mt-0 bg-white/70 p-4 text-gray-900 backdrop-blur-xs">
         <div
           className={`mx-auto w-fit ${
             isPresentationView ? "scrollbar-none max-h-[66vh] pb-6" : ""
