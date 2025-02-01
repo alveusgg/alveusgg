@@ -67,7 +67,7 @@ const DonateItem = ({ link }: { link: DonateLink }) => (
     href={link.link}
     external={link.external}
     custom
-    className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:shadow-2xl hover:scale-102"
+    className="group rounded-xl bg-alveus-green p-4 text-alveus-tan shadow-xl transition hover:scale-102 hover:shadow-2xl"
   >
     <div className="mb-1 flex items-center gap-4">
       <div className="block rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
@@ -118,7 +118,7 @@ const DonatePage: NextPage = () => {
             href={donationEvent.link}
             external={donationEvent.external}
             custom
-            className="whitespace-nowrap rounded-full border-2 border-white px-4 py-2 text-lg text-white transition-colors hover:bg-white hover:text-carnival md:px-4 md:py-2 md:text-xl"
+            className="rounded-full border-2 border-white px-4 py-2 text-lg whitespace-nowrap text-white transition-colors hover:bg-white hover:text-carnival md:px-4 md:py-2 md:text-xl"
           >
             {donationEvent.cta}
             <IconArrowRight className="ml-3 inline-block size-6" />

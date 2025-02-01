@@ -24,7 +24,7 @@ const dropdownLinks = [
 const WatchLive = () => (
   <Button as="div" dark className="group/link p-0">
     <Link
-      className="whitespace-pre-wrap py-2 pl-4"
+      className="py-2 pl-4 whitespace-pre-wrap"
       href={defaultLink.href}
       target="_blank"
       rel="noreferrer"
@@ -42,13 +42,13 @@ const WatchLive = () => (
 
         <IconChevronDown
           size={16}
-          className="transition-transform translate-y-0.5 group-data-[active]/button:translate-y-1"
+          className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
         />
       </MenuButton>
 
       <MenuItems
         transition
-        className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded-sm bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20 transition ease-in-out data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[closed]:scale-95"
+        className="group/items absolute top-full left-0 z-30 mt-1.5 -ml-4 flex flex-col rounded-sm bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20 transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
         as="ul"
         modal={false}
       >
@@ -58,7 +58,7 @@ const WatchLive = () => (
               href={link.href}
               target="_blank"
               rel="noreferrer"
-              className="block rounded-sm px-4 py-1 transition-colors hover:bg-alveus-green hover:text-alveus-tan group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
+              className="block rounded-sm px-4 py-1 transition-colors group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline hover:bg-alveus-green hover:text-alveus-tan"
             >
               {link.platform}
             </a>

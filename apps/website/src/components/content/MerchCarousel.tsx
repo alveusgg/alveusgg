@@ -79,7 +79,7 @@ const merch = Object.entries({
             alt={pip.alt}
             draggable={false}
             width={80}
-            className="absolute -bottom-2 -right-2 h-auto w-1/2 max-w-20 drop-shadow-sm"
+            className="absolute -right-2 -bottom-2 h-auto w-1/2 max-w-20 drop-shadow-sm"
           />
         )}
       </div>

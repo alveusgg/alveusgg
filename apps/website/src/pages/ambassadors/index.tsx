@@ -135,7 +135,7 @@ const AmbassadorItem = ({
         />
         <Heading
           level={level}
-          className="mb-0 mt-2 text-center transition-colors group-hover:text-alveus-green-700"
+          className="mt-2 mb-0 text-center transition-colors group-hover:text-alveus-green-700"
         >
           {data.name}
         </Heading>
@@ -158,7 +158,7 @@ const AmbassadorItems = ({
     {name && (
       <Heading
         level={2}
-        className="mb-8 mt-16 scroll-mt-22 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+        className="mt-16 mb-8 scroll-mt-22 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
@@ -216,12 +216,12 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-4 right-0 z-30 hidden h-auto w-1/2 max-w-xs select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute right-0 -bottom-4 z-30 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block"
         />
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-36 -left-16 z-30 hidden h-auto w-1/2 max-w-32 select-none drop-shadow-md rotate-45 -scale-y-100 lg:block"
+          className="pointer-events-none absolute -bottom-36 -left-16 z-30 hidden h-auto w-1/2 max-w-32 -scale-y-100 rotate-45 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -246,12 +246,12 @@ const AmbassadorsPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section className="grow pt-8">

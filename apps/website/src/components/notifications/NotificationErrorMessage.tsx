@@ -11,7 +11,7 @@ export const NotificationErrorMessage = ({
 }) => (
   <div
     className={classes(
-      "hyphens-auto rounded-lg bg-red-100 p-4 leading-tight text-red-800",
+      "rounded-lg bg-red-100 p-4 leading-tight hyphens-auto text-red-800",
       className,
     )}
   >

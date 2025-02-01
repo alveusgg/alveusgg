@@ -31,11 +31,11 @@ export const CalendarTimezoneSwitchButton = ({
     )}
     onClick={onClick}
   >
-    <span className="ml-5 mr-4 min-[420px]:ml-7 min-[420px]:mr-6">{label}</span>
+    <span className="mr-4 ml-5 min-[420px]:mr-6 min-[420px]:ml-7">{label}</span>
     <IconCheck
       role="presentation"
       className={classes(
-        "not-sr-only absolute left-1 top-1/2 w-3 -translate-y-1/2 min-[420px]:left-2 min-[420px]:w-5",
+        "not-sr-only absolute top-1/2 left-1 w-3 -translate-y-1/2 min-[420px]:left-2 min-[420px]:w-5",
         !isSelected && "invisible",
       )}
     />

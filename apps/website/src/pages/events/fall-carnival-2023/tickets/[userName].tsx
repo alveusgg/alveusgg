@@ -94,7 +94,7 @@ const TicketPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <IntroSection showLinkToClaimTicket />
@@ -142,12 +142,12 @@ const TicketPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -left-8 top-32 z-10 hidden h-auto w-1/3 max-w-28 select-none drop-shadow-md -rotate-45 lg:block"
+          className="pointer-events-none absolute top-32 -left-8 z-10 hidden h-auto w-1/3 max-w-28 -rotate-45 drop-shadow-md select-none lg:block"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -top-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute -top-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Activities />

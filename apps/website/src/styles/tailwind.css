@@ -6,10 +6,12 @@
 
 /* FIXME: https://github.com/tailwindlabs/tailwindcss/discussions/15253 */
 @theme inline {
-  --font-sans: var(--font-ptsans), ui-sans-serif, system-ui, sans-serif,
+  --font-sans:
+    var(--font-ptsans), ui-sans-serif, system-ui, sans-serif,
     "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  --font-serif: var(--font-ptserif), ui-serif, Georgia, Cambria,
-    "Times New Roman", Times, serif;
+  --font-serif:
+    var(--font-ptserif), ui-serif, Georgia, Cambria, "Times New Roman", Times,
+    serif;
 }
 
 @theme {

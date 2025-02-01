@@ -373,7 +373,9 @@ export function Calendar({
                 const lastWk = week === weeks - 1;
                 const rounded = classes(
                   firstWk && date === 1 && "rounded-t-sm md:rounded-none",
-                  lastWk && date === daysInMonth && "rounded-b-sm md:rounded-none",
+                  lastWk &&
+                    date === daysInMonth &&
+                    "rounded-b-sm md:rounded-none",
                   lastWk && i === 0 && "md:rounded-bl-sm",
                   lastWk && i === 6 && "md:rounded-br-sm",
                 );
@@ -422,10 +424,10 @@ export function Calendar({
                       rounded,
                     )}
                   >
-                    <div className="absolute right-0 top-0 mb-auto flex justify-end md:relative">
+                    <div className="absolute top-0 right-0 mb-auto flex justify-end md:relative">
                       <p
                         className={classes(
-                          "flex gap-1 rounded-bl-lg px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
+                          "flex gap-1 rounded-bl-lg px-1.5 pt-1.5 pb-1 font-mono text-sm leading-none md:-mt-1 md:-mr-1",
                           isPast && "opacity-50",
                           isToday && theme.heading,
                         )}

@@ -37,7 +37,7 @@ const Select = ({
         {label && <Label>{label}</Label>}
         <ListboxButton
           className={classes(
-            "relative w-full rounded-lg border py-2 pl-3 pr-10 text-left",
+            "relative w-full rounded-lg border py-2 pr-10 pl-3 text-left",
             dark
               ? "border-alveus-tan/40 bg-alveus-green text-alveus-tan"
               : "border-alveus-green/40 bg-alveus-tan text-alveus-green",
@@ -67,7 +67,7 @@ const Select = ({
               key={key}
               value={key}
               className={classes(
-                "group relative w-full min-w-max cursor-pointer rounded py-2 pl-10 pr-4 data-[focus]:outline-blue-500 data-[focus]:group-focus-visible:outline",
+                "group relative w-full min-w-max cursor-pointer rounded py-2 pr-4 pl-10 data-[focus]:outline-blue-500 data-[focus]:group-focus-visible:outline",
                 dark
                   ? "hover:bg-alveus-tan/20 data-[selected]:bg-alveus-tan/10"
                   : "hover:bg-alveus-green/20 data-[selected]:bg-alveus-green/10",

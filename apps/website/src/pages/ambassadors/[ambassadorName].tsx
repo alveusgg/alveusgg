@@ -99,7 +99,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         value: (
           <>
             <p>{species.name}</p>
-            <p className="italic text-alveus-green-700">
+            <p className="text-alveus-green-700 italic">
               {species.scientificName} (
               <Link
                 href={`/ambassadors#classification:${convertToSlug(
@@ -218,7 +218,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 alt={alt}
                 draggable={false}
                 width={300}
-                className="aspect-square h-auto w-full rounded-xl object-cover transition group-hover:shadow-xs group-hover:scale-102"
+                className="aspect-square h-auto w-full rounded-xl object-cover transition group-hover:scale-102 group-hover:shadow-xs"
                 style={{ objectPosition: position }}
               />
             </a>
@@ -260,7 +260,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
           <div className="flex basis-full flex-col py-4 md:max-w-1/2 md:basis-1/2 md:px-8 md:pt-8">
             <Heading className="text-5xl">{ambassador.name}</Heading>
             {!!ambassador.alternate.length && (
-              <p className="-mt-1 mb-2 text-lg italic text-alveus-green-700">
+              <p className="-mt-1 mb-2 text-lg text-alveus-green-700 italic">
                 also:{" "}
                 <span className="text-xl">
                   {ambassador.alternate.join("; ")}
@@ -280,7 +280,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     <div className="col-span-full h-px bg-alveus-green opacity-10" />
                   )}
                   <dt className="self-center text-2xl font-bold">{title}</dt>
-                  <dd className="self-center text-balance text-xl">{value}</dd>
+                  <dd className="self-center text-xl text-balance">{value}</dd>
                 </Fragment>
               ))}
             </dl>
@@ -317,7 +317,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     src={merchImage.src}
                     width={512}
                     alt={`${ambassador.name} Plush`}
-                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:shadow-2xl group-hover:scale-102"
+                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
                   />
                 </Link>
               ) : (
@@ -326,9 +326,9 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     src={merchImage.src}
                     width={512}
                     alt={`${ambassador.name} Plush`}
-                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:shadow-2xl group-hover:scale-102"
+                    className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:scale-102 group-hover:shadow-2xl"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition group-hover:opacity-100 group-hover:backdrop-blur-xs group-hover:scale-102">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition group-hover:scale-102 group-hover:opacity-100 group-hover:backdrop-blur-xs">
                     <p className="text-3xl">Coming Soon</p>
                     <p className="text-2xl">{ambassador.plush.soon}</p>
                   </div>

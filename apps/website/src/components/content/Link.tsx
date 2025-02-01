@@ -54,7 +54,7 @@ const Link = ({
       {external && !custom && (
         <IconExternal
           size="0.75em"
-          className="ml-1 mr-0.5 inline-block align-baseline"
+          className="mr-0.5 ml-1 inline-block align-baseline"
         />
       )}
     </NextLink>

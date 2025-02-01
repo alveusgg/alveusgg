@@ -58,7 +58,7 @@ export const NotificationsButton = ({
       <PopoverPanel
         transition
         className={classes(
-          `absolute z-30 -mt-0.5 flex min-w-[240px] max-w-fit flex-col gap-0.5 rounded-sm border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg transition ease-in-out data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-75 data-[closed]:scale-95 md:max-w-[calc(80vw-50px)]`,
+          `absolute z-30 -mt-0.5 flex max-w-fit min-w-[240px] flex-col gap-0.5 rounded-sm border border-black/20 bg-alveus-green-900 text-gray-200 shadow-lg transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-200 data-[leave]:duration-75 md:max-w-[calc(80vw-50px)]`,
           openDirectionX === "left" ? "right-0" : "left-0",
           openDirectionY === "top" ? "bottom-full" : "top-full",
         )}
