@@ -232,7 +232,7 @@ const PlayBingoPage = () => {
                 <span
                   className={classes(
                     embedStream ? "translate-x-6" : "translate-x-1",
-                    "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform",
+                    "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow-sm transition-transform",
                   )}
                 />
               </div>

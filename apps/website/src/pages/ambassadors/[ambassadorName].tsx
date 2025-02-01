@@ -218,7 +218,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 alt={alt}
                 draggable={false}
                 width={300}
-                className="aspect-square h-auto w-full rounded-xl object-cover transition group-hover:shadow-sm group-hover:scale-102"
+                className="aspect-square h-auto w-full rounded-xl object-cover transition group-hover:shadow-xs group-hover:scale-102"
                 style={{ objectPosition: position }}
               />
             </a>

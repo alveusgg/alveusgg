@@ -166,12 +166,12 @@ const Creators = ({ className }: { className?: string }) => {
                   });
                 }}
               >
-                <div className="size-3 rounded-full bg-alveus-green-300 shadow-sm" />
+                <div className="size-3 rounded-full bg-alveus-green-300 shadow-xs" />
               </button>
             ))}
 
             <div
-              className="pointer-events-none absolute inset-y-0 z-10 m-1 h-3 rounded-full bg-alveus-green-900 shadow-sm transition-[left]"
+              className="pointer-events-none absolute inset-y-0 z-10 m-1 h-3 rounded-full bg-alveus-green-900 shadow-xs transition-[left]"
               style={{
                 left: `calc((0.75rem * ${bar.start}) + (0.5rem * ${bar.start}))`,
                 width: `calc((0.75rem * ${bar.width}) + (0.5rem * (${bar.width} - 1)))`,

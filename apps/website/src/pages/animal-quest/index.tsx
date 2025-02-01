@@ -149,7 +149,7 @@ const AnimalQuestItems = ({
                   alt={img ? img.alt : "Animal Quest"}
                   className={classes(
                     !img && "opacity-10",
-                    "hidden h-24 w-24 rounded-full object-cover shadow transition-shadow group-hover:shadow-md min-[430px]:block md:h-32 md:w-32",
+                    "hidden h-24 w-24 rounded-full object-cover shadow-sm transition-shadow group-hover:shadow-md min-[430px]:block md:h-32 md:w-32",
                   )}
                   width={256}
                   style={{ objectPosition: img ? img.position : undefined }}
