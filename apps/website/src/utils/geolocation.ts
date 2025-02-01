@@ -5,7 +5,6 @@ import type {
   MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
 import { type Map, Marker } from "maplibre-gl";
-import tailwindConfig from "@alveusgg/data/build/tailwind";
 
 import { env } from "@/env";
 
@@ -206,7 +205,7 @@ export const getDefaultMarker = (
 ) => {
   if (map) {
     const marker = new Marker({
-      color: tailwindConfig.theme.colors["alveus-green"].DEFAULT,
+      color: "var(--color-alveus-green)",
       draggable: true,
     })
       .setLngLat(coords)
