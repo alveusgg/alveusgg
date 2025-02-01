@@ -12,7 +12,7 @@ const BadgeBackground = ({
   <svg
     xmlns="http://www.w3.org/2000/svg"
     className={classes(
-      "absolute inset-0 aspect-square h-full w-full drop-shadow",
+      "absolute inset-0 aspect-square h-full w-full drop-shadow-sm",
       dark ? "fill-alveus-tan" : "fill-alveus-green",
       className,
     )}
