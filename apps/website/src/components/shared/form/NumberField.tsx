@@ -96,7 +96,7 @@ export function NumberField(props: NumberFieldProps) {
         {props.showButtons && (
           <NumberButton {...decrementButtonProps}>-</NumberButton>
         )}
-        <div className="flex w-full items-center justify-center rounded-sm border border-gray-700 bg-white text-gray-500 focus-within:outline">
+        <div className="flex w-full items-center justify-center rounded-xs border border-gray-700 bg-white text-gray-500 focus-within:outline">
           <div className="contents" onClick={focusInput}>
             {props.prefix}
             <input

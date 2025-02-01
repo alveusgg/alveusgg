@@ -273,7 +273,7 @@ export function ShowAndTellGallery({
               width={100}
               height={100}
               draggable={false}
-              className="pointer-events-none aspect-square size-14 rounded object-cover shadow-lg"
+              className="pointer-events-none aspect-square size-14 rounded-sm object-cover shadow-lg"
               src={imageAttachment.url}
               alt={imageAttachment.alternativeText}
               title={imageAttachment.title}

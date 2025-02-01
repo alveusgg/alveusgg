@@ -50,7 +50,7 @@ export function TextField(props: TextFieldProps) {
       <label className={props.labelClassName} {...labelProps}>
         {props.label}
       </label>
-      <div className="flex w-full items-center gap-1 rounded-sm border border-gray-700 bg-white text-gray-500">
+      <div className="flex w-full items-center gap-1 rounded-xs border border-gray-700 bg-white text-gray-500">
         {props.prefix}
         <input
           className={classes(
