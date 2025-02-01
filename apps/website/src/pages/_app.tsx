@@ -16,7 +16,7 @@ import { ConsentProvider } from "@/hooks/consent";
 import Layout from "@/components/layout/Layout";
 import FontProvider from "@/components/layout/Fonts";
 
-import "@/styles/globals.css";
+import "@/styles/tailwind.css";
 
 unregisterServiceWorker();
 
