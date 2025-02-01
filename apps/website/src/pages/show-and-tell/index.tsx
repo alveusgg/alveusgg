@@ -418,7 +418,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       <Section className="py-6 md:py-12">
-        <div className="grid w-full grid-cols-4 grid-rows-3-auto gap-4 md:grid-cols-6 md:grid-rows-2-auto">
+        <div className="grid w-full grid-cols-4 grid-rows-auto-3 gap-4 md:grid-cols-6 md:grid-rows-auto-2">
           <Box
             className={classes(
               bentoBoxClasses,
