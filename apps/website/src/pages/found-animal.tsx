@@ -145,7 +145,7 @@ const FoundAnimalPage: NextPage = () => {
                     log.type === "prompt"
                       ? "self-start bg-alveus-tan-50/75"
                       : "self-end bg-alveus-green-50/75",
-                    "rounded px-2 py-1 text-alveus-green-800",
+                    "rounded-sm px-2 py-1 text-alveus-green-800",
                   )}
                 >
                   {log.message}
@@ -153,7 +153,7 @@ const FoundAnimalPage: NextPage = () => {
               ))}
 
               {!!loading && (
-                <p className="self-start rounded bg-alveus-tan-50 px-2 py-1 font-extrabold text-alveus-green-700">
+                <p className="self-start rounded-sm bg-alveus-tan-50 px-2 py-1 font-extrabold text-alveus-green-700">
                   <span className="animate-pulse">. . .</span>
                 </p>
               )}

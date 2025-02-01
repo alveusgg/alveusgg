@@ -80,7 +80,7 @@ const Cover = ({
 }) => (
   <div
     className={classes(
-      "relative aspect-2/3 h-auto w-full rounded-l rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
+      "relative aspect-2/3 h-auto w-full rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
       className,
     )}
   >
@@ -111,7 +111,7 @@ const Cover = ({
         src={image}
         alt={`${title} by ${author}`}
         width={width}
-        className="size-full rounded-l rounded-r-xl object-cover"
+        className="size-full rounded-l-sm rounded-r-xl object-cover"
       />
     )}
   </div>
@@ -142,7 +142,7 @@ const Book = ({
             />
             <div
               className={classes(
-                "w-full origin-top rounded-l-xl rounded-r-sm border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 -translate-y-0.5 rotate-x-90 scale-x-95 group-data-[open]:scale-x-100",
+                "w-full origin-top rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 -translate-y-0.5 rotate-x-90 scale-x-95 group-data-[open]:scale-x-100",
                 thickness,
                 color,
               )}

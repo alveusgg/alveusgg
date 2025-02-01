@@ -50,13 +50,13 @@ const Layout = ({ children }: LayoutProps) => {
       >
         <a
           href="#main"
-          className="sr-only left-0 top-0 z-40 w-auto rounded border-2 border-white bg-alveus-green-900 text-lg text-white focus:not-sr-only focus:fixed focus:m-4 focus:block focus:px-6 focus:py-4"
+          className="sr-only left-0 top-0 z-40 w-auto rounded-sm border-2 border-white bg-alveus-green-900 text-lg text-white focus:not-sr-only focus:fixed focus:m-4 focus:block focus:px-6 focus:py-4"
         >
           Jump to page content
         </a>
         <a
           href="#main-nav"
-          className="sr-only left-0 top-0 z-40 w-auto rounded border-2 border-white bg-alveus-green-900 text-lg text-white focus:not-sr-only focus:fixed focus:m-4 focus:block focus:px-6 focus:py-4"
+          className="sr-only left-0 top-0 z-40 w-auto rounded-sm border-2 border-white bg-alveus-green-900 text-lg text-white focus:not-sr-only focus:fixed focus:m-4 focus:block focus:px-6 focus:py-4"
         >
           Jump to main navigation
         </a>

@@ -48,7 +48,7 @@ const WatchLive = () => (
 
       <MenuItems
         transition
-        className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20 transition ease-in-out data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[closed]:scale-95"
+        className="group/items absolute left-0 top-full z-30 -ml-4 mt-1.5 flex flex-col rounded-sm bg-alveus-tan text-alveus-green shadow-lg outline outline-1 outline-black/20 transition ease-in-out data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[closed]:scale-95"
         as="ul"
         modal={false}
       >
@@ -58,7 +58,7 @@ const WatchLive = () => (
               href={link.href}
               target="_blank"
               rel="noreferrer"
-              className="block rounded px-4 py-1 transition-colors hover:bg-alveus-green hover:text-alveus-tan group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
+              className="block rounded-sm px-4 py-1 transition-colors hover:bg-alveus-green hover:text-alveus-tan group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
             >
               {link.platform}
             </a>

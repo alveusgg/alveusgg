@@ -38,7 +38,7 @@ export const NotificationCategoryCheckbox = ({
           checked={enabled && tags ? tags[tag] === "1" : true}
           type="checkbox"
           disabled={!enabled}
-          className="size-4 rounded border-gray-300 accent-alveus-green"
+          className="size-4 rounded-sm border-gray-300 accent-alveus-green"
           onChange={handleChange}
         />
       </div>
