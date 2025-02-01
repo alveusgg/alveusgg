@@ -131,7 +131,7 @@ const Book = ({
   <Disclosure as="div" className={className}>
     {({ open }) => (
       <>
-        <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-none">
+        <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-hidden">
           <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale-3d group-data-[open]:scale-70">
             <Cover
               title={title}
