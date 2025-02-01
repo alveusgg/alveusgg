@@ -54,7 +54,7 @@ const Select = ({
         <ListboxOptions
           transition
           className={classes(
-            "group absolute top-full z-30 mt-1 flex max-h-60 min-w-[10rem] flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-none data-[closed]:opacity-0",
+            "group absolute top-full z-30 mt-1 flex max-h-60 min-w-[10rem] flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-[closed]:opacity-0",
             align === "left" ? "left-0" : "right-0",
             dark
               ? "border-alveus-tan/20 bg-alveus-green text-alveus-tan"

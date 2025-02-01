@@ -113,7 +113,7 @@ export function Schedule() {
                 <input
                   readOnly={true}
                   type="url"
-                  className="box-content min-w-0 rounded-lg bg-alveus-green-800 p-1 text-center text-sm italic text-alveus-tan outline-none"
+                  className="box-content min-w-0 rounded-lg bg-alveus-green-800 p-1 text-center text-sm italic text-alveus-tan outline-hidden"
                   value={webcalUrls[group]}
                   onClick={(e) =>
                     e.currentTarget.setSelectionRange(

@@ -279,7 +279,7 @@ export const ShowAndTellEntry = ({
     <article
       key={entry.id}
       className={classes(
-        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-none",
+        "relative flex flex-shrink-0 flex-col transition-opacity delay-500 duration-500 focus:outline-hidden",
         isPresentationView &&
           "h-[calc(100svh-6em)] h-[calc(100vh-6em)] w-[80%] snap-center overflow-hidden bg-alveus-green text-white shadow-xl transition-[background-color,opacity]",
         !isPresentationView &&

@@ -67,7 +67,7 @@
 
   /* Rich text editor (Quill.js) */
   .alveus-rte {
-    @apply w-full rounded-sm border border-gray-700;
+    @apply w-full rounded-xs border border-gray-700;
 
     .ql-editor {
       padding: 0 20px;
