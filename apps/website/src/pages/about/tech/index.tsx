@@ -345,7 +345,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none drop-shadow-md lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
@@ -365,26 +365,26 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md -rotate-45 lg:block 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none lg:block 2xl:max-w-48"
         />
 
         <Section containerClassName="flex flex-wrap -mx-4">
           <div className="basis-full px-4 pb-8">
-            <Heading level={2} className="mb-4 mt-0" id="overview" link>
+            <Heading level={2} className="mt-0 mb-4" id="overview" link>
               System Overview
             </Heading>
             <Overview />
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mb-4 mt-0" id="studio" link>
+            <Heading level={2} className="mt-0 mb-4" id="studio" link>
               Broadcast Studio
             </Heading>
             <List items={broadcastStudio} />
           </div>
 
           <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mb-4 mt-0" id="system" link>
+            <Heading level={2} className="mt-0 mb-4" id="system" link>
               Broadcast System
             </Heading>
             <List items={broadcastSystem} />
@@ -396,7 +396,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section dark>
@@ -406,14 +406,14 @@ const AboutTechPage: NextPage = () => {
 
           <div className="flex flex-wrap">
             <div className="basis-full p-4 lg:basis-1/2">
-              <Heading level={3} className="mb-4 mt-0 text-2xl">
+              <Heading level={3} className="mt-0 mb-4 text-2xl">
                 Livestream Backpack
               </Heading>
               <List items={outsideBroadcasts.backpack} />
             </div>
 
             <div className="basis-full p-4 lg:basis-1/2">
-              <Heading level={3} className="mb-4 mt-0 text-2xl">
+              <Heading level={3} className="mt-0 mb-4 text-2xl">
                 Roaming Animal Cam
               </Heading>
               <List items={outsideBroadcasts.animals} />
@@ -426,11 +426,11 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute right-0 -bottom-20 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section>
-          <Heading level={2} className="mb-1 mt-0" id="cameras" link>
+          <Heading level={2} className="mt-0 mb-1" id="cameras" link>
             Network + Enclosure Cameras
           </Heading>
           <NetworkStats className="mb-4" />
@@ -443,11 +443,11 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="grow bg-alveus-green-800">
-          <Heading level={2} className="mb-2 mt-0" id="open-source" link>
+          <Heading level={2} className="mt-0 mb-2" id="open-source" link>
             Open-source
           </Heading>
           <p className="mb-4">

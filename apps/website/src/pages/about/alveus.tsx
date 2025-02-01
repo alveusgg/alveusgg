@@ -539,7 +539,7 @@ const transformHistoryItem = (item: HistoryItem) => ({
           >
             {item.link.text}
             {item.link.href.startsWith("/") && (
-              <IconArrowRight size={16} className="ml-1 mt-0.5" />
+              <IconArrowRight size={16} className="mt-0.5 ml-1" />
             )}
           </Link>
         </p>
@@ -564,7 +564,7 @@ const AboutAlveusPage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="flex basis-full flex-col gap-4 pb-16 pt-4 xl:basis-1/2 xl:py-24">
+        <div className="flex basis-full flex-col gap-4 pt-4 pb-16 xl:basis-1/2 xl:py-24">
           <Heading className="my-0">About Alveus Sanctuary</Heading>
 
           <p className="text-lg">
@@ -627,7 +627,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section className="text-center">
@@ -647,7 +647,7 @@ const AboutAlveusPage: NextPage = () => {
             We see Twitch as an untapped reservoir for doing good.
           </p>
 
-          <ul className="mb-2 mt-6 flex flex-wrap justify-center md:mt-12">
+          <ul className="mt-6 mb-2 flex flex-wrap justify-center md:mt-12">
             {Object.entries(stats).map(([key, stat]) => (
               <li
                 key={key}
@@ -696,7 +696,7 @@ const AboutAlveusPage: NextPage = () => {
 
       <Section dark>
         <div className="flex flex-wrap-reverse items-center">
-          <div className="basis-full pt-8 md:basis-1/2 md:pr-8 md:pt-0">
+          <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pr-8">
             <Maya className="mx-auto h-auto w-full max-w-lg lg:mr-0" />
           </div>
 
@@ -722,7 +722,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
+          className="pointer-events-none absolute -top-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section>
@@ -764,7 +764,7 @@ const AboutAlveusPage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Transparency className="grow" />

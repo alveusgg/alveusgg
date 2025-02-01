@@ -62,11 +62,11 @@ export function VideoItem({
           src={createImageUrl({ src: urlPreview, width: 720 })}
           alt=""
           loading="lazy"
-          className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:shadow-2xl group-hover/trigger:scale-102"
+          className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl"
         />
         <IconYouTube
           size={80}
-          className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition group-hover/trigger:drop-shadow-xl group-hover/trigger:scale-110"
+          className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
         />
       </div>
     );

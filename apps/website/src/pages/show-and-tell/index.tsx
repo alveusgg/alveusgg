@@ -396,7 +396,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         className="py-0"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="w-full pb-4 pt-8 md:w-3/5 md:py-20">
+        <div className="w-full pt-8 pb-4 md:w-3/5 md:py-20">
           <Heading>Show and Tell</Heading>
           <p className="text-lg">
             The community shares conservation and wildlife-related activities.
@@ -418,7 +418,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
       </Section>
 
       <Section className="py-6 md:py-12">
-        <div className="grid w-full grid-cols-4 grid-rows-3-auto gap-4 md:grid-cols-6 md:grid-rows-2-auto">
+        <div className="grid w-full grid-cols-4 grid-rows-auto-3 gap-4 md:grid-cols-6 md:grid-rows-auto-2">
           <Box
             className={classes(
               bentoBoxClasses,
@@ -507,7 +507,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           className={
             "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? "fixed inset-0 z-[100] gap-5 overflow-y-auto overflow-x-hidden bg-black p-5"
+              ? "fixed inset-0 z-[100] gap-5 overflow-x-hidden overflow-y-auto bg-black p-5"
               : "gap-20 bg-white/0")
           }
           onKeyDown={handleArrowKeys}
@@ -548,7 +548,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
               {/* 6em come from 100vh-6em on each article, 1.25rem from the gap-5 on the container */}
               {hasPrevEntry && (
                 <button
-                  className="group fixed left-5 top-0 z-20 h-[calc(6em/2)] w-[calc(80%-2em)]"
+                  className="group fixed top-0 left-5 z-20 h-[calc(6em/2)] w-[calc(80%-2em)]"
                   type="button"
                   onClick={scrollToPrev}
                 >
@@ -568,7 +568,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 </button>
               )}
 
-              <div className="fixed right-[20px] top-[20px] z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
+              <div className="fixed top-[20px] right-[20px] z-20 ml-auto flex w-[calc(20%-2em)] flex-col items-center gap-4 text-alveus-green">
                 <div className="flex flex-row items-center gap-1">
                   <Heading level={1} className="pt-3">
                     Show and Tell
@@ -590,7 +590,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             </>
           )}
 
-          <div className="sticky bottom-[20px] right-[20px] z-20 ml-auto flex w-fit select-none flex-col gap-2">
+          <div className="sticky right-[20px] bottom-[20px] z-20 ml-auto flex w-fit flex-col gap-2 select-none">
             {isPresentationView && currentPostAuthor && (
               <p className="max-w-40 text-lg text-alveus-green-300">
                 by {currentPostAuthor}

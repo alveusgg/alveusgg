@@ -48,7 +48,7 @@ export const Navbar = () => {
             <div className="flex items-center lg:hidden">
               <NotificationsButton className="rounded-lg p-4" />
 
-              <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-gray-200 hover:bg-gray-900 hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500">
+              <DisclosureButton className="inline-flex items-center justify-center rounded-md p-2 text-gray-200 hover:bg-gray-900 hover:text-white focus:ring-2 focus:ring-blue-500 focus:outline-hidden focus:ring-inset">
                 <span className="sr-only">
                   {open ? "Close main menu" : "Open main menu"}
                 </span>

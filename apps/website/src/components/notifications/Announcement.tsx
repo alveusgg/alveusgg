@@ -120,7 +120,7 @@ export function Announcement({ notification }: { notification: Notification }) {
         </div>
 
         {notification.imageUrl && (
-          <div className="my-2 h-auto max-w-full self-start overflow-hidden rounded">
+          <div className="my-2 h-auto max-w-full self-start overflow-hidden rounded-sm">
             <Image
               src={notification.imageUrl}
               className="w-full"
