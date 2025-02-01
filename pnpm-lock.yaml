@@ -87,8 +87,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: 0.53.0
-        version: 0.53.0(tailwindcss@4.0.6)(zod@3.24.2)
+        specifier: 0.54.0-0-pre.cb006ace0c44e1472d719ac2b39526e2a068e948
+        version: 0.54.0-0-pre.cb006ace0c44e1472d719ac2b39526e2a068e948(tailwindcss@4.0.6)(zod@3.24.2)
       '@aws-sdk/client-s3':
         specifier: ^3.744.0
         version: 3.744.0
@@ -400,14 +400,11 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.53.0':
-    resolution: {integrity: sha512-wsCVKl41bwwgBugGvcu2pcLcrZ3wDJ5EfuFAj17uQKndAVUqD8Rxp4lXdh2/77hch9T/Wmk3jEnn7f5gAT6YnQ==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.53.0/f672c35818c7abc6199ee6888dc04bdb4e3c2ca1}
+  '@alveusgg/data@0.54.0-0-pre.cb006ace0c44e1472d719ac2b39526e2a068e948':
+    resolution: {integrity: sha512-1oO2PkWmMpKWfoP4R/BPvloNFgNqACTbVBiQRFIxZWi8aN3fYwhqJEdYUrS8CQ3yP2Lmyth2fP/A/LiW8xw11w==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.54.0-0-pre.cb006ace0c44e1472d719ac2b39526e2a068e948/679e1ebcd1603900ba27fb0c1308b4445eb235cd}
     peerDependencies:
-      tailwindcss: ^3.0.0
+      tailwindcss: ^4.0.0
       zod: ^3.0.0
-    peerDependenciesMeta:
-      tailwindcss:
-        optional: true
 
   '@asamuzakjp/css-color@2.8.2':
     resolution: {integrity: sha512-RtWv9jFN2/bLExuZgFFZ0I3pWWeezAHGgrmjqGGWclATl1aDe3yhCUaI0Ilkp6OCk9zX7+FjvDasEX8Q9Rxc5w==}
@@ -6397,11 +6394,10 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.53.0(tailwindcss@4.0.6)(zod@3.24.2)':
+  '@alveusgg/data@0.54.0-0-pre.cb006ace0c44e1472d719ac2b39526e2a068e948(tailwindcss@4.0.6)(zod@3.24.2)':
     dependencies:
-      zod: 3.24.2
-    optionalDependencies:
       tailwindcss: 4.0.6
+      zod: 3.24.2
 
   '@asamuzakjp/css-color@2.8.2':
     dependencies:
