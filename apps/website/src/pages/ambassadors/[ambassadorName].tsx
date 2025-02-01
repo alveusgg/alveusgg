@@ -328,7 +328,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     alt={`${ambassador.name} Plush`}
                     className="h-auto w-full max-w-lg rounded-2xl bg-alveus-tan shadow-xl transition group-hover:shadow-2xl group-hover:scale-102"
                   />
-                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition group-hover:opacity-100 group-hover:backdrop-blur-sm group-hover:scale-102">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 rounded-2xl bg-alveus-tan/75 font-bold text-alveus-green-800 opacity-0 transition group-hover:opacity-100 group-hover:backdrop-blur-xs group-hover:scale-102">
                     <p className="text-3xl">Coming Soon</p>
                     <p className="text-2xl">{ambassador.plush.soon}</p>
                   </div>
