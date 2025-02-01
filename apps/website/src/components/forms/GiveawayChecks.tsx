@@ -80,7 +80,7 @@ const GiveawayCheck = ({
   }, []);
 
   const containerClasses =
-    "flex flex-row rounded border border-gray-200 bg-white shadow-xl";
+    "flex flex-row rounded-sm border border-gray-200 bg-white shadow-xl";
 
   // If we have a link, and the user hasn't clicked yet, then the whole container should be a link
   if (hasLink && !isClicked) {
