@@ -61,7 +61,7 @@ export function NotificationSettings() {
 
   return (
     <div className="flex flex-col">
-      <p className="px-7 pb-2 pt-4 leading-tight">Notification settings</p>
+      <p className="px-7 pt-4 pb-2 leading-tight">Notification settings</p>
 
       {isInstallAsPWARequired && (
         <div className="min-w-[300px] px-7 pb-4">

@@ -184,20 +184,20 @@ export function ShowAndTellGallery({
           data-pswp-height={
             imageAttachment.fileStorageObject?.imageMetadata?.height || 1080
           }
-          className="flex select-none items-center justify-center"
+          className="flex items-center justify-center select-none"
         >
-          <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl transition hover:shadow-2xl hover:scale-102">
+          <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl transition hover:scale-102 hover:shadow-2xl">
             <Image
               width={600}
               height={600}
               draggable={false}
-              className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto select-none object-cover"
+              className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto object-cover select-none"
               src={imageAttachment.url}
               alt={imageAttachment.alternativeText}
             />
             {imageAttachment.caption && (
               <>
-                <div className="absolute bottom-0 right-0 m-2 flex flex-row items-center gap-1 opacity-100 drop-shadow-lg transition-opacity duration-200 group-hover/carousel-item:opacity-0">
+                <div className="absolute right-0 bottom-0 m-2 flex flex-row items-center gap-1 opacity-100 drop-shadow-lg transition-opacity duration-200 group-hover/carousel-item:opacity-0">
                   caption <IconInformationCircle className="size-5" />
                 </div>
                 <figcaption className="absolute inset-0 top-auto flex items-center justify-center bg-black/80 p-2 leading-tight opacity-0 transition-opacity duration-200 group-hover/carousel-item:opacity-100">
@@ -266,7 +266,7 @@ export function ShowAndTellGallery({
               openLightBox(countItemsInPhotoswipe + idx);
             }}
             href={imageAttachment.url}
-            className="group relative flex select-none items-center justify-center"
+            className="group relative flex items-center justify-center select-none"
           >
             <Image
               loading="lazy"

@@ -178,7 +178,7 @@ const VotePage: NextPage = () => {
         className="py-8"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="flex basis-full flex-col gap-4 pb-16 pt-4 xl:basis-1/2 xl:py-24">
+        <div className="flex basis-full flex-col gap-4 pt-4 pb-16 xl:basis-1/2 xl:py-24">
           <Heading className="my-0">Voters&apos; Guide</Heading>
 
           <p className="text-lg">
@@ -198,7 +198,7 @@ const VotePage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute -top-20 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section>
@@ -206,7 +206,7 @@ const VotePage: NextPage = () => {
             Get Ready to Vote
           </Heading>
 
-          <div className="mb-6 mt-4 text-alveus-green-600">
+          <div className="mt-4 mb-6 text-alveus-green-600">
             <p>
               If you&apos;re in the United States, use the tools below to ensure
               you&apos;re prepared to vote in the next election.
@@ -224,7 +224,7 @@ const VotePage: NextPage = () => {
                 <Disclosure key={key}>
                   {({ open }) => (
                     <>
-                      <DisclosureButton className="mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
+                      <DisclosureButton className="mt-4 mb-2 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200">
                         <div className="flex grow flex-wrap items-baseline gap-x-4">
                           <Link
                             href={link}
@@ -265,7 +265,7 @@ const VotePage: NextPage = () => {
                   href={link}
                   external
                   custom
-                  className="group mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200"
+                  className="group mt-4 mb-2 flex w-full items-center gap-2 rounded-xl bg-alveus-green-100 px-4 py-2 text-start text-alveus-green-800 transition-colors hover:bg-alveus-green-200"
                 >
                   <div className="flex grow flex-wrap items-baseline gap-x-4">
                     <Heading
@@ -292,7 +292,7 @@ const VotePage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block"
         />
 
         <Section dark>
@@ -401,7 +401,7 @@ const VotePage: NextPage = () => {
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-24 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="grow bg-alveus-green-900">

@@ -168,7 +168,7 @@ const AnimalQuestItems = ({
                   <Image
                     src={img.src}
                     alt={img.alt}
-                    className="absolute -bottom-2 -right-2 hidden size-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
+                    className="absolute -right-2 -bottom-2 hidden size-12 rounded-full object-cover shadow-[-10px_-10px_25px_-10px_rgba(0,0,0,0.5)] min-[430px]:block md:size-16"
                     width={256}
                     style={{ objectPosition: img.position }}
                   />
@@ -282,7 +282,7 @@ const AnimalQuestPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto w-1/2 max-w-36 select-none drop-shadow-md rotate-[20deg] -scale-y-100 lg:block"
+          className="pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto w-1/2 max-w-36 -scale-y-100 rotate-[20deg] drop-shadow-md select-none lg:block"
         />
 
         <Section
@@ -290,7 +290,7 @@ const AnimalQuestPage: NextPage = () => {
           className="py-0"
           containerClassName="flex flex-wrap-reverse items-center justify-between"
         >
-          <div className="w-full pb-16 pt-4 md:w-3/5 md:py-24">
+          <div className="w-full pt-4 pb-16 md:w-3/5 md:py-24">
             <Heading>Animal Quest</Heading>
             <p className="text-lg">
               Learn about the ambassadors at Alveus through Animal Quest, a
@@ -318,12 +318,12 @@ const AnimalQuestPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow pt-8">

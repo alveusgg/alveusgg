@@ -144,7 +144,7 @@ const Header = ({
               className={classes(
                 "inline-flex items-center gap-1 text-green-700",
                 isPresentationView
-                  ? "group text-nowrap rounded-full bg-blue-900/95 p-1 text-3xl shadow-lg transition-all hover:bg-blue-900 hover:text-green-600 hover:scale-102 focus:bg-blue-900 focus:text-green-600"
+                  ? "group rounded-full bg-blue-900/95 p-1 text-3xl text-nowrap shadow-lg transition-all hover:scale-102 hover:bg-blue-900 hover:text-green-600 focus:bg-blue-900 focus:text-green-600"
                   : "hover:underline focus:underline",
               )}
               target="_blank"
@@ -209,7 +209,7 @@ const Content = ({
           }`}
         >
           {hasContent && (
-            <div className="alveus-ugc max-w-[1100px] hyphens-auto leading-relaxed md:text-lg xl:text-2xl">
+            <div className="alveus-ugc max-w-[1100px] leading-relaxed hyphens-auto md:text-lg xl:text-2xl">
               <ErrorBoundary
                 FallbackComponent={Empty}
                 onError={(err) =>
@@ -226,7 +226,7 @@ const Content = ({
 
           {hasNote && (
             <div className="opacity-75">
-              <h3 className="-mb-4 mt-4 text-xs font-bold uppercase text-alveus-green-600 xl:text-sm">
+              <h3 className="mt-4 -mb-4 text-xs font-bold text-alveus-green-600 uppercase xl:text-sm">
                 Mod Note
               </h3>
 
@@ -312,7 +312,7 @@ export const ShowAndTellEntry = ({
             width={1920}
             height={1080}
             draggable={false}
-            className="pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)] select-none object-cover opacity-30 blur-md"
+            className="pointer-events-none absolute inset-0 -m-2 size-[calc(100%+4em)] object-cover opacity-30 blur-md select-none"
             src={featuredImage.url}
             alt=""
           />
@@ -321,7 +321,7 @@ export const ShowAndTellEntry = ({
       <div
         className={`z-10 flex flex-col gap-4 p-4 ${
           isPresentationView
-            ? "scrollbar-none absolute inset-0 flex-1 overflow-hidden overflow-y-scroll"
+            ? "absolute inset-0 scrollbar-none flex-1 overflow-hidden overflow-y-scroll"
             : ""
         }`}
       >

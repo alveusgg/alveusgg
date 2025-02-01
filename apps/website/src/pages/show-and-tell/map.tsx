@@ -79,7 +79,7 @@ const ShowAndTellMapPage: NextPage<ShowAndTellPageProps> = ({
         className="py-0"
         containerClassName="flex flex-wrap items-center justify-between"
       >
-        <div className="w-full pb-4 pt-8 md:w-3/5 md:py-20">
+        <div className="w-full pt-8 pb-4 md:w-3/5 md:py-20">
           <Heading>Show and Tell: Community Map</Heading>
           <p className="text-lg">
             The community shares conservation and wildlife-related activities.
