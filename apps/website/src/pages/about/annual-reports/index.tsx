@@ -51,7 +51,7 @@ const AnnualReportsPage: NextPage = () => {
               </Heading>
               <IconChevronRight
                 size={24}
-                className="-mr-1 ml-2 mt-1 shrink-0 transition-all group-hover:-mr-2 group-hover:ml-3"
+                className="mt-1 -mr-1 ml-2 shrink-0 transition-all group-hover:-mr-2 group-hover:ml-3"
               />
             </Button>
           ))}

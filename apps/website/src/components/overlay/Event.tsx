@@ -67,7 +67,7 @@ const Event = ({ className }: { className?: string }) => {
         <div
           className={classes(
             className,
-            "text-stroke font-bold text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
+            "font-bold text-white transition-opacity text-stroke data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
           )}
         >
           <p>Upcoming:</p>
@@ -107,7 +107,7 @@ const Event = ({ className }: { className?: string }) => {
             className="h-16 w-auto opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
           />
 
-          <div className="text-stroke text-xl font-bold text-white">
+          <div className="text-xl font-bold text-white text-stroke">
             <p>alveussanctuary.org</p>
             <p>@alveussanctuary</p>
           </div>
