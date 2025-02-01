@@ -80,7 +80,7 @@ const Cover = ({
 }) => (
   <div
     className={classes(
-      "relative aspect-book h-auto w-full rounded-l rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
+      "relative aspect-2/3 h-auto w-full rounded-l rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
       className,
     )}
   >
@@ -131,8 +131,8 @@ const Book = ({
   <Disclosure as="div" className={className}>
     {({ open }) => (
       <>
-        <DisclosureButton className="group overflow-visible text-start perspective-500 focus:outline-none">
-          <div className="origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
+        <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-none">
+          <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale-3d group-data-[open]:scale-70">
             <Cover
               title={title}
               author={author}
