@@ -16,7 +16,7 @@ COPY ./apps/chatbot/package.json .
 COPY ./apps/chatbot/.env .
 
 ## Install dependencies
-RUN npm install -g corepack@latest && corepack enable
+RUN npm install -g corepack@latest && corepack enable && corepack install
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --filter "." --ignore-scripts
 
 ## Copy code
