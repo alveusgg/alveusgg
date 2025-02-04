@@ -19,6 +19,7 @@ import TransitionHeight from "@/components/content/TransitionHeight";
 import bookClubLogo from "@/assets/book-club/logo.png";
 import bookClubFull from "@/assets/book-club/full.png";
 
+import aMostRemarkableCreature from "@/assets/books/a-most-remarkable-creature.jpg";
 import hIsForHawk from "@/assets/books/h-is-for-hawk.jpg";
 
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -45,12 +46,21 @@ type BookInfo = {
 
 const books: BookInfo[] = [
   {
+    title: "A Most Remarkable Creature",
+    author: "Jonathan Meiburg",
+    image: aMostRemarkableCreature,
+    month: "2025-02",
+    link: "https://amzn.to/410hD8x",
+    thickness: thickness.lg,
+    color: "border-alveus-tan-200/75",
+  },
+  {
     title: "H is for Hawk",
     author: "Helen Macdonald",
     image: hIsForHawk,
     month: "2025-01",
     link: "https://amzn.to/4a2ByGQ",
-    thickness: thickness.md,
+    thickness: thickness.sm,
     color: "border-black",
   },
 ];
