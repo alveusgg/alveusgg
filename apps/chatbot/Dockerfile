@@ -1,7 +1,6 @@
 FROM node:22-alpine
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
 WORKDIR /app
 
 ## Copy root files
@@ -15,6 +14,9 @@ WORKDIR apps/chatbot
 COPY ./apps/chatbot/tsconfig.json .
 COPY ./apps/chatbot/package.json .
 COPY ./apps/chatbot/.env .
+
+## Install dependencies
+RUN npm install -g corepack@latest && corepack enable && corepack install
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile --filter "." --ignore-scripts
 
 ## Copy code
