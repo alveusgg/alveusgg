@@ -1,5 +1,12 @@
-import { type FormEvent, useCallback, useMemo, useState } from "react";
+import type {
+  MouseEvent,
+  type FormEvent,
+  useCallback,
+  useMemo,
+  useState
+} from "react";
 import { useRouter } from "next/router";
+import Image from "next/image";
 import type { ShowAndTellEntry } from "@prisma/client";
 
 import type {
@@ -47,6 +54,7 @@ import {
 import Link from "../content/Link";
 import type { MapLocation } from "../shared/form/MapPickerField";
 import { MapPickerField } from "../shared/form/MapPickerField";
+import { ModalDialog } from "../shared/ModalDialog";
 import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {
@@ -132,6 +140,17 @@ export function ShowAndTellEntryForm({
     },
     [],
   );
+
+  const [imageModalIsOpen, setImageModalIsOpen] = useState(false);
+  const [modalImageUrl, setModalImageUrl] = useState<string | null>(null);
+
+  const closeImageModal = () => {
+    setImageModalIsOpen(false);
+  };
+  const openImageModal = (url: string) => {
+    setModalImageUrl(url);
+    setImageModalIsOpen(true);
+  };
 
   const imageAttachmentsData = useUploadAttachmentsData(
     useMemo(
@@ -414,10 +433,30 @@ export function ShowAndTellEntryForm({
                       )?.imageAttachment
                     : undefined;
 
+                const handleImageClick = (e: MouseEvent<HTMLAnchorElement>) => {
+                  if (
+                    e.button !== 0 ||
+                    e.ctrlKey ||
+                    e.shiftKey ||
+                    e.altKey ||
+                    e.metaKey
+                  ) {
+                    return;
+                  }
+                  if (
+                    fileReference.status === "upload.done" ||
+                    fileReference.status === "saved"
+                  ) {
+                    e.preventDefault();
+                    openImageModal(fileReference.url);
+                  }
+                };
+
                 return (
                   <ImageUploadAttachment
                     {...props}
                     fileReference={fileReference}
+                    onClick={handleImageClick}
                   >
                     <div className="flex flex-col gap-3">
                       <TextAreaField
@@ -531,6 +570,26 @@ export function ShowAndTellEntryForm({
           )}
         </Button>
       </div>
+
+      <ModalDialog
+        title="Image Preview"
+        isOpen={imageModalIsOpen}
+        closeModal={closeImageModal}
+        closeLabel="Close"
+        panelClassName="max-w-4xl"
+      >
+        {modalImageUrl ? (
+          <Image
+            src={modalImageUrl}
+            alt="Uploaded image"
+            width={896}
+            height={896}
+            className="object-contain"
+          />
+        ) : (
+          <p>Image upload is still in progress.</p>
+        )}
+      </ModalDialog>
     </form>
   );
 }
