@@ -147,8 +147,8 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1(next@15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
       '@vercel/functions':
-        specifier: ^1.6.0
-        version: 1.6.0(@aws-sdk/credential-provider-web-identity@3.734.0)
+        specifier: ^2.0.0
+        version: 2.0.0(@aws-sdk/credential-provider-web-identity@3.734.0)
       country-list:
         specifier: ^2.3.0
         version: 2.3.0
@@ -338,7 +338,7 @@ importers:
         version: 3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3))(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@1.21.6))
       eslint-plugin-import:
         specifier: ^2.31.0
-        version: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6))
+        version: 2.31.0(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6))
       eslint-plugin-import-x:
         specifier: ^4.6.1
         version: 4.6.1(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3)
@@ -2869,9 +2869,9 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@1.6.0':
-    resolution: {integrity: sha512-R6FKQrYT5MZs5IE1SqeCJWxMuBdHawFcCZboKKw8p7s+6/mcd55Gx6tWmyKnQTyrSEA04NH73Tc9CbqpEle8RA==}
-    engines: {node: '>= 16'}
+  '@vercel/functions@2.0.0':
+    resolution: {integrity: sha512-BSwIihLHoV18gerKZJyGuqd3rtaYM6rJvET1kOwKktshucyaHXTJel7Cxegs+sdX0NZqsX4LO2MFnMU2jG01Cw==}
+    engines: {node: '>= 18'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
     peerDependenciesMeta:
@@ -9527,7 +9527,7 @@ snapshots:
       next: 15.1.6(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react: 19.0.0
 
-  '@vercel/functions@1.6.0(@aws-sdk/credential-provider-web-identity@3.734.0)':
+  '@vercel/functions@2.0.0(@aws-sdk/credential-provider-web-identity@3.734.0)':
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.734.0
 
@@ -10461,16 +10461,15 @@ snapshots:
       is-glob: 4.0.3
       stable-hash: 0.0.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6))
+      eslint-plugin-import: 2.31.0(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6))
       eslint-plugin-import-x: 4.6.1(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6)):
+  eslint-module-utils@2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
-      '@typescript-eslint/parser': 8.22.0(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3)
       eslint: 9.19.0(jiti@1.21.6)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 3.7.0(eslint-plugin-import-x@4.6.1(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3))(eslint-plugin-import@2.31.0)(eslint@9.19.0(jiti@1.21.6))
@@ -10497,7 +10496,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6)):
+  eslint-plugin-import@2.31.0(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -10508,7 +10507,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.19.0(jiti@1.21.6)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.22.0(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6))
+      eslint-module-utils: 2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@3.7.0)(eslint@9.19.0(jiti@1.21.6))
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -10519,8 +10518,6 @@ snapshots:
       semver: 6.3.1
       string.prototype.trimend: 1.0.8
       tsconfig-paths: 3.15.0
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.22.0(eslint@9.19.0(jiti@1.21.6))(typescript@5.7.3)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
