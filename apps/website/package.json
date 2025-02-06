@@ -54,7 +54,7 @@
     "@trpc/react-query": "11.0.0-rc.730",
     "@trpc/server": "11.0.0-rc.730",
     "@vercel/analytics": "^1.4.1",
-    "@vercel/functions": "^1.6.0",
+    "@vercel/functions": "^2.0.0",
     "country-list": "^2.3.0",
     "csv-stringify": "^6.5.2",
     "dagre": "^0.8.5",
