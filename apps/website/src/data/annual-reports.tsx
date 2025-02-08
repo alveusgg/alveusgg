@@ -7,6 +7,28 @@ import report2021Image from "@/assets/reports/2021.svg";
 import report2022Image from "@/assets/reports/2022.svg";
 import report2023Image from "@/assets/reports/2023.svg";
 
+export type Filing = {
+  year: number;
+  link: string;
+};
+
+export const filings = (
+  [
+    {
+      year: 2021,
+      link: "/site.webmanifest", // TODO: Real file
+    },
+    {
+      year: 2022,
+      link: "/site.webmanifest", // TODO: Real file
+    },
+    {
+      year: 2023,
+      link: "/site.webmanifest", // TODO: Real file
+    },
+  ] as const satisfies Filing[]
+).toSorted((a, b) => b.year - a.year);
+
 export type Report = {
   year: number;
   image: ImageProps["src"];
