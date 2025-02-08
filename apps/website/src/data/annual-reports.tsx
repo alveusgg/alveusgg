@@ -762,7 +762,9 @@ const reports = [
   },
 ] as const satisfies Report[];
 
-export const reportYears = reports.map((report) => report.year);
+export const reportYears = reports
+  .map((report) => report.year)
+  .toSorted((a, b) => b - a);
 
 export type ReportYear = (typeof reportYears)[number];
 

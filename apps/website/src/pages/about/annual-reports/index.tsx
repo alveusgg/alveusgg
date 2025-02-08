@@ -21,16 +21,20 @@ const AnnualReportsPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark>
-        <Heading>Annual Reports</Heading>
-        <p>
-          Read through the reports published each year on the current status of
-          Alveus and its mission.
-        </p>
+      <Section dark className="py-8">
+        <Heading className="text-center">Annual Reports</Heading>
       </Section>
 
-      <Section>
-        <div className="mx-auto flex flex-wrap justify-evenly gap-8 p-4">
+      <Section containerClassName="flex flex-col md:flex-row gap-8">
+        <div className="text-balance md:basis-1/2">
+          <p className="text-lg text-alveus-green-900">
+            Each year we publish a report that covers key stats on the growth
+            and current status of Alveus, the impact we&apos;ve made toward our
+            continued mission, and an in-depth breakdown of the financials
+            behind the sanctuary.
+          </p>
+        </div>
+        <div className="flex flex-col items-start gap-4 md:basis-1/2">
           {reportYears.map((year) => (
             <Button
               key={year}
