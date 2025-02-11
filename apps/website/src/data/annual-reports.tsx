@@ -18,7 +18,7 @@ export type Report = {
   filing: string;
 };
 
-export const reports = [
+const reports = [
   {
     year: 2021,
     image: report2021Image,
