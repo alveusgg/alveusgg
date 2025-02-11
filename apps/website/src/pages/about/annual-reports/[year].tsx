@@ -15,6 +15,8 @@ import Button from "@/components/content/Button";
 import Meta from "@/components/content/Meta";
 import Transparency from "@/components/content/Transparency";
 
+import IconDownload from "@/icons/IconDownload";
+
 type AboutAnnualReportYearPageProps = {
   year: ReportYear;
 };
@@ -51,7 +53,7 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
     <>
       <Meta
         title={`${report.year} | Annual Reports`}
-        description={`Read through the ${report.year} Annual Report published by Alveus.`}
+        description={`Read through the ${report.year} Annual Report published by Alveus Sanctuary.`}
       />
 
       {/* Nav background */}
@@ -67,7 +69,7 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
         </Button>
       </Section>
 
-      <Section>
+      <Section containerClassName="space-y-16">
         <Image
           src={report.image}
           quality={100}
@@ -78,6 +80,17 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
 
         <div className="sr-only space-y-8" id="report">
           {report.alt}
+        </div>
+
+        <div className="scroll-mt-8 text-center" id="990">
+          <Button
+            href={report.filing}
+            download={`alveus-sanctuary-990-${report.year}.pdf`}
+            external
+            className="inline-flex items-center gap-1 py-2 pr-4 text-base"
+          >
+            Download {report.year} 990 Filing <IconDownload size={20} />
+          </Button>
         </div>
       </Section>
 
