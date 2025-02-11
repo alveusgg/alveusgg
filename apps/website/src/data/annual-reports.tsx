@@ -11,35 +11,14 @@ import report2021Image from "@/assets/reports/2021.svg";
 import report2022Image from "@/assets/reports/2022.svg";
 import report2023Image from "@/assets/reports/2023.svg";
 
-export type Filing = {
-  year: number;
-  link: string;
-};
-
-export const filings = (
-  [
-    {
-      year: 2021,
-      link: filing2021Pdf,
-    },
-    {
-      year: 2022,
-      link: filing2022Pdf,
-    },
-    {
-      year: 2023,
-      link: filing2023Pdf,
-    },
-  ] as const satisfies Filing[]
-).toSorted((a, b) => b.year - a.year);
-
 export type Report = {
   year: number;
   image: ImageProps["src"];
   alt: ReactNode;
+  filing: string;
 };
 
-const reports = [
+export const reports = [
   {
     year: 2021,
     image: report2021Image,
@@ -209,6 +188,7 @@ const reports = [
         </div>
       </>
     ),
+    filing: filing2021Pdf,
   },
   {
     year: 2022,
@@ -556,6 +536,7 @@ const reports = [
         </div>
       </>
     ),
+    filing: filing2022Pdf,
   },
   {
     year: 2023,
@@ -785,6 +766,7 @@ const reports = [
         </div>
       </>
     ),
+    filing: filing2023Pdf,
   },
 ] as const satisfies Report[];
 
