@@ -3,6 +3,10 @@ import { type ImageProps } from "next/image";
 
 import Heading from "@/components/content/Heading";
 
+import filing2021Pdf from "@/assets/filings/990-2021.pdf";
+import filing2022Pdf from "@/assets/filings/990-2022.pdf";
+import filing2023Pdf from "@/assets/filings/990-2023.pdf";
+
 import report2021Image from "@/assets/reports/2021.svg";
 import report2022Image from "@/assets/reports/2022.svg";
 import report2023Image from "@/assets/reports/2023.svg";
@@ -11,6 +15,7 @@ export type Report = {
   year: number;
   image: ImageProps["src"];
   alt: ReactNode;
+  filing: string;
 };
 
 const reports = [
@@ -183,6 +188,7 @@ const reports = [
         </div>
       </>
     ),
+    filing: filing2021Pdf,
   },
   {
     year: 2022,
@@ -530,6 +536,7 @@ const reports = [
         </div>
       </>
     ),
+    filing: filing2022Pdf,
   },
   {
     year: 2023,
@@ -759,10 +766,13 @@ const reports = [
         </div>
       </>
     ),
+    filing: filing2023Pdf,
   },
 ] as const satisfies Report[];
 
-export const reportYears = reports.map((report) => report.year);
+export const reportYears = reports
+  .map((report) => report.year)
+  .toSorted((a, b) => b - a);
 
 export type ReportYear = (typeof reportYears)[number];
 

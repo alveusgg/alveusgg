@@ -26,8 +26,3 @@ declare module "*.mp4?quality=low" {
 declare module "*.webm" {
   export default Video;
 }
-
-declare module "*.md" {
-  const content: string;
-  export default content;
-}

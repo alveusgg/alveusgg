@@ -9,6 +9,7 @@ import Button from "@/components/content/Button";
 import Transparency from "@/components/content/Transparency";
 
 import IconChevronRight from "@/icons/IconChevronRight";
+import { classes } from "@/utils/classes";
 
 const AnnualReportsPage: NextPage = () => {
   return (
@@ -24,14 +25,16 @@ const AnnualReportsPage: NextPage = () => {
       <Section dark>
         <Heading>Annual Reports</Heading>
         <p>
-          Read through the reports published each year on the current status of
-          Alveus and its mission.
+          Each year we publish a report that covers key stats on the growth and
+          current status of Alveus, the impact we&apos;ve made toward our
+          continued mission, and an in-depth breakdown of the financials behind
+          the sanctuary.
         </p>
       </Section>
 
       <Section>
         <div className="mx-auto flex flex-wrap justify-evenly gap-8 p-4">
-          {reportYears.map((year) => (
+          {reportYears.map((year, idx) => (
             <Button
               key={year}
               href={`/about/annual-reports/${year}`}
@@ -39,7 +42,10 @@ const AnnualReportsPage: NextPage = () => {
             >
               <Heading
                 level={2}
-                className="my-0 font-sans text-2xl font-semibold"
+                className={classes(
+                  "my-0 font-sans",
+                  idx === 0 ? "text-2xl font-semibold" : "text-xl font-normal",
+                )}
               >
                 {year} Annual Report
               </Heading>

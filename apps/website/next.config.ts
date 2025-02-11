@@ -422,6 +422,12 @@ const config: NextConfig = {
       type: "asset/source",
     });
 
+    // Load PDF files as URLs
+    config.module.rules.push({
+      test: /\.pdf$/,
+      type: "asset/resource",
+    });
+
     // Disable Webpack caching if not in development
     if (!options.dev && config.cache?.type === "filesystem") {
       config.cache = false;
