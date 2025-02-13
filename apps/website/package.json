@@ -34,7 +34,7 @@
     "format": "prisma format"
   },
   "dependencies": {
-    "@alveusgg/data": "0.52.1",
+    "@alveusgg/data": "0.53.0",
     "@aws-sdk/client-s3": "^3.744.0",
     "@aws-sdk/s3-request-presigner": "^3.744.0",
     "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
