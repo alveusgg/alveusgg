@@ -33,7 +33,7 @@ import IconChevronDown from "@/icons/IconChevronDown";
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
     transition
-    className="group/items absolute right-0 top-full z-30 mt-1 flex min-w-40 flex-col gap-0.5 rounded border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-none data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[closed]:scale-95"
+    className="group/items absolute top-full right-0 z-30 mt-1 flex min-w-40 flex-col gap-0.5 rounded-sm border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-hidden data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
     as="ul"
     modal={false}
     {...props}
@@ -96,7 +96,7 @@ export function DesktopMenu() {
             <Menu as="div" className="relative flex h-full items-center">
               <MenuButton
                 as="button"
-                className="mx-3 cursor-pointer select-none appearance-none rounded-full"
+                className="mx-3 cursor-pointer appearance-none rounded-full select-none"
               >
                 <span className="sr-only">Open user menu</span>
                 <ProfileInfoImage />
@@ -178,7 +178,7 @@ export function DesktopMenu() {
                     {link.title}
                     <IconChevronDown
                       size={16}
-                      className="transition-transform translate-y-0.5 group-data-[active]/button:translate-y-1"
+                      className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
                     />
                   </MenuButton>
 

@@ -80,15 +80,15 @@ const Cover = ({
 }) => (
   <div
     className={classes(
-      "relative aspect-book h-auto w-full rounded-l rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
+      "relative aspect-2/3 h-auto w-full rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
       className,
     )}
   >
     {/* Bookmark (hover) */}
-    <div className="absolute right-3 top-0 z-20 h-16 overflow-hidden drop-shadow-md">
+    <div className="absolute top-0 right-3 z-20 h-16 overflow-hidden drop-shadow-md">
       <div className="relative -top-8 h-0 w-8 bg-alveus-green transition-all group-hover:h-full group-focus:h-full">
         <div className="absolute top-full border-0 border-b-[2rem] border-l-[2rem] border-solid border-y-transparent border-l-alveus-green" />
-        <div className="absolute top-full border-0 border-b-[2rem] border-r-[2rem] border-solid border-y-transparent border-r-alveus-green" />
+        <div className="absolute top-full border-0 border-r-[2rem] border-b-[2rem] border-solid border-y-transparent border-r-alveus-green" />
       </div>
     </div>
 
@@ -102,8 +102,8 @@ const Cover = ({
     <div className="absolute inset-y-0 left-4 w-1.5 bg-gradient-to-r from-white/10 via-white/30 to-white/0" />
 
     {/* Edges */}
-    <div className="absolute left-5 right-0 top-0 h-2 bg-gradient-to-b from-white/20 to-white/0" />
-    <div className="absolute bottom-0 left-5 right-0 h-2 bg-gradient-to-t from-white/20 to-white/0" />
+    <div className="absolute top-0 right-0 left-5 h-2 bg-gradient-to-b from-white/20 to-white/0" />
+    <div className="absolute right-0 bottom-0 left-5 h-2 bg-gradient-to-t from-white/20 to-white/0" />
     <div className="absolute inset-y-0 right-0 w-2 bg-gradient-to-l from-white/20 to-white/0" />
 
     {image && (
@@ -111,7 +111,7 @@ const Cover = ({
         src={image}
         alt={`${title} by ${author}`}
         width={width}
-        className="size-full rounded-l rounded-r-xl object-cover"
+        className="size-full rounded-l-sm rounded-r-xl object-cover"
       />
     )}
   </div>
@@ -131,8 +131,8 @@ const Book = ({
   <Disclosure as="div" className={className}>
     {({ open }) => (
       <>
-        <DisclosureButton className="group overflow-visible text-start perspective-500 focus:outline-none">
-          <div className="origin-[50%_40%] transition-all duration-1000 transform-style-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:rotate-x-[85deg] group-data-[open]:scale3d-[0.70]">
+        <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-hidden">
+          <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:scale-70 group-data-[open]:scale-3d group-data-[open]:rotate-x-[85deg]">
             <Cover
               title={title}
               author={author}
@@ -142,7 +142,7 @@ const Book = ({
             />
             <div
               className={classes(
-                "w-full origin-top rounded-l-xl rounded-r-sm border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 -translate-y-0.5 rotate-x-90 scale-x-95 group-data-[open]:scale-x-100",
+                "w-full origin-top -translate-y-0.5 scale-x-95 rotate-x-90 rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 group-data-[open]:scale-x-100",
                 thickness,
                 color,
               )}
@@ -151,7 +151,7 @@ const Book = ({
 
           <Heading
             level={2}
-            className="relative mb-0 mt-4 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700 group-data-[open]:text-lg"
+            className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
           >
             <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
             {formatPartialDateString(month)}
@@ -198,7 +198,7 @@ const BookClubPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto w-1/2 max-w-36 select-none drop-shadow-md rotate-[20deg] -scale-y-100 lg:block"
+          className="pointer-events-none absolute -bottom-10 left-0 z-30 hidden h-auto w-1/2 max-w-36 -scale-y-100 rotate-[20deg] drop-shadow-md select-none lg:block"
         />
 
         <Section
@@ -206,7 +206,7 @@ const BookClubPage: NextPage = () => {
           className="py-0"
           containerClassName="flex flex-wrap-reverse items-center justify-between"
         >
-          <div className="w-full pb-16 pt-4 md:w-3/5 md:py-24">
+          <div className="w-full pt-4 pb-16 md:w-3/5 md:py-24">
             <Heading>Alveus Book Club</Heading>
             <p className="text-lg">
               Join the staff at Alveus and the community in reading a book
@@ -233,12 +233,12 @@ const BookClubPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-32 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-40"
+          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-32 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-40"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow">
@@ -269,7 +269,7 @@ const BookClubPage: NextPage = () => {
             )}
           </div>
 
-          <p className="mt-16 text-center text-xs italic text-alveus-green">
+          <p className="mt-16 text-center text-xs text-alveus-green italic">
             Amazon.com links provided are affiliate links. Purchases made
             through these links help support Alveus Sanctuary.
           </p>

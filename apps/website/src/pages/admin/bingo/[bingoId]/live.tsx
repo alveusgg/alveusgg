@@ -253,7 +253,7 @@ const AdminEditBingoPage: NextPage<
                       key={index}
                       className={classes(
                         "flex flex-col gap-1",
-                        hasBingo && "rounded bg-red-900 ring-4 ring-red-800",
+                        hasBingo && "rounded-sm bg-red-900 ring-4 ring-red-800",
                       )}
                     >
                       <div className="flex flex-col gap-0.5 text-center">

@@ -68,14 +68,14 @@ export function NotificationSettingsForm({
         "pb-2 transition-opacity " +
         (enableSettings
           ? ""
-          : "pointer-none cursor-default select-none opacity-50")
+          : "pointer-none cursor-default opacity-50 select-none")
       }
     >
       <fieldset className="mx-2 space-y-1">
         <legend className="sr-only">Notifications</legend>
 
         {notificationPermission === "granted" && !isRegistered && (
-          <p className="flex items-center gap-2 p-2 pt-0 italic text-gray-300">
+          <p className="flex items-center gap-2 p-2 pt-0 text-gray-300 italic">
             <IconLoading className="size-4 animate-spin" />
             Setting up notifications…
           </p>

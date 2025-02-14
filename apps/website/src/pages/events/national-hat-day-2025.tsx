@@ -114,7 +114,7 @@ const NationalHatDayPage: NextPage<
           href="https://alveuscommunity.photos/share/DCOfWPj5lfQYQXlwtwSscNT7WQaWwovClFMBxVwkJOgducmv5yEVABTjGq0mfonbYME"
           external
           custom
-          className="group mb-2 mt-4 flex w-full items-center gap-2 rounded-xl bg-gray-700 px-4 py-2 text-start text-white"
+          className="group mt-4 mb-2 flex w-full items-center gap-2 rounded-xl bg-gray-700 px-4 py-2 text-start text-white"
         >
           <div className="flex grow flex-wrap items-baseline gap-x-4">
             See what others have submitted

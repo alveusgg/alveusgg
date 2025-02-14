@@ -107,7 +107,7 @@ export const EntryForm = ({
               <p className="m-2">Check the details you submitted below.</p>
             </MessageBox>
 
-            <Heading level={2} className="mb-6 mt-16 text-2xl">
+            <Heading level={2} className="mt-16 mb-6 text-2xl">
               Your Entry
             </Heading>
 

@@ -3,7 +3,7 @@ import Button from "@/components/content/Button";
 
 export function ShowAndTellNavigation() {
   return (
-    <div className="flex flex-wrap gap-2 whitespace-nowrap text-center lg:flex-col">
+    <div className="flex flex-wrap gap-2 text-center whitespace-nowrap lg:flex-col">
       <Button
         href="/show-and-tell"
         dark

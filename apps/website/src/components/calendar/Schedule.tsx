@@ -107,13 +107,13 @@ export function Schedule() {
                   Add to Google Calendar
                   <IconExternal
                     size="1em"
-                    className="-mb-0.5 ml-1 mr-0.5 inline-block align-baseline"
+                    className="mr-0.5 -mb-0.5 ml-1 inline-block align-baseline"
                   />
                 </Link>
                 <input
                   readOnly={true}
                   type="url"
-                  className="box-content min-w-0 rounded-lg bg-alveus-green-800 p-1 text-center text-sm italic text-alveus-tan outline-none"
+                  className="box-content min-w-0 rounded-lg bg-alveus-green-800 p-1 text-center text-sm text-alveus-tan italic outline-hidden"
                   value={webcalUrls[group]}
                   onClick={(e) =>
                     e.currentTarget.setSelectionRange(
