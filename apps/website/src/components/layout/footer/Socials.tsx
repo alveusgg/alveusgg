@@ -37,7 +37,7 @@ const Socials = () => {
               href="https://www.instagram.com/p/CoIq_hvOxiQ/"
               rel="noreferrer"
               target="_blank"
-              className="absolute left-[8%] top-[5%] aspect-[4/6.8] w-3/5 overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 rotate-[-6.8deg] hover:scale-102"
+              className="absolute top-[5%] left-[8%] aspect-[4/6.8] w-3/5 rotate-[-6.8deg] overflow-hidden rounded-3xl border-[7px] border-white bg-gray-700 shadow-2xl transition-transform duration-150 hover:scale-102"
             >
               <span className="sr-only">
                 Open Instagram post of Georgie, Alveus&apos; African Bullfrog
@@ -65,7 +65,7 @@ const Socials = () => {
                 />
               )}
               <IconInstagram
-                className="absolute right-0 top-0 m-3 opacity-60"
+                className="absolute top-0 right-0 m-3 opacity-60"
                 size={30}
               />
             </Link>
@@ -73,7 +73,7 @@ const Socials = () => {
               href="https://twitter.com/AlveusSanctuary/status/1627138286140461063/"
               rel="noreferrer"
               target="_blank"
-              className="absolute right-[3%] top-[23%] aspect-square w-[45%] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 rotate-[4.26deg] hover:scale-102"
+              className="absolute top-[23%] right-[3%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-102"
             >
               <Image
                 src={pic}
@@ -84,7 +84,7 @@ const Socials = () => {
                 className="absolute inset-0"
               />
               <IconTwitter
-                className="absolute right-0 top-0 m-3 opacity-80"
+                className="absolute top-0 right-0 m-3 opacity-80"
                 size={30}
               />
             </Link>
@@ -94,7 +94,7 @@ const Socials = () => {
         <div className="my-auto basis-full py-4 md:basis-1/2">
           <Heading level={2}>Stay Updated!</Heading>
 
-          <p className="mb-2 mt-4">
+          <p className="mt-4 mb-2">
             follow <span className="font-bold">@alveussanctuary</span> on all
             social platforms!
           </p>
@@ -115,7 +115,7 @@ const Socials = () => {
             ))}
           </ul>
 
-          <p className="mb-2 mt-4">
+          <p className="mt-4 mb-2">
             and keep up-to-date with our announcement channels:
           </p>
 

@@ -265,7 +265,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
                         consent[key as ConsentKey]
                           ? "translate-x-6"
                           : "translate-x-1",
-                        "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow transition-transform",
+                        "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow-sm transition-transform",
                       )}
                     />
                   </div>
@@ -308,7 +308,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
 
       <button
         type="button"
-        className="group fixed bottom-4 left-4 flex size-12 items-center justify-center rounded-full bg-alveus-tan shadow transition-shadow hover:shadow-lg lg:z-50"
+        className="group fixed bottom-4 left-4 flex size-12 items-center justify-center rounded-full bg-alveus-tan shadow-sm transition-shadow hover:shadow-lg lg:z-50"
         onClick={() => setOpen(true)}
         title="Manage consent"
       >

@@ -35,7 +35,7 @@ export function PopoverButton({
           </PopoverButtonHeadless>
 
           <PopoverPanel
-            className="z-20 mt-0.5 rounded bg-gray-800 p-2 text-white shadow-xl"
+            className="z-20 mt-0.5 rounded-sm bg-gray-800 p-2 text-white shadow-xl"
             anchor="bottom end"
             modal={false}
           >

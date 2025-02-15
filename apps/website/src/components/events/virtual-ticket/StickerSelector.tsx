@@ -56,7 +56,7 @@ export function StickerSelector({
                 .map(({ name, disabled, imageId, image }) => (
                   <li key={imageId} className="shrink-0">
                     <button
-                      className="select-none rounded-lg bg-white p-0.5 shadow-lg transition-transform enabled:hover:scale-110 disabled:bg-gray-300"
+                      className="rounded-lg bg-white p-0.5 shadow-lg transition-transform select-none enabled:hover:scale-110 disabled:bg-gray-300"
                       type="button"
                       disabled={disabled}
                       onClick={() => {

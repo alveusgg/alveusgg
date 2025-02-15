@@ -224,7 +224,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               className={`mx-auto aspect-square h-auto w-full max-w-2/3 rounded-2xl object-cover ${ambassadorImageHover}`}
               style={{ objectPosition: images[0].position }}
             />
-            <Heading level={3} className="mb-0 mt-4 text-2xl">
+            <Heading level={3} className="mt-4 mb-0 text-2xl">
               {ambassador.name}
             </Heading>
             <p
@@ -233,7 +233,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                   ? "Featured in this episode"
                   : "Related to this episode"
               }
-              className="text-sm font-bold uppercase text-alveus-green-900"
+              className="text-sm font-bold text-alveus-green-900 uppercase"
             >
               {relation}
             </p>
@@ -324,7 +324,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark>
@@ -441,19 +441,19 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <Image
           src={leafLeftImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-22 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-22 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section>
           {Object.keys(featuredAmbassadors).length > 0 && (
             <>
-              <Heading level={2} className="mb-8 mt-0" id="ambassadors" link>
+              <Heading level={2} className="mt-0 mb-8" id="ambassadors" link>
                 Meet the Ambassadors
               </Heading>
               <Carousel
                 items={featuredAmbassadors}
                 auto={10000}
-                className="mb-16 mt-4"
+                className="mt-4 mb-16"
                 itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-4"
               />
             </>
@@ -479,16 +479,16 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -top-16 right-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute -top-16 right-0 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-56 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute -bottom-56 left-0 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section className="grow">
-          <Heading level={2} className="mb-8 mt-0" id="presentation" link>
+          <Heading level={2} className="mt-0 mb-8" id="presentation" link>
             Episode Presentation
           </Heading>
           <Consent

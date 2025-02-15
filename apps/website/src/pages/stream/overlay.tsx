@@ -25,7 +25,7 @@ const OverlayPage: NextPage = () => {
   return (
     <div className="h-screen w-full">
       {!hide.has("datetime") && (
-        <Datetime className="absolute right-2 top-2 text-right">
+        <Datetime className="absolute top-2 right-2 text-right">
           {!hide.has("weather") && <Weather />}
         </Datetime>
       )}
@@ -33,7 +33,7 @@ const OverlayPage: NextPage = () => {
       {!hide.has("event") && <Event className="absolute bottom-2 left-2" />}
 
       {!hide.has("timecode") && (
-        <Timecode className="absolute bottom-0 right-0" />
+        <Timecode className="absolute right-0 bottom-0" />
       )}
     </div>
   );

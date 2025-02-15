@@ -258,7 +258,7 @@ export function Calendar({
               // Fade these in with a short delay before starting
               // Delay stops a flash of placeholders if we load quickly
               className={classes(
-                "transition-delay-200 mb-auto block animate-pulse rounded-sm bg-gray-400/50 transition-opacity duration-500 data-[closed]:opacity-0",
+                "transition-delay-200 mb-auto block animate-pulse rounded-xs bg-gray-400/50 transition-opacity duration-500 data-[closed]:opacity-0",
                 delay[Math.floor(Math.random() * delay.length)],
                 height[Math.floor(Math.random() * height.length)],
               )}
@@ -348,8 +348,8 @@ export function Calendar({
                 key={i}
                 className={classes(
                   "hidden border px-2 py-1 text-center font-bold uppercase transition-colors md:block",
-                  i === 0 && "rounded-tl",
-                  i === 6 && "rounded-tr",
+                  i === 0 && "rounded-tl-sm",
+                  i === 6 && "rounded-tr-sm",
                   theme.heading,
                   theme.border,
                 )}
@@ -372,10 +372,12 @@ export function Calendar({
                 const firstWk = week === 0;
                 const lastWk = week === weeks - 1;
                 const rounded = classes(
-                  firstWk && date === 1 && "rounded-t md:rounded-none",
-                  lastWk && date === daysInMonth && "rounded-b md:rounded-none",
-                  lastWk && i === 0 && "md:rounded-bl",
-                  lastWk && i === 6 && "md:rounded-br",
+                  firstWk && date === 1 && "rounded-t-sm md:rounded-none",
+                  lastWk &&
+                    date === daysInMonth &&
+                    "rounded-b-sm md:rounded-none",
+                  lastWk && i === 0 && "md:rounded-bl-sm",
+                  lastWk && i === 6 && "md:rounded-br-sm",
                 );
 
                 // Render empty cells for days outside of the month
@@ -422,10 +424,10 @@ export function Calendar({
                       rounded,
                     )}
                   >
-                    <div className="absolute right-0 top-0 mb-auto flex justify-end md:relative">
+                    <div className="absolute top-0 right-0 mb-auto flex justify-end md:relative">
                       <p
                         className={classes(
-                          "flex gap-1 rounded-bl-lg px-1.5 pb-1 pt-1.5 font-mono text-sm leading-none md:-mr-1 md:-mt-1",
+                          "flex gap-1 rounded-bl-lg px-1.5 pt-1.5 pb-1 font-mono text-sm leading-none md:-mt-1 md:-mr-1",
                           isPast && "opacity-50",
                           isToday && theme.heading,
                         )}

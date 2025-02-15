@@ -93,7 +93,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm select-none drop-shadow-md lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
@@ -115,13 +115,13 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-32 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md -scale-x-100 lg:block"
+          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section>
           <Heading
             level={2}
-            className="mb-2 mt-0 scroll-mt-14"
+            className="mt-0 mb-2 scroll-mt-14"
             id="commands"
             link
           >
@@ -258,7 +258,7 @@ const AboutTechPage: NextPage = () => {
                           </dt>
 
                           <dd>
-                            <p className="text-sm italic text-alveus-green-400">
+                            <p className="text-sm text-alveus-green-400 italic">
                               {command.description}
                             </p>
                           </dd>
@@ -276,7 +276,7 @@ const AboutTechPage: NextPage = () => {
       <Section className="bg-alveus-green-100">
         <Heading
           level={2}
-          className="mb-2 mt-0 scroll-mt-14"
+          className="mt-0 mb-2 scroll-mt-14"
           id="fossabot"
           link
         >
@@ -306,13 +306,13 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section className="grow">
           <Heading
             level={2}
-            className="mb-2 mt-0 scroll-mt-14"
+            className="mt-0 mb-2 scroll-mt-14"
             id="presets"
             link
           >
@@ -336,7 +336,7 @@ const AboutTechPage: NextPage = () => {
                       link
                     >
                       {title}
-                      <span className="text-sm italic text-alveus-green-400">
+                      <span className="text-sm text-alveus-green-400 italic">
                         {` (${camera.toLowerCase()})`}
                       </span>
                     </Heading>
@@ -363,7 +363,7 @@ const AboutTechPage: NextPage = () => {
                           </dt>
 
                           <dd>
-                            <p className="text-sm italic text-alveus-green-400">
+                            <p className="text-sm text-alveus-green-400 italic">
                               {preset.description}
                             </p>
                           </dd>

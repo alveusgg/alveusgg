@@ -39,7 +39,7 @@ const merch = Object.entries({
           alt={alt}
           draggable={false}
           width={200}
-          className="h-auto w-full drop-shadow"
+          className="h-auto w-full drop-shadow-sm"
         />
       </div>
     ),

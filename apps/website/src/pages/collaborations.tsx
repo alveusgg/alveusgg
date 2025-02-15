@@ -97,7 +97,7 @@ const Creators = ({ className }: { className?: string }) => {
     <div className={classes("flex justify-center", className)}>
       <div className="relative isolate max-w-full">
         <ul
-          className="scrollbar-none group/creators flex max-w-full cursor-grab flex-row gap-y-4 overflow-x-auto pb-2 pl-12 pr-8 pt-6"
+          className="group/creators scrollbar-none flex max-w-full cursor-grab flex-row gap-y-4 overflow-x-auto pt-6 pr-8 pb-2 pl-12"
           onMouseDown={drag}
           onScroll={onScroll}
           ref={ref}
@@ -111,7 +111,7 @@ const Creators = ({ className }: { className?: string }) => {
                 href={`#${slug}`}
                 title={name}
                 custom
-                className="group/creator -ml-6 block cursor-pointer select-none rounded-full transition-all duration-75 hover:-mt-4 hover:px-4 hover:pb-4 hover:scale-105"
+                className="group/creator -ml-6 block cursor-pointer rounded-full transition-all duration-75 select-none hover:-mt-4 hover:scale-105 hover:px-4 hover:pb-4"
                 onClick={(e) => {
                   e.preventDefault();
                   history.pushState(null, "", `#${slug}`);
@@ -166,12 +166,12 @@ const Creators = ({ className }: { className?: string }) => {
                   });
                 }}
               >
-                <div className="size-3 rounded-full bg-alveus-green-300 shadow-sm" />
+                <div className="size-3 rounded-full bg-alveus-green-300 shadow-xs" />
               </button>
             ))}
 
             <div
-              className="pointer-events-none absolute inset-y-0 z-10 m-1 h-3 rounded-full bg-alveus-green-900 shadow-sm transition-[left]"
+              className="pointer-events-none absolute inset-y-0 z-10 m-1 h-3 rounded-full bg-alveus-green-900 shadow-xs transition-[left]"
               style={{
                 left: `calc((0.75rem * ${bar.start}) + (0.5rem * ${bar.start}))`,
                 width: `calc((0.75rem * ${bar.width}) + (0.5rem * (${bar.width} - 1)))`,
@@ -224,7 +224,7 @@ const CollaborationItems = ({
         <Heading
           level={-1}
           className={classes(
-            "mb-6 mt-8 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
+            "mt-8 mb-6 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
             index === 0 && "sr-only-linkable",
           )}
           id={`${option}:${group}`}
@@ -336,19 +336,19 @@ const CollaborationsPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-16 right-0 z-30 hidden h-auto w-1/2 max-w-48 select-none -scale-x-100 lg:block"
+          className="pointer-events-none absolute right-0 -bottom-16 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
-        <Section dark className="pb-12 pt-24">
+        <Section dark className="pt-24 pb-12">
           <div className="w-full lg:w-4/5">
             <Heading>Our Collaborations</Heading>
-            <p className="text-balance text-lg">
+            <p className="text-lg text-balance">
               We work with other content creators to educate our combined
               audiences, introducing them to the educational ambassadors at
               Alveus and their conservation missions.
             </p>
 
-            <p className="mt-2 text-balance text-lg">
+            <p className="mt-2 text-lg text-balance">
               We&apos;ve hosted{" "}
               <abbr
                 title={`Across ${collaborations.length.toLocaleString()} collaboration streams`}
@@ -376,7 +376,7 @@ const CollaborationsPage: NextPage = () => {
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -bottom-60 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
+          className="pointer-events-none absolute right-0 -bottom-60 z-10 hidden h-auto w-1/2 max-w-40 select-none lg:block 2xl:-bottom-64 2xl:max-w-48"
         />
 
         <Section className="grow">

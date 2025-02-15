@@ -145,7 +145,7 @@ const AdminUsersPage: NextPage<
                         <td className={cellClasses}>
                           <ul className="flex flex-row gap-2">
                             {user.isSuperUser && (
-                              <li className="flex flex-row rounded bg-red-800 text-sm text-white">
+                              <li className="flex flex-row rounded-sm bg-red-800 text-sm text-white">
                                 <span className="px-2 py-0.5">Super User</span>
                               </li>
                             )}
@@ -155,7 +155,7 @@ const AdminUsersPage: NextPage<
                               .map(({ role }) => (
                                 <li
                                   key={role}
-                                  className="flex flex-row rounded bg-gray-800 text-sm text-white"
+                                  className="flex flex-row rounded-sm bg-gray-800 text-sm text-white"
                                 >
                                   <span className="py-0.5 pl-2">
                                     {userRoles[role as UserRole].label}

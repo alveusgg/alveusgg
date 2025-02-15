@@ -50,7 +50,7 @@ export const activities = (
           className="group text-center transition-colors hover:text-alveus-green-200"
           custom
         >
-          <Heading level={3} className="mb-0 mt-4 text-2xl">
+          <Heading level={3} className="mt-4 mb-0 text-2xl">
             {activity}
           </Heading>
           <p className="mt-1">with {ambassador.name}</p>
@@ -74,13 +74,13 @@ export function Activities() {
     <Section dark className="bg-fall">
       {Object.keys(activities).length > 0 && (
         <>
-          <Heading level={2} className="mb-8 mt-0" id="activities" link>
+          <Heading level={2} className="mt-0 mb-8" id="activities" link>
             Planned activities with the ambassadors
           </Heading>
           <Carousel
             items={activities}
             auto={10000}
-            className="mb-16 mt-4"
+            className="mt-4 mb-16"
             itemClassName="basis-full sm:basis-1/2 md:basis-full lg:basis-1/3 xl:basis-1/4 p-4"
           />
         </>

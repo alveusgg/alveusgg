@@ -217,7 +217,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             >
               {twitchEmbed && (
                 <Link
-                  className="block size-full rounded-2xl shadow-xl transition hover:shadow-2xl hover:scale-102"
+                  className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
                   href="/live"
                   target="_blank"
                   rel="noreferrer"
@@ -228,7 +228,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                     referrerPolicy="no-referrer"
                     allow="autoplay; encrypted-media"
                     sandbox="allow-same-origin allow-scripts"
-                    className="pointer-events-none aspect-video h-auto w-full select-none rounded-2xl"
+                    className="pointer-events-none aspect-video h-auto w-full rounded-2xl select-none"
                     tabIndex={-1}
                   ></iframe>
                 </Link>
@@ -239,7 +239,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute -top-64 bottom-0 right-0 z-10 hidden h-auto w-1/2 max-w-sm select-none overflow-clip lg:block xl:max-w-md 2xl:max-w-lg">
+        <div className="pointer-events-none absolute -top-64 right-0 bottom-0 z-10 hidden h-auto w-1/2 max-w-sm overflow-clip select-none lg:block xl:max-w-md 2xl:max-w-lg">
           <Image
             src={leafRightImage1}
             alt=""
@@ -250,7 +250,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 select-none drop-shadow-md lg:block"
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
         <Section dark>
@@ -284,7 +284,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               </Lightbox>
             </div>
 
-            <div className="basis-full pt-8 lg:basis-1/2 lg:pl-8 lg:pt-0">
+            <div className="basis-full pt-8 lg:basis-1/2 lg:pt-0 lg:pl-8">
               <Maya className="mx-auto h-auto w-full max-w-lg lg:ml-0" />
             </div>
           </div>
@@ -299,7 +299,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 Ambassadors:
               </Heading>
               <Link
-                className="group relative inline-block text-lg uppercase text-alveus-green-900 transition-colors hover:text-alveus-green"
+                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green"
                 href="/ambassadors"
               >
                 See All
@@ -348,7 +348,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             <div className="basis-full lg:basis-2/3 lg:px-16 xl:basis-1/2">
               <Heading
                 level={3}
-                className="my-1 font-sans text-lg font-normal uppercase text-alveus-green-100"
+                className="my-1 font-sans text-lg font-normal text-alveus-green-100 uppercase"
               >
                 Latest Episode
               </Heading>
@@ -370,7 +370,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafRightImage2}
           alt=""
-          className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-top-52 2xl:max-w-48"
+          className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-top-52 2xl:max-w-48"
         />
 
         <Section>
@@ -379,7 +379,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <PlushieCarousel />
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pl-8 md:pt-0">
+            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
               <Heading level={2} id="merch" link>
                 Alveus Plushies!
               </Heading>
@@ -414,7 +414,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-40 select-none drop-shadow-md lg:block 2xl:-bottom-48 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-44 left-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-48"
         />
 
         <Section dark className="grow bg-alveus-green-900">

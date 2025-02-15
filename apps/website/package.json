@@ -34,7 +34,7 @@
     "format": "prisma format"
   },
   "dependencies": {
-    "@alveusgg/data": "0.53.0",
+    "@alveusgg/data": "0.54.0",
     "@aws-sdk/client-s3": "^3.744.0",
     "@aws-sdk/s3-request-presigner": "^3.744.0",
     "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
@@ -48,6 +48,7 @@
     "@planetscale/database": "^1.19.0",
     "@prisma/client": "^6.3.1",
     "@t3-oss/env-nextjs": "^0.12.0",
+    "@tailwindcss/postcss": "^4.0.6",
     "@tanstack/react-query": "^5.66.0",
     "@trpc/client": "11.0.0-rc.761",
     "@trpc/next": "11.0.0-rc.761",
@@ -115,7 +116,6 @@
     "@types/react-dom": "^19.0.3",
     "@types/serviceworker": "^0.0.120",
     "@types/xml2js": "^0.4.14",
-    "autoprefixer": "^10.4.20",
     "eslint": "^9.20.1",
     "eslint-config-prettier": "^10.0.1",
     "eslint-import-resolver-typescript": "^3.7.0",
@@ -131,8 +131,7 @@
     "postcss": "^8.5.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.3.1",
-    "tailwindcss": "^3.4.17",
-    "tailwindcss-3d": "^1.0.7",
+    "tailwindcss": "^4.0.6",
     "tsup": "^8.3.6",
     "tsx": "^4.19.2",
     "typescript": "^5.7.3",
@@ -143,14 +142,12 @@
   "prettier": {
     "plugins": [
       "prettier-plugin-tailwindcss"
-    ]
+    ],
+    "tailwindStylesheet": "./src/styles/tailwind.css"
   },
   "postcss": {
     "plugins": {
-      "postcss-import": {},
-      "tailwindcss/nesting": {},
-      "tailwindcss": {},
-      "autoprefixer": {}
+      "@tailwindcss/postcss": {}
     }
   }
 }

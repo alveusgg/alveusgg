@@ -57,7 +57,7 @@ function ChannelConfigRow({
   return (
     <li
       key={channel.channelId}
-      className="my-2 flex flex-col gap-2 rounded border border-gray-400 bg-gray-800 p-4"
+      className="my-2 flex flex-col gap-2 rounded-sm border border-gray-400 bg-gray-800 p-4"
     >
       <div className="flex">
         <strong className="block flex-1 text-lg font-bold">

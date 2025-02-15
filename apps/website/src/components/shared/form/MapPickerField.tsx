@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import tailwindConfig from "@alveusgg/data/build/tailwind";
 import "maplibre-gl/dist/maplibre-gl.css"; // Actual map CSS
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Map search box CSS
 
@@ -165,7 +164,7 @@ export const MapPickerField = ({
       marker: false,
       showResultsWhileTyping: true,
       showResultMarkers: {
-        color: tailwindConfig.theme.colors["alveus-tan"][500],
+        color: "var(--color-alveus-tan-500)",
       },
       debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
     });

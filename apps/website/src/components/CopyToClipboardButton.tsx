@@ -29,7 +29,7 @@ const CopyToClipboardButton = ({
 
       <span
         className={classes(
-          "pointer-events-none absolute left-full top-0 ml-2 rounded-md bg-alveus-green-900 px-1 text-white transition-opacity duration-300",
+          "pointer-events-none absolute top-0 left-full ml-2 rounded-md bg-alveus-green-900 px-1 text-white transition-opacity duration-300",
           status === undefined ? "opacity-0" : "opacity-100",
           "group-hover:opacity-100",
         )}

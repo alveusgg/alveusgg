@@ -88,7 +88,7 @@ const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
         readOnly={true}
         type="url"
         className={classes(
-          "m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic outline-none",
+          "m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic outline-hidden",
           dark ? "text-alveus-tan" : "text-alveus-green-600",
         )}
         value={data.url}

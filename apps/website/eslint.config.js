@@ -10,7 +10,9 @@ import nextPlugin from "@next/eslint-plugin-next";
 import reactPlugin from "eslint-plugin-react";
 // @ts-expect-error - no types
 import hooksPlugin from "eslint-plugin-react-hooks";
-import tailwindPlugin from "eslint-plugin-tailwindcss";
+// FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/325
+// FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/384
+// import tailwindPlugin from "eslint-plugin-tailwindcss";
 
 import globals from "globals";
 
@@ -90,7 +92,7 @@ export default tseslint.config(
     name: "prettier/config",
     ...prettiereslint,
   },
-  ...tailwindPlugin.configs["flat/recommended"],
+  // ...tailwindPlugin.configs["flat/recommended"],
   {
     name: "tailwindcss/custom",
     rules: {

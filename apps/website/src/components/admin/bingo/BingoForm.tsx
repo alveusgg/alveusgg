@@ -168,7 +168,7 @@ export function BingoForm({ action, bingo }: BingoFormProps) {
           inputClassName="font-mono"
           placeholder={convertToSlug(label)}
           prefix={
-            <div className="cursor-default select-none pl-2 font-mono">{`${env.NEXT_PUBLIC_BASE_URL}/bingo/`}</div>
+            <div className="cursor-default pl-2 font-mono select-none">{`${env.NEXT_PUBLIC_BASE_URL}/bingo/`}</div>
           }
         />
       </Fieldset>

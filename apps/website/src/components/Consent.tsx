@@ -69,7 +69,7 @@ const Consent = ({
                   src={thumbnail}
                   fill
                   alt=""
-                  className="size-full object-cover blur brightness-50"
+                  className="size-full object-cover blur-sm brightness-50"
                 />
               </div>
             )}

@@ -135,7 +135,7 @@ export function FormForm({ action, form }: FormFormProps) {
           inputClassName="font-mono"
           placeholder={convertToSlug(label)}
           prefix={
-            <div className="cursor-default select-none pl-2 font-mono">{`${env.NEXT_PUBLIC_BASE_URL}/forms/`}</div>
+            <div className="cursor-default pl-2 font-mono select-none">{`${env.NEXT_PUBLIC_BASE_URL}/forms/`}</div>
           }
         />
       </Fieldset>
