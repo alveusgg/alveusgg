@@ -100,7 +100,13 @@ export const eventsByWeekDay = [
   [animalCareChats],
   // Wednesday
   [
-    animalCareChats,
+    {
+      title: "Connor Stream",
+      description: "Join Connor as he gets up to his usual antics.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 14, minute: 30 },
+    },
     {
       title: "WAI New Episode",
       description: "Watch the latest Wine About It episode.",
@@ -110,13 +116,7 @@ export const eventsByWeekDay = [
   ],
   // Thursday
   [
-    {
-      title: "Connor Stream",
-      description: "Join Connor as he gets up to his usual antics.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
-    },
+    animalCareChats,
     {
       title: "WW New Episode",
       description: "Watch the latest World's Wildest episode.",
