@@ -30,14 +30,14 @@ const Socials = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
           />,
           <QRCode
             key="qr"
-            className="size-16 rounded-lg border-2 border-black bg-white p-1 opacity-75 drop-shadow-sm"
+            className="size-16 rounded-lg border-2 border-black/75 bg-white p-0.5 opacity-90 drop-shadow-sm"
             value={`${getShortBaseUrl()}/socials`}
           />,
         ],
         [],
       )}
       // We want to be back on the logo before the parent cycle switches
-      interval={cycleTime / 3}
+      interval={cycleTime / 3 + 1}
     />
 
     <div className="text-xl font-bold text-white text-stroke">
@@ -113,25 +113,20 @@ const Upcoming = ({
     {...props}
   >
     <p>Upcoming:</p>
-
-    {event && (
-      <>
-        <p className="text-xl">
-          {getFormattedTitle(event, twitchChannels.alveus.username, 30)}
-        </p>
-        <p className="text-xl">
-          {formatDateTimeRelative(
-            event.startAt,
-            {
-              style: "long",
-              time: event.hasTime ? "minutes" : undefined,
-              timezone: event.hasTime,
-            },
-            { zone: DATETIME_ALVEUS_ZONE },
-          )}
-        </p>
-      </>
-    )}
+    <p className="text-xl">
+      {getFormattedTitle(event, twitchChannels.alveus.username, 30)}
+    </p>
+    <p className="text-xl">
+      {formatDateTimeRelative(
+        event.startAt,
+        {
+          style: "long",
+          time: event.hasTime ? "minutes" : undefined,
+          timezone: event.hasTime,
+        },
+        { zone: DATETIME_ALVEUS_ZONE },
+      )}
+    </p>
   </div>
 );
 
