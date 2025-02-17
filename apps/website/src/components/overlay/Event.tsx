@@ -33,6 +33,23 @@ const Cycle = ({
   items: ReactElement<{ className: string; ref: Ref<HTMLElement> }>[];
   interval?: number;
 }) => {
+  const refs = useRef<(HTMLElement | null)[]>([]);
+  const cloned = useMemo(
+    () =>
+      items.map((item, idx) =>
+        cloneElement(item, {
+          className: classes(
+            item.props.className,
+            "transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
+          ),
+          ref: (el) => {
+            refs.current[idx] = el;
+          },
+        }),
+      ),
+    [items],
+  );
+
   const [index, setIndex] = useState(0);
   useEffect(() => {
     const nextIndex = (index + 1) % items.length;
@@ -40,19 +57,17 @@ const Cycle = ({
     return () => clearTimeout(timeout);
   }, [index, items, interval]);
 
-  const refs = useRef<(HTMLElement | null)[]>([]);
-
-  return Children.map(items, (item, i) => (
+  return Children.map(cloned, (item, idx) => (
     <Transition
-      show={i === index}
+      show={idx === index}
       beforeEnter={() => {
-        const ref = refs.current[i];
+        const ref = refs.current[idx];
         if (!ref) return;
 
         ref.style.zIndex = "1";
       }}
       beforeLeave={() => {
-        const ref = refs.current[i];
+        const ref = refs.current[idx];
         if (!ref) return;
 
         // Only offset if not absolute positioned
@@ -68,22 +83,14 @@ const Cycle = ({
             : 0;
 
           // If we're the last element, we need to offset an element that will be to the left of us
-          ref.style[i === items.length - 1 ? "marginLeft" : "marginRight"] =
+          ref.style[idx === items.length - 1 ? "marginLeft" : "marginRight"] =
             `-${width + gap}px`;
         }
 
         ref.style.zIndex = "0";
       }}
     >
-      {cloneElement(item, {
-        className: classes(
-          item.props.className,
-          "transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
-        ),
-        ref: (el) => {
-          refs.current[i] = el;
-        },
-      })}
+      {item}
     </Transition>
   ));
 };
@@ -91,20 +98,23 @@ const Cycle = ({
 const Socials = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
   <div className={classes(className, "flex items-center gap-2")} {...props}>
     <Cycle
-      items={[
-        <Image
-          key="logo"
-          src={logoImage}
-          alt=""
-          height={64}
-          className="size-16 object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
-        />,
-        <QRCode
-          key="qr"
-          className="size-16 rounded-lg border-2 border-black bg-white p-1 opacity-75 drop-shadow-sm"
-          value={`${getShortBaseUrl()}/socials`}
-        />,
-      ]}
+      items={useMemo(
+        () => [
+          <Image
+            key="logo"
+            src={logoImage}
+            alt=""
+            height={64}
+            className="size-16 object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
+          />,
+          <QRCode
+            key="qr"
+            className="size-16 rounded-lg border-2 border-black bg-white p-1 opacity-75 drop-shadow-sm"
+            value={`${getShortBaseUrl()}/socials`}
+          />,
+        ],
+        [],
+      )}
       // We want to be back on the logo before the parent cycle switches
       interval={cycleTime / 3}
     />
