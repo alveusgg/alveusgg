@@ -113,25 +113,20 @@ const Upcoming = ({
     {...props}
   >
     <p>Upcoming:</p>
-
-    {event && (
-      <>
-        <p className="text-xl">
-          {getFormattedTitle(event, twitchChannels.alveus.username, 30)}
-        </p>
-        <p className="text-xl">
-          {formatDateTimeRelative(
-            event.startAt,
-            {
-              style: "long",
-              time: event.hasTime ? "minutes" : undefined,
-              timezone: event.hasTime,
-            },
-            { zone: DATETIME_ALVEUS_ZONE },
-          )}
-        </p>
-      </>
-    )}
+    <p className="text-xl">
+      {getFormattedTitle(event, twitchChannels.alveus.username, 30)}
+    </p>
+    <p className="text-xl">
+      {formatDateTimeRelative(
+        event.startAt,
+        {
+          style: "long",
+          time: event.hasTime ? "minutes" : undefined,
+          timezone: event.hasTime,
+        },
+        { zone: DATETIME_ALVEUS_ZONE },
+      )}
+    </p>
   </div>
 );
 
