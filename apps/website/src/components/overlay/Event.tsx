@@ -30,7 +30,7 @@ const Socials = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
           />,
           <QRCode
             key="qr"
-            className="size-16 rounded-lg border-2 border-black bg-white p-1 opacity-75 drop-shadow-sm"
+            className="size-16 rounded-lg border-2 border-black/75 bg-white p-0.5 opacity-90 drop-shadow-sm"
             value={`${getShortBaseUrl()}/socials`}
           />,
         ],
