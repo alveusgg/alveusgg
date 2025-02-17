@@ -1,5 +1,14 @@
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  Children,
+  cloneElement,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type RefCallback,
+  type ReactElement,
+} from "react";
 import { Transition } from "@headlessui/react";
 import { keepPreviousData } from "@tanstack/react-query";
 
@@ -12,6 +21,64 @@ import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 import { QRCode } from "@/components/QrCode";
 
 import logoImage from "@/assets/logo.png";
+
+const Cycle = ({
+  items,
+  interval = 60,
+}: {
+  items: ReactElement<{ className: string; ref: RefCallback<HTMLElement> }>[];
+  interval?: number;
+}) => {
+  const [index, setIndex] = useState(0);
+  useEffect(() => {
+    const nextIndex = (index + 1) % items.length;
+    const timeout = setTimeout(() => setIndex(nextIndex), interval * 1000);
+    return () => clearTimeout(timeout);
+  }, [index, items, interval]);
+
+  const refs = useRef<(HTMLElement | null)[]>([]);
+
+  return Children.map(items, (item, i) => (
+    <Transition
+      show={i === index}
+      beforeEnter={() => {
+        const ref = refs.current[i];
+        if (!ref) return;
+
+        ref.style.zIndex = "1";
+      }}
+      beforeLeave={() => {
+        const ref = refs.current[i];
+        if (!ref) return;
+
+        // Offset by the width of the element and any gap between elements
+        const { width } = ref.getBoundingClientRect();
+        const gap = ref.parentElement
+          ? Number(
+              window
+                .getComputedStyle(ref.parentElement)
+                .rowGap.replace(/px$/, ""),
+            )
+          : 0;
+
+        // If we're the last element, we need to offset an element that will be to the left of us
+        ref.style[i === items.length - 1 ? "marginLeft" : "marginRight"] =
+          `-${width + gap}px`;
+        ref.style.zIndex = "0";
+      }}
+    >
+      {cloneElement(item, {
+        className: classes(
+          item.props.className,
+          "transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
+        ),
+        ref: (el: HTMLElement | null) => {
+          refs.current[i] = el;
+        },
+      })}
+    </Transition>
+  ));
+};
 
 const Event = ({ className }: { className?: string }) => {
   // Set the range for upcoming events to the next 3 days
@@ -103,22 +170,28 @@ const Event = ({ className }: { className?: string }) => {
             "flex items-center gap-2 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
           )}
         >
-          <Image
-            src={logoImage}
-            alt=""
-            height={64}
-            className="h-16 w-auto opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
+          <Cycle
+            items={[
+              <Image
+                key="logo"
+                src={logoImage}
+                alt=""
+                height={64}
+                className="size-16 object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
+              />,
+              <QRCode
+                key="qr"
+                className="size-16 rounded-lg border-2 border-black bg-white p-1 opacity-75 drop-shadow-sm"
+                value={`${getShortBaseUrl()}/socials`}
+              />,
+            ]}
+            interval={20}
           />
 
           <div className="text-xl font-bold text-white text-stroke">
             <p>alveussanctuary.org</p>
             <p>@alveussanctuary</p>
           </div>
-
-          <QRCode
-            className="size-16 rounded-lg border-2 border-black bg-white p-1 opacity-75 drop-shadow-sm"
-            value={`${getShortBaseUrl()}/socials`}
-          />
         </div>
       </Transition>
     </>
