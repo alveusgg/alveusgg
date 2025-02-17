@@ -6,7 +6,10 @@ import { keepPreviousData } from "@tanstack/react-query";
 import { trpc } from "@/utils/trpc";
 import { DATETIME_ALVEUS_ZONE, formatDateTimeRelative } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
+import { getShortBaseUrl } from "@/utils/short-url";
 import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
+
+import { QRCode } from "@/components/QrCode";
 
 import logoImage from "@/assets/logo.png";
 
@@ -111,6 +114,11 @@ const Event = ({ className }: { className?: string }) => {
             <p>alveussanctuary.org</p>
             <p>@alveussanctuary</p>
           </div>
+
+          <QRCode
+            className="size-16 rounded-lg border-2 border-black bg-white p-1 opacity-75 drop-shadow-sm"
+            value={`${getShortBaseUrl()}/socials`}
+          />
         </div>
       </Transition>
     </>
