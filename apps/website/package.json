@@ -60,7 +60,7 @@
     "csv-stringify": "^6.5.2",
     "dagre": "^0.8.5",
     "dompurify": "^3.2.4",
-    "fast-xml-parser": "^4.5.1",
+    "fast-xml-parser": "^5.0.1",
     "framer-motion": "^12.4.5",
     "html-react-parser": "^5.2.2",
     "jsdom": "^26.0.0",
