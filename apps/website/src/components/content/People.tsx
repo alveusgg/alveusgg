@@ -50,12 +50,16 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
             align === "center" && "mx-auto",
           )}
         >
-          <Image
-            src={person.image}
-            width={320}
-            alt=""
-            className="aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover"
-          />
+          <div className="relative aspect-square h-auto w-full">
+            <Image
+              src={person.image}
+              width={320}
+              alt=""
+              className="aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover"
+            />
+
+            <div className="absolute inset-0 rounded-2xl border-4 border-alveus-green/75" />
+          </div>
         </div>
         <div
           className={classes(
