@@ -104,16 +104,38 @@ const allItems = {
 
 type MerchType = keyof typeof allItems;
 
+type KeysOfUnion<T> = T extends T ? keyof T : never;
+type MerchItem = KeysOfUnion<(typeof allItems)[MerchType]>;
+
+// When the type is "all", we want to zip together all the items from all the
+// categories. We do a zip so that the items seem to be in a random order.
+const zipAllItems = (): Record<string, Item> => {
+  const merchType = Object.keys(allItems) as MerchType[];
+  const maxLength = Math.max(
+    ...merchType.map((type) => Object.keys(allItems[type]).length),
+  );
+  const zippedItems: Record<string, Item> = {};
+
+  for (let i = 0; i < maxLength; i++) {
+    for (const type of merchType) {
+      const items = allItems[type] as Record<MerchItem, Item>;
+      const keys = Object.keys(items) as MerchItem[];
+
+      const key = i < keys.length && keys[i];
+      if (key) {
+        zippedItems[`${type}-${key}`] = items[key];
+      }
+    }
+  }
+
+  return zippedItems;
+};
+
 const MerchCarousel = ({ type = "all" }: { type?: MerchType | "all" }) => {
   const items = useMemo(
     () =>
       Object.entries<Item>(
-        type === "all"
-          ? Object.values(allItems).reduce(
-              (obj, items) => ({ ...obj, ...items }),
-              {},
-            )
-          : allItems[type],
+        type === "all" ? zipAllItems() : allItems[type],
       ).reduce<Record<string, ReactNode>>(
         (obj, [key, { src, alt, pip }]) => ({
           ...obj,
