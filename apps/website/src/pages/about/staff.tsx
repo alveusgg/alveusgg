@@ -3,11 +3,12 @@ import Image from "next/image";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import People from "@/components/content/People";
+import People, { type Person } from "@/components/content/People";
 import Meta from "@/components/content/Meta";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
+import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
@@ -18,9 +19,9 @@ import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
-const staff = {
+const staff: Record<string, Person> = {
   connor: {
-    image: connorObrienImage,
+    image: [connorObrienImage, connorObrienFunImage],
     name: "Connor O'Brien",
     title: "Director of Operations",
     description: (
@@ -175,7 +176,12 @@ const staff = {
   },
 };
 
-const team = {
+interface Member {
+  name: string;
+  title: string;
+}
+
+const team: Record<string, Member> = {
   jeff: {
     name: "Jeff (@YungJeff)",
     title: "Social Media Manager",
