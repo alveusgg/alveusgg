@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactNode, MouseEvent } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -66,18 +66,32 @@ export function ImageUploadAttachment({
   fileReference,
   children = "",
   showRemoveButton = true,
+  onClick,
 }: {
   removeFileReference: (id: string) => void;
   fileReference: FileReference;
   children?: ReactNode | ReactNode[];
   showRemoveButton?: boolean;
+  onClick?: (e: MouseEvent<HTMLAnchorElement>) => void;
 }) {
+  const src =
+    fileReference.status === "saved" || fileReference.status === "upload.done"
+      ? fileReference.url
+      : "dataURL" in fileReference
+        ? fileReference.dataURL
+        : undefined;
+
   return (
     <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
       <div className="py-2">
-        <div className="relative size-32 overflow-hidden rounded-lg bg-gray-200">
+        <a
+          href={src}
+          className="relative block size-32 overflow-hidden rounded-lg bg-gray-200"
+          title="Click to view image"
+          onClick={onClick}
+        >
           <ImageUploadFilePreview fileReference={fileReference} />
-        </div>
+        </a>
 
         {showRemoveButton && (
           <div className="p-2">
