@@ -53,25 +53,22 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
             align === "center" && "mx-auto",
           )}
         >
-          <div className="relative aspect-square h-auto w-full">
+          <div className="relative aspect-square h-auto w-full overflow-clip rounded-2xl">
             {Array.isArray(person.image) ? (
               <>
+                <Image
+                  src={person.image[1]}
+                  width={320}
+                  alt=""
+                  className={imageClasses}
+                />
                 <Image
                   src={person.image[0]}
                   width={320}
                   alt=""
                   className={classes(
                     imageClasses,
-                    "opacity-100 transition-opacity duration-500 group-hover:opacity-0 group-hover:duration-1000 group-focus:opacity-0 group-focus:duration-1000",
-                  )}
-                />
-                <Image
-                  src={person.image[1]}
-                  width={320}
-                  alt=""
-                  className={classes(
-                    imageClasses,
-                    "absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-hover:duration-1000 group-focus:opacity-100 group-focus:duration-1000",
+                    "absolute inset-x-0 top-0 drop-shadow-[0_-10px_15px_rgba(0,0,0,0.2)] transition-[top] duration-500 group-hover:top-[90%] group-hover:duration-1000 group-focus:top-[90%] group-focus:duration-1000",
                   )}
                 />
               </>
