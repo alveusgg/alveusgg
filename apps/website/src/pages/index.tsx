@@ -25,7 +25,7 @@ import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
 import Maya from "@/components/content/Maya";
 import AnimalQuest from "@/components/content/AnimalQuest";
-import PlushieCarousel from "@/components/content/PlushieCarousel";
+import MerchCarousel from "@/components/content/MerchCarousel";
 import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 import Consent from "@/components/Consent";
 
@@ -376,7 +376,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
         <Section>
           <div className="flex flex-wrap items-center">
             <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2">
-              <PlushieCarousel />
+              <MerchCarousel type="plushies" />
             </div>
 
             <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
