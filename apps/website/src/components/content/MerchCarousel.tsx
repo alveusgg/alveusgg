@@ -1,6 +1,8 @@
 import { useMemo, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
 
+import { classes } from "@/utils/classes";
+
 import tshirtFront from "@/assets/merch/tshirt-front.png";
 import tshirtDemoGrinder from "@/assets/merch/tshirt-demo-grinder.png";
 import tshirtBack from "@/assets/merch/tshirt-back.png";
@@ -131,7 +133,13 @@ const zipAllItems = (): Record<string, Item> => {
   return zippedItems;
 };
 
-const MerchCarousel = ({ type = "all" }: { type?: MerchType | "all" }) => {
+const MerchCarousel = ({
+  type = "all",
+  more = false,
+}: {
+  type?: MerchType | "all";
+  more?: boolean;
+}) => {
   const items = useMemo(
     () =>
       Object.entries<Item>(
@@ -170,7 +178,10 @@ const MerchCarousel = ({ type = "all" }: { type?: MerchType | "all" }) => {
     <Carousel
       items={items}
       wrapperClassName="items-center"
-      itemClassName="basis-full sm:basis-1/2 lg:basis-1/3 p-2"
+      itemClassName={classes(
+        "basis-full sm:basis-1/2 lg:basis-1/3 p-2",
+        more && "xl:basis-1/4 2xl:basis-1/6",
+      )}
     />
   );
 };
