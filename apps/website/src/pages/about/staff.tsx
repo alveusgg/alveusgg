@@ -11,8 +11,11 @@ import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
+import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
+import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
+import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
 import nickImage from "@/assets/people/nick.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
@@ -68,7 +71,7 @@ const staff: Record<string, Person> = {
     ),
   },
   lindsay: {
-    image: lindsayBellawImage,
+    image: [lindsayBellawImage, lindsayBellawFunImage],
     name: "Lindsay Bellaw",
     title: "Animal Care Coordinator",
     description: (
@@ -88,7 +91,7 @@ const staff: Record<string, Person> = {
     ),
   },
   sruti: {
-    image: srutiJamalapuramImage,
+    image: [srutiJamalapuramImage, srutiJamalapuramFunImage],
     name: "Sruti Jamalapuram",
     title: "Animal Care Coordinator",
     description: (
@@ -120,7 +123,7 @@ const staff: Record<string, Person> = {
     ),
   },
   amanda: {
-    image: amandaDenaroImage,
+    image: [amandaDenaroImage, amandaDenaroFunImage],
     name: "Amanda Denaro",
     title: "Animal Care Coordinator",
     description: (
