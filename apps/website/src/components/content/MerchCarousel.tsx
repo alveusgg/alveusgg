@@ -204,7 +204,7 @@ const MerchCarousel = ({
                 draggable={false}
                 width={200}
                 className={classes(
-                  "h-auto drop-shadow-sm",
+                  "mx-auto h-auto drop-shadow-sm",
                   size || "w-full",
                   pip?.position === "top" && "relative -right-2 -bottom-2",
                 )}
