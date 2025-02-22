@@ -25,7 +25,7 @@ import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
 import Maya from "@/components/content/Maya";
 import AnimalQuest from "@/components/content/AnimalQuest";
-import PlushieCarousel from "@/components/content/PlushieCarousel";
+import MerchCarousel from "@/components/content/MerchCarousel";
 import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 import Consent from "@/components/Consent";
 
@@ -373,30 +373,61 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           className="pointer-events-none absolute -top-44 right-0 z-10 hidden h-auto w-1/2 max-w-40 drop-shadow-md select-none lg:block 2xl:-top-52 2xl:max-w-48"
         />
 
-        <Section>
-          <div className="flex flex-wrap items-center">
-            <div className="max-w-full basis-full md:max-w-1/2 md:basis-1/2">
-              <PlushieCarousel />
+        <Section containerClassName="space-y-8">
+          <div className="grid grid-cols-1 justify-items-start gap-4 lg:grid-cols-2 lg:grid-rows-auto-3">
+            <Heading
+              level={2}
+              id="merch"
+              link
+              className="my-0 self-baseline lg:col-start-1 lg:row-start-1"
+            >
+              Alveus Merch
+            </Heading>
+
+            <div className="space-y-2 lg:col-start-1 lg:row-start-2">
+              <p>
+                Grab yourself some high-quality merch and support Alveus in your
+                home or when you&apos;re out and about!
+              </p>
             </div>
 
-            <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pl-8">
-              <Heading level={2} id="merch" link>
-                Alveus Plushies!
-              </Heading>
-              <p className="my-4">
-                Grab yourself a high-quality plushie and have your very own
-                ambassador in your home!
-              </p>
-              <p className="my-4">
-                All proceeds go directly into Alveus and the support & care of
-                our educational ambassadors!
-              </p>
+            <Button
+              href="/merch"
+              external
+              className="lg:col-start-1 lg:row-start-3"
+            >
+              Explore Merch Collection
+            </Button>
 
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button href="/plushies">Buy Plushies</Button>
-              </div>
+            <Heading
+              level={3}
+              className="my-0 self-baseline text-xl lg:col-start-2 lg:row-start-1"
+            >
+              + Plushies
+            </Heading>
+
+            <div className="space-y-2 lg:col-start-2 lg:row-start-2">
+              <p>
+                Or, have your very own ambassador in your home with our soft and
+                cuddly plushies!
+              </p>
             </div>
+
+            <Button
+              href="/plushies"
+              external
+              className="lg:col-start-2 lg:row-start-3"
+            >
+              Buy Ambassador Plushies
+            </Button>
           </div>
+
+          <MerchCarousel more />
+
+          <p className="text-center text-alveus-green italic">
+            All proceeds go directly into Alveus and the support + care of our
+            educational ambassadors!
+          </p>
         </Section>
       </div>
 
