@@ -152,6 +152,7 @@ const MerchCarousel = ({
               <Image
                 src={src}
                 alt={alt}
+                title={alt}
                 draggable={false}
                 width={200}
                 className="h-auto w-full drop-shadow-sm"
@@ -161,6 +162,7 @@ const MerchCarousel = ({
                 <Image
                   src={pip.src}
                   alt={pip.alt}
+                  title={pip.alt}
                   draggable={false}
                   width={80}
                   className="absolute -right-2 -bottom-2 h-auto w-1/2 max-w-20 drop-shadow-sm"
