@@ -5,19 +5,21 @@ import { classes } from "@/utils/classes";
 
 import Heading from "./Heading";
 
+export interface Person {
+  image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
+  name: string;
+  title: string;
+  description: ReactNode;
+}
+
 type PeopleProps = {
-  people: Record<
-    string,
-    {
-      image: ImageProps["src"];
-      name: string;
-      title: string;
-      description: ReactNode;
-    }
-  >;
+  people: Record<string, Person>;
   columns?: 1 | 2;
   align?: "left" | "center";
 };
+
+const imageClasses =
+  "aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover";
 
 const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
   <ul
@@ -35,7 +37,7 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
       <li
         key={key}
         className={classes(
-          "flex basis-full flex-col",
+          "group flex basis-full flex-col",
           ...(columns === 1
             ? ["md:flex-row"]
             : [
@@ -43,6 +45,7 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
                 align === "center" && "items-center text-center",
               ]),
         )}
+        tabIndex={-1}
       >
         <div
           className={classes(
@@ -50,13 +53,33 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
             align === "center" && "mx-auto",
           )}
         >
-          <div className="relative aspect-square h-auto w-full">
-            <Image
-              src={person.image}
-              width={320}
-              alt=""
-              className="aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover"
-            />
+          <div className="relative aspect-square h-auto w-full overflow-clip rounded-2xl">
+            {Array.isArray(person.image) ? (
+              <>
+                <Image
+                  src={person.image[1]}
+                  width={320}
+                  alt=""
+                  className={imageClasses}
+                />
+                <Image
+                  src={person.image[0]}
+                  width={320}
+                  alt=""
+                  className={classes(
+                    imageClasses,
+                    "absolute inset-x-0 top-0 drop-shadow-[0_-10px_15px_rgba(0,0,0,0.2)] transition-[top] duration-500 group-hover:top-[90%] group-hover:duration-1000 group-focus:top-[90%] group-focus:duration-1000",
+                  )}
+                />
+              </>
+            ) : (
+              <Image
+                src={person.image}
+                width={320}
+                alt=""
+                className={imageClasses}
+              />
+            )}
 
             <div className="absolute inset-0 rounded-2xl border-4 border-alveus-green/75" />
           </div>
