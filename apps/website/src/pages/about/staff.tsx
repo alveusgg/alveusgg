@@ -6,7 +6,12 @@ import Heading from "@/components/content/Heading";
 import People, { type Person } from "@/components/content/People";
 import Meta from "@/components/content/Meta";
 import { Lightbox, Preview } from "@/components/content/YouTube";
+import Link from "@/components/content/Link";
 
+import IconArrowRight from "@/icons/IconArrowRight";
+
+import mayaHigaImage from "@/assets/people/maya-higa.jpg";
+import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
@@ -23,6 +28,27 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const staff: Record<string, Person> = {
+  maya: {
+    image: [mayaHigaImage, mayaHigaFunImage],
+    name: "Maya Higa",
+    title: "Founder & Executive Director",
+    description: (
+      <>
+        <p>
+          Maya Higa is one of the top female streamers on Twitch and has amassed
+          a large following on YouTube and other social platforms. Maya has
+          experience as a licensed falconer, wildlife rehabilitator, zookeeper,
+          and conservation outreach educator. In 2021, Maya founded Alveus
+          Sanctuary, a non-profit wildlife sanctuary and virtual education
+          center in central Texas.
+        </p>
+        <Link href="/about/maya" className="flex items-center">
+          Read more about Maya
+          <IconArrowRight size={16} className="mt-0.5 ml-1" />
+        </Link>
+      </>
+    ),
+  },
   connor: {
     image: [connorObrienImage, connorObrienFunImage],
     name: "Connor O'Brien",
