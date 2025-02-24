@@ -3,29 +3,30 @@ import Image, { type ImageProps } from "next/image";
 
 import { classes } from "@/utils/classes";
 
-import beanieDoodleImage from "@/assets/merch/beanie-doodle.png";
 import beanieNoodleImage from "@/assets/merch/beanie-noodle.png";
-import bottleStickersImage from "@/assets/merch/bottle-stickers.png";
-// import capDoodleImage from "@/assets/merch/cap-doodle.png";
+import beaniePeepoImage from "@/assets/merch/beanie-peepo.png";
+import bottleFriendsImage from "@/assets/merch/bottle-friends.png";
 // import capNoodleImage from "@/assets/merch/cap-noodle.png";
-import hoodieAdventureImage from "@/assets/merch/hoodie-adventure.png";
-import hoodieMagazineImage from "@/assets/merch/hoodie-magazine.png";
-import hoodiePanelsImage from "@/assets/merch/hoodie-panels.png";
-import mugBarbaraImage from "@/assets/merch/mug-barbara.png";
+// import capPeepoImage from "@/assets/merch/cap-peepo.png";
+import hoodieKidsImage from "@/assets/merch/hoodie-kids.png";
+import hoodiePeepoRangerImage from "@/assets/merch/hoodie-peepo-ranger.png";
+import hoodiePolaroidImage from "@/assets/merch/hoodie-polaroid.png";
+import mugCountryGirlsImage from "@/assets/merch/mug-country-girls.png";
 import mugDoodleImage from "@/assets/merch/mug-doodle.png";
 import mugFennReedImage from "@/assets/merch/mug-fenn-reed.png";
 import mugSirenImage from "@/assets/merch/mug-siren.png";
-import sweaterBugsImage from "@/assets/merch/sweater-bugs.png";
-import sweaterWinnieImage from "@/assets/merch/sweater-winnie.png";
-// import toteFramesImage from "@/assets/merch/tote-frames.png";
-// import toteGeometricImage from "@/assets/merch/tote-geometric.png";
-import tshirtBubbleImage from "@/assets/merch/tshirt-bubble.png";
-import tshirtBugsImage from "@/assets/merch/tshirt-bugs.png";
+import onesieViewerTrainingImage from "@/assets/merch/onesie-viewer-training.png";
+import sweaterProtectFriendsImage from "@/assets/merch/sweater-protect-friends.png";
+// import sweaterWinnieImage from "@/assets/merch/sweater-winnie.png";
+// import toteGalleryImage from "@/assets/merch/tote-gallery.png";
+// import toteMosaicImage from "@/assets/merch/tote-mosaic.png";
+import tshirtBugHuntImage from "@/assets/merch/tshirt-bug-hunt.png";
 import tshirtPatchyImage from "@/assets/merch/tshirt-patchy.png";
+import tshirtYouthImage from "@/assets/merch/tshirt-youth.png";
 
 import tshirtPatchyMayaImage from "@/assets/merch/tshirt-patchy-maya.png";
-import hoodieAdventureConnorImage from "@/assets/merch/hoodie-adventure-connor.png";
-import sweaterBugsAmandaImage from "@/assets/merch/sweater-bugs-amanda.png";
+import hoodiePeepoRangerConnorImage from "@/assets/merch/hoodie-peepo-ranger-connor.png";
+import sweaterProtectFriendsAmandaImage from "@/assets/merch/sweater-protect-friends-amanda.png";
 import sweaterWinnieLindsayImage from "@/assets/merch/sweater-winnie-lindsay.png";
 
 import sirenImage from "@/assets/plushies/siren.png";
@@ -51,81 +52,81 @@ const allItems = {
   merch: {
     tshirtPatchyMaya: {
       src: tshirtPatchyMayaImage,
-      alt: "Maya wearing the Patchy t-shirt",
+      alt: "Maya wearing the Patchy Tee",
     },
-    tshirtBubblePatchy: {
-      src: tshirtBubbleImage,
-      alt: "Bubble t-shirt",
+    tshirtYouthPatchy: {
+      src: tshirtYouthImage,
+      alt: "Youth Tee",
       pip: {
         src: tshirtPatchyImage,
-        alt: "Patchy t-shirt",
+        alt: "Patchy Tee",
       },
     },
     mugSirenBarbara: {
       src: mugSirenImage,
-      alt: "Siren mug",
+      alt: "Siren's Yappers Club Mug",
       pip: {
-        src: mugBarbaraImage,
-        alt: "Barbara mug",
+        src: mugCountryGirlsImage,
+        alt: "Country Girls Make Do Mug",
       },
     },
-    hoodieAdventureConnor: {
-      src: hoodieAdventureConnorImage,
-      alt: "Connor wearing the Adventure hoodie",
+    hoodiePeepoRangerConnor: {
+      src: hoodiePeepoRangerConnorImage,
+      alt: "Connor wearing the Peepo Ranger Hoodie",
     },
-    hoodiePanelsAdventure: {
-      src: hoodiePanelsImage,
-      alt: "Panels hoodie",
+    tshirtBugHuntSweater: {
+      src: tshirtBugHuntImage,
+      alt: "Bug Hunt Tee",
       pip: {
-        src: hoodieAdventureImage,
-        alt: "Adventure hoodie",
+        src: sweaterProtectFriendsImage,
+        alt: "Protect Our Friends Crewneck",
       },
     },
     mugFeenReedDoodle: {
       src: mugFennReedImage,
-      alt: "Fenn and Reed mug",
+      alt: "Fenn and Reed Mug",
       pip: {
         src: mugDoodleImage,
-        alt: "Doodle mug",
+        alt: "Doodle Mug",
       },
     },
-    tshirtBugsSweater: {
-      src: tshirtBugsImage,
-      alt: "Bugs t-shirt",
+    hoodiePeepoRangerKids: {
+      src: hoodiePeepoRangerImage,
+      alt: "Peepo Ranger Hoodie",
       pip: {
-        src: sweaterBugsImage,
-        alt: "Bugs sweater",
+        src: hoodieKidsImage,
+        alt: "Kids Hoodie",
       },
     },
-    sweaterBugsAmanda: {
-      src: sweaterBugsAmandaImage,
-      alt: "Amanda wearing the Bugs sweater",
-    },
-    bottleStickers: {
-      src: bottleStickersImage,
-      alt: "Sticker bottle",
+    bottleFriends: {
+      src: bottleFriendsImage,
+      alt: "Alveus Friends Water Bottle",
       size: "w-2/3",
     },
-    beanieDoodleNoodle: {
-      src: beanieDoodleImage,
-      alt: "Doodle beanie",
+    sweaterProtectFriendsAmanda: {
+      src: sweaterProtectFriendsAmandaImage,
+      alt: "Amanda wearing the Protect Our Friends Crewneck",
+    },
+    beaniePeepoNoodle: {
+      src: beaniePeepoImage,
+      alt: "Peepo Beanie",
       pip: {
         src: beanieNoodleImage,
-        alt: "Noodle beanie",
+        alt: "Noodle Beanie",
         position: "top",
       },
     },
-    sweaterWinnieHoodieMagazine: {
-      src: sweaterWinnieImage,
-      alt: "Winnie sweater",
+    hoodiePolaroidOnesieViewerTraining: {
+      src: hoodiePolaroidImage,
+      alt: "Polariod Hoodie",
       pip: {
-        src: hoodieMagazineImage,
-        alt: "Magazine hoodie",
+        src: onesieViewerTrainingImage,
+        alt: "Viewer In Training Onesie",
       },
     },
     sweaterWinnieLindsay: {
       src: sweaterWinnieLindsayImage,
-      alt: "Lindsay wearing the Winnie sweater",
+      alt: "Lindsay wearing the Winnie The Moo Crew",
     },
   },
   plushies: {
