@@ -33,7 +33,7 @@ import IconChevronDown from "@/icons/IconChevronDown";
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
     transition
-    className="group/items absolute top-full right-0 z-50 mt-1 flex min-w-40 flex-col gap-0.5 rounded-sm border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-hidden data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+    className="group/items absolute top-full right-0 z-10 mt-1 flex min-w-40 flex-col gap-0.5 rounded-sm border border-black/20 bg-alveus-green-900 p-2 shadow-lg transition ease-in-out focus:outline-hidden data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
     as="ul"
     modal={false}
     {...props}
