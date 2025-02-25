@@ -15,7 +15,7 @@ export const Navbar = () => {
   return (
     <Disclosure
       as="header"
-      className="relative z-20 bg-alveus-green-900 text-white lg:bg-transparent"
+      className="relative z-50 bg-alveus-green-900 text-white lg:bg-transparent"
     >
       {({ open }) => (
         <>
