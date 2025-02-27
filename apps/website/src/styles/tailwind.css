@@ -90,22 +90,6 @@
     }
   }
 
-  .alveus-sat-pswp {
-    @apply w-[80%] overflow-hidden;
-
-    .pswp__alveus-caption {
-      @apply text-lg;
-    }
-  }
-
-  .pswp {
-    @apply font-sans;
-
-    .pswp__alveus-caption {
-      @apply absolute bottom-0 left-1/2 w-fit max-w-[calc(100%-80px)] -translate-x-1/2 bg-black/80 p-4 leading-tight text-white empty:hidden;
-    }
-  }
-
   .alveus-community-map {
     .maplibregl-popup-content {
       padding: 3px 6px !important;

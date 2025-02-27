@@ -168,7 +168,7 @@ export const Lightbox = ({
     const opts = {
       ...getDefaultPhotoswipeLightboxOptions(),
       gallery: `#${photoswipeId}`,
-      mainClass: `pswp--${photoswipeId}`,
+      mainClass: `font-sans pswp--${photoswipeId}`,
       children: `a[data-lightbox-${photoswipeId}]`,
       preloaderDelay: 0,
     };
