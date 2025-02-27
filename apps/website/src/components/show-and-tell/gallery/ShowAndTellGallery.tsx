@@ -48,7 +48,7 @@ export function ShowAndTellGallery({
       appendToEl: lightboxParent || defaultConfig.appendToEl,
       mainClass: classes(
         defaultConfig.mainClass,
-        lightboxParent && "w-[80%] overflow-hidden",
+        lightboxParent && "w-[80%]! overflow-hidden!",
       ),
       padding: {
         top: 0,
