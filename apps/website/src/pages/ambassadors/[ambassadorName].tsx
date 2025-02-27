@@ -187,7 +187,6 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   useEffect(() => {
     const lightbox = new PhotoSwipeLightbox({
       ...getDefaultPhotoswipeLightboxOptions(),
-      mainClass: "font-sans",
       gallery: `#${photoswipe}`,
       children: "a",
       loop: true,

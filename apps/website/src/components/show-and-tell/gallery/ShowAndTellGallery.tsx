@@ -47,7 +47,7 @@ export function ShowAndTellGallery({
       children: "a[data-pswp-type]",
       appendToEl: lightboxParent || defaultConfig.appendToEl,
       mainClass: classes(
-        "font-sans",
+        defaultConfig.mainClass,
         lightboxParent && "w-[80%] overflow-hidden",
       ),
       padding: {
