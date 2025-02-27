@@ -11,6 +11,7 @@ import {
 } from "@/utils/video-urls";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { createImageUrl } from "@/utils/image";
+import { classes } from "@/utils/classes";
 
 import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
@@ -45,7 +46,10 @@ export function ShowAndTellGallery({
       gallery: `#${photoswipeId}`,
       children: "a[data-pswp-type]",
       appendToEl: lightboxParent || defaultConfig.appendToEl,
-      mainClass: lightboxParent ? "alveus-sat-pswp" : undefined,
+      mainClass: classes(
+        defaultConfig.mainClass,
+        lightboxParent && "w-[80%]! overflow-hidden!",
+      ),
       padding: {
         top: 0,
         right: 40,
@@ -110,7 +114,10 @@ export function ShowAndTellGallery({
 
     lightbox.on("uiRegister", () => {
       lightbox.pswp?.ui?.registerElement({
-        name: "alveus-caption",
+        className: classes(
+          "absolute bottom-0 left-1/2 w-fit max-w-[calc(100%-80px)] -translate-x-1/2 bg-black/80 p-4 leading-tight text-white empty:hidden",
+          lightboxParent && "text-lg",
+        ),
         order: 9,
         isButton: false,
         appendTo: "root",
