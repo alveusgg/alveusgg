@@ -165,14 +165,14 @@ export const Lightbox = ({
   const [photoswipe, setPhotoswipe] = useState<PhotoSwipeLightbox>();
 
   useEffect(() => {
-    const opts = {
-      ...getDefaultPhotoswipeLightboxOptions(),
+    const defaultConfig = getDefaultPhotoswipeLightboxOptions();
+    const lightbox = new PhotoSwipeLightbox({
+      ...defaultConfig,
       gallery: `#${photoswipeId}`,
-      mainClass: `pswp--${photoswipeId}`,
+      mainClass: classes(defaultConfig.mainClass, `pswp--${photoswipeId}`),
       children: `a[data-lightbox-${photoswipeId}]`,
       preloaderDelay: 0,
-    };
-    const lightbox = new PhotoSwipeLightbox(opts);
+    });
 
     // Expose the video id
     lightbox.addFilter("itemData", (itemData) => ({
