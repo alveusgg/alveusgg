@@ -28,7 +28,7 @@ updates:
     versioning-strategy: increase
 
     groups:
-      # Create dedicated (grouped) PRs for Next.js/trpc/prisma dependencies
+      # Create dedicated (grouped) PRs for Next.js/trpc/prisma/tailwind dependencies
       next:
         patterns:
           - "next"
@@ -41,6 +41,10 @@ updates:
         patterns:
           - "prisma"
           - "@prisma/*"
+      tailwind:
+        patterns:
+          - "tailwindcss"
+          - "@tailwindcss/*"
 
       # Update `dependencies` and `devDependencies` separately
       # Create grouped PRs for minor/patch updates with majors getting dedicated PRs
@@ -57,6 +61,8 @@ updates:
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "tailwindcss"
+          - "@tailwindcss/*"
       development:
         dependency-type: development
         update-types:
@@ -69,6 +75,8 @@ updates:
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "tailwindcss"
+          - "@tailwindcss/*"
 
     # Manually update major versions of `@types/node` with the version specified within .nvmrc
     ignore:
@@ -81,4 +89,4 @@ updates:
     rebase-strategy: disabled
 
     # Allow enough PRs for all the groups plus some major version PRs
-    open-pull-requests-limit: 10
+    open-pull-requests-limit: 20
