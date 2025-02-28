@@ -4,11 +4,13 @@ import { type CSSProperties, useCallback, useId, useMemo } from "react";
 
 import { camelToKebab } from "@/utils/string-case";
 import { createImageUrl, type ImageLoaderProps } from "@/utils/image";
+import { classes } from "@/utils/classes";
 
 type SlideshowProps = {
   images: {
     src: ImageProps["src"];
     alt: string;
+    className?: string;
   }[];
   timing?: {
     fade: number;
@@ -116,7 +118,7 @@ const Slideshow = ({
           ].join("\n"),
         }}
       />
-      {images.map(({ src, alt }, idx) => (
+      {images.map(({ src, alt, className }, idx) => (
         <div
           className={`absolute inset-0 z-0 overflow-clip opacity-0 slideshow-${id}-container`}
           key={
@@ -137,7 +139,7 @@ const Slideshow = ({
             quality="50"
             loader={qualityLoader}
             priority={idx === 0}
-            className="size-full object-cover"
+            className={classes("size-full object-cover", className)}
             style={{
               animationDelay: `${idx * animation.duration.offset}ms`,
             }}
