@@ -439,6 +439,10 @@ const config: NextConfig = {
   experimental: {
     scrollRestoration: true,
   },
+  // Move the dev indicator out the way of the consent toggle
+  devIndicators: {
+    position: "bottom-right",
+  },
 };
 
 export default withSuperjson()(config);

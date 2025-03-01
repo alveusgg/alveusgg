@@ -1,5 +1,11 @@
 import { z } from "zod";
 import { type DateObjectUnits, DateTime } from "luxon";
+import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import {
+  type ActiveAmbassador,
+  type ActiveAmbassadorKey,
+  isActiveAmbassadorEntry,
+} from "@alveusgg/data/build/ambassadors/filters";
 
 import { prisma } from "@/server/db/client";
 import {
@@ -15,6 +21,9 @@ import {
 } from "@/server/apis/discord";
 
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+import { typeSafeObjectEntries } from "@/utils/helpers";
+import { getShortBaseUrl } from "@/utils/short-url";
+import { camelToKebab } from "@/utils/string-case";
 
 import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 
@@ -150,6 +159,23 @@ export const eventsByWeekDay = [
 ] as RegularEvent[][];
 
 export async function createRegularCalendarEvents(date: Date) {
+  // Get all the ambassadors with an exact birth date
+  const ambassadorBirthdays = typeSafeObjectEntries(ambassadors)
+    .filter(isActiveAmbassadorEntry)
+    .reduce(
+      (acc, [name, ambassador]) => {
+        const key = ambassador.birth
+          ?.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+          ?.slice(2)
+          .join("-");
+        if (!key) return acc;
+
+        const entry = [name, ambassador] as (typeof acc)[keyof typeof acc][0];
+        return { ...acc, [key]: [...(acc[key] || []), entry] };
+      },
+      {} as Record<string, [ActiveAmbassadorKey, ActiveAmbassador][]>,
+    );
+
   // Walk through each day of the next month and create any events
   const nextMonth = DateTime.fromJSDate(date)
     .plus({ months: 1 })
@@ -157,8 +183,22 @@ export async function createRegularCalendarEvents(date: Date) {
     .set({ day: 1, hour: 12, minute: 0, second: 0, millisecond: 0 });
   for (let day = 1; day <= (nextMonth.daysInMonth || 0); day++) {
     const date = nextMonth.set({ day });
-    const events = eventsByWeekDay[date.weekday - 1];
-    for (const event of events || []) {
+    const events = eventsByWeekDay[date.weekday - 1]?.slice() || [];
+
+    const birthdays =
+      ambassadorBirthdays[
+        `${date.month.toString().padStart(2, "0")}-${date.day.toString().padStart(2, "0")}`
+      ] || [];
+    for (const [name, ambassador] of birthdays) {
+      events.push({
+        title: `${ambassador.name}'s Birthday`,
+        description: `Wish ${ambassador.name} a happy birthday!`,
+        category: "Alveus Special Stream",
+        link: `${getShortBaseUrl()}/${camelToKebab(name)}`,
+      });
+    }
+
+    for (const event of events) {
       let hasTime = false;
       let eventDate = date;
       if (event.startTime !== undefined) {
