@@ -49,7 +49,7 @@ const slides = [
   {
     src: sirenHeroImage,
     alt: ambassadors.siren.name,
-    className: "object-left",
+    className: "object-[40%_50%] lg:object-left",
   },
   {
     src: serranoJalapenoHeroImage,
@@ -58,6 +58,7 @@ const slides = [
   {
     src: pushPopHeroImage,
     alt: ambassadors.pushPop.name,
+    className: "object-[25%_50%] lg:object-center",
   },
   {
     src: ticoMileyHeroImage,
@@ -71,6 +72,7 @@ const slides = [
   {
     src: momoAppaHeroImage,
     alt: `${ambassadors.momo.name} and ${ambassadors.appa.name}`,
+    className: "object-left lg:object-center",
   },
 ];
 
