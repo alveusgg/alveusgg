@@ -18,9 +18,9 @@ const imageWidths = [
 export type { ImageLoaderProps };
 
 export function createImageUrl(props: ImageLoaderProps) {
-  const resolvedWidth = imageWidths.find((w) => w >= props.width);
-  if (!resolvedWidth)
-    throw new Error(`Could not find a valid width for ${props.width}`);
+  const resolvedWidth =
+    imageWidths.find((w) => w >= props.width) ||
+    imageWidths[imageWidths.length - 1]!;
 
   return defaultLoader({
     ...props,

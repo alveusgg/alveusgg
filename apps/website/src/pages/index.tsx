@@ -33,12 +33,12 @@ import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
 
-import sirenHeroImage from "@/assets/hero/siren.png";
-import mileyHeroImage from "@/assets/hero/miley.png";
-import ticoHeroImage from "@/assets/hero/tico.png";
-import miaHeroImage from "@/assets/hero/mia.png";
-import noodleHeroImage from "@/assets/hero/noodle.png";
-import nuggetHeroImage from "@/assets/hero/nugget.png";
+import sirenHeroImage from "@/assets/hero/siren.jpg";
+import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
+import pushPopHeroImage from "@/assets/hero/push-pop.jpg";
+import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
+import noodleHeroImage from "@/assets/hero/noodle.jpg";
+import momoAppaHeroImage from "@/assets/hero/momo-appa.jpg";
 
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
@@ -48,27 +48,31 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 const slides = [
   {
     src: sirenHeroImage,
-    alt: "Siren",
+    alt: ambassadors.siren.name,
+    className: "object-[40%_50%] lg:object-left",
   },
   {
-    src: mileyHeroImage,
-    alt: "Miley",
+    src: serranoJalapenoHeroImage,
+    alt: `${ambassadors.serrano.name} and ${ambassadors.jalapeno.name}`,
   },
   {
-    src: ticoHeroImage,
-    alt: "Tico",
+    src: pushPopHeroImage,
+    alt: ambassadors.pushPop.name,
+    className: "object-[25%_50%] lg:object-center",
   },
   {
-    src: miaHeroImage,
-    alt: "Mia",
+    src: ticoMileyHeroImage,
+    alt: `${ambassadors.tico.name} and ${ambassadors.miley.name}`,
+    className: "object-bottom",
   },
   {
     src: noodleHeroImage,
-    alt: "Noodle",
+    alt: ambassadors.noodle.name,
   },
   {
-    src: nuggetHeroImage,
-    alt: "Nugget",
+    src: momoAppaHeroImage,
+    alt: `${ambassadors.momo.name} and ${ambassadors.appa.name}`,
+    className: "object-left lg:object-center",
   },
 ];
 
@@ -202,7 +206,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button href="/ambassadors" dark>
+              <Button href="/ambassadors" dark className="backdrop-blur-md">
                 Meet the Ambassadors
               </Button>
               <WatchLive />
@@ -213,7 +217,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             <Consent
               item="live cam feed"
               consent="twitch"
-              className="aspect-video h-auto w-full max-w-2xl rounded-2xl xl:ml-auto"
+              className="aspect-video h-auto w-full max-w-2xl rounded-2xl data-[consent]:backdrop-blur-md xl:ml-auto"
             >
               {twitchEmbed && (
                 <Link
