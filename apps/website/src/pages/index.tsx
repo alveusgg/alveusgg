@@ -204,7 +204,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </p>
 
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button href="/ambassadors" dark>
+              <Button href="/ambassadors" dark className="backdrop-blur-md">
                 Meet the Ambassadors
               </Button>
               <WatchLive />
@@ -215,7 +215,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             <Consent
               item="live cam feed"
               consent="twitch"
-              className="aspect-video h-auto w-full max-w-2xl rounded-2xl xl:ml-auto"
+              className="aspect-video h-auto w-full max-w-2xl rounded-2xl data-[consent]:backdrop-blur-md xl:ml-auto"
             >
               {twitchEmbed && (
                 <Link
