@@ -52,6 +52,7 @@ const Consent = ({
         "relative z-0 flex flex-col items-center justify-center",
         className,
       )}
+      {...(loaded && consent[key] ? { "data-consent": "" } : {})}
     >
       {loaded &&
         ((indexable && crawler) || consent[key] ? (
