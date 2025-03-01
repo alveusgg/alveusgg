@@ -8,8 +8,7 @@ import importXPlugin from "eslint-plugin-import-x";
 // @ts-expect-error - no types
 import nextPlugin from "@next/eslint-plugin-next";
 import reactPlugin from "eslint-plugin-react";
-// @ts-expect-error - no types
-import hooksPlugin from "eslint-plugin-react-hooks";
+import * as hooksPlugin from "eslint-plugin-react-hooks";
 // FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/325
 // FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/384
 // import tailwindPlugin from "eslint-plugin-tailwindcss";
