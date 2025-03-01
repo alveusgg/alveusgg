@@ -4,7 +4,6 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import {
   Children,
   cloneElement,
-  useEffect,
   type ReactElement,
   type LiHTMLAttributes,
   type Ref,
