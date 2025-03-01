@@ -12,7 +12,7 @@ type BoxProps = {
 const Box = ({ dark, className, ringClassName, children }: BoxProps) => (
   <div
     className={classes(
-      "relative rounded-xl shadow-xl",
+      "relative overflow-hidden rounded-xl shadow-xl",
       // add padding if not overwritten via className
       !/\bp-\d+\b/.test(className || "") && "p-8",
       // add background color if not overwritten via className

@@ -15,6 +15,8 @@ import mapStyle from "@/data/map-style";
 import IconWorld from "@/icons/IconWorld";
 import IconX from "@/icons/IconX";
 
+import Box from "@/components/content/Box";
+
 import { CheckboxField } from "./CheckboxField";
 
 /**
@@ -257,20 +259,16 @@ export const MapPickerField = ({
       </div>
 
       {showMap && (
-        <div className="h-[500px] w-full overflow-hidden rounded-lg">
+        <Box className="p-0">
           <div
             ref={mapContainerRef}
             onKeyDown={(e) => {
               // If enter is pressed, don't bubble up to submit the form
               if (e.key === "Enter") e.preventDefault();
             }}
-            style={{
-              width: "100%",
-              height: "500px",
-              visibility: showMap ? "visible" : "hidden",
-            }}
+            className="h-128"
           />
-        </div>
+        </Box>
       )}
     </>
   );

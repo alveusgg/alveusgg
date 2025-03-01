@@ -64,7 +64,7 @@ export type ShowAndTellPageProps = InferGetStaticPropsType<
 const entriesPerPage = 10;
 
 export const bentoBoxClasses =
-  "bg-alveus-green-600 text-center text-white flex flex-col justify-center gap-2 overflow-hidden";
+  "bg-alveus-green-600 text-center text-white flex flex-col justify-center gap-2";
 
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
