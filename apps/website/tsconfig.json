@@ -16,6 +16,8 @@
     "jsx": "preserve",
     "incremental": true,
     "noUncheckedIndexedAccess": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["./src/*"],
       "photoswipe/lightbox": [
