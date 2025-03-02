@@ -22,6 +22,9 @@ importers:
       prettier:
         specifier: ^3.5.2
         version: 3.5.2
+      typescript:
+        specifier: ^5.8.2
+        version: 5.8.2
 
   apps/chatbot:
     dependencies:
