@@ -3,6 +3,14 @@
 const channels = 3;
 const sigBits = 5;
 
+const Channel = {
+  Red: 0,
+  Green: 1,
+  Blue: 2,
+} as const;
+
+type Channel = (typeof Channel)[keyof typeof Channel];
+
 type Range = [number, number];
 const cut = (
   vboxes: {
@@ -19,13 +27,7 @@ const cut = (
 
   const { ranges } = vboxes.pop()!;
 
-  const enum Channel {
-    Red,
-    Green,
-    Blue,
-  }
-
-  let maxRange = Channel.Red;
+  let maxRange: Channel = Channel.Red;
   let maxSpan = ranges[maxRange][1] - ranges[maxRange][0];
   for (let i = Channel.Green; i < ranges.length; i++) {
     const range = ranges[i];
