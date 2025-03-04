@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { type DateObjectUnits, DateTime } from "luxon";
+import type { CalendarEvent } from "@prisma/client";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
   type ActiveAmbassador,
@@ -244,10 +245,64 @@ async function getTwitchSchedule(
   return segments;
 }
 
+interface ExternalCalendar<ExternalEvent> {
+  type: string;
+  get: () => Promise<ExternalEvent[]>;
+  filter: (event: CalendarEvent) => boolean;
+  compare: (internal: CalendarEvent, external: ExternalEvent) => boolean;
+  create: (event: CalendarEvent) => Promise<void>;
+  remove: (event: ExternalEvent) => Promise<void>;
+}
+
+async function syncExternalSchedule<ExternalEvent>(
+  calendar: ExternalCalendar<ExternalEvent>,
+) {
+  // Get all the database events that we need to sync
+  const internalEvents = await getCalendarEvents({
+    start: new Date(),
+    hasTime: true,
+  }).then((events) => events.filter(calendar.filter));
+
+  // Get all the existing events from the external service
+  const externalEvents = await calendar.get();
+
+  // Decide which events in the DB need to be created on the external service
+  const missingEvents: CalendarEvent[] = [];
+  for (const internal of internalEvents) {
+    const idx = externalEvents.findIndex((external) =>
+      calendar.compare(internal, external),
+    );
+
+    // If we have an existing match, remove it from the list
+    if (idx !== -1) {
+      externalEvents.splice(idx, 1);
+      continue;
+    }
+
+    // Otherwise, we need to create this event
+    missingEvents.push(internal);
+  }
+
+  // Remove events from the external service we don't have in the DB
+  for (const external of externalEvents) {
+    console.log(`Removing ${calendar.type} external event:`, external);
+    await calendar.remove(external);
+  }
+
+  // Then, create any new events
+  // Do this after the removal to reduce the chance of an overlap error
+  for (const internal of missingEvents) {
+    console.log(`Creating ${calendar.type} external event:`, internal);
+    try {
+      await calendar.create(internal);
+    } catch (err) {
+      console.error(`Failed to create ${calendar.type} external event:`, err);
+    }
+  }
+}
+
 export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
   const { username, filter } = twitchChannels[channel];
-
-  // Get auth for the Twitch account
   const twitchChannel = await prisma.twitchChannel.findFirst({
     where: { username },
     select: {
@@ -259,147 +314,62 @@ export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
       },
     },
   });
-  if (!twitchChannel?.broadcasterAccount?.access_token) {
+  const { access_token, providerAccountId } =
+    twitchChannel?.broadcasterAccount ?? {};
+  if (!access_token || !providerAccountId) {
     throw new Error(`No access token found for ${username} Twitch account`);
   }
 
-  // Get all events from now onwards for the channel
-  // TODO: With access to non-recurring events, can we create events in the past?
-  const events = await getCalendarEvents({
-    start: new Date(),
-    hasTime: true,
-  }).then((events) => events.filter(filter));
-
-  // Get all the existing segments in the future from Twitch
-  const segments = await getTwitchSchedule(
-    twitchChannel.broadcasterAccount.access_token,
-    twitchChannel.broadcasterAccount.providerAccountId,
-    new Date(),
-  );
-
-  // Decide which events in the DB need to be created on Twitch
-  const create: { title: string; startAt: Date }[] = [];
-  for (const event of events) {
-    // Look for a matching event in the Twitch API
-    const title = getFormattedTitle(event, username);
-    const date = event.startAt.toISOString().replace(/\.\d+Z$/, "Z");
-    const idx = segments.findIndex(
-      (s) => s.title === title && s.start_time === date,
-    );
-
-    // If we have an existing match, remove it from the list
-    if (idx !== -1) {
-      segments.splice(idx, 1);
-      continue;
-    }
-
-    // Otherwise, we need to create this event
-    create.push({ title, startAt: event.startAt });
-  }
-
-  // Remove segments from Twitch we don't have in the DB
-  for (const segment of segments) {
-    console.log("Removing segment:", segment);
-    await removeScheduleSegment(
-      twitchChannel.broadcasterAccount.access_token,
-      twitchChannel.broadcasterAccount.providerAccountId,
-      segment.id,
-    );
-  }
-
-  // Then, create any new events
-  // Do this after the removal to reduce the chance of an overlap error
-  for (const event of create) {
-    console.log("Creating segment:", event);
-    try {
-      await createScheduleSegment(
-        twitchChannel.broadcasterAccount.access_token,
-        twitchChannel.broadcasterAccount.providerAccountId,
-        event.startAt,
+  await syncExternalSchedule({
+    type: "Twitch",
+    get: () => getTwitchSchedule(access_token, providerAccountId, new Date()),
+    filter,
+    compare: (internal, external) => {
+      const title = getFormattedTitle(internal, username);
+      const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "Z");
+      return external.title === title && external.start_time === date;
+    },
+    create: (internal) =>
+      createScheduleSegment(
+        access_token,
+        providerAccountId,
+        internal.startAt,
         DATETIME_ALVEUS_ZONE,
         60,
-        event.title,
-      );
-    } catch (err) {
-      console.error("Error creating segment", event, err);
-    }
-  }
+        getFormattedTitle(internal, username),
+      ).then(() => {}),
+    remove: (external) =>
+      removeScheduleSegment(access_token, providerAccountId, external.id),
+  });
 }
 
-// TODO: Can this and the Twitch logic above be abstracted into a method that takes get/create/delete functions?
 export async function syncDiscordEvents(guildId: string) {
-  // Get all events from now onwards
-  // Unlike for Twitch, we'll show all events (with a time) on Discord
-  const events = await getCalendarEvents({
-    start: new Date(),
-    hasTime: true,
-  });
-
-  // Get all the existing events in the future from Discord
-  const existing = await getScheduledGuildEvents(guildId);
-
-  // Decide which events in the DB need to be created on Discord
-  const create: {
-    title: string;
-    link: string;
-    description: string | null;
-    startAt: Date;
-  }[] = [];
-  for (const event of events) {
-    // Look for a matching event in the Discord API
-    const title = getFormattedTitle(event);
-    const description = event.description;
-    const date = event.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
-    const idx = existing.findIndex(
-      (e) =>
-        e.name === title &&
-        e.entity_metadata.location === event.link &&
-        e.description === description &&
-        e.scheduled_start_time === date,
-    );
-
-    // If we have an existing match, remove it from the list
-    if (idx !== -1) {
-      existing.splice(idx, 1);
-      continue;
-    }
-
-    // Otherwise, we need to create this event
-    create.push({
-      title,
-      link: event.link,
-      description,
-      startAt: event.startAt,
-    });
-  }
-
-  // Remove events from Discord we don't have in the DB
-  for (const event of existing) {
-    console.log("Removing guild event:", event);
-    await removeScheduledGuildEvent(guildId, event.id);
-
-    // Delay to avoid rate limiting (5/60s)
-    await new Promise((resolve) => setTimeout(resolve, 60_000 / 5));
-  }
-
-  // Then, create any new events
-  // Do this after the removal to reduce the chance of an overlap error
-  for (const event of create) {
-    console.log("Creating guild event:", event);
-    try {
-      await createScheduledGuildEvent(
-        guildId,
-        event.startAt,
-        new Date(event.startAt.getTime() + 60 * 60 * 1000),
-        event.title,
-        event.link,
-        event.description,
+  await syncExternalSchedule({
+    type: "Discord",
+    get: () => getScheduledGuildEvents(guildId),
+    filter: () => true,
+    compare: (internal, external) => {
+      const title = getFormattedTitle(internal);
+      const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
+      return (
+        external.name === title &&
+        external.entity_metadata.location === internal.link &&
+        external.description === internal.description &&
+        external.scheduled_start_time === date
       );
-
-      // Delay to avoid rate limiting (5/60s)
-      await new Promise((resolve) => setTimeout(resolve, 60_000 / 5));
-    } catch (err) {
-      console.error("Error creating guild event", event, err);
-    }
-  }
+    },
+    create: (internal) =>
+      createScheduledGuildEvent(
+        guildId,
+        internal.startAt,
+        new Date(internal.startAt.getTime() + 60 * 60 * 1000),
+        getFormattedTitle(internal),
+        internal.link,
+        internal.description,
+      ).then(() => new Promise((resolve) => setTimeout(resolve, 60_000 / 5))),
+    remove: (external) =>
+      removeScheduledGuildEvent(guildId, external.id).then(
+        () => new Promise((resolve) => setTimeout(resolve, 60_000 / 5)),
+      ),
+  });
 }
