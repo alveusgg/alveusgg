@@ -249,8 +249,12 @@ interface ExternalCalendar<ExternalEvent> {
   type: string;
   get: () => Promise<ExternalEvent[]>;
   filter: (event: CalendarEvent) => boolean;
-  compare: (internal: CalendarEvent, external: ExternalEvent) => boolean;
+  compare: (
+    internal: CalendarEvent,
+    external: ExternalEvent,
+  ) => null | "partial" | "exact";
   create: (event: CalendarEvent) => Promise<void>;
+  edit: (internal: CalendarEvent, external: ExternalEvent) => Promise<void>;
   remove: (event: ExternalEvent) => Promise<void>;
 }
 
@@ -261,37 +265,85 @@ async function syncExternalSchedule<ExternalEvent>(
   const internalEvents = await getCalendarEvents({
     start: new Date(),
     hasTime: true,
-  }).then((events) => events.filter(calendar.filter));
+  }).then((events) => new Set(events.filter(calendar.filter)));
 
   // Get all the existing events from the external service
-  const externalEvents = await calendar.get();
-
-  // Decide which events in the DB need to be created on the external service
-  const missingEvents: CalendarEvent[] = [];
-  for (const internal of internalEvents) {
-    const idx = externalEvents.findIndex((external) =>
-      calendar.compare(internal, external),
+  // We'll use the tuple to track any partial matches
+  const externalEvents = await calendar
+    .get()
+    .then(
+      (events) =>
+        new Map(
+          events.map(
+            (event) => [event, []] as [ExternalEvent, CalendarEvent[]],
+          ),
+        ),
     );
 
-    // If we have an existing match, remove it from the list
-    if (idx !== -1) {
-      externalEvents.splice(idx, 1);
-      continue;
+  // Iterate over each internal event to find matches in external events
+  for (const internal of internalEvents) {
+    for (const [external, partialMatches] of externalEvents) {
+      const comparison = calendar.compare(internal, external);
+
+      // If this is an exact match, we don't need to think about this event pair again
+      if (comparison === "exact") {
+        console.log(
+          `Skipping ${calendar.type} external event:`,
+          internal,
+          external,
+        );
+        externalEvents.delete(external);
+        internalEvents.delete(internal);
+        break;
+      }
+
+      // If this is a partial match, track it for later
+      if (comparison === "partial") {
+        partialMatches.push(internal);
+      }
+    }
+  }
+
+  // Walk through each of the remaining external events and their partial matches
+  // Start with the least partial matches to give us the best chance of finding a match for each
+  const sortedExternalEvents = Array.from(externalEvents.entries()).sort(
+    (a, b) => a[1].length - b[1].length,
+  );
+  for (const [external, partialMatches] of sortedExternalEvents) {
+    let match = false;
+
+    for (const internal of partialMatches) {
+      // If this internal event has already been synced, skip it
+      if (!internalEvents.has(internal)) continue;
+
+      console.log(
+        `Editing ${calendar.type} external event:`,
+        internal,
+        external,
+      );
+      try {
+        await calendar.edit(internal, external);
+        internalEvents.delete(internal);
+        match = true;
+        break;
+      } catch (err) {
+        console.error(`Failed to edit ${calendar.type} external event:`, err);
+      }
     }
 
-    // Otherwise, we need to create this event
-    missingEvents.push(internal);
+    // If there were no matches for this external event, remove it
+    if (!match) {
+      console.log(`Removing ${calendar.type} external event:`, external);
+      try {
+        await calendar.remove(external);
+      } catch (err) {
+        console.error(`Failed to remove ${calendar.type} external event:`, err);
+      }
+    }
   }
 
-  // Remove events from the external service we don't have in the DB
-  for (const external of externalEvents) {
-    console.log(`Removing ${calendar.type} external event:`, external);
-    await calendar.remove(external);
-  }
-
-  // Then, create any new events
-  // Do this after the removal to reduce the chance of an overlap error
-  for (const internal of missingEvents) {
+  // Finally, for any internal events that we haven't synced, create them
+  for (const internal of internalEvents) {
     console.log(`Creating ${calendar.type} external event:`, internal);
     try {
       await calendar.create(internal);
@@ -327,7 +379,9 @@ export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
     compare: (internal, external) => {
       const title = getFormattedTitle(internal, username);
       const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "Z");
-      return external.title === title && external.start_time === date;
+      return external.title === title && external.start_time === date
+        ? "exact"
+        : null;
     },
     create: (internal) =>
       createScheduleSegment(
@@ -338,6 +392,7 @@ export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
         60,
         getFormattedTitle(internal, username),
       ).then(() => {}),
+    edit: () => Promise.resolve(),
     remove: (external) =>
       removeScheduleSegment(access_token, providerAccountId, external.id),
   });
@@ -351,12 +406,12 @@ export async function syncDiscordEvents(guildId: string) {
     compare: (internal, external) => {
       const title = getFormattedTitle(internal);
       const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
-      return (
-        external.name === title &&
+      return external.name === title &&
         external.entity_metadata.location === internal.link &&
         external.description === internal.description &&
         external.scheduled_start_time === date
-      );
+        ? "exact"
+        : null;
     },
     create: (internal) =>
       createScheduledGuildEvent(
@@ -367,6 +422,7 @@ export async function syncDiscordEvents(guildId: string) {
         internal.link,
         internal.description,
       ).then(() => new Promise((resolve) => setTimeout(resolve, 60_000 / 5))),
+    edit: () => Promise.resolve(),
     remove: (external) =>
       removeScheduledGuildEvent(guildId, external.id).then(
         () => new Promise((resolve) => setTimeout(resolve, 60_000 / 5)),
