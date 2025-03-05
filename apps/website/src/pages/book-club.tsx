@@ -19,8 +19,9 @@ import TransitionHeight from "@/components/content/TransitionHeight";
 import bookClubLogo from "@/assets/book-club/logo.png";
 import bookClubFull from "@/assets/book-club/full.png";
 
-import aMostRemarkableCreature from "@/assets/books/a-most-remarkable-creature.jpg";
-import hIsForHawk from "@/assets/books/h-is-for-hawk.jpg";
+import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
+import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
+import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
 
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -45,6 +46,15 @@ type BookInfo = {
 };
 
 const books: BookInfo[] = [
+  {
+    title: "Adventures of a Young Naturalist",
+    author: "Sir David Attenborough",
+    image: adventuresOfAYoungNaturalist,
+    month: "2025-03",
+    link: "https://amzn.to/41qA2um",
+    thickness: thickness.lg,
+    color: "border-blue-900",
+  },
   {
     title: "A Most Remarkable Creature",
     author: "Jonathan Meiburg",
