@@ -516,6 +516,19 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       </div>
     ),
   },
+  {
+    key: "2025-and-beyond",
+    items: [
+      {
+        key: "new-studio",
+        date: "2025-03-05",
+        content: [
+          "New Studio Launch",
+          "Alveus unveils a completely refurbished studio space, featuring live plant walls, an interactive whiteboard, a new fish tank and improved equipment for live streams.",
+        ],
+      },
+    ],
+  },
 ];
 
 const transformHistoryItem = (item: HistoryItem) => ({
