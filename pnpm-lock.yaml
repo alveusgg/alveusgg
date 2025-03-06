@@ -98,6 +98,9 @@ importers:
       '@bart-krakowski/get-week-info-polyfill':
         specifier: ^1.0.8
         version: 1.0.8
+      '@cloudflare/stream-react':
+        specifier: ^1.9.2
+        version: 1.9.3(react@19.0.0)
       '@fontsource/pt-sans':
         specifier: ^5.2.5
         version: 5.2.5
@@ -402,6 +405,9 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@asamuzakjp/css-color@2.8.2':
     resolution: {integrity: sha512-RtWv9jFN2/bLExuZgFFZ0I3pWWeezAHGgrmjqGGWclATl1aDe3yhCUaI0Ilkp6OCk9zX7+FjvDasEX8Q9Rxc5w==}
@@ -591,6 +597,12 @@ packages:
 
   '@bart-krakowski/get-week-info-polyfill@1.0.8':
     resolution: {integrity: sha512-Vkp5Skl44AkQ/w+pJ1XrCa5P5whvpK7Ix75KBoZXpGXOEp6CqLVkcAQaWfzY6+rF1R+2cwvJMkxkYF3M4B8HFw==}
+
+  '@cloudflare/stream-react@1.9.3':
+    resolution: {integrity: sha512-ocr7B+zHk/jq0r/wgtFeyoz7Hr+v3Qn0Ho6yUBkWT07ahr/0GU1dhliYJESwNXMuMYCU1sZ02sFH9pW5r1/BIA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
 
   '@corex/deepmerge@4.0.43':
     resolution: {integrity: sha512-N8uEMrMPL0cu/bdboEWpQYb/0i2K5Qn8eCsxzOmxSggJbbQte7ljMRoXm917AbntqTGOzdTu+vP3KOOzoC70HQ==}
@@ -6516,8 +6528,9 @@ snapshots:
 
   '@alveusgg/data@0.55.1(tailwindcss@4.0.17)(zod@3.24.2)':
     dependencies:
-      tailwindcss: 4.0.17
       zod: 3.24.2
+    optionalDependencies:
+      tailwindcss: 4.0.17
 
   '@asamuzakjp/css-color@2.8.2':
     dependencies:
@@ -7029,6 +7042,10 @@ snapshots:
       regenerator-runtime: 0.14.1
 
   '@bart-krakowski/get-week-info-polyfill@1.0.8': {}
+
+  '@cloudflare/stream-react@1.9.3(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
 
   '@corex/deepmerge@4.0.43': {}
 

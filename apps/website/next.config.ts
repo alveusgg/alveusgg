@@ -394,6 +394,8 @@ const config: NextConfig = {
               process.env.VERCEL_ENV &&
                 ["development", "preview"].includes(process.env.VERCEL_ENV) &&
                 "https://vercel.live/",
+              // Cloudflare Stream embeds:
+              "https://customer-agf91muwks8sd9ee.cloudflarestream.com/",
               // Twitch embeds:
               "https://embed.twitch.tv/ https://player.twitch.tv/ https://clips.twitch.tv/ https://www.twitch.tv/",
               // YouTube embeds:
