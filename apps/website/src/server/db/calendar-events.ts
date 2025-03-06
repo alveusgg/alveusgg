@@ -17,6 +17,7 @@ import {
 } from "@/server/apis/twitch";
 import {
   createScheduledGuildEvent,
+  editScheduledGuildEvent,
   getScheduledGuildEvents,
   removeScheduledGuildEvent,
 } from "@/server/apis/discord";
@@ -404,25 +405,55 @@ export async function syncDiscordEvents(guildId: string) {
     get: () => getScheduledGuildEvents(guildId),
     filter: () => true,
     compare: (internal, external) => {
-      const title = getFormattedTitle(internal);
       const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
-      return external.name === title &&
-        external.entity_metadata.location === internal.link &&
-        external.description === internal.description &&
-        external.scheduled_start_time === date
-        ? "exact"
-        : null;
+      const title = external.name.split(" @ ")[0] || "";
+
+      const titleMatch = title === internal.title;
+      const linkMatch = external.entity_metadata.location === internal.link;
+      const descriptionMatch = external.description === internal.description;
+      const dateMatch = external.scheduled_start_time === date;
+
+      // Handle exact matches, which require no changes to the external event
+      if (titleMatch && linkMatch && descriptionMatch && dateMatch) {
+        return "exact";
+      }
+
+      // If the title matches, but the date or another field doesn't, we'll consider it a partial match
+      if (titleMatch) {
+        return "partial";
+      }
+
+      // If the title is a close match, and one other field matches, we'll consider it a partial match
+      // This handles cases where whitespace, capitalization, or punctuation might've changed in the event name
+      // TODO: We may want to think about using levenshtein distance or similar for this?
+      const titleCloseMatch =
+        title.toLowerCase().replace(/[^a-z]/g, "") ===
+        internal.title.toLowerCase().replace(/[^a-z]/g, "");
+      if (
+        titleCloseMatch &&
+        (linkMatch || (internal.description && descriptionMatch) || dateMatch)
+      ) {
+        return "partial";
+      }
+
+      return null;
     },
     create: (internal) =>
-      createScheduledGuildEvent(
-        guildId,
-        internal.startAt,
-        new Date(internal.startAt.getTime() + 60 * 60 * 1000),
-        getFormattedTitle(internal),
-        internal.link,
-        internal.description,
-      ).then(() => new Promise((resolve) => setTimeout(resolve, 60_000 / 5))),
-    edit: () => Promise.resolve(),
+      createScheduledGuildEvent(guildId, {
+        start: internal.startAt,
+        end: new Date(internal.startAt.getTime() + 60 * 60 * 1000),
+        name: getFormattedTitle(internal),
+        location: internal.link,
+        description: internal.description,
+      }).then(() => new Promise((resolve) => setTimeout(resolve, 60_000 / 5))),
+    edit: (internal, external) =>
+      editScheduledGuildEvent(guildId, external.id, {
+        start: internal.startAt,
+        end: new Date(internal.startAt.getTime() + 60 * 60 * 1000),
+        name: getFormattedTitle(internal),
+        location: internal.link,
+        description: internal.description,
+      }).then(() => new Promise((resolve) => setTimeout(resolve, 60_000 / 5))),
     remove: (external) =>
       removeScheduledGuildEvent(guildId, external.id).then(
         () => new Promise((resolve) => setTimeout(resolve, 60_000 / 5)),
