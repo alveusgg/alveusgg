@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
 import type { Episode } from "schema-dts";
+import { Stream } from "@cloudflare/stream-react";
 
 import animalQuest, {
   hosts,
@@ -21,7 +22,6 @@ import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Link from "@/components/content/Link";
 import JsonLD from "@/components/content/JsonLD";
-import { TwitchEmbed } from "@/components/content/TwitchEmbed";
 import Consent from "@/components/Consent";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
@@ -51,34 +51,6 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
     {},
   );
 
-const getTwitchEmbed = (
-  video: number,
-  parent: string,
-  {
-    start,
-    player,
-    autoPlay = true,
-    muted = false,
-  }: Partial<{
-    start: string;
-    player: string;
-    autoPlay: boolean;
-    muted: boolean;
-  }> = {},
-): string => {
-  const url = new URL("https://player.twitch.tv");
-  url.searchParams.set("video", video.toString());
-  url.searchParams.set("parent", parent);
-  url.searchParams.set("autoplay", autoPlay.toString());
-  url.searchParams.set("muted", muted.toString());
-  url.searchParams.set("allowfullscreen", "true");
-  url.searchParams.set("width", "100%");
-  url.searchParams.set("height", "100%");
-  if (start) url.searchParams.set("time", start);
-  if (player) url.searchParams.set("player", player);
-  return url.toString();
-};
-
 const getPreziEmbed = (id: string): string => {
   const url = new URL(`https://prezi.com/p/embed/${encodeURIComponent(id)}`);
   url.searchParams.set("autoplay", "1");
@@ -96,15 +68,6 @@ const stringToSeconds = (time: string): number | undefined => {
       Number(hours ?? 0) * 3600 + Number(minutes ?? 0) * 60 + Number(seconds)
     );
   }
-};
-
-const secondsToString = (seconds: number): string => {
-  const h = Math.floor(seconds / 3600)
-    .toString()
-    .padStart(2, "0");
-  const m = (Math.floor(seconds / 60) % 60).toString().padStart(2, "0");
-  const s = (seconds % 60).toString().padStart(2, "0");
-  return `${h}h${m}m${s}s`;
 };
 
 const secondsToIso8601 = (seconds: number): string => {
@@ -180,7 +143,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
       ? router.query.t[0]
       : router.query.t;
     const querySeconds = stringToSeconds(queryString || "") ?? 0;
-    return secondsToString(Math.max(defaultSeconds, querySeconds));
+    return Math.max(defaultSeconds, querySeconds);
   }, [episode.video.start, router.query.t]);
 
   const description = useMemo(
@@ -266,7 +229,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
       >
         {/* This metadata is more-or-less copied from the Twitch VOD page */}
 
-        <meta
+        {/* <meta
           key="twitter:player"
           property="twitter:player"
           content={getTwitchEmbed(episode.video.id, "meta.tag", {
@@ -314,7 +277,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           content="text/html"
         />
         <meta key="og:video:width" property="og:video:width" content="620" />
-        <meta key="og:video:height" property="og:video:height" content="378" />
+        <meta key="og:video:height" property="og:video:height" content="378" /> */}
       </Meta>
 
       {/* Nav background */}
@@ -411,19 +374,25 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 Video
               </h2>
 
-              <Consent
-                item="episode video"
-                consent="twitch"
-                indexable
-                thumbnail={animalQuestFull}
+              <Stream
+                src="3462c91082b1a724ceaedf19e7597583"
+                customerCode="agf91muwks8sd9ee"
+                poster={
+                  /^http:\/\/localhost(:\d+)?$/.test(env.NEXT_PUBLIC_BASE_URL)
+                    ? "https://files.alveus.site/intros/animalquest.png"
+                    : env.NEXT_PUBLIC_BASE_URL +
+                      createImageUrl({ src: animalQuestFull.src, width: 1200 })
+                }
+                preload
+                autoplay
+                controls
+                muted={false}
+                currentTime={start}
+                letterboxColor="transparent"
+                height="100%"
+                width="100%"
                 className="my-auto aspect-video h-auto w-full overflow-hidden rounded-2xl bg-alveus-green text-alveus-tan"
-              >
-                <TwitchEmbed
-                  video={episode.video.id.toString()}
-                  time={start}
-                  className="aspect-video h-auto w-full"
-                />
-              </Consent>
+              />
             </div>
           </div>
 
