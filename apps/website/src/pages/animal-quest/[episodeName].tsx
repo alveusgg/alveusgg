@@ -21,6 +21,7 @@ import Heading from "@/components/content/Heading";
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Link from "@/components/content/Link";
+import Box from "@/components/content/Box";
 import JsonLD from "@/components/content/JsonLD";
 import Consent from "@/components/Consent";
 
@@ -345,108 +346,108 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
-        <Section dark>
-          <div className="flex flex-wrap lg:flex-nowrap">
-            <div className="flex w-full shrink-0 flex-col items-start justify-between py-4 lg:max-w-md lg:pl-8">
-              <Heading className="flex flex-col">
-                <span className="text-lg">
-                  Animal Quest Episode {episode.episode}:{" "}
-                </span>
-                <span>{episode.edition}</span>
-              </Heading>
+        <Section dark className="pt-4">
+          <Heading className="mb-6 text-3xl">
+            <span className="text-2xl">
+              Animal Quest Episode {episode.episode}:
+            </span>{" "}
+            {episode.edition}
+          </Heading>
 
-              <div className="flex w-full flex-wrap">
-                <h2 className="sr-only">Episode Information</h2>
+          <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
+            <Image
+              src={animalQuestFull}
+              alt=""
+              className="absolute inset-0 -z-10 h-full w-full object-cover"
+              width={1200}
+            />
+            <Stream
+              src="3462c91082b1a724ceaedf19e7597583"
+              customerCode="agf91muwks8sd9ee"
+              poster={posterUrl}
+              autoplay
+              preload
+              controls
+              muted={false}
+              currentTime={start}
+              letterboxColor="transparent"
+              height="100%"
+              width="100%"
+              className="my-auto aspect-video h-auto w-full bg-transparent"
+            />
+          </Box>
 
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Broadcast:
-                  </Heading>
-                  <p>{formatDateTime(episode.broadcast, { style: "long" })}</p>
-                </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between lg:flex-nowrap">
+            <div className="flex flex-wrap items-start gap-x-8 gap-y-2 py-4">
+              <h2 className="sr-only">Episode Information</h2>
 
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Featuring:
-                  </Heading>
-                  <p>
-                    {typeSafeObjectEntries(featured).map(
-                      ([key, ambassador], idx, arr) => (
-                        <Fragment key={key}>
-                          {/* Retired ambassadors don't have pages */}
-                          {isActiveAmbassadorKey(key) ? (
-                            <Link
-                              href={`/ambassadors/${camelToKebab(key)}`}
-                              dark
-                            >
-                              {ambassador.name}
-                            </Link>
-                          ) : (
-                            ambassador.name
-                          )}
-                          {idx < arr.length - 2 && ", "}
-                          {idx === arr.length - 2 && arr.length > 2 && ","}
-                          {idx === arr.length - 2 && " and "}
-                        </Fragment>
-                      ),
-                    )}
-                  </p>
-                </div>
-
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Host:
-                  </Heading>
-                  <p>
-                    <Link href={host.link} external={host.external} dark>
-                      {host.name}
-                    </Link>
-                  </p>
-                </div>
-
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Length:
-                  </Heading>
-                  <p title="Video length may appear longer due to intro/outro screen segments">
-                    {formatSeconds(episode.length, {
-                      style: "long",
-                      seconds: false,
-                    })}
-                  </p>
-                </div>
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Broadcast:
+                </Heading>
+                <p className="text-xl">
+                  {formatDateTime(episode.broadcast, { style: "long" })}
+                </p>
               </div>
 
-              <Button href="/animal-quest" className="mt-8" dark>
-                Discover more episodes
-              </Button>
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Featuring:
+                </Heading>
+                <p className="text-xl">
+                  {typeSafeObjectEntries(featured).map(
+                    ([key, ambassador], idx, arr) => (
+                      <Fragment key={key}>
+                        {/* Retired ambassadors don't have pages */}
+                        {isActiveAmbassadorKey(key) ? (
+                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
+                            {ambassador.name}
+                          </Link>
+                        ) : (
+                          ambassador.name
+                        )}
+                        {idx < arr.length - 2 && ", "}
+                        {idx === arr.length - 2 && arr.length > 2 && ","}
+                        {idx === arr.length - 2 && " and "}
+                      </Fragment>
+                    ),
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Host:
+                </Heading>
+                <p className="text-xl">
+                  <Link href={host.link} external={host.external} dark>
+                    {host.name}
+                  </Link>
+                </p>
+              </div>
+
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Length:
+                </Heading>
+                <p
+                  className="text-xl"
+                  title="Video length may appear longer due to intro/outro screen segments"
+                >
+                  {formatSeconds(episode.length, {
+                    style: "long",
+                    seconds: false,
+                  })}
+                </p>
+              </div>
             </div>
 
-            {/* Move the video to the left/top of the flex container with order-first */}
-            {/* Do this in CSS so the episode title is first in the DOM for screen-readers etc. */}
-            <div className="order-first flex w-full grow flex-col gap-4 lg:w-auto">
-              <h2 className="sr-only" id="video">
-                Video
-              </h2>
-
-              <Stream
-                src="3462c91082b1a724ceaedf19e7597583"
-                customerCode="agf91muwks8sd9ee"
-                poster={posterUrl}
-                preload
-                autoplay
-                controls
-                muted={false}
-                currentTime={start}
-                letterboxColor="transparent"
-                height="100%"
-                width="100%"
-                className="my-auto aspect-video h-auto w-full overflow-hidden rounded-2xl bg-alveus-green text-alveus-tan"
-              />
-            </div>
+            <Button href="/animal-quest" dark>
+              Discover more episodes
+            </Button>
           </div>
 
-          <div className="mt-8 w-full space-y-4">
+          <div className="mt-4 w-full space-y-4">
             {description.map((paragraph) => (
               <p key={paragraph} className="text-lg">
                 {paragraph}
