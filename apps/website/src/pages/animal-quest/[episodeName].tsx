@@ -51,6 +51,43 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
     {},
   );
 
+const getCloudflareEmbed = (
+  customer: string,
+  video: string,
+  {
+    start,
+    autoPlay = true,
+    muted = false,
+    poster,
+    title,
+    link,
+  }: Partial<{
+    start: string | number;
+    autoPlay: boolean;
+    muted: boolean;
+    poster: string;
+    title?: string;
+    link?: string;
+  }> = {},
+): string => {
+  const url = new URL(
+    `https://customer-${customer}.cloudflarestream.com/${video}/iframe`,
+  );
+  url.searchParams.set("autoplay", autoPlay.toString());
+  url.searchParams.set("muted", muted.toString());
+  if (start) url.searchParams.set("startTime", start.toString());
+  if (poster) url.searchParams.set("poster", poster);
+  if (title) url.searchParams.set("title", title);
+  if (link) {
+    url.searchParams.set("channel-link", link);
+    url.searchParams.set("share-link", link);
+  }
+  return url.toString();
+};
+
+const getCloudflareVideo = (customer: string, video: string): string =>
+  `https://customer-${customer}.cloudflarestream.com/${video}/downloads/default.mp4`;
+
 const getPreziEmbed = (id: string): string => {
   const url = new URL(`https://prezi.com/p/embed/${encodeURIComponent(id)}`);
   url.searchParams.set("autoplay", "1");
@@ -129,6 +166,11 @@ export const getStaticProps: GetStaticProps<
     },
   };
 };
+
+const posterUrl = /^http:\/\/localhost(:\d+)?$/.test(env.NEXT_PUBLIC_BASE_URL)
+  ? "https://files.alveus.site/intros/animalquest.png"
+  : env.NEXT_PUBLIC_BASE_URL +
+    createImageUrl({ src: animalQuestFull.src, width: 1200 });
 
 const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   episode,
@@ -227,15 +269,13 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         description={description.join("\n\n")}
         image={animalQuestFull.src}
       >
-        {/* This metadata is more-or-less copied from the Twitch VOD page */}
-
-        {/* <meta
+        <meta
           key="twitter:player"
           property="twitter:player"
-          content={getTwitchEmbed(episode.video.id, "meta.tag", {
-            start: episode.video.start,
-            player: "twitter",
-          })}
+          content={getCloudflareVideo(
+            "agf91muwks8sd9ee",
+            "3462c91082b1a724ceaedf19e7597583",
+          )}
         />
         <meta key="twitter:card" property="twitter:card" content="player" />
         <meta
@@ -252,18 +292,18 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="og:video"
           property="og:video"
-          content={getTwitchEmbed(episode.video.id, "meta.tag", {
-            start: episode.video.start,
-            player: "facebook",
-          })}
+          content={getCloudflareVideo(
+            "agf91muwks8sd9ee",
+            "3462c91082b1a724ceaedf19e7597583",
+          )}
         />
         <meta
           key="og:video:secure_url"
           property="og:video:secure_url"
-          content={getTwitchEmbed(episode.video.id, "meta.tag", {
-            start: episode.video.start,
-            player: "facebook",
-          })}
+          content={getCloudflareVideo(
+            "agf91muwks8sd9ee",
+            "3462c91082b1a724ceaedf19e7597583",
+          )}
         />
         <meta
           key="og:video:release_date"
@@ -274,10 +314,25 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="og:video:type"
           property="og:video:type"
-          content="text/html"
+          content="video/mp4"
         />
-        <meta key="og:video:width" property="og:video:width" content="620" />
-        <meta key="og:video:height" property="og:video:height" content="378" /> */}
+        <meta key="og:video:width" property="og:video:width" content="640" />
+        <meta key="og:video:height" property="og:video:height" content="360" />
+
+        <meta
+          key="canonical"
+          property="canonical"
+          content={`${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+            episode.edition,
+          )}`}
+        />
+        <meta
+          key="og:url"
+          property="og:url"
+          content={`${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+            episode.edition,
+          )}`}
+        />
       </Meta>
 
       {/* Nav background */}
@@ -377,12 +432,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               <Stream
                 src="3462c91082b1a724ceaedf19e7597583"
                 customerCode="agf91muwks8sd9ee"
-                poster={
-                  /^http:\/\/localhost(:\d+)?$/.test(env.NEXT_PUBLIC_BASE_URL)
-                    ? "https://files.alveus.site/intros/animalquest.png"
-                    : env.NEXT_PUBLIC_BASE_URL +
-                      createImageUrl({ src: animalQuestFull.src, width: 1200 })
-                }
+                poster={posterUrl}
                 preload
                 autoplay
                 controls
@@ -494,16 +544,25 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
               episode.edition,
             )}`,
-            thumbnailUrl:
-              env.NEXT_PUBLIC_BASE_URL +
-              createImageUrl({ src: animalQuestFull.src, width: 1200 }),
+            thumbnailUrl: posterUrl,
             uploadDate: episode.broadcast.toISOString(),
             duration: secondsToIso8601(episode.length),
-            // Copying the Twitch VOD page behaviour, as with the meta data
-            // Twitch set their embedUrl to be their WWW page, not the player
-            embedUrl: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
-              episode.edition,
-            )}`,
+            embedUrl: getCloudflareEmbed(
+              "agf91muwks8sd9ee",
+              "3462c91082b1a724ceaedf19e7597583",
+              {
+                start,
+                poster: posterUrl,
+                title: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
+                link: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+                  episode.edition,
+                )}`,
+              },
+            ),
+            contentUrl: getCloudflareVideo(
+              "agf91muwks8sd9ee",
+              "3462c91082b1a724ceaedf19e7597583",
+            ),
           },
           partOfSeries: {
             "@type": "CreativeWorkSeries",
