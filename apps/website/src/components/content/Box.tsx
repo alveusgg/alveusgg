@@ -29,7 +29,7 @@ const Box = ({ dark, className, ringClassName, children }: BoxProps) => (
       className={classes(
         "pointer-events-none absolute inset-0 rounded-xl ring-4 ring-inset",
         // add ring color if not overwritten via ringClassName
-        !/\bring-/.test(ringClassName || "") &&
+        !/\bring-\D+/.test(ringClassName || "") &&
           (dark ? "ring-white/15" : "ring-black/15"),
         ringClassName,
       )}
