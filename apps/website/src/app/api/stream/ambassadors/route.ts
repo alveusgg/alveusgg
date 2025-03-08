@@ -12,6 +12,7 @@ import {
   getSpecies,
   type Species,
 } from "@alveusgg/data/build/ambassadors/species";
+import enclosures from "@alveusgg/data/build/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { createImageUrl } from "@/utils/image";
@@ -64,6 +65,7 @@ const ambassadorsV2 = typeSafeObjectFromEntries(
               title: getClassification(species.class),
             },
           },
+          enclosure: enclosures[val.enclosure].name,
         },
       ];
     }),
