@@ -12,6 +12,7 @@ import {
   getSpecies,
   type Species,
 } from "@alveusgg/data/build/ambassadors/species";
+import enclosures from "@alveusgg/data/build/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { createImageUrl } from "@/utils/image";
@@ -22,12 +23,13 @@ import {
 import { env } from "@/env";
 
 // If these types change, the extension schema MUST be updated as well
-type AmbassadorV2 = Omit<ActiveAmbassador, "species"> & {
+type AmbassadorV2 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
   species: Omit<Species, "iucn" | "class"> & {
     iucn: Species["iucn"] & { title: string };
-    class: { name: Species["class"]; title: string };
+    class: { name: string; title: string };
   };
+  enclosure: string;
 };
 
 export type AmbassadorsResponse = {
@@ -63,6 +65,7 @@ const ambassadorsV2 = typeSafeObjectFromEntries(
               title: getClassification(species.class),
             },
           },
+          enclosure: enclosures[val.enclosure].name,
         },
       ];
     }),
