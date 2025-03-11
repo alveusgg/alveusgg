@@ -17,7 +17,7 @@ export const videoPlatformConfigs = {
       /(?:https?:)?(?:\/\/)?(?:(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/(?:(?:watch)?\?(?:app=[a-z]+&)?(?:feature=\w*&)?vi?=|embed\/|vi?\/|e\/|shorts\/)|youtu.be\/)([\w-]{10,20})/i,
     normalizedRegex: /https:\/\/www\.youtube\.com\/watch\?v=([\w-]{10,20})/,
     embedUrl: (id: string) =>
-      `https://www.youtube-nocookie.com/embed/${id}?modestbranding=1`,
+      `https://www.youtube-nocookie.com/embed/${id}?modestbranding=1&rel=0`,
     previewUrl: (id: string) =>
       `https://img.youtube.com/vi/${id}/maxresdefault.jpg`,
     consent: "youtube",
