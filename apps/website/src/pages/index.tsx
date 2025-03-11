@@ -34,6 +34,7 @@ import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
 
 import sirenHeroImage from "@/assets/hero/siren.jpg";
+import studioHeroImage from "@/assets/hero/studio.jpg";
 import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
 import pushPopHeroImage from "@/assets/hero/push-pop.jpg";
 import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
@@ -50,6 +51,10 @@ const slides = [
     src: sirenHeroImage,
     alt: ambassadors.siren.name,
     className: "object-[40%_50%] lg:object-left",
+  },
+  {
+    src: studioHeroImage,
+    alt: "Maya in the Alveus studio",
   },
   {
     src: serranoJalapenoHeroImage,

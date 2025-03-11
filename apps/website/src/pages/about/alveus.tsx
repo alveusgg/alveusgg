@@ -516,6 +516,19 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
       </div>
     ),
   },
+  {
+    key: "2025-and-beyond",
+    items: [
+      {
+        key: "new-studio",
+        date: "2025-03-05",
+        content: [
+          "New Studio Launch",
+          "Alveus unveils a completely refurbished studio space, featuring live plant walls, an interactive whiteboard, a new fish tank and improved equipment for live streams.",
+        ],
+      },
+    ],
+  },
 ];
 
 const transformHistoryItem = (item: HistoryItem) => ({
@@ -587,10 +600,10 @@ const AboutAlveusPage: NextPage = () => {
             Viewers can also follow along with our ambassadors and their daily
             lives at the sanctuary, fostering a deeper connection between our
             audience, the ambassadors, and the species they represent, while
-            learning about the conservation stories for each of them. Each
-            ambassador at Alveus is chosen with a purpose, being representatives
-            of their species with unique stories to be told about conservation
-            or consumer choice.
+            learning about the conservation stories for each of them. Each and
+            every ambassador at Alveus plays an important role as a
+            representative of their species, sharing unique stories about
+            conservation and consumer choice.
           </p>
 
           <p className="text-lg">

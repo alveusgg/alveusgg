@@ -206,7 +206,7 @@ const AmbassadorsPage: NextPage = () => {
     <>
       <Meta
         title="Ambassadors"
-        description="Alveus Ambassadors are animals whose role includes handling and/or training by staff or volunteers for interaction with the public and in support of institutional education and conservation goals."
+        description="Each and every ambassador at Alveus plays an important role as a representative of their species, sharing unique stories about conservation and consumer choice."
       />
 
       {/* Nav background */}
@@ -228,10 +228,12 @@ const AmbassadorsPage: NextPage = () => {
           <div className="w-full lg:w-3/5">
             <Heading>Alveus Ambassadors</Heading>
             <p className="text-lg">
-              Association of Zoo and Aquariums (AZA) defines an Ambassador
-              Animal as “an animal whose role includes handling and/or training
-              by staff or volunteers for interaction with the public and in
-              support of institutional education and conservation goals”.
+              Each and every ambassador at Alveus plays an important role as a
+              representative of their species, sharing unique stories about
+              conservation and consumer choice. Our non-releasable animal
+              ambassadors are not pets &mdash; they help educate our audience,
+              inspire conservation efforts, and foster a deeper connection with
+              their species.
             </p>
           </div>
         </Section>
