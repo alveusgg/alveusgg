@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { type DateObjectUnits, DateTime } from "luxon";
+import type { CalendarEvent } from "@prisma/client";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
   type ActiveAmbassador,
@@ -16,6 +17,7 @@ import {
 } from "@/server/apis/twitch";
 import {
   createScheduledGuildEvent,
+  editScheduledGuildEvent,
   getScheduledGuildEvents,
   removeScheduledGuildEvent,
 } from "@/server/apis/discord";
@@ -244,10 +246,116 @@ async function getTwitchSchedule(
   return segments;
 }
 
+interface ExternalCalendar<ExternalEvent> {
+  type: string;
+  get: () => Promise<ExternalEvent[]>;
+  filter: (event: CalendarEvent) => boolean;
+  compare: (
+    internal: CalendarEvent,
+    external: ExternalEvent,
+  ) => null | "partial" | "exact";
+  create: (event: CalendarEvent) => Promise<void>;
+  edit: (internal: CalendarEvent, external: ExternalEvent) => Promise<void>;
+  remove: (event: ExternalEvent) => Promise<void>;
+}
+
+async function syncExternalSchedule<ExternalEvent>(
+  calendar: ExternalCalendar<ExternalEvent>,
+) {
+  // Get all the database events that we need to sync
+  const internalEvents = await getCalendarEvents({
+    start: new Date(),
+    hasTime: true,
+  }).then((events) => new Set(events.filter(calendar.filter)));
+
+  // Get all the existing events from the external service
+  // We'll use the tuple to track any partial matches
+  const externalEvents = await calendar
+    .get()
+    .then(
+      (events) =>
+        new Map(
+          events.map(
+            (event) => [event, []] as [ExternalEvent, CalendarEvent[]],
+          ),
+        ),
+    );
+
+  // Iterate over each internal event to find matches in external events
+  for (const internal of internalEvents) {
+    for (const [external, partialMatches] of externalEvents) {
+      const comparison = calendar.compare(internal, external);
+
+      // If this is an exact match, we don't need to think about this event pair again
+      if (comparison === "exact") {
+        console.log(
+          `Skipping ${calendar.type} external event:`,
+          internal,
+          external,
+        );
+        externalEvents.delete(external);
+        internalEvents.delete(internal);
+        break;
+      }
+
+      // If this is a partial match, track it for later
+      if (comparison === "partial") {
+        partialMatches.push(internal);
+      }
+    }
+  }
+
+  // Walk through each of the remaining external events and their partial matches
+  // Start with the least partial matches to give us the best chance of finding a match for each
+  const sortedExternalEvents = Array.from(externalEvents.entries()).sort(
+    (a, b) => a[1].length - b[1].length,
+  );
+  for (const [external, partialMatches] of sortedExternalEvents) {
+    let match = false;
+
+    for (const internal of partialMatches) {
+      // If this internal event has already been synced, skip it
+      if (!internalEvents.has(internal)) continue;
+
+      console.log(
+        `Editing ${calendar.type} external event:`,
+        internal,
+        external,
+      );
+      try {
+        await calendar.edit(internal, external);
+        internalEvents.delete(internal);
+        match = true;
+        break;
+      } catch (err) {
+        console.error(`Failed to edit ${calendar.type} external event:`, err);
+      }
+    }
+
+    // If there were no matches for this external event, remove it
+    if (!match) {
+      console.log(`Removing ${calendar.type} external event:`, external);
+      try {
+        await calendar.remove(external);
+      } catch (err) {
+        console.error(`Failed to remove ${calendar.type} external event:`, err);
+      }
+    }
+  }
+
+  // Finally, for any internal events that we haven't synced, create them
+  for (const internal of internalEvents) {
+    console.log(`Creating ${calendar.type} external event:`, internal);
+    try {
+      await calendar.create(internal);
+    } catch (err) {
+      console.error(`Failed to create ${calendar.type} external event:`, err);
+    }
+  }
+}
+
 export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
   const { username, filter } = twitchChannels[channel];
-
-  // Get auth for the Twitch account
   const twitchChannel = await prisma.twitchChannel.findFirst({
     where: { username },
     select: {
@@ -259,147 +367,96 @@ export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
       },
     },
   });
-  if (!twitchChannel?.broadcasterAccount?.access_token) {
+  const { access_token, providerAccountId } =
+    twitchChannel?.broadcasterAccount ?? {};
+  if (!access_token || !providerAccountId) {
     throw new Error(`No access token found for ${username} Twitch account`);
   }
 
-  // Get all events from now onwards for the channel
-  // TODO: With access to non-recurring events, can we create events in the past?
-  const events = await getCalendarEvents({
-    start: new Date(),
-    hasTime: true,
-  }).then((events) => events.filter(filter));
-
-  // Get all the existing segments in the future from Twitch
-  const segments = await getTwitchSchedule(
-    twitchChannel.broadcasterAccount.access_token,
-    twitchChannel.broadcasterAccount.providerAccountId,
-    new Date(),
-  );
-
-  // Decide which events in the DB need to be created on Twitch
-  const create: { title: string; startAt: Date }[] = [];
-  for (const event of events) {
-    // Look for a matching event in the Twitch API
-    const title = getFormattedTitle(event, username);
-    const date = event.startAt.toISOString().replace(/\.\d+Z$/, "Z");
-    const idx = segments.findIndex(
-      (s) => s.title === title && s.start_time === date,
-    );
-
-    // If we have an existing match, remove it from the list
-    if (idx !== -1) {
-      segments.splice(idx, 1);
-      continue;
-    }
-
-    // Otherwise, we need to create this event
-    create.push({ title, startAt: event.startAt });
-  }
-
-  // Remove segments from Twitch we don't have in the DB
-  for (const segment of segments) {
-    console.log("Removing segment:", segment);
-    await removeScheduleSegment(
-      twitchChannel.broadcasterAccount.access_token,
-      twitchChannel.broadcasterAccount.providerAccountId,
-      segment.id,
-    );
-  }
-
-  // Then, create any new events
-  // Do this after the removal to reduce the chance of an overlap error
-  for (const event of create) {
-    console.log("Creating segment:", event);
-    try {
-      await createScheduleSegment(
-        twitchChannel.broadcasterAccount.access_token,
-        twitchChannel.broadcasterAccount.providerAccountId,
-        event.startAt,
+  await syncExternalSchedule({
+    type: "Twitch",
+    get: () => getTwitchSchedule(access_token, providerAccountId, new Date()),
+    filter,
+    compare: (internal, external) => {
+      const title = getFormattedTitle(internal, username);
+      const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "Z");
+      return external.title === title && external.start_time === date
+        ? "exact"
+        : null;
+    },
+    create: (internal) =>
+      createScheduleSegment(
+        access_token,
+        providerAccountId,
+        internal.startAt,
         DATETIME_ALVEUS_ZONE,
         60,
-        event.title,
-      );
-    } catch (err) {
-      console.error("Error creating segment", event, err);
-    }
-  }
+        getFormattedTitle(internal, username),
+      ).then(() => {}),
+    edit: () => Promise.resolve(),
+    remove: (external) =>
+      removeScheduleSegment(access_token, providerAccountId, external.id),
+  });
 }
 
-// TODO: Can this and the Twitch logic above be abstracted into a method that takes get/create/delete functions?
 export async function syncDiscordEvents(guildId: string) {
-  // Get all events from now onwards
-  // Unlike for Twitch, we'll show all events (with a time) on Discord
-  const events = await getCalendarEvents({
-    start: new Date(),
-    hasTime: true,
+  await syncExternalSchedule({
+    type: "Discord",
+    get: () => getScheduledGuildEvents(guildId),
+    filter: () => true,
+    compare: (internal, external) => {
+      const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
+      const title = external.name.split(" @ ")[0] || "";
+
+      const titleMatch = title === internal.title;
+      const linkMatch = external.entity_metadata.location === internal.link;
+      const descriptionMatch = external.description === internal.description;
+      const dateMatch = external.scheduled_start_time === date;
+
+      // Handle exact matches, which require no changes to the external event
+      if (titleMatch && linkMatch && descriptionMatch && dateMatch) {
+        return "exact";
+      }
+
+      // If the title matches, but the date or another field doesn't, we'll consider it a partial match
+      if (titleMatch) {
+        return "partial";
+      }
+
+      // If the title is a close match, and one other field matches, we'll consider it a partial match
+      // This handles cases where whitespace, capitalization, or punctuation might've changed in the event name
+      // TODO: We may want to think about using levenshtein distance or similar for this?
+      const titleCloseMatch =
+        title.toLowerCase().replace(/[^a-z]/g, "") ===
+        internal.title.toLowerCase().replace(/[^a-z]/g, "");
+      if (
+        titleCloseMatch &&
+        (linkMatch || (internal.description && descriptionMatch) || dateMatch)
+      ) {
+        return "partial";
+      }
+
+      return null;
+    },
+    create: (internal) =>
+      createScheduledGuildEvent(guildId, {
+        start: internal.startAt,
+        end: new Date(internal.startAt.getTime() + 60 * 60 * 1000),
+        name: getFormattedTitle(internal),
+        location: internal.link,
+        description: internal.description,
+      }).then(() => new Promise((resolve) => setTimeout(resolve, 60_000 / 5))),
+    edit: (internal, external) =>
+      editScheduledGuildEvent(guildId, external.id, {
+        start: internal.startAt,
+        end: new Date(internal.startAt.getTime() + 60 * 60 * 1000),
+        name: getFormattedTitle(internal),
+        location: internal.link,
+        description: internal.description,
+      }).then(() => new Promise((resolve) => setTimeout(resolve, 60_000 / 5))),
+    remove: (external) =>
+      removeScheduledGuildEvent(guildId, external.id).then(
+        () => new Promise((resolve) => setTimeout(resolve, 60_000 / 5)),
+      ),
   });
-
-  // Get all the existing events in the future from Discord
-  const existing = await getScheduledGuildEvents(guildId);
-
-  // Decide which events in the DB need to be created on Discord
-  const create: {
-    title: string;
-    link: string;
-    description: string | null;
-    startAt: Date;
-  }[] = [];
-  for (const event of events) {
-    // Look for a matching event in the Discord API
-    const title = getFormattedTitle(event);
-    const description = event.description;
-    const date = event.startAt.toISOString().replace(/\.\d+Z$/, "+00:00");
-    const idx = existing.findIndex(
-      (e) =>
-        e.name === title &&
-        e.entity_metadata.location === event.link &&
-        e.description === description &&
-        e.scheduled_start_time === date,
-    );
-
-    // If we have an existing match, remove it from the list
-    if (idx !== -1) {
-      existing.splice(idx, 1);
-      continue;
-    }
-
-    // Otherwise, we need to create this event
-    create.push({
-      title,
-      link: event.link,
-      description,
-      startAt: event.startAt,
-    });
-  }
-
-  // Remove events from Discord we don't have in the DB
-  for (const event of existing) {
-    console.log("Removing guild event:", event);
-    await removeScheduledGuildEvent(guildId, event.id);
-
-    // Delay to avoid rate limiting (5/60s)
-    await new Promise((resolve) => setTimeout(resolve, 60_000 / 5));
-  }
-
-  // Then, create any new events
-  // Do this after the removal to reduce the chance of an overlap error
-  for (const event of create) {
-    console.log("Creating guild event:", event);
-    try {
-      await createScheduledGuildEvent(
-        guildId,
-        event.startAt,
-        new Date(event.startAt.getTime() + 60 * 60 * 1000),
-        event.title,
-        event.link,
-        event.description,
-      );
-
-      // Delay to avoid rate limiting (5/60s)
-      await new Promise((resolve) => setTimeout(resolve, 60_000 / 5));
-    } catch (err) {
-      console.error("Error creating guild event", event, err);
-    }
-  }
 }

@@ -39,11 +39,19 @@ export async function getScheduledGuildEvents(guildId: string) {
 
 export async function createScheduledGuildEvent(
   guildId: string,
-  start: Date,
-  end: Date,
-  title: string,
-  location: string,
-  description: string | null,
+  {
+    start,
+    end,
+    name,
+    location,
+    description,
+  }: {
+    start: Date;
+    end: Date;
+    name: string;
+    location: string;
+    description: string | null;
+  },
 ) {
   const response = await fetch(
     `https://discord.com/api/v10/guilds/${guildId}/scheduled-events`,
@@ -54,7 +62,7 @@ export async function createScheduledGuildEvent(
         ...getAuthHeaders(),
       },
       body: JSON.stringify({
-        name: title,
+        name,
         description,
         scheduled_start_time: start.toISOString(),
         scheduled_end_time: end.toISOString(),
@@ -69,6 +77,52 @@ export async function createScheduledGuildEvent(
   if (response.status !== 200) {
     console.error(JSON.stringify(json, null, 2));
     throw new Error("Failed to create guild event!");
+  }
+
+  return scheduledEventSchema.parseAsync(json);
+}
+
+export async function editScheduledGuildEvent(
+  guildId: string,
+  eventId: string,
+  {
+    start,
+    end,
+    name,
+    location,
+    description,
+  }: {
+    start?: Date;
+    end?: Date;
+    name?: string;
+    location?: string;
+    description?: string | null;
+  },
+) {
+  const response = await fetch(
+    `https://discord.com/api/v10/guilds/${guildId}/scheduled-events/${eventId}`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        ...getAuthHeaders(),
+      },
+      body: JSON.stringify({
+        name,
+        description,
+        scheduled_start_time: start?.toISOString(),
+        scheduled_end_time: end?.toISOString(),
+        entity_type: 3, // external
+        privacy_level: 2, // guild-only
+        entity_metadata: { location },
+      }),
+    },
+  );
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(JSON.stringify(json, null, 2));
+    throw new Error("Failed to edit guild event!");
   }
 
   return scheduledEventSchema.parseAsync(json);
