@@ -34,7 +34,7 @@ const links = {
     link: "/wishlist",
     external: true,
     description:
-      "Donate specific items we are in need of at Alveus through our Amazon Wishlist.",
+      "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
   },
   paypal: {
     icon: IconPayPal,
@@ -42,7 +42,7 @@ const links = {
     link: "/paypal",
     external: true,
     description:
-      "Donate via credit/debit card, bank account or PayPal funds directly to Alveus.",
+      "Donate directly to Alveus via credit/debit card, bank account or PayPal funds.",
   },
   poBox: {
     icon: IconBox,
@@ -50,7 +50,7 @@ const links = {
     link: "/po-box",
     external: false,
     description:
-      "Send something to Alveus via our PO Box. Perhaps a gift to support the ambassadors?",
+      "Send something to our PO Box. Perhaps a snack for our staff or ambassador enrichment?",
   },
 } as const satisfies Record<string, DonateLink>;
 
