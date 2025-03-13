@@ -3,19 +3,20 @@ import { type ComponentType } from "react";
 
 import { useConsent } from "@/hooks/consent";
 
+import donationEvent from "@/data/env/donation-event";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Consent from "@/components/Consent";
+import Link from "@/components/content/Link";
 import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
+import Consent from "@/components/Consent";
 
+import { type IconProps } from "@/icons/BaseIcon";
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
 import IconBox from "@/icons/IconBox";
 import IconBitcoin from "@/icons/IconBitcoin";
-import { type IconProps } from "@/icons/BaseIcon";
-import donationEvent from "@/data/env/donation-event";
-import Link from "@/components/content/Link";
 import IconArrowRight from "@/icons/IconArrowRight";
 
 type DonateLink = {
