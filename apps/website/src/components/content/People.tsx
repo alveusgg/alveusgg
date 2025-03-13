@@ -38,9 +38,8 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
     {Object.entries(people).map(([key, person]) => (
       <li
         key={key}
-        id={key}
         className={classes(
-          "group flex basis-full scroll-mt-4 flex-col",
+          "group flex basis-full flex-col",
           ...(columns === 1
             ? ["md:flex-row"]
             : [
@@ -50,6 +49,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
         )}
         tabIndex={-1}
       >
+        <a id={key} className="scroll-mt-4" />
         <div
           className={classes(
             "my-auto w-full max-w-xs flex-shrink-0 p-4",
