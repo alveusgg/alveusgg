@@ -724,8 +724,8 @@ const AboutAlveusPage: NextPage = () => {
               zookeeper, and conservation outreach educator.
             </p>
 
-            <Button href="/about/maya" dark className="mt-8">
-              Learn more about Maya
+            <Button href="/about/staff" dark className="mt-8">
+              Learn more about Maya and the team at Alveus
             </Button>
           </div>
         </div>

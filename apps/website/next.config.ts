@@ -104,7 +104,12 @@ const config: NextConfig = {
     },
     {
       source: "/about-maya",
-      destination: "/about/maya",
+      destination: "/about/staff#maya",
+      permanent: true,
+    },
+    {
+      source: "/about/maya",
+      destination: "/about/staff#maya",
       permanent: true,
     },
     {
