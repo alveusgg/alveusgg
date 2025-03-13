@@ -302,7 +302,7 @@ const AboutStaffPage: NextPage = () => {
         />
 
         <Section className="grow">
-          <People people={staff} />
+          <People people={staff} link />
 
           <p className="mt-8 mb-4 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
             The Alveus team is more than just our on-site staff. We have a
@@ -310,7 +310,7 @@ const AboutStaffPage: NextPage = () => {
             from social media management to development.
           </p>
 
-          <div className="flex flex-wrap">
+          <div className="flex scroll-mt-4 flex-wrap" id="team">
             {Object.entries(team).map(([key, person]) => (
               <div key={key} className="w-full p-4 sm:w-1/2 lg:w-1/3">
                 <p className="text-lg font-semibold">{person.name}</p>

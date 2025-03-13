@@ -4,6 +4,7 @@ import Image, { type ImageProps } from "next/image";
 import { classes } from "@/utils/classes";
 
 import Heading from "./Heading";
+import Link from "./Link";
 
 export interface Person {
   image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
@@ -16,12 +17,13 @@ type PeopleProps = {
   people: Record<string, Person>;
   columns?: 1 | 2;
   align?: "left" | "center";
+  link?: boolean;
 };
 
 const imageClasses =
   "aspect-square h-auto w-full rounded-2xl bg-alveus-green object-cover";
 
-const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
+const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
   <ul
     className={classes(
       "flex flex-wrap",
@@ -36,8 +38,9 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
     {Object.entries(people).map(([key, person]) => (
       <li
         key={key}
+        id={key}
         className={classes(
-          "group flex basis-full flex-col",
+          "group flex basis-full scroll-mt-4 flex-col",
           ...(columns === 1
             ? ["md:flex-row"]
             : [
@@ -91,7 +94,13 @@ const People = ({ people, columns = 1, align = "left" }: PeopleProps) => (
           )}
         >
           <Heading level={2} className="mt-0 text-4xl">
-            {person.name}
+            {link ? (
+              <Link href={`#${key}`} custom>
+                {person.name}
+              </Link>
+            ) : (
+              person.name
+            )}
           </Heading>
           <Heading level={3} className="text-xl">
             {person.title}
