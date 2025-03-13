@@ -3,20 +3,22 @@ import { type ComponentType } from "react";
 
 import { useConsent } from "@/hooks/consent";
 
+import donationEvent from "@/data/env/donation-event";
+
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Consent from "@/components/Consent";
+import Link from "@/components/content/Link";
 import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
+import Consent from "@/components/Consent";
 
+import { type IconProps } from "@/icons/BaseIcon";
 import IconAmazon from "@/icons/IconAmazon";
 import IconPayPal from "@/icons/IconPayPal";
 import IconBox from "@/icons/IconBox";
 import IconBitcoin from "@/icons/IconBitcoin";
-import { type IconProps } from "@/icons/BaseIcon";
-import donationEvent from "@/data/env/donation-event";
-import Link from "@/components/content/Link";
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconGift from "@/icons/IconGift";
 
 type DonateLink = {
   icon: ComponentType<IconProps>;
@@ -33,7 +35,15 @@ const links = {
     link: "/wishlist",
     external: true,
     description:
-      "Donate specific items we are in need of at Alveus through our Amazon Wishlist.",
+      "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
+  },
+  toybox: {
+    icon: IconGift,
+    title: "Wildlife Toy Box",
+    link: "/toybox",
+    external: true,
+    description:
+      "Purchase specific items for our ambassadors from our Wildlife Toy Box wishlist.",
   },
   paypal: {
     icon: IconPayPal,
@@ -41,7 +51,7 @@ const links = {
     link: "/paypal",
     external: true,
     description:
-      "Donate via credit/debit card, bank account or PayPal funds directly to Alveus.",
+      "Donate directly to Alveus via credit/debit card, bank account or PayPal funds.",
   },
   poBox: {
     icon: IconBox,
@@ -49,7 +59,7 @@ const links = {
     link: "/po-box",
     external: false,
     description:
-      "Send something to Alveus via our PO Box. Perhaps a gift to support the ambassadors?",
+      "Send something to our PO Box. Perhaps a snack for our staff or ambassador enrichment?",
   },
 } as const satisfies Record<string, DonateLink>;
 

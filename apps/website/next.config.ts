@@ -272,7 +272,12 @@ const config: NextConfig = {
     },
     {
       source: "/wishlist",
-      destination: "https://smile.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
+      destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
+      permanent: true,
+    },
+    {
+      source: "/toybox",
+      destination: "https://www.wildlifetoybox.com/wishlist/56",
       permanent: true,
     },
     {
