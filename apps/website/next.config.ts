@@ -276,6 +276,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/toybox",
+      destination: "https://www.wildlifetoybox.com/wishlist/56",
+      permanent: true,
+    },
+    {
       source: "/paypal",
       destination:
         "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
