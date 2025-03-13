@@ -272,7 +272,7 @@ const config: NextConfig = {
     },
     {
       source: "/wishlist",
-      destination: "https://smile.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
+      destination: "https://www.amazon.com/hz/wishlist/ls/ZM472JRT5QXG",
       permanent: true,
     },
     {
