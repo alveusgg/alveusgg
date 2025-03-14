@@ -12,7 +12,7 @@ import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import Timeline from "@/components/content/Timeline";
 import { Lightbox, Preview } from "@/components/content/YouTube";
-import Maya from "@/components/content/Maya";
+import { MayaImage } from "@/components/content/Maya";
 import Box from "@/components/content/Box";
 import Transparency from "@/components/content/Transparency";
 import SubNav from "@/components/content/SubNav";
@@ -710,7 +710,7 @@ const AboutAlveusPage: NextPage = () => {
       <Section dark>
         <div className="flex flex-wrap-reverse items-center">
           <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pr-8">
-            <Maya className="mx-auto h-auto w-full max-w-lg lg:mr-0" />
+            <MayaImage className="mx-auto h-auto w-full max-w-lg lg:mr-0" />
           </div>
 
           <div className="basis-full md:basis-1/2 md:px-4">

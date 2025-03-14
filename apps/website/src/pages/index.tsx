@@ -23,7 +23,7 @@ import Slideshow from "@/components/content/Slideshow";
 import Section from "@/components/content/Section";
 import Carousel from "@/components/content/Carousel";
 import { Lightbox } from "@/components/content/YouTube";
-import Maya from "@/components/content/Maya";
+import { MayaImage } from "@/components/content/Maya";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import YouTubeCarousel from "@/components/content/YouTubeCarousel";
@@ -294,7 +294,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
 
             <div className="basis-full pt-8 lg:basis-1/2 lg:pt-0 lg:pl-8">
-              <Maya className="mx-auto h-auto w-full max-w-lg lg:ml-0" />
+              <MayaImage className="mx-auto h-auto w-full max-w-lg lg:ml-0" />
             </div>
           </div>
         </Section>

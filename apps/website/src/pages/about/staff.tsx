@@ -6,6 +6,7 @@ import Heading from "@/components/content/Heading";
 import People, { type Person } from "@/components/content/People";
 import Meta from "@/components/content/Meta";
 import { Lightbox, Preview } from "@/components/content/YouTube";
+import { MayaText } from "@/components/content/Maya";
 
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
@@ -31,22 +32,7 @@ const staff: Record<string, Person> = {
     title: "Founder & Executive Director",
     description: (
       <>
-        <p>
-          Maya Higa is one of the top female streamers on Twitch and has amassed
-          a large following on YouTube and other social platforms. She
-          integrates her passion for wildlife conservation and education into
-          her content regularly, creating some of the most unique content on
-          Twitch. Maya has experience as a licensed falconer, wildlife
-          rehabilitator, zookeeper, and conservation outreach educator.
-        </p>
-        <p>
-          Her livestreams and videos feature conservation education and charity
-          fundraising. She created a conservation podcast in 2019 which aired
-          more than 60 episodes and raised more than $92,000 for conservation
-          organizations around the globe. In 2021, Maya founded Alveus
-          Sanctuary, a non-profit wildlife sanctuary and virtual education
-          center in central Texas.
-        </p>
+        <MayaText />
         <p className="font-serif text-lg font-bold text-alveus-green">
           <span>&ldquo;</span>I love the natural world with my whole heart and
           entire being. All I want is to inspire that same love in others.
