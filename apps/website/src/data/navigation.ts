@@ -64,10 +64,6 @@ export const mainNavStructure: NavStructure = {
         title: "About Alveus",
         link: "/about/alveus",
       },
-      maya: {
-        title: "About Maya",
-        link: "/about/maya",
-      },
       staff: {
         title: "Alveus Staff",
         link: "/about/staff",

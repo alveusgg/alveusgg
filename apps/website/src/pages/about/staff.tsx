@@ -6,9 +6,7 @@ import Heading from "@/components/content/Heading";
 import People, { type Person } from "@/components/content/People";
 import Meta from "@/components/content/Meta";
 import { Lightbox, Preview } from "@/components/content/YouTube";
-import Link from "@/components/content/Link";
-
-import IconArrowRight from "@/icons/IconArrowRight";
+import { MayaText } from "@/components/content/Maya";
 
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
@@ -34,18 +32,12 @@ const staff: Record<string, Person> = {
     title: "Founder & Executive Director",
     description: (
       <>
-        <p>
-          Maya Higa is one of the top female streamers on Twitch and has amassed
-          a large following on YouTube and other social platforms. Maya has
-          experience as a licensed falconer, wildlife rehabilitator, zookeeper,
-          and conservation outreach educator. In 2021, Maya founded Alveus
-          Sanctuary, a non-profit wildlife sanctuary and virtual education
-          center in central Texas.
+        <MayaText />
+        <p className="font-serif text-lg font-bold text-alveus-green">
+          <span>&ldquo;</span>I love the natural world with my whole heart and
+          entire being. All I want is to inspire that same love in others.
+          <span>&rdquo;</span>
         </p>
-        <Link href="/about/maya" className="flex items-center">
-          Read more about Maya
-          <IconArrowRight size={16} className="mt-0.5 ml-1" />
-        </Link>
       </>
     ),
   },
@@ -296,7 +288,7 @@ const AboutStaffPage: NextPage = () => {
         />
 
         <Section className="grow">
-          <People people={staff} />
+          <People people={staff} link />
 
           <p className="mt-8 mb-4 border-t-2 border-alveus-green-300/25 px-4 pt-8 text-lg">
             The Alveus team is more than just our on-site staff. We have a
@@ -304,7 +296,7 @@ const AboutStaffPage: NextPage = () => {
             from social media management to development.
           </p>
 
-          <div className="flex flex-wrap">
+          <div className="flex scroll-mt-4 flex-wrap" id="team">
             {Object.entries(team).map(([key, person]) => (
               <div key={key} className="w-full p-4 sm:w-1/2 lg:w-1/3">
                 <p className="text-lg font-semibold">{person.name}</p>
