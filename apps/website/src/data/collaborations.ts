@@ -2,6 +2,7 @@ import { type StaticImageData } from "next/image";
 
 import { convertToSlug } from "@/utils/slugs";
 
+import thePrimeagen from "@/assets/collaborations/the-primeagen.png";
 import steak from "@/assets/collaborations/steak.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import hasanAbi from "@/assets/collaborations/hasan-abi.png";
@@ -77,6 +78,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "ThePrimeagen",
+      link: "https://www.twitch.tv/theprimeagen",
+      date: new Date("2025-03-13"),
+      videoId: "S-RoJj6hQYM",
+      creators: [
+        {
+          name: "ThePrimeagen",
+          image: thePrimeagen,
+          popularity: 738_000, // YouTube subscribers, 2025-03-14
+        },
+      ],
+    },
     {
       name: "Steak & KreekCraft",
       link: "https://www.youtube.com/@steak",
