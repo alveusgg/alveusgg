@@ -25,7 +25,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Update Chatbot SSH (Production)
-        uses: appleboy/ssh-action@v1.2.2
+        uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f # v1.2.2
         with:
           envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA
           host: ${{ secrets.CHATBOT_HOST }}
@@ -33,8 +33,8 @@ jobs:
           key: ${{ secrets.CHATBOT_KEY }}
           port: ${{ secrets.CHATBOT_PORT }}
           passphrase: ${{ secrets.CHATBOT_PASSPHRASE }}
-          script_stop: true
           script: |
+            set -e
             cd $CHATBOT_PATH
             git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
             cd apps/chatbot
@@ -47,7 +47,7 @@ jobs:
     if: github.ref == 'refs/heads/preview'
     steps:
       - name: Update Chatbot SSH (Preview)
-        uses: appleboy/ssh-action@v1.2.2
+        uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f # v1.2.2
         with:
           envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA
           host: ${{ secrets.CHATBOT_HOST }}
@@ -55,8 +55,8 @@ jobs:
           key: ${{ secrets.CHATBOT_KEY }}
           port: ${{ secrets.CHATBOT_PORT }}
           passphrase: ${{ secrets.CHATBOT_PASSPHRASE }}
-          script_stop: true
           script: |
+            set -e
             cd $CHATBOT_PATH
             git fetch origin $REF_NAME && git reset --hard origin/$REF_NAME
             cd apps/chatbot
