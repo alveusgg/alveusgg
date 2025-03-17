@@ -146,7 +146,9 @@
   },
   "postcss": {
     "plugins": {
-      "@tailwindcss/postcss": {}
+      "@tailwindcss/postcss": {
+        "optimize": true
+      }
     }
   }
 }
