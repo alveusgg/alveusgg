@@ -181,13 +181,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   const router = useRouter();
 
   const start = useMemo(() => {
-    const defaultSeconds = stringToSeconds(episode.video.start || "") ?? 0;
     const queryString = Array.isArray(router.query.t)
       ? router.query.t[0]
       : router.query.t;
-    const querySeconds = stringToSeconds(queryString || "") ?? 0;
-    return Math.max(defaultSeconds, querySeconds);
-  }, [episode.video.start, router.query.t]);
+    return stringToSeconds(queryString || "") ?? 0;
+  }, [router.query.t]);
 
   const description = useMemo(
     () =>
@@ -273,10 +271,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="twitter:player"
           property="twitter:player"
-          content={getCloudflareVideo(
-            "agf91muwks8sd9ee",
-            "3462c91082b1a724ceaedf19e7597583",
-          )}
+          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
         />
         <meta key="twitter:card" property="twitter:card" content="player" />
         <meta
@@ -293,18 +288,12 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="og:video"
           property="og:video"
-          content={getCloudflareVideo(
-            "agf91muwks8sd9ee",
-            "3462c91082b1a724ceaedf19e7597583",
-          )}
+          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
         />
         <meta
           key="og:video:secure_url"
           property="og:video:secure_url"
-          content={getCloudflareVideo(
-            "agf91muwks8sd9ee",
-            "3462c91082b1a724ceaedf19e7597583",
-          )}
+          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
         />
         <meta
           key="og:video:release_date"
@@ -362,8 +351,8 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
               width={1200}
             />
             <Stream
-              src="3462c91082b1a724ceaedf19e7597583"
-              customerCode="agf91muwks8sd9ee"
+              src={episode.video.id}
+              customerCode={episode.video.cu}
               poster={posterUrl}
               autoplay
               preload
@@ -548,22 +537,15 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             thumbnailUrl: posterUrl,
             uploadDate: episode.broadcast.toISOString(),
             duration: secondsToIso8601(episode.length),
-            embedUrl: getCloudflareEmbed(
-              "agf91muwks8sd9ee",
-              "3462c91082b1a724ceaedf19e7597583",
-              {
-                start,
-                poster: posterUrl,
-                title: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
-                link: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
-                  episode.edition,
-                )}`,
-              },
-            ),
-            contentUrl: getCloudflareVideo(
-              "agf91muwks8sd9ee",
-              "3462c91082b1a724ceaedf19e7597583",
-            ),
+            embedUrl: getCloudflareEmbed(episode.video.cu, episode.video.id, {
+              start,
+              poster: posterUrl,
+              title: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
+              link: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+                episode.edition,
+              )}`,
+            }),
+            contentUrl: getCloudflareVideo(episode.video.cu, episode.video.id),
           },
           partOfSeries: {
             "@type": "CreativeWorkSeries",
