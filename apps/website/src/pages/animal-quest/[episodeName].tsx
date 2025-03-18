@@ -419,10 +419,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                 <Heading level={3} className="my-0 text-lg">
                   Length:
                 </Heading>
-                <p
-                  className="text-xl"
-                  title="Video length may appear longer due to intro/outro screen segments"
-                >
+                <p className="text-xl">
                   {formatSeconds(episode.length, {
                     style: "long",
                     seconds: false,
