@@ -2,6 +2,7 @@ import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Transition } from "@headlessui/react";
 
+import { useRouter } from "next/router";
 import { type Clip, getClips } from "@/server/apis/twitch";
 import { prisma } from "@/server/db/client";
 
@@ -112,10 +113,10 @@ export const getStaticProps: GetStaticProps<{
   }
 };
 
-const getTwitchEmbed = (clip: string, parent: string): string => {
+const getTwitchEmbed = (clip: string, parents: string[]): string => {
   const url = new URL("https://clips.twitch.tv/embed");
   url.searchParams.set("clip", clip);
-  url.searchParams.set("parent", parent);
+  parents.forEach((parent) => url.searchParams.append("parent", parent));
   url.searchParams.set("autoplay", "true");
   url.searchParams.set("muted", "false");
   url.searchParams.set("allowfullscreen", "false");
@@ -127,6 +128,11 @@ const getTwitchEmbed = (clip: string, parent: string): string => {
 const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   clips,
 }) => {
+  const { query } = useRouter();
+  const parents = (
+    Array.isArray(query.parent) ? query.parent : [query.parent]
+  ).filter((elm): elm is string => typeof elm === "string" && !!elm);
+
   // Once mounted, randomize the clips
   const [randomClips, setRandomClips] = useState<ClipData[]>([]);
   useEffect(() => {
@@ -230,7 +236,10 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </Transition>
 
             <iframe
-              src={getTwitchEmbed(clip.id, window.location.hostname)}
+              src={getTwitchEmbed(clip.id, [
+                window.location.hostname,
+                ...parents,
+              ])}
               onLoad={onLoad}
               onError={onError}
               className="size-full rounded-lg"
