@@ -31,7 +31,7 @@ const config: NextConfig = {
   },
   images: {
     // limits the quality levels to limit cache variations for image optimization:
-    qualities: [50, 75, 100],
+    qualities: [50, 75, 90, 100],
     // we don't expect images to change often:
     // - yt thumbnails might change, but it's not that important
     // - assets should use cache busting for updates
