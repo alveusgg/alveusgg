@@ -30,9 +30,7 @@ const ContactUsPage: NextPage = () => {
 
           <p className="my-3 text-xl font-semibold">
             For business inquiries: <br />
-            <Link href="mailto:TeamAlveus@unitedtalent.com">
-              TeamAlveus@unitedtalent.com
-            </Link>
+            <Link href="mailto:alveus@loaded.gg">alveus@loaded.gg</Link>
           </p>
 
           <div className="flex flex-wrap justify-center gap-x-6">
