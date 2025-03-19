@@ -95,7 +95,8 @@ const collaborations: Collaboration[] = (
       name: "Steak & KreekCraft",
       link: "https://www.youtube.com/@steak",
       date: new Date("2025-03-06"),
-      videoId: "InaLSvxKvAw",
+      videoId: "MAaA-IL-PgA",
+      vodId: "InaLSvxKvAw",
       creators: [
         {
           name: "Steak",
