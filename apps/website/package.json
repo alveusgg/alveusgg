@@ -118,7 +118,7 @@
     "@types/xml2js": "^0.4.14",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-import-resolver-typescript": "^3.8.5",
+    "eslint-import-resolver-typescript": "^4.2.2",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-import-x": "^4.9.0",
     "eslint-plugin-react": "^7.37.4",
