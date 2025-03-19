@@ -50,8 +50,8 @@ importers:
         specifier: ^16.4.7
         version: 16.4.7
       drizzle-orm:
-        specifier: ^0.40.0
-        version: 0.40.0(@planetscale/database@1.19.0)(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.2))(typescript@5.8.2))(prisma@6.5.0(typescript@5.8.2))
+        specifier: ^0.40.1
+        version: 0.40.1(@planetscale/database@1.19.0)(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.2))(typescript@5.8.2))(prisma@6.5.0(typescript@5.8.2))
       read-pkg:
         specifier: ^9.0.1
         version: 9.0.1
@@ -87,8 +87,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: 0.55.0
-        version: 0.55.0(tailwindcss@4.0.14)(zod@3.24.2)
+        specifier: 0.55.1
+        version: 0.55.1(tailwindcss@4.0.14)(zod@3.24.2)
       '@aws-sdk/client-s3':
         specifier: ^3.758.0
         version: 3.758.0
@@ -165,8 +165,8 @@ importers:
         specifier: ^3.2.4
         version: 3.2.4
       fast-xml-parser:
-        specifier: ^5.0.8
-        version: 5.0.8
+        specifier: ^5.0.9
+        version: 5.0.9
       framer-motion:
         specifier: ^12.5.0
         version: 12.5.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -231,14 +231,14 @@ importers:
         specifier: ^10.1.0
         version: 10.1.0(@types/react@19.0.11)(react@19.0.0)
       react-quill-new:
-        specifier: ^3.3.3
-        version: 3.3.3(quill-delta@5.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ^3.4.1
+        version: 3.4.1(quill-delta@5.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       react-stately:
         specifier: ^3.36.1
         version: 3.36.1(react@19.0.0)
       react-textarea-autosize:
-        specifier: ^8.5.7
-        version: 8.5.7(@types/react@19.0.11)(react@19.0.0)
+        specifier: ^8.5.8
+        version: 8.5.8(@types/react@19.0.11)(react@19.0.0)
       reactflow:
         specifier: ^11.11.4
         version: 11.11.4(@types/react@19.0.11)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -397,8 +397,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.55.0':
-    resolution: {integrity: sha512-onfXIgr2+FVl097CZhyD36gQKocbX5fk7bDAbgXHlueXrWVRgVY4h35V/8mck2apPa6t+8MIrQK6opEH+Fkoag==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.55.0/d1e542aba68833174e85838028553661f1c244dc}
+  '@alveusgg/data@0.55.1':
+    resolution: {integrity: sha512-fdaezfBL1bDW+fkJSp5yNrNq7Hu5v2qrEko6zp69ijSy67qazRUaDsXVWCucm65NKcjBjXcA9H8ZJe/ALuz97g==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.55.1/289b1679a80d3bf1246d2f09d1cb5cfa9599f32a}
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
@@ -579,6 +579,10 @@ packages:
 
   '@babel/runtime@7.26.0':
     resolution: {integrity: sha512-FDSOghenHTiToteC/QRlv2q3DhPZ/oOXTBoirfWNx1Cx3TMVcGWQtMMmQcSvb/JjpNeGzx8Pq/b4fKEJuWm1sw==}
+    engines: {node: '>=6.9.0'}
+
+  '@babel/runtime@7.26.10':
+    resolution: {integrity: sha512-2WJMeRQPHKSPemqk/awGrAiuFfzBmOIPXKizAsVhWH9YJqLZ0H+HS4c8loHGgW6utJ3E/ejXQUsiGaQy2NZ9Fw==}
     engines: {node: '>=6.9.0'}
 
   '@babel/runtime@7.26.9':
@@ -3713,8 +3717,8 @@ packages:
     resolution: {integrity: sha512-47qPchRCykZC03FhkYAhrvwU4xDBFIj1QPqaarj6mdM/hgUzfPHcpkHJOn3mJAufFeeAxAzeGsr5X0M4k6fLZQ==}
     engines: {node: '>=12'}
 
-  drizzle-orm@0.40.0:
-    resolution: {integrity: sha512-7ptk/HQiMSrEZHnAsSlBESXWj52VwgMmyTEfoNmpNN2ZXpcz13LwHfXTIghsAEud7Z5UJhDOp8U07ujcqme7wg==}
+  drizzle-orm@0.40.1:
+    resolution: {integrity: sha512-aPNhtiJiPfm3qxz1czrnIDkfvkSdKGXYeZkpG55NPTVI186LmK2fBLMi4dsHpPHlJrZeQ92D322YFPHADBALew==}
     peerDependencies:
       '@aws-sdk/client-rds-data': '>=3'
       '@cloudflare/workers-types': '>=4'
@@ -4158,8 +4162,8 @@ packages:
     resolution: {integrity: sha512-xkjOecfnKGkSsOwtZ5Pz7Us/T6mrbPQrq0nh+aCO5V9nk5NLWmasAHumTKjiPJPWANe+kAZ84Jc8ooJkzZ88Sw==}
     hasBin: true
 
-  fast-xml-parser@5.0.8:
-    resolution: {integrity: sha512-qY8NiI5L8ff00F2giyICiJxSSKHO52tC36LJqx2JtvGyAd5ZfehC/l4iUVVHpmpIa6sM9N5mneSLHQG2INGoHA==}
+  fast-xml-parser@5.0.9:
+    resolution: {integrity: sha512-2mBwCiuW3ycKQQ6SOesSB8WeF+fIGb6I/GG5vU5/XEptwFFhp9PE8b9O7fbs2dpq9fXn4ULR3UsfydNUCntf5A==}
     hasBin: true
 
   fastq@1.19.1:
@@ -5506,8 +5510,8 @@ packages:
   react-property@2.0.2:
     resolution: {integrity: sha512-+PbtI3VuDV0l6CleQMsx2gtK0JZbZKbpdu5ynr+lbsuvtmgbNcS3VM0tuY2QjFNOcWxvXeHjDpy42RO+4U2rug==}
 
-  react-quill-new@3.3.3:
-    resolution: {integrity: sha512-jxbm1QUJlkuGUpc9/GUgGw5USLHdp43H0M7AufqS3V+zRLng9uqLeVBGjXYqEbUKi8QVOM4SClSV3F7kVNj68w==}
+  react-quill-new@3.4.1:
+    resolution: {integrity: sha512-EM4EXlX3imgYH5H1Ml8OM0dXvb/hGtKXtzosrhF7MRiKqw5rDJSIDkty0x/L6yBiJzBycpLT24rCMtPELSQW9Q==}
     peerDependencies:
       quill-delta: ^5.1.0
       react: ^16 || ^17 || ^18 || ^19
@@ -5518,8 +5522,8 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0 || ^19.0.0-rc.1
 
-  react-textarea-autosize@8.5.7:
-    resolution: {integrity: sha512-2MqJ3p0Jh69yt9ktFIaZmORHXw4c4bxSIhCeWiFwmJ9EYKgLmuNII3e9c9b2UO+ijl4StnpZdqpxNIhTdHvqtQ==}
+  react-textarea-autosize@8.5.8:
+    resolution: {integrity: sha512-iUiIj70JefrTuSJ4LbVFiSqWiHHss5L63L717bqaWHMgkm9sz6eEvro4vZ3uQfGJbevzwT6rHOszHKA8RkhRMg==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
@@ -6202,25 +6206,29 @@ packages:
   uri-js@4.4.1:
     resolution: {integrity: sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==}
 
-  use-composed-ref@1.3.0:
-    resolution: {integrity: sha512-GLMG0Jc/jiKov/3Ulid1wbv3r54K9HlMW29IWcDFPEqFkSO2nS0MuefWgMJpeHQ9YJeXDL3ZUF+P3jdXlZX/cQ==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-
-  use-isomorphic-layout-effect@1.1.2:
-    resolution: {integrity: sha512-49L8yCO3iGT/ZF9QttjwLF/ZD9Iwto5LnH5LmEdk/6cFmXddqi2ulF0edxTwjj+7mqvpVVGQWvbXZdn32wRSHA==}
+  use-composed-ref@1.4.0:
+    resolution: {integrity: sha512-djviaxuOOh7wkj0paeO1Q/4wMZ8Zrnag5H6yBvzN7AKKe8beOaED9SF5/ByLqsku8NP4zQqsvM2u3ew/tJK8/w==}
     peerDependencies:
       '@types/react': '*'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
 
-  use-latest@1.2.1:
-    resolution: {integrity: sha512-xA+AVm/Wlg3e2P/JiItTziwS7FK92LWrDB0p+hgXloIMuVCeJJ8v6f0eeHyPZaJrM+usM1FkFfbNCrJGs8A/zw==}
+  use-isomorphic-layout-effect@1.2.0:
+    resolution: {integrity: sha512-q6ayo8DWoPZT0VdG4u3D3uxcgONP3Mevx2i2b0434cwWBoL+aelL1DzkXI6w3PhTZzUeR2kaVlZn70iCiseP6w==}
     peerDependencies:
       '@types/react': '*'
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+
+  use-latest@1.3.0:
+    resolution: {integrity: sha512-mhg3xdm9NaM8q+gLT8KryJPnRFOz1/5XPBhmDEVZK1webPzDjrPk7f/mbpeLqTgB9msytYWANxgALOCJKnLvcQ==}
+    peerDependencies:
+      '@types/react': '*'
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -6497,7 +6505,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.55.0(tailwindcss@4.0.14)(zod@3.24.2)':
+  '@alveusgg/data@0.55.1(tailwindcss@4.0.14)(zod@3.24.2)':
     dependencies:
       tailwindcss: 4.0.14
       zod: 3.24.2
@@ -7000,6 +7008,10 @@ snapshots:
       js-tokens: 4.0.0
 
   '@babel/runtime@7.26.0':
+    dependencies:
+      regenerator-runtime: 0.14.1
+
+  '@babel/runtime@7.26.10':
     dependencies:
       regenerator-runtime: 0.14.1
 
@@ -10582,7 +10594,7 @@ snapshots:
 
   dotenv@16.4.7: {}
 
-  drizzle-orm@0.40.0(@planetscale/database@1.19.0)(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.2))(typescript@5.8.2))(prisma@6.5.0(typescript@5.8.2)):
+  drizzle-orm@0.40.1(@planetscale/database@1.19.0)(@prisma/client@6.5.0(prisma@6.5.0(typescript@5.8.2))(typescript@5.8.2))(prisma@6.5.0(typescript@5.8.2)):
     optionalDependencies:
       '@planetscale/database': 1.19.0
       '@prisma/client': 6.5.0(prisma@6.5.0(typescript@5.8.2))(typescript@5.8.2)
@@ -11216,7 +11228,7 @@ snapshots:
     dependencies:
       strnum: 1.1.2
 
-  fast-xml-parser@5.0.8:
+  fast-xml-parser@5.0.9:
     dependencies:
       strnum: 2.0.5
 
@@ -12730,9 +12742,9 @@ snapshots:
 
   react-property@2.0.2: {}
 
-  react-quill-new@3.3.3(quill-delta@5.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  react-quill-new@3.4.1(quill-delta@5.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
-      lodash: 4.17.21
+      lodash-es: 4.17.21
       quill: 2.0.3
       quill-delta: 5.1.0
       react: 19.0.0
@@ -12768,12 +12780,12 @@ snapshots:
       '@react-types/shared': 3.28.0(react@19.0.0)
       react: 19.0.0
 
-  react-textarea-autosize@8.5.7(@types/react@19.0.11)(react@19.0.0):
+  react-textarea-autosize@8.5.8(@types/react@19.0.11)(react@19.0.0):
     dependencies:
-      '@babel/runtime': 7.26.0
+      '@babel/runtime': 7.26.10
       react: 19.0.0
-      use-composed-ref: 1.3.0(react@19.0.0)
-      use-latest: 1.2.1(@types/react@19.0.11)(react@19.0.0)
+      use-composed-ref: 1.4.0(@types/react@19.0.11)(react@19.0.0)
+      use-latest: 1.3.0(@types/react@19.0.11)(react@19.0.0)
     transitivePeerDependencies:
       - '@types/react'
 
@@ -13623,20 +13635,22 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  use-composed-ref@1.3.0(react@19.0.0):
-    dependencies:
-      react: 19.0.0
-
-  use-isomorphic-layout-effect@1.1.2(@types/react@19.0.11)(react@19.0.0):
+  use-composed-ref@1.4.0(@types/react@19.0.11)(react@19.0.0):
     dependencies:
       react: 19.0.0
     optionalDependencies:
       '@types/react': 19.0.11
 
-  use-latest@1.2.1(@types/react@19.0.11)(react@19.0.0):
+  use-isomorphic-layout-effect@1.2.0(@types/react@19.0.11)(react@19.0.0):
     dependencies:
       react: 19.0.0
-      use-isomorphic-layout-effect: 1.1.2(@types/react@19.0.11)(react@19.0.0)
+    optionalDependencies:
+      '@types/react': 19.0.11
+
+  use-latest@1.3.0(@types/react@19.0.11)(react@19.0.0):
+    dependencies:
+      react: 19.0.0
+      use-isomorphic-layout-effect: 1.2.0(@types/react@19.0.11)(react@19.0.0)
     optionalDependencies:
       '@types/react': 19.0.11
 
