@@ -10,6 +10,7 @@ const {
   readdir,
   stat,
   unlink,
+  copyFile,
 } = require("fs/promises");
 const { interpolateName, getHashDigest } = require("loader-utils");
 const ffmpeg = require("@ffmpeg-installer/ffmpeg");
@@ -211,7 +212,8 @@ const videoResized = async (
 
       // Move the temporary file to the cache
       await mkdir(dirname(cacheFile), { recursive: true });
-      await rename(tmpFile, cacheFile);
+      await copyFile(tmpFile, cacheFile);
+      await unlink(tmpFile);
     }
   }
 
