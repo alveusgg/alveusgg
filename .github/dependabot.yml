@@ -14,6 +14,13 @@ updates:
       day: wednesday
       time: "00:00"
 
+    # Create a grouped PR for minor/patch updates with majors getting dedicated PRs
+    groups:
+      actions:
+        update-types:
+          - patch
+          - minor
+
   - package-ecosystem: npm
     directory: /
     schedule:
