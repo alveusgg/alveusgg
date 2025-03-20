@@ -82,7 +82,7 @@
     "react-dom": "^19.0.0",
     "react-error-boundary": "^5.0.0",
     "react-markdown": "^10.1.0",
-    "react-quill-new": "^3.4.1",
+    "react-quill-new": "^3.4.4",
     "react-stately": "^3.36.1",
     "react-textarea-autosize": "^8.5.8",
     "reactflow": "^11.11.4",
