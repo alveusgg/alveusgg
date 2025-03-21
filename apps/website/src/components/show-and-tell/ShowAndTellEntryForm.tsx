@@ -1,6 +1,17 @@
-import { type FormEvent, useCallback, useMemo, useState } from "react";
+import {
+  type ComponentProps,
+  type FormEvent,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 import { useRouter } from "next/router";
 import type { ShowAndTellEntry } from "@prisma/client";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 
 import type {
   PublicShowAndTellEntryWithAttachments,
@@ -25,6 +36,7 @@ import { splitAttachments } from "@/utils/split-attachments";
 
 import IconLoading from "@/icons/IconLoading";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
+import IconChevronDown from "@/icons/IconChevronDown";
 
 import useFileUpload from "@/hooks/files/upload";
 
@@ -55,6 +67,75 @@ type ShowAndTellEntryFormProps = {
   action: "review" | "create" | "update";
   onUpdate?: () => void;
 };
+
+function ImageAttachment({
+  entry,
+  fileReference,
+  ...props
+}: ComponentProps<typeof ImageUploadAttachment> &
+  Pick<ShowAndTellEntryFormProps, "entry">) {
+  const initialData =
+    fileReference.status === "saved"
+      ? entry?.attachments.find(
+          ({ imageAttachment }) =>
+            imageAttachment && imageAttachment.id === fileReference.id,
+        )?.imageAttachment
+      : undefined;
+
+  const [hasAlt, setHasAlt] = useState(!!initialData?.alternativeText);
+
+  return (
+    <ImageUploadAttachment {...props} fileReference={fileReference}>
+      <TextAreaField
+        name={`image[${fileReference.id}][caption]`}
+        label={<strong className="font-bold">Caption</strong>}
+        maxLength={200}
+        defaultValue={initialData?.caption}
+      />
+
+      <Disclosure as="div" className="mt-4" defaultOpen={hasAlt}>
+        <DisclosureButton
+          className={classes(
+            "group flex w-full items-center justify-between text-left text-gray-500",
+            hasAlt
+              ? "pointer-events-none"
+              : "transition-colors hover:text-gray-700",
+          )}
+          disabled={hasAlt}
+        >
+          <strong className="text-sm font-bold">
+            Accessibility Description
+          </strong>
+
+          <IconChevronDown
+            className="box-content shrink-0 p-1 transition-transform group-data-[open]:-scale-y-100"
+            size={24}
+          />
+        </DisclosureButton>
+
+        <DisclosurePanel className="rounded bg-gray-100 p-2" static={hasAlt}>
+          <TextAreaField
+            name={`image[${fileReference.id}][alternativeText]`}
+            label={
+              <>
+                <span className="sr-only">Alt text</span>
+                <p className="text-xs text-gray-600 italic">
+                  Use this text to describe the image for visually impaired
+                  users. This text is NOT visible on the show and tell page, but
+                  will be read by screen readers and other accessibility tools.
+                </p>
+              </>
+            }
+            labelClassName="block -mb-4"
+            maxLength={300}
+            defaultValue={initialData?.alternativeText}
+            onChange={(val) => setHasAlt(!!val)}
+          />
+        </DisclosurePanel>
+      </Disclosure>
+    </ImageUploadAttachment>
+  );
+}
 
 function GiveAnHourInput({
   defaultValue,
@@ -404,47 +485,13 @@ export function ShowAndTellEntryForm({
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
-              renderAttachment={({ fileReference, ...props }) => {
-                const initialData =
-                  fileReference.status === "saved"
-                    ? entry?.attachments.find(
-                        ({ imageAttachment }) =>
-                          imageAttachment &&
-                          imageAttachment.id === fileReference.id,
-                      )?.imageAttachment
-                    : undefined;
-
-                return (
-                  <ImageUploadAttachment
-                    {...props}
-                    fileReference={fileReference}
-                  >
-                    <div className="flex flex-col gap-3">
-                      <TextAreaField
-                        name={`image[${fileReference.id}][caption]`}
-                        label={<strong className="font-bold">Caption</strong>}
-                        maxLength={200}
-                        defaultValue={initialData?.caption}
-                      />
-                      <TextAreaField
-                        name={`image[${fileReference.id}][alternativeText]`}
-                        label={
-                          <span className="text-gray-600">
-                            Visual Description
-                            <br />
-                            <em className="text-sm">
-                              Text accessible to visually impaired users to
-                              describe the image
-                            </em>
-                          </span>
-                        }
-                        maxLength={300}
-                        defaultValue={initialData?.alternativeText}
-                      />
-                    </div>
-                  </ImageUploadAttachment>
-                );
-              }}
+              renderAttachment={({ fileReference, ...props }) => (
+                <ImageAttachment
+                  entry={entry}
+                  fileReference={fileReference}
+                  {...props}
+                />
+              )}
             />
           </Fieldset>
         </div>
