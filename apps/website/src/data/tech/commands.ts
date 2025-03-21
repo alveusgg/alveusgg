@@ -90,6 +90,9 @@ export const commandCategories = {
   Notify: {
     heading: "Notify",
   },
+  Rounds: {
+    heading: "Daily Rounds",
+  },
 } as const satisfies Record<string, CommandCategory>;
 
 const commands: Record<string, Command> = {
@@ -404,18 +407,6 @@ const commands: Record<string, Command> = {
       },
     ],
   },
-  ptzhome: {
-    description: "Move to home position",
-    category: "PTZ",
-    args: [
-      {
-        type: "string",
-        name: "camera",
-        required: false,
-        variadic: false,
-      },
-    ],
-  },
   ptzspeed: {
     description: "Change absolute movement speed",
     category: "PTZ",
@@ -430,6 +421,18 @@ const commands: Record<string, Command> = {
         type: "number",
         name: "speed",
         required: true,
+        variadic: false,
+      },
+    ],
+  },
+  ptzgetspeed: {
+    description: "Get absolute movement speed",
+    category: "PTZ",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
         variadic: false,
       },
     ],
@@ -601,6 +604,18 @@ const commands: Record<string, Command> = {
   /**
    * Presets
    */
+  ptzhome: {
+    description: "Move to home position",
+    category: "Presets",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
   ptzload: {
     description: "Move to a preset position",
     category: "Presets",
@@ -1093,6 +1108,26 @@ const commands: Record<string, Command> = {
       },
     ],
   },
+  showchat: {
+    description: "Show Twitch chat overlay (if enabled in the scene)",
+    category: "Scenes",
+    args: [],
+  },
+  hidechat: {
+    description: "Remove Twitch chat overlay",
+    category: "Scenes",
+    args: [],
+  },
+  raidvideo: {
+    description: "Show the raid video in cam slot 1, generally for raids >50",
+    category: "Scenes",
+    args: [],
+  },
+  stopraidvideo: {
+    description: "Stop the raid video",
+    category: "Scenes",
+    args: [],
+  },
 
   /**
    * Sources
@@ -1255,6 +1290,46 @@ const commands: Record<string, Command> = {
         required: false,
         variadic: false,
         prefix: "--image=",
+      },
+    ],
+  },
+
+  /**
+   * Rounds
+   */
+  startrounds: {
+    description: "Enable the Daily Rounds overlay",
+    category: "Rounds",
+    args: [],
+  },
+  stoprounds: {
+    description: "Disable the Daily Rounds overlay",
+    category: "Rounds",
+    args: [],
+  },
+  markdone: {
+    description:
+      "Mark list items as completed, no category will mark all as completed",
+    category: "Rounds",
+    args: [
+      {
+        type: "string",
+        name: "category",
+        required: false,
+        variadic: false,
+      },
+    ],
+  },
+  clearcheck: {
+    description:
+      "Remove checkmarks from list items, no category will remove all checkmarks",
+    category: "Rounds",
+    args: [
+      {
+        type: "string",
+        name: "category",
+        required: false,
+        variadic: false,
       },
     ],
   },
