@@ -160,9 +160,9 @@ function GiveAnHourInput({
       onChange={setValue}
       step={1}
       minValue={1}
-      maxValue={100}
+      maxValue={9999}
       inputClassName={classes(
-        "text-right min-w-[calc(4ch+1rem)]",
+        "text-right min-w-[calc(5ch+1rem)]",
         enabled ? "" : "opacity-50 cursor-not-allowed",
       )}
       showButtons={true}
