@@ -1297,27 +1297,37 @@ const commands: Record<string, Command> = {
   /**
    * Rounds
    */
-  startrounds: {
+  showrounds: {
     description: "Enable the Daily Rounds overlay",
     category: "Rounds",
     args: [],
   },
-  stoprounds: {
+  hiderounds: {
     description: "Disable the Daily Rounds overlay",
     category: "Rounds",
     args: [],
   },
-  markdone: {
-    description:
-      "Mark list items as completed, no category will mark all as completed",
+  checkmark: {
+    description: "Mark list items as completed",
     category: "Rounds",
     args: [
-      {
-        type: "string",
-        name: "category",
-        required: false,
-        variadic: false,
-      },
+      [
+        {
+          type: "string",
+          name: "category",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
     ],
   },
   clearcheck: {
