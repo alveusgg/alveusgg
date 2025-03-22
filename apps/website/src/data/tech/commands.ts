@@ -1308,16 +1308,26 @@ const commands: Record<string, Command> = {
     args: [],
   },
   checkmark: {
-    description:
-      'Mark list items as completed, "!checkmark all" will mark all as completed',
+    description: "Mark list items as completed",
     category: "Rounds",
     args: [
-      {
-        type: "string",
-        name: "category",
-        required: false,
-        variadic: false,
-      },
+      [
+        {
+          type: "string",
+          name: "category",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
     ],
   },
   clearcheck: {
