@@ -13,6 +13,7 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 
+import Image from "next/image";
 import type {
   PublicShowAndTellEntryWithAttachments,
   ShowAndTellSubmitInput,
@@ -59,6 +60,7 @@ import {
 import Link from "../content/Link";
 import type { MapLocation } from "../shared/form/MapPickerField";
 import { MapPickerField } from "../shared/form/MapPickerField";
+import { ModalDialog } from "../shared/ModalDialog";
 import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {
@@ -180,6 +182,8 @@ export function ShowAndTellEntryForm({
 }: ShowAndTellEntryFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const create = trpc.showAndTell.create.useMutation();
@@ -190,6 +194,15 @@ export function ShowAndTellEntryForm({
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
     !!entry?.volunteeringMinutes,
   );
+
+  function closeModal() {
+    setIsPreviewOpen(false);
+  }
+
+  function openModal(url: string) {
+    setPreviewImageUrl(url);
+    setIsPreviewOpen(true);
+  }
 
   const initialLocation = useMemo<MapLocation | undefined>(
     () =>
@@ -268,6 +281,7 @@ export function ShowAndTellEntryForm({
 
       dominantColor = [r, g, b].join();
     }
+
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
@@ -485,13 +499,24 @@ export function ShowAndTellEntryForm({
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
-              renderAttachment={({ fileReference, ...props }) => (
-                <ImageAttachment
-                  entry={entry}
-                  fileReference={fileReference}
-                  {...props}
-                />
-              )}
+              renderAttachment={({ fileReference, ...props }) => {
+                const handlePreviewClick = () => {
+                  if (
+                    fileReference.status === "upload.done" ||
+                    fileReference.status === "saved"
+                  ) {
+                    openModal(fileReference.url);
+                  }
+                };
+                return (
+                  <ImageAttachment
+                    entry={entry}
+                    fileReference={fileReference}
+                    onClick={handlePreviewClick}
+                    {...props}
+                  />
+                );
+              }}
             />
           </Fieldset>
         </div>
@@ -578,6 +603,24 @@ export function ShowAndTellEntryForm({
           )}
         </Button>
       </div>
+
+      <ModalDialog
+        isOpen={isPreviewOpen}
+        closeModal={closeModal}
+        title="Image Preview"
+      >
+        {previewImageUrl ? (
+          <Image
+            src={previewImageUrl}
+            alt="Form Image"
+            width={500}
+            height={500}
+            className="object-contain"
+          ></Image>
+        ) : (
+          <p>No Image to preview</p>
+        )}
+      </ModalDialog>
     </form>
   );
 }

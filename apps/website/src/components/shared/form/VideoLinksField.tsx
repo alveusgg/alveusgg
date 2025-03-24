@@ -119,7 +119,16 @@ export function VideoLinksField({
                   className="size-5"
                   platform={parseVideoUrl(url)?.platform}
                 />
-                <span className="min-w-0 flex-1 truncate text-left">{url}</span>
+                <a
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-blue-700 underline hover:cursor-pointer"
+                >
+                  <span className="min-w-0 flex-1 truncate text-left">
+                    {url}
+                  </span>
+                </a>
                 <Button
                   size="small"
                   width="auto"
