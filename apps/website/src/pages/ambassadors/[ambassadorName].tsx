@@ -14,6 +14,8 @@ import {
   getAmbassadorImages,
   getAmbassadorMerchImage,
   getAmbassadorIconImage,
+  getAmbassadorBadgeImage,
+  getAmbassadorEmoteImage,
   type AmbassadorImage,
   type AmbassadorImages,
 } from "@alveusgg/data/build/ambassadors/images";
@@ -72,7 +74,10 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
       enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
-      iconImage: getAmbassadorIconImage(ambassadorKey),
+      iconImage:
+        getAmbassadorIconImage(ambassadorKey) ??
+        getAmbassadorBadgeImage(ambassadorKey) ??
+        getAmbassadorEmoteImage(ambassadorKey),
       animalQuest: getAmbassadorEpisodes(ambassadorKey),
     },
   };
