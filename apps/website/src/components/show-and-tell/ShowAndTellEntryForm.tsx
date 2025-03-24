@@ -73,9 +73,12 @@ type ShowAndTellEntryFormProps = {
 function ImageAttachment({
   entry,
   fileReference,
+  callback,
   ...props
 }: ComponentProps<typeof ImageUploadAttachment> &
-  Pick<ShowAndTellEntryFormProps, "entry">) {
+  Pick<ShowAndTellEntryFormProps, "entry"> & {
+    callback: (param: string) => void;
+  }) {
   const initialData =
     fileReference.status === "saved"
       ? entry?.attachments.find(
@@ -86,8 +89,21 @@ function ImageAttachment({
 
   const [hasAlt, setHasAlt] = useState(!!initialData?.alternativeText);
 
+  const handlePreviewClick = () => {
+    if (
+      fileReference.status === "upload.done" ||
+      fileReference.status === "saved"
+    ) {
+      callback(fileReference.url);
+    }
+  };
+
   return (
-    <ImageUploadAttachment {...props} fileReference={fileReference}>
+    <ImageUploadAttachment
+      onClick={handlePreviewClick}
+      {...props}
+      fileReference={fileReference}
+    >
       <TextAreaField
         name={`image[${fileReference.id}][caption]`}
         label={<strong className="font-bold">Caption</strong>}
@@ -195,14 +211,14 @@ export function ShowAndTellEntryForm({
     !!entry?.volunteeringMinutes,
   );
 
-  function closeModal() {
+  const closeModal = () => {
     setIsPreviewOpen(false);
-  }
+  };
 
-  function openModal(url: string) {
+  const openModal = (url: string) => {
     setPreviewImageUrl(url);
     setIsPreviewOpen(true);
-  }
+  };
 
   const initialLocation = useMemo<MapLocation | undefined>(
     () =>
@@ -500,19 +516,11 @@ export function ShowAndTellEntryForm({
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
               renderAttachment={({ fileReference, ...props }) => {
-                const handlePreviewClick = () => {
-                  if (
-                    fileReference.status === "upload.done" ||
-                    fileReference.status === "saved"
-                  ) {
-                    openModal(fileReference.url);
-                  }
-                };
                 return (
                   <ImageAttachment
                     entry={entry}
                     fileReference={fileReference}
-                    onClick={handlePreviewClick}
+                    callback={openModal}
                     {...props}
                   />
                 );
