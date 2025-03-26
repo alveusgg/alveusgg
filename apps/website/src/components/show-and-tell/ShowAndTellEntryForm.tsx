@@ -73,11 +73,11 @@ type ShowAndTellEntryFormProps = {
 function ImageAttachment({
   entry,
   fileReference,
-  callback,
+  onClick,
   ...props
-}: ComponentProps<typeof ImageUploadAttachment> &
+}: Omit<ComponentProps<typeof ImageUploadAttachment>, "onClick"> &
   Pick<ShowAndTellEntryFormProps, "entry"> & {
-    callback: (param: string) => void;
+    onClick: (url: string) => void;
   }) {
   const initialData =
     fileReference.status === "saved"
@@ -94,14 +94,14 @@ function ImageAttachment({
       fileReference.status === "upload.done" ||
       fileReference.status === "saved"
     ) {
-      callback(fileReference.url);
+      onClick(fileReference.url);
     }
   };
 
   return (
     <ImageUploadAttachment
-      onClick={handlePreviewClick}
       {...props}
+      onClick={handlePreviewClick}
       fileReference={fileReference}
     >
       <TextAreaField
@@ -198,7 +198,6 @@ export function ShowAndTellEntryForm({
 }: ShowAndTellEntryFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -212,12 +211,11 @@ export function ShowAndTellEntryForm({
   );
 
   const closeModal = () => {
-    setIsPreviewOpen(false);
+    setPreviewImageUrl(null);
   };
 
   const openModal = (url: string) => {
     setPreviewImageUrl(url);
-    setIsPreviewOpen(true);
   };
 
   const initialLocation = useMemo<MapLocation | undefined>(
@@ -520,7 +518,7 @@ export function ShowAndTellEntryForm({
                   <ImageAttachment
                     entry={entry}
                     fileReference={fileReference}
-                    callback={openModal}
+                    onClick={openModal}
                     {...props}
                   />
                 );
@@ -613,7 +611,7 @@ export function ShowAndTellEntryForm({
       </div>
 
       <ModalDialog
-        isOpen={isPreviewOpen}
+        isOpen={!!previewImageUrl}
         closeModal={closeModal}
         title="Image Preview"
       >
