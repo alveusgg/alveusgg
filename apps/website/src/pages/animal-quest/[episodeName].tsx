@@ -52,6 +52,10 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
     {},
   );
 
+const posterUrl =
+  env.NEXT_PUBLIC_BASE_URL +
+  createImageUrl({ src: animalQuestFull.src, width: 1200 });
+
 const getCloudflareEmbed = (
   customer: string,
   video: string,
@@ -167,11 +171,6 @@ export const getStaticProps: GetStaticProps<
     },
   };
 };
-
-const posterUrl = /^http:\/\/localhost(:\d+)?$/.test(env.NEXT_PUBLIC_BASE_URL)
-  ? "https://files.alveus.site/intros/animalquest.png"
-  : env.NEXT_PUBLIC_BASE_URL +
-    createImageUrl({ src: animalQuestFull.src, width: 1200 });
 
 const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   episode,
