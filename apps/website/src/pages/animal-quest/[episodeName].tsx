@@ -11,7 +11,13 @@ import animalQuest, {
 } from "@alveusgg/data/build/animal-quest";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
-import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
+import {
+  getAmbassadorBadgeImage,
+  getAmbassadorEmoteImage,
+  getAmbassadorIconImage,
+  getAmbassadorImages,
+  type AmbassadorImage,
+} from "@alveusgg/data/build/ambassadors/images";
 
 import { env } from "@/env";
 
@@ -29,8 +35,9 @@ import { ambassadorImageHover } from "@/pages/ambassadors";
 
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { formatDateTime, formatSeconds } from "@/utils/datetime";
-import { typeSafeObjectEntries } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
+import { mapFirst } from "@/utils/array";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 
@@ -127,6 +134,7 @@ type AnimalQuestEpisodePageProps = {
   related: {
     [key in (typeof animalQuest)[number]["ambassadors"]["related"][number]]: (typeof ambassadors)[key];
   };
+  icon?: AmbassadorImage;
 };
 
 export const getStaticPaths: GetStaticPaths = () => {
@@ -163,11 +171,18 @@ export const getStaticProps: GetStaticProps<
     {},
   ) as AnimalQuestEpisodePageProps["related"];
 
+  const featuredKeys = typeSafeObjectKeys(featured);
+  const icon =
+    mapFirst(featuredKeys, getAmbassadorIconImage) ??
+    mapFirst(featuredKeys, getAmbassadorBadgeImage) ??
+    mapFirst(featuredKeys, getAmbassadorEmoteImage);
+
   return {
     props: {
       episode,
       featured,
       related,
+      icon,
     },
   };
 };
@@ -176,6 +191,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   episode,
   featured,
   related,
+  icon,
 }) => {
   const router = useRouter();
 
@@ -266,6 +282,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         title={`Episode ${episode.episode}: ${episode.edition} | Animal Quest`}
         description={description.join("\n\n")}
         image={animalQuestFull.src}
+        icon={icon?.src?.src}
       >
         <meta
           key="twitter:player"

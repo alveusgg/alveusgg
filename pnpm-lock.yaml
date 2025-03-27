@@ -87,8 +87,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: 0.56.0
-        version: 0.56.0(tailwindcss@4.0.17)(zod@3.24.2)
+        specifier: 0.57.0
+        version: 0.57.0(tailwindcss@4.0.17)(zod@3.24.2)
       '@aws-sdk/client-s3':
         specifier: ^3.775.0
         version: 3.775.0
@@ -392,7 +392,7 @@ importers:
         version: 3.0.9(@types/debug@4.1.12)(@types/node@22.13.13)(jiti@2.4.2)(jsdom@26.0.0)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)
       webpack:
         specifier: ^5.98.0
-        version: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)
+        version: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)
 
 packages:
 
@@ -400,8 +400,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.56.0':
-    resolution: {integrity: sha512-C23hxsnUvWZb5spd4Pi7s9Rrs6AFWqQgSxBgxVcvi3CNbpMTx9SrbTVXjRLfPq2P6IOYfzvitIAZTvYSVWKZYw==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.56.0/5b36410f72304aa77b49f93d02ffd39b5a9cef65}
+  '@alveusgg/data@0.57.0':
+    resolution: {integrity: sha512-pfqvbZQSRE/+/pivvzf7FpZNnAvOBnfnH52vQOT5TQ1oCW0RDjEqtCncEiCwdQlFDdtJNI0nN5QAKCMli/Bu0w==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.57.0/f5e88db617683bf7e2977bf9ac98691b49132af2}
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
@@ -6523,7 +6523,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.56.0(tailwindcss@4.0.17)(zod@3.24.2)':
+  '@alveusgg/data@0.57.0(tailwindcss@4.0.17)(zod@3.24.2)':
     dependencies:
       tailwindcss: 4.0.17
       zod: 3.24.2
@@ -13394,17 +13394,17 @@ snapshots:
 
   tapable@2.2.1: {}
 
-  terser-webpack-plugin@5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)):
+  terser-webpack-plugin@5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.39.0
-      webpack: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)
+      webpack: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)
     optionalDependencies:
       '@swc/core': 1.4.17(@swc/helpers@0.5.15)
-      esbuild: 0.25.1
+      esbuild: 0.25.0
 
   terser@5.39.0:
     dependencies:
@@ -13836,7 +13836,7 @@ snapshots:
 
   webpack-sources@3.2.3: {}
 
-  webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1):
+  webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.6
@@ -13858,7 +13858,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1))
+      terser-webpack-plugin: 5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0))
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
