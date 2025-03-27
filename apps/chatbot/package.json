@@ -20,7 +20,7 @@
     "@twurple/chat": "^7.2.1",
     "@twurple/easy-bot": "^7.2.1",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.40.1",
+    "drizzle-orm": "^0.41.0",
     "read-pkg": "^9.0.1",
     "tsx": "^4.19.3",
     "zod": "^3.24.2"
