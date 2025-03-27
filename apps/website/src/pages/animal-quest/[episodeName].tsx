@@ -3,6 +3,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
 import type { Episode } from "schema-dts";
+import { Stream } from "@cloudflare/stream-react";
 
 import animalQuest, {
   hosts,
@@ -20,8 +21,8 @@ import Heading from "@/components/content/Heading";
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Link from "@/components/content/Link";
+import Box from "@/components/content/Box";
 import JsonLD from "@/components/content/JsonLD";
-import { TwitchEmbed } from "@/components/content/TwitchEmbed";
 import Consent from "@/components/Consent";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
@@ -51,33 +52,46 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
     {},
   );
 
-const getTwitchEmbed = (
-  video: number,
-  parent: string,
+const posterUrl =
+  env.NEXT_PUBLIC_BASE_URL +
+  createImageUrl({ src: animalQuestFull.src, width: 1200 });
+
+const getCloudflareEmbed = (
+  customer: string,
+  video: string,
   {
     start,
-    player,
     autoPlay = true,
     muted = false,
+    poster,
+    title,
+    link,
   }: Partial<{
-    start: string;
-    player: string;
+    start: string | number;
     autoPlay: boolean;
     muted: boolean;
+    poster: string;
+    title?: string;
+    link?: string;
   }> = {},
 ): string => {
-  const url = new URL("https://player.twitch.tv");
-  url.searchParams.set("video", video.toString());
-  url.searchParams.set("parent", parent);
+  const url = new URL(
+    `https://customer-${customer}.cloudflarestream.com/${video}/iframe`,
+  );
   url.searchParams.set("autoplay", autoPlay.toString());
   url.searchParams.set("muted", muted.toString());
-  url.searchParams.set("allowfullscreen", "true");
-  url.searchParams.set("width", "100%");
-  url.searchParams.set("height", "100%");
-  if (start) url.searchParams.set("time", start);
-  if (player) url.searchParams.set("player", player);
+  if (start) url.searchParams.set("startTime", start.toString());
+  if (poster) url.searchParams.set("poster", poster);
+  if (title) url.searchParams.set("title", title);
+  if (link) {
+    url.searchParams.set("channel-link", link);
+    url.searchParams.set("share-link", link);
+  }
   return url.toString();
 };
+
+const getCloudflareVideo = (customer: string, video: string): string =>
+  `https://customer-${customer}.cloudflarestream.com/${video}/downloads/default.mp4`;
 
 const getPreziEmbed = (id: string): string => {
   const url = new URL(`https://prezi.com/p/embed/${encodeURIComponent(id)}`);
@@ -96,15 +110,6 @@ const stringToSeconds = (time: string): number | undefined => {
       Number(hours ?? 0) * 3600 + Number(minutes ?? 0) * 60 + Number(seconds)
     );
   }
-};
-
-const secondsToString = (seconds: number): string => {
-  const h = Math.floor(seconds / 3600)
-    .toString()
-    .padStart(2, "0");
-  const m = (Math.floor(seconds / 60) % 60).toString().padStart(2, "0");
-  const s = (seconds % 60).toString().padStart(2, "0");
-  return `${h}h${m}m${s}s`;
 };
 
 const secondsToIso8601 = (seconds: number): string => {
@@ -175,13 +180,11 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
   const router = useRouter();
 
   const start = useMemo(() => {
-    const defaultSeconds = stringToSeconds(episode.video.start || "") ?? 0;
     const queryString = Array.isArray(router.query.t)
       ? router.query.t[0]
       : router.query.t;
-    const querySeconds = stringToSeconds(queryString || "") ?? 0;
-    return secondsToString(Math.max(defaultSeconds, querySeconds));
-  }, [episode.video.start, router.query.t]);
+    return stringToSeconds(queryString || "") ?? 0;
+  }, [router.query.t]);
 
   const description = useMemo(
     () =>
@@ -264,15 +267,10 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         description={description.join("\n\n")}
         image={animalQuestFull.src}
       >
-        {/* This metadata is more-or-less copied from the Twitch VOD page */}
-
         <meta
           key="twitter:player"
           property="twitter:player"
-          content={getTwitchEmbed(episode.video.id, "meta.tag", {
-            start: episode.video.start,
-            player: "twitter",
-          })}
+          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
         />
         <meta key="twitter:card" property="twitter:card" content="player" />
         <meta
@@ -289,18 +287,12 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="og:video"
           property="og:video"
-          content={getTwitchEmbed(episode.video.id, "meta.tag", {
-            start: episode.video.start,
-            player: "facebook",
-          })}
+          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
         />
         <meta
           key="og:video:secure_url"
           property="og:video:secure_url"
-          content={getTwitchEmbed(episode.video.id, "meta.tag", {
-            start: episode.video.start,
-            player: "facebook",
-          })}
+          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
         />
         <meta
           key="og:video:release_date"
@@ -311,10 +303,25 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="og:video:type"
           property="og:video:type"
-          content="text/html"
+          content="video/mp4"
         />
-        <meta key="og:video:width" property="og:video:width" content="620" />
-        <meta key="og:video:height" property="og:video:height" content="378" />
+        <meta key="og:video:width" property="og:video:width" content="640" />
+        <meta key="og:video:height" property="og:video:height" content="360" />
+
+        <meta
+          key="canonical"
+          property="canonical"
+          content={`${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+            episode.edition,
+          )}`}
+        />
+        <meta
+          key="og:url"
+          property="og:url"
+          content={`${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+            episode.edition,
+          )}`}
+        />
       </Meta>
 
       {/* Nav background */}
@@ -327,107 +334,105 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
-        <Section dark>
-          <div className="flex flex-wrap lg:flex-nowrap">
-            <div className="flex w-full shrink-0 flex-col items-start justify-between py-4 lg:max-w-md lg:pl-8">
-              <Heading className="flex flex-col">
-                <span className="text-lg">
-                  Animal Quest Episode {episode.episode}:{" "}
-                </span>
-                <span>{episode.edition}</span>
-              </Heading>
+        <Section dark className="pt-4">
+          <Heading className="mb-6 text-3xl">
+            <span className="text-2xl">
+              Animal Quest Episode {episode.episode}:
+            </span>{" "}
+            {episode.edition}
+          </Heading>
 
-              <div className="flex w-full flex-wrap">
-                <h2 className="sr-only">Episode Information</h2>
+          <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
+            <Image
+              src={animalQuestFull}
+              alt=""
+              className="absolute inset-0 -z-10 h-full w-full object-cover"
+              width={1200}
+            />
+            <Stream
+              src={episode.video.id}
+              customerCode={episode.video.cu}
+              poster={posterUrl}
+              autoplay
+              preload
+              controls
+              muted={false}
+              currentTime={start}
+              letterboxColor="transparent"
+              height="100%"
+              width="100%"
+              className="my-auto aspect-video h-auto w-full bg-transparent"
+            />
+          </Box>
 
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Broadcast:
-                  </Heading>
-                  <p>{formatDateTime(episode.broadcast, { style: "long" })}</p>
-                </div>
+          <div className="mt-4 flex flex-wrap items-center justify-between lg:flex-nowrap">
+            <div className="flex flex-wrap items-start gap-x-8 gap-y-2 py-4">
+              <h2 className="sr-only">Episode Information</h2>
 
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Featuring:
-                  </Heading>
-                  <p>
-                    {typeSafeObjectEntries(featured).map(
-                      ([key, ambassador], idx, arr) => (
-                        <Fragment key={key}>
-                          {/* Retired ambassadors don't have pages */}
-                          {isActiveAmbassadorKey(key) ? (
-                            <Link
-                              href={`/ambassadors/${camelToKebab(key)}`}
-                              dark
-                            >
-                              {ambassador.name}
-                            </Link>
-                          ) : (
-                            ambassador.name
-                          )}
-                          {idx < arr.length - 2 && ", "}
-                          {idx === arr.length - 2 && arr.length > 2 && ","}
-                          {idx === arr.length - 2 && " and "}
-                        </Fragment>
-                      ),
-                    )}
-                  </p>
-                </div>
-
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Host:
-                  </Heading>
-                  <p>
-                    <Link href={host.link} external={host.external} dark>
-                      {host.name}
-                    </Link>
-                  </p>
-                </div>
-
-                <div className="w-full sm:w-1/2">
-                  <Heading level={3} className="text-2xl">
-                    Length:
-                  </Heading>
-                  <p title="Video length may appear longer due to intro/outro screen segments">
-                    {formatSeconds(episode.length, {
-                      style: "long",
-                      seconds: false,
-                    })}
-                  </p>
-                </div>
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Broadcast:
+                </Heading>
+                <p className="text-xl">
+                  {formatDateTime(episode.broadcast, { style: "long" })}
+                </p>
               </div>
 
-              <Button href="/animal-quest" className="mt-8" dark>
-                Discover more episodes
-              </Button>
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Featuring:
+                </Heading>
+                <p className="text-xl">
+                  {typeSafeObjectEntries(featured).map(
+                    ([key, ambassador], idx, arr) => (
+                      <Fragment key={key}>
+                        {/* Retired ambassadors don't have pages */}
+                        {isActiveAmbassadorKey(key) ? (
+                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
+                            {ambassador.name}
+                          </Link>
+                        ) : (
+                          ambassador.name
+                        )}
+                        {idx < arr.length - 2 && ", "}
+                        {idx === arr.length - 2 && arr.length > 2 && ","}
+                        {idx === arr.length - 2 && " and "}
+                      </Fragment>
+                    ),
+                  )}
+                </p>
+              </div>
+
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Host:
+                </Heading>
+                <p className="text-xl">
+                  <Link href={host.link} external={host.external} dark>
+                    {host.name}
+                  </Link>
+                </p>
+              </div>
+
+              <div>
+                <Heading level={3} className="my-0 text-lg">
+                  Length:
+                </Heading>
+                <p className="text-xl">
+                  {formatSeconds(episode.length, {
+                    style: "long",
+                    seconds: false,
+                  })}
+                </p>
+              </div>
             </div>
 
-            {/* Move the video to the left/top of the flex container with order-first */}
-            {/* Do this in CSS so the episode title is first in the DOM for screen-readers etc. */}
-            <div className="order-first flex w-full grow flex-col gap-4 lg:w-auto">
-              <h2 className="sr-only" id="video">
-                Video
-              </h2>
-
-              <Consent
-                item="episode video"
-                consent="twitch"
-                indexable
-                thumbnail={animalQuestFull}
-                className="my-auto aspect-video h-auto w-full overflow-hidden rounded-2xl bg-alveus-green text-alveus-tan"
-              >
-                <TwitchEmbed
-                  video={episode.video.id.toString()}
-                  time={start}
-                  className="aspect-video h-auto w-full"
-                />
-              </Consent>
-            </div>
+            <Button href="/animal-quest" dark>
+              Discover more episodes
+            </Button>
           </div>
 
-          <div className="mt-8 w-full space-y-4">
+          <div className="mt-4 w-full space-y-4">
             {description.map((paragraph) => (
               <p key={paragraph} className="text-lg">
                 {paragraph}
@@ -525,16 +530,18 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
               episode.edition,
             )}`,
-            thumbnailUrl:
-              env.NEXT_PUBLIC_BASE_URL +
-              createImageUrl({ src: animalQuestFull.src, width: 1200 }),
+            thumbnailUrl: posterUrl,
             uploadDate: episode.broadcast.toISOString(),
             duration: secondsToIso8601(episode.length),
-            // Copying the Twitch VOD page behaviour, as with the meta data
-            // Twitch set their embedUrl to be their WWW page, not the player
-            embedUrl: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
-              episode.edition,
-            )}`,
+            embedUrl: getCloudflareEmbed(episode.video.cu, episode.video.id, {
+              start,
+              poster: posterUrl,
+              title: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
+              link: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
+                episode.edition,
+              )}`,
+            }),
+            contentUrl: getCloudflareVideo(episode.video.cu, episode.video.id),
           },
           partOfSeries: {
             "@type": "CreativeWorkSeries",

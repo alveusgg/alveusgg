@@ -87,8 +87,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: 0.55.1
-        version: 0.55.1(tailwindcss@4.0.17)(zod@3.24.2)
+        specifier: 0.56.0
+        version: 0.56.0(tailwindcss@4.0.17)(zod@3.24.2)
       '@aws-sdk/client-s3':
         specifier: ^3.775.0
         version: 3.775.0
@@ -98,6 +98,9 @@ importers:
       '@bart-krakowski/get-week-info-polyfill':
         specifier: ^1.0.8
         version: 1.0.8
+      '@cloudflare/stream-react':
+        specifier: ^1.9.2
+        version: 1.9.3(react@19.0.0)
       '@fontsource/pt-sans':
         specifier: ^5.2.5
         version: 5.2.5
@@ -338,7 +341,7 @@ importers:
         version: 4.2.3(eslint-plugin-import-x@4.9.2(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-plugin-import@2.31.0)(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-import:
         specifier: ^2.31.0
-        version: 2.31.0(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2))
+        version: 2.31.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-import-x:
         specifier: ^4.9.2
         version: 4.9.2(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
@@ -389,7 +392,7 @@ importers:
         version: 3.0.9(@types/debug@4.1.12)(@types/node@22.13.13)(jiti@2.4.2)(jsdom@26.0.0)(lightningcss@1.29.2)(terser@5.39.0)(tsx@4.19.3)(yaml@2.7.0)
       webpack:
         specifier: ^5.98.0
-        version: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)
+        version: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)
 
 packages:
 
@@ -397,8 +400,8 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.55.1':
-    resolution: {integrity: sha512-fdaezfBL1bDW+fkJSp5yNrNq7Hu5v2qrEko6zp69ijSy67qazRUaDsXVWCucm65NKcjBjXcA9H8ZJe/ALuz97g==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.55.1/289b1679a80d3bf1246d2f09d1cb5cfa9599f32a}
+  '@alveusgg/data@0.56.0':
+    resolution: {integrity: sha512-C23hxsnUvWZb5spd4Pi7s9Rrs6AFWqQgSxBgxVcvi3CNbpMTx9SrbTVXjRLfPq2P6IOYfzvitIAZTvYSVWKZYw==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.56.0/5b36410f72304aa77b49f93d02ffd39b5a9cef65}
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
@@ -591,6 +594,12 @@ packages:
 
   '@bart-krakowski/get-week-info-polyfill@1.0.8':
     resolution: {integrity: sha512-Vkp5Skl44AkQ/w+pJ1XrCa5P5whvpK7Ix75KBoZXpGXOEp6CqLVkcAQaWfzY6+rF1R+2cwvJMkxkYF3M4B8HFw==}
+
+  '@cloudflare/stream-react@1.9.3':
+    resolution: {integrity: sha512-ocr7B+zHk/jq0r/wgtFeyoz7Hr+v3Qn0Ho6yUBkWT07ahr/0GU1dhliYJESwNXMuMYCU1sZ02sFH9pW5r1/BIA==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
 
   '@corex/deepmerge@4.0.43':
     resolution: {integrity: sha512-N8uEMrMPL0cu/bdboEWpQYb/0i2K5Qn8eCsxzOmxSggJbbQte7ljMRoXm917AbntqTGOzdTu+vP3KOOzoC70HQ==}
@@ -6514,7 +6523,7 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.55.1(tailwindcss@4.0.17)(zod@3.24.2)':
+  '@alveusgg/data@0.56.0(tailwindcss@4.0.17)(zod@3.24.2)':
     dependencies:
       tailwindcss: 4.0.17
       zod: 3.24.2
@@ -7029,6 +7038,10 @@ snapshots:
       regenerator-runtime: 0.14.1
 
   '@bart-krakowski/get-week-info-polyfill@1.0.8': {}
+
+  '@cloudflare/stream-react@1.9.3(react@19.0.0)':
+    dependencies:
+      react: 19.0.0
 
   '@corex/deepmerge@4.0.43': {}
 
@@ -10891,15 +10904,16 @@ snapshots:
       stable-hash: 0.0.5
       tinyglobby: 0.2.12
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2))
       eslint-plugin-import-x: 4.9.2(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
+      '@typescript-eslint/parser': 8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
       eslint: 9.23.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 4.2.3(eslint-plugin-import-x@4.9.2(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-plugin-import@2.31.0)(eslint@9.23.0(jiti@2.4.2))
@@ -10925,7 +10939,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-import@2.31.0(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -10936,7 +10950,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.23.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.2.3)(eslint@9.23.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -10947,6 +10961,8 @@ snapshots:
       semver: 6.3.1
       string.prototype.trimend: 1.0.8
       tsconfig-paths: 3.15.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 8.28.0(eslint@9.23.0(jiti@2.4.2))(typescript@5.8.2)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -13378,17 +13394,17 @@ snapshots:
 
   tapable@2.2.1: {}
 
-  terser-webpack-plugin@5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)):
+  terser-webpack-plugin@5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.25
       jest-worker: 27.5.1
       schema-utils: 4.3.0
       serialize-javascript: 6.0.2
       terser: 5.39.0
-      webpack: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)
+      webpack: 5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)
     optionalDependencies:
       '@swc/core': 1.4.17(@swc/helpers@0.5.15)
-      esbuild: 0.25.0
+      esbuild: 0.25.1
 
   terser@5.39.0:
     dependencies:
@@ -13820,7 +13836,7 @@ snapshots:
 
   webpack-sources@3.2.3: {}
 
-  webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0):
+  webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.6
@@ -13842,7 +13858,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.0
       tapable: 2.2.1
-      terser-webpack-plugin: 5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.0))
+      terser-webpack-plugin: 5.3.11(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1)(webpack@5.98.0(@swc/core@1.4.17(@swc/helpers@0.5.15))(esbuild@0.25.1))
       watchpack: 2.4.2
       webpack-sources: 3.2.3
     transitivePeerDependencies:
