@@ -614,17 +614,16 @@ export function ShowAndTellEntryForm({
         isOpen={!!previewImageUrl}
         closeModal={closeModal}
         title="Image Preview"
+        panelClassName="max-w-3xl"
       >
-        {previewImageUrl ? (
+        {previewImageUrl && (
           <Image
             src={previewImageUrl}
             alt="Form Image"
             width={500}
             height={500}
-            className="object-contain"
+            className="w-full object-contain"
           ></Image>
-        ) : (
-          <p>No Image to preview</p>
         )}
       </ModalDialog>
     </form>
