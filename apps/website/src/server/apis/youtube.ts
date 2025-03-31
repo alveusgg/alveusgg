@@ -1,6 +1,8 @@
 import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
 
+import { channels } from "@/data/youtube";
+
 const ItemSchema = z.object({
   id: z.string(),
   title: z.string(),
@@ -47,7 +49,7 @@ export interface YouTubeVideo {
   id: string;
   title: string;
   description: string;
-  author: { name: string; uri: string };
+  author: { id: string; name: string; uri: string };
   published: Date;
 }
 
@@ -56,6 +58,10 @@ export const fetchYouTubeVideos = async (
 ): Promise<YouTubeVideo[]> => {
   if (!channelId.startsWith("UC"))
     throw new Error("Invalid YouTube channel ID");
+
+  const custom = Object.values(channels).find(
+    (channel) => channel.id === channelId,
+  );
 
   // Get the built-in videos playlist for the channel
   // This contains only long-form videos, not shorts or live streams (or VoDs)
@@ -66,7 +72,11 @@ export const fetchYouTubeVideos = async (
         id: entry.id.replace(/^yt:video:/, ""),
         title: entry.title,
         description: entry["media:group"]["media:description"],
-        author: entry.author,
+        author: {
+          id: channelId,
+          name: custom?.name ?? entry.author.name,
+          uri: custom?.uri ?? entry.author.uri,
+        },
         published: entry.published,
       })),
   );
