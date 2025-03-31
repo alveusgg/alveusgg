@@ -66,18 +66,23 @@ export function ImageUploadAttachment({
   fileReference,
   children = "",
   showRemoveButton = true,
+  onClick,
 }: {
   removeFileReference: (id: string) => void;
   fileReference: FileReference;
   children?: ReactNode | ReactNode[];
   showRemoveButton?: boolean;
+  onClick?: () => void;
 }) {
   return (
     <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
       <div className="py-2">
-        <div className="relative size-32 overflow-hidden rounded-lg bg-gray-200">
+        <Button
+          onClick={onClick}
+          className="relative size-32 overflow-hidden rounded-lg bg-gray-200"
+        >
           <ImageUploadFilePreview fileReference={fileReference} />
-        </div>
+        </Button>
 
         {showRemoveButton && (
           <div className="p-2">

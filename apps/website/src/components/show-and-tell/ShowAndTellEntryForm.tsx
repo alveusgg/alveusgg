@@ -13,6 +13,7 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 
+import Image from "next/image";
 import type {
   PublicShowAndTellEntryWithAttachments,
   ShowAndTellSubmitInput,
@@ -59,6 +60,7 @@ import {
 import Link from "../content/Link";
 import type { MapLocation } from "../shared/form/MapPickerField";
 import { MapPickerField } from "../shared/form/MapPickerField";
+import { ModalDialog } from "../shared/ModalDialog";
 import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {
@@ -71,9 +73,12 @@ type ShowAndTellEntryFormProps = {
 function ImageAttachment({
   entry,
   fileReference,
+  onClick,
   ...props
-}: ComponentProps<typeof ImageUploadAttachment> &
-  Pick<ShowAndTellEntryFormProps, "entry">) {
+}: Omit<ComponentProps<typeof ImageUploadAttachment>, "onClick"> &
+  Pick<ShowAndTellEntryFormProps, "entry"> & {
+    onClick: (url: string) => void;
+  }) {
   const initialData =
     fileReference.status === "saved"
       ? entry?.attachments.find(
@@ -84,8 +89,21 @@ function ImageAttachment({
 
   const [hasAlt, setHasAlt] = useState(!!initialData?.alternativeText);
 
+  const handlePreviewClick = () => {
+    if (
+      fileReference.status === "upload.done" ||
+      fileReference.status === "saved"
+    ) {
+      onClick(fileReference.url);
+    }
+  };
+
   return (
-    <ImageUploadAttachment {...props} fileReference={fileReference}>
+    <ImageUploadAttachment
+      {...props}
+      onClick={handlePreviewClick}
+      fileReference={fileReference}
+    >
       <TextAreaField
         name={`image[${fileReference.id}][caption]`}
         label={<strong className="font-bold">Caption</strong>}
@@ -180,6 +198,7 @@ export function ShowAndTellEntryForm({
 }: ShowAndTellEntryFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   const create = trpc.showAndTell.create.useMutation();
@@ -190,6 +209,14 @@ export function ShowAndTellEntryForm({
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
     !!entry?.volunteeringMinutes,
   );
+
+  const closeModal = () => {
+    setPreviewImageUrl(null);
+  };
+
+  const openModal = (url: string) => {
+    setPreviewImageUrl(url);
+  };
 
   const initialLocation = useMemo<MapLocation | undefined>(
     () =>
@@ -268,6 +295,7 @@ export function ShowAndTellEntryForm({
 
       dominantColor = [r, g, b].join();
     }
+
     const data: ShowAndTellSubmitInput = {
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
@@ -485,13 +513,16 @@ export function ShowAndTellEntryForm({
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
-              renderAttachment={({ fileReference, ...props }) => (
-                <ImageAttachment
-                  entry={entry}
-                  fileReference={fileReference}
-                  {...props}
-                />
-              )}
+              renderAttachment={({ fileReference, ...props }) => {
+                return (
+                  <ImageAttachment
+                    entry={entry}
+                    fileReference={fileReference}
+                    onClick={openModal}
+                    {...props}
+                  />
+                );
+              }}
             />
           </Fieldset>
         </div>
@@ -578,6 +609,23 @@ export function ShowAndTellEntryForm({
           )}
         </Button>
       </div>
+
+      <ModalDialog
+        isOpen={!!previewImageUrl}
+        closeModal={closeModal}
+        title="Image Preview"
+        panelClassName="max-w-3xl"
+      >
+        {previewImageUrl && (
+          <Image
+            src={previewImageUrl}
+            alt="Form Image"
+            width={500}
+            height={500}
+            className="w-full object-contain"
+          ></Image>
+        )}
+      </ModalDialog>
     </form>
   );
 }
