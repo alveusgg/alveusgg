@@ -91,6 +91,7 @@ const createTrigger = (id: string) => {
 
 type PreviewProps = {
   videoId: string;
+  alt?: string;
   className?: string;
 };
 
@@ -103,7 +104,7 @@ const imgSrc = (id: string, type: string) =>
     quality: 100,
   });
 
-export const Preview = ({ videoId, className }: PreviewProps) => {
+export const Preview = ({ videoId, alt = "", className }: PreviewProps) => {
   // Handle falling back to hq if there isn't a maxres image
   const [type, setType] = useState<"maxresdefault" | "hqdefault">(
     "maxresdefault",
@@ -118,7 +119,7 @@ export const Preview = ({ videoId, className }: PreviewProps) => {
       <img
         src={imgSrc(videoId, type)}
         onError={onError}
-        alt=""
+        alt={alt}
         loading="lazy"
         className={classes(
           "pointer-events-none object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
