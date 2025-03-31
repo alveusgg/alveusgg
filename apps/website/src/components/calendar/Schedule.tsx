@@ -137,7 +137,7 @@ export function Schedule() {
                 <div
                   className={classes(
                     category.color,
-                    "rounded-md border-2 border-gray-400 p-2",
+                    "rounded-md border-2 border-black/10 p-2 hover:border-black/20",
                   )}
                 />
                 <p className="shrink-0 opacity-75">{category.name}</p>

@@ -13,6 +13,10 @@ export const standardCategories: StandardCategory[] = [
     name: "Alveus Collaboration Stream",
     color: "bg-blue-100 hover:bg-blue-50",
   },
+  {
+    name: "Alveus Ambassador Birthday",
+    color: "bg-pink-100 hover:bg-pink-200",
+  },
   { name: "Alveus YouTube Video", color: "bg-red-50 hover:bg-red-100" },
   { name: "Maya Stream", color: "bg-gray-200 hover:bg-gray-300" },
   { name: "Maya YouTube Video", color: "bg-red-100 hover:bg-red-50" },

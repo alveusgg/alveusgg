@@ -25,7 +25,7 @@ export function CalendarItem({
       className={classes(
         className,
         getStandardCategoryColor(event.category),
-        "mb-auto block rounded-xs p-1 leading-none transition-colors",
+        "mb-auto block rounded-sm border-2 border-black/10 p-1 leading-none transition-colors hover:border-black/20",
         event.startAt.getTime() < today.toMillis() && "opacity-50",
       )}
       custom
