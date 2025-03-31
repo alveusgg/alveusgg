@@ -121,6 +121,14 @@ export const regularEventsWeekly = [
       startTime: { hour: 14, minute: 30 },
     },
     {
+      title: "Chat Chats w/ Evan",
+      description:
+        "Join Evan as he chats all things bugs with chat and answers all your questions.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 21, minute: 0 },
+    },
+    {
       title: "WAI New Episode",
       description: "Watch the latest Wine About It episode.",
       category: "Maya YouTube Video",
