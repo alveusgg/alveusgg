@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { type DateObjectUnits, DateTime } from "luxon";
+import { DateTime } from "luxon";
 import type { CalendarEvent } from "@prisma/client";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
@@ -27,7 +27,11 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 import { getShortBaseUrl } from "@/utils/short-url";
 import { camelToKebab } from "@/utils/string-case";
 
-import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
+import {
+  getFormattedTitle,
+  regularEventsWeekly,
+  twitchChannels,
+} from "@/data/calendar-events";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),
@@ -88,78 +92,6 @@ export function getCalendarEvents({
   });
 }
 
-type RegularEvent = Pick<
-  CalendarEventSchema,
-  "title" | "description" | "category" | "link"
-> & {
-  startTime?: Pick<DateObjectUnits, "hour" | "minute">;
-};
-
-const animalCareChats: RegularEvent = {
-  title: "Animal Care Chats",
-  description:
-    "Join animal care staff as they carry out their daily tasks and answer your questions.",
-  category: "Alveus Regular Stream",
-  link: "https://twitch.tv/AlveusSanctuary",
-  startTime: { hour: 14, minute: 30 },
-};
-
-export const eventsByWeekDay = [
-  // Monday
-  [animalCareChats],
-  // Tuesday
-  [animalCareChats],
-  // Wednesday
-  [
-    {
-      title: "Connor Stream",
-      description: "Join Connor as he gets up to his usual antics.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
-    },
-    {
-      title: "WAI New Episode",
-      description: "Watch the latest Wine About It episode.",
-      category: "Maya YouTube Video",
-      link: "https://www.youtube.com/@WineAboutItPodcast",
-    },
-  ],
-  // Thursday
-  [
-    animalCareChats,
-    {
-      title: "WW New Episode",
-      description: "Watch the latest World's Wildest episode.",
-      category: "Maya YouTube Video",
-      link: "https://www.youtube.com/@worldswildestpodcast",
-    },
-  ],
-  // Friday
-  [
-    {
-      title: "Show & Tell",
-      description:
-        "Join Maya as she reviews this week's community submissions for Show and Tell.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
-    },
-  ],
-  // Saturday
-  [
-    {
-      title: "Nick Stream",
-      description: "Join Nick as he gets work done around the sanctuary.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
-    },
-  ],
-  // Sunday
-  [],
-] as RegularEvent[][];
-
 export async function createRegularCalendarEvents(date: Date) {
   // Get all the ambassadors with an exact birth date
   const ambassadorBirthdays = typeSafeObjectEntries(ambassadors)
@@ -185,7 +117,7 @@ export async function createRegularCalendarEvents(date: Date) {
     .set({ day: 1, hour: 12, minute: 0, second: 0, millisecond: 0 });
   for (let day = 1; day <= (nextMonth.daysInMonth || 0); day++) {
     const date = nextMonth.set({ day });
-    const events = eventsByWeekDay[date.weekday - 1]?.slice() || [];
+    const events = regularEventsWeekly[date.weekday - 1]?.slice() || [];
 
     const birthdays =
       ambassadorBirthdays[

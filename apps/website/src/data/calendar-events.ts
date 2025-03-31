@@ -1,4 +1,5 @@
 import { type CalendarEvent } from "@prisma/client";
+import { type DateObjectUnits } from "luxon";
 
 type StandardCategory = {
   name: string;
@@ -88,3 +89,98 @@ export const getFormattedTitle = (
     ? title
     : `${title} @ ${event.link.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "")}`;
 };
+
+type RegularEvent = Pick<
+  CalendarEvent,
+  "title" | "description" | "category" | "link"
+> & {
+  startTime?: Pick<DateObjectUnits, "hour" | "minute">;
+};
+
+const animalCareChats: RegularEvent = {
+  title: "Animal Care Chats",
+  description:
+    "Join animal care staff as they carry out their daily tasks and answer your questions.",
+  category: "Alveus Regular Stream",
+  link: "https://twitch.tv/AlveusSanctuary",
+  startTime: { hour: 14, minute: 30 },
+};
+
+const mayaStream: RegularEvent = {
+  title: "Maya Stream",
+  description: "Tune in to see what Maya is up to today!",
+  category: "Maya Stream",
+  link: "https://twitch.tv/maya",
+  startTime: { hour: 12, minute: 0 },
+};
+
+export const regularEventsWeekly = [
+  // Monday
+  [mayaStream, animalCareChats],
+  // Tuesday
+  [animalCareChats],
+  // Wednesday
+  [
+    mayaStream,
+    {
+      title: "Connor Stream",
+      description: "Join Connor as he gets up to his usual antics.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 14, minute: 30 },
+    },
+    {
+      title: "Chat Chats w/ Evan",
+      description:
+        "Join Evan as he chats all things bugs with chat and answers all your questions.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 21, minute: 0 },
+    },
+    {
+      title: "WAI New Episode",
+      description: "Watch the latest Wine About It episode.",
+      category: "Maya YouTube Video",
+      link: "https://www.youtube.com/@WineAboutItPodcast",
+    },
+  ],
+  // Thursday
+  [
+    {
+      title: "Lukas Stream",
+      description: "Join Lukas as he gets work done around the sanctuary.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 14, minute: 30 },
+    },
+    {
+      title: "WW New Episode",
+      description: "Watch the latest World's Wildest episode.",
+      category: "Maya YouTube Video",
+      link: "https://www.youtube.com/@worldswildestpodcast",
+    },
+  ],
+  // Friday
+  [
+    {
+      title: "Show & Tell",
+      description:
+        "Join Maya as she reviews this week's community submissions for Show and Tell.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 14, minute: 30 },
+    },
+  ],
+  // Saturday
+  [
+    {
+      title: "Nick Stream",
+      description: "Join Nick as he gets work done around the sanctuary.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 14, minute: 30 },
+    },
+  ],
+  // Sunday
+  [],
+] as RegularEvent[][];
