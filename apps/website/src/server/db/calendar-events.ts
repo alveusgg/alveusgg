@@ -127,7 +127,7 @@ export async function createRegularCalendarEvents(date: Date) {
       events.push({
         title: `${ambassador.name}'s Birthday`,
         description: `Wish ${ambassador.name} a happy birthday!`,
-        category: "Alveus Special Stream",
+        category: "Alveus Ambassador Birthday",
         link: `${getShortBaseUrl()}/${camelToKebab(name)}`,
       });
     }
