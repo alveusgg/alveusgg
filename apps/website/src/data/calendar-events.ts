@@ -106,13 +106,22 @@ const animalCareChats: RegularEvent = {
   startTime: { hour: 14, minute: 30 },
 };
 
+const mayaStream: RegularEvent = {
+  title: "Maya Stream",
+  description: "Tune in to see what Maya is up to today!",
+  category: "Maya Stream",
+  link: "https://twitch.tv/maya",
+  startTime: { hour: 12, minute: 0 },
+};
+
 export const regularEventsWeekly = [
   // Monday
-  [animalCareChats],
+  [mayaStream, animalCareChats],
   // Tuesday
   [animalCareChats],
   // Wednesday
   [
+    mayaStream,
     {
       title: "Connor Stream",
       description: "Join Connor as he gets up to his usual antics.",
