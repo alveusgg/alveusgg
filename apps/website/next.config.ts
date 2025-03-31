@@ -209,9 +209,9 @@ const config: NextConfig = {
         permanent: false,
       })),
     ...animalQuest
-      .map((episode, idx) => ({
+      .map((episode) => ({
         slug: sentenceToKebab(episode.edition),
-        episode: idx + 1,
+        episode: episode.episode,
       }))
       .flatMap(({ slug, episode }) => [
         {
@@ -394,6 +394,15 @@ const config: NextConfig = {
               process.env.VERCEL_ENV &&
                 ["development", "preview"].includes(process.env.VERCEL_ENV) &&
                 "https://vercel.live/",
+              // Cloudflare Stream embeds:
+              [
+                ...new Set(
+                  animalQuest.map(
+                    (episode) =>
+                      `https://customer-${episode.video.cu}.cloudflarestream.com/`,
+                  ),
+                ),
+              ].join(" "),
               // Twitch embeds:
               "https://embed.twitch.tv/ https://player.twitch.tv/ https://clips.twitch.tv/ https://www.twitch.tv/",
               // YouTube embeds:

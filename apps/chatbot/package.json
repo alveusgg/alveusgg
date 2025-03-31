@@ -20,19 +20,19 @@
     "@twurple/chat": "^7.2.1",
     "@twurple/easy-bot": "^7.2.1",
     "dotenv": "^16.4.7",
-    "drizzle-orm": "^0.40.1",
+    "drizzle-orm": "^0.41.0",
     "read-pkg": "^9.0.1",
     "tsx": "^4.19.3",
     "zod": "^3.24.2"
   },
   "devDependencies": {
-    "@eslint/js": "^9.22.0",
+    "@eslint/js": "^9.23.0",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.13.10",
-    "eslint": "^9.22.0",
+    "@types/node": "^22.13.13",
+    "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-import-x": "^4.9.1",
-    "typescript-eslint": "^8.27.0"
+    "eslint-plugin-import-x": "^4.9.2",
+    "typescript-eslint": "^8.28.0"
   },
   "scripts": {
     "start": "tsx src/server.ts",
