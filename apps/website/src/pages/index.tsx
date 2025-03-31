@@ -445,7 +445,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <Heading level={2} id="recent-videos" link>
             Recent Videos
           </Heading>
-          <YouTubeCarousel videos={videos} dark />
+          <YouTubeCarousel videos={videos} id="recent-videos" dark />
         </div>
       </Section>
 
