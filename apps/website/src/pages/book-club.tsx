@@ -19,6 +19,7 @@ import TransitionHeight from "@/components/content/TransitionHeight";
 import bookClubLogo from "@/assets/book-club/logo.png";
 import bookClubFull from "@/assets/book-club/full.png";
 
+import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
@@ -47,12 +48,21 @@ type BookInfo = {
 
 const books: BookInfo[] = [
   {
+    title: "The Last Rhinos",
+    author: "Lawrence Anthony",
+    image: theLastRhinos,
+    month: "2025-04",
+    link: "https://amzn.to/3YibG59",
+    thickness: thickness.md, // 360 pages
+    color: "border-alveus-tan-900",
+  },
+  {
     title: "Adventures of a Young Naturalist",
     author: "Sir David Attenborough",
     image: adventuresOfAYoungNaturalist,
     month: "2025-03",
     link: "https://amzn.to/41qA2um",
-    thickness: thickness.lg,
+    thickness: thickness.lg, // 400 pages
     color: "border-blue-900",
   },
   {
@@ -61,7 +71,7 @@ const books: BookInfo[] = [
     image: aMostRemarkableCreature,
     month: "2025-02",
     link: "https://amzn.to/410hD8x",
-    thickness: thickness.lg,
+    thickness: thickness.lg, // 400 pages
     color: "border-alveus-tan-200/75",
   },
   {
@@ -70,7 +80,7 @@ const books: BookInfo[] = [
     image: hIsForHawk,
     month: "2025-01",
     link: "https://amzn.to/4a2ByGQ",
-    thickness: thickness.sm,
+    thickness: thickness.sm, // 320 pages
     color: "border-black",
   },
 ];
