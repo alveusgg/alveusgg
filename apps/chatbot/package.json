@@ -28,11 +28,11 @@
   "devDependencies": {
     "@eslint/js": "^9.23.0",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.13.13",
+    "@types/node": "^22.13.17",
     "eslint": "^9.23.0",
     "eslint-config-prettier": "^10.1.1",
-    "eslint-plugin-import-x": "^4.9.2",
-    "typescript-eslint": "^8.28.0"
+    "eslint-plugin-import-x": "^4.10.0",
+    "typescript-eslint": "^8.29.0"
   },
   "scripts": {
     "start": "tsx src/server.ts",
