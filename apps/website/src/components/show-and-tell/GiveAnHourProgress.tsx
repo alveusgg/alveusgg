@@ -8,7 +8,7 @@ import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
 import useLocaleString from "@/hooks/locale";
 
-type DateString = PartialDateString & `${number}-${number}-${number}`;
+export type DateString = PartialDateString & `${number}-${number}-${number}`;
 
 const useDateString = (date?: DateString, offset?: number) =>
   useMemo(

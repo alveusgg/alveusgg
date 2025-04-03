@@ -11,7 +11,10 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Share from "@/components/content/Share";
 
-import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
+import {
+  GiveAnHourProgress,
+  type DateString,
+} from "@/components/show-and-tell/GiveAnHourProgress";
 
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -27,6 +30,16 @@ import giveAnHourFitness from "@/assets/show-and-tell/give-an-hour/fitness.svg";
 import giveAnHourShopping from "@/assets/show-and-tell/give-an-hour/shopping.svg";
 import giveAnHourWalk from "@/assets/show-and-tell/give-an-hour/walk.svg";
 import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
+
+interface WWFGiveAnHourDates {
+  start: DateString;
+  end: DateString;
+}
+
+const wwfGiveAnHourDates: WWFGiveAnHourDates[] = [
+  { start: "2025-03-23", end: "2025-04-22" },
+  { start: "2024-03-01", end: "2024-04-22" },
+];
 
 const Card = ({
   heading,
@@ -292,34 +305,86 @@ const GiveAnHourPage: NextPage = () => (
     </Section>
 
     {/* Grow the last section to cover the page */}
-    <Section
-      className="grow"
-      containerClassName="flex flex-wrap items-center justify-between"
-    >
-      <div className="w-full py-8 md:w-3/5">
-        <Heading level={2} id="share-your-activities" link>
-          Share Your Activities
-        </Heading>
+    <Section className="grow">
+      <div className="flex flex-wrap items-center justify-between">
+        <div className="w-full py-8 md:w-3/5">
+          <Heading level={2} id="share-your-activities" link>
+            Share Your Activities
+          </Heading>
 
-        <p className="text-lg">
-          Share the hours you&apos;ve given and what you&apos;ve been doing with
-          the Alveus community and inspire others, via the{" "}
-          <Link href="/show-and-tell/submit-post">Show and Tell</Link> page.
-        </p>
+          <p className="text-lg">
+            Share the hours you&apos;ve given and what you&apos;ve been doing
+            with the Alveus community and inspire others, via the{" "}
+            <Link href="/show-and-tell/submit-post">Show and Tell</Link> page.
+          </p>
 
-        <p className="mt-8 text-lg">
-          We need more people, more than ever. Individuals, communities,
-          businesses, and governments must all step up their actions for nature,
-          climate, and our one home to secure a Nature Positive world.
-        </p>
+          <p className="mt-8 text-lg">
+            We need more people, more than ever. Individuals, communities,
+            businesses, and governments must all step up their actions for
+            nature, climate, and our one home to secure a Nature Positive world.
+          </p>
+        </div>
+
+        <Image
+          src={showAndTellPeepo}
+          width={448}
+          alt=""
+          className="mx-auto w-full max-w-md p-4 md:mx-0 md:w-2/5"
+        />
       </div>
 
-      <Image
-        src={showAndTellPeepo}
-        width={448}
-        alt=""
-        className="mx-auto w-full max-w-md p-4 md:mx-0 md:w-2/5"
-      />
+      <div className="flex flex-wrap items-start justify-between py-8">
+        <div className="w-full lg:sticky lg:top-0 lg:w-1/2 lg:pl-8 xl:w-3/5">
+          <Heading level={2} id="wwf-give-an-hour" link>
+            WWF&apos;s Give an Hour for Earth
+          </Heading>
+
+          <p className="text-lg">
+            While we&apos;re tracking our hours all year round, this effort was
+            started as part of{" "}
+            <Link
+              href="https://www.worldwildlife.org/pages/earth-hour"
+              external
+            >
+              WWF&apos;s Give an Hour for Earth
+            </Link>{" "}
+            campaign. This campaign encourages people to take action for the
+            planet, and we are proud to continue to be a part of it each year!
+          </p>
+        </div>
+
+        <div className="flex w-full flex-col divide-y-1 divide-alveus-green/25 lg:order-first lg:w-1/2 xl:w-2/5">
+          {wwfGiveAnHourDates.map(({ start, end }) => {
+            const year = start.split("-")[0]!;
+            return (
+              <div key={year} className="pt-4 pb-6">
+                <div className="flex flex-wrap items-baseline justify-between">
+                  <Heading
+                    level={3}
+                    id={`wwf-give-an-hour-${year}`}
+                    link
+                    className="my-0 text-2xl"
+                  >
+                    {year}
+                  </Heading>
+                  <p className="text-sm opacity-75">
+                    {new Date(start).toLocaleDateString(undefined, {
+                      month: "long",
+                      day: "numeric",
+                    })}{" "}
+                    -{" "}
+                    {new Date(end).toLocaleDateString(undefined, {
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+                <GiveAnHourProgress start={start} end={end} />
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </Section>
   </>
 );
