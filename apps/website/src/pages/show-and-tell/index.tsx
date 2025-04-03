@@ -480,16 +480,16 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             )}
           >
             <p className="text-left md:text-center">
-              We&apos;re tracking hours spent giving back to the planet,
-              originally as part of WWF&apos;s{" "}
+              We&apos;re tracking hours spent as part of the Alveus
+              community&apos;s effort to{" "}
               <Link
                 href="/show-and-tell/give-an-hour"
-                className="whitespace-nowrap"
+                className="text-nowrap"
                 dark
               >
                 Give an Hour
               </Link>{" "}
-              initiative.
+              for Earth.
             </p>
             <div className="mt-2">
               <GiveAnHourProgress />

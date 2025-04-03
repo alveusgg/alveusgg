@@ -95,9 +95,9 @@ const GiveAnHourPage: NextPage = () => (
 
         <p className="text-lg">
           Join the Alveus community in giving hours for Earth. Discover what
-          actions you can take to help the environment and wildlife. Originally
-          part of WWF&apos;s Give an Hour for Earth campaign in 2024, we&apos;re
-          now tracking everything we do for Earth!
+          actions you can take to help the environment and wildlife. Supporting
+          WWF&apos;s Give an Hour for Earth campaign each year, we&apos;re now
+          tracking everything we do for Earth!
         </p>
 
         <p className="mt-8">
