@@ -17,9 +17,10 @@ const useLocaleHours = (hours: number, showDays: boolean) => {
 
 const targetIntervals = [24 * 180, 24 * 90, 24 * 30, 24 * 2];
 
-const getTarget = (hours: number) => {
+const getTarget = (hours: number, ended: boolean) => {
   const multiple = targetIntervals.find((interval) => interval <= hours) ?? 24;
-  return Math.ceil((hours + 1) / multiple) * multiple;
+  const round = ended ? Math.floor : Math.ceil;
+  return round((hours + 1) / multiple) * multiple;
 };
 
 const GiveAnHourProgressText = ({
@@ -56,9 +57,11 @@ const barClasses =
 export const GiveAnHourProgress = ({
   target,
   text = "after",
+  ended = false,
 }: {
   target?: number;
   text?: "after" | "before";
+  ended?: boolean;
 }) => {
   const hoursQuery = trpc.showAndTell.getGiveAnHourProgress.useQuery(
     undefined,
@@ -67,7 +70,8 @@ export const GiveAnHourProgress = ({
     },
   );
   const hours = hoursQuery.data ?? 0;
-  const computedTarget = target ?? getTarget(hours);
+  const computedTarget = target ?? getTarget(hours, ended);
+  const progress = Math.min((hours / computedTarget || 0) * 100, 100);
 
   return (
     <>
@@ -82,7 +86,7 @@ export const GiveAnHourProgress = ({
       <div className="relative my-1 h-10 w-full rounded-full bg-alveus-green-900 shadow-lg">
         <div
           className={classes(barClasses, "bg-alveus-green")}
-          style={{ width: `${(hours / computedTarget || 0) * 100}%` }}
+          style={{ width: `${progress}%` }}
         />
 
         <div
@@ -91,7 +95,7 @@ export const GiveAnHourProgress = ({
             "bg-alveus-tan bg-gradient-to-r from-blue-800 to-green-600",
             hours === 0 ? "opacity-0" : "animate-pulse-slow",
           )}
-          style={{ width: `${(hours / computedTarget || 0) * 100}%` }}
+          style={{ width: `${progress}%` }}
         />
       </div>
 
