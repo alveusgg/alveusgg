@@ -1,6 +1,26 @@
-import useLocaleString from "@/hooks/locale";
+import { useMemo } from "react";
+import { DateTime } from "luxon";
+import type { PartialDateString } from "@alveusgg/data/build/types";
+
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+
+import useLocaleString from "@/hooks/locale";
+
+type DateString = PartialDateString & `${number}-${number}-${number}`;
+
+const useDateString = (date?: DateString, offset?: number) =>
+  useMemo(
+    () =>
+      date &&
+      DateTime.fromFormat(date, "yyyy-MM-dd")
+        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
+        .plus({ days: offset ?? 0 })
+        .setZone(DATETIME_ALVEUS_ZONE, { keepLocalTime: true })
+        .toJSDate(),
+    [date, offset],
+  );
 
 const useLocaleDays = (hours: number) => {
   const localeDays = useLocaleString(Math.floor(hours / 24));
@@ -56,15 +76,28 @@ const barClasses =
 
 export const GiveAnHourProgress = ({
   target,
+  start,
+  end,
   text = "after",
-  ended = false,
 }: {
   target?: number;
+  start?: DateString;
+  end?: DateString;
   text?: "after" | "before";
-  ended?: boolean;
 }) => {
+  const startDate = useDateString(start);
+  const endDate = useDateString(end, 1); // `end` is exclusive in the API, but treated as inclusive as a prop here
+  const ended = useMemo(() => {
+    if (!endDate) return false;
+    const now = new Date();
+    return now >= endDate;
+  }, [endDate]);
+
   const hoursQuery = trpc.showAndTell.getGiveAnHourProgress.useQuery(
-    undefined,
+    {
+      start: startDate,
+      end: endDate,
+    },
     {
       refetchInterval: 5 * 60 * 1000,
     },
