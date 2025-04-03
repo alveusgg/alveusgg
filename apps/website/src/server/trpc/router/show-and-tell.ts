@@ -67,6 +67,7 @@ export const showAndTellRouter = router({
         .optional(),
     )
     .query(async ({ input }) => {
+      console.log("getGiveAnHourProgress", input);
       const minutes = await getVolunteeringMinutes(input);
       return Math.round(minutes / 60);
     }),
