@@ -10,17 +10,15 @@ import useLocaleString from "@/hooks/locale";
 
 export type DateString = PartialDateString & `${number}-${number}-${number}`;
 
+export const parseDateString = (date: DateString, offset?: number) =>
+  DateTime.fromFormat(date, "yyyy-MM-dd")
+    .startOf("day")
+    .plus({ days: offset ?? 0 })
+    .setZone(DATETIME_ALVEUS_ZONE, { keepLocalTime: true })
+    .toJSDate();
+
 const useDateString = (date?: DateString, offset?: number) =>
-  useMemo(
-    () =>
-      date &&
-      DateTime.fromFormat(date, "yyyy-MM-dd")
-        .set({ hour: 0, minute: 0, second: 0, millisecond: 0 })
-        .plus({ days: offset ?? 0 })
-        .setZone(DATETIME_ALVEUS_ZONE, { keepLocalTime: true })
-        .toJSDate(),
-    [date, offset],
-  );
+  useMemo(() => date && parseDateString(date, offset), [date, offset]);
 
 const useLocaleDays = (hours: number) => {
   const localeDays = useLocaleString(Math.floor(hours / 24));
