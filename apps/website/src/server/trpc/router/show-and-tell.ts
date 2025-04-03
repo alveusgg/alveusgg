@@ -60,10 +60,16 @@ export const showAndTellRouter = router({
       return { items, nextCursor };
     }),
 
-  getGiveAnHourProgress: publicProcedure.query(async () => {
-    const minutes = await getVolunteeringMinutes();
-    return Math.round(minutes / 60);
-  }),
+  getGiveAnHourProgress: publicProcedure
+    .input(
+      z
+        .object({ start: z.date().optional(), end: z.date().optional() })
+        .optional(),
+    )
+    .query(async ({ input }) => {
+      const minutes = await getVolunteeringMinutes(input);
+      return Math.round(minutes / 60);
+    }),
 
   create: publicProcedure
     .input(showAndTellCreateInputSchema)

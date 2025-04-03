@@ -361,10 +361,19 @@ export async function getUsersCount() {
   return countWithUserId.length + countWithoutUserId.length;
 }
 
-export async function getVolunteeringMinutes() {
+export async function getVolunteeringMinutes({
+  start,
+  end,
+}: { start?: Date; end?: Date } = {}) {
   const res = await prisma.showAndTellEntry.aggregate({
     _sum: { volunteeringMinutes: true },
-    where: getPostFilter("approved"),
+    where: {
+      AND: [
+        getPostFilter("approved"),
+        start && { createdAt: { gte: start } },
+        end && { createdAt: { lt: end } },
+      ].filter(notEmpty),
+    },
   });
 
   return res._sum.volunteeringMinutes ?? 0;
