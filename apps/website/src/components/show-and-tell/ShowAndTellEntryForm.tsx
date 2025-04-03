@@ -12,6 +12,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
+import { useLocale } from "react-aria";
 
 import Image from "next/image";
 import type {
@@ -283,16 +284,28 @@ export function ShowAndTellEntryForm({
     { allowedFileTypes: imageMimeTypes },
   );
 
+  const { locale } = useLocale();
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const hours = parseFloat(formData.get("giveAnHour") as string);
+
+    const numberGroupChar = new Intl.NumberFormat(locale, {
+      useGrouping: true,
+    })
+      .formatToParts(1000)
+      .find((part) => part.type === "group")?.value;
+    let hoursText = formData.get("giveAnHour") as string;
+    if (numberGroupChar) {
+      hoursText = hoursText.replaceAll(numberGroupChar, "");
+    }
+    const hours = parseInt(hoursText);
+
     let dominantColor = formData.get("dominantColor") as string | null;
     if (dominantColor) {
       const r = parseInt(dominantColor.slice(1, 3), 16);
       const g = parseInt(dominantColor.slice(3, 5), 16);
       const b = parseInt(dominantColor.slice(5, 7), 16);
-
       dominantColor = [r, g, b].join();
     }
 
