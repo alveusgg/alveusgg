@@ -39,7 +39,7 @@ const sharePlatforms = {
       const share = new URL("https://bsky.app/intent/compose");
       share.searchParams.append(
         "text",
-        [title, text, url].filter(Boolean).join("\n\n"),
+        [text || title, url].filter(Boolean).join("\n\n"),
       );
       return share.toString();
     },
