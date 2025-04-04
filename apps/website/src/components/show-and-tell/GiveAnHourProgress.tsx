@@ -42,13 +42,15 @@ const getTarget = (hours: number, ended: boolean) => {
 };
 
 const GiveAnHourProgressText = ({
-  isLoading,
   hours,
   target,
+  isLoading = false,
+  ended = false,
 }: {
-  isLoading?: boolean;
   hours: number;
   target: number;
+  isLoading?: boolean;
+  ended?: boolean;
 }) => {
   // Show the equivalent number of days if we're over 72 hours
   const showDays = target > 72;
@@ -61,8 +63,8 @@ const GiveAnHourProgressText = ({
         {isLoading
           ? "Loading hours given…"
           : hours === 0
-            ? "No hours given yet"
-            : `${localeHours} already given`}
+            ? `No hours given${ended ? "" : " yet"}`
+            : `${localeHours}${ended ? "" : " already"} given`}
       </p>
       <p className="font-medium opacity-75">{localeTarget} target</p>
     </div>
@@ -108,9 +110,10 @@ export const GiveAnHourProgress = ({
     <>
       {text === "before" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
+          isLoading={hoursQuery.isPending}
+          ended={ended}
         />
       )}
 
@@ -132,9 +135,10 @@ export const GiveAnHourProgress = ({
 
       {text === "after" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
+          isLoading={hoursQuery.isPending}
+          ended={ended}
         />
       )}
     </>
