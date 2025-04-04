@@ -80,7 +80,9 @@ export const GiveAnHourProgress = ({
   end,
   text = "after",
 }: {
-  target?: number;
+  target?:
+    | number
+    | ((hours: number, ended: boolean, computed: number) => number);
   start?: DateString;
   end?: DateString;
   text?: "after" | "before";
@@ -103,7 +105,15 @@ export const GiveAnHourProgress = ({
     },
   );
   const hours = hoursQuery.data ?? 0;
-  const computedTarget = target ?? getTarget(hours, ended);
+
+  const computedTarget = useMemo(() => {
+    if (typeof target === "number") return target;
+
+    const computed = getTarget(hours, ended);
+    if (typeof target === "undefined") return computed;
+
+    return target(hours, ended, computed);
+  }, [target, hours, ended]);
   const progress = Math.min((hours / computedTarget || 0) * 100, 100);
 
   return (
