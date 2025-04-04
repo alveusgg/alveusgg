@@ -46,7 +46,7 @@ const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
               className={classes(
                 "block rounded-2xl p-3 transition-colors",
                 dark
-                  ? "bg-alveus-tan text-alveus-green hover:bg-alveus-green hover:text-alveus-tan"
+                  ? "bg-alveus-tan text-alveus-green hover:bg-alveus-green-800 hover:text-alveus-tan"
                   : "bg-alveus-green text-alveus-tan hover:bg-alveus-tan hover:text-alveus-green",
               )}
               title={item.description}
