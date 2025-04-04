@@ -71,6 +71,12 @@ export const formatDateTimeParts = (
     .reconfigure({ locale: locale ?? undefined })
     .toLocaleParts(getFormat({ style, time, timezone }));
 
+const foundMinMax = (arr: number[]) => {
+  const filtered = arr.filter((x) => x !== -1);
+  if (filtered.length === 0) throw new Error("No parts found");
+  return [Math.min(...filtered), Math.max(...filtered)] as [number, number];
+};
+
 export const formatDateTimeRelative = (
   dateTime: Date,
   {
@@ -96,22 +102,32 @@ export const formatDateTimeRelative = (
   const daysGiven = Math.floor(
     dateGiven.startOf("day").toUnixInteger() / (60 * 60 * 24),
   );
+  const daysDiff = daysGiven - daysToday;
 
-  // If they are the same, or the given is one day away, show relative
-  const days = daysGiven - daysToday;
-  if (days === 0 || days === 1) {
+  // If the date is today or tomorrow, show relative date
+  if (daysDiff === 0 || daysDiff === 1) {
     // Get the year -> day parts
     const yearIdx = parts.findIndex((part) => part.type === "year");
     const monthIdx = parts.findIndex((part) => part.type === "month");
     const dayIdx = parts.findIndex((part) => part.type === "day");
-    const minIdx = Math.min(yearIdx, monthIdx, dayIdx);
-    const maxIdx = Math.max(yearIdx, monthIdx, dayIdx);
+    const [minIdx, maxIdx] = foundMinMax([yearIdx, monthIdx, dayIdx]);
 
     // Replace the year -> day parts with the relative date
     parts.splice(minIdx, maxIdx - minIdx + 1, {
       type: "literal",
-      value: days === 0 ? "Today" : "Tomorrow",
+      value: daysDiff === 0 ? "Today" : "Tomorrow",
     });
+
+    // If the date is today, and time was requested, show the time
+    if (daysDiff === 0 && time) {
+      parts.splice(minIdx + 1, 0, {
+        type: "literal",
+        value: ` in ${formatSeconds(dateGiven.diff(dateToday).as("seconds"), {
+          style: "long",
+          seconds: time === "seconds",
+        })}`,
+      });
+    }
   }
 
   return parts.map((part) => part.value).join("");
