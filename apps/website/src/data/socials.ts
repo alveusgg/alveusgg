@@ -13,7 +13,7 @@ const socials = {
     title: "Instagram",
   },
   twitter: {
-    link: "https://twitter.com/AlveusSanctuary",
+    link: "https://x.com/AlveusSanctuary",
     title: "X (Twitter)",
   },
   bluesky: {

@@ -121,7 +121,7 @@ export const GiveawayChecks = () => (
     <GiveawayCheck
       name="twitter"
       label="Follow @AlveusSanctuary on X (Twitter)"
-      url="https://twitter.com/intent/follow?user_id=1349932850632667137"
+      url="https://x.com/intent/follow?user_id=1349932850632667137"
     >
       <IconTwitter size={32} />
       <span>Follow @AlveusSanctuary on X (Twitter)</span>

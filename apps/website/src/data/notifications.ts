@@ -68,7 +68,7 @@ export const notificationLinkSuggestions = [
   { label: "YT AlveusSanctuary", url: "https://youtube.com/@AlveusSanctuary" },
   { label: "YT Maya", url: "https://youtube.com/@mayahiga" },
   { label: "Website", url: "https://www.alveussanctuary.org/" },
-  { label: "Twitter page", url: "https://twitter.com/AlveusSanctuary" },
+  { label: "X (Twitter)", url: "https://x.com/AlveusSanctuary" },
 ] satisfies NotificationLinkSuggestion[];
 
 export const notificationLinkDefault = "";

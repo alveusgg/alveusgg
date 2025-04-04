@@ -70,7 +70,7 @@ const Socials = () => {
               />
             </Link>
             <Link
-              href="https://twitter.com/AlveusSanctuary/status/1627138286140461063/"
+              href="https://x.com/AlveusSanctuary/status/1627138286140461063/"
               rel="noreferrer"
               target="_blank"
               className="absolute top-[23%] right-[3%] aspect-square w-[45%] rotate-[4.26deg] overflow-hidden rounded-2xl border-[7px] border-white bg-gray-700 shadow-lg transition-transform duration-150 hover:scale-102"
