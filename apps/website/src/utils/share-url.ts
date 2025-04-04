@@ -13,6 +13,15 @@ export const twitterShareUrl = ({ url, title, text }: ShareProps) => {
   return share.toString();
 };
 
+export const blueskyShareUrl = ({ url, title, text }: ShareProps) => {
+  const share = new URL("https://bsky.app/intent/compose");
+  share.searchParams.append(
+    "text",
+    [title, text, url].filter(Boolean).join("\n\n"),
+  );
+  return share.toString();
+};
+
 export const facebookShareUrl = ({ url, title, text }: ShareProps) => {
   // NOTE: This is the old way of sharing -- it no longer accepts title
   //       The new dialog method needs an app ID though, so we're not using it

@@ -2,6 +2,7 @@ import { useMemo } from "react";
 
 import { getShortBaseUrl } from "@/utils/short-url";
 import {
+  blueskyShareUrl,
   emailShareUrl,
   facebookShareUrl,
   linkedinShareUrl,
@@ -11,6 +12,7 @@ import { classes } from "@/utils/classes";
 
 import IconFacebook from "@/icons/IconFacebook";
 import IconTwitter from "@/icons/IconTwitter";
+import IconBluesky from "@/icons/IconBluesky";
 import IconEnvelope from "@/icons/IconEnvelope";
 import IconLinkedIn from "@/icons/IconLinkedIn";
 
@@ -41,6 +43,11 @@ const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
         link: twitterShareUrl(data),
         text: "Share on X (Twitter)",
         icon: IconTwitter,
+      },
+      bluesky: {
+        link: blueskyShareUrl(data),
+        text: "Share on Bluesky",
+        icon: IconBluesky,
       },
       facebook: {
         link: facebookShareUrl(data),

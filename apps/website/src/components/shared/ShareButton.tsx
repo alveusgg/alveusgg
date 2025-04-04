@@ -8,12 +8,14 @@ import { PopoverButton as PopoverButtonHeadless } from "@headlessui/react";
 
 import { classes } from "@/utils/classes";
 import {
+  blueskyShareUrl,
   emailShareUrl,
   facebookShareUrl,
   twitterShareUrl,
 } from "@/utils/share-url";
 
 import IconTwitter from "@/icons/IconTwitter";
+import IconBluesky from "@/icons/IconBluesky";
 import IconFacebook from "@/icons/IconFacebook";
 import IconShare from "@/icons/IconShare";
 import IconEnvelope from "@/icons/IconEnvelope";
@@ -121,6 +123,13 @@ export function ShareButton({
           title="Share on X (Twitter)"
         >
           <IconTwitter className="size-4" />X (Twitter)
+        </ShareLink>
+        <ShareLink
+          href={blueskyShareUrl({ url, text, title })}
+          title="Share on Bluesky"
+        >
+          <IconBluesky className="size-4" />
+          Bluesky
         </ShareLink>
         <ShareLink
           href={facebookShareUrl({ url, text, title })}
