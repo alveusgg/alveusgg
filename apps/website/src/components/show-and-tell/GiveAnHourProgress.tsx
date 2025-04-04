@@ -42,13 +42,15 @@ const getTarget = (hours: number, ended: boolean) => {
 };
 
 const GiveAnHourProgressText = ({
-  isLoading,
   hours,
   target,
+  isLoading = false,
+  ended = false,
 }: {
-  isLoading?: boolean;
   hours: number;
   target: number;
+  isLoading?: boolean;
+  ended?: boolean;
 }) => {
   // Show the equivalent number of days if we're over 72 hours
   const showDays = target > 72;
@@ -61,8 +63,8 @@ const GiveAnHourProgressText = ({
         {isLoading
           ? "Loading hours given…"
           : hours === 0
-            ? "No hours given yet"
-            : `${localeHours} already given`}
+            ? `No hours given${ended ? "" : " yet"}`
+            : `${localeHours}${ended ? "" : " already"} given`}
       </p>
       <p className="font-medium opacity-75">{localeTarget} target</p>
     </div>
@@ -78,7 +80,9 @@ export const GiveAnHourProgress = ({
   end,
   text = "after",
 }: {
-  target?: number;
+  target?:
+    | number
+    | ((hours: number, ended: boolean, computed: number) => number);
   start?: DateString;
   end?: DateString;
   text?: "after" | "before";
@@ -101,16 +105,25 @@ export const GiveAnHourProgress = ({
     },
   );
   const hours = hoursQuery.data ?? 0;
-  const computedTarget = target ?? getTarget(hours, ended);
+
+  const computedTarget = useMemo(() => {
+    if (typeof target === "number") return target;
+
+    const computed = getTarget(hours, ended);
+    if (typeof target === "undefined") return computed;
+
+    return target(hours, ended, computed);
+  }, [target, hours, ended]);
   const progress = Math.min((hours / computedTarget || 0) * 100, 100);
 
   return (
     <>
       {text === "before" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
+          isLoading={hoursQuery.isPending}
+          ended={ended}
         />
       )}
 
@@ -132,9 +145,10 @@ export const GiveAnHourProgress = ({
 
       {text === "after" && (
         <GiveAnHourProgressText
-          isLoading={hoursQuery.isPending}
           hours={hours}
           target={computedTarget}
+          isLoading={hoursQuery.isPending}
+          ended={ended}
         />
       )}
     </>

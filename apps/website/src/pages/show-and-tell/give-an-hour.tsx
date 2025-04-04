@@ -45,6 +45,16 @@ const wwfGiveAnHourCampaigns: WWFGiveAnHourCampaign[] = [
   { start: "2024-03-01", end: "2024-04-22" },
 ];
 
+const wwfGiveAnHourTarget = (
+  hours: number,
+  ended: boolean,
+  computed: number,
+) => {
+  const round = ended ? Math.floor : Math.ceil;
+  computed = round(computed / 500) * 500;
+  return ended ? computed : Math.max(1500, computed);
+};
+
 const Card = ({
   heading,
   id,
@@ -174,7 +184,11 @@ const GiveAnHourPage: NextPage<
             page.
           </p>
           <div className="mt-2">
-            <GiveAnHourProgress start={wwf?.start} end={wwf?.end} />
+            <GiveAnHourProgress
+              start={wwf?.start}
+              end={wwf?.end}
+              target={wwf && wwfGiveAnHourTarget}
+            />
           </div>
         </div>
 
@@ -432,7 +446,11 @@ const GiveAnHourPage: NextPage<
                       })}
                     </p>
                   </div>
-                  <GiveAnHourProgress start={start} end={end} />
+                  <GiveAnHourProgress
+                    start={start}
+                    end={end}
+                    target={wwfGiveAnHourTarget}
+                  />
                 </div>
               );
             })}
