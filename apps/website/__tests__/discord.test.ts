@@ -12,9 +12,9 @@ test("wrapping fully qualified urls", async () => {
 
 test("wrapping multiple qualified urls", async () => {
   const example =
-    "http://twitch.tv/alveussanctuary, https://www.twitter.com/AlveusSanctuary, https://youtube.com/@AlveusSanctuary";
+    "http://twitch.tv/alveussanctuary, https://x.com/AlveusSanctuary, https://youtube.com/@AlveusSanctuary";
   const expected =
-    "<http://twitch.tv/alveussanctuary>, <https://www.twitter.com/AlveusSanctuary>, <https://youtube.com/@AlveusSanctuary>";
+    "<http://twitch.tv/alveussanctuary>, <https://x.com/AlveusSanctuary>, <https://youtube.com/@AlveusSanctuary>";
 
   const res = escapeLinksForDiscord(example);
 
@@ -32,9 +32,9 @@ test("not wrapping partial urls", async () => {
 
 test("not wrapping multiple partial urls", async () => {
   const example =
-    "twitch.tv/alveussanctuary, twitter.com/AlveusSanctuary, youtube.com/@AlveusSanctuary";
+    "twitch.tv/alveussanctuary, x.com/AlveusSanctuary, youtube.com/@AlveusSanctuary";
   const expected =
-    "twitch.tv/alveussanctuary, twitter.com/AlveusSanctuary, youtube.com/@AlveusSanctuary";
+    "twitch.tv/alveussanctuary, x.com/AlveusSanctuary, youtube.com/@AlveusSanctuary";
 
   const res = escapeLinksForDiscord(example);
 

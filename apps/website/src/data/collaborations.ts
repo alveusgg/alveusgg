@@ -685,7 +685,7 @@ const collaborations: Collaboration[] = (
     },
     {
       name: "YungJeff",
-      link: "https://twitter.com/YUNGJEFF",
+      link: "https://x.com/YUNGJEFF",
       date: new Date("2023-04-04"),
       videoId: "BXOEWQZ8C_Y",
       creators: [

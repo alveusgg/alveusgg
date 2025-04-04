@@ -1,18 +1,8 @@
 import { useMemo } from "react";
 
 import { getShortBaseUrl } from "@/utils/short-url";
-import {
-  emailShareUrl,
-  facebookShareUrl,
-  linkedinShareUrl,
-  twitterShareUrl,
-} from "@/utils/share-url";
+import sharePlatforms, { type SharePlatform } from "@/utils/share";
 import { classes } from "@/utils/classes";
-
-import IconFacebook from "@/icons/IconFacebook";
-import IconTwitter from "@/icons/IconTwitter";
-import IconEnvelope from "@/icons/IconEnvelope";
-import IconLinkedIn from "@/icons/IconLinkedIn";
 
 import Link from "./Link";
 
@@ -24,59 +14,42 @@ interface ShareProps {
   className?: string;
 }
 
-interface Share {
-  link: string;
-  text: string;
-  icon: React.ComponentType<{ size: number }>;
-}
-
 const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
-  const data = useMemo(
-    () => ({ title, text, url: `${getShortBaseUrl()}${path}` }),
+  const share = useMemo(
+    () =>
+      Object.entries(sharePlatforms).map(
+        ([key, item]) =>
+          [
+            key,
+            {
+              ...item,
+              url: item.url({
+                title,
+                text,
+                url: `${getShortBaseUrl()}${path}`,
+              }),
+            },
+          ] as [string, SharePlatform & { url: string }],
+      ),
     [title, text, path],
-  );
-  const share = useMemo<Record<string, Share>>(
-    () => ({
-      twitter: {
-        link: twitterShareUrl(data),
-        text: "Share on X (Twitter)",
-        icon: IconTwitter,
-      },
-      facebook: {
-        link: facebookShareUrl(data),
-        text: "Share on Facebook",
-        icon: IconFacebook,
-      },
-      linkedIn: {
-        link: linkedinShareUrl(data),
-        text: "Share on LinkedIn",
-        icon: IconLinkedIn,
-      },
-      email: {
-        link: emailShareUrl(data),
-        text: "Share via Email",
-        icon: IconEnvelope,
-      },
-    }),
-    [data],
   );
 
   return (
     <div className={className}>
       <ul className="flex justify-center gap-4">
-        {Object.entries(share).map(([key, item]) => (
+        {share.map(([key, item]) => (
           <li key={key}>
             <Link
-              href={item.link}
+              href={item.url}
               external
               custom
               className={classes(
                 "block rounded-2xl p-3 transition-colors",
                 dark
-                  ? "bg-alveus-tan text-alveus-green hover:bg-alveus-green hover:text-alveus-tan"
+                  ? "bg-alveus-tan text-alveus-green hover:bg-alveus-green-800 hover:text-alveus-tan"
                   : "bg-alveus-green text-alveus-tan hover:bg-alveus-tan hover:text-alveus-green",
               )}
-              title={item.text}
+              title={item.description}
             >
               <item.icon size={32} />
             </Link>
@@ -91,7 +64,7 @@ const Share = ({ title, text, path, dark = false, className }: ShareProps) => {
           "m-0 mt-2 w-full bg-transparent p-0.5 text-center text-sm italic outline-hidden",
           dark ? "text-alveus-tan" : "text-alveus-green-600",
         )}
-        value={data.url}
+        value={`${getShortBaseUrl()}${path}`}
         onClick={(e) =>
           e.currentTarget.setSelectionRange(0, e.currentTarget.value.length)
         }

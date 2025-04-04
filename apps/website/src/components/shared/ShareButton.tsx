@@ -1,22 +1,15 @@
 import {
   Fragment,
+  useMemo,
   type ComponentPropsWithoutRef,
   type MouseEventHandler,
 } from "react";
-
 import { PopoverButton as PopoverButtonHeadless } from "@headlessui/react";
 
 import { classes } from "@/utils/classes";
-import {
-  emailShareUrl,
-  facebookShareUrl,
-  twitterShareUrl,
-} from "@/utils/share-url";
+import sharePlatforms, { type SharePlatform } from "@/utils/share";
 
-import IconTwitter from "@/icons/IconTwitter";
-import IconFacebook from "@/icons/IconFacebook";
 import IconShare from "@/icons/IconShare";
-import IconEnvelope from "@/icons/IconEnvelope";
 import IconClipboard from "@/icons/IconClipboard";
 
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
@@ -73,6 +66,21 @@ export function ShareButton({
     statusText: linkCopiedText,
   } = useCopyToClipboard();
 
+  const share = useMemo(
+    () =>
+      Object.entries(sharePlatforms).map(
+        ([key, item]) =>
+          [
+            key,
+            {
+              ...item,
+              url: item.url({ url, text, title }),
+            },
+          ] as [string, SharePlatform & { url: string }],
+      ),
+    [url, text, title],
+  );
+
   return (
     <PopoverButton
       onClick={handleClick}
@@ -116,26 +124,12 @@ export function ShareButton({
       </div>
 
       <div className="flex gap-2">
-        <ShareLink
-          href={twitterShareUrl({ url, text, title })}
-          title="Share on X (Twitter)"
-        >
-          <IconTwitter className="size-4" />X (Twitter)
-        </ShareLink>
-        <ShareLink
-          href={facebookShareUrl({ url, text, title })}
-          title="Share on Facebook"
-        >
-          <IconFacebook className="size-4" />
-          Facebook
-        </ShareLink>
-        <ShareLink
-          href={emailShareUrl({ url, text, title })}
-          title="Share via Email"
-        >
-          <IconEnvelope className="size-4" />
-          Email
-        </ShareLink>
+        {share.map(([key, item]) => (
+          <ShareLink key={key} href={item.url} title={item.description}>
+            <item.icon size={16} />
+            {item.name}
+          </ShareLink>
+        ))}
       </div>
 
       <div className="mt-3 border-t">
