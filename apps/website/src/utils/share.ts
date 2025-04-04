@@ -23,7 +23,7 @@ const sharePlatforms = {
     description: "Share on X (Twitter)",
     icon: IconTwitter,
     url: ({ url, title, text }: ShareProps) => {
-      const share = new URL("https://x.com/intent/tweet");
+      const share = new URL("https://x.com/intent/post");
       share.searchParams.append("url", url);
       if (text || title)
         share.searchParams.append("text", (text || title) as string);
