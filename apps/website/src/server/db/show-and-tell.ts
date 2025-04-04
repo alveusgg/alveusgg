@@ -100,8 +100,7 @@ function getPostFilter(filter: "approved" | "pendingApproval") {
 
 const postOrderBy = [
   { seenOnStream: "asc" }, // make sure not yet seen posts are at the top
-  { approvedAt: "desc" },
-  { updatedAt: "desc" },
+  { createdAt: "desc" },
 ] as const;
 
 const attachmentSchema = z.object({
