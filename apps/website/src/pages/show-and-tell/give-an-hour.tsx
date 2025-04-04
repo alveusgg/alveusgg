@@ -1,4 +1,5 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
+import { useMemo, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
 import { useLocale } from "react-aria";
 import { DateTime } from "luxon";
@@ -38,12 +39,39 @@ import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
 interface WWFGiveAnHourCampaign {
   start: DateString;
   end: DateString;
+  cta?: (header: boolean) => ReactNode;
 }
 
 const wwfGiveAnHourCampaigns: WWFGiveAnHourCampaign[] = [
-  { start: "2025-03-23", end: "2025-04-22" },
+  {
+    start: "2025-03-23",
+    end: "2025-04-22",
+    cta: (header) => (
+      <>
+        {header ? "Head" : "For WWF's 2025 Give An Hour campaign, you can head"}{" "}
+        over to{" "}
+        <Link href="http://wwfsticker.org" external dark={header}>
+          wwfsticker.org
+        </Link>{" "}
+        to claim your free WWF sticker once you&apos;ve completed your hour!
+      </>
+    ),
+  },
   { start: "2024-03-01", end: "2024-04-22" },
 ];
+
+const useWWfGiveAnHourCampaign = (date?: DateString) =>
+  useMemo(() => {
+    if (!date) return undefined;
+
+    const campaign = wwfGiveAnHourCampaigns.find(({ start }) => start === date);
+    if (!campaign) return undefined;
+
+    return {
+      ...campaign,
+      year: campaign.start.split("-")[0]!,
+    };
+  }, [date]);
 
 const wwfGiveAnHourTarget = (
   hours: number,
@@ -114,10 +142,7 @@ export const getStaticProps = async () => {
 
   return {
     props: {
-      wwf: wwfCampaign && {
-        ...wwfCampaign,
-        year: wwfCampaign.start.split("-")[0]!,
-      },
+      wwfStart: wwfCampaign?.start,
     },
     revalidate: 60 * 60 * 6, // revalidate after 6 hours
   };
@@ -125,8 +150,9 @@ export const getStaticProps = async () => {
 
 const GiveAnHourPage: NextPage<
   InferGetStaticPropsType<typeof getStaticProps>
-> = ({ wwf }) => {
+> = ({ wwfStart }) => {
   const { locale } = useLocale();
+  const wwf = useWWfGiveAnHourCampaign(wwfStart);
 
   return (
     <>
@@ -164,7 +190,7 @@ const GiveAnHourPage: NextPage<
                 month: "long",
                 day: "numeric",
               })}
-              .
+              .{wwf.cta && <> {wwf.cta(true)}</>}
             </p>
           ) : (
             <p className="text-lg">
@@ -418,6 +444,8 @@ const GiveAnHourPage: NextPage<
               campaign. This campaign encourages people to take action for the
               planet, and we are proud to continue to be a part of it each year!
             </p>
+
+            {wwf?.cta && <p className="mt-2 text-lg">{wwf.cta(false)}</p>}
           </div>
 
           <div className="flex w-full flex-col divide-y-1 divide-alveus-green/25 lg:order-first lg:w-1/2 xl:w-2/5">
