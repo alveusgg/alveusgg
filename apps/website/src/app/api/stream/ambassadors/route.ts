@@ -102,4 +102,4 @@ export async function OPTIONS() {
 // Cache the response for 30 minutes
 export const dynamic = "force-static";
 export const revalidate = 1800;
-export const runtime = "edge";
+// export const runtime = "edge"; // Not compatible with force-static
