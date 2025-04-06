@@ -362,6 +362,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/live/twitch/chat",
+      destination: "https://www.twitch.tv/popout/alveussanctuary/chat",
+      permanent: true,
+    },
+    {
       source: "/live/youtube",
       destination: "https://www.youtube.com/AlveusSanctuary/live",
       permanent: true,
