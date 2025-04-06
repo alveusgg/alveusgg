@@ -44,9 +44,8 @@ export async function GET(
     });
   } catch (err) {
     console.error("Error getting YouTube videos", err);
+    return new Response("YouTube data not available", { status: 500 });
   }
-
-  return new Response("YouTube data not available", { status: 500 });
 }
 
 // Cache the response for 30 minutes

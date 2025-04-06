@@ -15,9 +15,8 @@ export async function GET() {
     });
   } catch (err) {
     console.error("Error getting weather", err);
+    return new Response("Weather data not available", { status: 500 });
   }
-
-  return new Response("Weather data not available", { status: 500 });
 }
 
 // Cache the response for 1 minute
