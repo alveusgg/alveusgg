@@ -23,4 +23,4 @@ export async function GET() {
 // Cache the response for 1 minute
 export const dynamic = "force-static";
 export const revalidate = 60;
-export const runtime = "edge";
+// export const runtime = "edge"; // Not compatible with force-static
