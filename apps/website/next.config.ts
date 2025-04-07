@@ -362,10 +362,21 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/live/twitch/chat",
+      destination: "https://www.twitch.tv/popout/alveussanctuary/chat",
+      permanent: true,
+    },
+    {
       source: "/live/youtube",
       destination: "https://www.youtube.com/AlveusSanctuary/live",
       permanent: true,
     },
+    // Handled by app/live/youtube/chat/route.ts as the link changes with each stream
+    // {
+    //   source: "/live/youtube",
+    //   destination: "https://www.youtube.com/AlveusSanctuary/live/chat",
+    //   permanent: true,
+    // },
     {
       source: "/updates/ical",
       destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${twitchChannels.alveus.id}`,

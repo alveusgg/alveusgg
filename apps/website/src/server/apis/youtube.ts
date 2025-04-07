@@ -2,6 +2,7 @@ import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
 
 import { channels } from "@/data/youtube";
+import { env } from "@/env";
 
 const ItemSchema = z.object({
   id: z.string(),
@@ -80,4 +81,90 @@ export const fetchYouTubeVideos = async (
         published: entry.published,
       })),
   );
+};
+
+const SearchSchema = z.object({
+  kind: z.literal("youtube#searchListResponse"),
+  pageInfo: z.object({
+    totalResults: z.number(),
+    resultsPerPage: z.number(),
+  }),
+  items: z.array(
+    z.object({
+      kind: z.literal("youtube#searchResult"),
+      id: z.object({
+        kind: z.literal("youtube#video"),
+        videoId: z.string(),
+      }),
+      snippet: z.object({
+        title: z.string(),
+        description: z.string(),
+        channelId: z.string(),
+        channelTitle: z.string(),
+        publishedAt: z.string().datetime(),
+        thumbnails: z.record(
+          z.union([
+            z.literal("default"),
+            z.literal("medium"),
+            z.literal("high"),
+            z.literal("standard"),
+            z.literal("maxres"),
+          ]),
+          z.object({
+            url: z.string().url(),
+            width: z.number(),
+            height: z.number(),
+          }),
+        ),
+        liveBroadcastContent: z.union([
+          z.literal("none"),
+          z.literal("upcoming"),
+          z.literal("live"),
+        ]),
+      }),
+    }),
+  ),
+});
+
+export const fetchYouTubeLive = async (
+  channelId: string,
+): Promise<YouTubeVideo | null> => {
+  const apiKey = env.YOUTUBE_API_KEY;
+  if (!apiKey) throw new Error("Missing YouTube API key");
+
+  if (!channelId.startsWith("UC"))
+    throw new Error("Invalid YouTube channel ID");
+
+  const custom = Object.values(channels).find(
+    (channel) => channel.id === channelId,
+  );
+
+  const resp = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channelId}&eventType=live&type=video&key=${apiKey}`,
+  );
+  if (!resp.ok) {
+    throw new Error(`Failed to fetch YouTube feed: ${resp.statusText}`);
+  }
+
+  const json = await resp.json();
+  const parsed = SearchSchema.parse(json);
+
+  const live = parsed.items[0];
+  if (!live || live.snippet.liveBroadcastContent !== "live") {
+    return null;
+  }
+
+  return {
+    id: live.id.videoId,
+    title: live.snippet.title,
+    description: live.snippet.description,
+    author: {
+      id: channelId,
+      name: custom?.name ?? live.snippet.channelTitle,
+      uri:
+        custom?.uri ??
+        `https://www.youtube.com/channel/${live.snippet.channelId}`,
+    },
+    published: new Date(live.snippet.publishedAt),
+  };
 };

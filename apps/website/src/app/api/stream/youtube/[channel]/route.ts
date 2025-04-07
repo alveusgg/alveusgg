@@ -36,19 +36,17 @@ export async function GET(
 
     return new Response(resp, {
       headers: {
-        // Response can be cached for 30 minutes
-        // And can be stale for 5 minutes while revalidating
-        "Cache-Control":
-          "max-age=1800, s-maxage=1800, stale-while-revalidate=300",
+        // Response can be cached for 5 minutes
+        // And can be stale for 1 minute while revalidating
+        "Cache-Control": "max-age=300, s-maxage=300, stale-while-revalidate=60",
       },
     });
   } catch (err) {
     console.error("Error getting YouTube videos", err);
+    return new Response("YouTube data not available", { status: 500 });
   }
-
-  return new Response("YouTube data not available", { status: 500 });
 }
 
-// Cache the response for 30 minutes
+// Cache the response for 5 minutes
 export const dynamic = "force-static";
-export const revalidate = 1800;
+export const revalidate = 300;
