@@ -82,7 +82,8 @@ const collaborations: Collaboration[] = (
       name: "ThePrimeagen",
       link: "https://www.twitch.tv/theprimeagen",
       date: new Date("2025-03-13"),
-      videoId: "S-RoJj6hQYM",
+      videoId: "GraVO8_5x6g",
+      vodId: "S-RoJj6hQYM",
       creators: [
         {
           name: "ThePrimeagen",
