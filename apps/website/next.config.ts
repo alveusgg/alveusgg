@@ -62,6 +62,11 @@ const config: NextConfig = {
         protocol: "https",
         hostname: "i.imgur.com",
       },
+      // Candid (GuideStar)
+      {
+        protocol: "https",
+        hostname: "widgets.guidestar.org",
+      },
       // Original Website
       {
         protocol: "https",

@@ -6,7 +6,6 @@ import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 
-import imageGuidestarSeal from "@/assets/guidestar-candid-seal.svg";
 import imageCharityNavigatorBadge from "@/assets/charity-navigator-badge.svg";
 
 type TransparencyProps = {
@@ -49,10 +48,10 @@ const Transparency = ({ className }: TransparencyProps) => (
       >
         <Image
           className="size-40"
-          src={imageGuidestarSeal}
+          src="https://widgets.guidestar.org/prod/v1/pdp/transparency-seal/10965548/svg"
           width={200}
           height={200}
-          alt="Platinum Transparency Seal 2024 by Candid"
+          alt="Platinum Transparency Seal by Candid"
         />
       </Link>
     </div>
