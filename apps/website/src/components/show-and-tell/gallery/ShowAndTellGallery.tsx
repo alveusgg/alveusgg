@@ -156,23 +156,6 @@ export function ShowAndTellGallery({
   );
 
   const carouselItems = useMemo(() => {
-    const videoItems: [string, JSX.Element][] = videoAttachments
-      .filter(({ url }) => validateNormalizedVideoUrl(url))
-      .map((videoAttachment, i) => [
-        `001-video-${i}`,
-        <VideoItem
-          key={`image-${i}`}
-          videoAttachment={videoAttachment}
-          showPreview
-          openInLightbox
-          linkAttributes={{
-            className:
-              "group/trigger pointer-events-auto flex items-center justify-center cursor-pointer select-none",
-            draggable: false,
-          }}
-        />,
-      ]);
-
     const imageItems: [string, JSX.Element][] = imageAttachments.map(
       (imageAttachment, i) => [
         `002-image-${i}`,
@@ -217,7 +200,24 @@ export function ShowAndTellGallery({
       ],
     );
 
-    return Object.fromEntries([...videoItems, ...imageItems]);
+    const videoItems: [string, JSX.Element][] = videoAttachments
+      .filter(({ url }) => validateNormalizedVideoUrl(url))
+      .map((videoAttachment, i) => [
+        `001-video-${i}`,
+        <VideoItem
+          key={`image-${i}`}
+          videoAttachment={videoAttachment}
+          showPreview
+          openInLightbox
+          linkAttributes={{
+            className:
+              "group/trigger pointer-events-auto flex items-center justify-center cursor-pointer select-none",
+            draggable: false,
+          }}
+        />,
+      ]);
+
+    return Object.fromEntries([...imageItems, ...videoItems]);
   }, [imageAttachments, videoAttachments]);
 
   const carouselCount = Object.keys(carouselItems).length;
@@ -239,38 +239,17 @@ export function ShowAndTellGallery({
     />
   );
 
-  let countItemsInPhotoswipe = 0;
+  const imageCount = imageAttachments.length;
   let thumbnails: JSX.Element | null = null;
   if (carouselCount > 1) {
     thumbnails = (
       <div className="my-2 flex flex-row flex-wrap items-center justify-center gap-2">
-        {videoAttachments.map((videoAttachment) => {
-          const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
-          if (!parsedVideoUrl) return null;
-          let handleClick: MouseEventHandler<HTMLAnchorElement> | undefined =
-            undefined;
-          if ("embedUrl" in videoPlatformConfigs[parsedVideoUrl.platform]) {
-            const lightboxIndex = countItemsInPhotoswipe++;
-            handleClick = (e) => {
-              e.preventDefault();
-              openLightBox(lightboxIndex);
-            };
-          }
-
-          return (
-            <VideoItem
-              key={videoAttachment.id}
-              videoAttachment={videoAttachment}
-              linkAttributes={{ onClick: handleClick }}
-            />
-          );
-        })}
         {imageAttachments.map((imageAttachment, idx) => (
           <a
             key={imageAttachment.id}
             onClick={(e) => {
               e.preventDefault();
-              openLightBox(countItemsInPhotoswipe + idx);
+              openLightBox(idx);
             }}
             href={imageAttachment.url}
             className="group relative flex items-center justify-center select-none"
@@ -287,6 +266,27 @@ export function ShowAndTellGallery({
             />
           </a>
         ))}
+        {videoAttachments.map((videoAttachment, idx) => {
+          const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
+          if (!parsedVideoUrl) return null;
+          let handleClick: MouseEventHandler<HTMLAnchorElement> | undefined =
+            undefined;
+          if ("embedUrl" in videoPlatformConfigs[parsedVideoUrl.platform]) {
+            const lightboxIndex = imageCount + idx;
+            handleClick = (e) => {
+              e.preventDefault();
+              openLightBox(lightboxIndex);
+            };
+          }
+
+          return (
+            <VideoItem
+              key={videoAttachment.id}
+              videoAttachment={videoAttachment}
+              linkAttributes={{ onClick: handleClick }}
+            />
+          );
+        })}
       </div>
     );
   }
