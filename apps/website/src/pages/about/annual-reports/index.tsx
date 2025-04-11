@@ -42,10 +42,7 @@ const AnnualReportsPage: NextPage = () => {
             >
               <Heading
                 level={2}
-                className={classes(
-                  "my-0 font-sans",
-                  idx === 0 ? "text-2xl font-semibold" : "text-xl font-normal",
-                )}
+                className={classes("my-0 font-sans text-xl font-normal")}
               >
                 {year} Annual Report
               </Heading>
