@@ -79,6 +79,11 @@ const config: NextConfig = {
           "https://localhost",
       ),
     ],
+    // Allow SVGs to be proxied through Next.js
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Render images in the browser if accessed directly
+    contentDispositionType: "inline",
   },
   redirects: async () => [
     // Redirect progressive web app view to home page
