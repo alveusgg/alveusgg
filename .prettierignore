@@ -1,3 +1,5 @@
-node_modules
-apps/website/.next
+node_modules/
 pnpm-lock.yaml
+
+apps/website/.next/
+apps/website/public/push/alveus/

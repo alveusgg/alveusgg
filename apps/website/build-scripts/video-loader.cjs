@@ -5,7 +5,6 @@ const { join, dirname } = require("path");
 const { exec: execSync } = require("child_process");
 const {
   readFile,
-  rename,
   mkdir,
   readdir,
   stat,
