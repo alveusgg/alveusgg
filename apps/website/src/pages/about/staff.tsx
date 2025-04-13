@@ -19,7 +19,7 @@ import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
 import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
-import nickImage from "@/assets/people/nick.jpg";
+import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -162,7 +162,7 @@ const staff: Record<string, Person> = {
     ),
   },
   nick: {
-    image: nickImage,
+    image: nickFacilitiesImage,
     name: "Nick",
     title: "Facilities",
     description: (
