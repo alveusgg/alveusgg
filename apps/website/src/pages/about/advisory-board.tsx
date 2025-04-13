@@ -10,7 +10,7 @@ import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
 import synackImage from "@/assets/people/synack.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
 import allisonImage from "@/assets/people/allison.jpg";
-import nickImage from "@/assets/people/nick.png";
+import nickElectricianImage from "@/assets/people/nick-electrician.png";
 
 const advisors = {
   michele: {
@@ -74,14 +74,14 @@ const advisors = {
     description: (
       <>
         <p>
-          Nick is currently the general manager of the media/gaming organization
-          &apos;One True King&apos;, and has been since October of 2020.
-          Previous experience includes 10 years as an Operations/Project manager
-          for a custom software development company, as well as 5 years being a
-          treasurer and board member for a non-profit cat rescue and low-cost
-          spay/neuter organization. In addition, he has 10 years of experience
-          on an advisory board for the business and technology department of a
-          local college.
+          Nick (Synack) is currently the general manager of the media/gaming
+          organization &apos;One True King&apos;, and has been since October of
+          2020. Previous experience includes 10 years as an Operations/Project
+          manager for a custom software development company, as well as 5 years
+          being a treasurer and board member for a non-profit cat rescue and
+          low-cost spay/neuter organization. In addition, he has 10 years of
+          experience on an advisory board for the business and technology
+          department of a local college.
         </p>
       </>
     ),
@@ -126,7 +126,7 @@ const advisors = {
     ),
   },
   nick: {
-    image: nickImage,
+    image: nickElectricianImage,
     name: "Nick",
     title: "Advisory Board Member",
     description: (
