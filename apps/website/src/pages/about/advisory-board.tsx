@@ -10,6 +10,7 @@ import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
 import synackImage from "@/assets/people/synack.png";
 import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
 import allisonImage from "@/assets/people/allison.jpg";
+import nickImage from "@/assets/people/nick.png";
 
 const advisors = {
   michele: {
@@ -26,7 +27,7 @@ const advisors = {
           Raffin is a dedicated avian advocate and a passionate observer of
           birdlife. A certified aviculturist and regular consultant to zoos and
           breeders, Raffin has spoken at the TEDx conference, is the
-          conservation columnist for the Avicultural Society of America’s
+          conservation columnist for the Avicultural Society of America&apos;s
           Avicultural Bulletin, and has served as co-chair of a large humane
           society and on the board of a companion bird rescue organization.
         </p>
@@ -60,8 +61,8 @@ const advisors = {
         </p>
         <p>
           In her spare time, Ellie loves to hang out with her dogs, run, play
-          video games, and watch Twitch! She’s thrilled to support Alveus as
-          they grow.
+          video games, and watch Twitch! She&apos;s thrilled to support Alveus
+          as they grow.
         </p>
       </>
     ),
@@ -74,9 +75,9 @@ const advisors = {
       <>
         <p>
           Nick is currently the general manager of the media/gaming organization
-          ‘One True King’, and has been since October of 2020. Previous
-          experience includes 10 years as an Operations/Project manager for a
-          custom software development company, as well as 5 years being a
+          &apos;One True King&apos;, and has been since October of 2020.
+          Previous experience includes 10 years as an Operations/Project manager
+          for a custom software development company, as well as 5 years being a
           treasurer and board member for a non-profit cat rescue and low-cost
           spay/neuter organization. In addition, he has 10 years of experience
           on an advisory board for the business and technology department of a
@@ -93,16 +94,17 @@ const advisors = {
       <>
         <p>
           Sebastian is a spider scientist, wildlife photographer, and educator
-          who loves introducing people to wonderfully weird animals. He’s been
-          featured on podcasts, news, and TV, including Ologies, NPR, and
+          who loves introducing people to wonderfully weird animals. He&apos;s
+          been featured on podcasts, news, and TV, including Ologies, NPR, and
           Disney+. Sebastian studies the evolutionary relationship between
-          animals’ eyes, their environment, and how they use color, shape, and
-          movement to talk with each other. For his PhD, he studied why and how
-          jumping spiders get their audience’s attention when performing their
-          spectacular courtship dances. Currently, he is researching the
-          evolution of eye size across tarantulas. To learn more about his work,
-          visit www.spiderdaynightlive.com. Sebastian advises Alveus on the care
-          and behavior of the sanctuary’s arthropod ambassadors.
+          animals&apos; eyes, their environment, and how they use color, shape,
+          and movement to talk with each other. For his PhD, he studied why and
+          how jumping spiders get their audience&apos;s attention when
+          performing their spectacular courtship dances. Currently, he is
+          researching the evolution of eye size across tarantulas. To learn more
+          about his work, visit www.spiderdaynightlive.com. Sebastian advises
+          Alveus on the care and behavior of the sanctuary&apos;s arthropod
+          ambassadors.
         </p>
       </>
     ),
@@ -119,6 +121,22 @@ const advisors = {
           several years, where she found her passion for teaching with bugs. Dr.
           Allison now focuses on pollinator conservation, reducing pesticide use
           in the environment, and teaching integrated pest management practices.
+        </p>
+      </>
+    ),
+  },
+  nick: {
+    image: nickImage,
+    name: "Nick",
+    title: "Advisory Board Member",
+    description: (
+      <>
+        <p>
+          Nick has been a master electrician since 1996, he is also part owner
+          in a wildlife technology company called Window to Wildlife. He has
+          been advising and helping build Alveus&apos; power, internet and cam
+          infrastructure since the beginning. Nick donates a lot of his time and
+          skills and we are excited to have him on the advisory board.
         </p>
       </>
     ),
