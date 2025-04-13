@@ -1,10 +1,10 @@
 // @ts-check
 
 import eslint from "@eslint/js";
-import tseslint from "typescript-eslint";
+import tseslint, { configs as tseslintConfigs } from "typescript-eslint";
 import prettiereslint from "eslint-config-prettier";
 
-import importXPlugin from "eslint-plugin-import-x";
+import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
 // @ts-expect-error - no types
 import nextPlugin from "@next/eslint-plugin-next";
 import reactPlugin from "eslint-plugin-react";
@@ -20,8 +20,7 @@ export default tseslint.config(
     name: "eslint/recommended",
     ...eslint.configs.recommended,
   },
-  // eslint-disable-next-line import-x/no-named-as-default-member
-  ...tseslint.configs.recommended,
+  ...tseslintConfigs.recommended,
   {
     name: "typescript-eslint/tsconfig",
     languageOptions: {
@@ -38,8 +37,8 @@ export default tseslint.config(
       reportUnusedDisableDirectives: true,
     },
   },
-  importXPlugin.flatConfigs.recommended,
-  importXPlugin.flatConfigs.typescript,
+  importXPluginConfigs.recommended,
+  importXPluginConfigs.typescript,
   {
     name: "import-x/order",
     rules: {
