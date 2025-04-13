@@ -23,4 +23,7 @@ const manifest = {
   display: "standalone",
 };
 
-fs.writeFileSync("public/site.webmanifest", JSON.stringify(manifest, null, 2));
+fs.writeFileSync(
+  "public/site.webmanifest",
+  JSON.stringify(manifest, null, 2) + "\n",
+);

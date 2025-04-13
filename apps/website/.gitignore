@@ -1,14 +1,7 @@
-# dependencies
-/.pnp
-.pnp.js
-
-# testing
-/coverage
-
 # generated assets (web manifest, service worker)
 /public/site.webmanifest
 /public/RootServiceWorker.js*
-/public/push/alveus/*
+/public/push/alveus/
 /public/robots.txt
 /public/sitemap.xml
 
@@ -23,7 +16,7 @@
 next-env.d.ts
 
 # production
-/build
+/build/
 
 # vercel
-.vercel
+/.vercel/
