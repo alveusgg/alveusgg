@@ -482,7 +482,6 @@ const config: NextConfig = {
 
     return config;
   },
-  transpilePackages: ["@alveusgg/data"],
   experimental: {
     scrollRestoration: true,
   },
