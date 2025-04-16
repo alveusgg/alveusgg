@@ -6,8 +6,7 @@
 /public/sitemap.xml
 
 # database
-/prisma/db.sqlite
-/prisma/db.sqlite-journal
+/prisma/client/
 
 # next.js
 /.next/
