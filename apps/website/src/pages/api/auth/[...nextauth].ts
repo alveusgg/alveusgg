@@ -1,7 +1,6 @@
 import NextAuth, { type NextAuthOptions } from "next-auth";
-import type { TwitchProfile } from "next-auth/providers/twitch";
-import TwitchProvider from "next-auth/providers/twitch";
-import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import TwitchProvider, { type TwitchProfile } from "next-auth/providers/twitch";
+import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import { env } from "@/env";
 import { prisma } from "@/server/db/client";
