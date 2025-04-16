@@ -69,17 +69,21 @@ export const fetchYouTubeVideos = async (
   // See https://stackoverflow.com/a/76602819 for other playlist prefixes
   return fetchYouTubeFeed("playlist", channelId.replace(/^UC/, "UULF")).then(
     (feed) =>
-      feed.map((entry) => ({
-        id: entry.id.replace(/^yt:video:/, ""),
-        title: entry.title,
-        description: entry["media:group"]["media:description"],
-        author: {
-          id: channelId,
-          name: custom?.name ?? entry.author.name,
-          uri: custom?.uri ?? entry.author.uri,
-        },
-        published: entry.published,
-      })),
+      feed
+        .map((entry) => ({
+          id: entry.id.replace(/^yt:video:/, ""),
+          title: entry.title,
+          description: entry["media:group"]["media:description"],
+          author: {
+            id: channelId,
+            name: custom?.name ?? entry.author.name,
+            uri: custom?.uri ?? entry.author.uri,
+          },
+          published: entry.published,
+        }))
+        // If a title contains a hashtag, remove it as a precaution
+        // We've seen YouTube accidentally include shorts in this playlist
+        .filter((entry) => !/\W#\w/.test(entry.title)),
   );
 };
 
