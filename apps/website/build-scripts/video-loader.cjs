@@ -170,6 +170,7 @@ const videoResized = async (
       "sha1",
     );
     const cacheFile = `${ctx.cache}/${cacheKey}.${processedExtension}`;
+    console.log(` ... ${ctx.context.resourcePath} cache file: ${cacheFile}`);
 
     // See if the cache exists
     const cacheData = await readFile(cacheFile).catch(() => null);
@@ -411,15 +412,23 @@ const videoLoader = async (context, content) => {
 };
 
 /**
+ * Get all files in the cache
+ *
+ * @return {Promise<string[]>}
+ */
+const cacheList = () =>
+  readdir(cacheDir, { withFileTypes: true })
+    .then((file) => file.filter((f) => f.isFile()).map((f) => f.name))
+    .catch(() => []);
+
+/**
  * Webpack hook to clean up old cache files
  *
  * @return {Promise<void>}
  */
 const cacheCleanup = async () => {
-  // Get all files in the cache dir
-  const cacheFiles = await readdir(cacheDir, { withFileTypes: true })
-    .then((file) => file.filter((f) => f.isFile()).map((f) => f.name))
-    .catch(() => []);
+  const cacheFiles = await cacheList();
+  const usedFiles = [];
 
   // Remove all files last accessed over 24 hours ago
   const cutoff = Date.now() - 24 * 60 * 60 * 1000;
@@ -427,7 +436,12 @@ const cacheCleanup = async () => {
     cacheFiles.map(async (file) => {
       const { atimeMs } = await stat(join(cacheDir, file));
       if (atimeMs < cutoff) await unlink(join(cacheDir, file));
+      else usedFiles.push(file);
     }),
+  );
+
+  console.log(
+    `video-loader cache:${usedFiles.map((f) => `\n  ${f}`).join("")}`,
   );
 };
 
@@ -454,6 +468,13 @@ module.exports = function (content) {
     this._compiler &&
     !this._compiler.hooks.afterEmit.taps.some((t) => t.fn === cacheCleanup)
   ) {
+    // Also, as this is our first call to the loader, print the cache
+    cacheList().then((files) =>
+      console.log(
+        `video-loader cache:${files.map((f) => `\n  ${f}`).join("")}`,
+      ),
+    );
+
     this._compiler.hooks.afterEmit.tapPromise(
       "VideoLoaderCleanup",
       cacheCleanup,
