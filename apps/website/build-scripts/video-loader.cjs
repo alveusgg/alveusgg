@@ -296,13 +296,21 @@ const defaultTypes = {
 };
 
 /**
+ * @typedef {Object} VideoLoaderResult
+ * @property {string} output Output video content
+ * @property {{ cached: number, skipped: number, total: number }} stats Stats on the video processing
+ */
+
+/**
  * Run the video loader
  *
  * @param {VideoLoaderContext["context"]} context Webpack compilation context
  * @param {Buffer} content Input video content
- * @return {Promise<{ output: string, stats: { cached: number, skipped: number, total: number } }>}
+ * @return {Promise<VideoLoaderResult>}
  */
 const videoLoader = async (context, content) => {
+  console.log(`Processing video ${context.resourcePath} ...`);
+
   // Get the prefix for the output files
   // Based on https://github.com/vercel/next.js/blob/888384c5e853ee5f9988b74b9085f1d6f80157a3/packages/next/src/build/webpack/loaders/next-image-loader/index.ts#L25
   const options = context.getOptions();
@@ -411,6 +419,59 @@ const videoLoader = async (context, content) => {
 };
 
 /**
+ * @type {[VideoLoaderContext["context"], Buffer, { resolve: Function, reject: Function }][]}
+ */
+const queue = [];
+let processing = false;
+
+/**
+ * Process the pending video queue
+ */
+const queueProcess = async () => {
+  if (processing) return;
+  processing = true;
+  console.log("Processing video queue ...");
+
+  while (queue.length) {
+    const [context, content, { resolve, reject }] = queue.shift();
+    try {
+      const res = await videoLoader(context, content);
+      resolve(res);
+    } catch (e) {
+      reject(e);
+    }
+  }
+
+  processing = false;
+  console.log(" ... video queue processed");
+};
+
+/**
+ * Run the video loader
+ *
+ * @param {VideoLoaderContext["context"]} context Webpack compilation context
+ * @param {Buffer} content Input video content
+ * @return {Promise<VideoLoaderResult>}
+ */
+const queueVideo = async (context, content) => {
+  console.log(`Queueing video ${context.resourcePath} ...`);
+
+  // Create a promise to represent this video processing
+  let resolve, reject;
+  const promise = new Promise((res, rej) => {
+    resolve = res;
+    reject = rej;
+  });
+
+  // Add the context to the queue
+  queue.push([context, content, { resolve, reject }]);
+
+  // Process the queue in the background
+  queueProcess();
+  return promise;
+};
+
+/**
  * Webpack hook to clean up old cache files
  *
  * @return {Promise<void>}
@@ -435,9 +496,8 @@ const cacheCleanup = async () => {
  * @type {import("webpack").RawLoaderDefinition<VideoLoaderOptions, {}>}
  */
 module.exports = function (content) {
-  console.log(`Processing video ${this.resourcePath} ...`);
   const callback = this.async();
-  videoLoader(this, content)
+  queueVideo(this, content)
     .then((res) => {
       console.log(
         ` ... ${this.resourcePath} completed (${res.stats.cached}/${res.stats.total} cached, ${res.stats.skipped}/${res.stats.total} skipped)`,
