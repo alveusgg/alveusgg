@@ -1,8 +1,8 @@
 import type { FormEvent } from "react";
 import { useCallback } from "react";
-
-import type { TwitchChannel } from "@prisma/client";
 import { useRouter } from "next/router";
+
+import type { TwitchChannel } from "@/server/db/client";
 
 import { trpc } from "@/utils/trpc";
 

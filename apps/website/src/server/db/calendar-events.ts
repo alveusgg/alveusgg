@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { DateTime } from "luxon";
-import type { CalendarEvent } from "@prisma/client";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
   type ActiveAmbassador,
@@ -8,7 +7,7 @@ import {
   isActiveAmbassadorEntry,
 } from "@alveusgg/data/build/ambassadors/filters";
 
-import { prisma } from "@/server/db/client";
+import { prisma, type CalendarEvent } from "@/server/db/client";
 import {
   createScheduleSegment,
   getScheduleSegments,

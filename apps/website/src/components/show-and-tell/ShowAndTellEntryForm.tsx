@@ -6,7 +6,7 @@ import {
   useState,
 } from "react";
 import { useRouter } from "next/router";
-import type { ShowAndTellEntry } from "@prisma/client";
+import Image from "next/image";
 import {
   Disclosure,
   DisclosureButton,
@@ -14,7 +14,7 @@ import {
 } from "@headlessui/react";
 import { useLocale } from "react-aria";
 
-import Image from "next/image";
+import type { ShowAndTellEntry } from "@/server/db/client";
 import type {
   PublicShowAndTellEntryWithAttachments,
   ShowAndTellSubmitInput,

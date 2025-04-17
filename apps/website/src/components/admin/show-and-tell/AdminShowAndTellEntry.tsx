@@ -1,4 +1,4 @@
-import type { ShowAndTellEntry, User } from "@prisma/client";
+import type { ShowAndTellEntry, User } from "@/server/db/client";
 
 import type { MarkPostAsSeenMode } from "@/server/db/show-and-tell";
 
@@ -12,6 +12,7 @@ import {
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 import DateTime from "@/components/content/DateTime";
+
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
 import IconEye from "@/icons/IconEye";

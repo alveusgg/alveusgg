@@ -1,4 +1,4 @@
-import type { Notification } from "@prisma/client";
+import type { Notification } from "@/server/db/client";
 
 import IconTwitch from "@/icons/IconTwitch";
 import IconYouTube from "@/icons/IconYouTube";

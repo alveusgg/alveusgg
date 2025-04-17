@@ -1,4 +1,4 @@
-import type { NotificationUrgency } from "@prisma/client";
+import type { NotificationUrgency } from "@/server/db/client";
 
 export const WEB_PUSH_MAX_TTL = 2419200; // 4 weeks
 

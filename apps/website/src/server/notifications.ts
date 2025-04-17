@@ -1,5 +1,3 @@
-import type { Notification } from "@prisma/client";
-
 import { env } from "@/env";
 
 import type { NotificationCategory } from "@/data/notifications";
@@ -9,9 +7,10 @@ import {
   notificationCategories,
 } from "@/data/notifications";
 
-import { prisma } from "@/server/db/client";
+import { prisma, type Notification } from "@/server/db/client";
 import { callEndpoint } from "@/server/utils/queue";
 import { triggerDiscordChannelWebhook } from "@/server/outgoing-webhooks";
+
 import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
 
 import type { CreatePushesOptions } from "@/pages/api/notifications/batched-create-notification-pushes";

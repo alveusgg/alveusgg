@@ -4,13 +4,14 @@ import type {
   NextPage,
 } from "next";
 
-import type { Form } from "@prisma/client";
+import type { Form } from "@/server/db/client";
+import { findActiveForm } from "@/server/db/forms";
+
+import { calcFormConfig } from "@/utils/forms";
 
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
-import { calcFormConfig } from "@/utils/forms";
-import { findActiveForm } from "@/server/db/forms";
 import Markdown from "@/components/content/Markdown";
 
 export type FormPageProps = InferGetServerSidePropsType<

@@ -1,8 +1,9 @@
 import type { FormEvent } from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
-
-import type { Bingo } from "@prisma/client";
 import { useRouter } from "next/router";
+
+import type { Bingo } from "@/server/db/client";
+import type { BingoSchema } from "@/server/db/bingos";
 
 import { env } from "@/env";
 
@@ -21,8 +22,6 @@ import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
-
-import { type BingoSchema } from "@/server/db/bingos";
 
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";

@@ -1,9 +1,12 @@
-import type { CalendarEvent } from "@prisma/client";
-
 import type { DateTime } from "luxon";
+
+import type { CalendarEvent } from "@/server/db/client";
+
 import { getStandardCategoryColor } from "@/data/calendar-events";
+
 import { classes } from "@/utils/classes";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+
 import Link from "@/components/content/Link";
 
 interface CalendarItemProps

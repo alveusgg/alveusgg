@@ -1,13 +1,13 @@
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 
-import type { ShortLinks } from "@prisma/client";
 import { useRouter } from "next/router";
+
+import type { ShortLinks } from "@/server/db/client";
+import type { ShortLinkSchema } from "@/server/db/short-links";
 
 import { trpc } from "@/utils/trpc";
 import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
-
-import type { ShortLinkSchema } from "@/server/db/short-links";
 
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { TextField } from "@/components/shared/form/TextField";

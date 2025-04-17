@@ -1,4 +1,4 @@
-import type { Form } from "@prisma/client";
+import type { Form } from "@/server/db/client";
 
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";

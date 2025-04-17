@@ -1,12 +1,11 @@
 import { z } from "zod";
 import { waitUntil } from "@vercel/functions";
-import type { Notification } from "@prisma/client";
 
 import { env } from "@/env";
 
+import { prisma, type Notification } from "@/server/db/client";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
-import { prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 
 import type { SendPushOptions } from "@/pages/api/notifications/send-push";
