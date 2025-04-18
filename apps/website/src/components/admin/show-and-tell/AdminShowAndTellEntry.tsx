@@ -1,5 +1,7 @@
 import type { ShowAndTellEntry, User } from "@prisma/client";
 
+import type { MarkPostAsSeenMode } from "@/server/db/show-and-tell";
+
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { formatDateTimeLocal } from "@/utils/datetime";
 
@@ -15,13 +17,17 @@ import IconTrash from "@/icons/IconTrash";
 import IconEye from "@/icons/IconEye";
 import IconPlus from "@/icons/IconPlus";
 import IconCheck from "@/icons/IconCheck";
+import IconArrowUp from "@/icons/IconArrowUp";
 import IconArrowDown from "@/icons/IconArrowDown";
 
 type ShowAndTellEntryWithUser = ShowAndTellEntry & { user: User | null };
 
 type AdminShowAndTellEntryProps = {
   entry: ShowAndTellEntryWithUser;
-  markSeen: (entry: ShowAndTellEntryWithUser, retroactive?: boolean) => void;
+  markSeen: (
+    entry: ShowAndTellEntryWithUser,
+    mode?: MarkPostAsSeenMode,
+  ) => void;
   unmarkSeen: (entry: ShowAndTellEntryWithUser) => void;
   deletePost: (entry: ShowAndTellEntryWithUser) => void;
 };
@@ -73,18 +79,41 @@ export function AdminShowAndTellEntry({
               <IconPlus className="size-5" /> Seen
             </Button>
 
-            <Button
-              size="small"
-              className={secondaryButtonClasses}
-              onClick={() => {
-                if (confirm("Mark all posts until here as seen on stream?")) {
-                  markSeen(entry, true);
-                }
-              }}
-              title="Mark all posts until here as seen on stream"
-            >
-              <IconArrowDown className="size-5" /> All
-            </Button>
+            <div className="flex gap-1">
+              <Button
+                size="small"
+                className={secondaryButtonClasses}
+                onClick={() => {
+                  if (
+                    confirm(
+                      "Mark all posts until here and newer as seen on stream?",
+                    )
+                  ) {
+                    markSeen(entry, "thisAndNewer");
+                  }
+                }}
+                title="Mark all posts until here and newer as seen on stream"
+              >
+                <IconArrowUp className="size-5" />
+              </Button>
+
+              <Button
+                size="small"
+                className={secondaryButtonClasses}
+                onClick={() => {
+                  if (
+                    confirm(
+                      "Mark all posts from here and older as seen on stream?",
+                    )
+                  ) {
+                    markSeen(entry, "thisAndOlder");
+                  }
+                }}
+                title="Mark all posts from here and older as seen on stream"
+              >
+                <IconArrowDown className="size-5" />
+              </Button>
+            </div>
           </div>
         )}
         {!entry.seenOnStreamAt && status === "pendingApproval" && "no"}
