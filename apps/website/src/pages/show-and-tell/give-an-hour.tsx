@@ -74,9 +74,11 @@ const useWWfGiveAnHourCampaign = (date?: DateString) =>
   }, [date]);
 
 const wwfGiveAnHourTarget = (hours: number, ended: boolean) => {
-  const round = ended ? Math.floor : Math.ceil;
-  const computed = round(hours / 500) * 500;
-  return ended ? computed : Math.max(1500, computed);
+  if (ended) return Math.floor(hours / 500) * 500;
+
+  const minimum = 1500;
+  const multiple = hours > minimum ? 1000 : 500;
+  return Math.max(Math.ceil(hours / multiple) * multiple, minimum);
 };
 
 const Card = ({
