@@ -17,6 +17,8 @@ import parse, {
 import { ErrorBoundary } from "react-error-boundary";
 
 import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
+import { classes } from "@/utils/classes";
+import { splitAttachments } from "@/utils/split-attachments";
 
 import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
 
@@ -25,8 +27,8 @@ import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTe
 import { Badge } from "@/components/show-and-tell/Badge";
 
 import IconWorld from "@/icons/IconWorld";
-import { classes } from "@/utils/classes";
-import { splitAttachments } from "@/utils/split-attachments";
+
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 
 type ShowAndTellEntryProps = {
   entry: PublicShowAndTellEntryWithAttachments;
@@ -331,12 +333,29 @@ export const ShowAndTellEntry = ({
           isPresentationView={isPresentationView}
         />
 
-        <ShowAndTellGallery
-          isPresentationView={isPresentationView}
-          lightboxParentRef={wrapperRef}
-          imageAttachments={imageAttachments}
-          videoAttachments={videoAttachments}
-        />
+        {imageAttachments.length || videoAttachments.length ? (
+          <ShowAndTellGallery
+            isPresentationView={isPresentationView}
+            lightboxParentRef={wrapperRef}
+            imageAttachments={imageAttachments}
+            videoAttachments={videoAttachments}
+          />
+        ) : (
+          <div className="flex flex-1 flex-col items-center justify-center gap-2 p-4">
+            <Image
+              src={showAndTellPeepo}
+              height={384}
+              alt=""
+              className={classes(
+                "h-full w-auto opacity-50",
+                isPresentationView ? "max-h-96" : "max-h-48",
+              )}
+            />
+            <p className="text-xs italic opacity-75">
+              This post has no videos or images.
+            </p>
+          </div>
+        )}
 
         <Content entry={entry} isPresentationView={isPresentationView} />
       </div>
