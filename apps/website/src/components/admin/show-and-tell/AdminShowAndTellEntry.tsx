@@ -92,7 +92,7 @@ export function AdminShowAndTellEntry({
                     markSeen(entry, "thisAndNewer");
                   }
                 }}
-                title="Mark all posts until here and newer as seen on stream"
+                title="Mark this post and all newer posts as seen on stream"
               >
                 <IconArrowUp className="size-5" />
               </Button>
