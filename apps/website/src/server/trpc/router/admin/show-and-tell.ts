@@ -11,6 +11,7 @@ import {
   approvePost,
   removeApprovalFromPost,
   deletePost,
+  markPostAsSeenModeSchema,
   markPostAsSeen,
   unmarkPostAsSeen,
   getAdminPosts,
@@ -43,11 +44,12 @@ export const adminShowAndTellRouter = router({
 
   markAsSeen: permittedProcedure
     .input(
-      z.object({ id: z.string().cuid(), retroactive: z.boolean().optional() }),
+      z.object({
+        id: z.string().cuid(),
+        mode: markPostAsSeenModeSchema,
+      }),
     )
-    .mutation(
-      async ({ input }) => await markPostAsSeen(input.id, input.retroactive),
-    ),
+    .mutation(async ({ input }) => await markPostAsSeen(input.id, input.mode)),
 
   unmarkAsSeen: permittedProcedure
     .input(z.object({ id: z.string().cuid() }))

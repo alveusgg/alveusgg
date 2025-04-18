@@ -4,6 +4,8 @@ import { trpc } from "@/utils/trpc";
 import { Button } from "@/components/shared/form/Button";
 import IconLoading from "@/icons/IconLoading";
 import type { AppRouter } from "@/server/trpc/router/_app";
+import type { MarkPostAsSeenMode } from "@/server/db/show-and-tell";
+
 import { Panel } from "../Panel";
 import { AdminShowAndTellEntry } from "./AdminShowAndTellEntry";
 
@@ -38,8 +40,8 @@ export function AdminShowAndTellEntriesPanel({
     onSettled: () => entries.refetch(),
   });
   const handleMarkAsSeen = useCallback(
-    (entry: Entry, retroactive = false) => {
-      markAsSeen.mutate({ id: entry.id, retroactive });
+    (entry: Entry, mode?: MarkPostAsSeenMode) => {
+      markAsSeen.mutate({ id: entry.id, mode });
     },
     [markAsSeen],
   );
