@@ -295,11 +295,11 @@ export function ShowAndTellEntryForm({
     })
       .formatToParts(1000)
       .find((part) => part.type === "group")?.value;
-    let hoursText = formData.get("giveAnHour") as string;
-    if (numberGroupChar) {
+    let hoursText = formData.get("giveAnHour") as string | null;
+    if (hoursText && numberGroupChar) {
       hoursText = hoursText.replaceAll(numberGroupChar, "");
     }
-    const hours = parseInt(hoursText);
+    const hours = parseInt(hoursText ?? "");
 
     let dominantColor = formData.get("dominantColor") as string | null;
     if (dominantColor) {
