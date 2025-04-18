@@ -522,8 +522,17 @@ export async function removeApprovalFromPost(
   await revalidateCache(id);
 }
 
-export async function markPostAsSeen(id: string, retroactive = false) {
-  if (!retroactive) {
+export const markPostAsSeenModeSchema = z
+  .enum(["this", "thisAndOlder", "thisAndNewer"])
+  .default("this");
+
+export type MarkPostAsSeenMode = z.infer<typeof markPostAsSeenModeSchema>;
+
+export async function markPostAsSeen(
+  id: string,
+  mode: MarkPostAsSeenMode = "this",
+) {
+  if (mode === "this") {
     await prisma.showAndTellEntry.update({
       where: { id },
       data: {
@@ -536,7 +545,7 @@ export async function markPostAsSeen(id: string, retroactive = false) {
   }
 
   const entry = await prisma.showAndTellEntry.findUniqueOrThrow({
-    select: { approvedAt: true },
+    select: { approvedAt: true, createdAt: true },
     where: { id },
   });
   if (!entry.approvedAt) return;
@@ -545,7 +554,15 @@ export async function markPostAsSeen(id: string, retroactive = false) {
     await prisma.showAndTellEntry.findMany({
       select: { id: true },
       where: {
-        AND: [whereApproved, { approvedAt: { lte: entry.approvedAt } }],
+        AND: [
+          whereApproved,
+          {
+            createdAt:
+              mode === "thisAndNewer"
+                ? { gte: entry.createdAt }
+                : { lt: entry.createdAt },
+          },
+        ],
       },
     })
   ).map((e) => e.id);
