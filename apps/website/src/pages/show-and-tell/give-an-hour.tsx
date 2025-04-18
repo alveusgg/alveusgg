@@ -73,13 +73,9 @@ const useWWfGiveAnHourCampaign = (date?: DateString) =>
     };
   }, [date]);
 
-const wwfGiveAnHourTarget = (
-  hours: number,
-  ended: boolean,
-  computed: number,
-) => {
+const wwfGiveAnHourTarget = (hours: number, ended: boolean) => {
   const round = ended ? Math.floor : Math.ceil;
-  computed = round(computed / 500) * 500;
+  const computed = round(hours / 500) * 500;
   return ended ? computed : Math.max(1500, computed);
 };
 
