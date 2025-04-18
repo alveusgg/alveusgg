@@ -109,7 +109,7 @@ export function AdminShowAndTellEntry({
                     markSeen(entry, "thisAndOlder");
                   }
                 }}
-                title="Mark all posts from here and older as seen on stream"
+                title="Mark this post and all older posts as seen on stream"
               >
                 <IconArrowDown className="size-5" />
               </Button>
