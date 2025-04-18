@@ -66,7 +66,9 @@ const GiveAnHourProgressText = ({
             ? `No hours given${ended ? "" : " yet"}`
             : `${localeHours}${ended ? "" : " already"} given`}
       </p>
-      <p className="font-medium opacity-75">{localeTarget} target</p>
+      {!ended && (
+        <p className="font-medium opacity-75">{localeTarget} target</p>
+      )}
     </div>
   );
 };
