@@ -1,5 +1,5 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
-import { useMemo, type ReactNode } from "react";
+import { useCallback, useMemo, useState, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
 import { useLocale } from "react-aria";
 import { DateTime } from "luxon";
@@ -74,7 +74,8 @@ const useWWfGiveAnHourCampaign = (date?: DateString) =>
   }, [date]);
 
 const wwfGiveAnHourTarget = (hours: number, ended: boolean) => {
-  if (ended) return Math.floor(hours / 500) * 500;
+  // The target is hidden when ended, so we can just use the actual hours
+  if (ended) return hours;
 
   const minimum = 1500;
   const multiple = hours > minimum ? 1000 : 500;
@@ -151,6 +152,18 @@ const GiveAnHourPage: NextPage<
 > = ({ wwfStart }) => {
   const { locale } = useLocale();
   const wwf = useWWfGiveAnHourCampaign(wwfStart);
+
+  // Sync the targets of all the campaigns to the max target for them
+  const [wwfMaxTarget, setWwfMaxTarget] = useState(0);
+  const wwfGiveAnHourSyncTarget = useCallback(
+    (hours: number, ended: boolean) => {
+      const target = wwfGiveAnHourTarget(hours, ended);
+      const max = Math.max(target, wwfMaxTarget);
+      if (max !== wwfMaxTarget) setWwfMaxTarget(max);
+      return max;
+    },
+    [wwfMaxTarget],
+  );
 
   return (
     <>
@@ -475,7 +488,7 @@ const GiveAnHourPage: NextPage<
                   <GiveAnHourProgress
                     start={start}
                     end={end}
-                    target={wwfGiveAnHourTarget}
+                    target={wwfGiveAnHourSyncTarget}
                   />
                 </div>
               );
