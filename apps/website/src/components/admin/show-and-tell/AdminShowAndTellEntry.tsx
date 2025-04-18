@@ -86,7 +86,7 @@ export function AdminShowAndTellEntry({
                 onClick={() => {
                   if (
                     confirm(
-                      "Mark all posts until here and newer as seen on stream?",
+                      "Mark this post and all NEWER posts as seen on stream?",
                     )
                   ) {
                     markSeen(entry, "thisAndNewer");
