@@ -28,6 +28,8 @@ const config: NextConfig = {
   reactStrictMode: true,
   eslint: {
     dirs: ["."],
+    // We run ESLint in PR checks, so don't do it during builds
+    ignoreDuringBuilds: true,
   },
   images: {
     // limits the quality levels to limit cache variations for image optimization:
