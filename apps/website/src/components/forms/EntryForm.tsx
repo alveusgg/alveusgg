@@ -1,6 +1,7 @@
 import { useCallback, type FormEvent } from "react";
 import { useSession } from "next-auth/react";
-import type { Form } from "@prisma/client";
+
+import type { Form } from "@/server/db/client";
 
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { Button } from "@/components/shared/form/Button";

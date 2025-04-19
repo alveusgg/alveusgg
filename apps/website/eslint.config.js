@@ -100,7 +100,7 @@ export default tseslint.config(
   },
   {
     name: "custom/ignores",
-    ignores: ["public/*", ".next/*"],
+    ignores: ["public/*", ".next/*", "prisma/client/*"],
   },
   {
     name: "custom/rules",

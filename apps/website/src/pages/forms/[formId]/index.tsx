@@ -4,9 +4,10 @@ import type {
   GetServerSideProps,
 } from "next";
 import { getSession } from "next-auth/react";
-import type { Form, FormEntry, MailingAddress } from "@prisma/client";
 
+import type { Form, FormEntry, MailingAddress } from "@/server/db/client";
 import { findActiveForm, getFormEntry } from "@/server/db/forms";
+
 import { EntryForm } from "@/components/forms/EntryForm";
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";

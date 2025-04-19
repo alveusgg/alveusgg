@@ -2,7 +2,9 @@ import type { MouseEventHandler, RefObject, JSX } from "react";
 import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
-import type { LinkAttachment } from "@prisma/client";
+
+import type { LinkAttachment } from "@/server/db/client";
+import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
 import {
   parseVideoUrl,
@@ -12,8 +14,6 @@ import {
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { createImageUrl } from "@/utils/image";
 import { classes } from "@/utils/classes";
-
-import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
 import { useConsent } from "@/hooks/consent";
 

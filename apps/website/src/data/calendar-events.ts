@@ -1,5 +1,6 @@
-import { type CalendarEvent } from "@prisma/client";
 import { type DateObjectUnits } from "luxon";
+
+import { type CalendarEvent } from "@/server/db/client";
 
 type StandardCategory = {
   name: string;

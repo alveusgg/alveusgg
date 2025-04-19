@@ -1,8 +1,7 @@
 import type { NextPage, GetStaticProps, InferGetStaticPropsType } from "next";
 import Link from "next/link";
 
-import type { Form } from "@prisma/client";
-import { prisma } from "@/server/db/client";
+import { prisma, type Form } from "@/server/db/client";
 
 import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";

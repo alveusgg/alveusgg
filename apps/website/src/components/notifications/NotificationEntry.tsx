@@ -1,9 +1,12 @@
 import { DateTime } from "luxon";
 import Link from "next/link";
-import type { Notification } from "@prisma/client";
+
+import type { Notification } from "@/server/db/client";
+
+import { formatDateTime } from "@/utils/datetime";
 
 import { getNotificationCategory } from "@/data/notifications";
-import { formatDateTime } from "@/utils/datetime";
+
 import { NotificationIcon } from "@/components/notifications/NotificationIcon";
 
 export function NotificationEntry({

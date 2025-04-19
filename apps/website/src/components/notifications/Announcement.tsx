@@ -1,8 +1,9 @@
 import { useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { Notification } from "@prisma/client";
 import { DateTime } from "luxon";
+
+import type { Notification } from "@/server/db/client";
 
 import { formatDateTime } from "@/utils/datetime";
 import { getShortBaseUrl } from "@/utils/short-url";

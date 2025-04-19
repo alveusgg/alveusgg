@@ -1,8 +1,10 @@
 import type { FormEvent } from "react";
 import { useState, useCallback } from "react";
 
-import type { CalendarEvent } from "@prisma/client";
 import { useRouter } from "next/router";
+
+import type { CalendarEvent } from "@/server/db/client";
+import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
 import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
@@ -13,8 +15,6 @@ import {
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
 import { frequentLinks, standardCategories } from "@/data/calendar-events";
-
-import type { CalendarEventSchema } from "@/server/db/calendar-events";
 
 import {
   Button,

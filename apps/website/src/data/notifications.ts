@@ -1,4 +1,4 @@
-import type { NotificationUrgency } from "@prisma/client";
+import type { NotificationUrgency } from "@/server/db/client";
 
 import { env } from "@/env";
 
