@@ -399,9 +399,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
         <div className="w-full pt-8 pb-4 md:w-3/5 md:py-20">
           <Heading>Show and Tell</Heading>
           <p className="text-lg">
-            The community shares conservation and wildlife-related activities.
-            <br />
-            Share your own via the{" "}
+            See what the Alveus community has been up to as they share their
+            conservation and wildlife-related activities, <br />
+            or share your own via the{" "}
             <Link href="/show-and-tell/submit-post" dark>
               submission page
             </Link>
