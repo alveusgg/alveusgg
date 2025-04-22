@@ -19,6 +19,7 @@ import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
 import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
+import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
@@ -157,6 +158,23 @@ const staff: Record<string, Person> = {
           opportunity arose to work at Alveus, Amanda was beyond excited to be
           part such of an amazing online community united in the same goal of
           promoting conservation of our natural world.
+        </p>
+      </>
+    ),
+  },
+  lukas: {
+    image: lukasMeyerImage,
+    name: "Lukas Meyer",
+    title: "Herpetology & Invert Lead | Habitat Specialist",
+    description: (
+      <>
+        <p>
+          Lukas has unique animal, horticulture, and construction experience. He
+          is able to combine all three to create amazing ecosystems for the
+          Alveus ambassadors. He has worked as Curator of Herpetology at the
+          Creature Conservancy, and Habitat Landscape at the Detroit Zoo. Lukas
+          is a big fan of plants and reptiles. His favorite ambassador at Alveus
+          is Pushpop the Sulcata Tortoise.
         </p>
       </>
     ),
