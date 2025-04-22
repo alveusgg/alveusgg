@@ -520,6 +520,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     key: "2025-and-beyond",
     items: [
       {
+        key: "lukas",
+        date: "2025-01",
+        content: [
+          "Lukas joins the Alveus team",
+          "Announced at the start of the year, Lukas joins the team as the Herpetology & Invert Lead as well as a Habitat Specialist.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
         key: "new-studio",
         date: "2025-03-05",
         content: [
