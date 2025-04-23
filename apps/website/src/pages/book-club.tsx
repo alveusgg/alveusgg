@@ -23,6 +23,7 @@ import IconYouTube from "@/icons/IconYouTube";
 import bookClubLogo from "@/assets/book-club/logo.png";
 import bookClubFull from "@/assets/book-club/full.png";
 
+import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
@@ -52,6 +53,15 @@ type BookInfo = {
 };
 
 const books: BookInfo[] = [
+  {
+    title: "The Anthropocene Reviewed",
+    author: "John Green",
+    image: theAnthropoceneReviewed,
+    month: "2025-05",
+    link: "https://amzn.to/42LpJSo",
+    thickness: thickness.sm, // 300 pages
+    color: "border-black",
+  },
   {
     title: "The Last Rhinos",
     author: "Lawrence Anthony",
