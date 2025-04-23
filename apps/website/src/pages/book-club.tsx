@@ -15,6 +15,10 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Button from "@/components/content/Button";
 import TransitionHeight from "@/components/content/TransitionHeight";
+import { Lightbox } from "@/components/content/YouTube";
+
+import IconExternal from "@/icons/IconExternal";
+import IconYouTube from "@/icons/IconYouTube";
 
 import bookClubLogo from "@/assets/book-club/logo.png";
 import bookClubFull from "@/assets/book-club/full.png";
@@ -44,6 +48,7 @@ type BookInfo = {
   link: string;
   thickness: (typeof thickness)[keyof typeof thickness];
   color: `border-${string}`;
+  vodId?: string;
 };
 
 const books: BookInfo[] = [
@@ -64,6 +69,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/41qA2um",
     thickness: thickness.lg, // 400 pages
     color: "border-blue-900",
+    vodId: "fRjxSfOhk94",
   },
   {
     title: "A Most Remarkable Creature",
@@ -73,6 +79,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/410hD8x",
     thickness: thickness.lg, // 400 pages
     color: "border-alveus-tan-200/75",
+    vodId: "AH0mwSckVns",
   },
   {
     title: "H is for Hawk",
@@ -82,6 +89,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/4a2ByGQ",
     thickness: thickness.sm, // 320 pages
     color: "border-black",
+    vodId: "EfCksCFlq84",
   },
 ];
 
@@ -145,61 +153,83 @@ const Book = ({
   link,
   thickness,
   color,
+  vodId,
   width,
   className,
 }: BookInfo & { width?: number; className?: string }) => (
-  <Disclosure as="div" className={className}>
-    {({ open }) => (
-      <>
-        <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-hidden">
-          <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:scale-70 group-data-[open]:scale-3d group-data-[open]:rotate-x-[85deg]">
-            <Cover
-              title={title}
-              author={author}
-              image={image}
-              width={width}
-              className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
-            />
-            <div
-              className={classes(
-                "w-full origin-top -translate-y-0.5 scale-x-95 rotate-x-90 rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 group-data-[open]:scale-x-100",
-                thickness,
-                color,
-              )}
-            />
-          </div>
+  <Lightbox id={`book-club-${month}`}>
+    {({ Trigger }) => (
+      <Disclosure as="div" className={className}>
+        {({ open }) => (
+          <>
+            <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-hidden">
+              <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:scale-70 group-data-[open]:scale-3d group-data-[open]:rotate-x-[85deg]">
+                <Cover
+                  title={title}
+                  author={author}
+                  image={image}
+                  width={width}
+                  className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
+                />
+                <div
+                  className={classes(
+                    "w-full origin-top -translate-y-0.5 scale-x-95 rotate-x-90 rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 group-data-[open]:scale-x-100",
+                    thickness,
+                    color,
+                  )}
+                />
+              </div>
 
-          <Heading
-            level={2}
-            className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
-          >
-            <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
-            {formatPartialDateString(month)}
-          </Heading>
-        </DisclosureButton>
+              <Heading
+                level={2}
+                className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
+              >
+                <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
+                {formatPartialDateString(month)}
+              </Heading>
+            </DisclosureButton>
 
-        <TransitionHeight
-          show={open}
-          enter="duration-500 delay-500"
-          leave="duration-500"
-        >
-          <DisclosurePanel static>
-            <Heading level={3} className="my-0">
-              {title}
-            </Heading>
-            <p>
-              <span className="text-sm opacity-50">by </span>
-              {author}
-            </p>
+            <TransitionHeight
+              show={open}
+              enter="duration-500 delay-500"
+              leave="duration-500"
+            >
+              <DisclosurePanel static>
+                <Heading level={3} className="my-0">
+                  {title}
+                </Heading>
+                <p>
+                  <span className="text-sm opacity-50">by </span>
+                  {author}
+                </p>
 
-            <Button href={link} className="mt-8" external>
-              Buy on Amazon.com
-            </Button>
-          </DisclosurePanel>
-        </TransitionHeight>
-      </>
+                <Button
+                  href={link}
+                  className="mt-8 flex items-center justify-between gap-2"
+                  external
+                >
+                  Buy on Amazon.com
+                  <IconExternal size="1em" />
+                </Button>
+
+                {vodId && (
+                  <Button
+                    as={Trigger}
+                    videoId={vodId}
+                    caption={`${title} | ${formatPartialDateString(month)}`}
+                    className="mt-2 flex items-center justify-between gap-2"
+                  >
+                    Re-Watch the Meeting
+                    <IconYouTube size="1em" />
+                  </Button>
+                )}
+              </DisclosurePanel>
+            </TransitionHeight>
+          </>
+        )}
+      </Disclosure>
     )}
-  </Disclosure>
+  </Lightbox>
 );
 
 const BookClubPage: NextPage = () => {
