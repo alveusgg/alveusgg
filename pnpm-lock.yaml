@@ -138,16 +138,16 @@ importers:
         specifier: ^5.74.4
         version: 5.74.4(react@19.1.0)
       '@trpc/client':
-        specifier: 11.1.1
+        specifier: ^11.1.1
         version: 11.1.1(@trpc/server@11.1.1(typescript@5.8.3))(typescript@5.8.3)
       '@trpc/next':
-        specifier: 11.1.1
+        specifier: ^11.1.1
         version: 11.1.1(@tanstack/react-query@5.74.4(react@19.1.0))(@trpc/client@11.1.1(@trpc/server@11.1.1(typescript@5.8.3))(typescript@5.8.3))(@trpc/react-query@11.1.1(@tanstack/react-query@5.74.4(react@19.1.0))(@trpc/client@11.1.1(@trpc/server@11.1.1(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.1(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3))(@trpc/server@11.1.1(typescript@5.8.3))(next@15.3.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       '@trpc/react-query':
-        specifier: 11.1.1
+        specifier: ^11.1.1
         version: 11.1.1(@tanstack/react-query@5.74.4(react@19.1.0))(@trpc/client@11.1.1(@trpc/server@11.1.1(typescript@5.8.3))(typescript@5.8.3))(@trpc/server@11.1.1(typescript@5.8.3))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(typescript@5.8.3)
       '@trpc/server':
-        specifier: 11.1.1
+        specifier: ^11.1.1
         version: 11.1.1(typescript@5.8.3)
       '@vercel/analytics':
         specifier: ^1.5.0
@@ -405,6 +405,9 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@asamuzakjp/css-color@3.1.2':
     resolution: {integrity: sha512-nwgc7jPn3LpZ4JWsoHtuwBsad1qSSLDDX634DdG0PBJofIuIEtSWk4KkRmuXyu178tjuHAbwiMNNzwqIyLYxZw==}
@@ -6662,8 +6665,9 @@ snapshots:
 
   '@alveusgg/data@0.58.0(tailwindcss@4.1.4)(zod@3.24.2)':
     dependencies:
-      tailwindcss: 4.1.4
       zod: 3.24.2
+    optionalDependencies:
+      tailwindcss: 4.1.4
 
   '@asamuzakjp/css-color@3.1.2':
     dependencies:
