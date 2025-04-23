@@ -23,15 +23,6 @@ import {
 import { env } from "@/env";
 
 // If these types change, the extension schema MUST be updated as well
-type AmbassadorV2 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
-  image: Omit<AmbassadorImage, "src"> & { src: string };
-  species: Omit<Species, "iucn" | "class"> & {
-    iucn: Species["iucn"] & { title: string };
-    class: { name: string; title: string };
-  };
-  enclosure: string;
-};
-
 type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
   species: Omit<Species, "iucn" | "class"> & {
@@ -46,44 +37,8 @@ type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
 };
 
 export type AmbassadorsResponse = {
-  v2: Record<string, AmbassadorV2>;
   v3: Record<string, AmbassadorV3>;
 };
-
-const ambassadorsV2 = typeSafeObjectFromEntries(
-  typeSafeObjectEntries(allAmbassadors)
-    .filter(isActiveAmbassadorEntry)
-    .map<[string, AmbassadorV2]>(([key, val]) => {
-      const image = getAmbassadorImages(key)[0];
-      const species = getSpecies(val.species);
-
-      return [
-        key,
-        {
-          ...val,
-          image: {
-            ...image,
-            src: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({
-              src: image.src.src,
-              width: 600,
-            })}`,
-          },
-          species: {
-            ...species,
-            iucn: {
-              ...species.iucn,
-              title: getIUCNStatus(species.iucn.status),
-            },
-            class: {
-              name: species.class,
-              title: getClassification(species.class),
-            },
-          },
-          enclosure: enclosures[val.enclosure].name,
-        },
-      ];
-    }),
-);
 
 const ambassadorsV3 = typeSafeObjectFromEntries(
   typeSafeObjectEntries(allAmbassadors)
@@ -137,7 +92,7 @@ const headers = {
 
 // API for extension
 export async function GET() {
-  const resp: AmbassadorsResponse = { v2: ambassadorsV2, v3: ambassadorsV3 };
+  const resp: AmbassadorsResponse = { v3: ambassadorsV3 };
   return Response.json(resp, { headers });
 }
 
