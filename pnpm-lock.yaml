@@ -125,6 +125,9 @@ importers:
       '@planetscale/database':
         specifier: ^1.19.0
         version: 1.19.0
+      '@prisma/adapter-planetscale':
+        specifier: ^6.7.0
+        version: 6.7.0(@planetscale/database@1.19.0)
       '@prisma/client':
         specifier: ^6.7.0
         version: 6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)
@@ -1546,6 +1549,11 @@ packages:
     resolution: {integrity: sha512-Tv4jcFUFAFjOWrGSio49H6R2ijALv0ZzVBfJKIdm+kl9X046Fh4LLawrF9OMsglVbK6ukqMJsUCeucGAFTBcMA==}
     engines: {node: '>=16'}
 
+  '@prisma/adapter-planetscale@6.7.0':
+    resolution: {integrity: sha512-snLJ9znp+ABkLK6lT+z76An9BE4WCq+WtB763NNEt9vffdRQaiJDqHToTsiOAB6dxxBm1DHjE4f1plsb03w4cg==}
+    peerDependencies:
+      '@planetscale/database': ^1.15.0
+
   '@prisma/client@6.7.0':
     resolution: {integrity: sha512-+k61zZn1XHjbZul8q6TdQLpuI/cvyfil87zqK2zpreNIXyXtpUv3+H/oM69hcsFcZXaokHJIzPAt5Z8C8eK2QA==}
     engines: {node: '>=18.18'}
@@ -1563,6 +1571,9 @@ packages:
 
   '@prisma/debug@6.7.0':
     resolution: {integrity: sha512-RabHn9emKoYFsv99RLxvfG2GHzWk2ZI1BuVzqYtmMSIcuGboHY5uFt3Q3boOREM9de6z5s3bQoyKeWnq8Fz22w==}
+
+  '@prisma/driver-adapter-utils@6.7.0':
+    resolution: {integrity: sha512-xYcXALWz1GsCRqwcDw0kP0R27chn99Co/HMX0nyOvIjAOo+41Tl/qcCOce/Ik1wNMGTI68N64kt3iccJ4EJoCQ==}
 
   '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed':
     resolution: {integrity: sha512-EvpOFEWf1KkJpDsBCrih0kg3HdHuaCnXmMn7XFPObpFTzagK1N0Q0FMnYPsEhvARfANP5Ok11QyoTIRA2hgJTA==}
@@ -8136,6 +8147,11 @@ snapshots:
 
   '@planetscale/database@1.19.0': {}
 
+  '@prisma/adapter-planetscale@6.7.0(@planetscale/database@1.19.0)':
+    dependencies:
+      '@planetscale/database': 1.19.0
+      '@prisma/driver-adapter-utils': 6.7.0
+
   '@prisma/client@6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)':
     optionalDependencies:
       prisma: 6.7.0(typescript@5.8.3)
@@ -8149,6 +8165,10 @@ snapshots:
       - supports-color
 
   '@prisma/debug@6.7.0': {}
+
+  '@prisma/driver-adapter-utils@6.7.0':
+    dependencies:
+      '@prisma/debug': 6.7.0
 
   '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed': {}
 
