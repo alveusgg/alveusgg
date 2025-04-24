@@ -6,6 +6,7 @@ import {
   findActiveBingo,
   getBingoEntry,
 } from "@/server/db/bingos";
+import { prisma } from "@/server/db/client";
 import { protectedProcedure, router } from "@/server/trpc/trpc";
 
 import {
@@ -74,7 +75,7 @@ export const bingosRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const bingo = await findActiveBingo(input.bingoId);
+      const bingo = await findActiveBingo(prisma, input.bingoId);
       if (!bingo) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Bingo not found" });
       }
@@ -113,7 +114,7 @@ export const bingosRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const bingo = await findActiveBingo(input.bingoId);
+      const bingo = await findActiveBingo(prisma, input.bingoId);
       if (!bingo) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Bingo not found" });
       }

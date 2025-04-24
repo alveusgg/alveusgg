@@ -1,10 +1,8 @@
-import { Client } from "@planetscale/database";
-
-import { env } from "@/env";
+import { findActiveBingo } from "@/server/db/bingos";
+import { prisma } from "@/server/db/client";
 
 import {
   type BingoLiveData,
-  type BingoType,
   calcBingoConfig,
   findCardsWithBingo,
   parseBingoPlayData,
@@ -12,10 +10,6 @@ import {
 
 export const runtime = "edge";
 export const revalidate = 2;
-
-const db = new Client({
-  url: env.DATABASE_URL,
-});
 
 export async function GET(
   req: Request,
@@ -30,19 +24,7 @@ export async function GET(
   try {
     const { bingo: bingoSlugOrId } = await params;
 
-    const conn = db.connection();
-    const bingo = await conn
-      .execute<{
-        type: BingoType;
-        label: string;
-        config: string;
-        playData: string;
-      }>(
-        "SELECT b.type, b.label, b.config, b.playData FROM Bingo b WHERE b.active = 1 AND b.startAt > NOW() AND (endAt IS NULL OR b.endAt > NOW()) AND b.id = ? OR b.slug = ? LIMIT 1",
-        [bingoSlugOrId, bingoSlugOrId],
-        { as: "object" },
-      )
-      .then(({ rows }) => rows[0]);
+    const bingo = await findActiveBingo(prisma.edge, bingoSlugOrId);
     if (!bingo) {
       return new Response("Row not found", { status: 404 });
     }
