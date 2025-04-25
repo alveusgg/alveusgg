@@ -11,6 +11,7 @@ export async function GET() {
         // Response can be cached for 1 minute
         // And can be stale for 5 minutes while revalidating
         "Cache-Control": "max-age=60, s-maxage=60, stale-while-revalidate=300",
+        "X-Generated-At": new Date().toISOString(),
       },
     });
   } catch (err) {
