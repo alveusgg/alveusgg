@@ -4,6 +4,7 @@ import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
 
+import artAuction2025Video from "@/assets/events/art-auction-2025.mp4";
 import artAuction2024Video from "@/assets/events/art-auction-2024.mp4";
 import valentines2024Video from "@/assets/events/valentines-2024.mp4";
 import fallCarnival20232024Video from "@/assets/events/fall-carnival-2023-2024.mp4";
@@ -28,7 +29,7 @@ const events: Event[] = (
     {
       name: "Art Auction 2025",
       date: new Date("2025-04-22"),
-      video: artAuction2024Video,
+      video: artAuction2025Video,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
