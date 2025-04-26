@@ -81,7 +81,8 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
 
 const headers = {
   // Response can be cached for 30 minutes
-  "Cache-Control": "max-age=1800, s-maxage=1800, must-revalidate",
+  // And can be stale for 5 minutes while revalidating
+  "Cache-Control": "max-age=1800, s-maxage=1800, stale-while-revalidate=300",
 
   // Vercel doesn't respect Vary so we allow all origins to use this
   // Ideally we'd just allow specifically localhost + *.ext-twitch.tv

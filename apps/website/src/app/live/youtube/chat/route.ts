@@ -19,7 +19,7 @@ export async function GET() {
         Refresh: `0;url=${link}`,
         // Response can be cached for 5 minutes
         // And can be stale for 1 minute while revalidating
-        "Cache-Control": "max-age=300, s-maxage=300, must-revalidate",
+        "Cache-Control": "max-age=300, s-maxage=300, stale-while-revalidate=60",
         "X-Generated-At": new Date().toISOString(),
       },
     });
