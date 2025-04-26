@@ -12,6 +12,7 @@ export async function GET() {
         // And can be stale for 5 minutes while revalidating
         "Cache-Control": "max-age=60, s-maxage=60, stale-while-revalidate=300",
         "X-Generated-At": new Date().toISOString(),
+        "X-Observed-At": data.time.utc ?? "",
       },
     });
   } catch (err) {
