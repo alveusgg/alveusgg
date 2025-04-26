@@ -71,13 +71,11 @@ const currentObservationsSchema = (imperial: boolean) =>
 export async function getCurrentObservation<T extends boolean>(
   stationId: string,
   imperial: T,
-  cache?: number,
 ): Promise<CurrentObservation<T>> {
   invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
   const response = await fetch(
     `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
-    cache ? { cache: "force-cache", next: { revalidate: cache } } : {},
   );
 
   const json = await response.json();
@@ -106,11 +104,7 @@ export async function getWeather() {
   invariant(env.WEATHER_STATION_ID, "WEATHER_STATION_ID is required");
   invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
-  const weather = await getCurrentObservation(
-    env.WEATHER_STATION_ID,
-    true,
-    60, // Cache the raw station data for 1 minute
-  );
+  const weather = await getCurrentObservation(env.WEATHER_STATION_ID, true);
   const feelsLike = getFeelsLike(
     weather.imperial.temp,
     weather.imperial.heatIndex,
