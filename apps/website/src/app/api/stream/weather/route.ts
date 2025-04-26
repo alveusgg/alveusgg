@@ -19,8 +19,3 @@ export async function GET() {
     return new Response("Weather data not available", { status: 500 });
   }
 }
-
-// Cache the response for 1 minute
-export const dynamic = "force-static";
-export const revalidate = 60;
-// export const runtime = "edge"; // Not compatible with force-static

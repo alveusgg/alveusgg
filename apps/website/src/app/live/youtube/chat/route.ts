@@ -28,7 +28,3 @@ export async function GET() {
     return new Response("YouTube data not available", { status: 500 });
   }
 }
-
-// Cache the response for 5 minutes
-export const dynamic = "force-static";
-export const revalidate = 300;
