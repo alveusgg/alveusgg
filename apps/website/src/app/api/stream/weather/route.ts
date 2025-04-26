@@ -8,9 +8,9 @@ export async function GET() {
 
     return new Response(resp, {
       headers: {
-        // Response can be cached for 1 minute
-        // And can be stale for 5 minutes while revalidating
-        "Cache-Control": "max-age=60, s-maxage=60, stale-while-revalidate=300",
+        // Response can be cached for 10 seconds (the underlying data is cached for 1 minute)
+        // And can be stale for 1 minute while revalidating
+        "Cache-Control": "max-age=10, s-maxage=10, stale-while-revalidate=60",
         "X-Generated-At": new Date().toISOString(),
         "X-Observed-At": data.time.utc ?? "",
       },

@@ -109,7 +109,7 @@ export async function getWeather() {
   const weather = await getCurrentObservation(
     env.WEATHER_STATION_ID,
     true,
-    300, // Cache the raw station data for 300 seconds
+    60, // Cache the raw station data for 1 minute
   );
   const feelsLike = getFeelsLike(
     weather.imperial.temp,
