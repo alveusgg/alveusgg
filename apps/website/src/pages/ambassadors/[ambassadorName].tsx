@@ -261,22 +261,22 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 
       <div className="relative">
         <Section
-          className="min-h-[85vh] pt-64 md:pt-0"
+          className="min-h-[85vh] pt-64 lg:pt-0"
           containerClassName="flex flex-wrap"
         >
-          <div className="absolute inset-x-0 top-0 h-64 w-full md:bottom-0 md:h-full md:w-1/2">
+          <div className="absolute inset-x-0 top-0 h-64 w-full lg:bottom-0 lg:h-full lg:w-1/2">
             <Image
               src={images[0].src}
               alt={images[0].alt}
               placeholder="blur"
-              className="absolute inset-x-0 top-0 size-full object-cover md:sticky md:h-screen md:max-h-full"
+              className="absolute inset-x-0 top-0 size-full object-cover lg:sticky lg:h-screen lg:max-h-full"
               style={{ objectPosition: images[0].position }}
             />
           </div>
 
-          <div className="basis-full md:basis-1/2" />
+          <div className="basis-full lg:basis-1/2" />
 
-          <div className="flex basis-full flex-col py-4 md:max-w-1/2 md:basis-1/2 md:px-8 md:pt-8">
+          <div className="flex basis-full flex-col py-4 lg:max-w-1/2 lg:basis-1/2 lg:px-8 lg:pt-8">
             <Heading className="text-5xl">{ambassador.name}</Heading>
             {!!ambassador.alternate.length && (
               <p className="-mt-1 mb-2 text-lg text-alveus-green-700 italic">
@@ -292,7 +292,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               <p className="my-2">{ambassador.mission}</p>
             </div>
 
-            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 md:grid-cols-1 lg:grid-cols-auto-2">
+            <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 lg:grid-cols-auto-2">
               {stats.map((item) => {
                 const nested = Array.isArray(item);
                 const items = nested ? item : [item];
@@ -302,7 +302,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     className={classes(
                       "contents",
                       nested &&
-                        "xl:col-span-full xl:grid xl:grid-cols-auto-4 xl:gap-4",
+                        "col-span-full grid-cols-auto-4 gap-4 md:grid lg:contents xl:grid",
                     )}
                   >
                     {items.map(({ title, value }, idx) => (
@@ -310,7 +310,9 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                         <div
                           className={classes(
                             "col-span-full h-px bg-alveus-green opacity-10",
-                            nested && idx % 2 !== 0 && "xl:hidden",
+                            nested &&
+                              idx % 2 !== 0 &&
+                              "md:hidden lg:block xl:hidden",
                           )}
                         />
                         <dt className="self-center text-2xl font-bold">
@@ -341,7 +343,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               items={carousel}
               auto={null}
               className="my-6"
-              itemClassName="basis-1/2 md:basis-full lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+              itemClassName="basis-1/2 md:basis-1/3 lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
             />
 
             {ambassador.plush &&
