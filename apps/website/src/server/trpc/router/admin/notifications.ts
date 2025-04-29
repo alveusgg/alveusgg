@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { waitUntil } from "@vercel/functions";
 
+import { TRPCError } from "@trpc/server";
 import { env } from "@/env";
 import { permissions } from "@/data/permissions";
 
@@ -17,7 +18,10 @@ import {
   copyNotification,
   sendNotification,
 } from "@/server/notifications";
-import { createFileStorageUpload } from "@/server/utils/file-storage";
+import {
+  checkAndFixUploadedImageFileStorageObject,
+  createFileStorageUpload,
+} from "@/server/utils/file-storage";
 import {
   cancelNotification,
   getRecentNotifications,
@@ -46,11 +50,28 @@ export const adminNotificationsRouter = router({
         imageUrl: z.string().url().optional(),
         scheduledStartAt: localDatetimeAsDateSchema.optional(),
         scheduledEndAt: localDatetimeAsDateSchema.optional(),
+        fileStorageObjectId: z.string().cuid().optional(),
         isPush: z.boolean().optional(),
         isDiscord: z.boolean().optional(),
       }),
     )
     .mutation(async ({ input }) => {
+      console.log("input", input);
+
+      // Check if the file storage object is valid
+      if (input.fileStorageObjectId) {
+        const { error, success } =
+          await checkAndFixUploadedImageFileStorageObject(
+            input.fileStorageObjectId,
+          );
+        if (error) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message: `Error checking file storage object: ${error}`,
+          });
+        }
+      }
+
       const notification = await createNotification(input);
       waitUntil(sendNotification(notification));
     }),
@@ -124,6 +145,7 @@ export const adminNotificationsRouter = router({
          * through the Next.js server. This is because the DO Spaces endpoint is not
          * accessible without ssl, and Next.js does not support ssl in development.
          */
+
         return {
           viewUrl: String(viewUrl),
           uploadUrl: `/api/file-upload${uploadUrl.pathname}${uploadUrl.search}`,

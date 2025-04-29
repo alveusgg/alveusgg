@@ -129,7 +129,7 @@ export async function createFileStorageUpload({
 
 export async function checkAndFixUploadedImageFileStorageObject(id: string) {
   const data = await prisma.fileStorageObject.findUniqueOrThrow({
-    where: { id },
+    where: { id: id },
     include: { imageMetadata: true },
   });
   if (

@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState, type FormEvent } from "react";
+import { useCallback, useMemo, useRef, useState, type FormEvent } from "react";
 import { Duration } from "luxon";
 
 import {
@@ -50,11 +50,14 @@ export function SendNotificationForm() {
 
   const createFileUpload =
     trpc.adminNotifications.createFileUpload.useMutation();
+
   const upload = useFileUpload<ImageMimeType>(
     (signature) => createFileUpload.mutateAsync(signature),
     { allowedFileTypes: imageMimeTypes },
   );
+
   const imageAttachmentData = useUploadAttachmentsData();
+
   const image = imageAttachmentData.files[0];
 
   const [category, setCategory] = useState("announcements");
@@ -65,10 +68,14 @@ export function SendNotificationForm() {
   const [isScheduled, setIsScheduled] = useState(false);
 
   const submit = useCallback(
-    (event: FormEvent<HTMLFormElement>) => {
+    async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
       const imageUrl = image?.status === "upload.done" ? image.url : undefined;
+      const fileStorageObjectId =
+        image?.status === "upload.done" ? image.fileStorageObjectId : undefined;
+
+      console.log("fileStorageObjectId", fileStorageObjectId);
       const scheduledStartAt =
         (isScheduled && String(data.get("scheduledStartAt"))) || undefined;
       const scheduledEndAt =
@@ -83,6 +90,7 @@ export function SendNotificationForm() {
         scheduledStartAt,
         scheduledEndAt,
         imageUrl,
+        fileStorageObjectId,
         isPush: channels.includes("push"),
         isDiscord: channels.includes("discord"),
       });

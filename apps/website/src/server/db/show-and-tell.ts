@@ -215,7 +215,6 @@ async function createImageAttachment(attachment: CreateImageAttachment) {
   const { error } = await checkAndFixUploadedImageFileStorageObject(
     attachment.fileStorageObjectId,
   );
-
   if (error) {
     throw new TRPCError({
       code: "BAD_REQUEST",
