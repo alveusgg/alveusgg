@@ -4,6 +4,7 @@ import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
 
+import artAuction2025Video from "@/assets/events/art-auction-2025.mp4";
 import artAuction2024Video from "@/assets/events/art-auction-2024.mp4";
 import valentines2024Video from "@/assets/events/valentines-2024.mp4";
 import fallCarnival20232024Video from "@/assets/events/fall-carnival-2023-2024.mp4";
@@ -25,6 +26,50 @@ export type Event = {
 
 const events: Event[] = (
   [
+    {
+      name: "Art Auction 2025",
+      date: new Date("2025-04-22"),
+      video: artAuction2025Video,
+      stats: {
+        totalDonations: {
+          title: "Raised for Alveus Sanctuary",
+          stat: "$87,256",
+        },
+        artworksSold: {
+          title: "Artworks sold",
+          stat: "36",
+        },
+        signedPrints: {
+          title: "Signed prints for donors",
+          stat: "452",
+        },
+        averagePrice: {
+          title: "Average donation for each artwork",
+          stat: "$1,866",
+        },
+      },
+      info: (
+        <>
+          <p>
+            Celebrating Earth Day, the 2025 Art Auction was a huge success.
+            Hosted in the Session Yard again, 36 pieces of art created by the
+            ambassadors and the staff at Alveus were up for auction, as well as
+            a signed print available for anyone who donated $25 or more during
+            the event.
+          </p>
+          <p>
+            By the end of the event, we raised $87,256 for Alveus Sanctuary,
+            with 452 signed postcards sent out to donors. The most successful
+            ambassador artist this year was{" "}
+            <Link href="/ambassadors/stompy">Stompy</Link>, with his painting
+            and foot casting being won for over $12,000 combined. The top
+            painting sold for $11,111 this year, and was created by Maya
+            herself. Thank you to everyone who participated by bidding on an
+            item, donating for a signed print, or just watching the livestream!
+          </p>
+        </>
+      ),
+    },
     {
       name: "Fall Carnival 2024",
       date: new Date("2024-11-04"),
