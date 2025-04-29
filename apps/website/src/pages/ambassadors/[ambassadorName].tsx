@@ -348,19 +348,19 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   harmful chemicals in their environment, which is why it is so
                   important to keep pollution and litter out of our waterways!
                 </p>
+
+                {animalQuest &&
+                  animalQuest.map((aq) => (
+                    <AnimalQuest
+                      key={aq.episode}
+                      episode={aq}
+                      relation={aq.relation}
+                      ambassador={ambassador}
+                      className="mt-4"
+                    />
+                  ))}
               </Box>
             )}
-
-            {animalQuest &&
-              animalQuest.map((aq) => (
-                <AnimalQuest
-                  key={aq.episode}
-                  episode={aq}
-                  relation={aq.relation}
-                  ambassador={ambassador}
-                  className="my-6"
-                />
-              ))}
 
             <Carousel
               id={photoswipe}
