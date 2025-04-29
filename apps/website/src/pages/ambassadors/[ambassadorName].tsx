@@ -5,7 +5,7 @@ import { useEffect, useId, useMemo, Fragment } from "react";
 
 import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
 import { getIUCNStatus } from "@alveusgg/data/build/iucn";
-import enclosures, { type Enclosure } from "@alveusgg/data/build/enclosures";
+import enclosures from "@alveusgg/data/build/enclosures";
 import {
   getAmbassadorEpisodes,
   type AnimalQuestWithRelation,
@@ -37,127 +37,80 @@ import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { formatPartialDateString } from "@/utils/datetime";
+import { classes } from "@/utils/classes";
 
-type AmbassadorPageProps = {
-  ambassador: Ambassador;
-  enclosure: Enclosure;
-  images: AmbassadorImages;
-  merchImage?: AmbassadorImage;
-  iconImage?: AmbassadorImage;
-  animalQuest?: AnimalQuestWithRelation[];
+type Stat = {
+  title: string;
+  value: React.ReactNode;
 };
 
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: typeSafeObjectKeys(ambassadors)
-      .filter(isActiveAmbassadorKey)
-      .map((key) => ({
-        params: { ambassadorName: camelToKebab(key) },
-      })),
-    fallback: false,
-  };
-};
+type Stats = (Stat | Stat[])[];
 
-export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
-  context,
-) => {
-  const ambassadorName = context.params?.ambassadorName;
-  if (typeof ambassadorName !== "string") return { notFound: true };
-
-  const ambassadorKey = kebabToCamel(ambassadorName);
-  if (!isActiveAmbassadorKey(ambassadorKey)) return { notFound: true };
-
-  const ambassador = ambassadors[ambassadorKey];
-  return {
-    props: {
-      ambassador,
-      enclosure: enclosures[ambassador.enclosure],
-      images: getAmbassadorImages(ambassadorKey),
-      merchImage: getAmbassadorMerchImage(ambassadorKey),
-      iconImage:
-        getAmbassadorIconImage(ambassadorKey) ??
-        getAmbassadorBadgeImage(ambassadorKey) ??
-        getAmbassadorEmoteImage(ambassadorKey),
-      animalQuest: getAmbassadorEpisodes(ambassadorKey),
-    },
-  };
-};
-
-const stringifyLifespan = (value: number | { min: number; max: number }) => {
-  return typeof value === "number" ? `${value}` : `${value.min}-${value.max}`;
-};
-
-const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
-  ambassador,
-  enclosure,
-  images,
-  merchImage,
-  iconImage,
-  animalQuest,
-}) => {
+const getStats = (ambassador: Ambassador): Stats => {
   const species = getSpecies(ambassador.species);
+  const enclosure = enclosures[ambassador.enclosure];
 
-  const stats = useMemo(
-    () => [
-      {
-        title: "Species",
-        value: (
-          <>
-            <p>{species.name}</p>
-            <p className="text-alveus-green-700 italic">
-              {species.scientificName} (
-              <Link
-                href={`/ambassadors#classification:${convertToSlug(
-                  getClassification(species.class),
-                )}`}
-              >
-                {getClassification(species.class)}
-              </Link>
-              )
-            </p>
-          </>
-        ),
-      },
-      {
-        title: "Conservation Status",
-        value: (
-          <p>
-            {species.iucn.id ? (
-              <Link
-                href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${species.iucn.id}`}
-                external
-              >
-                IUCN: {getIUCNStatus(species.iucn.status)}
-              </Link>
-            ) : (
-              <>IUCN: {getIUCNStatus(species.iucn.status)}</>
-            )}
+  return [
+    {
+      title: "Species",
+      value: (
+        <>
+          <p>{species.name}</p>
+          <p className="text-alveus-green-700 italic">
+            {species.scientificName} (
+            <Link
+              href={`/ambassadors#classification:${convertToSlug(
+                getClassification(species.class),
+              )}`}
+            >
+              {getClassification(species.class)}
+            </Link>
+            )
           </p>
-        ),
-      },
-      {
-        title: "Native To",
-        value: <p>{species.native.text}</p>,
-      },
-      {
-        title: "Species Lifespan",
-        value: (
-          <>
-            <p>
-              Wild:{" "}
-              {species.lifespan.wild
-                ? `${stringifyLifespan(species.lifespan.wild)} years`
-                : "Unknown"}
-            </p>
-            <p>
-              Captivity:{" "}
-              {species.lifespan.captivity
-                ? `${stringifyLifespan(species.lifespan.captivity)} years`
-                : "Unknown"}
-            </p>
-          </>
-        ),
-      },
+        </>
+      ),
+    },
+    {
+      title: "Conservation Status",
+      value: (
+        <p>
+          {species.iucn.id ? (
+            <Link
+              href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${species.iucn.id}`}
+              external
+            >
+              IUCN: {getIUCNStatus(species.iucn.status)}
+            </Link>
+          ) : (
+            <>IUCN: {getIUCNStatus(species.iucn.status)}</>
+          )}
+        </p>
+      ),
+    },
+    {
+      title: "Native To",
+      value: <p>{species.native.text}</p>,
+    },
+    {
+      title: "Species Lifespan",
+      value: (
+        <>
+          <p>
+            Wild:{" "}
+            {species.lifespan.wild
+              ? `${stringifyLifespan(species.lifespan.wild)} years`
+              : "Unknown"}
+          </p>
+          <p>
+            Captivity:{" "}
+            {species.lifespan.captivity
+              ? `${stringifyLifespan(species.lifespan.captivity)} years`
+              : "Unknown"}
+          </p>
+        </>
+      ),
+    },
+    [
       {
         title: "Date of Birth",
         value: <p>{formatPartialDateString(ambassador.birth)}</p>,
@@ -185,8 +138,64 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
         ),
       },
     ],
-    [ambassador, species, enclosure],
-  );
+  ];
+};
+
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: typeSafeObjectKeys(ambassadors)
+      .filter(isActiveAmbassadorKey)
+      .map((key) => ({
+        params: { ambassadorName: camelToKebab(key) },
+      })),
+    fallback: false,
+  };
+};
+
+type AmbassadorPageProps = {
+  ambassador: Ambassador;
+  images: AmbassadorImages;
+  merchImage?: AmbassadorImage;
+  iconImage?: AmbassadorImage;
+  animalQuest?: AnimalQuestWithRelation[];
+};
+
+export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
+  context,
+) => {
+  const ambassadorName = context.params?.ambassadorName;
+  if (typeof ambassadorName !== "string") return { notFound: true };
+
+  const ambassadorKey = kebabToCamel(ambassadorName);
+  if (!isActiveAmbassadorKey(ambassadorKey)) return { notFound: true };
+
+  const ambassador = ambassadors[ambassadorKey];
+  return {
+    props: {
+      ambassador,
+      images: getAmbassadorImages(ambassadorKey),
+      merchImage: getAmbassadorMerchImage(ambassadorKey),
+      iconImage:
+        getAmbassadorIconImage(ambassadorKey) ??
+        getAmbassadorBadgeImage(ambassadorKey) ??
+        getAmbassadorEmoteImage(ambassadorKey),
+      animalQuest: getAmbassadorEpisodes(ambassadorKey),
+    },
+  };
+};
+
+const stringifyLifespan = (value: number | { min: number; max: number }) => {
+  return typeof value === "number" ? `${value}` : `${value.min}-${value.max}`;
+};
+
+const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
+  ambassador,
+  images,
+  merchImage,
+  iconImage,
+  animalQuest,
+}) => {
+  const stats = useMemo(() => getStats(ambassador), [ambassador]);
 
   const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
   useEffect(() => {
@@ -279,15 +288,37 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             </div>
 
             <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 md:grid-cols-1 lg:grid-cols-auto-2">
-              {stats.map(({ title, value }, idx) => (
-                <Fragment key={title}>
-                  {idx !== 0 && (
-                    <div className="col-span-full h-px bg-alveus-green opacity-10" />
-                  )}
-                  <dt className="self-center text-2xl font-bold">{title}</dt>
-                  <dd className="self-center text-xl text-balance">{value}</dd>
-                </Fragment>
-              ))}
+              {stats.map((item) => {
+                const nested = Array.isArray(item);
+                const items = nested ? item : [item];
+                return (
+                  <div
+                    key={items.map((i) => i.title).join(",")}
+                    className={classes(
+                      "contents",
+                      nested &&
+                        "xl:col-span-full xl:grid xl:grid-cols-auto-4 xl:gap-4",
+                    )}
+                  >
+                    {items.map(({ title, value }, idx) => (
+                      <Fragment key={title}>
+                        <div
+                          className={classes(
+                            "col-span-full h-px bg-alveus-green opacity-10",
+                            nested && idx % 2 !== 0 && "xl:hidden",
+                          )}
+                        />
+                        <dt className="self-center text-2xl font-bold">
+                          {title}
+                        </dt>
+                        <dd className="self-center text-xl text-balance">
+                          {value}
+                        </dd>
+                      </Fragment>
+                    ))}
+                  </div>
+                );
+              })}
             </dl>
 
             {animalQuest &&
