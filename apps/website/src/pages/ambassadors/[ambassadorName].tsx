@@ -34,6 +34,7 @@ import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
 import AnimalQuest from "@/components/content/AnimalQuest";
+import Box from "@/components/content/Box";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -328,6 +329,31 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 );
               })}
             </dl>
+
+            {ambassador.species === "bullfrogAfrican" && (
+              <Box dark className="my-6 space-y-2 p-4">
+                <Heading
+                  level={2}
+                  id="did-you-know"
+                  link
+                  className="mt-0 text-2xl"
+                >
+                  Did you know?
+                </Heading>
+                <p className="text-lg">
+                  African Bullfrogs, like many other amphibians, have
+                  semipermeable skin that allows them to absorb water and
+                  oxygen. This adaptation is super important to allow them to
+                  drink and breathe while they&apos;re underwater or buried in
+                  the mud.
+                </p>
+                <p className="text-lg">
+                  Unfortunately, this also means that they can absorb any
+                  harmful chemicals in their environment, which is why it is so
+                  important to keep pollution and litter out of our waterways!
+                </p>
+              </Box>
+            )}
 
             {animalQuest &&
               animalQuest.map((aq) => (
