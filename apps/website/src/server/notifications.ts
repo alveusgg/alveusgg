@@ -22,7 +22,6 @@ type CreateNotificationData = {
   linkUrl?: string;
   title?: string;
   imageUrl?: string;
-  fileStorageObjectId?: string;
   scheduledStartAt?: Date | null;
   scheduledEndAt?: Date | null;
   isPush?: boolean;

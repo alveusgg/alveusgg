@@ -74,8 +74,6 @@ export function SendNotificationForm() {
       const imageUrl = image?.status === "upload.done" ? image.url : undefined;
       const fileStorageObjectId =
         image?.status === "upload.done" ? image.fileStorageObjectId : undefined;
-
-      console.log("fileStorageObjectId", fileStorageObjectId);
       const scheduledStartAt =
         (isScheduled && String(data.get("scheduledStartAt"))) || undefined;
       const scheduledEndAt =

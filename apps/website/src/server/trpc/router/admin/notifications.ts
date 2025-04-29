@@ -56,8 +56,6 @@ export const adminNotificationsRouter = router({
       }),
     )
     .mutation(async ({ input }) => {
-      console.log("input", input);
-
       // Check if the file storage object is valid
       if (input.fileStorageObjectId) {
         const { error, success } =
