@@ -67,6 +67,45 @@
     }
   }
 
+  .markdown-content {
+    a[href] {
+      @apply text-blue-500 underline;
+    }
+
+    h1,
+    h2,
+    h3 {
+      @apply my-3 text-xl font-bold;
+    }
+
+    h4 {
+      @apply my-3 text-lg font-bold;
+    }
+
+    h5,
+    h6 {
+      @apply my-3 font-bold;
+    }
+
+    p,
+    ul,
+    ol {
+      @apply my-3;
+    }
+
+    ul {
+      @apply ml-7 list-disc pl-0;
+    }
+
+    ol {
+      @apply ml-7 list-decimal pl-0;
+    }
+
+    li {
+      @apply my-1;
+    }
+  }
+
   /* Rich text editor (Quill.js) */
   .alveus-rte {
     @apply w-full rounded-xs border border-gray-700;
