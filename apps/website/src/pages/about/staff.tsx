@@ -21,6 +21,8 @@ import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
 import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
+import chandlerImage from "@/assets/people/chandler.jpg";
+import chandlerFunImage from "@/assets/people/chandler-fun.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -189,6 +191,16 @@ const staff: Record<string, Person> = {
       </>
     ),
   },
+  chandler: {
+    image: [chandlerImage, chandlerFunImage],
+    name: "Chandler",
+    title: "Facilities",
+    description: (
+      <>
+        <p>I&apos;m the zoomer (W Hunger).</p>
+      </>
+    ),
+  },
   space: {
     image: spaceVoyageImage,
     name: "SpaceVoyage",
@@ -228,10 +240,6 @@ const team: Record<string, Member> = {
   colton: {
     name: "Colton (@ColtonActually)",
     title: "Post-Production Manager",
-  },
-  chandler: {
-    name: "Chandler",
-    title: "TikTok Editor",
   },
   dion: {
     name: "Dion (@Dionysus1911)",
