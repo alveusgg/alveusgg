@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { keepPreviousData } from "@tanstack/react-query";
 
 import { trpc } from "@/utils/trpc";
@@ -14,6 +15,16 @@ const Weather = () => {
       staleTime: 10 * 60 * 1000,
     },
   );
+
+  useEffect(() => {
+    // Log the timestamp of the last weather observation
+    if (weather?.time.utc) {
+      const observedAt = new Date(weather.time.utc);
+      console.log(
+        `Weather observation received at ${observedAt.toLocaleString()}${isStale ? " (stale)" : ""}`,
+      );
+    }
+  }, [weather, isStale]);
 
   return (
     weather &&

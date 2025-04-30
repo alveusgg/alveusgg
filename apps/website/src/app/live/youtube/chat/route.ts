@@ -18,8 +18,8 @@ export async function GET() {
         Location: link,
         Refresh: `0;url=${link}`,
         // Response can be cached for 5 minutes
-        // And can be stale for 1 minute while revalidating
-        "Cache-Control": "max-age=300, s-maxage=300, stale-while-revalidate=60",
+        "Cache-Control": "max-age=300, s-maxage=300, must-revalidate",
+        "X-Generated-At": new Date().toISOString(),
       },
     });
   } catch (err) {
@@ -27,7 +27,3 @@ export async function GET() {
     return new Response("YouTube data not available", { status: 500 });
   }
 }
-
-// Cache the response for 5 minutes
-export const dynamic = "force-static";
-export const revalidate = 300;
