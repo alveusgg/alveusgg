@@ -331,12 +331,12 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             </dl>
 
             {ambassador.species === "bullfrogAfrican" && (
-              <Box dark className="my-6 space-y-2 p-4">
+              <Box dark className="my-6 flex flex-col gap-2 p-4">
                 <Heading
                   level={2}
                   id="did-you-know"
                   link
-                  className="mt-0 text-2xl"
+                  className="my-0 scroll-mt-6 text-2xl"
                 >
                   Did you know?
                 </Heading>
@@ -359,7 +359,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                       key={aq.episode}
                       episode={aq}
                       ambassador={ambassadorKey}
-                      className="mt-4"
+                      className="mt-2 hover:translate-y-1"
                     />
                   ))}
               </Box>
