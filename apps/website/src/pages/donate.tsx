@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import { type ComponentType } from "react";
-import Markdown from "react-markdown";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -11,6 +10,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Link from "@/components/content/Link";
 import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
+import Markdown from "@/components/content/Markdown";
 import Consent from "@/components/Consent";
 
 import { type IconProps } from "@/icons/BaseIcon";
@@ -121,8 +121,8 @@ const DonatePage: NextPage = () => {
           <div className="grow">
             <Heading level={2}>{donationEvent.title}</Heading>
             {donationEvent.description && (
-              <div className="markdown-content text-lg">
-                <Markdown>{donationEvent.description}</Markdown>
+              <div className="text-lg">
+                <Markdown content={donationEvent.description} />
               </div>
             )}
           </div>
