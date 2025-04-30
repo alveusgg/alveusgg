@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import { type ComponentType } from "react";
+import Markdown from "react-markdown";
 
 import { useConsent } from "@/hooks/consent";
 
@@ -120,7 +121,9 @@ const DonatePage: NextPage = () => {
           <div className="grow">
             <Heading level={2}>{donationEvent.title}</Heading>
             {donationEvent.description && (
-              <p className="text-lg">{donationEvent.description}</p>
+              <p className="markdown-content text-lg">
+                <Markdown>{donationEvent.description}</Markdown>
+              </p>
             )}
           </div>
 
