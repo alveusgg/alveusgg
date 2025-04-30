@@ -535,9 +535,21 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         key: "new-studio",
         date: "2025-03-05",
         content: [
-          "New Studio Launch",
+          "New studio launch",
           "Alveus unveils a completely refurbished studio space, featuring live plant walls, an interactive whiteboard, a new fish tank and improved equipment for live streams.",
         ],
+      },
+      {
+        key: "art-auction-2025",
+        date: "2025-04",
+        content: [
+          "Art Auction fundraiser",
+          "Celebrating Earth Day and hosted in the Session Yard at Alveus, the art auction sold 36 pieces of art from the ambassadors and staff, as well as over 450 signed prints, raising over $87,000 USD.",
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#art-auction-2025",
+        },
       },
     ],
   },

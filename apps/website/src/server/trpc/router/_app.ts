@@ -17,7 +17,6 @@ import { notificationsRouter } from "./notifications";
 import { pushSubscriptionRouter } from "./push/subscription";
 import { showAndTellRouter } from "./show-and-tell";
 import { streamRouter } from "./stream";
-import { virtualTicketsRouter } from "./virtual-tickets";
 
 export const appRouter = router({
   adminActivityFeed: adminActivityFeedRouter,
@@ -37,7 +36,6 @@ export const appRouter = router({
   pushSubscription: pushSubscriptionRouter,
   showAndTell: showAndTellRouter,
   stream: streamRouter,
-  virtualTickets: virtualTicketsRouter,
 });
 
 // export type definition of API
