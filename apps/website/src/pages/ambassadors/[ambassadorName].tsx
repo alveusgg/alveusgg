@@ -330,7 +330,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               })}
             </dl>
 
-            {ambassador.species === "bullfrogAfrican" && (
+            {ambassador.fact ? (
               <Box dark className="my-6 flex flex-col gap-2 p-4">
                 <Heading
                   level={2}
@@ -340,29 +340,31 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 >
                   Did you know?
                 </Heading>
-                <p className="text-lg">
-                  African Bullfrogs, like many other amphibians, have
-                  semipermeable skin that allows them to absorb water and
-                  oxygen. This adaptation is super important to allow them to
-                  drink and breathe while they&apos;re underwater or buried in
-                  the mud.
-                </p>
-                <p className="text-lg">
-                  Unfortunately, this also means that they can absorb any
-                  harmful chemicals in their environment, which is why it is so
-                  important to keep pollution and litter out of our waterways!
-                </p>
 
-                {animalQuest &&
-                  animalQuest.map((aq) => (
-                    <AnimalQuest
-                      key={aq.episode}
-                      episode={aq}
-                      ambassador={ambassadorKey}
-                      className="mt-2 hover:translate-y-1"
-                    />
-                  ))}
+                {ambassador.fact.split("\n\n").map((fact, idx) => (
+                  <p key={idx} className="text-lg">
+                    {fact}
+                  </p>
+                ))}
+
+                {animalQuest?.map((aq) => (
+                  <AnimalQuest
+                    key={aq.episode}
+                    episode={aq}
+                    ambassador={ambassadorKey}
+                    className="mt-2 hover:translate-y-1"
+                  />
+                ))}
               </Box>
+            ) : (
+              animalQuest?.map((aq) => (
+                <AnimalQuest
+                  key={aq.episode}
+                  episode={aq}
+                  ambassador={ambassadorKey}
+                  className="my-6"
+                />
+              ))
             )}
 
             <Carousel
