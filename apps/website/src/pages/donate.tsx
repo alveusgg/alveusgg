@@ -122,7 +122,7 @@ const DonatePage: NextPage = () => {
             <Heading level={2}>{donationEvent.title}</Heading>
             {donationEvent.description && (
               <div className="text-lg">
-                <Markdown content={donationEvent.description} />
+                <Markdown content={donationEvent.description} dark />
               </div>
             )}
           </div>
