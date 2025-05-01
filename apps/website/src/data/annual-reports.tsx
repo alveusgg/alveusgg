@@ -1,12 +1,11 @@
-import { type ReactNode } from "react";
 import { type ImageProps } from "next/image";
+import { type ReactNode } from "react";
 
 import Heading from "@/components/content/Heading";
 
 import filing2021Pdf from "@/assets/filings/990-2021.pdf";
 import filing2022Pdf from "@/assets/filings/990-2022.pdf";
 import filing2023Pdf from "@/assets/filings/990-2023.pdf";
-
 import report2021Image from "@/assets/reports/2021.svg";
 import report2022Image from "@/assets/reports/2022.svg";
 import report2023Image from "@/assets/reports/2023.svg";

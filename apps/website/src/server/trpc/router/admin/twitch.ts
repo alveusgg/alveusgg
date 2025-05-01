@@ -1,5 +1,7 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import { getUserByName } from "@/server/apis/twitch";
 import {
   createTwitchChannel,
   deleteTwitchChannel,
@@ -11,7 +13,7 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
-import { getUserByName } from "@/server/apis/twitch";
+
 import { permissions } from "@/data/permissions";
 
 const permittedProcedure = protectedProcedure.use(

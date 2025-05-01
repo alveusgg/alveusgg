@@ -1,4 +1,5 @@
 import { trpc } from "@/utils/trpc";
+
 import { Announcement } from "@/components/notifications/Announcement";
 
 export function Announcements() {

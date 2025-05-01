@@ -1,14 +1,15 @@
-import { type JSX } from "react";
 import {
+  Label,
   Listbox,
   ListboxButton,
-  ListboxOptions,
   ListboxOption,
-  Label,
+  ListboxOptions,
 } from "@headlessui/react";
+import { type JSX } from "react";
 
-import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
+import { typeSafeObjectEntries } from "@/utils/helpers";
+
 import IconCheck from "@/icons/IconCheck";
 import IconChevronVertical from "@/icons/IconChevronVertical";
 

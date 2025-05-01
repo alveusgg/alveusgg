@@ -1,17 +1,15 @@
-import { useState } from "react";
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import {
   Button,
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
-
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 

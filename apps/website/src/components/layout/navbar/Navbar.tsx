@@ -1,15 +1,15 @@
-import Link from "next/link";
-import Image from "next/image";
 import { Disclosure, DisclosureButton } from "@headlessui/react";
+import Image from "next/image";
+import Link from "next/link";
 
-import logoImage from "@/assets/logo.png";
-
-import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
 import { DesktopMenu } from "@/components/layout/navbar/DesktopMenu";
+import { MobileMenu } from "@/components/layout/navbar/MobileMenu";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
-import IconX from "@/icons/IconX";
 import IconMenu from "@/icons/IconMenu";
+import IconX from "@/icons/IconX";
+
+import logoImage from "@/assets/logo.png";
 
 export const Navbar = () => {
   return (

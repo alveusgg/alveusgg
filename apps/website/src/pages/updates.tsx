@@ -1,23 +1,22 @@
 import { type NextPage } from "next";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
-import usePrefersReducedMotion from "@/hooks/motion";
 import useCrawler from "@/hooks/crawler";
+import usePrefersReducedMotion from "@/hooks/motion";
+import useIsWebKit from "@/hooks/webkit";
 
-import Section from "@/components/content/Section";
+import { Schedule } from "@/components/calendar/Schedule";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import Video from "@/components/content/Video";
-
-import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { Announcements } from "@/components/notifications/Announcements";
+import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 import { RecentNotifications } from "@/components/notifications/RecentNotifications";
-import { Schedule } from "@/components/calendar/Schedule";
 import updateChannels from "@/components/shared/data/updateChannels";
 
 import bellPeepo from "@/assets/bell-peepo.webm";
-import useIsWebKit from "@/hooks/webkit";
 
 const notificationTags = ["stream"];
 

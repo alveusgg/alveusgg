@@ -1,11 +1,13 @@
 import { useCallback } from "react";
 
-import IconClipboard from "@/icons/IconClipboard";
-import {
-  useCopyToClipboard,
-  type CopyToClipboardOptions,
-} from "@/hooks/clipboard";
 import { classes } from "@/utils/classes";
+
+import {
+  type CopyToClipboardOptions,
+  useCopyToClipboard,
+} from "@/hooks/clipboard";
+
+import IconClipboard from "@/icons/IconClipboard";
 
 type CopyToClipboardButtonProps = {
   text: string;

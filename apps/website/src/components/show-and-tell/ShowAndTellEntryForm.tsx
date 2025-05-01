@@ -1,17 +1,17 @@
 import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import {
   type ComponentProps,
   type FormEvent,
   useCallback,
   useMemo,
   useState,
 } from "react";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import {
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-} from "@headlessui/react";
 import { useLocale } from "react-aria";
 
 import type { ShowAndTellEntry } from "@/server/db/client";
@@ -28,40 +28,40 @@ import {
 } from "@/data/show-and-tell";
 
 import { classes } from "@/utils/classes";
-import { trpc } from "@/utils/trpc";
-import { notEmpty } from "@/utils/helpers";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
+import { notEmpty } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
 import { extractColorFromImage } from "@/utils/process-image";
 import { splitAttachments } from "@/utils/split-attachments";
-
-import IconLoading from "@/icons/IconLoading";
-import IconWarningTriangle from "@/icons/IconWarningTriangle";
-import IconChevronDown from "@/icons/IconChevronDown";
+import { trpc } from "@/utils/trpc";
 
 import useFileUpload from "@/hooks/files/upload";
 
+import IconChevronDown from "@/icons/IconChevronDown";
+import IconLoading from "@/icons/IconLoading";
+import IconWarningTriangle from "@/icons/IconWarningTriangle";
+
+import Link from "../content/Link";
+import { MessageBox } from "../shared/MessageBox";
+import { ModalDialog } from "../shared/ModalDialog";
+import { Button } from "../shared/form/Button";
 import { Fieldset } from "../shared/form/Fieldset";
-import { TextField } from "../shared/form/TextField";
+import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
+import type { MapLocation } from "../shared/form/MapPickerField";
+import { MapPickerField } from "../shared/form/MapPickerField";
+import { NumberField } from "../shared/form/NumberField";
 import { RichTextField } from "../shared/form/RichTextField";
+import { TextAreaField } from "../shared/form/TextAreaField";
+import { TextField } from "../shared/form/TextField";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
-import { Button } from "../shared/form/Button";
-import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
-import { MessageBox } from "../shared/MessageBox";
-import { TextAreaField } from "../shared/form/TextAreaField";
-import { NumberField } from "../shared/form/NumberField";
 import {
-  useVideoLinksData,
   VideoLinksField,
+  useVideoLinksData,
 } from "../shared/form/VideoLinksField";
-import Link from "../content/Link";
-import type { MapLocation } from "../shared/form/MapPickerField";
-import { MapPickerField } from "../shared/form/MapPickerField";
-import { ModalDialog } from "../shared/ModalDialog";
 import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {

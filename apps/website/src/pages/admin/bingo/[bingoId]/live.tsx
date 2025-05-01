@@ -1,15 +1,15 @@
 import type {
+  GetServerSidePropsContext,
   InferGetStaticPropsType,
   NextPage,
-  GetServerSidePropsContext,
 } from "next";
-
+import { getSession } from "next-auth/react";
 import { useMemo } from "react";
 
-import { getSession } from "next-auth/react";
+import { getAdminSSP } from "@/server/utils/admin";
+
 import { permissions } from "@/data/permissions";
 
-import { classes } from "@/utils/classes";
 import {
   type BingoValue,
   bingoTypeDefs,
@@ -19,21 +19,21 @@ import {
   isCellPartOfBingo,
   parseBingoPlayData,
 } from "@/utils/bingo";
+import { classes } from "@/utils/classes";
+import { transposeMatrix } from "@/utils/math";
 import { trpc } from "@/utils/trpc";
-import { getAdminSSP } from "@/server/utils/admin";
 
+import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
+import { Headline } from "@/components/admin/Headline";
+import { Panel } from "@/components/admin/Panel";
+import { BingoCardGrid } from "@/components/bingo/BingoCardGrid";
 import Meta from "@/components/content/Meta";
+import { MessageBox } from "@/components/shared/MessageBox";
 import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/form/Button";
-import { MessageBox } from "@/components/shared/MessageBox";
-import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { Headline } from "@/components/admin/Headline";
-import { Panel } from "@/components/admin/Panel";
-import { BingoCardGrid } from "@/components/bingo/BingoCardGrid";
-import { transposeMatrix } from "@/utils/math";
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const session = await getSession(context);

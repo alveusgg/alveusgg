@@ -1,11 +1,12 @@
 import { expect, test, vi } from "vitest";
+
 import {
-  generateSalt,
-  decodeSalt,
-  encodeSalt,
   createSaltedEncryptionKey,
-  encrypt,
+  decodeSalt,
   decrypt,
+  encodeSalt,
+  encrypt,
+  generateSalt,
 } from "@/server/utils/encryption";
 
 vi.mock("@/env", () => {

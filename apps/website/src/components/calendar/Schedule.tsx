@@ -1,25 +1,25 @@
-import { useMemo } from "react";
 import { Transition } from "@headlessui/react";
+import { useMemo } from "react";
 
 import { standardCategories, twitchChannels } from "@/data/calendar-events";
 
 import { classes } from "@/utils/classes";
-import { getShortBaseUrl } from "@/utils/short-url";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { getShortBaseUrl } from "@/utils/short-url";
 import { sentenceToTitle } from "@/utils/string-case";
 
-import Link from "@/components/content/Link";
+import useTimezone from "@/hooks/timezone";
+import useToday from "@/hooks/today";
+
 import {
   Calendar,
   useCalendarEventsQuery,
   useMonthSelection,
 } from "@/components/calendar/Calendar";
 import { CalendarItem } from "@/components/calendar/CalendarItem";
+import Link from "@/components/content/Link";
 
 import IconExternal from "@/icons/IconExternal";
-
-import useTimezone from "@/hooks/timezone";
-import useToday from "@/hooks/today";
 
 const groupedCategories = standardCategories.reduce(
   (acc, category) => {

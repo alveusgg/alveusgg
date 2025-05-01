@@ -1,44 +1,43 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useMemo, Fragment } from "react";
+import { Fragment, useMemo } from "react";
 
-import animalQuest, {
-  type AnimalQuestWithEpisode,
-} from "@alveusgg/data/build/animal-quest";
+import {
+  getClassification,
+  sortAmbassadorClassification,
+} from "@alveusgg/data/build/ambassadors/classification";
 import ambassadors, {
   type AmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
-import {
-  getClassification,
-  sortAmbassadorClassification,
-} from "@alveusgg/data/build/ambassadors/classification";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
+import animalQuest, {
+  type AnimalQuestWithEpisode,
+} from "@alveusgg/data/build/animal-quest";
+
+import { classes } from "@/utils/classes";
+import { formatDateTime } from "@/utils/datetime";
+import { convertToSlug } from "@/utils/slugs";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
-import { formatDateTime } from "@/utils/datetime";
-import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
-import { classes } from "@/utils/classes";
-import { convertToSlug } from "@/utils/slugs";
-
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import Select from "@/components/content/Select";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import Select from "@/components/content/Select";
 import SubNav from "@/components/content/SubNav";
 
 import IconYouTube from "@/icons/IconYouTube";
 
-import animalQuestLogo from "@/assets/animal-quest/logo.png";
 import animalQuestFull from "@/assets/animal-quest/full.png";
-
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import animalQuestLogo from "@/assets/animal-quest/logo.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const animalQuestEpisodes: AnimalQuestWithEpisode[] = animalQuest
   .map((episode, idx) => ({

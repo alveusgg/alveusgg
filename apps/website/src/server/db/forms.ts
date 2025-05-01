@@ -1,11 +1,14 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
-import { isValidCountryCode } from "@/utils/countries";
+import { z } from "zod";
+
 import { prisma } from "@/server/db/client";
 import { decryptRecord, encryptRecord } from "@/server/db/encryption";
-import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
+
+import { isValidCountryCode } from "@/utils/countries";
 import { formConfigSchema } from "@/utils/forms";
-import { convertToSlug, SLUG_REGEX } from "@/utils/slugs";
+import { SLUG_REGEX, convertToSlug } from "@/utils/slugs";
+
+import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
 
 const entryEncryptFields = ["givenName", "familyName"];
 

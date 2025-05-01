@@ -1,11 +1,15 @@
 import { getSession } from "next-auth/react";
 import type { GetSessionParams } from "next-auth/react";
+
+import { env } from "@/env";
+
+import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
+
 import type { PermissionConfig } from "@/data/permissions";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
-import { env } from "@/env";
-import { notEmpty } from "@/utils/helpers";
+
 import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
-import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
+import { notEmpty } from "@/utils/helpers";
 
 const menuItems = [
   {

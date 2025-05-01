@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
-import NextLink from "next/link";
 import Image from "next/image";
+import NextLink from "next/link";
 
 import {
   getMapFeatures,
@@ -10,22 +10,22 @@ import {
 
 import { classes } from "@/utils/classes";
 import { extractInfoFromMapFeatures } from "@/utils/locations";
+
 import useLocaleString from "@/hooks/locale";
 
-import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
-import showAndTellHeader from "@/assets/show-and-tell/header.png";
-
-import IconArrowRight from "@/icons/IconArrowRight";
-import IconMapPin from "@/icons/IconMapPin";
-import IconGlobe from "@/icons/IconGlobe";
-
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
+import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
-import Box from "@/components/content/Box";
-
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import { CommunityMap } from "@/components/show-and-tell/CommunityMap";
+
+import IconArrowRight from "@/icons/IconArrowRight";
+import IconGlobe from "@/icons/IconGlobe";
+import IconMapPin from "@/icons/IconMapPin";
+
+import showAndTellHeader from "@/assets/show-and-tell/header.png";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 
 import { bentoBoxClasses } from ".";
 

@@ -1,9 +1,9 @@
+import Link, { type LinkProps } from "next/link";
 import {
   type AnchorHTMLAttributes,
-  type RefAttributes,
   type ReactNode,
+  type RefAttributes,
 } from "react";
-import Link, { type LinkProps } from "next/link";
 
 import { classes } from "@/utils/classes";
 

@@ -1,22 +1,23 @@
-import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { useEffect, useMemo, useState } from "react";
 
+import { getIsIos, getIsSafari } from "@/utils/browser-detection";
+import { checkUserAgentRequiresToBeInstalledAsPWA } from "@/utils/notifications";
 import {
   isNotificationsSupported,
   isWebPushSupported,
 } from "@/utils/push-subscription";
-import { checkUserAgentRequiresToBeInstalledAsPWA } from "@/utils/notifications";
-import { getIsIos, getIsSafari } from "@/utils/browser-detection";
 
+import Link from "@/components/content/Link";
 import { NotificationErrorMessage } from "@/components/notifications/NotificationErrorMessage";
 import { NotificationPermission } from "@/components/notifications/NotificationPermission";
 import { NotificationSettingsForm } from "@/components/notifications/NotificationSettingsForm";
-import Link from "@/components/content/Link";
 
-import imageIOSShareDialog from "@/assets/notifications-help/ios-share-dialog.png";
-import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
 import IconPlus from "@/icons/IconPlus";
 import IconUpload from "@/icons/IconUpload";
+
+import imageIOSAddIcon from "@/assets/notifications-help/ios-add-icon.png";
+import imageIOSShareDialog from "@/assets/notifications-help/ios-share-dialog.png";
 
 export function useNotificationStatus() {
   const [isClientSupported, setIsClientSupported] = useState(false);

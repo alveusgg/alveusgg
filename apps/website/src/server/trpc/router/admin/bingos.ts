@@ -1,12 +1,15 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
+
+import { bingoSchema, createBingo, editBingo } from "@/server/db/bingos";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
+
 import { permissions } from "@/data/permissions";
-import { createBingo, editBingo, bingoSchema } from "@/server/db/bingos";
+
 import type { BingoPlayData } from "@/utils/bingo";
 import { bingoValueSchema, parseBingoPlayData } from "@/utils/bingo";
 

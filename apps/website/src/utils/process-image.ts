@@ -1,6 +1,6 @@
+import type { ImageMimeType } from "@/utils/files";
 import invariant from "@/utils/invariant";
 import { mmcq } from "@/utils/mmcq";
-import type { ImageMimeType } from "@/utils/files";
 
 export type ResizeImageOptions = {
   type: ImageMimeType;

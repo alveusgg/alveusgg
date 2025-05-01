@@ -1,13 +1,14 @@
 import { Client } from "@planetscale/database";
-import {
-  type BingoType,
-  type BingoLiveData,
-  calcBingoConfig,
-  parseBingoPlayData,
-  findCardsWithBingo,
-} from "@/utils/bingo";
 
 import { env } from "@/env";
+
+import {
+  type BingoLiveData,
+  type BingoType,
+  calcBingoConfig,
+  findCardsWithBingo,
+  parseBingoPlayData,
+} from "@/utils/bingo";
 
 export const runtime = "edge";
 export const revalidate = 2;

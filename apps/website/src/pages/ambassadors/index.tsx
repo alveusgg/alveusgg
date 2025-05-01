@@ -1,39 +1,40 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useMemo, type ComponentProps } from "react";
+import { type ComponentProps, useMemo } from "react";
 
 import {
   getClassification,
   sortAmbassadorClassification,
 } from "@alveusgg/data/build/ambassadors/classification";
-import enclosures from "@alveusgg/data/build/enclosures";
-import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
-import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
-import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
+import enclosures from "@alveusgg/data/build/enclosures";
 
-import { camelToKebab } from "@/utils/string-case";
-import { typeSafeObjectEntries } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
 import {
   parsePartialDateString,
   sortPartialDateString,
 } from "@/utils/datetime";
+import { typeSafeObjectEntries } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
+import { camelToKebab } from "@/utils/string-case";
 
-import Section from "@/components/content/Section";
+import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
+
+import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import Select from "@/components/content/Select";
-import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import SubNav from "@/components/content/SubNav";
 
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 // We don't want to show retired ambassadors on the page
 const activeAmbassadors = typeSafeObjectEntries(ambassadors).filter(

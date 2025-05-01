@@ -1,4 +1,5 @@
 import { readFile } from "node:fs/promises";
+
 import { assignCardToUser } from "@/utils/bingo";
 
 (async () => {

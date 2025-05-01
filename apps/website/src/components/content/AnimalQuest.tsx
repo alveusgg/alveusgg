@@ -1,18 +1,19 @@
-import { type ComponentProps } from "react";
 import Image from "next/image";
+import { type ComponentProps } from "react";
 
 import { type Ambassador } from "@alveusgg/data/build/ambassadors/core";
 import {
   type AnimalQuestWithEpisode,
   type AnimalQuestWithRelation,
 } from "@alveusgg/data/build/animal-quest";
-import { sentenceToKebab } from "@/utils/string-case";
-import { classes } from "@/utils/classes";
 
-import IconYouTube from "@/icons/IconYouTube";
+import { classes } from "@/utils/classes";
+import { sentenceToKebab } from "@/utils/string-case";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+
+import IconYouTube from "@/icons/IconYouTube";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
 

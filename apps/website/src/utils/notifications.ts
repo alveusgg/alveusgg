@@ -1,6 +1,7 @@
-import type { NotificationOptionsData } from "@/utils/notification-payload";
-import { getIsIos, getIsSafari } from "@/utils/browser-detection";
 import { welcomeMessage, welcomeTitle } from "@/data/notifications";
+
+import { getIsIos, getIsSafari } from "@/utils/browser-detection";
+import type { NotificationOptionsData } from "@/utils/notification-payload";
 
 // Weird test to make sure that the types are compatible
 const assert = <_A, _B extends _A>() => {};

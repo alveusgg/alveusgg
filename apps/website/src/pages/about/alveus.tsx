@@ -1,21 +1,22 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 import { type ReactNode } from "react";
+
 import type { PartialDateString } from "@alveusgg/data/build/types";
 
 import { formatPartialDateString } from "@/utils/datetime";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Button from "@/components/content/Button";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import Timeline from "@/components/content/Timeline";
-import { Lightbox, Preview } from "@/components/content/YouTube";
-import { MayaImage } from "@/components/content/Maya";
 import Box from "@/components/content/Box";
-import Transparency from "@/components/content/Transparency";
+import Button from "@/components/content/Button";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import { MayaImage } from "@/components/content/Maya";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
+import Timeline from "@/components/content/Timeline";
+import Transparency from "@/components/content/Transparency";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 

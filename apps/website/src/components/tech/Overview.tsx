@@ -1,11 +1,12 @@
 import { useMemo } from "react";
-import { Handle, Position, useEdges, type NodeProps } from "reactflow";
+import { Handle, type NodeProps, Position, useEdges } from "reactflow";
+
+import steps, { type Step, upstream } from "@/data/tech/overview";
 
 import { classes } from "@/utils/classes";
+import { convertToSlug } from "@/utils/slugs";
 
 import Tree, { type TreeNode } from "@/components/tech/Tree";
-import steps, { upstream, type Step } from "@/data/tech/overview";
-import { convertToSlug } from "@/utils/slugs";
 
 interface Data {
   label: string;

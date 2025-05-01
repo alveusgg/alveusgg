@@ -1,22 +1,21 @@
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
 
-import usePrefersReducedMotion from "@/hooks/motion";
 import useCrawler from "@/hooks/crawler";
-
-import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
-import pic from "@/assets/socials/twitter-pic-winnie.jpg";
-
-import IconInstagram from "@/icons/IconInstagram";
-import IconTwitter from "@/icons/IconTwitter";
-
-import socials from "@/components/shared/data/socials";
-import updateChannels from "@/components/shared/data/updateChannels";
+import usePrefersReducedMotion from "@/hooks/motion";
 
 import Heading from "@/components/content/Heading";
 import Section from "@/components/content/Section";
 import Video from "@/components/content/Video";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
+import socials from "@/components/shared/data/socials";
+import updateChannels from "@/components/shared/data/updateChannels";
+
+import IconInstagram from "@/icons/IconInstagram";
+import IconTwitter from "@/icons/IconTwitter";
+
+import reelVideo from "@/assets/socials/georgie-reel-clip.mp4?quality=low";
+import pic from "@/assets/socials/twitter-pic-winnie.jpg";
 
 const buttonClasses =
   "block rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan";

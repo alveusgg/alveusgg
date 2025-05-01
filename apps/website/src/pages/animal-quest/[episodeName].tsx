@@ -1,50 +1,49 @@
+import { Stream } from "@cloudflare/stream-react";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, useMemo } from "react";
 import type { Episode } from "schema-dts";
-import { Stream } from "@cloudflare/stream-react";
 
-import animalQuest, {
-  hosts,
-  type AnimalQuestWithEpisode,
-} from "@alveusgg/data/build/animal-quest";
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import {
+  type AmbassadorImage,
   getAmbassadorBadgeImage,
   getAmbassadorEmoteImage,
   getAmbassadorIconImage,
   getAmbassadorImages,
-  type AmbassadorImage,
 } from "@alveusgg/data/build/ambassadors/images";
+import animalQuest, {
+  type AnimalQuestWithEpisode,
+  hosts,
+} from "@alveusgg/data/build/animal-quest";
 
 import { env } from "@/env";
 
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Button from "@/components/content/Button";
-import Carousel from "@/components/content/Carousel";
-import Link from "@/components/content/Link";
-import Box from "@/components/content/Box";
-import JsonLD from "@/components/content/JsonLD";
-import Consent from "@/components/Consent";
-
-import { ambassadorImageHover } from "@/pages/ambassadors";
-
-import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
+import { mapFirst } from "@/utils/array";
 import { formatDateTime, formatSeconds } from "@/utils/datetime";
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
-import { mapFirst } from "@/utils/array";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
+
+import Consent from "@/components/Consent";
+import Box from "@/components/content/Box";
+import Button from "@/components/content/Button";
+import Carousel from "@/components/content/Carousel";
+import Heading from "@/components/content/Heading";
+import JsonLD from "@/components/content/JsonLD";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
-
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+
+import { ambassadorImageHover } from "@/pages/ambassadors";
 
 const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
   .map((episode, idx) => ({

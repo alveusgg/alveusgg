@@ -1,22 +1,22 @@
+import PhotoSwipeLightbox from "photoswipe/lightbox";
 import {
+  type ReactNode,
+  type Ref,
   cloneElement,
   useCallback,
   useEffect,
   useId,
   useMemo,
   useState,
-  type ReactNode,
-  type Ref,
 } from "react";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 
+import { classes } from "@/utils/classes";
+import { createImageUrl } from "@/utils/image";
 import {
   getDefaultPhotoswipeLightboxOptions,
   resolvePhotoswipeElementProvider,
 } from "@/utils/photoswipe";
 import { camelToKebab } from "@/utils/string-case";
-import { createImageUrl } from "@/utils/image";
-import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 

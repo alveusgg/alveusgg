@@ -1,6 +1,6 @@
-import { type AnchorHTMLAttributes, type Ref, type ReactNode } from "react";
 import type { LinkProps } from "next/link";
 import Link from "next/link";
+import { type AnchorHTMLAttributes, type ReactNode, type Ref } from "react";
 
 import { classes } from "@/utils/classes";
 

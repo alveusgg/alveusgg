@@ -1,20 +1,21 @@
+import { Transition } from "@headlessui/react";
+import { DateTime } from "luxon";
 import {
   type Dispatch,
-  type SetStateAction,
   type ReactNode,
+  type SetStateAction,
   useMemo,
   useState,
 } from "react";
 
-import { Transition } from "@headlessui/react";
-import { DateTime } from "luxon";
 import "@bart-krakowski/get-week-info-polyfill";
 
-import { trpc } from "@/utils/trpc";
 import { classes } from "@/utils/classes";
+import { trpc } from "@/utils/trpc";
+
+import useToday from "@/hooks/today";
 
 import IconArrowRight from "@/icons/IconArrowRight";
-import useToday from "@/hooks/today";
 
 import { CalendarTimezoneSwitch } from "./CalendarTimezoneSwitch";
 

@@ -1,8 +1,7 @@
-import { Fragment } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
+import { Fragment } from "react";
 
-import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import commands, {
   type Argument,
   type Command,
@@ -15,15 +14,16 @@ import presets from "@/data/tech/presets";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
+import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import Button from "@/components/content/Button";
+import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 
 interface NamedCommand extends Command {
   name: string;

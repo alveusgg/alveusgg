@@ -1,37 +1,36 @@
-import { type NextPage } from "next";
-import Image, { type StaticImageData } from "next/image";
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
+import { type NextPage } from "next";
+import Image, { type StaticImageData } from "next/image";
+
 import type { PartialDateString } from "@alveusgg/data/build/types";
 
-import { formatPartialDateString } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
+import { formatPartialDateString } from "@/utils/datetime";
 
-import Section from "@/components/content/Section";
+import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Button from "@/components/content/Button";
+import Section from "@/components/content/Section";
 import TransitionHeight from "@/components/content/TransitionHeight";
 import { Lightbox } from "@/components/content/YouTube";
 
 import IconExternal from "@/icons/IconExternal";
 import IconYouTube from "@/icons/IconYouTube";
 
-import bookClubLogo from "@/assets/book-club/logo.png";
-import bookClubFull from "@/assets/book-club/full.png";
-
+import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
+import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
+import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
-import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
-import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
-import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
-
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import bookClubFull from "@/assets/book-club/full.png";
+import bookClubLogo from "@/assets/book-club/logo.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const thickness = {
   xs: "h-6 -translate-z-6 -mb-6",

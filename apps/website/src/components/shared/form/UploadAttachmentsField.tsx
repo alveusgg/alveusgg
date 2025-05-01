@@ -1,6 +1,6 @@
 import {
-  type Dispatch,
   type ChangeEvent,
+  type Dispatch,
   type Key,
   type ReactNode,
   useCallback,
@@ -22,9 +22,9 @@ import {
   resizeImage,
 } from "@/utils/process-image";
 
-import IconUploadFiles from "@/icons/IconUploadFiles";
-
 import useFileDragAndDrop from "@/hooks/files/drop";
+
+import IconUploadFiles from "@/icons/IconUploadFiles";
 
 import { MessageBox } from "../MessageBox";
 import { Button, defaultButtonClasses } from "./Button";

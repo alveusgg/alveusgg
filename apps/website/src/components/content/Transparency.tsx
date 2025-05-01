@@ -2,9 +2,9 @@ import Image from "next/image";
 
 import { classes } from "@/utils/classes";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Section from "@/components/content/Section";
 
 import imageCharityNavigatorBadge from "@/assets/charity-navigator-badge.svg";
 

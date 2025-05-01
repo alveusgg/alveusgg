@@ -1,24 +1,25 @@
-import type { MouseEventHandler, RefObject, JSX } from "react";
-import { useCallback, useEffect, useId, useMemo, useRef } from "react";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
 import Image from "next/image";
+import PhotoSwipeLightbox from "photoswipe/lightbox";
+import type { JSX, MouseEventHandler, RefObject } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 
 import type { LinkAttachment } from "@/server/db/client";
 import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
+import { classes } from "@/utils/classes";
+import { createImageUrl } from "@/utils/image";
+import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import {
   parseVideoUrl,
   validateNormalizedVideoUrl,
   videoPlatformConfigs,
 } from "@/utils/video-urls";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
-import { createImageUrl } from "@/utils/image";
-import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 
 import Carousel from "@/components/content/Carousel";
 import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
+
 import IconInformationCircle from "@/icons/IconInformationCircle";
 
 export function ShowAndTellGallery({

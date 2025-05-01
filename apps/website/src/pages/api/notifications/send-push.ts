@@ -2,6 +2,17 @@ import { z } from "zod";
 
 import { env } from "@/env";
 
+import { type NotificationUrgency, prisma } from "@/server/db/client";
+import { updateNotificationPushStatus } from "@/server/db/notifications";
+import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
+import { createTokenProtectedApiHandler } from "@/server/utils/api";
+import { sendWebPushNotification } from "@/server/web-push";
+import {
+  WEB_PUSH_MAX_TTL,
+  getWebPushUrgency,
+  isNotificationUrgency,
+} from "@/server/web-push/constants";
+
 import {
   badgeUrl,
   defaultTag,
@@ -10,17 +21,6 @@ import {
 } from "@/data/notifications";
 
 import type { NotificationPayload } from "@/utils/notification-payload";
-
-import { prisma, type NotificationUrgency } from "@/server/db/client";
-import { createTokenProtectedApiHandler } from "@/server/utils/api";
-import {
-  getWebPushUrgency,
-  isNotificationUrgency,
-  WEB_PUSH_MAX_TTL,
-} from "@/server/web-push/constants";
-import { sendWebPushNotification } from "@/server/web-push";
-import { updateNotificationPushStatus } from "@/server/db/notifications";
-import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
 
 export const config = {
   maxDuration: 60, // 60 Seconds is the maximum duration allowed in Hobby Plan

@@ -1,8 +1,8 @@
 import { useMemo } from "react";
 
-import { getShortBaseUrl } from "@/utils/short-url";
-import sharePlatforms, { type SharePlatform } from "@/utils/share";
 import { classes } from "@/utils/classes";
+import sharePlatforms, { type SharePlatform } from "@/utils/share";
+import { getShortBaseUrl } from "@/utils/short-url";
 
 import Link from "./Link";
 

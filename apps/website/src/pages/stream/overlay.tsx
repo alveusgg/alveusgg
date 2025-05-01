@@ -2,10 +2,10 @@ import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 
-import Event from "@/components/overlay/Event";
-import Weather from "@/components/overlay/Weather";
-import Timecode from "@/components/overlay/Timecode";
 import Datetime from "@/components/overlay/Datetime";
+import Event from "@/components/overlay/Event";
+import Timecode from "@/components/overlay/Timecode";
+import Weather from "@/components/overlay/Weather";
 
 const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components

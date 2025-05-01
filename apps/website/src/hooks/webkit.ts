@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { getIsIos, getIsSafari } from "@/utils/browser-detection";
 
 const useIsWebKit = () => {

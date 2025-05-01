@@ -1,15 +1,15 @@
-import Image from "next/image";
-import { useEffect, useMemo, useRef, useState, type HTMLProps } from "react";
 import { keepPreviousData } from "@tanstack/react-query";
+import Image from "next/image";
+import { type HTMLProps, useEffect, useMemo, useRef, useState } from "react";
 
 import type { CalendarEvent } from "@/server/db/client";
 
-import { trpc } from "@/utils/trpc";
-import { DATETIME_ALVEUS_ZONE, formatDateTimeRelative } from "@/utils/datetime";
-import { classes } from "@/utils/classes";
-import { getShortBaseUrl } from "@/utils/short-url";
-
 import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
+
+import { classes } from "@/utils/classes";
+import { DATETIME_ALVEUS_ZONE, formatDateTimeRelative } from "@/utils/datetime";
+import { getShortBaseUrl } from "@/utils/short-url";
+import { trpc } from "@/utils/trpc";
 
 import { QRCode } from "@/components/QrCode";
 import Cycle from "@/components/overlay/Cycle";

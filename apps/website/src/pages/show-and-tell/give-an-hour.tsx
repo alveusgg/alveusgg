@@ -1,40 +1,38 @@
-import type { InferGetStaticPropsType, NextPage } from "next";
-import { useCallback, useMemo, useState, type ReactNode } from "react";
-import Image, { type ImageProps } from "next/image";
-import { useLocale } from "react-aria";
 import { DateTime } from "luxon";
+import type { InferGetStaticPropsType, NextPage } from "next";
+import Image, { type ImageProps } from "next/image";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { useLocale } from "react-aria";
 
 import { classes } from "@/utils/classes";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
-import IconPlus from "@/icons/IconPlus";
-
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import Share from "@/components/content/Share";
-
 import {
+  type DateString,
   GiveAnHourProgress,
   parseDateString,
-  type DateString,
 } from "@/components/show-and-tell/GiveAnHourProgress";
+
+import IconPlus from "@/icons/IconPlus";
 
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import alveusLogo from "@/assets/logo.png";
-import wwfLogo from "@/assets/show-and-tell/give-an-hour/wwf.svg";
-import giveAnHourPoster from "@/assets/show-and-tell/give-an-hour/poster.png";
-
 // Artwork from https://undraw.co
 import giveAnHourArt from "@/assets/show-and-tell/give-an-hour/art.svg";
 import giveAnHourEntertainment from "@/assets/show-and-tell/give-an-hour/entertainment.svg";
 import giveAnHourFitness from "@/assets/show-and-tell/give-an-hour/fitness.svg";
+import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
+import giveAnHourPoster from "@/assets/show-and-tell/give-an-hour/poster.png";
 import giveAnHourShopping from "@/assets/show-and-tell/give-an-hour/shopping.svg";
 import giveAnHourWalk from "@/assets/show-and-tell/give-an-hour/walk.svg";
-import giveAnHourNature from "@/assets/show-and-tell/give-an-hour/nature.svg";
+import wwfLogo from "@/assets/show-and-tell/give-an-hour/wwf.svg";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 
 interface WWFGiveAnHourCampaign {
   start: DateString;

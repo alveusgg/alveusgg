@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useColorSwatch } from "react-aria";
+
 import { CheckboxField } from "@/components/shared/form/CheckboxField";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 

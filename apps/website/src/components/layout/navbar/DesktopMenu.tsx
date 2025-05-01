@@ -1,12 +1,12 @@
-import Link from "next/link";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import {
   Children,
-  cloneElement,
-  type ReactElement,
   type LiHTMLAttributes,
+  type ReactElement,
   type Ref,
+  cloneElement,
 } from "react";
 
 import { mainNavStructure, utilityNavStructure } from "@/data/navigation";
@@ -16,9 +16,9 @@ import { classes } from "@/utils/classes";
 
 import {
   NavLink,
+  NavLinkSub,
   navLinkClassesMain,
   navLinkClassesSub,
-  NavLinkSub,
 } from "@/components/layout/navbar/NavLink";
 import {
   ProfileInfo,
@@ -26,8 +26,8 @@ import {
 } from "@/components/layout/navbar/ProfileInfo";
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
-import IconSignIn from "@/icons/IconSignIn";
 import IconChevronDown from "@/icons/IconChevronDown";
+import IconSignIn from "@/icons/IconSignIn";
 
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
