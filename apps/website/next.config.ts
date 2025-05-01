@@ -1,17 +1,18 @@
-import { resolve } from "path";
+import { resolve } from "node:path";
+
 import type { NextConfig } from "next";
-import type { RemotePattern } from "next/dist/shared/lib/image-config";
 import { withSuperjson } from "next-superjson";
+import type { RemotePattern } from "next/dist/shared/lib/image-config";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
-import animalQuest from "@alveusgg/data/build/animal-quest";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
-
-import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
-import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
+import animalQuest from "@alveusgg/data/build/animal-quest";
 
 import { twitchChannels } from "@/data/calendar-events";
 import socials from "@/data/socials";
+
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
+import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import "@/env/index.js";
 
