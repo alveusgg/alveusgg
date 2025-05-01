@@ -1,30 +1,19 @@
 // @ts-check
 
 import eslint from "@eslint/js";
+import tseslint, { configs as tseslintConfigs } from "typescript-eslint";
+import prettiereslint from "eslint-config-prettier";
+
+import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
 // @ts-expect-error - no types
 import nextPlugin from "@next/eslint-plugin-next";
-import prettiereslint from "eslint-config-prettier";
-import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
 import reactPlugin from "eslint-plugin-react";
 import * as hooksPlugin from "eslint-plugin-react-hooks";
 // FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/325
 // FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/384
 // import tailwindPlugin from "eslint-plugin-tailwindcss";
-import globals from "globals";
-import tseslint, { configs as tseslintConfigs } from "typescript-eslint";
 
-const importOrder = [
-  "@alveusgg/data",
-  "@/env",
-  "@/server",
-  "@/data",
-  "@/utils",
-  "@/hooks",
-  "@/components",
-  "@/icons",
-  "@/assets",
-  "@/",
-];
+import globals from "globals";
 
 export default tseslint.config(
   {
@@ -54,23 +43,15 @@ export default tseslint.config(
     name: "import-x/order",
     rules: {
       "import-x/order": [
-        "error",
+        "warn",
         {
-          pathGroups: importOrder.map((group) => ({
-            pattern: `${group}{,/**}`,
-            group: "external",
-            position: "after",
-          })),
-          pathGroupsExcludedImportTypes: ["builtin"],
-          "newlines-between": "always",
-          alphabetize: {
-            order: "asc",
-            caseInsensitive: true,
-          },
-          named: {
-            enabled: true,
-            types: "types-last",
-          },
+          pathGroups: [
+            {
+              pattern: "@/**",
+              group: "external",
+              position: "after",
+            },
+          ],
         },
       ],
     },
