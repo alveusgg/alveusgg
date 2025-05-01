@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import type { YouTubeVideo } from "@/server/apis/youtube";
 
-import { formatDateTime } from "@/utils/datetime";
 import { classes } from "@/utils/classes";
+import { formatDateTime } from "@/utils/datetime";
 
-import { Lightbox, Preview } from "@/components/content/YouTube";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 type YouTubeCarouselProps = {
   videos: YouTubeVideo[];

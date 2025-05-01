@@ -1,31 +1,31 @@
+import pluralize from "pluralize";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
-  Handle,
-  Position,
-  useEdges,
-  EdgeLabelRenderer,
-  useNodes,
-  getBezierPath,
   BaseEdge,
-  type NodeProps,
+  EdgeLabelRenderer,
   type EdgeProps,
+  Handle,
+  type NodeProps,
+  Position,
+  getBezierPath,
+  useEdges,
+  useNodes,
 } from "reactflow";
-import pluralize from "pluralize";
 
 import network, {
-  isNestedNetworkItem,
   type NestedNetworkItem,
   type NetworkItem,
+  isNestedNetworkItem,
 } from "@/data/tech/network";
-import { classes } from "@/utils/classes";
-import { convertToSlug } from "@/utils/slugs";
-import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 
-import IconExternal from "@/icons/IconExternal";
+import { classes } from "@/utils/classes";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
+import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
-
 import Tree, { type TreeNode } from "@/components/tech/Tree";
+
+import IconExternal from "@/icons/IconExternal";
 
 type Data = {
   label: string;

@@ -1,13 +1,14 @@
-import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { Transition } from "@headlessui/react";
-
+import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import { useRouter } from "next/router";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import { env } from "@/env";
+
 import { type Clip, getClips } from "@/server/apis/twitch";
 import { prisma } from "@/server/db/client";
 
 import { twitchChannels } from "@/data/calendar-events";
-import { env } from "@/env";
 
 async function getTwitchClips(
   userAccessToken: string,

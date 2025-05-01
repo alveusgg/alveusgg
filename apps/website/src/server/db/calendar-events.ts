@@ -1,5 +1,6 @@
-import { z } from "zod";
 import { DateTime } from "luxon";
+import { z } from "zod";
+
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
   type ActiveAmbassador,
@@ -7,30 +8,30 @@ import {
   isActiveAmbassadorEntry,
 } from "@alveusgg/data/build/ambassadors/filters";
 
-import { prisma, type CalendarEvent } from "@/server/db/client";
-import {
-  createScheduleSegment,
-  getScheduleSegments,
-  removeScheduleSegment,
-  type ScheduleSegment,
-} from "@/server/apis/twitch";
 import {
   createScheduledGuildEvent,
   editScheduledGuildEvent,
   getScheduledGuildEvents,
   removeScheduledGuildEvent,
 } from "@/server/apis/discord";
-
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
-import { typeSafeObjectEntries } from "@/utils/helpers";
-import { getShortBaseUrl } from "@/utils/short-url";
-import { camelToKebab } from "@/utils/string-case";
+import {
+  type ScheduleSegment,
+  createScheduleSegment,
+  getScheduleSegments,
+  removeScheduleSegment,
+} from "@/server/apis/twitch";
+import { type CalendarEvent, prisma } from "@/server/db/client";
 
 import {
   getFormattedTitle,
   regularEventsWeekly,
   twitchChannels,
 } from "@/data/calendar-events";
+
+import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+import { typeSafeObjectEntries } from "@/utils/helpers";
+import { getShortBaseUrl } from "@/utils/short-url";
+import { camelToKebab } from "@/utils/string-case";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),

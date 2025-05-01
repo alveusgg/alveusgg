@@ -1,5 +1,5 @@
-import { useMemo, type ComponentProps } from "react";
 import NextLink from "next/link";
+import { type ComponentProps, useMemo } from "react";
 
 import { classes } from "@/utils/classes";
 

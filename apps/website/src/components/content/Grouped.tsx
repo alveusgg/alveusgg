@@ -1,4 +1,4 @@
-import { useCallback, type ComponentType, type Ref } from "react";
+import { type ComponentType, type Ref, useCallback } from "react";
 
 import { type Items } from "@/hooks/grouped";
 

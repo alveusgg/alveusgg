@@ -1,6 +1,7 @@
 import { defineConfig } from "tsup";
 
 import "./build-scripts/env";
+
 import { env } from "@/env";
 
 const config = defineConfig((options) => ({

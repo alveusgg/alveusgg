@@ -1,6 +1,6 @@
 import { env } from "@/env";
 
-import { prisma, type OutgoingWebhook } from "@/server/db/client";
+import { type OutgoingWebhook, prisma } from "@/server/db/client";
 
 export type OutgoingWebhookType = "form-entry" | "unknown";
 

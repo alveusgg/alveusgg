@@ -3,8 +3,11 @@ import {
   type NextRequest,
   NextResponse,
 } from "next/server";
+
 import { env } from "@/env";
+
 import { callEndpoint } from "@/server/utils/queue";
+
 import type { TrackClickSchema } from "@/pages/api/short-links/track-click";
 
 const headersToObject = (headers: Headers) =>

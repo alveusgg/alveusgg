@@ -1,5 +1,5 @@
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import Link from "next/link";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 
 import IconChevronDown from "@/icons/IconChevronDown";
 

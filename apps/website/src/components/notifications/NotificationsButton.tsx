@@ -2,16 +2,17 @@ import { Popover, PopoverButton, PopoverPanel } from "@headlessui/react";
 import Link from "next/link";
 
 import { classes } from "@/utils/classes";
-import IconNotification from "@/icons/IconNotification";
-import IconNotificationOn from "@/icons/IconNotificationOn";
-import IconNotificationOff from "@/icons/IconNotificationOff";
-import IconChevronRight from "@/icons/IconChevronRight";
 
+import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
 import {
   NotificationSettings,
   useNotificationStatus,
 } from "@/components/notifications/NotificationSettings";
-import { navLinkClassesSub } from "@/components/layout/navbar/NavLink";
+
+import IconChevronRight from "@/icons/IconChevronRight";
+import IconNotification from "@/icons/IconNotification";
+import IconNotificationOff from "@/icons/IconNotificationOff";
+import IconNotificationOn from "@/icons/IconNotificationOn";
 
 export const NotificationsButton = ({
   openDirectionX = "left",

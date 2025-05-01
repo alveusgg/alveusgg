@@ -1,15 +1,15 @@
 import { env } from "@/env";
 
+import { type Notification, prisma } from "@/server/db/client";
+import { triggerDiscordChannelWebhook } from "@/server/outgoing-webhooks";
+import { callEndpoint } from "@/server/utils/queue";
+
 import type { NotificationCategory } from "@/data/notifications";
 import {
   defaultTag,
   defaultTitle,
   notificationCategories,
 } from "@/data/notifications";
-
-import { prisma, type Notification } from "@/server/db/client";
-import { callEndpoint } from "@/server/utils/queue";
-import { triggerDiscordChannelWebhook } from "@/server/outgoing-webhooks";
 
 import { escapeLinksForDiscord } from "@/utils/escape-links-for-discord";
 

@@ -1,42 +1,43 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import PhotoSwipeLightbox from "photoswipe/lightbox";
-import { useEffect, useId, useMemo, Fragment } from "react";
+import { Fragment, useEffect, useId, useMemo } from "react";
 
 import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
-import { getIUCNStatus } from "@alveusgg/data/build/iucn";
-import enclosures, { type Enclosure } from "@alveusgg/data/build/enclosures";
-import {
-  getAmbassadorEpisodes,
-  type AnimalQuestWithRelation,
-} from "@alveusgg/data/build/animal-quest";
-import {
-  getAmbassadorImages,
-  getAmbassadorMerchImage,
-  getAmbassadorIconImage,
-  getAmbassadorBadgeImage,
-  getAmbassadorEmoteImage,
-  type AmbassadorImage,
-  type AmbassadorImages,
-} from "@alveusgg/data/build/ambassadors/images";
-import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import ambassadors, {
   type Ambassador,
 } from "@alveusgg/data/build/ambassadors/core";
+import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import {
+  type AmbassadorImage,
+  type AmbassadorImages,
+  getAmbassadorBadgeImage,
+  getAmbassadorEmoteImage,
+  getAmbassadorIconImage,
+  getAmbassadorImages,
+  getAmbassadorMerchImage,
+} from "@alveusgg/data/build/ambassadors/images";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Carousel from "@/components/content/Carousel";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import { Lightbox, Preview } from "@/components/content/YouTube";
-import AnimalQuest from "@/components/content/AnimalQuest";
+import {
+  type AnimalQuestWithRelation,
+  getAmbassadorEpisodes,
+} from "@alveusgg/data/build/animal-quest";
+import enclosures, { type Enclosure } from "@alveusgg/data/build/enclosures";
+import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
-import { camelToKebab, kebabToCamel } from "@/utils/string-case";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
-import { typeSafeObjectKeys } from "@/utils/helpers";
-import { convertToSlug } from "@/utils/slugs";
 import { formatPartialDateString } from "@/utils/datetime";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
+import { convertToSlug } from "@/utils/slugs";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
+
+import AnimalQuest from "@/components/content/AnimalQuest";
+import Carousel from "@/components/content/Carousel";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;

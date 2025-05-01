@@ -1,29 +1,29 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { type NextPage } from "next";
 import Image from "next/image";
-
-import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
-import useDragScroll from "@/hooks/drag";
-
-import { formatDateTime } from "@/utils/datetime";
-import { classes } from "@/utils/classes";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import collaborations, {
-  type Creator,
   type Collaboration,
+  type Creator,
 } from "@/data/collaborations";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import { Lightbox, Preview } from "@/components/content/YouTube";
-import Grouped, { type GroupedProps } from "@/components/content/Grouped";
-import SubNav from "@/components/content/SubNav";
+import { classes } from "@/utils/classes";
+import { formatDateTime } from "@/utils/datetime";
 
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import useDragScroll from "@/hooks/drag";
+import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
+
+import Grouped, { type GroupedProps } from "@/components/content/Grouped";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import SubNav from "@/components/content/SubNav";
+import { Lightbox, Preview } from "@/components/content/YouTube";
+
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type CreatorWithSlug = Creator & { slug: string };
 

@@ -1,19 +1,18 @@
+import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
-
-import { useRouter } from "next/router";
 
 import type { ShortLinks } from "@/server/db/client";
 import type { ShortLinkSchema } from "@/server/db/short-links";
 
-import { trpc } from "@/utils/trpc";
-import { convertToSlug, SLUG_PATTERN } from "@/utils/slugs";
-
-import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
-import { TextField } from "@/components/shared/form/TextField";
-import { Fieldset } from "@/components/shared/form/Fieldset";
-import { MessageBox } from "@/components/shared/MessageBox";
 import { getShortBaseUrl } from "@/utils/short-url";
+import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
+import { trpc } from "@/utils/trpc";
+
+import { MessageBox } from "@/components/shared/MessageBox";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+import { Fieldset } from "@/components/shared/form/Fieldset";
+import { TextField } from "@/components/shared/form/TextField";
 
 type ShortLinkFormProps = {
   action: "create" | "edit";

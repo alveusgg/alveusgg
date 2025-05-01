@@ -2,14 +2,14 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
-import { trpc } from "@/utils/trpc";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { splitAttachments } from "@/utils/split-attachments";
+import { trpc } from "@/utils/trpc";
 
-import IconPencil from "@/icons/IconPencil";
-import IconEye from "@/icons/IconEye";
-import IconTrash from "@/icons/IconTrash";
-
+import DateTime from "@/components/content/DateTime";
+import Heading from "@/components/content/Heading";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import {
   Button,
@@ -17,13 +17,11 @@ import {
   dangerButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
-
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import DateTime from "@/components/content/DateTime";
-
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+
+import IconEye from "@/icons/IconEye";
+import IconPencil from "@/icons/IconPencil";
+import IconTrash from "@/icons/IconTrash";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
 

@@ -1,7 +1,7 @@
-import type { UrlObject } from "url";
+import type { LinkProps } from "next/link";
 import { useRouter } from "next/router";
 
-const useIsActivePath = (href: UrlObject | string, exact = false) => {
+const useIsActivePath = (href: LinkProps["href"], exact = false) => {
   const router = useRouter();
 
   const url = typeof href === "string" ? href : href.href;

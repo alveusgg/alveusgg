@@ -1,61 +1,59 @@
+import type { InferGetStaticPropsType, NextPage } from "next";
+import Image from "next/image";
+import NextLink from "next/link";
 import {
+  type KeyboardEventHandler,
+  type WheelEvent,
   useCallback,
   useEffect,
   useMemo,
   useRef,
   useState,
-  type WheelEvent,
-  type KeyboardEventHandler,
 } from "react";
-import type { InferGetStaticPropsType, NextPage } from "next";
-import NextLink from "next/link";
-import Image from "next/image";
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
-
-import { delay } from "@/utils/delay";
-import { trpc } from "@/utils/trpc";
-import { classes } from "@/utils/classes";
-import { extractInfoFromMapFeatures } from "@/utils/locations";
 
 import {
   getMapFeatures,
-  getPublicPosts,
   getPostsCount,
   getPostsToShow,
+  getPublicPosts,
   getUsersCount,
 } from "@/server/db/show-and-tell";
+
+import { classes } from "@/utils/classes";
+import { delay } from "@/utils/delay";
+import { extractInfoFromMapFeatures } from "@/utils/locations";
+import { trpc } from "@/utils/trpc";
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
 import useIntersectionObserver from "@/hooks/intersection";
 import useLocaleString from "@/hooks/locale";
 
-import IconLoading from "@/icons/IconLoading";
-import IconArrowUp from "@/icons/IconArrowUp";
-import IconArrowDown from "@/icons/IconArrowDown";
-import IconArrowsIn from "@/icons/IconArrowsIn";
-import IconArrowsOut from "@/icons/IconArrowsOut";
-import IconArrowRight from "@/icons/IconArrowRight";
-import IconPencil from "@/icons/IconPencil";
-import IconGlobe from "@/icons/IconGlobe";
-import IconUserGroup from "@/icons/IconUserGroup";
-import IconMapPin from "@/icons/IconMapPin";
-
-import Meta from "@/components/content/Meta";
-import Section from "@/components/content/Section";
+import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
-import Box from "@/components/content/Box";
-
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 import { Button, LinkButton } from "@/components/shared/form/Button";
-
-import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
-import { QrCode } from "@/components/show-and-tell/QrCode";
 import { GiveAnHourProgress } from "@/components/show-and-tell/GiveAnHourProgress";
+import { QrCode } from "@/components/show-and-tell/QrCode";
+import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
+
+import IconArrowDown from "@/icons/IconArrowDown";
+import IconArrowRight from "@/icons/IconArrowRight";
+import IconArrowUp from "@/icons/IconArrowUp";
+import IconArrowsIn from "@/icons/IconArrowsIn";
+import IconArrowsOut from "@/icons/IconArrowsOut";
+import IconGlobe from "@/icons/IconGlobe";
+import IconLoading from "@/icons/IconLoading";
+import IconMapPin from "@/icons/IconMapPin";
+import IconPencil from "@/icons/IconPencil";
+import IconUserGroup from "@/icons/IconUserGroup";
 
 import alveusLogo from "@/assets/logo.png";
-import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
 import mapImage from "@/assets/show-and-tell/map.jpg";
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
 
 export type ShowAndTellPageProps = InferGetStaticPropsType<
   typeof getStaticProps

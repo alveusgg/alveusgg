@@ -1,27 +1,28 @@
-import { type NextPage } from "next";
-import Image from "next/image";
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
 import IframeResizer from "@iframe-resizer/react";
+import { type NextPage } from "next";
+import Image from "next/image";
+
 import { type ActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import Share from "@/components/content/Share";
 import Button from "@/components/content/Button";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import Share from "@/components/content/Share";
 
-import IconChevronUp from "@/icons/IconChevronUp";
-import IconChevronDown from "@/icons/IconChevronDown";
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconChevronDown from "@/icons/IconChevronDown";
+import IconChevronUp from "@/icons/IconChevronUp";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";

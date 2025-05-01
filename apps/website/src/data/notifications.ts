@@ -1,6 +1,6 @@
-import type { NotificationUrgency } from "@/server/db/client";
-
 import { env } from "@/env";
+
+import type { NotificationUrgency } from "@/server/db/client";
 
 type NotificationLinkSuggestion = {
   label: string;

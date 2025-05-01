@@ -1,20 +1,21 @@
-import { useEffect } from "react";
-import { type AppType } from "next/app";
-import { useRouter } from "next/router";
-import Head from "next/head";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Analytics } from "@vercel/analytics/react";
 import { type Session } from "next-auth";
 import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
-import { Analytics } from "@vercel/analytics/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { type AppType } from "next/app";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
-import { trpc } from "@/utils/trpc";
-import { unregisterServiceWorker } from "@/utils/sw";
 import { botScopes, defaultScopes } from "@/data/twitch";
+
+import { unregisterServiceWorker } from "@/utils/sw";
+import { trpc } from "@/utils/trpc";
 
 import { ConsentProvider } from "@/hooks/consent";
 
-import Layout from "@/components/layout/Layout";
 import FontProvider from "@/components/layout/Fonts";
+import Layout from "@/components/layout/Layout";
 
 import "@/styles/tailwind.css";
 

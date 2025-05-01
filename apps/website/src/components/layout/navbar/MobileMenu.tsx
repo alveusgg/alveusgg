@@ -1,13 +1,13 @@
-import { DisclosurePanel, DisclosureButton } from "@headlessui/react";
-import { Fragment } from "react";
+import { DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { Fragment } from "react";
 
 import { mainNavStructure } from "@/data/navigation";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 
-import { navLinkClassesSub, NavLinkSub } from "./NavLink";
+import { NavLinkSub, navLinkClassesSub } from "./NavLink";
 
 export function MobileMenu() {
   const { data: sessionData } = useSession();

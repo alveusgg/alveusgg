@@ -3,16 +3,15 @@ import type {
   InferGetStaticPropsType,
   NextPage,
 } from "next";
-
+import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { useRouter } from "next/router";
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-
 import { getNotificationById } from "@/server/db/notifications";
+
+import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const notificationId = String(params?.notificationId || "");

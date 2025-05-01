@@ -1,7 +1,19 @@
-import { z } from "zod";
 import { TRPCError } from "@trpc/server";
+import { z } from "zod";
 
 import { env } from "@/env";
+
+import {
+  type FileStorageObject,
+  type ImageAttachment,
+  type ImageMetadata,
+  type LinkAttachment,
+  type ShowAndTellEntryAttachment,
+  type ShowAndTellEntry as ShowAndTellEntryModel,
+  prisma,
+} from "@/server/db/client";
+import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
+import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 
 import {
   MAX_IMAGES,
@@ -10,21 +22,9 @@ import {
   MYSQL_MAX_VARCHAR_LENGTH,
 } from "@/data/show-and-tell";
 
-import {
-  prisma,
-  type FileStorageObject,
-  type ImageAttachment,
-  type ImageMetadata,
-  type LinkAttachment,
-  type ShowAndTellEntry as ShowAndTellEntryModel,
-  type ShowAndTellEntryAttachment,
-} from "@/server/db/client";
-import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
-import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
-
-import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { notEmpty } from "@/utils/helpers";
+import { parseVideoUrl, validateNormalizedVideoUrl } from "@/utils/video-urls";
 
 export type ImageAttachmentWithFileStorageObject = ImageAttachment & {
   fileStorageObject:

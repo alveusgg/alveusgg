@@ -1,8 +1,8 @@
 import { type ReactNode } from "react";
 
-import IconCalendar from "@/icons/IconCalendar";
-
 import { classes } from "@/utils/classes";
+
+import IconCalendar from "@/icons/IconCalendar";
 
 type TimelineProps = {
   items: {

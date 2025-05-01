@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { z, ZodType } from "zod";
+import type { ZodType, z } from "zod";
 
 import { env } from "@/env";
+
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 
 export function createTokenProtectedApiHandler<T extends ZodType>(

@@ -2,9 +2,9 @@ import type { ImageProps } from "next/image";
 import Image from "next/image";
 import { type CSSProperties, useCallback, useId, useMemo } from "react";
 
-import { camelToKebab } from "@/utils/string-case";
-import { createImageUrl, type ImageLoaderProps } from "@/utils/image";
 import { classes } from "@/utils/classes";
+import { type ImageLoaderProps, createImageUrl } from "@/utils/image";
+import { camelToKebab } from "@/utils/string-case";
 
 type SlideshowProps = {
   images: {

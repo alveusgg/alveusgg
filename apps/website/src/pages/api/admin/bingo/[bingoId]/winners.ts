@@ -1,16 +1,17 @@
 import { type NextApiRequest, type NextApiResponse } from "next";
 
-import { prisma } from "@/server/db/client";
-
 import { getServerAuthSession } from "@/server/common/get-server-auth-session";
-import { checkPermissions } from "@/server/utils/auth";
 import { getAllEntriesForBingo } from "@/server/db/bingos";
+import { prisma } from "@/server/db/client";
+import { checkPermissions } from "@/server/utils/auth";
+
+import { permissions } from "@/data/permissions";
+
 import {
   calcBingoConfig,
   findCardsWithBingo,
   parseBingoPlayData,
 } from "@/utils/bingo";
-import { permissions } from "@/data/permissions";
 
 const winners = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerAuthSession({ req, res });

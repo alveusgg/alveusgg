@@ -1,9 +1,10 @@
-import { Fragment, type MouseEventHandler, type ReactNode } from "react";
 import {
   Popover,
   PopoverButton as PopoverButtonHeadless,
   PopoverPanel,
 } from "@headlessui/react";
+import { Fragment, type MouseEventHandler, type ReactNode } from "react";
+
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 
 export function PopoverButton({

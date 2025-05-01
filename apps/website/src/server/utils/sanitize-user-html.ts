@@ -1,5 +1,5 @@
-import { JSDOM } from "jsdom";
 import domPurify, { type Config } from "dompurify";
+import { JSDOM } from "jsdom";
 
 const window = new JSDOM("").window;
 const purify = domPurify(window);

@@ -2,19 +2,20 @@ import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 
 import { generatePreSignedUploadUrl } from "@/server/utils/community-photos";
+
 import { imageMimeTypes } from "@/utils/files";
 
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import Heading from "@/components/content/Heading";
+import { ImageUploadFilePreview } from "@/components/shared/form/ImageUploadAttachment";
 import {
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "@/components/shared/form/UploadAttachmentsField";
 
-import { ImageUploadFilePreview } from "@/components/shared/form/ImageUploadAttachment";
-import Link from "@/components/content/Link";
 import IconArrowRight from "@/icons/IconArrowRight";
 
 export async function getServerSideProps(context: NextPageContext) {

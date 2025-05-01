@@ -1,16 +1,16 @@
 import { type NextPage } from "next";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import People from "@/components/content/People";
 import Meta from "@/components/content/Meta";
+import People from "@/components/content/People";
+import Section from "@/components/content/Section";
 
-import micheleRaffinImage from "@/assets/people/michele-raffin.png";
-import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
-import synackImage from "@/assets/people/synack.png";
-import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
 import allisonImage from "@/assets/people/allison.jpg";
+import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
+import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import nickElectricianImage from "@/assets/people/nick-electrician.png";
+import sebastianEcheverriImage from "@/assets/people/sebastian-echeverri.png";
+import synackImage from "@/assets/people/synack.png";
 
 const advisors = {
   michele: {

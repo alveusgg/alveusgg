@@ -4,15 +4,13 @@ import { useRouter } from "next/router";
 
 import { trpc } from "@/utils/trpc";
 
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { MessageBox } from "@/components/shared/MessageBox";
-
+import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-
-import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
+import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
 
 import showAndTellHeader from "@/assets/show-and-tell/header.png";
 

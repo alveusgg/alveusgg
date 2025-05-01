@@ -2,16 +2,16 @@ import { Fragment } from "react";
 
 import { trpc } from "@/utils/trpc";
 
-import IconLoading from "@/icons/IconLoading";
-import IconSync from "@/icons/IconSync";
+import DateTime from "@/components/content/DateTime";
+import { NotificationEntry } from "@/components/notifications/NotificationEntry";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { Button } from "@/components/shared/form/Button";
+
 import IconArchive from "@/icons/IconArchive";
 import IconBolt from "@/icons/IconBolt";
+import IconLoading from "@/icons/IconLoading";
+import IconSync from "@/icons/IconSync";
 import IconXCircleOutline from "@/icons/IconXCircleOutline";
-
-import { NotificationEntry } from "@/components/notifications/NotificationEntry";
-import DateTime from "@/components/content/DateTime";
-import { Button } from "@/components/shared/form/Button";
-import { MessageBox } from "@/components/shared/MessageBox";
 
 export function NotificationsLive() {
   const recentNotifications =

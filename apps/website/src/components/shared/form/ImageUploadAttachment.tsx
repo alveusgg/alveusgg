@@ -2,13 +2,13 @@ import type { ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
-import IconLoading from "@/icons/IconLoading";
-
 import { Button } from "@/components/shared/form/Button";
 import type { FileReference } from "@/components/shared/form/UploadAttachmentsField";
+
+import IconCheck from "@/icons/IconCheck";
+import IconLoading from "@/icons/IconLoading";
 import IconTrash from "@/icons/IconTrash";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
-import IconCheck from "@/icons/IconCheck";
 
 export function ImageUploadFilePreview({
   fileReference,

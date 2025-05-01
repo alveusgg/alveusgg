@@ -1,28 +1,30 @@
 import {
-  useCallback,
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  useMemo,
-  useRef,
-  type ReactNode,
-  type Ref,
-} from "react";
-import { useRouter } from "next/router";
-import {
+  Description,
   Dialog,
   DialogPanel,
   DialogTitle,
-  Description,
 } from "@headlessui/react";
+import { useRouter } from "next/router";
+import {
+  type ReactNode,
+  type Ref,
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
-import { safeJSONParse } from "@/utils/helpers";
 import { classes } from "@/utils/classes";
+import { safeJSONParse } from "@/utils/helpers";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+
 import IconX from "@/icons/IconX";
+
 import useCrawler from "./crawler";
 
 type ConsentData = {

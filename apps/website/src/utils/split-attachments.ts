@@ -1,4 +1,5 @@
 import type { ShowAndTellEntryAttachments } from "@/server/db/show-and-tell";
+
 import { parseVideoUrl, videoPlatformConfigs } from "./video-urls";
 
 export function splitAttachments(attachments: ShowAndTellEntryAttachments) {
