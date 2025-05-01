@@ -1,10 +1,6 @@
 import { type GeoJSONSource, Map, Popup } from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import "maplibre-gl/dist/maplibre-gl.css";
-
-// Import the MapLibre CSS
-
 import { env } from "@/env";
 
 import type { LocationFeature } from "@/server/db/show-and-tell";
@@ -18,6 +14,8 @@ import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
 import Section from "../content/Section";
 import { ModalDialog } from "../shared/ModalDialog";
+
+import "maplibre-gl/dist/maplibre-gl.css";
 
 const MAX_ZOOM = 8;
 const TOOLTIP_MIN_ZOOM = 3;

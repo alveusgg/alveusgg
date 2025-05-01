@@ -2,13 +2,7 @@ import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
 import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import "maplibre-gl/dist/maplibre-gl.css";
-// Actual map CSS
-import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
-
 import mapStyle from "@/data/map-style";
-
-// Map search box CSS
 
 import {
   geocoderApi,
@@ -23,6 +17,9 @@ import IconWorld from "@/icons/IconWorld";
 import IconX from "@/icons/IconX";
 
 import { CheckboxField } from "./CheckboxField";
+
+import "maplibre-gl/dist/maplibre-gl.css";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
 /**
  * @param name Unique name of the element
