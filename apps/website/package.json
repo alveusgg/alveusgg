@@ -34,7 +34,7 @@
     "format": "prisma format"
   },
   "dependencies": {
-    "@alveusgg/data": "0.58.0",
+    "@alveusgg/data": "0.59.0-0-pre.6c93a195eea887a2e43a98eda3f181ba70b8323d",
     "@auth/prisma-adapter": "^2.9.0",
     "@aws-sdk/client-s3": "^3.799.0",
     "@aws-sdk/s3-request-presigner": "^3.799.0",
