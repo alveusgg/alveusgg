@@ -100,6 +100,7 @@
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^2.1.2",
     "@next/eslint-plugin-next": "^15.3.1",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.2",
     "@types/country-list": "^2.1.4",
     "@types/dagre": "^0.7.52",
     "@types/eslint-config-prettier": "^6.11.3",
@@ -140,9 +141,28 @@
   },
   "prettier": {
     "plugins": [
-      "prettier-plugin-tailwindcss"
+      "prettier-plugin-tailwindcss",
+      "@trivago/prettier-plugin-sort-imports"
     ],
-    "tailwindStylesheet": "./src/styles/tailwind.css"
+    "tailwindStylesheet": "./src/styles/tailwind.css",
+    "importOrder": [
+      "^node:.+$",
+      "<THIRD_PARTY_MODULES>",
+      "^@alveusgg/data(/.+)?$",
+      "^@/env(/.+)?$",
+      "^@/server(/.+)?$",
+      "^@/data(/.+)?$",
+      "^@/utils(/.+)?$",
+      "^@/hooks(/.+)?$",
+      "^@/components(/.+)?$",
+      "^@/icons(/.+)?$",
+      "^@/assets(/.+)?$",
+      "^@/.+$",
+      "^\\."
+    ],
+    "importOrderSeparation": true,
+    "importOrderSortSpecifiers": true,
+    "importOrderSideEffects": false
   },
   "postcss": {
     "plugins": {
