@@ -14,7 +14,10 @@
   },
   "scripts": {
     "types": "tsc --noEmit",
-    "postinstall": "prisma generate",
+    "build:compile": "tsc --outDir dist --declaration --sourcemap",
+    "build:generate": "prisma generate",
+    "build": "run-s build:generate build:compile",
+    "postinstall": "run-s build",
     "lint:validate": "prisma validate",
     "lint:format": "prisma format --check",
     "lint": "run-p lint:*",
@@ -31,7 +34,7 @@
   },
   "exports": {
     ".": {
-      "import": "./src/index.ts"
+      "import": "./dist/index.js"
     }
   }
 }
