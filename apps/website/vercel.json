@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "echo \"//npm.pkg.github.com/:_authToken=\\${GH_PKG_REGISTRY_TOKEN}\" >> ~/.npmrc && pnpm install --frozen-lockfile --filter \"{.}...\"",
-  "ignoreCommand": "git diff ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} HEAD --quiet ../../pnpm-lock.yaml ../../pnpm-workspace.yaml ../../package.json ../database ./",
+  "ignoreCommand": "git diff $([ -n \"${VERCEL_GIT_PREVIOUS_SHA}\" ] && git show \"${VERCEL_GIT_PREVIOUS_SHA}\" &> /dev/null && echo \"${VERCEL_GIT_PREVIOUS_SHA}\" || echo HEAD^) HEAD --quiet ../../pnpm-lock.yaml ../../pnpm-workspace.yaml ../../package.json ../database ./",
   "crons": [
     {
       "path": "/api/cron",
