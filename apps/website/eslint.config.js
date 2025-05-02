@@ -37,7 +37,7 @@ export default tseslint.config(
   importXPluginConfigs.recommended,
   importXPluginConfigs.typescript,
   {
-    name: "import-x/order",
+    name: "import-x/custom",
     rules: {
       "import-x/order": [
         "warn",
@@ -51,6 +51,13 @@ export default tseslint.config(
           ],
         },
       ],
+    },
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project: import.meta.dirname,
+        },
+      },
     },
   },
   {

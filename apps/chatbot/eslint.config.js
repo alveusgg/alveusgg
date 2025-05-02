@@ -3,8 +3,7 @@
 import eslint from "@eslint/js";
 import tseslint from "typescript-eslint";
 import prettiereslint from "eslint-config-prettier";
-
-import importXPlugin from "eslint-plugin-import-x";
+import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
 
 export default tseslint.config(
   {
@@ -25,10 +24,10 @@ export default tseslint.config(
       reportUnusedDisableDirectives: true,
     },
   },
-  importXPlugin.flatConfigs.recommended,
-  importXPlugin.flatConfigs.typescript,
+  importXPluginConfigs.recommended,
+  importXPluginConfigs.typescript,
   {
-    name: "import-x/order",
+    name: "import-x/custom",
     rules: {
       "import-x/order": [
         "warn",
@@ -42,6 +41,13 @@ export default tseslint.config(
           ],
         },
       ],
+    },
+    settings: {
+      "import-x/resolver": {
+        typescript: {
+          project: import.meta.dirname,
+        },
+      },
     },
   },
   {
