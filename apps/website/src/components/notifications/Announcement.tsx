@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
 
-import type { Notification } from "@/server/db/client";
+import type { Notification } from "@alveusgg/database";
 
 import { formatDateTime } from "@/utils/datetime";
 import { getShortBaseUrl } from "@/utils/short-url";

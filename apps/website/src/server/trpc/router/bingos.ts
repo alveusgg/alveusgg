@@ -1,12 +1,13 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import { prisma } from "@alveusgg/database";
+
 import {
   createEntry,
   findActiveBingo,
   getBingoEntry,
 } from "@/server/db/bingos";
-import { prisma } from "@/server/db/client";
 import { protectedProcedure, router } from "@/server/trpc/trpc";
 
 import {

@@ -2,7 +2,8 @@ import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 
-import type { ShortLinks } from "@/server/db/client";
+import type { ShortLinks } from "@alveusgg/database";
+
 import type { ShortLinkSchema } from "@/server/db/short-links";
 
 import { getShortBaseUrl } from "@/utils/short-url";

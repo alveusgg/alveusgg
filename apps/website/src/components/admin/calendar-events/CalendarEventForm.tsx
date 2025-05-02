@@ -2,8 +2,9 @@ import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 
+import type { CalendarEvent } from "@alveusgg/database";
+
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
-import type { CalendarEvent } from "@/server/db/client";
 
 import { frequentLinks, standardCategories } from "@/data/calendar-events";
 

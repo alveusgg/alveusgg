@@ -1,9 +1,10 @@
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
+import { type Notification, prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import { type Notification, prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";

@@ -2,7 +2,7 @@ import { keepPreviousData } from "@tanstack/react-query";
 import Image from "next/image";
 import { type HTMLProps, useEffect, useMemo, useRef, useState } from "react";
 
-import type { CalendarEvent } from "@/server/db/client";
+import type { CalendarEvent } from "@alveusgg/database";
 
 import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
 

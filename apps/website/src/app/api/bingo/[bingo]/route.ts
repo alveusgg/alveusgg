@@ -1,5 +1,6 @@
+import { prisma } from "@alveusgg/database";
+
 import { findActiveBingo } from "@/server/db/bingos";
-import { prisma } from "@/server/db/client";
 
 import {
   type BingoLiveData,

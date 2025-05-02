@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
 
 //API for short links middleware function
 export default async function handler(

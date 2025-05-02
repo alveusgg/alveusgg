@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
 
 import { SLUG_REGEX } from "@/utils/slugs";
 

@@ -1,6 +1,6 @@
-import { env } from "@/env";
+import { type OutgoingWebhook, prisma } from "@alveusgg/database";
 
-import { type OutgoingWebhook, prisma } from "@/server/db/client";
+import { env } from "@/env";
 
 export type OutgoingWebhookType = "form-entry" | "unknown";
 

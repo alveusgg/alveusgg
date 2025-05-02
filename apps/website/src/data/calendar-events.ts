@@ -1,6 +1,6 @@
 import { type DateObjectUnits } from "luxon";
 
-import { type CalendarEvent } from "@/server/db/client";
+import { type CalendarEvent } from "@alveusgg/database";
 
 type StandardCategory = {
   name: string;

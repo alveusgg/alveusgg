@@ -2,9 +2,10 @@ import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
+import { prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import { prisma } from "@/server/db/client";
 import {
   cancelNotification,
   getRecentNotifications,

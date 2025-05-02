@@ -1,4 +1,5 @@
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
+
 import { deleteFileStorageObject } from "@/server/utils/file-storage";
 
 export async function cleanupFileStorage({

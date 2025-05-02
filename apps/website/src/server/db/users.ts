@@ -1,4 +1,4 @@
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
 
 export async function getRolesForUser(userId: string) {
   return (

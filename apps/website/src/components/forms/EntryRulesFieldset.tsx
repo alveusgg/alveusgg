@@ -1,4 +1,4 @@
-import type { Form } from "@/server/db/client";
+import type { Form } from "@alveusgg/database";
 
 import Link from "@/components/content/Link";
 import { CheckboxField } from "@/components/shared/form/CheckboxField";

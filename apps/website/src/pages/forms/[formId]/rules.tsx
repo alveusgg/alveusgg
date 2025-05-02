@@ -4,7 +4,8 @@ import type {
   NextPage,
 } from "next";
 
-import type { Form } from "@/server/db/client";
+import type { Form } from "@alveusgg/database";
+
 import { findActiveForm } from "@/server/db/forms";
 
 import { calcFormConfig } from "@/utils/forms";

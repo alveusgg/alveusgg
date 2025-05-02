@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { type PrismaClient, prisma } from "@/server/db/client";
+import { type PrismaClient, prisma } from "@alveusgg/database";
 
 import type { BingoPlayData } from "@/utils/bingo";
 import { assignCardToUser, bingoConfigSchema, bingoTypes } from "@/utils/bingo";

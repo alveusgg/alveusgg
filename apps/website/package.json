@@ -140,6 +140,7 @@
       "^node:.+$",
       "<THIRD_PARTY_MODULES>",
       "^@alveusgg/data(/.+)?$",
+      "^@alveusgg/database(/.+)?$",
       "^@/env(/.+)?$",
       "^@/server(/.+)?$",
       "^@/data(/.+)?$",

@@ -8,6 +8,8 @@ import {
   isActiveAmbassadorEntry,
 } from "@alveusgg/data/build/ambassadors/filters";
 
+import { type CalendarEvent, prisma } from "@alveusgg/database";
+
 import {
   createScheduledGuildEvent,
   editScheduledGuildEvent,
@@ -20,7 +22,6 @@ import {
   getScheduleSegments,
   removeScheduleSegment,
 } from "@/server/apis/twitch";
-import { type CalendarEvent, prisma } from "@/server/db/client";
 
 import {
   getFormattedTitle,
