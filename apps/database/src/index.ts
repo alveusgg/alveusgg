@@ -1,35 +1,36 @@
 import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
 
-import { env } from "@/env";
-
-import { type Prisma, PrismaClient } from "../../../prisma/client";
+import { type Prisma, PrismaClient } from "../prisma/client";
 
 const opts = {
-  log: env.NODE_ENV === "development" ? ["query", "error", "warn"] : ["error"],
+  log:
+    process.env.NODE_ENV === "development"
+      ? ["query", "error", "warn"]
+      : ["error"],
 } as const satisfies Prisma.PrismaClientOptions;
 
 const createClient = () => new PrismaClient({ ...opts });
-let client: ReturnType<typeof createClient>;
+let cachedClient: ReturnType<typeof createClient>;
 const getClient = () => {
-  client ??= createClient();
-  return client;
+  cachedClient ??= createClient();
+  return cachedClient;
 };
 
 const createEdge = () =>
   new PrismaClient({
     ...opts,
-    adapter: new PrismaPlanetScale({ url: env.DATABASE_URL }),
+    adapter: new PrismaPlanetScale({ url: process.env.DATABASE_URL }),
   });
-let edge: ReturnType<typeof createEdge>;
+let cachedEdge: ReturnType<typeof createEdge>;
 const getEdge = () => {
-  edge ??= createEdge();
-  return edge;
+  cachedEdge ??= createEdge();
+  return cachedEdge;
 };
 
 // Readonly to reflect that the Proxy only exposes a getter
 type PrismaClientWithEdge = Readonly<
-  typeof client & {
-    get edge(): typeof edge;
+  typeof cachedClient & {
+    get edge(): typeof cachedEdge;
   }
 >;
 
@@ -46,4 +47,4 @@ export const prisma = new Proxy(
   },
 ) as PrismaClientWithEdge;
 
-export * from "../../../prisma/client";
+export * from "../prisma/client";

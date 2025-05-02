@@ -3,4 +3,5 @@ pnpm-lock.yaml
 
 apps/website/.next/
 apps/website/public/push/alveus/
-apps/website/prisma/client/
+
+apps/database/prisma/client/

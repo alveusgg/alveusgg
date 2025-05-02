@@ -1,0 +1,37 @@
+{
+  "name": "@alveusgg/database",
+  "version": "0.1.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE.md",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alveusgg/alveusgg.git",
+    "directory": "apps/database"
+  },
+  "bugs": {
+    "url": "https://github.com/alveusgg/alveusgg/issues"
+  },
+  "scripts": {
+    "types": "tsc --noEmit",
+    "postinstall": "prisma generate",
+    "lint:validate": "prisma validate",
+    "lint:format": "prisma format --check",
+    "lint": "run-p lint:*",
+    "format": "prisma format"
+  },
+  "dependencies": {
+    "@prisma/adapter-planetscale": "^6.7.0",
+    "@prisma/client": "^6.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.3",
+    "npm-run-all2": "^7.0.2",
+    "prisma": "^6.7.0"
+  },
+  "exports": {
+    ".": {
+      "import": "./src/index.ts"
+    }
+  }
+}
