@@ -22,7 +22,7 @@ const logMutations = t.middleware(async ({ path, type, next, ctx }) => {
       : "Unauthenticated";
 
     console.log(
-      `[${new Date().toISOString()}] tRPC MUTATION:${user} invoked ${path}`,
+      `[${new Date().toISOString()}] tRPC MUTATION: ${user} invoked ${path}`,
     );
   }
 
