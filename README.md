@@ -81,12 +81,13 @@ If you aren't working on features related to Twitch authentication, you can set 
    4. The data encryption passphrase (`DATA_ENCRYPTION_PASSPHRASE`) has to be filled with a 24-byte Base64-encoded secret. See [Generate secrets](#generate-secrets) below.
    5. You may define a Weather API key (`WEATHER_API_KEY`) to use the weather API and stream overlay. See [Weather API](#weather-api) below.
    6. If you are using Twitch authentication, you may define privileged users once they have signed in in the `SUPER_USER_IDS` variable with their CUID (using comma separated values)
-7. Push the database schema to the new database using `pnpm prisma db push` from within `apps/website`.
-8. Start the dev server using `pnpm dev` from within `apps/website`
-9. The website should be running at `http://localhost:3000/` (open in browser)
+7. Copy `apps/database/.env.example` to `apps/database/.env`
+8. Push the database schema to the new database using `pnpm prisma db push` from within `apps/database`.
+9. Start the dev server using `pnpm dev` from within `apps/website`
+10. The website should be running at `http://localhost:3000/` (open in browser)
 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
-- You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio`
+- You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio` from within `apps/database`
 - You can access a direct MySQL CLI to the database with `docker compose exec db sh -c 'MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql alveusgg'`
 - If you're using VSCode, add `"typescript.tsdk": "node_modules/typescript/lib"` + `"eslint.workingDirectories": [{ "pattern": "apps/*" }]` to `.vscode/settings.json` to ensure you're using the correct TypeScript version + ESLint working directories
 
