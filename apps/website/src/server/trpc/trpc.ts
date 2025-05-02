@@ -14,10 +14,24 @@ const t = initTRPC.context<Context>().create({
 
 export const router = t.router;
 
+// Middleware to log mutations
+const logMutations = t.middleware(async ({ path, type, next, ctx }) => {
+  if (type === "mutation") {
+    const userId = ctx.session?.user?.id || "Unauthenticated";
+
+    console.log(
+      `[${new Date().toISOString()}] tRPC MUTATION: ${path}`,
+      `user: (${userId})`,
+    );
+  }
+
+  return next();
+});
+
 /**
  * Unprotected procedure
  **/
-export const publicProcedure = t.procedure;
+export const publicProcedure = t.procedure.use(logMutations);
 
 /**
  * Reusable middleware to ensure
@@ -48,7 +62,7 @@ export const createCheckPermissionMiddleware = (permission: PermissionConfig) =>
 /**
  * Protected procedure
  **/
-export const protectedProcedure = t.procedure.use(isAuthed);
+export const protectedProcedure = t.procedure.use(logMutations).use(isAuthed);
 
 /**
  * Reusable middleware to ensure
@@ -69,4 +83,6 @@ const isAuthedSuperUser = t.middleware(({ ctx, next }) => {
 /**
  * Protected procedure
  **/
-export const superUserProcedure = t.procedure.use(isAuthedSuperUser);
+export const superUserProcedure = t.procedure
+  .use(logMutations)
+  .use(isAuthedSuperUser);
