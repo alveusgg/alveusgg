@@ -1,4 +1,5 @@
 {
+  "ignoreCommand": "echo ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} && git diff ${VERCEL_GIT_PREVIOUS_SHA:-HEAD^} HEAD --quiet ../../pnpm-lock.yaml ../../pnpm-workspace.yaml ../../package.json ../database ./",
   "crons": [
     {
       "path": "/api/cron",
