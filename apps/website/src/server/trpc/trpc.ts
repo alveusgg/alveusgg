@@ -17,11 +17,12 @@ export const router = t.router;
 // Middleware to log mutations
 const logMutations = t.middleware(async ({ path, type, next, ctx }) => {
   if (type === "mutation") {
-    const userId = ctx.session?.user?.id || "Unauthenticated";
+    const user = ctx.session?.user
+      ? `@${ctx.session.user.name ?? "unknown"} (${ctx.session.user.id})`
+      : "Unauthenticated";
 
     console.log(
-      `[${new Date().toISOString()}] tRPC MUTATION: ${path}`,
-      `user: (${userId})`,
+      `[${new Date().toISOString()}] tRPC MUTATION:${user} invoked ${path}`,
     );
   }
 
