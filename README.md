@@ -88,7 +88,7 @@ If you aren't working on features related to Twitch authentication, you can set 
 - Learn more about the stack at [Create T3 App - Introduction](https://create.t3.gg/en/introduction)
 - You can use the Prisma Studio to view your database. Launch it with `pnpm prisma studio`
 - You can access a direct MySQL CLI to the database with `docker compose exec db sh -c 'MYSQL_PWD=$MYSQL_ROOT_PASSWORD mysql alveusgg'`
-- If you're using VSCode, add `"typescript.tsdk": "node_modules/typescript/lib"` to `.vscode/settings.json` to ensure you're using the correct TypeScript version
+- If you're using VSCode, add `"typescript.tsdk": "node_modules/typescript/lib"` + `"eslint.workingDirectories": [{ "pattern": "apps/*" }]` to `.vscode/settings.json` to ensure you're using the correct TypeScript version + ESLint working directories
 
 ### Generate secrets
 
