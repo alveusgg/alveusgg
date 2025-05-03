@@ -1,13 +1,13 @@
-import { type ReactNode, useMemo } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
-
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-
-import IconArrowRight from "@/icons/IconArrowRight";
+import { type ReactNode, useMemo } from "react";
 
 import globalPromotion from "@/data/env/global-promotion";
+
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+
+import IconArrowRight from "@/icons/IconArrowRight";
 
 import { Footer } from "./footer/Footer";
 import { Navbar } from "./navbar/Navbar";

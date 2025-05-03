@@ -1,25 +1,25 @@
 import { type NextPage } from "next";
 import { type ComponentType } from "react";
 
-import { useConsent } from "@/hooks/consent";
-
 import donationEvent from "@/data/env/donation-event";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
-import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
-import Markdown from "@/components/content/Markdown";
+import { useConsent } from "@/hooks/consent";
+
 import Consent from "@/components/Consent";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Markdown from "@/components/content/Markdown";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 
 import { type IconProps } from "@/icons/BaseIcon";
 import IconAmazon from "@/icons/IconAmazon";
-import IconPayPal from "@/icons/IconPayPal";
-import IconBox from "@/icons/IconBox";
-import IconBitcoin from "@/icons/IconBitcoin";
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconBitcoin from "@/icons/IconBitcoin";
+import IconBox from "@/icons/IconBox";
 import IconGift from "@/icons/IconGift";
+import IconPayPal from "@/icons/IconPayPal";
 
 type DonateLink = {
   icon: ComponentType<IconProps>;

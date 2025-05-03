@@ -21,7 +21,6 @@
  * This product bundles QR Code Generator, which is available under a
  * "MIT" license. For details, see src/third-party/qrcodegen.
  */
-
 import type React from "react";
 
 import { QrCode } from "@/third-party/qrcodegen";

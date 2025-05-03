@@ -1,17 +1,17 @@
 import type {
-  NextPage,
-  InferGetServerSidePropsType,
   GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
 } from "next";
 import { getSession } from "next-auth/react";
 
 import type { Form, FormEntry, MailingAddress } from "@/server/db/client";
 import { findActiveForm, getFormEntry } from "@/server/db/forms";
 
-import { EntryForm } from "@/components/forms/EntryForm";
 import Heading from "@/components/content/Heading";
-import Section from "@/components/content/Section";
 import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
+import { EntryForm } from "@/components/forms/EntryForm";
 import { MessageBox } from "@/components/shared/MessageBox";
 
 export type FormPageProps = InferGetServerSidePropsType<

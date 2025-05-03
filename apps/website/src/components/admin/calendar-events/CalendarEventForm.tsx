@@ -1,12 +1,12 @@
-import type { FormEvent } from "react";
-import { useState, useCallback } from "react";
-
 import { useRouter } from "next/router";
+import type { FormEvent } from "react";
+import { useCallback, useState } from "react";
 
-import type { CalendarEvent } from "@/server/db/client";
 import type { CalendarEventSchema } from "@/server/db/calendar-events";
+import type { CalendarEvent } from "@/server/db/client";
 
-import { trpc } from "@/utils/trpc";
+import { frequentLinks, standardCategories } from "@/data/calendar-events";
+
 import { classes } from "@/utils/classes";
 import {
   DATE_LOCAL_INPUT_FORMAT,
@@ -14,20 +14,20 @@ import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/local-datetime";
-import { frequentLinks, standardCategories } from "@/data/calendar-events";
+import { trpc } from "@/utils/trpc";
 
+import { MessageBox } from "@/components/shared/MessageBox";
 import {
   Button,
   dangerButtonClasses,
   defaultButtonClasses,
 } from "@/components/shared/form/Button";
-import { TextField } from "@/components/shared/form/TextField";
-import { Fieldset } from "@/components/shared/form/Fieldset";
-import { MessageBox } from "@/components/shared/MessageBox";
 import { FieldGroup } from "@/components/shared/form/FieldGroup";
+import { Fieldset } from "@/components/shared/form/Fieldset";
 import { LocalDateField } from "@/components/shared/form/LocalDateField";
 import { LocalTimeField } from "@/components/shared/form/LocalTimeField";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
+import { TextField } from "@/components/shared/form/TextField";
 
 type CalendarEventFormProps = {
   action: "create" | "edit";

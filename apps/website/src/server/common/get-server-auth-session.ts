@@ -1,7 +1,9 @@
 import { type GetServerSidePropsContext } from "next";
 import { unstable_getServerSession } from "next-auth";
-import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
+
 import { env } from "@/env";
+
+import { DEV_ADMIN_SESSION } from "@/utils/dev-admin-session";
 
 import { authOptions } from "../../pages/api/auth/[...nextauth]";
 

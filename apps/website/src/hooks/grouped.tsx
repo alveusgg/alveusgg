@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 type ObjectKey<T> = Extract<keyof T, string>;
 

@@ -1,29 +1,28 @@
-import { useCallback, type FormEvent } from "react";
 import { useSession } from "next-auth/react";
+import { type FormEvent, useCallback } from "react";
 
 import type { Form } from "@/server/db/client";
 
-import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
-import { Button } from "@/components/shared/form/Button";
-import { MessageBox } from "@/components/shared/MessageBox";
-
-import Markdown from "@/components/content/Markdown";
-import Heading from "@/components/content/Heading";
-import Section from "@/components/content/Section";
-
 import { getCountryName } from "@/utils/countries";
-import { trpc } from "@/utils/trpc";
 import { calcFormConfig } from "@/utils/forms";
+import { trpc } from "@/utils/trpc";
+
+import Heading from "@/components/content/Heading";
+import Markdown from "@/components/content/Markdown";
+import Section from "@/components/content/Section";
+import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
+import { MessageBox } from "@/components/shared/MessageBox";
+import { Button } from "@/components/shared/form/Button";
 
 import type { FormEntryWithAddress } from "@/pages/forms/[formId]";
 
 import { ConsentFieldset } from "./ConsentFieldset";
-import { GiveawayChecks } from "./GiveawayChecks";
-import { ShippingAddressFieldset } from "./ShippingAddressFieldset";
-import { NameFieldset } from "./NameFieldset";
 import { ContactFieldset } from "./ContactFieldset";
 import { EntryRulesFieldset } from "./EntryRulesFieldset";
+import { GiveawayChecks } from "./GiveawayChecks";
+import { NameFieldset } from "./NameFieldset";
 import { Promos } from "./Promos";
+import { ShippingAddressFieldset } from "./ShippingAddressFieldset";
 
 export const EntryForm = ({
   form,

@@ -1,30 +1,30 @@
+import parse, {
+  type DOMNode,
+  Element,
+  type HTMLReactParserOptions,
+  Text,
+  domToReact,
+} from "html-react-parser";
+import Image from "next/image";
 import {
   Fragment,
+  type Ref,
   isValidElement,
   useCallback,
   useMemo,
   useRef,
-  type Ref,
 } from "react";
-import Image from "next/image";
-import parse, {
-  domToReact,
-  Element,
-  Text,
-  type DOMNode,
-  type HTMLReactParserOptions,
-} from "html-react-parser";
 import { ErrorBoundary } from "react-error-boundary";
-
-import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
-import { classes } from "@/utils/classes";
-import { splitAttachments } from "@/utils/split-attachments";
 
 import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
 
+import { classes } from "@/utils/classes";
+import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
+import { splitAttachments } from "@/utils/split-attachments";
+
 import Link from "@/components/content/Link";
-import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 import { Badge } from "@/components/show-and-tell/Badge";
+import { ShowAndTellGallery } from "@/components/show-and-tell/gallery/ShowAndTellGallery";
 
 import IconWorld from "@/icons/IconWorld";
 

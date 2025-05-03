@@ -1,9 +1,9 @@
-import IconStreamable from "@/icons/IconStreamable";
+import type { videoPlatformConfigs } from "@/utils/video-urls";
+
 import IconImgur from "@/icons/IconImgur";
+import IconStreamable from "@/icons/IconStreamable";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconYouTube from "@/icons/IconYouTube";
-
-import type { videoPlatformConfigs } from "@/utils/video-urls";
 
 export function VideoPlatformIcon({
   platform,

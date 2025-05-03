@@ -1,8 +1,9 @@
-import { initTRPC, TRPCError } from "@trpc/server";
+import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 
-import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 import { type Context } from "@/server/trpc/context";
+import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
+
 import type { PermissionConfig } from "@/data/permissions";
 
 const t = initTRPC.context<Context>().create({

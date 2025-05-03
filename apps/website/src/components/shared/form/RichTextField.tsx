@@ -1,7 +1,8 @@
+import dynamic from "next/dynamic";
 import { type LegacyRef, useRef, useState } from "react";
 import { type AriaTextFieldOptions, useTextField } from "react-aria";
-import dynamic from "next/dynamic";
 import type { default as ReactQuillType } from "react-quill-new";
+
 import "react-quill-new/dist/quill.snow.css";
 
 import { classes } from "@/utils/classes";

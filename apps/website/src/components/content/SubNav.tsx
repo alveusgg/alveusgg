@@ -1,9 +1,9 @@
-import { Fragment } from "react";
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
+import { Fragment } from "react";
 
 import { classes } from "@/utils/classes";
 

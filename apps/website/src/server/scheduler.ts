@@ -1,8 +1,9 @@
 import { DateTime } from "luxon";
 
+import { prisma } from "@/server/db/client";
+
 import type { ScheduledTasksConfig } from "@/data/scheduled-tasks";
 import { scheduledTasks } from "@/data/scheduled-tasks";
-import { prisma } from "@/server/db/client";
 
 type TaskConfig = ScheduledTasksConfig["tasks"][number];
 

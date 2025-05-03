@@ -2,11 +2,11 @@ import type { AnchorHTMLAttributes, JSX } from "react";
 
 import type { LinkAttachment } from "@/server/db/client";
 
-import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 import { createImageUrl } from "@/utils/image";
+import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 
-import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 import { Preview } from "@/components/content/YouTube";
+import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 
 import IconYouTube from "@/icons/IconYouTube";
 

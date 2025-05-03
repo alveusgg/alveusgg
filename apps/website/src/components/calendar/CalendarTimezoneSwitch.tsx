@@ -1,11 +1,14 @@
 import { type MouseEventHandler } from "react";
-import { DATETIME_USER_ZONE, DATETIME_USER_ZONE_SHORT } from "@/hooks/timezone";
-import IconCheck from "@/icons/IconCheck";
+
 import { classes } from "@/utils/classes";
 import {
   DATETIME_ALVEUS_ZONE,
   DATETIME_ALVEUS_ZONE_SHORT,
 } from "@/utils/datetime";
+
+import { DATETIME_USER_ZONE, DATETIME_USER_ZONE_SHORT } from "@/hooks/timezone";
+
+import IconCheck from "@/icons/IconCheck";
 
 export type CalendarTimezoneSwitchButtonProps = {
   label: string;

@@ -1,10 +1,10 @@
 import { type NextPage } from "next";
 
-import Section from "@/components/content/Section";
-import Heading from "@/components/content/Heading";
-import Meta from "@/components/content/Meta";
-import Link from "@/components/content/Link";
 import Button from "@/components/content/Button";
+import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
+import Meta from "@/components/content/Meta";
+import Section from "@/components/content/Section";
 
 const ContactUsPage: NextPage = () => {
   return (

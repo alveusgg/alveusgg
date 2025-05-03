@@ -1,22 +1,22 @@
-import {
-  Fragment,
-  useMemo,
-  type ComponentPropsWithoutRef,
-  type MouseEventHandler,
-} from "react";
 import { PopoverButton as PopoverButtonHeadless } from "@headlessui/react";
+import {
+  type ComponentPropsWithoutRef,
+  Fragment,
+  type MouseEventHandler,
+  useMemo,
+} from "react";
 
 import { classes } from "@/utils/classes";
 import sharePlatforms, { type SharePlatform } from "@/utils/share";
 
-import IconShare from "@/icons/IconShare";
-import IconClipboard from "@/icons/IconClipboard";
-
-import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
-import { PopoverButton } from "@/components/shared/PopoverButton";
-import { QRCode } from "@/components/QrCode";
-
 import { useCopyToClipboard } from "@/hooks/clipboard";
+
+import { QRCode } from "@/components/QrCode";
+import { PopoverButton } from "@/components/shared/PopoverButton";
+import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
+
+import IconClipboard from "@/icons/IconClipboard";
+import IconShare from "@/icons/IconShare";
 
 function ShareLink({
   className,

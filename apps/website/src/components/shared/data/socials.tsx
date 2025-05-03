@@ -1,18 +1,18 @@
 import { type ComponentType } from "react";
 
-import IconInstagram from "@/icons/IconInstagram";
-import IconTikTok from "@/icons/IconTikTok";
-import IconTwitter from "@/icons/IconTwitter";
-import IconTwitch from "@/icons/IconTwitch";
-import IconYouTube from "@/icons/IconYouTube";
-import IconBluesky from "@/icons/IconBluesky";
-
 import socials from "@/data/socials";
 
 import {
   typeSafeObjectEntries,
   typeSafeObjectFromEntries,
 } from "@/utils/helpers";
+
+import IconBluesky from "@/icons/IconBluesky";
+import IconInstagram from "@/icons/IconInstagram";
+import IconTikTok from "@/icons/IconTikTok";
+import IconTwitch from "@/icons/IconTwitch";
+import IconTwitter from "@/icons/IconTwitter";
+import IconYouTube from "@/icons/IconYouTube";
 
 const icons = {
   twitch: IconTwitch,

@@ -1,26 +1,27 @@
+import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
 import allAmbassadors from "@alveusgg/data/build/ambassadors/core";
 import {
-  isActiveAmbassadorEntry,
   type ActiveAmbassador,
+  isActiveAmbassadorEntry,
 } from "@alveusgg/data/build/ambassadors/filters";
 import {
-  getAmbassadorImages,
   type AmbassadorImage,
+  getAmbassadorImages,
 } from "@alveusgg/data/build/ambassadors/images";
-import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
 import {
-  getSpecies,
   type Species,
+  getSpecies,
 } from "@alveusgg/data/build/ambassadors/species";
 import enclosures from "@alveusgg/data/build/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
-import { createImageUrl } from "@/utils/image";
+import { env } from "@/env";
+
 import {
   typeSafeObjectEntries,
   typeSafeObjectFromEntries,
 } from "@/utils/helpers";
-import { env } from "@/env";
+import { createImageUrl } from "@/utils/image";
 
 // If these types change, the extension schema MUST be updated as well
 type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {

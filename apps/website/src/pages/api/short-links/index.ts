@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+
 import { prisma } from "@/server/db/client";
 
 //API for short links middleware function

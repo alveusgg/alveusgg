@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
 import { DateTime } from "luxon";
+import { useEffect, useState } from "react";
 
 export default function useToday(timeZone?: string) {
   const [today, setToday] = useState<DateTime>();

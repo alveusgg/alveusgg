@@ -1,5 +1,5 @@
-import { useMemo, type ReactNode } from "react";
 import Image, { type ImageProps } from "next/image";
+import { type ReactNode, useMemo } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -9,6 +9,7 @@ import bottleFriendsImage from "@/assets/merch/bottle-friends.png";
 // import capNoodleImage from "@/assets/merch/cap-noodle.png";
 // import capPeepoImage from "@/assets/merch/cap-peepo.png";
 import hoodieKidsImage from "@/assets/merch/hoodie-kids.png";
+import hoodiePeepoRangerConnorImage from "@/assets/merch/hoodie-peepo-ranger-connor.png";
 import hoodiePeepoRangerImage from "@/assets/merch/hoodie-peepo-ranger.png";
 import hoodiePolaroidImage from "@/assets/merch/hoodie-polaroid.png";
 import mugCountryGirlsImage from "@/assets/merch/mug-country-girls.png";
@@ -16,24 +17,21 @@ import mugDoodleImage from "@/assets/merch/mug-doodle.png";
 import mugFennReedImage from "@/assets/merch/mug-fenn-reed.png";
 import mugSirenImage from "@/assets/merch/mug-siren.png";
 import onesieViewerTrainingImage from "@/assets/merch/onesie-viewer-training.png";
+import sweaterProtectFriendsAmandaImage from "@/assets/merch/sweater-protect-friends-amanda.png";
 import sweaterProtectFriendsImage from "@/assets/merch/sweater-protect-friends.png";
+import sweaterWinnieLindsayImage from "@/assets/merch/sweater-winnie-lindsay.png";
 // import sweaterWinnieImage from "@/assets/merch/sweater-winnie.png";
 // import toteGalleryImage from "@/assets/merch/tote-gallery.png";
 // import toteMosaicImage from "@/assets/merch/tote-mosaic.png";
 import tshirtBugHuntImage from "@/assets/merch/tshirt-bug-hunt.png";
+import tshirtPatchyMayaImage from "@/assets/merch/tshirt-patchy-maya.png";
 import tshirtPatchyImage from "@/assets/merch/tshirt-patchy.png";
 import tshirtYouthImage from "@/assets/merch/tshirt-youth.png";
-
-import tshirtPatchyMayaImage from "@/assets/merch/tshirt-patchy-maya.png";
-import hoodiePeepoRangerConnorImage from "@/assets/merch/hoodie-peepo-ranger-connor.png";
-import sweaterProtectFriendsAmandaImage from "@/assets/merch/sweater-protect-friends-amanda.png";
-import sweaterWinnieLindsayImage from "@/assets/merch/sweater-winnie-lindsay.png";
-
-import sirenImage from "@/assets/plushies/siren.png";
-import winnieImage from "@/assets/plushies/winnie.png";
 import georgieImage from "@/assets/plushies/georgie.png";
-import stompyImage from "@/assets/plushies/stompy.png";
 import mayaImage from "@/assets/plushies/maya.png";
+import sirenImage from "@/assets/plushies/siren.png";
+import stompyImage from "@/assets/plushies/stompy.png";
+import winnieImage from "@/assets/plushies/winnie.png";
 
 import Carousel from "./Carousel";
 

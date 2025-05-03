@@ -1,5 +1,7 @@
 import fs from "node:fs";
+
 import "./env";
+
 import { env } from "../src/env";
 
 const manifest = {

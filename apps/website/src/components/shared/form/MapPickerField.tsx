@@ -1,8 +1,8 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
 import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import "maplibre-gl/dist/maplibre-gl.css"; // Actual map CSS
-import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css"; // Map search box CSS
+import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import mapStyle from "@/data/map-style";
 
 import {
   geocoderApi,
@@ -10,14 +10,16 @@ import {
   reverseSearch,
   roundCoord,
 } from "@/utils/geolocation";
-import mapStyle from "@/data/map-style";
+
+import Box from "@/components/content/Box";
 
 import IconWorld from "@/icons/IconWorld";
 import IconX from "@/icons/IconX";
 
-import Box from "@/components/content/Box";
-
 import { CheckboxField } from "./CheckboxField";
+
+import "maplibre-gl/dist/maplibre-gl.css";
+import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
 /**
  * @param name Unique name of the element

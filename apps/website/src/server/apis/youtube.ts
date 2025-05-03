@@ -1,8 +1,9 @@
 import { XMLParser } from "fast-xml-parser";
 import { z } from "zod";
 
-import { channels } from "@/data/youtube";
 import { env } from "@/env";
+
+import { channels } from "@/data/youtube";
 
 const ItemSchema = z.object({
   id: z.string(),

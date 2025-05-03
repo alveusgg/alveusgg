@@ -1,6 +1,6 @@
-import type { NextPage, InferGetStaticPropsType } from "next";
-import Link from "next/link";
+import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
@@ -9,42 +9,43 @@ import animalQuestEpisodes from "@alveusgg/data/build/animal-quest";
 
 import { fetchYouTubeVideos } from "@/server/apis/youtube";
 
-import { typeSafeObjectEntries } from "@/utils/helpers";
-import { camelToKebab } from "@/utils/string-case";
-import usePrefersReducedMotion from "@/hooks/motion";
 import { channels as youTubeChannels } from "@/data/youtube";
 
-import { ambassadorImageHover } from "@/pages/ambassadors";
+import { typeSafeObjectEntries } from "@/utils/helpers";
+import { camelToKebab } from "@/utils/string-case";
 
-import Heading from "@/components/content/Heading";
-import Button from "@/components/content/Button";
-import WatchLive from "@/components/content/WatchLive";
-import Slideshow from "@/components/content/Slideshow";
-import Section from "@/components/content/Section";
-import Carousel from "@/components/content/Carousel";
-import { Lightbox } from "@/components/content/YouTube";
-import { MayaImage } from "@/components/content/Maya";
-import AnimalQuest from "@/components/content/AnimalQuest";
-import MerchCarousel from "@/components/content/MerchCarousel";
-import YouTubeCarousel from "@/components/content/YouTubeCarousel";
+import usePrefersReducedMotion from "@/hooks/motion";
+
 import Consent from "@/components/Consent";
+import AnimalQuest from "@/components/content/AnimalQuest";
+import Button from "@/components/content/Button";
+import Carousel from "@/components/content/Carousel";
+import Heading from "@/components/content/Heading";
+import { MayaImage } from "@/components/content/Maya";
+import MerchCarousel from "@/components/content/MerchCarousel";
+import Section from "@/components/content/Section";
+import Slideshow from "@/components/content/Slideshow";
+import WatchLive from "@/components/content/WatchLive";
+import { Lightbox } from "@/components/content/YouTube";
+import YouTubeCarousel from "@/components/content/YouTubeCarousel";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
 
-import sirenHeroImage from "@/assets/hero/siren.jpg";
-import studioHeroImage from "@/assets/hero/studio.jpg";
-import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
-import pushPopHeroImage from "@/assets/hero/push-pop.jpg";
-import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
-import noodleHeroImage from "@/assets/hero/noodle.jpg";
-import momoAppaHeroImage from "@/assets/hero/momo-appa.jpg";
-
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import momoAppaHeroImage from "@/assets/hero/momo-appa.jpg";
+import noodleHeroImage from "@/assets/hero/noodle.jpg";
+import pushPopHeroImage from "@/assets/hero/push-pop.jpg";
+import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
+import sirenHeroImage from "@/assets/hero/siren.jpg";
+import studioHeroImage from "@/assets/hero/studio.jpg";
+import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
+
+import { ambassadorImageHover } from "@/pages/ambassadors";
 
 const slides = [
   {

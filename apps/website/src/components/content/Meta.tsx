@@ -1,9 +1,11 @@
 import Head from "next/head";
 import { type ReactNode } from "react";
 
-import headerImage from "@/assets/header.png";
-import { createImageUrl } from "@/utils/image";
 import { env } from "@/env";
+
+import { createImageUrl } from "@/utils/image";
+
+import headerImage from "@/assets/header.png";
 
 type MetaProps = {
   title?: string;

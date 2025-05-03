@@ -2,14 +2,15 @@ import { type NextPage } from "next";
 
 import { reportYears } from "@/data/annual-reports";
 
-import Section from "@/components/content/Section";
+import { classes } from "@/utils/classes";
+
+import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Button from "@/components/content/Button";
+import Section from "@/components/content/Section";
 import Transparency from "@/components/content/Transparency";
 
 import IconChevronRight from "@/icons/IconChevronRight";
-import { classes } from "@/utils/classes";
 
 const AnnualReportsPage: NextPage = () => {
   return (

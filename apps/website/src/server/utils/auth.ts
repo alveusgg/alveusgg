@@ -1,6 +1,7 @@
 import type { Session } from "next-auth";
 
 import { env } from "@/env";
+
 import type { PermissionConfig } from "@/data/permissions";
 
 export function getSuperUserIds() {

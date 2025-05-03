@@ -1,30 +1,31 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 
-import Section from "@/components/content/Section";
 import Heading from "@/components/content/Heading";
-import People, { type Person } from "@/components/content/People";
-import Meta from "@/components/content/Meta";
-import { Lightbox, Preview } from "@/components/content/YouTube";
 import { MayaText } from "@/components/content/Maya";
-
-import mayaHigaImage from "@/assets/people/maya-higa.jpg";
-import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
-import connorObrienImage from "@/assets/people/connor-obrien.jpg";
-import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
-import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
-import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
-import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
-import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
-import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
-import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
-import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
-import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
-import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
-import spaceVoyageImage from "@/assets/people/space-voyage.png";
+import Meta from "@/components/content/Meta";
+import People, { type Person } from "@/components/content/People";
+import Section from "@/components/content/Section";
+import { Lightbox, Preview } from "@/components/content/YouTube";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
+import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
+import chandlerFunImage from "@/assets/people/chandler-fun.jpg";
+import chandlerImage from "@/assets/people/chandler.jpg";
+import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
+import connorObrienImage from "@/assets/people/connor-obrien.jpg";
+import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
+import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
+import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
+import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
+import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
+import mayaHigaImage from "@/assets/people/maya-higa.jpg";
+import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
+import spaceVoyageImage from "@/assets/people/space-voyage.png";
+import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
+import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 
 const staff: Record<string, Person> = {
   maya: {
@@ -189,6 +190,16 @@ const staff: Record<string, Person> = {
       </>
     ),
   },
+  chandler: {
+    image: [chandlerImage, chandlerFunImage],
+    name: "Chandler",
+    title: "Facilities",
+    description: (
+      <>
+        <p>I&apos;m the zoomer (W Hunger).</p>
+      </>
+    ),
+  },
   space: {
     image: spaceVoyageImage,
     name: "SpaceVoyage",
@@ -228,10 +239,6 @@ const team: Record<string, Member> = {
   colton: {
     name: "Colton (@ColtonActually)",
     title: "Post-Production Manager",
-  },
-  chandler: {
-    name: "Chandler",
-    title: "TikTok Editor",
   },
   dion: {
     name: "Dion (@Dionysus1911)",

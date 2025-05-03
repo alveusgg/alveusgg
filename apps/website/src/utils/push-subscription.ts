@@ -2,11 +2,11 @@
  * TODO: Check if applicationServerKey changed?
  * TODO: Check expirationTime?
  */
-
 import { useQuery } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { env } from "@/env";
+
 import { trpc } from "./trpc";
 
 const SW_PATH = "/push/alveus/PushServiceWorker.js";
