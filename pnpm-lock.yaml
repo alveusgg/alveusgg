@@ -144,6 +144,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
+      '@prisma/nextjs-monorepo-workaround-plugin':
+        specifier: ^6.7.0
+        version: 6.7.0
       '@t3-oss/env-nextjs':
         specifier: ^0.13.0
         version: 0.13.0(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.24.3)
@@ -357,7 +360,7 @@ importers:
         version: 4.3.4(eslint-plugin-import-x@4.11.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(eslint-plugin-import@2.31.0)(eslint@9.25.1(jiti@2.4.2))
       eslint-plugin-import:
         specifier: ^2.31.0
-        version: 2.31.0(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
+        version: 2.31.0(@typescript-eslint/parser@8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
       eslint-plugin-import-x:
         specifier: ^4.11.0
         version: 4.11.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
@@ -418,9 +421,6 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
-    peerDependenciesMeta:
-      tailwindcss:
-        optional: true
 
   '@ark/schema@0.46.0':
     resolution: {integrity: sha512-c2UQdKgP2eqqDArfBqQIJppxJHvNNXuQPeuSPlDML4rjw+f1cu0qAlzOG4b8ujgm9ctIDWwhpyw6gjG5ledIVQ==}
@@ -1599,6 +1599,9 @@ packages:
 
   '@prisma/get-platform@6.7.0':
     resolution: {integrity: sha512-i9IH5lO4fQwnMLvQLYNdgVh9TK3PuWBfQd7QLk/YurnAIg+VeADcZDbmhAi4XBBDD+hDif9hrKyASu0hbjwabw==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.7.0':
+    resolution: {integrity: sha512-5rrgAAxhlmfZXNBkaussmCZe8y86L38B6QCbRgBIO/AaI4EkO+2OJolztpbAp+YRr9sOSPj4geinUVZol1drfg==}
 
   '@react-aria/breadcrumbs@3.5.23':
     resolution: {integrity: sha512-4uLxuAgPfXds8sBc/Cg0ml7LKWzK+YTwHL7xclhQUkPO32rzlHDl+BJ5cyWhvZgGUf8JJXbXhD5VlJJzbbl8Xg==}
@@ -6805,9 +6808,8 @@ snapshots:
 
   '@alveusgg/data@0.58.0(tailwindcss@4.1.4)(zod@3.24.3)':
     dependencies:
-      zod: 3.24.3
-    optionalDependencies:
       tailwindcss: 4.1.4
+      zod: 3.24.3
 
   '@ark/schema@0.46.0':
     dependencies:
@@ -8202,6 +8204,8 @@ snapshots:
   '@prisma/get-platform@6.7.0':
     dependencies:
       '@prisma/debug': 6.7.0
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.7.0': {}
 
   '@react-aria/breadcrumbs@3.5.23(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -11346,15 +11350,16 @@ snapshots:
       tinyglobby: 0.2.13
       unrs-resolver: 1.6.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
       eslint-plugin-import-x: 4.11.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
+      '@typescript-eslint/parser': 8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.25.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 4.3.4(eslint-plugin-import-x@4.11.0(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(eslint-plugin-import@2.31.0)(eslint@9.25.1(jiti@2.4.2))
@@ -11379,7 +11384,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-import@2.31.0(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -11390,7 +11395,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.25.1(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.25.1(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -11401,6 +11406,8 @@ snapshots:
       semver: 6.3.1
       string.prototype.trimend: 1.0.8
       tsconfig-paths: 3.15.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
