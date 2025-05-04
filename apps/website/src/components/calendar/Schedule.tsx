@@ -1,7 +1,8 @@
 import { Transition } from "@headlessui/react";
 import { useMemo } from "react";
 
-import { standardCategories, twitchChannels } from "@/data/calendar-events";
+import { standardCategories } from "@/data/calendar-events";
+import { channels } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -32,7 +33,7 @@ const groupedCategories = standardCategories.reduce(
   {} as Record<string, { name: string; color: string }[]>,
 );
 
-const webcalUrls = Object.keys(twitchChannels).reduce(
+const webcalUrls = Object.keys(channels).reduce(
   (acc, key) => ({
     ...acc,
     [key]: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical${key === "alveus" ? "" : `/${key}`}`,

@@ -23,11 +23,8 @@ import {
   removeScheduleSegment,
 } from "@/server/apis/twitch";
 
-import {
-  getFormattedTitle,
-  regularEventsWeekly,
-  twitchChannels,
-} from "@/data/calendar-events";
+import { getFormattedTitle, regularEventsWeekly } from "@/data/calendar-events";
+import { channels } from "@/data/twitch";
 
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -287,8 +284,8 @@ async function syncExternalSchedule<ExternalEvent>(
   }
 }
 
-export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
-  const { username, filter } = twitchChannels[channel];
+export async function syncTwitchSchedule(channel: keyof typeof channels) {
+  const { username, calendarEventFilter } = channels[channel];
   const twitchChannel = await prisma.twitchChannel.findFirst({
     where: { username },
     select: {
@@ -309,7 +306,7 @@ export async function syncTwitchSchedule(channel: keyof typeof twitchChannels) {
   await syncExternalSchedule({
     type: "Twitch",
     get: () => getTwitchSchedule(access_token, providerAccountId, new Date()),
-    filter,
+    filter: calendarEventFilter,
     compare: (internal, external) => {
       const title = getFormattedTitle(internal, username);
       const date = internal.startAt.toISOString().replace(/\.\d+Z$/, "Z");
