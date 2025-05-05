@@ -4,6 +4,8 @@ export const imageMimeTypes = [
   "image/png",
   "image/gif",
   "image/webp",
+  "image/avif",
+  "image/heic",
 ] as const satisfies Array<`image/${string}`>;
 
 export const isImageMimeType = (type: string): type is ImageMimeType =>
