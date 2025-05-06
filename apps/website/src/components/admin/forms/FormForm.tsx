@@ -2,9 +2,10 @@ import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useCallback, useState } from "react";
 
+import type { Form } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import type { Form } from "@/server/db/client";
 import type { FormSchema } from "@/server/db/forms";
 
 import {

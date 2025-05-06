@@ -1,6 +1,6 @@
 import type { AnchorHTMLAttributes, JSX } from "react";
 
-import type { LinkAttachment } from "@/server/db/client";
+import type { LinkAttachment } from "@alveusgg/database";
 
 import { createImageUrl } from "@/utils/image";
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";

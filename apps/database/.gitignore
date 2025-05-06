@@ -1,0 +1,5 @@
+# database
+/prisma/client/
+
+# tsc
+/dist/

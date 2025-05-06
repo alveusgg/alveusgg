@@ -1,9 +1,10 @@
 import { stringify } from "csv-stringify/sync";
 import { type NextApiRequest, type NextApiResponse } from "next";
 
+import { prisma } from "@alveusgg/database";
+
 import { getServerAuthSession } from "@/server/common/get-server-auth-session";
 import { getAllEntriesForBingo } from "@/server/db/bingos";
-import { prisma } from "@/server/db/client";
 import { checkPermissions } from "@/server/utils/auth";
 
 import { permissions } from "@/data/permissions";

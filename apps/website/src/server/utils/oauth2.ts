@@ -1,6 +1,6 @@
 import { OAuth2 } from "oauth";
 
-import { prisma } from "../db/client";
+import { prisma } from "@alveusgg/database";
 
 export class ExpiredAccessTokenError extends Error {}
 

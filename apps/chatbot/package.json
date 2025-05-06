@@ -13,14 +13,13 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "dependencies": {
-    "@planetscale/database": "^1.19.0",
+    "@alveusgg/database": "workspace:*",
     "@t3-oss/env-core": "^0.13.0",
     "@twurple/api": "^7.3.0",
     "@twurple/auth": "^7.3.0",
     "@twurple/chat": "^7.3.0",
     "@twurple/easy-bot": "^7.3.0",
     "dotenv": "^16.5.0",
-    "drizzle-orm": "^0.43.1",
     "read-pkg": "^9.0.1",
     "tsx": "^4.19.4",
     "zod": "^3.24.3"

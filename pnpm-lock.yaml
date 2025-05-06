@@ -28,9 +28,9 @@ importers:
 
   apps/chatbot:
     dependencies:
-      '@planetscale/database':
-        specifier: ^1.19.0
-        version: 1.19.0
+      '@alveusgg/database':
+        specifier: workspace:*
+        version: link:../database
       '@t3-oss/env-core':
         specifier: ^0.13.0
         version: 0.13.0(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.24.3)
@@ -49,9 +49,6 @@ importers:
       dotenv:
         specifier: ^16.5.0
         version: 16.5.0
-      drizzle-orm:
-        specifier: ^0.43.1
-        version: 0.43.1(@planetscale/database@1.19.0)(@prisma/client@6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3))(prisma@6.7.0(typescript@5.8.3))
       read-pkg:
         specifier: ^9.0.1
         version: 9.0.1
@@ -84,11 +81,33 @@ importers:
         specifier: ^8.31.1
         version: 8.31.1(eslint@9.25.1(jiti@2.4.2))(typescript@5.8.3)
 
+  apps/database:
+    dependencies:
+      '@prisma/adapter-planetscale':
+        specifier: ^6.7.0
+        version: 6.7.0(@planetscale/database@1.19.0)
+      '@prisma/client':
+        specifier: ^6.7.0
+        version: 6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.15.3
+        version: 22.15.3
+      npm-run-all2:
+        specifier: ^7.0.2
+        version: 7.0.2
+      prisma:
+        specifier: ^6.7.0
+        version: 6.7.0(typescript@5.8.3)
+
   apps/website:
     dependencies:
       '@alveusgg/data':
         specifier: 0.58.0
         version: 0.58.0(tailwindcss@4.1.4)(zod@3.24.3)
+      '@alveusgg/database':
+        specifier: workspace:*
+        version: link:../database
       '@auth/prisma-adapter':
         specifier: ^2.9.0
         version: 2.9.0(@prisma/client@6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3))
@@ -122,12 +141,9 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
-      '@planetscale/database':
-        specifier: ^1.19.0
-        version: 1.19.0
-      '@prisma/client':
+      '@prisma/nextjs-monorepo-workaround-plugin':
         specifier: ^6.7.0
-        version: 6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)
+        version: 6.7.0
       '@t3-oss/env-nextjs':
         specifier: ^0.13.0
         version: 0.13.0(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.24.3)
@@ -372,9 +388,6 @@ importers:
       prettier-plugin-tailwindcss:
         specifier: ^0.6.11
         version: 0.6.11(@trivago/prettier-plugin-sort-imports@5.2.2(prettier@3.5.3))(prettier@3.5.3)
-      prisma:
-        specifier: ^6.7.0
-        version: 6.7.0(typescript@5.8.3)
       tailwindcss:
         specifier: ^4.1.4
         version: 4.1.4
@@ -1546,6 +1559,11 @@ packages:
     resolution: {integrity: sha512-Tv4jcFUFAFjOWrGSio49H6R2ijALv0ZzVBfJKIdm+kl9X046Fh4LLawrF9OMsglVbK6ukqMJsUCeucGAFTBcMA==}
     engines: {node: '>=16'}
 
+  '@prisma/adapter-planetscale@6.7.0':
+    resolution: {integrity: sha512-snLJ9znp+ABkLK6lT+z76An9BE4WCq+WtB763NNEt9vffdRQaiJDqHToTsiOAB6dxxBm1DHjE4f1plsb03w4cg==}
+    peerDependencies:
+      '@planetscale/database': ^1.15.0
+
   '@prisma/client@6.7.0':
     resolution: {integrity: sha512-+k61zZn1XHjbZul8q6TdQLpuI/cvyfil87zqK2zpreNIXyXtpUv3+H/oM69hcsFcZXaokHJIzPAt5Z8C8eK2QA==}
     engines: {node: '>=18.18'}
@@ -1564,6 +1582,9 @@ packages:
   '@prisma/debug@6.7.0':
     resolution: {integrity: sha512-RabHn9emKoYFsv99RLxvfG2GHzWk2ZI1BuVzqYtmMSIcuGboHY5uFt3Q3boOREM9de6z5s3bQoyKeWnq8Fz22w==}
 
+  '@prisma/driver-adapter-utils@6.7.0':
+    resolution: {integrity: sha512-xYcXALWz1GsCRqwcDw0kP0R27chn99Co/HMX0nyOvIjAOo+41Tl/qcCOce/Ik1wNMGTI68N64kt3iccJ4EJoCQ==}
+
   '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed':
     resolution: {integrity: sha512-EvpOFEWf1KkJpDsBCrih0kg3HdHuaCnXmMn7XFPObpFTzagK1N0Q0FMnYPsEhvARfANP5Ok11QyoTIRA2hgJTA==}
 
@@ -1575,6 +1596,9 @@ packages:
 
   '@prisma/get-platform@6.7.0':
     resolution: {integrity: sha512-i9IH5lO4fQwnMLvQLYNdgVh9TK3PuWBfQd7QLk/YurnAIg+VeADcZDbmhAi4XBBDD+hDif9hrKyASu0hbjwabw==}
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.7.0':
+    resolution: {integrity: sha512-5rrgAAxhlmfZXNBkaussmCZe8y86L38B6QCbRgBIO/AaI4EkO+2OJolztpbAp+YRr9sOSPj4geinUVZol1drfg==}
 
   '@react-aria/breadcrumbs@3.5.23':
     resolution: {integrity: sha512-4uLxuAgPfXds8sBc/Cg0ml7LKWzK+YTwHL7xclhQUkPO32rzlHDl+BJ5cyWhvZgGUf8JJXbXhD5VlJJzbbl8Xg==}
@@ -3908,95 +3932,6 @@ packages:
   dotenv@16.5.0:
     resolution: {integrity: sha512-m/C+AwOAr9/W1UOIZUo232ejMNnJAJtYQjUbHoNTBNTJSvqzzDh7vnrei3o3r3m9blf6ZoDkvcw0VmozNRFJxg==}
     engines: {node: '>=12'}
-
-  drizzle-orm@0.43.1:
-    resolution: {integrity: sha512-dUcDaZtE/zN4RV/xqGrVSMpnEczxd5cIaoDeor7Zst9wOe/HzC/7eAaulywWGYXdDEc9oBPMjayVEDg0ziTLJA==}
-    peerDependencies:
-      '@aws-sdk/client-rds-data': '>=3'
-      '@cloudflare/workers-types': '>=4'
-      '@electric-sql/pglite': '>=0.2.0'
-      '@libsql/client': '>=0.10.0'
-      '@libsql/client-wasm': '>=0.10.0'
-      '@neondatabase/serverless': '>=0.10.0'
-      '@op-engineering/op-sqlite': '>=2'
-      '@opentelemetry/api': ^1.4.1
-      '@planetscale/database': '>=1.13'
-      '@prisma/client': '*'
-      '@tidbcloud/serverless': '*'
-      '@types/better-sqlite3': '*'
-      '@types/pg': '*'
-      '@types/sql.js': '*'
-      '@vercel/postgres': '>=0.8.0'
-      '@xata.io/client': '*'
-      better-sqlite3: '>=7'
-      bun-types: '*'
-      expo-sqlite: '>=14.0.0'
-      gel: '>=2'
-      knex: '*'
-      kysely: '*'
-      mysql2: '>=2'
-      pg: '>=8'
-      postgres: '>=3'
-      prisma: '*'
-      sql.js: '>=1'
-      sqlite3: '>=5'
-    peerDependenciesMeta:
-      '@aws-sdk/client-rds-data':
-        optional: true
-      '@cloudflare/workers-types':
-        optional: true
-      '@electric-sql/pglite':
-        optional: true
-      '@libsql/client':
-        optional: true
-      '@libsql/client-wasm':
-        optional: true
-      '@neondatabase/serverless':
-        optional: true
-      '@op-engineering/op-sqlite':
-        optional: true
-      '@opentelemetry/api':
-        optional: true
-      '@planetscale/database':
-        optional: true
-      '@prisma/client':
-        optional: true
-      '@tidbcloud/serverless':
-        optional: true
-      '@types/better-sqlite3':
-        optional: true
-      '@types/pg':
-        optional: true
-      '@types/sql.js':
-        optional: true
-      '@vercel/postgres':
-        optional: true
-      '@xata.io/client':
-        optional: true
-      better-sqlite3:
-        optional: true
-      bun-types:
-        optional: true
-      expo-sqlite:
-        optional: true
-      gel:
-        optional: true
-      knex:
-        optional: true
-      kysely:
-        optional: true
-      mysql2:
-        optional: true
-      pg:
-        optional: true
-      postgres:
-        optional: true
-      prisma:
-        optional: true
-      sql.js:
-        optional: true
-      sqlite3:
-        optional: true
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -8136,6 +8071,11 @@ snapshots:
 
   '@planetscale/database@1.19.0': {}
 
+  '@prisma/adapter-planetscale@6.7.0(@planetscale/database@1.19.0)':
+    dependencies:
+      '@planetscale/database': 1.19.0
+      '@prisma/driver-adapter-utils': 6.7.0
+
   '@prisma/client@6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)':
     optionalDependencies:
       prisma: 6.7.0(typescript@5.8.3)
@@ -8149,6 +8089,10 @@ snapshots:
       - supports-color
 
   '@prisma/debug@6.7.0': {}
+
+  '@prisma/driver-adapter-utils@6.7.0':
+    dependencies:
+      '@prisma/debug': 6.7.0
 
   '@prisma/engines-version@6.7.0-36.3cff47a7f5d65c3ea74883f1d736e41d68ce91ed': {}
 
@@ -8168,6 +8112,8 @@ snapshots:
   '@prisma/get-platform@6.7.0':
     dependencies:
       '@prisma/debug': 6.7.0
+
+  '@prisma/nextjs-monorepo-workaround-plugin@6.7.0': {}
 
   '@react-aria/breadcrumbs@3.5.23(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
@@ -11018,12 +10964,6 @@ snapshots:
       domhandler: 5.0.3
 
   dotenv@16.5.0: {}
-
-  drizzle-orm@0.43.1(@planetscale/database@1.19.0)(@prisma/client@6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3))(prisma@6.7.0(typescript@5.8.3)):
-    optionalDependencies:
-      '@planetscale/database': 1.19.0
-      '@prisma/client': 6.7.0(prisma@6.7.0(typescript@5.8.3))(typescript@5.8.3)
-      prisma: 6.7.0(typescript@5.8.3)
 
   dunder-proto@1.0.1:
     dependencies:

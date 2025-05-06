@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useCallback } from "react";
 
-import type { TwitchChannel } from "@/server/db/client";
+import type { TwitchChannel } from "@alveusgg/database";
 
 import { trpc } from "@/utils/trpc";
 

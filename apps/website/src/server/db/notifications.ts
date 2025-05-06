@@ -1,6 +1,6 @@
-import { env } from "@/env";
+import { prisma } from "@alveusgg/database";
 
-import { prisma } from "@/server/db/client";
+import { env } from "@/env";
 
 export async function getRecentNotificationsForTags({
   tags,

@@ -1,6 +1,6 @@
-import { env } from "@/env";
+import type { NotificationUrgency } from "@alveusgg/database";
 
-import type { NotificationUrgency } from "@/server/db/client";
+import { env } from "@/env";
 
 type NotificationLinkSuggestion = {
   label: string;

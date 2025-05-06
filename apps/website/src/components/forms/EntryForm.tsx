@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 import { type FormEvent, useCallback } from "react";
 
-import type { Form } from "@/server/db/client";
+import type { Form } from "@alveusgg/database";
 
 import { getCountryName } from "@/utils/countries";
 import { calcFormConfig } from "@/utils/forms";

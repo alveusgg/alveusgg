@@ -1,8 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { env } from "@/env";
-
 import {
   type FileStorageObject,
   type ImageAttachment,
@@ -11,7 +9,10 @@ import {
   type ShowAndTellEntryAttachment,
   type ShowAndTellEntry as ShowAndTellEntryModel,
   prisma,
-} from "@/server/db/client";
+} from "@alveusgg/database";
+
+import { env } from "@/env";
+
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
 

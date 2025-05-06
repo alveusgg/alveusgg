@@ -1,6 +1,6 @@
 import type { DateTime } from "luxon";
 
-import type { CalendarEvent } from "@/server/db/client";
+import type { CalendarEvent } from "@alveusgg/database";
 
 import { getStandardCategoryColor } from "@/data/calendar-events";
 

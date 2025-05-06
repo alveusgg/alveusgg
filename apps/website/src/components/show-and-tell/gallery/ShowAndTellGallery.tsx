@@ -3,7 +3,8 @@ import PhotoSwipeLightbox from "photoswipe/lightbox";
 import type { JSX, MouseEventHandler, RefObject } from "react";
 import { useCallback, useEffect, useId, useMemo, useRef } from "react";
 
-import type { LinkAttachment } from "@/server/db/client";
+import type { LinkAttachment } from "@alveusgg/database";
+
 import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
 import { classes } from "@/utils/classes";

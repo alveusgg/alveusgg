@@ -2,9 +2,10 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import NextAuth, { type NextAuthOptions } from "next-auth";
 import TwitchProvider, { type TwitchProfile } from "next-auth/providers/twitch";
 
+import { prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import { prisma } from "@/server/db/client";
 import { getRolesForUser } from "@/server/db/users";
 import { checkIsSuperUserId } from "@/server/utils/auth";
 import {

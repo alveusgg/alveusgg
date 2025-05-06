@@ -1,4 +1,5 @@
-import type { ShowAndTellEntry, User } from "@/server/db/client";
+import type { ShowAndTellEntry, User } from "@alveusgg/database";
+
 import type { MarkPostAsSeenMode } from "@/server/db/show-and-tell";
 
 import { formatDateTimeLocal } from "@/utils/datetime";

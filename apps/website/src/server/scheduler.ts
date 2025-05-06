@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
 
 import type { ScheduledTasksConfig } from "@/data/scheduled-tasks";
 import { scheduledTasks } from "@/data/scheduled-tasks";

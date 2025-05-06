@@ -1,6 +1,7 @@
+import { type Notification, prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import { type Notification, prisma } from "@/server/db/client";
 import { triggerDiscordChannelWebhook } from "@/server/outgoing-webhooks";
 import { callEndpoint } from "@/server/utils/queue";
 
