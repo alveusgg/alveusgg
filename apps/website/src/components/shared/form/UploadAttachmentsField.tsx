@@ -16,6 +16,7 @@ import {
   getImageMimeType,
   isImageMimeType,
 } from "@/utils/files";
+import { imageConverter } from "@/utils/image-converter";
 import {
   type ResizeImageOptions,
   extractColorFromImage,
@@ -238,6 +239,22 @@ export const UploadAttachmentsField = ({
           let extractColor: PendingUploadFileReference["extractColor"] =
             async () => await extractColorFromImage(dataURL);
           let fileToUpload = file;
+
+          // Convert image to jpeg if it's a heic, avif or heif file
+          if (
+            file.type === "image/heic" ||
+            file.type === "image/avif" ||
+            file.type === "image/heif"
+          ) {
+            console.log("Converting image to jpeg", file);
+            const jpegFile = await imageConverter(file);
+            if (jpegFile) {
+              fileToUpload = jpegFile;
+              dataURL = await fileToBase64(jpegFile);
+              console.log("Converted image to jpeg", fileToUpload);
+            }
+          }
+
           if (resizeImageOptions) {
             const resized = await handleImageResize(
               fileToUpload,
