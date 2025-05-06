@@ -1,4 +1,4 @@
-import { type CalendarEvent } from "@/server/db/client";
+import { type CalendarEvent } from "@alveusgg/database";
 
 export const scopeLabels = {
   // User
