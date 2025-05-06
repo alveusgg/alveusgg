@@ -57,7 +57,7 @@
     "dagre": "^0.8.5",
     "dompurify": "^3.2.5",
     "fast-xml-parser": "^5.2.1",
-    "heic2any": "^0.0.4",
+    "heic-decode": "^2.0.0",
     "html-react-parser": "^5.2.3",
     "jsdom": "^26.1.0",
     "linkify-it": "^5.0.0",
