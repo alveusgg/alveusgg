@@ -18,22 +18,19 @@ export default async function handler(
 
   try {
     const contentType = req.headers["content-type"] || "";
-    if (!contentType.includes("/image")) {
+    if (!contentType.includes("image")) {
+      console.log("Invalid content type", contentType);
       return res.status(400).json({ error: "Invalid content type" });
-    }
-
-    const outputFormat = (req.body.outputFormat as string) || "jpeg";
-    if (!["jpeg", "webp", "png"].includes(outputFormat)) {
-      return res.status(400).json({ error: "Invalid output format" });
     }
 
     const imageBuffer = await getRawBody(req);
 
-    const processedImage = await sharp(imageBuffer).toFormat("jpeg").toBuffer();
+    const processedImage = await sharp(imageBuffer).jpeg().toBuffer();
 
-    res.setHeader("Content-Type", `image/${outputFormat}`);
+    res.setHeader("Content-Type", `image/jpeg`);
     res.status(200).send(processedImage);
   } catch (error) {
+    console.error(error);
     return res.status(400).json({ error: "Invalid request" });
   }
 }
