@@ -190,6 +190,12 @@ importers:
         specifier: ^3.2.5
         version: 3.2.5
       fast-xml-parser:
+        specifier: ^5.2.1
+        version: 5.2.1
+      heic2any:
+        specifier: ^0.0.4
+        version: 0.0.4
+      html-react-parser:
         specifier: ^5.2.3
         version: 5.2.3
       html-react-parser:
@@ -4819,6 +4825,9 @@ packages:
 
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
+
+  heic2any@0.0.4:
+    resolution: {integrity: sha512-3lLnZiDELfabVH87htnRolZ2iehX9zwpRyGNz22GKXIu0fznlblf0/ftppXKNqS26dqFSeqfIBhAmAj/uSp0cA==}
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
@@ -12544,6 +12553,8 @@ snapshots:
   hast-util-whitespace@3.0.0:
     dependencies:
       '@types/hast': 3.0.4
+
+  heic2any@0.0.4: {}
 
   hoist-non-react-statics@3.3.2:
     dependencies:
