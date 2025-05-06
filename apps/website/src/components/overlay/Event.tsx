@@ -4,7 +4,8 @@ import { type HTMLProps, useEffect, useMemo, useRef, useState } from "react";
 
 import type { CalendarEvent } from "@alveusgg/database";
 
-import { getFormattedTitle, twitchChannels } from "@/data/calendar-events";
+import { getFormattedTitle } from "@/data/calendar-events";
+import { channels } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
 import { DATETIME_ALVEUS_ZONE, formatDateTimeRelative } from "@/utils/datetime";
@@ -79,7 +80,7 @@ const useUpcoming = () => {
   useEffect(() => {
     if (!events) return;
 
-    const upcoming = events.find(twitchChannels.alveus.filter);
+    const upcoming = events.find(channels.alveus.calendarEventFilter);
     if (!upcoming) {
       setEvent(undefined);
       return;
@@ -116,7 +117,7 @@ const Upcoming = ({
   >
     <p>Upcoming:</p>
     <p className="text-xl">
-      {getFormattedTitle(event, twitchChannels.alveus.username, 30)}
+      {getFormattedTitle(event, channels.alveus.username, 30)}
     </p>
     <p className="text-xl">
       {formatDateTimeRelative(

@@ -1,3 +1,5 @@
+import { type CalendarEvent } from "@alveusgg/database";
+
 export const scopeLabels = {
   // User
   openid: "OpenID",
@@ -36,3 +38,26 @@ export const botScopes = [
   "channel:read:vips",
   "channel:manage:schedule",
 ] as const satisfies Scope[];
+
+interface Channel {
+  username: string;
+  id: string;
+  calendarEventFilter: (event: CalendarEvent) => boolean;
+}
+
+export const channels = {
+  alveus: {
+    username: "AlveusSanctuary",
+    id: "636587384",
+    calendarEventFilter: (event: CalendarEvent) =>
+      /^alveus\b/i.test(event.category) &&
+      !/\b(yt|youtube)\b/i.test(event.category),
+  },
+  maya: {
+    username: "Maya",
+    id: "235835559",
+    calendarEventFilter: (event: CalendarEvent) =>
+      /^maya\b/i.test(event.category) &&
+      !/\b(yt|youtube)\b/i.test(event.category),
+  },
+} as const satisfies Record<string, Channel>;
