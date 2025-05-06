@@ -1,3 +1,4 @@
+import heicDecode from "heic-decode";
 import type { NextApiRequest, NextApiResponse } from "next";
 import getRawBody from "raw-body";
 import sharp from "sharp";
@@ -18,14 +19,37 @@ export default async function handler(
 
   try {
     const contentType = req.headers["content-type"] || "";
-    if (!contentType.includes("image")) {
-      console.log("Invalid content type", contentType);
-      return res.status(400).json({ error: "Invalid content type" });
-    }
-
     const imageBuffer = await getRawBody(req);
 
-    const processedImage = await sharp(imageBuffer).jpeg().toBuffer();
+    let processedImage: Buffer;
+
+    if (
+      contentType.includes("image/heic") ||
+      contentType.includes("image/heif")
+    ) {
+      try {
+        const { width, height, data } = await heicDecode({
+          buffer: imageBuffer,
+        });
+
+        processedImage = await sharp(Buffer.from(data), {
+          raw: {
+            width,
+            height,
+            channels: 4,
+          },
+        })
+          .jpeg({ quality: 90 })
+          .toBuffer();
+      } catch (heicError) {
+        console.error("HEIC decode error:", heicError);
+        return res.status(500).json({ error: "HEIC decode failed" });
+      }
+    } else {
+      processedImage = await sharp(imageBuffer)
+        .jpeg({ quality: 90 })
+        .toBuffer();
+    }
 
     res.setHeader("Content-Type", `image/jpeg`);
     res.status(200).send(processedImage);
