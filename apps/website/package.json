@@ -35,7 +35,7 @@
     "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
     "@cloudflare/stream-react": "^1.9.2",
     "@fontsource/pt-sans": "^5.2.5",
-    "@headlessui/react": "^2.2.2",
+    "@headlessui/react": "^2.2.1",
     "@iframe-resizer/react": "^5.4.6",
     "@maplibre/maplibre-gl-geocoder": "^1.8.0",
     "@next/env": "^15.3.1",
