@@ -1,7 +1,8 @@
 import { track } from "@vercel/analytics/server";
 import { z } from "zod";
 
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
+
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 
 const trackClickSchema = z.object({

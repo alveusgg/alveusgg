@@ -8,9 +8,10 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { createId } from "@paralleldrive/cuid2";
 import { DateTime } from "luxon";
 
+import { prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import { prisma } from "@/server/db/client";
 import { probeImageMeta } from "@/server/utils/probe-image-meta";
 
 export function getBucketUrl() {

@@ -1,4 +1,4 @@
-import type { Notification } from "@/server/db/client";
+import type { Notification } from "@alveusgg/database";
 
 import IconNotificationAlert from "@/icons/IconNotificationAlert";
 import IconTwitch from "@/icons/IconTwitch";

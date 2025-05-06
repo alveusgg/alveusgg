@@ -1,8 +1,9 @@
 import { z } from "zod";
 
+import { type NotificationUrgency, prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import { type NotificationUrgency, prisma } from "@/server/db/client";
 import { updateNotificationPushStatus } from "@/server/db/notifications";
 import { markPushSubscriptionAsDeleted } from "@/server/db/push-subscriptions";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";

@@ -1,4 +1,4 @@
-import type { FormEntry, OutgoingWebhook, User } from "@/server/db/client";
+import type { FormEntry, OutgoingWebhook, User } from "@alveusgg/database";
 
 import { trpc } from "@/utils/trpc";
 

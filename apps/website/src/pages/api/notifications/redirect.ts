@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
 
 export default async function handler(
   req: NextApiRequest,

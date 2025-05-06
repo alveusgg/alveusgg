@@ -20,8 +20,8 @@ async function createAuthProvider() {
     throw new Error("No bot account found");
   }
 
-  const { accessToken, refreshToken, expiresAt } = botAccount;
-  if (!accessToken) {
+  const { access_token, refresh_token, expires_at } = botAccount;
+  if (!access_token) {
     throw new Error("No access token found");
   }
 
@@ -29,7 +29,7 @@ async function createAuthProvider() {
 
   let authProvider: RefreshingAuthProvider | StaticAuthProvider;
 
-  if (refreshToken && expiresAt) {
+  if (refresh_token && expires_at) {
     authProvider = new RefreshingAuthProvider({
       clientId: env.TWITCH_CLIENT_ID,
       clientSecret: env.TWITCH_CLIENT_SECRET,
@@ -38,10 +38,10 @@ async function createAuthProvider() {
     const obtainmentTimestamp = Math.floor(Date.now() / 1000);
     await authProvider.addUserForToken(
       {
-        accessToken,
-        refreshToken,
+        accessToken: access_token,
+        refreshToken: refresh_token,
         scope: scope,
-        expiresIn: expiresAt - obtainmentTimestamp,
+        expiresIn: expires_at - obtainmentTimestamp,
         obtainmentTimestamp,
       },
       ["chat"],
@@ -54,7 +54,7 @@ async function createAuthProvider() {
       throw new Error("No new access token found");
     }
 
-    if (newAccessToken.accessToken !== accessToken) {
+    if (newAccessToken.accessToken !== access_token) {
       console.log("Got a new access token, updating database");
       updateAccessToken({
         providerAccountId: env.BOT_USER_ID,
@@ -66,7 +66,7 @@ async function createAuthProvider() {
   } else {
     authProvider = new StaticAuthProvider(
       env.TWITCH_CLIENT_ID,
-      accessToken,
+      access_token,
       scope,
     );
   }

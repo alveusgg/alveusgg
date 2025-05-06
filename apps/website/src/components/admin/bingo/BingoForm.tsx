@@ -2,10 +2,11 @@ import { useRouter } from "next/router";
 import type { FormEvent } from "react";
 import { useCallback, useMemo, useRef, useState } from "react";
 
+import type { Bingo } from "@alveusgg/database";
+
 import { env } from "@/env";
 
 import type { BingoSchema } from "@/server/db/bingos";
-import type { Bingo } from "@/server/db/client";
 
 import type { BingoType } from "@/utils/bingo";
 import {

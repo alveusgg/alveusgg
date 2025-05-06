@@ -3,12 +3,13 @@ import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
 import { type Clip, getClips } from "@/server/apis/twitch";
-import { prisma } from "@/server/db/client";
 
-import { twitchChannels } from "@/data/calendar-events";
+import { channels } from "@/data/twitch";
 
 async function getTwitchClips(
   userAccessToken: string,
@@ -59,7 +60,7 @@ export const getStaticProps: GetStaticProps<{
   try {
     // Get auth for the Twitch account
     const twitchChannel = await prisma.twitchChannel.findFirst({
-      where: { username: twitchChannels.alveus.username },
+      where: { username: channels.alveus.username },
       select: {
         broadcasterAccount: {
           select: {
@@ -79,7 +80,7 @@ export const getStaticProps: GetStaticProps<{
     end.setDate(end.getDate() - 7);
     const clips = await getTwitchClips(
       twitchChannel.broadcasterAccount.access_token,
-      twitchChannels.alveus.id,
+      channels.alveus.id,
       start,
       end,
       100,

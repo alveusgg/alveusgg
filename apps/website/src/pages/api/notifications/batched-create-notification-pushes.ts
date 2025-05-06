@@ -1,7 +1,8 @@
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
-import { prisma } from "@/server/db/client";
+import { prisma } from "@alveusgg/database";
+
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
 import { callEndpoint } from "@/server/utils/queue";
 

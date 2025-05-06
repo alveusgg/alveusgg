@@ -1,7 +1,7 @@
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import Link from "next/link";
 
-import { type Form, prisma } from "@/server/db/client";
+import { type Form, prisma } from "@alveusgg/database";
 
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";

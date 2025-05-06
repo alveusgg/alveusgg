@@ -14,7 +14,8 @@ import {
 } from "react";
 import { useLocale } from "react-aria";
 
-import type { ShowAndTellEntry } from "@/server/db/client";
+import type { ShowAndTellEntry } from "@alveusgg/database";
+
 import type {
   PublicShowAndTellEntryWithAttachments,
   ShowAndTellSubmitInput,

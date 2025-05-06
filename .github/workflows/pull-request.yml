@@ -60,7 +60,7 @@ jobs:
         run: pnpm -rc exec "cp .env.example .env || true"
 
       - name: Prepare next-env.d.ts
-        run: DIR=$(mktemp -d) && pnpm run lint:next --quiet --dir $DIR && rm -rf $DIR
+        run: DIR=$(mktemp -d) && pnpm run lint --quiet --dir $DIR && rm -rf $DIR
         working-directory: apps/website
         env:
           NEXT_TELEMETRY_DISABLED: 1
@@ -99,7 +99,7 @@ jobs:
         run: pnpm -rc exec "cp .env.example .env || true"
 
       - name: Prepare next-env.d.ts
-        run: DIR=$(mktemp -d) && pnpm run lint:next --quiet --dir $DIR && rm -rf $DIR
+        run: DIR=$(mktemp -d) && pnpm run lint --quiet --dir $DIR && rm -rf $DIR
         working-directory: apps/website
         env:
           NEXT_TELEMETRY_DISABLED: 1

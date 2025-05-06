@@ -1,6 +1,7 @@
+import { prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
-import { prisma } from "@/server/db/client";
 import { refreshAccessToken } from "@/server/utils/oauth2";
 
 export async function getTwitchChannels() {

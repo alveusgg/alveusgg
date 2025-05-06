@@ -1,5 +1,6 @@
 import { resolve } from "node:path";
 
+import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 import type { NextConfig } from "next";
 import { withSuperjson } from "next-superjson";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
@@ -8,8 +9,8 @@ import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import animalQuest from "@alveusgg/data/build/animal-quest";
 
-import { twitchChannels } from "@/data/calendar-events";
 import socials from "@/data/socials";
+import { channels } from "@/data/twitch";
 
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
@@ -379,10 +380,10 @@ const config: NextConfig = {
     // },
     {
       source: "/updates/ical",
-      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${twitchChannels.alveus.id}`,
+      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${channels.alveus.id}`,
       permanent: true,
     },
-    ...typeSafeObjectEntries(twitchChannels).map(([key, { id }]) => ({
+    ...typeSafeObjectEntries(channels).map(([key, { id }]) => ({
       source: `/updates/ical/${key}`,
       destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
       permanent: true,
@@ -464,6 +465,11 @@ const config: NextConfig = {
       test: /\.pdf$/,
       type: "asset/resource",
     });
+
+    // Ensure Prisma bundles its binaries correctly
+    if (options.isServer) {
+      config.plugins.push(new PrismaPlugin());
+    }
 
     // Disable Webpack caching if not in development
     if (!options.dev && config.cache?.type === "filesystem") {

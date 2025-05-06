@@ -14,7 +14,7 @@ import {
   retryOutgoingWebhooks,
 } from "@/server/outgoing-webhooks";
 
-import { twitchChannels } from "@/data/calendar-events";
+import { channels } from "@/data/twitch";
 
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
@@ -74,7 +74,7 @@ export const scheduledTasks: ScheduledTasksConfig = {
       startDateTime: new Date(2024, 7, 21, 0, 8, 0),
       interval: { months: 1 },
     },
-    ...typeSafeObjectKeys(twitchChannels).map((channel) => ({
+    ...typeSafeObjectKeys(channels).map((channel) => ({
       id: `calendarEvents.twitch.${channel}`,
       task: () => syncTwitchSchedule(channel),
       label: `Calendar events: Sync Twitch Schedule (${channel})`,

@@ -1,6 +1,6 @@
 import { type DateObjectUnits } from "luxon";
 
-import { type CalendarEvent } from "@/server/db/client";
+import { type CalendarEvent } from "@alveusgg/database";
 
 type StandardCategory = {
   name: string;
@@ -51,26 +51,6 @@ export const frequentLinks: FrequentLink[] = [
     url: "https://youtube.com/@mayahiga",
   },
 ] as const;
-
-export const twitchChannels = {
-  alveus: {
-    username: "AlveusSanctuary",
-    id: "636587384",
-    filter: (event: CalendarEvent) =>
-      /^alveus\b/i.test(event.category) &&
-      !/\b(yt|youtube)\b/i.test(event.category),
-  },
-  maya: {
-    username: "Maya",
-    id: "235835559",
-    filter: (event: CalendarEvent) =>
-      /^maya\b/i.test(event.category) &&
-      !/\b(yt|youtube)\b/i.test(event.category),
-  },
-} as const satisfies Record<
-  string,
-  { username: string; id: string; filter: (event: CalendarEvent) => boolean }
->;
 
 const truncate = (value: string, max: number) => {
   if (value.length <= max) return value;

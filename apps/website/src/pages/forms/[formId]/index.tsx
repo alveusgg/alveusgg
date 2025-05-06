@@ -5,7 +5,8 @@ import type {
 } from "next";
 import { getSession } from "next-auth/react";
 
-import type { Form, FormEntry, MailingAddress } from "@/server/db/client";
+import type { Form, FormEntry, MailingAddress } from "@alveusgg/database";
+
 import { findActiveForm, getFormEntry } from "@/server/db/forms";
 
 import Heading from "@/components/content/Heading";

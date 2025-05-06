@@ -1,7 +1,7 @@
 import { DateTime } from "luxon";
 import Link from "next/link";
 
-import type { Notification } from "@/server/db/client";
+import type { Notification } from "@alveusgg/database";
 
 import { getNotificationCategory } from "@/data/notifications";
 
