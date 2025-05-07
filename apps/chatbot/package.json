@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@alveusgg/database": "workspace:*",
-    "@t3-oss/env-core": "^0.13.0",
+    "@t3-oss/env-core": "^0.13.4",
     "@twurple/api": "^7.3.0",
     "@twurple/auth": "^7.3.0",
     "@twurple/chat": "^7.3.0",
@@ -22,7 +22,7 @@
     "dotenv": "^16.5.0",
     "read-pkg": "^9.0.1",
     "tsx": "^4.19.4",
-    "zod": "^3.24.3"
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.26.0",
