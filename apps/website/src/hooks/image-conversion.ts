@@ -1,4 +1,4 @@
-export async function imageConverter(file: File) {
+export const useImageConverter = async (file: File) => {
   try {
     let convertedFile: File | null = null;
 
@@ -19,7 +19,6 @@ export async function imageConverter(file: File) {
       );
     }
 
-    // AVIF to JPEG using Canvas
     if (file.type === "image/avif") {
       convertedFile = await new Promise((resolve, reject) => {
         const img = new Image();
@@ -68,4 +67,4 @@ export async function imageConverter(file: File) {
     console.error(error);
     return null;
   }
-}
+};

@@ -152,6 +152,17 @@ export const useUploadAttachmentsData = (
   return { files: fileReferences, dispatch };
 };
 
+async function handleImageConversion(file: File) {
+  if (file.type === "image/heic" || file.type === "image/heif") {
+    const jpegFile = await imageConverter(file);
+    if (jpegFile) {
+      return jpegFile;
+    }
+  }
+
+  return file;
+}
+
 async function handleImageResize(
   file: File,
   dataURL: string,
@@ -250,7 +261,8 @@ export const UploadAttachmentsField = ({
             file.type === "image/heif"
           ) {
             setIsImageConverting(true);
-            const jpegFile = await imageConverter(file);
+
+            const jpegFile = await handleImageConversion(file);
             if (jpegFile) {
               fileToUpload = jpegFile;
               dataURL = await fileToBase64(jpegFile);
