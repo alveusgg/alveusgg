@@ -367,7 +367,7 @@ export const UploadAttachmentsField = ({
       <ModalDialog
         isOpen={isImageConverting}
         closeModal={() => setIsImageConverting(false)}
-        title="Processing image..."
+        title="Converting image..."
       >
         <div className="flex flex-row items-center justify-center gap-2">
           <span>Converting image to jpeg...</span>
