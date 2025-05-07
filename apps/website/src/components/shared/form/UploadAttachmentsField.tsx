@@ -246,12 +246,10 @@ export const UploadAttachmentsField = ({
             file.type === "image/avif" ||
             file.type === "image/heif"
           ) {
-            console.log("Converting image to jpeg", file);
             const jpegFile = await imageConverter(file);
             if (jpegFile) {
               fileToUpload = jpegFile;
               dataURL = await fileToBase64(jpegFile);
-              console.log("Converted image to jpeg", fileToUpload);
             }
           }
 
