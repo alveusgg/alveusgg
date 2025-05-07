@@ -186,9 +186,6 @@ importers:
       fast-xml-parser:
         specifier: ^5.2.2
         version: 5.2.2
-      heic-decode:
-        specifier: ^2.0.0
-        version: 2.0.0
       heic2any:
         specifier: ^0.0.4
         version: 0.0.4
@@ -424,6 +421,9 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@ark/schema@0.46.0':
     resolution: {integrity: sha512-c2UQdKgP2eqqDArfBqQIJppxJHvNNXuQPeuSPlDML4rjw+f1cu0qAlzOG4b8ujgm9ctIDWwhpyw6gjG5ledIVQ==}
@@ -4621,10 +4621,6 @@ packages:
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
 
-  heic-decode@2.0.0:
-    resolution: {integrity: sha512-NU+zsiDvdL+EebyTjrEqjkO2XYI7FgLhQzsbmO8dnnYce3S0PBSDm/ZyI4KpcGPXYEdb5W72vp/AQFuc4F8ASg==}
-    engines: {node: '>=8.0.0'}
-
   heic2any@0.0.4:
     resolution: {integrity: sha512-3lLnZiDELfabVH87htnRolZ2iehX9zwpRyGNz22GKXIu0fznlblf0/ftppXKNqS26dqFSeqfIBhAmAj/uSp0cA==}
 
@@ -5035,10 +5031,6 @@ packages:
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
     engines: {node: '>= 0.8.0'}
-
-  libheif-js@1.18.2:
-    resolution: {integrity: sha512-4Nk0dKhhRfVS4mECcX2jSDpNU6gcHQLneJjkGQq61N8COGtjSpSA3CI+1Q3kUYv5Vf+SwIqUtaDSdU6JO37c6w==}
-    engines: {node: '>=8.0.0'}
 
   lightningcss-darwin-arm64@1.29.2:
     resolution: {integrity: sha512-cK/eMabSViKn/PG8U/a7aCorpeKLMlK0bQeNHmdb7qUnBkNPnL+oV5DjJUo0kqWsJUapZsM4jCfYItbqBDvlcA==}
@@ -6929,8 +6921,9 @@ snapshots:
 
   '@alveusgg/data@0.58.0(tailwindcss@4.1.5)(zod@3.24.4)':
     dependencies:
-      tailwindcss: 4.1.5
       zod: 3.24.4
+    optionalDependencies:
+      tailwindcss: 4.1.5
 
   '@ark/schema@0.46.0':
     dependencies:
@@ -12214,10 +12207,6 @@ snapshots:
     dependencies:
       '@types/hast': 3.0.4
 
-  heic-decode@2.0.0:
-    dependencies:
-      libheif-js: 1.18.2
-
   heic2any@0.0.4: {}
 
   hoist-non-react-statics@3.3.2:
@@ -12651,8 +12640,6 @@ snapshots:
     dependencies:
       prelude-ls: 1.2.1
       type-check: 0.4.0
-
-  libheif-js@1.18.2: {}
 
   lightningcss-darwin-arm64@1.29.2:
     optional: true
