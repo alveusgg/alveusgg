@@ -25,13 +25,13 @@
     "zod": "^3.24.3"
   },
   "devDependencies": {
-    "@eslint/js": "^9.25.1",
+    "@eslint/js": "^9.26.0",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.15.3",
-    "eslint": "^9.25.1",
+    "@types/node": "^22.15.14",
+    "eslint": "^9.26.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-import-x": "^4.11.0",
-    "typescript-eslint": "^8.31.1"
+    "typescript-eslint": "^8.32.0"
   },
   "scripts": {
     "start": "tsx src/server.ts",
