@@ -44,6 +44,7 @@ import lacari from "@/assets/collaborations/lacari.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
 import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 import peachJars from "@/assets/collaborations/peach-jars.png";
+import pizzaPrincessG from "@/assets/collaborations/pizza-princess-g.png";
 import pointCrow from "@/assets/collaborations/point-crow.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import russel from "@/assets/collaborations/russel.png";
@@ -78,6 +79,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "PizzaPrincessG",
+      link: "https://www.twitch.tv/pizzaprincessg",
+      date: new Date("2025-04-08"),
+      videoId: "JFATXJB6M2A",
+      creators: [
+        {
+          name: "PizzaPrincessG",
+          image: pizzaPrincessG,
+          popularity: 194_000, // Twitch followers, 2025-05-06
+        },
+      ],
+    },
     {
       name: "ThePrimeagen",
       link: "https://www.twitch.tv/theprimeagen",

@@ -370,7 +370,7 @@ export const UploadAttachmentsField = ({
         title="Converting image..."
       >
         <div className="flex flex-row items-center justify-center gap-2">
-          <span>Converting image to jpeg...</span>
+          <span>Converting image to JPEG format...</span>
           <IconLoading className="size-5 animate-spin" />
         </div>
       </ModalDialog>
