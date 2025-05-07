@@ -43,7 +43,7 @@
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.7.0",
     "@t3-oss/env-nextjs": "^0.13.0",
     "@tailwindcss/postcss": "^4.1.5",
-    "@tanstack/react-query": "^5.74.11",
+    "@tanstack/react-query": "^5.75.4",
     "@trpc/client": "^11.1.2",
     "@trpc/next": "^11.1.2",
     "@trpc/react-query": "^11.1.2",
