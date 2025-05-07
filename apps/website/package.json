@@ -73,7 +73,7 @@
     "react": "^19.1.0",
     "react-aria": "^3.39.0",
     "react-dom": "^19.1.0",
-    "react-error-boundary": "^5.0.0",
+    "react-error-boundary": "^6.0.0",
     "react-markdown": "^10.1.0",
     "react-quill-new": "^3.4.6",
     "react-stately": "^3.37.0",
