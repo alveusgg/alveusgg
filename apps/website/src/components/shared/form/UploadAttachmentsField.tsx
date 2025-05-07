@@ -153,7 +153,11 @@ export const useUploadAttachmentsData = (
 };
 
 async function handleImageConversion(file: File) {
-  if (file.type === "image/heic" || file.type === "image/heif") {
+  if (
+    file.type === "image/heic" ||
+    file.type === "image/heif" ||
+    file.type === "image/avif"
+  ) {
     const jpegFile = await imageConverter(file);
     if (jpegFile) {
       return jpegFile;
