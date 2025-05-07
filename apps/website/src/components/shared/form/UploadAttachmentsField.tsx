@@ -25,9 +25,11 @@ import {
 
 import useFileDragAndDrop from "@/hooks/files/drop";
 
+import IconLoading from "@/icons/IconLoading";
 import IconUploadFiles from "@/icons/IconUploadFiles";
 
 import { MessageBox } from "../MessageBox";
+import { ModalDialog } from "../ModalDialog";
 import { Button, defaultButtonClasses } from "./Button";
 
 export type FileReference =
@@ -195,6 +197,7 @@ export const UploadAttachmentsField = ({
 }: FileUploadingPropsType) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isImageConverting, setIsImageConverting] = useState(false);
 
   const onFileUpload = useCallback((): void => {
     if (inputRef.current) {
@@ -246,11 +249,13 @@ export const UploadAttachmentsField = ({
             file.type === "image/avif" ||
             file.type === "image/heif"
           ) {
+            setIsImageConverting(true);
             const jpegFile = await imageConverter(file);
             if (jpegFile) {
               fileToUpload = jpegFile;
               dataURL = await fileToBase64(jpegFile);
             }
+            setIsImageConverting(false);
           }
 
           if (resizeImageOptions) {
@@ -358,6 +363,17 @@ export const UploadAttachmentsField = ({
           Click or Drop here
         </Button>
       </div>
+
+      <ModalDialog
+        isOpen={isImageConverting}
+        closeModal={() => setIsImageConverting(false)}
+        title="Processing image..."
+      >
+        <div className="flex flex-row items-center justify-center gap-2">
+          <span>Converting image to jpeg...</span>
+          <IconLoading className="size-5 animate-spin" />
+        </div>
+      </ModalDialog>
     </div>
   );
 };
