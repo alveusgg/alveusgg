@@ -7073,14 +7073,9 @@ snapshots:
 
   '@alveusgg/data@0.58.0(tailwindcss@4.1.5)(zod@3.24.4)':
     dependencies:
-<<<<<<< HEAD
-      zod: 3.24.3
-    optionalDependencies:
-      tailwindcss: 4.1.4
-=======
-      tailwindcss: 4.1.5
       zod: 3.24.4
->>>>>>> a2cf40ca210ef0cbf93eb1044f06fd2a9f46c548
+    optionalDependencies:
+      tailwindcss: 4.1.5
 
   '@ark/schema@0.46.0':
     dependencies:
