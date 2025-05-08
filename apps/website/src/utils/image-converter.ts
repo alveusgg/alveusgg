@@ -76,26 +76,22 @@ const conversionFunctions: Record<
 export async function imageConverter(
   file: File,
   setIsConvertingFile: Dispatch<SetStateAction<boolean>>,
+  setError: Dispatch<SetStateAction<string | null>>,
 ) {
-  try {
-    let convertedFile: File | null = null;
+  let convertedFile: File | null = null;
 
-    const converter = conversionFunctions[file.type as SupportedMimeTypes];
-    if (converter) {
-      setIsConvertingFile(true);
-      try {
-        convertedFile = await converter(file);
-        return convertedFile;
-      } catch (error) {
-        console.error(error);
-        return null;
-      } finally {
-        setIsConvertingFile(false);
-      }
+  const converter = conversionFunctions[file.type as SupportedMimeTypes];
+  if (converter) {
+    setIsConvertingFile(true);
+    try {
+      convertedFile = await converter(file);
+      return convertedFile;
+    } catch (error) {
+      setError(`Error converting image (${file.type}) to JPEG`);
+      return null;
+    } finally {
+      setIsConvertingFile(false);
     }
-    return null;
-  } catch (error) {
-    console.error(error);
-    return null;
   }
+  return null;
 }

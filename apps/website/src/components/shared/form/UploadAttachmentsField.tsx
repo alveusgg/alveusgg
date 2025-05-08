@@ -244,7 +244,11 @@ export const UploadAttachmentsField = ({
           let fileToUpload = file;
 
           // Convert image to jpeg if it's a heic, avif or heif file
-          const jpegFile = await imageConverter(file, setIsImageConverting);
+          const jpegFile = await imageConverter(
+            file,
+            setIsImageConverting,
+            setError,
+          );
           if (jpegFile) {
             fileToUpload = jpegFile;
             dataURL = await fileToBase64(jpegFile);
