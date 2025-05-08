@@ -1,26 +1,19 @@
 import type { Dispatch, SetStateAction } from "react";
 
 async function convertHeicToJpeg(file: File) {
-  let convertedFile: File | null = null;
   const heic2any = (await import("heic2any")).default;
   const blob = await heic2any({
     blob: file,
     toType: "image/jpeg",
     quality: 0.9,
   });
-  convertedFile = new File(
-    [blob as Blob],
-    file.name.replace(/\.[^.]+$/, "jpeg"),
-    {
-      type: "image/jpeg",
-    },
-  );
-  return convertedFile;
+  return new File([blob as Blob], file.name.replace(/\.[^.]+$/, "jpeg"), {
+    type: "image/jpeg",
+  });
 }
 
 async function convertAvifToJpeg(file: File) {
-  let convertedFile: File | null = null;
-  convertedFile = await new Promise((resolve, reject) => {
+  const convertedFile: File = await new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
 
@@ -66,7 +59,7 @@ type SupportedMimeTypes = "image/heic" | "image/heif" | "image/avif";
 
 const conversionFunctions: Record<
   SupportedMimeTypes,
-  (file: File) => Promise<File | null>
+  (file: File) => Promise<File>
 > = {
   "image/heic": convertHeicToJpeg,
   "image/heif": convertHeicToJpeg,
@@ -78,7 +71,7 @@ export async function imageConverter(
   setIsConvertingFile: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string | null>>,
 ) {
-  let convertedFile: File | null = null;
+  let convertedFile: File;
 
   const converter = conversionFunctions[file.type as SupportedMimeTypes];
   if (converter) {
@@ -88,10 +81,11 @@ export async function imageConverter(
       return convertedFile;
     } catch (error) {
       setError(`Error converting image (${file.type}) to JPEG`);
-      return null;
+      console.error(error);
+      return file;
     } finally {
       setIsConvertingFile(false);
     }
   }
-  return null;
+  return file;
 }
