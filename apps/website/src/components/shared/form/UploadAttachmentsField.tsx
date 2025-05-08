@@ -238,30 +238,27 @@ export const UploadAttachmentsField = ({
 
       newFiles.push(
         (async () => {
-          let dataURL = await fileToBase64(file);
-          let extractColor: PendingUploadFileReference["extractColor"] =
-            async () => await extractColorFromImage(dataURL);
-          let fileToUpload = file;
-
-          // Convert image to jpeg if it's a heic, avif or heif file
-          const jpegFile = await imageConverter(
+          // Run through the image converter to convert the file to a jpeg if it's a heic, avif or heif file
+          // returns the original file if conversion not needed
+          const fileToUpload = await imageConverter(
             file,
             setIsImageConverting,
             setError,
           );
-          if (jpegFile) {
-            fileToUpload = jpegFile;
-            dataURL = await fileToBase64(jpegFile);
-          }
+
+          let dataURL = await fileToBase64(fileToUpload);
+          let extractColor: PendingUploadFileReference["extractColor"] =
+            async () => await extractColorFromImage(dataURL);
+          let readyFile = fileToUpload;
 
           if (resizeImageOptions) {
             const resized = await handleImageResize(
-              fileToUpload,
+              readyFile,
               dataURL,
               resizeImageOptions,
             );
             if (resized) {
-              fileToUpload = resized.fileToUpload;
+              readyFile = resized.fileToUpload;
               dataURL = resized.dataURL;
               extractColor = resized.extractColor;
             }
@@ -272,7 +269,7 @@ export const UploadAttachmentsField = ({
             status: "upload.pending",
             dataURL,
             extractColor,
-            file: fileToUpload,
+            file: readyFile,
           };
         })(),
       );
