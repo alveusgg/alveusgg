@@ -1,6 +1,8 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 
+import { classes } from "@/utils/classes";
+
 import Heading from "@/components/content/Heading";
 import { MayaText } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
@@ -344,8 +346,14 @@ const AboutStaffPage: NextPage = () => {
           </p>
 
           <div className="flex scroll-mt-4 flex-wrap" id="team">
-            {Object.entries(team).map(([key, person]) => (
-              <div key={key} className="w-full p-4 sm:w-1/2 lg:w-1/3">
+            {Object.entries(team).map(([key, person], _, arr) => (
+              <div
+                key={key}
+                className={classes(
+                  "w-full p-4 sm:w-1/2",
+                  arr.length === 4 ? "lg:w-1/4" : "lg:w-1/3",
+                )}
+              >
                 <p className="text-lg font-semibold">{person.name}</p>
                 <p>{person.title}</p>
               </div>
