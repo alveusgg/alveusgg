@@ -1,19 +1,22 @@
 import type { Dispatch, SetStateAction } from "react";
 
+import type { ImageMimeType } from "./files";
+
 async function convertHeicToJpeg(file: File) {
   const heic2any = (await import("heic2any")).default;
+
   const blob = await heic2any({
     blob: file,
     toType: "image/jpeg",
     quality: 0.9,
   });
-  return new File([blob as Blob], file.name.replace(/\.[^.]+$/, "jpeg"), {
+  return new File([blob as Blob], file.name.replace(/\.[^.]+$/, ".jpeg"), {
     type: "image/jpeg",
   });
 }
 
-async function convertAvifToJpeg(file: File) {
-  const convertedFile: File = await new Promise((resolve, reject) => {
+async function convertAvifToJpeg(file: File): Promise<File> {
+  return new Promise((resolve, reject) => {
     const img = new Image();
     const url = URL.createObjectURL(file);
 
@@ -36,7 +39,7 @@ async function convertAvifToJpeg(file: File) {
             return;
           }
           resolve(
-            new File([blob], file.name.replace(/\.avif$/i, ".jpg"), {
+            new File([blob], file.name.replace(/\.avif$/i, ".jpeg"), {
               type: "image/jpeg",
             }),
           );
@@ -53,32 +56,35 @@ async function convertAvifToJpeg(file: File) {
 
     img.src = url;
   });
-  return convertedFile;
 }
-type SupportedMimeTypes = "image/heic" | "image/heif" | "image/avif";
 
-const conversionFunctions: Record<
-  SupportedMimeTypes,
-  (file: File) => Promise<File>
+const conversionFunctions: Partial<
+  Record<ImageMimeType, (file: File) => Promise<File>>
 > = {
   "image/heic": convertHeicToJpeg,
   "image/heif": convertHeicToJpeg,
   "image/avif": convertAvifToJpeg,
 };
 
+function isConvertibleMimeType(
+  mimeType: string,
+): mimeType is keyof typeof conversionFunctions & ImageMimeType {
+  return mimeType in conversionFunctions;
+}
+
 export async function imageConverter(
   file: File,
   setIsConvertingFile: Dispatch<SetStateAction<boolean>>,
   setError: Dispatch<SetStateAction<string | null>>,
 ) {
-  let convertedFile: File;
+  if (isConvertibleMimeType(file.type)) {
+    const converter = conversionFunctions[file.type];
 
-  const converter = conversionFunctions[file.type as SupportedMimeTypes];
-  if (converter) {
-    setIsConvertingFile(true);
+    if (!converter) return file;
+
     try {
-      convertedFile = await converter(file);
-      return convertedFile;
+      setIsConvertingFile(true);
+      return await converter(file);
     } catch (error) {
       setError(`Error converting image (${file.type}) to JPEG`);
       console.error(error);
