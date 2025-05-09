@@ -84,6 +84,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/pizzaprincessg",
       date: new Date("2025-04-08"),
       videoId: "JFATXJB6M2A",
+      vodId: "Pf8vH9n4dHU",
       creators: [
         {
           name: "PizzaPrincessG",
