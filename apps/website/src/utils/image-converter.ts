@@ -88,7 +88,7 @@ export async function imageConverter(
     } catch (error) {
       setImageConversionError(`Error converting image (${file.type}) to JPEG`);
       console.error(error);
-      return file;
+      return;
     } finally {
       setIsConvertingFile(false);
     }
