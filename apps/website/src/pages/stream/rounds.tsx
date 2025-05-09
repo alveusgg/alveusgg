@@ -1,6 +1,7 @@
+import { DateTime } from "luxon";
 import { type NextPage } from "next";
 import Image from "next/image";
-import { type CSSProperties, useId } from "react";
+import { type CSSProperties, useEffect, useId, useState } from "react";
 
 import {
   type AmbassadorImage,
@@ -8,6 +9,12 @@ import {
 } from "@alveusgg/data/build/ambassadors/images";
 
 import { classes, objToCss } from "@/utils/classes";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+
+import Video from "@/components/content/Video";
+
+import roundsDayBackground from "@/assets/rounds/day.webm";
+import roundsNightBackground from "@/assets/rounds/night.webm";
 
 interface Check {
   name: string;
@@ -81,11 +88,11 @@ const Check = ({
       <Image
         src={check.icon.src}
         alt={check.icon.alt}
-        className="rounded-full border-2 border-white size-16 object-cover"
+        className="rounded-full border-4 border-white size-20 object-cover"
         style={{ objectPosition: check.icon.position }}
       />
       <span className="w-3 h-1.5 bg-white rounded-xs" />
-      <span className="text-3xl font-bold text-white">{check.name}</span>
+      <span className="text-5xl font-bold text-white">{check.name}</span>
     </div>
   );
 };
@@ -122,6 +129,21 @@ const keyframes = objToCss({
 
 const RoundsPage: NextPage = () => {
   const id = useId();
+
+  const [night, setNight] = useState(false);
+  useEffect(() => {
+    const update = () => {
+      const now = DateTime.now().setZone(DATETIME_ALVEUS_ZONE);
+      setNight(now.hour < 6 || now.hour >= 18);
+    };
+
+    update();
+    const interval = setInterval(update, 15_000);
+    return () => clearInterval(interval);
+  });
+
+  const background = night ? roundsNightBackground : roundsDayBackground;
+
   return (
     <>
       <style
@@ -134,7 +156,20 @@ const RoundsPage: NextPage = () => {
         }}
       />
       <div className="h-screen w-full">
-        <div className="flex flex-col h-full justify-between items-start py-24 px-16">
+        <Video
+          sources={background.sources}
+          poster={background.poster}
+          className="h-full w-full object-cover absolute inset-0 object-top-left"
+          width={1920}
+          height={1080}
+          autoPlay
+          loop
+          muted
+          playsInline
+          disablePictureInPicture
+        />
+
+        <div className="flex flex-col h-full max-h-full overflow-hidden justify-center items-start px-16 gap-4">
           {Object.entries(checks).map(([key, check], idx) => (
             <Check
               key={key}
