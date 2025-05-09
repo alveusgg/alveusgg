@@ -1,26 +1,18 @@
-import type { ChatMessage } from "@twurple/chat";
 import { DateTime } from "luxon";
 import { type NextPage } from "next";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
-import {
-  typeSafeObjectEntries,
-  typeSafeObjectFromEntries,
-  typeSafeObjectKeys,
-} from "@/utils/helpers";
-
-import useChat from "@/hooks/chat";
 
 import Video from "@/components/content/Video";
-import Checks, { type Check } from "@/components/overlay/Checks";
+import Checks, { type Check, useChatChecks } from "@/components/overlay/Checks";
 
 import roundsDayBackground from "@/assets/rounds/day.webm";
 import roundsNightBackground from "@/assets/rounds/night.webm";
 
-const checks = {
+const checks: Record<string, Omit<Check, "status" | "description">> = {
   foxes: {
     name: "Foxes",
     icon: getAmbassadorImages("reed")[0],
@@ -65,12 +57,6 @@ const checks = {
     name: "Chickens",
     icon: getAmbassadorImages("oliver")[0],
   },
-} as const satisfies Record<string, Omit<Check, "status">>;
-
-type CheckKey = keyof typeof checks;
-
-const isCheckKey = (key: string): key is CheckKey => {
-  return Object.keys(checks).includes(key);
 };
 
 const RoundsPage: NextPage = () => {
@@ -88,55 +74,7 @@ const RoundsPage: NextPage = () => {
 
   const background = night ? roundsNightBackground : roundsDayBackground;
 
-  const [checksWithStatus, setChecksWithStatus] = useState<
-    Record<CheckKey, Check>
-  >(
-    typeSafeObjectFromEntries(
-      typeSafeObjectEntries(checks).map(([key, check]) => {
-        return [
-          key,
-          {
-            ...check,
-            status: false,
-            description: `!check ${key}`,
-          },
-        ] as const;
-      }),
-    ),
-  );
-
-  const setStatus = useCallback(
-    (keys: CheckKey[], mode: "toggle" | "reset") => {
-      if (keys.length === 0) return;
-
-      setChecksWithStatus((prev) => {
-        const newChecks = { ...prev };
-        keys.forEach((key) => {
-          newChecks[key] = {
-            ...newChecks[key],
-            status: mode === "toggle" ? !newChecks[key].status : false,
-          };
-        });
-        return newChecks;
-      });
-    },
-    [],
-  );
-
-  useChat(["AlveusSanctuary", "AlveusGG"], (message: ChatMessage) => {
-    const { text, userInfo } = message;
-    const [command, ...keys] = text.split(" ");
-
-    if (command !== "!check") return;
-    if (!userInfo.isMod && !userInfo.isBroadcaster) return;
-
-    if (keys[0] === "reset") {
-      setStatus(typeSafeObjectKeys(checks), "reset");
-      return;
-    }
-
-    setStatus(keys.filter(isCheckKey), "toggle");
-  });
+  const chatChecks = useChatChecks(["AlveusSanctuary", "AlveusGG"], checks);
 
   return (
     <div className="h-screen w-full">
@@ -155,7 +93,7 @@ const RoundsPage: NextPage = () => {
 
       <div className="h-full flex justify-start overflow-hidden px-16">
         <Checks
-          checks={checksWithStatus}
+          checks={chatChecks}
           className="animate-wiggle-slow origin-center h-full"
         />
       </div>
