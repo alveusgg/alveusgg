@@ -365,7 +365,11 @@ export const UploadAttachmentsField = ({
       <ModalDialog
         isOpen={isImageConverting}
         closeModal={() => setIsImageConverting(false)}
-        title="Converting image..."
+        title={
+          imageConversionError
+            ? "Error converting image"
+            : "Converting image..."
+        }
       >
         <div className="flex flex-row items-center justify-center gap-2">
           {imageConversionError && (
