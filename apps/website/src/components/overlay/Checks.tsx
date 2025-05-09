@@ -14,7 +14,7 @@ import { classes, objToCss } from "@/utils/classes";
 
 import useChat from "@/hooks/chat";
 
-import IconCheck from "@/icons/IconCheck";
+import IconCheckFancy from "@/icons/IconCheckFancy";
 
 export interface Check {
   name: string;
@@ -55,7 +55,7 @@ const Check = ({
         />
 
         {check.status && (
-          <IconCheck className="absolute top-1/2 left-1/2 -translate-1/2 size-16 text-green-400 saturate-250" />
+          <IconCheckFancy className="absolute top-1/2 left-1/2 -translate-1/2 size-18 text-green-400 saturate-250" />
         )}
       </div>
       <span className="w-3 h-1.5 bg-white rounded-xs" />
