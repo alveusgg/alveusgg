@@ -83,7 +83,7 @@ export async function imageConverter(
     if (!converter) return file;
 
     setIsConvertingFile(true);
-    return converter(file)
+    return await converter(file)
       .then((convertedFile) => {
         setIsConvertingFile(false);
         return convertedFile;
