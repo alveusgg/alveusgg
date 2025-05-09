@@ -5,9 +5,12 @@ import { type AmbassadorImage } from "@alveusgg/data/build/ambassadors/images";
 
 import { classes, objToCss } from "@/utils/classes";
 
+import IconCheck from "@/icons/IconCheck";
+
 export interface Check {
   name: string;
   icon: AmbassadorImage;
+  status: boolean;
 }
 
 const Check = ({
@@ -27,12 +30,23 @@ const Check = ({
       )}
       style={style}
     >
-      <Image
-        src={check.icon.src}
-        alt={check.icon.alt}
-        className="rounded-full border-4 border-white size-20 object-cover"
-        style={{ objectPosition: check.icon.position }}
-      />
+      <div className="size-20 relative">
+        <Image
+          src={check.icon.src}
+          alt={check.icon.alt}
+          className={classes(
+            "rounded-full border-4 size-full object-cover",
+            check.status
+              ? "border-green-400 saturate-50 brightness-50"
+              : "border-white",
+          )}
+          style={{ objectPosition: check.icon.position }}
+        />
+
+        {check.status && (
+          <IconCheck className="absolute top-1/2 left-1/2 -translate-1/2 size-16 text-green-400 saturate-250" />
+        )}
+      </div>
       <span className="w-3 h-1.5 bg-white rounded-xs" />
       <span className="text-5xl font-bold text-white">{check.name}</span>
     </div>
