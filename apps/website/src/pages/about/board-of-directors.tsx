@@ -47,11 +47,11 @@ const directors = {
           Joel Pierre resides in Canada and is a Senior Financial Consultant.
           Joel combines his love for Finance and Technology to help build and
           develop systems for rapid growth. Previously Financial Controller at
-          Sealion Cargo Inc. Joel demonstrates leadership critical to the
+          Sealion Cargo Inc., Joel demonstrates leadership critical to the
           success of any organization. Graduate of the University of Toronto
           with a Specialist in Philosophy, Joel is perfectly aligned with
-          Alveus’ core values to educate the world about animals in a new an
-          innovative way.
+          Alveus&apos; core values to educate the world about animals in a new
+          and innovative way.
         </p>
       </>
     ),
