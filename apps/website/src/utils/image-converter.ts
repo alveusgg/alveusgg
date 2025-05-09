@@ -82,16 +82,22 @@ export async function imageConverter(
 
     if (!converter) return file;
 
-    try {
-      setIsConvertingFile(true);
-      return await converter(file);
-    } catch (error) {
-      setImageConversionError(`Error converting image (${file.type}) to JPEG`);
-      console.error(error);
-      return;
-    } finally {
-      setIsConvertingFile(false);
-    }
+    setIsConvertingFile(true);
+    return converter(file)
+      .then((convertedFile) => {
+        setIsConvertingFile(false);
+        return convertedFile;
+      })
+      .catch((error) => {
+        setImageConversionError(
+          `Error converting image (${file.type}) to JPEG`,
+        );
+        console.error(error);
+        return;
+      })
+      .finally(() => {
+        setIsConvertingFile(false);
+      });
   }
   return file;
 }
