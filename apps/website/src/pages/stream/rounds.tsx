@@ -1,10 +1,13 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { type CSSProperties, useId } from "react";
 
 import {
   type AmbassadorImage,
   getAmbassadorImages,
 } from "@alveusgg/data/build/ambassadors/images";
+
+import { classes, objToCss } from "@/utils/classes";
 
 interface Check {
   name: string;
@@ -58,9 +61,23 @@ const checks: Record<string, Check> = {
   },
 };
 
-const Check = ({ check }: { check: Check }) => {
+const Check = ({
+  check,
+  className,
+  style,
+}: {
+  check: Check;
+  className?: string;
+  style?: CSSProperties;
+}) => {
   return (
-    <div className="flex items-center gap-2 drop-shadow-md">
+    <div
+      className={classes(
+        "flex items-center gap-2 drop-shadow-md origin-center",
+        className,
+      )}
+      style={style}
+    >
       <Image
         src={check.icon.src}
         alt={check.icon.alt}
@@ -73,15 +90,64 @@ const Check = ({ check }: { check: Check }) => {
   );
 };
 
+const timing = {
+  duration: 750,
+  delay: { item: -600, before: 1000, after: 9000 },
+};
+const scale = { from: 1, to: 1.15 };
+
+const itemDuration = timing.duration + timing.delay.item;
+const totalDuration =
+  itemDuration * Object.keys(checks).length +
+  timing.delay.before +
+  timing.delay.after;
+
+const keyframes = objToCss({
+  "0%": {
+    scale: scale.from,
+  },
+  [`${(timing.delay.before / totalDuration) * 100}%`]: {
+    scale: scale.from,
+  },
+  [`${((timing.delay.before + timing.duration / 2) / totalDuration) * 100}%`]: {
+    scale: scale.to,
+  },
+  [`${((timing.delay.before + timing.duration) / totalDuration) * 100}%`]: {
+    scale: scale.from,
+  },
+  "100%": {
+    scale: scale.from,
+  },
+});
+
 const RoundsPage: NextPage = () => {
+  const id = useId();
   return (
-    <div className="h-screen w-full">
-      <div className="flex flex-col h-full justify-between items-start py-24 px-16">
-        {Object.entries(checks).map(([key, check]) => (
-          <Check key={key} check={check} />
-        ))}
+    <>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: [
+            `@keyframes rounds-${id}-item { ${keyframes} }`,
+            `.rounds-${id}-item { animation: ${totalDuration}ms rounds-${id}-item infinite; will-change: scale; }`,
+            `@media (prefers-reduced-motion) { .rounds-${id}-item { animation: none !important; } }`,
+          ].join("\n"),
+        }}
+      />
+      <div className="h-screen w-full">
+        <div className="flex flex-col h-full justify-between items-start py-24 px-16">
+          {Object.entries(checks).map(([key, check], idx) => (
+            <Check
+              key={key}
+              check={check}
+              className={`rounds-${id}-item`}
+              style={{
+                animationDelay: `${idx * itemDuration}ms`,
+              }}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
