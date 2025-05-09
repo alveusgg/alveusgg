@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { createImageUrl } from "@/utils/image";
 
@@ -67,7 +67,14 @@ const Video = ({
     [seen, threshold],
   );
 
-  const computedPoster = poster && createImageUrl({ src: poster, width: 512 });
+  const computedPoster = useMemo(
+    () => poster && createImageUrl({ src: poster, width: 512 }),
+    [poster],
+  );
+  const computedKey = useMemo(
+    () => sources.map((source) => source.src).join(","),
+    [sources],
+  );
 
   return (
     <video
@@ -81,6 +88,7 @@ const Video = ({
       width={width}
       height={height || sources[0]?.size}
       poster={computedPoster}
+      key={computedKey}
       ref={ref}
     >
       {seen &&
