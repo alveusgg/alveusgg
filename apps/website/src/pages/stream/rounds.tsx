@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 import { type NextPage } from "next";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useMemo, useState } from "react";
 
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
@@ -74,7 +75,19 @@ const RoundsPage: NextPage = () => {
 
   const background = night ? roundsNightBackground : roundsDayBackground;
 
-  const chatChecks = useChatChecks(["AlveusSanctuary", "AlveusGG"], checks);
+  const { query } = useRouter();
+  const trustedUsers = useMemo(
+    () =>
+      (Array.isArray(query.users) ? query.users : [query.users]).filter(
+        (x) => typeof x === "string",
+      ),
+    [query.users],
+  );
+  const chatChecks = useChatChecks(
+    ["AlveusSanctuary", "AlveusGG"],
+    checks,
+    trustedUsers,
+  );
 
   return (
     <div className="h-screen w-full">
