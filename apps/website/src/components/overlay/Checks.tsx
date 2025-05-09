@@ -9,6 +9,7 @@ import IconCheck from "@/icons/IconCheck";
 
 export interface Check {
   name: string;
+  description?: string;
   icon: AmbassadorImage;
   status: boolean;
 }
@@ -18,6 +19,7 @@ const Check = ({
   className,
   style,
 }: {
+  key: string;
   check: Check;
   className?: string;
   style?: CSSProperties;
@@ -48,7 +50,14 @@ const Check = ({
         )}
       </div>
       <span className="w-3 h-1.5 bg-white rounded-xs" />
-      <span className="text-5xl font-bold text-white">{check.name}</span>
+      <div className="flex flex-col">
+        <span className="text-5xl font-bold text-white">{check.name}</span>
+        {check.description && (
+          <span className="text-sm text-white opacity-75 font-mono">
+            {check.description}
+          </span>
+        )}
+      </div>
     </div>
   );
 };

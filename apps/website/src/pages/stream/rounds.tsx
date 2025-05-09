@@ -98,6 +98,7 @@ const RoundsPage: NextPage = () => {
           {
             ...check,
             status: false,
+            description: `!check ${key}`,
           },
         ] as const;
       }),
