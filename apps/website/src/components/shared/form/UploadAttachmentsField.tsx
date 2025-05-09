@@ -366,18 +366,18 @@ export const UploadAttachmentsField = ({
         isOpen={isImageConverting}
         closeModal={() => setIsImageConverting(false)}
         title={
-          imageConversionError
-            ? "Error converting image"
-            : "Converting image..."
+          imageConversionError ? "Image conversion failed" : "Converting image"
         }
       >
         <div className="flex flex-row items-center justify-center gap-2">
           {imageConversionError && (
-            <span className="text-red-500">Error converting image</span>
+            <span className="text-red-500">
+              Unable to convert image format. Please try another file.
+            </span>
           )}
           {!imageConversionError && (
             <>
-              <span>Converting image to JPEG format...</span>
+              <span>Processing image for upload...</span>
               <IconLoading className="size-5 animate-spin" />
             </>
           )}
