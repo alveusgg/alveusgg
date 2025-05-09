@@ -1,9 +1,18 @@
+import type { ChatMessage } from "@twurple/chat";
 import Image from "next/image";
-import { type CSSProperties, useId, useMemo } from "react";
+import {
+  type CSSProperties,
+  useCallback,
+  useId,
+  useMemo,
+  useState,
+} from "react";
 
 import { type AmbassadorImage } from "@alveusgg/data/build/ambassadors/images";
 
 import { classes, objToCss } from "@/utils/classes";
+
+import useChat from "@/hooks/chat";
 
 import IconCheck from "@/icons/IconCheck";
 
@@ -150,3 +159,67 @@ const Checks = ({
 };
 
 export default Checks;
+
+export const useChatChecks = (
+  channels: string[],
+  checks: Record<string, Omit<Check, "status" | "description">>,
+) => {
+  const [checksWithStatus, setChecksWithStatus] = useState<
+    Record<string, Check>
+  >(
+    Object.fromEntries(
+      Object.entries(checks).map(([key, check]) => {
+        return [
+          key,
+          {
+            ...check,
+            status: false,
+            description: `!check ${key}`,
+          },
+        ] as const;
+      }),
+    ),
+  );
+
+  const setStatus = useCallback((keys: string[], mode: "toggle" | "reset") => {
+    if (keys.length === 0) return;
+
+    setChecksWithStatus((prev) => {
+      const newChecks = { ...prev };
+
+      keys.forEach((key) => {
+        if (!newChecks[key]) return;
+
+        newChecks[key] = {
+          ...newChecks[key],
+          status: mode === "toggle" ? !newChecks[key].status : false,
+        };
+      });
+
+      return newChecks;
+    });
+  }, []);
+
+  useChat(
+    channels,
+    useCallback(
+      (message: ChatMessage) => {
+        const { text, userInfo } = message;
+        const [command, ...keys] = text.split(" ");
+
+        if (command !== "!check") return;
+        if (!userInfo.isMod && !userInfo.isBroadcaster) return;
+
+        if (keys[0] === "reset") {
+          setStatus(Object.keys(checks), "reset");
+          return;
+        }
+
+        setStatus(keys, "toggle");
+      },
+      [setStatus, checks],
+    ),
+  );
+
+  return checksWithStatus;
+};
