@@ -75,7 +75,7 @@ function isConvertibleMimeType(
 export async function imageConverter(
   file: File,
   setIsConvertingFile: Dispatch<SetStateAction<boolean>>,
-  setError: Dispatch<SetStateAction<string | null>>,
+  setImageConversionError: Dispatch<SetStateAction<string | null>>,
 ) {
   if (isConvertibleMimeType(file.type)) {
     const converter = conversionFunctions[file.type];
@@ -86,7 +86,7 @@ export async function imageConverter(
       setIsConvertingFile(true);
       return await converter(file);
     } catch (error) {
-      setError(`Error converting image (${file.type}) to JPEG`);
+      setImageConversionError(`Error converting image (${file.type}) to JPEG`);
       console.error(error);
       return file;
     } finally {

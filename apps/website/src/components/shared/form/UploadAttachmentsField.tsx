@@ -197,6 +197,9 @@ export const UploadAttachmentsField = ({
 }: FileUploadingPropsType) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [imageConversionError, setImageConversionError] = useState<
+    string | null
+  >(null);
   const [isImageConverting, setIsImageConverting] = useState(false);
 
   const onFileUpload = useCallback((): void => {
@@ -243,7 +246,7 @@ export const UploadAttachmentsField = ({
           const fileToUpload = await imageConverter(
             file,
             setIsImageConverting,
-            setError,
+            setImageConversionError,
           );
 
           let dataURL = await fileToBase64(fileToUpload);
@@ -363,8 +366,15 @@ export const UploadAttachmentsField = ({
         title="Converting image..."
       >
         <div className="flex flex-row items-center justify-center gap-2">
-          <span>Converting image to jpeg...</span>
-          <IconLoading className="size-5 animate-spin" />
+          {imageConversionError && (
+            <span className="text-red-500">Error converting image</span>
+          )}
+          {!imageConversionError && (
+            <>
+              <span>Converting image to JPEG format...</span>
+              <IconLoading className="size-5 animate-spin" />
+            </>
+          )}
         </div>
       </ModalDialog>
     </div>
