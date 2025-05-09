@@ -229,6 +229,16 @@ export const UploadAttachmentsField = ({
       const file = filesToAdd[i];
       if (!file) continue;
 
+      // Run through the image converter to convert the file to a jpeg if it's a heic, avif or heif file
+      // returns the original file if conversion not needed
+      const fileToUpload = await imageConverter(
+        file,
+        setIsImageConverting,
+        setImageConversionError,
+      );
+
+      if (!fileToUpload) continue;
+
       if (allowedFileTypes && !allowedFileTypes.includes(file.type)) {
         setError(`File type not allowed (${file.type})`);
         return;
@@ -241,14 +251,6 @@ export const UploadAttachmentsField = ({
 
       newFiles.push(
         (async () => {
-          // Run through the image converter to convert the file to a jpeg if it's a heic, avif or heif file
-          // returns the original file if conversion not needed
-          const fileToUpload = await imageConverter(
-            file,
-            setIsImageConverting,
-            setImageConversionError,
-          );
-
           let dataURL = await fileToBase64(fileToUpload);
           let extractColor: PendingUploadFileReference["extractColor"] =
             async () => await extractColorFromImage(dataURL);
