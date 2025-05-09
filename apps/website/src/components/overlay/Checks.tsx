@@ -163,7 +163,13 @@ export default Checks;
 export const useChatChecks = (
   channels: string[],
   checks: Record<string, Omit<Check, "status" | "description">>,
+  users?: string[],
 ) => {
+  const usersCleaned = useMemo(
+    () => users?.map((user) => user.toLowerCase().trim()) ?? [],
+    [users],
+  );
+
   const [checksWithStatus, setChecksWithStatus] = useState<
     Record<string, Check>
   >(
@@ -208,7 +214,12 @@ export const useChatChecks = (
         const [command, ...keys] = text.split(" ");
 
         if (command !== "!check") return;
-        if (!userInfo.isMod && !userInfo.isBroadcaster) return;
+        if (
+          !userInfo.isMod &&
+          !userInfo.isBroadcaster &&
+          !usersCleaned.includes(userInfo.userName.toLowerCase().trim())
+        )
+          return;
 
         if (keys[0] === "reset") {
           setStatus(Object.keys(checks), "reset");
@@ -217,7 +228,7 @@ export const useChatChecks = (
 
         setStatus(keys, "toggle");
       },
-      [setStatus, checks],
+      [setStatus, checks, usersCleaned],
     ),
   );
 
