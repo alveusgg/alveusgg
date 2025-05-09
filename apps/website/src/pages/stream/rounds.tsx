@@ -89,10 +89,12 @@ const RoundsPage: NextPage = () => {
         disablePictureInPicture
       />
 
-      <Checks
-        checks={checks}
-        className="h-full max-h-full overflow-hidden px-16"
-      />
+      <div className="h-full flex justify-start overflow-hidden px-16">
+        <Checks
+          checks={checks}
+          className="animate-wiggle-slow origin-center h-full"
+        />
+      </div>
     </div>
   );
 };

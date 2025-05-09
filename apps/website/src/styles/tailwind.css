@@ -17,6 +17,30 @@
 @theme {
   --animate-spin-slow: spin 3s linear infinite;
   --animate-pulse-slow: pulse 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+
+  --animate-wiggle-slow:
+    wiggle-slow-rotate 10s ease-in-out infinite,
+    wiggle-slow-scale 10s ease-in-out infinite 3s;
+
+  @keyframes wiggle-slow-rotate {
+    0%,
+    100% {
+      rotate: 0deg;
+    }
+    50% {
+      rotate: 1deg;
+    }
+  }
+
+  @keyframes wiggle-slow-scale {
+    0%,
+    100% {
+      scale: 1;
+    }
+    50% {
+      scale: 1.025;
+    }
+  }
 }
 
 @layer base {
