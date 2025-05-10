@@ -14,13 +14,13 @@ import roundsDayBackground from "@/assets/rounds/day.webm";
 import roundsNightBackground from "@/assets/rounds/night.webm";
 
 const checks: Record<string, Omit<Check, "status" | "description">> = {
-  foxes: {
-    name: "Foxes",
-    icon: getAmbassadorImages("reed")[0],
-  },
   wolfdogs: {
     name: "Wolfdogs",
     icon: getAmbassadorImages("awa")[0],
+  },
+  foxes: {
+    name: "Foxes",
+    icon: getAmbassadorImages("reed")[0],
   },
   pushpop: {
     name: "Push Pop",
@@ -34,9 +34,13 @@ const checks: Record<string, Omit<Check, "status" | "description">> = {
     name: "Marmosets",
     icon: getAmbassadorImages("appa")[0],
   },
-  critters: {
-    name: "Insects/Reptiles",
+  insects: {
+    name: "Insects",
     icon: getAmbassadorImages("barbaraBakedBean")[0],
+  },
+  reptiles: {
+    name: "Reptiles",
+    icon: getAmbassadorImages("toasterStrudel")[0],
   },
   winnie: {
     name: "Winnie",
