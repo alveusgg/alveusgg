@@ -1,10 +1,9 @@
 import type { ImageProps } from "next/image";
 import Image from "next/image";
-import { type CSSProperties, useCallback, useId, useMemo } from "react";
+import { useCallback, useId, useMemo } from "react";
 
-import { classes } from "@/utils/classes";
+import { classes, objToCss } from "@/utils/classes";
 import { type ImageLoaderProps, createImageUrl } from "@/utils/image";
-import { camelToKebab } from "@/utils/string-case";
 
 type SlideshowProps = {
   images: {
@@ -21,14 +20,6 @@ type SlideshowProps = {
     to: number;
   };
 };
-
-const objToCss = (obj: Record<string, CSSProperties> | CSSProperties): string =>
-  Object.entries(obj)
-    .map(([key, value]) => {
-      if (typeof value === "object") return `${key} { ${objToCss(value)} }`;
-      return `${camelToKebab(key)}: ${value};`;
-    })
-    .join(" ");
 
 const Slideshow = ({
   images,
