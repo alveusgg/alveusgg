@@ -139,7 +139,7 @@ const Checks = ({
       />
       <div
         className={classes(
-          "flex flex-col justify-center items-start gap-4",
+          "flex flex-col justify-center items-start",
           className,
         )}
       >
@@ -147,7 +147,7 @@ const Checks = ({
           <Check
             key={key}
             check={check}
-            className={`checks-${id}-item`}
+            className={classes(`checks-${id}-item`, idx % 2 !== 0 && "ml-32")}
             style={{
               animationDelay: `${idx * animation.duration.item}ms`,
             }}
