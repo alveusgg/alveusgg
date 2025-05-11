@@ -1,7 +1,7 @@
 import { Transition } from "@headlessui/react";
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { prisma } from "@alveusgg/database";
 
@@ -10,6 +10,8 @@ import { env } from "@/env";
 import { type Clip, getClips } from "@/server/apis/twitch";
 
 import { channels } from "@/data/twitch";
+
+import { queryArray } from "@/utils/array";
 
 async function getTwitchClips(
   userAccessToken: string,
@@ -131,9 +133,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   clips,
 }) => {
   const { query } = useRouter();
-  const parents = (
-    Array.isArray(query.parent) ? query.parent : [query.parent]
-  ).filter((elm): elm is string => typeof elm === "string" && !!elm);
+  const parents = useMemo(() => queryArray(query.parent), [query.parent]);
 
   // Once mounted, randomize the clips
   const [randomClips, setRandomClips] = useState<ClipData[]>([]);

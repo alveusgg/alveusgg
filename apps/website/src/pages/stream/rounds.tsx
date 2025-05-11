@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
+import { queryArray } from "@/utils/array";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
 import Video from "@/components/content/Video";
@@ -80,13 +81,7 @@ const RoundsPage: NextPage = () => {
   const background = night ? roundsNightBackground : roundsDayBackground;
 
   const { query } = useRouter();
-  const trustedUsers = useMemo(
-    () =>
-      (Array.isArray(query.users) ? query.users : [query.users]).filter(
-        (x) => typeof x === "string",
-      ),
-    [query.users],
-  );
+  const trustedUsers = useMemo(() => queryArray(query.users), [query.users]);
   const chatChecks = useChatChecks(
     ["AlveusSanctuary", "AlveusGG"],
     checks,
