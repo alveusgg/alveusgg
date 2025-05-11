@@ -138,6 +138,9 @@
       "prettier-plugin-tailwindcss"
     ],
     "tailwindStylesheet": "./src/styles/tailwind.css",
+    "tailwindFunctions": [
+      "classes"
+    ],
     "importOrder": [
       "^node:.+$",
       "<THIRD_PARTY_MODULES>",
