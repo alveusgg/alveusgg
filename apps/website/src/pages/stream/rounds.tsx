@@ -81,11 +81,13 @@ const RoundsPage: NextPage = () => {
   const background = night ? roundsNightBackground : roundsDayBackground;
 
   const { query } = useRouter();
-  const trustedUsers = useMemo(() => queryArray(query.users), [query.users]);
   const chatChecks = useChatChecks(
-    ["AlveusSanctuary", "AlveusGG"],
+    useMemo(() => {
+      const param = queryArray(query.channels);
+      return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
+    }, [query.channels]),
     checks,
-    trustedUsers,
+    useMemo(() => queryArray(query.users), [query.users]),
   );
 
   return (
