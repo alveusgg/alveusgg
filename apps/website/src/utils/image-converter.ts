@@ -58,28 +58,24 @@ async function convertAvifToJpeg(file: File): Promise<File> {
   });
 }
 
-const conversionFunctions: Record<
-  "image/heic" | "image/heif" | "image/avif",
-  (file: File) => Promise<File>
-> = {
+const converters = {
   "image/heic": convertHeicToJpeg,
   "image/heif": convertHeicToJpeg,
   "image/avif": convertAvifToJpeg,
-};
+} as const satisfies Partial<
+  Record<ImageMimeType, (file: File) => Promise<File>>
+>;
 
-function isConvertibleMimeType(
-  mimeType: string,
-): mimeType is keyof typeof conversionFunctions & ImageMimeType {
-  return mimeType in conversionFunctions;
-}
+const hasConverter = (mimeType: string): mimeType is keyof typeof converters =>
+  mimeType in converters;
 
 export async function imageConverter(
   file: File,
   setIsConvertingFile: Dispatch<SetStateAction<boolean>>,
   setImageConversionError: Dispatch<SetStateAction<string | null>>,
 ) {
-  if (isConvertibleMimeType(file.type)) {
-    const converter = conversionFunctions[file.type];
+  if (hasConverter(file.type)) {
+    const converter = converters[file.type];
 
     setIsConvertingFile(true);
     return converter(file)
