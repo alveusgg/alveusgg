@@ -95,7 +95,7 @@ const RoundsPage: NextPage = () => {
       <Video
         sources={background.sources}
         poster={background.poster}
-        className="h-full w-full object-cover absolute inset-0 object-top-left"
+        className="absolute inset-0 h-full w-full object-cover object-top-left"
         width={1920}
         height={1080}
         autoPlay
@@ -105,10 +105,10 @@ const RoundsPage: NextPage = () => {
         disablePictureInPicture
       />
 
-      <div className="h-full flex justify-start overflow-hidden px-16">
+      <div className="flex h-full justify-start overflow-hidden px-16">
         <Checks
           checks={chatChecks}
-          className="animate-wiggle-slow origin-center h-full"
+          className="h-full origin-center animate-wiggle-slow"
         />
       </div>
     </div>

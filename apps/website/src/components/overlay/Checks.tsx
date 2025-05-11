@@ -36,33 +36,33 @@ const Check = ({
   return (
     <div
       className={classes(
-        "flex items-center gap-2 drop-shadow-md origin-center",
+        "flex origin-center items-center gap-2 drop-shadow-md",
         className,
       )}
       style={style}
     >
-      <div className="size-20 relative">
+      <div className="relative size-20">
         <Image
           src={check.icon.src}
           alt={check.icon.alt}
           className={classes(
-            "rounded-full border-4 size-full object-cover",
+            "size-full rounded-full border-4 object-cover",
             check.status
-              ? "border-green-400 saturate-50 brightness-50"
+              ? "border-green-400 brightness-50 saturate-50"
               : "border-white",
           )}
           style={{ objectPosition: check.icon.position }}
         />
 
         {check.status && (
-          <IconCheckFancy className="absolute top-1/2 left-1/2 -translate-1/2 size-18 text-green-400 saturate-250" />
+          <IconCheckFancy className="absolute top-1/2 left-1/2 size-18 -translate-1/2 text-green-400 saturate-250" />
         )}
       </div>
-      <span className="w-3 h-1.5 bg-white rounded-xs" />
+      <span className="h-1.5 w-3 rounded-xs bg-white" />
       <div className="flex flex-col">
         <span className="text-5xl font-bold text-white">{check.name}</span>
         {check.description && (
-          <span className="text-sm text-white opacity-75 font-mono">
+          <span className="font-mono text-sm text-white opacity-75">
             {check.description}
           </span>
         )}
@@ -139,7 +139,7 @@ const Checks = ({
       />
       <div
         className={classes(
-          "flex flex-col justify-center items-start",
+          "flex flex-col items-start justify-center",
           className,
         )}
       >

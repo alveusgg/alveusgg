@@ -182,8 +182,8 @@ function GiveAnHourInput({
       minValue={1}
       maxValue={9999}
       inputClassName={classes(
-        "text-right min-w-[calc(5ch+1rem)]",
-        enabled ? "" : "opacity-50 cursor-not-allowed",
+        "min-w-[calc(5ch+1rem)] text-right",
+        enabled ? "" : "cursor-not-allowed opacity-50",
       )}
       showButtons={true}
       labelClassName="sr-only"
