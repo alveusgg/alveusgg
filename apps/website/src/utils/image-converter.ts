@@ -58,8 +58,9 @@ async function convertAvifToJpeg(file: File): Promise<File> {
   });
 }
 
-const conversionFunctions: Partial<
-  Record<ImageMimeType, (file: File) => Promise<File>>
+const conversionFunctions: Record<
+  "image/heic" | "image/heif" | "image/avif",
+  (file: File) => Promise<File>
 > = {
   "image/heic": convertHeicToJpeg,
   "image/heif": convertHeicToJpeg,
@@ -80,7 +81,6 @@ export async function imageConverter(
   if (isConvertibleMimeType(file.type)) {
     const converter = conversionFunctions[file.type];
 
-    if (!converter) return file;
     setIsConvertingFile(true);
     return converter(file)
       .then((convertedFile) => {
