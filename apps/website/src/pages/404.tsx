@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
@@ -14,6 +14,7 @@ import {
 } from "@alveusgg/data/build/ambassadors/images";
 import { getSpecies } from "@alveusgg/data/build/ambassadors/species";
 
+import { classes } from "@/utils/classes";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
@@ -24,13 +25,18 @@ import Section from "@/components/content/Section";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
+import showAndTellPeepo from "@/assets/show-and-tell/peepo.png";
+
 const useRandomAmbassador = () => {
   const [key, setKey] = useState<ActiveAmbassadorKey | null>(null);
-  useEffect(() => {
+  const pick = useCallback(() => {
     const keys = typeSafeObjectKeys(ambassadors).filter(isActiveAmbassadorKey);
     const randomIndex = Math.floor(Math.random() * keys.length);
     setKey(keys[randomIndex]!);
   }, []);
+  useEffect(() => {
+    pick();
+  }, [pick]);
 
   return useMemo(() => {
     if (!key) return {};
@@ -47,6 +53,7 @@ const useRandomAmbassador = () => {
       ambassador,
       species,
       icon,
+      pick,
     };
   }, [key]);
 };
@@ -66,7 +73,7 @@ const CustomLink = ({
 );
 
 const NotFound: NextPage = () => {
-  const { slug, ambassador, species, icon } = useRandomAmbassador();
+  const { slug, ambassador, species, icon, pick } = useRandomAmbassador();
 
   return (
     <>
@@ -144,15 +151,18 @@ const NotFound: NextPage = () => {
                 </p>
               </div>
 
-              {icon && (
-                <Image
-                  src={icon.src}
-                  alt={icon.alt}
-                  width={100}
-                  height={100}
-                  className="h-24 w-24 object-cover drop-shadow-lg -mt-2"
-                />
-              )}
+              <Image
+                src={(icon ?? showAndTellPeepo).src}
+                alt=""
+                width={100}
+                height={100}
+                className={classes(
+                  "h-24 w-auto drop-shadow-lg -mt-2 cursor-pointer",
+                  !icon && "opacity-50",
+                )}
+                onClick={pick}
+                title="Click to meet another ambassador"
+              />
             </div>
 
             <p>
