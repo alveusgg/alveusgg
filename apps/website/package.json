@@ -134,8 +134,8 @@
   },
   "prettier": {
     "plugins": [
-      "prettier-plugin-tailwindcss",
-      "@trivago/prettier-plugin-sort-imports"
+      "@trivago/prettier-plugin-sort-imports",
+      "prettier-plugin-tailwindcss"
     ],
     "tailwindStylesheet": "./src/styles/tailwind.css",
     "importOrder": [
