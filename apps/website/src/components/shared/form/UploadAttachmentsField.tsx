@@ -239,13 +239,13 @@ export const UploadAttachmentsField = ({
 
       if (!fileToUpload) continue;
 
-      if (allowedFileTypes && !allowedFileTypes.includes(file.type)) {
-        setError(`File type not allowed (${file.type})`);
+      if (allowedFileTypes && !allowedFileTypes.includes(fileToUpload.type)) {
+        setError(`File type not allowed (${fileToUpload.type})`);
         return;
       }
 
-      if (maxFileSize && file.size > maxFileSize) {
-        setError(`File size too large (${file.size} > ${maxFileSize})`);
+      if (maxFileSize && fileToUpload.size > maxFileSize) {
+        setError(`File size too large (${fileToUpload.size} > ${maxFileSize})`);
         return;
       }
 

@@ -81,9 +81,8 @@ export async function imageConverter(
     const converter = conversionFunctions[file.type];
 
     if (!converter) return file;
-
     setIsConvertingFile(true);
-    return await converter(file)
+    return converter(file)
       .then((convertedFile) => {
         setIsConvertingFile(false);
         return convertedFile;
