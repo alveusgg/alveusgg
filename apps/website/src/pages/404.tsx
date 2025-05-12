@@ -65,10 +65,10 @@ const CustomLink = ({
   <Link
     {...props}
     custom
-    className="text-alveus-green hover:text-alveus-green-900 hover:underline transition-colors group text-shadow-sm py-1 text-lg"
+    className="group py-1 text-lg text-alveus-green transition-colors text-shadow-sm hover:text-alveus-green-900 hover:underline"
   >
     {children}
-    <IconArrowRight className="inline-block size-4 opacity-0 -ml-4 mr-8 group-hover:ml-1 group-hover:mr-3 group-hover:opacity-100 transition-[margin,opacity] drop-shadow-sm" />
+    <IconArrowRight className="mr-8 -ml-4 inline-block size-4 opacity-0 drop-shadow-sm transition-[margin,opacity] group-hover:mr-3 group-hover:ml-1 group-hover:opacity-100" />
   </Link>
 );
 
@@ -111,7 +111,7 @@ const NotFound: NextPage = () => {
             Here are some links to help you find what you&apos;re looking for:
           </p>
 
-          <ul className="flex max-md:flex-col flex-wrap">
+          <ul className="flex flex-wrap max-md:flex-col">
             <li>
               <CustomLink href="/">Home</CustomLink>
             </li>
@@ -138,7 +138,7 @@ const NotFound: NextPage = () => {
 
         {ambassador && species && (
           <div>
-            <div className="flex justify-between items-start gap-4 mb-2">
+            <div className="mb-2 flex items-start justify-between gap-4">
               <div>
                 <p className="text-sm">While you&apos;re here...</p>
 
@@ -157,7 +157,7 @@ const NotFound: NextPage = () => {
                 width={100}
                 height={100}
                 className={classes(
-                  "h-24 w-auto drop-shadow-lg -mt-2 cursor-pointer",
+                  "-mt-2 h-24 w-auto cursor-pointer drop-shadow-lg",
                   !icon && "opacity-50",
                 )}
                 onClick={pick}

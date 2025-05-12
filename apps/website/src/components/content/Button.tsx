@@ -13,11 +13,11 @@ const getClassNames = (className?: string, dark = false, filled = false) =>
     "rounded-3xl border-2 transition-colors",
     dark
       ? filled
-        ? "hover:text-alveus-tan hover:border-alveus-tan hover:bg-transparent border-alveus-tan bg-alveus-tan text-alveus-green"
-        : "text-alveus-tan border-alveus-tan bg-transparent hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+        ? "border-alveus-tan bg-alveus-tan text-alveus-green hover:border-alveus-tan hover:bg-transparent hover:text-alveus-tan"
+        : "border-alveus-tan bg-transparent text-alveus-tan hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
       : filled
-        ? "hover:text-alveus-green hover:border-alveus-green hover:bg-transparent border-alveus-green bg-alveus-green text-alveus-tan"
-        : "text-alveus-green border-alveus-green bg-transparent hover:border-alveus-green hover:bg-alveus-green hover:text-alveus-tan",
+        ? "border-alveus-green bg-alveus-green text-alveus-tan hover:border-alveus-green hover:bg-transparent hover:text-alveus-green"
+        : "border-alveus-green bg-transparent text-alveus-green hover:border-alveus-green hover:bg-alveus-green hover:text-alveus-tan",
     !/(^|\s)text-(xs|sm|base|lg|[2-6]?xl)(\s|$)/.test(className || "") &&
       "text-lg",
     !/(^|\s)((inline-)?(block|flex|grid|table)|inline|contents)(\s|$)/.test(
