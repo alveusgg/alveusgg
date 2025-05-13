@@ -60,10 +60,9 @@ export const adminNotificationsRouter = router({
     .mutation(async ({ input }) => {
       // Check if the file storage object is valid
       if (input.fileStorageObjectId) {
-        const { error, success } =
-          await checkAndFixUploadedImageFileStorageObject(
-            input.fileStorageObjectId,
-          );
+        const { error } = await checkAndFixUploadedImageFileStorageObject(
+          input.fileStorageObjectId,
+        );
         if (error) {
           throw new TRPCError({
             code: "BAD_REQUEST",
