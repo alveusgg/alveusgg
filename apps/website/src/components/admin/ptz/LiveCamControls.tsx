@@ -5,6 +5,8 @@ import { trpc } from "@/utils/trpc";
 
 import useChat from "@/hooks/chat";
 
+import Player from "./Player";
+
 const channels = ["AlveusSanctuary", "AlveusGG"];
 
 const positions = [
@@ -102,6 +104,10 @@ const LiveCamControls = () => {
           }}
         ></div>
       ))}
+
+      <div className="col-span-full row-span-full">
+        <Player />
+      </div>
     </div>
   );
 };
