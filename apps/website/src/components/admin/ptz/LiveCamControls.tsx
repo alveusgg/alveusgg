@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
@@ -86,8 +86,35 @@ const LiveCamControls = () => {
     });
   }, [runCommand]);
 
+  const gridRef = useRef<HTMLDivElement>(null);
+  const camClick = (cam: string, event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (active !== cam) {
+      setActive(cam);
+      return;
+    }
+
+    const rect = gridRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const xScaled = (x / rect.width) * 1920;
+    const yScaled = (y / rect.height) * 1080;
+
+    runCommand({
+      command: "ptzclick",
+      args: [
+        Math.round(xScaled).toString(),
+        Math.round(yScaled).toString(),
+        "100",
+      ],
+    });
+  };
+
   return (
-    <div className="grid aspect-video grid-cols-3 grid-rows-3">
+    <div ref={gridRef} className="grid aspect-video grid-cols-3 grid-rows-3">
       {cams?.map(({ cam, position }) => (
         <div
           key={cam}
@@ -99,9 +126,7 @@ const LiveCamControls = () => {
               ? "cursor-crosshair border-red"
               : "cursor-pointer border-blue bg-black/25 backdrop-blur-xs",
           )}
-          onClick={() => {
-            setActive(cam);
-          }}
+          onClick={(e) => camClick(cam, e)}
         ></div>
       ))}
 
