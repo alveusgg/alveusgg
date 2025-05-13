@@ -10,6 +10,7 @@ type Params = {
 };
 
 // Only allow known channels
+export const dynamic = "force-dynamic";
 export const dynamicParams = false;
 export function generateStaticParams(): Params[] {
   return typeSafeObjectKeys(channels).map((channel) => ({ channel }));
