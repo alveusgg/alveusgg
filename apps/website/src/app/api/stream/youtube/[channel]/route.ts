@@ -2,19 +2,8 @@ import { fetchYouTubeVideos } from "@/server/apis/youtube";
 
 import { channels } from "@/data/youtube";
 
-import { typeSafeObjectKeys } from "@/utils/helpers";
-
-type Channel = keyof typeof channels;
-type Params = {
-  channel: Channel;
-};
-
-// Only allow known channels
-export const dynamic = "force-dynamic";
-export const dynamicParams = false;
-export function generateStaticParams(): Params[] {
-  return typeSafeObjectKeys(channels).map((channel) => ({ channel }));
-}
+const isChannel = (channel: string): channel is keyof typeof channels =>
+  channel in channels;
 
 // API for chat bot
 export async function GET(
@@ -22,10 +11,15 @@ export async function GET(
   {
     params,
   }: {
-    params: Promise<Params>;
+    params: Promise<{
+      channel: string;
+    }>;
   },
 ) {
   const { channel } = await params;
+  if (!isChannel(channel)) {
+    return new Response("YouTube channel not available", { status: 404 });
+  }
 
   try {
     const videos = await fetchYouTubeVideos(channels[channel].id);
