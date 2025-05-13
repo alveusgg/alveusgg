@@ -7,7 +7,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { botScopes, defaultScopes } from "@/data/twitch";
+import { scopeGroups } from "@/data/twitch";
 
 import { unregisterServiceWorker } from "@/utils/sw";
 import { trpc } from "@/utils/trpc";
@@ -35,7 +35,12 @@ const SessionChecker = ({ children }: { children: React.ReactNode }) => {
       signIn(
         "twitch",
         { callbackUrl: window.location.href },
-        { scope: [...defaultScopes, ...botScopes].join(" ") },
+        {
+          scope: [
+            ...scopeGroups.default.scopes,
+            ...scopeGroups.api.scopes,
+          ].join(" "),
+        },
       );
       return;
     }

@@ -13,7 +13,7 @@ import {
   refreshAccessToken,
 } from "@/server/utils/oauth2";
 
-import { botScopes, defaultScopes } from "@/data/twitch";
+import { scopeGroups } from "@/data/twitch";
 
 import invariant from "@/utils/invariant";
 
@@ -24,7 +24,7 @@ const twitchProvider = TwitchProvider({
   clientSecret: env.TWITCH_CLIENT_SECRET,
   authorization: {
     params: {
-      scope: defaultScopes.join(" "),
+      scope: scopeGroups.default.scopes.join(" "),
     },
   },
 });
@@ -93,7 +93,9 @@ export const authOptions: NextAuthOptions = {
         account.twitchChannelModerator.length
       ) {
         const scopes = new Set(account.scope?.split(" "));
-        const missingScopes = botScopes.filter((scope) => !scopes.has(scope));
+        const missingScopes = scopeGroups.api.scopes.filter(
+          (scope) => !scopes.has(scope),
+        );
         if (missingScopes.length > 0) {
           return {
             expires: new Date(0).toISOString(),
