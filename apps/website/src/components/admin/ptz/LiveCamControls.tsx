@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import { channels } from "@/data/twitch";
 
@@ -83,11 +83,39 @@ const useCamLayout = () => {
 };
 
 const LiveCamControls = ({ url }: { url?: string }) => {
+  const { mutateAsync: runCommand } = trpc.stream.runCommand.useMutation();
   const cams = useCamLayout();
   const [active, setActive] = useState<number>(0);
 
+  const gridRef = useRef<HTMLDivElement>(null);
+  const camClick = (cam: number, event: React.MouseEvent) => {
+    event.stopPropagation();
+    event.preventDefault();
+
+    if (active !== cam) {
+      setActive(cam);
+      return;
+    }
+
+    const rect = gridRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const xScaled = (x / rect.width) * 1920;
+    const yScaled = (y / rect.height) * 1080;
+
+    runCommand({
+      command: "ptzclick",
+      args: [
+        Math.round(xScaled).toString(),
+        Math.round(yScaled).toString(),
+        "100",
+      ],
+    });
+  };
+
   return (
-    <div className="grid aspect-video grid-cols-3 grid-rows-3">
+    <div ref={gridRef} className="grid aspect-video grid-cols-3 grid-rows-3">
       {cams?.map(({ cam, position }, idx) => (
         <div
           key={cam}
@@ -99,9 +127,7 @@ const LiveCamControls = ({ url }: { url?: string }) => {
               ? "cursor-crosshair border-red"
               : "cursor-pointer border-blue bg-black/25 backdrop-blur-xs",
           )}
-          onClick={() => {
-            setActive(idx + 1);
-          }}
+          onClick={(e) => camClick(idx + 1, e)}
         ></div>
       ))}
 

@@ -13,7 +13,7 @@ import {
 import { channels } from "@/data/twitch";
 
 export const runCommandSchema = z.object({
-  command: z.enum(["ptzload", "ptzlist"]),
+  command: z.enum(["ptzload", "ptzlist", "ptzclick"]),
   args: z.array(z.string()).optional(),
 });
 
