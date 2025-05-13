@@ -65,6 +65,31 @@ const useCamLayout = () => {
             setScene(scene);
             setCams(camList);
           }
+          return;
+        }
+
+        // Look for !ptzgetcam response
+        const ptzgetcam = text.match(/^{"cam":"(.+)","position":(\d+)}$/);
+        if (ptzgetcam && userInfo.userId === channels.alveus.id) {
+          const [_, cam, position] = ptzgetcam;
+          if (cam && position) {
+            console.log("!ptzgetcam", { cam, position });
+            setCams((prev) => {
+              const newCams = [...prev];
+              const newIdx = Number(position) - 1;
+
+              // If the cam is already in the list at a different index,
+              // update that index to contain the cam at the new index
+              const existingIdx = newCams.findIndex((c) => c === cam);
+              if (existingIdx !== -1 && existingIdx !== newIdx) {
+                newCams[existingIdx] = newCams[newIdx] ?? "";
+              }
+
+              newCams[newIdx] = cam;
+              return newCams;
+            });
+          }
+          return;
         }
       },
       [setScene, setCams],
@@ -92,17 +117,25 @@ const LiveCamControls = ({ url }: { url?: string }) => {
     event.stopPropagation();
     event.preventDefault();
 
-    if (active !== cam) {
-      setActive(cam);
-      return;
-    }
-
     const rect = gridRef.current?.getBoundingClientRect();
     if (!rect) return;
     const x = event.clientX - rect.left;
     const y = event.clientY - rect.top;
     const xScaled = (x / rect.width) * 1920;
     const yScaled = (y / rect.height) * 1080;
+
+    if (active !== cam) {
+      setActive(cam);
+      runCommand({
+        command: "ptzgetcam",
+        args: [
+          Math.round(xScaled).toString(),
+          Math.round(yScaled).toString(),
+          "json",
+        ],
+      });
+      return;
+    }
 
     runCommand({
       command: "ptzclick",
@@ -128,7 +161,11 @@ const LiveCamControls = ({ url }: { url?: string }) => {
               : "cursor-pointer border-blue bg-black/25 backdrop-blur-xs",
           )}
           onClick={(e) => camClick(idx + 1, e)}
-        ></div>
+        >
+          <p className="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-1 text-sm text-white">
+            {cam}
+          </p>
+        </div>
       ))}
 
       <div className="col-span-full row-span-full">
