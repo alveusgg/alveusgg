@@ -7,6 +7,8 @@ import { trpc } from "@/utils/trpc";
 
 import useChat from "@/hooks/chat";
 
+import LiveCamFeed from "./LiveCamFeed";
+
 const chatChannels = [channels.alveus.username, channels.alveusgg.username];
 
 const positions = [
@@ -80,7 +82,7 @@ const useCamLayout = () => {
   return camLayout;
 };
 
-const LiveCamControls = () => {
+const LiveCamControls = ({ url }: { url?: string }) => {
   const cams = useCamLayout();
   const [active, setActive] = useState<number>(0);
 
@@ -102,6 +104,10 @@ const LiveCamControls = () => {
           }}
         ></div>
       ))}
+
+      <div className="col-span-full row-span-full">
+        <LiveCamFeed url={url} />
+      </div>
     </div>
   );
 };
