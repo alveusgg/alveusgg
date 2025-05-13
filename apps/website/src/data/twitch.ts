@@ -6,6 +6,7 @@ export const scopeLabels = {
   "user:read:email": "User Email (Read)",
   "user:read:follows": "User Follows (Read)",
   "user:read:subscriptions": "User Subscriptions (Read)",
+  "user:write:chat": "User Chat (Write)",
   // Chat
   "chat:edit": "Chat (Edit)",
   "chat:read": "Chat (Read)",
@@ -43,6 +44,10 @@ export const scopeGroups = {
       "channel:read:vips",
       "channel:manage:schedule",
     ],
+  },
+  ptz: {
+    label: "PTZ control API access",
+    scopes: ["user:write:chat"],
   },
 } as const satisfies Record<
   string,
