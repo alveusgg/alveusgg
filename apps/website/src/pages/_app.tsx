@@ -53,7 +53,8 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   const { pathname } = useRouter();
-  const isStream = pathname.startsWith("/stream/");
+  const isStream =
+    pathname.startsWith("/stream/") && pathname !== "/stream/ptz";
 
   // Add stream class to the root for stream pages
   useEffect(() => {
