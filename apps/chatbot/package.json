@@ -35,7 +35,7 @@
   },
   "scripts": {
     "start": "tsx src/server.ts",
-    "lint": "eslint .",
+    "lint": "eslint . --max-warnings 0",
     "types": "tsc --noEmit"
   }
 }
