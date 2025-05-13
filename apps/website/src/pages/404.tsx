@@ -55,7 +55,7 @@ const useRandomAmbassador = () => {
       icon,
       pick,
     };
-  }, [key]);
+  }, [key, pick]);
 };
 
 const CustomLink = ({
