@@ -7,8 +7,6 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-import { scopeGroups } from "@/data/twitch";
-
 import { unregisterServiceWorker } from "@/utils/sw";
 import { trpc } from "@/utils/trpc";
 
@@ -31,15 +29,13 @@ const SessionChecker = ({ children }: { children: React.ReactNode }) => {
     if (!data?.error) return;
 
     // Some accounts require additional auth scopes
-    if (data.error === "Additional scopes required") {
+    const additional = data.error.match(/^Additional scopes required: (.+)$/);
+    if (additional?.[1]) {
       signIn(
         "twitch",
         { callbackUrl: window.location.href },
         {
-          scope: [
-            ...scopeGroups.default.scopes,
-            ...scopeGroups.api.scopes,
-          ].join(" "),
+          scope: additional[1],
         },
       );
       return;
