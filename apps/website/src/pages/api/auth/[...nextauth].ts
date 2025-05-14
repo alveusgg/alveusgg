@@ -13,9 +13,24 @@ import {
   refreshAccessToken,
 } from "@/server/utils/oauth2";
 
-import { botScopes, defaultScopes } from "@/data/twitch";
+import { scopeGroups } from "@/data/twitch";
 
 import invariant from "@/utils/invariant";
+
+const requireScopes = (account: { scope: string | null }, scopes: string[]) => {
+  const accountScopes = new Set(account.scope?.split(" "));
+  const missingScopes = scopes.filter((scope) => !accountScopes.has(scope));
+
+  if (missingScopes.length > 0) {
+    const allScopes = [...accountScopes, ...missingScopes].join(" ");
+    return {
+      expires: new Date(0).toISOString(),
+      error: `Additional scopes required: ${allScopes}`,
+    };
+  }
+
+  return null;
+};
 
 const adapter = PrismaAdapter(prisma);
 
@@ -24,7 +39,7 @@ const twitchProvider = TwitchProvider({
   clientSecret: env.TWITCH_CLIENT_SECRET,
   authorization: {
     params: {
-      scope: defaultScopes.join(" "),
+      scope: scopeGroups.default.scopes.join(" "),
     },
   },
 });
@@ -92,14 +107,8 @@ export const authOptions: NextAuthOptions = {
         account.twitchChannelBroadcaster.length ||
         account.twitchChannelModerator.length
       ) {
-        const scopes = new Set(account.scope?.split(" "));
-        const missingScopes = botScopes.filter((scope) => !scopes.has(scope));
-        if (missingScopes.length > 0) {
-          return {
-            expires: new Date(0).toISOString(),
-            error: "Additional scopes required",
-          };
-        }
+        const err = requireScopes(account, scopeGroups.api.scopes);
+        if (err) return err;
       }
 
       // Include user.id on session
