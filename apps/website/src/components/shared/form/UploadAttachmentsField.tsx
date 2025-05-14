@@ -208,7 +208,7 @@ export const UploadAttachmentsField = ({
       const convertedFile = await imageConverter(file);
       return convertedFile;
     } catch (e) {
-      setImageConversionError(`Error converting image (${file.type}) to JPEG`);
+      setImageConversionError(`${e}`);
       return;
     } finally {
       setIsImageConverting(false);
