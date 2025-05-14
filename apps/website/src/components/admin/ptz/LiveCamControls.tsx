@@ -100,8 +100,17 @@ const LiveCamControls = () => {
           }
           return;
         }
+
+        // Look for !swap command
+        const swap = text.match(/^!swap (.+) (.+)$/);
+        if (swap) {
+          runCommand({
+            command: "scenecams",
+          });
+          return;
+        }
       },
-      [setLayout, setCams],
+      [setLayout, setCams, runCommand],
     ),
   );
 
