@@ -205,8 +205,7 @@ export const UploadAttachmentsField = ({
   const convertImage = async (file: File) => {
     setIsImageConverting(true);
     try {
-      const convertedFile = await imageConverter(file);
-      return convertedFile;
+      return await imageConverter(file);
     } catch (e) {
       setImageConversionError(`${e}`);
       return;
