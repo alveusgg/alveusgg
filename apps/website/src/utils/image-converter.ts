@@ -1,5 +1,3 @@
-import type { Dispatch, SetStateAction } from "react";
-
 import type { ImageMimeType } from "./files";
 
 async function convertHeicToJpeg(file: File) {
@@ -69,30 +67,17 @@ const converters = {
 const hasConverter = (mimeType: string): mimeType is keyof typeof converters =>
   mimeType in converters;
 
-export async function imageConverter(
-  file: File,
-  setIsConvertingFile: Dispatch<SetStateAction<boolean>>,
-  setImageConversionError: Dispatch<SetStateAction<string | null>>,
-) {
+export async function imageConverter(file: File) {
   if (hasConverter(file.type)) {
     const converter = converters[file.type];
 
-    setIsConvertingFile(true);
-    return converter(file)
-      .then((convertedFile) => {
-        setIsConvertingFile(false);
-        return convertedFile;
-      })
-      .catch((error) => {
-        setImageConversionError(
-          `Error converting image (${file.type}) to JPEG`,
-        );
-        console.error(error);
-        return;
-      })
-      .finally(() => {
-        setIsConvertingFile(false);
+    try {
+      return await converter(file);
+    } catch (e) {
+      throw new Error(`Error converting image (${file.type}) to JPEG`, {
+        cause: e,
       });
+    }
   }
   return file;
 }

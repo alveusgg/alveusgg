@@ -202,6 +202,19 @@ export const UploadAttachmentsField = ({
   >(null);
   const [isImageConverting, setIsImageConverting] = useState(false);
 
+  async function convertImage(file: File) {
+    setIsImageConverting(true);
+    try {
+      const convertedFile = await imageConverter(file);
+      return convertedFile;
+    } catch (e) {
+      setImageConversionError(`Error converting image (${file.type}) to JPEG`);
+      return;
+    } finally {
+      setIsImageConverting(false);
+    }
+  }
+
   const onFileUpload = useCallback((): void => {
     if (inputRef.current) {
       inputRef.current.click();
@@ -231,11 +244,7 @@ export const UploadAttachmentsField = ({
 
       // Run through the image converter to convert the file to a jpeg if it's a heic, avif or heif file
       // returns the original file if conversion not needed
-      const fileToUpload = await imageConverter(
-        file,
-        setIsImageConverting,
-        setImageConversionError,
-      );
+      const fileToUpload = await convertImage(file);
 
       if (!fileToUpload) continue;
 
