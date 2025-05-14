@@ -202,7 +202,7 @@ export const UploadAttachmentsField = ({
   >(null);
   const [isImageConverting, setIsImageConverting] = useState(false);
 
-  async function convertImage(file: File) {
+  const convertImage = async (file: File) => {
     setIsImageConverting(true);
     try {
       const convertedFile = await imageConverter(file);
@@ -213,7 +213,7 @@ export const UploadAttachmentsField = ({
     } finally {
       setIsImageConverting(false);
     }
-  }
+  };
 
   const onFileUpload = useCallback((): void => {
     if (inputRef.current) {
