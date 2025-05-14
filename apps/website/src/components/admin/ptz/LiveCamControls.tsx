@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { channels } from "@/data/twitch";
 
@@ -124,6 +124,16 @@ const LiveCamControls = ({ url }: { url?: string }) => {
     const xScaled = (x / rect.width) * 1920;
     const yScaled = (y / rect.height) * 1080;
 
+    if (shift) {
+      if (active && active !== cam) {
+        runCommand({
+          command: "swap",
+          args: [active.toString(), cam.toString()],
+        });
+      }
+      return;
+    }
+
     if (active !== cam) {
       setActive(cam);
       runCommand({
@@ -147,8 +157,34 @@ const LiveCamControls = ({ url }: { url?: string }) => {
     });
   };
 
+  const [shift, setShift] = useState(false);
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Shift") {
+        setShift(true);
+      }
+    };
+
+    const handleKeyUp = (e: KeyboardEvent) => {
+      if (e.key === "Shift") {
+        setShift(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
+
   return (
-    <div ref={gridRef} className="grid aspect-video grid-cols-3 grid-rows-3">
+    <div
+      ref={gridRef}
+      className="grid aspect-video grid-cols-3 grid-rows-3 select-none"
+    >
       {cams?.map(({ cam, position }, idx) => (
         <div
           key={cam}
@@ -156,9 +192,20 @@ const LiveCamControls = ({ url }: { url?: string }) => {
           className={classes(
             position,
             "relative border-2",
+
             active === idx + 1
-              ? "cursor-crosshair border-red"
-              : "cursor-pointer border-blue bg-black/25 backdrop-blur-xs",
+              ? "border-red"
+              : shift && active
+                ? "border-green hover:border-yellow"
+                : "border-blue",
+
+            active === idx + 1
+              ? shift && active
+                ? "cursor-not-allowed"
+                : "cursor-crosshair"
+              : "cursor-pointer",
+
+            active !== idx + 1 && "bg-black/25 backdrop-blur-xs",
           )}
           onClick={(e) => camClick(idx + 1, e)}
         >
