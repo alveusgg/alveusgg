@@ -34,7 +34,7 @@ const useCamLayout = () => {
     if (matching) {
       return cams.map((cam, idx) => ({
         cam,
-        position: matching.positions[idx]!,
+        className: matching.positions[idx]!,
       }));
     }
     return null;
@@ -50,7 +50,7 @@ const useCamLayout = () => {
 const LiveCamControls = () => {
   const { mutateAsync: runCommand } = trpc.stream.runCommand.useMutation();
   const { setLayout, setCams, cams } = useCamLayout();
-  const [active, setActive] = useState<string | null>(null);
+  const [active, setActive] = useState<number>(0);
 
   useChat(
     channels,
@@ -112,7 +112,7 @@ const LiveCamControls = () => {
   }, [runCommand]);
 
   const gridRef = useRef<HTMLDivElement>(null);
-  const camClick = (cam: string, event: React.MouseEvent) => {
+  const camClick = (pos: number, event: React.MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
 
@@ -124,21 +124,17 @@ const LiveCamControls = () => {
     const yScaled = (y / rect.height) * 1080;
 
     if (shift) {
-      if (active !== cam) {
-        const activeIdx = cams?.findIndex((c) => c.cam === active) ?? -1;
-        const camIdx = cams?.findIndex((c) => c.cam === cam) ?? -1;
-        if (activeIdx !== -1 && camIdx !== -1) {
-          runCommand({
-            command: "swap",
-            args: [(activeIdx + 1).toString(), (camIdx + 1).toString()],
-          });
-        }
+      if (active !== pos) {
+        runCommand({
+          command: "swap",
+          args: [active.toString(), pos.toString()],
+        });
       }
       return;
     }
 
-    if (active !== cam) {
-      setActive(cam);
+    if (active !== pos) {
+      setActive(pos);
       runCommand({
         command: "ptzgetcam",
         args: [
@@ -188,29 +184,29 @@ const LiveCamControls = () => {
       ref={gridRef}
       className="grid aspect-video grid-cols-3 grid-rows-3 select-none"
     >
-      {cams?.map(({ cam, position }) => (
+      {cams?.map(({ cam, className }, idx) => (
         <div
-          key={cam}
+          key={`cam-${idx + 1}`}
           title={cam}
           className={classes(
-            position,
+            className,
             "relative border-2",
 
-            active === cam
+            active === idx + 1
               ? "border-red"
               : shift && active
                 ? "border-green hover:border-yellow"
                 : "border-blue",
 
-            active === cam
+            active === idx + 1
               ? shift && active
                 ? "cursor-not-allowed"
                 : "cursor-crosshair"
               : "cursor-pointer",
 
-            active !== cam && "bg-black/25 backdrop-blur-xs",
+            active !== idx + 1 && "bg-black/25 backdrop-blur-xs",
           )}
-          onClick={(e) => camClick(cam, e)}
+          onClick={(e) => camClick(idx + 1, e)}
         >
           <p className="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-1 text-sm text-white">
             {cam}
