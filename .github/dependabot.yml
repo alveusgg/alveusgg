@@ -48,6 +48,7 @@ updates:
         patterns:
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
       tailwind:
         patterns:
           - "tailwindcss"
@@ -69,6 +70,7 @@ updates:
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
           - "tailwindcss"
           - "@tailwindcss/*"
           - "@headlessui/react"
@@ -84,6 +86,7 @@ updates:
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
           - "tailwindcss"
           - "@tailwindcss/*"
           - "@headlessui/react"
