@@ -104,6 +104,10 @@ export const env = createEnv({
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
     COMMUNITY_PHOTOS_URL: z.string().url().optional(),
     COMMUNITY_PHOTOS_KEY: z.string().optional(),
+    CF_STREAM_KEY_ID: z.string().optional(),
+    CF_STREAM_KEY_JWK: z.string().optional(),
+    CF_STREAM_LOLA_VIDEO_ID: z.string().optional(),
+    CF_STREAM_HOST: z.string().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -192,6 +196,10 @@ export const env = createEnv({
       process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION,
     COMMUNITY_PHOTOS_URL: process.env.COMMUNITY_PHOTOS_URL,
     COMMUNITY_PHOTOS_KEY: process.env.COMMUNITY_PHOTOS_KEY,
+    CF_STREAM_KEY_ID: process.env.CF_STREAM_KEY_ID,
+    CF_STREAM_KEY_JWK: process.env.CF_STREAM_KEY_JWK,
+    CF_STREAM_LOLA_VIDEO_ID: process.env.CF_STREAM_LOLA_VIDEO_ID,
+    CF_STREAM_HOST: process.env.CF_STREAM_HOST,
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does

@@ -123,6 +123,9 @@ importers:
       '@cloudflare/stream-react':
         specifier: ^1.9.2
         version: 1.9.3(react@19.1.0)
+      '@eyevinn/webrtc-player':
+        specifier: ^0.13.0
+        version: 0.13.0
       '@fontsource/pt-sans':
         specifier: ^5.2.5
         version: 5.2.5
@@ -360,7 +363,7 @@ importers:
         version: 4.3.4(eslint-plugin-import-x@4.11.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint-plugin-import@2.31.0)(eslint@9.26.0(jiti@2.4.2))
       eslint-plugin-import:
         specifier: ^2.31.0
-        version: 2.31.0(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2))
+        version: 2.31.0(@typescript-eslint/parser@8.32.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2))
       eslint-plugin-import-x:
         specifier: ^4.11.1
         version: 4.11.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
@@ -749,6 +752,14 @@ packages:
 
   '@d-fischer/typed-event-emitter@3.3.3':
     resolution: {integrity: sha512-OvSEOa8icfdWDqcRtjSEZtgJTFOFNgTjje7zaL0+nAtu2/kZtRCSK5wUMrI/aXtCH8o0Qz2vA8UqkhWUTARFQQ==}
+
+  '@dailymotion/vast-client@4.0.1':
+    resolution: {integrity: sha512-oRUCc06bWdX/1f2Eha/od5WCj+MLHiD6rgyAudgjOUyWXhCcbkUTZeejBSQsLft0nFnd+5nrDqGkBD8mrEVd/Q==}
+    engines: {node: '>=12.22.1'}
+
+  '@dailymotion/vmap@3.3.2':
+    resolution: {integrity: sha512-mwJfXNuVIJ18hPtXLNK9wnrh5EBIjQqdVU6Z2RNvAkfSuwdaQwCrzGod4M+PtGY9GR4Q+aaVMaB4+BkEoQOYcA==}
+    engines: {node: '>=12.22.1'}
 
   '@emnapi/core@1.4.3':
     resolution: {integrity: sha512-4m62DuCE07lw01soJwPiBGC0nAww0Q+RY70VZ+n49yDIO13yyinhbWCeNnaob0lakDtWQzSdtNWzJeOJt2ma+g==}
@@ -1283,6 +1294,20 @@ packages:
   '@eslint/plugin-kit@0.2.8':
     resolution: {integrity: sha512-ZAoA40rNMPwSm+AeHpCq8STiNAwzWLJuP8Xv4CHIc9wv/PSuExjMrmjfYNj682vW0OOiZ1HKxzvjQr9XZIisQA==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@eyevinn/csai-manager@0.1.2':
+    resolution: {integrity: sha512-ZehCxXlSIHF5Ej1n/WZEaLa6sLIH5zrE1ZB71yyT/KbFoeDsDDoo+jw61xzzT+pKBb4vNBtKQRgaVDGZdT2L/g==}
+
+  '@eyevinn/video-event-filter@2.0.0':
+    resolution: {integrity: sha512-S5pECmymqg7WqlAeerhtPVEFxWhLY3cz3DTuhuljZreVDLnEBV6/DlWI6SWDnKdpDJMgD6VjPfaRJssmGatNBg==}
+    deprecated: Package no longer maintained, we recommend migrating to @eyevinn/media-event-filter
+
+  '@eyevinn/webrtc-player@0.13.0':
+    resolution: {integrity: sha512-X5Nzznbyw9PXj85HYV7nyHSbeC0tWpTTAFEYjilnlLLWfo9EARx1tCQk5tdhmImnDST8VN50SYt6uMDudoVnWw==}
+    engines: {node: '>=18.15.0'}
+
+  '@eyevinn/whpp-client@0.1.2':
+    resolution: {integrity: sha512-Mau11ykVIZudy+7Qz2tJZbV2cuj8Un7eT2QRBGFA42RPL8djfEi/RIZ+6b9C1Bc1EAppl26zoh28D8/KstFioQ==}
 
   '@ffmpeg-installer/darwin-arm64@4.1.5':
     resolution: {integrity: sha512-hYqTiP63mXz7wSQfuqfFwfLOfwwFChUedeCVKkBtl/cliaTM7/ePI9bVzfZ2c+dWu3TqCwLDRWNSJ5pqZl8otA==}
@@ -3627,6 +3652,10 @@ packages:
 
   '@webassemblyjs/wast-printer@1.14.1':
     resolution: {integrity: sha512-kPSSXE6De1XOR820C90RIo2ogvZG+c3KiHzqUoO/F34Y2shGzesfqv7o57xrxovZJH/MetF5UjroJ/R/3isoiw==}
+
+  '@xmldom/xmldom@0.8.10':
+    resolution: {integrity: sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==}
+    engines: {node: '>=10.0.0'}
 
   '@xtuc/ieee754@1.2.0':
     resolution: {integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA==}
@@ -7754,6 +7783,12 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@dailymotion/vast-client@4.0.1':
+    dependencies:
+      '@xmldom/xmldom': 0.8.10
+
+  '@dailymotion/vmap@3.3.2': {}
+
   '@emnapi/core@1.4.3':
     dependencies:
       '@emnapi/wasi-threads': 1.0.2
@@ -8135,6 +8170,25 @@ snapshots:
     dependencies:
       '@eslint/core': 0.13.0
       levn: 0.4.1
+
+  '@eyevinn/csai-manager@0.1.2':
+    dependencies:
+      '@dailymotion/vast-client': 4.0.1
+      '@dailymotion/vmap': 3.3.2
+      '@eyevinn/video-event-filter': 2.0.0
+      mitt: 3.0.1
+
+  '@eyevinn/video-event-filter@2.0.0':
+    dependencies:
+      mitt: 2.1.0
+
+  '@eyevinn/webrtc-player@0.13.0':
+    dependencies:
+      '@eyevinn/csai-manager': 0.1.2
+      '@eyevinn/whpp-client': 0.1.2
+      events: 3.3.0
+
+  '@eyevinn/whpp-client@0.1.2': {}
 
   '@ffmpeg-installer/darwin-arm64@4.1.5':
     optional: true
@@ -10975,6 +11029,8 @@ snapshots:
       '@webassemblyjs/ast': 1.14.1
       '@xtuc/long': 4.2.2
 
+  '@xmldom/xmldom@0.8.10': {}
+
   '@xtuc/ieee754@1.2.0': {}
 
   '@xtuc/long@4.2.2': {}
@@ -11853,15 +11909,16 @@ snapshots:
       tinyglobby: 0.2.13
       unrs-resolver: 1.6.4
     optionalDependencies:
-      eslint-plugin-import: 2.31.0(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2))
+      eslint-plugin-import: 2.31.0(@typescript-eslint/parser@8.32.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2))
       eslint-plugin-import-x: 4.11.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2)):
+  eslint-module-utils@2.12.0(@typescript-eslint/parser@8.32.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
+      '@typescript-eslint/parser': 8.32.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
       eslint: 9.26.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 4.3.4(eslint-plugin-import-x@4.11.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint-plugin-import@2.31.0)(eslint@9.26.0(jiti@2.4.2))
@@ -11886,7 +11943,7 @@ snapshots:
       - supports-color
       - typescript
 
-  eslint-plugin-import@2.31.0(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2)):
+  eslint-plugin-import@2.31.0(@typescript-eslint/parser@8.32.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.8
@@ -11897,7 +11954,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.26.0(jiti@2.4.2)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.0(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2))
+      eslint-module-utils: 2.12.0(@typescript-eslint/parser@8.32.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.3.4)(eslint@9.26.0(jiti@2.4.2))
       hasown: 2.0.2
       is-core-module: 2.15.1
       is-glob: 4.0.3
@@ -11908,6 +11965,8 @@ snapshots:
       semver: 6.3.1
       string.prototype.trimend: 1.0.8
       tsconfig-paths: 3.15.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 8.32.1(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
