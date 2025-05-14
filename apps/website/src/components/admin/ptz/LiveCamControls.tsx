@@ -121,9 +121,15 @@ const LiveCamControls = () => {
   }, [runCommand]);
 
   const gridRef = useRef<HTMLDivElement>(null);
+  const clickRef = useRef<{
+    x: number;
+    y: number;
+    timer: NodeJS.Timeout;
+  } | null>(null);
   const camClick = (pos: number, event: React.MouseEvent) => {
     event.stopPropagation();
     event.preventDefault();
+    if (!cams) return;
 
     const rect = gridRef.current?.getBoundingClientRect();
     if (!rect) return;
@@ -155,6 +161,21 @@ const LiveCamControls = () => {
       return;
     }
 
+    if (clickRef.current) {
+      const dx = Math.abs(clickRef.current.x - x);
+      const dy = Math.abs(clickRef.current.y - y);
+      if (dx < 10 && dy < 10) {
+        clearTimeout(clickRef.current.timer);
+        clickRef.current = null;
+
+        runCommand({
+          command: "ptzzoomr",
+          args: [cams[active - 1]!.cam, alt ? "80" : "120"],
+        });
+        return;
+      }
+    }
+
     runCommand({
       command: "ptzclick",
       args: [
@@ -163,19 +184,36 @@ const LiveCamControls = () => {
         "100",
       ],
     });
+
+    clickRef.current = {
+      x,
+      y,
+      timer: setTimeout(() => {
+        clickRef.current = null;
+      }, 150),
+    };
   };
 
   const [shift, setShift] = useState(false);
+  const [alt, setAlt] = useState(false);
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Shift") {
         setShift(true);
+      }
+
+      if (e.key === "Alt") {
+        setAlt(true);
       }
     };
 
     const handleKeyUp = (e: KeyboardEvent) => {
       if (e.key === "Shift") {
         setShift(false);
+      }
+
+      if (e.key === "Alt") {
+        setAlt(false);
       }
     };
 
