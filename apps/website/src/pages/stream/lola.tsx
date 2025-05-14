@@ -1,4 +1,8 @@
-import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
+import type {
+  InferGetServerSidePropsType,
+  NextPage,
+  NextPageContext,
+} from "next";
 import { getSession } from "next-auth/react";
 
 import { env } from "@/env";
@@ -55,11 +59,9 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 
-const PTZPage: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
-  hasRole,
-  isAuthed,
-  url,
-}) => {
+const PTZPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
+> = ({ hasRole, isAuthed, url }) => {
   return (
     <>
       <Meta title="Low-Latency Video Stream" description="" />
@@ -81,7 +83,11 @@ const PTZPage: NextPage<InferGetStaticPropsType<typeof getServerSideProps>> = ({
               </p>
             </div>
           ) : (
-            url && <LiveCamFeed url={url} />
+            url && (
+              <div className="h-screen w-screen">
+                <LiveCamFeed url={url} />
+              </div>
+            )
           ))}
       </main>
     </>

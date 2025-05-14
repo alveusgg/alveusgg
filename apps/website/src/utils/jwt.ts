@@ -26,13 +26,11 @@ export const signJWT = async (token: string, jwkKey: string) => {
     encoder.encode(token),
   );
 
-  return `${token}.${arrayBufferToBase64Url(signature)}`;
+  return `${token}.${arrayBufferToBase64Url(new Uint8Array(signature))}`;
 };
 
-const arrayBufferToBase64Url = (
-  buffer: Uint8Array<ArrayBuffer> | ArrayBuffer,
-) => {
-  return btoa(String.fromCharCode(...new Uint8Array(buffer)))
+const arrayBufferToBase64Url = (buffer: Uint8Array<ArrayBuffer>) => {
+  return btoa(String.fromCharCode(...buffer))
     .replace(/=/g, "")
     .replace(/\+/g, "-")
     .replace(/\//g, "_");

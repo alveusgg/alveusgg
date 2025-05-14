@@ -1,13 +1,13 @@
 import { WebRTCPlayer } from "@eyevinn/webrtc-player";
-import { useMemo } from "react";
+import { useCallback } from "react";
 
 interface LiveCamFeedProps {
   url: string;
 }
 
 const LiveCamFeed = ({ url }: LiveCamFeedProps) => {
-  const videoRefCallback = useMemo(() => {
-    return (video: HTMLVideoElement) => {
+  const videoRefCallback = useCallback(
+    (video: HTMLVideoElement) => {
       if (!video) return;
       const player = new WebRTCPlayer({
         type: "whep",
@@ -22,11 +22,12 @@ const LiveCamFeed = ({ url }: LiveCamFeedProps) => {
       return () => {
         player.destroy();
       };
-    };
-  }, [url]);
+    },
+    [url],
+  );
 
   return (
-    <div className="flex h-screen w-screen items-center justify-center bg-black">
+    <div className="flex h-full w-full items-center justify-center bg-black">
       <video
         className="aspect-video max-h-full max-w-full"
         ref={videoRefCallback}
