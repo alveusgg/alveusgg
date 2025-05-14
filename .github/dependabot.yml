@@ -40,6 +40,7 @@ updates:
         patterns:
           - "next"
           - "@next/*"
+          - "@vercel/*"
       trpc:
         patterns:
           - "@trpc/*"
@@ -48,10 +49,12 @@ updates:
         patterns:
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
       tailwind:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/*"
+          - "@headlessui/react"
 
       # Update `dependencies` and `devDependencies` separately
       # Create grouped PRs for minor/patch updates with majors getting dedicated PRs
@@ -64,12 +67,15 @@ updates:
         exclude-patterns:
           - "next"
           - "@next/*"
+          - "@vercel/*"
           - "@trpc/*"
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
           - "tailwindcss"
           - "@tailwindcss/*"
+          - "@headlessui/react"
       development:
         dependency-type: development
         update-types:
@@ -78,12 +84,15 @@ updates:
         exclude-patterns:
           - "next"
           - "@next/*"
+          - "@vercel/*"
           - "@trpc/*"
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
           - "tailwindcss"
           - "@tailwindcss/*"
+          - "@headlessui/react"
 
     # Manually update major versions of `@types/node` with the version specified within .nvmrc
     ignore:
