@@ -34,6 +34,10 @@ export const userRoles = {
     label: "Calendar Events",
     description: "Can manage calendar events",
   },
+  ptzControl: {
+    label: "PTZ Control",
+    description: "Can manage live cam controls",
+  },
 } as const satisfies Record<string, UserRoleConfig>;
 
 export function isValidUserRole(role: string) {
