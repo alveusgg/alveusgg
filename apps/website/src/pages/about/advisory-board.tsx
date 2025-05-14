@@ -5,7 +5,6 @@ import Meta from "@/components/content/Meta";
 import People from "@/components/content/People";
 import Section from "@/components/content/Section";
 
-import allisonImage from "@/assets/people/allison.jpg";
 import ellieArmstrongImage from "@/assets/people/ellie-armstrong.png";
 import micheleRaffinImage from "@/assets/people/michele-raffin.png";
 import nickElectricianImage from "@/assets/people/nick-electrician.png";
@@ -105,22 +104,6 @@ const advisors = {
           about his work, visit www.spiderdaynightlive.com. Sebastian advises
           Alveus on the care and behavior of the sanctuary&apos;s arthropod
           ambassadors.
-        </p>
-      </>
-    ),
-  },
-  allison: {
-    image: allisonImage,
-    name: "Allison",
-    title: "Advisory Board Member",
-    description: (
-      <>
-        <p>
-          Allison is an entomologist specializing in public service, education,
-          and outreach. She served as the coordinator for an insect zoo for
-          several years, where she found her passion for teaching with bugs. Dr.
-          Allison now focuses on pollinator conservation, reducing pesticide use
-          in the environment, and teaching integrated pest management practices.
         </p>
       </>
     ),
