@@ -36,6 +36,9 @@ export const permissions = {
   manageCalendarEvents: {
     requiredRole: "calendarEvents",
   },
+  managePTZControls: {
+    requiredRole: "ptzControl",
+  },
 } as const satisfies Record<string, PermissionConfig>;
 
 export function checkRolesGivePermission(

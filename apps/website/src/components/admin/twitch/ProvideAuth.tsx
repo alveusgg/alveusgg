@@ -1,6 +1,6 @@
 import { signIn } from "next-auth/react";
 
-import { botScopes, defaultScopes, isScope, scopeLabels } from "@/data/twitch";
+import { isScope, scopeGroups, scopeLabels } from "@/data/twitch";
 
 import { trpc } from "@/utils/trpc";
 
@@ -51,7 +51,10 @@ export function ProvideAuth() {
             "twitch",
             { redirect: false },
             {
-              scope: [...defaultScopes, ...botScopes].join(" "),
+              scope: [
+                ...scopeGroups.default.scopes,
+                ...scopeGroups.api.scopes,
+              ].join(" "),
             },
           )
         }
