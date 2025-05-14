@@ -91,8 +91,17 @@ const useCamLayout = () => {
           }
           return;
         }
+
+        // Look for !swap command
+        const swap = text.match(/^!swap (.+) (.+)$/);
+        if (swap) {
+          runCommand({
+            command: "ptzlist",
+          });
+          return;
+        }
       },
-      [setScene, setCams],
+      [setScene, setCams, runCommand],
     ),
     useCallback(() => {
       setScene(null);
