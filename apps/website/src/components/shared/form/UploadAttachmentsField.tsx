@@ -16,6 +16,7 @@ import {
   getImageMimeType,
   isImageMimeType,
 } from "@/utils/files";
+import { imageConverter } from "@/utils/image-converter";
 import {
   type ResizeImageOptions,
   extractColorFromImage,
@@ -24,9 +25,11 @@ import {
 
 import useFileDragAndDrop from "@/hooks/files/drop";
 
+import IconLoading from "@/icons/IconLoading";
 import IconUploadFiles from "@/icons/IconUploadFiles";
 
 import { MessageBox } from "../MessageBox";
+import { ModalDialog } from "../ModalDialog";
 import { Button, defaultButtonClasses } from "./Button";
 
 export type FileReference =
@@ -194,6 +197,22 @@ export const UploadAttachmentsField = ({
 }: FileUploadingPropsType) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
+  const [imageConversionError, setImageConversionError] = useState<
+    string | null
+  >(null);
+  const [isImageConverting, setIsImageConverting] = useState(false);
+
+  const convertImage = async (file: File) => {
+    setIsImageConverting(true);
+    try {
+      return await imageConverter(file);
+    } catch (e) {
+      setImageConversionError(`${e}`);
+      return;
+    } finally {
+      setIsImageConverting(false);
+    }
+  };
 
   const onFileUpload = useCallback((): void => {
     if (inputRef.current) {
@@ -222,30 +241,37 @@ export const UploadAttachmentsField = ({
       const file = filesToAdd[i];
       if (!file) continue;
 
-      if (allowedFileTypes && !allowedFileTypes.includes(file.type)) {
-        setError(`File type not allowed (${file.type})`);
+      // Run through the image converter to convert the file to a jpeg if it's a heic, avif or heif file
+      // returns the original file if conversion not needed
+      const fileToUpload = await convertImage(file);
+
+      if (!fileToUpload) continue;
+
+      if (allowedFileTypes && !allowedFileTypes.includes(fileToUpload.type)) {
+        setError(`File type not allowed (${fileToUpload.type})`);
         return;
       }
 
-      if (maxFileSize && file.size > maxFileSize) {
-        setError(`File size too large (${file.size} > ${maxFileSize})`);
+      if (maxFileSize && fileToUpload.size > maxFileSize) {
+        setError(`File size too large (${fileToUpload.size} > ${maxFileSize})`);
         return;
       }
 
       newFiles.push(
         (async () => {
-          let dataURL = await fileToBase64(file);
+          let dataURL = await fileToBase64(fileToUpload);
           let extractColor: PendingUploadFileReference["extractColor"] =
             async () => await extractColorFromImage(dataURL);
-          let fileToUpload = file;
+          let readyFile = fileToUpload;
+
           if (resizeImageOptions) {
             const resized = await handleImageResize(
-              fileToUpload,
+              readyFile,
               dataURL,
               resizeImageOptions,
             );
             if (resized) {
-              fileToUpload = resized.fileToUpload;
+              readyFile = resized.fileToUpload;
               dataURL = resized.dataURL;
               extractColor = resized.extractColor;
             }
@@ -256,7 +282,7 @@ export const UploadAttachmentsField = ({
             status: "upload.pending",
             dataURL,
             extractColor,
-            file: fileToUpload,
+            file: readyFile,
           };
         })(),
       );
@@ -343,6 +369,28 @@ export const UploadAttachmentsField = ({
           Click or Drop here
         </Button>
       </div>
+
+      <ModalDialog
+        isOpen={isImageConverting}
+        closeModal={() => setIsImageConverting(false)}
+        title={
+          imageConversionError ? "Image conversion failed" : "Converting image"
+        }
+      >
+        <div className="flex flex-row items-center justify-center gap-2">
+          {imageConversionError && (
+            <span className="text-red-500">
+              Unable to convert image format. Please try another file.
+            </span>
+          )}
+          {!imageConversionError && (
+            <>
+              <span>Processing image for upload...</span>
+              <IconLoading className="size-5 animate-spin" />
+            </>
+          )}
+        </div>
+      </ModalDialog>
     </div>
   );
 };
