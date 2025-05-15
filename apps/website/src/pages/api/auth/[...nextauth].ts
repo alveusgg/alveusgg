@@ -111,6 +111,13 @@ export const authOptions: NextAuthOptions = {
         if (err) return err;
       }
 
+      // Also, accounts with the PTZ role need more scopes for API access
+      const roles = await getRolesForUser(user.id);
+      if (roles.includes("ptzControl")) {
+        const err = requireScopes(account, scopeGroups.ptz.scopes);
+        if (err) return err;
+      }
+
       // Include user.id on session
       return {
         ...session,
