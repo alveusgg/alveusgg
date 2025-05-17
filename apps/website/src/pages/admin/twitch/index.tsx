@@ -9,8 +9,8 @@ import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
 import { ChannelConfig } from "@/components/admin/twitch/ChannelConfig";
-import { ProvideAuth } from "@/components/admin/twitch/ProvideAuth";
 import Meta from "@/components/content/Meta";
+import LoginWithExtraScopes from "@/components/shared/LoginWithExtraScopes";
 import { LinkButton } from "@/components/shared/form/Button";
 
 export async function getServerSideProps(context: NextPageContext) {
@@ -49,7 +49,7 @@ const AdminTwitchPage: NextPage<
 
         <Headline>Provide auth</Headline>
         <Panel>
-          <ProvideAuth />
+          <LoginWithExtraScopes scopeGroup="api" showCurrentScopes />
         </Panel>
       </AdminPageLayout>
     </>
