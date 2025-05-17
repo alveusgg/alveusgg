@@ -39,7 +39,7 @@ const twitchProvider = TwitchProvider({
   clientSecret: env.TWITCH_CLIENT_SECRET,
   authorization: {
     params: {
-      scope: scopeGroups.default.scopes.join(" "),
+      scope: scopeGroups.default.join(" "),
     },
   },
 });
@@ -107,7 +107,7 @@ export const authOptions: NextAuthOptions = {
         account.twitchChannelBroadcaster.length ||
         account.twitchChannelModerator.length
       ) {
-        const err = requireScopes(account, scopeGroups.api.scopes);
+        const err = requireScopes(account, scopeGroups.api);
         if (err) return err;
       }
 

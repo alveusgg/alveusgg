@@ -43,8 +43,8 @@ const LoginWithExtraScopes = ({
   const currentScopes = data?.user?.scopes ?? [];
   const requiredScopes = [
     ...(data?.user?.scopes ?? []),
-    ...scopeGroups.default.scopes,
-    ...scopeGroups[scopeGroup].scopes,
+    ...scopeGroups.default,
+    ...scopeGroups[scopeGroup],
   ];
   const missingScopes = requiredScopes.filter(
     (scope) => !currentScopes.includes(scope),
