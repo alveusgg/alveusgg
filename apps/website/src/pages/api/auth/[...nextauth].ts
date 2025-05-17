@@ -119,6 +119,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           isSuperUser: checkIsSuperUserId(user.id),
           roles: await getRolesForUser(user.id),
+          scopes: account.scope?.split(" ") ?? [],
         },
       };
     },
