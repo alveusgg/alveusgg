@@ -6,7 +6,7 @@ import {
 
 import { classes } from "@/utils/classes";
 
-import CopyToClipboardButton from "../CopyToClipboardButton";
+import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
 
 export interface NamedCommand extends Command {
   name: string;

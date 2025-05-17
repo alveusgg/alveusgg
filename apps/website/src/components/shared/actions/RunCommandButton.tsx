@@ -6,10 +6,11 @@ import type { runCommandSchema } from "@/server/trpc/router/stream";
 
 import { scopeGroups } from "@/data/twitch";
 
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
 import IconVideoCamera from "@/icons/IconVideoCamera";
+
+import ActionButton from "./ActionButton";
 
 const RunCommandButton = ({
   command,
@@ -59,21 +60,12 @@ const RunCommandButton = ({
     return null;
 
   return (
-    <div className="group relative inline-block">
-      <button onClick={onClick} title="Run command">
-        <IconVideoCamera className="m-1 inline size-4 cursor-pointer text-alveus-green-400 group-hover:text-black" />
-      </button>
-
-      <span
-        className={classes(
-          "pointer-events-none absolute top-1/2 left-full z-10 -translate-y-1/2 rounded-md bg-alveus-green-900 px-1 text-white transition-opacity",
-          !statusText ? "opacity-0" : "opacity-100",
-          "group-hover:opacity-100",
-        )}
-      >
-        {statusText ?? "Run command"}
-      </span>
-    </div>
+    <ActionButton
+      onClick={onClick}
+      icon={IconVideoCamera}
+      alt="Run command"
+      tooltip={{ text: statusText ?? "Run command", force: !!statusText }}
+    />
   );
 };
 

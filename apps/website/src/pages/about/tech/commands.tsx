@@ -11,8 +11,6 @@ import presets from "@/data/tech/presets";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
-import CopyToClipboardButton from "@/components/CopyToClipboardButton";
-import RunCommandButton from "@/components/RunCommandButton";
 import Button from "@/components/content/Button";
 import Commands, {
   type NamedCommand,
@@ -23,6 +21,8 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
+import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
+import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
 import IconVideoCamera from "@/icons/IconVideoCamera";
 
