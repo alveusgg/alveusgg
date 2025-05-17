@@ -1,14 +1,15 @@
+import { heicTo } from "heic-to/csp";
+
 import type { ImageMimeType } from "./files";
 
 async function convertHeicToJpeg(file: File) {
-  const heic2any = (await import("heic2any")).default;
-
-  const blob = await heic2any({
+  const blob = await heicTo({
     blob: file,
-    toType: "image/jpeg",
+    type: "image/jpeg",
     quality: 0.9,
   });
-  return new File([blob as Blob], file.name.replace(/\.[^.]+$/, ".jpeg"), {
+
+  return new File([blob], file.name.replace(/\.[^.]+$/, ".jpeg"), {
     type: "image/jpeg",
   });
 }
@@ -74,6 +75,7 @@ export async function imageConverter(file: File) {
     try {
       return await converter(file);
     } catch (e) {
+      console.error(e);
       throw new Error(`Error converting image (${file.type}) to JPEG`, {
         cause: e,
       });
