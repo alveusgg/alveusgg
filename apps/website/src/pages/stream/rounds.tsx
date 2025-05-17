@@ -35,9 +35,9 @@ const checks: Record<string, Omit<Check, "status" | "description">> = {
     name: "Marmosets",
     icon: getAmbassadorImages("appa")[0],
   },
-  insects: {
-    name: "Insects",
-    icon: getAmbassadorImages("barbaraBakedBean")[0],
+  chinchillas: {
+    name: "Chinchillas",
+    icon: getAmbassadorImages("moomin")[0],
   },
   reptiles: {
     name: "Reptiles",
