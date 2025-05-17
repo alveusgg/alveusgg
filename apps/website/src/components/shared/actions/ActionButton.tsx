@@ -25,7 +25,7 @@ const ActionButton = ({
 
     <span
       className={classes(
-        "pointer-events-none absolute top-1/2 left-full z-10 -translate-y-1/2 rounded-md bg-alveus-green-900 px-1 text-white transition-opacity",
+        "pointer-events-none absolute top-1/2 left-full z-10 -translate-y-1/2 rounded-md bg-alveus-green-900 px-1 text-nowrap text-white transition-opacity",
         tooltip.force ? "opacity-100" : "opacity-0",
         "group-hover:opacity-100",
       )}
