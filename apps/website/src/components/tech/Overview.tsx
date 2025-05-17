@@ -1,7 +1,6 @@
-import { useMemo } from "react";
 import { Handle, type NodeProps, Position, useEdges } from "reactflow";
 
-import steps, { type Step, upstream } from "@/data/tech/overview";
+import steps, { type Step } from "@/data/tech/overview";
 
 import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
@@ -14,32 +13,34 @@ interface Data {
 }
 
 const toTree = (
-  step: Step,
+  steps: Step | Step[],
   cache?: Map<Step, TreeNode<Data>>,
-): TreeNode<Data> => {
+): TreeNode<Data>[] => {
   if (!cache) cache = new Map();
 
-  // If we've already processed this step, return the cached result
-  // This ensures we preserve shared steps
-  const cached = cache.get(step);
-  if (cached) return cached;
+  return (Array.isArray(steps) ? steps : [steps]).map((step) => {
+    // If we've already processed this step, return the cached result
+    // This ensures we preserve shared steps
+    const cached = cache.get(step);
+    if (cached) return cached;
 
-  const tree = {
-    id: step.id,
-    type: "overview",
-    data: {
-      label: `${step.name} (${step.type})`,
-      step,
-    },
-    children: [] as TreeNode<Data>[],
-  };
-  cache.set(step, tree);
+    const tree = {
+      id: step.id,
+      type: "overview",
+      data: {
+        label: `${step.name} (${step.type})`,
+        step,
+      },
+      children: [] as TreeNode<Data>[],
+    };
+    cache.set(step, tree);
 
-  // Process the children after we've cached this node
-  // This allows us to handle circular dependencies
-  tree.children = (step.children || []).map((child) => toTree(child, cache));
+    // Process the children after we've cached this node
+    // This allows us to handle circular dependencies
+    tree.children = toTree(step.children || [], cache);
 
-  return tree;
+    return tree;
+  });
 };
 
 const nodeTypes: {
@@ -63,18 +64,15 @@ const nodeTypes: {
     container: "border-blue-700",
     eyebrow: { name: "Service", color: "text-blue-700" },
   },
+  output: {
+    container: "border-pink-700",
+    eyebrow: { name: "Output", color: "text-pink-700" },
+  },
   control: {
     container: "border-blue-400",
     eyebrow: { name: "Control", color: "text-blue-400" },
   },
 };
-
-// The upstream steps need to share the same root node below them
-const stepsTree = toTree(steps);
-const fullTree = upstream.map((step) => ({
-  ...toTree(step),
-  children: [stepsTree],
-}));
 
 const OverviewNode = ({
   id,
@@ -129,15 +127,11 @@ const OverviewNode = ({
   );
 };
 
-interface StepWithUpstream extends Step {
-  upstream: Step[];
-}
-
 const OverviewList = ({
   items,
   className,
 }: {
-  items: (Step | StepWithUpstream)[];
+  items: Step[];
   className?: string;
 }) => (
   <ul className={className}>
@@ -146,12 +140,8 @@ const OverviewList = ({
         <p>
           {nodeTypes[item.type].eyebrow.name}: {item.name}
         </p>
-
-        {"upstream" in item && item.upstream && (
-          <>
-            <p>Broadcasting to:</p>
-            <OverviewList items={item.upstream} className="ml-4" />
-          </>
+        {item.description && (
+          <p className="text-sm text-alveus-green-700">{item.description}</p>
         )}
 
         {"children" in item && item.children && (
@@ -165,29 +155,24 @@ const OverviewList = ({
   </ul>
 );
 
-const stepsList = [
-  {
-    ...steps,
-    upstream,
-  },
-];
+const tree = {
+  data: toTree(steps),
+  nodeTypes: { overview: OverviewNode },
+  nodeSize: { width: 192, height: 80 },
+  nodeSpacing: { ranks: 60, siblings: 20 },
+  defaultZoom: 0.75,
+};
 
 const Overview = () => (
   <>
     <div
-      className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
+      className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
       aria-hidden
     >
-      <Tree
-        data={fullTree}
-        nodeTypes={useMemo(() => ({ overview: OverviewNode }), [])}
-        nodeSize={useMemo(() => ({ width: 192, height: 80 }), [])}
-        nodeSpacing={useMemo(() => ({ ranks: 60, siblings: 20 }), [])}
-        defaultZoom={0.75}
-      />
+      <Tree {...tree} />
     </div>
 
-    <OverviewList items={stepsList} className="sr-only" />
+    <OverviewList items={steps} className="sr-only" />
   </>
 );
 

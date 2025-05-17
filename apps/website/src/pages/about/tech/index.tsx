@@ -1,8 +1,15 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 
-import { classes } from "@/utils/classes";
+import commands, {
+  type OverloadedArguments,
+  isOverloadedArguments,
+} from "@/data/tech/commands";
 
+import { typeSafeObjectEntries } from "@/utils/helpers";
+
+import Button from "@/components/content/Button";
+import Commands, { type NamedCommand } from "@/components/content/Commands";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -14,245 +21,30 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
-const broadcastStudio: ListItems = {
-  software: {
-    title: "Software",
-    description: "OBS + Psynaps Cloud Server",
-  },
-  camera: {
-    title: "Camera",
-    items: {
-      dslr: {
-        title: "DSLR",
-        description: "Sony Alpha a6400",
-      },
-      lens: {
-        title: "Studio Lens",
-        description: "Sony SELP1650 16-50mm Power Zoom Lens",
-      },
-      telephoto: {
-        title: "Telephoto Lens",
-        description: "Tamron 70-180mm f/2.8 Di III VXD Lens",
-      },
-      flipLens: {
-        title: "Studio Lens (Station3Media)",
-        description: "Sony Vario-Tessar T* FE 16-35mm f/4 ZA OSS Lens",
-      },
-      flipTripod: {
-        title: "Tripod (Station3Media)",
-        description: "Manfrotto MVT502AM Tripod and MVH500A Fluid Head",
-      },
-    },
-  },
-  audio: {
-    title: "Audio",
-    items: {
-      wirelessMics: {
-        title: "Wireless Mics",
-        description: "4x Sennheiser XSW 1-ME3-A Wireless Headmic Set",
-      },
-      overheadMic: {
-        title: "Overhead Mic",
-        description: "Audio Technica PRO45",
-      },
-      monitoring: {
-        title: "Monitoring",
-        description: "Xvive U4 Wireless in-Ear Monitor System",
-      },
-      audioInterface: {
-        title: "Audio Interface",
-        description: "Focusrite Scarlett 18i8 3rd Gen",
-      },
-    },
-  },
-  lighting: {
-    title: "Lighting",
-    items: {
-      keyLight: {
-        title: "Key Light",
-        description: "Elgato Ring Light",
-      },
-      fillLight: {
-        title: "Fill Light",
-        description:
-          '2x Godox SL150WII w/ Neewer 32"x32" Octagon Flash Softbox',
-      },
-    },
-  },
-  streamingPc: {
-    title: "Streaming PC",
-    items: {
-      cpu: {
-        title: "CPU",
-        description: "AMD Ryzen 9 5900X",
-      },
-      gpu: {
-        title: "GPU",
-        description: "Nvidia RTX 3070",
-      },
-      ram: {
-        title: "RAM",
-        description: "32GB",
-      },
-      storage: {
-        title: "Storage",
-        description: "CORSAIR Force MP600 1TB SSD",
-      },
-      control: {
-        title: "Control",
-        description: "Elgato Stream Deck",
-      },
-      videoOutput: {
-        title: "Video Output",
-        description: "OREI HDMI Splitter UHDS-102C",
-      },
-    },
-  },
-};
+const subCommandNames: (keyof typeof commands)[] = [
+  "ptzlist",
+  "ptzload",
+  "ptzhome",
+  "ptzzoom",
+  "ptzfocus",
+  "ptzautofocus",
+  "swap",
+];
 
-const broadcastSystem: ListItems = {
-  localPc: {
-    title: "Local PC",
-    description: "MINISFORUM EliteMini TH80",
-    items: {
-      cpu: {
-        title: "CPU",
-        description: "Intel Core i7-11800H",
-      },
-      ram: {
-        title: "RAM",
-        description: "32GB",
-      },
-      storage: {
-        title: "Storage",
-        description: "512GB SSD",
-      },
-    },
-  },
-  remotePc: {
-    title: "Remote PC",
-    description: "ROG Strix G10 Gaming Desktop PC",
-    items: {
-      cpu: {
-        title: "CPU",
-        description: "Intel Core i7-11700",
-      },
-      gpu: {
-        title: "GPU",
-        description: "Nvidia RTX 3060",
-      },
-      ram: {
-        title: "RAM",
-        description: "16GB DDR4",
-      },
-      storage: {
-        title: "Storage",
-        description: "1TB SSD",
-      },
-    },
-  },
-  software: {
-    title: "Software",
-    items: {
-      obs: {
-        title: "OBS",
-        description: "Used with assorted plugins",
-        items: {
-          transitionTable: "Transition Table",
-          sourceCopy: "Source Copy",
-          advancedSceneSwitcher: "Advanced Scene Switcher",
-        },
-      },
-      chatBot: {
-        title: "Chat Control",
-        description: "Custom Node.js app for Twitch.tv chat features",
-        items: {
-          obs: "Controls local and cloud OBS instances",
-          cams: "Controls Axis PTZ cameras",
-        },
-      },
-    },
-  },
-  nutritionHouse: {
-    title: "Nutrition House",
-    items: {
-      pc: {
-        title: "PC",
-        description: "Beelink Mini PC w/ AMD Ryzen 5 5500U",
-      },
-      cam: {
-        title: "Camera",
-        description: "OBSBot",
-      },
-    },
-  },
-};
-
-const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
-  backpack: {
-    connectivity: {
-      title: "Connectivity",
-      items: {
-        liveU: "LiveU Solo",
-        nighthawk: "Verizon Netgear Nighthawk MR1100-100NAS",
-        inseego: "2 x Inseego MC800 Modems",
-      },
-    },
-    power: {
-      title: "Power",
-      items: {
-        maxoak: "MAXOAK Laptop Power Bank 185Wh/50000mAh",
-        krisdonia: "Krisdonia 50000mAh Laptop Power Bank",
-      },
-    },
-    dslr: {
-      title: "DSLR",
-      items: {
-        dslr: "Sony a7R III Camera",
-        lens: "Tamron 28-75mm F/2.8 Di III RXD Lens",
-        flipLens: "Sigma 24-70mm F2.8 DG DN | Art Lens (Station3Media)",
-        flipFilter:
-          "K&F Concept Nano-X 82mm Circular Polarizer + Variable ND2-32 Filter (1- to 5-Stop) (Station3Media)",
-      },
-    },
-    goPro: {
-      title: "GoPro",
-      items: {
-        camera: "GoPro 11 + MediaMod w/ GoPro Labs firmware (clean HDMI out)",
-        quickRelease: "ULANZI GP-4 Magnetic Quick Release for GoPro",
-        shoulderMount: "STUNTMAN Pack Mount Shoulder Mount for GoPro",
-      },
-    },
-    audio: {
-      title: "Audio",
-      items: {
-        lav: "Rode Wireless GO II",
-        mic: "Rode VideoMicro I Mic (for DSLR)",
-        flipTx:
-          "Rode RodeLink TX-BELT Wireless Beltpack Transmitter (for DSLR; Station3Media)",
-        flipRx:
-          "Rode RodeLink RX-Cam Camera Mounted Wireless Receiver (for DSLR; Station3Media)",
-        flipRecorder: "H6 Audio Recorder (for DSLR; Station3Media)",
-      },
-    },
-  },
-  animals: {
-    device: {
-      title: "Device",
-      description: "Google Pixel 7",
-    },
-    apps: {
-      title: "Apps",
-      items: {
-        larixBroadcaster: "Larix Broadcaster (broadcasting)",
-        speedify: "Speedify (internet bonding)",
-        irlChat: "IRL Chat (alerts + chat)",
-      },
-    },
-  },
-};
+const subCommands: NamedCommand[] = subCommandNames.map((name) => ({
+  name,
+  ...commands[name],
+  args:
+    isOverloadedArguments(commands[name].args) && name === "swap"
+      ? (commands[name].args.filter(
+          (args) =>
+            !args.some(
+              (arg) => arg.type === "choice" && arg.choices.includes("blank"),
+            ) && args.length,
+        ) as OverloadedArguments)
+      : commands[name].args,
+}));
 
 const openSource = {
   website: {
@@ -271,64 +63,6 @@ const openSource = {
     link: "https://github.com/alveusgg/chatbot",
   },
 };
-
-type ListItems = {
-  [key: string]:
-    | string
-    | { title: string; description?: string; link?: string; items?: ListItems };
-};
-
-type ListProps = {
-  items: ListItems;
-  className?: string;
-  itemClassName?: string;
-  dark?: boolean;
-};
-
-const List = ({ items, className, itemClassName, dark }: ListProps) => (
-  <ul className={className}>
-    {Object.entries(items).map(([key, item], idx) => (
-      <li
-        key={key}
-        className={classes(
-          // Add whitespace above if we're nested and not the first item
-          idx !== 0 && typeof item === "object" && item.items && "mt-2",
-          itemClassName,
-        )}
-      >
-        {typeof item === "string" ? (
-          <p>{item}</p>
-        ) : (
-          <>
-            <p>
-              <span className="font-bold">
-                {item.description || !item.link ? (
-                  item.title
-                ) : (
-                  <Link href={item.link} dark={dark} external>
-                    {item.title}
-                  </Link>
-                )}
-                {item.description && ": "}
-              </span>
-              {item.description &&
-                (item.link ? (
-                  <Link href={item.link} dark={dark} external>
-                    {item.description}
-                  </Link>
-                ) : (
-                  item.description
-                ))}
-            </p>
-            {item.items && (
-              <List items={item.items} dark={dark} className="ml-4" />
-            )}
-          </>
-        )}
-      </li>
-    ))}
-  </ul>
-);
 
 const AboutTechPage: NextPage = () => {
   return (
@@ -349,15 +83,13 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section dark className="py-24">
-          <div className="w-full lg:w-3/5">
-            <Heading level={1}>Tech at Alveus</Heading>
-            <p className="text-lg">
-              Alveus Sanctuary is a virtual education center, and with that
-              comes the need for a lot of technology to make it all work, from
-              livestream broadcast systems to PTZ cameras and microphones in the
-              ambassador enclosures.
-            </p>
-          </div>
+          <Heading level={1}>Tech at Alveus</Heading>
+          <p className="text-lg text-balance lg:max-w-3/4">
+            Alveus Sanctuary is a virtual education center, and with that comes
+            the need for a lot of technology to make it all work, from
+            livestream broadcast systems to PTZ cameras and microphones in the
+            ambassador enclosures.
+          </p>
         </Section>
       </div>
 
@@ -368,59 +100,54 @@ const AboutTechPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none lg:block 2xl:max-w-48"
         />
 
-        <Section containerClassName="flex flex-wrap -mx-4">
-          <div className="basis-full px-4 pb-8">
-            <Heading level={2} className="mt-0 mb-4" id="overview" link>
-              System Overview
-            </Heading>
-            <Overview />
-          </div>
-
-          <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mt-0 mb-4" id="studio" link>
-              Broadcast Studio
-            </Heading>
-            <List items={broadcastStudio} />
-          </div>
-
-          <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mt-0 mb-4" id="system" link>
-              Broadcast System
-            </Heading>
-            <List items={broadcastSystem} />
-          </div>
-        </Section>
-      </div>
-
-      <div className="relative">
-        <Image
-          src={leafRightImage2}
-          alt=""
-          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
-        />
-
-        <Section dark>
-          <Heading level={2} id="outside" link>
-            Outside Broadcasts
+        <Section>
+          <Heading level={2} className="mt-0 mb-4" id="controls" link>
+            Live Cam Controls
           </Heading>
+          <p className="text-lg text-balance lg:max-w-3/4">
+            Anyone subscribed to{" "}
+            <Link href="/live/twitch" external>
+              Alveus Sanctuary on Twitch
+            </Link>{" "}
+            can control the position of the cameras currently shown on the
+            livestream! Use the commands below in the Twitch chat to load preset
+            positions, change the layout of the stream, or even tweak the focus
+            or zoom of the cameras.
+          </p>
 
-          <div className="flex flex-wrap">
-            <div className="basis-full p-4 lg:basis-1/2">
-              <Heading level={3} className="mt-0 mb-4 text-2xl">
-                Livestream Backpack
-              </Heading>
-              <List items={outsideBroadcasts.backpack} />
-            </div>
+          <Commands commands={subCommands} className="my-8" />
 
-            <div className="basis-full p-4 lg:basis-1/2">
-              <Heading level={3} className="mt-0 mb-4 text-2xl">
-                Roaming Animal Cam
-              </Heading>
-              <List items={outsideBroadcasts.animals} />
-            </div>
-          </div>
+          <p className="text-alveus-green italic">
+            Need help with moving the cameras to a position not covered by
+            presets? Ask the moderators in Twitch chat as they have full access
+            to control the cameras (and edit preset positions for you to use).
+          </p>
         </Section>
       </div>
+
+      <Section dark>
+        <Heading
+          level={2}
+          className="mt-0 mb-2 scroll-mt-14"
+          id="commands"
+          link
+        >
+          Chat Commands
+        </Heading>
+
+        <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
+          <p className="text-lg text-balance">
+            The bot that we use in our Twitch chat to control the cameras has
+            many more commands available! Many of the commands are restricted to
+            moderators only, but some of them are available to subscribers
+            (beyond those documented above) or even everyone in chat.
+          </p>
+
+          <Button href="/about/tech/commands" className="shrink-0" dark>
+            Explore More Commands
+          </Button>
+        </div>
+      </Section>
 
       <div className="relative">
         <Image
@@ -430,7 +157,12 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section>
-          <Heading level={2} className="mt-0 mb-1" id="cameras" link>
+          <Heading level={2} className="mt-0 mb-4" id="overview" link>
+            System Overview
+          </Heading>
+          <Overview />
+
+          <Heading level={2} className="mt-16 mb-1" id="cameras" link>
             Network + Enclosure Cameras
           </Heading>
           <NetworkStats className="mb-4" />
@@ -450,16 +182,30 @@ const AboutTechPage: NextPage = () => {
           <Heading level={2} className="mt-0 mb-2" id="open-source" link>
             Open-source
           </Heading>
-          <p className="mb-4">
-            This website, and our Twitch extension, are open-source on GitHub.
-            We&apos;re always looking for contributors to help us improve them!
+          <p className="mb-4 text-balance">
+            We believe in being transparent in all that we do, and that includes
+            the code we&apos;re writing to power Alveus Sanctuary. This website,
+            our Twitch extension, and even that chatbot used to control the
+            cams, are all open-source on GitHub. We&apos;re not just building in
+            public, we&apos;re also always looking for community contributors to
+            help us improve them!
           </p>
-          <List
-            items={openSource}
-            className="flex flex-wrap md:gap-y-4"
-            itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
-            dark
-          />
+
+          <ul className="flex flex-wrap md:gap-y-4">
+            {typeSafeObjectEntries(openSource).map(([key, item]) => (
+              <li className="basis-full md:basis-1/2 lg:basis-1/3" key={key}>
+                <p>
+                  <span className="font-bold">
+                    {item.title}
+                    {": "}
+                  </span>
+                  <Link href={item.link} dark external>
+                    {item.description}
+                  </Link>
+                </p>
+              </li>
+            ))}
+          </ul>
         </Section>
       </div>
     </>
