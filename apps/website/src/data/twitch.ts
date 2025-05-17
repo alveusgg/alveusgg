@@ -23,34 +23,22 @@ export type Scope = keyof typeof scopeLabels;
 export const isScope = (scope: string): scope is Scope => scope in scopeLabels;
 
 export const scopeGroups = {
-  default: {
-    label: "Default",
-    scopes: [
-      "openid",
-      "user:read:email",
-      "user:read:follows",
-      "user:read:subscriptions",
-    ],
-  },
-  api: {
-    label: "Broadcaster/moderator API access",
-    scopes: [
-      "chat:edit",
-      "chat:read",
-      "moderator:read:followers",
-      "channel:read:charity",
-      "channel:read:subscriptions",
-      "channel:read:vips",
-      "channel:manage:schedule",
-    ],
-  },
-} as const satisfies Record<
-  string,
-  {
-    label: string;
-    scopes: Scope[];
-  }
->;
+  default: [
+    "openid",
+    "user:read:email",
+    "user:read:follows",
+    "user:read:subscriptions",
+  ],
+  api: [
+    "chat:edit",
+    "chat:read",
+    "moderator:read:followers",
+    "channel:read:charity",
+    "channel:read:subscriptions",
+    "channel:read:vips",
+    "channel:manage:schedule",
+  ],
+} as const satisfies Record<string, Scope[]>;
 
 export type ScopeGroup = keyof typeof scopeGroups;
 
