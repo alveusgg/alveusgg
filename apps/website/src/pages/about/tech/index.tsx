@@ -5,6 +5,7 @@ import commands, {
   type OverloadedArguments,
   isOverloadedArguments,
 } from "@/data/tech/commands";
+import { channels } from "@/data/twitch";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 
@@ -117,7 +118,27 @@ const AboutTechPage: NextPage = () => {
 
           <Commands commands={subCommands} className="my-8" />
 
-          <p className="text-alveus-green italic">
+          <p className="mt-2 text-balance text-alveus-green italic">
+            Commands can be run from the{" "}
+            <Link
+              href={`https://twitch.tv/${channels.alveus.username}`}
+              external
+            >
+              {channels.alveus.username} Twitch chat
+            </Link>
+            , or from the{" "}
+            <Link
+              href={`https://twitch.tv/${channels.alveusgg.username}`}
+              external
+            >
+              {channels.alveusgg.username} Twitch chat
+            </Link>{" "}
+            instead to keep the main chat clean. In either case, you need to be
+            a subscriber to the main Alveus Sanctuary Twitch channel to use the
+            commands.
+          </p>
+
+          <p className="mt-2 text-balance text-alveus-green italic">
             Need help with moving the cameras to a position not covered by
             presets? Ask the moderators in Twitch chat as they have full access
             to control the cameras (and edit preset positions for you to use).
