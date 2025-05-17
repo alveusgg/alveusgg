@@ -15,6 +15,7 @@ import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import CopyToClipboardButton from "@/components/CopyToClipboardButton";
+import RunCommandButton from "@/components/RunCommandButton";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -367,7 +368,7 @@ const AboutTechPage: NextPage = () => {
                       {typeSafeObjectEntries(presets).map(([name, preset]) => (
                         <div
                           key={name}
-                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
+                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-2"
                         >
                           <dt>
                             <pre>
@@ -376,9 +377,15 @@ const AboutTechPage: NextPage = () => {
                                   {`!ptzload ${camera.toLowerCase()} `}
                                 </span>
                                 {name}
-                                <CopyToClipboardButton
-                                  text={`!ptzload ${camera.toLowerCase()} ${name}`}
-                                />
+                                <span className="ml-2">
+                                  <CopyToClipboardButton
+                                    text={`!ptzload ${camera.toLowerCase()} ${name}`}
+                                  />
+                                  <RunCommandButton
+                                    command="ptzload"
+                                    args={[camera.toLowerCase(), name]}
+                                  />
+                                </span>
                               </code>
                             </pre>
                           </dt>
