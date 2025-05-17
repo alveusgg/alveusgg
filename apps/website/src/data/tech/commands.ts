@@ -106,7 +106,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -124,7 +124,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -142,7 +142,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -161,7 +161,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -179,7 +179,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -210,7 +210,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -253,7 +253,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -265,7 +265,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -293,7 +293,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -323,7 +323,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -354,7 +354,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -384,7 +384,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -414,7 +414,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -432,7 +432,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -444,7 +444,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -463,7 +463,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -479,7 +479,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -498,7 +498,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -521,7 +521,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -539,7 +539,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -558,7 +558,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -576,7 +576,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -588,7 +588,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -611,7 +611,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -623,7 +623,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -641,7 +641,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -659,7 +659,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -677,7 +677,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -714,7 +714,7 @@ const commands: Record<string, Command> = {
         {
           type: "string",
           name: "camera",
-          required: false,
+          required: true,
           variadic: false,
         },
         {
@@ -740,7 +740,7 @@ const commands: Record<string, Command> = {
         {
           type: "string",
           name: "camera",
-          required: false,
+          required: true,
           variadic: false,
         },
         {
@@ -836,7 +836,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
