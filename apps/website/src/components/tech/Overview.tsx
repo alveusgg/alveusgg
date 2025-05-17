@@ -175,7 +175,7 @@ const stepsList = [
 const Overview = () => (
   <>
     <div
-      className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
+      className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
       aria-hidden
     >
       <Tree
