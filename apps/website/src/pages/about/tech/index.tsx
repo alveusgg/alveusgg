@@ -97,7 +97,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none lg:block 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-20 -left-8 z-10 hidden h-auto w-1/2 max-w-24 -rotate-45 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
         />
 
         <Section>

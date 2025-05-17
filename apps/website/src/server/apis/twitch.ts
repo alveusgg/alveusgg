@@ -374,3 +374,29 @@ export async function getClips(
 
   return clipsResponseSchema.parseAsync(json);
 }
+
+export async function sendChatMessage(
+  userAccessToken: string,
+  userId: string,
+  broadcasterId: string,
+  message: string,
+) {
+  const response = await fetch("https://api.twitch.tv/helix/chat/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ...(await getUserAuthHeaders(userAccessToken)),
+    },
+    body: JSON.stringify({
+      sender_id: userId,
+      broadcaster_id: broadcasterId,
+      message,
+    }),
+  });
+
+  if (response.status !== 200) {
+    const json = await response.json();
+    console.error(json);
+    throw new Error("Failed to send chat message!");
+  }
+}

@@ -10,7 +10,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters"
 import animalQuest from "@alveusgg/data/build/animal-quest";
 
 import socials from "@/data/socials";
-import { channels } from "@/data/twitch";
+import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
 
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
@@ -383,11 +383,13 @@ const config: NextConfig = {
       destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${channels.alveus.id}`,
       permanent: true,
     },
-    ...typeSafeObjectEntries(channels).map(([key, { id }]) => ({
-      source: `/updates/ical/${key}`,
-      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
-      permanent: true,
-    })),
+    ...typeSafeObjectEntries(channels)
+      .filter(([key]) => isChannelWithCalendarEvents(key))
+      .map(([key, { id }]) => ({
+        source: `/updates/ical/${key}`,
+        destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
+        permanent: true,
+      })),
   ],
   headers: async () => [
     {
