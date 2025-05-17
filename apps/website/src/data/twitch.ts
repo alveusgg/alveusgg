@@ -47,10 +47,10 @@ export type ScopeGroup = keyof typeof scopeGroups;
 export const isScopeGroup = (group: string): group is ScopeGroup =>
   group in scopeGroups;
 
-interface Channel {
+interface ChannelData {
   username: string;
   id: string;
-  calendarEventFilter: (event: CalendarEvent) => boolean;
+  calendarEventFilter?: (event: CalendarEvent) => boolean;
 }
 
 export const channels = {
@@ -68,4 +68,25 @@ export const channels = {
       /^maya\b/i.test(event.category) &&
       !/\b(yt|youtube)\b/i.test(event.category),
   },
-} as const satisfies Record<string, Channel>;
+  alveusgg: {
+    username: "AlveusGG",
+    id: "858050963",
+  },
+} as const satisfies Record<string, ChannelData>;
+
+export type Channel = keyof typeof channels;
+
+export type ChannelWithCalendarEvents = {
+  [K in keyof typeof channels]: (typeof channels)[K] extends {
+    calendarEventFilter: Exclude<ChannelData["calendarEventFilter"], undefined>;
+  }
+    ? K
+    : never;
+}[keyof typeof channels];
+
+export const isChannelWithCalendarEvents = (
+  channel: Channel,
+): channel is ChannelWithCalendarEvents => {
+  const channelData = channels[channel];
+  return "calendarEventFilter" in channelData;
+};

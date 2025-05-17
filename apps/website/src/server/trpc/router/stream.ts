@@ -10,6 +10,8 @@ import {
   router,
 } from "@/server/trpc/trpc";
 
+import { channels } from "@/data/twitch";
+
 export const runCommandSchema = z.object({
   command: z.enum(["ptzload"]),
   args: z.array(z.string()).optional(),
@@ -41,7 +43,7 @@ export const streamRouter = router({
       await sendChatMessage(
         account.access_token,
         account.providerAccountId,
-        "858050963",
+        channels.alveusgg.id,
         `!${command} ${args?.join(" ") || ""}`,
       );
     }),
