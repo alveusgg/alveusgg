@@ -2,10 +2,10 @@ import { Transition } from "@headlessui/react";
 import { useMemo } from "react";
 
 import { standardCategories } from "@/data/calendar-events";
-import { channels } from "@/data/twitch";
+import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
-import { typeSafeObjectEntries } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { getShortBaseUrl } from "@/utils/short-url";
 import { sentenceToTitle } from "@/utils/string-case";
 
@@ -33,13 +33,15 @@ const groupedCategories = standardCategories.reduce(
   {} as Record<string, { name: string; color: string }[]>,
 );
 
-const webcalUrls = Object.keys(channels).reduce(
-  (acc, key) => ({
-    ...acc,
-    [key]: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical${key === "alveus" ? "" : `/${key}`}`,
-  }),
-  {} as Record<string, string>,
-);
+const webcalUrls = typeSafeObjectKeys(channels)
+  .filter(isChannelWithCalendarEvents)
+  .reduce(
+    (acc, key) => ({
+      ...acc,
+      [key]: `${getShortBaseUrl().replace(/^((https?:)?\/\/)?/, "webcal://")}/updates/ical${key === "alveus" ? "" : `/${key}`}`,
+    }),
+    {} as Record<string, string>,
+  );
 
 export function Schedule() {
   const [timeZone, setTimeZone] = useTimezone();

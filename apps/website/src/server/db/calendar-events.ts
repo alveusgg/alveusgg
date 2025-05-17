@@ -24,7 +24,7 @@ import {
 } from "@/server/apis/twitch";
 
 import { getFormattedTitle, regularEventsWeekly } from "@/data/calendar-events";
-import { channels } from "@/data/twitch";
+import { type ChannelWithCalendarEvents, channels } from "@/data/twitch";
 
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
@@ -284,7 +284,7 @@ async function syncExternalSchedule<ExternalEvent>(
   }
 }
 
-export async function syncTwitchSchedule(channel: keyof typeof channels) {
+export async function syncTwitchSchedule(channel: ChannelWithCalendarEvents) {
   const { username, calendarEventFilter } = channels[channel];
   const twitchChannel = await prisma.twitchChannel.findFirst({
     where: { username },
