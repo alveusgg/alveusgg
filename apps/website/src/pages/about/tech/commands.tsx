@@ -21,6 +21,9 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
+import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
+
+import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -262,10 +265,28 @@ const AboutTechPage: NextPage = () => {
             Presets
           </Heading>
 
-          <p>
-            These commands will pan, tilt and zoom the respective camera to a
-            preset view described below.
-          </p>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <p>
+              These commands will pan, tilt and zoom the respective camera to a
+              preset view described below.
+            </p>
+
+            <div>
+              <p>
+                You can run these commands directly from this page by clicking
+                the{" "}
+                <span className="font-semibold text-alveus-green">
+                  Run command{" "}
+                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                </span>{" "}
+                button next to each command. This will automatically send the
+                command to the Alveus Twitch chat as if you had typed it in the
+                chat yourself.
+              </p>
+
+              <ProvideAuth scopeGroup="chat" className="mt-4" />
+            </div>
+          </div>
 
           <dl>
             {typeSafeObjectEntries(presets).map(
