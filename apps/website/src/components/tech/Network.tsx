@@ -386,7 +386,7 @@ const tree = {
 const Network = () => (
   <>
     <div
-      className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
+      className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
       aria-hidden
     >
       <Tree {...tree} />

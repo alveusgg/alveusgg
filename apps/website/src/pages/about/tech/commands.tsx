@@ -3,11 +3,8 @@ import Image from "next/image";
 import { Fragment } from "react";
 
 import commands, {
-  type Argument,
-  type Command,
   type CommandCategoryId,
   commandCategories,
-  isOverloadedArguments,
 } from "@/data/tech/commands";
 import presets from "@/data/tech/presets";
 
@@ -16,6 +13,10 @@ import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
 import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import Button from "@/components/content/Button";
+import Commands, {
+  type NamedCommand,
+  signature,
+} from "@/components/content/Commands";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
@@ -24,10 +25,6 @@ import SubNav from "@/components/content/SubNav";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-
-interface NamedCommand extends Command {
-  name: string;
-}
 
 const grouped = typeSafeObjectEntries(commands).reduce(
   (obj, [name, command]) => ({
@@ -42,36 +39,6 @@ const grouped = typeSafeObjectEntries(commands).reduce(
   }),
   {} as Record<CommandCategoryId, NamedCommand[]>,
 );
-
-const signatureArg = (arg: Argument) =>
-  [
-    arg.required ? "<" : "[",
-    arg.type !== "choice" || arg.choices.length > 1 ? `${arg.name}:` : "",
-    arg.prefix ? `'${arg.prefix}' + ` : "",
-    arg.type === "choice"
-      ? arg.choices.map((choice) => `'${choice}'`).join("|")
-      : arg.type,
-    arg.variadic ? "..." : "",
-    arg.suffix ? ` + '${arg.suffix}'` : "",
-    arg.required ? ">" : "]",
-  ].join("");
-
-const signature = (command: NamedCommand) => {
-  const { name, args } = command;
-  const cmd = `!${name}`;
-  if (!args) return cmd;
-
-  const cmdArgs = isOverloadedArguments(args)
-    ? args
-        .map(
-          (nestedArgs) =>
-            nestedArgs.map((arg) => signatureArg(arg)).join(" ") || "[]",
-        )
-        .join(`\n${" ".repeat(cmd.length - 1)}| `)
-    : args.map((arg) => signatureArg(arg)).join(" ");
-
-  return `${cmd} ${cmdArgs}`;
-};
 
 const sectionLinks = [
   { name: "Commands", href: "#commands" },
@@ -240,31 +207,7 @@ const AboutTechPage: NextPage = () => {
                     )}
                   </dt>
                   <dd className="mx-2">
-                    <dl className="max-w-full overflow-x-auto">
-                      {commands.map((command) => (
-                        <div
-                          key={command.name}
-                          className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
-                        >
-                          <dt>
-                            <pre>
-                              <code className="text-sm">
-                                {signature(command)}
-                                <CopyToClipboardButton
-                                  text={signature(command)}
-                                />
-                              </code>
-                            </pre>
-                          </dt>
-
-                          <dd>
-                            <p className="text-sm text-alveus-green-400 italic">
-                              {command.description}
-                            </p>
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
+                    <Commands commands={commands} />
                   </dd>
                 </Fragment>
               );
