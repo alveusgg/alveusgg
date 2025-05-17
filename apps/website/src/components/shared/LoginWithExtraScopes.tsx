@@ -49,25 +49,27 @@ const LoginWithExtraScopes = ({
   const missingScopes = requiredScopes.filter(
     (scope) => !currentScopes.includes(scope),
   );
-  if (!missingScopes.length) return null;
+  if (!missingScopes.length && !showCurrentScopes) return null;
 
   return (
     <div className={classes("flex flex-col gap-4", className)}>
-      <Button
-        className="bg-twitch text-white transition-[filter] hover:brightness-110"
-        onClick={() =>
-          signIn(
-            "twitch",
-            { redirect: false },
-            {
-              scope: requiredScopes.join(" "),
-            },
-          )
-        }
-      >
-        <IconTwitch />
-        <span>Log in</span>
-      </Button>
+      {!!missingScopes.length && (
+        <Button
+          className="bg-twitch text-white transition-[filter] hover:brightness-110"
+          onClick={() =>
+            signIn(
+              "twitch",
+              { redirect: false },
+              {
+                scope: requiredScopes.join(" "),
+              },
+            )
+          }
+        >
+          <IconTwitch />
+          <span>Log in</span>
+        </Button>
+      )}
 
       {showCurrentScopes && (
         <>
@@ -91,7 +93,7 @@ const LoginWithExtraScopes = ({
         </>
       )}
 
-      {showMissingScopes && (
+      {showMissingScopes && !!missingScopes.length && (
         <div>
           <p className="mb-1 text-sm">
             Logging in with Twitch will grant us the following permissions:
