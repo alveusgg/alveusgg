@@ -54,7 +54,7 @@ const AboutTechPage: NextPage = () => {
     <>
       <Meta
         title="Chat Commands at Alveus"
-        description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing trusted chat members and moderators to control the live cameras."
+        description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing members of the community to control the live cameras on stream."
       />
 
       {/* Nav background */}
@@ -71,10 +71,10 @@ const AboutTechPage: NextPage = () => {
           <div className="w-full lg:w-3/5">
             <Heading level={1}>Chat Commands at Alveus</Heading>
             <p className="text-lg">
-              Moderators and trusted chat members in the Alveus Sanctuary Twitch
-              live chat can use a variety of commands to control what live
-              cameras are shown on stream, what can be seen on each of the
-              cameras, and what audio can be heard.
+              Moderators and members of the community in the Alveus Sanctuary
+              Twitch live chat have varying levels of access to run commands in
+              chat that can control what live cameras are shown on stream, what
+              can be seen on each of the cameras, and what audio can be heard.
             </p>
           </div>
         </Section>
@@ -269,13 +269,14 @@ const AboutTechPage: NextPage = () => {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <p>
               These commands will pan, tilt and zoom the respective camera to a
-              preset view described below.
+              preset view described below. Anyone who is subscribed to the
+              Alveus Twitch channel can run these commands in the chat.
             </p>
 
             <div>
               <p>
-                You can run these commands directly from this page by clicking
-                the{" "}
+                If you&apos;re subscribed, you can run these commands directly
+                from this page by clicking the{" "}
                 <span className="font-semibold text-alveus-green">
                   Run command{" "}
                   <IconVideoCamera className="mb-0.5 inline-block size-4" />
