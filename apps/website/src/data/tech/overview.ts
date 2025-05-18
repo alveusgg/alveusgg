@@ -3,6 +3,7 @@ export interface Step {
   name: string;
   type: "server" | "source" | "github" | "service" | "control" | "output";
   description?: string;
+  link?: string;
   children?: Step[];
 }
 
@@ -20,6 +21,7 @@ const chatBot = (id: string): Step => ({
       type: "github",
       description:
         "GitHub repository for the chat bot, allowing control of the stream layout and cameras.",
+      link: "https://github.com/alveusgg/chatbot",
     },
   ],
 });
@@ -104,6 +106,7 @@ const steps: Step[] = [
     id: "twitch",
     name: "Twitch Stream",
     type: "output",
+    link: "/live/twitch",
     children: [
       cloudObs,
       {
@@ -112,6 +115,7 @@ const steps: Step[] = [
         type: "github",
         description:
           "GitHub repository for the Twitch extension showing ambassador information on the stream.",
+        link: "https://github.com/alveusgg/extension",
       },
     ],
   },
@@ -119,6 +123,7 @@ const steps: Step[] = [
     id: "youtube",
     name: "YouTube Stream",
     type: "output",
+    link: "/live/youtube",
     children: [cloudObs],
   },
   {
@@ -126,6 +131,7 @@ const steps: Step[] = [
     name: "Website",
     type: "output",
     description: "Alveus Sanctuary website at alveussanctuary.org.",
+    link: "/",
     children: [
       {
         id: "low-latency",
@@ -155,6 +161,7 @@ const steps: Step[] = [
             name: "alveusgg/alveusgg",
             type: "github",
             description: "GitHub repository for the Alveus Sanctuary website.",
+            link: "https://github.com/alveusgg/alveusgg",
           },
         ],
       },

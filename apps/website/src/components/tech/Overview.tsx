@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Handle, type NodeProps, Position, useEdges } from "reactflow";
 
 import steps, { type Step } from "@/data/tech/overview";
@@ -6,6 +7,8 @@ import { classes } from "@/utils/classes";
 import { convertToSlug } from "@/utils/slugs";
 
 import Tree, { type TreeNode } from "@/components/tech/Tree";
+
+import IconExternal from "@/icons/IconExternal";
 
 interface Data {
   label: string;
@@ -94,13 +97,28 @@ const OverviewNode = ({
     if (targetEdge && sourceEdge) break;
   }
 
+  // If this node has a link, we need some extra props
+  const Element = data.step.link ? "a" : "div";
+  const linkProps = useMemo(
+    () =>
+      data.step.link
+        ? {
+            href: data.step.link,
+            target: "_blank",
+            rel: "noopener noreferrer",
+          }
+        : {},
+    [data.step.link],
+  );
+
   return (
-    <div
+    <Element
       className={classes(
         "group flex h-20 w-48 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
         nodeTypes[data.step.type].container,
       )}
       tabIndex={-1}
+      {...linkProps}
     >
       {(targetEdge || isConnectable) && (
         <Handle
@@ -123,11 +141,17 @@ const OverviewNode = ({
         {nodeTypes[data.step.type].eyebrow.name}
       </p>
       <div className="my-auto">
-        <p className="truncate text-lg text-alveus-green-900">
-          {data.step.name}
+        <p className="flex items-center gap-1 truncate text-lg text-alveus-green-900">
+          <span className={classes(data.step.link && "group-hover:underline")}>
+            {data.step.name}
+          </span>
+
+          {data.step.link && (
+            <IconExternal className="shrink-0 grow-0" size={14} />
+          )}
         </p>
       </div>
-    </div>
+    </Element>
   );
 };
 

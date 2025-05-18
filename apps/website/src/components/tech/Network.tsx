@@ -161,7 +161,7 @@ const NetworkNode = ({
       </p>
       <div className="my-auto">
         <p className="truncate text-alveus-green-900">{data.item.name}</p>
-        <p className="flex items-end gap-1 text-xs text-alveus-green-700">
+        <p className="flex items-center gap-1 text-xs text-alveus-green-700">
           <span
             className={classes(
               "shrink overflow-hidden text-ellipsis whitespace-nowrap",
