@@ -368,6 +368,7 @@ const AboutTechPage: NextPage = () => {
                             <RunCommandButton
                               command="ptzload"
                               args={[camera.toLowerCase(), name]}
+                              subOnly
                             />
                             <p className="text-sm text-alveus-green-400 italic">
                               {preset.description}

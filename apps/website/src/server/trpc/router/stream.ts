@@ -39,6 +39,8 @@ export const streamRouter = router({
         true,
       );
       const { command, args } = input;
+
+      // TODO: Check if user is subscribed + send directly to bot
       await sendChatMessage(
         twitchAccount.token,
         twitchAccount.id,
