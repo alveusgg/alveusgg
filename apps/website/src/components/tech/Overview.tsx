@@ -60,6 +60,10 @@ const nodeTypes: {
     container: "border-green-700",
     eyebrow: { name: "Source", color: "text-green-700" },
   },
+  github: {
+    container: "border-alveus-green-700",
+    eyebrow: { name: "GitHub", color: "text-alveus-green-700" },
+  },
   service: {
     container: "border-blue-700",
     eyebrow: { name: "Service", color: "text-blue-700" },
