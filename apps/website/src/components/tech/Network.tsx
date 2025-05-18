@@ -1,14 +1,10 @@
 import pluralize from "pluralize";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   BaseEdge,
   EdgeLabelRenderer,
   type EdgeProps,
-  Handle,
-  type NodeProps,
-  Position,
   getBezierPath,
-  useEdges,
   useNodes,
 } from "reactflow";
 
@@ -23,13 +19,69 @@ import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
+import Node, { type NodeData } from "@/components/tech/Node";
 import Tree, { type TreeNode } from "@/components/tech/Tree";
-
-import IconExternal from "@/icons/IconExternal";
 
 type Data = {
   label: string;
   item: NetworkItem;
+} & NodeData;
+
+const nodeTypes: {
+  [k in NetworkItem["type"]]: {
+    container: string;
+    stats: boolean;
+    eyebrow: {
+      text: string;
+      color: string;
+    };
+  };
+} = {
+  switch: {
+    container: "border-blue-700",
+    stats: true,
+    eyebrow: { text: "Network Switch", color: "text-blue-700" },
+  },
+  converter: {
+    container: "border-blue-700 border-dashed",
+    stats: false,
+    eyebrow: { text: "Media Converter", color: "text-blue-700" },
+  },
+  accessPoint: {
+    container: "border-blue-400",
+    stats: true,
+    eyebrow: { text: "WiFi Access Point", color: "text-blue-400" },
+  },
+  camera: {
+    container: "border-green-700",
+    stats: true,
+    eyebrow: { text: "Camera", color: "text-green-700" },
+  },
+  microphone: {
+    container: "border-green-400",
+    stats: true,
+    eyebrow: { text: "Microphone", color: "text-green-400" },
+  },
+  speaker: {
+    container: "border-green-400",
+    stats: false,
+    eyebrow: { text: "Speaker", color: "text-green-400" },
+  },
+  interface: {
+    container: "border-green-400",
+    stats: false,
+    eyebrow: { text: "Audio I/O Interface", color: "text-green-400" },
+  },
+  server: {
+    container: "border-yellow-700",
+    stats: false,
+    eyebrow: { text: "Server", color: "text-yellow-700" },
+  },
+  controlunit: {
+    container: "border-red-700",
+    stats: false,
+    eyebrow: { text: "Camera Control Unit", color: "text-red-700" },
+  },
 };
 
 const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
@@ -38,147 +90,15 @@ const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
     type: "network",
     data: {
       label: `${item.name} (${item.type})`,
-      item,
+      item: {
+        ...item,
+        description: item.model,
+        eyebrow: nodeTypes[item.type].eyebrow,
+        container: nodeTypes[item.type].container,
+      },
     },
     children: "links" in item && item.links ? toTree(item.links) : [],
   }));
-
-const nodeTypes: {
-  [k in NetworkItem["type"]]: {
-    container: string;
-    stats: boolean;
-    eyebrow: {
-      name: string;
-      color: string;
-    };
-  };
-} = {
-  switch: {
-    container: "border-blue-700",
-    stats: true,
-    eyebrow: { name: "Network Switch", color: "text-blue-700" },
-  },
-  converter: {
-    container: "border-blue-700 border-dashed",
-    stats: false,
-    eyebrow: { name: "Media Converter", color: "text-blue-700" },
-  },
-  accessPoint: {
-    container: "border-blue-400",
-    stats: true,
-    eyebrow: { name: "WiFi Access Point", color: "text-blue-400" },
-  },
-  camera: {
-    container: "border-green-700",
-    stats: true,
-    eyebrow: { name: "Camera", color: "text-green-700" },
-  },
-  microphone: {
-    container: "border-green-400",
-    stats: true,
-    eyebrow: { name: "Microphone", color: "text-green-400" },
-  },
-  speaker: {
-    container: "border-green-400",
-    stats: false,
-    eyebrow: { name: "Speaker", color: "text-green-400" },
-  },
-  interface: {
-    container: "border-green-400",
-    stats: false,
-    eyebrow: { name: "Audio I/O Interface", color: "text-green-400" },
-  },
-  server: {
-    container: "border-yellow-700",
-    stats: false,
-    eyebrow: { name: "Server", color: "text-yellow-700" },
-  },
-  controlunit: {
-    container: "border-red-700",
-    stats: false,
-    eyebrow: { name: "Camera Control Unit", color: "text-red-700" },
-  },
-};
-
-const NetworkNode = ({
-  id,
-  data,
-  targetPosition = Position.Top,
-  sourcePosition = Position.Bottom,
-  isConnectable,
-}: NodeProps<Data>) => {
-  // Get the source and target edges
-  const edges = useEdges();
-  let targetEdge, sourceEdge;
-  for (const edge of edges) {
-    if (!targetEdge && edge.target === id) targetEdge = edge;
-    if (!sourceEdge && edge.source === id) sourceEdge = edge;
-    if (targetEdge && sourceEdge) break;
-  }
-
-  // If this node has a URL, we need some extra link props
-  const Element = data.item.url ? "a" : "div";
-  const linkProps = useMemo(
-    () =>
-      data.item.url
-        ? {
-            href: data.item.url,
-            target: "_blank",
-            rel: "noopener noreferrer",
-          }
-        : {},
-    [data.item.url],
-  );
-
-  return (
-    <Element
-      className={classes(
-        "group flex h-20 w-44 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
-        nodeTypes[data.item.type].container,
-      )}
-      tabIndex={-1}
-      {...linkProps}
-    >
-      {(targetEdge || isConnectable) && (
-        <Handle
-          type="target"
-          position={targetPosition}
-          isConnectable={isConnectable}
-        />
-      )}
-      {(sourceEdge || isConnectable) && (
-        <Handle
-          type="source"
-          position={sourcePosition}
-          isConnectable={isConnectable}
-        />
-      )}
-
-      <p
-        className={classes("text-xs", nodeTypes[data.item.type].eyebrow.color)}
-      >
-        {nodeTypes[data.item.type].eyebrow.name}
-      </p>
-      <div className="my-auto">
-        <p className="truncate text-alveus-green-900">{data.item.name}</p>
-        <p className="flex items-center gap-1 text-xs text-alveus-green-700">
-          <span
-            className={classes(
-              "shrink overflow-hidden text-ellipsis whitespace-nowrap",
-              data.item.url && "group-hover:underline",
-            )}
-          >
-            {data.item.model}
-          </span>
-
-          {data.item.url && (
-            <IconExternal className="shrink-0 grow-0" size={14} />
-          )}
-        </p>
-      </div>
-    </Element>
-  );
-};
 
 const edgeTypes: {
   [k in NestedNetworkItem["connection"]["type"]]: {
@@ -348,7 +268,7 @@ const NetworkList = ({
     {items.map((item) => (
       <li key={convertToSlug(`${item.name}-${item.type}`)} className="my-2">
         <p>
-          {nodeTypes[item.type].eyebrow.name}: {item.name}
+          {nodeTypes[item.type].eyebrow.text}: {item.name}
         </p>
         <p>
           Model:{" "}
@@ -377,7 +297,7 @@ const NetworkList = ({
 
 const tree = {
   data: toTree(network),
-  nodeTypes: { network: NetworkNode },
+  nodeTypes: { network: Node },
   edgeType: NetworkEdge,
   nodeSize: { width: 176, height: 80 },
   defaultZoom: 0.75,
@@ -431,7 +351,7 @@ export const NetworkStats = ({ className }: { className?: string }) => (
   >
     {stats.map(([key, value], idx) => (
       <li key={key}>
-        {value.toLocaleString()} {pluralize(nodeTypes[key].eyebrow.name, value)}
+        {value.toLocaleString()} {pluralize(nodeTypes[key].eyebrow.text, value)}
         {idx < stats.length - 1 && ", "}
       </li>
     ))}
