@@ -12,7 +12,9 @@ type NetworkConnectionWireless = NetworkConnectionCore & {
   type: "wifi" | "cloud";
 };
 
-type NetworkConnection = NetworkConnectionWired | NetworkConnectionWireless;
+export type NetworkConnection =
+  | NetworkConnectionWired
+  | NetworkConnectionWireless;
 
 type NetworkItemCore = {
   type: string;

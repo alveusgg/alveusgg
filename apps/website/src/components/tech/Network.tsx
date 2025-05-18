@@ -10,6 +10,7 @@ import {
 
 import network, {
   type NestedNetworkItem,
+  type NetworkConnection,
   type NetworkItem,
   isNestedNetworkItem,
 } from "@/data/tech/network";
@@ -22,10 +23,9 @@ import Link from "@/components/content/Link";
 import Node, { type NodeData } from "@/components/tech/Node";
 import Tree, { type TreeNode } from "@/components/tech/Tree";
 
-type Data = {
-  label: string;
-  item: NetworkItem;
-} & NodeData;
+interface Data extends NodeData {
+  connection?: NetworkConnection;
+}
 
 const nodeTypes: {
   [k in NetworkItem["type"]]: {
@@ -89,13 +89,12 @@ const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
     id: convertToSlug(`${item.name}-${item.type}`),
     type: "network",
     data: {
-      label: `${item.name} (${item.type})`,
-      item: {
-        ...item,
-        description: item.model,
-        eyebrow: nodeTypes[item.type].eyebrow,
-        container: classes("h-20 w-44", nodeTypes[item.type].container),
-      },
+      container: classes("h-20 w-44", nodeTypes[item.type].container),
+      eyebrow: nodeTypes[item.type].eyebrow,
+      name: item.name,
+      description: item.model,
+      url: item.url,
+      connection: isNestedNetworkItem(item) ? item.connection : undefined,
     },
     children: "links" in item && item.links ? toTree(item.links) : [],
   }));
@@ -164,9 +163,7 @@ const NetworkEdge = ({
     if (sourceNode && targetNode) break;
   }
   if (!sourceNode || !targetNode) throw new Error("Missing source or target");
-  if (!isNestedNetworkItem(targetNode.data.item))
-    throw new Error("Invalid target");
-  const targetConnection = targetNode.data.item.connection;
+  if (!targetNode.data.connection) throw new Error("Invalid target");
 
   // Track if the user is hovering, or if the edge is focused
   const [hovered, setHovered] = useState(false);
@@ -224,7 +221,7 @@ const NetworkEdge = ({
       <g
         ref={ref}
         className={classes(
-          edgeTypes[targetConnection.type].stroke.color,
+          edgeTypes[targetNode.data.connection.type].stroke.color,
           !hovered && !focused && "opacity-75",
         )}
       >
@@ -233,7 +230,8 @@ const NetworkEdge = ({
           style={{
             stroke: "inherit",
             strokeWidth: 2,
-            strokeDasharray: edgeTypes[targetConnection.type].stroke.dash,
+            strokeDasharray:
+              edgeTypes[targetNode.data.connection.type].stroke.dash,
           }}
         />
       </g>
@@ -249,7 +247,7 @@ const NetworkEdge = ({
             }}
             className="absolute rounded-xl border-2 border-alveus-green-100 bg-white px-2 py-1 shadow-md"
           >
-            {edgeTypes[targetConnection.type].name}
+            {edgeTypes[targetNode.data.connection.type].name}
           </div>
         )}
       </EdgeLabelRenderer>

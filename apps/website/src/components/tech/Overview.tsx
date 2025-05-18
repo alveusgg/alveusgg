@@ -7,11 +7,6 @@ import Tree, { type TreeNode } from "@/components/tech/Tree";
 
 import Node, { type NodeData } from "./Node";
 
-type Data = {
-  label: string;
-  item: Step;
-} & NodeData;
-
 const nodeTypes: {
   [k in Step["type"]]: {
     container: string;
@@ -49,8 +44,8 @@ const nodeTypes: {
 
 const toTree = (
   steps: Step | Step[],
-  cache?: Map<Step, TreeNode<Data>>,
-): TreeNode<Data>[] => {
+  cache?: Map<Step, TreeNode<NodeData>>,
+): TreeNode<NodeData>[] => {
   if (!cache) cache = new Map();
 
   return (Array.isArray(steps) ? steps : [steps]).map((step) => {
@@ -63,14 +58,13 @@ const toTree = (
       id: step.id,
       type: "overview",
       data: {
-        label: `${step.name} (${step.type})`,
-        item: {
-          ...step,
-          eyebrow: nodeTypes[step.type].eyebrow,
-          container: classes("h-20 w-48", nodeTypes[step.type].container),
-        },
+        container: classes("h-20 w-48", nodeTypes[step.type].container),
+        eyebrow: nodeTypes[step.type].eyebrow,
+        name: step.name,
+        description: step.description,
+        url: step.url,
       },
-      children: [] as TreeNode<Data>[],
+      children: [] as TreeNode<NodeData>[],
     };
     cache.set(step, tree);
 

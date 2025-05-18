@@ -6,13 +6,11 @@ import { classes } from "@/utils/classes";
 import IconExternal from "@/icons/IconExternal";
 
 export interface NodeData {
-  item: {
-    container: string;
-    eyebrow: { text: string; color: string };
-    name: string;
-    description?: string;
-    url?: string;
-  };
+  container: string;
+  eyebrow: { text: string; color: string };
+  name: string;
+  description?: string;
+  url?: string;
 }
 
 const Node = ({
@@ -32,24 +30,24 @@ const Node = ({
   }
 
   // If this node has a link, we need some extra props
-  const Element = data.item.url ? "a" : "div";
+  const Element = data.url ? "a" : "div";
   const linkProps = useMemo(
     () =>
-      data.item.url
+      data.url
         ? {
-            href: data.item.url,
+            href: data.url,
             target: "_blank",
             rel: "noopener noreferrer",
           }
         : {},
-    [data.item.url],
+    [data.url],
   );
 
   return (
     <Element
       className={classes(
         "group flex cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
-        data.item.container,
+        data.container,
       )}
       tabIndex={-1}
       {...linkProps}
@@ -69,18 +67,18 @@ const Node = ({
         />
       )}
 
-      <p className={classes("text-xs", data.item.eyebrow.color)}>
-        {data.item.eyebrow.text}
+      <p className={classes("text-xs", data.eyebrow.color)}>
+        {data.eyebrow.text}
       </p>
       <div className="my-auto">
-        {data.item.description && (
-          <p className="truncate text-alveus-green-900">{data.item.name}</p>
+        {data.description && (
+          <p className="truncate text-alveus-green-900">{data.name}</p>
         )}
 
         <p
           className={classes(
             "flex items-center gap-1",
-            data.item.description
+            data.description
               ? "text-xs text-alveus-green-700"
               : "text-alveus-green-900",
           )}
@@ -88,15 +86,13 @@ const Node = ({
           <span
             className={classes(
               "shrink overflow-hidden text-ellipsis whitespace-nowrap",
-              data.item.url && "group-hover:underline",
+              data.url && "group-hover:underline",
             )}
           >
-            {data.item.description || data.item.name}
+            {data.description || data.name}
           </span>
 
-          {data.item.url && (
-            <IconExternal className="shrink-0 grow-0" size={14} />
-          )}
+          {data.url && <IconExternal className="shrink-0 grow-0" size={14} />}
         </p>
       </div>
     </Element>
