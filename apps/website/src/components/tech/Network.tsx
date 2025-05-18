@@ -4,6 +4,7 @@ import {
   BaseEdge,
   EdgeLabelRenderer,
   type EdgeProps,
+  type ReactFlowInstance,
   getBezierPath,
   useNodes,
 } from "reactflow";
@@ -298,6 +299,23 @@ const tree = {
   nodeTypes: { network: Node },
   edgeType: NetworkEdge,
   nodeSize: { width: 176, height: 80 },
+  onInit: (instance: ReactFlowInstance) => {
+    // After the initial fit, vertically center on the first node
+    window.requestAnimationFrame(() => {
+      const nodes = instance.getNodes();
+
+      const firstNode = nodes[0];
+      if (!firstNode) return;
+
+      const centerX =
+        nodes.reduce((acc, node) => acc + node.position.x, 0) / nodes.length;
+
+      const viewport = instance.getViewport();
+      instance.setCenter(centerX, firstNode.position.y, {
+        zoom: viewport.zoom,
+      });
+    });
+  },
 };
 
 const Network = () => (

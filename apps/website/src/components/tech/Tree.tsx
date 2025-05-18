@@ -8,6 +8,7 @@ import {
   type NodeTypes,
   Position,
   ReactFlow,
+  type ReactFlowInstance,
   type XYPosition,
 } from "reactflow";
 
@@ -46,6 +47,7 @@ interface TreeProps<T> {
   edgeType?: EdgeTypes[string];
   nodeSize?: { width: number; height: number };
   nodeSpacing?: { ranks: number; siblings: number };
+  onInit?: (instance: ReactFlowInstance) => void;
 }
 
 const withPositions = <T,>(
@@ -227,6 +229,7 @@ const Tree = <T,>({
   edgeType,
   nodeSize = { width: 180, height: 40 },
   nodeSpacing = { ranks: 100, siblings: 50 },
+  onInit,
 }: TreeProps<T>) => {
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(
@@ -248,6 +251,7 @@ const Tree = <T,>({
       edgeTypes={edgeTypes}
       proOptions={{ hideAttribution: true }}
       fitView
+      onInit={onInit}
     >
       <Background />
       <Controls showInteractive={false} />
