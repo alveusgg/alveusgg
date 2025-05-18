@@ -3,31 +3,32 @@ import Image from "next/image";
 import { Fragment } from "react";
 
 import commands, {
-  type Argument,
-  type Command,
   type CommandCategoryId,
   commandCategories,
-  isOverloadedArguments,
 } from "@/data/tech/commands";
 import presets from "@/data/tech/presets";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 
-import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import Button from "@/components/content/Button";
+import Commands, {
+  type NamedCommand,
+  signature,
+} from "@/components/content/Commands";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
+import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
+import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
+import RunCommandButton from "@/components/shared/actions/RunCommandButton";
+
+import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-
-interface NamedCommand extends Command {
-  name: string;
-}
 
 const grouped = typeSafeObjectEntries(commands).reduce(
   (obj, [name, command]) => ({
@@ -43,36 +44,6 @@ const grouped = typeSafeObjectEntries(commands).reduce(
   {} as Record<CommandCategoryId, NamedCommand[]>,
 );
 
-const signatureArg = (arg: Argument) =>
-  [
-    arg.required ? "<" : "[",
-    arg.type !== "choice" || arg.choices.length > 1 ? `${arg.name}:` : "",
-    arg.prefix ? `'${arg.prefix}' + ` : "",
-    arg.type === "choice"
-      ? arg.choices.map((choice) => `'${choice}'`).join("|")
-      : arg.type,
-    arg.variadic ? "..." : "",
-    arg.suffix ? ` + '${arg.suffix}'` : "",
-    arg.required ? ">" : "]",
-  ].join("");
-
-const signature = (command: NamedCommand) => {
-  const { name, args } = command;
-  const cmd = `!${name}`;
-  if (!args) return cmd;
-
-  const cmdArgs = isOverloadedArguments(args)
-    ? args
-        .map(
-          (nestedArgs) =>
-            nestedArgs.map((arg) => signatureArg(arg)).join(" ") || "[]",
-        )
-        .join(`\n${" ".repeat(cmd.length - 1)}| `)
-    : args.map((arg) => signatureArg(arg)).join(" ");
-
-  return `${cmd} ${cmdArgs}`;
-};
-
 const sectionLinks = [
   { name: "Commands", href: "#commands" },
   { name: "Presets", href: "#presets" },
@@ -83,7 +54,7 @@ const AboutTechPage: NextPage = () => {
     <>
       <Meta
         title="Chat Commands at Alveus"
-        description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing trusted chat members and moderators to control the live cameras."
+        description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing members of the community to control the live cameras on stream."
       />
 
       {/* Nav background */}
@@ -100,10 +71,10 @@ const AboutTechPage: NextPage = () => {
           <div className="w-full lg:w-3/5">
             <Heading level={1}>Chat Commands at Alveus</Heading>
             <p className="text-lg">
-              Moderators and trusted chat members in the Alveus Sanctuary Twitch
-              live chat can use a variety of commands to control what live
-              cameras are shown on stream, what can be seen on each of the
-              cameras, and what audio can be heard.
+              Moderators and members of the community in the Alveus Sanctuary
+              Twitch live chat have varying levels of access to run commands in
+              chat that can control what live cameras are shown on stream, what
+              can be seen on each of the cameras, and what audio can be heard.
             </p>
           </div>
         </Section>
@@ -240,31 +211,7 @@ const AboutTechPage: NextPage = () => {
                     )}
                   </dt>
                   <dd className="mx-2">
-                    <dl className="max-w-full overflow-x-auto">
-                      {commands.map((command) => (
-                        <div
-                          key={command.name}
-                          className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
-                        >
-                          <dt>
-                            <pre>
-                              <code className="text-sm">
-                                {signature(command)}
-                                <CopyToClipboardButton
-                                  text={signature(command)}
-                                />
-                              </code>
-                            </pre>
-                          </dt>
-
-                          <dd>
-                            <p className="text-sm text-alveus-green-400 italic">
-                              {command.description}
-                            </p>
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
+                    <Commands commands={commands} />
                   </dd>
                 </Fragment>
               );
@@ -319,10 +266,29 @@ const AboutTechPage: NextPage = () => {
             Presets
           </Heading>
 
-          <p>
-            These commands will pan, tilt and zoom the respective camera to a
-            preset view described below.
-          </p>
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <p>
+              These commands will pan, tilt and zoom the respective camera to a
+              preset view described below. Anyone who is subscribed to the
+              Alveus Twitch channel can run these commands in the chat.
+            </p>
+
+            <div>
+              <p>
+                If you&apos;re subscribed, you can run these commands directly
+                from this page by clicking the{" "}
+                <span className="font-semibold text-alveus-green">
+                  Run command{" "}
+                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                </span>{" "}
+                button next to each command. This will automatically send the
+                command to the Alveus Twitch chat as if you had typed it in the
+                chat yourself.
+              </p>
+
+              <ProvideAuth scopeGroup="chat" className="mt-4" />
+            </div>
+          </div>
 
           <dl>
             {typeSafeObjectEntries(presets).map(
@@ -346,7 +312,7 @@ const AboutTechPage: NextPage = () => {
                       {typeSafeObjectEntries(presets).map(([name, preset]) => (
                         <div
                           key={name}
-                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
+                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-2"
                         >
                           <dt>
                             <pre>
@@ -355,14 +321,18 @@ const AboutTechPage: NextPage = () => {
                                   {`!ptzload ${camera.toLowerCase()} `}
                                 </span>
                                 {name}
-                                <CopyToClipboardButton
-                                  text={`!ptzload ${camera.toLowerCase()} ${name}`}
-                                />
                               </code>
                             </pre>
                           </dt>
 
-                          <dd>
+                          <dd className="flex items-center gap-1">
+                            <CopyToClipboardButton
+                              text={`!ptzload ${camera.toLowerCase()} ${name}`}
+                            />
+                            <RunCommandButton
+                              command="ptzload"
+                              args={[camera.toLowerCase(), name]}
+                            />
                             <p className="text-sm text-alveus-green-400 italic">
                               {preset.description}
                             </p>

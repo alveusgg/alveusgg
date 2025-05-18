@@ -14,7 +14,7 @@ import {
   retryOutgoingWebhooks,
 } from "@/server/outgoing-webhooks";
 
-import { channels } from "@/data/twitch";
+import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
 
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
@@ -74,13 +74,15 @@ export const scheduledTasks: ScheduledTasksConfig = {
       startDateTime: new Date(2024, 7, 21, 0, 8, 0),
       interval: { months: 1 },
     },
-    ...typeSafeObjectKeys(channels).map((channel) => ({
-      id: `calendarEvents.twitch.${channel}`,
-      task: () => syncTwitchSchedule(channel),
-      label: `Calendar events: Sync Twitch Schedule (${channel})`,
-      startDateTime: new Date(2024, 9, 30, 0, 0, 0),
-      interval: { minutes: 10 },
-    })),
+    ...typeSafeObjectKeys(channels)
+      .filter(isChannelWithCalendarEvents)
+      .map((channel) => ({
+        id: `calendarEvents.twitch.${channel}`,
+        task: () => syncTwitchSchedule(channel),
+        label: `Calendar events: Sync Twitch Schedule (${channel})`,
+        startDateTime: new Date(2024, 9, 30, 0, 0, 0),
+        interval: { minutes: 10 },
+      })),
     ...(env.DISCORD_CALENDAR_EVENT_GUILD_IDS || []).map((guildId) => ({
       id: `calendarEvents.discord.${guildId}`,
       task: () => syncDiscordEvents(guildId),
