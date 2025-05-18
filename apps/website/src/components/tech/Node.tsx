@@ -48,7 +48,7 @@ const Node = ({
   return (
     <Element
       className={classes(
-        "group flex h-20 w-44 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
+        "group flex cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
         data.item.container,
       )}
       tabIndex={-1}
@@ -77,7 +77,14 @@ const Node = ({
           <p className="truncate text-alveus-green-900">{data.item.name}</p>
         )}
 
-        <p className="flex items-center gap-1 text-xs text-alveus-green-700">
+        <p
+          className={classes(
+            "flex items-center gap-1",
+            data.item.description
+              ? "text-xs text-alveus-green-700"
+              : "text-alveus-green-900",
+          )}
+        >
           <span
             className={classes(
               "shrink overflow-hidden text-ellipsis whitespace-nowrap",

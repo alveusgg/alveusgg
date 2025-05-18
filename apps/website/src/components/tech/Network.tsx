@@ -94,7 +94,7 @@ const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
         ...item,
         description: item.model,
         eyebrow: nodeTypes[item.type].eyebrow,
-        container: nodeTypes[item.type].container,
+        container: classes("h-20 w-44", nodeTypes[item.type].container),
       },
     },
     children: "links" in item && item.links ? toTree(item.links) : [],

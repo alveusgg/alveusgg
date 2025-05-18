@@ -1,6 +1,3 @@
-import { useMemo } from "react";
-import { Handle, type NodeProps, Position, useEdges } from "reactflow";
-
 import steps, { type Step } from "@/data/tech/overview";
 
 import { classes } from "@/utils/classes";
@@ -8,12 +5,47 @@ import { convertToSlug } from "@/utils/slugs";
 
 import Tree, { type TreeNode } from "@/components/tech/Tree";
 
-import IconExternal from "@/icons/IconExternal";
+import Node, { type NodeData } from "./Node";
 
-interface Data {
+type Data = {
   label: string;
-  step: Step;
-}
+  item: Step;
+} & NodeData;
+
+const nodeTypes: {
+  [k in Step["type"]]: {
+    container: string;
+    eyebrow: {
+      text: string;
+      color: string;
+    };
+  };
+} = {
+  server: {
+    container: "border-yellow-700",
+    eyebrow: { text: "Server", color: "text-yellow-700" },
+  },
+  source: {
+    container: "border-green-700",
+    eyebrow: { text: "Source", color: "text-green-700" },
+  },
+  github: {
+    container: "border-alveus-green-700",
+    eyebrow: { text: "GitHub", color: "text-alveus-green-700" },
+  },
+  service: {
+    container: "border-blue-700",
+    eyebrow: { text: "Service", color: "text-blue-700" },
+  },
+  output: {
+    container: "border-pink-700",
+    eyebrow: { text: "Output", color: "text-pink-700" },
+  },
+  control: {
+    container: "border-blue-400",
+    eyebrow: { text: "Control", color: "text-blue-400" },
+  },
+};
 
 const toTree = (
   steps: Step | Step[],
@@ -32,7 +64,11 @@ const toTree = (
       type: "overview",
       data: {
         label: `${step.name} (${step.type})`,
-        step,
+        item: {
+          ...step,
+          eyebrow: nodeTypes[step.type].eyebrow,
+          container: classes("h-20 w-48", nodeTypes[step.type].container),
+        },
       },
       children: [] as TreeNode<Data>[],
     };
@@ -46,115 +82,6 @@ const toTree = (
   });
 };
 
-const nodeTypes: {
-  [k in Step["type"]]: {
-    container: string;
-    eyebrow: {
-      name: string;
-      color: string;
-    };
-  };
-} = {
-  server: {
-    container: "border-yellow-700",
-    eyebrow: { name: "Server", color: "text-yellow-700" },
-  },
-  source: {
-    container: "border-green-700",
-    eyebrow: { name: "Source", color: "text-green-700" },
-  },
-  github: {
-    container: "border-alveus-green-700",
-    eyebrow: { name: "GitHub", color: "text-alveus-green-700" },
-  },
-  service: {
-    container: "border-blue-700",
-    eyebrow: { name: "Service", color: "text-blue-700" },
-  },
-  output: {
-    container: "border-pink-700",
-    eyebrow: { name: "Output", color: "text-pink-700" },
-  },
-  control: {
-    container: "border-blue-400",
-    eyebrow: { name: "Control", color: "text-blue-400" },
-  },
-};
-
-const OverviewNode = ({
-  id,
-  data,
-  targetPosition = Position.Top,
-  sourcePosition = Position.Bottom,
-  isConnectable,
-}: NodeProps<Data>) => {
-  // Get the source and target edges
-  const edges = useEdges();
-  let targetEdge, sourceEdge;
-  for (const edge of edges) {
-    if (!targetEdge && edge.target === id) targetEdge = edge;
-    if (!sourceEdge && edge.source === id) sourceEdge = edge;
-    if (targetEdge && sourceEdge) break;
-  }
-
-  // If this node has a link, we need some extra props
-  const Element = data.step.link ? "a" : "div";
-  const linkProps = useMemo(
-    () =>
-      data.step.link
-        ? {
-            href: data.step.link,
-            target: "_blank",
-            rel: "noopener noreferrer",
-          }
-        : {},
-    [data.step.link],
-  );
-
-  return (
-    <Element
-      className={classes(
-        "group flex h-20 w-48 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
-        nodeTypes[data.step.type].container,
-      )}
-      tabIndex={-1}
-      {...linkProps}
-    >
-      {(targetEdge || isConnectable) && (
-        <Handle
-          type="target"
-          position={targetPosition}
-          isConnectable={isConnectable}
-        />
-      )}
-      {(sourceEdge || isConnectable) && (
-        <Handle
-          type="source"
-          position={sourcePosition}
-          isConnectable={isConnectable}
-        />
-      )}
-
-      <p
-        className={classes("text-sm", nodeTypes[data.step.type].eyebrow.color)}
-      >
-        {nodeTypes[data.step.type].eyebrow.name}
-      </p>
-      <div className="my-auto">
-        <p className="flex items-center gap-1 truncate text-lg text-alveus-green-900">
-          <span className={classes(data.step.link && "group-hover:underline")}>
-            {data.step.name}
-          </span>
-
-          {data.step.link && (
-            <IconExternal className="shrink-0 grow-0" size={14} />
-          )}
-        </p>
-      </div>
-    </Element>
-  );
-};
-
 const OverviewList = ({
   items,
   className,
@@ -166,7 +93,7 @@ const OverviewList = ({
     {items.map((item) => (
       <li key={convertToSlug(`${item.name}-${item.type}`)} className="my-2">
         <p>
-          {nodeTypes[item.type].eyebrow.name}: {item.name}
+          {nodeTypes[item.type].eyebrow.text}: {item.name}
         </p>
         {item.description && (
           <p className="text-sm text-alveus-green-700">{item.description}</p>
@@ -185,7 +112,7 @@ const OverviewList = ({
 
 const tree = {
   data: toTree(steps),
-  nodeTypes: { overview: OverviewNode },
+  nodeTypes: { overview: Node },
   nodeSize: { width: 192, height: 80 },
   nodeSpacing: { ranks: 60, siblings: 20 },
   defaultZoom: 0.75,
