@@ -15,8 +15,8 @@ import roundsDayBackground from "@/assets/rounds/day.webm";
 import roundsNightBackground from "@/assets/rounds/night.webm";
 
 const checks: Record<string, Omit<Check, "status" | "description">> = {
-  wolfdogs: {
-    name: "Wolfdogs",
+  wolves: {
+    name: "Wolf Hybrids",
     icon: getAmbassadorImages("awa")[0],
   },
   foxes: {
