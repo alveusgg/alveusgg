@@ -7,10 +7,12 @@ import commands, {
   commandCategories,
 } from "@/data/tech/commands";
 import presets from "@/data/tech/presets";
-import { channels } from "@/data/twitch";
+import { channels, scopeGroups } from "@/data/twitch";
 
+import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
+import { trpc } from "@/utils/trpc";
 
 import Button from "@/components/content/Button";
 import Commands, {
@@ -52,6 +54,13 @@ const sectionLinks = [
 ];
 
 const AboutTechPage: NextPage = () => {
+  const { data: session } = trpc.auth.getSession.useQuery();
+  const subscription = trpc.stream.getSubscription.useQuery(undefined, {
+    enabled: scopeGroups.chat.every((scope) =>
+      session?.user?.scopes?.includes(scope),
+    ),
+  });
+
   return (
     <>
       <Meta
@@ -271,7 +280,7 @@ const AboutTechPage: NextPage = () => {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <p>
               These commands will pan, tilt and zoom the respective camera to a
-              preset view described below. Anyone who is subscribed to
+              preset view described below. Anyone who is subscribed to{" "}
               <Link href="/live/twitch" external>
                 Alveus Sanctuary on Twitch
               </Link>{" "}
@@ -298,6 +307,22 @@ const AboutTechPage: NextPage = () => {
               </p>
 
               <ProvideAuth scopeGroup="chat" className="mt-4" />
+
+              {subscription.isSuccess && (
+                <p className="mt-4">
+                  Subscription status:{" "}
+                  <span
+                    className={classes(
+                      "mx-1 rounded-md px-1.5 py-0.5 text-sm leading-tight text-alveus-tan",
+                      subscription.data ? "bg-alveus-green" : "bg-red",
+                    )}
+                  >
+                    {subscription.data
+                      ? `Subscribed at Tier ${subscription.data.tier.replace(/0+$/, "")}`
+                      : "Not subscribed"}
+                  </span>
+                </p>
+              )}
             </div>
           </div>
 
