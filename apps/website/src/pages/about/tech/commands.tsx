@@ -7,6 +7,7 @@ import commands, {
   commandCategories,
 } from "@/data/tech/commands";
 import presets from "@/data/tech/presets";
+import { channels } from "@/data/twitch";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
@@ -17,6 +18,7 @@ import Commands, {
   signature,
 } from "@/components/content/Commands";
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
@@ -269,8 +271,11 @@ const AboutTechPage: NextPage = () => {
           <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <p>
               These commands will pan, tilt and zoom the respective camera to a
-              preset view described below. Anyone who is subscribed to the
-              Alveus Twitch channel can run these commands in the chat.
+              preset view described below. Anyone who is subscribed to
+              <Link href="/live/twitch" external>
+                Alveus Sanctuary on Twitch
+              </Link>{" "}
+              can run these commands in the chat.
             </p>
 
             <div>
@@ -282,8 +287,14 @@ const AboutTechPage: NextPage = () => {
                   <IconVideoCamera className="mb-0.5 inline-block size-4" />
                 </span>{" "}
                 button next to each command. This will automatically send the
-                command to the Alveus Twitch chat as if you had typed it in the
-                chat yourself.
+                command to the{" "}
+                <Link
+                  href={`https://twitch.tv/${channels.alveusgg.username}`}
+                  external
+                >
+                  {channels.alveusgg.username} Twitch chat
+                </Link>{" "}
+                as if you had typed it in the chat yourself.
               </p>
 
               <ProvideAuth scopeGroup="chat" className="mt-4" />
