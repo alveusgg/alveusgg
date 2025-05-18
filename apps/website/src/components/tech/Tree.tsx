@@ -1,6 +1,6 @@
 import type { Node as DagreNode } from "dagre";
 import { graphlib, layout } from "dagre";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import {
   Background,
   Controls,
@@ -8,7 +8,6 @@ import {
   type NodeTypes,
   Position,
   ReactFlow,
-  type ReactFlowInstance,
   type XYPosition,
 } from "reactflow";
 
@@ -47,7 +46,6 @@ interface TreeProps<T> {
   edgeType?: EdgeTypes[string];
   nodeSize?: { width: number; height: number };
   nodeSpacing?: { ranks: number; siblings: number };
-  defaultZoom?: number;
 }
 
 const withPositions = <T,>(
@@ -229,35 +227,11 @@ const Tree = <T,>({
   edgeType,
   nodeSize = { width: 180, height: 40 },
   nodeSpacing = { ranks: 100, siblings: 50 },
-  defaultZoom = 1,
 }: TreeProps<T>) => {
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(
     () => withPositions(getNodesEdges(data), nodeSize, nodeSpacing),
     [data, nodeSize, nodeSpacing],
-  );
-
-  // When the tree loads, center it
-  const init = useCallback(
-    (instance: ReactFlowInstance) => {
-      const firstNode = nodes[0];
-      if (!firstNode) return;
-
-      // Center on 0, 0
-      instance.setCenter(0, 0);
-
-      // Wait for the viewport to update
-      window.requestAnimationFrame(() => {
-        const viewport = instance.getViewport();
-
-        // Center the first node vertically
-        // But remain horizontally pinned to the left
-        instance.setCenter(viewport.x, firstNode.position.y, {
-          zoom: defaultZoom,
-        });
-      });
-    },
-    [nodes, defaultZoom],
   );
 
   // Override the default edge type if one is provided
@@ -273,7 +247,7 @@ const Tree = <T,>({
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       proOptions={{ hideAttribution: true }}
-      onInit={init}
+      fitView
     >
       <Background />
       <Controls showInteractive={false} />

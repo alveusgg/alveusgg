@@ -109,7 +109,6 @@ const tree = {
   nodeTypes: { overview: Node },
   nodeSize: { width: 192, height: 80 },
   nodeSpacing: { ranks: 60, siblings: 20 },
-  defaultZoom: 0.75,
 };
 
 const Overview = () => (

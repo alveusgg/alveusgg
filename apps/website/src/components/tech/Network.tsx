@@ -298,7 +298,6 @@ const tree = {
   nodeTypes: { network: Node },
   edgeType: NetworkEdge,
   nodeSize: { width: 176, height: 80 },
-  defaultZoom: 0.75,
 };
 
 const Network = () => (
