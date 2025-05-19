@@ -58,7 +58,7 @@ const Node = ({
   return (
     <Element
       className={classes(
-        "group flex cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
+        "group flex min-w-0 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 shadow-sm transition-all hover:!min-w-[calc-size(min-content,size))] hover:min-w-min hover:shadow-lg focus:!min-w-[calc-size(min-content,size)] focus:min-w-min focus:shadow-lg",
         data.container,
       )}
       tabIndex={-1}
