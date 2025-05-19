@@ -28,7 +28,7 @@ export async function getServerSideProps(context: NextPageContext) {
     return { props: { isAuthed, hasRole } };
   }
 
-  const expiresTimeInSeconds = 60 * 60 * 48;
+  const expiresTimeInSeconds = 60 * 5;
   const expiresIn = Math.floor(Date.now() / 1000) + expiresTimeInSeconds;
   const token = createJWT(
     {
