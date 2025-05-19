@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { Handle, type NodeProps, Position, useEdges } from "reactflow";
 
 import { classes } from "@/utils/classes";
@@ -43,6 +43,18 @@ const Node = ({
     [data.url],
   );
 
+  const handleRef = useCallback((node: HTMLDivElement | null) => {
+    if (!node) return;
+
+    // Get the current position of the node
+    const { offsetTop, offsetLeft } = node;
+
+    // Set an absolute position for the node
+    node.style.position = "absolute";
+    node.style.top = `${offsetTop}px`;
+    node.style.left = `${offsetLeft}px`;
+  }, []);
+
   return (
     <Element
       className={classes(
@@ -57,6 +69,8 @@ const Node = ({
           type="target"
           position={targetPosition}
           isConnectable={isConnectable}
+          ref={handleRef}
+          className="-z-10"
         />
       )}
       {(sourceEdge || isConnectable) && (
@@ -64,6 +78,8 @@ const Node = ({
           type="source"
           position={sourcePosition}
           isConnectable={isConnectable}
+          ref={handleRef}
+          className="-z-10"
         />
       )}
 
