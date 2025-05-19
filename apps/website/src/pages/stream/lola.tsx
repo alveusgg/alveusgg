@@ -42,7 +42,7 @@ const LolaPage: NextPage<
             </div>
           ) : (
             <div className="h-screen w-screen">
-              <LiveCamFeed url="" />
+              <LiveCamFeed />
             </div>
           ))}
       </main>
