@@ -259,6 +259,13 @@ const LiveCamControls = ({ url }: { url?: string }) => {
           <p className="absolute bottom-2 left-2 rounded bg-black/50 px-2 py-1 text-sm text-white">
             {cam}
           </p>
+
+          {active === idx + 1 && (
+            <>
+              <div className="absolute top-1/2 left-1/2 h-6 w-0.5 -translate-1/2 backdrop-invert" />
+              <div className="absolute top-1/2 left-1/2 h-0.5 w-6 -translate-1/2 backdrop-invert" />
+            </>
+          )}
         </div>
       ))}
 
