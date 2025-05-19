@@ -28,7 +28,7 @@ export async function getServerSideProps(context: NextPageContext) {
     return { props: { isAuthed, hasRole } };
   }
 
-  const expiresTimeInSeconds = 60 * 60 * 48;
+  const expiresTimeInSeconds = 60 * 5;
   const expiresIn = Math.floor(Date.now() / 1000) + expiresTimeInSeconds;
   const token = createJWT(
     {
@@ -59,7 +59,7 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 
-const PTZPage: NextPage<
+const LolaPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ hasRole, isAuthed, url }) => {
   return (
@@ -94,4 +94,4 @@ const PTZPage: NextPage<
   );
 };
 
-export default PTZPage;
+export default LolaPage;
