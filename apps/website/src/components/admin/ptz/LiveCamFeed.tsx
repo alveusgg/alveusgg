@@ -21,52 +21,23 @@ const LiveCamFeed = () => {
     setUrl((prev) => prev ?? feedUrl.data?.url);
   }, [feedUrl.isError, feedUrl.data?.url]);
 
-  const [player, setPlayer] = useState<WebRTCPlayer & { loaded: boolean }>();
+  const ref = useCallback(
+    (video: HTMLVideoElement) => {
+      if (!video || !url) return;
 
-  useEffect(() => {
-    if (!player) return;
+      const player = new WebRTCPlayer({
+        type: "whep",
+        video: video,
+      });
 
-    (async () => {
-      // Always unload the player if the URL changes
-      // This ensures that the underlying connection doesn't remain open
-      if (player.loaded) {
-        await player
-          .unload()
-          .then(() => {
-            console.log(`[LOLA] Unloaded`);
-            player.loaded = false;
-          })
-          .catch((error) => {
-            console.error(`[LOLA] Error unloading`, error);
-          });
-      }
-
-      if (!url) return;
-
-      await player
+      player
         .load(new URL(url))
         .then(() => {
           console.log(`[LOLA] Loaded`);
-          player.loaded = true;
         })
         .catch((error) => console.error(`[LOLA] Error loading`, error));
-    })();
-  }, [url, player]);
 
-  const ref = useCallback((video: HTMLVideoElement) => {
-    if (!video) return;
-    const player = Object.assign(
-      new WebRTCPlayer({
-        type: "whep",
-        video: video,
-      }),
-      { loaded: false },
-    );
-    setPlayer(player);
-
-    return () => {
-      setPlayer((prev) => (prev === player ? undefined : prev));
-      if (player.loaded) {
+      return () => {
         player
           .unload()
           .then(() => {
@@ -75,10 +46,14 @@ const LiveCamFeed = () => {
           })
           .catch((error) => {
             console.error(`[LOLA] Error unloading`, error);
+          })
+          .finally(() => {
+            player.destroy();
           });
-      }
-    };
-  }, []);
+      };
+    },
+    [url],
+  );
 
   return (
     <div className="flex h-full w-full items-center justify-center bg-black">
