@@ -154,6 +154,7 @@ const NetworkEdge = ({
   targetX,
   targetY,
   targetPosition,
+  style,
 }: EdgeProps) => {
   // Get the source and target nodes
   const nodes = useNodes<Data>();
@@ -233,6 +234,7 @@ const NetworkEdge = ({
             strokeWidth: 2,
             strokeDasharray:
               edgeTypes[targetNode.data.connection.type].stroke.dash,
+            ...style,
           }}
         />
       </g>
