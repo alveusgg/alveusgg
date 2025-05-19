@@ -59,7 +59,7 @@ export async function getServerSideProps(context: NextPageContext) {
   };
 }
 
-const PTZPage: NextPage<
+const LolaPage: NextPage<
   InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ hasRole, isAuthed, url }) => {
   return (
@@ -94,4 +94,4 @@ const PTZPage: NextPage<
   );
 };
 
-export default PTZPage;
+export default LolaPage;

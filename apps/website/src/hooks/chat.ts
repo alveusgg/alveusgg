@@ -4,12 +4,37 @@ import { useEffect } from "react";
 const useChat = (
   channels: string[],
   onMessage: (message: ChatMessage) => void,
+  onConnect?: () => void,
 ) =>
   useEffect(() => {
-    const chatClient = new ChatClient({ channels });
+    const normalizedChannels = channels.map((c) => c.toLowerCase());
+    const chatClient = new ChatClient({ channels: normalizedChannels });
     chatClient.connect();
 
-    const messageListener = chatClient.onMessage(
+    if (onConnect) {
+      const connectedChannels: string[] = [];
+
+      const listener = chatClient.onJoin((channel) => {
+        connectedChannels.push(channel.toLowerCase().replace(/^#/, ""));
+        checkConnected();
+      });
+
+      const checkConnected = () => {
+        if (!chatClient.isConnected) return;
+        if (connectedChannels.length !== normalizedChannels.length) return;
+        if (
+          connectedChannels.some(
+            (c) => !normalizedChannels.includes(c.toLowerCase()),
+          )
+        )
+          return;
+
+        chatClient.removeListener(listener);
+        onConnect();
+      };
+    }
+
+    const onMessageListener = chatClient.onMessage(
       async (
         _channel: string,
         _user: string,
@@ -21,9 +46,9 @@ const useChat = (
     );
 
     return () => {
-      chatClient.removeListener(messageListener);
+      chatClient.removeListener(onMessageListener);
       chatClient.quit();
     };
-  }, [channels, onMessage]);
+  }, [channels, onMessage, onConnect]);
 
 export default useChat;
