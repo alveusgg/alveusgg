@@ -12,11 +12,23 @@ import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import ActionButton from "./ActionButton";
 
+interface RunCommandButtonProps extends z.infer<typeof runCommandSchema> {
+  subOnly?: boolean;
+}
+
 const RunCommandButton = ({
   command,
   args,
-}: z.infer<typeof runCommandSchema>) => {
-  const { data } = useSession();
+  subOnly = false,
+}: RunCommandButtonProps) => {
+  const { data: session } = useSession();
+  const hasScopes = scopeGroups.chat.every((scope) =>
+    session?.user?.scopes?.includes(scope),
+  );
+
+  const subscription = trpc.stream.getSubscription.useQuery(undefined, {
+    enabled: subOnly && hasScopes,
+  });
 
   const { mutateAsync: runCommand, status } =
     trpc.stream.runCommand.useMutation();
@@ -56,8 +68,7 @@ const RunCommandButton = ({
     }
   }, [status]);
 
-  if (!scopeGroups.chat.every((scope) => data?.user?.scopes?.includes(scope)))
-    return null;
+  if (!hasScopes || (subOnly && !subscription.data)) return null;
 
   return (
     <ActionButton

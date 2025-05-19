@@ -123,6 +123,69 @@ export async function getUserFollowsBroadcaster(
   return false;
 }
 
+const userSubscribedToResponseSchema = z.object({
+  data: z
+    .array(
+      z
+        .object({
+          broadcaster_id: z.string(),
+          broadcaster_login: z.string(),
+          broadcaster_name: z.string(),
+          tier: z.enum(["1000", "2000", "3000"]),
+        })
+        .and(
+          z.discriminatedUnion("is_gift", [
+            z.object({
+              is_gift: z.literal(false),
+            }),
+            z.object({
+              is_gift: z.literal(true),
+              gifter_id: z.string(),
+              gifter_login: z.string(),
+              gifter_name: z.string(),
+            }),
+          ]),
+        ),
+    )
+    .length(1),
+});
+
+export async function getUserSubscribedToBroadcaster(
+  userAccessToken: string,
+  userId: string,
+  broadcasterId: string,
+) {
+  const response = await fetch(
+    `https://api.twitch.tv/helix/subscriptions/user?${new URLSearchParams({
+      user_id: userId,
+      broadcaster_id: broadcasterId,
+    })}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    },
+  );
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  if (response.status === 404) {
+    return false;
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get subscription status!");
+  }
+
+  const data = await userSubscribedToResponseSchema.parseAsync(json);
+  return data.data[0]!;
+}
+
 const usersResponseSchema = z.object({
   data: z.array(
     z.object({
@@ -165,7 +228,7 @@ export async function getUserByName(userName: string) {
   }
 
   const data = await usersResponseSchema.parseAsync(json);
-  return data?.data?.[0];
+  return data.data[0];
 }
 
 const scheduleSegmentSchema = z.object({

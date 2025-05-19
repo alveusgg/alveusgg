@@ -1,14 +1,16 @@
 import { z } from "zod";
 
-import { prisma } from "@alveusgg/database";
-
-import { sendChatMessage } from "@/server/apis/twitch";
+import {
+  getUserSubscribedToBroadcaster,
+  sendChatMessage,
+} from "@/server/apis/twitch";
 import { getWeather } from "@/server/apis/weather";
 import {
   protectedProcedure,
   publicProcedure,
   router,
 } from "@/server/trpc/trpc";
+import { getUserTwitchAccount } from "@/server/utils/auth";
 
 import { channels } from "@/data/twitch";
 
@@ -20,29 +22,28 @@ export const runCommandSchema = z.object({
 export const streamRouter = router({
   getWeather: publicProcedure.query(getWeather),
 
+  getSubscription: protectedProcedure.query(async ({ ctx }) => {
+    const twitchAccount = await getUserTwitchAccount(ctx.session.user.id, true);
+    return getUserSubscribedToBroadcaster(
+      twitchAccount.token,
+      twitchAccount.id,
+      channels.alveus.id,
+    );
+  }),
+
   runCommand: protectedProcedure
     .input(runCommandSchema)
     .mutation(async ({ ctx, input }) => {
+      const twitchAccount = await getUserTwitchAccount(
+        ctx.session.user.id,
+        true,
+      );
       const { command, args } = input;
 
-      // Get the user's Twitch access token
-      const account = await prisma.account.findFirst({
-        where: {
-          userId: ctx.session.user.id,
-          provider: "twitch",
-        },
-        select: {
-          providerAccountId: true,
-          access_token: true,
-        },
-      });
-      if (!account || !account.access_token) {
-        throw new Error("No Twitch account found for user");
-      }
-
+      // TODO: Check if user is subscribed + send directly to bot
       await sendChatMessage(
-        account.access_token,
-        account.providerAccountId,
+        twitchAccount.token,
+        twitchAccount.id,
         channels.alveusgg.id,
         `!${command} ${args?.join(" ") || ""}`,
       );

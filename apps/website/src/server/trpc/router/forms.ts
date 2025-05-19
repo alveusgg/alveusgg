@@ -8,6 +8,9 @@ import {
   triggerOutgoingWebhook,
 } from "@/server/outgoing-webhooks";
 import { protectedProcedure, router } from "@/server/trpc/trpc";
+import { getUserTwitchAccount } from "@/server/utils/auth";
+
+import { channels } from "@/data/twitch";
 
 import { calcFormConfig } from "@/utils/forms";
 
@@ -18,17 +21,6 @@ export const createFormEntrySchema = formEntrySchema.and(
     acceptPrivacy: z.boolean(),
   }),
 );
-
-async function checkFollowsChannel(
-  channelId: string,
-  twitchAccount: { access_token: string; providerAccountId: string },
-) {
-  return getUserFollowsBroadcaster(
-    twitchAccount.access_token,
-    twitchAccount.providerAccountId,
-    channelId,
-  );
-}
 
 export const formsRouter = router({
   enterForm: protectedProcedure
@@ -91,31 +83,16 @@ export const formsRouter = router({
       }
 
       // Check if twitch account is connected
-      const twitchAccount = await ctx.prisma.account.findFirst({
-        select: {
-          providerAccountId: true,
-          access_token: true,
-        },
-        where: {
-          userId,
-          provider: "twitch",
-        },
-      });
-      const accessToken = twitchAccount?.access_token;
-      if (!accessToken) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "User is not connected to a Twitch account!",
-        });
-      }
+      const twitchAccount = await getUserTwitchAccount(userId, true);
 
       // Perform server side checks if required
       if (config.checks) {
         // TODO: Make the form config granular. Right now the channel follow check is hard-coded here:
-        const isFollowing = await checkFollowsChannel("636587384", {
-          access_token: accessToken,
-          providerAccountId: twitchAccount.providerAccountId,
-        });
+        const isFollowing = await getUserFollowsBroadcaster(
+          twitchAccount.token,
+          twitchAccount.id,
+          channels.alveus.id,
+        );
 
         if (!isFollowing) {
           throw new TRPCError({
