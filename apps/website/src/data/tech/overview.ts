@@ -1,10 +1,30 @@
 export interface Step {
   id: string;
   name: string;
-  type: "server" | "source" | "service" | "control" | "output";
+  type: "server" | "source" | "github" | "service" | "control" | "output";
   description?: string;
+  url?: string;
   children?: Step[];
 }
+
+// Return a unique chatbot object each time to avoid weird edges in the graph
+const chatBot = (id: string): Step => ({
+  id: `chatbot-${id}`,
+  name: "Chat Bot",
+  type: "control",
+  description:
+    "Custom Node.js application allowing control of stream layout and PTZ cameras from Twitch chat.",
+  children: [
+    {
+      id: `github-chatbot-${id}`,
+      name: "alveusgg/chatbot",
+      type: "github",
+      description:
+        "GitHub repository for the chat bot, allowing control of the stream layout and cameras.",
+      url: "https://github.com/alveusgg/chatbot",
+    },
+  ],
+});
 
 const localObs: Step = {
   id: "local-obs",
@@ -25,13 +45,7 @@ const localObs: Step = {
           description:
             "Axis IP camera management software allowing PTZ control.",
         },
-        {
-          id: "bot-cameras",
-          name: "Chat Bot",
-          type: "control",
-          description:
-            "Custom Node.js application allowing PTZ control from Twitch chat.",
-        },
+        chatBot("cameras"),
       ],
     },
     {
@@ -41,13 +55,7 @@ const localObs: Step = {
       description:
         "Browser-based overlays added to the stream in OBS, providing alerts etc., mainly using StreamElements.",
     },
-    {
-      id: "bot-local-obs",
-      name: "Chat Bot",
-      type: "control",
-      description:
-        "Custom Node.js application allowing control of scene/camera layout from Twitch chat.",
-    },
+    chatBot("local-obs"),
   ],
 };
 
@@ -89,13 +97,7 @@ const cloudObs: Step = {
         },
       ],
     },
-    {
-      id: "bot-cloud-obs",
-      name: "Chat Bot",
-      type: "control",
-      description:
-        "Custom Node.js application allowing control of scene/source swapping from Twitch chat.",
-    },
+    chatBot("cloud-obs"),
   ],
 };
 
@@ -104,28 +106,64 @@ const steps: Step[] = [
     id: "twitch",
     name: "Twitch Stream",
     type: "output",
-    children: [cloudObs],
+    url: "/live/twitch",
+    children: [
+      cloudObs,
+      {
+        id: "github-extension",
+        name: "alveusgg/extension",
+        type: "github",
+        description:
+          "GitHub repository for the Twitch extension showing ambassador information on the stream.",
+        url: "https://github.com/alveusgg/extension",
+      },
+    ],
   },
   {
     id: "youtube",
     name: "YouTube Stream",
     type: "output",
+    url: "/live/youtube",
     children: [cloudObs],
   },
   {
-    id: "low-latency",
-    name: "Low Latency Feed",
+    id: "website",
+    name: "Website",
     type: "output",
-    description:
-      "Low latency feed used by moderators for responsive PTZ control.",
+    description: "Alveus Sanctuary website at alveussanctuary.org.",
+    url: "/",
     children: [
       {
-        id: "cloudflare-stream",
-        name: "Cloudflare Stream",
-        type: "service",
+        id: "low-latency",
+        name: "Low Latency Feed",
+        type: "output",
         description:
-          "Cloudflare Stream, used for the low latency feed over WebRTC.",
-        children: [localObs],
+          "Low latency feed used by moderators for responsive PTZ control.",
+        children: [
+          {
+            id: "cloudflare-stream",
+            name: "Cloudflare Stream",
+            type: "service",
+            description:
+              "Cloudflare Stream, used for the low latency feed over WebRTC.",
+            children: [localObs],
+          },
+        ],
+      },
+      {
+        id: "vercel",
+        name: "Vercel",
+        type: "service",
+        description: "Vercel hosting for the Alveus Sanctuary website.",
+        children: [
+          {
+            id: "github-website",
+            name: "alveusgg/alveusgg",
+            type: "github",
+            description: "GitHub repository for the Alveus Sanctuary website.",
+            url: "https://github.com/alveusgg/alveusgg",
+          },
+        ],
       },
     ],
   },
