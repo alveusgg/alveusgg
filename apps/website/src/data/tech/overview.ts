@@ -130,7 +130,6 @@ const steps: Step[] = [
     id: "website",
     name: "Website",
     type: "output",
-    description: "Alveus Sanctuary website at alveussanctuary.org.",
     url: "/",
     children: [
       {

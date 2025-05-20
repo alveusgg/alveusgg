@@ -1,5 +1,11 @@
 import { useCallback, useMemo } from "react";
-import { Handle, type NodeProps, Position, useEdges } from "reactflow";
+import {
+  Handle,
+  type NodeProps,
+  Position,
+  useEdges,
+  useUpdateNodeInternals,
+} from "reactflow";
 
 import { classes } from "@/utils/classes";
 
@@ -20,14 +26,18 @@ const Node = ({
   sourcePosition = Position.Bottom,
   isConnectable,
 }: NodeProps<NodeData>) => {
+  const updateNodeInternals = useUpdateNodeInternals();
+
   // Get the source and target edges
   const edges = useEdges();
-  let targetEdge, sourceEdge;
-  for (const edge of edges) {
-    if (!targetEdge && edge.target === id) targetEdge = edge;
-    if (!sourceEdge && edge.source === id) sourceEdge = edge;
-    if (targetEdge && sourceEdge) break;
-  }
+  const sourceEdges = useMemo(
+    () => edges.filter((edge) => edge.source === id),
+    [edges, id],
+  );
+  const targetEdges = useMemo(
+    () => edges.filter((edge) => edge.target === id),
+    [edges, id],
+  );
 
   // If this node has a link, we need some extra props
   const Element = data.url ? "a" : "div";
@@ -42,6 +52,28 @@ const Node = ({
         : {},
     [data.url],
   );
+
+  // Highlight the connected edges on hover
+  const mouseOver = useCallback(() => {
+    targetEdges.concat(sourceEdges).forEach((edge) => {
+      edge.style = {
+        ...edge.style,
+        stroke: "var(--color-highlight)",
+        strokeWidth: 2,
+      };
+    });
+    updateNodeInternals(id);
+  }, [targetEdges, sourceEdges, updateNodeInternals, id]);
+
+  const mouseOut = useCallback(() => {
+    targetEdges.concat(sourceEdges).forEach((edge) => {
+      const style = { ...edge.style };
+      Reflect.deleteProperty(style, "stroke");
+      Reflect.deleteProperty(style, "strokeWidth");
+      edge.style = style;
+    });
+    updateNodeInternals(id);
+  }, [targetEdges, sourceEdges, updateNodeInternals, id]);
 
   const handleRef = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
@@ -64,8 +96,10 @@ const Node = ({
       )}
       tabIndex={-1}
       {...linkProps}
+      onMouseOver={mouseOver}
+      onMouseOut={mouseOut}
     >
-      {(targetEdge || isConnectable) && (
+      {(!!targetEdges.length || isConnectable) && (
         <Handle
           type="target"
           position={targetPosition}
@@ -74,7 +108,7 @@ const Node = ({
           className="-z-10"
         />
       )}
-      {(sourceEdge || isConnectable) && (
+      {(!!sourceEdges.length || isConnectable) && (
         <Handle
           type="source"
           position={sourcePosition}
