@@ -22,7 +22,7 @@
     "dotenv": "^16.5.0",
     "read-pkg": "^9.0.1",
     "tsx": "^4.19.4",
-    "zod": "^3.25.12"
+    "zod": "^3.25.11"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
