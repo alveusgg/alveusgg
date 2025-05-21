@@ -25,12 +25,12 @@
     "zod": "^3.24.4"
   },
   "devDependencies": {
-    "@eslint/js": "^9.26.0",
+    "@eslint/js": "^9.27.0",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^22.15.18",
-    "eslint": "^9.26.0",
+    "@types/node": "^22.15.21",
+    "eslint": "^9.27.0",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-import-x": "^4.11.1",
+    "eslint-plugin-import-x": "^4.12.2",
     "typescript-eslint": "^8.32.1"
   },
   "scripts": {
