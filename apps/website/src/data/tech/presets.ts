@@ -1,5 +1,10 @@
+import { type StaticImageData } from "next/image";
+
+import pasture from "../presets/pasture";
+
 interface Preset {
   description: string;
+  image?: StaticImageData;
 }
 
 interface Camera {
@@ -8,41 +13,7 @@ interface Camera {
 }
 
 const presets: Record<string, Camera> = {
-  pasture: {
-    title: "Pasture",
-    presets: {
-      angel: { description: "feeder but lower" },
-      barn: { description: "feedstall barn" },
-      barn2: { description: "2nd barn" },
-      barn2r: { description: "2nd barn right" },
-      barnfloor: { description: "floor of the barn" },
-      brush: { description: "winnie's brush" },
-      brushr: { description: "winnie's brush right" },
-      donksleep: { description: "donk sleep spot" },
-      feeder: { description: "feeder bin" },
-      feedstall: { description: "inside feedstall" },
-      fencel: { description: "fence left" },
-      gate: { description: "feedstall gate" },
-      grove: { description: "pasture grove" },
-      insidebarn: { description: "inside feed barn" },
-      middle: { description: "middle of pasture" },
-      pen: { description: "round pen" },
-      penl: { description: "round pen left" },
-      penr: { description: "round pen right" },
-      picnic: { description: "bug picnic spot" },
-      pooll: { description: "pool left" },
-      poolr: { description: "pool right" },
-      purplebase: { description: "purple martin base" },
-      purplenest: { description: "purple martin nest" },
-      right: { description: "right of pasture" },
-      roundpen: { description: "training round pen" },
-      saltlick: { description: "salt lick spot" },
-      sky: { description: "view of the sky" },
-      stompyfood: { description: "stompy's food" },
-      sunrise: { description: "view of the sunrise" },
-      water: { description: "water trough" },
-    },
-  },
+  pasture,
   fox: {
     title: "Foxes Main Camera",
     presets: {
