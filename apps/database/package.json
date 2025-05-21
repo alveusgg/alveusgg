@@ -28,8 +28,8 @@
     "@prisma/client": "^6.7.0"
   },
   "devDependencies": {
-    "@types/node": "^22.15.18",
-    "npm-run-all2": "^8.0.1",
+    "@types/node": "^22.15.21",
+    "npm-run-all2": "^8.0.3",
     "prisma": "^6.7.0"
   },
   "exports": {
