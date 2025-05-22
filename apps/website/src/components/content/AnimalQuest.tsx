@@ -1,11 +1,10 @@
 import Image from "next/image";
 import { type ComponentProps } from "react";
 
-import { type Ambassador } from "@alveusgg/data/build/ambassadors/core";
-import {
-  type AnimalQuestWithEpisode,
-  type AnimalQuestWithRelation,
-} from "@alveusgg/data/build/animal-quest";
+import ambassadors, {
+  type AmbassadorKey,
+} from "@alveusgg/data/build/ambassadors/core";
+import { type AnimalQuestWithEpisode } from "@alveusgg/data/build/animal-quest";
 
 import { classes } from "@/utils/classes";
 import { sentenceToKebab } from "@/utils/string-case";
@@ -17,17 +16,17 @@ import IconYouTube from "@/icons/IconYouTube";
 
 import animalQuestImage from "@/assets/animal-quest/full.png";
 
+import List from "./List";
+
 type AnimalQuestProps = {
   episode: AnimalQuestWithEpisode;
-  relation: AnimalQuestWithRelation["relation"];
-  ambassador: Ambassador;
+  ambassador?: AmbassadorKey;
   heading?: ComponentProps<typeof Heading>["level"];
   className?: string;
 };
 
 const AnimalQuest = ({
   episode,
-  relation,
   ambassador,
   heading = 2,
   className,
@@ -60,7 +59,13 @@ const AnimalQuest = ({
       </Heading>
       <p className="text-xl text-balance text-alveus-green-800">
         <span className="inline-block">
-          Learn more {relation === "featured" && `about ${ambassador.name} `}
+          Learn more about{" "}
+          <List
+            items={(ambassador
+              ? [ambassador]
+              : episode.ambassadors.featured
+            ).map((ambassador) => ambassadors[ambassador].name)}
+          />{" "}
           on
         </span>{" "}
         <span className="inline-block">Animal Quest</span>
