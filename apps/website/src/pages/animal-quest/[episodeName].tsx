@@ -2,7 +2,7 @@ import { Stream } from "@cloudflare/stream-react";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 import type { Episode } from "schema-dts";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
@@ -34,6 +34,7 @@ import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import JsonLD from "@/components/content/JsonLD";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 
@@ -399,23 +400,23 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                   Featuring:
                 </Heading>
                 <p className="text-xl">
-                  {typeSafeObjectEntries(featured).map(
-                    ([key, ambassador], idx, arr) => (
-                      <Fragment key={key}>
-                        {/* Retired ambassadors don't have pages */}
-                        {isActiveAmbassadorKey(key) ? (
-                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
+                  <List
+                    items={typeSafeObjectEntries(featured).map(
+                      ([key, ambassador]) =>
+                        // Retired ambassadors don't have pages
+                        isActiveAmbassadorKey(key) ? (
+                          <Link
+                            key={key}
+                            href={`/ambassadors/${camelToKebab(key)}`}
+                            dark
+                          >
                             {ambassador.name}
                           </Link>
                         ) : (
                           ambassador.name
-                        )}
-                        {idx < arr.length - 2 && ", "}
-                        {idx === arr.length - 2 && arr.length > 2 && ","}
-                        {idx === arr.length - 2 && " and "}
-                      </Fragment>
-                    ),
-                  )}
+                        ),
+                    )}
+                  />
                 </p>
               </div>
 
