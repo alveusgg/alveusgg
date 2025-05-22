@@ -6,6 +6,7 @@ import { Fragment, useEffect, useId, useMemo } from "react";
 import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
 import ambassadors, {
   type Ambassador,
+  type AmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import {
@@ -41,6 +42,7 @@ import { Lightbox, Preview } from "@/components/content/YouTube";
 
 type AmbassadorPageProps = {
   ambassador: Ambassador;
+  ambassadorKey: AmbassadorKey;
   enclosure: Enclosure;
   images: AmbassadorImages;
   merchImage?: AmbassadorImage;
@@ -72,6 +74,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   return {
     props: {
       ambassador,
+      ambassadorKey,
       enclosure: enclosures[ambassador.enclosure],
       images: getAmbassadorImages(ambassadorKey),
       merchImage: getAmbassadorMerchImage(ambassadorKey),
@@ -90,6 +93,7 @@ const stringifyLifespan = (value: number | { min: number; max: number }) => {
 
 const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
   ambassador,
+  ambassadorKey,
   enclosure,
   images,
   merchImage,
@@ -296,8 +300,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                 <AnimalQuest
                   key={aq.episode}
                   episode={aq}
-                  relation={aq.relation}
-                  ambassador={ambassador}
+                  ambassador={ambassadorKey}
                   className="my-6"
                 />
               ))}
