@@ -2,10 +2,16 @@ import type { heicTo } from "heic-to/csp";
 
 import type { ImageMimeType } from "./files";
 
-let heicToPromise: Promise<typeof heicTo>;
+let heicToPromise: Promise<typeof heicTo> | undefined;
 const heicToLazy = () => {
   if (heicToPromise) return heicToPromise;
-  heicToPromise = import("heic-to/csp").then((module) => module.heicTo);
+  heicToPromise = import("heic-to/csp")
+    .then((module) => module.heicTo)
+    .catch((error) => {
+      console.error("Failed to load heic-to module:", error);
+      heicToPromise = undefined; // Reset to allow retry
+      throw error; // Re-throw to propagate the error
+    });
   return heicToPromise;
 };
 
