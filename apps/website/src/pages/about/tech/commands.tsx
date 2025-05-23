@@ -6,11 +6,12 @@ import commands, {
   type CommandCategoryId,
   commandCategories,
 } from "@/data/tech/commands";
+import type { Preset } from "@/data/tech/presets";
 import presets from "@/data/tech/presets";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
-import { typeSafeObjectEntries } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { trpc } from "@/utils/trpc";
 
@@ -61,8 +62,8 @@ const AboutTechPage: NextPage = () => {
     ),
   });
 
-  const [selectedCamera, setSelectedCamera] = useState<keyof typeof presets>(
-    Object.keys(presets)[0] as keyof typeof presets,
+  const [selectedCamera, setSelectedCamera] = useState<Preset>(
+    typeSafeObjectKeys(presets)[0]!,
   );
 
   return (
@@ -341,21 +342,19 @@ const AboutTechPage: NextPage = () => {
                 <select
                   id="camera-select"
                   value={selectedCamera}
-                  onChange={(e) =>
-                    setSelectedCamera(e.target.value as keyof typeof presets)
-                  }
+                  onChange={(e) => setSelectedCamera(e.target.value as Preset)}
                   className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 >
-                  {typeSafeObjectEntries(presets).map(([camera, { title }]) => (
+                  {typeSafeObjectKeys(presets).map((camera) => (
                     <option key={camera} value={camera}>
-                      {title} ({camera.toLowerCase()})
+                      {presets[camera].title} ({camera.toLowerCase()})
                     </option>
                   ))}
                 </select>
               </div>
               {/* Desktop: Button List */}
               <div className="hidden space-y-2 lg:block">
-                {typeSafeObjectEntries(presets).map(([camera, { title }]) => (
+                {typeSafeObjectKeys(presets).map((camera) => (
                   <button
                     key={camera}
                     onClick={() => setSelectedCamera(camera)}
@@ -366,7 +365,7 @@ const AboutTechPage: NextPage = () => {
                         : "bg-alveus-green-50 hover:bg-alveus-green-100",
                     )}
                   >
-                    {title}
+                    {presets[camera].title}
                     <span className="text-sm text-alveus-green-400 italic">
                       {` (${camera.toLowerCase()})`}
                     </span>
@@ -384,17 +383,15 @@ const AboutTechPage: NextPage = () => {
                     className="scroll-mt-14 text-2xl"
                     id={`presets:${camelToKebab(selectedCamera)}`}
                   >
-                    {presets[selectedCamera]?.title}
+                    {presets[selectedCamera].title}
                     <span className="text-sm text-alveus-green-400 italic">
                       {` (${selectedCamera.toLowerCase()})`}
                     </span>
                   </Heading>
 
                   <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {typeSafeObjectEntries(
-                      presets[selectedCamera]?.presets ?? {},
-                    ).map(([name, preset]) => {
-                      return (
+                    {typeSafeObjectEntries(presets[selectedCamera].presets).map(
+                      ([name, preset]) => (
                         <div
                           key={name}
                           className="overflow-hidden rounded-lg border shadow-lg"
@@ -405,10 +402,10 @@ const AboutTechPage: NextPage = () => {
                                 src={preset.image}
                                 alt={preset.description}
                                 fill
-                                className="object-cover transition-transform group-hover:scale-105"
+                                className="aspect-video w-full object-cover transition-transform"
                               />
                             ) : (
-                              <div className="flex h-full w-full items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
+                              <div className="flex aspect-video items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
                                 No Image
                               </div>
                             )}
@@ -432,8 +429,8 @@ const AboutTechPage: NextPage = () => {
                             </p>
                           </div>
                         </div>
-                      );
-                    })}
+                      ),
+                    )}
                   </div>
                 </Fragment>
               )}

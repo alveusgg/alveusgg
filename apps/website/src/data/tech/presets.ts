@@ -1,364 +1,71 @@
 import { type StaticImageData } from "next/image";
 
+import chicken from "../presets/chicken";
+import chickenindoor from "../presets/chickenindoor";
+import crowin from "../presets/crowin";
+import crowout from "../presets/crowout";
+import fox from "../presets/fox";
+import foxcorner from "../presets/foxcorner";
+import georgie from "../presets/georgie";
+import georgiewater from "../presets/georgiewater";
+import hank from "../presets/hank";
+import marmin from "../presets/marmin";
+import marmout from "../presets/marmout";
+import noodle from "../presets/noodle";
+import parrot from "../presets/parrots";
 import pasture from "../presets/pasture";
+import patchy from "../presets/patchy";
+import pushpop from "../presets/pushpop";
+import pushpopcrunch from "../presets/pushpopcrunch";
+import pushpopindoor from "../presets/pushpopindoor";
+import roaches from "../presets/roaches";
+import toast from "../presets/toast";
+import wolf from "../presets/wolf";
+import wolfcorner from "../presets/wolfcorner";
+import wolfden from "../presets/wolfden";
+import wolfden2 from "../presets/wolfden2";
+import wolfindoor from "../presets/wolfindoor";
+import wolfswitch from "../presets/wolfswitch";
 
-interface Preset {
+interface PresetData {
   description: string;
   image?: StaticImageData;
 }
 
 interface Camera {
   title: string;
-  presets: Record<string, Preset>;
+  presets: Record<string, PresetData>;
 }
 
-const presets: Record<string, Camera> = {
+const presets = {
   pasture,
-  fox: {
-    title: "Foxes Main Camera",
-    presets: {
-      belowplatform: { description: "below fox platform" },
-      belowplatformz: { description: "below platform zoomed" },
-      belowramp: { description: "below fox ramp" },
-      bench: { description: "view the bench" },
-      brush: { description: "view fox brush" },
-      center: { description: "center of enclosure" },
-      denf: { description: "view far den" },
-      denl: { description: "view den left" },
-      denr: { description: "view den right" },
-      down: { description: "view straight down" },
-      downleft: { description: "view down left" },
-      downright: { description: "view down right" },
-      entry: { description: "entryway door" },
-      insidedoor: { description: "view inside door" },
-      left: { description: "left of enclosure" },
-      leftfence: { description: "view left fence" },
-      lefttraining: { description: "training spot left" },
-      platform: { description: "fox platform" },
-      platformbl: { description: "platform back left" },
-      platformbr: { description: "platform back right" },
-      platformfl: { description: "platform front left" },
-      platformfr: { description: "platform front right" },
-      platforml: { description: "view platform left" },
-      rampl: { description: "view ramp left" },
-      rampt: { description: "view ramp top" },
-      right: { description: "right of fox enclosure" },
-      rightcorner: { description: "right corner of enclosure" },
-      righttraining: { description: "right training spot" },
-      shade: { description: "shade under platform" },
-      table: { description: "foxes table" },
-      treeclimb: { description: "platform tree climbing spot" },
-      treehouse: { description: "foxes treehouse/platform" },
-      treehousel: { description: "left of treehouse" },
-      treehouser: { description: "right of treehouse" },
-    },
-  },
-  foxCorner: {
-    title: "Foxes Corner Camera (Wide-Angle)",
-    presets: {
-      bowl: { description: "foxes bowl" },
-      den: { description: "foxes den" },
-      hillleft: { description: "left of foxes hill/den" },
-      insidedoor: { description: "view fox inside door" },
-      table: { description: "foxes table" },
-      training: { description: "Fox training spot" },
-      training2: { description: "Fox training spot 2" },
-    },
-  },
-  bb: {
-    title: "Bonus Bugs",
-    presets: {
-      backcenter: { description: "back center of enclosure" },
-      backcorner: { description: "back corner of enclosure" },
-      backleft: { description: "back left of enclosure" },
-      backright: { description: "back right of enclosure" },
-      nest: { description: "bb's nest" },
-      nest2: { description: "bb's 2nd nest" },
-      topright: { description: "top right of enclosure" },
-    },
-  },
-  roaches: {
-    title: "Roaches",
-    presets: {
-      down: { description: "straight down" },
-      left: { description: "left of enclosure" },
-      leftcorner: { description: "left corner of enclosure" },
-      stickb: { description: "stick base" },
-      stickt: { description: "stick top" },
-      stickl: { description: "stick left" },
-      top: { description: "top of enclosure" },
-    },
-  },
-  georgie: {
-    title: "Georgie",
-    presets: {
-      closedirt: { description: "zoomed in view of dirt mound" },
-      closeup: { description: "lower view of dirt mound zoomed" },
-      dirt: { description: "zoomed out view of dirt mound" },
-      ramp: { description: "ramp up to the dirt to the left" },
-      shore: { description: "zoomed out view of shore" },
-      shoreright: { description: "zoomed in view of shore right" },
-      water: { description: "view of the water" },
-      wide: { description: "wide shot of shore and dirt" },
-    },
-  },
-  crow: {
-    title: "Crows Indoor",
-    presets: {
-      back: { description: "back of enclosure" },
-      backcorner: { description: "back corner perch" },
-      backcornerr: { description: "back corner perch right" },
-      backleftcorner: { description: "back left corner perch" },
-      crowsleep: { description: "crow sleep spot" },
-      down: { description: "straight down" },
-      down2: { description: "straight down more" },
-      entry: { description: "entryway door" },
-      heater: { description: "crows heater" },
-      hose: { description: "crows hose" },
-      outside: { description: "view of crow outdoor" },
-      platform: { description: "crow platform" },
-      rightperch: { description: "right perches" },
-      table: { description: "crows table" },
-      top: { description: "top perches" },
-      training: { description: "spot for training" },
-      water: { description: "water bowl" },
-      window: { description: "crows window" },
-      windowc: { description: "crows window corner" },
-    },
-  },
-  crowOutdoor: {
-    title: "Crows Outdoor",
-    presets: {
-      backcorner: { description: "back corner perch" },
-      bench: { description: "corner perches" },
-      corner: { description: "corner perch" },
-      cornerc: { description: "corner perch zoomed in" },
-      down: { description: "straight down" },
-      entry: { description: "crow indoor entry area" },
-      ground: { description: "view of the ground" },
-      groundlc: { description: "ground left corner" },
-      groundrc: { description: "ground right corner" },
-      inside: { description: "indoor area" },
-      insideperch: { description: "view of indoor perch" },
-      insidewater: { description: "indoor water bowl" },
-      left: { description: "left of outdoor crow enclosure" },
-      platform: { description: "outdoor crow platform" },
-      platforminside: { description: "indoor crow platform" },
-      right: { description: "right of crow enclosure" },
-      table: { description: "indoor crow table" },
-      training: { description: "crow training spot" },
-      tree: { description: "perch tree to the left" },
-      treeb: { description: "perch tree base" },
-      treebase: { description: "very base of tree" },
-      treet: { description: "perch tree top" },
-      water: { description: "crow water source" },
-    },
-  },
-  marmosetIndoor: {
-    title: "Marmosets Indoor",
-    presets: {
-      bowll: { description: "bowl left of flaps" },
-      bowllc: { description: "zoomed in view of bowl left of the flaps" },
-      bridgecl: {
-        description: "zoomed in view of bridge to the very far left",
-      },
-      bridgel: { description: "bridge to the very far left" },
-      bridgem: { description: "middle bridge" },
-      bridgerc: { description: "zoomed in view of bridge to the far right" },
-      center: { description: "center of enclosure" },
-      cornershelf: { description: "corner shelves" },
-      domeleft: { description: "dome to the left" },
-      domeright: { description: "dome to the right" },
-      down: { description: "straight down" },
-      flapl: { description: "left flap" },
-      flaps: { description: "zoomed out view of both flaps" },
-      floor: { description: "view of the floor" },
-      left: { description: "left of enclosure" },
-      pole: { description: "pole from the floor to the corner shelves" },
-      right: { description: "right of enclosure" },
-      table: { description: "training table" },
-      win1: { description: "window 1 to the far left" },
-      win2: { description: "window 2 to the left" },
-      win3: { description: "window 3 to the right" },
-      win4: { description: "window 4 to the far right" },
-    },
-  },
-  marmoset: {
-    title: "Marmosets Outdoor",
-    presets: {
-      below: { description: "straight down" },
-      bottomshelfl: {
-        description: "bottom left shelf to the left of the enclosure",
-      },
-      bottomshelfr: {
-        description: "bottom right shelf to the left of the enclosure",
-      },
-      domel: { description: "dome left" },
-      domer: { description: "dome right" },
-      domes: { description: "zoomed out view of both domes" },
-      door: { description: "door to the indoor space" },
-      flapl: { description: "flap left" },
-      flapr: { description: "flap right" },
-      flaps: { description: "zoomed out view of both flaps" },
-      frontdoor: { description: "view of the door" },
-      ground: { description: "view of the ground" },
-      groundr: { description: "ground right" },
-      hose: { description: "marmoset hose" },
-      ir: { description: "top of marmoset ir spotlight" },
-      left: { description: "left of enclosure" },
-      leftpostshelves: {
-        description: "view of the post shelves to the left of the enclosure",
-      },
-      leftpostshelvesl: {
-        description:
-          "view of the lower post shelves to the left of the enclosure",
-      },
-      platformleft: { description: "left of platform" },
-      post2t: { description: "right post shelves top" },
-      ramp: { description: "ramp to the right of the flaps" },
-      right: { description: "right of the enclosure" },
-      rightperch: { description: "perches to the right" },
-      rightpostb: { description: "base of the right post" },
-      rightshelvest: { description: "top of the right post" },
-      rope: { description: "rope bridge" },
-      table: { description: "training table" },
-      top: { description: "view of top shelves" },
-      topshelfl: { description: "top shelf left" },
-      topshelfr: { description: "top shelf right" },
-    },
-  },
-  parrots: {
-    title: "Parrots",
-    presets: {
-      abovedoor: { description: "above the door to the enclosure" },
-      bothwindows: { description: "view of both parrot windows" },
-      chicken: { description: "spot where chickens show up during walks" },
-      door: { description: "view of the door to the enclosure" },
-      floor: { description: "floor of the enclosure" },
-      floorl: { description: "left of the floor" },
-      floorr: { description: "right of the floor" },
-      littles: { description: "Littles tree" },
-      littles2: { description: "littles perch by window" },
-      littlesb: { description: "base of littles tree" },
-      littlesbowl: { description: "littles bowl" },
-      littlesbowl2: { description: "second littles bowl" },
-      littlesbowl3: { description: "third littles bowl" },
-      littlessleep: { description: "littles sleep spot" },
-      littlest: { description: "top of the littles tree" },
-      littlesw: { description: "littles window" },
-      macaws: { description: "macawsw tree" },
-      macawsb: { description: "base of macaws tree" },
-      macawsbowl: { description: "macaws bowl" },
-      macawsbowl2: { description: "second macaws bowl" },
-      macawst: { description: "top of the macaws tree" },
-      macawsw: { description: "macaws window" },
-      platform1: {
-        description: "platform to the left near parrot inside door",
-      },
-      platform2: {
-        description: "platform to the right in front of littles tree",
-      },
-      tablet: { description: "littles tablet" },
-    },
-  },
-  wolf: {
-    title: "Wolf",
-    presets: {
-      backleftcorner: {
-        description: "left corner along the back fence near den1",
-      },
-      belowplatform: { description: "below the viewing platform" },
-      bigrocks: { description: "view of the big donor rocks" },
-      center: { description: "center of enclosure" },
-      den1: { description: "overview of den1 (close to pond)" },
-      den1inside: { description: "zoomed in view of den1 door" },
-      den1l: { description: "left of den1" },
-      den1r: { description: "right of den1" },
-      den1t: { description: "top of den1" },
-      den2: { description: "overview of den2" },
-      den2b: { description: "den2 base" },
-      den2gap: { description: "small gap to the left of den2" },
-      den2l: { description: "den2 left and den2 ramp" },
-      den2m: { description: "middle platform of den2" },
-      den2mz: { description: "zoomed in middle platform of den2" },
-      den2r: { description: "right of den2" },
-      den2w: { description: "wide view of den2" },
-      den2t: { description: "top platform of den2" },
-      den2rw: { description: "wide view of the right of den2" },
-      down: { description: "straight down" },
-      downright: { description: "down right" },
-      farcorner: {
-        description: "corner on the opposite side of the enclosure",
-      },
-      farfence: { description: "wide view showing the far right fence" },
-      grass: { description: "middle grass patch" },
-      grassl: { description: "left side of the middle grass patch" },
-      insidedoor: { description: "door to the inside space" },
-      left: { description: "left of the pond" },
-      leftcorner: { description: "close corner next to the building" },
-      pond: { description: "pond" },
-      right: { description: "right view of the enclosure" },
-      rightfence: { description: "view down the right fence" },
-      river: { description: "overview of the river and pond" },
-      switchgater: { description: "right switch gate" },
-      tip: { description: "tip of the river" },
-      tipz: { description: "zoomed in view of the river tip" },
-      waterfall: { description: "waterfall at the end of the river" },
-      wolfcornercam: { description: "wolf corner cam view" },
-    },
-  },
-  wolfcorner: {
-    title: "Wolf Corner",
-    presets: {
-      backfence: { description: "back fence" },
-      belowplatform: { description: "below viewing platform" },
-      belowplatforml: { description: "below the viewing platform" },
-      belowrampl: { description: "below the viewing platform to the right" },
-      belowramplz: { description: "below the den2 left ramp" },
-      belowrampr: { description: "zoomed in view below the den2 left ramp" },
-      brushl: { description: "below the den2 right ramp" },
-      center: { description: "center of the enclosure" },
-      den1: { description: "den1 near the pond" },
-      den2: { description: "den2 close to camera/viewing platform" },
-      den2b: { description: "bottom platform of den2" },
-      den2door: { description: "door to den2" },
-      den2entrace: { description: "front of den2" },
-      den2inside: { description: "view of inside den2" },
-      den2l: { description: "left of den2" },
-      den2m: { description: "middle platform of den2" },
-      den2shade: { description: "shade below the den2 platform" },
-      den2t: { description: "top platform of den2" },
-      down: { description: "straight down" },
-      downleft: { description: "down to the left" },
-      downright: { description: "down to the right" },
-      grass: { description: "middle grass patch" },
-      grassr: { description: "right side of middle grass patch" },
-      left: { description: "left side of enclosure" },
-      leftcorner: { description: "corner of the inside building" },
-      leftfence: { description: "view down the left fence" },
-      leftw: { description: "wide view of the left side" },
-      nearcorner: { description: "corner below the viewing platform" },
-      rampl: { description: "left ramp on den2" },
-      rampr: { description: "right ramp on den2" },
-      right: { description: "right of den2" },
-      rightcorner: { description: "right corner along the back fence" },
-      rightfence: { description: "view down the right fence" },
-      river: { description: "river near den1" },
-      water: { description: "drinking tub under the viewing platform" },
-      wolfcam: { description: "view of the main wolf camera" },
-    },
-  },
-  wolfindoor: {
-    title: "Wolf Indoor",
-    presets: {
-      doors: { description: "wolf doors" },
-      left: { description: "left side of the enclosure" },
-      right: { description: "right side of the enclosure" },
-      platformcenter: { description: "center platform" },
-      platformleft: { description: "left platform" },
-      platformright: { description: "right platform" },
-    },
-  },
-};
+  fox,
+  foxcorner,
+  roaches,
+  crowin,
+  crowout,
+  marmin,
+  marmout,
+  parrot,
+  wolf,
+  wolfcorner,
+  wolfindoor,
+  wolfswitch,
+  wolfden,
+  wolfden2,
+  hank,
+  pushpop,
+  pushpopindoor,
+  pushpopcrunch,
+  toast,
+  patchy,
+  noodle,
+  chicken,
+  chickenindoor,
+  georgie,
+  georgiewater,
+} as const satisfies Record<string, Camera>;
 
+export type Preset = keyof typeof presets;
+export type { PresetData, Camera };
 export default presets;
