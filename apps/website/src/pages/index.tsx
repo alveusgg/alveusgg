@@ -363,14 +363,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 Latest Episode
               </Heading>
 
-              <AnimalQuest
-                episode={latestAnimalQuest}
-                relation="featured"
-                ambassador={
-                  ambassadors[latestAnimalQuest.ambassadors.featured[0]]
-                }
-                heading={-1}
-              />
+              <AnimalQuest episode={latestAnimalQuest} heading={-1} />
             </div>
           )}
         </div>
