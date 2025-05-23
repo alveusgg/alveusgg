@@ -2,13 +2,12 @@ import type { heicTo } from "heic-to/csp";
 
 import type { ImageMimeType } from "./files";
 
-let heicToCache: typeof heicTo | undefined;
-const heicToLazy = () =>
-  heicToCache ??
-  import("heic-to/csp").then((m) => {
-    heicToCache = m.heicTo;
-    return heicToCache;
-  });
+let heicToPromise: Promise<typeof heicTo>;
+const heicToLazy = () => {
+  if (heicToPromise) return heicToPromise;
+  heicToPromise = import("heic-to/csp").then((module) => module.heicTo);
+  return heicToPromise;
+};
 
 async function convertHeicToJpeg(file: File) {
   const heicTo = await heicToLazy();
