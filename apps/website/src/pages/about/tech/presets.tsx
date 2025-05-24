@@ -131,7 +131,7 @@ const AboutTechPresetsPage: NextPage = () => {
 
           <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-4">
             {/* Camera List */}
-            <div className="col-span-1 space-y-2">
+            <div className="col-span-1 space-y-2 lg:sticky lg:top-0 lg:pt-2">
               {/* Mobile: Dropdown */}
               <div className="mb-2 block lg:hidden">
                 <label htmlFor="camera-select" className="sr-only">
@@ -174,7 +174,7 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
 
             {/* Preset List */}
-            <div className="col-span-1 lg:col-span-3">
+            <div className="col-span-1 lg:sticky lg:top-0 lg:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
                   <Heading
@@ -215,6 +215,7 @@ const AboutTechPresetsPage: NextPage = () => {
                               <div className="flex gap-1">
                                 <CopyToClipboardButton
                                   text={`!ptzload ${selectedCamera.toLowerCase()} ${name}`}
+                                  options={{ initialText: "Copy command" }}
                                 />
                                 <RunCommandButton
                                   command="ptzload"
