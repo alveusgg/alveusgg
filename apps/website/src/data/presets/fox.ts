@@ -1,11 +1,14 @@
 import { type StaticImageData } from "next/image";
 
+import bed from "@/assets/presets/fox/bed.png";
+import behindtree from "@/assets/presets/fox/behindtree.png";
 import belowplatform from "@/assets/presets/fox/belowplatform.png";
 import belowplatformz from "@/assets/presets/fox/belowplatformz.png";
 import belowramp from "@/assets/presets/fox/belowramp.png";
 import bench from "@/assets/presets/fox/bench.png";
 import brush from "@/assets/presets/fox/brush.png";
 import center from "@/assets/presets/fox/center.png";
+import centerleft from "@/assets/presets/fox/centerleft.png";
 import den from "@/assets/presets/fox/den.png";
 import denf from "@/assets/presets/fox/denf.png";
 import denl from "@/assets/presets/fox/denl.png";
@@ -37,31 +40,39 @@ import treehouse from "@/assets/presets/fox/treehouse.png";
 import treehousel from "@/assets/presets/fox/treehousel.png";
 import treehouser from "@/assets/presets/fox/treehouser.png";
 
-//import bed from "@/assets/presets/fox/bed.png";
-//import behindtree from "@/assets/presets/fox/behindtree.png";
-//import centerleft from "@/assets/presets/fox/centerleft.png";
-
 export interface Preset {
   description: string;
   image?: StaticImageData;
 }
 
 const foxPresets: Record<string, Preset> = {
+  home: {
+    description: "Home",
+    image: home,
+  },
+  bed: {
+    description: "Bed (old)",
+    image: bed,
+  },
+  behindtree: {
+    description: "Behind Tree (below platform)",
+    image: behindtree,
+  },
+  bench: {
+    description: "Bench",
+    image: bench,
+  },
   belowplatform: {
     description: "Below Platform",
     image: belowplatform,
   },
   belowplatformz: {
-    description: "Below Platform Z",
+    description: "Below Platform Zoomed",
     image: belowplatformz,
   },
   belowramp: {
     description: "Below Ramp",
     image: belowramp,
-  },
-  bench: {
-    description: "Bench",
-    image: bench,
   },
   brush: {
     description: "Brush",
@@ -70,6 +81,10 @@ const foxPresets: Record<string, Preset> = {
   center: {
     description: "Center",
     image: center,
+  },
+  centerleft: {
+    description: "Center Left",
+    image: centerleft,
   },
   den: {
     description: "Den",
@@ -87,6 +102,10 @@ const foxPresets: Record<string, Preset> = {
     description: "Den Right",
     image: denr,
   },
+  down: {
+    description: "Down",
+    image: down,
+  },
   downleft: {
     description: "Down Left",
     image: downleft,
@@ -95,21 +114,17 @@ const foxPresets: Record<string, Preset> = {
     description: "Down Right",
     image: downright,
   },
-  down: {
-    description: "Down",
-    image: down,
-  },
   entry: {
     description: "Entry",
     image: entry,
   },
-  home: {
-    description: "Home",
-    image: home,
-  },
   insidedoor: {
     description: "Inside Door",
     image: insidedoor,
+  },
+  left: {
+    description: "Left",
+    image: left,
   },
   leftfence: {
     description: "Left Fence",
@@ -119,28 +134,16 @@ const foxPresets: Record<string, Preset> = {
     description: "Left Training",
     image: lefttraining,
   },
-  righttraining: {
-    description: "Right Training",
-    image: righttraining,
-  },
-  rightcorner: {
-    description: "Right Corner",
-    image: rightcorner,
-  },
-  rampt: {
-    description: "Ramp Top",
-    image: rampt,
-  },
-  rampl: {
-    description: "Ramp Left",
-    image: rampl,
+  platform: {
+    description: "Platform",
+    image: platform,
   },
   platformbl: {
-    description: "Platform Bottom Left",
+    description: "Platform Back Left",
     image: platformbl,
   },
   platformbr: {
-    description: "Platform Bottom Right",
+    description: "Platform Back Right",
     image: platformbr,
   },
   platformfl: {
@@ -155,17 +158,25 @@ const foxPresets: Record<string, Preset> = {
     description: "Platform Left",
     image: platforml,
   },
-  platform: {
-    description: "Platform",
-    image: platform,
+  rampl: {
+    description: "Ramp Left",
+    image: rampl,
   },
-  left: {
-    description: "Left",
-    image: left,
+  rampt: {
+    description: "Ramp Top",
+    image: rampt,
   },
   right: {
     description: "Right",
     image: right,
+  },
+  rightcorner: {
+    description: "Right Corner",
+    image: rightcorner,
+  },
+  righttraining: {
+    description: "Right Training",
+    image: righttraining,
   },
   shade: {
     description: "Shade",
@@ -190,18 +201,6 @@ const foxPresets: Record<string, Preset> = {
   treehouser: {
     description: "Tree House Right",
     image: treehouser,
-  },
-  bed: {
-    description: "Bed",
-    //image: bed,
-  },
-  behindtree: {
-    description: "Behind Tree",
-    //image: behindtree,
-  },
-  centerleft: {
-    description: "Center Left",
-    //image: centerleft,
   },
 };
 

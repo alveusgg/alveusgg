@@ -12,6 +12,7 @@ import littles2 from "@/assets/presets/parrots/littles2.png";
 import littles from "@/assets/presets/parrots/littles.png";
 import littlesb from "@/assets/presets/parrots/littlesb.png";
 import littlesbowl2 from "@/assets/presets/parrots/littlesbowl2.png";
+import littlesbowl3 from "@/assets/presets/parrots/littlesbowl3.png";
 import littlesbowl from "@/assets/presets/parrots/littlesbowl.png";
 import littlessleep from "@/assets/presets/parrots/littlessleep.png";
 import littlest from "@/assets/presets/parrots/littlest.png";
@@ -20,17 +21,15 @@ import macaws from "@/assets/presets/parrots/macaws.png";
 import macawsb from "@/assets/presets/parrots/macawsb.png";
 import macawsbowl2 from "@/assets/presets/parrots/macawsbowl2.png";
 import macawsbowl from "@/assets/presets/parrots/macawsbowl.png";
+import macawssleep from "@/assets/presets/parrots/macawssleep.png";
 import macawst from "@/assets/presets/parrots/macawst.png";
 import macawsw from "@/assets/presets/parrots/macawsw.png";
 import platform1 from "@/assets/presets/parrots/platform1.png";
 import platform2 from "@/assets/presets/parrots/platform2.png";
 import tablet from "@/assets/presets/parrots/tablet.png";
-
-//import littlesbowl3 from "@/assets/presets/parrots/littlesbowl3.png";
-//import macawssleep from "@/assets/presets/parrots/macawssleep.png";
-//import upleft from "@/assets/presets/parrots/upleft.png";
-//import upright from "@/assets/presets/parrots/upright.png";
-//import upmiddle from "@/assets/presets/parrots/upmiddle.png";
+import upleft from "@/assets/presets/parrots/upleft.png";
+import upmiddle from "@/assets/presets/parrots/upmiddle.png";
+import upright from "@/assets/presets/parrots/upright.png";
 
 export interface Preset {
   description: string;
@@ -42,74 +41,6 @@ const parrotsPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
   },
-  littles: {
-    description: "Littles",
-    image: littles,
-  },
-  littles2: {
-    description: "Littles 2",
-    image: littles2,
-  },
-  littlesb: {
-    description: "Littles Bowl",
-    image: littlesb,
-  },
-  littlesbowl: {
-    description: "Littles Bowl",
-    image: littlesbowl,
-  },
-  littlesbowl2: {
-    description: "Littles Bowl 2",
-    image: littlesbowl2,
-  },
-  littlessleep: {
-    description: "Littles Sleep",
-    image: littlessleep,
-  },
-  littlest: {
-    description: "Littles T",
-    image: littlest,
-  },
-  littlesw: {
-    description: "Littles W",
-    image: littlesw,
-  },
-  macaws: {
-    description: "Macaws",
-    image: macaws,
-  },
-  macawsb: {
-    description: "Macaws Bowl",
-    image: macawsb,
-  },
-  macawsbowl: {
-    description: "Macaws Bowl",
-    image: macawsbowl,
-  },
-  macawsbowl2: {
-    description: "Macaws Bowl 2",
-    image: macawsbowl2,
-  },
-  macawst: {
-    description: "Macaws T",
-    image: macawst,
-  },
-  macawsw: {
-    description: "Macaws W",
-    image: macawsw,
-  },
-  platform1: {
-    description: "Platform 1",
-    image: platform1,
-  },
-  platform2: {
-    description: "Platform 2",
-    image: platform2,
-  },
-  tablet: {
-    description: "Tablet",
-    image: tablet,
-  },
   abovedoor: {
     description: "Above Door",
     image: abovedoor,
@@ -119,7 +50,7 @@ const parrotsPresets: Record<string, Preset> = {
     image: bothwindows,
   },
   chicken: {
-    description: "Chicken",
+    description: "chicken/bunny visit spot",
     image: chicken,
   },
   door: {
@@ -138,25 +69,93 @@ const parrotsPresets: Record<string, Preset> = {
     description: "Floor Right",
     image: floorr,
   },
+  littles: {
+    description: "Littles tree",
+    image: littles,
+  },
+  littles2: {
+    description: "Littles branches near the window",
+    image: littles2,
+  },
+  littlesb: {
+    description: "Littles tree bottom",
+    image: littlesb,
+  },
+  littlesbowl: {
+    description: "Littles Bowl",
+    image: littlesbowl,
+  },
+  littlesbowl2: {
+    description: "Littles Bowl 2",
+    image: littlesbowl2,
+  },
   littlesbowl3: {
     description: "Littles Bowl 3",
-    //image: littlesbowl3,
+    image: littlesbowl3,
+  },
+  littlessleep: {
+    description: "Littles Sleep",
+    image: littlessleep,
+  },
+  littlest: {
+    description: "Littles tree top",
+    image: littlest,
+  },
+  littlesw: {
+    description: "Littles window",
+    image: littlesw,
+  },
+  macaws: {
+    description: "Macaws",
+    image: macaws,
+  },
+  macawsb: {
+    description: "Macaws bottom",
+    image: macawsb,
+  },
+  macawsbowl: {
+    description: "Macaws Bowl",
+    image: macawsbowl,
+  },
+  macawsbowl2: {
+    description: "Macaws Bowl 2",
+    image: macawsbowl2,
   },
   macawssleep: {
     description: "Macaws Sleep",
-    //image: macawssleep,
+    image: macawssleep,
   },
-  upleft: {
-    description: "Up Left",
-    //image: upleft,
+  macawst: {
+    description: "Macaws top",
+    image: macawst,
   },
-  upright: {
-    description: "Up Right",
-    //image: upright,
+  macawsw: {
+    description: "Macaws window",
+    image: macawsw,
+  },
+  platform1: {
+    description: "Platform 1",
+    image: platform1,
+  },
+  platform2: {
+    description: "Platform 2",
+    image: platform2,
+  },
+  tablet: {
+    description: "Tablet (smokee)",
+    image: tablet,
   },
   upmiddle: {
     description: "Up Middle",
-    //image: upmiddle,
+    image: upmiddle,
+  },
+  upleft: {
+    description: "Up Left",
+    image: upleft,
+  },
+  upright: {
+    description: "Up Right",
+    image: upright,
   },
 };
 

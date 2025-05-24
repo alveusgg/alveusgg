@@ -1,16 +1,16 @@
 import { type StaticImageData } from "next/image";
 
-// import home from "@/assets/presets/chickenindoor/home.png";
-// import down from "@/assets/presets/chickenindoor/down.png";
-// import downl from "@/assets/presets/chickenindoor/downl.png";
-// import downr from "@/assets/presets/chickenindoor/downr.png";
-// import entryl from "@/assets/presets/chickenindoor/entryl.png";
-// import entryr from "@/assets/presets/chickenindoor/entryr.png";
-// import humandoor from "@/assets/presets/chickenindoor/humandoor.png";
-// import nestboxes from "@/assets/presets/chickenindoor/nestboxes.png";
-// import perchl from "@/assets/presets/chickenindoor/perchl.png";
-// import perchr from "@/assets/presets/chickenindoor/perchr.png";
-// import right from "@/assets/presets/chickenindoor/right.png";
+import down from "@/assets/presets/chickenindoor/down.png";
+import downl from "@/assets/presets/chickenindoor/downl.png";
+import downr from "@/assets/presets/chickenindoor/downr.png";
+import entryl from "@/assets/presets/chickenindoor/entryl.png";
+import entryr from "@/assets/presets/chickenindoor/entryr.png";
+import home from "@/assets/presets/chickenindoor/home.png";
+import humandoor from "@/assets/presets/chickenindoor/humandoor.png";
+import nestboxes from "@/assets/presets/chickenindoor/nestboxes.png";
+import perchl from "@/assets/presets/chickenindoor/perchl.png";
+import perchr from "@/assets/presets/chickenindoor/perchr.png";
+import right from "@/assets/presets/chickenindoor/right.png";
 
 export interface Preset {
   description: string;
@@ -20,47 +20,47 @@ export interface Preset {
 const chickenindoorPresets: Record<string, Preset> = {
   home: {
     description: "Home",
-    //image: home,
+    image: home,
   },
   down: {
     description: "Down",
-    //image: down,
+    image: down,
   },
   downl: {
     description: "Down Left",
-    //image: downl,
+    image: downl,
   },
   downr: {
     description: "Down Right",
-    //image: downr,
+    image: downr,
   },
   entryl: {
     description: "Entry Left",
-    //image: entryl,
+    image: entryl,
   },
   entryr: {
     description: "Entry Right",
-    //image: entryr,
+    image: entryr,
   },
   humandoor: {
     description: "Human Door",
-    //image: humandoor,
+    image: humandoor,
   },
   nestboxes: {
     description: "Nest Boxes",
-    //image: nestboxes,
+    image: nestboxes,
   },
   perchl: {
     description: "Perch Left",
-    //image: perchl,
+    image: perchl,
   },
   perchr: {
     description: "Perch Right",
-    //image: perchr,
+    image: perchr,
   },
   right: {
     description: "Right",
-    //image: right,
+    image: right,
   },
 };
 

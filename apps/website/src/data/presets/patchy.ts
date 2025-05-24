@@ -17,25 +17,25 @@ const patchyPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
   },
-  water: {
-    description: "Water",
-    image: water,
+  closebranches: {
+    description: "Close Branches",
+    image: closebranches,
   },
   down: {
     description: "Down",
     image: down,
   },
+  farbranches: {
+    description: "Far Branches",
+    image: farbranches,
+  },
   groundm: {
     description: "Ground Middle",
     image: groundm,
   },
-  closebranches: {
-    description: "Close Branches",
-    image: closebranches,
-  },
-  farbranches: {
-    description: "Far Branches",
-    image: farbranches,
+  water: {
+    description: "Water",
+    image: water,
   },
 };
 

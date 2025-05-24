@@ -2,6 +2,9 @@ import { type StaticImageData } from "next/image";
 
 import chicken from "../presets/chicken";
 import chickenindoor from "../presets/chickenindoor";
+import chin from "../presets/chin";
+import chin2 from "../presets/chin2";
+import chin3 from "../presets/chin3";
 import crowin from "../presets/crowin";
 import crowout from "../presets/crowout";
 import fox from "../presets/fox";
@@ -38,32 +41,35 @@ interface Camera {
 }
 
 const presets = {
-  pasture,
-  fox,
-  foxcorner,
-  roaches,
-  crowin,
-  crowout,
-  marmin,
-  marmout,
-  parrot,
-  wolf,
-  wolfcorner,
-  wolfindoor,
-  wolfswitch,
-  wolfden,
-  wolfden2,
-  hank,
-  pushpop,
-  pushpopindoor,
-  pushpopcrunch,
-  toast,
-  patchy,
-  noodle,
   chicken,
   chickenindoor,
+  chin,
+  chin2,
+  chin3,
+  crowin,
+  crowout,
+  fox,
+  foxcorner,
   georgie,
   georgiewater,
+  hank,
+  marmin,
+  marmout,
+  noodle,
+  parrot,
+  pasture,
+  patchy,
+  pushpop,
+  pushpopcrunch,
+  pushpopindoor,
+  roaches,
+  toast,
+  wolf,
+  wolfcorner,
+  wolfden,
+  wolfden2,
+  wolfindoor,
+  wolfswitch,
 } as const satisfies Record<string, Camera>;
 
 export type Preset = keyof typeof presets;

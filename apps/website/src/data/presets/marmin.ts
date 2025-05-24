@@ -15,6 +15,7 @@ import flaps from "@/assets/presets/marmin/flaps.png";
 import floor from "@/assets/presets/marmin/floor.png";
 import home from "@/assets/presets/marmin/home.png";
 import left from "@/assets/presets/marmin/left.png";
+import leftw from "@/assets/presets/marmin/leftw.png";
 import pole from "@/assets/presets/marmin/pole.png";
 import right from "@/assets/presets/marmin/right.png";
 import table from "@/assets/presets/marmin/table.png";
@@ -26,8 +27,6 @@ import windows from "@/assets/presets/marmin/windows.png";
 import winl from "@/assets/presets/marmin/winl.png";
 import winr from "@/assets/presets/marmin/winr.png";
 
-//import leftw from "@/assets/presets/marmin/leftw.png";
-
 export interface Preset {
   description: string;
   image?: StaticImageData;
@@ -38,41 +37,33 @@ const marminPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
   },
-  left: {
-    description: "Left",
-    image: left,
+  bowll: {
+    description: "Bowl Left",
+    image: bowll,
   },
-  right: {
-    description: "Right",
-    image: right,
+  bridgecl: {
+    description: "Bridge Close Left",
+    image: bridgecl,
+  },
+  bridgel: {
+    description: "Bridge Left",
+    image: bridgel,
+  },
+  bridgem: {
+    description: "Bridge Middle",
+    image: bridgem,
+  },
+  bridger: {
+    description: "Bridge Right",
+    image: bridger,
   },
   center: {
     description: "Center",
     image: center,
   },
-  down: {
-    description: "Down",
-    image: down,
-  },
-  table: {
-    description: "Table",
-    image: table,
-  },
-  floor: {
-    description: "Floor",
-    image: floor,
-  },
-  pole: {
-    description: "Pole",
-    image: pole,
-  },
-  flapl: {
-    description: "Flap Left",
-    image: flapl,
-  },
-  flaps: {
-    description: "Flaps",
-    image: flaps,
+  cornershelf: {
+    description: "Corner Shelf",
+    image: cornershelf,
   },
   domeleft: {
     description: "Dome Left",
@@ -82,9 +73,41 @@ const marminPresets: Record<string, Preset> = {
     description: "Dome Right",
     image: domeright,
   },
-  cornershelf: {
-    description: "Corner Shelf",
-    image: cornershelf,
+  down: {
+    description: "Down",
+    image: down,
+  },
+  flapl: {
+    description: "Flap Left",
+    image: flapl,
+  },
+  flaps: {
+    description: "Flaps",
+    image: flaps,
+  },
+  floor: {
+    description: "Floor",
+    image: floor,
+  },
+  left: {
+    description: "Left",
+    image: left,
+  },
+  leftw: {
+    description: "Left Wall",
+    image: leftw,
+  },
+  pole: {
+    description: "Pole",
+    image: pole,
+  },
+  right: {
+    description: "Right",
+    image: right,
+  },
+  table: {
+    description: "Table",
+    image: table,
   },
   win1: {
     description: "Window 1",
@@ -102,10 +125,6 @@ const marminPresets: Record<string, Preset> = {
     description: "Window 4",
     image: win4,
   },
-  windows: {
-    description: "Windows",
-    image: windows,
-  },
   winl: {
     description: "Window Left",
     image: winl,
@@ -114,29 +133,9 @@ const marminPresets: Record<string, Preset> = {
     description: "Window Right",
     image: winr,
   },
-  bowll: {
-    description: "Bowl Left",
-    image: bowll,
-  },
-  bridgecl: {
-    description: "Bridge Left",
-    image: bridgecl,
-  },
-  bridgel: {
-    description: "Bridge Left",
-    image: bridgel,
-  },
-  bridgem: {
-    description: "Bridge Middle",
-    image: bridgem,
-  },
-  bridger: {
-    description: "Bridge Right",
-    image: bridger,
-  },
-  leftw: {
-    description: "Left Wall",
-    //image : leftw
+  windows: {
+    description: "Windows",
+    image: windows,
   },
 };
 

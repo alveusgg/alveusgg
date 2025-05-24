@@ -8,9 +8,8 @@ import hillwide from "@/assets/presets/foxcorner/hillwide.png";
 import home from "@/assets/presets/foxcorner/home.png";
 import insidedoor from "@/assets/presets/foxcorner/insidedoor.png";
 import table from "@/assets/presets/foxcorner/table.png";
+import training2 from "@/assets/presets/foxcorner/training2.png";
 import training from "@/assets/presets/foxcorner/training.png";
-
-//import training2 from "@/assets/presets/foxcorner/training2.png";
 
 export interface Preset {
   description: string;
@@ -22,25 +21,13 @@ const foxcornerPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
   },
-  den: {
-    description: "Den",
-    image: den,
-  },
   bowl: {
     description: "Bowl",
     image: bowl,
   },
-  table: {
-    description: "Table",
-    image: table,
-  },
-  training: {
-    description: "Training",
-    image: training,
-  },
-  training2: {
-    description: "Training 2",
-    //image: training2,
+  den: {
+    description: "Den",
+    image: den,
   },
   hillleft: {
     description: "Hill Left",
@@ -57,6 +44,18 @@ const foxcornerPresets: Record<string, Preset> = {
   insidedoor: {
     description: "Inside Door",
     image: insidedoor,
+  },
+  table: {
+    description: "Table",
+    image: table,
+  },
+  training: {
+    description: "Training",
+    image: training,
+  },
+  training2: {
+    description: "Training 2",
+    image: training2,
   },
 };
 

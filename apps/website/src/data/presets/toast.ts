@@ -7,9 +7,8 @@ import food from "@/assets/presets/toast/food.png";
 import home from "@/assets/presets/toast/home.png";
 import log from "@/assets/presets/toast/log.png";
 import logz from "@/assets/presets/toast/logz.png";
+import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
 import water from "@/assets/presets/toast/water.png";
-
-//import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
 
 export interface Preset {
   description: string;
@@ -33,25 +32,25 @@ const toastPresets: Record<string, Preset> = {
     description: "Far",
     image: far,
   },
+  food: {
+    description: "Food",
+    image: food,
+  },
   log: {
     description: "Log",
     image: log,
   },
   logz: {
-    description: "Log Z",
+    description: "Log zoomed",
     image: logz,
+  },
+  rocksandwich: {
+    description: "Rock Sandwich",
+    image: rocksandwich,
   },
   water: {
     description: "Water",
     image: water,
-  },
-  food: {
-    description: "Food",
-    image: food,
-  },
-  rocksandwich: {
-    description: "Rock Sandwich",
-    //image: rocksandwich,
   },
 };
 

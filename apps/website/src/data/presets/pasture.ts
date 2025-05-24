@@ -15,7 +15,9 @@ import feederstatus from "@/assets/presets/pasture/feederstatus.png";
 import feedstall from "@/assets/presets/pasture/feedstall.png";
 import fencel from "@/assets/presets/pasture/fencel.png";
 import gate from "@/assets/presets/pasture/gate.png";
+import ground from "@/assets/presets/pasture/ground.png";
 import grove2 from "@/assets/presets/pasture/grove2.png";
+import grove2l from "@/assets/presets/pasture/grove2l.png";
 import grove from "@/assets/presets/pasture/grove.png";
 import home from "@/assets/presets/pasture/home.png";
 import insidebarn from "@/assets/presets/pasture/insidebarn.png";
@@ -38,9 +40,6 @@ import stompyfood from "@/assets/presets/pasture/stompyfood.png";
 import sunrise from "@/assets/presets/pasture/sunrise.png";
 import water from "@/assets/presets/pasture/water.png";
 
-//import ground from "@/assets/presets/pasture/ground.png";
-//import grove2l from "@/assets/presets/pasture/grove2l.png";
-
 export interface Preset {
   description: string;
   image?: StaticImageData;
@@ -56,19 +55,19 @@ const pasturePresets: Record<string, Preset> = {
     image: angel,
   },
   barn: {
-    description: "Barn",
+    description: "front of main structure",
     image: barn,
   },
   barn2: {
-    description: "Barn 2",
+    description: "secondary barn/structure",
     image: barn2,
   },
   barn2hay: {
-    description: "Barn 2 (hay)",
+    description: "Barn 2 hay spot",
     image: barn2hay,
   },
   barn2r: {
-    description: "Barn 2 (right)",
+    description: "Barn 2 right",
     image: barn2r,
   },
   barnfloor: {
@@ -76,20 +75,28 @@ const pasturePresets: Record<string, Preset> = {
     image: barnfloor,
   },
   brush: {
-    description: "Brush",
+    description: "Squitchy",
     image: brush,
   },
   brushr: {
-    description: "Brush (right)",
+    description: "Brush right",
     image: brushr,
   },
   donksleep: {
-    description: "Donk Sleep",
+    description: "donks sleep spot in the pen",
     image: donksleep,
+  },
+  down: {
+    description: "Down",
+    image: down,
   },
   feeder: {
     description: "Feeder",
     image: feeder,
+  },
+  feederstatus: {
+    description: "Feeder status window",
+    image: feederstatus,
   },
   feedstall: {
     description: "Feed Stall",
@@ -104,8 +111,20 @@ const pasturePresets: Record<string, Preset> = {
     image: gate,
   },
   grove: {
-    description: "Grove",
+    description: "grove of trees near barn 2",
     image: grove,
+  },
+  grove2: {
+    description: "grove of trees near roundpen",
+    image: grove2,
+  },
+  grove2l: {
+    description: "Grove 2 Left",
+    image: grove2l,
+  },
+  ground: {
+    description: "Ground near cam",
+    image: ground,
   },
   insidebarn: {
     description: "Inside Barn",
@@ -114,6 +133,10 @@ const pasturePresets: Record<string, Preset> = {
   middle: {
     description: "Middle",
     image: middle,
+  },
+  pedrocorner: {
+    description: "where pedro comes and goes",
+    image: pedrocorner,
   },
   pen: {
     description: "Pen",
@@ -132,7 +155,7 @@ const pasturePresets: Record<string, Preset> = {
     image: pole,
   },
   pool: {
-    description: "Pool",
+    description: "stompys pool",
     image: pool,
   },
   pooll: {
@@ -144,11 +167,11 @@ const pasturePresets: Record<string, Preset> = {
     image: poolr,
   },
   purplebase: {
-    description: "Purple Base",
+    description: "Purple Martin Base",
     image: purplebase,
   },
   purplenest: {
-    description: "Purple Nest",
+    description: "Purple Martin Nest",
     image: purplenest,
   },
   right: {
@@ -178,30 +201,6 @@ const pasturePresets: Record<string, Preset> = {
   water: {
     description: "Water",
     image: water,
-  },
-  down: {
-    description: "Down",
-    image: down,
-  },
-  feederstatus: {
-    description: "Feeder Status",
-    image: feederstatus,
-  },
-  grove2: {
-    description: "Grove 2",
-    image: grove2,
-  },
-  pedrocorner: {
-    description: "Pedro Corner",
-    image: pedrocorner,
-  },
-  ground: {
-    description: "Ground",
-    //image: ground,
-  },
-  grove2l: {
-    description: "Grove 2 Left",
-    //image: grove2l,
   },
 };
 

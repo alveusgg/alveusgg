@@ -31,14 +31,6 @@ const crowinPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
   },
-  entry: {
-    description: "Entry",
-    image: entry,
-  },
-  top: {
-    description: "Top",
-    image: top,
-  },
   back: {
     description: "Back",
     image: back,
@@ -55,13 +47,9 @@ const crowinPresets: Record<string, Preset> = {
     description: "Back Left Corner",
     image: backleftcorner,
   },
-  window: {
-    description: "Window",
-    image: window,
-  },
-  windowc: {
-    description: "Window Corner",
-    image: windowc,
+  crowsleep: {
+    description: "Crow Sleep",
+    image: crowsleep,
   },
   down: {
     description: "Down",
@@ -70,6 +58,22 @@ const crowinPresets: Record<string, Preset> = {
   down2: {
     description: "Down 2",
     image: down2,
+  },
+  entry: {
+    description: "Entry",
+    image: entry,
+  },
+  heater: {
+    description: "Heater",
+    image: heater,
+  },
+  hose: {
+    description: "Hose",
+    image: hose,
+  },
+  outside: {
+    description: "Outside",
+    image: outside,
   },
   platform: {
     description: "Platform",
@@ -80,8 +84,12 @@ const crowinPresets: Record<string, Preset> = {
     image: rightperch,
   },
   table: {
-    description: "Table",
+    description: "Table (old)",
     image: table,
+  },
+  top: {
+    description: "Top",
+    image: top,
   },
   training: {
     description: "Training",
@@ -91,21 +99,13 @@ const crowinPresets: Record<string, Preset> = {
     description: "Water",
     image: water,
   },
-  crowsleep: {
-    description: "Crow Sleep",
-    image: crowsleep,
+  window: {
+    description: "Window",
+    image: window,
   },
-  outside: {
-    description: "Outside",
-    image: outside,
-  },
-  heater: {
-    description: "Heater",
-    image: heater,
-  },
-  hose: {
-    description: "Hose",
-    image: hose,
+  windowc: {
+    description: "Window Close",
+    image: windowc,
   },
 };
 
