@@ -192,10 +192,6 @@ const AboutTechCommandsPage: NextPage = () => {
                     >
                       {category.heading}
                     </Heading>
-
-                    {"description" in category && (
-                      <p className="mb-4">{category.description}</p>
-                    )}
                   </dt>
                   <dd className="mx-2">
                     <Commands commands={commands} />
@@ -208,29 +204,23 @@ const AboutTechCommandsPage: NextPage = () => {
       </div>
 
       <Section className="bg-alveus-green-100">
-        <Heading
-          level={2}
-          className="mt-0 mb-2 scroll-mt-14"
-          id="fossabot"
-          link
-        >
-          Fossabot
+        <Heading level={2} className="mt-0 mb-2 scroll-mt-14" id="presets" link>
+          Presets
         </Heading>
 
         <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
           <p className="text-lg">
-            Alongside the custom chat bot for all the commands above, Fossabot
-            is also used in the Twitch chat to provide a set of commands that
-            anyone can access, providing easy access to a bunch of common
-            information and links.
+            Almost all of the cameras on the livestream have a set of saved
+            preset positions that can be loaded through chat commands, or
+            directly on the website. Anyone who is subscribed to{" "}
+            <Link href="/live/twitch" external>
+              Alveus Sanctuary on Twitch
+            </Link>{" "}
+            can load these presets to control what views are shown on stream.
           </p>
 
-          <Button
-            href="https://fossabot.com/alveussanctuary/commands"
-            external
-            className="shrink-0"
-          >
-            Explore Fossabot Commands
+          <Button href="/about/tech/presets" className="shrink-0">
+            View Camera Presets
           </Button>
         </div>
       </Section>
@@ -247,25 +237,27 @@ const AboutTechCommandsPage: NextPage = () => {
           <Heading
             level={2}
             className="mt-0 mb-2 scroll-mt-14"
-            id="presets"
+            id="fossabot"
             link
           >
-            Presets
+            Fossabot
           </Heading>
 
           <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
             <p className="text-lg">
-              Almost all of the cameras on the livestream have a set of saved
-              preset positions that can be loaded through chat commands, or
-              directly on the website. Anyone who is subscribed to{" "}
-              <Link href="/live/twitch" external dark>
-                Alveus Sanctuary on Twitch
-              </Link>{" "}
-              can load these presets to control what views are shown on stream.
+              Alongside the custom chat bot for all the commands above, Fossabot
+              is also used in the Twitch chat to provide a set of commands that
+              anyone can access, providing easy access to a bunch of common
+              information and links.
             </p>
 
-            <Button href="/about/tech/presets" className="shrink-0" dark>
-              View Camera Presets
+            <Button
+              href="https://fossabot.com/alveussanctuary/commands"
+              external
+              className="shrink-0"
+              dark
+            >
+              Explore Fossabot Commands
             </Button>
           </div>
         </Section>
