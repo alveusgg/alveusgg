@@ -1,15 +1,21 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 
 export type CopyToClipboardOptions = {
+  initialText?: string;
   timeToKeepStatus?: number;
 };
 
 export function useCopyToClipboard({
+  initialText = "Copy",
   timeToKeepStatus = 2_000,
 }: CopyToClipboardOptions = {}) {
   const [status, setStatus] = useState<undefined | "success" | "error">();
   const statusText =
-    status === "success" ? "Copied!" : status === "error" ? "Failed" : "Copy";
+    status === "success"
+      ? "Copied!"
+      : status === "error"
+        ? "Failed"
+        : initialText;
   useEffect(() => {
     if (status !== undefined) {
       const timeout = setTimeout(() => {

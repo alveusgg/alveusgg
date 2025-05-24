@@ -51,7 +51,6 @@ export type CommandCategoryId = keyof typeof commandCategories;
 
 export interface CommandCategory {
   heading: string;
-  description?: string;
 }
 
 export const commandCategories = {
@@ -69,8 +68,6 @@ export const commandCategories = {
   },
   Presets: {
     heading: "Presets",
-    description:
-      "These commands will pan, tilt and zoom the respective camera to a preset view. The presets are listed below.",
   },
   Audio: {
     heading: "Audio",
