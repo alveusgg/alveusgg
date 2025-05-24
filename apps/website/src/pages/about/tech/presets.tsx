@@ -19,6 +19,7 @@ import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardBu
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
 import IconCheck from "@/icons/IconCheck";
+import IconLoading from "@/icons/IconLoading";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconX from "@/icons/IconX";
 
@@ -106,24 +107,39 @@ const AboutTechPresetsPage: NextPage = () => {
             <div className="w-full lg:w-2/5 lg:px-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
-              {subscription.isSuccess && (
+              {!subscription.isPaused && (
                 <div
                   className={classes(
                     "mx-1 flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
-                    subscription.data ? "bg-alveus-green" : "bg-red",
+                    subscription.isSuccess &&
+                      (subscription.data ? "bg-alveus-green" : "bg-red"),
+                    subscription.isLoading && "bg-twitch",
+                    subscription.isError && "bg-red",
                   )}
                 >
                   <p>
-                    {subscription.data
-                      ? `@${session?.user?.name} is subscribed at Tier ${subscription.data.tier.replace(/0+$/, "")}`
-                      : `@${session?.user?.name} is not subscribed`}
+                    {subscription.isSuccess &&
+                      (subscription.data
+                        ? `@${session?.user?.name} is subscribed at Tier ${subscription.data.tier.replace(/0+$/, "")}`
+                        : `@${session?.user?.name} is not subscribed`)}
+
+                    {subscription.isLoading &&
+                      "Checking subscription status..."}
+                    {subscription.isError &&
+                      "Failed to check subscription status"}
                   </p>
 
-                  {subscription.data ? (
-                    <IconCheck className="size-6" />
-                  ) : (
-                    <IconX className="size-6" />
+                  {subscription.isSuccess &&
+                    (subscription.data ? (
+                      <IconCheck className="size-6" />
+                    ) : (
+                      <IconX className="size-6" />
+                    ))}
+
+                  {subscription.isLoading && (
+                    <IconLoading className="size-6 animate-spin" />
                   )}
+                  {subscription.isError && <IconX className="size-6" />}
                 </div>
               )}
             </div>
