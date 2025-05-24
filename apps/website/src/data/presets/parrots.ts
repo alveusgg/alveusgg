@@ -12,6 +12,7 @@ import littlesb from "@/assets/presets/parrots/littlesb.png";
 import littlesbowl2 from "@/assets/presets/parrots/littlesbowl2.png";
 import littlesbowl3 from "@/assets/presets/parrots/littlesbowl3.png";
 import littlesbowl from "@/assets/presets/parrots/littlesbowl.png";
+import littlesbridge from "@/assets/presets/parrots/littlesbridge.png";
 import littlessleep from "@/assets/presets/parrots/littlessleep.png";
 import littlest from "@/assets/presets/parrots/littlest.png";
 import littlesw from "@/assets/presets/parrots/littlesw.png";
@@ -87,6 +88,10 @@ const parrotsPresets: Record<string, Preset> = {
   littlesbowl3: {
     description: "Littles Bowl 3",
     image: littlesbowl3,
+  },
+  littlesbridge: {
+    description: "littles tree to abovedoor",
+    image: littlesbridge,
   },
   littlessleep: {
     description: "Littles Sleep",
