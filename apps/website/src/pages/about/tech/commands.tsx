@@ -6,8 +6,7 @@ import commands, {
   type CommandCategoryId,
   commandCategories,
 } from "@/data/tech/commands";
-import type { Camera } from "@/data/tech/presets";
-import presets from "@/data/tech/presets";
+import presets, { type Camera } from "@/data/tech/presets";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";

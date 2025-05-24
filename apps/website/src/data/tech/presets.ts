@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import chicken from "../presets/chicken";
 import chickenindoor from "../presets/chickenindoor";
 import chin from "../presets/chin";
@@ -18,6 +16,7 @@ import noodle from "../presets/noodle";
 import parrot from "../presets/parrots";
 import pasture from "../presets/pasture";
 import patchy from "../presets/patchy";
+import type { Preset } from "../presets/preset";
 import pushpop from "../presets/pushpop";
 import pushpopcrunch from "../presets/pushpopcrunch";
 import pushpopindoor from "../presets/pushpopindoor";
@@ -30,14 +29,9 @@ import wolfden2 from "../presets/wolfden2";
 import wolfindoor from "../presets/wolfindoor";
 import wolfswitch from "../presets/wolfswitch";
 
-interface PresetData {
-  description: string;
-  image?: StaticImageData;
-}
-
 interface CameraData {
   title: string;
-  presets: Record<string, PresetData>;
+  presets: Record<string, Preset>;
 }
 
 const cameras = {
