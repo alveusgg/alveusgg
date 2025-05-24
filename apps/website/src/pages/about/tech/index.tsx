@@ -146,6 +146,27 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
+      <Section className="bg-alveus-green-100">
+        <Heading level={2} className="mt-0 mb-2 scroll-mt-14" id="presets" link>
+          Camera Presets
+        </Heading>
+
+        <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
+          <p className="text-lg">
+            Overwhelmed by the number of camera presets available, or just
+            don&apos;t want to run commands by hand in chat? We&apos;ve got you
+            covered with our camera presets page! View thumbnail previews and
+            descriptions of all the camera presets available, and if you&apos;re
+            signed in as a subscriber, you can load them directly from the page
+            to control what views are shown on stream.
+          </p>
+
+          <Button href="/about/tech/presets" className="shrink-0">
+            View Camera Presets
+          </Button>
+        </div>
+      </Section>
+
       <Section dark>
         <Heading
           level={2}
