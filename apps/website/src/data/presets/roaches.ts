@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import down from "@/assets/presets/roaches/down.png";
 import downr from "@/assets/presets/roaches/downr.png";
 import food from "@/assets/presets/roaches/food.png";
@@ -11,10 +9,7 @@ import sticklt from "@/assets/presets/roaches/sticklt.png";
 import stickr from "@/assets/presets/roaches/stickr.png";
 import stickrt from "@/assets/presets/roaches/stickrt.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const roachesPresets: Record<string, Preset> = {
   home: {

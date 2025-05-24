@@ -1,11 +1,6 @@
-import { type StaticImageData } from "next/image";
-
 import home from "@/assets/presets/georgiewater/home.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const georgiewaterPresets: Record<string, Preset> = {
   home: {

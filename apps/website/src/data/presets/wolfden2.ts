@@ -1,15 +1,10 @@
-import { type StaticImageData } from "next/image";
-
 import bottomright from "@/assets/presets/wolfden2/bottomright.png";
 import home from "@/assets/presets/wolfden2/home.png";
 import left from "@/assets/presets/wolfden2/left.png";
 import leftcorner from "@/assets/presets/wolfden2/leftcorner.png";
 import rightcorner from "@/assets/presets/wolfden2/rightcorner.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const wolfden2Presets: Record<string, Preset> = {
   home: {

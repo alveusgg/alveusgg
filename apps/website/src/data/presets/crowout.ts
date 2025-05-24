@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import backcorner from "@/assets/presets/crowout/backcorner.png";
 import bench from "@/assets/presets/crowout/bench.png";
 import cache from "@/assets/presets/crowout/cache.png";
@@ -28,10 +26,7 @@ import treebase from "@/assets/presets/crowout/treebase.png";
 import treet from "@/assets/presets/crowout/treet.png";
 import water from "@/assets/presets/crowout/water.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const crowoutPresets: Record<string, Preset> = {
   home: {

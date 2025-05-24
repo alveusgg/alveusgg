@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import crunchwide from "@/assets/presets/pushpop/crunchwide.png";
 import cubby from "@/assets/presets/pushpop/cubby.png";
 import down from "@/assets/presets/pushpop/down.png";
@@ -14,10 +12,7 @@ import left from "@/assets/presets/pushpop/left.png";
 import right from "@/assets/presets/pushpop/right.png";
 import water from "@/assets/presets/pushpop/water.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const pushpopPresets: Record<string, Preset> = {
   home: {

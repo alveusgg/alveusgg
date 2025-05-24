@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import center from "@/assets/presets/wolfindoor/center.png";
 import doors from "@/assets/presets/wolfindoor/doors.png";
 import down from "@/assets/presets/wolfindoor/down.png";
@@ -14,10 +12,7 @@ import platformright from "@/assets/presets/wolfindoor/platformright.png";
 import platformrightb from "@/assets/presets/wolfindoor/platformrightb.png";
 import right from "@/assets/presets/wolfindoor/right.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const wolfindoorPresets: Record<string, Preset> = {
   home: {

@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import down from "@/assets/presets/toast/down.png";
 import downright from "@/assets/presets/toast/downright.png";
 import far from "@/assets/presets/toast/far.png";
@@ -10,10 +8,7 @@ import logz from "@/assets/presets/toast/logz.png";
 import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
 import water from "@/assets/presets/toast/water.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const toastPresets: Record<string, Preset> = {
   home: {

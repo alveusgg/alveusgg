@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import bottomshelfl from "@/assets/presets/marmout/bottomshelfl.png";
 import bottomshelfr from "@/assets/presets/marmout/bottomshelfr.png";
 import domel from "@/assets/presets/marmout/domel.png";
@@ -34,10 +32,7 @@ import top from "@/assets/presets/marmout/top.png";
 import topshelfl from "@/assets/presets/marmout/topshelfl.png";
 import topshelfr from "@/assets/presets/marmout/topshelfr.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const marmoutPresets: Record<string, Preset> = {
   home: {

@@ -6,7 +6,7 @@ import commands, {
   type CommandCategoryId,
   commandCategories,
 } from "@/data/tech/commands";
-import type { Preset } from "@/data/tech/presets";
+import type { Camera } from "@/data/tech/presets";
 import presets from "@/data/tech/presets";
 import { channels, scopeGroups } from "@/data/twitch";
 
@@ -62,7 +62,7 @@ const AboutTechPage: NextPage = () => {
     ),
   });
 
-  const [selectedCamera, setSelectedCamera] = useState<Preset>(
+  const [selectedCamera, setSelectedCamera] = useState<Camera>(
     typeSafeObjectKeys(presets)[0]!,
   );
 
@@ -342,7 +342,7 @@ const AboutTechPage: NextPage = () => {
                 <select
                   id="camera-select"
                   value={selectedCamera}
-                  onChange={(e) => setSelectedCamera(e.target.value as Preset)}
+                  onChange={(e) => setSelectedCamera(e.target.value as Camera)}
                   className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 >
                   {typeSafeObjectKeys(presets).map((camera) => (

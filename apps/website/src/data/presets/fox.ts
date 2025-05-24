@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import bed from "@/assets/presets/fox/bed.png";
 import behindtree from "@/assets/presets/fox/behindtree.png";
 import belowplatform from "@/assets/presets/fox/belowplatform.png";
@@ -40,10 +38,7 @@ import treehouse from "@/assets/presets/fox/treehouse.png";
 import treehousel from "@/assets/presets/fox/treehousel.png";
 import treehouser from "@/assets/presets/fox/treehouser.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const foxPresets: Record<string, Preset> = {
   home: {

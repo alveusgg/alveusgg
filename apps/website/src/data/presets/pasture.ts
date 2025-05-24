@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import angel from "@/assets/presets/pasture/angel.png";
 import barn2 from "@/assets/presets/pasture/barn2.png";
 import barn2hay from "@/assets/presets/pasture/barn2hay.png";
@@ -40,10 +38,7 @@ import stompyfood from "@/assets/presets/pasture/stompyfood.png";
 import sunrise from "@/assets/presets/pasture/sunrise.png";
 import water from "@/assets/presets/pasture/water.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const pasturePresets: Record<string, Preset> = {
   home: {

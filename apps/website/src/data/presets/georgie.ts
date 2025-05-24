@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import cave from "@/assets/presets/georgie/cave.png";
 import down from "@/assets/presets/georgie/down.png";
 import downl from "@/assets/presets/georgie/downl.png";
@@ -9,10 +7,7 @@ import land from "@/assets/presets/georgie/land.png";
 import landz from "@/assets/presets/georgie/landz.png";
 import shore from "@/assets/presets/georgie/shore.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const georgiePresets: Record<string, Preset> = {
   home: {

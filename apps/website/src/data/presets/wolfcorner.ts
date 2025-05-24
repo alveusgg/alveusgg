@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import back from "@/assets/presets/wolfcorner/back.png";
 import backfence from "@/assets/presets/wolfcorner/backfence.png";
 import belowplatform from "@/assets/presets/wolfcorner/belowplatform.png";
@@ -44,10 +42,7 @@ import trees from "@/assets/presets/wolfcorner/trees.png";
 import water from "@/assets/presets/wolfcorner/water.png";
 import wolfcam from "@/assets/presets/wolfcorner/wolfcam.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const wolfcornerPresets: Record<string, Preset> = {
   home: {

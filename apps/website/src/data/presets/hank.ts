@@ -1,12 +1,7 @@
-import { type StaticImageData } from "next/image";
-
 import home from "@/assets/presets/hank/home.png";
 import water from "@/assets/presets/hank/water.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const hankPresets: Record<string, Preset> = {
   home: {

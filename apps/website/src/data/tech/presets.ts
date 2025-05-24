@@ -35,12 +35,12 @@ interface PresetData {
   image?: StaticImageData;
 }
 
-interface Camera {
+interface CameraData {
   title: string;
   presets: Record<string, PresetData>;
 }
 
-const presets = {
+const cameras = {
   chicken,
   chickenindoor,
   chin,
@@ -70,8 +70,7 @@ const presets = {
   wolfden2,
   wolfindoor,
   wolfswitch,
-} as const satisfies Record<string, Camera>;
+} as const satisfies Record<string, CameraData>;
 
-export type Preset = keyof typeof presets;
-export type { PresetData, Camera };
-export default presets;
+export type Camera = keyof typeof cameras;
+export default cameras;

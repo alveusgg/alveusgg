@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import digbox from "@/assets/presets/pushpopindoor/digbox.png";
 import down from "@/assets/presets/pushpopindoor/down.png";
 import downl from "@/assets/presets/pushpopindoor/downl.png";
@@ -11,10 +9,7 @@ import leftcorner from "@/assets/presets/pushpopindoor/leftcorner.png";
 import right from "@/assets/presets/pushpopindoor/right.png";
 import rightcorner from "@/assets/presets/pushpopindoor/rightcorner.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const pushpopindoorPresets: Record<string, Preset> = {
   home: {

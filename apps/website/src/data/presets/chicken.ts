@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import backright from "@/assets/presets/chicken/backright.png";
 import barrels from "@/assets/presets/chicken/barrels.png";
 import down from "@/assets/presets/chicken/down.png";
@@ -12,10 +10,7 @@ import oliversleep from "@/assets/presets/chicken/oliversleep.png";
 import right from "@/assets/presets/chicken/right.png";
 import window from "@/assets/presets/chicken/window.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const chickenPresets: Record<string, Preset> = {
   home: {

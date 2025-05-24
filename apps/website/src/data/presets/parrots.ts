@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import abovedoor from "@/assets/presets/parrots/abovedoor.png";
 import bothwindows from "@/assets/presets/parrots/bothwindows.png";
 import chicken from "@/assets/presets/parrots/chicken.png";
@@ -31,10 +29,7 @@ import upleft from "@/assets/presets/parrots/upleft.png";
 import upmiddle from "@/assets/presets/parrots/upmiddle.png";
 import upright from "@/assets/presets/parrots/upright.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const parrotsPresets: Record<string, Preset> = {
   home: {

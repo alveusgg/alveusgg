@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import bowl from "@/assets/presets/foxcorner/bowl.png";
 import den from "@/assets/presets/foxcorner/den.png";
 import hillleft from "@/assets/presets/foxcorner/hillleft.png";
@@ -11,10 +9,7 @@ import table from "@/assets/presets/foxcorner/table.png";
 import training2 from "@/assets/presets/foxcorner/training2.png";
 import training from "@/assets/presets/foxcorner/training.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const foxcornerPresets: Record<string, Preset> = {
   home: {

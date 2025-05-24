@@ -1,12 +1,7 @@
-import { type StaticImageData } from "next/image";
-
 import home from "@/assets/presets/wolfden/home.png";
 import rightcorner from "@/assets/presets/wolfden/rightcorner.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const wolfdenPresets: Record<string, Preset> = {
   home: {

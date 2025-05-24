@@ -1,11 +1,6 @@
-import { type StaticImageData } from "next/image";
-
 import home from "@/assets/presets/chin3/home.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const chin3Presets: Record<string, Preset> = {
   home: {

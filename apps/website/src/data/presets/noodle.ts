@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import closebranch from "@/assets/presets/noodle/closebranch.png";
 import down from "@/assets/presets/noodle/down.png";
 import farbranches from "@/assets/presets/noodle/farbranches.png";
@@ -8,10 +6,7 @@ import home from "@/assets/presets/noodle/home.png";
 import left from "@/assets/presets/noodle/left.png";
 import water from "@/assets/presets/noodle/water.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const noodlePresets: Record<string, Preset> = {
   home: {

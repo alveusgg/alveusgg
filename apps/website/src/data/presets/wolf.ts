@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import akelafood from "@/assets/presets/wolf/akelafood.png";
 import backleftcorner from "@/assets/presets/wolf/backleftcorner.png";
 import belowplatform from "@/assets/presets/wolf/belowplatform.png";
@@ -50,10 +48,7 @@ import trees from "@/assets/presets/wolf/trees.png";
 import waterfall from "@/assets/presets/wolf/waterfall.png";
 import wolfcornercam from "@/assets/presets/wolf/wolfcornercam.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const wolfPresets: Record<string, Preset> = {
   home: {

@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import back from "@/assets/presets/crowin/back.png";
 import backcorner from "@/assets/presets/crowin/backcorner.png";
 import backcornerr from "@/assets/presets/crowin/backcornerr.png";
@@ -21,10 +19,7 @@ import water from "@/assets/presets/crowin/water.png";
 import window from "@/assets/presets/crowin/window.png";
 import windowc from "@/assets/presets/crowin/windowc.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const crowinPresets: Record<string, Preset> = {
   home: {

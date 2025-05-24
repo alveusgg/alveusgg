@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import back from "@/assets/presets/wolfswitch/back.png";
 import den from "@/assets/presets/wolfswitch/den.png";
 import denl from "@/assets/presets/wolfswitch/denl.png";
@@ -16,10 +14,7 @@ import middleleft from "@/assets/presets/wolfswitch/middleleft.png";
 import pond from "@/assets/presets/wolfswitch/pond.png";
 import water from "@/assets/presets/wolfswitch/water.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const wolfswitchPresets: Record<string, Preset> = {
   home: {

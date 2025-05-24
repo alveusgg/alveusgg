@@ -1,5 +1,3 @@
-import { type StaticImageData } from "next/image";
-
 import bowll from "@/assets/presets/marmin/bowll.png";
 import bridgecl from "@/assets/presets/marmin/bridgecl.png";
 import bridgel from "@/assets/presets/marmin/bridgel.png";
@@ -27,10 +25,7 @@ import windows from "@/assets/presets/marmin/windows.png";
 import winl from "@/assets/presets/marmin/winl.png";
 import winr from "@/assets/presets/marmin/winr.png";
 
-export interface Preset {
-  description: string;
-  image?: StaticImageData;
-}
+import type { Preset } from "./preset";
 
 const marminPresets: Record<string, Preset> = {
   home: {
