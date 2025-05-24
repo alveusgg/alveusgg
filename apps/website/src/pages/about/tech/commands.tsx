@@ -1,16 +1,16 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 
 import commands, {
   type CommandCategoryId,
   commandCategories,
 } from "@/data/tech/commands";
-import presets from "@/data/tech/presets";
+import presets, { type Camera } from "@/data/tech/presets";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
-import { typeSafeObjectEntries } from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
 import { trpc } from "@/utils/trpc";
 
@@ -60,6 +60,10 @@ const AboutTechPage: NextPage = () => {
       session?.user?.scopes?.includes(scope),
     ),
   });
+
+  const [selectedCamera, setSelectedCamera] = useState<Camera>(
+    typeSafeObjectKeys(presets)[0]!,
+  );
 
   return (
     <>
@@ -295,7 +299,7 @@ const AboutTechPage: NextPage = () => {
                   Run command{" "}
                   <IconVideoCamera className="mb-0.5 inline-block size-4" />
                 </span>{" "}
-                button next to each command. This will automatically send the
+                button in each preset card. This will automatically send the
                 command to the{" "}
                 <Link
                   href={`https://twitch.tv/${channels.alveusgg.username}`}
@@ -326,62 +330,111 @@ const AboutTechPage: NextPage = () => {
             </div>
           </div>
 
-          <dl>
-            {typeSafeObjectEntries(presets).map(
-              ([camera, { title, presets }]) => (
-                <Fragment key={camera}>
-                  <dt className="mt-6">
-                    <Heading
-                      level={3}
-                      className="scroll-mt-14 text-2xl"
-                      id={`presets:${camelToKebab(camera)}`}
-                      link
-                    >
-                      {title}
-                      <span className="text-sm text-alveus-green-400 italic">
-                        {` (${camera.toLowerCase()})`}
-                      </span>
-                    </Heading>
-                  </dt>
-                  <dd className="mx-2">
-                    <dl className="max-w-full overflow-x-auto">
-                      {typeSafeObjectEntries(presets).map(([name, preset]) => (
+          <div className="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-4">
+            {/* Camera List */}
+            <div className="col-span-1 space-y-2">
+              {/* Mobile: Dropdown */}
+              <div className="mb-2 block lg:hidden">
+                <label htmlFor="camera-select" className="sr-only">
+                  Select Camera
+                </label>
+                <select
+                  id="camera-select"
+                  value={selectedCamera}
+                  onChange={(e) => setSelectedCamera(e.target.value as Camera)}
+                  className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                >
+                  {typeSafeObjectKeys(presets).map((camera) => (
+                    <option key={camera} value={camera}>
+                      {presets[camera].title} ({camera.toLowerCase()})
+                    </option>
+                  ))}
+                </select>
+              </div>
+              {/* Desktop: Button List */}
+              <div className="hidden space-y-2 lg:block">
+                {typeSafeObjectKeys(presets).map((camera) => (
+                  <button
+                    key={camera}
+                    onClick={() => setSelectedCamera(camera)}
+                    className={classes(
+                      "w-full rounded px-3 py-2 text-left text-lg font-semibold",
+                      selectedCamera === camera
+                        ? "bg-alveus-green text-white"
+                        : "bg-alveus-green-50 hover:bg-alveus-green-100",
+                    )}
+                  >
+                    {presets[camera].title}
+                    <span className="text-sm text-alveus-green-400 italic">
+                      {` (${camera.toLowerCase()})`}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Preset List */}
+            <div className="col-span-1 lg:col-span-3">
+              {selectedCamera && (
+                <Fragment key={selectedCamera}>
+                  <Heading
+                    level={3}
+                    className="scroll-mt-14 text-2xl"
+                    id={`presets:${camelToKebab(selectedCamera)}`}
+                  >
+                    {presets[selectedCamera].title}
+                    <span className="text-sm text-alveus-green-400 italic">
+                      {` (${selectedCamera.toLowerCase()})`}
+                    </span>
+                  </Heading>
+
+                  <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                    {typeSafeObjectEntries(presets[selectedCamera].presets).map(
+                      ([name, preset]) => (
                         <div
                           key={name}
-                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-2"
+                          className="overflow-hidden rounded-lg border shadow-lg"
                         >
-                          <dt>
-                            <pre>
-                              <code className="text-sm">
-                                <span className="opacity-40 group-first/preset:opacity-100">
-                                  {`!ptzload ${camera.toLowerCase()} `}
-                                </span>
-                                {name}
-                              </code>
-                            </pre>
-                          </dt>
-
-                          <dd className="flex items-center gap-1">
-                            <CopyToClipboardButton
-                              text={`!ptzload ${camera.toLowerCase()} ${name}`}
-                            />
-                            <RunCommandButton
-                              command="ptzload"
-                              args={[camera.toLowerCase(), name]}
-                              subOnly
-                            />
-                            <p className="text-sm text-alveus-green-400 italic">
+                          <div className="group relative aspect-video">
+                            {preset.image ? (
+                              <Image
+                                src={preset.image}
+                                alt={preset.description}
+                                fill
+                                className="aspect-video w-full object-cover transition-transform"
+                              />
+                            ) : (
+                              <div className="flex aspect-video items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
+                                No Image
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex flex-col gap-1 bg-alveus-tan p-2">
+                            <div className="flex items-center justify-between">
+                              <h4 className="text-lg font-semibold">{name}</h4>
+                              <div className="flex gap-1">
+                                <CopyToClipboardButton
+                                  text={`!ptzload ${selectedCamera.toLowerCase()} ${name}`}
+                                />
+                                <RunCommandButton
+                                  command="ptzload"
+                                  args={[selectedCamera.toLowerCase(), name]}
+                                  subOnly
+                                />
+                              </div>
+                            </div>
+                            <p className="text-sm text-alveus-green-600 italic">
                               {preset.description}
                             </p>
-                          </dd>
+                          </div>
                         </div>
-                      ))}
-                    </dl>
-                  </dd>
+                      ),
+                    )}
+                  </div>
                 </Fragment>
-              ),
-            )}
-          </dl>
+              )}
+            </div>
+          </div>
         </Section>
       </div>
     </>
