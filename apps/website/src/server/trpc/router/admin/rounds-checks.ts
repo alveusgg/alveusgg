@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   createRoundsCheck,
   editRoundsCheck,
+  moveRoundsCheck,
   roundsCheckSchema,
 } from "@/server/db/rounds-checks";
 import {
@@ -40,6 +41,17 @@ export const adminRoundsChecksRouter = router({
           break;
         }
       }
+    }),
+
+  moveRoundsCheck: permittedProcedure
+    .input(
+      z.object({
+        id: z.string().cuid(),
+        direction: z.enum(["up", "down"]),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      await moveRoundsCheck(input.id, input.direction);
     }),
 
   deleteRoundsCheck: permittedProcedure

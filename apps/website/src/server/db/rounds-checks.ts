@@ -62,3 +62,35 @@ export async function editRoundsCheck(
     data,
   });
 }
+
+export async function moveRoundsCheck(id: string, direction: "up" | "down") {
+  const roundsCheck = await prisma.roundsCheck.findUnique({
+    where: { id },
+  });
+  if (!roundsCheck) throw new TRPCError({ code: "NOT_FOUND" });
+
+  const targetRoundsCheck = await prisma.roundsCheck.findFirst({
+    where: {
+      order: {
+        [direction === "up" ? "lt" : "gt"]: roundsCheck.order,
+      },
+    },
+    orderBy: { order: direction === "up" ? "desc" : "asc" },
+  });
+  if (!targetRoundsCheck)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: `Cannot move rounds check further ${direction}`,
+    });
+
+  await prisma.$transaction([
+    prisma.roundsCheck.update({
+      where: { id: roundsCheck.id },
+      data: { order: targetRoundsCheck.order },
+    }),
+    prisma.roundsCheck.update({
+      where: { id: targetRoundsCheck.id },
+      data: { order: roundsCheck.order },
+    }),
+  ]);
+}

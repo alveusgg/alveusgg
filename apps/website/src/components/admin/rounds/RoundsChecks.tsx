@@ -11,8 +11,11 @@ import {
   Button,
   LinkButton,
   dangerButtonClasses,
+  secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 
+import IconArrowDown from "@/icons/IconArrowDown";
+import IconArrowUp from "@/icons/IconArrowUp";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
 
@@ -20,10 +23,16 @@ type CheckProps = {
   check: RoundsCheck;
   onError: (error: string) => void;
   onUpdate: () => void;
+  first?: boolean;
+  last?: boolean;
 };
 
-function RoundsCheck({ check, onError, onUpdate }: CheckProps) {
+function RoundsCheck({ check, onError, onUpdate, first, last }: CheckProps) {
   const deleteMutation = trpc.adminRoundsChecks.deleteRoundsCheck.useMutation({
+    onError: (error) => onError(error.message),
+    onSettled: () => onUpdate(),
+  });
+  const moveMutation = trpc.adminRoundsChecks.moveRoundsCheck.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
@@ -52,6 +61,38 @@ function RoundsCheck({ check, onError, onUpdate }: CheckProps) {
           >
             <IconTrash className="size-4" />
             Delete
+          </Button>
+
+          <Button
+            size="small"
+            width="auto"
+            className={secondaryButtonClasses}
+            title="Move up"
+            onClick={() =>
+              moveMutation.mutate({
+                id: check.id,
+                direction: "up",
+              })
+            }
+            disabled={first}
+          >
+            <IconArrowUp className="size-5" />
+          </Button>
+
+          <Button
+            size="small"
+            width="auto"
+            className={secondaryButtonClasses}
+            title="Move down"
+            onClick={() =>
+              moveMutation.mutate({
+                id: check.id,
+                direction: "down",
+              })
+            }
+            disabled={last}
+          >
+            <IconArrowDown className="size-5" />
           </Button>
         </td>
       </tr>
@@ -86,12 +127,14 @@ export function RoundsChecks() {
             </tr>
           </thead>
           <tbody>
-            {checks.data?.map((check) => (
+            {checks.data?.map((check, idx, arr) => (
               <RoundsCheck
                 key={check.id}
                 check={check}
                 onError={(err) => setErrorMessage(err)}
                 onUpdate={() => checks.refetch()}
+                first={idx === 0}
+                last={idx === arr.length - 1}
               />
             ))}
           </tbody>
