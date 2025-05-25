@@ -14,7 +14,7 @@ import { trpc } from "@/utils/trpc";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
-import { RoundsCheckForm } from "@/components/admin/rounds/RoundsCheckForm";
+import { RoundsCheckForm } from "@/components/admin/rounds-checks/RoundsCheckForm";
 import Meta from "@/components/content/Meta";
 import { MessageBox } from "@/components/shared/MessageBox";
 

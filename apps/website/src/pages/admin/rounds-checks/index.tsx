@@ -10,7 +10,7 @@ import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { RoundsChecks } from "@/components/admin/rounds/RoundsChecks";
+import { RoundsChecks } from "@/components/admin/rounds-checks/RoundsChecks";
 import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
