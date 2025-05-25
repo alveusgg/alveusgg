@@ -35,11 +35,10 @@ function RoundsCheck({ check, onError, onUpdate, first, last }: CheckProps) {
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
-  const editMutation =
-    trpc.adminRoundsChecks.createOrEditRoundsCheck.useMutation({
-      onError: (error) => onError(error.message),
-      onSettled: () => onUpdate(),
-    });
+  const editMutation = trpc.adminRoundsChecks.editRoundsCheck.useMutation({
+    onError: (error) => onError(error.message),
+    onSettled: () => onUpdate(),
+  });
   const moveMutation = trpc.adminRoundsChecks.moveRoundsCheck.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
@@ -115,7 +114,6 @@ function RoundsCheck({ check, onError, onUpdate, first, last }: CheckProps) {
             title={`${check.hidden ? "Show" : "Hide"} check`}
             onClick={() =>
               editMutation.mutate({
-                action: "edit",
                 id: check.id,
                 hidden: !check.hidden,
               })

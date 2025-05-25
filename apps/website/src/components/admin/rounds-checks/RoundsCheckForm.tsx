@@ -2,21 +2,39 @@ import { useRouter } from "next/router";
 import { type FormEvent, useCallback, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
-import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
+import {
+  type ActiveAmbassadorKey,
+  isActiveAmbassadorEntry,
+  isActiveAmbassadorKey,
+} from "@alveusgg/data/build/ambassadors/filters";
 
 import type { RoundsCheck } from "@alveusgg/database";
 
-import type { RoundsCheckSchema } from "@/server/db/rounds-checks";
-
+import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
-import { trpc } from "@/utils/trpc";
+import { type RouterInputs, trpc } from "@/utils/trpc";
+
+import useFileUpload from "@/hooks/files/upload";
 
 import { MessageBox } from "@/components/shared/MessageBox";
 import { Button, defaultButtonClasses } from "@/components/shared/form/Button";
 import { Fieldset } from "@/components/shared/form/Fieldset";
+import { ImageUploadAttachment } from "@/components/shared/form/ImageUploadAttachment";
 import { SelectBoxField } from "@/components/shared/form/SelectBoxField";
 import { TextField } from "@/components/shared/form/TextField";
+import {
+  UploadAttachmentsField,
+  useUploadAttachmentsData,
+} from "@/components/shared/form/UploadAttachmentsField";
+
+const resizeImageOptions = {
+  maxWidth: 512,
+  maxHeight: 512,
+  quality: 90,
+};
+
+type RoundsCheckSchema = RouterInputs["adminRoundsChecks"]["createRoundsCheck"];
 
 type RoundsCheckFormProps = {
   action: "create" | "edit";
@@ -25,10 +43,25 @@ type RoundsCheckFormProps = {
 
 export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
   const router = useRouter();
-  const submit = trpc.adminRoundsChecks.createOrEditRoundsCheck.useMutation();
+  const create = trpc.adminRoundsChecks.createRoundsCheck.useMutation();
+  const edit = trpc.adminRoundsChecks.editRoundsCheck.useMutation();
+  const createFileUpload =
+    trpc.adminRoundsChecks.createFileUpload.useMutation();
+
+  const upload = useFileUpload<ImageMimeType>(
+    (signature) => createFileUpload.mutateAsync(signature),
+    { allowedFileTypes: imageMimeTypes },
+  );
+
+  const imageAttachmentData = useUploadAttachmentsData();
+  const imageFile = imageAttachmentData.files[0];
 
   const [name, setName] = useState(check?.name || "");
-  const [ambassador, setAmbassador] = useState(check?.ambassador || "");
+  const [imageType, setImageType] = useState<ActiveAmbassadorKey | "custom">(
+    check?.ambassador && isActiveAmbassadorKey(check.ambassador)
+      ? check.ambassador
+      : "custom",
+  );
 
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
@@ -36,11 +69,28 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
 
       const formData = new FormData(event.currentTarget);
 
+      const imageData =
+        imageType === "custom"
+          ? {
+              ambassador: null,
+              fileStorageObjectId:
+                imageFile?.status === "upload.done"
+                  ? imageFile.fileStorageObjectId
+                  : (check?.fileStorageObjectId ?? ""),
+            }
+          : {
+              ambassador: imageType,
+              fileStorageObjectId: null,
+            };
+      if (!imageData.ambassador && !imageData.fileStorageObjectId) {
+        return;
+      }
+
       const mutationData: RoundsCheckSchema = {
         name: String(formData.get("name")),
         command: convertToSlug(String(formData.get("name"))),
-        ambassador: String(formData.get("ambassador")),
         hidden: check?.hidden ?? false,
+        ...imageData,
       };
 
       const command =
@@ -51,33 +101,29 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
 
       if (action === "edit") {
         if (!check) return;
-        submit.mutate({
-          action: "edit",
+        edit.mutate({
           id: check.id,
           ...mutationData,
         });
       } else {
-        submit.mutate(
-          { action: "create", ...mutationData },
-          {
-            onSuccess: async () => {
-              await router.push("/admin/rounds-checks");
-            },
+        create.mutate(mutationData, {
+          onSuccess: async () => {
+            await router.push("/admin/rounds-checks");
           },
-        );
+        });
       }
     },
-    [action, check, router, submit],
+    [imageType, imageFile, action, check, router, create, edit],
   );
 
   return (
     <form className="flex flex-col gap-10" onSubmit={handleSubmit}>
-      {submit.error && (
+      {(create.error || edit.error) && (
         <MessageBox variant="failure">
-          <pre>{submit.error.message}</pre>
+          <pre>{(create.error || edit.error)?.message}</pre>
         </MessageBox>
       )}
-      {submit.isSuccess && (
+      {edit.isSuccess && (
         <MessageBox variant="success">Rounds check updated!</MessageBox>
       )}
 
@@ -105,20 +151,42 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
         />
 
         <SelectBoxField
-          label="Ambassador (image)"
-          name="ambassador"
+          label="Image"
+          name="image"
           required
-          value={ambassador}
-          onChange={(event) => setAmbassador(event.target.value)}
+          value={imageType}
+          onChange={(event) =>
+            setImageType(event.target.value as ActiveAmbassadorKey | "custom")
+          }
         >
-          {typeSafeObjectEntries(ambassadors)
-            .filter(isActiveAmbassadorEntry)
-            .map(([key, { name }]) => (
-              <option key={key} value={key}>
-                {name}
-              </option>
-            ))}
+          <optgroup>
+            <option value="custom">Custom upload</option>
+          </optgroup>
+          <optgroup>
+            {typeSafeObjectEntries(ambassadors)
+              .filter(isActiveAmbassadorEntry)
+              .map(([key, { name }]) => (
+                <option key={key} value={key}>
+                  {name}
+                </option>
+              ))}
+          </optgroup>
         </SelectBoxField>
+
+        {imageType === "custom" && (
+          <UploadAttachmentsField
+            label=""
+            {...imageAttachmentData}
+            maxNumber={1}
+            multiple={false}
+            upload={upload}
+            allowedFileTypes={imageMimeTypes}
+            resizeImageOptions={resizeImageOptions}
+            renderAttachment={({ fileReference, ...props }) => (
+              <ImageUploadAttachment {...props} fileReference={fileReference} />
+            )}
+          />
+        )}
       </Fieldset>
 
       <Button type="submit" className={defaultButtonClasses}>
