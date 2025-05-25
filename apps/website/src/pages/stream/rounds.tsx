@@ -55,10 +55,10 @@ const checks: Record<string, Omit<Check, "status" | "description">> = {
     name: "Donkeys",
     icon: getAmbassadorImages("jalapeno")[0],
   },
-  parrots: {
-    name: "Parrots",
-    icon: getAmbassadorImages("siren")[0],
-  },
+  // parrots: {
+  //   name: "Parrots",
+  //   icon: getAmbassadorImages("siren")[0],
+  // },
   chickens: {
     name: "Chickens",
     icon: getAmbassadorImages("oliver")[0],
