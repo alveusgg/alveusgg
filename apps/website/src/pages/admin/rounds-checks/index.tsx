@@ -1,4 +1,8 @@
-import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
+import type {
+  InferGetServerSidePropsType,
+  NextPage,
+  NextPageContext,
+} from "next";
 import { getSession } from "next-auth/react";
 
 import { getAdminSSP } from "@/server/utils/admin";
@@ -26,8 +30,8 @@ export async function getServerSideProps(context: NextPageContext) {
   return { props: adminProps };
 }
 
-const AdminRoundsPage: NextPage<
-  InferGetStaticPropsType<typeof getServerSideProps>
+const AdminRoundsChecksPage: NextPage<
+  InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ menuItems }) => {
   return (
     <>
@@ -39,4 +43,4 @@ const AdminRoundsPage: NextPage<
   );
 };
 
-export default AdminRoundsPage;
+export default AdminRoundsChecksPage;

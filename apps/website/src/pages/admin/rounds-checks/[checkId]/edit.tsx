@@ -1,6 +1,6 @@
 import type {
   GetServerSidePropsContext,
-  InferGetStaticPropsType,
+  InferGetServerSidePropsType,
   NextPage,
 } from "next";
 import { getSession } from "next-auth/react";
@@ -46,7 +46,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 }
 
 const AdminEditRoundsCheckPage: NextPage<
-  InferGetStaticPropsType<typeof getServerSideProps>
+  InferGetServerSidePropsType<typeof getServerSideProps>
 > = ({ menuItems, checkId }) => {
   const check = trpc.adminRoundsChecks.getRoundsCheck.useQuery(checkId);
 
