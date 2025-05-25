@@ -33,6 +33,10 @@ const ptzProcedure = protectedProcedure.use(
 export const streamRouter = router({
   getWeather: publicProcedure.query(getWeather),
 
+  getRoundsChecks: publicProcedure.query(({ ctx }) =>
+    ctx.prisma.roundsCheck.findMany({ orderBy: { order: "asc" } }),
+  ),
+
   getSubscription: protectedProcedure.query(async ({ ctx }) => {
     const twitchAccount = await getUserTwitchAccount(ctx.session.user.id, true);
     return getUserSubscribedToBroadcaster(

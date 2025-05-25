@@ -3,67 +3,16 @@ import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
-import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
-
 import { queryArray } from "@/utils/array";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 
+import useChecks from "@/hooks/checks";
+
 import Video from "@/components/content/Video";
-import Checks, { type Check, useChatChecks } from "@/components/overlay/Checks";
+import Checks from "@/components/overlay/Checks";
 
 import roundsDayBackground from "@/assets/rounds/day.webm";
 import roundsNightBackground from "@/assets/rounds/night.webm";
-
-const checks: Record<string, Omit<Check, "status" | "description">> = {
-  wolves: {
-    name: "Wolf Hybrids",
-    icon: getAmbassadorImages("awa")[0],
-  },
-  foxes: {
-    name: "Foxes",
-    icon: getAmbassadorImages("reed")[0],
-  },
-  pushpop: {
-    name: "Push Pop",
-    icon: getAmbassadorImages("pushPop")[0],
-  },
-  crows: {
-    name: "Crows",
-    icon: getAmbassadorImages("abbott")[0],
-  },
-  marmosets: {
-    name: "Marmosets",
-    icon: getAmbassadorImages("appa")[0],
-  },
-  chinchillas: {
-    name: "Chinchillas",
-    icon: getAmbassadorImages("moomin")[0],
-  },
-  reptiles: {
-    name: "Reptiles",
-    icon: getAmbassadorImages("toasterStrudel")[0],
-  },
-  winnie: {
-    name: "Winnie",
-    icon: getAmbassadorImages("winnieTheMoo")[0],
-  },
-  stompy: {
-    name: "Stompy",
-    icon: getAmbassadorImages("stompy")[0],
-  },
-  donkeys: {
-    name: "Donkeys",
-    icon: getAmbassadorImages("jalapeno")[0],
-  },
-  // parrots: {
-  //   name: "Parrots",
-  //   icon: getAmbassadorImages("siren")[0],
-  // },
-  chickens: {
-    name: "Chickens",
-    icon: getAmbassadorImages("oliver")[0],
-  },
-};
 
 const RoundsPage: NextPage = () => {
   const [night, setNight] = useState(false);
@@ -81,12 +30,11 @@ const RoundsPage: NextPage = () => {
   const background = night ? roundsNightBackground : roundsDayBackground;
 
   const { query } = useRouter();
-  const chatChecks = useChatChecks(
+  const checks = useChecks(
     useMemo(() => {
       const param = queryArray(query.channels);
       return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
     }, [query.channels]),
-    checks,
     useMemo(() => queryArray(query.users), [query.users]),
   );
 
@@ -107,7 +55,7 @@ const RoundsPage: NextPage = () => {
 
       <div className="flex h-full justify-start overflow-hidden px-16">
         <Checks
-          checks={chatChecks}
+          checks={checks}
           className="h-full origin-center animate-wiggle-slow"
         />
       </div>
