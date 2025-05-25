@@ -4,6 +4,7 @@ import { adminBingosRouter } from "./admin/bingos";
 import { adminCalendarEventsRouter } from "./admin/calendar-events";
 import { adminFormsRouter } from "./admin/forms";
 import { adminNotificationsRouter } from "./admin/notifications";
+import { adminRoundsChecksRouter } from "./admin/rounds-checks";
 import { adminShortLinksRouter } from "./admin/short-links";
 import { adminShowAndTellRouter } from "./admin/show-and-tell";
 import { adminTwitchRouter } from "./admin/twitch";
@@ -25,6 +26,7 @@ export const appRouter = router({
   adminShortLinks: adminShortLinksRouter,
   adminNotifications: adminNotificationsRouter,
   adminShowAndTell: adminShowAndTellRouter,
+  adminRoundsChecks: adminRoundsChecksRouter,
   adminTwitch: adminTwitchRouter,
   adminUsersRouter: adminUsersRouter,
   auth: authRouter,

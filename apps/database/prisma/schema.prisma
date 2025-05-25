@@ -480,3 +480,11 @@ model TwitchChannel {
   broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
   moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
 }
+
+model RoundsCheck {
+  id         String @id @default(cuid())
+  name       String
+  command    String @unique
+  ambassador String
+  order      Int
+}

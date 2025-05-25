@@ -1,25 +1,14 @@
-import type { ChatMessage } from "@twurple/chat";
-import Image from "next/image";
-import {
-  type CSSProperties,
-  useCallback,
-  useId,
-  useMemo,
-  useState,
-} from "react";
-
-import { type AmbassadorImage } from "@alveusgg/data/build/ambassadors/images";
+import Image, { type StaticImageData } from "next/image";
+import { type CSSProperties, useId, useMemo } from "react";
 
 import { classes, objToCss } from "@/utils/classes";
-
-import useChat from "@/hooks/chat";
 
 import IconCheckFancy from "@/icons/IconCheckFancy";
 
 export interface Check {
   name: string;
   description?: string;
-  icon: AmbassadorImage;
+  icon: { src: string | StaticImageData; position?: string };
   status: boolean;
 }
 
@@ -44,7 +33,7 @@ const Check = ({
       <div className="relative size-20">
         <Image
           src={check.icon.src}
-          alt={check.icon.alt}
+          alt=""
           className={classes(
             "size-full rounded-full border-4 object-cover",
             check.status
@@ -80,7 +69,7 @@ const Checks = ({
   scale = { from: 1, to: 1.15 },
   className,
 }: {
-  checks: Record<string, Check>;
+  checks: Check[];
   timing?: {
     duration: number;
     delay: { item: number; before: number; after: number };
@@ -143,9 +132,9 @@ const Checks = ({
           className,
         )}
       >
-        {Object.entries(checks).map(([key, check], idx) => (
+        {checks.map((check, idx) => (
           <Check
-            key={key}
+            key={`${check.name}-${idx}`}
             check={check}
             className={classes(`checks-${id}-item`, idx % 2 !== 0 && "ml-32")}
             style={{
@@ -159,78 +148,3 @@ const Checks = ({
 };
 
 export default Checks;
-
-export const useChatChecks = (
-  channels: string[],
-  checks: Record<string, Omit<Check, "status" | "description">>,
-  users?: string[],
-) => {
-  const usersCleaned = useMemo(
-    () => users?.map((user) => user.toLowerCase().trim()) ?? [],
-    [users],
-  );
-
-  const [checksWithStatus, setChecksWithStatus] = useState<
-    Record<string, Check>
-  >(
-    Object.fromEntries(
-      Object.entries(checks).map(([key, check]) => {
-        return [
-          key,
-          {
-            ...check,
-            status: false,
-            description: `!check ${key}`,
-          },
-        ] as const;
-      }),
-    ),
-  );
-
-  const setStatus = useCallback((keys: string[], mode: "toggle" | "reset") => {
-    if (keys.length === 0) return;
-
-    setChecksWithStatus((prev) => {
-      const newChecks = { ...prev };
-
-      keys.forEach((key) => {
-        if (!newChecks[key]) return;
-
-        newChecks[key] = {
-          ...newChecks[key],
-          status: mode === "toggle" ? !newChecks[key].status : false,
-        };
-      });
-
-      return newChecks;
-    });
-  }, []);
-
-  useChat(
-    channels,
-    useCallback(
-      (message: ChatMessage) => {
-        const { text, userInfo } = message;
-        const [command, ...keys] = text.split(" ");
-
-        if (command !== "!check") return;
-        if (
-          !userInfo.isMod &&
-          !userInfo.isBroadcaster &&
-          !usersCleaned.includes(userInfo.userName.toLowerCase().trim())
-        )
-          return;
-
-        if (keys[0] === "reset") {
-          setStatus(Object.keys(checks), "reset");
-          return;
-        }
-
-        setStatus(keys, "toggle");
-      },
-      [setStatus, checks, usersCleaned],
-    ),
-  );
-
-  return checksWithStatus;
-};

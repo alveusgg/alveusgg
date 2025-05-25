@@ -39,6 +39,9 @@ export const permissions = {
   managePTZControls: {
     requiredRole: "ptzControl",
   },
+  manageRoundsChecks: {
+    requiredRole: "roundsChecks",
+  },
 } as const satisfies Record<string, PermissionConfig>;
 
 export function checkRolesGivePermission(

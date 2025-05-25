@@ -48,6 +48,11 @@ const menuItems = [
     permission: permissions.manageShowAndTell,
   },
   {
+    label: "Rounds Checks",
+    href: "/admin/rounds-checks",
+    permission: permissions.manageRoundsChecks,
+  },
+  {
     label: "Activity Feed",
     href: "/admin/activity-feed",
     permission: permissions.viewActivityFeed,

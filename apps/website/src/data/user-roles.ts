@@ -38,6 +38,10 @@ export const userRoles = {
     label: "PTZ Control",
     description: "Can manage live cam controls",
   },
+  roundsChecks: {
+    label: "Rounds Checks",
+    description: "Can manage rounds checks",
+  },
 } as const satisfies Record<string, UserRoleConfig>;
 
 export function isValidUserRole(role: string) {
