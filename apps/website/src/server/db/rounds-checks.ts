@@ -5,6 +5,8 @@ import { prisma } from "@alveusgg/database";
 
 import { SLUG_REGEX } from "@/utils/slugs";
 
+export const MAX_ROUNDS_CHECKS = 12;
+
 export const roundsCheckSchema = z.object({
   name: z.string().min(1),
   command: z.string().regex(SLUG_REGEX),
@@ -31,15 +33,20 @@ export async function createRoundsCheck(
       message: "Command already exists",
     });
 
-  const existingRoundsCheckOrderMax = await prisma.roundsCheck.aggregate({
+  const existingRoundsChecksStats = await prisma.roundsCheck.aggregate({
+    _count: true,
     _max: { order: true },
   });
-  const order = existingRoundsCheckOrderMax._max.order ?? 0;
+  if (existingRoundsChecksStats._count >= MAX_ROUNDS_CHECKS)
+    throw new TRPCError({
+      code: "BAD_REQUEST",
+      message: "Maximum number of rounds checks reached",
+    });
 
   return await prisma.roundsCheck.create({
     data: {
       ...input,
-      order: order + 1,
+      order: (existingRoundsChecksStats._max.order ?? 0) + 1,
     },
   });
 }
