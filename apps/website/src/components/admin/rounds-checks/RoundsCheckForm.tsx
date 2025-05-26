@@ -1,5 +1,6 @@
+import { createId } from "@paralleldrive/cuid2";
 import { useRouter } from "next/router";
-import { type FormEvent, useCallback, useState } from "react";
+import { type FormEvent, useCallback, useMemo, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
@@ -8,12 +9,12 @@ import {
   isActiveAmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/filters";
 
-import type { RoundsCheck } from "@alveusgg/database";
-
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { createImageUrl } from "@/utils/image";
+import { extractColorFromImage } from "@/utils/process-image";
 import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
-import { type RouterInputs, trpc } from "@/utils/trpc";
+import { type RouterInputs, type RouterOutputs, trpc } from "@/utils/trpc";
 
 import useFileUpload from "@/hooks/files/upload";
 
@@ -35,6 +36,7 @@ const resizeImageOptions = {
 };
 
 type RoundsCheckSchema = RouterInputs["adminRoundsChecks"]["createRoundsCheck"];
+type RoundsCheck = RouterOutputs["adminRoundsChecks"]["getRoundsCheck"];
 
 type RoundsCheckFormProps = {
   action: "create" | "edit";
@@ -48,12 +50,38 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
   const createFileUpload =
     trpc.adminRoundsChecks.createFileUpload.useMutation();
 
+  const [error, setError] = useState<string | null>(null);
+
   const upload = useFileUpload<ImageMimeType>(
     (signature) => createFileUpload.mutateAsync(signature),
     { allowedFileTypes: imageMimeTypes },
   );
 
-  const imageAttachmentData = useUploadAttachmentsData();
+  const imageAttachmentData = useUploadAttachmentsData(
+    useMemo(() => {
+      const { fileStorageObjectId, fileStorageObjectUrl } = check || {};
+      if (!fileStorageObjectId || !fileStorageObjectUrl) {
+        return [];
+      }
+
+      return [
+        {
+          status: "saved",
+          id: createId(),
+          url: fileStorageObjectUrl.toString(),
+          fileStorageObjectId: fileStorageObjectId,
+          extractColor: async () =>
+            await extractColorFromImage(
+              createImageUrl({
+                src: fileStorageObjectUrl.toString(),
+                width: 512,
+                quality: 100,
+              }),
+            ),
+        },
+      ];
+    }, [check]),
+  );
   const imageFile = imageAttachmentData.files[0];
 
   const [name, setName] = useState(check?.name || "");
@@ -66,6 +94,7 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
   const handleSubmit = useCallback(
     (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      setError(null);
 
       const formData = new FormData(event.currentTarget);
 
@@ -74,15 +103,17 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
           ? {
               ambassador: null,
               fileStorageObjectId:
-                imageFile?.status === "upload.done"
+                imageFile?.status === "upload.done" ||
+                imageFile?.status === "saved"
                   ? imageFile.fileStorageObjectId
-                  : (check?.fileStorageObjectId ?? ""),
+                  : "",
             }
           : {
               ambassador: imageType,
               fileStorageObjectId: null,
             };
       if (!imageData.ambassador && !imageData.fileStorageObjectId) {
+        setError("Please select an ambassador or upload a custom image.");
         return;
       }
 
@@ -123,6 +154,7 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
           <pre>{(create.error || edit.error)?.message}</pre>
         </MessageBox>
       )}
+      {error && <MessageBox variant="failure">{error}</MessageBox>}
       {edit.isSuccess && (
         <MessageBox variant="success">Rounds check updated!</MessageBox>
       )}
