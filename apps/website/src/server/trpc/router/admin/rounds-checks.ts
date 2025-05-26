@@ -18,6 +18,7 @@ import {
 import {
   createFileStorageUpload,
   deleteFileStorageObject,
+  getViewUrlForFileStorageObjectKey,
 } from "@/server/utils/file-storage";
 
 import { permissions } from "@/data/permissions";
@@ -71,9 +72,26 @@ export const adminRoundsChecksRouter = router({
 
   getRoundsCheck: permittedProcedure
     .input(z.cuid())
-    .query(({ ctx, input: id }) =>
-      ctx.prisma.roundsCheck.findUnique({ where: { id } }),
-    ),
+    .query(async ({ ctx, input: id }) => {
+      const roundsCheck = await ctx.prisma.roundsCheck.findUnique({
+        where: { id },
+        include: { fileStorageObject: true },
+      });
+      if (!roundsCheck) {
+        throw new TRPCError({
+          code: "NOT_FOUND",
+          message: "Rounds check not found",
+        });
+      }
+
+      const { fileStorageObject, ...data } = roundsCheck;
+      return {
+        ...data,
+        fileStorageObjectUrl: fileStorageObject
+          ? getViewUrlForFileStorageObjectKey(fileStorageObject.key)
+          : null,
+      };
+    }),
 
   getRoundsChecks: permittedProcedure.query(({ ctx }) =>
     ctx.prisma.roundsCheck.findMany({ orderBy: { order: "asc" } }),
