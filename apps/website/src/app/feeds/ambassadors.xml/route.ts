@@ -43,7 +43,7 @@ export async function GET() {
       id: ambassadorPageUrl,
       link: ambassadorPageUrl,
       description: ambassador.story,
-      content: ambassador.mission,
+      content: ambassador.story, // ambassador.mission,
       date: new Date(ambassador.arrival),
     });
   });
