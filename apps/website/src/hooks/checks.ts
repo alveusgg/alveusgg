@@ -43,14 +43,12 @@ const useChecks = (channels: string[], users?: string[]) => {
   const [statues, setStatues] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    if (!checks.data) {
-      setStatues({});
-      return;
-    }
-
     setStatues((prev) =>
       typeSafeObjectFromEntries(
-        checks.data.map(({ command }) => [command, prev[command] ?? false]),
+        (checks.data ?? []).map(({ command }) => [
+          command,
+          prev[command] ?? false,
+        ]),
       ),
     );
   }, [checks.data]);
