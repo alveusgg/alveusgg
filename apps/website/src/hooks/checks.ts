@@ -6,6 +6,10 @@ import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import type { RoundsCheck } from "@alveusgg/database";
 
+import {
+  typeSafeObjectEntries,
+  typeSafeObjectFromEntries,
+} from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
 
 import useChat from "@/hooks/chat";
@@ -38,33 +42,16 @@ const useChecks = (channels: string[], users?: string[]) => {
 
   const [statues, setStatues] = useState<Record<string, boolean>>({});
 
-  const updateStatuses = useCallback(
-    (mode: "toggle" | "reset" | "persist", keys?: string[]) => {
-      setStatues((prev) =>
-        (checks.data ?? []).reduce((acc, { command }) => {
-          if (mode === "reset") {
-            return { ...acc, [command]: false };
-          }
-
-          if (mode === "persist") {
-            return { ...acc, [command]: prev[command] ?? false };
-          }
-
-          if (keys?.includes(command)) {
-            return { ...acc, [command]: !prev[command] };
-          }
-
-          return acc;
-        }, {}),
-      );
-    },
-    [checks.data],
-  );
-
-  // When `checks.data` changes,`updateStatuses` will change, and we should call it to ensure the statues match the latest checks
   useEffect(() => {
-    updateStatuses("persist");
-  }, [updateStatuses]);
+    setStatues((prev) =>
+      typeSafeObjectFromEntries(
+        (checks.data ?? []).map(({ command }) => [
+          command,
+          prev[command] ?? false,
+        ]),
+      ),
+    );
+  }, [checks.data]);
 
   const usersCleaned = useMemo(
     () => users?.map((user) => user.toLowerCase().trim()) ?? [],
@@ -86,18 +73,23 @@ const useChecks = (channels: string[], users?: string[]) => {
         )
           return;
 
-        if (keys[0] === "reset") {
-          updateStatuses("reset");
-          return;
-        }
-
-        updateStatuses("toggle", keys);
+        setStatues((prev) =>
+          typeSafeObjectFromEntries(
+            typeSafeObjectEntries(prev).map(([key, value]) => {
+              if (keys[0] === "reset") return [key, false];
+              return [key, keys.includes(key) ? !value : value];
+            }),
+          ),
+        );
       },
-      [updateStatuses, usersCleaned],
+      [usersCleaned],
     ),
   );
 
-  return transformChecks(checks.data ?? [], statues);
+  return useMemo(
+    () => transformChecks(checks.data ?? [], statues),
+    [checks.data, statues],
+  );
 };
 
 export default useChecks;
