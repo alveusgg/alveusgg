@@ -88,7 +88,10 @@ const useChecks = (channels: string[], users?: string[]) => {
     ),
   );
 
-  return transformChecks(checks.data ?? [], statues);
+  return useMemo(
+    () => transformChecks(checks.data ?? [], statues),
+    [checks.data, statues],
+  );
 };
 
 export default useChecks;
