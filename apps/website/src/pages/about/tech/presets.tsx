@@ -80,29 +80,44 @@ const AboutTechPresetsPage: NextPage = () => {
 
         <Section className="grow">
           <div className="flex flex-col gap-y-4 lg:flex-row">
-            <p className="w-full lg:w-3/5">
-              If you&apos;re subscribed, you can run these commands directly
-              from this page by clicking the{" "}
-              <span className="font-semibold text-alveus-green">
-                Run command{" "}
-                <IconVideoCamera className="mb-0.5 inline-block size-4" />
-              </span>{" "}
-              button in each preset card. This will automatically send the
-              command to the{" "}
-              <Link
-                href={`https://twitch.tv/${channels.alveusgg.username}`}
-                external
-              >
-                {channels.alveusgg.username} Twitch chat
-              </Link>{" "}
-              as if you had typed it in the chat yourself. Make sure you have
-              the{" "}
-              <Link href="/live/twitch" external>
-                livestream
-              </Link>{" "}
-              open in another tab to see the camera change as you load the
-              presets.
-            </p>
+            <div className="w-full lg:w-3/5">
+              <p>
+                If you&apos;re subscribed, you can run these commands directly
+                from this page by clicking the{" "}
+                <span className="font-semibold text-alveus-green">
+                  Run command{" "}
+                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                </span>{" "}
+                button in each preset card. This will automatically send the
+                command to the{" "}
+                <Link
+                  href={`https://twitch.tv/${channels.alveusgg.username}`}
+                  external
+                >
+                  {channels.alveusgg.username} Twitch chat
+                </Link>{" "}
+                as if you had typed it in the chat yourself. Make sure you have
+                the{" "}
+                <Link href="/live/twitch" external>
+                  livestream
+                </Link>{" "}
+                open in another tab to see the camera change as you load the
+                presets.
+              </p>
+
+              <p className="hidden lg:mt-2 lg:block">
+                Next to each camera in the menu you&apos;ll find a{" "}
+                <span className="font-semibold text-alveus-green">
+                  Run swap command{" "}
+                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                </span>{" "}
+                button, allowing you to swap it on stream with the currently
+                selected camera, if you&apos;re subscribed. Be aware that not
+                all cameras can be swapped &mdash; by default, only cameras
+                already on stream, indoor enclosure cameras, and different views
+                of outdoor enclosures already on stream, can be swapped in.
+              </p>
+            </div>
 
             <div className="w-full lg:w-2/5 lg:px-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
