@@ -5,8 +5,19 @@ export interface Preset {
   image?: StaticImageData;
 }
 
-export interface CameraData {
+interface CameraCore {
   title: string;
   group: string;
+}
+
+export interface CameraPTZ extends CameraCore {
   presets: Record<string, Preset>;
+}
+
+export interface CameraMulti extends CameraCore {
+  multi: {
+    cameras: string[];
+    description?: string;
+    image?: StaticImageData;
+  };
 }

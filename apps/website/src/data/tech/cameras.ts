@@ -27,7 +27,7 @@ import wolfden from "../presets/wolfden";
 import wolfden2 from "../presets/wolfden2";
 import wolfindoor from "../presets/wolfindoor";
 import wolfswitch from "../presets/wolfswitch";
-import type { CameraData } from "./cameras.types";
+import type { CameraMulti, CameraPTZ } from "./cameras.types";
 
 const cameras = {
   chicken,
@@ -59,7 +59,7 @@ const cameras = {
   wolfden2,
   wolfindoor,
   wolfswitch,
-} as const satisfies Record<string, CameraData>;
+} as const satisfies Record<string, CameraPTZ | CameraMulti>;
 
 export type Camera = keyof typeof cameras;
 export default cameras;
