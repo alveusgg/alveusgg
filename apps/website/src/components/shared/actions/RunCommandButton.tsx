@@ -74,7 +74,6 @@ const RunCommandButton = ({
     <ActionButton
       onClick={onClick}
       icon={IconVideoCamera}
-      alt="Run command"
       tooltip={{ text: statusText ?? "Run command", force: !!statusText }}
     />
   );

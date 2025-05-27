@@ -27,7 +27,6 @@ const CopyToClipboardButton = ({
     <ActionButton
       onClick={onClick}
       icon={IconClipboard}
-      alt="Copy to clipboard"
       tooltip={{ text: statusText, force: status !== undefined }}
     />
   );

@@ -5,19 +5,13 @@ import { classes } from "@/utils/classes";
 type ActionButtonProps = {
   onClick: () => void;
   icon: ({ className }: { className: string }) => ReactNode;
-  alt: string;
   tooltip: {
     text: string;
     force: boolean;
   };
 };
 
-const ActionButton = ({
-  onClick,
-  icon: Icon,
-  alt,
-  tooltip,
-}: ActionButtonProps) => (
+const ActionButton = ({ onClick, icon: Icon, tooltip }: ActionButtonProps) => (
   <div className="group relative inline-block">
     <span
       className={classes(
@@ -28,7 +22,7 @@ const ActionButton = ({
     >
       {tooltip.text}
     </span>
-    <button onClick={onClick} title={alt}>
+    <button onClick={onClick} title={tooltip.text}>
       <Icon className="m-1 inline size-5 cursor-pointer text-alveus-green-400 group-hover:text-black" />
     </button>
   </div>
