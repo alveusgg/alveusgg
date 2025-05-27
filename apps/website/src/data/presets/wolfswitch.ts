@@ -14,7 +14,7 @@ import middleleft from "@/assets/presets/wolfswitch/middleleft.png";
 import pond from "@/assets/presets/wolfswitch/pond.png";
 import water from "@/assets/presets/wolfswitch/water.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const wolfswitchPresets: Record<string, Preset> = {
   home: {

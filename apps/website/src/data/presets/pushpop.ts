@@ -12,7 +12,7 @@ import left from "@/assets/presets/pushpop/left.png";
 import right from "@/assets/presets/pushpop/right.png";
 import water from "@/assets/presets/pushpop/water.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const pushpopPresets: Record<string, Preset> = {
   home: {

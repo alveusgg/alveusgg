@@ -16,7 +16,6 @@ import noodle from "../presets/noodle";
 import parrot from "../presets/parrots";
 import pasture from "../presets/pasture";
 import patchy from "../presets/patchy";
-import type { Preset } from "../presets/preset";
 import pushpop from "../presets/pushpop";
 import pushpopcrunch from "../presets/pushpopcrunch";
 import pushpopindoor from "../presets/pushpopindoor";
@@ -28,12 +27,7 @@ import wolfden from "../presets/wolfden";
 import wolfden2 from "../presets/wolfden2";
 import wolfindoor from "../presets/wolfindoor";
 import wolfswitch from "../presets/wolfswitch";
-
-interface CameraData {
-  title: string;
-  group: string;
-  presets: Record<string, Preset>;
-}
+import type { CameraData } from "./cameras.types";
 
 const cameras = {
   chicken,

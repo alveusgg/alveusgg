@@ -4,7 +4,7 @@ import left from "@/assets/presets/wolfden2/left.png";
 import leftcorner from "@/assets/presets/wolfden2/leftcorner.png";
 import rightcorner from "@/assets/presets/wolfden2/rightcorner.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const wolfden2Presets: Record<string, Preset> = {
   home: {

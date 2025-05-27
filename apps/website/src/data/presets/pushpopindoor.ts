@@ -9,7 +9,7 @@ import leftcorner from "@/assets/presets/pushpopindoor/leftcorner.png";
 import right from "@/assets/presets/pushpopindoor/right.png";
 import rightcorner from "@/assets/presets/pushpopindoor/rightcorner.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const pushpopindoorPresets: Record<string, Preset> = {
   home: {
