@@ -1,19 +1,18 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { z } from "zod";
-
-import type { runCommandSchema } from "@/server/trpc/router/stream";
 
 import { scopeGroups } from "@/data/twitch";
 
-import { trpc } from "@/utils/trpc";
+import { type RouterInputs, trpc } from "@/utils/trpc";
 
 import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import ActionButton from "./ActionButton";
 import getActionPreviewTooltip from "./ActionPreviewTooltip";
 
-interface RunCommandButtonProps extends z.infer<typeof runCommandSchema> {
+type Command = RouterInputs["stream"]["runCommand"];
+
+interface RunCommandButtonProps extends Command {
   subOnly?: boolean;
   tooltip?: string;
   className?: string;
