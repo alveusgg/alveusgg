@@ -232,6 +232,7 @@ const AboutTechPresetsPage: NextPage = () => {
                                 <CopyToClipboardButton
                                   text={`!ptzload ${selectedCamera.toLowerCase()} ${name}`}
                                   options={{ initialText: "Copy command" }}
+                                  preview
                                 />
                                 <RunCommandButton
                                   command="ptzload"

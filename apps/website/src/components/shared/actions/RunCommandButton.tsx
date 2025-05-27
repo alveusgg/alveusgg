@@ -6,30 +6,12 @@ import type { runCommandSchema } from "@/server/trpc/router/stream";
 
 import { scopeGroups } from "@/data/twitch";
 
-import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
 import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import ActionButton from "./ActionButton";
-
-const getCommandTooltip = (command: string, args?: string[]) => {
-  const CommandTooltip = ({
-    className,
-    children,
-  }: {
-    className: string;
-    children: string;
-  }) => (
-    <div className={classes(className, "flex flex-col")}>
-      <span>{children}</span>
-      <span className="font-mono text-xs text-alveus-green-300">
-        !{[command, ...(args ?? [])].join(" ")}
-      </span>
-    </div>
-  );
-  return CommandTooltip;
-};
+import getActionPreviewTooltip from "./ActionPreviewTooltip";
 
 interface RunCommandButtonProps extends z.infer<typeof runCommandSchema> {
   subOnly?: boolean;
@@ -87,8 +69,8 @@ const RunCommandButton = ({
     }
   }, [status]);
 
-  const CommandTooltip = useMemo(
-    () => getCommandTooltip(command, args),
+  const PreviewTooltip = useMemo(
+    () => getActionPreviewTooltip(`!${[command, ...(args ?? [])].join(" ")}`),
     [command, args],
   );
 
@@ -100,7 +82,7 @@ const RunCommandButton = ({
       icon={IconVideoCamera}
       tooltip={{
         text: statusText ?? "Run command",
-        elm: statusText ? undefined : CommandTooltip,
+        elm: statusText ? undefined : PreviewTooltip,
         force: !!statusText,
       }}
     />
