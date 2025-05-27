@@ -170,21 +170,36 @@ const AboutTechPresetsPage: NextPage = () => {
               {/* Desktop: Button List */}
               <div className="hidden space-y-2 lg:block">
                 {typeSafeObjectKeys(presets).map((camera) => (
-                  <button
+                  <div
                     key={camera}
-                    onClick={() => setSelectedCamera(camera)}
-                    className={classes(
-                      "w-full rounded px-3 py-2 text-left text-lg font-semibold",
-                      selectedCamera === camera
-                        ? "bg-alveus-green text-white"
-                        : "bg-alveus-green-50 hover:bg-alveus-green-100",
-                    )}
+                    className="flex w-full overflow-hidden rounded"
                   >
-                    {presets[camera].title}
-                    <span className="text-sm text-alveus-green-400 italic">
-                      {` (${camera.toLowerCase()})`}
-                    </span>
-                  </button>
+                    <button
+                      onClick={() => setSelectedCamera(camera)}
+                      className={classes(
+                        "my-auto grow px-3 py-2 text-left text-lg font-semibold",
+                        selectedCamera === camera
+                          ? "bg-alveus-green text-white"
+                          : "bg-alveus-green-50 hover:bg-alveus-green-100",
+                      )}
+                    >
+                      {presets[camera].title}
+                      <span className="text-sm text-alveus-green-400 italic">
+                        {` (${camera.toLowerCase()})`}
+                      </span>
+                    </button>
+
+                    {selectedCamera !== camera && (
+                      <RunCommandButton
+                        command="swap"
+                        args={[
+                          selectedCamera.toLowerCase(),
+                          camera.toLowerCase(),
+                        ]}
+                        subOnly
+                      />
+                    )}
+                  </div>
                 ))}
               </div>
             </div>

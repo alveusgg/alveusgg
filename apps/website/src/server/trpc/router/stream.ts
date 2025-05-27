@@ -22,7 +22,7 @@ import invariant from "@/utils/invariant";
 import { createJWT, signJWT } from "@/utils/jwt";
 
 export const runCommandSchema = z.object({
-  command: z.enum(["ptzload"]),
+  command: z.enum(["ptzload", "swap"]),
   args: z.array(z.string()).optional(),
 });
 
