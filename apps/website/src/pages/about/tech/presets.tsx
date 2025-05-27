@@ -209,9 +209,9 @@ const AboutTechPresetsPage: NextPage = () => {
                       ([name, preset]) => (
                         <div
                           key={name}
-                          className="overflow-hidden rounded-lg border shadow-lg"
+                          className="rounded-lg border border-alveus-green-900 shadow-lg"
                         >
-                          <div className="group relative aspect-video">
+                          <div className="group relative aspect-video overflow-hidden rounded-t-lg">
                             {preset.image ? (
                               <Image
                                 src={preset.image}
@@ -225,13 +225,14 @@ const AboutTechPresetsPage: NextPage = () => {
                               </div>
                             )}
                           </div>
-                          <div className="flex flex-col gap-1 bg-alveus-tan p-2">
+                          <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
                             <div className="flex items-center justify-between">
                               <h4 className="text-lg font-semibold">{name}</h4>
                               <div className="flex gap-1">
                                 <CopyToClipboardButton
                                   text={`!ptzload ${selectedCamera.toLowerCase()} ${name}`}
                                   options={{ initialText: "Copy command" }}
+                                  preview
                                 />
                                 <RunCommandButton
                                   command="ptzload"

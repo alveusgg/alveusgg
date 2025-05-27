@@ -1,5 +1,5 @@
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { z } from "zod";
 
 import type { runCommandSchema } from "@/server/trpc/router/stream";
@@ -11,6 +11,7 @@ import { trpc } from "@/utils/trpc";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import ActionButton from "./ActionButton";
+import getActionPreviewTooltip from "./ActionPreviewTooltip";
 
 interface RunCommandButtonProps extends z.infer<typeof runCommandSchema> {
   subOnly?: boolean;
@@ -68,14 +69,22 @@ const RunCommandButton = ({
     }
   }, [status]);
 
+  const PreviewTooltip = useMemo(
+    () => getActionPreviewTooltip(`!${[command, ...(args ?? [])].join(" ")}`),
+    [command, args],
+  );
+
   if (!hasScopes || (subOnly && !subscription.data)) return null;
 
   return (
     <ActionButton
       onClick={onClick}
       icon={IconVideoCamera}
-      alt="Run command"
-      tooltip={{ text: statusText ?? "Run command", force: !!statusText }}
+      tooltip={{
+        text: statusText ?? "Run command",
+        elm: statusText ? undefined : PreviewTooltip,
+        force: !!statusText,
+      }}
     />
   );
 };

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 
 import {
   type CopyToClipboardOptions,
@@ -8,27 +8,36 @@ import {
 import IconClipboard from "@/icons/IconClipboard";
 
 import ActionButton from "./ActionButton";
+import getActionPreviewTooltip from "./ActionPreviewTooltip";
 
 type CopyToClipboardButtonProps = {
   text: string;
+  preview?: boolean;
   options?: CopyToClipboardOptions;
 };
 
 const CopyToClipboardButton = ({
   text,
+  preview = false,
   options,
 }: CopyToClipboardButtonProps) => {
   const { copy, status, statusText } = useCopyToClipboard(options);
+
   const onClick = useCallback(async () => {
     await copy(text);
   }, [copy, text]);
+
+  const PreviewTooltip = useMemo(() => getActionPreviewTooltip(text), [text]);
 
   return (
     <ActionButton
       onClick={onClick}
       icon={IconClipboard}
-      alt="Copy to clipboard"
-      tooltip={{ text: statusText, force: status !== undefined }}
+      tooltip={{
+        text: statusText,
+        elm: preview && !status ? PreviewTooltip : undefined,
+        force: status !== undefined,
+      }}
     />
   );
 };
