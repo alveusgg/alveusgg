@@ -36,6 +36,7 @@ const patchyPresets: Record<string, Preset> = {
 
 const patchy = {
   title: "Patchy",
+  group: "patchy",
   presets: patchyPresets,
 };
 

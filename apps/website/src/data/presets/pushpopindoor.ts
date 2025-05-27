@@ -56,6 +56,7 @@ const pushpopindoorPresets: Record<string, Preset> = {
 
 const pushpopindoor = {
   title: "Pushpop Indoor",
+  group: "pushpop",
   presets: pushpopindoorPresets,
 };
 

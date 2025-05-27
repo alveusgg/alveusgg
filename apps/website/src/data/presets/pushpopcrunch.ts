@@ -11,6 +11,7 @@ const pushpopcrunchPresets: Record<string, Preset> = {
 
 const pushpopcrunch = {
   title: "Pushpop Crunch",
+  group: "pushpop",
   presets: pushpopcrunchPresets,
 };
 

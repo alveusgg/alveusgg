@@ -167,6 +167,7 @@ const marmoutPresets: Record<string, Preset> = {
 
 const marmout = {
   title: "Marmoset Outdoor",
+  group: "marmoset",
   presets: marmoutPresets,
 };
 

@@ -31,6 +31,7 @@ import wolfswitch from "../presets/wolfswitch";
 
 interface CameraData {
   title: string;
+  group: string;
   presets: Record<string, Preset>;
 }
 

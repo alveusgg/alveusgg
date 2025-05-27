@@ -221,6 +221,7 @@ const wolfcornerPresets: Record<string, Preset> = {
 
 const wolfcorner = {
   title: "Wolf Corner",
+  group: "wolf",
   presets: wolfcornerPresets,
 };
 

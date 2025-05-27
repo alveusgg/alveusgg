@@ -106,16 +106,14 @@ const AboutTechPresetsPage: NextPage = () => {
               </p>
 
               <p className="hidden lg:mt-2 lg:block">
-                Next to each camera in the menu you&apos;ll find a{" "}
+                Next to each camera in the menu you&apos;ll also find a{" "}
                 <span className="font-semibold text-alveus-green">
                   Run swap command{" "}
                   <IconVideoCamera className="mb-0.5 inline-block size-4" />
                 </span>{" "}
-                button, allowing you to swap it on stream with the currently
-                selected camera, if you&apos;re subscribed. Be aware that not
-                all cameras can be swapped &mdash; by default, only cameras
-                already on stream, indoor enclosure cameras, and different views
-                of outdoor enclosures already on stream, can be swapped in.
+                button if the camera is in the same enclosure as the currently
+                selected camera, allowing you to swap which camera is shown on
+                stream if you&apos;re subscribed.
               </p>
             </div>
 
@@ -204,18 +202,20 @@ const AboutTechPresetsPage: NextPage = () => {
                       </span>
                     </button>
 
-                    {selectedCamera !== camera && (
-                      <RunCommandButton
-                        command="swap"
-                        args={[
-                          selectedCamera.toLowerCase(),
-                          camera.toLowerCase(),
-                        ]}
-                        subOnly
-                        tooltip="Run swap command"
-                        className="flex items-center rounded-r bg-alveus-green px-2 text-alveus-tan transition-colors hover:bg-alveus-green-900"
-                      />
-                    )}
+                    {selectedCamera !== camera &&
+                      presets[selectedCamera].group ===
+                        presets[camera].group && (
+                        <RunCommandButton
+                          command="swap"
+                          args={[
+                            selectedCamera.toLowerCase(),
+                            camera.toLowerCase(),
+                          ]}
+                          subOnly
+                          tooltip="Run swap command"
+                          className="flex items-center rounded-r bg-alveus-green px-2 text-alveus-tan transition-colors hover:bg-alveus-green-900"
+                        />
+                      )}
                   </div>
                 ))}
               </div>

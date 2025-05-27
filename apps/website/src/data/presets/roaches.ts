@@ -56,6 +56,7 @@ const roachesPresets: Record<string, Preset> = {
 
 const roaches = {
   title: "Roaches",
+  group: "roaches",
   presets: roachesPresets,
 };
 

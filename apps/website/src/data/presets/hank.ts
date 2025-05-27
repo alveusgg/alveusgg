@@ -16,6 +16,7 @@ const hankPresets: Record<string, Preset> = {
 
 const hank = {
   title: "Hank",
+  group: "hank",
   presets: hankPresets,
 };
 

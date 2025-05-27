@@ -201,6 +201,7 @@ const pasturePresets: Record<string, Preset> = {
 
 const pasture = {
   title: "Pasture",
+  group: "pasture",
   presets: pasturePresets,
 };
 

@@ -46,6 +46,7 @@ const georgiePresets: Record<string, Preset> = {
 
 const georgie = {
   title: "Georgie",
+  group: "georgie",
   presets: georgiePresets,
 };
 

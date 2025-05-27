@@ -61,6 +61,7 @@ const chickenPresets: Record<string, Preset> = {
 
 const chicken = {
   title: "Chicken",
+  group: "chicken",
   presets: chickenPresets,
 };
 
