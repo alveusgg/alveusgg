@@ -2,7 +2,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { Fragment, useState } from "react";
 
-import presets, { type Camera } from "@/data/tech/presets";
+import cameras, { type Camera } from "@/data/tech/cameras";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
@@ -35,7 +35,7 @@ const AboutTechPresetsPage: NextPage = () => {
   });
 
   const [selectedCamera, setSelectedCamera] = useState<Camera>(
-    typeSafeObjectKeys(presets)[0]!,
+    typeSafeObjectKeys(cameras)[0]!,
   );
 
   return (
@@ -172,9 +172,9 @@ const AboutTechPresetsPage: NextPage = () => {
                   onChange={(e) => setSelectedCamera(e.target.value as Camera)}
                   className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 >
-                  {typeSafeObjectKeys(presets).map((camera) => (
+                  {typeSafeObjectKeys(cameras).map((camera) => (
                     <option key={camera} value={camera}>
-                      {presets[camera].title} ({camera.toLowerCase()})
+                      {cameras[camera].title} ({camera.toLowerCase()})
                     </option>
                   ))}
                 </select>
@@ -182,7 +182,7 @@ const AboutTechPresetsPage: NextPage = () => {
 
               {/* Desktop: Button List */}
               <div className="hidden space-y-2 lg:block">
-                {typeSafeObjectKeys(presets).map((camera) => (
+                {typeSafeObjectKeys(cameras).map((camera) => (
                   <div
                     key={camera}
                     className="flex w-full overflow-hidden rounded"
@@ -196,15 +196,15 @@ const AboutTechPresetsPage: NextPage = () => {
                           : "bg-alveus-green-50 hover:bg-alveus-green-100",
                       )}
                     >
-                      {presets[camera].title}
+                      {cameras[camera].title}
                       <span className="text-sm text-alveus-green-400 italic">
                         {` (${camera.toLowerCase()})`}
                       </span>
                     </button>
 
                     {selectedCamera !== camera &&
-                      presets[selectedCamera].group ===
-                        presets[camera].group && (
+                      cameras[selectedCamera].group ===
+                        cameras[camera].group && (
                         <RunCommandButton
                           command="swap"
                           args={[
@@ -230,14 +230,14 @@ const AboutTechPresetsPage: NextPage = () => {
                     className="scroll-mt-14 text-2xl"
                     id={`presets:${camelToKebab(selectedCamera)}`}
                   >
-                    {presets[selectedCamera].title}
+                    {cameras[selectedCamera].title}
                     <span className="text-sm text-alveus-green-400 italic">
                       {` (${selectedCamera.toLowerCase()})`}
                     </span>
                   </Heading>
 
                   <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {typeSafeObjectEntries(presets[selectedCamera].presets).map(
+                    {typeSafeObjectEntries(cameras[selectedCamera].presets).map(
                       ([name, preset]) => (
                         <div
                           key={name}
