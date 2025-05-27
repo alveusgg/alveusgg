@@ -26,6 +26,64 @@ import IconX from "@/icons/IconX";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 
+type Command = RouterInputs["stream"]["runCommand"];
+
+const Card = ({
+  title,
+  image,
+  command,
+  className,
+  children,
+}: {
+  title: string;
+  image?: { src: StaticImageData; alt: string };
+  command?: Command;
+  className?: string;
+  children?: ReactNode;
+}) => (
+  <div
+    className={classes(
+      "rounded-lg border border-alveus-green-900 shadow-lg",
+      className,
+    )}
+  >
+    <div className="group relative aspect-video overflow-hidden rounded-t-lg">
+      {image ? (
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          className="aspect-video w-full object-cover transition-transform"
+        />
+      ) : (
+        <div className="flex aspect-video items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
+          No Image
+        </div>
+      )}
+    </div>
+    <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
+      <div className="flex items-center justify-between">
+        <h4 className="text-lg font-semibold">{title}</h4>
+        {command && (
+          <div className="flex gap-1">
+            <CopyToClipboardButton
+              text={`!${[command.command, ...(command.args ?? [])].join(" ")}`}
+              options={{ initialText: "Copy command" }}
+              preview
+            />
+            <RunCommandButton
+              command={command.command}
+              args={command.args}
+              subOnly
+            />
+          </div>
+        )}
+      </div>
+      <p className="text-sm text-alveus-green-600 italic">{children}</p>
+    </div>
+  </div>
+);
+
 const AboutTechPresetsPage: NextPage = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
   const subscription = trpc.stream.getSubscription.useQuery(undefined, {
@@ -239,45 +297,21 @@ const AboutTechPresetsPage: NextPage = () => {
                   <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     {typeSafeObjectEntries(cameras[selectedCamera].presets).map(
                       ([name, preset]) => (
-                        <div
+                        <Card
                           key={name}
-                          className="rounded-lg border border-alveus-green-900 shadow-lg"
+                          title={name}
+                          image={
+                            preset.image
+                              ? { src: preset.image, alt: preset.description }
+                              : undefined
+                          }
+                          command={{
+                            command: "ptzload",
+                            args: [selectedCamera.toLowerCase(), name],
+                          }}
                         >
-                          <div className="group relative aspect-video overflow-hidden rounded-t-lg">
-                            {preset.image ? (
-                              <Image
-                                src={preset.image}
-                                alt={preset.description}
-                                fill
-                                className="aspect-video w-full object-cover transition-transform"
-                              />
-                            ) : (
-                              <div className="flex aspect-video items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
-                                No Image
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-lg font-semibold">{name}</h4>
-                              <div className="flex gap-1">
-                                <CopyToClipboardButton
-                                  text={`!ptzload ${selectedCamera.toLowerCase()} ${name}`}
-                                  options={{ initialText: "Copy command" }}
-                                  preview
-                                />
-                                <RunCommandButton
-                                  command="ptzload"
-                                  args={[selectedCamera.toLowerCase(), name]}
-                                  subOnly
-                                />
-                              </div>
-                            </div>
-                            <p className="text-sm text-alveus-green-600 italic">
-                              {preset.description}
-                            </p>
-                          </div>
-                        </div>
+                          {preset.description}
+                        </Card>
                       ),
                     )}
                   </div>
