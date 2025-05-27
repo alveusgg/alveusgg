@@ -11,6 +11,7 @@ const georgiewaterPresets: Record<string, Preset> = {
 
 const georgiewater = {
   title: "Georgie Water",
+  group: "georgie",
   presets: georgiewaterPresets,
 };
 

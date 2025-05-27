@@ -201,6 +201,7 @@ const foxPresets: Record<string, Preset> = {
 
 const fox = {
   title: "Fox",
+  group: "fox",
   presets: foxPresets,
 };
 

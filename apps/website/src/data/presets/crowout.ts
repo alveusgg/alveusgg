@@ -141,6 +141,7 @@ const crowoutPresets: Record<string, Preset> = {
 
 const crowout = {
   title: "Crow Outdoor",
+  group: "crow",
   presets: crowoutPresets,
 };
 

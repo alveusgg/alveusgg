@@ -11,6 +11,7 @@ const chinPresets: Record<string, Preset> = {
 
 const chin = {
   title: "Chin Top",
+  group: "chin",
   presets: chinPresets,
 };
 

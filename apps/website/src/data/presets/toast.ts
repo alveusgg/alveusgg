@@ -51,6 +51,7 @@ const toastPresets: Record<string, Preset> = {
 
 const toast = {
   title: "Toast",
+  group: "toast",
   presets: toastPresets,
 };
 

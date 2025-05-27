@@ -106,6 +106,7 @@ const crowinPresets: Record<string, Preset> = {
 
 const crowin = {
   title: "Crow Indoor",
+  group: "crow",
   presets: crowinPresets,
 };
 

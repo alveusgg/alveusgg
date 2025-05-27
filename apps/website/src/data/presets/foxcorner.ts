@@ -56,6 +56,7 @@ const foxcornerPresets: Record<string, Preset> = {
 
 const foxcorner = {
   title: "Fox Corner",
+  group: "fox",
   presets: foxcornerPresets,
 };
 

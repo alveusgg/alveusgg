@@ -136,6 +136,7 @@ const marminPresets: Record<string, Preset> = {
 
 const marmin = {
   title: "Marmoset Indoor",
+  group: "marmoset",
   presets: marminPresets,
 };
 

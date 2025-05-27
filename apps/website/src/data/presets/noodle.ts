@@ -41,6 +41,7 @@ const noodlePresets: Record<string, Preset> = {
 
 const noodle = {
   title: "Noodle",
+  group: "noodle",
   presets: noodlePresets,
 };
 

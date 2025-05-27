@@ -85,6 +85,7 @@ const wolfswitchPresets: Record<string, Preset> = {
 
 const wolfswitch = {
   title: "Wolf Switch",
+  group: "wolf",
   presets: wolfswitchPresets,
 };
 

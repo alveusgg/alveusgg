@@ -61,6 +61,7 @@ const chickenindoorPresets: Record<string, Preset> = {
 
 const chickenindoor = {
   title: "Chicken Indoor",
+  group: "chicken",
   presets: chickenindoorPresets,
 };
 

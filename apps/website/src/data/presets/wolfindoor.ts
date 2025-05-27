@@ -71,6 +71,7 @@ const wolfindoorPresets: Record<string, Preset> = {
 
 const wolfindoor = {
   title: "Wolf Indoor",
+  group: "wolf",
   presets: wolfindoorPresets,
 };
 

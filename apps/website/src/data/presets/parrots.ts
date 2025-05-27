@@ -161,6 +161,7 @@ const parrotsPresets: Record<string, Preset> = {
 
 const parrot = {
   title: "Parrots",
+  group: "parrots",
   presets: parrotsPresets,
 };
 

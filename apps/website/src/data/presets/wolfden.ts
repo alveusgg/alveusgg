@@ -16,6 +16,7 @@ const wolfdenPresets: Record<string, Preset> = {
 
 const wolfden = {
   title: "Wolf Den",
+  group: "wolf",
   presets: wolfdenPresets,
 };
 

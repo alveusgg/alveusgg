@@ -251,6 +251,7 @@ const wolfPresets: Record<string, Preset> = {
 
 const wolf = {
   title: "Wolf",
+  group: "wolf",
   presets: wolfPresets,
 };
 
