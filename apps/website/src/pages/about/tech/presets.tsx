@@ -197,6 +197,8 @@ const AboutTechPresetsPage: NextPage = () => {
                           camera.toLowerCase(),
                         ]}
                         subOnly
+                        tooltip="Run swap command"
+                        className="flex items-center rounded-r bg-alveus-green px-2 text-alveus-tan transition-colors hover:bg-alveus-green-900"
                       />
                     )}
                   </div>

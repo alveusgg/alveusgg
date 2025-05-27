@@ -15,12 +15,16 @@ import getActionPreviewTooltip from "./ActionPreviewTooltip";
 
 interface RunCommandButtonProps extends z.infer<typeof runCommandSchema> {
   subOnly?: boolean;
+  tooltip?: string;
+  className?: string;
 }
 
 const RunCommandButton = ({
   command,
   args,
   subOnly = false,
+  tooltip = "Run command",
+  className,
 }: RunCommandButtonProps) => {
   const { data: session } = useSession();
   const hasScopes = scopeGroups.chat.every((scope) =>
@@ -81,10 +85,11 @@ const RunCommandButton = ({
       onClick={onClick}
       icon={IconVideoCamera}
       tooltip={{
-        text: statusText ?? "Run command",
+        text: statusText ?? tooltip,
         elm: statusText ? undefined : PreviewTooltip,
         force: !!statusText,
       }}
+      className={className}
     />
   );
 };
