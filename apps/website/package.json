@@ -30,8 +30,8 @@
     "@alveusgg/data": "0.59.0",
     "@alveusgg/database": "workspace:*",
     "@auth/prisma-adapter": "^2.9.1",
-    "@aws-sdk/client-s3": "^3.812.0",
-    "@aws-sdk/s3-request-presigner": "^3.812.0",
+    "@aws-sdk/client-s3": "^3.817.0",
+    "@aws-sdk/s3-request-presigner": "^3.817.0",
     "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
     "@cloudflare/stream-react": "^1.9.2",
     "@eyevinn/webrtc-player": "^0.13.0",
@@ -42,7 +42,7 @@
     "@next/env": "^15.3.2",
     "@paralleldrive/cuid2": "^2.2.2",
     "@prisma/nextjs-monorepo-workaround-plugin": "^6.8.2",
-    "@t3-oss/env-nextjs": "^0.13.4",
+    "@t3-oss/env-nextjs": "^0.13.6",
     "@tailwindcss/postcss": "^4.1.7",
     "@tanstack/react-query": "^5.77.2",
     "@trpc/client": "^11.1.3",
@@ -88,7 +88,7 @@
     "slugify": "^1.6.6",
     "smooth-scroll-into-view-if-needed": "^2.0.2",
     "superjson": "^2.2.2",
-    "zod": "^3.25.11"
+    "zod": "^3.25.32"
   },
   "devDependencies": {
     "@eslint-react/eslint-plugin": "^1.50.0",
