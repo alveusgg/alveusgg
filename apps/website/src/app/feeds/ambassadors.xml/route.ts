@@ -24,7 +24,7 @@ export async function GET() {
   const latestActiveAmbassador = sortedActiveAmbassadors[0];
   const latestArrivalDate =
     (latestActiveAmbassador && new Date(latestActiveAmbassador[1].arrival)) ||
-    new Date();
+    undefined;
 
   const feed = new Feed({
     title: "Alveus Sanctuary Ambassadors",

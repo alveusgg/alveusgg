@@ -248,7 +248,14 @@ const BookClubPage: NextPage = () => {
         title="Book Club"
         description="Join the staff at Alveus and the community in reading and discussing a book together each month."
         image={bookClubFull.src}
-      />
+      >
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Alveus Sanctuary Book Club"
+          href="/feeds/book-club.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
