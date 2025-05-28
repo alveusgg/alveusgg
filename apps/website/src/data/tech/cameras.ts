@@ -1,3 +1,5 @@
+import chinmulti from "@/assets/presets/chinmulti.png";
+
 import chicken from "../presets/chicken";
 import chickenindoor from "../presets/chickenindoor";
 import chin from "../presets/chin";
@@ -35,6 +37,15 @@ const cameras = {
   chin,
   chin2,
   chin3,
+  chinmulti: {
+    title: "Chin Multi-View",
+    group: "chin",
+    multi: {
+      cameras: ["chin", "chin2", "chin3"],
+      image: chinmulti,
+      description: "Picture-in-picture of all three chin cameras",
+    },
+  },
   crowin,
   crowout,
   fox,

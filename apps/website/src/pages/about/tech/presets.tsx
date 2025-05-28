@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
-import Image from "next/image";
-import { Fragment, useState } from "react";
+import Image, { type StaticImageData } from "next/image";
+import { Fragment, type ReactNode, useState } from "react";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import { channels, scopeGroups } from "@/data/twitch";
@@ -8,7 +8,7 @@ import { channels, scopeGroups } from "@/data/twitch";
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
-import { trpc } from "@/utils/trpc";
+import { type RouterInputs, trpc } from "@/utils/trpc";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -95,6 +95,7 @@ const AboutTechPresetsPage: NextPage = () => {
   const [selectedCamera, setSelectedCamera] = useState<Camera>(
     typeSafeObjectKeys(cameras)[0]!,
   );
+  const selectedData = cameras[selectedCamera];
 
   return (
     <>
@@ -261,8 +262,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     </button>
 
                     {selectedCamera !== camera &&
-                      cameras[selectedCamera].group ===
-                        cameras[camera].group && (
+                      selectedData.group === cameras[camera].group && (
                         <RunCommandButton
                           command="swap"
                           args={[
@@ -288,31 +288,51 @@ const AboutTechPresetsPage: NextPage = () => {
                     className="scroll-mt-14 text-2xl"
                     id={`presets:${camelToKebab(selectedCamera)}`}
                   >
-                    {cameras[selectedCamera].title}
+                    {selectedData.title}
                     <span className="text-sm text-alveus-green-400 italic">
                       {` (${selectedCamera.toLowerCase()})`}
                     </span>
                   </Heading>
 
                   <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {typeSafeObjectEntries(cameras[selectedCamera].presets).map(
-                      ([name, preset]) => (
-                        <Card
-                          key={name}
-                          title={name}
-                          image={
-                            preset.image
-                              ? { src: preset.image, alt: preset.description }
-                              : undefined
-                          }
-                          command={{
-                            command: "ptzload",
-                            args: [selectedCamera.toLowerCase(), name],
-                          }}
-                        >
-                          {preset.description}
-                        </Card>
-                      ),
+                    {"presets" in selectedData &&
+                      typeSafeObjectEntries(selectedData.presets).map(
+                        ([name, preset]) => (
+                          <Card
+                            key={name}
+                            title={name}
+                            image={
+                              preset.image
+                                ? { src: preset.image, alt: preset.description }
+                                : undefined
+                            }
+                            command={{
+                              command: "ptzload",
+                              args: [selectedCamera.toLowerCase(), name],
+                            }}
+                          >
+                            {preset.description}
+                          </Card>
+                        ),
+                      )}
+
+                    {"multi" in selectedData && (
+                      <Card
+                        title={selectedData.multi.cameras.join(" + ")}
+                        image={
+                          selectedData.multi.image
+                            ? {
+                                src: selectedData.multi.image,
+                                alt:
+                                  selectedData.multi.description ??
+                                  selectedData.multi.cameras.join(" + "),
+                              }
+                            : undefined
+                        }
+                        className="col-span-2"
+                      >
+                        {selectedData.multi.description}
+                      </Card>
                     )}
                   </div>
                 </Fragment>
