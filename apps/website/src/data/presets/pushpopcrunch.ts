@@ -1,6 +1,6 @@
 import home from "@/assets/presets/pushpopcrunch/home.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const pushpopcrunchPresets: Record<string, Preset> = {
   home: {
@@ -11,6 +11,7 @@ const pushpopcrunchPresets: Record<string, Preset> = {
 
 const pushpopcrunch = {
   title: "Pushpop Crunch",
+  group: "pushpop",
   presets: pushpopcrunchPresets,
 };
 

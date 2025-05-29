@@ -10,7 +10,7 @@ import oliversleep from "@/assets/presets/chicken/oliversleep.png";
 import right from "@/assets/presets/chicken/right.png";
 import window from "@/assets/presets/chicken/window.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const chickenPresets: Record<string, Preset> = {
   home: {
@@ -61,6 +61,7 @@ const chickenPresets: Record<string, Preset> = {
 
 const chicken = {
   title: "Chicken",
+  group: "chicken",
   presets: chickenPresets,
 };
 

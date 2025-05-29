@@ -8,7 +8,7 @@ import logz from "@/assets/presets/toast/logz.png";
 import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
 import water from "@/assets/presets/toast/water.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const toastPresets: Record<string, Preset> = {
   home: {
@@ -51,6 +51,7 @@ const toastPresets: Record<string, Preset> = {
 
 const toast = {
   title: "Toast",
+  group: "toast",
   presets: toastPresets,
 };
 

@@ -9,7 +9,7 @@ import sticklt from "@/assets/presets/roaches/sticklt.png";
 import stickr from "@/assets/presets/roaches/stickr.png";
 import stickrt from "@/assets/presets/roaches/stickrt.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const roachesPresets: Record<string, Preset> = {
   home: {
@@ -56,6 +56,7 @@ const roachesPresets: Record<string, Preset> = {
 
 const roaches = {
   title: "Roaches",
+  group: "roaches",
   presets: roachesPresets,
 };
 

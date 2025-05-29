@@ -1,14 +1,14 @@
 import { type NextPage } from "next";
-import Image from "next/image";
-import { Fragment, useState } from "react";
+import Image, { type StaticImageData } from "next/image";
+import { Fragment, type ReactNode, useState } from "react";
 
-import presets, { type Camera } from "@/data/tech/presets";
+import cameras, { type Camera } from "@/data/tech/cameras";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
-import { trpc } from "@/utils/trpc";
+import { type RouterInputs, trpc } from "@/utils/trpc";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -26,6 +26,64 @@ import IconX from "@/icons/IconX";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 
+type Command = RouterInputs["stream"]["runCommand"];
+
+const Card = ({
+  title,
+  image,
+  command,
+  className,
+  children,
+}: {
+  title: string;
+  image?: { src: StaticImageData; alt: string };
+  command?: Command;
+  className?: string;
+  children?: ReactNode;
+}) => (
+  <div
+    className={classes(
+      "rounded-lg border border-alveus-green-900 shadow-lg",
+      className,
+    )}
+  >
+    <div className="group relative aspect-video overflow-hidden rounded-t-lg">
+      {image ? (
+        <Image
+          src={image.src}
+          alt={image.alt}
+          fill
+          className="aspect-video w-full object-cover transition-transform"
+        />
+      ) : (
+        <div className="flex aspect-video items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
+          No Image
+        </div>
+      )}
+    </div>
+    <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
+      <div className="flex items-center justify-between">
+        <h4 className="text-lg font-semibold">{title}</h4>
+        {command && (
+          <div className="flex gap-1">
+            <CopyToClipboardButton
+              text={`!${[command.command, ...(command.args ?? [])].join(" ")}`}
+              options={{ initialText: "Copy command" }}
+              preview
+            />
+            <RunCommandButton
+              command={command.command}
+              args={command.args}
+              subOnly
+            />
+          </div>
+        )}
+      </div>
+      <p className="text-sm text-alveus-green-600 italic">{children}</p>
+    </div>
+  </div>
+);
+
 const AboutTechPresetsPage: NextPage = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
   const subscription = trpc.stream.getSubscription.useQuery(undefined, {
@@ -35,8 +93,9 @@ const AboutTechPresetsPage: NextPage = () => {
   });
 
   const [selectedCamera, setSelectedCamera] = useState<Camera>(
-    typeSafeObjectKeys(presets)[0]!,
+    typeSafeObjectKeys(cameras)[0]!,
   );
+  const selectedData = cameras[selectedCamera];
 
   return (
     <>
@@ -80,29 +139,42 @@ const AboutTechPresetsPage: NextPage = () => {
 
         <Section className="grow">
           <div className="flex flex-col gap-y-4 lg:flex-row">
-            <p className="w-full lg:w-3/5">
-              If you&apos;re subscribed, you can run these commands directly
-              from this page by clicking the{" "}
-              <span className="font-semibold text-alveus-green">
-                Run command{" "}
-                <IconVideoCamera className="mb-0.5 inline-block size-4" />
-              </span>{" "}
-              button in each preset card. This will automatically send the
-              command to the{" "}
-              <Link
-                href={`https://twitch.tv/${channels.alveusgg.username}`}
-                external
-              >
-                {channels.alveusgg.username} Twitch chat
-              </Link>{" "}
-              as if you had typed it in the chat yourself. Make sure you have
-              the{" "}
-              <Link href="/live/twitch" external>
-                livestream
-              </Link>{" "}
-              open in another tab to see the camera change as you load the
-              presets.
-            </p>
+            <div className="w-full lg:w-3/5">
+              <p>
+                If you&apos;re subscribed, you can run these commands directly
+                from this page by clicking the{" "}
+                <span className="font-semibold text-alveus-green">
+                  Run command{" "}
+                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                </span>{" "}
+                button in each preset card. This will automatically send the
+                command to the{" "}
+                <Link
+                  href={`https://twitch.tv/${channels.alveusgg.username}`}
+                  external
+                >
+                  {channels.alveusgg.username} Twitch chat
+                </Link>{" "}
+                as if you had typed it in the chat yourself. Make sure you have
+                the{" "}
+                <Link href="/live/twitch" external>
+                  livestream
+                </Link>{" "}
+                open in another tab to see the camera change as you load the
+                presets.
+              </p>
+
+              <p className="hidden lg:mt-2 lg:block">
+                Next to each camera in the menu you&apos;ll also find a{" "}
+                <span className="font-semibold text-alveus-green">
+                  Run swap command{" "}
+                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                </span>{" "}
+                button if the camera is in the same enclosure as the currently
+                selected camera, allowing you to swap which camera is shown on
+                stream if you&apos;re subscribed.
+              </p>
+            </div>
 
             <div className="w-full lg:w-2/5 lg:px-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
@@ -159,9 +231,9 @@ const AboutTechPresetsPage: NextPage = () => {
                   onChange={(e) => setSelectedCamera(e.target.value as Camera)}
                   className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 >
-                  {typeSafeObjectKeys(presets).map((camera) => (
+                  {typeSafeObjectKeys(cameras).map((camera) => (
                     <option key={camera} value={camera}>
-                      {presets[camera].title} ({camera.toLowerCase()})
+                      {cameras[camera].title} ({camera.toLowerCase()})
                     </option>
                   ))}
                 </select>
@@ -169,22 +241,40 @@ const AboutTechPresetsPage: NextPage = () => {
 
               {/* Desktop: Button List */}
               <div className="hidden space-y-2 lg:block">
-                {typeSafeObjectKeys(presets).map((camera) => (
-                  <button
+                {typeSafeObjectKeys(cameras).map((camera) => (
+                  <div
                     key={camera}
-                    onClick={() => setSelectedCamera(camera)}
-                    className={classes(
-                      "w-full rounded px-3 py-2 text-left text-lg font-semibold",
-                      selectedCamera === camera
-                        ? "bg-alveus-green text-white"
-                        : "bg-alveus-green-50 hover:bg-alveus-green-100",
-                    )}
+                    className="flex w-full overflow-hidden rounded"
                   >
-                    {presets[camera].title}
-                    <span className="text-sm text-alveus-green-400 italic">
-                      {` (${camera.toLowerCase()})`}
-                    </span>
-                  </button>
+                    <button
+                      onClick={() => setSelectedCamera(camera)}
+                      className={classes(
+                        "my-auto grow px-3 py-2 text-left text-lg font-semibold",
+                        selectedCamera === camera
+                          ? "bg-alveus-green text-white"
+                          : "bg-alveus-green-50 hover:bg-alveus-green-100",
+                      )}
+                    >
+                      {cameras[camera].title}
+                      <span className="text-sm text-alveus-green-400 italic">
+                        {` (${camera.toLowerCase()})`}
+                      </span>
+                    </button>
+
+                    {selectedCamera !== camera &&
+                      selectedData.group === cameras[camera].group && (
+                        <RunCommandButton
+                          command="swap"
+                          args={[
+                            selectedCamera.toLowerCase(),
+                            camera.toLowerCase(),
+                          ]}
+                          subOnly
+                          tooltip="Run swap command"
+                          className="flex items-center rounded-r bg-alveus-green px-2 text-alveus-tan transition-colors hover:bg-alveus-green-900"
+                        />
+                      )}
+                  </div>
                 ))}
               </div>
             </div>
@@ -198,55 +288,51 @@ const AboutTechPresetsPage: NextPage = () => {
                     className="scroll-mt-14 text-2xl"
                     id={`presets:${camelToKebab(selectedCamera)}`}
                   >
-                    {presets[selectedCamera].title}
+                    {selectedData.title}
                     <span className="text-sm text-alveus-green-400 italic">
                       {` (${selectedCamera.toLowerCase()})`}
                     </span>
                   </Heading>
 
                   <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {typeSafeObjectEntries(presets[selectedCamera].presets).map(
-                      ([name, preset]) => (
-                        <div
-                          key={name}
-                          className="rounded-lg border border-alveus-green-900 shadow-lg"
-                        >
-                          <div className="group relative aspect-video overflow-hidden rounded-t-lg">
-                            {preset.image ? (
-                              <Image
-                                src={preset.image}
-                                alt={preset.description}
-                                fill
-                                className="aspect-video w-full object-cover transition-transform"
-                              />
-                            ) : (
-                              <div className="flex aspect-video items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
-                                No Image
-                              </div>
-                            )}
-                          </div>
-                          <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
-                            <div className="flex items-center justify-between">
-                              <h4 className="text-lg font-semibold">{name}</h4>
-                              <div className="flex gap-1">
-                                <CopyToClipboardButton
-                                  text={`!ptzload ${selectedCamera.toLowerCase()} ${name}`}
-                                  options={{ initialText: "Copy command" }}
-                                  preview
-                                />
-                                <RunCommandButton
-                                  command="ptzload"
-                                  args={[selectedCamera.toLowerCase(), name]}
-                                  subOnly
-                                />
-                              </div>
-                            </div>
-                            <p className="text-sm text-alveus-green-600 italic">
-                              {preset.description}
-                            </p>
-                          </div>
-                        </div>
-                      ),
+                    {"presets" in selectedData &&
+                      typeSafeObjectEntries(selectedData.presets).map(
+                        ([name, preset]) => (
+                          <Card
+                            key={name}
+                            title={name}
+                            image={
+                              preset.image
+                                ? { src: preset.image, alt: preset.description }
+                                : undefined
+                            }
+                            command={{
+                              command: "ptzload",
+                              args: [selectedCamera.toLowerCase(), name],
+                            }}
+                          >
+                            {preset.description}
+                          </Card>
+                        ),
+                      )}
+
+                    {"multi" in selectedData && (
+                      <Card
+                        title={selectedData.multi.cameras.join(" + ")}
+                        image={
+                          selectedData.multi.image
+                            ? {
+                                src: selectedData.multi.image,
+                                alt:
+                                  selectedData.multi.description ??
+                                  selectedData.multi.cameras.join(" + "),
+                              }
+                            : undefined
+                        }
+                        className="col-span-2"
+                      >
+                        {selectedData.multi.description}
+                      </Card>
                     )}
                   </div>
                 </Fragment>

@@ -38,7 +38,7 @@ import stompyfood from "@/assets/presets/pasture/stompyfood.png";
 import sunrise from "@/assets/presets/pasture/sunrise.png";
 import water from "@/assets/presets/pasture/water.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const pasturePresets: Record<string, Preset> = {
   home: {
@@ -201,6 +201,7 @@ const pasturePresets: Record<string, Preset> = {
 
 const pasture = {
   title: "Pasture",
+  group: "pasture",
   presets: pasturePresets,
 };
 

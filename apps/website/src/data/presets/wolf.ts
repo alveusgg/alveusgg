@@ -48,7 +48,7 @@ import trees from "@/assets/presets/wolf/trees.png";
 import waterfall from "@/assets/presets/wolf/waterfall.png";
 import wolfcornercam from "@/assets/presets/wolf/wolfcornercam.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const wolfPresets: Record<string, Preset> = {
   home: {
@@ -251,6 +251,7 @@ const wolfPresets: Record<string, Preset> = {
 
 const wolf = {
   title: "Wolf",
+  group: "wolf",
   presets: wolfPresets,
 };
 

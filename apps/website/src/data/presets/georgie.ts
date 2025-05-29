@@ -7,7 +7,7 @@ import land from "@/assets/presets/georgie/land.png";
 import landz from "@/assets/presets/georgie/landz.png";
 import shore from "@/assets/presets/georgie/shore.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const georgiePresets: Record<string, Preset> = {
   home: {
@@ -46,6 +46,7 @@ const georgiePresets: Record<string, Preset> = {
 
 const georgie = {
   title: "Georgie",
+  group: "georgie",
   presets: georgiePresets,
 };
 

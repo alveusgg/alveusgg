@@ -12,7 +12,7 @@ import platformright from "@/assets/presets/wolfindoor/platformright.png";
 import platformrightb from "@/assets/presets/wolfindoor/platformrightb.png";
 import right from "@/assets/presets/wolfindoor/right.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const wolfindoorPresets: Record<string, Preset> = {
   home: {
@@ -71,6 +71,7 @@ const wolfindoorPresets: Record<string, Preset> = {
 
 const wolfindoor = {
   title: "Wolf Indoor",
+  group: "wolf",
   presets: wolfindoorPresets,
 };
 

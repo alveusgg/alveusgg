@@ -1,7 +1,7 @@
 import home from "@/assets/presets/hank/home.png";
 import water from "@/assets/presets/hank/water.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const hankPresets: Record<string, Preset> = {
   home: {
@@ -16,6 +16,7 @@ const hankPresets: Record<string, Preset> = {
 
 const hank = {
   title: "Hank",
+  group: "hank",
   presets: hankPresets,
 };
 

@@ -1,3 +1,5 @@
+import chinmulti from "@/assets/presets/chinmulti.png";
+
 import chicken from "../presets/chicken";
 import chickenindoor from "../presets/chickenindoor";
 import chin from "../presets/chin";
@@ -16,7 +18,6 @@ import noodle from "../presets/noodle";
 import parrot from "../presets/parrots";
 import pasture from "../presets/pasture";
 import patchy from "../presets/patchy";
-import type { Preset } from "../presets/preset";
 import pushpop from "../presets/pushpop";
 import pushpopcrunch from "../presets/pushpopcrunch";
 import pushpopindoor from "../presets/pushpopindoor";
@@ -28,11 +29,7 @@ import wolfden from "../presets/wolfden";
 import wolfden2 from "../presets/wolfden2";
 import wolfindoor from "../presets/wolfindoor";
 import wolfswitch from "../presets/wolfswitch";
-
-interface CameraData {
-  title: string;
-  presets: Record<string, Preset>;
-}
+import type { CameraMulti, CameraPTZ } from "./cameras.types";
 
 const cameras = {
   chicken,
@@ -40,6 +37,15 @@ const cameras = {
   chin,
   chin2,
   chin3,
+  chinmulti: {
+    title: "Chin Multi-View",
+    group: "chin",
+    multi: {
+      cameras: ["chin", "chin2", "chin3"],
+      image: chinmulti,
+      description: "Picture-in-picture of all three chin cameras",
+    },
+  },
   crowin,
   crowout,
   fox,
@@ -64,7 +70,7 @@ const cameras = {
   wolfden2,
   wolfindoor,
   wolfswitch,
-} as const satisfies Record<string, CameraData>;
+} as const satisfies Record<string, CameraPTZ | CameraMulti>;
 
 export type Camera = keyof typeof cameras;
 export default cameras;

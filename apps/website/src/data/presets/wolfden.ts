@@ -1,7 +1,7 @@
 import home from "@/assets/presets/wolfden/home.png";
 import rightcorner from "@/assets/presets/wolfden/rightcorner.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const wolfdenPresets: Record<string, Preset> = {
   home: {
@@ -16,6 +16,7 @@ const wolfdenPresets: Record<string, Preset> = {
 
 const wolfden = {
   title: "Wolf Den",
+  group: "wolf",
   presets: wolfdenPresets,
 };
 

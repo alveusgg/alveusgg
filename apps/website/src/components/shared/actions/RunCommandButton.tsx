@@ -1,26 +1,29 @@
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { z } from "zod";
-
-import type { runCommandSchema } from "@/server/trpc/router/stream";
 
 import { scopeGroups } from "@/data/twitch";
 
-import { trpc } from "@/utils/trpc";
+import { type RouterInputs, trpc } from "@/utils/trpc";
 
 import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import ActionButton from "./ActionButton";
 import getActionPreviewTooltip from "./ActionPreviewTooltip";
 
-interface RunCommandButtonProps extends z.infer<typeof runCommandSchema> {
+type Command = RouterInputs["stream"]["runCommand"];
+
+interface RunCommandButtonProps extends Command {
   subOnly?: boolean;
+  tooltip?: string;
+  className?: string;
 }
 
 const RunCommandButton = ({
   command,
   args,
   subOnly = false,
+  tooltip = "Run command",
+  className,
 }: RunCommandButtonProps) => {
   const { data: session } = useSession();
   const hasScopes = scopeGroups.chat.every((scope) =>
@@ -81,10 +84,11 @@ const RunCommandButton = ({
       onClick={onClick}
       icon={IconVideoCamera}
       tooltip={{
-        text: statusText ?? "Run command",
+        text: statusText ?? tooltip,
         elm: statusText ? undefined : PreviewTooltip,
         force: !!statusText,
       }}
+      className={className}
     />
   );
 };

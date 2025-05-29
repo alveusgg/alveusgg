@@ -1,6 +1,6 @@
 import home from "@/assets/presets/chin2/home.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const chin2Presets: Record<string, Preset> = {
   home: {
@@ -11,6 +11,7 @@ const chin2Presets: Record<string, Preset> = {
 
 const chin2 = {
   title: "Chin Lower Left",
+  group: "chin",
   presets: chin2Presets,
 };
 

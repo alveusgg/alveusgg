@@ -9,7 +9,7 @@ import table from "@/assets/presets/foxcorner/table.png";
 import training2 from "@/assets/presets/foxcorner/training2.png";
 import training from "@/assets/presets/foxcorner/training.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const foxcornerPresets: Record<string, Preset> = {
   home: {
@@ -56,6 +56,7 @@ const foxcornerPresets: Record<string, Preset> = {
 
 const foxcorner = {
   title: "Fox Corner",
+  group: "fox",
   presets: foxcornerPresets,
 };
 

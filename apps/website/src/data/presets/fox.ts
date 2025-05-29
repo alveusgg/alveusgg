@@ -38,7 +38,7 @@ import treehouse from "@/assets/presets/fox/treehouse.png";
 import treehousel from "@/assets/presets/fox/treehousel.png";
 import treehouser from "@/assets/presets/fox/treehouser.png";
 
-import type { Preset } from "./preset";
+import type { Preset } from "../tech/cameras.types.ts";
 
 const foxPresets: Record<string, Preset> = {
   home: {
@@ -201,6 +201,7 @@ const foxPresets: Record<string, Preset> = {
 
 const fox = {
   title: "Fox",
+  group: "fox",
   presets: foxPresets,
 };
 
