@@ -40,6 +40,7 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
         name: String(formData.get("name")),
         command: convertToSlug(String(formData.get("name"))),
         ambassador: String(formData.get("ambassador")),
+        hidden: check?.hidden ?? false,
       };
 
       const command =

@@ -3,6 +3,7 @@ import { z } from "zod";
 import {
   createRoundsCheck,
   editRoundsCheck,
+  existingRoundsCheckSchema,
   moveRoundsCheck,
   roundsCheckSchema,
 } from "@/server/db/rounds-checks";
@@ -21,12 +22,12 @@ const permittedProcedure = protectedProcedure.use(
 export const adminRoundsChecksRouter = router({
   createOrEditRoundsCheck: permittedProcedure
     .input(
-      z
-        .discriminatedUnion("action", [
-          z.object({ action: z.literal("create") }),
-          z.object({ action: z.literal("edit"), id: z.string().cuid() }),
-        ])
-        .and(roundsCheckSchema),
+      z.discriminatedUnion("action", [
+        z.object({ action: z.literal("create") }).merge(roundsCheckSchema),
+        z
+          .object({ action: z.literal("edit") })
+          .merge(existingRoundsCheckSchema),
+      ]),
     )
     .mutation(async ({ input }) => {
       switch (input.action) {

@@ -2,8 +2,7 @@ import { useState } from "react";
 
 import type { RoundsCheck } from "@alveusgg/database";
 
-import { MAX_ROUNDS_CHECKS } from "@/server/db/rounds-checks";
-
+import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
 import { Headline } from "@/components/admin/Headline";
@@ -18,6 +17,8 @@ import {
 
 import IconArrowDown from "@/icons/IconArrowDown";
 import IconArrowUp from "@/icons/IconArrowUp";
+import IconEye from "@/icons/IconEye";
+import IconEyeSlash from "@/icons/IconEyeSlash";
 import IconPencil from "@/icons/IconPencil";
 import IconTrash from "@/icons/IconTrash";
 
@@ -34,6 +35,11 @@ function RoundsCheck({ check, onError, onUpdate, first, last }: CheckProps) {
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
   });
+  const editMutation =
+    trpc.adminRoundsChecks.createOrEditRoundsCheck.useMutation({
+      onError: (error) => onError(error.message),
+      onSettled: () => onUpdate(),
+    });
   const moveMutation = trpc.adminRoundsChecks.moveRoundsCheck.useMutation({
     onError: (error) => onError(error.message),
     onSettled: () => onUpdate(),
@@ -42,8 +48,10 @@ function RoundsCheck({ check, onError, onUpdate, first, last }: CheckProps) {
   return (
     <>
       <tr className="border-b border-gray-700">
-        <td>{check.name}</td>
-        <td>{`!check ${check.command}`}</td>
+        <td className={classes(check.hidden && "opacity-50")}>{check.name}</td>
+        <td
+          className={classes(check.hidden && "opacity-50")}
+        >{`!check ${check.command}`}</td>
         <td className="flex flex-row flex-wrap gap-2 p-1">
           <LinkButton
             size="small"
@@ -96,6 +104,29 @@ function RoundsCheck({ check, onError, onUpdate, first, last }: CheckProps) {
           >
             <IconArrowDown className="size-5" />
           </Button>
+
+          <Button
+            size="small"
+            width="auto"
+            className={classes(
+              secondaryButtonClasses,
+              check.hidden && "opacity-75",
+            )}
+            title={`${check.hidden ? "Show" : "Hide"} check`}
+            onClick={() =>
+              editMutation.mutate({
+                action: "edit",
+                id: check.id,
+                hidden: !check.hidden,
+              })
+            }
+          >
+            {check.hidden ? (
+              <IconEyeSlash className="size-5" />
+            ) : (
+              <IconEye className="size-5" />
+            )}
+          </Button>
         </td>
       </tr>
     </>
@@ -147,12 +178,6 @@ export function RoundsChecks() {
             href="/admin/rounds-checks/create"
             size="small"
             width="auto"
-            aria-disabled={(checks?.data?.length ?? 0) >= MAX_ROUNDS_CHECKS}
-            onClick={(e) => {
-              if ((checks?.data?.length ?? 0) >= MAX_ROUNDS_CHECKS) {
-                e.preventDefault();
-              }
-            }}
           >
             + Create rounds check
           </LinkButton>
