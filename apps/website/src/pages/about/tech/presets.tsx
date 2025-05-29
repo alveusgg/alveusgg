@@ -1,3 +1,8 @@
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
 import { Fragment, type ReactNode, useState } from "react";
@@ -6,8 +11,12 @@ import cameras, { type Camera } from "@/data/tech/cameras";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
-import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
-import { camelToKebab } from "@/utils/string-case";
+import {
+  isDefinedEntry,
+  typeSafeObjectEntries,
+  typeSafeObjectKeys,
+} from "@/utils/helpers";
+import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
 import Heading from "@/components/content/Heading";
@@ -19,12 +28,24 @@ import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardBu
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
 import IconCheck from "@/icons/IconCheck";
+import IconChevronDown from "@/icons/IconChevronDown";
 import IconLoading from "@/icons/IconLoading";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconX from "@/icons/IconX";
 
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+
+const groupedCameras = typeSafeObjectEntries(cameras).reduce(
+  (acc, [key, value]) => ({
+    ...acc,
+    [value.group]: {
+      ...acc[value.group],
+      [key]: value,
+    },
+  }),
+  {} as Record<string, Partial<typeof cameras>>,
+);
 
 type Command = RouterInputs["stream"]["runCommand"];
 
@@ -284,20 +305,68 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
 
               {/* Desktop: Button List */}
-              <div className="hidden space-y-2 lg:block">
-                {typeSafeObjectKeys(cameras).map((camera) => (
-                  <Button
-                    key={camera}
-                    camera={camera}
-                    title={cameras[camera].title}
-                    group={cameras[camera].group}
-                    onClick={() => setSelectedCamera(camera)}
-                    selected={{
-                      camera: selectedCamera,
-                      group: selectedData.group,
-                    }}
-                  />
-                ))}
+              <div className="hidden lg:flex lg:flex-col lg:gap-1">
+                {typeSafeObjectEntries(groupedCameras).map(([name, group]) => {
+                  const groupEntries =
+                    typeSafeObjectEntries(group).filter(isDefinedEntry);
+                  if (groupEntries.length === 0) return null;
+
+                  if (groupEntries.length === 1) {
+                    const [camera, { title, group }] = groupEntries[0]!;
+                    return (
+                      <Button
+                        key={camera}
+                        camera={camera}
+                        title={title}
+                        group={group}
+                        onClick={() => setSelectedCamera(camera)}
+                        selected={{
+                          camera: selectedCamera,
+                          group: selectedData.group,
+                        }}
+                      />
+                    );
+                  }
+
+                  return (
+                    <Disclosure
+                      key={name}
+                      defaultOpen={name === selectedData.group}
+                    >
+                      <DisclosureButton
+                        className={classes(
+                          "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold",
+                          selectedData.group === name
+                            ? "bg-alveus-green text-white"
+                            : "bg-alveus-green-50 hover:bg-alveus-green-100",
+                        )}
+                      >
+                        <span>
+                          {camelToTitle(name)} Cameras
+                          <span className="text-sm text-alveus-green-400 italic">
+                            {` (${groupEntries.length})`}
+                          </span>
+                        </span>
+                        <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
+                      </DisclosureButton>
+                      <DisclosurePanel className="ml-4 flex flex-col gap-1">
+                        {groupEntries.map(([camera, { title, group }]) => (
+                          <Button
+                            key={camera}
+                            camera={camera}
+                            title={title}
+                            group={group}
+                            onClick={() => setSelectedCamera(camera)}
+                            selected={{
+                              camera: selectedCamera,
+                              group: selectedData.group,
+                            }}
+                          />
+                        ))}
+                      </DisclosurePanel>
+                    </Disclosure>
+                  );
+                })}
               </div>
             </div>
 
