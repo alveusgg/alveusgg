@@ -5,7 +5,7 @@ import { prisma } from "@alveusgg/database";
 
 import { SLUG_REGEX } from "@/utils/slugs";
 
-export const MAX_ROUNDS_CHECKS = 12;
+export const MAX_VISIBLE_ROUNDS_CHECKS = 12;
 
 export const roundsCheckSchema = z.object({
   name: z.string().min(1),
@@ -34,20 +34,22 @@ export async function createRoundsCheck(
       message: "Command already exists",
     });
 
-  const existingRoundsChecksStats = await prisma.roundsCheck.aggregate({
-    _count: true,
+  if (input.hidden === false) {
+    const existingRoundsChecksVisible = await prisma.roundsCheck.aggregate({
+      where: { hidden: false },
+      _count: true,
+    });
+    if (existingRoundsChecksVisible._count >= MAX_VISIBLE_ROUNDS_CHECKS)
+      input.hidden = true;
+  }
+
+  const existingRoundsChecksOrder = await prisma.roundsCheck.aggregate({
     _max: { order: true },
   });
-  if (existingRoundsChecksStats._count >= MAX_ROUNDS_CHECKS)
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "Maximum number of rounds checks reached",
-    });
-
   return await prisma.roundsCheck.create({
     data: {
       ...input,
-      order: (existingRoundsChecksStats._max.order ?? 0) + 1,
+      order: (existingRoundsChecksOrder._max.order ?? 0) + 1,
     },
   });
 }
@@ -63,6 +65,18 @@ export async function editRoundsCheck(
       throw new TRPCError({
         code: "BAD_REQUEST",
         message: "Command already exists",
+      });
+  }
+
+  if (input.hidden === false) {
+    const existingRoundsChecksVisible = await prisma.roundsCheck.aggregate({
+      where: { hidden: false, id: { not: input.id } },
+      _count: true,
+    });
+    if (existingRoundsChecksVisible._count >= MAX_VISIBLE_ROUNDS_CHECKS)
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Maximum number of visible rounds checks reached",
       });
   }
 

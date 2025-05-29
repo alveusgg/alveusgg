@@ -2,8 +2,6 @@ import { useState } from "react";
 
 import type { RoundsCheck } from "@alveusgg/database";
 
-import { MAX_ROUNDS_CHECKS } from "@/server/db/rounds-checks";
-
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
@@ -180,12 +178,6 @@ export function RoundsChecks() {
             href="/admin/rounds-checks/create"
             size="small"
             width="auto"
-            aria-disabled={(checks?.data?.length ?? 0) >= MAX_ROUNDS_CHECKS}
-            onClick={(e) => {
-              if ((checks?.data?.length ?? 0) >= MAX_ROUNDS_CHECKS) {
-                e.preventDefault();
-              }
-            }}
           >
             + Create rounds check
           </LinkButton>
