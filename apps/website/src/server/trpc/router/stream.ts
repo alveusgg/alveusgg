@@ -34,7 +34,10 @@ export const streamRouter = router({
   getWeather: publicProcedure.query(getWeather),
 
   getRoundsChecks: publicProcedure.query(({ ctx }) =>
-    ctx.prisma.roundsCheck.findMany({ orderBy: { order: "asc" } }),
+    ctx.prisma.roundsCheck.findMany({
+      where: { hidden: false },
+      orderBy: { order: "asc" },
+    }),
   ),
 
   getSubscription: protectedProcedure.query(async ({ ctx }) => {

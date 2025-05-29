@@ -482,9 +482,10 @@ model TwitchChannel {
 }
 
 model RoundsCheck {
-  id         String @id @default(cuid())
+  id         String  @id @default(cuid())
   name       String
-  command    String @unique
+  command    String  @unique
   ambassador String
   order      Int
+  hidden     Boolean @default(false)
 }
