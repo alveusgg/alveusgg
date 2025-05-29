@@ -28,6 +28,50 @@ import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 
 type Command = RouterInputs["stream"]["runCommand"];
 
+const Button = ({
+  camera,
+  title,
+  group,
+  onClick,
+  selected,
+}: {
+  camera: Camera;
+  title: string;
+  group: string;
+  onClick: () => void;
+  selected: {
+    camera: Camera;
+    group: string;
+  };
+}) => (
+  <div className="flex w-full overflow-hidden rounded">
+    <button
+      onClick={onClick}
+      className={classes(
+        "my-auto grow px-3 py-2 text-left text-lg font-semibold",
+        camera === selected.camera
+          ? "bg-alveus-green text-white"
+          : "bg-alveus-green-50 hover:bg-alveus-green-100",
+      )}
+    >
+      {title}
+      <span className="text-sm text-alveus-green-400 italic">
+        {` (${camera.toLowerCase()})`}
+      </span>
+    </button>
+
+    {camera !== selected.camera && group === selected.group && (
+      <RunCommandButton
+        command="swap"
+        args={[selected.camera.toLowerCase(), camera.toLowerCase()]}
+        subOnly
+        tooltip="Run swap command"
+        className="flex items-center rounded-r bg-alveus-green px-2 text-alveus-tan transition-colors hover:bg-alveus-green-900"
+      />
+    )}
+  </div>
+);
+
 const Card = ({
   title,
   image,
@@ -242,39 +286,17 @@ const AboutTechPresetsPage: NextPage = () => {
               {/* Desktop: Button List */}
               <div className="hidden space-y-2 lg:block">
                 {typeSafeObjectKeys(cameras).map((camera) => (
-                  <div
+                  <Button
                     key={camera}
-                    className="flex w-full overflow-hidden rounded"
-                  >
-                    <button
-                      onClick={() => setSelectedCamera(camera)}
-                      className={classes(
-                        "my-auto grow px-3 py-2 text-left text-lg font-semibold",
-                        selectedCamera === camera
-                          ? "bg-alveus-green text-white"
-                          : "bg-alveus-green-50 hover:bg-alveus-green-100",
-                      )}
-                    >
-                      {cameras[camera].title}
-                      <span className="text-sm text-alveus-green-400 italic">
-                        {` (${camera.toLowerCase()})`}
-                      </span>
-                    </button>
-
-                    {selectedCamera !== camera &&
-                      selectedData.group === cameras[camera].group && (
-                        <RunCommandButton
-                          command="swap"
-                          args={[
-                            selectedCamera.toLowerCase(),
-                            camera.toLowerCase(),
-                          ]}
-                          subOnly
-                          tooltip="Run swap command"
-                          className="flex items-center rounded-r bg-alveus-green px-2 text-alveus-tan transition-colors hover:bg-alveus-green-900"
-                        />
-                      )}
-                  </div>
+                    camera={camera}
+                    title={cameras[camera].title}
+                    group={cameras[camera].group}
+                    onClick={() => setSelectedCamera(camera)}
+                    selected={{
+                      camera: selectedCamera,
+                      group: selectedData.group,
+                    }}
+                  />
                 ))}
               </div>
             </div>
