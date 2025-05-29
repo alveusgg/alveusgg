@@ -14,13 +14,13 @@
   },
   "scripts": {
     "types": "tsc --noEmit",
-    "build:compile": "tsc --outDir dist --declaration --sourcemap",
     "build:generate": "prisma generate",
-    "build": "run-s build:generate build:compile",
-    "postinstall": "run-s build",
+    "build:compile": "tsc --outDir dist --declaration --sourcemap",
+    "build": "pnpm run --sequential \"/^build:.*/\"",
+    "postinstall": "pnpm build",
     "lint:validate": "prisma validate",
     "lint:format": "prisma format --check",
-    "lint": "run-p lint:*",
+    "lint": "pnpm run \"/^lint:.*/\"",
     "format": "prisma format"
   },
   "dependencies": {
@@ -29,7 +29,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.23",
-    "npm-run-all2": "^8.0.4",
     "prisma": "^6.8.2"
   },
   "exports": {
