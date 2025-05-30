@@ -100,8 +100,8 @@ importers:
   apps/website:
     dependencies:
       '@alveusgg/data':
-        specifier: 0.59.0
-        version: 0.59.0(tailwindcss@4.1.7)(zod@3.25.32)
+        specifier: 0.60.0-pre.f004200b2f60a02f431f9c898d96624797b003ba
+        version: 0.60.0-pre.f004200b2f60a02f431f9c898d96624797b003ba(tailwindcss@4.1.7)(zod@3.25.32)
       '@alveusgg/database':
         specifier: workspace:*
         version: link:../database
@@ -416,14 +416,11 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  '@alveusgg/data@0.59.0':
-    resolution: {integrity: sha512-tesO6cqgqg2lN1EMHOOtRLeEv9I+jFVfqJgPrIc7P2FTizl69Vi/Vkmi+MbUMVS0Ug47KnMV4KUFv4w9xRkstQ==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.59.0/f8c6516b9a03b22d8807d9f81f6633735e5cd915}
+  '@alveusgg/data@0.60.0-pre.f004200b2f60a02f431f9c898d96624797b003ba':
+    resolution: {integrity: sha512-DRsIqgLtactWbBhfoDibsPAK8oeQmP9Ijpj+aptRQFsBWL8M9BDO7Pce1BuFxejOblqqtWjjC5lHv5oqGVpdGg==, tarball: https://npm.pkg.github.com/download/@alveusgg/data/0.60.0-pre.f004200b2f60a02f431f9c898d96624797b003ba/02e40ae4863f454e5a3ed3707675c7c7947ff52a}
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
-    peerDependenciesMeta:
-      tailwindcss:
-        optional: true
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -6568,11 +6565,10 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.59.0(tailwindcss@4.1.7)(zod@3.25.32)':
+  '@alveusgg/data@0.60.0-pre.f004200b2f60a02f431f9c898d96624797b003ba(tailwindcss@4.1.7)(zod@3.25.32)':
     dependencies:
-      zod: 3.25.32
-    optionalDependencies:
       tailwindcss: 4.1.7
+      zod: 3.25.32
 
   '@ampproject/remapping@2.3.0':
     dependencies:
