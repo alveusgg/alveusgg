@@ -2,7 +2,13 @@ import {
   Stream as CloudflareStream,
   type StreamPlayerApi,
 } from "@cloudflare/stream-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import Image, { type StaticImageData } from "next/image";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { env } from "@/env";
+
+import { classes } from "@/utils/classes";
+import { createImageUrl } from "@/utils/image";
 
 type StreamProps = {
   src: {
@@ -15,7 +21,7 @@ type StreamProps = {
   controls?: boolean;
   className?: string;
   title?: string;
-  poster?: string;
+  poster?: StaticImageData;
   threshold?: number;
 };
 
@@ -87,8 +93,24 @@ const Stream = ({
     return () => clearInterval(interval);
   }, [playPause]);
 
+  const computedPoster = useMemo(
+    () =>
+      poster &&
+      env.NEXT_PUBLIC_BASE_URL +
+        createImageUrl({ src: poster.src, width: 1200 }),
+    [poster],
+  );
+
   return (
-    <div className={className} ref={ref}>
+    <div className={classes("relative", className)} ref={ref}>
+      {poster && (
+        <Image
+          src={poster}
+          alt=""
+          className="absolute inset-0 -z-10 h-full w-full object-cover"
+          width={1200}
+        />
+      )}
       {seen && (
         <CloudflareStream
           src={src.id}
@@ -97,7 +119,7 @@ const Stream = ({
           muted={muted}
           controls={controls}
           title={title}
-          poster={poster}
+          poster={computedPoster}
           width="100%"
           height="100%"
           letterboxColor="transparent"
