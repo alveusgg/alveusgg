@@ -88,7 +88,7 @@ const animalCareChats: RegularEvent = {
     "Join animal care staff as they carry out their daily tasks and answer your questions.",
   category: "Alveus Regular Stream",
   link: "https://twitch.tv/AlveusSanctuary",
-  startTime: { hour: 14, minute: 30 },
+  startTime: { hour: 10, minute: 0 },
 };
 
 const mayaStream: RegularEvent = {

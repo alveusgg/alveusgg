@@ -37,6 +37,7 @@ import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
 import jasonTheWeen from "@/assets/collaborations/jason-the-ween.png";
 import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
 import jinny from "@/assets/collaborations/jinny.png";
+import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
@@ -79,6 +80,20 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Juliakins",
+      link: "https://www.twitch.tv/juliakins",
+      date: new Date("2025-05-29"),
+      videoId: "43nh-ln7WkI",
+      vodId: "j3kx9NXwyJ0",
+      creators: [
+        {
+          name: "Juliakins",
+          image: juliakins,
+          popularity: 88_000, // Twitch followers, 2025-05-31
+        },
+      ],
+    },
     {
       name: "PizzaPrincessG",
       link: "https://www.twitch.tv/pizzaprincessg",
