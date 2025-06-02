@@ -104,6 +104,7 @@ const EventItems = ({
             <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
               <Stream
                 src={event.video}
+                poster={event.poster}
                 autoplay
                 muted
                 loop
