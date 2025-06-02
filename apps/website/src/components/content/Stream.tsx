@@ -19,6 +19,7 @@ type StreamProps = {
   loop?: boolean;
   muted?: boolean;
   controls?: boolean;
+  time?: number;
   className?: string;
   title?: string;
   poster?: StaticImageData;
@@ -30,6 +31,7 @@ const Stream = ({
   autoplay = false,
   loop = false,
   muted = false,
+  time,
   controls = false,
   className,
   title,
@@ -118,6 +120,7 @@ const Stream = ({
           loop={loop}
           muted={muted}
           controls={controls}
+          currentTime={time}
           title={title}
           poster={computedPoster}
           width="100%"
