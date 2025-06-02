@@ -486,7 +486,13 @@ const config: NextConfig = {
     return config;
   },
   experimental: {
+    // Restore scroll position when navigating back
     scrollRestoration: true,
+    // Enable the usage of threads for Webpack
+    webpackBuildWorker: true,
+    // Execute parallelization of server builds
+    parallelServerBuildTraces: true,
+    parallelServerCompiles: true,
   },
   // Move the dev indicator out the way of the consent toggle
   devIndicators: {
