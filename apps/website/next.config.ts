@@ -488,6 +488,9 @@ const config: NextConfig = {
   experimental: {
     // Restore scroll position when navigating back
     scrollRestoration: true,
+    // Ensure that server-side code is also minified (with source maps)
+    serverMinification: true,
+    serverSourceMaps: true,
     // Enable the usage of threads for Webpack
     webpackBuildWorker: true,
     // Execute parallelization of server builds
