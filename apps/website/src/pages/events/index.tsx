@@ -1,4 +1,3 @@
-import { Stream } from "@cloudflare/stream-react";
 import { type NextPage } from "next";
 import Image from "next/image";
 
@@ -14,6 +13,7 @@ import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Stream from "@/components/content/Stream";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -103,14 +103,10 @@ const EventItems = ({
           >
             <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
               <Stream
-                src={event.video.id}
-                customerCode={event.video.cu}
+                src={event.video}
                 autoplay
                 muted
                 loop
-                letterboxColor="transparent"
-                height="100%"
-                width="100%"
                 className="my-auto aspect-video w-full"
               />
             </Box>
