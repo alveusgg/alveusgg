@@ -475,6 +475,7 @@ const AboutTechPresetsPage: NextPage = () => {
         <Moveable
           className="right-2 bottom-2 z-50 w-2xl rounded-xl shadow-xl"
           fixed
+          store="presets:twitch-embed"
         >
           <Box className="p-0" dark>
             <Twitch channel="alveussanctuary" />

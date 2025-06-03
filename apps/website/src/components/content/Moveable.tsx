@@ -1,13 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 
 import { classes } from "@/utils/classes";
+import { safeJSONParse } from "@/utils/helpers";
 
 const Moveable = ({
   fixed = false,
+  store,
   className,
   children,
 }: {
   fixed?: boolean;
+  store?: string;
   className?: string;
   children: React.ReactNode;
 }) => {
@@ -17,13 +20,53 @@ const Moveable = ({
 
       const position = (x?: number, y?: number) => {
         const rect = node.getBoundingClientRect();
-        node.style.left = `${Math.max(0, Math.min((fixed ? document.documentElement.clientWidth : document.body.scrollWidth) - rect.width, x ?? node.offsetLeft))}px`;
-        node.style.top = `${Math.max(0, Math.min((fixed ? document.documentElement.clientHeight : document.body.scrollHeight) - rect.height, y ?? node.offsetTop))}px`;
+        const left = Math.max(
+          0,
+          Math.min(
+            (fixed
+              ? document.documentElement.clientWidth
+              : document.body.scrollWidth) - rect.width,
+            x ?? node.offsetLeft,
+          ),
+        );
+        const top = Math.max(
+          0,
+          Math.min(
+            (fixed
+              ? document.documentElement.clientHeight
+              : document.body.scrollHeight) - rect.height,
+            y ?? node.offsetTop,
+          ),
+        );
+        if (store)
+          localStorage.setItem(
+            `moveable:${store}`,
+            JSON.stringify({ left, top }),
+          );
+
+        node.style.left = `${left}px`;
+        node.style.top = `${top}px`;
         node.style.right = "auto";
         node.style.bottom = "auto";
       };
 
-      position();
+      let initialX: number | undefined, initialY: number | undefined;
+      if (store) {
+        const saved = localStorage.getItem(`moveable:${store}`);
+        const parsed = safeJSONParse(saved ?? "");
+        if (
+          typeof parsed === "object" &&
+          parsed !== null &&
+          "left" in parsed &&
+          typeof parsed.left === "number" &&
+          "top" in parsed &&
+          typeof parsed.top === "number"
+        ) {
+          initialX = parsed.left;
+          initialY = parsed.top;
+        }
+      }
+      position(initialX, initialY);
 
       const mouseDown = (event: MouseEvent) => {
         event.preventDefault();
@@ -60,7 +103,7 @@ const Moveable = ({
         document.removeEventListener("resize", resize);
       };
     },
-    [fixed],
+    [fixed, store],
   );
 
   const [shift, setShift] = useState(false);
