@@ -19,10 +19,13 @@ import {
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
+import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
+import Moveable from "@/components/content/Moveable";
 import Section from "@/components/content/Section";
+import Twitch from "@/components/content/Twitch";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
 import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
@@ -432,6 +435,12 @@ const AboutTechPresetsPage: NextPage = () => {
           </div>
         </Section>
       </div>
+
+      <Moveable className="z-50 w-3xl">
+        <Box className="p-0" dark>
+          <Twitch channel="alveussanctuary" />
+        </Box>
+      </Moveable>
     </>
   );
 };
