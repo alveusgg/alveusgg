@@ -8,7 +8,7 @@ import {
 } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
-import { Fragment, type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useEffect, useState } from "react";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import { channels, scopeGroups } from "@/data/twitch";
@@ -16,6 +16,7 @@ import { channels, scopeGroups } from "@/data/twitch";
 import { classes } from "@/utils/classes";
 import {
   isDefinedEntry,
+  safeJSONParse,
   typeSafeObjectEntries,
   typeSafeObjectKeys,
 } from "@/utils/helpers";
@@ -168,7 +169,18 @@ const AboutTechPresetsPage: NextPage = () => {
   );
   const selectedData = cameras[selectedCamera];
 
-  const [twitchEmbed, setTwitchEmbed] = useState(false);
+  const [twitchEmbed, setTwitchEmbed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("presets:twitch-embed");
+      const parsed = safeJSONParse(saved ?? "");
+      if (typeof parsed === "boolean") return parsed;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
+  }, [twitchEmbed]);
 
   return (
     <>
@@ -459,7 +471,7 @@ const AboutTechPresetsPage: NextPage = () => {
         </Section>
       </div>
 
-      {twitchEmbed && (
+      {subscription.isSuccess && subscription.data && twitchEmbed && (
         <Moveable
           className="right-2 bottom-2 z-50 w-2xl rounded-xl shadow-xl"
           fixed
