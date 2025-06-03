@@ -3,60 +3,65 @@ import { useCallback, useEffect, useState } from "react";
 import { classes } from "@/utils/classes";
 
 const Moveable = ({
+  fixed = false,
   className,
   children,
 }: {
+  fixed?: boolean;
   className?: string;
   children: React.ReactNode;
 }) => {
-  const ref = useCallback((node: HTMLDivElement | null) => {
-    if (!node) return;
+  const ref = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) return;
 
-    const position = (x?: number, y?: number) => {
-      const rect = node.getBoundingClientRect();
-      node.style.left = `${Math.max(0, Math.min(document.body.clientWidth - rect.width, x ?? node.offsetLeft))}px`;
-      node.style.top = `${Math.max(0, Math.min(document.body.scrollHeight - rect.height, y ?? node.offsetTop))}px`;
-      node.style.right = "auto";
-      node.style.bottom = "auto";
-    };
-
-    position();
-
-    const mouseDown = (event: MouseEvent) => {
-      event.preventDefault();
-
-      const startX = event.clientX;
-      const startY = event.clientY;
-      const startLeft = node.offsetLeft;
-      const startTop = node.offsetTop;
-
-      const mouseMove = (moveEvent: MouseEvent) => {
-        moveEvent.preventDefault();
-        position(
-          startLeft + (moveEvent.clientX - startX),
-          startTop + (moveEvent.clientY - startY),
-        );
+      const position = (x?: number, y?: number) => {
+        const rect = node.getBoundingClientRect();
+        node.style.left = `${Math.max(0, Math.min((fixed ? document.documentElement.clientWidth : document.body.scrollWidth) - rect.width, x ?? node.offsetLeft))}px`;
+        node.style.top = `${Math.max(0, Math.min((fixed ? document.documentElement.clientHeight : document.body.scrollHeight) - rect.height, y ?? node.offsetTop))}px`;
+        node.style.right = "auto";
+        node.style.bottom = "auto";
       };
 
-      const mouseUp = () => {
-        document.removeEventListener("mousemove", mouseMove);
-        document.removeEventListener("mouseup", mouseUp);
+      position();
+
+      const mouseDown = (event: MouseEvent) => {
+        event.preventDefault();
+
+        const startX = event.clientX;
+        const startY = event.clientY;
+        const startLeft = node.offsetLeft;
+        const startTop = node.offsetTop;
+
+        const mouseMove = (moveEvent: MouseEvent) => {
+          moveEvent.preventDefault();
+          position(
+            startLeft + (moveEvent.clientX - startX),
+            startTop + (moveEvent.clientY - startY),
+          );
+        };
+
+        const mouseUp = () => {
+          document.removeEventListener("mousemove", mouseMove);
+          document.removeEventListener("mouseup", mouseUp);
+        };
+
+        document.addEventListener("mousemove", mouseMove);
+        document.addEventListener("mouseup", mouseUp);
       };
 
-      document.addEventListener("mousemove", mouseMove);
-      document.addEventListener("mouseup", mouseUp);
-    };
+      const resize = () => position();
 
-    const resize = () => position();
+      node.addEventListener("mousedown", mouseDown);
+      document.addEventListener("resize", resize);
 
-    node.addEventListener("mousedown", mouseDown);
-    document.addEventListener("resize", resize);
-
-    return () => {
-      node.removeEventListener("mousedown", mouseDown);
-      document.removeEventListener("resize", resize);
-    };
-  }, []);
+      return () => {
+        node.removeEventListener("mousedown", mouseDown);
+        document.removeEventListener("resize", resize);
+      };
+    },
+    [fixed],
+  );
 
   const [shift, setShift] = useState(false);
   useEffect(() => {
@@ -86,7 +91,8 @@ const Moveable = ({
   return (
     <div
       className={classes(
-        "absolute cursor-move select-none",
+        "cursor-move select-none",
+        fixed ? "fixed" : "absolute",
         !shift && "*:pointer-events-none",
         className,
       )}

@@ -460,7 +460,10 @@ const AboutTechPresetsPage: NextPage = () => {
       </div>
 
       {twitchEmbed && (
-        <Moveable className="right-2 bottom-2 z-50 w-3xl">
+        <Moveable
+          className="right-2 bottom-2 z-50 w-2xl rounded-xl shadow-xl"
+          fixed
+        >
           <Box className="p-0" dark>
             <Twitch channel="alveussanctuary" />
           </Box>
