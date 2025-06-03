@@ -2,10 +2,13 @@ import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
+  Field,
+  Label,
+  Switch,
 } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
-import { Fragment, type ReactNode, useState } from "react";
+import { Fragment, type ReactNode, useEffect, useState } from "react";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import { channels, scopeGroups } from "@/data/twitch";
@@ -13,16 +16,20 @@ import { channels, scopeGroups } from "@/data/twitch";
 import { classes } from "@/utils/classes";
 import {
   isDefinedEntry,
+  safeJSONParse,
   typeSafeObjectEntries,
   typeSafeObjectKeys,
 } from "@/utils/helpers";
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
+import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
+import Moveable from "@/components/content/Moveable";
 import Section from "@/components/content/Section";
+import Twitch from "@/components/content/Twitch";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
 import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
@@ -162,6 +169,19 @@ const AboutTechPresetsPage: NextPage = () => {
   );
   const selectedData = cameras[selectedCamera];
 
+  const [twitchEmbed, setTwitchEmbed] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("presets:twitch-embed");
+      const parsed = safeJSONParse(saved ?? "");
+      if (typeof parsed === "boolean") return parsed;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
+  }, [twitchEmbed]);
+
   return (
     <>
       <Meta
@@ -204,7 +224,7 @@ const AboutTechPresetsPage: NextPage = () => {
 
         <Section className="grow">
           <div className="flex flex-col gap-y-4 lg:flex-row">
-            <div className="w-full lg:w-3/5">
+            <div className="flex w-full flex-col gap-2 lg:w-3/5">
               <p>
                 If you&apos;re subscribed, you can run these commands directly
                 from this page by clicking the{" "}
@@ -229,7 +249,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 presets.
               </p>
 
-              <p className="hidden lg:mt-2 lg:block">
+              <p className="hidden lg:block">
                 Next to each camera in the menu you&apos;ll also find a{" "}
                 <span className="font-semibold text-alveus-green">
                   Run swap command{" "}
@@ -241,13 +261,13 @@ const AboutTechPresetsPage: NextPage = () => {
               </p>
             </div>
 
-            <div className="w-full lg:w-2/5 lg:px-8">
+            <div className="flex w-full flex-col gap-2 lg:w-2/5 lg:px-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
               {!subscription.isPaused && (
                 <div
                   className={classes(
-                    "mx-1 flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
+                    "flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
                     subscription.isSuccess &&
                       (subscription.data ? "bg-alveus-green" : "bg-red"),
                     subscription.isLoading && "bg-twitch",
@@ -278,6 +298,24 @@ const AboutTechPresetsPage: NextPage = () => {
                   )}
                   {subscription.isError && <IconX className="size-6" />}
                 </div>
+              )}
+
+              {subscription.isSuccess && subscription.data && (
+                <Field className="mt-auto hidden items-center gap-2 lg:flex">
+                  <Switch
+                    checked={twitchEmbed}
+                    onChange={setTwitchEmbed}
+                    className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                  >
+                    <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                  </Switch>
+                  <Label className="flex flex-col leading-tight">
+                    <span>Enable embedded Twitch stream player</span>
+                    <span className="text-sm text-alveus-green-400 italic">
+                      (drag to move; hold shift to interact with player)
+                    </span>
+                  </Label>
+                </Field>
               )}
             </div>
           </div>
@@ -432,6 +470,18 @@ const AboutTechPresetsPage: NextPage = () => {
           </div>
         </Section>
       </div>
+
+      {subscription.isSuccess && subscription.data && twitchEmbed && (
+        <Moveable
+          className="right-2 bottom-2 z-50 w-2xl rounded-xl shadow-xl"
+          fixed
+          store="presets:twitch-embed"
+        >
+          <Box className="p-0" dark>
+            <Twitch channel="alveussanctuary" />
+          </Box>
+        </Moveable>
+      )}
     </>
   );
 };

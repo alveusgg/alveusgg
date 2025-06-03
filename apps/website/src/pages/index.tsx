@@ -1,7 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
@@ -14,8 +13,6 @@ import { channels as youTubeChannels } from "@/data/youtube";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
-import usePrefersReducedMotion from "@/hooks/motion";
-
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import Button from "@/components/content/Button";
@@ -25,6 +22,7 @@ import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
+import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
 import { Lightbox } from "@/components/content/YouTube";
 import YouTubeCarousel from "@/components/content/YouTubeCarousel";
@@ -138,22 +136,6 @@ const help = {
   },
 };
 
-const getTwitchEmbed = (
-  channel: string,
-  parent: string,
-  autoPlay = true,
-): string => {
-  const url = new URL("https://player.twitch.tv");
-  url.searchParams.set("channel", channel);
-  url.searchParams.set("parent", parent);
-  url.searchParams.set("autoplay", autoPlay.toString());
-  url.searchParams.set("muted", "true");
-  url.searchParams.set("allowfullscreen", "false");
-  url.searchParams.set("width", "100%");
-  url.searchParams.set("height", "100%");
-  return url.toString();
-};
-
 export const getStaticProps = async () => {
   const channels = [youTubeChannels.alveus.id, youTubeChannels.highlights.id];
   const latestVideos = await Promise.all(
@@ -176,19 +158,6 @@ export const getStaticProps = async () => {
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
 }) => {
-  const reducedMotion = usePrefersReducedMotion();
-
-  const [twitchEmbed, setTwitchEmbed] = useState<string | null>(null);
-  useEffect(() => {
-    setTwitchEmbed(
-      getTwitchEmbed(
-        "alveussanctuary",
-        window.location.hostname,
-        !reducedMotion,
-      ),
-    );
-  }, [reducedMotion]);
-
   return (
     <>
       {/* Hero, offset to be navbar background */}
@@ -225,24 +194,18 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               consent="twitch"
               className="aspect-video h-auto w-full max-w-2xl rounded-2xl data-[consent]:backdrop-blur-md xl:ml-auto"
             >
-              {twitchEmbed && (
-                <Link
-                  className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
-                  href="/live"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <iframe
-                    src={twitchEmbed}
-                    title="Twitch livestream"
-                    referrerPolicy="no-referrer"
-                    allow="autoplay; encrypted-media"
-                    sandbox="allow-same-origin allow-scripts"
-                    className="pointer-events-none aspect-video h-auto w-full rounded-2xl select-none"
-                    tabIndex={-1}
-                  ></iframe>
-                </Link>
-              )}
+              <Link
+                className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
+                href="/live"
+                target="_blank"
+                rel="noreferrer"
+              >
+                <Twitch
+                  channel="alveussanctuary"
+                  muted
+                  className="pointer-events-none rounded-2xl select-none"
+                />
+              </Link>
             </Consent>
           </div>
         </div>
