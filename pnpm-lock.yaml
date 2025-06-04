@@ -6,7 +6,7 @@ settings:
 
 patchedDependencies:
   eslint-plugin-tailwindcss@3.17.5:
-    hash: ffbd4ayk5rqu3ipt6gp4marery
+    hash: e68ba67a3525bc4b23056140334272fb1a90721db49b16680274a371890796d0
     path: patches/eslint-plugin-tailwindcss@3.17.5.patch
 
 importers:
@@ -375,7 +375,7 @@ importers:
         version: 5.2.0(eslint@9.28.0(jiti@2.4.2))
       eslint-plugin-tailwindcss:
         specifier: ^3.17.5
-        version: 3.17.5(patch_hash=ffbd4ayk5rqu3ipt6gp4marery)(tailwindcss@4.1.8)
+        version: 3.17.5(patch_hash=e68ba67a3525bc4b23056140334272fb1a90721db49b16680274a371890796d0)(tailwindcss@4.1.8)
       file-type:
         specifier: ^21.0.0
         version: 21.0.0
@@ -421,6 +421,9 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^3.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -1294,7 +1297,6 @@ packages:
 
   '@eyevinn/video-event-filter@2.0.0':
     resolution: {integrity: sha512-S5pECmymqg7WqlAeerhtPVEFxWhLY3cz3DTuhuljZreVDLnEBV6/DlWI6SWDnKdpDJMgD6VjPfaRJssmGatNBg==}
-    deprecated: Package no longer maintained, we recommend migrating to @eyevinn/media-event-filter
 
   '@eyevinn/webrtc-player@0.13.0':
     resolution: {integrity: sha512-X5Nzznbyw9PXj85HYV7nyHSbeC0tWpTTAFEYjilnlLLWfo9EARx1tCQk5tdhmImnDST8VN50SYt6uMDudoVnWw==}
@@ -5165,7 +5167,6 @@ packages:
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
-    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.merge@4.6.2:
     resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
@@ -6842,8 +6843,9 @@ snapshots:
 
   '@alveusgg/data@0.60.0(tailwindcss@4.1.8)(zod@3.25.50)':
     dependencies:
-      tailwindcss: 4.1.8
       zod: 3.25.50
+    optionalDependencies:
+      tailwindcss: 4.1.8
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -11708,7 +11710,7 @@ snapshots:
       string.prototype.matchall: 4.0.12
       string.prototype.repeat: 1.0.0
 
-  eslint-plugin-tailwindcss@3.17.5(patch_hash=ffbd4ayk5rqu3ipt6gp4marery)(tailwindcss@4.1.8):
+  eslint-plugin-tailwindcss@3.17.5(patch_hash=e68ba67a3525bc4b23056140334272fb1a90721db49b16680274a371890796d0)(tailwindcss@4.1.8):
     dependencies:
       fast-glob: 3.3.2
       postcss: 8.5.4
