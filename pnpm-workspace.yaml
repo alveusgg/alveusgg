@@ -1,2 +1,7 @@
 packages:
   - "apps/*"
+
+# FIXME: https://github.com/prettier/prettier/issues/17565
+publicHoistPattern:
+  - "@trivago/prettier-plugin-sort-imports"
+  - "prettier-plugin-tailwindcss"
