@@ -16,9 +16,9 @@
   },
   "engines": {
     "node": "22.x",
-    "pnpm": "^9.14.2"
+    "pnpm": "^10.11.1"
   },
-  "packageManager": "pnpm@9.14.2",
+  "packageManager": "pnpm@10.11.1",
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^16.1.0",
