@@ -284,7 +284,14 @@ const AboutStaffPage: NextPage = () => {
       <Meta
         title="Alveus Staff"
         description="Watch the video to meet some of the team and discover what they do at Alveus in their jobs, or read on to learn more about each of them."
-      />
+      >
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Alveus Sanctuary Staff"
+          href="/feeds/staff.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
