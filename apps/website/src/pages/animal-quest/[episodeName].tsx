@@ -1,4 +1,3 @@
-import { Stream } from "@cloudflare/stream-react";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -37,6 +36,7 @@ import Link from "@/components/content/Link";
 import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Stream from "@/components/content/Stream";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -58,10 +58,6 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
     }),
     {},
   );
-
-const posterUrl =
-  env.NEXT_PUBLIC_BASE_URL +
-  createImageUrl({ src: animalQuestFull.src, width: 1200 });
 
 const getCloudflareEmbed = (
   customer: string,
@@ -360,24 +356,13 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           </Heading>
 
           <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
-            <Image
-              src={animalQuestFull}
-              alt=""
-              className="absolute inset-0 -z-10 h-full w-full object-cover"
-              width={1200}
-            />
             <Stream
-              src={episode.video.id}
-              customerCode={episode.video.cu}
-              poster={posterUrl}
+              src={episode.video}
+              poster={animalQuestFull}
               autoplay
-              preload
               controls
-              muted={false}
-              currentTime={start}
-              letterboxColor="transparent"
-              height="100%"
-              width="100%"
+              time={start}
+              threshold={0}
               className="my-auto aspect-video h-auto w-full bg-transparent"
             />
           </Box>
@@ -547,12 +532,12 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
               episode.edition,
             )}`,
-            thumbnailUrl: posterUrl,
+            thumbnailUrl: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({ src: animalQuestFull.src, width: 1200 })}`,
             uploadDate: episode.broadcast.toISOString(),
             duration: secondsToIso8601(episode.length),
             embedUrl: getCloudflareEmbed(episode.video.cu, episode.video.id, {
               start,
-              poster: posterUrl,
+              poster: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({ src: animalQuestFull.src, width: 1200 })}`,
               title: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
               link: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
                 episode.edition,

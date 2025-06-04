@@ -8,11 +8,12 @@ import { formatDateTime } from "@/utils/datetime";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
+import Box from "@/components/content/Box";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import VideoPlayer from "@/components/content/Video";
+import Stream from "@/components/content/Stream";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -100,15 +101,16 @@ const EventItems = ({
               idx % 2 === 0 && "lg:order-first",
             )}
           >
-            <VideoPlayer
-              className="my-auto aspect-video w-full rounded-xl"
-              poster={event.video.poster}
-              sources={event.video.sources}
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
+            <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
+              <Stream
+                src={event.video}
+                poster={event.poster}
+                autoplay
+                muted
+                loop
+                className="my-auto aspect-video w-full"
+              />
+            </Box>
           </div>
 
           <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
