@@ -30,15 +30,5 @@
     "lint-staged": "lint-staged --relative",
     "lint": "prettier . --check",
     "format": "prettier . --write"
-  },
-  "pnpm": {
-    "patchedDependencies": {
-      "eslint-plugin-tailwindcss@3.17.5": "patches/eslint-plugin-tailwindcss@3.17.5.patch"
-    },
-    "peerDependencyRules": {
-      "allowedVersions": {
-        "next-superjson-plugin>next": "^15.0"
-      }
-    }
   }
 }
