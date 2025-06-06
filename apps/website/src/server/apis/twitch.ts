@@ -233,10 +233,10 @@ export async function getUserByName(userName: string) {
 
 const scheduleSegmentSchema = z.object({
   id: z.string(),
-  start_time: z.string().datetime(),
-  end_time: z.string().datetime(),
+  start_time: z.iso.datetime(),
+  end_time: z.iso.datetime(),
   title: z.string(),
-  canceled_until: z.string().datetime().nullable(),
+  canceled_until: z.iso.datetime().nullable(),
   category: z
     .object({
       id: z.string(),
@@ -255,8 +255,8 @@ const channelScheduleResponseSchema = z.object({
     broadcaster_name: z.string(),
     vacation: z
       .object({
-        start_time: z.string().datetime(),
-        end_time: z.string().datetime(),
+        start_time: z.iso.datetime(),
+        end_time: z.iso.datetime(),
       })
       .nullable(),
   }),
@@ -307,8 +307,8 @@ const createScheduleResponseSchema = z.object({
     broadcaster_name: z.string(),
     vacation: z
       .object({
-        start_time: z.string().datetime(),
-        end_time: z.string().datetime(),
+        start_time: z.iso.datetime(),
+        end_time: z.iso.datetime(),
       })
       .nullable(),
   }),
@@ -392,7 +392,7 @@ const clipSchema = z.object({
   language: z.string(),
   title: z.string(),
   view_count: z.number(),
-  created_at: z.string().datetime(),
+  created_at: z.iso.datetime(),
   thumbnail_url: z.string(),
   duration: z.number(),
   vod_offset: z.number().nullable(),
