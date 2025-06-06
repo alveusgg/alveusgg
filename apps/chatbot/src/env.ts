@@ -25,7 +25,9 @@ export const env = createEnv({
 
     // Chatbot
     BOT_USER_ID: z.string().default("858050963"),
-    BOT_CHANNEL_NAMES: namesSchema.default(["AlveusGG"].join(",")),
+    BOT_CHANNEL_NAMES: namesSchema.default(
+      ["AlveusGG"].map((name) => name.toLowerCase()),
+    ),
     BOT_LOGLEVEL: z
       .string()
       .trim()
@@ -49,16 +51,7 @@ export const env = createEnv({
         // Admins
         "pjeweb",
         "MattIPv4",
-        // Mods
-        //"Shrezno",
-        //"Mik_MWP",
-        //"HellSatanX",
-        //"DannyDV",
-        //"Dionysus1911",
-        //"MaxzillaJr",
-        //"VirtualPop",
-        //"HellSatanX",
-      ].join(","),
+      ].map((name) => name.toLowerCase()),
     ),
 
     // Website API
