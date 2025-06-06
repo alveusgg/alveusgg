@@ -10,7 +10,7 @@ const ItemSchema = z.object({
   title: z.string(),
   author: z.object({
     name: z.string(),
-    uri: z.string().url(),
+    uri: z.url(),
   }),
   published: z
     .string()
@@ -116,7 +116,7 @@ const SearchSchema = z.object({
             z.literal("maxres"),
           ]),
           z.object({
-            url: z.string().url(),
+            url: z.url(),
             width: z.number(),
             height: z.number(),
           }),

@@ -12,7 +12,6 @@ const namesSchema = z
   .transform((names) => names.map((name) => name.toLowerCase()));
 
 const urlWithTrailingSlashSchema = z
-  .string()
   .url()
   .refine((url) => url.match(/https?:\/\/.*\//));
 
@@ -61,7 +60,7 @@ export const env = createEnv({
     API_SECRET: z.string(),
 
     // Database
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
 
     // Twitch OAuth
     TWITCH_CLIENT_ID: z.string(),

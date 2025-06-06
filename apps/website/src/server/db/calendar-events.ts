@@ -35,7 +35,7 @@ export const calendarEventSchema = z.object({
   title: z.string().min(1),
   category: z.string().min(1),
   description: z.string().min(1).nullable(),
-  link: z.string().url(),
+  link: z.url(),
   startAt: z.date(),
   hasTime: z.boolean().default(true),
 });
@@ -44,7 +44,7 @@ export type CalendarEventSchema = z.infer<typeof calendarEventSchema>;
 
 export const existingCalendarEventSchema = calendarEventSchema.and(
   z.object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   }),
 );
 

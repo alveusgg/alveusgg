@@ -47,7 +47,7 @@ export const adminRoundsChecksRouter = router({
   moveRoundsCheck: permittedProcedure
     .input(
       z.object({
-        id: z.string().cuid(),
+        id: z.cuid(),
         direction: z.literal(["up", "down"]),
       }),
     )
@@ -56,13 +56,13 @@ export const adminRoundsChecksRouter = router({
     }),
 
   deleteRoundsCheck: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) => {
       await ctx.prisma.roundsCheck.delete({ where: { id: id } });
     }),
 
   getRoundsCheck: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(({ ctx, input: id }) =>
       ctx.prisma.roundsCheck.findUnique({ where: { id } }),
     ),

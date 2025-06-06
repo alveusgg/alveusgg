@@ -20,7 +20,7 @@ export const bingoSchema = z.object({
 
 export const existingBingoSchema = bingoSchema.and(
   z.object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   }),
 );
 

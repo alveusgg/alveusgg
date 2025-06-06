@@ -18,7 +18,7 @@ export type RoundsCheckSchema = z.infer<typeof roundsCheckSchema>;
 
 export const existingRoundsCheckSchema = z
   .object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   })
   .merge(roundsCheckSchema.partial());
 
