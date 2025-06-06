@@ -1,4 +1,3 @@
 Contact: mailto:opensource@alveussanctuary.org
 Policy: https://github.com/alveusgg/alveusgg/security/policy
-Expires: 2026-01-31T04:00:00.000Z
 Preferred-Languages: en
