@@ -40,7 +40,7 @@ export const env = createEnv({
     DATABASE_URL: z.string().url(),
     DATA_ENCRYPTION_PASSPHRASE: z.string().length(32),
     NODE_ENV: z
-      .enum(["development", "test", "production"])
+      .literal(["development", "test", "production"])
       .default("production"),
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
@@ -79,7 +79,7 @@ export const env = createEnv({
     UPSTASH_QSTASH_URL: z.string().url().optional(),
     UPSTASH_QSTASH_KEY: z.string().optional(),
     PUSH_LANG: z.string().default("en"),
-    PUSH_TEXT_DIR: z.enum(["ltr", "rtl"]).default("ltr"),
+    PUSH_TEXT_DIR: z.literal(["ltr", "rtl"]).default("ltr"),
     PUSH_BATCH_SIZE: z.coerce.number().int().min(1).default(50),
     PUSH_BATCH_DELAY_MS: z.coerce.number().int().min(1).default(1_000),
     PUSH_MAX_ATTEMPTS: z.coerce.number().int().min(1).default(5),
@@ -112,7 +112,7 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
-      .enum(["development", "test", "production"])
+      .literal(["development", "test", "production"])
       .optional()
       .default("development"),
     NEXT_PUBLIC_BASE_URL: z

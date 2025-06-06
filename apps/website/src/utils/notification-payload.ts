@@ -11,7 +11,7 @@ export const notificationOptionsSchema = z.object({
     notificationId: z.string().cuid(),
     subscriptionId: z.string().cuid(),
   }),
-  dir: z.enum(["ltr", "rtl", "auto"]),
+  dir: z.literal(["ltr", "rtl", "auto"]),
   icon: z.string().url().optional(),
   image: z.string().url().optional(),
   lang: z.string().length(2).optional(),

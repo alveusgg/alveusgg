@@ -96,7 +96,7 @@ export const adminTwitchRouter = router({
     .input(
       z.object({
         twitchChannelId: z.string(),
-        role: z.enum(roles),
+        role: z.literal([...roles]),
       }),
     )
     .mutation(async ({ ctx, input }) => {
