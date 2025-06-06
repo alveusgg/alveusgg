@@ -1,5 +1,3 @@
-import { z } from "zod/v4";
-
 /** @param {string} base64 */
 function isBase64UrlEncoded(base64) {
   return /^[A-Za-z0-9\-_]+$/.test(base64);
@@ -14,91 +12,81 @@ export function decode(str) {
 }
 
 /**
- * @param {string} subject
- * @param {import("zod/v4").RefinementCtx} ctx
- * @returns {boolean}
+ * @type {import("zod/v4/core").CheckFn<string>}
  */
-export function checkSubject(subject, ctx) {
-  if (subject.length === 0) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+export function checkSubject(ctx) {
+  if (ctx.value.length === 0) {
+    ctx.issues.push({
+      code: "custom",
       message:
         "The subject value must be a string containing a URL or mailto: address",
+      input: ctx.value,
     });
-    return false;
+    return;
   }
 
-  if (subject.indexOf("mailto:") !== 0) {
+  if (ctx.value.indexOf("mailto:") !== 0) {
     try {
-      const subjectParseResult = new URL(subject);
+      const subjectParseResult = new URL(ctx.value);
       if (!subjectParseResult.hostname) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
+        ctx.issues.push({
+          code: "custom",
           message: "Vapid subject url is missing a hostname!",
+          input: ctx.value,
         });
-        return false;
+        return;
       }
     } catch (_) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
+      ctx.issues.push({
+        code: "custom",
         message: "Vapid subject is not a valid url or mailto url!",
+        input: ctx.value,
       });
-      return false;
+      return;
     }
   }
-
-  return true;
 }
 
 /**
- * @param {string} base64
- * @param {import("zod/v4").RefinementCtx} ctx
- * @returns {boolean}
+ * @type {import("zod/v4/core").CheckFn<string>}
  */
-export function checkBase64UrlEncoded(base64, ctx) {
-  if (!isBase64UrlEncoded(base64)) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+export function checkBase64UrlEncoded(ctx) {
+  if (!isBase64UrlEncoded(ctx.value)) {
+    ctx.issues.push({
+      code: "custom",
       message: "Value must be base64url",
+      input: ctx.value,
     });
-    return false;
+    return;
   }
-
-  return true;
 }
 
 /**
- * @param {string} publicKey
- * @param {import("zod/v4").RefinementCtx} ctx
- * @returns {boolean}
+ * @type {import("zod/v4/core").CheckFn<string>}
  */
-export function checkPublicKey(publicKey, ctx) {
-  const len = decode(publicKey).length;
+export function checkPublicKey(ctx) {
+  const len = decode(ctx.value).length;
   if (len !== 65) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+    ctx.issues.push({
+      code: "custom",
       message: "Vapid public key should be 65 bytes long when decoded.",
+      input: ctx.value,
     });
-    return false;
+    return;
   }
-
-  return true;
 }
 
 /**
- * @param {string} privateKey
- * @param {import("zod/v4").RefinementCtx} ctx
- * @returns {boolean}
+ * @type {import("zod/v4/core").CheckFn<string>}
  */
-export function checkPrivateKey(privateKey, ctx) {
-  const len = decode(privateKey).length;
+export function checkPrivateKey(ctx) {
+  const len = decode(ctx.value).length;
   if (len !== 32) {
-    ctx.addIssue({
-      code: z.ZodIssueCode.custom,
+    ctx.issues.push({
+      code: "custom",
       message: "Vapid private key should be 32 bytes long when decoded.",
+      input: ctx.value,
     });
-    return false;
+    return;
   }
-
-  return true;
 }

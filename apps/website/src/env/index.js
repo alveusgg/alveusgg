@@ -70,10 +70,10 @@ export const env = createEnv({
     SUPER_USER_IDS: z.string(),
     WEB_PUSH_VAPID_PRIVATE_KEY: z
       .string()
-      .superRefine(checkBase64UrlEncoded)
-      .superRefine(checkPrivateKey)
+      .check(checkBase64UrlEncoded)
+      .check(checkPrivateKey)
       .optional(),
-    WEB_PUSH_VAPID_SUBJECT: z.string().superRefine(checkSubject).optional(),
+    WEB_PUSH_VAPID_SUBJECT: z.string().check(checkSubject).optional(),
     FILE_STORAGE_CDN_URL: z.string().optional(),
     FILE_STORAGE_ENDPOINT: z.string(),
     FILE_STORAGE_KEY: z.string(),
@@ -125,8 +125,8 @@ export const env = createEnv({
       .optional(),
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z
       .string()
-      .superRefine(checkBase64UrlEncoded)
-      .superRefine(checkPublicKey)
+      .check(checkBase64UrlEncoded)
+      .check(checkPublicKey)
       .optional(),
     NEXT_PUBLIC_NOINDEX: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
