@@ -131,7 +131,7 @@ const userSubscribedToResponseSchema = z.object({
           broadcaster_id: z.string(),
           broadcaster_login: z.string(),
           broadcaster_name: z.string(),
-          tier: z.enum(["1000", "2000", "3000"]),
+          tier: z.literal(["1000", "2000", "3000"]),
         })
         .and(
           z.discriminatedUnion("is_gift", [
@@ -192,8 +192,8 @@ const usersResponseSchema = z.object({
       id: z.string(),
       login: z.string(),
       display_name: z.string(),
-      type: z.enum(["staff", "admin", "global_mod", ""]),
-      broadcaster_type: z.enum(["partner", "affiliate", ""]),
+      type: z.literal(["staff", "admin", "global_mod", ""]),
+      broadcaster_type: z.literal(["partner", "affiliate", ""]),
       description: z.string(),
       profile_image_url: z.string(),
       offline_image_url: z.string(),

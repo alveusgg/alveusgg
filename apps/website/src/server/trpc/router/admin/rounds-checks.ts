@@ -48,7 +48,7 @@ export const adminRoundsChecksRouter = router({
     .input(
       z.object({
         id: z.string().cuid(),
-        direction: z.enum(["up", "down"]),
+        direction: z.literal(["up", "down"]),
       }),
     )
     .mutation(async ({ input }) => {

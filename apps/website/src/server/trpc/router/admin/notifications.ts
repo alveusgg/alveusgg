@@ -127,7 +127,7 @@ export const adminNotificationsRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(imageMimeTypes),
+        fileType: z.literal(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {
