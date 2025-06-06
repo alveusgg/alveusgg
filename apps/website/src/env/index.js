@@ -14,7 +14,7 @@ import {
 /**
  * @template {import("zod/v4").ZodTypeAny} T
  * @param {T} schema
- * @returns {import("zod/v4").ZodEffects<import("zod/v4").ZodString, import("zod/v4").infer<T>[]>}
+ * @returns {import("zod/v4").ZodPipe<import("zod/v4").ZodString, import("zod/v4").ZodTransform<import("zod/v4").infer<T>[]>>}
  */
 const listOfSchema = (schema) =>
   z.string().transform((val, ctx) => {
