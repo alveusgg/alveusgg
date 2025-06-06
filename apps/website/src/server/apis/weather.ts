@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env } from "@/env";
 
@@ -16,7 +16,7 @@ const observationSchema = z
     lon: z.number().nullable(),
     neighborhood: z.string().nullable(),
     obsTimeLocal: z.string().nullable(),
-    obsTimeUtc: z.string().datetime().nullable(),
+    obsTimeUtc: z.iso.datetime().nullable(),
     qcStatus: z.number().min(-1).max(1).int(),
     realtimeFrequency: z.number().nullable(),
     softwareType: z.string().nullable(),

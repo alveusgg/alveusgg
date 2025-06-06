@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env } from "@/env";
 
@@ -10,12 +10,9 @@ const ItemSchema = z.object({
   title: z.string(),
   author: z.object({
     name: z.string(),
-    uri: z.string().url(),
+    uri: z.url(),
   }),
-  published: z
-    .string()
-    .datetime({ offset: true })
-    .transform((x) => new Date(x)),
+  published: z.iso.datetime({ offset: true }).transform((x) => new Date(x)),
 });
 
 const FeedSchema = z.object({
@@ -106,7 +103,7 @@ const SearchSchema = z.object({
         description: z.string(),
         channelId: z.string(),
         channelTitle: z.string(),
-        publishedAt: z.string().datetime(),
+        publishedAt: z.iso.datetime(),
         thumbnails: z.record(
           z.union([
             z.literal("default"),
@@ -116,7 +113,7 @@ const SearchSchema = z.object({
             z.literal("maxres"),
           ]),
           z.object({
-            url: z.string().url(),
+            url: z.url(),
             width: z.number(),
             height: z.number(),
           }),
