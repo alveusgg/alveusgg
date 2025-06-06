@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 /** @param {string} base64 */
 function isBase64UrlEncoded(base64) {
@@ -15,7 +15,7 @@ export function decode(str) {
 
 /**
  * @param {string} subject
- * @param {import("zod").RefinementCtx} ctx
+ * @param {import("zod/v4").RefinementCtx} ctx
  * @returns {boolean}
  */
 export function checkSubject(subject, ctx) {
@@ -52,7 +52,7 @@ export function checkSubject(subject, ctx) {
 
 /**
  * @param {string} base64
- * @param {import("zod").RefinementCtx} ctx
+ * @param {import("zod/v4").RefinementCtx} ctx
  * @returns {boolean}
  */
 export function checkBase64UrlEncoded(base64, ctx) {
@@ -69,7 +69,7 @@ export function checkBase64UrlEncoded(base64, ctx) {
 
 /**
  * @param {string} publicKey
- * @param {import("zod").RefinementCtx} ctx
+ * @param {import("zod/v4").RefinementCtx} ctx
  * @returns {boolean}
  */
 export function checkPublicKey(publicKey, ctx) {
@@ -87,7 +87,7 @@ export function checkPublicKey(publicKey, ctx) {
 
 /**
  * @param {string} privateKey
- * @param {import("zod").RefinementCtx} ctx
+ * @param {import("zod/v4").RefinementCtx} ctx
  * @returns {boolean}
  */
 export function checkPrivateKey(privateKey, ctx) {
