@@ -9,7 +9,7 @@ const trackClickSchema = z.object({
   id: z.string().cuid(),
   slug: z.string(),
   link: z.string(),
-  headers: z.record(z.union([z.string(), z.array(z.string())])),
+  headers: z.record(z.string(), z.union([z.string(), z.array(z.string())])),
 });
 export type TrackClickSchema = z.infer<typeof trackClickSchema>;
 
