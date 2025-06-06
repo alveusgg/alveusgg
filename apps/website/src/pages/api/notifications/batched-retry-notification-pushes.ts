@@ -21,8 +21,8 @@ const retryPushesSchema = z.object({
   pushes: z.array(
     z.object({
       attempts: z.number().nullable(),
-      notificationId: z.string().cuid(),
-      subscriptionId: z.string().cuid(),
+      notificationId: z.cuid(),
+      subscriptionId: z.cuid(),
       expiresAt: z.number(),
     }),
   ),

@@ -67,7 +67,7 @@ export const adminUsersRouter = router({
   removeRole: superUserProcedure
     .input(
       z.object({
-        userId: z.string().cuid(),
+        userId: z.cuid(),
         role: z.string(),
       }),
     )
