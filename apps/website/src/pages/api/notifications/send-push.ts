@@ -31,8 +31,8 @@ export type SendPushOptions = z.infer<typeof sendPushSchema>;
 
 const sendPushSchema = z.object({
   attempt: z.number().optional(),
-  notificationId: z.string().cuid(),
-  subscriptionId: z.string().cuid(),
+  notificationId: z.cuid(),
+  subscriptionId: z.cuid(),
   expiresAt: z.number(),
   title: z.string().optional(),
   message: z.string(),

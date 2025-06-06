@@ -16,7 +16,7 @@ import { calcFormConfig } from "@/utils/forms";
 
 export const createFormEntrySchema = formEntrySchema.and(
   z.object({
-    formId: z.string().cuid(),
+    formId: z.cuid(),
     acceptRules: z.boolean().optional(),
     acceptPrivacy: z.boolean(),
   }),
