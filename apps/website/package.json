@@ -27,7 +27,7 @@
     "test": "vitest"
   },
   "dependencies": {
-    "@alveusgg/data": "0.61.0",
+    "@alveusgg/data": "0.63.0-pre.b91bc4f46a1e65563b2c43a6d83097d81f578c12",
     "@alveusgg/database": "workspace:*",
     "@auth/prisma-adapter": "^2.9.1",
     "@aws-sdk/client-s3": "^3.832.0",
