@@ -198,7 +198,7 @@ const usersResponseSchema = z.object({
       profile_image_url: z.string(),
       offline_image_url: z.string(),
       view_count: z.number(),
-      email: z.string().email().optional(),
+      email: z.email().optional(),
       created_at: z.string(),
     }),
   ),

@@ -37,7 +37,7 @@ const listOfSchema = (schema) =>
 
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     DATA_ENCRYPTION_PASSPHRASE: z.string().length(32),
     NODE_ENV: z
       .literal(["development", "test", "production"])
@@ -51,7 +51,7 @@ export const env = createEnv({
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL || str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL_URL ? z.string() : z.string().url(),
+      process.env.VERCEL_URL ? z.string() : z.url(),
     ),
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),
@@ -76,7 +76,7 @@ export const env = createEnv({
     FILE_STORAGE_SECRET: z.string(),
     FILE_STORAGE_BUCKET: z.string(),
     FILE_STORAGE_PATH_STYLE: z.stringbool().optional().default(false),
-    UPSTASH_QSTASH_URL: z.string().url().optional(),
+    UPSTASH_QSTASH_URL: z.url().optional(),
     UPSTASH_QSTASH_KEY: z.string().optional(),
     PUSH_LANG: z.string().default("en"),
     PUSH_TEXT_DIR: z.literal(["ltr", "rtl"]).default("ltr"),
@@ -90,20 +90,18 @@ export const env = createEnv({
     ).optional(),
     DISCORD_CHANNEL_WEBHOOK_NAME: z.string().default("Alveus Updates"),
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION: listOfSchema(
-      z.string().url(),
+      z.url(),
     ).optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: z
       .stringbool()
       .optional()
       .default(false),
-    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfSchema(
-      z.string().url(),
-    ).optional(),
+    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfSchema(z.url()).optional(),
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: z
       .stringbool()
       .optional()
       .default(false),
-    COMMUNITY_PHOTOS_URL: z.string().url().optional(),
+    COMMUNITY_PHOTOS_URL: z.url().optional(),
     COMMUNITY_PHOTOS_KEY: z.string().optional(),
     CF_STREAM_KEY_ID: z.string().optional(),
     CF_STREAM_KEY_JWK: z.string().optional(),
@@ -115,12 +113,8 @@ export const env = createEnv({
       .literal(["development", "test", "production"])
       .optional()
       .default("development"),
-    NEXT_PUBLIC_BASE_URL: z
-      .string()
-      .url()
-      .refine((url) => !url.endsWith("/")),
+    NEXT_PUBLIC_BASE_URL: z.url().refine((url) => !url.endsWith("/")),
     NEXT_PUBLIC_SHORT_BASE_URL: z
-      .string()
       .url()
       .refine((url) => !url.endsWith("/"))
       .optional(),
