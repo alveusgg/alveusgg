@@ -35,11 +35,6 @@ const listOfSchema = (schema) =>
     return items;
   });
 
-const optionalBoolSchema = z
-  .enum(["true", "false"])
-  .optional()
-  .transform((val) => val === "true");
-
 export const env = createEnv({
   server: {
     DATABASE_URL: z.string().url(),
@@ -66,7 +61,7 @@ export const env = createEnv({
     WEATHER_API_KEY: z.string().optional(),
     WEATHER_STATION_ID: z.string().optional(),
     YOUTUBE_API_KEY: z.string().optional(),
-    DISABLE_ADMIN_AUTH: optionalBoolSchema,
+    DISABLE_ADMIN_AUTH: z.stringbool().optional().default(false),
     SUPER_USER_IDS: z.string(),
     WEB_PUSH_VAPID_PRIVATE_KEY: z
       .string()
@@ -80,7 +75,7 @@ export const env = createEnv({
     FILE_STORAGE_REGION: z.string(),
     FILE_STORAGE_SECRET: z.string(),
     FILE_STORAGE_BUCKET: z.string(),
-    FILE_STORAGE_PATH_STYLE: optionalBoolSchema,
+    FILE_STORAGE_PATH_STYLE: z.stringbool().optional().default(false),
     UPSTASH_QSTASH_URL: z.string().url().optional(),
     UPSTASH_QSTASH_KEY: z.string().optional(),
     PUSH_LANG: z.string().default("en"),
@@ -97,11 +92,17 @@ export const env = createEnv({
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION: listOfSchema(
       z.string().url(),
     ).optional(),
-    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: z
+      .stringbool()
+      .optional()
+      .default(false),
     DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfSchema(
       z.string().url(),
     ).optional(),
-    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: z
+      .stringbool()
+      .optional()
+      .default(false),
     COMMUNITY_PHOTOS_URL: z.string().url().optional(),
     COMMUNITY_PHOTOS_KEY: z.string().optional(),
     CF_STREAM_KEY_ID: z.string().optional(),
@@ -132,13 +133,19 @@ export const env = createEnv({
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
-    NEXT_PUBLIC_GLOBAL_PROMOTION_EXTERNAL: optionalBoolSchema,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_EXTERNAL: z
+      .stringbool()
+      .optional()
+      .default(false),
     NEXT_PUBLIC_GLOBAL_PROMOTION_EXCLUDED: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_TITLE: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_CTA: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_LINK: z.string().optional(),
-    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL: optionalBoolSchema,
+    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL: z
+      .stringbool()
+      .optional()
+      .default(false),
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
