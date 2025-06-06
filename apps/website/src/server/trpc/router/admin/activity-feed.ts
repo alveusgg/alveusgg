@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { retryOutgoingWebhook } from "@/server/outgoing-webhooks";
 import { router, superUserProcedure } from "@/server/trpc/trpc";
