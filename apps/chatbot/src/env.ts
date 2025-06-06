@@ -20,7 +20,7 @@ export const env = createEnv({
   server: {
     // General
     NODE_ENV: z
-      .enum(["development", "test", "production"])
+      .literal(["development", "test", "production"])
       .default("production"),
 
     // Chatbot

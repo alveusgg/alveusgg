@@ -79,7 +79,7 @@ export const adminShowAndTellRouter = router({
   getEntries: permittedProcedure
     .input(
       z.object({
-        filter: z.enum(["approved", "pendingApproval"]).optional(),
+        filter: z.literal(["approved", "pendingApproval"]).optional(),
         limit: z.number().min(1).max(100).nullish(),
         cursor: z.string().cuid().nullish(),
       }),

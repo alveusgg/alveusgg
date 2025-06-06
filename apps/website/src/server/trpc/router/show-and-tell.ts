@@ -41,7 +41,7 @@ export const showAndTellRouter = router({
   getEntries: publicProcedure
     .input(
       z.object({
-        filter: z.enum(["approved", "pendingApproval"]).optional(),
+        filter: z.literal(["approved", "pendingApproval"]).optional(),
         cursor: z.string().cuid().nullish(),
       }),
     )
@@ -121,7 +121,7 @@ export const showAndTellRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(imageMimeTypes),
+        fileType: z.literal(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {

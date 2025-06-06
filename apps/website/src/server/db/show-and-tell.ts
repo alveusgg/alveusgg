@@ -524,7 +524,7 @@ export async function removeApprovalFromPost(
 }
 
 export const markPostAsSeenModeSchema = z
-  .enum(["this", "thisAndOlder", "thisAndNewer"])
+  .literal(["this", "thisAndOlder", "thisAndNewer"])
   .default("this");
 
 export type MarkPostAsSeenMode = z.infer<typeof markPostAsSeenModeSchema>;
