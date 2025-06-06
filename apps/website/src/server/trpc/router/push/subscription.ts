@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { publicProcedure, router } from "@/server/trpc/trpc";
 import { knownPushServicesRegex } from "@/server/web-push/known-push-services";
