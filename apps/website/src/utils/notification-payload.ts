@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
 export type NotificationOptionsData = z.infer<typeof notificationOptionsSchema>;

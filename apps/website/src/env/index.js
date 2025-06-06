@@ -2,7 +2,7 @@
  * This file is included in `/next.config.js` which ensures the app isn't built with invalid env vars.
  */
 import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   checkBase64UrlEncoded,
@@ -12,9 +12,9 @@ import {
 } from "./vapid.js";
 
 /**
- * @template {import("zod").ZodTypeAny} T
+ * @template {import("zod/v4").ZodTypeAny} T
  * @param {T} schema
- * @returns {import("zod").ZodEffects<import("zod").ZodString, import("zod").infer<T>[]>}
+ * @returns {import("zod/v4").ZodEffects<import("zod/v4").ZodString, import("zod/v4").infer<T>[]>}
  */
 const listOfSchema = (schema) =>
   z.string().transform((val, ctx) => {

@@ -1,5 +1,5 @@
 import { track } from "@vercel/analytics/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { prisma } from "@alveusgg/database";
 

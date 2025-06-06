@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import {
