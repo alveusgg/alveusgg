@@ -81,6 +81,19 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Filian",
+      link: "https://www.twitch.tv/filian",
+      date: new Date("2025-06-06"),
+      videoId: "kMxwBQW68PE",
+      creators: [
+        {
+          name: "Filian",
+          image: filian,
+          popularity: 3_050_000, // YouTube subscribers, 2025-06-08
+        },
+      ],
+    },
+    {
       name: "Juliakins",
       link: "https://www.twitch.tv/juliakins",
       date: new Date("2025-05-29"),
@@ -548,13 +561,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/filian",
       date: new Date("2023-10-11"),
       videoId: "WaQcdQBrz0I",
-      creators: [
-        {
-          name: "Filian",
-          image: filian,
-          popularity: 2_880_000, // YouTube subscribers, 2024-10-4
-        },
-      ],
+      creators: [], // Filian has a more recent collaboration
     },
     {
       name: "Trihex",
