@@ -1,5 +1,5 @@
 import { waitUntil } from "@vercel/functions";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { prisma } from "@alveusgg/database";
 
@@ -15,9 +15,9 @@ export const config = {
 };
 
 const createPushesSchema = z.object({
-  notificationId: z.string().cuid(),
+  notificationId: z.cuid(),
   expiresAt: z.number(),
-  subscriptionIds: z.array(z.string().cuid()),
+  subscriptionIds: z.array(z.cuid()),
 });
 
 export default createTokenProtectedApiHandler(

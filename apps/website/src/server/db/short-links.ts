@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { prisma } from "@alveusgg/database";
 
@@ -8,14 +8,14 @@ import { SLUG_REGEX } from "@/utils/slugs";
 export const shortLinkSchema = z.object({
   label: z.string().min(1),
   slug: z.string().regex(SLUG_REGEX),
-  link: z.string().url(),
+  link: z.url(),
 });
 
 export type ShortLinkSchema = z.infer<typeof shortLinkSchema>;
 
 export const existingShortLinkSchema = shortLinkSchema.and(
   z.object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   }),
 );
 

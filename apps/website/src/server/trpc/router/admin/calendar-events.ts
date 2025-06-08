@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   calendarEventSchema,
@@ -23,7 +23,7 @@ export const adminCalendarEventsRouter = router({
       z
         .discriminatedUnion("action", [
           z.object({ action: z.literal("create") }),
-          z.object({ action: z.literal("edit"), id: z.string().cuid() }),
+          z.object({ action: z.literal("edit"), id: z.cuid() }),
         ])
         .and(calendarEventSchema),
     )
@@ -43,13 +43,13 @@ export const adminCalendarEventsRouter = router({
     }),
 
   deleteCalendarEvent: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(({ ctx, input: id }) =>
       ctx.prisma.calendarEvent.delete({ where: { id: id } }),
     ),
 
   getCalendarEvent: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(({ ctx, input: id }) =>
       ctx.prisma.calendarEvent.findUnique({ where: { id } }),
     ),
