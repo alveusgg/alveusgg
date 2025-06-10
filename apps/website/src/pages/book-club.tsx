@@ -25,6 +25,7 @@ import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
+import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
 import bookClubFull from "@/assets/book-club/full.png";
 import bookClubLogo from "@/assets/book-club/logo.png";
@@ -53,6 +54,15 @@ type BookInfo = {
 
 const books: BookInfo[] = [
   {
+    title: "The Insect Crisis",
+    author: "Oliver Milman",
+    image: theInsectCrisis,
+    month: "2025-06",
+    link: "https://amzn.to/4kZ31gL",
+    thickness: thickness.sm, // 270 pages
+    color: "border-yellow-400",
+  },
+  {
     title: "The Anthropocene Reviewed",
     author: "John Green",
     image: theAnthropoceneReviewed,
@@ -69,6 +79,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/3YibG59",
     thickness: thickness.md, // 360 pages
     color: "border-alveus-tan-900",
+    vodId: "Kkerq_KvYrI",
   },
   {
     title: "Adventures of a Young Naturalist",
@@ -117,15 +128,20 @@ const Cover = ({
 }) => (
   <div
     className={classes(
-      "relative aspect-2/3 h-auto w-full rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
+      "relative aspect-2/3 h-auto w-full overflow-hidden rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
       className,
     )}
   >
     {/* Bookmark (hover) */}
-    <div className="absolute top-0 right-3 z-20 h-16 overflow-hidden drop-shadow-md">
-      <div className="relative -top-8 h-0 w-8 bg-alveus-green transition-all group-hover:h-full group-focus:h-full">
-        <div className="absolute top-full border-0 border-b-[2rem] border-l-[2rem] border-solid border-y-transparent border-l-alveus-green" />
-        <div className="absolute top-full border-0 border-r-[2rem] border-b-[2rem] border-solid border-y-transparent border-r-alveus-green" />
+    <div className="absolute top-0 right-3 z-20 h-16 w-8 -translate-y-full transition-transform group-hover:translate-y-0 group-focus:translate-y-0">
+      <div className="opacity-0 drop-shadow-md drop-shadow-black/50 transition-opacity delay-(--default-transition-duration) duration-0 group-hover:opacity-100 group-hover:delay-0 group-focus:opacity-100 group-focus:delay-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 2 4"
+          className="h-full w-auto fill-alveus-green stroke-white/25"
+        >
+          <path d="M0 0 0 4 1 3 2 4 2 0" strokeWidth={0.2} />
+        </svg>
       </div>
     </div>
 
@@ -318,8 +334,9 @@ const BookClubPage: NextPage = () => {
                   key={i}
                   className={classes(
                     "group mx-auto hidden w-64",
-                    // If we're not the first placeholder, we're for desktop only
-                    i > 0 ? "xl:block" : "md:block",
+                    // If we have an even number of books, show on desktop only
+                    // Otherwise, show on desktop except the first which is shown on tablet
+                    books.length % 2 === 0 || i > 0 ? "xl:block" : "md:block",
                   )}
                 >
                   <Cover />
