@@ -334,8 +334,9 @@ const BookClubPage: NextPage = () => {
                   key={i}
                   className={classes(
                     "group mx-auto hidden w-64",
-                    // If we're not the first placeholder, we're for desktop only
-                    i > 0 ? "xl:block" : "md:block",
+                    // If we have an even number of books, show on desktop only
+                    // Otherwise, show on desktop except the first which is shown on tablet
+                    books.length % 2 === 0 || i > 0 ? "xl:block" : "md:block",
                   )}
                 >
                   <Cover />
