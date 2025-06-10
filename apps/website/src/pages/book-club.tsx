@@ -79,6 +79,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/3YibG59",
     thickness: thickness.md, // 360 pages
     color: "border-alveus-tan-900",
+    vodId: "Kkerq_KvYrI",
   },
   {
     title: "Adventures of a Young Naturalist",
