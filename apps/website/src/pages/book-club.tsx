@@ -25,6 +25,7 @@ import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
+import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
 import bookClubFull from "@/assets/book-club/full.png";
 import bookClubLogo from "@/assets/book-club/logo.png";
@@ -52,6 +53,15 @@ type BookInfo = {
 };
 
 const books: BookInfo[] = [
+  {
+    title: "The Insect Crisis",
+    author: "Oliver Milman",
+    image: theInsectCrisis,
+    month: "2025-06",
+    link: "https://amzn.to/4kZ31gL",
+    thickness: thickness.sm, // 270 pages
+    color: "border-yellow-400",
+  },
   {
     title: "The Anthropocene Reviewed",
     author: "John Green",
