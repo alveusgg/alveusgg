@@ -133,10 +133,15 @@ const Cover = ({
     )}
   >
     {/* Bookmark (hover) */}
-    <div className="absolute top-0 right-3 z-20 h-16 overflow-hidden drop-shadow-md">
-      <div className="relative -top-8 h-0 w-8 bg-alveus-green transition-all group-hover:h-full group-focus:h-full">
-        <div className="absolute top-full border-0 border-b-[2rem] border-l-[2rem] border-solid border-y-transparent border-l-alveus-green" />
-        <div className="absolute top-full border-0 border-r-[2rem] border-b-[2rem] border-solid border-y-transparent border-r-alveus-green" />
+    <div className="absolute top-0 right-3 z-20 h-16 w-8 -translate-y-full transition-transform group-hover:translate-y-0 group-focus:translate-y-0">
+      <div className="opacity-0 drop-shadow-md drop-shadow-black/50 transition-opacity delay-(--default-transition-duration) duration-0 group-hover:opacity-100 group-hover:delay-0 group-focus:opacity-100 group-focus:delay-0">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 2 4"
+          className="h-full w-auto fill-alveus-green stroke-white/25"
+        >
+          <path d="M0 0 0 4 1 3 2 4 2 0" strokeWidth={0.2} />
+        </svg>
       </div>
     </div>
 
