@@ -127,7 +127,7 @@ const Cover = ({
 }) => (
   <div
     className={classes(
-      "relative aspect-2/3 h-auto w-full rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
+      "relative aspect-2/3 h-auto w-full overflow-hidden rounded-l-sm rounded-r-xl bg-alveus-green-900 drop-shadow-lg",
       className,
     )}
   >
