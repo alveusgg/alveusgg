@@ -32,6 +32,7 @@ import leftcorner from "@/assets/presets/wolf/leftcorner.png";
 import log from "@/assets/presets/wolf/log.png";
 import neargrass from "@/assets/presets/wolf/neargrass.png";
 import pond from "@/assets/presets/wolf/pond.png";
+import pump from "@/assets/presets/wolf/pump.png";
 import right from "@/assets/presets/wolf/right.png";
 import rightfence from "@/assets/presets/wolf/rightfence.png";
 import river from "@/assets/presets/wolf/river.png";
@@ -48,7 +49,7 @@ import trees from "@/assets/presets/wolf/trees.png";
 import waterfall from "@/assets/presets/wolf/waterfall.png";
 import wolfcornercam from "@/assets/presets/wolf/wolfcornercam.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const wolfPresets: Record<string, Preset> = {
   home: {
@@ -186,6 +187,10 @@ const wolfPresets: Record<string, Preset> = {
   pond: {
     description: "Pond",
     image: pond,
+  },
+  pump: {
+    description: "Pump",
+    image: pump,
   },
   right: {
     description: "Right",

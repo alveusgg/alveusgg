@@ -6,7 +6,7 @@ import home from "@/assets/presets/noodle/home.png";
 import left from "@/assets/presets/noodle/left.png";
 import water from "@/assets/presets/noodle/water.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const noodlePresets: Record<string, Preset> = {
   home: {

@@ -1,7 +1,7 @@
 import home from "@/assets/presets/hank/home.png";
 import water from "@/assets/presets/hank/water.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const hankPresets: Record<string, Preset> = {
   home: {

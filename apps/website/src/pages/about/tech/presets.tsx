@@ -11,6 +11,7 @@ import Image, { type StaticImageData } from "next/image";
 import { Fragment, type ReactNode, useEffect, useState } from "react";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
+import type { CameraMulti, CameraPTZ } from "@/data/tech/cameras.types";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
@@ -167,7 +168,7 @@ const AboutTechPresetsPage: NextPage = () => {
   const [selectedCamera, setSelectedCamera] = useState<Camera>(
     typeSafeObjectKeys(cameras)[0]!,
   );
-  const selectedData = cameras[selectedCamera];
+  const selectedData = cameras[selectedCamera] as CameraPTZ | CameraMulti;
 
   const [twitchEmbed, setTwitchEmbed] = useState(() => {
     if (typeof window !== "undefined") {

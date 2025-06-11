@@ -1,4 +1,14 @@
+import chickenmulti from "@/assets/presets/chickenmulti.png";
 import chinmulti from "@/assets/presets/chinmulti.png";
+import crowincrowout from "@/assets/presets/crowincrowout.png";
+import crowoutcrowin from "@/assets/presets/crowoutcrowin.png";
+import foxmulti from "@/assets/presets/foxmulti.png";
+import marmmulti from "@/assets/presets/marmmulti.png";
+import wolfcwolfin from "@/assets/presets/wolfcwolfin.png";
+import wolfden2multi from "@/assets/presets/wolfden2multi.png";
+import wolfdenmulti from "@/assets/presets/wolfdenmulti.png";
+import wolfmulti from "@/assets/presets/wolfmulti.png";
+import wolfwolfin from "@/assets/presets/wolfwolfin.png";
 
 import chicken from "../presets/chicken";
 import chickenindoor from "../presets/chickenindoor";
@@ -17,6 +27,7 @@ import marmout from "../presets/marmout";
 import noodle from "../presets/noodle";
 import parrot from "../presets/parrots";
 import pasture from "../presets/pasture";
+import pasturefeeder from "../presets/pasturefeeder";
 import patchy from "../presets/patchy";
 import pushpop from "../presets/pushpop";
 import pushpopcrunch from "../presets/pushpopcrunch";
@@ -34,6 +45,15 @@ import type { CameraMulti, CameraPTZ } from "./cameras.types";
 const cameras = {
   chicken,
   chickenindoor,
+  chickenmulti: {
+    title: "Chicken Multi-View",
+    group: "chicken",
+    multi: {
+      cameras: ["chicken", "chickenindoor"],
+      image: chickenmulti,
+      description: "Chicken camera with chicken indoor picture-in-picture",
+    },
+  },
   chin,
   chin2,
   chin3,
@@ -48,16 +68,54 @@ const cameras = {
   },
   crowin,
   crowout,
+  crowincrowout: {
+    title: "Crow In/Out Multi-View",
+    group: "crow",
+    multi: {
+      cameras: ["crowin", "crowout"],
+      image: crowincrowout,
+      description: "Crow indoor camera with crow outdoor picture-in-picture",
+    },
+  },
+  crowoutcrowin: {
+    title: "Crow Out/In Multi-View",
+    group: "crow",
+    multi: {
+      cameras: ["crowout", "crowin"],
+      image: crowoutcrowin,
+      description: "Crow outdoor camera with crow indoor picture-in-picture",
+    },
+  },
   fox,
   foxcorner,
+  foxmulti: {
+    title: "Fox Multi-View",
+    group: "fox",
+    multi: {
+      cameras: ["fox", "foxcorner"],
+      image: foxmulti,
+      description: "Picture-in-picture of both fox cameras",
+    },
+  },
   georgie,
   georgiewater,
   hank,
   marmin,
   marmout,
+  marmmulti: {
+    title: "Marmoset Multi-View",
+    group: "marmoset",
+    multi: {
+      cameras: ["marmout", "marmin"],
+      image: marmmulti,
+      description:
+        "Marmoset outdoor camera with marmoset indoor picture-in-picture",
+    },
+  },
   noodle,
   parrot,
   pasture,
+  pasturefeeder,
   patchy,
   pushpop,
   pushpopcrunch,
@@ -70,6 +128,51 @@ const cameras = {
   wolfden2,
   wolfindoor,
   wolfswitch,
+  wolfcwolfin: {
+    title: "Wolf Corner/In Multi-View",
+    group: "wolf",
+    multi: {
+      cameras: ["wolfcorner", "wolfindoor"],
+      image: wolfcwolfin,
+      description: "Wolf corner camera with wolf indoor picture-in-picture",
+    },
+  },
+  wolfden2multi: {
+    title: "Wolf Den 2 Multi-View",
+    group: "wolf",
+    multi: {
+      cameras: ["wolfcorner", "wolfden2"],
+      image: wolfden2multi,
+      description: "Wolf corner camera with wolf den 2 picture-in-picture",
+    },
+  },
+  wolfdenmulti: {
+    title: "Wolf Den Multi-View",
+    group: "wolf",
+    multi: {
+      cameras: ["wolf", "wolfden"],
+      image: wolfdenmulti,
+      description: "Wolf camera with wolf den picture-in-picture",
+    },
+  },
+  wolfmulti: {
+    title: "Wolf Multi-View",
+    group: "wolf",
+    multi: {
+      cameras: ["wolf", "wolfcorner"],
+      image: wolfmulti,
+      description: "Wolf camera with wolf corner picture-in-picture",
+    },
+  },
+  wolfwolfin: {
+    title: "Wolf/Wolf In Multi-View",
+    group: "wolf",
+    multi: {
+      cameras: ["wolf", "wolfindoor"],
+      image: wolfwolfin,
+      description: "Wolf camera with wolf indoor picture-in-picture",
+    },
+  },
 } as const satisfies Record<string, CameraPTZ | CameraMulti>;
 
 export type Camera = keyof typeof cameras;

@@ -5,7 +5,7 @@ import groundm from "@/assets/presets/patchy/groundm.png";
 import home from "@/assets/presets/patchy/home.png";
 import water from "@/assets/presets/patchy/water.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const patchyPresets: Record<string, Preset> = {
   home: {

@@ -30,7 +30,7 @@ import upleft from "@/assets/presets/parrots/upleft.png";
 import upmiddle from "@/assets/presets/parrots/upmiddle.png";
 import upright from "@/assets/presets/parrots/upright.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const parrotsPresets: Record<string, Preset> = {
   home: {

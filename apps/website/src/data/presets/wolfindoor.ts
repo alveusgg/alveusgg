@@ -1,9 +1,11 @@
 import center from "@/assets/presets/wolfindoor/center.png";
 import doors from "@/assets/presets/wolfindoor/doors.png";
 import down from "@/assets/presets/wolfindoor/down.png";
+import downleft from "@/assets/presets/wolfindoor/downleft.png";
 import downright from "@/assets/presets/wolfindoor/downright.png";
 import home from "@/assets/presets/wolfindoor/home.png";
 import left from "@/assets/presets/wolfindoor/left.png";
+import leftcorner from "@/assets/presets/wolfindoor/leftcorner.png";
 import neardoor from "@/assets/presets/wolfindoor/neardoor.png";
 import platformcenter from "@/assets/presets/wolfindoor/platformcenter.png";
 import platformleft from "@/assets/presets/wolfindoor/platformleft.png";
@@ -11,8 +13,9 @@ import platformleftb from "@/assets/presets/wolfindoor/platformleftb.png";
 import platformright from "@/assets/presets/wolfindoor/platformright.png";
 import platformrightb from "@/assets/presets/wolfindoor/platformrightb.png";
 import right from "@/assets/presets/wolfindoor/right.png";
+import water from "@/assets/presets/wolfindoor/water.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const wolfindoorPresets: Record<string, Preset> = {
   home: {
@@ -31,6 +34,10 @@ const wolfindoorPresets: Record<string, Preset> = {
     description: "Down",
     image: down,
   },
+  downleft: {
+    description: "Down Left",
+    image: downleft,
+  },
   downright: {
     description: "Down Right",
     image: downright,
@@ -38,6 +45,10 @@ const wolfindoorPresets: Record<string, Preset> = {
   left: {
     description: "Left",
     image: left,
+  },
+  leftcorner: {
+    description: "Left Corner",
+    image: leftcorner,
   },
   neardoor: {
     description: "Near Door",
@@ -66,6 +77,10 @@ const wolfindoorPresets: Record<string, Preset> = {
   right: {
     description: "Right",
     image: right,
+  },
+  water: {
+    description: "Water",
+    image: water,
   },
 };
 
