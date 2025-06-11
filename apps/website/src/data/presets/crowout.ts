@@ -26,7 +26,7 @@ import treebase from "@/assets/presets/crowout/treebase.png";
 import treet from "@/assets/presets/crowout/treet.png";
 import water from "@/assets/presets/crowout/water.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const crowoutPresets: Record<string, Preset> = {
   home: {

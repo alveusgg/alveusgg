@@ -1,6 +1,6 @@
 import home from "@/assets/presets/chin2/home.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const chin2Presets: Record<string, Preset> = {
   home: {

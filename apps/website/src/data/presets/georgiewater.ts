@@ -1,6 +1,6 @@
 import home from "@/assets/presets/georgiewater/home.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const georgiewaterPresets: Record<string, Preset> = {
   home: {

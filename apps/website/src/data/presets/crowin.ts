@@ -19,7 +19,7 @@ import water from "@/assets/presets/crowin/water.png";
 import window from "@/assets/presets/crowin/window.png";
 import windowc from "@/assets/presets/crowin/windowc.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const crowinPresets: Record<string, Preset> = {
   home: {

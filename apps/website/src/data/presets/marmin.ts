@@ -25,7 +25,7 @@ import windows from "@/assets/presets/marmin/windows.png";
 import winl from "@/assets/presets/marmin/winl.png";
 import winr from "@/assets/presets/marmin/winr.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const marminPresets: Record<string, Preset> = {
   home: {

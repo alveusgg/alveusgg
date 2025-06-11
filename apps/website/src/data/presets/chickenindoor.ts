@@ -12,7 +12,7 @@ import perchl from "@/assets/presets/chickenindoor/perchl.png";
 import perchr from "@/assets/presets/chickenindoor/perchr.png";
 import right from "@/assets/presets/chickenindoor/right.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const chickenindoorPresets: Record<string, Preset> = {
   home: {

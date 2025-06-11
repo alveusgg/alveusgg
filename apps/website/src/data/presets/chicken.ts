@@ -19,7 +19,7 @@ import rightcorner from "@/assets/presets/chicken/rightcorner.png";
 import water from "@/assets/presets/chicken/water.png";
 import window from "@/assets/presets/chicken/window.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const chickenPresets: Record<string, Preset> = {
   home: {

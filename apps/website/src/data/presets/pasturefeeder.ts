@@ -1,7 +1,7 @@
 import home from "@/assets/presets/pasturefeeder/home.png";
 import stompy from "@/assets/presets/pasturefeeder/stompy.png";
 
-import type { Preset } from "../tech/cameras.types.js";
+import type { Preset } from "../tech/cameras.types";
 
 const pasturefeederPresets: Record<string, Preset> = {
   home: {

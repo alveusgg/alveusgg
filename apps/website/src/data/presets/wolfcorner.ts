@@ -43,7 +43,7 @@ import trees from "@/assets/presets/wolfcorner/trees.png";
 import water from "@/assets/presets/wolfcorner/water.png";
 import wolfcam from "@/assets/presets/wolfcorner/wolfcam.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const wolfcornerPresets: Record<string, Preset> = {
   home: {

@@ -15,7 +15,7 @@ import platformrightb from "@/assets/presets/wolfindoor/platformrightb.png";
 import right from "@/assets/presets/wolfindoor/right.png";
 import water from "@/assets/presets/wolfindoor/water.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const wolfindoorPresets: Record<string, Preset> = {
   home: {

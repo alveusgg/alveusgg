@@ -32,7 +32,7 @@ import top from "@/assets/presets/marmout/top.png";
 import topshelfl from "@/assets/presets/marmout/topshelfl.png";
 import topshelfr from "@/assets/presets/marmout/topshelfr.png";
 
-import type { Preset } from "../tech/cameras.types.ts";
+import type { Preset } from "../tech/cameras.types";
 
 const marmoutPresets: Record<string, Preset> = {
   home: {
