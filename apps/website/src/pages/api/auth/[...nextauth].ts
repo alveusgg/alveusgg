@@ -188,17 +188,23 @@ export const authOptions: NextAuthOptions = {
     },
   },
   adapter,
-  providers: [
-    // Configure one or more authentication providers
-    twitchProvider,
-    // ...add more providers here
-  ],
+  providers: [twitchProvider],
   pages: {
     signIn: "/auth/signin",
-    //signOut: '/auth/signout',
     error: "/auth/signin", // Error code passed in query string as ?error=
-    //verifyRequest: '/auth/verify-request', // (used for check email message)
-    //newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+  },
+  cookies: {
+    // Set SameSite=none for the session cookie so it can be embedded in an iframe
+    // https://github.com/nextauthjs/next-auth/blob/next-auth%404.24.11/packages/next-auth/src/core/lib/cookie.ts#L57-L68
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+      },
+    },
   },
 };
 
