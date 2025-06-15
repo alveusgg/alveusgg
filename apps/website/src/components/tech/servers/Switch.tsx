@@ -24,6 +24,7 @@ const Ports = ({
           (i + 1) % (rows === 1 ? 8 : 16) === 0 &&
             i !== count - 1 &&
             "mr-[0.5cqw]",
+          rows === 2 && i === count - 1 && i % 2 === 0 && "row-start-2",
         )}
         key={i}
       >
@@ -51,10 +52,12 @@ const Ports = ({
 );
 
 const Switch = ({
+  drives = 0,
   rj45 = 24,
   sfp = 2,
   rows = 1,
 }: {
+  drives?: 0 | 1 | 2;
   rj45?: number;
   sfp?: number;
   rows?: 1 | 2;
@@ -76,6 +79,24 @@ const Switch = ({
         </div>
 
         <div className="my-auto flex justify-end gap-[0.75cqw]">
+          {!!drives && (
+            <div
+              className={classes(
+                "flex items-center gap-[0.75cqw]",
+                drives === 2 && "mr-auto",
+              )}
+            >
+              {Array.from({ length: drives }).map((_, i) => (
+                <div
+                  className="relative aspect-[5/1] h-[4.5cqw] rounded-sm border-[0.25cqw] border-gray-600"
+                  key={i}
+                >
+                  <div className="h-full w-[0.25cqw] bg-gray-600" />
+                  <div className="absolute top-1/2 right-1/15 aspect-square h-1/6 -translate-y-1/2 rounded-full bg-white/75" />
+                </div>
+              ))}
+            </div>
+          )}
           {!!rj45 && <Ports count={rj45} rows={rows} type="rj45" />}
           {!!sfp && <Ports count={sfp} rows={rows} type="sfp" />}
         </div>
