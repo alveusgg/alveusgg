@@ -24,6 +24,7 @@ const Ports = ({
           (i + 1) % (rows === 1 ? 8 : 16) === 0 &&
             i !== count - 1 &&
             "mr-[0.5cqw]",
+          rows === 2 && i === count - 1 && i % 2 === 0 && "row-start-2",
         )}
         key={i}
       >
@@ -51,31 +52,58 @@ const Ports = ({
 );
 
 const Switch = ({
+  screen = true,
+  drives = 0,
   rj45 = 24,
   sfp = 2,
   rows = 1,
 }: {
+  screen?: boolean;
+  drives?: 0 | 1 | 2 | 3 | 4;
   rj45?: number;
   sfp?: number;
   rows?: 1 | 2;
 }) => (
   <Server size={1}>
     <div className="flex h-full justify-between gap-[2cqw]">
-      <div className="relative my-auto aspect-square h-3/4 rounded-sm bg-blue-900">
-        <div className="absolute inset-y-0 left-1/2 h-full w-px -translate-x-1/2 bg-blue-500" />
-        <div className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-blue-500" />
-        <div className="absolute top-1/2 left-1/2 size-2/5 -translate-1/2 rounded-full bg-blue-900 ring-1 ring-blue-500" />
-        <div className="absolute top-1/2 left-1/2 size-1/5 -translate-1/2 rounded-full bg-white/75" />
-      </div>
+      {screen && (
+        <div className="relative my-auto aspect-square w-1/15 shrink-0 rounded-sm bg-blue-900">
+          <div className="absolute inset-y-0 left-1/2 h-full w-px -translate-x-1/2 bg-blue-500" />
+          <div className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-blue-500" />
+          <div className="absolute top-1/2 left-1/2 size-2/5 -translate-1/2 rounded-full bg-blue-900 ring-1 ring-blue-500" />
+          <div className="absolute top-1/2 left-1/2 size-1/5 -translate-1/2 rounded-full bg-white/75" />
+        </div>
+      )}
 
       <div className="flex grow flex-col gap-[0.25cqw]">
         <div className="flex gap-[0.25cqw]">
+          {!screen && (
+            <div className="h-[0.5cqw] w-[calc((1/15*100%)+2cqw)] rounded-sm bg-blue-500" />
+          )}
           {Array.from({ length: 5 }).map((_, i) => (
             <div className="h-[0.5cqw] grow rounded-sm bg-gray-900" key={i} />
           ))}
         </div>
 
         <div className="my-auto flex justify-end gap-[0.75cqw]">
+          {!!drives && (
+            <div
+              className={classes(
+                "flex items-center gap-[0.75cqw]",
+                drives > 1 && "mr-auto",
+              )}
+            >
+              {Array.from({ length: drives }).map((_, i) => (
+                <div
+                  className="relative aspect-[5/1] h-[4.5cqw] rounded-sm border-[0.25cqw] border-gray-600"
+                  key={i}
+                >
+                  <div className="h-full w-[0.25cqw] bg-gray-600" />
+                  <div className="absolute top-1/2 right-1/15 aspect-square h-1/6 -translate-y-1/2 rounded-full bg-white/75" />
+                </div>
+              ))}
+            </div>
+          )}
           {!!rj45 && <Ports count={rj45} rows={rows} type="rj45" />}
           {!!sfp && <Ports count={sfp} rows={rows} type="sfp" />}
         </div>
