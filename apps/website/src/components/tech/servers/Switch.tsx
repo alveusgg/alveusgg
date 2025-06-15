@@ -21,32 +21,32 @@ const Ports = ({
       <div
         className={classes(
           "relative aspect-[3/2] w-[2.85cqw] rounded-xs bg-gray-900",
+          // Each block of 8 ports has a gap to the right, except the last one
           (i + 1) % (rows === 1 ? 8 : 16) === 0 &&
             i !== count - 1 &&
             "mr-[0.5cqw]",
+          // Final port, if odd, should be on the second row, not the first
           rows === 2 && i === count - 1 && i % 2 === 0 && "row-start-2",
+          // RJ45 ports have yellow/green connectivity indicators
+          type === "rj45" &&
+            "before:absolute before:top-0 before:left-0 before:aspect-[3/2] before:w-1/4 before:rounded-xs before:bg-yellow-500/50 before:content-['']",
+          type === "rj45" &&
+            "after:absolute after:top-0 after:right-0 after:aspect-[3/2] after:w-1/4 after:rounded-xs after:bg-green-500/50 after:content-['']",
+          // SFP ports have a white connectivity indicator
+          type === "sfp" &&
+            "after:absolute after:aspect-square after:w-1/5 after:rounded-xs after:bg-white/50 after:content-['']",
+          type === "sfp" &&
+            rows === 1 &&
+            "after:-top-1/2 after:left-1/2 after:-translate-x-1/2",
+          // With two rows, the SFP connectivity indicators are between the two rows
+          type === "sfp" &&
+            rows === 2 &&
+            (i % 2 === 0
+              ? "after:-bottom-1/3 after:left-1/6"
+              : "after:-top-1/3 after:right-1/6"),
         )}
         key={i}
-      >
-        {type === "rj45" && (
-          <>
-            <div className="absolute top-0 left-0 aspect-[3/2] w-1/4 rounded-xs bg-yellow-500/50" />
-            <div className="absolute top-0 right-0 aspect-[3/2] w-1/4 rounded-xs bg-green-500/50" />
-          </>
-        )}
-
-        {type === "sfp" &&
-          (rows === 1 ? (
-            <div className="absolute -top-1/2 left-1/2 aspect-square w-1/4 -translate-x-1/2 rounded-xs bg-white/50" />
-          ) : (
-            <div
-              className={classes(
-                "absolute aspect-square w-1/5 rounded-xs bg-white/50",
-                i % 2 === 0 ? "-bottom-1/3 left-1/6" : "-top-1/3 right-1/6",
-              )}
-            />
-          ))}
-      </div>
+      />
     ))}
   </div>
 );
