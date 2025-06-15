@@ -17,6 +17,10 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Network, { NetworkStats } from "@/components/tech/Network";
 import Overview from "@/components/tech/Overview";
+import Blank from "@/components/tech/servers/Blank";
+import Rack from "@/components/tech/servers/Rack";
+import Storage from "@/components/tech/servers/Storage";
+import Switch from "@/components/tech/servers/Switch";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -211,6 +215,27 @@ const AboutTechPage: NextPage = () => {
           <Network />
         </Section>
       </div>
+
+      <Section dark>
+        <Heading level={2} className="mt-0 mb-2 scroll-mt-14" id="compute" link>
+          On-Site Compute
+        </Heading>
+
+        <div className="flex flex-col gap-2 lg:flex-row">
+          <Rack className="lg:basis-3/5">
+            <Switch rj45={0} sfp={32} rows={2} />
+            <Switch />
+            <Switch rj45={48} sfp={4} rows={2} />
+            <Switch drives={1} rj45={9} rows={2} />
+
+            <Blank />
+
+            <Storage size={1} />
+            <Storage drives={Array(3).fill(true)} />
+            <Storage drives={Array(8).fill(true)} />
+          </Rack>
+        </div>
+      </Section>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
