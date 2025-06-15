@@ -17,6 +17,8 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Network, { NetworkStats } from "@/components/tech/Network";
 import Overview from "@/components/tech/Overview";
+import Blank from "@/components/tech/servers/Blank";
+import Rack from "@/components/tech/servers/Rack";
 import Storage from "@/components/tech/servers/Storage";
 import Switch from "@/components/tech/servers/Switch";
 
@@ -220,17 +222,19 @@ const AboutTechPage: NextPage = () => {
         </Heading>
 
         <div className="flex flex-col gap-2 lg:flex-row">
-          <div className="lg:basis-3/5">
+          <Rack className="lg:basis-3/5">
             <Switch rj45={0} sfp={32} rows={2} />
             <Switch drives={1} rj45={9} rows={2} />
 
             <Switch />
             <Switch screen={false} drives={4} rj45={0} sfp={0} />
 
+            <Blank />
+
             <Storage size={1} />
             <Storage drives={Array(3).fill(true)} />
             <Storage drives={Array(8).fill(true)} />
-          </div>
+          </Rack>
         </div>
       </Section>
 
