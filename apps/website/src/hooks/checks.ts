@@ -4,13 +4,11 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
-import type { RoundsCheck } from "@alveusgg/database";
-
 import {
   typeSafeObjectEntries,
   typeSafeObjectFromEntries,
 } from "@/utils/helpers";
-import { trpc } from "@/utils/trpc";
+import { type RouterOutputs, trpc } from "@/utils/trpc";
 
 import useChat from "@/hooks/chat";
 
@@ -18,18 +16,27 @@ import type { Check } from "@/components/overlay/Checks";
 
 const isNotNull = <T>(value: T | null): value is T => value !== null;
 
+type RoundsChecks = RouterOutputs["stream"]["getRoundsChecks"];
+
 const transformChecks = (
-  checks: RoundsCheck[],
+  checks: RoundsChecks,
   statues: Record<string, boolean>,
 ): Check[] =>
   checks
     .map((check) => {
-      if (!isActiveAmbassadorKey(check.ambassador)) return null;
+      let icon: Check["icon"];
+      if (check.ambassador) {
+        if (!isActiveAmbassadorKey(check.ambassador)) return null;
+        icon = getAmbassadorImages(check.ambassador)[0];
+      } else {
+        if (!check.fileStorageObjectUrl) return null;
+        icon = { src: check.fileStorageObjectUrl.toString() };
+      }
 
       return {
         name: check.name,
         description: `!check ${check.command}`,
-        icon: getAmbassadorImages(check.ambassador)[0],
+        icon,
         status: statues[check.command] ?? false,
       };
     })

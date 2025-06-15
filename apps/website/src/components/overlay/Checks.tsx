@@ -33,9 +33,11 @@ const Check = ({
       <div className="relative size-20">
         <Image
           src={check.icon.src}
+          width={80}
+          height={80}
           alt=""
           className={classes(
-            "size-full rounded-full border-4 object-cover",
+            "size-full rounded-full border-4 bg-alveus-green object-cover",
             check.status
               ? "border-green-400 brightness-50 saturate-50"
               : "border-white",
