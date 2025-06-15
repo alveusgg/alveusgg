@@ -18,6 +18,7 @@ import Section from "@/components/content/Section";
 import Network, { NetworkStats } from "@/components/tech/Network";
 import Overview from "@/components/tech/Overview";
 import Storage from "@/components/tech/servers/Storage";
+import Switch from "@/components/tech/servers/Switch";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -219,7 +220,10 @@ const AboutTechPage: NextPage = () => {
         </Heading>
 
         <div className="flex flex-col gap-2 lg:flex-row">
-          <div className="lg:basis-2/5">
+          <div className="lg:basis-3/5">
+            <Switch rj45={0} sfp={8 * 4} rows={2} />
+            <Switch />
+            <Switch rj45={8 * 4} rows={2} />
             <Storage size={1} />
             <Storage drives={Array(3).fill(true)} />
             <Storage drives={Array(8).fill(true)} />
