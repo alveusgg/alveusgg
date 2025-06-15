@@ -218,9 +218,12 @@ const AboutTechPage: NextPage = () => {
           On-Site Compute
         </Heading>
 
-        <div>
-          <Storage drives={Array(3).fill(true)} />
-          <Storage drives={Array(8).fill(true)} />
+        <div className="flex flex-col gap-2 lg:flex-row">
+          <div className="lg:basis-2/5">
+            <Storage size={1} />
+            <Storage drives={Array(3).fill(true)} />
+            <Storage drives={Array(8).fill(true)} />
+          </div>
         </div>
       </Section>
 
