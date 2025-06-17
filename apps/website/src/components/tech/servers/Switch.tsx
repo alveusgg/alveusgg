@@ -57,14 +57,16 @@ const Switch = ({
   rj45 = 24,
   sfp = 2,
   rows = 1,
+  title,
 }: {
   screen?: boolean;
   drives?: 0 | 1 | 2 | 3 | 4;
   rj45?: number;
   sfp?: number;
   rows?: 1 | 2;
+  title?: string;
 }) => (
-  <Server size={1}>
+  <Server size={1} title={title}>
     <div className="flex h-full justify-between gap-[2cqw]">
       {screen && (
         <div className="relative my-auto aspect-square w-1/15 shrink-0 rounded-sm bg-blue-900">

@@ -5,12 +5,14 @@ import { classes } from "@/utils/classes";
 const Front = ({
   size,
   background,
+  title,
   left,
   right,
   children,
 }: {
   size: 1 | 2;
   background?: string;
+  title?: string;
   left?: ReactNode;
   right?: ReactNode;
   children?: ReactNode;
@@ -25,6 +27,7 @@ const Front = ({
         !empty && "@container flex gap-[0.25cqw] p-[0.25cqw]",
         "w-full rounded-sm",
       )}
+      title={title}
     >
       {!empty && (
         <>
@@ -40,17 +43,25 @@ const Front = ({
 const Server = ({
   size,
   background,
+  title,
   left,
   right,
   children,
 }: {
   size: 1 | 2;
   background?: string;
+  title?: string;
   left?: ReactNode;
   right?: ReactNode;
   children?: ReactNode;
 }) => (
-  <Front size={size} background={background} left={left} right={right}>
+  <Front
+    size={size}
+    background={background}
+    title={title}
+    left={left}
+    right={right}
+  >
     {children}
   </Front>
 );

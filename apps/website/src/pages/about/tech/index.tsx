@@ -313,11 +313,17 @@ const AboutTechPage: NextPage = () => {
           </div>
 
           <Rack className="lg:order-first">
-            <Switch rj45={0} sfp={32} rows={2} />
-            <Switch drives={1} rj45={9} rows={2} />
+            <Switch rj45={0} sfp={32} rows={2} title="USW Pro Aggregation" />
+            <Switch drives={1} rj45={9} rows={2} title="UDM Pro" />
 
-            <Switch />
-            <Switch screen={false} drives={4} rj45={0} sfp={0} />
+            <Switch title="USW Pro Max 24 PoE" />
+            <Switch
+              screen={false}
+              drives={4}
+              rj45={0}
+              sfp={0}
+              title="UNVR Network Video Recorder"
+            />
 
             <Blank />
 
