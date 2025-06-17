@@ -15,12 +15,15 @@ const leds = {
 const Storage = ({
   size = 2,
   drives,
+  title,
 }: {
   size?: 1 | 2;
   drives?: boolean[];
+  title?: string;
 }) => (
   <Server
     size={size}
+    title={title}
     left={
       <div className="flex h-full w-2/5 flex-col justify-end gap-[0.5cqw] p-[0.25cqw]">
         <div className={classes(led, leds.green)} />
