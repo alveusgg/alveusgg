@@ -221,8 +221,98 @@ const AboutTechPage: NextPage = () => {
           On-Site Compute
         </Heading>
 
-        <div className="flex flex-col gap-2 lg:flex-row">
-          <Rack className="lg:basis-3/5">
+        <p className="mb-4 text-lg text-balance lg:mb-8">
+          Alongside the complex network of switches and cameras that feed the
+          livestream for Alveus, we also make use of a number of servers on-site
+          to handle the processing of the video feeds and running various bits
+          of tooling to support the livestream and the sanctuary itself.
+        </p>
+
+        <div className="grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2">
+          <div className="space-y-4">
+            <div>
+              <Heading level={3} className="text-xl">
+                Core Network
+              </Heading>
+
+              <p>
+                Living at the top of our main rack is our core networking
+                equipment. This is where the fiber links from all the enclosures
+                land, as well as the main uplink to the internet.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Fiber Aggregation
+              </Heading>
+              <p>
+                A USW Pro Aggregation switch from Ubiquiti offers us 28 SFP+ 10
+                Gbps ports, and 4 SFP28 ports with 25 Gbps capability, for
+                high-speed connections to the rest of the network. We use this
+                to connect all the enclosure fiber links to the network, as well
+                as our other core networking equipment and the servers below.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Network Router
+              </Heading>
+              <p>
+                A UDM Pro from Ubiquiti serves as our core router, handling all
+                the routing and firewalling for the sanctuary. It provides the
+                rest of the network with an uplink to the internet and is
+                connected to the Pro Aggregation switch via a 10 Gbps direct
+                attach copper cable (DAC) link.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Network Switch
+              </Heading>
+              <p>
+                Also connected to the Pro Aggregation switch over a 10 Gbps
+                fiber link is a USW Pro Max 24 PoE switch from Ubiquiti, which
+                provides 24 GbE RJ45 ports (8 of which are capable of 2.5 Gbps)
+                for connections to the management ports of servers and other
+                equipment in the rack, and miscellaneous other devices like our
+                HomeAssistant server.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Security Recording
+              </Heading>
+              <p>
+                Finally, at the bottom of the networking section of the rack, is
+                a UNVR Network Video Recorder from Ubiquiti, which handles the
+                recording of security cameras around the sanctuary (enclosure
+                camera feeds are recorded to the storage server below),
+                connected to the Pro Max switch via a GbE link.
+              </p>
+            </div>
+
+            <div>
+              <Heading level={3} className="text-xl">
+                Core Compute
+              </Heading>
+            </div>
+
+            <div>
+              <Heading level={3} className="text-xl">
+                Core Storage
+              </Heading>
+            </div>
+          </div>
+
+          <Rack className="lg:order-first">
             <Switch rj45={0} sfp={32} rows={2} />
             <Switch drives={1} rj45={9} rows={2} />
 
