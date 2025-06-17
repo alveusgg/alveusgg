@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { Fragment } from "react";
 
 import commands, {
   type OverloadedArguments,
@@ -7,6 +8,7 @@ import commands, {
 } from "@/data/tech/commands";
 import { channels } from "@/data/twitch";
 
+import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 
 import Button from "@/components/content/Button";
@@ -68,6 +70,43 @@ const openSource = {
     link: "https://github.com/alveusgg/chatbot",
   },
 };
+
+const Bullet = ({ className }: { className?: string }) => (
+  <span
+    className={classes(
+      "inline-block h-0.5 w-2 rounded-xs bg-alveus-green-200",
+      className,
+    )}
+  />
+);
+
+const Spec = ({
+  items,
+  className,
+}: {
+  items: [string, string[]][];
+  className?: string;
+}) => (
+  <ul className={classes("text-sm", className)}>
+    {items.map((item) => (
+      <li key={item.join("-")} className="flex items-center gap-x-1">
+        <Bullet className="mx-1" />
+        <span className="font-bold">{item[0]}: </span>
+        {item[1].map((value, index) => (
+          <Fragment key={index}>
+            {value}
+            {index < item[1].length - 1 && (
+              <>
+                <span className="sr-only">, </span>
+                <Bullet />
+              </>
+            )}
+          </Fragment>
+        ))}
+      </li>
+    ))}
+  </ul>
+);
 
 const AboutTechPage: NextPage = () => {
   return (
@@ -303,12 +342,101 @@ const AboutTechPage: NextPage = () => {
               <Heading level={3} className="text-xl">
                 Core Compute
               </Heading>
-            </div>
 
-            <div>
-              <Heading level={3} className="text-xl">
-                Core Storage
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Development Server
               </Heading>
+              <p>
+                A 1U Dell PowerEdge R630 acts as our development server.
+                It&apos;s connected to the network with a GbE link to the Pro
+                Max switch, plus a second link for its management port. Proxmox
+                is installed as the host OS acting as a hypervisor, with
+                Tailscale running on the host for remote access. We have a
+                development Kubernetes cluster running within Proxmox, as well
+                as any other VMs that we need to test or develop on.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x Intel Xeon E5-2650 v4 @ 2.2 GHz"]],
+                  ["RAM", ["20x 32 GB DDR4 ECC @ 2400 MHz"]],
+                  ["Storage", ["2x 120 GB Dell S3510 SATA SSD"]],
+                  ["Networking", ["8x GbE RJ45", "1x BMC RJ45"]],
+                ]}
+                className="mt-1"
+              />
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Application Server
+              </Heading>
+              <p>
+                A 2U SuperMicro AS-2024S-TR Mainstream A+ SuperServer acts as
+                our production application server. The server is networked with
+                a 10 Gbps fiber link to the Pro Aggregation switch, as well as a
+                management port link to the Pro Max switch. As with the
+                development server, Proxmox is installed as the host OS acting
+                as a hypervisor, alongside Tailscale for remote access. A
+                Kubernetes cluster is running within Proxmox, which hosts the
+                majority of our applications. Additional VMs are also run in
+                Proxmox for non-containerized applications, such as our database
+                instances.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x AMD EPYC™ 7313 16-Core @ 3.0 GHz"]],
+                  ["RAM", ["4x 64 GB DDR4 ECC @ 3200 MHz"]],
+                  ["Storage", ["3x 960 GB Micron 7450 PRO NVMe SSD"]],
+                  [
+                    "Networking",
+                    ["2x 10 Gbps SFP+", "2x GbE RJ45", "1x BMC RJ45"],
+                  ],
+                ]}
+                className="mt-1"
+              />
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Storage Server
+              </Heading>
+              <p>
+                A 2U SuperMicro AS-2024S-TR Mainstream A+ SuperServer also acts
+                as our storage server for all our enclosure camera feeds. Like
+                the application server, this server is networked with a 10 Gbps
+                fiber link to the Pro Aggregation switch and a link to the Pro
+                Max switch for the management port. It also has Proxmox
+                installed as the host OS with Tailscale for access. Two key VMs
+                are deployed to the server, running MediaMTX which handles
+                ingesting and re-broadcasting the camera feeds, and TrueNAS to
+                expose the storage RAIDZ2 ZFS array as a network share for the
+                cameras to record their feeds to continually. Additional VMs are
+                run in Proxmox to utilize the spare compute available on the
+                server, complementing the deployments on the application server.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x AMD EPYC™ 7313 16-Core @ 3.0 GHz"]],
+                  ["RAM", ["4x 64 GB DDR4 ECC @ 3200 MHz"]],
+                  [
+                    "Storage",
+                    [
+                      "8x 14 TB Seagate Exos™ 2X14 SAS HDD",
+                      "1x 960 GB Samsung PM9A3 M.2 SSD",
+                    ],
+                  ],
+                  [
+                    "Networking",
+                    ["2x 10 Gbps SFP+", "2x GbE RJ45", "1x BMC RJ45"],
+                  ],
+                ]}
+                className="mt-1"
+              />
             </div>
           </div>
 
@@ -327,9 +455,15 @@ const AboutTechPage: NextPage = () => {
 
             <Blank />
 
-            <Storage size={1} />
-            <Storage drives={Array(3).fill(true)} />
-            <Storage drives={Array(8).fill(true)} />
+            <Storage size={1} title="Dell PowerEdge R630 (development)" />
+            <Storage
+              drives={Array(3).fill(true)}
+              title="SuperMicro AS-2024S-TR (application)"
+            />
+            <Storage
+              drives={Array(8).fill(true)}
+              title="SuperMicro AS-2024S-TR (storage)"
+            />
           </Rack>
         </div>
       </Section>
