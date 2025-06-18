@@ -2,9 +2,6 @@ import { Feed } from "feed";
 
 import { env } from "@/env";
 
-import { camelToKebab } from "@/utils/string-case";
-
-// import People, { type Person } from "@/components/content/People";
 import { type Person } from "@/components/content/People";
 
 import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
