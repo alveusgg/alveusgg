@@ -32,8 +32,6 @@ export async function GET() {
       title: video.title,
       id: videoUrl,
       link: videoUrl,
-      description: video.description,
-      content: video.description,
       date: video.published,
     });
   });
