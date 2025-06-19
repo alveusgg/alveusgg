@@ -116,7 +116,9 @@ const getStats = (ambassador: Ambassador): Stats => {
     },
     [
       {
-        title: "Date of Birth",
+        title: `Date of ${
+          { live: "Birth", egg: "Hatching", seed: "Planting" }[species.birth]
+        }`,
         value: <p>{formatPartialDateString(ambassador.birth)}</p>,
       },
       {
