@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env } from "@/env";
 
@@ -12,8 +12,8 @@ const scheduledEventSchema = z.object({
   id: z.string(),
   name: z.string(),
   description: z.string().nullable(),
-  scheduled_start_time: z.string().datetime({ offset: true }),
-  scheduled_end_time: z.string().datetime({ offset: true }).nullable(),
+  scheduled_start_time: z.iso.datetime({ offset: true }),
+  scheduled_end_time: z.iso.datetime({ offset: true }).nullable(),
   entity_type: z.number(),
   entity_metadata: z.object({
     location: z.string().optional(),
