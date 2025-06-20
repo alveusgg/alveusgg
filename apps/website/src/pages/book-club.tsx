@@ -70,6 +70,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/42LpJSo",
     thickness: thickness.sm, // 300 pages
     color: "border-black",
+    vodId: "tpRWhSPuHlQ",
   },
   {
     title: "The Last Rhinos",

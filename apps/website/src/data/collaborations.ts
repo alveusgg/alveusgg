@@ -85,6 +85,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/filian",
       date: new Date("2025-06-06"),
       videoId: "kMxwBQW68PE",
+      vodId: "jPpNVI5L-nk",
       creators: [
         {
           name: "Filian",
