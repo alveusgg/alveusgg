@@ -23,6 +23,7 @@ import Blank from "@/components/tech/servers/Blank";
 import Rack from "@/components/tech/servers/Rack";
 import Storage from "@/components/tech/servers/Storage";
 import Switch from "@/components/tech/servers/Switch";
+import UPS from "@/components/tech/servers/UPS";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -464,6 +465,10 @@ const AboutTechPage: NextPage = () => {
               drives={Array(8).fill(true)}
               title="SuperMicro AS-2024S-TR (storage)"
             />
+
+            <Blank />
+
+            <UPS size={2} title="Eaton 5P3000RT UPS" />
           </Rack>
         </div>
       </Section>
