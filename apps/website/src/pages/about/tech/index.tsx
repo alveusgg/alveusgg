@@ -440,7 +440,7 @@ const AboutTechPage: NextPage = () => {
             </div>
           </div>
 
-          <Rack className="lg:order-first">
+          <Rack sticky="bottom" className="lg:order-first">
             <Switch rj45={0} sfp={32} rows={2} title="USW Pro Aggregation" />
             <Switch drives={1} rj45={9} rows={2} title="UDM Pro" />
 
