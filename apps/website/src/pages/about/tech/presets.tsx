@@ -41,8 +41,8 @@ import IconLoading from "@/icons/IconLoading";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconX from "@/icons/IconX";
 
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
 
 const groupedCameras = typeSafeObjectEntries(cameras).reduce(
   (acc, [key, value]) => ({
@@ -195,9 +195,9 @@ const AboutTechPresetsPage: NextPage = () => {
 
       <div className="relative">
         <Image
-          src={leafRightImage1}
+          src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block xl:max-w-sm"
+          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
