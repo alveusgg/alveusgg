@@ -1,5 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { Fragment } from "react";
 
 import commands, {
   type OverloadedArguments,
@@ -7,6 +8,7 @@ import commands, {
 } from "@/data/tech/commands";
 import { channels } from "@/data/twitch";
 
+import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 
 import Button from "@/components/content/Button";
@@ -17,6 +19,11 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Network, { NetworkStats } from "@/components/tech/Network";
 import Overview from "@/components/tech/Overview";
+import Blank from "@/components/tech/servers/Blank";
+import Rack from "@/components/tech/servers/Rack";
+import Storage from "@/components/tech/servers/Storage";
+import Switch from "@/components/tech/servers/Switch";
+import UPS from "@/components/tech/servers/UPS";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -64,6 +71,43 @@ const openSource = {
     link: "https://github.com/alveusgg/chatbot",
   },
 };
+
+const Bullet = ({ className }: { className?: string }) => (
+  <span
+    className={classes(
+      "inline-block h-0.5 w-2 rounded-xs bg-alveus-green-200",
+      className,
+    )}
+  />
+);
+
+const Spec = ({
+  items,
+  className,
+}: {
+  items: [string, string[]][];
+  className?: string;
+}) => (
+  <ul className={classes("text-sm", className)}>
+    {items.map((item) => (
+      <li key={item.join("-")} className="flex items-center gap-x-1">
+        <Bullet className="mx-1" />
+        <span className="font-bold">{item[0]}: </span>
+        {item[1].map((value, index) => (
+          <Fragment key={index}>
+            {value}
+            {index < item[1].length - 1 && (
+              <>
+                <span className="sr-only">, </span>
+                <Bullet />
+              </>
+            )}
+          </Fragment>
+        ))}
+      </li>
+    ))}
+  </ul>
+);
 
 const AboutTechPage: NextPage = () => {
   return (
@@ -211,6 +255,215 @@ const AboutTechPage: NextPage = () => {
           <Network />
         </Section>
       </div>
+
+      <Section dark>
+        <Heading level={2} className="mt-0 mb-2 scroll-mt-14" id="compute" link>
+          On-Site Compute
+        </Heading>
+
+        <p className="mb-4 text-lg text-balance lg:mb-8">
+          Alongside the complex network of switches and cameras that feed the
+          livestream for Alveus, we also make use of a number of servers on-site
+          to handle the processing of the video feeds and running various bits
+          of tooling to support the livestream and the sanctuary itself.
+        </p>
+
+        <div className="grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2">
+          <div className="space-y-4">
+            <div>
+              <Heading level={3} className="text-xl">
+                Core Network
+              </Heading>
+
+              <p>
+                Living at the top of our main rack is our core networking
+                equipment. This is where the fiber links from all the enclosures
+                land, as well as the main uplink to the internet.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Fiber Aggregation
+              </Heading>
+              <p>
+                A USW Pro Aggregation switch from Ubiquiti offers us 28 SFP+ 10
+                Gbps ports, and 4 SFP28 ports with 25 Gbps capability, for
+                high-speed connections to the rest of the network. We use this
+                to connect all the enclosure fiber links to the network, as well
+                as our other core networking equipment and the servers below.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Network Router
+              </Heading>
+              <p>
+                A UDM Pro from Ubiquiti serves as our core router, handling all
+                the routing and firewalling for the sanctuary. It provides the
+                rest of the network with an uplink to the internet and is
+                connected to the Pro Aggregation switch via a 10 Gbps direct
+                attach copper cable (DAC) link.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Network Switch
+              </Heading>
+              <p>
+                Also connected to the Pro Aggregation switch over a 10 Gbps
+                fiber link is a USW Pro Max 24 PoE switch from Ubiquiti, which
+                provides 24 GbE RJ45 ports for connections to the management
+                ports of servers and other equipment in the rack, and
+                miscellaneous other devices like our HomeAssistant server.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Security Recording
+              </Heading>
+              <p>
+                Finally, at the bottom of the networking section of the rack, is
+                a UNVR Network Video Recorder from Ubiquiti, which handles the
+                recording of security cameras around the sanctuary (enclosure
+                camera feeds are recorded to the storage server below),
+                connected to the Pro Max switch via a GbE link.
+              </p>
+            </div>
+
+            <div>
+              <Heading level={3} className="text-xl">
+                Core Compute
+              </Heading>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Development Server
+              </Heading>
+              <p>
+                A 1U Dell ??? acts as our development server. It&apos;s
+                connected to the network with a GbE link to the Pro Max switch,
+                plus a second link for its management port. Proxmox is installed
+                as the host OS acting as a hypervisor, with Tailscale running on
+                the host for remote access. We have a development Kubernetes
+                cluster running within Proxmox, as well as any other VMs that we
+                need to test or develop on.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["???"]],
+                  ["RAM", ["???"]],
+                  ["Storage", ["???"]],
+                  ["Networking", ["???"]],
+                ]}
+                className="mt-1"
+              />
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Application Server
+              </Heading>
+              <p>
+                A 2U SuperMicro AS-2024S-TR Mainstream A+ SuperServer acts as
+                our production application server. The server is networked with
+                a 10 Gbps fiber link to the Pro Aggregation switch, as well as a
+                management port link to the Pro Max switch. As with the
+                development server, Proxmox is installed as the host OS acting
+                as a hypervisor, alongside Tailscale for remote access. A
+                Kubernetes cluster is running within Proxmox, composed of three
+                master nodes and six worker nodes, which hosts the majority of
+                our applications. Additional VMs are also run in Proxmox for
+                non-containerized applications, such as our database instances.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x AMD EPYC™ 7313 16-Core @ 3.0 GHz"]],
+                  ["RAM", ["4x 64 GB DDR4 ECC @ 3200 MHz"]],
+                  ["Storage", ["3x 960 GB Micron 7450 PRO NVMe SSD"]],
+                  ["Networking", ["2x 10 Gbps SFP+", "2x GbE RJ45"]],
+                ]}
+                className="mt-1"
+              />
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Storage Server
+              </Heading>
+              <p>
+                A 2U SuperMicro AS-2024S-TR Mainstream A+ SuperServer also acts
+                as our storage server for all our enclosure camera feeds. Like
+                the application server, this server is networked with a 10 Gbps
+                fiber link to the Pro Aggregation switch and a link to the Pro
+                Max switch for the management port. It also has Proxmox
+                installed as the host OS with Tailscale for access, and has
+                TrueNAS running in a VM configured to expose the storage RAIDZ2
+                ZFS array as a network share for the cameras to write their
+                feeds to. Additional VMs are run in Proxmox to utilize the spare
+                compute available on the server, complementing the deployments
+                on the application server.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x AMD EPYC™ 7313 16-Core @ 3.0 GHz"]],
+                  ["RAM", ["4x 64 GB DDR4 ECC @ 3200 MHz"]],
+                  [
+                    "Storage",
+                    [
+                      "8x 14 TB Seagate Exos™ 2X14 SAS HDD",
+                      "1x 960 GB Samsung PM9A3 M.2 SSD",
+                    ],
+                  ],
+                  ["Networking", ["2x 10 Gbps SFP+", "2x GbE RJ45"]],
+                ]}
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <Rack sticky="bottom" className="lg:order-first">
+            <Switch rj45={0} sfp={32} rows={2} title="USW Pro Aggregation" />
+            <Switch drives={1} rj45={9} rows={2} title="UDM Pro" />
+
+            <Switch title="USW Pro Max 24 PoE" />
+            <Switch
+              screen={false}
+              drives={4}
+              rj45={0}
+              sfp={0}
+              title="UNVR Network Video Recorder"
+            />
+
+            <Blank />
+
+            <Storage size={1} title="Dell ??? (development)" />
+            <Storage
+              drives={Array(3).fill(true)}
+              title="SuperMicro AS-2024S-TR (application)"
+            />
+            <Storage
+              drives={Array(8).fill(true)}
+              title="SuperMicro AS-2024S-TR (storage)"
+            />
+
+            <Blank />
+
+            <UPS size={2} title="Eaton 5P3000RT UPS" />
+          </Rack>
+        </div>
+      </Section>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
