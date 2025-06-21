@@ -16,6 +16,7 @@ import den2entrance from "@/assets/presets/wolfcorner/den2entrance.png";
 import den2inside from "@/assets/presets/wolfcorner/den2inside.png";
 import den2l from "@/assets/presets/wolfcorner/den2l.png";
 import den2m from "@/assets/presets/wolfcorner/den2m.png";
+import den2r from "@/assets/presets/wolfcorner/den2r.png";
 import den2shade from "@/assets/presets/wolfcorner/den2shade.png";
 import den2shadel from "@/assets/presets/wolfcorner/den2shadel.png";
 import den2t from "@/assets/presets/wolfcorner/den2t.png";
@@ -121,6 +122,10 @@ const wolfcornerPresets: Record<string, Preset> = {
   den2m: {
     description: "Den 2 middle platform",
     image: den2m,
+  },
+  den2r: {
+    description: "Den 2 right",
+    image: den2r,
   },
   den2shade: {
     description: "Den 2 shade under top platform",
