@@ -2,6 +2,7 @@ import angel from "@/assets/presets/pasture/angel.png";
 import barn2 from "@/assets/presets/pasture/barn2.png";
 import barn2hay from "@/assets/presets/pasture/barn2hay.png";
 import barn2r from "@/assets/presets/pasture/barn2r.png";
+import barn2z from "@/assets/presets/pasture/barn2z.png";
 import barn from "@/assets/presets/pasture/barn.png";
 import barnfloor from "@/assets/presets/pasture/barnfloor.png";
 import brush from "@/assets/presets/pasture/brush.png";
@@ -64,6 +65,10 @@ const pasturePresets: Record<string, Preset> = {
   barn2r: {
     description: "Barn 2 right",
     image: barn2r,
+  },
+  barn2z: {
+    description: "Barn 2 zoomed",
+    image: barn2z,
   },
   barnfloor: {
     description: "Barn Floor",
