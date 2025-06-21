@@ -242,13 +242,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 >
                   {channels.alveusgg.username} Twitch chat
                 </Link>{" "}
-                as if you had typed it in the chat yourself. Make sure you have
-                the{" "}
-                <Link href="/live/twitch" external>
-                  livestream
-                </Link>{" "}
-                open in another tab to see the camera change as you load the
-                presets.
+                as if you had typed it in the chat yourself.
               </p>
 
               <p className="hidden lg:block">
@@ -260,6 +254,20 @@ const AboutTechPresetsPage: NextPage = () => {
                 button if the camera is in the same enclosure as the currently
                 selected camera, allowing you to swap which camera is shown on
                 stream if you&apos;re subscribed.
+              </p>
+
+              <p>
+                Make sure to enable the embedded stream player, or have the{" "}
+                <Link href="/live/twitch" external>
+                  livestream
+                </Link>{" "}
+                open in another tab, to see the cameras change as you load
+                presets
+                <span className="hidden lg:inline">
+                  {" "}
+                  and swap which cameras are on stream
+                </span>
+                .
               </p>
             </div>
 
