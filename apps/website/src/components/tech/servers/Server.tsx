@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
+// This component makes use of percentage + cqw (container query width) units.
+// This ensures it scales to whatever container it is within, similar to an SVG.
+
 const Front = ({
   size,
   background,

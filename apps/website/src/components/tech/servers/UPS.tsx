@@ -2,6 +2,9 @@ import { classes } from "@/utils/classes";
 
 import Server from "./Server";
 
+// This component makes use of percentage + cqw (container query width) units.
+// This ensures it scales to whatever container it is within, similar to an SVG.
+
 const UPS = ({ size = 1, title }: { size?: 1 | 2; title?: string }) => (
   <Server size={size} title={title} background="bg-gray-800">
     <div className="flex h-full">

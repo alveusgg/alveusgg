@@ -2,6 +2,9 @@ import { classes } from "@/utils/classes";
 
 import Server from "./Server";
 
+// This component makes use of percentage + cqw (container query width) units.
+// This ensures it scales to whatever container it is within, similar to an SVG.
+
 const led =
   "aspect-square rounded-full inset-ring-[0.1cqw] relative after:content-[''] after:absolute after:top-1/2 after:left-1/2 after:-translate-1/2 after:size-2/5 after:rounded-full after:brightness-150 after:opacity-75";
 
