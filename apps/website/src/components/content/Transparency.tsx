@@ -20,7 +20,7 @@ const Transparency = ({ className }: TransparencyProps) => (
   >
     <div className="flex flex-col gap-4 md:flex-row-reverse md:items-center md:gap-10">
       <div>
-        <Heading id="transparency" level={2} link className="scroll-mt-24">
+        <Heading id="transparency" level={2} link>
           Platinum rated transparency
         </Heading>
 

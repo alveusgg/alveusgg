@@ -338,7 +338,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   level={2}
                   id="did-you-know"
                   link
-                  className="my-0 scroll-mt-6 text-2xl"
+                  className="my-0 text-2xl"
                 >
                   Did you know?
                 </Heading>

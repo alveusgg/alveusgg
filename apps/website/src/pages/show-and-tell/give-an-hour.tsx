@@ -113,12 +113,7 @@ const Card = ({
     </div>
 
     <div className="grow text-lg">
-      <Heading
-        level={3}
-        id={id}
-        link
-        className="mt-0 scroll-mt-8 font-sans text-2xl"
-      >
+      <Heading level={3} id={id} link className="mt-0 font-sans text-2xl">
         {heading}
       </Heading>
       {children}
