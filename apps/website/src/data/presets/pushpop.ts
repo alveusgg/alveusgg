@@ -4,9 +4,13 @@ import down from "@/assets/presets/pushpop/down.png";
 import downcubby from "@/assets/presets/pushpop/downcubby.png";
 import downl from "@/assets/presets/pushpop/downl.png";
 import downr from "@/assets/presets/pushpop/downr.png";
+import farcenter from "@/assets/presets/pushpop/farcenter.png";
 import farfence from "@/assets/presets/pushpop/farfence.png";
+import farleft from "@/assets/presets/pushpop/farleft.png";
+import farright from "@/assets/presets/pushpop/farright.png";
 import home from "@/assets/presets/pushpop/home.png";
 import hut from "@/assets/presets/pushpop/hut.png";
+import hutz from "@/assets/presets/pushpop/hutz.png";
 import insidedoor from "@/assets/presets/pushpop/insidedoor.png";
 import left from "@/assets/presets/pushpop/left.png";
 import right from "@/assets/presets/pushpop/right.png";
@@ -43,13 +47,29 @@ const pushpopPresets: Record<string, Preset> = {
     description: "Down Right",
     image: downr,
   },
+  farcenter: {
+    description: "Far Center",
+    image: farcenter,
+  },
   farfence: {
     description: "Far Fence",
     image: farfence,
   },
+  farleft: {
+    description: "Far Left",
+    image: farleft,
+  },
+  farright: {
+    description: "Far Right",
+    image: farright,
+  },
   hut: {
     description: "Hut",
     image: hut,
+  },
+  hutz: {
+    description: "Hut Zoomed",
+    image: hutz,
   },
   insidedoor: {
     description: "Inside Door",

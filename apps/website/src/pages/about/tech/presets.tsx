@@ -41,8 +41,9 @@ import IconLoading from "@/icons/IconLoading";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconX from "@/icons/IconX";
 
+import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 const groupedCameras = typeSafeObjectEntries(cameras).reduce(
   (acc, [key, value]) => ({
@@ -73,14 +74,14 @@ const Button = ({
     group: string;
   };
 }) => (
-  <div className="flex w-full overflow-hidden rounded">
+  <div className="flex w-full overflow-hidden rounded shadow-md">
     <button
       onClick={onClick}
       className={classes(
-        "my-auto grow px-3 py-2 text-left text-lg font-semibold",
+        "my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm",
         camera === selected.camera
-          ? "bg-alveus-green text-white"
-          : "bg-alveus-green-50 hover:bg-alveus-green-100",
+          ? "bg-alveus-green/75 text-white"
+          : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
       )}
     >
       {title}
@@ -95,7 +96,7 @@ const Button = ({
         args={[selected.camera.toLowerCase(), camera.toLowerCase()]}
         subOnly
         tooltip="Run swap command"
-        className="flex items-center rounded-r bg-alveus-green px-2 text-alveus-tan transition-colors hover:bg-alveus-green-900"
+        className="flex items-center rounded-r bg-alveus-green/75 px-2 text-alveus-tan backdrop-blur-sm transition-colors hover:bg-alveus-green-900/90"
       />
     )}
   </div>
@@ -195,9 +196,9 @@ const AboutTechPresetsPage: NextPage = () => {
 
       <div className="relative">
         <Image
-          src={leafRightImage1}
+          src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block xl:max-w-sm"
+          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -220,7 +221,7 @@ const AboutTechPresetsPage: NextPage = () => {
         <Image
           src={leafLeftImage3}
           alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section className="grow">
@@ -241,13 +242,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 >
                   {channels.alveusgg.username} Twitch chat
                 </Link>{" "}
-                as if you had typed it in the chat yourself. Make sure you have
-                the{" "}
-                <Link href="/live/twitch" external>
-                  livestream
-                </Link>{" "}
-                open in another tab to see the camera change as you load the
-                presets.
+                as if you had typed it in the chat yourself.
               </p>
 
               <p className="hidden lg:block">
@@ -259,6 +254,20 @@ const AboutTechPresetsPage: NextPage = () => {
                 button if the camera is in the same enclosure as the currently
                 selected camera, allowing you to swap which camera is shown on
                 stream if you&apos;re subscribed.
+              </p>
+
+              <p>
+                Make sure to enable the embedded stream player, or have the{" "}
+                <Link href="/live/twitch" external>
+                  livestream
+                </Link>{" "}
+                open in another tab, to see the cameras change as you load
+                presets
+                <span className="hidden lg:inline">
+                  {" "}
+                  and swap which cameras are on stream
+                </span>
+                .
               </p>
             </div>
 
@@ -344,7 +353,13 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
 
               {/* Desktop: Button List */}
-              <div className="hidden lg:flex lg:flex-col lg:gap-1">
+              <div className="relative hidden lg:flex lg:flex-col lg:gap-1">
+                <Image
+                  src={leafRightImage2}
+                  alt=""
+                  className="pointer-events-none absolute bottom-0 -left-1/3 -z-10 h-auto w-3/4 drop-shadow-md select-none"
+                />
+
                 {typeSafeObjectEntries(groupedCameras).map(([name, group]) => {
                   const groupEntries =
                     typeSafeObjectEntries(group).filter(isDefinedEntry);
@@ -374,10 +389,10 @@ const AboutTechPresetsPage: NextPage = () => {
                     >
                       <DisclosureButton
                         className={classes(
-                          "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold",
+                          "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
                           selectedData.group === name
-                            ? "bg-alveus-green text-white"
-                            : "bg-alveus-green-50 hover:bg-alveus-green-100",
+                            ? "bg-alveus-green/75 text-white"
+                            : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
                         )}
                       >
                         <span>
