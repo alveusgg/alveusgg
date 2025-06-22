@@ -1,6 +1,5 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Fragment } from "react";
 
 import commands, {
   type OverloadedArguments,
@@ -80,13 +79,8 @@ const openSource = {
   },
 };
 
-const Bullet = ({ className }: { className?: string }) => (
-  <span
-    className={classes(
-      "inline-block h-0.5 w-2 rounded-xs bg-alveus-green-200",
-      className,
-    )}
-  />
+const Bullet = () => (
+  <span className="mx-1 my-auto inline-block h-0.5 w-2 shrink-0 rounded-xs bg-alveus-green-200" />
 );
 
 const Spec = ({
@@ -98,20 +92,22 @@ const Spec = ({
 }) => (
   <ul className={classes("text-sm", className)}>
     {items.map((item) => (
-      <li key={item.join("-")} className="flex items-center gap-x-1">
-        <Bullet className="mx-1" />
-        <span className="font-bold">{item[0]}: </span>
-        {item[1].map((value, index) => (
-          <Fragment key={index}>
-            {value}
-            {index < item[1].length - 1 && (
-              <>
+      <li key={item.join("-")} className="flex items-start">
+        <span className="flex">
+          <Bullet />
+          <span className="mx-1 font-bold">{item[0]}: </span>
+        </span>
+        <span className="flex flex-wrap">
+          {item[1].map((value, index) => (
+            <span key={index} className="flex">
+              {index !== 0 && <Bullet />}
+              {value}
+              {index < item[1].length - 1 && (
                 <span className="sr-only">, </span>
-                <Bullet />
-              </>
-            )}
-          </Fragment>
-        ))}
+              )}
+            </span>
+          ))}
+        </span>
       </li>
     ))}
   </ul>
