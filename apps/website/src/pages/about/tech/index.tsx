@@ -17,6 +17,7 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import SubNav from "@/components/content/SubNav";
 import Network, { NetworkStats } from "@/components/tech/Network";
 import Overview from "@/components/tech/Overview";
 import Blank from "@/components/tech/servers/Blank";
@@ -29,6 +30,13 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+
+const sectionLinks = [
+  { name: "Live Cam Controls", href: "#controls" },
+  { name: "System Overview", href: "#overview" },
+  { name: "On-Site Compute", href: "#compute" },
+  { name: "Open-source", href: "#open-source" },
+];
 
 const subCommandNames: (keyof typeof commands)[] = [
   "ptzlist",
@@ -124,7 +132,7 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
@@ -137,6 +145,8 @@ const AboutTechPage: NextPage = () => {
           </p>
         </Section>
       </div>
+
+      <SubNav links={sectionLinks} className="z-20" />
 
       <div className="relative">
         <Image
@@ -191,7 +201,7 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       <Section className="bg-alveus-green-100">
-        <Heading level={2} className="mt-0 mb-2 scroll-mt-14" id="presets" link>
+        <Heading level={2} className="mt-0 mb-2" id="presets" link>
           Camera Presets
         </Heading>
 
@@ -212,12 +222,7 @@ const AboutTechPage: NextPage = () => {
       </Section>
 
       <Section dark>
-        <Heading
-          level={2}
-          className="mt-0 mb-2 scroll-mt-14"
-          id="commands"
-          link
-        >
+        <Heading level={2} className="mt-0 mb-2" id="commands" link>
           Chat Commands
         </Heading>
 
@@ -257,7 +262,7 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       <Section dark>
-        <Heading level={2} className="mt-0 mb-2 scroll-mt-14" id="compute" link>
+        <Heading level={2} className="mt-0 mb-2" id="compute" link>
           On-Site Compute
         </Heading>
 
