@@ -18,7 +18,6 @@ import IconAmazon from "@/icons/IconAmazon";
 import IconArrowRight from "@/icons/IconArrowRight";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
-import IconGift from "@/icons/IconGift";
 import IconPayPal from "@/icons/IconPayPal";
 
 type DonateLink = {
@@ -37,14 +36,6 @@ const links = {
     external: true,
     description:
       "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
-  },
-  toybox: {
-    icon: IconGift,
-    title: "Wildlife Toy Box",
-    link: "/toybox",
-    external: true,
-    description:
-      "Purchase specific items for our ambassadors from our Wildlife Toy Box wishlist.",
   },
   paypal: {
     icon: IconPayPal,
