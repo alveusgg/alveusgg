@@ -86,8 +86,8 @@ const ContactUsPage: NextPage = () => {
           </p>
 
           <p>
-            If you discover a security vulnerability within the website or
-            Twitch extension, please email us:{" "}
+            If you discover a security vulnerability within the website, or any
+            of our other open-source projects, please email us:{" "}
             <Link href="mailto:opensource@alveussanctuary.org">
               opensource@alveussanctuary.org
             </Link>

@@ -481,11 +481,12 @@ const AboutTechPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
-        <Section dark className="grow bg-alveus-green-800">
-          <Heading level={2} className="mt-0 mb-2" id="open-source" link>
+        <Section className="grow" containerClassName="space-y-2">
+          <Heading level={2} className="mt-0" id="open-source" link>
             Open-source
           </Heading>
-          <p className="mb-4 text-balance">
+
+          <p className="text-balance">
             We believe in being transparent in all that we do, and that includes
             the code we&apos;re writing to power Alveus Sanctuary. This website,
             our Twitch extension, and even that chatbot used to control the
@@ -494,21 +495,43 @@ const AboutTechPage: NextPage = () => {
             help us improve them!
           </p>
 
-          <ul className="flex flex-wrap md:gap-y-4">
+          <ul className="my-4 grid grid-cols-1 lg:my-8 lg:grid-cols-2 lg:gap-4 xl:grid-cols-3">
             {typeSafeObjectEntries(openSource).map(([key, item]) => (
-              <li className="basis-full md:basis-1/2 lg:basis-1/3" key={key}>
+              <li key={key}>
                 <p>
                   <span className="font-bold">
                     {item.title}
                     {": "}
                   </span>
-                  <Link href={item.link} dark external>
+                  <Link href={item.link} external>
                     {item.description}
                   </Link>
                 </p>
               </li>
             ))}
           </ul>
+
+          <p className="text-balance">
+            If you discover a security vulnerability within the website, or any
+            of our other open-source projects, please email us:{" "}
+            <Link href="mailto:opensource@alveussanctuary.org">
+              opensource@alveussanctuary.org
+            </Link>
+          </p>
+
+          <p className="text-balance">
+            Thanks to{" "}
+            <Link href="https://vercel.com" external>
+              Vercel
+            </Link>{" "}
+            (web hosting), and{" "}
+            <Link href="https://cloudflare.com" external>
+              Cloudflare
+            </Link>{" "}
+            (DNS, video streaming, and web hosting), for providing us their
+            services free of charge as part of their open-source/non-profit
+            programs.
+          </p>
         </Section>
       </div>
     </>
