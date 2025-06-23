@@ -123,7 +123,7 @@ export const env = createEnv({
       .check(checkBase64UrlEncoded)
       .check(checkPublicKey)
       .optional(),
-    NEXT_PUBLIC_NOINDEX: z.string().optional(),
+    NEXT_PUBLIC_NOINDEX: z.stringbool().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
