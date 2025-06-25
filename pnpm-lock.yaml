@@ -172,8 +172,8 @@ importers:
         specifier: ^1.5.0
         version: 1.5.0(next@15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react@19.1.0)
       '@vercel/functions':
-        specifier: ^2.2.1
-        version: 2.2.1(@aws-sdk/credential-provider-web-identity@3.830.0)
+        specifier: ^2.2.2
+        version: 2.2.2(@aws-sdk/credential-provider-web-identity@3.830.0)
       country-list:
         specifier: ^2.3.0
         version: 2.3.0
@@ -3501,8 +3501,8 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@2.2.1':
-    resolution: {integrity: sha512-Hpx84E+j51Gb0d5Tj5o+LDGer6AUzVjckl2/SymxmKIaWTXjsQRyNRuPrxNptF5wPlSoDkmuVbSD2dlJq86M9g==}
+  '@vercel/functions@2.2.2':
+    resolution: {integrity: sha512-wgtgFwhYAUzS7UOvw44q14FaoRPONEnyoM0JlrjcDkI+kzSu7M8J5Tk5T3Kvv52//8is+HGxVQtaBSiO3G0wbw==}
     engines: {node: '>= 18'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -10518,7 +10518,7 @@ snapshots:
       next: 15.3.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       react: 19.1.0
 
-  '@vercel/functions@2.2.1(@aws-sdk/credential-provider-web-identity@3.830.0)':
+  '@vercel/functions@2.2.2(@aws-sdk/credential-provider-web-identity@3.830.0)':
     optionalDependencies:
       '@aws-sdk/credential-provider-web-identity': 3.830.0
 
