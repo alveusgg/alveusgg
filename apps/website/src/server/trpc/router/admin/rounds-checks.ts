@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   createRoundsCheck,
@@ -47,8 +47,8 @@ export const adminRoundsChecksRouter = router({
   moveRoundsCheck: permittedProcedure
     .input(
       z.object({
-        id: z.string().cuid(),
-        direction: z.enum(["up", "down"]),
+        id: z.cuid(),
+        direction: z.literal(["up", "down"]),
       }),
     )
     .mutation(async ({ input }) => {
@@ -56,13 +56,13 @@ export const adminRoundsChecksRouter = router({
     }),
 
   deleteRoundsCheck: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) => {
       await ctx.prisma.roundsCheck.delete({ where: { id: id } });
     }),
 
   getRoundsCheck: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(({ ctx, input: id }) =>
       ctx.prisma.roundsCheck.findUnique({ where: { id } }),
     ),

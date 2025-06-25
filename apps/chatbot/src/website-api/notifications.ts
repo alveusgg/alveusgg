@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env } from "@/env";
 import { fetchApi } from "@/website-api/index";
@@ -13,8 +13,8 @@ const notificationSchema = z.object({
   tag: z.string(),
   text: z.string().optional(),
   title: z.string().optional(),
-  linkUrl: z.string().url().optional(),
-  imageUrl: z.string().url().optional(),
+  linkUrl: z.url().optional(),
+  imageUrl: z.url().optional(),
   scheduledStartAt: dateSchema.optional(),
   scheduledEndAt: dateSchema.optional(),
   isPush: z.boolean().optional(),

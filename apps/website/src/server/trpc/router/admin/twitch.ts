@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { getUserByName } from "@/server/apis/twitch";
 import {
@@ -96,7 +96,7 @@ export const adminTwitchRouter = router({
     .input(
       z.object({
         twitchChannelId: z.string(),
-        role: z.enum(roles),
+        role: z.literal([...roles]),
       }),
     )
     .mutation(async ({ ctx, input }) => {

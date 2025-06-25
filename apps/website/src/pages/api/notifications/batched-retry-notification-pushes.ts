@@ -1,5 +1,5 @@
 import { waitUntil } from "@vercel/functions";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { type Notification, prisma } from "@alveusgg/database";
 
@@ -21,8 +21,8 @@ const retryPushesSchema = z.object({
   pushes: z.array(
     z.object({
       attempts: z.number().nullable(),
-      notificationId: z.string().cuid(),
-      subscriptionId: z.string().cuid(),
+      notificationId: z.cuid(),
+      subscriptionId: z.cuid(),
       expiresAt: z.number(),
     }),
   ),

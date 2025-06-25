@@ -2,7 +2,7 @@
  * This file is included in `/next.config.js` which ensures the app isn't built with invalid env vars.
  */
 import { createEnv } from "@t3-oss/env-nextjs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   checkBase64UrlEncoded,
@@ -12,9 +12,9 @@ import {
 } from "./vapid.js";
 
 /**
- * @template {import("zod").ZodTypeAny} T
+ * @template {import("zod/v4").ZodTypeAny} T
  * @param {T} schema
- * @returns {import("zod").ZodEffects<import("zod").ZodString, import("zod").infer<T>[]>}
+ * @returns {import("zod/v4").ZodPipe<import("zod/v4").ZodString, import("zod/v4").ZodTransform<import("zod/v4").infer<T>[]>>}
  */
 const listOfSchema = (schema) =>
   z.string().transform((val, ctx) => {
@@ -35,17 +35,12 @@ const listOfSchema = (schema) =>
     return items;
   });
 
-const optionalBoolSchema = z
-  .enum(["true", "false"])
-  .optional()
-  .transform((val) => val === "true");
-
 export const env = createEnv({
   server: {
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
     DATA_ENCRYPTION_PASSPHRASE: z.string().length(32),
     NODE_ENV: z
-      .enum(["development", "test", "production"])
+      .literal(["development", "test", "production"])
       .default("production"),
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
@@ -56,7 +51,7 @@ export const env = createEnv({
       // Since NextAuth.js automatically uses the VERCEL_URL if present.
       (str) => process.env.VERCEL_URL || str,
       // VERCEL_URL doesn't include `https` so it cant be validated as a URL
-      process.env.VERCEL_URL ? z.string() : z.string().url(),
+      process.env.VERCEL_URL ? z.string() : z.url(),
     ),
     TWITCH_CLIENT_ID: z.string(),
     TWITCH_CLIENT_SECRET: z.string(),
@@ -66,25 +61,25 @@ export const env = createEnv({
     WEATHER_API_KEY: z.string().optional(),
     WEATHER_STATION_ID: z.string().optional(),
     YOUTUBE_API_KEY: z.string().optional(),
-    DISABLE_ADMIN_AUTH: optionalBoolSchema,
+    DISABLE_ADMIN_AUTH: z.stringbool().optional().default(false),
     SUPER_USER_IDS: z.string(),
     WEB_PUSH_VAPID_PRIVATE_KEY: z
       .string()
-      .superRefine(checkBase64UrlEncoded)
-      .superRefine(checkPrivateKey)
+      .check(checkBase64UrlEncoded)
+      .check(checkPrivateKey)
       .optional(),
-    WEB_PUSH_VAPID_SUBJECT: z.string().superRefine(checkSubject).optional(),
+    WEB_PUSH_VAPID_SUBJECT: z.string().check(checkSubject).optional(),
     FILE_STORAGE_CDN_URL: z.string().optional(),
     FILE_STORAGE_ENDPOINT: z.string(),
     FILE_STORAGE_KEY: z.string(),
     FILE_STORAGE_REGION: z.string(),
     FILE_STORAGE_SECRET: z.string(),
     FILE_STORAGE_BUCKET: z.string(),
-    FILE_STORAGE_PATH_STYLE: optionalBoolSchema,
-    UPSTASH_QSTASH_URL: z.string().url().optional(),
+    FILE_STORAGE_PATH_STYLE: z.stringbool().optional().default(false),
+    UPSTASH_QSTASH_URL: z.url().optional(),
     UPSTASH_QSTASH_KEY: z.string().optional(),
     PUSH_LANG: z.string().default("en"),
-    PUSH_TEXT_DIR: z.enum(["ltr", "rtl"]).default("ltr"),
+    PUSH_TEXT_DIR: z.literal(["ltr", "rtl"]).default("ltr"),
     PUSH_BATCH_SIZE: z.coerce.number().int().min(1).default(50),
     PUSH_BATCH_DELAY_MS: z.coerce.number().int().min(1).default(1_000),
     PUSH_MAX_ATTEMPTS: z.coerce.number().int().min(1).default(5),
@@ -95,14 +90,18 @@ export const env = createEnv({
     ).optional(),
     DISCORD_CHANNEL_WEBHOOK_NAME: z.string().default("Alveus Updates"),
     DISCORD_CHANNEL_WEBHOOK_URLS_STREAM_NOTIFICATION: listOfSchema(
-      z.string().url(),
+      z.url(),
     ).optional(),
-    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: optionalBoolSchema,
-    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfSchema(
-      z.string().url(),
-    ).optional(),
-    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: optionalBoolSchema,
-    COMMUNITY_PHOTOS_URL: z.string().url().optional(),
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_ANNOUNCEMENT: z
+      .stringbool()
+      .optional()
+      .default(false),
+    DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT: listOfSchema(z.url()).optional(),
+    DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION: z
+      .stringbool()
+      .optional()
+      .default(false),
+    COMMUNITY_PHOTOS_URL: z.url().optional(),
     COMMUNITY_PHOTOS_KEY: z.string().optional(),
     CF_STREAM_KEY_ID: z.string().optional(),
     CF_STREAM_KEY_JWK: z.string().optional(),
@@ -111,34 +110,36 @@ export const env = createEnv({
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
-      .enum(["development", "test", "production"])
+      .literal(["development", "test", "production"])
       .optional()
       .default("development"),
-    NEXT_PUBLIC_BASE_URL: z
-      .string()
-      .url()
-      .refine((url) => !url.endsWith("/")),
+    NEXT_PUBLIC_BASE_URL: z.url().refine((url) => !url.endsWith("/")),
     NEXT_PUBLIC_SHORT_BASE_URL: z
-      .string()
       .url()
       .refine((url) => !url.endsWith("/"))
       .optional(),
     NEXT_PUBLIC_WEB_PUSH_VAPID_PUBLIC_KEY: z
       .string()
-      .superRefine(checkBase64UrlEncoded)
-      .superRefine(checkPublicKey)
+      .check(checkBase64UrlEncoded)
+      .check(checkPublicKey)
       .optional(),
-    NEXT_PUBLIC_NOINDEX: z.string().optional(),
+    NEXT_PUBLIC_NOINDEX: z.stringbool().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_TITLE: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_CTA: z.string().optional(),
     NEXT_PUBLIC_GLOBAL_PROMOTION_LINK: z.string().optional(),
-    NEXT_PUBLIC_GLOBAL_PROMOTION_EXTERNAL: optionalBoolSchema,
+    NEXT_PUBLIC_GLOBAL_PROMOTION_EXTERNAL: z
+      .stringbool()
+      .optional()
+      .default(false),
     NEXT_PUBLIC_GLOBAL_PROMOTION_EXCLUDED: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_TITLE: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_DESCRIPTION: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_CTA: z.string().optional(),
     NEXT_PUBLIC_DONATION_EVENT_LINK: z.string().optional(),
-    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL: optionalBoolSchema,
+    NEXT_PUBLIC_DONATION_EVENT_EXTERNAL: z
+      .stringbool()
+      .optional()
+      .default(false),
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do

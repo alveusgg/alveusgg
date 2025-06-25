@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env } from "@/env";
 
 import invariant from "@/utils/invariant";
 
 const responseSchema = z.object({
-  url: z.string().url(),
+  url: z.url(),
 });
 
 export async function generatePreSignedUploadUrl(username: string) {

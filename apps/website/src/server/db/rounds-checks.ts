@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { prisma } from "@alveusgg/database";
 
@@ -18,7 +18,7 @@ export type RoundsCheckSchema = z.infer<typeof roundsCheckSchema>;
 
 export const existingRoundsCheckSchema = z
   .object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   })
   .merge(roundsCheckSchema.partial());
 

@@ -1,5 +1,5 @@
 import { waitUntil } from "@vercel/functions";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { createNotification, sendNotification } from "@/server/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";
@@ -15,8 +15,8 @@ const notificationSchema = z.object({
   tag: z.string(),
   text: z.string().optional(),
   title: z.string().optional(),
-  linkUrl: z.string().url().optional(),
-  imageUrl: z.string().url().optional(),
+  linkUrl: z.url().optional(),
+  imageUrl: z.url().optional(),
   scheduledStartAt: dateSchema.optional(),
   scheduledEndAt: dateSchema.optional(),
   isPush: z.boolean().optional(),
