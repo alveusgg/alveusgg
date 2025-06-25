@@ -71,7 +71,7 @@ const EventItems = ({
           <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
             <Heading
               level={2}
-              className="my-4 scroll-mt-8 text-center text-4xl"
+              className="my-4 text-center text-4xl"
               id={event.slug}
               link
               linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"

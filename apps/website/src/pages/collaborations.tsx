@@ -224,7 +224,7 @@ const CollaborationItems = ({
         <Heading
           level={-1}
           className={classes(
-            "mt-8 mb-6 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
+            "mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
             index === 0 && "sr-only-linkable",
           )}
           id={`${option}:${group}`}

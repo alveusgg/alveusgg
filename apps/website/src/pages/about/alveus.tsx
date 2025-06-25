@@ -669,7 +669,7 @@ const AboutAlveusPage: NextPage = () => {
         />
 
         <Section className="text-center">
-          <Heading id="twitch" level={2} link className="scroll-mt-14">
+          <Heading id="twitch" level={2} link>
             Why Twitch.tv
           </Heading>
 
@@ -767,7 +767,7 @@ const AboutAlveusPage: NextPage = () => {
           <Heading
             id="history"
             level={2}
-            className="mb-16 scroll-mt-14 text-center text-5xl text-alveus-green"
+            className="mb-16 text-center text-5xl text-alveus-green"
             link
           >
             Alveus&apos; History

@@ -26,6 +26,7 @@ const Heading = ({
     () =>
       classes(
         !/(^|\s)my-\d+(\s|$)/.test(className || "") && "my-2",
+        !/(^|\s)scroll-mt-\d+(\s|$)/.test(className || "") && "scroll-mt-16",
         !/(^|\s)text-(xs|sm|base|lg|[2-6]?xl)(\s|$)/.test(className || "") &&
           "text-3xl",
         !/(^|\s)font-(sans|serif|mono)(\s|$)/.test(className || "") &&
