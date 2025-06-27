@@ -8,6 +8,7 @@ import alluux from "@/assets/collaborations/alluux.png";
 import alpharad from "@/assets/collaborations/alpharad.png";
 import angelskimi from "@/assets/collaborations/angelskimi.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
+import arky from "@/assets/collaborations/arky.png";
 import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
 import bao from "@/assets/collaborations/bao.png";
 import botzSisters from "@/assets/collaborations/botez-sisters.png";
@@ -59,6 +60,7 @@ import trihex from "@/assets/collaborations/trihex.png";
 import trivi from "@/assets/collaborations/trivi.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
 import xchocobars from "@/assets/collaborations/xchocobars.png";
+import yugi2x from "@/assets/collaborations/yugi2x.png";
 import yungJeff from "@/assets/collaborations/yung-jeff.png";
 import zoil from "@/assets/collaborations/zoil.png";
 
@@ -80,6 +82,25 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Arky & Yugi2x",
+      link: "https://www.twitch.tv/arky",
+      date: new Date("2025-06-25"),
+      videoId: "Qxkzrctsi5g",
+      vodId: "xrD35a6UnkY",
+      creators: [
+        {
+          name: "Arky",
+          image: arky,
+          popularity: 235_000, // Twitch followers, 2025-06-27
+        },
+        {
+          name: "Yugi2x",
+          image: yugi2x,
+          popularity: 157_000, // Twitch followers, 2025-06-27
+        },
+      ],
+    },
     {
       name: "Filian",
       link: "https://www.twitch.tv/filian",
