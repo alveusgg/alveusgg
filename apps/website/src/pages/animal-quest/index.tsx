@@ -122,10 +122,7 @@ const AnimalQuestItems = ({
     )}
     <div
       ref={ref}
-      className={classes(
-        "flex flex-wrap",
-        group ? "scroll-mt-16" : "justify-center",
-      )}
+      className={classes("flex flex-wrap", !group && "justify-center")}
     >
       {items.map((episode) => (
         <div
