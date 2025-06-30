@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import {
   createShortLink,
@@ -23,7 +23,7 @@ export const adminShortLinksRouter = router({
       z
         .discriminatedUnion("action", [
           z.object({ action: z.literal("create") }),
-          z.object({ action: z.literal("edit"), id: z.string().cuid() }),
+          z.object({ action: z.literal("edit"), id: z.cuid() }),
         ])
         .and(shortLinkSchema),
     )
@@ -43,14 +43,14 @@ export const adminShortLinksRouter = router({
     }),
 
   deleteShortLink: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) => {
       await ctx.prisma.shortLinks.delete({ where: { id: id } });
       await ctx.prisma.shortLinksTracking.delete({ where: { id: id } });
     }),
 
   getShortLink: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(({ ctx, input: id }) =>
       ctx.prisma.shortLinks.findUnique({ where: { id } }),
     ),

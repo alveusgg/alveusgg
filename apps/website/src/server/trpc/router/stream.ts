@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { env } from "@/env";
 
@@ -22,7 +22,7 @@ import invariant from "@/utils/invariant";
 import { createJWT, signJWT } from "@/utils/jwt";
 
 export const runCommandSchema = z.object({
-  command: z.enum(["ptzload", "swap"]),
+  command: z.literal(["ptzload", "swap"]),
   args: z.array(z.string()).optional(),
 });
 

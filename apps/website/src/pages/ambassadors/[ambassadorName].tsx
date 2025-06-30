@@ -79,7 +79,7 @@ const getStats = (ambassador: Ambassador): Stats => {
         <p>
           {species.iucn.id ? (
             <Link
-              href={`https://apiv3.iucnredlist.org/api/v3/taxonredirect/${species.iucn.id}`}
+              href={`https://www.iucnredlist.org/species/${species.iucn.id}/${species.iucn.assessment}`}
               external
             >
               IUCN: {getIUCNStatus(species.iucn.status)}

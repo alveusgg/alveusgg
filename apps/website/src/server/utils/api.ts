@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { ZodType, z } from "zod";
+import type { ZodType, z } from "zod/v4";
 
 import { env } from "@/env";
 

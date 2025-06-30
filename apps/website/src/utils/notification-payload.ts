@@ -1,19 +1,19 @@
-import { z } from "zod";
+import { z } from "zod/v4";
 
 export type NotificationPayload = z.infer<typeof notificationPayloadSchema>;
 export type NotificationOptionsData = z.infer<typeof notificationOptionsSchema>;
 
 export const notificationOptionsSchema = z.object({
   //actions?: NotificationAction[];
-  badge: z.string().url(),
+  badge: z.url(),
   body: z.string(),
   data: z.object({
-    notificationId: z.string().cuid(),
-    subscriptionId: z.string().cuid(),
+    notificationId: z.cuid(),
+    subscriptionId: z.cuid(),
   }),
-  dir: z.enum(["ltr", "rtl", "auto"]),
-  icon: z.string().url().optional(),
-  image: z.string().url().optional(),
+  dir: z.literal(["ltr", "rtl", "auto"]),
+  icon: z.url().optional(),
+  image: z.url().optional(),
   lang: z.string().length(2).optional(),
   renotify: z.boolean().optional(),
   requireInteraction: z.boolean().optional(),

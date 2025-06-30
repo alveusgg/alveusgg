@@ -1,6 +1,6 @@
 import { LogLevel } from "@twurple/chat";
 import { createEnv } from "@t3-oss/env-core";
-import { z } from "zod";
+import { z } from "zod/v4";
 import "dotenv/config";
 
 const transformCommaSeparatedStringToArray = (value: string) =>
@@ -12,7 +12,6 @@ const namesSchema = z
   .transform((names) => names.map((name) => name.toLowerCase()));
 
 const urlWithTrailingSlashSchema = z
-  .string()
   .url()
   .refine((url) => url.match(/https?:\/\/.*\//));
 
@@ -20,12 +19,14 @@ export const env = createEnv({
   server: {
     // General
     NODE_ENV: z
-      .enum(["development", "test", "production"])
+      .literal(["development", "test", "production"])
       .default("production"),
 
     // Chatbot
     BOT_USER_ID: z.string().default("858050963"),
-    BOT_CHANNEL_NAMES: namesSchema.default(["AlveusGG"].join(",")),
+    BOT_CHANNEL_NAMES: namesSchema.default(
+      ["AlveusGG"].map((name) => name.toLowerCase()),
+    ),
     BOT_LOGLEVEL: z
       .string()
       .trim()
@@ -49,16 +50,7 @@ export const env = createEnv({
         // Admins
         "pjeweb",
         "MattIPv4",
-        // Mods
-        //"Shrezno",
-        //"Mik_MWP",
-        //"HellSatanX",
-        //"DannyDV",
-        //"Dionysus1911",
-        //"MaxzillaJr",
-        //"VirtualPop",
-        //"HellSatanX",
-      ].join(","),
+      ].map((name) => name.toLowerCase()),
     ),
 
     // Website API
@@ -68,7 +60,7 @@ export const env = createEnv({
     API_SECRET: z.string(),
 
     // Database
-    DATABASE_URL: z.string().url(),
+    DATABASE_URL: z.url(),
 
     // Twitch OAuth
     TWITCH_CLIENT_ID: z.string(),

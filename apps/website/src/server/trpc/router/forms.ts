@@ -1,5 +1,5 @@
 import { TRPCError } from "@trpc/server";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 import { getUserFollowsBroadcaster } from "@/server/apis/twitch";
 import { createEntry, formEntrySchema } from "@/server/db/forms";
@@ -16,7 +16,7 @@ import { calcFormConfig } from "@/utils/forms";
 
 export const createFormEntrySchema = formEntrySchema.and(
   z.object({
-    formId: z.string().cuid(),
+    formId: z.cuid(),
     acceptRules: z.boolean().optional(),
     acceptPrivacy: z.boolean(),
   }),

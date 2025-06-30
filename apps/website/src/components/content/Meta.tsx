@@ -80,7 +80,7 @@ const Meta = ({
         content={computedDescription}
       />
       <meta key="twitter:image" name="twitter:image" content={computedImage} />
-      {(env.NEXT_PUBLIC_NOINDEX === "true" || noindex) && (
+      {(env.NEXT_PUBLIC_NOINDEX || noindex) && (
         <meta key="robots" name="robots" content="noindex" />
       )}
       <meta name="format-detection" content="telephone=no" />
