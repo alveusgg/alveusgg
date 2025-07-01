@@ -95,9 +95,7 @@ const sortByOptions = {
       [...ambassadors]
         .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
         .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
-          const year = parsePartialDateString(val.arrival)
-            ?.getUTCFullYear()
-            ?.toString();
+          const year = parsePartialDateString(val.arrival)?.year.toString();
           const group = year || "unknown";
 
           map.set(group, {

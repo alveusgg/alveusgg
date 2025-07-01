@@ -1,10 +1,17 @@
 import { DateTime } from "luxon";
 
+import { DATETIME_ALVEUS_ZONE } from "./timezone";
+
 export type DateTimeFormat = {
   style: "short" | "long";
   time: "minutes" | "seconds" | undefined;
   timezone: boolean;
 };
+
+export const getToday = (timezone?: string) =>
+  DateTime.now()
+    .setZone(timezone || DATETIME_ALVEUS_ZONE)
+    .startOf("day");
 
 const getFormat = ({
   style,
