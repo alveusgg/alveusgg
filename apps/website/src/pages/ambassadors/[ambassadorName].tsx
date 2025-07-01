@@ -27,7 +27,7 @@ import enclosures from "@alveusgg/data/build/enclosures";
 import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 
 import { classes } from "@/utils/classes";
-import { formatPartialDateString } from "@/utils/datetime";
+import { formatPartialDateString } from "@/utils/datetime-partial";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { convertToSlug } from "@/utils/slugs";
