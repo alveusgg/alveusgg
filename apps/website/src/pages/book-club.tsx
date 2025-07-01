@@ -41,11 +41,13 @@ const thickness = {
   xl: "h-14 -translate-z-14 -mb-14",
 };
 
+type Month = PartialDateString & `${number}-${number}`;
+
 type BookInfo = {
   title: string;
   author: string;
   image: StaticImageData;
-  month: PartialDateString & `${number}-${number}`;
+  month: Month[];
   link: string;
   thickness: (typeof thickness)[keyof typeof thickness];
   color: `border-${string}`;
@@ -57,7 +59,7 @@ const books: BookInfo[] = [
     title: "The Insect Crisis",
     author: "Oliver Milman",
     image: theInsectCrisis,
-    month: "2025-06",
+    month: ["2025-06", "2025-07"],
     link: "https://amzn.to/4kZ31gL",
     thickness: thickness.sm, // 270 pages
     color: "border-yellow-400",
@@ -66,7 +68,7 @@ const books: BookInfo[] = [
     title: "The Anthropocene Reviewed",
     author: "John Green",
     image: theAnthropoceneReviewed,
-    month: "2025-05",
+    month: ["2025-05"],
     link: "https://amzn.to/42LpJSo",
     thickness: thickness.sm, // 300 pages
     color: "border-black",
@@ -76,7 +78,7 @@ const books: BookInfo[] = [
     title: "The Last Rhinos",
     author: "Lawrence Anthony",
     image: theLastRhinos,
-    month: "2025-04",
+    month: ["2025-04"],
     link: "https://amzn.to/3YibG59",
     thickness: thickness.md, // 360 pages
     color: "border-alveus-tan-900",
@@ -86,7 +88,7 @@ const books: BookInfo[] = [
     title: "Adventures of a Young Naturalist",
     author: "Sir David Attenborough",
     image: adventuresOfAYoungNaturalist,
-    month: "2025-03",
+    month: ["2025-03"],
     link: "https://amzn.to/41qA2um",
     thickness: thickness.lg, // 400 pages
     color: "border-blue-900",
@@ -96,7 +98,7 @@ const books: BookInfo[] = [
     title: "A Most Remarkable Creature",
     author: "Jonathan Meiburg",
     image: aMostRemarkableCreature,
-    month: "2025-02",
+    month: ["2025-02"],
     link: "https://amzn.to/410hD8x",
     thickness: thickness.lg, // 400 pages
     color: "border-alveus-tan-200/75",
@@ -106,13 +108,31 @@ const books: BookInfo[] = [
     title: "H is for Hawk",
     author: "Helen Macdonald",
     image: hIsForHawk,
-    month: "2025-01",
+    month: ["2025-01"],
     link: "https://amzn.to/4a2ByGQ",
     thickness: thickness.sm, // 320 pages
     color: "border-black",
     vodId: "EfCksCFlq84",
   },
 ];
+
+const formatMonths = (months: Month[]) =>
+  months
+    .toReversed()
+    .reduce((formattedMonths, month) => {
+      const [formattedMonth, formattedYear] = formatPartialDateString(
+        month,
+      ).split(" ") as [string, string];
+
+      // If the year is the same as the previous month, just return the month
+      if (formattedMonths[0]?.includes(formattedYear)) {
+        return [formattedMonth, ...formattedMonths];
+      }
+
+      // Otherwise, return the month and year
+      return [`${formattedMonth} ${formattedYear}`, ...formattedMonths];
+    }, [] as string[])
+    .join(" + ");
 
 type CoverInfo = Pick<BookInfo, "title" | "author" | "image"> & {
   width?: number;
@@ -183,7 +203,7 @@ const Book = ({
   width,
   className,
 }: BookInfo & { width?: number; className?: string }) => (
-  <Lightbox id={`book-club-${month}`}>
+  <Lightbox id={`book-club-${month.join("-")}`}>
     {({ Trigger }) => (
       <Disclosure as="div" className={className}>
         {({ open }) => (
@@ -211,7 +231,7 @@ const Book = ({
                 className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
               >
                 <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
-                {formatPartialDateString(month)}
+                {formatMonths(month)}
               </Heading>
             </DisclosureButton>
 
@@ -242,7 +262,7 @@ const Book = ({
                   <Button
                     as={Trigger}
                     videoId={vodId}
-                    caption={`${title} | ${formatPartialDateString(month)}`}
+                    caption={`${title} | ${formatMonths(month)}`}
                     className="mt-2 flex items-center justify-between gap-2"
                   >
                     Re-Watch the Meeting
