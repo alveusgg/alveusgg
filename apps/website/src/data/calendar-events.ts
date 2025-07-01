@@ -157,15 +157,7 @@ export const regularEventsWeekly = [
     },
   ],
   // Saturday
-  [
-    {
-      title: "Nick Stream",
-      description: "Join Nick as he gets work done around the sanctuary.",
-      category: "Alveus Regular Stream",
-      link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
-    },
-  ],
+  [],
   // Sunday
   [],
 ] as RegularEvent[][];
