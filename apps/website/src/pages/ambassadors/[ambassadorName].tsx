@@ -39,6 +39,7 @@ import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
+import PartialDateDiff from "@/components/content/PartialDateDiff";
 import Section from "@/components/content/Section";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
@@ -59,7 +60,7 @@ const getStats = (ambassador: Ambassador): Stats => {
       value: (
         <>
           <p>{species.name}</p>
-          <p className="text-alveus-green-700 italic">
+          <p className="text-base text-alveus-green-700 italic">
             {species.scientificName} (
             <Link
               href={`/ambassadors#classification:${convertToSlug(
@@ -119,7 +120,16 @@ const getStats = (ambassador: Ambassador): Stats => {
         title: `Date of ${
           { live: "Birth", egg: "Hatching", seed: "Planting" }[species.birth]
         }`,
-        value: <p>{formatPartialDateString(ambassador.birth)}</p>,
+        value: (
+          <>
+            <p>{formatPartialDateString(ambassador.birth)}</p>
+            {ambassador.birth && (
+              <p className="text-base text-alveus-green-700 italic">
+                <PartialDateDiff date={ambassador.birth} suffix="old" />
+              </p>
+            )}
+          </>
+        ),
       },
       {
         title: "Sex",
@@ -127,7 +137,16 @@ const getStats = (ambassador: Ambassador): Stats => {
       },
       {
         title: "Arrived at Alveus",
-        value: <p>{formatPartialDateString(ambassador.arrival)}</p>,
+        value: (
+          <>
+            <p>{formatPartialDateString(ambassador.arrival)}</p>
+            {ambassador.arrival && (
+              <p className="text-base text-alveus-green-700 italic">
+                <PartialDateDiff date={ambassador.arrival} suffix="ago" />
+              </p>
+            )}
+          </>
+        ),
       },
       {
         title: "Enclosure",
