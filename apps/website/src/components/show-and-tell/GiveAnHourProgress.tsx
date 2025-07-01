@@ -1,9 +1,8 @@
 import { DateTime } from "luxon";
 import { useMemo } from "react";
 
-import type { PartialDateString } from "@alveusgg/data/build/types";
-
 import { classes } from "@/utils/classes";
+import type { PartialDateString } from "@/utils/datetime-partial";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { trpc } from "@/utils/trpc";
 
