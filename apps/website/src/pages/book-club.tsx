@@ -118,8 +118,8 @@ const books: BookInfo[] = [
 ];
 
 const formatMonths = (months: Month[]) =>
-  months
-    .toReversed()
+  [...months]
+    .reverse()
     .reduce((formattedMonths, month) => {
       const [formattedMonth, formattedYear] = formatPartialDateString(
         month,
