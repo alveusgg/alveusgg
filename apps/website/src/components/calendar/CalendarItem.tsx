@@ -5,7 +5,7 @@ import type { CalendarEvent } from "@alveusgg/database";
 import { getStandardCategoryColor } from "@/data/calendar-events";
 
 import { classes } from "@/utils/classes";
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 import Link from "@/components/content/Link";
 

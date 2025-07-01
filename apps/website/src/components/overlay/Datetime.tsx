@@ -1,7 +1,8 @@
 import { type ReactNode, useEffect, useRef, useState } from "react";
 
 import { classes } from "@/utils/classes";
-import { DATETIME_ALVEUS_ZONE, formatDateTimeParts } from "@/utils/datetime";
+import { formatDateTimeParts } from "@/utils/datetime";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 const Datetime = ({
   className,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getShortTimezoneName } from "@/utils/datetime";
+import { getShortTimezoneName } from "@/utils/timezone";
 
 export const DATETIME_USER_ZONE =
   Intl.DateTimeFormat().resolvedOptions().timeZone;

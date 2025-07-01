@@ -3,7 +3,8 @@ import { getCalendarEvents } from "@/server/db/calendar-events";
 import { getFormattedTitle } from "@/data/calendar-events";
 import { channels } from "@/data/twitch";
 
-import { DATETIME_ALVEUS_ZONE, formatDateTimeRelative } from "@/utils/datetime";
+import { formatDateTimeRelative } from "@/utils/datetime";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 // API for chat bot
 // Matches the implementation of src/components/overlay/Event.tsx
