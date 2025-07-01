@@ -13,6 +13,7 @@ import { formatPartialDateString } from "@/utils/datetime";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import TransitionHeight from "@/components/content/TransitionHeight";
@@ -283,7 +284,7 @@ const BookClubPage: NextPage = () => {
     <>
       <Meta
         title="Book Club"
-        description="Join the staff at Alveus and the community in reading and discussing a book together each month."
+        description="Join the staff at Alveus and the community in reading and discussing books together."
         image={bookClubFull.src}
       />
 
@@ -305,13 +306,15 @@ const BookClubPage: NextPage = () => {
           <div className="w-full pt-4 pb-16 md:w-3/5 md:py-24">
             <Heading>Alveus Book Club</Heading>
             <p className="text-lg">
-              Join the staff at Alveus and the community in reading a book
-              together each month. At the end of each month we&apos;ll all meet
-              together in a livestream chat to discuss the book. Head to your
-              local library or bookstore to pick up a copy of the book, or use
-              the links below to purchase a copy online. If reading isn&apos;t
-              your thing, we also encourage listening to the audiobook version
-              each month.
+              Join the staff at Alveus and the community in reading books
+              together! Every other month we&apos;ll all meet together in a{" "}
+              <Link href="/live" external dark>
+                livestream chat
+              </Link>{" "}
+              to discuss the most recent book. Head to your local library or
+              bookstore to pick up a copy of the book, or use the links below to
+              purchase a copy online. If reading isn&apos;t your thing, we also
+              encourage listening to the audiobook version of each book.
             </p>
           </div>
 
