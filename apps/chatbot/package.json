@@ -19,7 +19,7 @@
     "@twurple/auth": "^7.3.0",
     "@twurple/chat": "^7.3.0",
     "@twurple/easy-bot": "^7.3.0",
-    "dotenv": "^16.5.0",
+    "dotenv": "^17.0.1",
     "read-pkg": "^9.0.1",
     "tsx": "^4.20.3",
     "zod": "^3.25.67"
