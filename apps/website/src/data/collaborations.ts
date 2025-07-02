@@ -44,6 +44,7 @@ import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lacari from "@/assets/collaborations/lacari.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
+import mari from "@/assets/collaborations/mari.png";
 import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 import peachJars from "@/assets/collaborations/peach-jars.png";
 import pizzaPrincessG from "@/assets/collaborations/pizza-princess-g.png";
@@ -82,6 +83,20 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Mari",
+      link: "https://www.twitch.tv/mari",
+      date: new Date("2025-06-26"),
+      videoId: "5pSsaPzGCPc",
+      vodId: "YEEWOB39Lw0",
+      creators: [
+        {
+          name: "Mari",
+          image: mari,
+          popularity: 256_000, // Twitch followers, 2025-07-02
+        },
+      ],
+    },
     {
       name: "Arky & Yugi2x",
       link: "https://www.twitch.tv/arky",
