@@ -126,8 +126,8 @@ const AboutOrgsPage: NextPage = () => {
           className="pointer-events-none absolute right-0 -bottom-16 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
         />
 
-        <Section dark className="pt-24 pb-12">
-          <div className="w-full lg:w-4/5">
+        <Section dark>
+          <div className="w-full lg:w-4/5 lg:py-8">
             <Heading>Partnering with Organizations</Heading>
 
             <p className="text-lg text-balance">
