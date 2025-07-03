@@ -25,7 +25,6 @@ import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
-import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
@@ -183,26 +182,6 @@ const staff: Record<string, Person> = {
       </>
     ),
   },
-  nick: {
-    image: nickFacilitiesImage,
-    name: "Nick",
-    title: "Facilities",
-    description: (
-      <>
-        <p>I&apos;m the neighbor.</p>
-      </>
-    ),
-  },
-  chandler: {
-    image: [chandlerImage, chandlerFunImage],
-    name: "Chandler",
-    title: "Facilities",
-    description: (
-      <>
-        <p>I&apos;m the zoomer (W Hunger).</p>
-      </>
-    ),
-  },
   space: {
     image: spaceVoyageImage,
     name: "SpaceVoyage",
@@ -249,6 +228,16 @@ const staff: Record<string, Person> = {
           <span>&ldquo;</span>Cinema
           <span>&rdquo;</span>
         </p>
+      </>
+    ),
+  },
+  chandler: {
+    image: [chandlerImage, chandlerFunImage],
+    name: "Chandler",
+    title: "YouTube Channel Manager",
+    description: (
+      <>
+        <p>I&apos;m the zoomer (W Hunger).</p>
       </>
     ),
   },
