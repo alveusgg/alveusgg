@@ -198,6 +198,24 @@ const AboutOrgsPage: NextPage = () => {
           alt=""
           className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-32 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-40"
         />
+
+        <Section dark className="bg-alveus-green-900">
+          <div className="w-full lg:w-4/5">
+            <Heading id="work-with-us" level={2} link>
+              Work with us
+            </Heading>
+
+            <p className="text-lg text-balance">
+              If you are an organization that would like to partner with Alveus
+              Sanctuary, please{" "}
+              <Link href="/contact-us" dark>
+                get in touch
+              </Link>{" "}
+              with us. We are always looking for new ways to collaborate and
+              share the important work being done in conservation and education.
+            </p>
+          </div>
+        </Section>
       </div>
     </>
   );
