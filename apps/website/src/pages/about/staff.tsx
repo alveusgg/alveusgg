@@ -25,7 +25,6 @@ import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
-import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
@@ -180,16 +179,6 @@ const staff: Record<string, Person> = {
           is a big fan of plants and reptiles. His favorite ambassador at Alveus
           is Pushpop the Sulcata Tortoise.
         </p>
-      </>
-    ),
-  },
-  nick: {
-    image: nickFacilitiesImage,
-    name: "Nick",
-    title: "Facilities",
-    description: (
-      <>
-        <p>I&apos;m the neighbor.</p>
       </>
     ),
   },
