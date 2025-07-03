@@ -59,6 +59,15 @@ const config: NextConfig = {
         protocol: "https",
         hostname: "cdn-cf-east.streamable.com",
       },
+      // Instagram Thumbnails
+      {
+        protocol: "https",
+        hostname: "www.instagram.com",
+      },
+      {
+        protocol: "https",
+        hostname: "instagram.**.fbcdn.net",
+      },
       // Imgur (stream schedule)
       {
         protocol: "https",

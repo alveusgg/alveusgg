@@ -4,18 +4,21 @@ import Image from "next/image";
 import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
+import { Preview as InstagramPreview } from "@/components/content/Instagram";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import { Lightbox, Preview } from "@/components/content/YouTube";
+import {
+  Lightbox as YouTubeLightbox,
+  Preview as YouTubePreview,
+} from "@/components/content/YouTube";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
 type Video = {
   title: string;
-  id: string;
-};
+} & ({ youtube: string } | { instagram: string });
 type Organization = {
   key: string;
   title: string;
@@ -32,11 +35,15 @@ const orgs: Organization[] = [
     videos: [
       {
         title: "Touring San Diego Zoo Safari Park",
-        id: "ShneHneCqlE",
+        youtube: "ShneHneCqlE",
       },
       {
         title: "Working In Conservation with San Diego Zoo Safari Park",
-        id: "heNAUMbq-ls",
+        youtube: "heNAUMbq-ls",
+      },
+      {
+        title: "San Diego Zoo Wildlife Alliance Condor Breeding Program Reel",
+        instagram: "DHgYQRtueYV",
       },
     ],
   },
@@ -48,7 +55,15 @@ const orgs: Organization[] = [
     videos: [
       {
         title: "Finding Whales with WDC",
-        id: "uIoI4na-gUs",
+        youtube: "uIoI4na-gUs",
+      },
+      {
+        title: "North Atlantic Right Whales Reel",
+        instagram: "CrWi1tMrde9",
+      },
+      {
+        title: "Icelandic Whale Hunting Call to Action Reel",
+        instagram: "CsrxAJ-PPBA",
       },
     ],
   },
@@ -58,7 +73,7 @@ const orgs: Organization[] = [
     videos: [
       {
         title: "Travelling to Brazil with PMCA",
-        id: "6EC0xP7GVzc",
+        youtube: "6EC0xP7GVzc",
       },
     ],
   },
@@ -68,11 +83,15 @@ const orgs: Organization[] = [
     videos: [
       {
         title: "Exploring the Amazon (Part 1)",
-        id: "WoTHrtz2aQk",
+        youtube: "WoTHrtz2aQk",
       },
       {
         title: "Exploring the Amazon (Part 2)",
-        id: "dqGXrDMXEWk",
+        youtube: "dqGXrDMXEWk",
+      },
+      {
+        title: "Amazon Rainforest Conservation Reel",
+        instagram: "C48mQYnrX5r",
       },
     ],
   },
@@ -82,7 +101,7 @@ const orgs: Organization[] = [
     videos: [
       {
         title: "Meeting Birds at World Bird Sanctuary",
-        id: "vp6NeFTib4I",
+        youtube: "vp6NeFTib4I",
       },
     ],
   },
@@ -92,7 +111,11 @@ const orgs: Organization[] = [
     videos: [
       {
         title: "Visiting the Largest Bat Colony in the World",
-        id: "55kwlp1aVw0",
+        youtube: "55kwlp1aVw0",
+      },
+      {
+        title: "Bracken Cave Bat Colony Reel",
+        instagram: "DIE3UjSPWmc",
       },
     ],
   },
@@ -102,7 +125,87 @@ const orgs: Organization[] = [
     videos: [
       {
         title: "Meeting Cats and Dogs at Austin Pets Alive!",
-        id: "tjarFJ6CH3U",
+        youtube: "tjarFJ6CH3U",
+      },
+    ],
+  },
+  {
+    key: "world-wildlife-fund",
+    title: "World Wildlife Fund",
+    videos: [
+      {
+        title: "Reporting the Illegal Wildlife Trade Reel",
+        instagram: "Cwqo1uCv3T3",
+      },
+      {
+        title: "Purchasing Sustainable Palm Oil Products Reel",
+        instagram: "C3tLbtovGqN",
+      },
+      {
+        title: "Tropical Deforestation TREES Act Call to Action Reel",
+        instagram: "C_jGH9KP4uo",
+      },
+      {
+        title: "Give an Hour for Earth Campaign Reel",
+        instagram: "DH_e8lEOJPe",
+      },
+    ],
+  },
+  {
+    key: "xerces-society",
+    title: "Xerces Society",
+    videos: [
+      {
+        title: "Be Kind to Bugs Reel",
+        instagram: "C5lyfrqvP3M",
+      },
+      {
+        title: "Monarch Butterfly Endangered Species Act Call to Action Reel",
+        instagram: "DGTmtGvvDKx",
+      },
+    ],
+  },
+  {
+    key: "natural-resources-defense-council",
+    title: "Natural Resources Defense Council",
+    videos: [
+      {
+        title: "Offshore Drilling Call to Action Reel",
+        instagram: "DKsAkGtuERk",
+      },
+      {
+        title: "Western Arctic Drilling Call to Action Reel",
+        instagram: "DLVDp43MKOM",
+      },
+    ],
+  },
+  {
+    key: "carnivero-plant-nursery",
+    title: "Carnivero Carnivorous Plant & Rare Plant Nursery",
+    videos: [
+      {
+        title: "Touring Behind the Scenes at Carnivero",
+        youtube: "D5Iij3qD6_s",
+      },
+    ],
+  },
+  {
+    key: "wolf-conservation-center",
+    title: "Wolf Conservation Center",
+    videos: [
+      {
+        title: "Meeting Wolves at Wolf Conservation Center",
+        youtube: "-T8JYRKMilk",
+      },
+    ],
+  },
+  {
+    key: "associacao-amigos-do-peixe-boi",
+    title: "Associação Amigos do Peixe-Boi",
+    videos: [
+      {
+        title: "Visiting a Manatee Rehab Center in Brazil",
+        youtube: "gpwQcfLmVgg",
       },
     ],
   },
@@ -171,23 +274,70 @@ const AboutOrgsPage: NextPage = () => {
               )}
             </div>
 
-            <Lightbox id={org.key} className="mt-6 contents">
-              {({ Trigger }) => (
+            <YouTubeLightbox id={org.key} className="mt-6 contents">
+              {({ Trigger: YouTubeTrigger }) => (
                 <>
-                  {org.videos.map((video) => (
-                    <div key={video.id}>
-                      <Trigger videoId={video.id} caption={video.title}>
-                        <Preview videoId={video.id} alt={video.title} />
-                      </Trigger>
+                  {org.videos.map((video) => {
+                    const isYouTube = "youtube" in video;
+                    return (
+                      <div
+                        key={
+                          isYouTube
+                            ? `yt-${video.youtube}`
+                            : `ig-${video.instagram}`
+                        }
+                        className="flex flex-col"
+                      >
+                        <div
+                          className={
+                            isYouTube
+                              ? "contents"
+                              : "flex aspect-video items-center gap-4"
+                          }
+                        >
+                          <Heading
+                            level={3}
+                            className={classes(
+                              "order-last font-sans text-2xl",
+                              isYouTube
+                                ? "text-center"
+                                : "grow lg:order-first lg:text-right",
+                            )}
+                          >
+                            {video.title}
+                          </Heading>
 
-                      <Heading level={3} className="text-center text-2xl">
-                        {video.title}
-                      </Heading>
-                    </div>
-                  ))}
+                          {isYouTube ? (
+                            <YouTubeTrigger
+                              videoId={video.youtube}
+                              caption={video.title}
+                            >
+                              <YouTubePreview
+                                videoId={video.youtube}
+                                alt={video.title}
+                              />
+                            </YouTubeTrigger>
+                          ) : (
+                            <Link
+                              href={`https://www.instagram.com/reel/${video.instagram}`}
+                              external
+                              custom
+                              className="group/trigger h-full shrink-0"
+                            >
+                              <InstagramPreview reelId={video.instagram} />
+                            </Link>
+                          )}
+                        </div>
+
+                        {!isYouTube && (
+                          <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
+                        )}
+                      </div>
+                    );
+                  })}
                 </>
               )}
-            </Lightbox>
+            </YouTubeLightbox>
           </div>
         </Section>
       ))}
