@@ -193,16 +193,6 @@ const staff: Record<string, Person> = {
       </>
     ),
   },
-  chandler: {
-    image: [chandlerImage, chandlerFunImage],
-    name: "Chandler",
-    title: "Facilities",
-    description: (
-      <>
-        <p>I&apos;m the zoomer (W Hunger).</p>
-      </>
-    ),
-  },
   space: {
     image: spaceVoyageImage,
     name: "SpaceVoyage",
@@ -249,6 +239,16 @@ const staff: Record<string, Person> = {
           <span>&ldquo;</span>Cinema
           <span>&rdquo;</span>
         </p>
+      </>
+    ),
+  },
+  chandler: {
+    image: [chandlerImage, chandlerFunImage],
+    name: "Chandler",
+    title: "YouTube Channel Manager",
+    description: (
+      <>
+        <p>I&apos;m the zoomer (W Hunger).</p>
       </>
     ),
   },
