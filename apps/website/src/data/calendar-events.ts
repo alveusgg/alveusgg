@@ -129,7 +129,7 @@ export const regularEventsWeekly = [
       description: "Join Lukas as he gets work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 10, minute: 0 },
+      startTime: { hour: 10, minute: 30 },
     },
     {
       title: "WW New Episode",
