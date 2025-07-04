@@ -14,7 +14,12 @@ import {
 } from "@/components/content/YouTube";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
+import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import leafLeftImage4 from "@/assets/floral/leaf-left-4.png";
+import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
+import leafRightImage3 from "@/assets/floral/leaf-right-3.png";
 
 type Video = {
   title: string;
@@ -224,9 +229,9 @@ const AboutOrgsPage: NextPage = () => {
 
       <div className="relative">
         <Image
-          src={leafLeftImage3}
+          src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-16 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 select-none lg:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block xl:max-w-sm"
         />
 
         <Section dark>
@@ -248,125 +253,169 @@ const AboutOrgsPage: NextPage = () => {
       </div>
 
       {orgs.map((org, idx) => (
-        <Section
-          key={org.key}
-          dark={idx % 2 === 1}
-          className={classes(idx === orgs.length - 1 && "grow")}
-        >
-          <div
-            className={classes(
-              "grid grid-cols-1 gap-4 lg:grid-cols-2",
-              (org.videos.length === 3 || org.videos.length > 4) &&
-                "xl:grid-cols-3",
-            )}
+        <div key={org.key} className="relative">
+          {idx === 1 && (
+            <Image
+              src={leafRightImage2}
+              alt=""
+              className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
+            />
+          )}
+
+          {idx === 3 && (
+            <Image
+              src={leafLeftImage3}
+              alt=""
+              className="pointer-events-none absolute right-0 -bottom-20 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+            />
+          )}
+
+          {idx === 5 && (
+            <Image
+              src={leafLeftImage2}
+              alt=""
+              className="pointer-events-none absolute -bottom-20 left-0 z-30 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+            />
+          )}
+
+          {idx === 7 && (
+            <Image
+              src={leafRightImage3}
+              alt=""
+              className="pointer-events-none absolute right-0 -bottom-24 z-30 hidden h-auto w-1/2 max-w-32 drop-shadow-md select-none lg:block 2xl:max-w-40"
+            />
+          )}
+
+          {idx === 9 && (
+            <Image
+              src={leafLeftImage4}
+              alt=""
+              className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
+            />
+          )}
+
+          {idx === 11 && (
+            <Image
+              src={leafLeftImage1}
+              alt=""
+              className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-32 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-40"
+            />
+          )}
+
+          <Section
+            dark={idx % 2 === 1}
+            className={classes(idx === orgs.length - 1 && "grow")}
           >
-            <div className={classes(org.videos.length > 1 && "col-span-full")}>
-              <Heading id={org.key} level={2} link className="text-balance">
-                {org.title}
-              </Heading>
-
-              {org.videos.length === 1 && (
-                <div className="my-4 h-2 max-w-3xs rounded-xs bg-alveus-green-300" />
+            <div
+              className={classes(
+                "grid grid-cols-1 gap-4 lg:grid-cols-2",
+                (org.videos.length === 3 || org.videos.length > 4) &&
+                  "xl:grid-cols-3",
               )}
+            >
+              <div
+                className={classes(org.videos.length > 1 && "col-span-full")}
+              >
+                <Heading id={org.key} level={2} link className="text-balance">
+                  {org.title}
+                </Heading>
 
-              {org.description && (
-                <p className="text-lg text-balance">{org.description}</p>
-              )}
-            </div>
+                {org.videos.length === 1 && (
+                  <div className="my-4 h-2 max-w-3xs rounded-xs bg-alveus-green-300" />
+                )}
 
-            <YouTubeLightbox id={org.key} className="mt-6 contents">
-              {({ Trigger: YouTubeTrigger }) => (
-                <>
-                  {org.videos.map((video) => {
-                    const isYouTube = "youtube" in video;
-                    return (
-                      <div
-                        key={
-                          isYouTube
-                            ? `yt-${video.youtube}`
-                            : `ig-${video.instagram}`
-                        }
-                        className="flex flex-col"
-                      >
+                {org.description && (
+                  <p className="text-lg text-balance">{org.description}</p>
+                )}
+              </div>
+
+              <YouTubeLightbox id={org.key} className="mt-6 contents">
+                {({ Trigger: YouTubeTrigger }) => (
+                  <>
+                    {org.videos.map((video) => {
+                      const isYouTube = "youtube" in video;
+                      return (
                         <div
-                          className={
+                          key={
                             isYouTube
-                              ? "contents"
-                              : "flex aspect-video items-center gap-4"
+                              ? `yt-${video.youtube}`
+                              : `ig-${video.instagram}`
                           }
+                          className="flex flex-col"
                         >
-                          <Heading
-                            level={3}
-                            className={classes(
-                              "order-last font-sans text-2xl",
+                          <div
+                            className={
                               isYouTube
-                                ? "text-center"
-                                : "grow lg:order-first lg:text-right",
-                            )}
+                                ? "contents"
+                                : "flex aspect-video items-center gap-4"
+                            }
                           >
-                            {video.title}
-                          </Heading>
+                            <Heading
+                              level={3}
+                              className={classes(
+                                "order-last font-sans text-2xl",
+                                isYouTube
+                                  ? "text-center"
+                                  : "grow lg:order-first lg:text-right",
+                              )}
+                            >
+                              {video.title}
+                            </Heading>
 
-                          {isYouTube ? (
-                            <YouTubeTrigger
-                              videoId={video.youtube}
-                              caption={video.title}
-                            >
-                              <YouTubePreview
+                            {isYouTube ? (
+                              <YouTubeTrigger
                                 videoId={video.youtube}
-                                alt={video.title}
-                              />
-                            </YouTubeTrigger>
-                          ) : (
-                            <Link
-                              href={`https://www.instagram.com/reel/${video.instagram}`}
-                              external
-                              custom
-                              className="group/trigger h-full shrink-0"
-                            >
-                              <InstagramPreview reelId={video.instagram} />
-                            </Link>
+                                caption={video.title}
+                              >
+                                <YouTubePreview
+                                  videoId={video.youtube}
+                                  alt={video.title}
+                                />
+                              </YouTubeTrigger>
+                            ) : (
+                              <Link
+                                href={`https://www.instagram.com/reel/${video.instagram}`}
+                                external
+                                custom
+                                className="group/trigger h-full shrink-0"
+                              >
+                                <InstagramPreview reelId={video.instagram} />
+                              </Link>
+                            )}
+                          </div>
+
+                          {!isYouTube && (
+                            <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
                           )}
                         </div>
-
-                        {!isYouTube && (
-                          <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
-                        )}
-                      </div>
-                    );
-                  })}
-                </>
-              )}
-            </YouTubeLightbox>
-          </div>
-        </Section>
+                      );
+                    })}
+                  </>
+                )}
+              </YouTubeLightbox>
+            </div>
+          </Section>
+        </div>
       ))}
 
-      <div className="relative">
-        <Image
-          src={leafLeftImage1}
-          alt=""
-          className="pointer-events-none absolute -bottom-32 left-0 z-10 hidden h-auto w-1/2 max-w-32 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-40"
-        />
+      {/* Grow the last section to cover the page */}
+      <Section dark className="grow bg-alveus-green-900">
+        <div className="w-full lg:w-4/5">
+          <Heading id="work-with-us" level={2} link>
+            Work with us
+          </Heading>
 
-        <Section dark className="bg-alveus-green-900">
-          <div className="w-full lg:w-4/5">
-            <Heading id="work-with-us" level={2} link>
-              Work with us
-            </Heading>
-
-            <p className="text-lg text-balance">
-              If you are an organization that would like to partner with Alveus
-              Sanctuary, please{" "}
-              <Link href="/contact-us" dark>
-                get in touch
-              </Link>{" "}
-              with us. We are always looking for new ways to collaborate and
-              share the important work being done in conservation and education.
-            </p>
-          </div>
-        </Section>
-      </div>
+          <p className="text-lg text-balance">
+            If you are an organization that would like to partner with Alveus
+            Sanctuary, please{" "}
+            <Link href="/contact-us" dark>
+              get in touch
+            </Link>{" "}
+            with us. We are always looking for new ways to collaborate and share
+            the important work being done in conservation and education.
+          </p>
+        </div>
+      </Section>
     </>
   );
 };
