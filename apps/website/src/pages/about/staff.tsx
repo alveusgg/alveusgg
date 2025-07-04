@@ -194,7 +194,7 @@ const staff: Record<string, Person> = {
           a varied capacity, including: carpentry, drywall, brick, tile,
           plumbing, and more. His most recent job being in access solutions,
           mainly overhead sectional doors. He enjoys tinkering with electronics,
-          puzzles, and has a strong appreciation for a good looking door.
+          puzzles, and has a strong appreciation for a good-looking door.
         </p>
       </>
     ),
