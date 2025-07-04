@@ -19,7 +19,6 @@
     "@twurple/auth": "^7.3.0",
     "@twurple/chat": "^7.3.0",
     "@twurple/easy-bot": "^7.3.0",
-    "dotenv": "^16.5.0",
     "read-pkg": "^9.0.1",
     "tsx": "^4.20.3",
     "zod": "^3.25.67"
@@ -34,7 +33,7 @@
     "typescript-eslint": "^8.35.1"
   },
   "scripts": {
-    "start": "tsx src/server.ts",
+    "start": "tsx --env-file=.env src/server.ts",
     "lint": "eslint . --max-warnings 0",
     "types": "tsc --noEmit"
   }
