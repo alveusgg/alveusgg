@@ -11,7 +11,7 @@ type PreviewProps = {
 
 const imgSrc = (id: string) =>
   createImageUrl({
-    src: `https://www.instagram.com/p/${encodeURIComponent(id)}/media?size=l`,
+    src: `/api/instagram/preview/${encodeURIComponent(id)}`,
     width: 640,
     quality: 100,
   });
