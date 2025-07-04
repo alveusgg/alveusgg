@@ -14,7 +14,7 @@ import {
   TIME_LOCAL_INPUT_FORMAT,
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
-} from "@/utils/local-datetime";
+} from "@/utils/datetime-local";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";

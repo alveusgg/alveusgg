@@ -6,10 +6,11 @@ import {
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
 
-import type { PartialDateString } from "@alveusgg/data/build/types";
-
 import { classes } from "@/utils/classes";
-import { formatPartialDateString } from "@/utils/datetime";
+import {
+  type PartialDateString,
+  formatPartialDateString,
+} from "@/utils/datetime-partial";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";

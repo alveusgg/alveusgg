@@ -26,10 +26,10 @@ import {
 import { getFormattedTitle, regularEventsWeekly } from "@/data/calendar-events";
 import { type ChannelWithCalendarEvents, channels } from "@/data/twitch";
 
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { getShortBaseUrl } from "@/utils/short-url";
 import { camelToKebab } from "@/utils/string-case";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),

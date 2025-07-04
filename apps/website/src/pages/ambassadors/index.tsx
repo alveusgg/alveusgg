@@ -17,7 +17,7 @@ import { classes } from "@/utils/classes";
 import {
   parsePartialDateString,
   sortPartialDateString,
-} from "@/utils/datetime";
+} from "@/utils/datetime-partial";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab } from "@/utils/string-case";
@@ -95,9 +95,7 @@ const sortByOptions = {
       [...ambassadors]
         .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
         .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
-          const year = parsePartialDateString(val.arrival)
-            ?.getUTCFullYear()
-            ?.toString();
+          const year = parsePartialDateString(val.arrival)?.year.toString();
           const group = year || "unknown";
 
           map.set(group, {

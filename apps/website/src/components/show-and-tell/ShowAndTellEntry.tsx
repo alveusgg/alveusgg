@@ -19,8 +19,9 @@ import { ErrorBoundary } from "react-error-boundary";
 import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
 
 import { classes } from "@/utils/classes";
-import { DATETIME_ALVEUS_ZONE, formatDateTime } from "@/utils/datetime";
+import { formatDateTime } from "@/utils/datetime";
 import { splitAttachments } from "@/utils/split-attachments";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 import Link from "@/components/content/Link";
 import { Badge } from "@/components/show-and-tell/Badge";
