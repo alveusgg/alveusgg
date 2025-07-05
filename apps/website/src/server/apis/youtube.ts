@@ -105,24 +105,16 @@ const SearchSchema = z.object({
         channelTitle: z.string(),
         publishedAt: z.iso.datetime(),
         thumbnails: z.record(
-          z.union([
-            z.literal("default"),
-            z.literal("medium"),
-            z.literal("high"),
-            z.literal("standard"),
-            z.literal("maxres"),
-          ]),
-          z.object({
-            url: z.url(),
-            width: z.number(),
-            height: z.number(),
-          }),
+          z.literal(["default", "medium", "high", "standard", "maxres"]),
+          z
+            .object({
+              url: z.url(),
+              width: z.number(),
+              height: z.number(),
+            })
+            .optional(),
         ),
-        liveBroadcastContent: z.union([
-          z.literal("none"),
-          z.literal("upcoming"),
-          z.literal("live"),
-        ]),
+        liveBroadcastContent: z.literal(["none", "upcoming", "live"]),
       }),
     }),
   ),
