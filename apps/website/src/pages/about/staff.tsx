@@ -19,6 +19,7 @@ import chandlerImage from "@/assets/people/chandler.jpg";
 import coltonHolsteImage from "@/assets/people/colton-holste.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
+import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
@@ -178,6 +179,22 @@ const staff: Record<string, Person> = {
           Creature Conservancy, and Habitat Landscape at the Detroit Zoo. Lukas
           is a big fan of plants and reptiles. His favorite ambassador at Alveus
           is Pushpop the Sulcata Tortoise.
+        </p>
+      </>
+    ),
+  },
+  dan: {
+    image: danielDoormanImage,
+    name: "Daniel (Dan the Doorman)",
+    title: "Facilities Specialist",
+    description: (
+      <>
+        <p>
+          Daniel has more than 15 years in the construction industry, working in
+          a varied capacity, including: carpentry, drywall, brick, tile,
+          plumbing, and more. His most recent job being in access solutions,
+          mainly overhead sectional doors. He enjoys tinkering with electronics,
+          puzzles, and has a strong appreciation for a good-looking door.
         </p>
       </>
     ),
