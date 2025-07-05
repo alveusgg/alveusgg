@@ -178,6 +178,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/orgs",
+      destination: "/about/orgs",
+      permanent: true,
+    },
+    {
       source: "/tech",
       destination: "/about/tech",
       permanent: true,
