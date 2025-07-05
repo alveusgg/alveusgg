@@ -122,12 +122,6 @@ export const regularEventsWeekly = [
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 21, minute: 0 },
     },
-    {
-      title: "WAI New Episode",
-      description: "Watch the latest Wine About It episode.",
-      category: "Maya YouTube Video",
-      link: "https://www.youtube.com/@WineAboutItPodcast",
-    },
   ],
   // Thursday
   [
