@@ -110,9 +110,11 @@ const DonatePage: NextPage = () => {
           containerClassName="flex flex-col md:flex-row gap-8 items-start md:items-end"
         >
           <div className="grow">
-            <Heading level={2}>{donationEvent.title}</Heading>
+            <Heading level={2} id="event" link>
+              {donationEvent.title}
+            </Heading>
             {donationEvent.description && (
-              <div className="text-lg">
+              <div className="text-lg text-balance">
                 <Markdown content={donationEvent.description} dark />
               </div>
             )}
