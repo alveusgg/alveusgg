@@ -31,7 +31,7 @@ export const Preview = ({ reelId, alt, className }: PreviewProps) => (
     <div className="absolute inset-0 m-auto aspect-square w-16 rounded-2xl bg-alveus-green/25 backdrop-blur-sm transition group-hover/trigger:scale-110 group-hover/trigger:bg-alveus-green/50" />
     <IconInstagram
       size={64}
-      className="group-hover/trigger:drop-shadow-xll absolute inset-0 m-auto text-white drop-shadow-md transition group-hover/trigger:scale-110"
+      className="absolute inset-0 m-auto text-white drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
     />
   </div>
 );
