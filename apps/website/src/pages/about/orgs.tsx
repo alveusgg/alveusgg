@@ -379,7 +379,10 @@ const AboutOrgsPage: NextPage = () => {
                                 custom
                                 className="group/trigger h-full shrink-0"
                               >
-                                <InstagramPreview reelId={video.instagram} />
+                                <InstagramPreview
+                                  reelId={video.instagram}
+                                  className="h-0 min-h-full"
+                                />
                               </Link>
                             )}
                           </div>
