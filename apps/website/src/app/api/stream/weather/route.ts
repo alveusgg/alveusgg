@@ -4,7 +4,7 @@ import { getWeather } from "@/server/apis/weather";
 export async function GET() {
   try {
     const data = await getWeather();
-    const resp = `Alveus Weather: ${data.temperature.fahrenheit} °F (${data.temperature.celsius} °C). Feels like ${data.temperature.feelsLike.fahrenheit} °F (${data.temperature.feelsLike.celsius} °C). ${data.humidity}% humidity. ${data.wind.speed.miles} mph winds. ${data.precipitation.total.inches} in of rain.`;
+    const resp = `Alveus Weather: ${data.temperature.fahrenheit} °F (${data.temperature.celsius} °C). Feels like ${data.temperature.feelsLike.fahrenheit} °F (${data.temperature.feelsLike.celsius} °C). ${data.humidity}% humidity. ${data.wind.speed.miles} mph winds.`;
 
     return new Response(resp, {
       headers: {
