@@ -36,7 +36,7 @@ const orgs: Organization[] = [
     key: "san-diego-zoo-wildlife-alliance",
     title: "San Diego Zoo Wildlife Alliance",
     description:
-      "Meeting Marco Wendt, a wildlife ambassador from San Diego Zoo Wildlife Alliance, and learning about their conservation efforts.",
+      "Documenting SDZWA's California Condor Center and exploring themes of diversity in both nature and across conservation related careers.",
     videos: [
       {
         title: "Touring San Diego Zoo Safari Park",
@@ -55,8 +55,7 @@ const orgs: Organization[] = [
   {
     key: "whale-and-dolphin-conservation",
     title: "Whale and Dolphin Conservation",
-    description:
-      "Learning about North Atlantic right whales and the conservation work that Whale and Dolphin Conservation does to protect them and other marine mammals.",
+    description: "Documenting the plight of the North Atlantic Right Whale.",
     videos: [
       {
         title: "Finding Whales with WDC",
@@ -75,6 +74,8 @@ const orgs: Organization[] = [
   {
     key: "purple-martin-conservation-association",
     title: "Purple Martin Conservation Association",
+    description:
+      "Travelling to the Amazon Rainforest alongside PMCA to follow and document purple martins on their 5000 mile migration.",
     videos: [
       {
         title: "Travelling to Brazil with PMCA",
@@ -85,6 +86,8 @@ const orgs: Organization[] = [
   {
     key: "rainforest-alliance",
     title: "Rainforest Alliance",
+    description:
+      "Travelling to the Amazon Rainforest and amplifying Rainforest Alliance's mission work to protect rainforests from deforestation, mitigating climate change, and promoting the rights and livelihoods of rural communities.",
     videos: [
       {
         title: "Exploring the Amazon (Part 1)",
@@ -103,6 +106,8 @@ const orgs: Organization[] = [
   {
     key: "world-bird-sanctuary",
     title: "World Bird Sanctuary",
+    description:
+      "Promoting vulture conservation and fundraising for World Bird Sanctuary's education, breeding, and recovery programs.",
     videos: [
       {
         title: "Meeting Birds at World Bird Sanctuary",
@@ -113,6 +118,8 @@ const orgs: Organization[] = [
   {
     key: "bat-conservation-international",
     title: "Bat Conservation International",
+    description:
+      "Visiting the largest colony of bats in the world and fundraising for Bat Conservation International's education, research, and conservation work.",
     videos: [
       {
         title: "Visiting the Largest Bat Colony in the World",
@@ -127,6 +134,8 @@ const orgs: Organization[] = [
   {
     key: "austin-pets-alive",
     title: "Austin Pets Alive!",
+    description:
+      "Fundraising for an animal shelter focusing on saving animals at risk of euthanasia.",
     videos: [
       {
         title: "Meeting Cats and Dogs at Austin Pets Alive!",
@@ -137,6 +146,8 @@ const orgs: Organization[] = [
   {
     key: "world-wildlife-fund",
     title: "World Wildlife Fund",
+    description:
+      "Amplifying various initiatives for World Wildlife Fund to direct action towards sustainable palm oil consumption, environmental advocacy, combating the wildlife trade, and more.",
     videos: [
       {
         title: "Reporting the Illegal Wildlife Trade Reel",
@@ -159,6 +170,8 @@ const orgs: Organization[] = [
   {
     key: "xerces-society",
     title: "Xerces Society",
+    description:
+      "Partnering with Xerces society to promote the protection of our natural world via invertebrate conservation and invertebrate habitat conservation.",
     videos: [
       {
         title: "Be Kind to Bugs Reel",
@@ -173,6 +186,8 @@ const orgs: Organization[] = [
   {
     key: "natural-resources-defense-council",
     title: "Natural Resources Defense Council",
+    description:
+      "Promoting environmental advocacy in partnership with the Natural Resources Defense Council by encouraging viewers to use their political voice and voting power to safeguard nature.",
     videos: [
       {
         title: "Offshore Drilling Call to Action Reel",
@@ -187,6 +202,8 @@ const orgs: Organization[] = [
   {
     key: "carnivero-plant-nursery",
     title: "Carnivero Carnivorous Plant & Rare Plant Nursery",
+    description:
+      "Documenting and promoting plant conservation via captive breeding efforts to combat plant poaching.",
     videos: [
       {
         title: "Touring Behind the Scenes at Carnivero",
@@ -197,6 +214,8 @@ const orgs: Organization[] = [
   {
     key: "wolf-conservation-center",
     title: "Wolf Conservation Center",
+    description:
+      "Fundraising for and promoting Wolf Conservation Center's education, research, and recovery programs for Red Wolves and Mexican Gray Wolves.",
     videos: [
       {
         title: "Meeting Wolves at Wolf Conservation Center",
@@ -207,6 +226,8 @@ const orgs: Organization[] = [
   {
     key: "associacao-amigos-do-peixe-boi",
     title: "Associação Amigos do Peixe-Boi",
+    description:
+      "Visiting Associação Amigos do Peixe-Boi in Brazil and documenting their rehabilitation program for Amazonian Manatees and Pink River Dolphins.",
     videos: [
       {
         title: "Visiting a Manatee Rehab Center in Brazil",
@@ -221,7 +242,7 @@ const AboutOrgsPage: NextPage = () => {
     <>
       <Meta
         title="Partnering with Organizations"
-        description="Beyond our educational collaborations with content creators, Alveus Sanctuary partners with various organizations to further our mission of conservation and education."
+        description="Beyond our educational collaborations with content creators, Maya Higa and Alveus Sanctuary partner with various organizations to further our mission of conservation and education."
       />
 
       {/* Nav background */}
@@ -243,8 +264,8 @@ const AboutOrgsPage: NextPage = () => {
               <Link href="/collaborations" dark>
                 educational collaborations
               </Link>{" "}
-              with content creators, Alveus Sanctuary partners with various
-              organizations to further our mission of conservation and
+              with content creators, Maya Higa and Alveus Sanctuary partner with
+              various organizations to further our mission of conservation and
               education. These partnerships allow us to amplify their efforts
               and share their important work with our audience.
             </p>
