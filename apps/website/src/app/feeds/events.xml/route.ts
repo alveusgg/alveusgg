@@ -2,7 +2,6 @@ import { Feed } from "feed";
 
 import { env } from "@/env";
 
-// Already sorted in descending order
 import events from "@/data/events";
 
 export async function GET() {
