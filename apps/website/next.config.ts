@@ -310,6 +310,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/twitch-charity",
+      destination: "https://www.twitch.tv/charity/alveussanctuary",
+      permanent: true,
+    },
+    {
       source: "/github",
       destination: "https://github.com/alveusgg",
       permanent: true,

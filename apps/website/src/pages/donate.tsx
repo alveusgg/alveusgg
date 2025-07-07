@@ -19,6 +19,7 @@ import IconArrowRight from "@/icons/IconArrowRight";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
 import IconPayPal from "@/icons/IconPayPal";
+import IconTwitch from "@/icons/IconTwitch";
 
 type DonateLink = {
   icon: ComponentType<IconProps>;
@@ -37,13 +38,21 @@ const links = {
     description:
       "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
   },
+  twitch: {
+    icon: IconTwitch,
+    title: "Twitch Charity",
+    link: "/twitch-charity",
+    external: true,
+    description:
+      "Donate to Alveus on Twitch via PayPal's Giving Fund, using a credit/debit card or PayPal account.",
+  },
   paypal: {
     icon: IconPayPal,
     title: "PayPal",
     link: "/paypal",
     external: true,
     description:
-      "Donate directly to Alveus via credit/debit card, bank account or PayPal funds.",
+      "Use your PayPal account, or your credit/debit card, to donate directly to Alveus.",
   },
   poBox: {
     icon: IconBox,
@@ -134,13 +143,13 @@ const DonatePage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow" containerClassName="flex flex-wrap">
-        <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
+        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
           {Object.entries(links).map(([key, link]) => (
             <DonateItem key={key} link={link} />
           ))}
         </div>
 
-        <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
+        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
           {!consent.givingBlock && <DonateItem link={givingBlock} />}
 
           <Consent item="donation widget" consent="givingBlock">
