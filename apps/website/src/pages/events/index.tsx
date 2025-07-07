@@ -11,6 +11,7 @@ import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import VideoPlayer from "@/components/content/Video";
 
@@ -133,12 +134,7 @@ const EventsPage: NextPage = () => {
         title="Events"
         description="We host one-off fundraising events to increase awareness of our conservation missions and to encourage donations to support Alveus."
       >
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title="Alveus Sanctuary Events"
-          href="/feeds/events.xml"
-        />
+        <RssLink title="Alveus Sanctuary Events" path="/feeds/events.xml" />
       </Meta>
 
       {/* Nav background */}

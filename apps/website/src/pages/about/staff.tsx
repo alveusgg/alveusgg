@@ -8,6 +8,7 @@ import { classes } from "@/utils/classes";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import People from "@/components/content/People";
+import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import { Lightbox, Preview } from "@/components/content/YouTube";
 
@@ -45,12 +46,7 @@ const AboutStaffPage: NextPage = () => {
         title="Alveus Staff"
         description="Watch the video to meet some of the team and discover what they do at Alveus in their jobs, or read on to learn more about each of them."
       >
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title="Alveus Sanctuary Staff"
-          href="/feeds/staff.xml"
-        />
+        <RssLink title="Alveus Sanctuary Staff" path="/feeds/staff.xml" />
       </Meta>
 
       {/* Nav background */}

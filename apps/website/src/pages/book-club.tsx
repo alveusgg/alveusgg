@@ -14,6 +14,7 @@ import { formatPartialDateString } from "@/utils/datetime";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import TransitionHeight from "@/components/content/TransitionHeight";
 import { Lightbox } from "@/components/content/YouTube";
@@ -174,11 +175,9 @@ const BookClubPage: NextPage = () => {
         description="Join the staff at Alveus and the community in reading and discussing a book together each month."
         image={bookClubFull.src}
       >
-        <link
-          rel="alternate"
-          type="application/rss+xml"
+        <RssLink
           title="Alveus Sanctuary Book Club"
-          href="/feeds/book-club.xml"
+          path="/feeds/book-club.xml"
         />
       </Meta>
 
