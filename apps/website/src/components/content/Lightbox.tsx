@@ -1,5 +1,7 @@
-import { Dialog, DialogPanel } from "@headlessui/react";
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { type ReactNode, useCallback, useEffect, useState } from "react";
+
+import { classes } from "@/utils/classes";
 
 import IconX from "@/icons/IconX";
 
@@ -9,9 +11,10 @@ type LightboxProps = {
   open?: string;
   onClose: () => void;
   items: Record<string, ReactNode>;
+  className?: string;
 };
 
-const Lightbox = ({ open, onClose, items }: LightboxProps) => {
+const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
   // Whenever the lightbox opens, we want to scroll to the item that was opened
   const [scrollTo, setScrollTo] = useState<string>();
   useEffect(() => {
@@ -33,10 +36,14 @@ const Lightbox = ({ open, onClose, items }: LightboxProps) => {
   );
 
   return (
-    <Dialog open={!!open} onClose={onClose} className="relative z-50">
-      <div className="fixed inset-0 bg-black/75" aria-hidden="true" />
+    <Dialog
+      open={!!open}
+      onClose={onClose}
+      className={classes("fixed inset-0 z-100", className)}
+    >
+      <DialogBackdrop className="absolute inset-0 bg-black/75" />
 
-      <div className="fixed inset-0 p-1 md:p-4 lg:p-8">
+      <div className="absolute inset-0 p-1 md:p-4 lg:p-8">
         <DialogPanel className="size-full">
           <Carousel
             items={items}
