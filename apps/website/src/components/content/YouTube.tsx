@@ -136,6 +136,35 @@ export const Preview = ({ videoId, alt = "", className }: PreviewProps) => {
   );
 };
 
+export const YouTubePreview = Preview;
+
+type EmbedProps = {
+  videoId: string;
+  caption?: string;
+};
+
+export const YouTubeEmbed = ({ videoId, caption }: EmbedProps) => (
+  <div className="flex h-full flex-col">
+    <div className="mx-auto flex aspect-video max-w-full grow">
+      <iframe
+        src={iframeSrc(videoId)}
+        referrerPolicy="no-referrer"
+        allow="fullscreen; encrypted-media"
+        sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
+        loading="lazy"
+        className="pointer-events-auto my-auto aspect-video h-auto w-full rounded-2xl bg-alveus-green-800 shadow-xl"
+        allowFullScreen
+      />
+    </div>
+
+    {caption && (
+      <p className="my-4 text-center text-xl text-balance text-alveus-tan md:mb-0 lg:mt-8">
+        {caption}
+      </p>
+    )}
+  </div>
+);
+
 type LightboxCtxProps = {
   Trigger: ReturnType<typeof createTrigger>;
   parseUrl: typeof parseUrl;
