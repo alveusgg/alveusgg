@@ -118,6 +118,7 @@ export const ShowAndTellGallery = ({
             open={lightboxOpen}
             onClose={() => setLightboxOpen(undefined)}
             items={lightboxItems}
+            className={classes(isPresentationView && "w-[80%]")}
           />
         </div>
       )}
