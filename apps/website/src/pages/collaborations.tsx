@@ -300,7 +300,10 @@ const CollaborationItems = ({
               custom
               className="w-full max-w-2xl"
             >
-              <YouTubePreview videoId={collaboration.videoId} />
+              <YouTubePreview
+                videoId={collaboration.videoId}
+                className="aspect-video h-auto w-full"
+              />
             </Link>
 
             {collaboration.vodId && (
