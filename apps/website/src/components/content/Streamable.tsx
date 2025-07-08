@@ -18,7 +18,7 @@ const imgSrc = (id: string) =>
 
 export const StreamablePreview = ({
   videoId,
-  alt = "",
+  alt = "Streamable video thumbnail",
   className,
 }: PreviewProps) => (
   <div className="relative">
@@ -53,6 +53,7 @@ export const StreamableEmbed = ({ videoId, caption }: EmbedProps) => (
     <div className="mx-auto flex aspect-video max-w-full grow">
       <iframe
         src={iframeSrc(videoId)}
+        title="Streamable video embed"
         referrerPolicy="no-referrer"
         allow="fullscreen; encrypted-media"
         sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
