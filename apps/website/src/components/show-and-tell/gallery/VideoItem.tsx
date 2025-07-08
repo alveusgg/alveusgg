@@ -24,6 +24,7 @@ export function VideoItem({
   showPreview = false,
   linkAttributes = {},
 }: VideoThumbnailProps) {
+  // TODO: Instead of returning null for unknown URLs, we should render a generic link icon
   const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
   if (!parsedVideoUrl) {
     return null;
