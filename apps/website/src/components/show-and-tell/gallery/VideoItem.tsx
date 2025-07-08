@@ -1,13 +1,14 @@
-import type { AnchorHTMLAttributes, JSX } from "react";
+import type { AnchorHTMLAttributes, JSX, ReactNode } from "react";
 
 import type { LinkAttachment } from "@alveusgg/database";
 
-import { createImageUrl } from "@/utils/image";
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 
+import { StreamablePreview } from "@/components/content/Streamable";
 import { YouTubePreview } from "@/components/content/YouTube";
-import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 
+import IconExternal from "@/icons/IconExternal";
+import IconStreamable from "@/icons/IconStreamable";
 import IconYouTube from "@/icons/IconYouTube";
 
 type VideoThumbnailProps = {
@@ -18,62 +19,48 @@ type VideoThumbnailProps = {
     AnchorHTMLAttributes<HTMLAnchorElement>;
 };
 
-export function VideoItem({
+const previews: Record<
+  keyof typeof videoPlatformConfigs,
+  ({ videoId }: { videoId: string }) => ReactNode
+> = {
+  youtube: ({ videoId }: { videoId: string }) => (
+    <YouTubePreview videoId={videoId} className="aspect-video h-auto w-full" />
+  ),
+  streamable: ({ videoId }: { videoId: string }) => (
+    <StreamablePreview
+      videoId={videoId}
+      className="max-h-[40vh] min-h-[100px] w-auto"
+    />
+  ),
+};
+
+const icons: Record<
+  keyof typeof videoPlatformConfigs,
+  ({ size }: { size: number }) => ReactNode
+> = {
+  youtube: IconYouTube,
+  streamable: IconStreamable,
+};
+
+export const VideoItemPreview = ({
   videoAttachment,
   openInLightbox = false,
   showPreview = false,
   linkAttributes = {},
-}: VideoThumbnailProps) {
-  // TODO: Instead of returning null for unknown URLs, we should render a generic link icon
-  const parsedVideoUrl = parseVideoUrl(videoAttachment.url);
-  if (!parsedVideoUrl) {
-    return null;
-  }
-
-  const { platform, id, normalizedUrl } = parsedVideoUrl;
-  const videoPlatformConfig = videoPlatformConfigs[platform];
-
-  // default attributes
-  linkAttributes = {
-    target: "_blank",
-    rel: "noreferrer",
-    ...linkAttributes,
-  };
-
-  let urlEmbed, urlPreview;
-  if ("embedUrl" in videoPlatformConfig) {
-    urlEmbed = videoPlatformConfig.embedUrl(id);
-  }
-  if ("previewUrl" in videoPlatformConfig) {
-    urlPreview = videoPlatformConfig.previewUrl(id);
-  }
+}: VideoThumbnailProps) => {
+  const parsed = parseVideoUrl(videoAttachment.url);
+  const config = parsed && videoPlatformConfigs[parsed.platform];
 
   let content: JSX.Element;
-  if (showPreview && platform === "youtube") {
-    // YouTube has a custom preview
+  if (showPreview && config) {
+    const Preview = previews[config.key];
     content = (
       <div className="max-w-2xl">
-        <YouTubePreview videoId={id} />
-      </div>
-    );
-  } else if (showPreview && urlPreview) {
-    // Support platforms that have dedicated thumbnail URLs
-    content = (
-      <div className="relative">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={createImageUrl({ src: urlPreview, width: 720 })}
-          alt=""
-          loading="lazy"
-          className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl"
-        />
-        <IconYouTube
-          size={80}
-          className="absolute inset-0 m-auto text-alveus-tan drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
-        />
+        <Preview videoId={parsed.id} />
       </div>
     );
   } else {
+    const Icon = config ? icons[config.key] : IconExternal;
     content = (
       <div
         className={
@@ -83,34 +70,44 @@ export function VideoItem({
             : "gap-0.5 bg-white/60 p-2 text-sm shadow-lg group-hover/trigger:shadow-xl")
         }
       >
-        <VideoPlatformIcon
-          platform={videoPlatformConfig.key}
-          className="size-5"
-        />
+        <Icon size={20} />
         {showPreview && "Open "}
-        {videoPlatformConfig.label}
+        {config?.label ??
+          new URL(videoAttachment.url).hostname.replace(/^www\./, "")}
         {showPreview && " in a new tab."}
       </div>
     );
   }
 
+  // default attributes
   linkAttributes = {
-    href: normalizedUrl,
+    target: "_blank",
+    rel: "noreferrer",
     ...linkAttributes,
   };
 
-  if (urlEmbed && openInLightbox) {
+  if (parsed) {
     linkAttributes = {
-      "data-pswp-type": "iframe",
-      "data-iframe-url": urlEmbed,
+      href: parsed.normalizedUrl,
       ...linkAttributes,
     };
 
-    if ("consent" in videoPlatformConfig) {
-      linkAttributes = {
-        "data-consent": videoPlatformConfig.consent,
-        ...linkAttributes,
-      };
+    if (config) {
+      const urlEmbed = config.embedUrl(parsed.id);
+      if (urlEmbed && openInLightbox) {
+        linkAttributes = {
+          "data-pswp-type": "iframe",
+          "data-iframe-url": urlEmbed,
+          ...linkAttributes,
+        };
+
+        if ("consent" in config) {
+          linkAttributes = {
+            "data-consent": config.consent,
+            ...linkAttributes,
+          };
+        }
+      }
     }
   }
 
@@ -119,4 +116,4 @@ export function VideoItem({
       <a {...linkAttributes}>{content}</a>
     </div>
   );
-}
+};
