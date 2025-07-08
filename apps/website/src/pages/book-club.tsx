@@ -5,6 +5,7 @@ import {
 } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
+import { type ReactNode, useState } from "react";
 
 import type { PartialDateString } from "@alveusgg/data/build/types";
 
@@ -13,11 +14,12 @@ import { formatPartialDateString } from "@/utils/datetime";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
+import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import TransitionHeight from "@/components/content/TransitionHeight";
-import { Lightbox } from "@/components/content/YouTube";
+import { YouTubeEmbed } from "@/components/content/YouTube";
 
 import IconExternal from "@/icons/IconExternal";
 import IconYouTube from "@/icons/IconYouTube";
@@ -135,6 +137,22 @@ const formatMonths = (months: Month[]) =>
     }, [] as string[])
     .join(" + ");
 
+const lightboxItems = books.reduce<Record<string, ReactNode>>(
+  (acc, book) =>
+    book.vodId
+      ? {
+          ...acc,
+          [book.vodId]: (
+            <YouTubeEmbed
+              videoId={book.vodId}
+              caption={`${book.title} | ${formatMonths(book.month)}`}
+            />
+          ),
+        }
+      : acc,
+  {},
+);
+
 type CoverInfo = Pick<BookInfo, "title" | "author" | "image"> & {
   width?: number;
 };
@@ -201,85 +219,91 @@ const Book = ({
   thickness,
   color,
   vodId,
+  lightbox,
   width,
   className,
-}: BookInfo & { width?: number; className?: string }) => (
-  <Lightbox id={`book-club-${month.join("-")}`}>
-    {({ Trigger }) => (
-      <Disclosure as="div" className={className}>
-        {({ open }) => (
-          <>
-            <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-hidden">
-              <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:scale-70 group-data-[open]:scale-3d group-data-[open]:rotate-x-[85deg]">
-                <Cover
-                  title={title}
-                  author={author}
-                  image={image}
-                  width={width}
-                  className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
-                />
-                <div
-                  className={classes(
-                    "w-full origin-top -translate-y-0.5 scale-x-95 rotate-x-90 rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 group-data-[open]:scale-x-100",
-                    thickness,
-                    color,
-                  )}
-                />
-              </div>
+}: BookInfo & {
+  lightbox: (id: string) => void;
+  width?: number;
+  className?: string;
+}) => (
+  <Disclosure as="div" className={className}>
+    {({ open }) => (
+      <>
+        <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-hidden">
+          <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:scale-70 group-data-[open]:scale-3d group-data-[open]:rotate-x-[85deg]">
+            <Cover
+              title={title}
+              author={author}
+              image={image}
+              width={width}
+              className="transition-transform duration-1000 group-data-[open]:translate-x-1 group-data-[open]:-translate-z-0.5"
+            />
+            <div
+              className={classes(
+                "w-full origin-top -translate-y-0.5 scale-x-95 rotate-x-90 rounded-l-xl rounded-r-xs border-4 border-r-0 border-solid bg-gradient-to-b from-alveus-tan-50 via-gray-100 to-alveus-tan-50 transition-transform duration-1000 group-data-[open]:scale-x-100",
+                thickness,
+                color,
+              )}
+            />
+          </div>
 
-              <Heading
-                level={2}
-                className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
-              >
-                <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
-                {formatMonths(month)}
-              </Heading>
-            </DisclosureButton>
+          <Heading
+            level={2}
+            className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
+          >
+            <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
+            {formatMonths(month)}
+          </Heading>
+        </DisclosureButton>
 
-            <TransitionHeight
-              show={open}
-              enter="duration-500 delay-500"
-              leave="duration-500"
+        <TransitionHeight
+          show={open}
+          enter="duration-500 delay-500"
+          leave="duration-500"
+        >
+          <DisclosurePanel static>
+            <Heading level={3} className="my-0">
+              {title}
+            </Heading>
+            <p>
+              <span className="text-sm opacity-50">by </span>
+              {author}
+            </p>
+
+            <Button
+              href={link}
+              className="mt-8 flex items-center justify-between gap-2"
+              external
             >
-              <DisclosurePanel static>
-                <Heading level={3} className="my-0">
-                  {title}
-                </Heading>
-                <p>
-                  <span className="text-sm opacity-50">by </span>
-                  {author}
-                </p>
+              Buy on Amazon.com
+              <IconExternal size="1em" />
+            </Button>
 
-                <Button
-                  href={link}
-                  className="mt-8 flex items-center justify-between gap-2"
-                  external
-                >
-                  Buy on Amazon.com
-                  <IconExternal size="1em" />
-                </Button>
-
-                {vodId && (
-                  <Button
-                    as={Trigger}
-                    videoId={vodId}
-                    caption={`${title} | ${formatMonths(month)}`}
-                    className="mt-2 flex items-center justify-between gap-2"
-                  >
-                    Re-Watch the Meeting
-                    <IconYouTube size="1em" />
-                  </Button>
-                )}
-              </DisclosurePanel>
-            </TransitionHeight>
-          </>
-        )}
-      </Disclosure>
+            {vodId && (
+              <Button
+                href={`https://www.youtube.com/watch?v=${vodId}`}
+                external
+                onClick={(e: MouseEvent) => {
+                  e.preventDefault();
+                  lightbox(vodId);
+                }}
+                className="mt-2 flex items-center justify-between gap-2"
+              >
+                Re-Watch the Meeting
+                <IconYouTube size="1em" />
+              </Button>
+            )}
+          </DisclosurePanel>
+        </TransitionHeight>
+      </>
     )}
-  </Lightbox>
+  </Disclosure>
 );
 
 const BookClubPage: NextPage = () => {
+  const [lightboxOpen, setLightboxOpen] = useState<string>();
+
   return (
     <>
       <Meta
@@ -346,6 +370,7 @@ const BookClubPage: NextPage = () => {
               <Book
                 key={book.title}
                 {...book}
+                lightbox={setLightboxOpen}
                 width={256}
                 className="mx-auto w-64"
               />
@@ -368,6 +393,12 @@ const BookClubPage: NextPage = () => {
               ),
             )}
           </div>
+
+          <Lightbox
+            open={lightboxOpen}
+            onClose={() => setLightboxOpen(undefined)}
+            items={lightboxItems}
+          />
 
           <p className="mt-16 text-center text-xs text-alveus-green italic">
             Amazon.com links provided are affiliate links. Purchases made

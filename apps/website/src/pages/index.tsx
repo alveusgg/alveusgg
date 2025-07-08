@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
+import { type ReactNode, useMemo, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
@@ -10,22 +10,28 @@ import { fetchYouTubeVideos } from "@/server/apis/youtube";
 
 import { channels as youTubeChannels } from "@/data/youtube";
 
+import { formatDateTime } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
-import Button from "@/components/content/Button";
+import Button, { buttonClassNames } from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
+import Lightbox from "@/components/content/Lightbox";
+import Link from "@/components/content/Link";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
-import { Lightbox } from "@/components/content/YouTube";
-import YouTubeCarousel from "@/components/content/YouTubeCarousel";
+import {
+  YouTubeEmbed,
+  YouTubeLightbox,
+  YouTubePreview,
+} from "@/components/content/YouTube";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
@@ -90,6 +96,7 @@ const featuredAmbassadors = typeSafeObjectEntries(ambassadors)
         <Link
           href={`/ambassadors/${camelToKebab(key)}`}
           draggable={false}
+          custom
           className="group hover:text-alveus-green"
         >
           <Image
@@ -158,6 +165,25 @@ export const getStaticProps = async () => {
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
 }) => {
+  const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
+
+  const latestLightboxItems = useMemo(
+    () =>
+      videos.reduce<Record<string, ReactNode>>(
+        (acc, video) => ({
+          ...acc,
+          [video.id]: (
+            <YouTubeEmbed
+              videoId={video.id}
+              caption={`${video.title}: ${formatDateTime(video.published, { style: "long" })}`}
+            />
+          ),
+        }),
+        {},
+      ),
+    [videos],
+  );
+
   return (
     <>
       {/* Hero, offset to be navbar background */}
@@ -195,10 +221,10 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               className="aspect-video h-auto w-full max-w-2xl rounded-2xl data-[consent]:backdrop-blur-md xl:ml-auto"
             >
               <Link
-                className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
                 href="/live"
-                target="_blank"
-                rel="noreferrer"
+                external
+                custom
+                className="block size-full rounded-2xl shadow-xl transition hover:scale-102 hover:shadow-2xl"
               >
                 <Twitch
                   channel="alveussanctuary"
@@ -248,13 +274,13 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 participate in education programs. Combining platforms this way
                 maximizes the impact for spreading conservation messages.
               </p>
-              <Lightbox>
-                {({ Trigger }) => (
-                  <Button as={Trigger} dark videoId="jXTqWIc--jo">
-                    Watch the Video
-                  </Button>
-                )}
-              </Lightbox>
+
+              <YouTubeLightbox
+                videoId="jXTqWIc--jo"
+                className={buttonClassNames({ dark: true })}
+              >
+                Watch the Video
+              </YouTubeLightbox>
             </div>
 
             <div className="basis-full pt-8 lg:basis-1/2 lg:pt-0 lg:pl-8">
@@ -272,8 +298,9 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 Ambassadors:
               </Heading>
               <Link
-                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green"
                 href="/ambassadors"
+                custom
+                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green"
               >
                 See All
                 <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full" />
@@ -402,7 +429,55 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <Heading level={2} id="recent-videos" link>
             Recent Videos
           </Heading>
-          <YouTubeCarousel videos={videos} id="recent-videos" dark />
+
+          <div className="flex w-full flex-wrap justify-around gap-y-4">
+            {videos.map((video) => (
+              <div
+                key={video.id}
+                className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/4"
+              >
+                <Heading
+                  level={2}
+                  className="order-3 my-0 px-1 text-center text-2xl"
+                >
+                  {video.title}
+                </Heading>
+
+                <Link
+                  href={`https://www.youtube.com/watch?v=${video.id}`}
+                  external
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setLatestLightboxOpen(video.id);
+                  }}
+                  className="group/trigger order-1 w-full max-w-2xl"
+                  custom
+                >
+                  <YouTubePreview videoId={video.id} alt={video.title} />
+                </Link>
+
+                <div className="order-2 my-1 flex w-full flex-wrap items-center justify-between px-1">
+                  <p className="text-sm leading-tight text-alveus-green-200">
+                    {formatDateTime(video.published, { style: "long" })}
+                  </p>
+                  <Link
+                    href={video.author.uri}
+                    external
+                    custom
+                    className="block rounded-full bg-alveus-tan px-2 py-1 text-xs leading-tight text-alveus-green-700 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan"
+                  >
+                    {video.author.name}
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <Lightbox
+            open={latestLightboxOpen}
+            onClose={() => setLatestLightboxOpen(undefined)}
+            items={latestLightboxItems}
+          />
         </div>
       </Section>
 
@@ -422,12 +497,11 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="mt-8 flex flex-wrap items-center justify-evenly gap-8">
             {Object.entries(help).map(([key, value]) => (
               <Link
-                className="group flex items-center gap-4"
-                href={value.link}
                 key={key}
-                {...(value.external
-                  ? { target: "_blank", rel: "noreferrer" }
-                  : {})}
+                href={value.link}
+                external={value.external}
+                custom
+                className="group flex items-center gap-4"
               >
                 <div className="rounded-2xl bg-alveus-tan p-3 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
                   <value.icon size={24} />

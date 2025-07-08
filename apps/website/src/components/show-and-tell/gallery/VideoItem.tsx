@@ -5,7 +5,7 @@ import type { LinkAttachment } from "@alveusgg/database";
 import { createImageUrl } from "@/utils/image";
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 
-import { Preview } from "@/components/content/YouTube";
+import { YouTubePreview } from "@/components/content/YouTube";
 import { VideoPlatformIcon } from "@/components/shared/VideoPlatformIcon";
 
 import IconYouTube from "@/icons/IconYouTube";
@@ -52,7 +52,7 @@ export function VideoItem({
     // YouTube has a custom preview
     content = (
       <div className="max-w-2xl">
-        <Preview videoId={id} />
+        <YouTubePreview videoId={id} />
       </div>
     );
   } else if (showPreview && urlPreview) {
