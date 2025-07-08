@@ -1,6 +1,13 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import collaborations, {
   type Collaboration,
@@ -15,11 +22,12 @@ import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
+import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
-import { Lightbox, Preview } from "@/components/content/YouTube";
+import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -211,12 +219,29 @@ const CollaborationItems = ({
   index,
   ref,
 }: GroupedProps<Collaboration, HTMLDivElement>) => {
-  const [open, setOpen] = useState<string>();
+  const [lightboxOpen, setLightboxOpen] = useState<string>();
+
+  const lightboxItems = useMemo(
+    () =>
+      items.reduce<Record<string, ReactNode>>(
+        (acc, collaboration) => ({
+          ...acc,
+          [collaboration.slug]: (
+            <YouTubeEmbed
+              videoId={collaboration.videoId}
+              caption={`${collaboration.name}: ${formatDateTime(collaboration.date, { style: "long" })}`}
+            />
+          ),
+        }),
+        {},
+      ),
+    [items],
+  );
+
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (items.some((collaboration) => collaboration.slug === hash))
-      setOpen(hash);
-  }, [items]);
+    if (hash in lightboxItems) setLightboxOpen(hash);
+  }, [lightboxItems]);
 
   return (
     <>
@@ -234,75 +259,71 @@ const CollaborationItems = ({
           {name}
         </Heading>
       )}
+
+      <div className="flex flex-wrap" ref={ref}>
+        {items.map((collaboration) => (
+          <div
+            key={collaboration.slug}
+            className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
+          >
+            <Heading
+              level={2}
+              className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center"
+              id={collaboration.slug}
+            >
+              {collaboration.link !== null ? (
+                <Link
+                  href={collaboration.link}
+                  className="hover:text-alveus-green-600 hover:underline"
+                  external
+                  custom
+                >
+                  {collaboration.name}
+                </Link>
+              ) : (
+                collaboration.name
+              )}
+              <small className="text-xl text-alveus-green-600">
+                <Link href={`#${collaboration.slug}`} custom>
+                  {formatDateTime(collaboration.date, { style: "long" })}
+                </Link>
+              </small>
+            </Heading>
+
+            <Link
+              href={`https://www.youtube.com/watch?v=${collaboration.videoId}`}
+              external
+              onClick={(e) => {
+                e.preventDefault();
+                setLightboxOpen(collaboration.slug);
+              }}
+              custom
+              className="w-full max-w-2xl"
+            >
+              <YouTubePreview videoId={collaboration.videoId} />
+            </Link>
+
+            {collaboration.vodId && (
+              <p className="mt-2">
+                (
+                <Link
+                  href={`https://www.youtube.com/watch?v=${collaboration.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
+                  external
+                >
+                  Full stream VoD
+                </Link>
+                )
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
       <Lightbox
-        id={`collaborations-${name}`}
-        className="flex flex-wrap"
-        value={open}
-        onChange={setOpen}
-        ref={ref}
-      >
-        {({ Trigger }) => (
-          <>
-            {items.map((collaboration) => (
-              <div
-                key={collaboration.slug}
-                className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
-              >
-                <Heading
-                  level={2}
-                  className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center"
-                  id={collaboration.slug}
-                >
-                  {collaboration.link !== null ? (
-                    <Link
-                      href={collaboration.link}
-                      className="hover:text-alveus-green-600 hover:underline"
-                      external
-                      custom
-                    >
-                      {collaboration.name}
-                    </Link>
-                  ) : (
-                    collaboration.name
-                  )}
-                  <small className="text-xl text-alveus-green-600">
-                    <Link href={`#${collaboration.slug}`} custom>
-                      {formatDateTime(collaboration.date, { style: "long" })}
-                    </Link>
-                  </small>
-                </Heading>
-
-                <Trigger
-                  videoId={collaboration.videoId}
-                  caption={`${collaboration.name}: ${formatDateTime(
-                    collaboration.date,
-                    {
-                      style: "long",
-                    },
-                  )}`}
-                  triggerId={collaboration.slug}
-                  className="w-full max-w-2xl"
-                >
-                  <Preview videoId={collaboration.videoId} />
-                </Trigger>
-
-                {collaboration.vodId && (
-                  <p className="mt-2">
-                    (
-                    <Link
-                      href={`https://www.youtube.com/watch?v=${collaboration.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
-                      external
-                    >
-                      Full stream VoD
-                    </Link>
-                    )
-                  </p>
-                )}
-              </div>
-            ))}
-          </>
-        )}
-      </Lightbox>
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(undefined)}
+        items={lightboxItems}
+      />
     </>
   );
 };
