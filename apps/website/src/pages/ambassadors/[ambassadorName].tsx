@@ -498,7 +498,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   className="w-full max-w-2xl"
                   custom
                 >
-                  <YouTubePreview videoId={id} />
+                  <YouTubePreview
+                    videoId={id}
+                    className="aspect-video h-auto w-full"
+                  />
                 </Link>
 
                 <p className="mt-2 text-center text-xl">{caption}</p>
