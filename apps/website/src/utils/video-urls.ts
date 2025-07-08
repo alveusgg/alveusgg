@@ -35,23 +35,6 @@ export const videoPlatformConfigs = {
       `https://cdn-cf-east.streamable.com/image/${id}.jpg`,
     consent: "streamable",
   },
-  imgurGallery: {
-    key: "imgurGallery",
-    label: "Imgur Gallery",
-    replacement: (id: string) => `https://imgur.com/a/${id}`,
-    example: "https://imgur.com/a/yaJMyAR",
-    regex:
-      /(?:https?:)?(?:\/\/)?(?:(?:www|i)\.)?imgur\.com\/(?:a|g|gallery)\/([a-z0-9]+)/i,
-    normalizedRegex: /https:\/\/imgur\.com\/a\/([a-z0-9]+)/,
-  },
-  imgur: {
-    key: "imgur",
-    label: "Imgur Image",
-    replacement: (id: string) => `https://imgur.com/${id}`,
-    example: "https://imgur.com/yaJMyAR",
-    regex: /(?:https?:)?(?:\/\/)?(?:(?:www|i)\.)?imgur\.com\/([a-z0-9]+)/i,
-    normalizedRegex: /https:\/\/imgur\.com\/([a-z0-9]+)/,
-  },
 } as const;
 
 export function validateNormalizedVideoUrl(url: string) {
