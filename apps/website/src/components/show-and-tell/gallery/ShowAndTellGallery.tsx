@@ -19,7 +19,7 @@ import {
 import { useConsent } from "@/hooks/consent";
 
 import Carousel from "@/components/content/Carousel";
-import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
+import { VideoItemPreview } from "@/components/show-and-tell/gallery/VideoItem";
 
 import IconInformationCircle from "@/icons/IconInformationCircle";
 
@@ -162,7 +162,7 @@ export function ShowAndTellGallery({
       .filter(({ url }) => validateNormalizedVideoUrl(url))
       .map((videoAttachment, i) => [
         `001-video-${i}`,
-        <VideoItem
+        <VideoItemPreview
           key={`image-${i}`}
           videoAttachment={videoAttachment}
           showPreview
@@ -260,7 +260,7 @@ export function ShowAndTellGallery({
           }
 
           return (
-            <VideoItem
+            <VideoItemPreview
               key={videoAttachment.id}
               videoAttachment={videoAttachment}
               linkAttributes={{ onClick: handleClick }}
