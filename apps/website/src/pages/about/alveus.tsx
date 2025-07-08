@@ -17,7 +17,7 @@ import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 import Timeline from "@/components/content/Timeline";
 import Transparency from "@/components/content/Transparency";
-import { Lightbox, Preview } from "@/components/content/YouTube";
+import { YouTubeLightbox } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
@@ -188,13 +188,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Lightbox>
-            {({ Trigger }) => (
-              <Trigger videoId="4_ZrMe_6-CU">
-                <Preview videoId="4_ZrMe_6-CU" />
-              </Trigger>
-            )}
-          </Lightbox>
+          <YouTubeLightbox videoId="4_ZrMe_6-CU" />
         </div>
       </div>
     ),
@@ -296,13 +290,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     cta: (
       <div className="flex flex-wrap-reverse items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Lightbox>
-            {({ Trigger }) => (
-              <Trigger videoId="_PRVsl9Nxok">
-                <Preview videoId="_PRVsl9Nxok" />
-              </Trigger>
-            )}
-          </Lightbox>
+          <YouTubeLightbox videoId="_PRVsl9Nxok" />
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
@@ -494,13 +482,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     cta: (
       <div className="flex flex-wrap-reverse items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Lightbox>
-            {({ Trigger }) => (
-              <Trigger videoId="y8jQPL_jO2s">
-                <Preview videoId="y8jQPL_jO2s" />
-              </Trigger>
-            )}
-          </Lightbox>
+          <YouTubeLightbox videoId="y8jQPL_jO2s" />
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
@@ -642,21 +624,17 @@ const AboutAlveusPage: NextPage = () => {
         </div>
 
         <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4">
-          <Lightbox className="mx-auto max-w-2xl xl:mr-0">
-            {({ Trigger }) => (
-              <Trigger videoId="jXTqWIc--jo">
-                <Preview videoId="jXTqWIc--jo" />
+          <div className="mx-auto max-w-2xl xl:mr-0">
+            <YouTubeLightbox videoId="jXTqWIc--jo" />
 
-                <Heading level={2} className="text-center">
-                  Announcing Alveus
-                </Heading>
+            <Heading level={2} className="text-center">
+              Announcing Alveus
+            </Heading>
 
-                <p className="text-center italic">
-                  Watch the video to learn more about why Maya founded Alveus.
-                </p>
-              </Trigger>
-            )}
-          </Lightbox>
+            <p className="text-center italic">
+              Watch the video to learn more about why Maya founded Alveus.
+            </p>
+          </div>
         </div>
       </Section>
 
