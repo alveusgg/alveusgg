@@ -1,17 +1,16 @@
 import { type NextPage } from "next";
 import Image from "next/image";
+import { type ReactNode, useMemo, useState } from "react";
 
 import { classes } from "@/utils/classes";
 
 import Heading from "@/components/content/Heading";
 import { Preview as InstagramPreview } from "@/components/content/Instagram";
+import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import {
-  Lightbox as YouTubeLightbox,
-  Preview as YouTubePreview,
-} from "@/components/content/YouTube";
+import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -244,6 +243,25 @@ const Org = ({
   videos,
   idx,
 }: Organization & { idx: number }) => {
+  const [lightboxOpen, setLightboxOpen] = useState<string>();
+
+  const lightboxItems = useMemo(
+    () =>
+      videos.reduce<Record<string, ReactNode>>(
+        (acc, video) =>
+          "youtube" in video
+            ? {
+                ...acc,
+                [video.youtube]: (
+                  <YouTubeEmbed videoId={video.youtube} caption={video.title} />
+                ),
+              }
+            : acc,
+        {},
+      ),
+    [videos],
+  );
+
   return (
     <div className="relative">
       {idx === 1 && (
@@ -304,7 +322,9 @@ const Org = ({
             (videos.length === 3 || videos.length > 4) && "xl:grid-cols-3",
           )}
         >
-          <div className={classes(videos.length > 1 && "col-span-full")}>
+          <div
+            className={classes("mb-6", videos.length > 1 && "col-span-full")}
+          >
             <Heading id={key} level={2} link className="text-balance">
               {title}
             </Heading>
@@ -318,73 +338,77 @@ const Org = ({
             )}
           </div>
 
-          <YouTubeLightbox id={key} className="mt-6 contents">
-            {({ Trigger: YouTubeTrigger }) => (
-              <>
-                {videos.map((video) => {
-                  const isYouTube = "youtube" in video;
-                  return (
-                    <div
-                      key={
-                        isYouTube
-                          ? `yt-${video.youtube}`
-                          : `ig-${video.instagram}`
-                      }
-                      className="flex flex-col"
+          {videos.map((video) => {
+            const isYouTube = "youtube" in video;
+            return (
+              <div
+                key={
+                  isYouTube ? `yt-${video.youtube}` : `ig-${video.instagram}`
+                }
+                className="flex flex-col"
+              >
+                <div
+                  className={
+                    isYouTube
+                      ? "contents"
+                      : "flex aspect-video items-center gap-4"
+                  }
+                >
+                  <Heading
+                    level={3}
+                    className={classes(
+                      "order-last font-sans text-2xl",
+                      isYouTube
+                        ? "text-center"
+                        : "grow lg:order-first lg:text-right",
+                    )}
+                  >
+                    {video.title}
+                  </Heading>
+
+                  {isYouTube ? (
+                    <Link
+                      href={`https://www.youtube.com/watch?v=${video.youtube}`}
+                      external
+                      onClick={(e) => {
+                        e.preventDefault();
+                        setLightboxOpen(video.youtube);
+                      }}
+                      custom
+                      className="group/trigger"
                     >
-                      <div
-                        className={
-                          isYouTube
-                            ? "contents"
-                            : "flex aspect-video items-center gap-4"
-                        }
-                      >
-                        <Heading
-                          level={3}
-                          className={classes(
-                            "order-last font-sans text-2xl",
-                            isYouTube
-                              ? "text-center"
-                              : "grow lg:order-first lg:text-right",
-                          )}
-                        >
-                          {video.title}
-                        </Heading>
+                      <YouTubePreview
+                        videoId={video.youtube}
+                        alt={video.title}
+                      />
+                    </Link>
+                  ) : (
+                    <Link
+                      href={`https://www.instagram.com/reel/${video.instagram}`}
+                      external
+                      custom
+                      className="group/trigger h-full shrink-0"
+                    >
+                      <InstagramPreview
+                        reelId={video.instagram}
+                        className="h-0 min-h-full"
+                      />
+                    </Link>
+                  )}
+                </div>
 
-                        {isYouTube ? (
-                          <YouTubeTrigger
-                            videoId={video.youtube}
-                            caption={video.title}
-                          >
-                            <YouTubePreview
-                              videoId={video.youtube}
-                              alt={video.title}
-                            />
-                          </YouTubeTrigger>
-                        ) : (
-                          <Link
-                            href={`https://www.instagram.com/reel/${video.instagram}`}
-                            external
-                            custom
-                            className="group/trigger h-full shrink-0"
-                          >
-                            <InstagramPreview
-                              reelId={video.instagram}
-                              className="h-0 min-h-full"
-                            />
-                          </Link>
-                        )}
-                      </div>
+                {!isYouTube && (
+                  <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
+                )}
+              </div>
+            );
+          })}
 
-                      {!isYouTube && (
-                        <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
-                      )}
-                    </div>
-                  );
-                })}
-              </>
-            )}
-          </YouTubeLightbox>
+          <Lightbox
+            open={lightboxOpen}
+            onClose={() => setLightboxOpen(undefined)}
+            items={lightboxItems}
+          />
         </div>
       </Section>
     </div>
