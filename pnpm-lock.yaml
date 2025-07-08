@@ -222,9 +222,6 @@ importers:
       oauth:
         specifier: ^0.10.2
         version: 0.10.2
-      photoswipe:
-        specifier: ^5.4.4
-        version: 5.4.4
       pluralize:
         specifier: ^8.0.0
         version: 8.0.0
@@ -418,6 +415,9 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -5050,10 +5050,6 @@ packages:
     resolution: {integrity: sha512-nri2TO5JE3/mRryik9LlHFT53cgHfRK0Lt0BAZQXku/AW3E6XLt2GaY8siWi7dvW/m1z0ecn+J+bpDa9ZN3IsQ==}
     engines: {node: '>=18'}
 
-  photoswipe@5.4.4:
-    resolution: {integrity: sha512-WNFHoKrkZNnvFFhbHL93WDkW3ifwVOXSW3w1UuZZelSmgXpIGiZSNlZJq37rR8YejqME2rHs9EhH9ZvlvFH2NA==}
-    engines: {node: '>= 0.12.0'}
-
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
 
@@ -6235,8 +6231,9 @@ snapshots:
 
   '@alveusgg/data@0.65.0(tailwindcss@4.1.11)(zod@4.0.5)':
     dependencies:
-      tailwindcss: 4.1.11
       zod: 4.0.5
+    optionalDependencies:
+      tailwindcss: 4.1.11
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -12103,8 +12100,6 @@ snapshots:
       resolve-protobuf-schema: 2.1.0
 
   peek-readable@7.0.0: {}
-
-  photoswipe@5.4.4: {}
 
   picocolors@1.1.1: {}
 
