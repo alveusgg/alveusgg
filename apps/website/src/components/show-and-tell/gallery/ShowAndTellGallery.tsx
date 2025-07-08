@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { JSX } from "react";
 import { useMemo, useState } from "react";
 
@@ -7,7 +6,6 @@ import type { LinkAttachment } from "@alveusgg/database";
 import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
 import { classes } from "@/utils/classes";
-import { createImageUrl } from "@/utils/image";
 
 import Carousel from "@/components/content/Carousel";
 import Lightbox from "@/components/content/Lightbox";
@@ -16,7 +14,7 @@ import {
   VideoItemPreview,
 } from "@/components/show-and-tell/gallery/VideoItem";
 
-import IconInformationCircle from "@/icons/IconInformationCircle";
+import { ImageItemEmbed, ImageItemPreview } from "./ImageItem";
 
 export const ShowAndTellGallery = ({
   isPresentationView,
@@ -33,33 +31,7 @@ export const ShowAndTellGallery = ({
     const imageItems: [string, JSX.Element][] = imageAttachments.map(
       (image) => [
         image.id,
-        <div key={image.id} className="flex h-full flex-col">
-          <div
-            className="mx-auto flex max-h-full max-w-full grow"
-            style={{
-              aspectRatio: `${image.fileStorageObject?.imageMetadata?.width || 1920} / ${image.fileStorageObject?.imageMetadata?.height || 1080}`,
-            }}
-          >
-            <Image
-              src={image.url}
-              width={image.fileStorageObject?.imageMetadata?.width || 1920}
-              height={image.fileStorageObject?.imageMetadata?.height || 1080}
-              alt={image.alternativeText}
-              quality={90}
-              draggable={false}
-              className="my-auto h-auto max-h-full w-full rounded-xl bg-alveus-green-800 shadow-xl"
-              style={{
-                aspectRatio: `${image.fileStorageObject?.imageMetadata?.width || 1920} / ${image.fileStorageObject?.imageMetadata?.height || 1080}`,
-              }}
-            />
-          </div>
-
-          {image.caption && (
-            <p className="my-4 text-center text-balance text-alveus-tan md:mb-0 lg:mt-8">
-              {image.caption}
-            </p>
-          )}
-        </div>,
+        <ImageItemEmbed key={image.id} imageAttachment={image} />,
       ],
     );
 
@@ -89,41 +61,12 @@ export const ShowAndTellGallery = ({
     const imageItems: [string, JSX.Element][] = imageAttachments.map(
       (image) => [
         image.id,
-        <a
+        <ImageItemPreview
           key={image.id}
-          href={createImageUrl({
-            src: image.url,
-            width: 1920,
-            quality: 90,
-          })}
-          onClick={(e) => {
-            e.preventDefault();
-            setLightboxOpen(image.id);
-          }}
-          draggable={false}
-          className="flex items-center justify-center select-none"
-        >
-          <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl transition hover:scale-102 hover:shadow-2xl">
-            <Image
-              src={image.url}
-              width={600}
-              height={600}
-              alt={image.alternativeText}
-              draggable={false}
-              className="pointer-events-none max-h-[40vh] min-h-[100px] w-auto object-cover select-none"
-            />
-            {image.caption && (
-              <>
-                <div className="absolute right-0 bottom-0 m-2 flex flex-row items-center gap-1 opacity-100 drop-shadow-lg transition-opacity duration-200 group-hover/carousel-item:opacity-0">
-                  caption <IconInformationCircle className="size-5" />
-                </div>
-                <figcaption className="absolute inset-0 top-auto flex items-center justify-center bg-black/80 p-2 leading-tight opacity-0 transition-opacity duration-200 group-hover/carousel-item:opacity-100">
-                  {image.caption}
-                </figcaption>
-              </>
-            )}
-          </figure>
-        </a>,
+          imageAttachment={image}
+          lightbox={setLightboxOpen}
+          preview
+        />,
       ],
     );
 
@@ -164,30 +107,11 @@ export const ShowAndTellGallery = ({
           ))}
 
           {imageAttachments.map((image) => (
-            <a
+            <ImageItemPreview
               key={image.id}
-              href={createImageUrl({
-                src: image.url,
-                width: 1920,
-                quality: 90,
-              })}
-              onClick={(e) => {
-                e.preventDefault();
-                setLightboxOpen(image.id);
-              }}
-              className="group relative flex items-center justify-center select-none"
-            >
-              <Image
-                loading="lazy"
-                width={100}
-                height={100}
-                draggable={false}
-                className="pointer-events-none aspect-square size-14 rounded-sm object-cover shadow-lg"
-                src={image.url}
-                alt={image.alternativeText}
-                title={image.title}
-              />
-            </a>
+              imageAttachment={image}
+              lightbox={setLightboxOpen}
+            />
           ))}
 
           <Lightbox
