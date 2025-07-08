@@ -380,6 +380,7 @@ const Org = ({
                       <YouTubePreview
                         videoId={video.youtube}
                         alt={video.title}
+                        className="aspect-video h-auto w-full"
                       />
                     </Link>
                   ) : (

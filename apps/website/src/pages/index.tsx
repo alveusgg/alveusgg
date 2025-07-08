@@ -453,7 +453,11 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                   className="group/trigger order-1 w-full max-w-2xl"
                   custom
                 >
-                  <YouTubePreview videoId={video.id} alt={video.title} />
+                  <YouTubePreview
+                    videoId={video.id}
+                    alt={video.title}
+                    className="aspect-video h-auto w-full"
+                  />
                 </Link>
 
                 <div className="order-2 my-1 flex w-full flex-wrap items-center justify-between px-1">
