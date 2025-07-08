@@ -237,6 +237,160 @@ const orgs: Organization[] = [
   },
 ];
 
+const Org = ({
+  key,
+  title,
+  description,
+  videos,
+  idx,
+}: Organization & { idx: number }) => {
+  return (
+    <div className="relative">
+      {idx === 1 && (
+        <Image
+          src={leafRightImage2}
+          alt=""
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
+        />
+      )}
+
+      {idx === 3 && (
+        <Image
+          src={leafLeftImage3}
+          alt=""
+          className="pointer-events-none absolute right-0 -bottom-20 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+        />
+      )}
+
+      {idx === 5 && (
+        <Image
+          src={leafLeftImage2}
+          alt=""
+          className="pointer-events-none absolute -bottom-20 left-0 z-30 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
+        />
+      )}
+
+      {idx === 7 && (
+        <Image
+          src={leafRightImage3}
+          alt=""
+          className="pointer-events-none absolute right-0 -bottom-24 z-30 hidden h-auto w-1/2 max-w-32 drop-shadow-md select-none lg:block 2xl:max-w-40"
+        />
+      )}
+
+      {idx === 9 && (
+        <Image
+          src={leafLeftImage4}
+          alt=""
+          className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
+        />
+      )}
+
+      {idx === 11 && (
+        <Image
+          src={leafLeftImage1}
+          alt=""
+          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-32 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-40"
+        />
+      )}
+
+      <Section
+        dark={idx % 2 === 1}
+        className={classes(idx === orgs.length - 1 && "grow")}
+      >
+        <div
+          className={classes(
+            "grid grid-cols-1 gap-4 lg:grid-cols-2",
+            (videos.length === 3 || videos.length > 4) && "xl:grid-cols-3",
+          )}
+        >
+          <div className={classes(videos.length > 1 && "col-span-full")}>
+            <Heading id={key} level={2} link className="text-balance">
+              {title}
+            </Heading>
+
+            {videos.length === 1 && (
+              <div className="my-4 h-2 max-w-3xs rounded-xs bg-alveus-green-300" />
+            )}
+
+            {description && (
+              <p className="text-lg text-balance">{description}</p>
+            )}
+          </div>
+
+          <YouTubeLightbox id={key} className="mt-6 contents">
+            {({ Trigger: YouTubeTrigger }) => (
+              <>
+                {videos.map((video) => {
+                  const isYouTube = "youtube" in video;
+                  return (
+                    <div
+                      key={
+                        isYouTube
+                          ? `yt-${video.youtube}`
+                          : `ig-${video.instagram}`
+                      }
+                      className="flex flex-col"
+                    >
+                      <div
+                        className={
+                          isYouTube
+                            ? "contents"
+                            : "flex aspect-video items-center gap-4"
+                        }
+                      >
+                        <Heading
+                          level={3}
+                          className={classes(
+                            "order-last font-sans text-2xl",
+                            isYouTube
+                              ? "text-center"
+                              : "grow lg:order-first lg:text-right",
+                          )}
+                        >
+                          {video.title}
+                        </Heading>
+
+                        {isYouTube ? (
+                          <YouTubeTrigger
+                            videoId={video.youtube}
+                            caption={video.title}
+                          >
+                            <YouTubePreview
+                              videoId={video.youtube}
+                              alt={video.title}
+                            />
+                          </YouTubeTrigger>
+                        ) : (
+                          <Link
+                            href={`https://www.instagram.com/reel/${video.instagram}`}
+                            external
+                            custom
+                            className="group/trigger h-full shrink-0"
+                          >
+                            <InstagramPreview
+                              reelId={video.instagram}
+                              className="h-0 min-h-full"
+                            />
+                          </Link>
+                        )}
+                      </div>
+
+                      {!isYouTube && (
+                        <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
+                      )}
+                    </div>
+                  );
+                })}
+              </>
+            )}
+          </YouTubeLightbox>
+        </div>
+      </Section>
+    </div>
+  );
+};
+
 const AboutOrgsPage: NextPage = () => {
   return (
     <>
@@ -274,152 +428,7 @@ const AboutOrgsPage: NextPage = () => {
       </div>
 
       {orgs.map((org, idx) => (
-        <div key={org.key} className="relative">
-          {idx === 1 && (
-            <Image
-              src={leafRightImage2}
-              alt=""
-              className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
-            />
-          )}
-
-          {idx === 3 && (
-            <Image
-              src={leafLeftImage3}
-              alt=""
-              className="pointer-events-none absolute right-0 -bottom-20 z-30 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
-            />
-          )}
-
-          {idx === 5 && (
-            <Image
-              src={leafLeftImage2}
-              alt=""
-              className="pointer-events-none absolute -bottom-20 left-0 z-30 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
-            />
-          )}
-
-          {idx === 7 && (
-            <Image
-              src={leafRightImage3}
-              alt=""
-              className="pointer-events-none absolute right-0 -bottom-24 z-30 hidden h-auto w-1/2 max-w-32 drop-shadow-md select-none lg:block 2xl:max-w-40"
-            />
-          )}
-
-          {idx === 9 && (
-            <Image
-              src={leafLeftImage4}
-              alt=""
-              className="pointer-events-none absolute -bottom-20 left-0 z-10 hidden h-auto w-1/2 max-w-24 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
-            />
-          )}
-
-          {idx === 11 && (
-            <Image
-              src={leafLeftImage1}
-              alt=""
-              className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-32 -scale-x-100 drop-shadow-md select-none lg:block 2xl:-bottom-48 2xl:max-w-40"
-            />
-          )}
-
-          <Section
-            dark={idx % 2 === 1}
-            className={classes(idx === orgs.length - 1 && "grow")}
-          >
-            <div
-              className={classes(
-                "grid grid-cols-1 gap-4 lg:grid-cols-2",
-                (org.videos.length === 3 || org.videos.length > 4) &&
-                  "xl:grid-cols-3",
-              )}
-            >
-              <div
-                className={classes(org.videos.length > 1 && "col-span-full")}
-              >
-                <Heading id={org.key} level={2} link className="text-balance">
-                  {org.title}
-                </Heading>
-
-                {org.videos.length === 1 && (
-                  <div className="my-4 h-2 max-w-3xs rounded-xs bg-alveus-green-300" />
-                )}
-
-                {org.description && (
-                  <p className="text-lg text-balance">{org.description}</p>
-                )}
-              </div>
-
-              <YouTubeLightbox id={org.key} className="mt-6 contents">
-                {({ Trigger: YouTubeTrigger }) => (
-                  <>
-                    {org.videos.map((video) => {
-                      const isYouTube = "youtube" in video;
-                      return (
-                        <div
-                          key={
-                            isYouTube
-                              ? `yt-${video.youtube}`
-                              : `ig-${video.instagram}`
-                          }
-                          className="flex flex-col"
-                        >
-                          <div
-                            className={
-                              isYouTube
-                                ? "contents"
-                                : "flex aspect-video items-center gap-4"
-                            }
-                          >
-                            <Heading
-                              level={3}
-                              className={classes(
-                                "order-last font-sans text-2xl",
-                                isYouTube
-                                  ? "text-center"
-                                  : "grow lg:order-first lg:text-right",
-                              )}
-                            >
-                              {video.title}
-                            </Heading>
-
-                            {isYouTube ? (
-                              <YouTubeTrigger
-                                videoId={video.youtube}
-                                caption={video.title}
-                              >
-                                <YouTubePreview
-                                  videoId={video.youtube}
-                                  alt={video.title}
-                                />
-                              </YouTubeTrigger>
-                            ) : (
-                              <Link
-                                href={`https://www.instagram.com/reel/${video.instagram}`}
-                                external
-                                custom
-                                className="group/trigger h-full shrink-0"
-                              >
-                                <InstagramPreview
-                                  reelId={video.instagram}
-                                  className="h-0 min-h-full"
-                                />
-                              </Link>
-                            )}
-                          </div>
-
-                          {!isYouTube && (
-                            <div className="mt-4 ml-auto hidden h-2 w-full max-w-3xs rounded-xs bg-alveus-green-300 lg:block" />
-                          )}
-                        </div>
-                      );
-                    })}
-                  </>
-                )}
-              </YouTubeLightbox>
-            </div>
-          </Section>
-        </div>
+        <Org {...org} key={org.key} idx={idx} />
       ))}
 
       {/* Grow the last section to cover the page */}
