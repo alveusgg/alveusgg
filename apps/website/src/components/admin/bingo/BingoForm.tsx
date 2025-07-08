@@ -20,7 +20,7 @@ import {
 import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
-} from "@/utils/local-datetime";
+} from "@/utils/datetime-local";
 import { SLUG_PATTERN, convertToSlug } from "@/utils/slugs";
 import { trpc } from "@/utils/trpc";
 

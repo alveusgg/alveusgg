@@ -1,12 +1,17 @@
 import { DateTime } from "luxon";
 
-import type { PartialDateString } from "@alveusgg/data/build/types";
+import { DATETIME_ALVEUS_ZONE } from "./timezone";
 
 export type DateTimeFormat = {
   style: "short" | "long";
   time: "minutes" | "seconds" | undefined;
   timezone: boolean;
 };
+
+export const getToday = (timezone?: string) =>
+  DateTime.now()
+    .setZone(timezone || DATETIME_ALVEUS_ZONE)
+    .startOf("day");
 
 const getFormat = ({
   style,
@@ -146,81 +151,6 @@ export const formatDateTimeLocal = (
       zone: null,
     },
   );
-
-export const getShortTimezoneName = ({
-  locale,
-  timeZone,
-}: Partial<{ locale: string; timeZone: string }>) =>
-  Intl.DateTimeFormat(locale, {
-    timeZoneName: "short",
-    timeZone,
-  })
-    .formatToParts(new Date())
-    .find((part) => part.type === "timeZoneName")?.value;
-
-export const DATETIME_ALVEUS_ZONE = "America/Chicago";
-export const DATETIME_ALVEUS_ZONE_SHORT = getShortTimezoneName({
-  locale: "en-US",
-  timeZone: DATETIME_ALVEUS_ZONE,
-});
-
-export const parsePartialDateString = (
-  date: PartialDateString,
-): Date | null => {
-  const arr = date.split("-");
-  const d = parseInt(arr[2] || "");
-  const m = parseInt(arr[1] || "");
-  const y = parseInt(arr[0] || "");
-
-  if (!isNaN(d) && !isNaN(m) && !isNaN(y)) return new Date(y, m - 1, d);
-  if (!isNaN(m) && !isNaN(y)) return new Date(y, m - 1);
-  if (!isNaN(y)) return new Date(y, 0);
-
-  return null;
-};
-
-export const sortPartialDateString = (
-  a: PartialDateString | null,
-  b: PartialDateString | null,
-): number => {
-  const parsedA = (
-    typeof a === "string" ? parsePartialDateString(a) : null
-  )?.getTime();
-  const parsedB = (
-    typeof b === "string" ? parsePartialDateString(b) : null
-  )?.getTime();
-
-  // If they match (same date or both unknown), no change
-  if (parsedA === parsedB) return 0;
-
-  // If the first date is unknown, the second date moves up
-  if (parsedA === undefined) return 1;
-
-  // If the second date is unknown, the first date moves up
-  if (parsedB === undefined) return -1;
-
-  // Otherwise, sort by date
-  return parsedA > parsedB ? -1 : 1;
-};
-
-export const formatPartialDateString = (
-  date: PartialDateString | null,
-): string => {
-  if (!date) return "Unknown";
-
-  const [year, month, day] = date.split("-");
-  const parsed = new Date(
-    Number(year),
-    Number(month || 1) - 1,
-    Number(day || 1),
-  );
-
-  return parsed.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: month ? "long" : undefined,
-    day: day ? "numeric" : undefined,
-  });
-};
 
 export const formatSeconds = (
   seconds: number,

@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 
 import { queryArray } from "@/utils/array";
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 import useChecks from "@/hooks/checks";
 

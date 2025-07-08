@@ -5,7 +5,7 @@ import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useLocale } from "react-aria";
 
 import { classes } from "@/utils/classes";
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";

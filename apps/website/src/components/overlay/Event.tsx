@@ -8,8 +8,9 @@ import { getFormattedTitle } from "@/data/calendar-events";
 import { channels } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
-import { DATETIME_ALVEUS_ZONE, formatDateTimeRelative } from "@/utils/datetime";
+import { formatDateTimeRelative } from "@/utils/datetime";
 import { getShortBaseUrl } from "@/utils/short-url";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { trpc } from "@/utils/trpc";
 
 import { QRCode } from "@/components/QrCode";
