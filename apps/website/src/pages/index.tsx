@@ -16,7 +16,7 @@ import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
-import Button from "@/components/content/Button";
+import Button, { buttonClassNames } from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
@@ -27,7 +27,11 @@ import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
-import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
+import {
+  YouTubeEmbed,
+  YouTubeLightbox,
+  YouTubePreview,
+} from "@/components/content/YouTube";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
@@ -270,13 +274,13 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 participate in education programs. Combining platforms this way
                 maximizes the impact for spreading conservation messages.
               </p>
-              {/* <Lightbox>
-                {({ Trigger }) => (
-                  <Button as={Trigger} dark videoId="jXTqWIc--jo">
-                    Watch the Video
-                  </Button>
-                )}
-              </Lightbox> */}
+
+              <YouTubeLightbox
+                videoId="jXTqWIc--jo"
+                className={buttonClassNames({ dark: true })}
+              >
+                Watch the Video
+              </YouTubeLightbox>
             </div>
 
             <div className="basis-full pt-8 lg:basis-1/2 lg:pt-0 lg:pl-8">
