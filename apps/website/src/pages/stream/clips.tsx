@@ -146,18 +146,14 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     setRandomClips(shuffled);
   }, [clips]);
 
+  // Iterate through clips, showing details as an overlay initially for each
+  const [details, setDetails] = useState(true);
   const [idx, setIdx] = useState<number>(0);
   const clip = randomClips[idx];
-  const increment = useCallback(
-    () => setIdx((idx) => (idx + 1) % clips.length),
-    [clips.length],
-  );
-
-  // When we pick a clip, show the details
-  const [details, setDetails] = useState(false);
-  useEffect(() => {
+  const increment = useCallback(() => {
+    setIdx((idx) => (idx + 1) % clips.length);
     setDetails(true);
-  }, [clip]);
+  }, [clips.length]);
 
   // As a fallback, set a timer for 150% of the duration of the clip
   const fallbackTimer = useRef<NodeJS.Timeout>(null);
@@ -246,6 +242,21 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               onError={onError}
               className="size-full rounded-lg"
             />
+
+            <Transition show={!details}>
+              {/* data-[leave]:duration-0 to ensure the next clip's details aren't show */}
+              <div className="absolute -bottom-4 left-0 flex translate-y-full items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-0">
+                <p className="text-lg">{clip.title}</p>
+                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                <p>
+                  {new Date(clip.created).toLocaleDateString(undefined, {
+                    dateStyle: "long",
+                  })}
+                </p>
+                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                <p>Clipped by {clip.creator}</p>
+              </div>
+            </Transition>
           </div>
         </div>
       )}
