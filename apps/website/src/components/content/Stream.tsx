@@ -69,7 +69,7 @@ export const getStreamUrlIframe = (
 
 export const StreamPreview = ({
   src,
-  alt = "",
+  alt = "Video thumbnail",
   className,
   icon = true,
 }: PreviewProps) => (
@@ -119,7 +119,7 @@ export const StreamEmbed = ({
   time,
   controls = false,
   className,
-  title,
+  title = "Video embed",
   caption,
   poster,
   threshold = 0.1,
