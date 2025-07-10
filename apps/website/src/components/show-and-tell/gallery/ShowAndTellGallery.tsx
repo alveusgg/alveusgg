@@ -78,22 +78,31 @@ export const ShowAndTellGallery = ({
   return (
     <div className="flex flex-1 flex-col">
       {carouselCount > 0 && (
-        <Carousel
-          className="flex-1"
-          // Negative margin to allow padding for shadows
-          wrapperClassName={classes(
-            "flex-1",
-            isPresentationView ? "-mb-4 pb-6" : "-mb-12 pb-16",
-          )}
-          auto={null}
-          itemClassName={classes(
-            "flex basis-full flex-col justify-center p-4",
-            carouselCount >= 2 && "md:basis-1/2",
-            carouselCount >= 3 && "lg:basis-1/3",
-            carouselCount >= 4 && "xl:basis-1/4",
-          )}
-          items={carouselItems}
-        />
+        <>
+          <Carousel
+            className="flex-1"
+            // Negative margin to allow padding for shadows
+            wrapperClassName={classes(
+              "flex-1",
+              isPresentationView ? "-mb-4 pb-6" : "-mb-12 pb-16",
+            )}
+            auto={null}
+            itemClassName={classes(
+              "flex basis-full flex-col justify-center p-4",
+              carouselCount >= 2 && "md:basis-1/2",
+              carouselCount >= 3 && "lg:basis-1/3",
+              carouselCount >= 4 && "xl:basis-1/4",
+            )}
+            items={carouselItems}
+          />
+
+          <Lightbox
+            open={lightboxOpen}
+            onClose={() => setLightboxOpen(undefined)}
+            items={lightboxItems}
+            className={classes(isPresentationView && "w-[80%]")}
+          />
+        </>
       )}
 
       {carouselCount > 1 && (
@@ -113,13 +122,6 @@ export const ShowAndTellGallery = ({
               lightbox={setLightboxOpen}
             />
           ))}
-
-          <Lightbox
-            open={lightboxOpen}
-            onClose={() => setLightboxOpen(undefined)}
-            items={lightboxItems}
-            className={classes(isPresentationView && "w-[80%]")}
-          />
         </div>
       )}
     </div>
