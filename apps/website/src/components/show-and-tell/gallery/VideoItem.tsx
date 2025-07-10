@@ -5,6 +5,7 @@ import type { LinkAttachment } from "@alveusgg/database";
 import { classes } from "@/utils/classes";
 import { parseVideoUrl, videoPlatformConfigs } from "@/utils/video-urls";
 
+import Link from "@/components/content/Link";
 import {
   StreamableEmbed,
   StreamablePreview,
@@ -17,7 +18,7 @@ import IconYouTube from "@/icons/IconYouTube";
 
 type VideoItemPreviewProps = {
   videoAttachment: LinkAttachment;
-  lightbox: (id: string) => void;
+  lightbox?: (id: string) => void;
   preview?: boolean;
 };
 
@@ -81,19 +82,21 @@ export const VideoItemPreview = ({
   }
 
   return (
-    <div className="flex items-center justify-center">
-      <a
-        href={parsed?.normalizedUrl ?? videoAttachment.url}
-        onClick={(e) => {
-          e.preventDefault();
-          lightbox(videoAttachment.id);
-        }}
-        draggable={false}
-        className="group/trigger pointer-events-auto flex cursor-pointer items-center justify-center select-none"
-      >
-        {content}
-      </a>
-    </div>
+    <Link
+      href={parsed?.normalizedUrl ?? videoAttachment.url}
+      external
+      onClick={(e) => {
+        if (!lightbox) return;
+
+        e.preventDefault();
+        lightbox(videoAttachment.id);
+      }}
+      draggable={false}
+      className="group/trigger pointer-events-auto flex cursor-pointer items-center justify-center select-none"
+      custom
+    >
+      {content}
+    </Link>
   );
 };
 
@@ -121,5 +124,13 @@ export const VideoItemEmbed = ({ videoAttachment }: VideoItemEmbedProps) => {
     return <Embed videoId={parsed.id} />;
   }
 
-  return <></>;
+  return (
+    <div className="flex h-full items-center justify-center">
+      <VideoItemPreview
+        key={videoAttachment.id}
+        videoAttachment={videoAttachment}
+        preview
+      />
+    </div>
+  );
 };

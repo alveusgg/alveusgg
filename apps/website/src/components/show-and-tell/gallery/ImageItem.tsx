@@ -5,6 +5,8 @@ import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-
 import { classes } from "@/utils/classes";
 import { createImageUrl } from "@/utils/image";
 
+import Link from "@/components/content/Link";
+
 import IconInformationCircle from "@/icons/IconInformationCircle";
 
 type ImageItemPreviewProps = {
@@ -18,18 +20,20 @@ export const ImageItemPreview = ({
   lightbox: setLightboxOpen,
   preview = false,
 }: ImageItemPreviewProps) => (
-  <a
+  <Link
     href={createImageUrl({
       src: imageAttachment.url,
       width: 1920,
       quality: 90,
     })}
+    external
     onClick={(e) => {
       e.preventDefault();
       setLightboxOpen(imageAttachment.id);
     }}
     draggable={false}
     className="flex items-center justify-center select-none"
+    custom
   >
     <figure className="group/carousel-item relative flex items-center justify-center overflow-hidden rounded-lg bg-black text-white shadow-xl transition hover:scale-102 hover:shadow-2xl">
       <Image
@@ -57,7 +61,7 @@ export const ImageItemPreview = ({
         </>
       )}
     </figure>
-  </a>
+  </Link>
 );
 
 type ImageItemEmbedProps = {
