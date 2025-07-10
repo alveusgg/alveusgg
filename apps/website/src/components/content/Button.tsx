@@ -8,7 +8,7 @@ const CustomLink = ({
   <Link {...props} custom />
 );
 
-export const buttonClassNames = ({
+const buttonClassNames = ({
   className,
   dark = false,
   filled = false,

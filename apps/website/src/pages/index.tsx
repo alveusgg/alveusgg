@@ -16,7 +16,7 @@ import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
-import Button, { buttonClassNames } from "@/components/content/Button";
+import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
@@ -27,11 +27,7 @@ import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
-import {
-  YouTubeEmbed,
-  YouTubeLightbox,
-  YouTubePreview,
-} from "@/components/content/YouTube";
+import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
@@ -261,26 +257,27 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <p className="my-2 font-serif text-lg italic">
                 Founded by Maya Higa
               </p>
+
               <p className="my-4 text-lg">
                 Alveus is a nonprofit organization founded by Maya Higa that
                 functions as a wildlife sanctuary and as a virtual education
                 center facility to provide permanent homes to non-releasable
-                animal ambassadors. These animals function as ambassadors, so
-                viewers can watch their journeys, get to know the animals, and
-                gain an appreciation for their species.
-              </p>
-              <p className="my-4 text-lg">
-                Alveus hosts content collaborations where creators can visit and
-                participate in education programs. Combining platforms this way
-                maximizes the impact for spreading conservation messages.
+                animal ambassadors.
               </p>
 
-              <YouTubeLightbox
-                videoId="jXTqWIc--jo"
-                className={buttonClassNames({ dark: true })}
-              >
-                Watch the Video
-              </YouTubeLightbox>
+              <p className="my-4 text-lg">
+                Alveus runs a 24/7 live stream on Twitch, where viewers can
+                watch the animal ambassadors, get to know them and gain an
+                appreciation for their species. The sanctuary also hosts content
+                collaborations where creators can visit and participate in
+                education programs, sharing the ambassadors with their own
+                audiences and combining platforms to maximize the impact for
+                spreading conservation messages.
+              </p>
+
+              <Button href="/about/alveus" dark>
+                Learn more about Alveus Sanctuary
+              </Button>
             </div>
 
             <div className="basis-full pt-8 lg:basis-1/2 lg:pt-0 lg:pl-8">
