@@ -10,6 +10,7 @@ import wolfdenmulti from "@/assets/presets/wolfdenmulti.png";
 import wolfmulti from "@/assets/presets/wolfmulti.png";
 import wolfwolfin from "@/assets/presets/wolfwolfin.png";
 
+import bb from "../presets/bb";
 import chicken from "../presets/chicken";
 import chickenindoor from "../presets/chickenindoor";
 import chin from "../presets/chin";
@@ -19,11 +20,13 @@ import crowin from "../presets/crowin";
 import crowout from "../presets/crowout";
 import fox from "../presets/fox";
 import foxcorner from "../presets/foxcorner";
+import garden from "../presets/garden";
 import georgie from "../presets/georgie";
 import georgiewater from "../presets/georgiewater";
 import hank from "../presets/hank";
 import marmin from "../presets/marmin";
 import marmout from "../presets/marmout";
+import marty from "../presets/marty";
 import noodle from "../presets/noodle";
 import parrot from "../presets/parrots";
 import pasture from "../presets/pasture";
@@ -33,7 +36,10 @@ import pushpop from "../presets/pushpop";
 import pushpopcrunch from "../presets/pushpopcrunch";
 import pushpopindoor from "../presets/pushpopindoor";
 import roaches from "../presets/roaches";
+import tarantula from "../presets/tarantula";
+import tarantulaptz from "../presets/tarantulaptz";
 import toast from "../presets/toast";
+import toastcrunch from "../presets/toastcrunch";
 import wolf from "../presets/wolf";
 import wolfcorner from "../presets/wolfcorner";
 import wolfden from "../presets/wolfden";
@@ -43,6 +49,7 @@ import wolfswitch from "../presets/wolfswitch";
 import type { CameraMulti, CameraPTZ } from "./cameras.types";
 
 const cameras = {
+  bb,
   chicken,
   chickenindoor,
   chickenmulti: {
@@ -97,6 +104,7 @@ const cameras = {
       description: "Picture-in-picture of both fox cameras",
     },
   },
+  garden,
   georgie,
   georgiewater,
   hank,
@@ -112,6 +120,7 @@ const cameras = {
         "Marmoset outdoor camera with marmoset indoor picture-in-picture",
     },
   },
+  marty,
   noodle,
   parrot,
   pasture,
@@ -121,7 +130,10 @@ const cameras = {
   pushpopcrunch,
   pushpopindoor,
   roaches,
+  tarantula,
+  tarantulaptz,
   toast,
+  toastcrunch,
   wolf,
   wolfcorner,
   wolfden,

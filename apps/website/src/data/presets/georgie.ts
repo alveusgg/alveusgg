@@ -2,6 +2,7 @@ import cave from "@/assets/presets/georgie/cave.png";
 import down from "@/assets/presets/georgie/down.png";
 import downl from "@/assets/presets/georgie/downl.png";
 import downr from "@/assets/presets/georgie/downr.png";
+import far from "@/assets/presets/georgie/far.png";
 import home from "@/assets/presets/georgie/home.png";
 import land from "@/assets/presets/georgie/land.png";
 import landz from "@/assets/presets/georgie/landz.png";
@@ -29,6 +30,10 @@ const georgiePresets: Record<string, Preset> = {
   downr: {
     description: "Down right",
     image: downr,
+  },
+  far: {
+    description: "Far",
+    image: far,
   },
   land: {
     description: "Land",
