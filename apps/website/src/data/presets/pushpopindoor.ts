@@ -3,6 +3,8 @@ import down from "@/assets/presets/pushpopindoor/down.png";
 import downl from "@/assets/presets/pushpopindoor/downl.png";
 import downr from "@/assets/presets/pushpopindoor/downr.png";
 import farcorner from "@/assets/presets/pushpopindoor/farcorner.png";
+import farcornerz from "@/assets/presets/pushpopindoor/farcornerz.png";
+import heatlamp from "@/assets/presets/pushpopindoor/heatlamp.png";
 import home from "@/assets/presets/pushpopindoor/home.png";
 import left from "@/assets/presets/pushpopindoor/left.png";
 import leftcorner from "@/assets/presets/pushpopindoor/leftcorner.png";
@@ -35,6 +37,14 @@ const pushpopindoorPresets: Record<string, Preset> = {
   farcorner: {
     description: "Far Corner",
     image: farcorner,
+  },
+  farcornerz: {
+    description: "Far Corner Zoomed",
+    image: farcornerz,
+  },
+  heatlamp: {
+    description: "Heat Lamp",
+    image: heatlamp,
   },
   left: {
     description: "Left",

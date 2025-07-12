@@ -15,8 +15,10 @@ import feedstall from "@/assets/presets/pasture/feedstall.png";
 import fencel from "@/assets/presets/pasture/fencel.png";
 import gate from "@/assets/presets/pasture/gate.png";
 import ground from "@/assets/presets/pasture/ground.png";
+import groundr from "@/assets/presets/pasture/groundr.png";
 import grove2 from "@/assets/presets/pasture/grove2.png";
 import grove2l from "@/assets/presets/pasture/grove2l.png";
+import grove2r from "@/assets/presets/pasture/grove2r.png";
 import grove from "@/assets/presets/pasture/grove.png";
 import home from "@/assets/presets/pasture/home.png";
 import insidebarn from "@/assets/presets/pasture/insidebarn.png";
@@ -30,6 +32,7 @@ import pool from "@/assets/presets/pasture/pool.png";
 import pooll from "@/assets/presets/pasture/pooll.png";
 import poolr from "@/assets/presets/pasture/poolr.png";
 import purplebase from "@/assets/presets/pasture/purplebase.png";
+import purplebasel from "@/assets/presets/pasture/purplebasel.png";
 import purplenest from "@/assets/presets/pasture/purplenest.png";
 import right from "@/assets/presets/pasture/right.png";
 import roundpen from "@/assets/presets/pasture/roundpen.png";
@@ -110,6 +113,14 @@ const pasturePresets: Record<string, Preset> = {
     description: "Gate",
     image: gate,
   },
+  ground: {
+    description: "Ground near cam",
+    image: ground,
+  },
+  groundr: {
+    description: "Ground Right",
+    image: groundr,
+  },
   grove: {
     description: "grove of trees near barn 2",
     image: grove,
@@ -122,9 +133,9 @@ const pasturePresets: Record<string, Preset> = {
     description: "Grove 2 Left",
     image: grove2l,
   },
-  ground: {
-    description: "Ground near cam",
-    image: ground,
+  grove2r: {
+    description: "Grove 2 Right",
+    image: grove2r,
   },
   insidebarn: {
     description: "Inside Barn",
@@ -169,6 +180,10 @@ const pasturePresets: Record<string, Preset> = {
   purplebase: {
     description: "Purple Martin Base",
     image: purplebase,
+  },
+  purplebasel: {
+    description: "Purple Martin Base Left",
+    image: purplebasel,
   },
   purplenest: {
     description: "Purple Martin Nest",

@@ -1,3 +1,4 @@
+import closerock from "@/assets/presets/toast/closerock.png";
 import down from "@/assets/presets/toast/down.png";
 import downright from "@/assets/presets/toast/downright.png";
 import far from "@/assets/presets/toast/far.png";
@@ -6,6 +7,7 @@ import home from "@/assets/presets/toast/home.png";
 import log from "@/assets/presets/toast/log.png";
 import logz from "@/assets/presets/toast/logz.png";
 import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
+import tunnel from "@/assets/presets/toast/tunnel.png";
 import water from "@/assets/presets/toast/water.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -14,6 +16,10 @@ const toastPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+  },
+  closerock: {
+    description: "Close Rock",
+    image: closerock,
   },
   down: {
     description: "Down",
@@ -42,6 +48,10 @@ const toastPresets: Record<string, Preset> = {
   rocksandwich: {
     description: "Rock Sandwich",
     image: rocksandwich,
+  },
+  tunnel: {
+    description: "Tunnel",
+    image: tunnel,
   },
   water: {
     description: "Water",

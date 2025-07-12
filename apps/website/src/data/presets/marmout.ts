@@ -1,10 +1,10 @@
 import bottomshelfl from "@/assets/presets/marmout/bottomshelfl.png";
 import bottomshelfr from "@/assets/presets/marmout/bottomshelfr.png";
 import domel from "@/assets/presets/marmout/domel.png";
+import domelt from "@/assets/presets/marmout/domelt.png";
 import domer from "@/assets/presets/marmout/domer.png";
 import domes from "@/assets/presets/marmout/domes.png";
 import door from "@/assets/presets/marmout/door.png";
-// import door from "@/assets/presets/marmout/door.png";
 import flapl from "@/assets/presets/marmout/flapl.png";
 import flapr from "@/assets/presets/marmout/flapr.png";
 import flaps from "@/assets/presets/marmout/flaps.png";
@@ -50,6 +50,10 @@ const marmoutPresets: Record<string, Preset> = {
   domel: {
     description: "Dome Left",
     image: domel,
+  },
+  domelt: {
+    description: "Dome Left Top",
+    image: domelt,
   },
   domer: {
     description: "Dome Right",

@@ -32,6 +32,7 @@ import leftcorner from "@/assets/presets/wolfcorner/leftcorner.png";
 import leftcornerw from "@/assets/presets/wolfcorner/leftcornerw.png";
 import leftfence from "@/assets/presets/wolfcorner/leftfence.png";
 import leftw from "@/assets/presets/wolfcorner/leftw.png";
+import log from "@/assets/presets/wolfcorner/log.png";
 import nearcorner from "@/assets/presets/wolfcorner/nearcorner.png";
 import rampl from "@/assets/presets/wolfcorner/rampl.png";
 import rampr from "@/assets/presets/wolfcorner/rampr.png";
@@ -182,6 +183,10 @@ const wolfcornerPresets: Record<string, Preset> = {
   leftw: {
     description: "Left wide",
     image: leftw,
+  },
+  log: {
+    description: "Training Log",
+    image: log,
   },
   nearcorner: {
     description: "Near Corner",

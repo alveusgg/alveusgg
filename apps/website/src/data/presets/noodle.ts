@@ -4,6 +4,7 @@ import farbranches from "@/assets/presets/noodle/farbranches.png";
 import farrock from "@/assets/presets/noodle/farrock.png";
 import home from "@/assets/presets/noodle/home.png";
 import left from "@/assets/presets/noodle/left.png";
+import leftshelf from "@/assets/presets/noodle/leftshelf.png";
 import water from "@/assets/presets/noodle/water.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -32,6 +33,10 @@ const noodlePresets: Record<string, Preset> = {
   left: {
     description: "Left",
     image: left,
+  },
+  leftshelf: {
+    description: "Left Shelf",
+    image: leftshelf,
   },
   water: {
     description: "Water",
