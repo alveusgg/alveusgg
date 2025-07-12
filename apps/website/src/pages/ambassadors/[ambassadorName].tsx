@@ -1,14 +1,6 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
-import PhotoSwipeLightbox from "photoswipe/lightbox";
-import {
-  Fragment,
-  type ReactNode,
-  useEffect,
-  useId,
-  useMemo,
-  useState,
-} from "react";
+import { Fragment, type ReactNode, useMemo, useState } from "react";
 
 import { getClassification } from "@alveusgg/data/build/ambassadors/classification";
 import ambassadors, {
@@ -36,7 +28,6 @@ import { getIUCNStatus } from "@alveusgg/data/build/iucn";
 import { classes } from "@/utils/classes";
 import { formatPartialDateString } from "@/utils/datetime-partial";
 import { typeSafeObjectKeys } from "@/utils/helpers";
-import { getDefaultPhotoswipeLightboxOptions } from "@/utils/photoswipe";
 import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
@@ -233,48 +224,70 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
 }) => {
   const stats = useMemo(() => getStats(ambassador), [ambassador]);
 
-  const photoswipe = `photoswipe-${useId().replace(/\W/g, "")}`;
-  useEffect(() => {
-    const lightbox = new PhotoSwipeLightbox({
-      ...getDefaultPhotoswipeLightboxOptions(),
-      gallery: `#${photoswipe}`,
-      children: "a",
-      loop: true,
-    });
-    lightbox.init();
+  const [carouselLightboxOpen, setCarouselLightboxOpen] = useState<string>();
 
-    return () => {
-      lightbox.destroy();
-    };
-  }, [photoswipe]);
-
-  const carousel = useMemo(
+  const carouselLightboxItems = useMemo(
     () =>
-      images.reduce((obj, { src, alt, position }) => {
-        return {
-          ...obj,
-          [src.src]: (
-            <a
-              href={src.src}
-              target="_blank"
-              rel="noreferrer"
+      images.reduce<Record<string, ReactNode>>(
+        (acc, image) => ({
+          ...acc,
+          [image.src.src]: (
+            <div className="flex h-full flex-col">
+              <div
+                className="mx-auto flex max-h-full max-w-full grow"
+                style={{
+                  aspectRatio: `${image.src.width} / ${image.src.height}`,
+                }}
+              >
+                <Image
+                  src={image.src}
+                  alt={image.alt}
+                  quality={90}
+                  className="my-auto h-auto max-h-full w-full rounded-xl bg-alveus-green-800 shadow-xl"
+                  style={{
+                    aspectRatio: `${image.src.width} / ${image.src.height}`,
+                  }}
+                  draggable={false}
+                />
+              </div>
+            </div>
+          ),
+        }),
+        {},
+      ),
+    [images],
+  );
+
+  const carouselItems = useMemo(
+    () =>
+      images.reduce<Record<string, ReactNode>>(
+        (acc, image) => ({
+          ...acc,
+          [image.src.src]: (
+            <Link
+              href={image.src.src}
+              external
+              onClick={(e) => {
+                e.preventDefault();
+                setCarouselLightboxOpen(image.src.src);
+              }}
               draggable={false}
-              className="group"
-              data-pswp-width={src.width}
-              data-pswp-height={src.height}
+              className="group/trigger"
+              custom
             >
               <Image
-                src={src}
-                alt={alt}
-                draggable={false}
+                src={image.src}
+                alt={image.alt}
                 width={300}
-                className="aspect-square h-auto w-full rounded-xl object-cover transition group-hover:scale-102 group-hover:shadow-xs"
-                style={{ objectPosition: position }}
+                className="group/trigger-hover:scale-102 group/trigger-hover:shadow-xs aspect-square h-auto w-full rounded-xl object-cover transition"
+                style={{ objectPosition: image.position }}
+                draggable={false}
               />
-            </a>
+            </Link>
           ),
-        };
-      }, {}),
+        }),
+        {},
+      ),
     [images],
   );
 
@@ -411,11 +424,16 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
             )}
 
             <Carousel
-              id={photoswipe}
-              items={carousel}
+              items={carouselItems}
               auto={null}
               className="my-6"
               itemClassName="basis-1/2 md:basis-1/3 lg:basis-1/2 xl:basis-1/3 p-2 2xl:p-4"
+            />
+
+            <Lightbox
+              open={carouselLightboxOpen}
+              onClose={() => setCarouselLightboxOpen(undefined)}
+              items={carouselLightboxItems}
             />
 
             {ambassador.plush &&
@@ -480,7 +498,10 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                   className="w-full max-w-2xl"
                   custom
                 >
-                  <YouTubePreview videoId={id} />
+                  <YouTubePreview
+                    videoId={id}
+                    className="aspect-video h-auto w-full"
+                  />
                 </Link>
 
                 <p className="mt-2 text-center text-xl">{caption}</p>
