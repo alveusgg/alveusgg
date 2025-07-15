@@ -3,12 +3,21 @@ import {
   DisclosureButton,
   DisclosurePanel,
   Field,
+  Input,
   Label,
   Switch,
 } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
-import { Fragment, type ReactNode, useEffect, useState } from "react";
+import {
+  Fragment,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import type { CameraMulti, CameraPTZ } from "@/data/tech/cameras.types";
@@ -44,17 +53,6 @@ import IconX from "@/icons/IconX";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-
-const groupedCameras = typeSafeObjectEntries(cameras).reduce(
-  (acc, [key, value]) => ({
-    ...acc,
-    [value.group]: {
-      ...acc[value.group],
-      [key]: value,
-    },
-  }),
-  {} as Record<string, Partial<typeof cameras>>,
-);
 
 type Command = RouterInputs["stream"]["runCommand"];
 
@@ -165,6 +163,56 @@ const AboutTechPresetsPage: NextPage = () => {
       session?.user?.scopes?.includes(scope),
     ),
   });
+
+  // Track all the disclosure buttons so we can open/close them based on search input
+  const disclosures = useRef<Set<HTMLButtonElement>>(new Set());
+  const disclosureRef = useCallback((el: HTMLButtonElement) => {
+    disclosures.current.add(el);
+    return () => {
+      disclosures.current.delete(el);
+    };
+  }, []);
+
+  const [searchCamera, setSearchCamera] = useState("");
+  const searchCameraSanitized = searchCamera.trim().toLowerCase();
+  useEffect(() => {
+    // If we have a search term, open all the disclosures that're rendered
+    if (searchCameraSanitized.length > 0) {
+      disclosures.current.forEach((el) => {
+        if (el instanceof HTMLButtonElement && !("open" in el.dataset)) {
+          el.click();
+        }
+      });
+      return;
+    }
+
+    // If we have no search term, close all disclosures
+    disclosures.current.forEach((el) => {
+      if (el instanceof HTMLButtonElement && "open" in el.dataset) {
+        el.click();
+      }
+    });
+  }, [searchCameraSanitized]);
+
+  // Filer the cameras based on the search term and group them
+  const groupedCameras = useMemo(
+    () =>
+      typeSafeObjectEntries(cameras).reduce(
+        (acc, [key, value]) =>
+          !searchCameraSanitized.length ||
+          value.title.toLowerCase().includes(searchCameraSanitized)
+            ? {
+                ...acc,
+                [value.group]: {
+                  ...acc[value.group],
+                  [key]: value,
+                },
+              }
+            : acc,
+        {} as Record<string, Partial<typeof cameras>>,
+      ),
+    [searchCameraSanitized],
+  );
 
   const [selectedCamera, setSelectedCamera] = useState<Camera>(
     typeSafeObjectKeys(cameras)[0]!,
@@ -344,11 +392,13 @@ const AboutTechPresetsPage: NextPage = () => {
                   onChange={(e) => setSelectedCamera(e.target.value as Camera)}
                   className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 >
-                  {typeSafeObjectKeys(cameras).map((camera) => (
-                    <option key={camera} value={camera}>
-                      {cameras[camera].title} ({camera.toLowerCase()})
-                    </option>
-                  ))}
+                  {Object.values(groupedCameras)
+                    .flatMap((group) => typeSafeObjectKeys(group))
+                    .map((camera) => (
+                      <option key={camera} value={camera}>
+                        {cameras[camera].title} ({camera.toLowerCase()})
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -357,7 +407,15 @@ const AboutTechPresetsPage: NextPage = () => {
                 <Image
                   src={leafRightImage2}
                   alt=""
-                  className="pointer-events-none absolute bottom-0 -left-1/3 -z-10 h-auto w-3/4 drop-shadow-md select-none"
+                  className="pointer-events-none absolute top-0 -left-1/3 -z-10 h-auto w-3/4 drop-shadow-md select-none"
+                />
+
+                <Input
+                  type="text"
+                  placeholder="Search cameras..."
+                  value={searchCamera}
+                  onChange={(e) => setSearchCamera(e.target.value)}
+                  className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-3 py-2 text-lg font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 />
 
                 {typeSafeObjectEntries(groupedCameras).map(([name, group]) => {
@@ -383,11 +441,9 @@ const AboutTechPresetsPage: NextPage = () => {
                   }
 
                   return (
-                    <Disclosure
-                      key={name}
-                      defaultOpen={name === selectedData.group}
-                    >
+                    <Disclosure key={name}>
                       <DisclosureButton
+                        ref={disclosureRef}
                         className={classes(
                           "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
                           selectedData.group === name
