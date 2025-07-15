@@ -88,6 +88,7 @@ export function SendNotificationForm() {
         scheduledStartAt,
         scheduledEndAt,
         imageUrl,
+        vodUrl: String(data.get("vodUrl")) || undefined,
         fileStorageObjectId,
         isPush: channels.includes("push"),
         isDiscord: channels.includes("discord"),
@@ -182,6 +183,16 @@ export function SendNotificationForm() {
             renderAttachment={({ fileReference, ...props }) => (
               <ImageUploadAttachment {...props} fileReference={fileReference} />
             )}
+          />
+
+          <TextField
+            label="VoD"
+            name="vodUrl"
+            inputMode="url"
+            type="vodUrl"
+            showResetButton={true}
+            pattern="https?://.*"
+            inputClassName="font-mono"
           />
 
           <Fieldset legend="Announcement details">

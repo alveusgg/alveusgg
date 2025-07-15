@@ -50,6 +50,7 @@ export const adminNotificationsRouter = router({
         title: z.string(),
         linkUrl: z.union([z.literal(""), z.string().trim().url()]).optional(),
         imageUrl: z.url().optional(),
+        vodUrl: z.url().optional(),
         scheduledStartAt: localDatetimeAsDateSchema.optional(),
         scheduledEndAt: localDatetimeAsDateSchema.optional(),
         fileStorageObjectId: z.cuid().optional(),
