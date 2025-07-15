@@ -414,7 +414,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 <Image
                   src={leafRightImage2}
                   alt=""
-                  className="pointer-events-none absolute top-0 -left-1/3 -z-10 h-auto w-3/4 drop-shadow-md select-none"
+                  className="pointer-events-none absolute top-0 left-0 -z-10 h-96 max-h-full w-auto -translate-x-1/2 drop-shadow-md select-none"
                 />
 
                 <Input
