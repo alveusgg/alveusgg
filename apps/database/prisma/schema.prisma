@@ -143,6 +143,7 @@ model Notification {
   title            String?
   linkUrl          String?
   imageUrl         String?
+  vodUrl           String?
   tag              String?
   urgency          NotificationUrgency @default(NORMAL)
   isPush           Boolean             @default(false)
