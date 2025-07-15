@@ -219,6 +219,13 @@ const AboutTechPresetsPage: NextPage = () => {
   );
   const selectedData = cameras[selectedCamera] as CameraPTZ | CameraMulti;
 
+  const [searchPresets, setSearchPresets] = useState("");
+  const searchPresetsSanitized = searchPresets.trim().toLowerCase();
+  useEffect(() => {
+    // Reset the search presets when the selected camera changes
+    setSearchPresets("");
+  }, [selectedCamera]);
+
   const [twitchEmbed, setTwitchEmbed] = useState(() => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("presets:twitch-embed");
@@ -380,7 +387,7 @@ const AboutTechPresetsPage: NextPage = () => {
 
           <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-4">
             {/* Camera List */}
-            <div className="col-span-1 space-y-2 lg:sticky lg:top-0 lg:pt-2">
+            <div className="col-span-1 space-y-2 lg:sticky lg:top-0">
               {/* Mobile: Dropdown */}
               <div className="mb-2 block lg:hidden">
                 <label htmlFor="camera-select" className="sr-only">
@@ -415,7 +422,7 @@ const AboutTechPresetsPage: NextPage = () => {
                   placeholder="Search cameras..."
                   value={searchCamera}
                   onChange={(e) => setSearchCamera(e.target.value)}
-                  className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-3 py-2 text-lg font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                  className="mb-2 w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 />
 
                 {typeSafeObjectEntries(groupedCameras).map(([name, group]) => {
@@ -484,21 +491,43 @@ const AboutTechPresetsPage: NextPage = () => {
             <div className="col-span-1 lg:sticky lg:top-0 lg:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
-                  <Heading
-                    level={3}
-                    className="scroll-mt-14 text-2xl"
-                    id={`presets:${camelToKebab(selectedCamera)}`}
-                  >
-                    {selectedData.title}
-                    <span className="text-sm text-alveus-green-400 italic">
-                      {` (${selectedCamera.toLowerCase()})`}
-                    </span>
-                  </Heading>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <Heading
+                      level={3}
+                      className="my-0 shrink-0 scroll-mt-14 text-2xl"
+                      id={`presets:${camelToKebab(selectedCamera)}`}
+                    >
+                      {selectedData.title}
+                      <span className="text-sm text-alveus-green-400 italic">
+                        {` (${selectedCamera.toLowerCase()})`}
+                      </span>
+                    </Heading>
 
-                  <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                    {"presets" in selectedData && (
+                      <Input
+                        type="text"
+                        placeholder="Search presets..."
+                        value={searchPresets}
+                        onChange={(e) => setSearchPresets(e.target.value)}
+                        className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                      />
+                    )}
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     {"presets" in selectedData &&
-                      typeSafeObjectEntries(selectedData.presets).map(
-                        ([name, preset]) => (
+                      typeSafeObjectEntries(selectedData.presets)
+                        .filter(
+                          ([name, preset]) =>
+                            !searchPresetsSanitized.length ||
+                            name
+                              .toLowerCase()
+                              .includes(searchPresetsSanitized) ||
+                            preset.description
+                              .toLowerCase()
+                              .includes(searchPresetsSanitized),
+                        )
+                        .map(([name, preset]) => (
                           <Card
                             key={name}
                             title={name}
@@ -514,8 +543,7 @@ const AboutTechPresetsPage: NextPage = () => {
                           >
                             {preset.description}
                           </Card>
-                        ),
-                      )}
+                        ))}
 
                     {"multi" in selectedData && (
                       <Card
