@@ -420,6 +420,7 @@ const AboutTechPresetsPage: NextPage = () => {
                 <Input
                   type="text"
                   placeholder="Search cameras..."
+                  aria-label="Search cameras"
                   value={searchCamera}
                   onChange={(e) => setSearchCamera(e.target.value)}
                   className="mb-2 w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
@@ -507,6 +508,7 @@ const AboutTechPresetsPage: NextPage = () => {
                       <Input
                         type="text"
                         placeholder="Search presets..."
+                        aria-label="Search presets"
                         value={searchPresets}
                         onChange={(e) => setSearchPresets(e.target.value)}
                         className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
