@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import invariant from "@/utils/invariant";
 import { transposeMatrix } from "@/utils/math";

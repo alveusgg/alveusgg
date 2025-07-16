@@ -1,5 +1,5 @@
 import { waitUntil } from "@vercel/functions";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { createNotification, sendNotification } from "@/server/notifications";
 import { createTokenProtectedApiHandler } from "@/server/utils/api";

@@ -1,5 +1,5 @@
 import { waitUntil } from "@vercel/functions";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { type Notification, prisma } from "@alveusgg/database";
 

@@ -1,6 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
 
