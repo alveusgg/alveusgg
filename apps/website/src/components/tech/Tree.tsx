@@ -1,6 +1,3 @@
-import type { Node as DagreNode } from "dagre";
-import { graphlib, layout } from "dagre";
-import { useMemo } from "react";
 import {
   Background,
   Controls,
@@ -9,10 +6,14 @@ import {
   Position,
   ReactFlow,
   type ReactFlowInstance,
+  type Node as ReactFlowNode,
   type XYPosition,
-} from "reactflow";
+} from "@xyflow/react";
+import type { Node as DagreNode } from "dagre";
+import { graphlib, layout } from "dagre";
+import { useMemo } from "react";
 
-import "reactflow/dist/style.css";
+import "@xyflow/react/dist/style.css";
 
 export type TreeNode<T> = {
   id: string;
@@ -41,13 +42,17 @@ type TreeEdgeInternal = {
   focusable: boolean;
 };
 
-interface TreeProps<T> {
+export type TreeInstance<T extends Record<string, unknown>> = ReactFlowInstance<
+  ReactFlowNode<T>
+>;
+
+interface TreeProps<T extends Record<string, unknown>> {
   data: TreeNode<T> | TreeNode<T>[];
   nodeTypes?: NodeTypes;
   edgeType?: EdgeTypes[string];
   nodeSize?: { width: number; height: number };
   nodeSpacing?: { ranks: number; siblings: number };
-  onInit?: (instance: ReactFlowInstance) => void;
+  onInit?: (instance: TreeInstance<T>) => void;
 }
 
 const withPositions = <T,>(
@@ -223,7 +228,7 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
   };
 };
 
-const Tree = <T,>({
+const Tree = <T extends Record<string, unknown>>({
   data,
   nodeTypes,
   edgeType,
