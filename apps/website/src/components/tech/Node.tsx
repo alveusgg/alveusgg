@@ -1,23 +1,24 @@
-import { useCallback, useMemo } from "react";
 import {
   Handle,
-  type NodeProps,
   Position,
+  type Node as ReactFlowNode,
+  type NodeProps as ReactFlowNodeProps,
   useEdges,
   useUpdateNodeInternals,
-} from "reactflow";
+} from "@xyflow/react";
+import { useCallback, useMemo } from "react";
 
 import { classes } from "@/utils/classes";
 
 import IconExternal from "@/icons/IconExternal";
 
-export interface NodeData {
+export type NodeData = {
   container: string;
   eyebrow: { text: string; color: string };
   name: string;
   description?: string;
   url?: string;
-}
+};
 
 const Node = ({
   id,
@@ -25,7 +26,7 @@ const Node = ({
   targetPosition = Position.Top,
   sourcePosition = Position.Bottom,
   isConnectable,
-}: NodeProps<NodeData>) => {
+}: ReactFlowNodeProps<ReactFlowNode<NodeData>>) => {
   const updateNodeInternals = useUpdateNodeInternals();
 
   // Get the source and target edges
