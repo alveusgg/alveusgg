@@ -33,7 +33,7 @@ importers:
         version: link:../database
       '@t3-oss/env-core':
         specifier: ^0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.25.76)
+        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@4.0.5)
       '@twurple/api':
         specifier: ^7.3.0
         version: 7.3.0(@twurple/auth@7.3.0)
@@ -53,8 +53,8 @@ importers:
         specifier: ^4.20.3
         version: 4.20.3
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: ^4.0.5
+        version: 4.0.5
     devDependencies:
       '@eslint/js':
         specifier: ^9.31.0
@@ -98,7 +98,7 @@ importers:
     dependencies:
       '@alveusgg/data':
         specifier: 0.64.0
-        version: 0.64.0(tailwindcss@4.1.11)(zod@3.25.76)
+        version: 0.64.0(tailwindcss@4.1.11)(zod@4.0.5)
       '@alveusgg/database':
         specifier: workspace:*
         version: link:../database
@@ -143,7 +143,7 @@ importers:
         version: 6.12.0
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
-        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.25.76)
+        version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@4.0.5)
       '@tailwindcss/postcss':
         specifier: ^4.1.11
         version: 4.1.11
@@ -280,8 +280,8 @@ importers:
         specifier: ^2.2.2
         version: 2.2.2
       zod:
-        specifier: ^3.25.76
-        version: 3.25.76
+        specifier: ^4.0.5
+        version: 4.0.5
     devDependencies:
       '@eslint-react/eslint-plugin':
         specifier: ^1.52.3
@@ -6208,9 +6208,6 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
 
-  zod@3.25.76:
-    resolution: {integrity: sha512-gzUt/qt81nXsFGKIFcC3YnfEAx5NkunCfnDlvuBSSFS02bcXu4Lmea0AFIUwbLWxWPx3d9p8S5QoaujKcNQxcQ==}
-
   zod@4.0.5:
     resolution: {integrity: sha512-/5UuuRPStvHXu7RS+gmvRf4NXrNxpSllGwDnCBcJZtQsKrviYXm54yDGV2KYNLT5kq0lHGcl7lqWJLgSaG+tgA==}
 
@@ -6236,10 +6233,10 @@ snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
 
-  '@alveusgg/data@0.64.0(tailwindcss@4.1.11)(zod@3.25.76)':
+  '@alveusgg/data@0.64.0(tailwindcss@4.1.11)(zod@4.0.5)':
     dependencies:
       tailwindcss: 4.1.11
-      zod: 3.25.76
+      zod: 4.0.5
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -9104,21 +9101,21 @@ snapshots:
     dependencies:
       '@swc/counter': 0.1.3
 
-  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.25.76)':
+  '@t3-oss/env-core@0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@4.0.5)':
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
       valibot: 1.0.0(typescript@5.8.3)
-      zod: 3.25.76
+      zod: 4.0.5
 
-  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.25.76)':
+  '@t3-oss/env-nextjs@0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@4.0.5)':
     dependencies:
-      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@3.25.76)
+      '@t3-oss/env-core': 0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@4.0.5)
     optionalDependencies:
       arktype: 2.1.20
       typescript: 5.8.3
       valibot: 1.0.0(typescript@5.8.3)
-      zod: 3.25.76
+      zod: 4.0.5
 
   '@tailwindcss/node@4.1.11':
     dependencies:
@@ -13447,8 +13444,6 @@ snapshots:
   yaml@2.8.0: {}
 
   yocto-queue@0.1.0: {}
-
-  zod@3.25.76: {}
 
   zod@4.0.5: {}
 
