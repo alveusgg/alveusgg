@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { createForm, editForm, formSchema } from "@/server/db/forms";
 import {

@@ -1,6 +1,6 @@
 import { LogLevel } from "@twurple/chat";
 import { createEnv } from "@t3-oss/env-core";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 const transformCommaSeparatedStringToArray = (value: string) =>
   value ? value.split(",").map((v) => v.trim()) : [];

@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { getCalendarEvents } from "@/server/db/calendar-events";
 import { publicProcedure, router } from "@/server/trpc/trpc";

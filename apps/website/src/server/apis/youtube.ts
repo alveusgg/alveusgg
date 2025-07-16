@@ -1,5 +1,5 @@
 import { XMLParser } from "fast-xml-parser";
-import { z } from "zod/v4";
+import { z } from "zod";
 
 import { env } from "@/env";
 

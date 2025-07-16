@@ -1,4 +1,4 @@
-import { z } from "zod/v4";
+import { z } from "zod";
 
 export type CalculatedFormConfig = z.infer<typeof formConfigSchema> & {
   hasRules: boolean;
