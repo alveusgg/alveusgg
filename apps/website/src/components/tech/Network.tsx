@@ -1,13 +1,13 @@
-import pluralize from "pluralize";
-import { useCallback, useRef, useState } from "react";
 import {
   BaseEdge,
   EdgeLabelRenderer,
   type EdgeProps,
-  type ReactFlowInstance,
+  type Node as ReactFlowNode,
   getBezierPath,
   useNodes,
-} from "reactflow";
+} from "@xyflow/react";
+import pluralize from "pluralize";
+import { useCallback, useRef, useState } from "react";
 
 import network, {
   type NestedNetworkItem,
@@ -22,11 +22,11 @@ import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
 import Node, { type NodeData } from "@/components/tech/Node";
-import Tree, { type TreeNode } from "@/components/tech/Tree";
+import Tree, { type TreeInstance, type TreeNode } from "@/components/tech/Tree";
 
-interface Data extends NodeData {
+type Data = NodeData & {
   connection?: NetworkConnection;
-}
+};
 
 const nodeTypes: {
   [k in NetworkItem["type"]]: {
@@ -157,7 +157,7 @@ const NetworkEdge = ({
   style,
 }: EdgeProps) => {
   // Get the source and target nodes
-  const nodes = useNodes<Data>();
+  const nodes = useNodes<ReactFlowNode<Data>>();
   let sourceNode, targetNode;
   for (const node of nodes) {
     if (!sourceNode && node.id === source) sourceNode = node;
@@ -301,7 +301,7 @@ const tree = {
   nodeTypes: { network: Node },
   edgeType: NetworkEdge,
   nodeSize: { width: 176, height: 80 },
-  onInit: (instance: ReactFlowInstance) => {
+  onInit: (instance: TreeInstance<Data>) => {
     // After the initial fit, vertically center on the first node
     window.requestAnimationFrame(() => {
       const nodes = instance.getNodes();
