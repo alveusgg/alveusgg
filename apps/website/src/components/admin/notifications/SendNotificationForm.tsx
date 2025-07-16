@@ -88,7 +88,7 @@ export function SendNotificationForm() {
         scheduledStartAt,
         scheduledEndAt,
         imageUrl,
-        vodUrl: String(data.get("vodUrl")) || undefined,
+        vodUrl: String(data.get("vodUrl") || "") || undefined,
         fileStorageObjectId,
         isPush: channels.includes("push"),
         isDiscord: channels.includes("discord"),
