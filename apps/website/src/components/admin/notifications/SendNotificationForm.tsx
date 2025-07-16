@@ -189,7 +189,7 @@ export function SendNotificationForm() {
             label="VoD"
             name="vodUrl"
             inputMode="url"
-            type="vodUrl"
+            type="url"
             showResetButton={true}
             pattern="https?://.*"
             inputClassName="font-mono"
