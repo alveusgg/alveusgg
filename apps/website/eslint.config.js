@@ -1,6 +1,5 @@
 // @ts-check
 import eslint from "@eslint/js";
-// @ts-expect-error - no types
 import nextPlugin from "@next/eslint-plugin-next";
 import prettiereslint from "eslint-config-prettier";
 import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
@@ -86,8 +85,18 @@ export default tseslint.config(
       "@next/next": nextPlugin,
     },
     rules: {
-      ...nextPlugin.configs.recommended.rules,
-      ...nextPlugin.configs["core-web-vitals"].rules,
+      // FIXME: @next/eslint-plugin-next returns rule values as `string` rather than `RuleLevel` (`SeverityString`)
+      // FIXME: @next/eslint-plugin-next claims to export `configs` but does not as it is a CommonJS module
+      // FIXME: https://github.com/vercel/next.js/issues/81695
+
+      .../** @type Record<string, NonNullable<import('typescript-eslint').ConfigWithExtends["rules"]>[string]> */ (
+        // eslint-disable-next-line import-x/no-named-as-default-member
+        nextPlugin.configs.recommended.rules
+      ),
+      .../** @type Record<string, NonNullable<import('typescript-eslint').ConfigWithExtends["rules"]>[string]> */ (
+        // eslint-disable-next-line import-x/no-named-as-default-member
+        nextPlugin.configs["core-web-vitals"].rules
+      ),
     },
   },
   {
