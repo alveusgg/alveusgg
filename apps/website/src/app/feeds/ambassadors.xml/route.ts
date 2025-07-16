@@ -1,54 +1,50 @@
-import { Feed } from "feed";
-
 import allAmbassadors from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorEntry } from "@alveusgg/data/build/ambassadors/filters";
 
 import { env } from "@/env";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { getRssFeedContent } from "@/utils/rss-feed";
 import { camelToKebab } from "@/utils/string-case";
 
-const activeAmbassadors = typeSafeObjectEntries(allAmbassadors).filter(
-  isActiveAmbassadorEntry,
-);
-
-// Sort in descending order by date
+// Get all active ambassadors & sort in descending order by date
+const activeAmbassadors = typeSafeObjectEntries(allAmbassadors)
+  .filter(isActiveAmbassadorEntry)
+  .map(([, ambassador]) => ambassador);
 const sortedActiveAmbassadors = activeAmbassadors.toSorted(
-  ([, a], [, b]) =>
-    new Date(b.arrival).valueOf() - new Date(a.arrival).valueOf(),
+  (a, b) => new Date(b.arrival).valueOf() - new Date(a.arrival).valueOf(),
 );
 
 export async function GET() {
   const allAmbassadorsPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/ambassadors`;
-
-  const latestActiveAmbassador = sortedActiveAmbassadors[0];
+  // TODO can the abstraction get this instead?
   const latestArrivalDate =
-    (latestActiveAmbassador && new Date(latestActiveAmbassador[1].arrival)) ||
-    undefined;
+    sortedActiveAmbassadors[0] && new Date(sortedActiveAmbassadors[0].arrival);
 
-  const feed = new Feed({
+  const ambassadorFeedItems = sortedActiveAmbassadors
+    // TODO just have the feed use link if id not present
+    .map((ambassador) => ({
+      ...ambassador,
+      url: `${env.NEXT_PUBLIC_BASE_URL}/ambassadors/${camelToKebab(ambassador.name)}`,
+    }))
+    .map((ambassador) => ({
+      title: ambassador.name,
+      id: ambassador.url,
+      link: ambassador.url,
+      description: ambassador.story,
+      date: new Date(ambassador.arrival),
+    }));
+
+  const ambassadorFeedContent = getRssFeedContent({
     title: "Alveus Sanctuary Ambassadors",
     description: "A feed for new ambassador arrivals",
     id: allAmbassadorsPageUrl,
     link: allAmbassadorsPageUrl,
-    copyright: "Copyright 2023 Alveus Sanctuary Inc. and the Alveus.gg team",
     updated: latestArrivalDate,
+    items: ambassadorFeedItems,
   });
 
-  sortedActiveAmbassadors.forEach(([, ambassador]) => {
-    const ambassadorPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/ambassadors/${camelToKebab(ambassador.name)}`;
-
-    feed.addItem({
-      title: ambassador.name,
-      id: ambassadorPageUrl,
-      link: ambassadorPageUrl,
-      description: ambassador.story,
-      content: ambassador.story, // ambassador.mission,
-      date: new Date(ambassador.arrival),
-    });
-  });
-
-  return new Response(feed.rss2(), {
+  return new Response(ambassadorFeedContent, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
     },

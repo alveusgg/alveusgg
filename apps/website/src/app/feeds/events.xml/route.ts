@@ -1,39 +1,37 @@
-import { Feed } from "feed";
-
 import { env } from "@/env";
 
 import events from "@/data/events";
 
+import { getRssFeedContent } from "@/utils/rss-feed";
+
 export async function GET() {
   const eventsPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/events`;
+  // TODO can the abstraction get this instead?
+  const latestEventDate = events[0] && new Date(events[0].date);
 
-  const latestEvent = events[0];
-  const latestEventDate =
-    (latestEvent && new Date(latestEvent.date)) || undefined;
+  const eventFeedItems = events
+    .map((event) => ({
+      ...event,
+      url: `${env.NEXT_PUBLIC_BASE_URL}/events#${event.slug}`,
+    }))
+    .map((event) => ({
+      title: event.name,
+      id: event.url,
+      link: event.url,
+      description: undefined,
+      date: event.date,
+    }));
 
-  const feed = new Feed({
+  const rssFeedContent = getRssFeedContent({
     title: "Alveus Sanctuary Events",
     description: "A feed for new fundraising events",
     id: eventsPageUrl,
     link: eventsPageUrl,
-    copyright: "Copyright 2023 Alveus Sanctuary Inc. and the Alveus.gg team",
     updated: latestEventDate,
+    items: eventFeedItems,
   });
 
-  events.forEach((event) => {
-    const eventPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/events#${event.slug}`;
-
-    feed.addItem({
-      title: event.name,
-      id: eventPageUrl,
-      link: eventPageUrl,
-      // description: undefined,
-      // content: undefined,
-      date: event.date,
-    });
-  });
-
-  return new Response(feed.rss2(), {
+  return new Response(rssFeedContent, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
     },

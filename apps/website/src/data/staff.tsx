@@ -19,7 +19,7 @@ import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
 
-export const staff: Record<string, Person> = {
+const staff: Record<string, Person> = {
   maya: {
     image: [mayaHigaImage, mayaHigaFunImage],
     name: "Maya Higa",

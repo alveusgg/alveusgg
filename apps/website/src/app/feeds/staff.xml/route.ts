@@ -1,35 +1,33 @@
-import { Feed } from "feed";
-
 import { env } from "@/env";
 
 import staff from "@/data/staff";
 
+import { getRssFeedContent } from "@/utils/rss-feed";
+
 export async function GET() {
   const staffPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/about/staff`;
 
-  const feed = new Feed({
+  const staffFeedItems = Object.entries(staff)
+    .map(([key, person]) => ({ ...person, url: `${staffPageUrl}#${key}` }))
+    .map((person) => ({
+      title: person.name,
+      id: person.url,
+      link: person.url,
+      description: person.title,
+      content: person.title,
+      date: new Date(), // A date is required, but they aren't available for staff
+    }));
+
+  const staffFeedContent = getRssFeedContent({
     title: "Alveus Sanctuary Staff",
     description: "A feed for new staff members",
     id: staffPageUrl,
     link: staffPageUrl,
-    copyright: "Copyright 2023 Alveus Sanctuary Inc. and the Alveus.gg team",
     updated: undefined, // Since the latest staff join date is unavailable
+    items: staffFeedItems,
   });
 
-  Object.entries(staff).forEach(([key, person]) => {
-    const personUrl = `${staffPageUrl}#${key}`;
-
-    feed.addItem({
-      title: person.name,
-      id: personUrl,
-      link: personUrl,
-      description: person.title,
-      content: person.title,
-      date: new Date(), // A date is required, but they aren't available for staff
-    });
-  });
-
-  return new Response(feed.rss2(), {
+  return new Response(staffFeedContent, {
     headers: {
       "Content-Type": "application/xml; charset=utf-8",
     },

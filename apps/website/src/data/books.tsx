@@ -27,7 +27,7 @@ export type BookInfo = {
   vodId?: string;
 };
 
-export const books: BookInfo[] = [
+const books: BookInfo[] = [
   {
     title: "The Anthropocene Reviewed",
     author: "John Green",
