@@ -41,7 +41,7 @@
     "@maplibre/maplibre-gl-geocoder": "^1.9.0",
     "@next/env": "^15.3.5",
     "@paralleldrive/cuid2": "^2.2.2",
-    "@prisma/nextjs-monorepo-workaround-plugin": "^6.11.1",
+    "@prisma/nextjs-monorepo-workaround-plugin": "^6.12.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tailwindcss/postcss": "^4.1.11",
     "@tanstack/react-query": "^5.81.5",
