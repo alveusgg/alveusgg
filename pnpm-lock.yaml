@@ -138,9 +138,6 @@ importers:
       '@paralleldrive/cuid2':
         specifier: ^2.2.2
         version: 2.2.2
-      '@prisma/nextjs-monorepo-workaround-plugin':
-        specifier: ^6.12.0
-        version: 6.12.0
       '@t3-oss/env-nextjs':
         specifier: ^0.13.8
         version: 0.13.8(arktype@2.1.20)(typescript@5.8.3)(valibot@1.0.0(typescript@5.8.3))(zod@4.0.5)
@@ -418,6 +415,9 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
+    peerDependenciesMeta:
+      tailwindcss:
+        optional: true
 
   '@ampproject/remapping@2.3.0':
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
@@ -1485,9 +1485,6 @@ packages:
 
   '@prisma/get-platform@6.12.0':
     resolution: {integrity: sha512-nRerTGhTlgyvcBlyWgt8OLNIV7QgJS2XYXMJD1hysorMCuLAjuDDuoxmVt7C2nLxbuxbWPp7OuFRHC23HqD9dA==}
-
-  '@prisma/nextjs-monorepo-workaround-plugin@6.12.0':
-    resolution: {integrity: sha512-fAquBdU+3nabAE7t7I/VPtFTMDNwElk2Tb7l9YoY3+YHtmM7cC97jZRZ6ZGgM4GaRgEQ4ze4nm1ynsFc4CYoog==}
 
   '@react-aria/breadcrumbs@3.5.26':
     resolution: {integrity: sha512-jybk2jy3m9KNmTpzJu87C0nkcMcGbZIyotgK1s8st8aUE2aJlxPZrvGuJTO8GUFZn9TKnCg3JjBC8qS9sizKQg==}
@@ -6235,8 +6232,9 @@ snapshots:
 
   '@alveusgg/data@0.65.0(tailwindcss@4.1.11)(zod@4.0.5)':
     dependencies:
-      tailwindcss: 4.1.11
       zod: 4.0.5
+    optionalDependencies:
+      tailwindcss: 4.1.11
 
   '@ampproject/remapping@2.3.0':
     dependencies:
@@ -7600,8 +7598,6 @@ snapshots:
   '@prisma/get-platform@6.12.0':
     dependencies:
       '@prisma/debug': 6.12.0
-
-  '@prisma/nextjs-monorepo-workaround-plugin@6.12.0': {}
 
   '@react-aria/breadcrumbs@3.5.26(react-dom@19.1.0(react@19.1.0))(react@19.1.0)':
     dependencies:
