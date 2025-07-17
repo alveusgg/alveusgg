@@ -5,4 +5,4 @@ apps/website/.next/
 apps/website/public/push/alveus/
 
 apps/database/dist/
-apps/database/prisma/client/
+apps/database/prisma/generated/

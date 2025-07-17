@@ -1,6 +1,6 @@
 import { PrismaPlanetScale } from "@prisma/adapter-planetscale";
 
-import { type Prisma, PrismaClient } from "../prisma/client";
+import { type Prisma, PrismaClient } from "../prisma/generated/client";
 
 const opts = {
   log:
@@ -47,4 +47,4 @@ export const prisma = new Proxy(
   },
 ) as PrismaClientWithEdge;
 
-export * from "../prisma/client";
+export * from "../prisma/generated/client";

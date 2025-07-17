@@ -1,5 +1,5 @@
 # database
-/prisma/client/
+/prisma/generated/
 
 # tsc
 /dist/
