@@ -1,4 +1,4 @@
-import { prisma } from "@alveusgg/database";
+import { prisma } from "@alveusgg/database/edge";
 
 import { findActiveBingo } from "@/server/db/bingos";
 
@@ -25,7 +25,7 @@ export async function GET(
   try {
     const { bingo: bingoSlugOrId } = await params;
 
-    const bingo = await findActiveBingo(prisma.edge, bingoSlugOrId);
+    const bingo = await findActiveBingo(prisma, bingoSlugOrId);
     if (!bingo) {
       return new Response("Row not found", { status: 404 });
     }
