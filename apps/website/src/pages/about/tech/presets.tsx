@@ -3,12 +3,21 @@ import {
   DisclosureButton,
   DisclosurePanel,
   Field,
+  Input,
   Label,
   Switch,
 } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
-import { Fragment, type ReactNode, useEffect, useState } from "react";
+import {
+  Fragment,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import type { CameraMulti, CameraPTZ } from "@/data/tech/cameras.types";
@@ -44,17 +53,6 @@ import IconX from "@/icons/IconX";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-
-const groupedCameras = typeSafeObjectEntries(cameras).reduce(
-  (acc, [key, value]) => ({
-    ...acc,
-    [value.group]: {
-      ...acc[value.group],
-      [key]: value,
-    },
-  }),
-  {} as Record<string, Partial<typeof cameras>>,
-);
 
 type Command = RouterInputs["stream"]["runCommand"];
 
@@ -166,10 +164,67 @@ const AboutTechPresetsPage: NextPage = () => {
     ),
   });
 
+  // Track all the disclosure buttons so we can open/close them based on search input
+  const disclosures = useRef<Set<HTMLButtonElement>>(new Set());
+  const disclosureRef = useCallback((el: HTMLButtonElement) => {
+    disclosures.current.add(el);
+    return () => {
+      disclosures.current.delete(el);
+    };
+  }, []);
+
+  const [searchCamera, setSearchCamera] = useState("");
+  const searchCameraSanitized = searchCamera.trim().toLowerCase();
+  useEffect(() => {
+    // If we have a search term, open all the disclosures that're rendered
+    if (searchCameraSanitized.length > 0) {
+      disclosures.current.forEach((el) => {
+        if (el instanceof HTMLButtonElement && !("open" in el.dataset)) {
+          el.click();
+        }
+      });
+      return;
+    }
+
+    // If we have no search term, close all disclosures
+    disclosures.current.forEach((el) => {
+      if (el instanceof HTMLButtonElement && "open" in el.dataset) {
+        el.click();
+      }
+    });
+  }, [searchCameraSanitized]);
+
+  // Filer the cameras based on the search term and group them
+  const groupedCameras = useMemo(
+    () =>
+      typeSafeObjectEntries(cameras).reduce(
+        (acc, [key, value]) =>
+          !searchCameraSanitized.length ||
+          value.title.toLowerCase().includes(searchCameraSanitized)
+            ? {
+                ...acc,
+                [value.group]: {
+                  ...acc[value.group],
+                  [key]: value,
+                },
+              }
+            : acc,
+        {} as Record<string, Partial<typeof cameras>>,
+      ),
+    [searchCameraSanitized],
+  );
+
   const [selectedCamera, setSelectedCamera] = useState<Camera>(
     typeSafeObjectKeys(cameras)[0]!,
   );
   const selectedData = cameras[selectedCamera] as CameraPTZ | CameraMulti;
+
+  const [searchPresets, setSearchPresets] = useState("");
+  const searchPresetsSanitized = searchPresets.trim().toLowerCase();
+  useEffect(() => {
+    // Reset the search presets when the selected camera changes
+    setSearchPresets("");
+  }, [selectedCamera]);
 
   const [twitchEmbed, setTwitchEmbed] = useState(() => {
     if (typeof window !== "undefined") {
@@ -332,7 +387,7 @@ const AboutTechPresetsPage: NextPage = () => {
 
           <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-4">
             {/* Camera List */}
-            <div className="col-span-1 space-y-2 lg:sticky lg:top-0 lg:pt-2">
+            <div className="col-span-1 space-y-2 lg:sticky lg:top-0">
               {/* Mobile: Dropdown */}
               <div className="mb-2 block lg:hidden">
                 <label htmlFor="camera-select" className="sr-only">
@@ -344,11 +399,13 @@ const AboutTechPresetsPage: NextPage = () => {
                   onChange={(e) => setSelectedCamera(e.target.value as Camera)}
                   className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 >
-                  {typeSafeObjectKeys(cameras).map((camera) => (
-                    <option key={camera} value={camera}>
-                      {cameras[camera].title} ({camera.toLowerCase()})
-                    </option>
-                  ))}
+                  {Object.values(groupedCameras)
+                    .flatMap((group) => typeSafeObjectKeys(group))
+                    .map((camera) => (
+                      <option key={camera} value={camera}>
+                        {cameras[camera].title} ({camera.toLowerCase()})
+                      </option>
+                    ))}
                 </select>
               </div>
 
@@ -357,7 +414,16 @@ const AboutTechPresetsPage: NextPage = () => {
                 <Image
                   src={leafRightImage2}
                   alt=""
-                  className="pointer-events-none absolute bottom-0 -left-1/3 -z-10 h-auto w-3/4 drop-shadow-md select-none"
+                  className="pointer-events-none absolute top-0 left-0 -z-10 h-96 max-h-full w-auto -translate-x-1/2 drop-shadow-md select-none"
+                />
+
+                <Input
+                  type="text"
+                  placeholder="Search cameras..."
+                  aria-label="Search cameras"
+                  value={searchCamera}
+                  onChange={(e) => setSearchCamera(e.target.value)}
+                  className="mb-2 w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 />
 
                 {typeSafeObjectEntries(groupedCameras).map(([name, group]) => {
@@ -383,11 +449,9 @@ const AboutTechPresetsPage: NextPage = () => {
                   }
 
                   return (
-                    <Disclosure
-                      key={name}
-                      defaultOpen={name === selectedData.group}
-                    >
+                    <Disclosure key={name}>
                       <DisclosureButton
+                        ref={disclosureRef}
                         className={classes(
                           "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
                           selectedData.group === name
@@ -428,21 +492,44 @@ const AboutTechPresetsPage: NextPage = () => {
             <div className="col-span-1 lg:sticky lg:top-0 lg:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
-                  <Heading
-                    level={3}
-                    className="scroll-mt-14 text-2xl"
-                    id={`presets:${camelToKebab(selectedCamera)}`}
-                  >
-                    {selectedData.title}
-                    <span className="text-sm text-alveus-green-400 italic">
-                      {` (${selectedCamera.toLowerCase()})`}
-                    </span>
-                  </Heading>
+                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                    <Heading
+                      level={3}
+                      className="my-0 shrink-0 scroll-mt-14 text-2xl"
+                      id={`presets:${camelToKebab(selectedCamera)}`}
+                    >
+                      {selectedData.title}
+                      <span className="text-sm text-alveus-green-400 italic">
+                        {` (${selectedCamera.toLowerCase()})`}
+                      </span>
+                    </Heading>
 
-                  <div className="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                    {"presets" in selectedData && (
+                      <Input
+                        type="text"
+                        placeholder="Search presets..."
+                        aria-label="Search presets"
+                        value={searchPresets}
+                        onChange={(e) => setSearchPresets(e.target.value)}
+                        className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                      />
+                    )}
+                  </div>
+
+                  <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
                     {"presets" in selectedData &&
-                      typeSafeObjectEntries(selectedData.presets).map(
-                        ([name, preset]) => (
+                      typeSafeObjectEntries(selectedData.presets)
+                        .filter(
+                          ([name, preset]) =>
+                            !searchPresetsSanitized.length ||
+                            name
+                              .toLowerCase()
+                              .includes(searchPresetsSanitized) ||
+                            preset.description
+                              .toLowerCase()
+                              .includes(searchPresetsSanitized),
+                        )
+                        .map(([name, preset]) => (
                           <Card
                             key={name}
                             title={name}
@@ -458,8 +545,7 @@ const AboutTechPresetsPage: NextPage = () => {
                           >
                             {preset.description}
                           </Card>
-                        ),
-                      )}
+                        ))}
 
                     {"multi" in selectedData && (
                       <Card
