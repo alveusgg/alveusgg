@@ -25,7 +25,7 @@ const imgSrc = (id: string, type: string) =>
 
 export const YouTubePreview = ({
   videoId,
-  alt = "",
+  alt = "YouTube video thumbnail",
   className,
 }: PreviewProps) => {
   // Handle falling back to hq if there isn't a maxres image
@@ -37,7 +37,7 @@ export const YouTubePreview = ({
   }, [type]);
 
   return (
-    <div className="relative aspect-video w-full">
+    <div className="relative">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={imgSrc(videoId, type)}
@@ -45,7 +45,7 @@ export const YouTubePreview = ({
         alt={alt}
         loading="lazy"
         className={classes(
-          "pointer-events-none aspect-video w-full rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
+          "pointer-events-none rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
           className,
         )}
       />
@@ -73,6 +73,7 @@ export const YouTubeEmbed = ({ videoId, caption }: EmbedProps) => (
     <div className="mx-auto flex aspect-video max-w-full grow">
       <iframe
         src={iframeSrc(videoId)}
+        title="YouTube video embed"
         referrerPolicy="no-referrer"
         allow="fullscreen; encrypted-media"
         sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
@@ -116,7 +117,13 @@ export const YouTubeLightbox = ({
         custom
         className={classes("group/trigger", className)}
       >
-        {children || <YouTubePreview videoId={videoId} alt={caption} />}
+        {children || (
+          <YouTubePreview
+            videoId={videoId}
+            alt={caption}
+            className="aspect-video h-auto w-full"
+          />
+        )}
       </Link>
 
       <BaseLightbox
