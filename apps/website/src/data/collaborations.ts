@@ -852,7 +852,8 @@ const collaborations: Collaboration[] = (
       name: "Knut",
       link: "https://www.twitch.tv/knut",
       date: new Date("2022-08-09"),
-      videoId: "lFhFx6kf2E4",
+      videoId: "-HhGd3Whld0",
+      vodId: "lFhFx6kf2E4",
       creators: [
         {
           name: "Knut",
