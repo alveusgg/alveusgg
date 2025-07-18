@@ -33,7 +33,10 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/src/index.js"
+    },
+    "./edge": {
+      "import": "./dist/src/edge.js"
     }
   }
 }
