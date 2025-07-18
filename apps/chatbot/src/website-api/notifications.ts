@@ -15,6 +15,7 @@ const notificationSchema = z.object({
   title: z.string().optional(),
   linkUrl: z.url().optional(),
   imageUrl: z.url().optional(),
+  vodUrl: z.url().optional(),
   scheduledStartAt: dateSchema.optional(),
   scheduledEndAt: dateSchema.optional(),
   isPush: z.boolean().optional(),
