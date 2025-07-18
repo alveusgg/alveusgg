@@ -19,6 +19,7 @@ import {
 import { useConsent } from "@/hooks/consent";
 
 import Carousel from "@/components/content/Carousel";
+import { useModalBlock } from "@/components/shared/ModalDialog";
 import { VideoItem } from "@/components/show-and-tell/gallery/VideoItem";
 
 import IconInformationCircle from "@/icons/IconInformationCircle";
@@ -34,6 +35,7 @@ export function ShowAndTellGallery({
   imageAttachments: Array<ImageAttachmentWithFileStorageObject>;
   videoAttachments: Array<LinkAttachment>;
 }) {
+  const { blockOuterModal, unblockOuterModal } = useModalBlock();
   const { update: updateConsent } = useConsent();
 
   const lightboxRef = useRef<PhotoSwipeLightbox>(null);
@@ -124,6 +126,7 @@ export function ShowAndTellGallery({
         isButton: false,
         appendTo: "root",
         onInit: (el, pswp) => {
+          if (!blockOuterModal || !unblockOuterModal) return;
           pswp.on("change", () => {
             let captionText = "";
             const caption =
@@ -133,6 +136,12 @@ export function ShowAndTellGallery({
               captionText = caption.textContent || "";
             }
             el.textContent = captionText;
+          });
+          pswp.on("openingAnimationStart", () => {
+            blockOuterModal();
+          });
+          pswp.on("close", () => {
+            unblockOuterModal();
           });
         },
       });
@@ -144,7 +153,14 @@ export function ShowAndTellGallery({
     return () => {
       lightbox.destroy();
     };
-  }, [lightboxParentRef, isPresentationView, photoswipeId, updateConsent]);
+  }, [
+    lightboxParentRef,
+    isPresentationView,
+    photoswipeId,
+    updateConsent,
+    blockOuterModal,
+    unblockOuterModal,
+  ]);
 
   const openLightBox = useCallback(
     (index: number) => {
