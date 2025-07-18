@@ -1,5 +1,11 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
-import type { ReactNode } from "react";
+import {
+  type ReactNode,
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -14,6 +20,86 @@ export type ModalDialogProps = {
   closeModal: () => void;
 };
 
+// #region Modal Block Context
+
+// Prevent closing if multiple layered modals are open
+// at the same time (i.e. lightbox inside modal)
+
+interface ModalBlockContextType {
+  blockOuterModal: () => void;
+  unblockOuterModal: () => void;
+  keepModalOpen: boolean;
+}
+
+const ModalBlockContext = createContext<ModalBlockContextType | undefined>(
+  undefined,
+);
+
+/**
+ * Hook to access modal blocking control from {@link ModalBlockProvider}.
+ *
+ * Use this hook to programmatically block or unblock the closing of a modal.
+ * Must be used inside a component tree wrapped with {@link ModalBlockProvider}.
+ *
+ * @throws Error if used outside a {@link ModalBlockProvider}
+ *
+ * @returns {{
+ *   blockOuterModal: () => void;
+ *   unblockOuterModal: () => void;
+ *   keepModalOpen: boolean;
+ * }}
+ *
+ * @see {@link ModalBlockProvider}
+ * @example
+ * const { blockOuterModal, unblockOuterModal, keepModalOpen } = useModalBlock();
+ * blockOuterModal(); // Prevent modal from being closed
+ * unblockOuterModal(); // Allow modal to be closed again
+ */
+export const useModalBlock = (): ModalBlockContextType => {
+  const context = useContext(ModalBlockContext);
+  if (!context) {
+    throw new Error("useModalBlock must be used within a ModalBlockProvider");
+  }
+  return context;
+};
+
+/**
+ * Provides context to control whether a {@link ModalDialog} can be closed.
+ * Wrap this provider around any component tree that needs to block or allow modal closing.
+ *
+ * This is useful for cases where nested components (e.g. lightboxes or nested modals)
+ * need to temporarily prevent the outer modal from closing.
+ *
+ * @see {@link useModalBlock}()
+ * @example
+ * <ModalBlockProvider>
+ *   <ModalDialog ... />
+ * </ModalBlockProvider>
+ */
+export const ModalBlockProvider: React.FC<{
+  children: React.ReactNode;
+}> = ({ children }) => {
+  const [keepModalOpen, setKeepModalOpen] = useState(false);
+
+  const blockOuterModal = useCallback(() => {
+    setKeepModalOpen(true);
+  }, []);
+
+  const unblockOuterModal = useCallback(() => {
+    setKeepModalOpen(false);
+  }, []);
+
+  return (
+    <ModalBlockContext.Provider
+      value={{ blockOuterModal, unblockOuterModal, keepModalOpen }}
+    >
+      {children}
+    </ModalBlockContext.Provider>
+  );
+};
+
+// #endregion
+
 export function ModalDialog({
   title,
   children,
@@ -22,6 +108,8 @@ export function ModalDialog({
   isOpen = true,
   closeModal,
 }: ModalDialogProps) {
+  const { keepModalOpen } = useModalBlock();
+
   if (!isOpen) return null;
 
   return (
@@ -29,7 +117,7 @@ export function ModalDialog({
       as="div"
       open={isOpen}
       className="relative z-20"
-      onClose={closeModal}
+      onClose={keepModalOpen ? () => {} : closeModal}
     >
       <div className="fixed inset-0 bg-black/25" />
 

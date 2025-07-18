@@ -13,7 +13,7 @@ import { MessageBox } from "@/components/shared/MessageBox";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
 import Section from "../content/Section";
-import { ModalDialog } from "../shared/ModalDialog";
+import { ModalBlockProvider, ModalDialog } from "../shared/ModalDialog";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -165,7 +165,7 @@ export function CommunityMap({
   );
 
   return (
-    <>
+    <ModalBlockProvider>
       <div
         id="mapVisualizerContainer"
         className="alveus-community-map h-[60vh] max-h-[800px] w-full overflow-hidden rounded-xl border-4 border-alveus-green bg-gray-400 shadow-2xl"
@@ -196,6 +196,6 @@ export function CommunityMap({
           )}
         </Section>
       </ModalDialog>
-    </>
+    </ModalBlockProvider>
   );
 }
