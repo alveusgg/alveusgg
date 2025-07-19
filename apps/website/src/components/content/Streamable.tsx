@@ -7,6 +7,7 @@ type PreviewProps = {
   videoId: string;
   alt?: string;
   className?: string;
+  icon?: boolean;
 };
 
 const imgSrc = (id: string) =>
@@ -18,8 +19,9 @@ const imgSrc = (id: string) =>
 
 export const StreamablePreview = ({
   videoId,
-  alt = "Streamable video thumbnail",
+  alt = "Video thumbnail",
   className,
+  icon = true,
 }: PreviewProps) => (
   <div className="relative">
     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -28,15 +30,20 @@ export const StreamablePreview = ({
       alt={alt}
       loading="lazy"
       className={classes(
-        "pointer-events-none rounded-2xl bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
+        "pointer-events-none bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
+        !/\brounded-/.test(className || "") && "rounded-2xl",
         className,
       )}
     />
-    <div className="absolute inset-0 m-auto box-content aspect-square w-20 rounded-full bg-alveus-green/25 p-0.5 backdrop-blur-sm transition group-hover/trigger:scale-110 group-hover/trigger:bg-alveus-green/50" />
-    <IconStreamable
-      size={80}
-      className="absolute inset-0 m-auto text-white drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
-    />
+    {icon && (
+      <>
+        <div className="absolute inset-0 m-auto box-content aspect-square w-20 rounded-full bg-alveus-green/25 p-0.5 backdrop-blur-sm transition group-hover/trigger:scale-110 group-hover/trigger:bg-alveus-green/50" />
+        <IconStreamable
+          size={80}
+          className="absolute inset-0 m-auto text-white drop-shadow-md transition group-hover/trigger:scale-110 group-hover/trigger:drop-shadow-xl"
+        />
+      </>
+    )}
   </div>
 );
 
@@ -53,7 +60,7 @@ export const StreamableEmbed = ({ videoId, caption }: EmbedProps) => (
     <div className="mx-auto flex aspect-video max-w-full grow">
       <iframe
         src={iframeSrc(videoId)}
-        title="Streamable video embed"
+        title="Video embed"
         referrerPolicy="no-referrer"
         allow="fullscreen; encrypted-media"
         sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
