@@ -809,6 +809,19 @@ const AboutAlveusPage: NextPage = () => {
           onClose={() => setNewsLightboxOpen(undefined)}
           items={newsLightboxItems}
         />
+
+        <p className="mt-8 text-center text-lg text-balance">
+          We also partner with various organizations to amplify their efforts
+          and share their important work with our audience, furthering our
+          mission of conservation and education.
+        </p>
+
+        <p className="mt-2 text-center text-lg">
+          <Link href="/about/orgs">
+            Explore some of our partnerships
+            <IconArrowRight size={16} className="ml-1 inline-block" />
+          </Link>
+        </p>
       </Section>
 
       <Section dark>
