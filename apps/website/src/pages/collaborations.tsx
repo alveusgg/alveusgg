@@ -29,6 +29,8 @@ import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
+import IconArrowRight from "@/icons/IconArrowRight";
+
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -365,26 +367,46 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section dark className="pt-24 pb-12">
-          <div className="w-full lg:w-4/5">
-            <Heading>Our Collaborations</Heading>
-            <p className="text-lg text-balance">
-              We work with other content creators to educate our combined
-              audiences, introducing them to the educational ambassadors at
-              Alveus and their conservation missions.
-            </p>
+          <div className="flex flex-wrap items-end">
+            <div className="w-full lg:w-2/3">
+              <Heading>Our Collaborations</Heading>
 
-            <p className="mt-2 text-lg text-balance">
-              We&apos;ve hosted{" "}
-              <abbr
-                title={`Across ${collaborations.length.toLocaleString()} collaboration streams`}
-              >
-                {creators.length.toLocaleString()} creators
-              </abbr>{" "}
-              at the sanctuary since {collaborations.at(-1)!.date.getFullYear()}
-              , bringing audiences from Twitch, YouTube, and other platforms,
-              together to learn about the importance of conservation.
-            </p>
+              <p className="text-lg text-balance">
+                We work with other content creators to educate our combined
+                audiences, introducing them to the educational ambassadors at
+                Alveus and their conservation missions.
+              </p>
+
+              <p className="mt-2 text-lg text-balance">
+                We&apos;ve hosted{" "}
+                <abbr
+                  title={`Across ${collaborations.length.toLocaleString()} collaboration streams`}
+                >
+                  {creators.length.toLocaleString()} creators
+                </abbr>{" "}
+                at the sanctuary since{" "}
+                {collaborations.at(-1)!.date.getFullYear()}, bringing audiences
+                from Twitch, YouTube, and other platforms, together to learn
+                about the importance of conservation.
+              </p>
+            </div>
+
+            <div className="w-full lg:w-1/3 lg:pl-2">
+              <p className="text-lg text-balance">
+                We also partner with various organizations to amplify their
+                efforts and share their important work with our audience,
+                furthering our mission of conservation and education.
+              </p>
+
+              <p className="mt-2 text-lg">
+                <Link href="/about/orgs" dark>
+                  Explore some of our partnerships
+                  <IconArrowRight size={16} className="ml-1 inline-block" />
+                </Link>
+              </p>
+            </div>
           </div>
+
           <Creators className="mt-6" />
         </Section>
       </div>
