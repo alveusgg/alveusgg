@@ -1,14 +1,6 @@
 import { Feed } from "feed";
 
-export type RssFeedParameters = {
-  title: string;
-  description: string;
-  id: string;
-  link: string;
-  updated: Date | undefined;
-  items: Array<RssFeedItem>;
-  // TODO favicon?
-};
+import { fetchYouTubeVideos } from "@/server/apis/youtube";
 
 export type RssFeedItem = {
   title: string;
@@ -17,6 +9,16 @@ export type RssFeedItem = {
   description: string | undefined;
   date: Date;
   // TODO image?
+};
+
+export type RssFeedParameters = {
+  title: string;
+  description: string;
+  id: string;
+  link: string;
+  updated: Date | undefined;
+  items: Array<RssFeedItem>;
+  // TODO favicon?
 };
 
 export function getRssFeedContent(options: RssFeedParameters) {
@@ -42,4 +44,48 @@ export function getRssFeedContent(options: RssFeedParameters) {
   });
 
   return feed.rss2();
+}
+
+export type YouTubeRssFeedParameters = {
+  title: string;
+  description: string;
+  id: string;
+  link: string;
+  // TODO favicon?
+};
+
+export async function getYouTubeRssFeedContent(
+  options: YouTubeRssFeedParameters,
+  channelIds: string[],
+) {
+  const latestVideos = await Promise.all(
+    channelIds.map((channelId) => fetchYouTubeVideos(channelId)),
+  ).then((feeds) =>
+    feeds.flat().sort((a, b) => b.published.getTime() - a.published.getTime()),
+  );
+  const latestVideoDate = latestVideos[0]?.published;
+
+  const videoFeedItems = latestVideos
+    .map((video) => ({
+      ...video,
+      url: `https://www.youtube.com/watch?v=${encodeURIComponent(video.id)}`,
+    }))
+    .map((video) => ({
+      title: video.title,
+      id: video.url,
+      link: video.url,
+      description: undefined,
+      date: video.published,
+    }));
+
+  const videoFeedContent = getRssFeedContent({
+    title: options.title,
+    description: options.description,
+    id: options.id,
+    link: options.link,
+    updated: latestVideoDate,
+    items: videoFeedItems,
+  });
+
+  return videoFeedContent;
 }
