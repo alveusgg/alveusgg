@@ -6,7 +6,6 @@ import { getRssFeedContent } from "@/utils/rss-feed";
 
 export async function GET() {
   const eventsPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/events`;
-  // TODO can the abstraction get this instead?
   const latestEventDate = events[0] && new Date(events[0].date);
 
   const eventFeedItems = events

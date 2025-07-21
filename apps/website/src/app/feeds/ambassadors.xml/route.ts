@@ -17,12 +17,10 @@ const sortedActiveAmbassadors = activeAmbassadors.toSorted(
 
 export async function GET() {
   const allAmbassadorsPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/ambassadors`;
-  // TODO can the abstraction get this instead?
   const latestArrivalDate =
     sortedActiveAmbassadors[0] && new Date(sortedActiveAmbassadors[0].arrival);
 
   const ambassadorFeedItems = sortedActiveAmbassadors
-    // TODO just have the feed use link if id not present
     .map((ambassador) => ({
       ...ambassador,
       url: `${env.NEXT_PUBLIC_BASE_URL}/ambassadors/${camelToKebab(ambassador.name)}`,

@@ -6,7 +6,6 @@ import { getRssFeedContent } from "@/utils/rss-feed";
 
 export async function GET() {
   const bookClubPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/book-club`;
-  // TODO can the abstraction get this instead?
   const latestBookDate = books[0] && new Date(books[0].month);
 
   const bookFeedItems = books.map((book) => ({

@@ -16,11 +16,9 @@ const animalQuestEpisodes: AnimalQuestWithEpisode[] = animalQuest
 
 export async function GET() {
   const animalQuestPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/animal-quest`;
-  // TODO can the abstraction get this instead?
   const latestEpisodeDate = animalQuestEpisodes[0]?.broadcast;
 
   const animalQuestFeedItems = animalQuestEpisodes
-    // TODO just have the feed use link if id not present
     .map((episode) => ({
       ...episode,
       url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${camelToKebab(episode.edition)}`,
