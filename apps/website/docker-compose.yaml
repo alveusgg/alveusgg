@@ -7,16 +7,20 @@ services:
       MYSQL_ROOT_PASSWORD: alveusgg_secret
 
   s3:
-    image: bitnami/minio:latest
+    image: minio/minio:latest
     ports:
       - 9000:9000
       - 9001:9001
     environment:
       MINIO_ROOT_USER: alveusgg_key
       MINIO_ROOT_PASSWORD: alveusgg_secret
-      MINIO_DEFAULT_BUCKETS: alveusgg:download
+    command: server /data --console-address ":9001"
+    post_start:
+      - command: sh -c "/usr/bin/mc mb local/alveusgg --ignore-existing; /usr/bin/mc anonymous set download local/alveusgg;"
+        environment:
+          - MC_HOST_local=http://alveusgg_key:alveusgg_secret@localhost:9000
     volumes:
-      - s3:/bitnami/minio/data
+      - s3:/data
 
 volumes:
   s3:
