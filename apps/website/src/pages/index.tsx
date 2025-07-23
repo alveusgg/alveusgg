@@ -16,7 +16,7 @@ import { camelToKebab } from "@/utils/string-case";
 
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
-import Button, { buttonClassNames } from "@/components/content/Button";
+import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
@@ -27,11 +27,7 @@ import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
-import {
-  YouTubeEmbed,
-  YouTubeLightbox,
-  YouTubePreview,
-} from "@/components/content/YouTube";
+import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
@@ -261,26 +257,27 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <p className="my-2 font-serif text-lg italic">
                 Founded by Maya Higa
               </p>
+
               <p className="my-4 text-lg">
                 Alveus is a nonprofit organization founded by Maya Higa that
                 functions as a wildlife sanctuary and as a virtual education
                 center facility to provide permanent homes to non-releasable
-                animal ambassadors. These animals function as ambassadors, so
-                viewers can watch their journeys, get to know the animals, and
-                gain an appreciation for their species.
-              </p>
-              <p className="my-4 text-lg">
-                Alveus hosts content collaborations where creators can visit and
-                participate in education programs. Combining platforms this way
-                maximizes the impact for spreading conservation messages.
+                animal ambassadors.
               </p>
 
-              <YouTubeLightbox
-                videoId="jXTqWIc--jo"
-                className={buttonClassNames({ dark: true })}
-              >
-                Watch the Video
-              </YouTubeLightbox>
+              <p className="my-4 text-lg">
+                Alveus runs a 24/7 live stream on Twitch, where viewers can
+                watch the animal ambassadors, get to know them and gain an
+                appreciation for their species. The sanctuary also hosts content
+                collaborations where creators can visit and participate in
+                education programs, sharing the ambassadors with their own
+                audiences and combining platforms to maximize the impact for
+                spreading conservation messages.
+              </p>
+
+              <Button href="/about/alveus" dark>
+                Learn more about Alveus Sanctuary
+              </Button>
             </div>
 
             <div className="basis-full pt-8 lg:basis-1/2 lg:pt-0 lg:pl-8">
@@ -425,64 +422,62 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       </div>
 
       <Section dark>
-        <div className="flex flex-wrap items-center gap-y-8">
-          <Heading level={2} id="recent-videos" link>
-            Recent Videos
-          </Heading>
+        <Heading level={2} id="recent-videos" link>
+          Recent Videos
+        </Heading>
 
-          <div className="flex w-full flex-wrap justify-around gap-y-4">
-            {videos.map((video) => (
-              <div
-                key={video.id}
-                className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/4"
+        <div className="mt-8 flex w-full flex-wrap justify-around gap-y-4">
+          {videos.map((video) => (
+            <div
+              key={video.id}
+              className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/4"
+            >
+              <Heading
+                level={2}
+                className="order-3 my-0 px-1 text-center text-2xl"
               >
-                <Heading
-                  level={2}
-                  className="order-3 my-0 px-1 text-center text-2xl"
-                >
-                  {video.title}
-                </Heading>
+                {video.title}
+              </Heading>
 
+              <Link
+                href={`https://www.youtube.com/watch?v=${video.id}`}
+                external
+                onClick={(e) => {
+                  e.preventDefault();
+                  setLatestLightboxOpen(video.id);
+                }}
+                className="group/trigger order-1 w-full max-w-2xl"
+                custom
+              >
+                <YouTubePreview
+                  videoId={video.id}
+                  alt={video.title}
+                  className="aspect-video h-auto w-full"
+                />
+              </Link>
+
+              <div className="order-2 my-1 flex w-full flex-wrap items-center justify-between px-1">
+                <p className="text-sm leading-tight text-alveus-green-200">
+                  {formatDateTime(video.published, { style: "long" })}
+                </p>
                 <Link
-                  href={`https://www.youtube.com/watch?v=${video.id}`}
+                  href={video.author.uri}
                   external
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setLatestLightboxOpen(video.id);
-                  }}
-                  className="group/trigger order-1 w-full max-w-2xl"
                   custom
+                  className="block rounded-full bg-alveus-tan px-2 py-1 text-xs leading-tight text-alveus-green-700 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan"
                 >
-                  <YouTubePreview
-                    videoId={video.id}
-                    alt={video.title}
-                    className="aspect-video h-auto w-full"
-                  />
+                  {video.author.name}
                 </Link>
-
-                <div className="order-2 my-1 flex w-full flex-wrap items-center justify-between px-1">
-                  <p className="text-sm leading-tight text-alveus-green-200">
-                    {formatDateTime(video.published, { style: "long" })}
-                  </p>
-                  <Link
-                    href={video.author.uri}
-                    external
-                    custom
-                    className="block rounded-full bg-alveus-tan px-2 py-1 text-xs leading-tight text-alveus-green-700 transition-colors hover:bg-alveus-green-800 hover:text-alveus-tan"
-                  >
-                    {video.author.name}
-                  </Link>
-                </div>
               </div>
-            ))}
-          </div>
-
-          <Lightbox
-            open={latestLightboxOpen}
-            onClose={() => setLatestLightboxOpen(undefined)}
-            items={latestLightboxItems}
-          />
+            </div>
+          ))}
         </div>
+
+        <Lightbox
+          open={latestLightboxOpen}
+          onClose={() => setLatestLightboxOpen(undefined)}
+          items={latestLightboxItems}
+        />
       </Section>
 
       {/* Grow the last section to cover the page */}
