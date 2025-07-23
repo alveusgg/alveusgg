@@ -839,7 +839,8 @@ const collaborations: Collaboration[] = (
       name: "The Botez Sisters",
       link: "https://www.twitch.tv/botezlive",
       date: new Date("2022-08-30"),
-      videoId: "QgvNy11kU6E",
+      videoId: "qC2enrkLHzo",
+      vodId: "QgvNy11kU6E",
       creators: [
         {
           name: "The Botez Sisters",
