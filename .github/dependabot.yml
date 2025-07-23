@@ -14,6 +14,10 @@ updates:
       day: wednesday
       time: "00:00"
 
+    # Only accept updates that have been published for at least 3 days
+    cooldown:
+      default-days: 3
+
     # Create a grouped PR for minor/patch updates with majors getting dedicated PRs
     groups:
       actions:
@@ -30,6 +34,10 @@ updates:
 
     # Allow usage of any registry including npm-github w/ auth as above
     registries: "*"
+
+    # Only accept updates that have been published for at least 3 days
+    cooldown:
+      default-days: 3
 
     # Ensure the new version is stored in `package.json`
     versioning-strategy: increase

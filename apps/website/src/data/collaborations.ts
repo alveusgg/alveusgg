@@ -839,7 +839,8 @@ const collaborations: Collaboration[] = (
       name: "The Botez Sisters",
       link: "https://www.twitch.tv/botezlive",
       date: new Date("2022-08-30"),
-      videoId: "QgvNy11kU6E",
+      videoId: "qC2enrkLHzo",
+      vodId: "QgvNy11kU6E",
       creators: [
         {
           name: "The Botez Sisters",
@@ -852,7 +853,8 @@ const collaborations: Collaboration[] = (
       name: "Knut",
       link: "https://www.twitch.tv/knut",
       date: new Date("2022-08-09"),
-      videoId: "lFhFx6kf2E4",
+      videoId: "-HhGd3Whld0",
+      vodId: "lFhFx6kf2E4",
       creators: [
         {
           name: "Knut",
