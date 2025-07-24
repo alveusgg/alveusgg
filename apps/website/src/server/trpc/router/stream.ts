@@ -1,3 +1,5 @@
+import { track } from "@vercel/analytics/server";
+import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
 import { env } from "@/env";
@@ -64,6 +66,15 @@ export const streamRouter = router({
         twitchAccount.id,
         channels.alveusgg.id,
         `!${command} ${args?.join(" ") || ""}`,
+      );
+
+      // Track the command run in the background
+      waitUntil(
+        track(
+          "Command run",
+          { command, args: args?.join(" ") ?? null },
+          { headers: ctx.req.headers },
+        ),
       );
     }),
 
