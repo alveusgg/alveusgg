@@ -139,6 +139,12 @@ export const formatDateTimeRelative = (
   return parts.map((part) => part.value).join("");
 };
 
+export const hasTimePassed = (targetTime: Date | number | string): boolean => {
+  const now = new Date();
+  const target = new Date(targetTime);
+  return now > target;
+};
+
 export const formatDateTimeLocal = (
   dateTime: Date,
   format: Partial<DateTimeFormat> = {},
