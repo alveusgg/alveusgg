@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "@alveusgg/data/build/tailwind.css";
-@import "photoswipe/dist/photoswipe.css";
 
 @plugin "./text-stroke.ts";
 

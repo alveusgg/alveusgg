@@ -337,7 +337,6 @@ export const ShowAndTellEntry = ({
         {imageAttachments.length || videoAttachments.length ? (
           <ShowAndTellGallery
             isPresentationView={isPresentationView}
-            lightboxParentRef={wrapperRef}
             imageAttachments={imageAttachments}
             videoAttachments={videoAttachments}
           />
