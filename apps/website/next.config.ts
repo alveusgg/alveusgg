@@ -59,6 +59,11 @@ const config: NextConfig = {
         protocol: "https",
         hostname: "cdn-cf-east.streamable.com",
       },
+      // Cloudflare Stream Thumbnails
+      {
+        protocol: "https",
+        hostname: "customer-*.cloudflarestream.com",
+      },
       // Imgur (stream schedule)
       {
         protocol: "https",
