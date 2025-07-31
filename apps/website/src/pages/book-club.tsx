@@ -28,6 +28,7 @@ import IconYouTube from "@/icons/IconYouTube";
 import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
+import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
 import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
@@ -59,6 +60,15 @@ type BookInfo = {
 };
 
 const books: BookInfo[] = [
+  {
+    title: "Steve & Me",
+    author: "Terri Irwin",
+    image: steveAndMe,
+    month: ["2025-08"],
+    link: "https://amzn.to/4moWrRz",
+    thickness: thickness.sm, // 290 pages
+    color: "border-black",
+  },
   {
     title: "The Insect Crisis",
     author: "Oliver Milman",
