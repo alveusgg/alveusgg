@@ -505,7 +505,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
           className={
             "scrollbar-none flex flex-col transition-colors duration-200 " +
             (isPresentationView
-              ? "fixed inset-0 z-[100] gap-5 overflow-x-hidden overflow-y-auto bg-black p-5"
+              ? "fixed inset-0 z-100 gap-5 overflow-x-hidden overflow-y-auto bg-black p-5"
               : "gap-20 bg-white/0")
           }
           onKeyDown={handleArrowKeys}
@@ -676,13 +676,9 @@ async function transitionBetweenViews(
     }
 
     // If possible, open native fullscreen
-    if (
-      presentationViewRootElement &&
-      presentationViewRootElement !== document.fullscreenElement &&
-      "requestFullscreen" in presentationViewRootElement
-    ) {
+    if ("requestFullscreen" in document.documentElement) {
       try {
-        await presentationViewRootElement.requestFullscreen();
+        await document.documentElement.requestFullscreen();
         await delay(300);
       } catch (_) {}
     }
@@ -696,6 +692,9 @@ async function transitionBetweenViews(
       } catch (_) {}
     }
   }
+
+  // Disable scrolling in presentation view
+  document.body.style.overflow = value ? "hidden" : "";
 
   // Always scroll to the target element
   await delay(10);

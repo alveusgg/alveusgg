@@ -13,7 +13,7 @@ import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import Stream from "@/components/content/Stream";
+import { StreamEmbed } from "@/components/content/Stream";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -101,14 +101,18 @@ const EventItems = ({
               idx % 2 === 0 && "lg:order-first",
             )}
           >
-            <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
-              <Stream
+            <Box
+              className="z-0 aspect-video p-0"
+              ringClassName="lg:ring-8"
+              dark
+            >
+              <StreamEmbed
                 src={event.video}
                 poster={event.poster}
                 autoplay
                 muted
                 loop
-                className="my-auto aspect-video w-full"
+                className="rounded-none"
               />
             </Box>
           </div>

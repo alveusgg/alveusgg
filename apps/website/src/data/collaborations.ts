@@ -7,6 +7,7 @@ import alinity from "@/assets/collaborations/alinity.png";
 import alluux from "@/assets/collaborations/alluux.png";
 import alpharad from "@/assets/collaborations/alpharad.png";
 import angelskimi from "@/assets/collaborations/angelskimi.png";
+import annieFuchsia from "@/assets/collaborations/annie-fuchsia.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
 import arky from "@/assets/collaborations/arky.png";
 import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
@@ -83,6 +84,20 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Annie Fuchsia",
+      link: "https://www.twitch.tv/anniefuchsia",
+      date: new Date("2025-07-27"),
+      videoId: "QylLgVFiWe4",
+      vodId: "ZYfocWgSTs8",
+      creators: [
+        {
+          name: "Annie Fuchsia",
+          image: annieFuchsia,
+          popularity: 502_000, // Twitch followers, 2025-07-28
+        },
+      ],
+    },
     {
       name: "Mari",
       link: "https://www.twitch.tv/mari",
