@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { useState } from "react";
+import { type MouseEvent, useState } from "react";
 
 import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
@@ -76,7 +76,7 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
   const [isZoomed, setIsZoomed] = useState(false);
   const [transformOrigin, setTransformOrigin] = useState("center");
 
-  const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
+  const handleImageClick = (e: MouseEvent<HTMLImageElement>) => {
     if (state !== "loaded") return;
 
     const rect = e.currentTarget.getBoundingClientRect();
