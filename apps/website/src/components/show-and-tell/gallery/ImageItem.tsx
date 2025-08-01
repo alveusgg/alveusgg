@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useState } from "react";
 
 import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
 
@@ -8,6 +9,8 @@ import { createImageUrl } from "@/utils/image";
 import Link from "@/components/content/Link";
 
 import IconInformationCircle from "@/icons/IconInformationCircle";
+import IconLoading from "@/icons/IconLoading";
+import IconX from "@/icons/IconX";
 
 type ImageItemPreviewProps = {
   imageAttachment: ImageAttachmentWithFileStorageObject;
@@ -69,10 +72,12 @@ type ImageItemEmbedProps = {
 };
 
 export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
+  const [state, setState] = useState<"loading" | "error" | "loaded">("loading");
+
   return (
     <div className="flex h-full flex-col">
       <div
-        className="mx-auto flex max-h-full max-w-full grow"
+        className="relative mx-auto flex max-h-full min-h-0 max-w-full shrink grow"
         style={{
           aspectRatio: `${imageAttachment.fileStorageObject?.imageMetadata?.width || 1920} / ${imageAttachment.fileStorageObject?.imageMetadata?.height || 1080}`,
         }}
@@ -92,11 +97,20 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
           style={{
             aspectRatio: `${imageAttachment.fileStorageObject?.imageMetadata?.width || 1920} / ${imageAttachment.fileStorageObject?.imageMetadata?.height || 1080}`,
           }}
+          onLoad={() => setState("loaded")}
+          onError={() => setState("error")}
         />
+
+        {state === "loading" && (
+          <IconLoading className="absolute top-1/2 left-1/2 -translate-1/2 text-alveus-tan" />
+        )}
+        {state === "error" && (
+          <IconX className="absolute top-1/2 left-1/2 -translate-1/2 text-alveus-tan" />
+        )}
       </div>
 
       {imageAttachment.caption && (
-        <p className="my-4 text-center text-balance text-alveus-tan md:mb-0 lg:mt-8">
+        <p className="my-4 shrink-0 text-center text-balance text-alveus-tan md:mb-0 lg:mt-8">
           {imageAttachment.caption}
         </p>
       )}
