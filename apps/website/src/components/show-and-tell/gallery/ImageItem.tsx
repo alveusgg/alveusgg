@@ -73,11 +73,29 @@ type ImageItemEmbedProps = {
 
 export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
   const [state, setState] = useState<"loading" | "error" | "loaded">("loading");
+  const [isZoomed, setIsZoomed] = useState(false);
+  const [transformOrigin, setTransformOrigin] = useState("center");
+
+  const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    if (state !== "loaded") return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    if (!isZoomed) {
+      setTransformOrigin(`${x}% ${y}%`);
+      setIsZoomed(true);
+    } else {
+      setTransformOrigin("center");
+      setIsZoomed(false);
+    }
+  };
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col select-none">
       <div
-        className="relative mx-auto flex max-h-full min-h-0 max-w-full shrink grow"
+        className="relative mx-auto flex max-h-full min-h-0 max-w-full shrink grow overflow-hidden"
         style={{
           aspectRatio: `${imageAttachment.fileStorageObject?.imageMetadata?.width || 1920} / ${imageAttachment.fileStorageObject?.imageMetadata?.height || 1080}`,
         }}
@@ -93,12 +111,17 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
           alt={imageAttachment.alternativeText}
           quality={90}
           draggable={false}
-          className="my-auto h-auto max-h-full w-full rounded-xl bg-alveus-green-800 shadow-xl"
+          className={classes(
+            "my-auto h-auto max-h-full w-full rounded-xl bg-alveus-green-800 shadow-xl transition-transform duration-300 ease-out",
+            isZoomed ? "scale-200 cursor-zoom-out" : "scale-100 cursor-zoom-in",
+          )}
           style={{
             aspectRatio: `${imageAttachment.fileStorageObject?.imageMetadata?.width || 1920} / ${imageAttachment.fileStorageObject?.imageMetadata?.height || 1080}`,
+            transformOrigin: transformOrigin,
           }}
           onLoad={() => setState("loaded")}
           onError={() => setState("error")}
+          onClick={handleImageClick}
         />
 
         {state === "loading" && (
