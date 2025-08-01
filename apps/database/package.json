@@ -16,6 +16,7 @@
     "types": "tsc --noEmit",
     "build:generate": "prisma generate",
     "build:compile": "tsc --outDir dist --declaration --sourcemap",
+    "build:copy": "copyfiles --verbose \"prisma/generated/**/*.@(js|wasm)\" dist",
     "build": "pnpm run --sequential \"/^build:.*/\"",
     "postinstall": "pnpm build",
     "lint:validate": "prisma validate",
@@ -24,16 +25,19 @@
     "format": "prisma format"
   },
   "dependencies": {
+    "@prisma/adapter-mariadb": "^6.13.0",
     "@prisma/adapter-planetscale": "^6.12.0",
     "@prisma/client": "^6.12.0"
   },
   "devDependencies": {
     "@types/node": "^22.16.5",
+    "copyfiles": "^2.4.1",
     "prisma": "^6.12.0"
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "edge-light": "./dist/src/edge.js",
+      "import": "./dist/src/index.js"
     }
   }
 }

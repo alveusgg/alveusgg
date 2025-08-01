@@ -1,6 +1,14 @@
-generator client {
-  provider        = "prisma-client-js"
-  output          = "./client"
+generator node {
+  provider        = "prisma-client"
+  output          = "./generated/node"
+  runtime         = "nodejs"
+  previewFeatures = ["queryCompiler", "driverAdapters"]
+}
+
+generator edge {
+  provider        = "prisma-client"
+  output          = "./generated/edge"
+  runtime         = "edge-light"
   previewFeatures = ["driverAdapters"]
 }
 
