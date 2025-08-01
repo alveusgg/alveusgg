@@ -4,7 +4,7 @@ import {
   type Node as ReactFlowNode,
   type NodeProps as ReactFlowNodeProps,
   useEdges,
-  useUpdateNodeInternals,
+  useReactFlow,
 } from "@xyflow/react";
 import { useCallback, useMemo } from "react";
 
@@ -27,8 +27,6 @@ const Node = ({
   sourcePosition = Position.Bottom,
   isConnectable,
 }: ReactFlowNodeProps<ReactFlowNode<NodeData>>) => {
-  const updateNodeInternals = useUpdateNodeInternals();
-
   // Get the source and target edges
   const edges = useEdges();
   const sourceEdges = useMemo(
@@ -55,26 +53,28 @@ const Node = ({
   );
 
   // Highlight the connected edges on hover
+  const { updateEdge } = useReactFlow();
+
   const mouseOver = useCallback(() => {
     targetEdges.concat(sourceEdges).forEach((edge) => {
-      edge.style = {
-        ...edge.style,
-        stroke: "var(--color-highlight)",
-        strokeWidth: 2,
-      };
+      updateEdge(edge.id, {
+        style: {
+          ...edge.style,
+          stroke: "var(--color-highlight)",
+          strokeWidth: 2,
+        },
+      });
     });
-    updateNodeInternals(id);
-  }, [targetEdges, sourceEdges, updateNodeInternals, id]);
+  }, [targetEdges, sourceEdges, updateEdge]);
 
   const mouseOut = useCallback(() => {
     targetEdges.concat(sourceEdges).forEach((edge) => {
       const style = { ...edge.style };
       Reflect.deleteProperty(style, "stroke");
       Reflect.deleteProperty(style, "strokeWidth");
-      edge.style = style;
+      updateEdge(edge.id, { style });
     });
-    updateNodeInternals(id);
-  }, [targetEdges, sourceEdges, updateNodeInternals, id]);
+  }, [targetEdges, sourceEdges, updateEdge]);
 
   const handleRef = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
