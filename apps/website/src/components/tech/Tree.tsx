@@ -6,12 +6,13 @@ import {
   Position,
   ReactFlow,
   type ReactFlowInstance,
-  type Node as ReactFlowNode,
   type XYPosition,
+  useEdgesState,
+  useNodesState,
 } from "@xyflow/react";
 import type { Node as DagreNode } from "dagre";
 import { graphlib, layout } from "dagre";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 
 import "@xyflow/react/dist/style.css";
 
@@ -43,7 +44,8 @@ type TreeEdgeInternal = {
 };
 
 export type TreeInstance<T extends Record<string, unknown>> = ReactFlowInstance<
-  ReactFlowNode<T>
+  TreeNodePositioned<T>,
+  TreeEdgeInternal
 >;
 
 interface TreeProps<T extends Record<string, unknown>> {
@@ -228,18 +230,51 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
   };
 };
 
-const Tree = <T extends Record<string, unknown>>({
-  data,
-  nodeTypes,
-  edgeType,
-  nodeSize = { width: 180, height: 40 },
-  nodeSpacing = { ranks: 100, siblings: 50 },
-  onInit,
-}: TreeProps<T>) => {
+const useNodesEdgesState = <T extends Record<string, unknown>>(
+  data: TreeNode<T> | TreeNode<T>[],
+  nodeSize: { width: number; height: number },
+  nodeSpacing: { ranks: number; siblings: number },
+) => {
   // Take the nested data and convert it to a flat list of nodes and edges
   const { nodes, edges } = useMemo(
     () => withPositions(getNodesEdges(data), nodeSize, nodeSpacing),
     [data, nodeSize, nodeSpacing],
+  );
+
+  const [statefulNodes, setNodes, onNodesChange] = useNodesState(nodes);
+  useEffect(() => {
+    setNodes(nodes);
+  }, [nodes, setNodes]);
+
+  const [statefulEdges, setEdges, onEdgesChange] = useEdgesState(edges);
+  useEffect(() => {
+    setEdges(edges);
+  }, [edges, setEdges]);
+
+  return {
+    nodes: statefulNodes,
+    edges: statefulEdges,
+    onNodesChange,
+    onEdgesChange,
+  };
+};
+
+const defaultNodeSize = { width: 180, height: 40 };
+const defaultNodeSpacing = { ranks: 100, siblings: 50 };
+
+const Tree = <T extends Record<string, unknown>>({
+  data,
+  nodeTypes,
+  edgeType,
+  nodeSize = defaultNodeSize,
+  nodeSpacing = defaultNodeSpacing,
+  onInit,
+}: TreeProps<T>) => {
+  // Convert the nested data into stateful nodes and edges
+  const { nodes, edges, onNodesChange, onEdgesChange } = useNodesEdgesState(
+    data,
+    nodeSize,
+    nodeSpacing,
   );
 
   // Override the default edge type if one is provided
@@ -252,6 +287,8 @@ const Tree = <T extends Record<string, unknown>>({
     <ReactFlow
       nodes={nodes}
       edges={edges}
+      onNodesChange={onNodesChange}
+      onEdgesChange={onEdgesChange}
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       proOptions={{ hideAttribution: true }}
