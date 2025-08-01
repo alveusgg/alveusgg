@@ -1,3 +1,4 @@
+import { type Node as DagreNode, graphlib, layout } from "@dagrejs/dagre";
 import {
   Background,
   Controls,
@@ -10,8 +11,6 @@ import {
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
-import type { Node as DagreNode } from "dagre";
-import { graphlib, layout } from "dagre";
 import { useEffect, useMemo } from "react";
 
 import "@xyflow/react/dist/style.css";
