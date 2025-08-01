@@ -170,7 +170,7 @@ const Carousel = ({
       >
         <span className="sr-only">Previous</span>
         <IconChevronLeft
-          className="transition-opacity group-disabled:opacity-20"
+          className="transition-opacity group-disabled:opacity-5"
           size={24}
         />
       </button>
@@ -223,7 +223,7 @@ const Carousel = ({
       >
         <span className="sr-only">Next</span>
         <IconChevronRight
-          className="transition-opacity group-disabled:opacity-20"
+          className="transition-opacity group-disabled:opacity-5"
           size={24}
         />
       </button>
