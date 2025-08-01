@@ -72,7 +72,7 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
   return (
     <div className="flex h-full flex-col">
       <div
-        className="mx-auto flex max-h-full max-w-full grow"
+        className="mx-auto flex max-h-full min-h-0 max-w-full shrink grow"
         style={{
           aspectRatio: `${imageAttachment.fileStorageObject?.imageMetadata?.width || 1920} / ${imageAttachment.fileStorageObject?.imageMetadata?.height || 1080}`,
         }}
@@ -96,7 +96,7 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
       </div>
 
       {imageAttachment.caption && (
-        <p className="my-4 text-center text-balance text-alveus-tan md:mb-0 lg:mt-8">
+        <p className="my-4 shrink-0 text-center text-balance text-alveus-tan md:mb-0 lg:mt-8">
           {imageAttachment.caption}
         </p>
       )}
