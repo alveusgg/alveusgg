@@ -1,7 +1,8 @@
 generator node {
-  provider = "prisma-client"
-  output   = "./generated/node"
-  runtime  = "nodejs"
+  provider        = "prisma-client"
+  output          = "./generated/node"
+  runtime         = "nodejs"
+  previewFeatures = ["queryCompiler", "driverAdapters"]
 }
 
 generator edge {
