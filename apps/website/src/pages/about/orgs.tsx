@@ -420,8 +420,8 @@ const AboutOrgsPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Partnering with Organizations"
-        description="Beyond our educational collaborations with content creators, Maya Higa and Alveus Sanctuary partner with various organizations to further our mission of conservation and education."
+        title="Collaborating with Organizations"
+        description="Beyond our educational collaborations with content creators, Maya Higa and Alveus Sanctuary collaborate with various organizations to further our mission of conservation and education."
       />
 
       {/* Nav background */}
@@ -436,17 +436,17 @@ const AboutOrgsPage: NextPage = () => {
 
         <Section dark>
           <div className="w-full lg:w-4/5 lg:py-8">
-            <Heading>Partnering with Organizations</Heading>
+            <Heading>Collaborating with Organizations</Heading>
 
             <p className="text-lg text-balance">
               Beyond our{" "}
               <Link href="/collaborations" dark>
                 educational collaborations
               </Link>{" "}
-              with content creators, Maya Higa and Alveus Sanctuary partner with
-              various organizations to further our mission of conservation and
-              education. These partnerships allow us to amplify their efforts
-              and share their important work with our audience.
+              with content creators, Maya Higa and Alveus Sanctuary collaborate
+              with various organizations to further our mission of conservation
+              and education. These collaborations allow us to amplify their
+              efforts and share their important work with our audience.
             </p>
           </div>
         </Section>
