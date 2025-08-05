@@ -53,6 +53,7 @@ import pointCrow from "@/assets/collaborations/point-crow.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import russel from "@/assets/collaborations/russel.png";
 import scarra from "@/assets/collaborations/scarra.png";
+import sketch from "@/assets/collaborations/sketch.png";
 import squeex from "@/assets/collaborations/squeex.png";
 import steak from "@/assets/collaborations/steak.png";
 import supertf from "@/assets/collaborations/supertf.png";
@@ -84,6 +85,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Sketch",
+      link: "https://www.twitch.tv/thesketchreal",
+      date: new Date("2025-08-04"),
+      videoId: "qgoqxPAm7G8",
+      creators: [
+        {
+          name: "Sketch",
+          image: sketch,
+          popularity: 1_600_000, // Twitch followers, 2025-08-05
+        },
+      ],
+    },
     {
       name: "Annie Fuchsia",
       link: "https://www.twitch.tv/anniefuchsia",
