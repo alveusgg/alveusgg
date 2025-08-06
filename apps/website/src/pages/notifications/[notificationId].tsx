@@ -1,19 +1,23 @@
+import { DateTime } from "luxon";
 import type {
   GetStaticPropsContext,
   InferGetStaticPropsType,
   NextPage,
 } from "next";
-import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 import { getNotificationById } from "@/server/db/notifications";
 
+import { formatDateTime } from "@/utils/datetime";
 import { getNotificationVod } from "@/utils/notifications";
 
+import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
-import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import { NotificationIcon } from "@/components/notifications/NotificationIcon";
+
+import IconArrowRight from "@/icons/IconArrowRight";
 
 export async function getStaticProps({ params }: GetStaticPropsContext) {
   const notificationId = String(params?.notificationId || "");
@@ -39,71 +43,60 @@ export async function getStaticPaths() {
 const NotificationPage: NextPage<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ notification }) => {
-  const router = useRouter();
   const link = getNotificationVod(notification) || notification.linkUrl;
 
   useEffect(() => {
     if (link) {
       window.location.href = link;
-    } else {
-      router
-        .replace(
-          `/updates?${new URLSearchParams({
-            notificationId: notification.id,
-          })}`,
-        )
-        .then(() => {
-          // ignore
-        });
     }
-  }, [link, notification.id, router]);
-
-  const content = (
-    <>
-      <div className="text-center">
-        <Heading>{notification.title || "Update"}</Heading>
-        <p>{notification.message}</p>
-
-        {link ? (
-          <Link external href={link}>
-            {link}
-          </Link>
-        ) : (
-          <Link
-            href={`/updates?${new URLSearchParams({
-              notificationId: notification.id,
-            })}`}
-          >
-            Show updates!
-          </Link>
-        )}
-      </div>
-    </>
-  );
+  }, [link]);
 
   return (
     <>
       <Meta
-        title={notification.title || "Update"}
+        title={[notification.title, "Notification"].filter(Boolean).join(" | ")}
         description={notification.message}
       />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark>
-        <Heading>Alveus notification</Heading>
+      <Section dark className="py-8">
+        <Heading className="flex items-center justify-center gap-4">
+          {notification.title || "Notification"}
+          <NotificationIcon notification={notification} />
+        </Heading>
       </Section>
 
       {/* Grow the last section to cover the page */}
-      <Section className="grow">{content}</Section>
-
-      <div
-        className="fixed inset-0 z-20 flex items-center justify-center bg-alveus-tan"
-        id="notification-redirect-overlay"
+      <Section
+        className="flex grow"
+        containerClassName="flex flex-col items-center my-auto gap-4"
       >
-        <div className="text-center">{content}</div>
-      </div>
+        <Button href={link || "/updates"} className="flex items-center gap-2">
+          {link?.toLowerCase().replace(/^(https?:)?\/\/(www\.)?/, "") ||
+            "See Updates"}
+          <IconArrowRight />
+        </Button>
+
+        <div className="flex items-center gap-2 opacity-70">
+          {!!notification.message && (
+            <>
+              <p>{notification.message}</p>
+              <div className="mt-0.5 size-1.5 rounded-full bg-alveus-green-800" />
+            </>
+          )}
+
+          <time
+            dateTime={notification.createdAt.toISOString()}
+            title={formatDateTime(notification.createdAt)}
+          >
+            {DateTime.fromJSDate(notification.createdAt).toRelative({
+              locale: "en-US",
+            })}
+          </time>
+        </div>
+      </Section>
     </>
   );
 };
