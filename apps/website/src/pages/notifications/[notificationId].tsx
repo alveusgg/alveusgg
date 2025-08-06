@@ -8,6 +8,8 @@ import { useEffect } from "react";
 
 import { getNotificationById } from "@/server/db/notifications";
 
+import { getNotificationVod } from "@/utils/notifications";
+
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -38,9 +40,11 @@ const NotificationPage: NextPage<
   InferGetStaticPropsType<typeof getStaticProps>
 > = ({ notification }) => {
   const router = useRouter();
+  const link = getNotificationVod(notification) || notification.linkUrl;
+
   useEffect(() => {
-    if (notification.linkUrl) {
-      window.location.href = notification.linkUrl;
+    if (link) {
+      window.location.href = link;
     } else {
       router
         .replace(
@@ -52,7 +56,7 @@ const NotificationPage: NextPage<
           // ignore
         });
     }
-  });
+  }, [link, notification.id, router]);
 
   const content = (
     <>
@@ -60,9 +64,9 @@ const NotificationPage: NextPage<
         <Heading>{notification.title || "Update"}</Heading>
         <p>{notification.message}</p>
 
-        {notification.linkUrl ? (
-          <Link external href={notification.linkUrl}>
-            {notification.linkUrl}
+        {link ? (
+          <Link external href={link}>
+            {link}
           </Link>
         ) : (
           <Link

@@ -2,6 +2,8 @@ import type { NextApiRequest, NextApiResponse } from "next";
 
 import { prisma } from "@alveusgg/database";
 
+import { getNotificationVod } from "@/utils/notifications";
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
@@ -36,7 +38,10 @@ export default async function handler(
     return;
   }
 
-  res.redirect(303, notification.linkUrl || "/");
+  res.redirect(
+    303,
+    getNotificationVod(notification) || notification.linkUrl || "/",
+  );
   res.end();
 
   // Track click if possible
