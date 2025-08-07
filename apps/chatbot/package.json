@@ -15,13 +15,13 @@
   "dependencies": {
     "@alveusgg/database": "workspace:*",
     "@t3-oss/env-core": "^0.13.8",
-    "@twurple/api": "^7.3.0",
-    "@twurple/auth": "^7.3.0",
-    "@twurple/chat": "^7.3.0",
-    "@twurple/easy-bot": "^7.3.0",
+    "@twurple/api": "^7.4.0",
+    "@twurple/auth": "^7.4.0",
+    "@twurple/chat": "^7.4.0",
+    "@twurple/easy-bot": "^7.4.0",
     "read-pkg": "^9.0.1",
     "tsx": "^4.20.3",
-    "zod": "^4.0.10"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@eslint/js": "^9.32.0",
