@@ -184,7 +184,12 @@ const config: NextConfig = {
     },
     {
       source: "/orgs",
-      destination: "/about/orgs",
+      destination: "/collaborations/orgs",
+      permanent: true,
+    },
+    {
+      source: "/about/orgs",
+      destination: "/collaborations/orgs",
       permanent: true,
     },
     {

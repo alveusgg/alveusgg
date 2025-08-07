@@ -36,7 +36,7 @@ const UpdatesPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Schedule & Updates"
+        title="Schedule and Updates"
         description="See upcoming streams in the schedule and stay updated with push notifications"
       />
 

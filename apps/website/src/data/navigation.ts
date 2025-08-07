@@ -45,12 +45,16 @@ export const mainNavStructure: NavStructure = {
         title: "Animal Quest",
         link: "/animal-quest",
       },
-      collaborations: {
-        title: "Collaborations",
+      creatorCollabs: {
+        title: "Creator Collaborations",
         link: "/collaborations",
       },
+      ngoCollabs: {
+        title: "NGO Collaborations",
+        link: "/collaborations/orgs",
+      },
       updates: {
-        title: "Schedule & Updates",
+        title: "Schedule and Updates",
         link: "/updates",
       },
       events: {
@@ -77,10 +81,6 @@ export const mainNavStructure: NavStructure = {
       boardOfDirectors: {
         title: "Board of Directors",
         link: "/about/board-of-directors",
-      },
-      ngoCollabs: {
-        title: "NGO Collaborations",
-        link: "/about/orgs",
       },
       annualReports: {
         title: "Annual Reports",

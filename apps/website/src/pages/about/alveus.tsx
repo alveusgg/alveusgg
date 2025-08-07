@@ -817,7 +817,7 @@ const AboutAlveusPage: NextPage = () => {
         </p>
 
         <p className="mt-2 text-center text-lg">
-          <Link href="/about/orgs">
+          <Link href="/collaborations/orgs">
             Explore some of our NGO collaborations
             <IconArrowRight size={16} className="ml-1 inline-block" />
           </Link>

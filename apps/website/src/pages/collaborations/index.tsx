@@ -399,7 +399,7 @@ const CollaborationsPage: NextPage = () => {
               </p>
 
               <p className="mt-2 text-lg">
-                <Link href="/about/orgs" dark>
+                <Link href="/collaborations/orgs" dark>
                   Explore some of our NGO collaborations
                   <IconArrowRight size={16} className="ml-1 inline-block" />
                 </Link>

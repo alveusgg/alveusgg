@@ -416,7 +416,7 @@ const Org = ({
   );
 };
 
-const AboutOrgsPage: NextPage = () => {
+const CollaborationsOrgsPage: NextPage = () => {
   return (
     <>
       <Meta
@@ -441,12 +441,13 @@ const AboutOrgsPage: NextPage = () => {
             <p className="text-lg text-balance">
               Beyond our{" "}
               <Link href="/collaborations" dark>
-                educational collaborations
-              </Link>{" "}
-              with content creators, Maya Higa and Alveus Sanctuary collaborate
-              with various organizations to further our mission of conservation
-              and education. These collaborations allow us to amplify their
-              efforts and share their important work with our audience.
+                content creator collaborations
+              </Link>
+              , educating their audiences, Maya Higa and Alveus Sanctuary
+              collaborate with various organizations to further our mission of
+              conservation and education. These collaborations allow us to
+              amplify their efforts and share their important work with our
+              audience.
             </p>
           </div>
         </Section>
@@ -478,4 +479,4 @@ const AboutOrgsPage: NextPage = () => {
   );
 };
 
-export default AboutOrgsPage;
+export default CollaborationsOrgsPage;
