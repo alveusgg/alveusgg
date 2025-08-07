@@ -26,7 +26,7 @@ const listOfSchema = (schema) =>
     for (const item of val.split(" ")) {
       const parsed = schema.safeParse(item.trim());
       if (!parsed.success) {
-        parsed.error.issues.forEach((issue) => ctx.addIssue(issue));
+        parsed.error.issues.forEach(({ ...issue }) => ctx.addIssue(issue));
         return z.NEVER;
       }
 
