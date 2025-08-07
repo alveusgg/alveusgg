@@ -54,7 +54,7 @@ const fileUploadProxy = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const uploadRes = await fetch(storageUrl, {
     method: req.method,
-    body: body,
+    body: new Uint8Array(body),
     headers: {
       "Content-Type": contentType,
       "Content-Length": String(body.length),

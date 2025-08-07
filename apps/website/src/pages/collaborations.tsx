@@ -393,14 +393,14 @@ const CollaborationsPage: NextPage = () => {
 
             <div className="w-full lg:w-1/3 lg:pl-2">
               <p className="text-lg text-balance">
-                We also partner with various organizations to amplify their
+                We also collaborate with various organizations to amplify their
                 efforts and share their important work with our audience,
                 furthering our mission of conservation and education.
               </p>
 
               <p className="mt-2 text-lg">
                 <Link href="/about/orgs" dark>
-                  Explore some of our partnerships
+                  Explore some of our NGO collaborations
                   <IconArrowRight size={16} className="ml-1 inline-block" />
                 </Link>
               </p>
