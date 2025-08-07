@@ -59,6 +59,7 @@ export const authOptions: NextAuthOptions = {
           id: true,
           access_token: true,
           refresh_token: true,
+          expires_at: true,
           verified_at: true,
           scope: true,
           twitchChannelBroadcaster: {
@@ -90,6 +91,11 @@ export const authOptions: NextAuthOptions = {
               account.id,
               account.access_token,
               account.refresh_token,
+              // Force the refresh if we're within 1hr of expiry
+              !!(
+                account.expires_at &&
+                account.expires_at - Date.now() / 1000 < 60 * 60
+              ),
             );
           } catch (err) {
             if (!(err instanceof ExpiredAccessTokenError)) console.error(err);
