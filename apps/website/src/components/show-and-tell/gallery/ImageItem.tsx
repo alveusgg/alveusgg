@@ -92,6 +92,16 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
     }
   };
 
+  const handleImageMouseMove = (e: MouseEvent<HTMLImageElement>) => {
+    if (!isZoomed || state !== "loaded") return;
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+    setTransformOrigin(`${x}% ${y}%`);
+  };
+
   const aspectRatio = `${imageAttachment.fileStorageObject?.imageMetadata?.width || 1920} / ${imageAttachment.fileStorageObject?.imageMetadata?.height || 1080}`;
 
   return (
@@ -128,6 +138,7 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
             onLoad={() => setState("loaded")}
             onError={() => setState("error")}
             onClick={handleImageClick}
+            onMouseMove={handleImageMouseMove}
           />
         </div>
 
