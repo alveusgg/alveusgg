@@ -127,12 +127,15 @@ const Slideshow = ({
           <Image
             src={src}
             alt={alt}
-            width={320}
+            sizes="100vw"
             quality={50}
-            priority={true}
-            loading="eager"
+            loader={qualityLoader}
+            loading="lazy"
+            onLoad={(e) => {
+              e.currentTarget.dataset.loaded = "true";
+            }}
             className={classes(
-              "absolute inset-0 -z-10 size-full bg-transparent object-cover blur-lg",
+              "peer size-full bg-transparent object-cover",
               className,
             )}
             style={{
@@ -142,12 +145,12 @@ const Slideshow = ({
           <Image
             src={src}
             alt={alt}
-            sizes="100vw"
+            width={320}
             quality={50}
-            loader={qualityLoader}
-            loading="lazy"
+            priority={true}
+            loading="eager"
             className={classes(
-              "size-full bg-transparent object-cover",
+              "absolute inset-0 size-full bg-transparent object-cover blur-lg transition-[opacity,visibility] duration-300 peer-data-loaded:invisible peer-data-loaded:opacity-0",
               className,
             )}
             style={{
