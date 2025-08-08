@@ -1,7 +1,15 @@
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import { type ReactNode, useCallback, useEffect, useState } from "react";
+import {
+  type MouseEvent,
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import { classes } from "@/utils/classes";
+import { visibleUnderCursor } from "@/utils/dom";
 
 import IconX from "@/icons/IconX";
 
@@ -35,13 +43,28 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
     [scrollTo],
   );
 
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const onClick = useCallback(
+    (e: MouseEvent) => {
+      const elm = visibleUnderCursor(e.nativeEvent);
+      if (elm && backdropRef.current && elm === backdropRef.current) {
+        onClose();
+      }
+    },
+    [onClose],
+  );
+
   return (
     <Dialog
       open={!!open}
       onClose={onClose}
       className={classes("fixed inset-0 z-100", className)}
+      onClickCapture={onClick}
     >
-      <DialogBackdrop className="absolute inset-0 bg-black/75" />
+      <DialogBackdrop
+        className="absolute inset-0 bg-black/75"
+        ref={backdropRef}
+      />
 
       <div className="absolute inset-0 p-1 md:p-4 lg:p-8">
         <DialogPanel className="size-full">
