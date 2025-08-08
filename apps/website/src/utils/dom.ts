@@ -42,7 +42,9 @@ export function visibleUnderCursor(e: MouseEvent) {
     const style = getComputedStyle(element);
     if (
       style.backgroundImage !== "none" ||
-      style.backgroundColor !== "rgba(0, 0, 0, 0)"
+      (style.backgroundColor.replaceAll(" ", "") !== "rgba(0,0,0,0)" &&
+        style.backgroundColor !== "transparent" &&
+        style.backgroundColor !== "")
     ) {
       return element;
     }
