@@ -142,9 +142,10 @@ const Slideshow = ({
               animationDelay: `${idx * animation.duration.offset}ms`,
             }}
           />
+
           <Image
             src={src}
-            alt={alt}
+            alt=""
             width={320}
             quality={50}
             priority={true}
