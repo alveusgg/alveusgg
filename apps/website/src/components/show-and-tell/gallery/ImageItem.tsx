@@ -87,7 +87,7 @@ export const ImageItemEmbed = ({ imageAttachment }: ImageItemEmbedProps) => {
       setTransformOrigin(`${x}% ${y}%`);
       setIsZoomed(true);
     } else {
-      setTransformOrigin("center");
+      // Don't reset transformOrigin to avoid snapping to center during zoom-out
       setIsZoomed(false);
     }
   };
