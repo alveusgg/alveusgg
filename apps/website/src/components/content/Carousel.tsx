@@ -162,7 +162,8 @@ const Carousel = ({
           state === "none" && "hidden",
         )}
         type="button"
-        onClick={() => {
+        onClick={(event) => {
+          event.stopPropagation();
           interacted();
           move("left");
         }}
@@ -184,6 +185,9 @@ const Carousel = ({
         ref={ref}
         onScroll={scrolled}
         onMouseDown={state === "none" ? undefined : drag}
+        onClick={(event) => {
+          event.stopPropagation();
+        }}
       >
         {Object.entries(items).map(([key, item]) => (
           <div
@@ -215,7 +219,8 @@ const Carousel = ({
           state === "none" && "hidden",
         )}
         type="button"
-        onClick={() => {
+        onClick={(event) => {
+          event.stopPropagation();
           interacted();
           move("right");
         }}
