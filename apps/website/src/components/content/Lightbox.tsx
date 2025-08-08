@@ -44,7 +44,12 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
       <DialogBackdrop className="absolute inset-0 bg-black/75" />
 
       <div className="absolute inset-0 p-1 md:p-4 lg:p-8">
-        <DialogPanel className="size-full">
+        <DialogPanel
+          className="size-full"
+          onClick={() => {
+            onClose();
+          }}
+        >
           <Carousel
             items={items}
             auto={null}
