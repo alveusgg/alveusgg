@@ -43,9 +43,43 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
     [scrollTo],
   );
 
+  // Allow clicks that go through to the backdrop to close the lightbox
+  // Except when the click is part of a drag operation
   const backdropRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const dragStartPos = useRef<{ x: number; y: number } | null>(null);
+
+  const onMouseDown = useCallback((e: MouseEvent) => {
+    dragStartPos.current = { x: e.clientX, y: e.clientY };
+    isDragging.current = false;
+  }, []);
+
+  const onMouseMove = useCallback((e: MouseEvent) => {
+    if (!dragStartPos.current) return;
+
+    const deltaX = Math.abs(e.clientX - dragStartPos.current.x);
+    const deltaY = Math.abs(e.clientY - dragStartPos.current.y);
+
+    // Consider it a drag if the mouse has moved more than 5 pixels in any direction
+    if (deltaX > 5 || deltaY > 5) {
+      isDragging.current = true;
+    }
+  }, []);
+
+  const onMouseUp = useCallback(() => {
+    dragStartPos.current = null;
+
+    // Reset isDragging after a short delay to allow click event to fire
+    setTimeout(() => {
+      isDragging.current = false;
+    }, 0);
+  }, []);
+
   const onClick = useCallback(
     (e: MouseEvent) => {
+      // Don't close if this click was part of a drag operation
+      if (isDragging.current) return;
+
       const elm = visibleUnderCursor(e.nativeEvent);
       if (elm && backdropRef.current && elm === backdropRef.current) {
         onClose();
@@ -60,6 +94,9 @@ const Lightbox = ({ open, onClose, items, className }: LightboxProps) => {
       onClose={onClose}
       className={classes("fixed inset-0 z-100", className)}
       onClickCapture={onClick}
+      onMouseDownCapture={onMouseDown}
+      onMouseMoveCapture={onMouseMove}
+      onMouseUpCapture={onMouseUp}
     >
       <DialogBackdrop
         className="absolute inset-0 bg-black/75"
