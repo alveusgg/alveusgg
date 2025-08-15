@@ -8,6 +8,7 @@ import {
 } from "@/utils/helpers";
 
 import IconBluesky from "@/icons/IconBluesky";
+import IconFacebook from "@/icons/IconFacebook";
 import IconInstagram from "@/icons/IconInstagram";
 import IconTikTok from "@/icons/IconTikTok";
 import IconTwitch from "@/icons/IconTwitch";
@@ -19,6 +20,7 @@ const icons = {
   instagram: IconInstagram,
   twitter: IconTwitter,
   bluesky: IconBluesky,
+  facebook: IconFacebook,
   tiktok: IconTikTok,
   youtube: IconYouTube,
 } as const satisfies Record<keyof typeof socials, ComponentType>;
