@@ -28,13 +28,20 @@ const ContactUsPage: NextPage = () => {
             We are not openly hiring.
           </p>
 
-          <p className="my-3 text-xl font-semibold">
-            For business inquiries: <br />
-            <Link href="mailto:alveus@loaded.gg">alveus@loaded.gg</Link>
-          </p>
+          <div className="my-6 grid grid-cols-1 justify-center gap-6 lg:my-12 lg:grid-cols-2">
+            <p className="text-xl font-semibold">
+              For donor inquiries: <br />
+              <Link href="mailto:contact@alveussanctuary.org">
+                contact@alveussanctuary.org
+              </Link>
+            </p>
 
-          <div className="flex flex-wrap justify-center gap-x-6">
-            <p className="my-3 text-xl font-semibold">
+            <p className="text-xl font-semibold">
+              For business inquiries: <br />
+              <Link href="mailto:alveus@loaded.gg">alveus@loaded.gg</Link>
+            </p>
+
+            <p className="text-xl font-semibold">
               For merch inquiries: <br />
               <Link
                 href="https://shop.alveussanctuary.org/pages/contact"
@@ -44,7 +51,7 @@ const ContactUsPage: NextPage = () => {
               </Link>
             </p>
 
-            <p className="my-3 text-xl font-semibold">
+            <p className="text-xl font-semibold">
               For plushie inquiries: <br />
               <Link href="https://youtooz.com/pages/contact-us" external>
                 youtooz.com/pages/contact-us
