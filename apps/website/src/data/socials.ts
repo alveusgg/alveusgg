@@ -20,6 +20,10 @@ const socials = {
     link: "https://bsky.app/profile/alveussanctuary.org",
     title: "Bluesky",
   },
+  facebook: {
+    link: "https://www.facebook.com/AlveusSanctuary",
+    title: "Facebook",
+  },
   tiktok: {
     link: "https://www.tiktok.com/@alveussanctuary",
     title: "TikTok",
