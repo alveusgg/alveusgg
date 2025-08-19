@@ -23,6 +23,8 @@ import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
+import Meta from "@/components/content/Meta";
+import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import WatchLive from "@/components/content/WatchLive";
@@ -191,6 +193,21 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
   return (
     <>
+      <Meta>
+        <RssLink
+          title="All Alveus Sanctuary YouTube Videos"
+          path="/feeds/youtube/all.xml"
+        ></RssLink>
+        <RssLink
+          title="Alveus Sanctuary Main YouTube Channel"
+          path="/feeds/youtube/alveus-sanctuary.xml"
+        ></RssLink>
+        <RssLink
+          title="Alveus Sanctuary Highlights YouTube Channel"
+          path="/feeds/youtube/alveus-sanctuary-highlights.xml"
+        ></RssLink>
+      </Meta>
+
       {/* Hero, offset to be navbar background */}
       <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
         <div className="absolute inset-0 -z-10 bg-alveus-green">
