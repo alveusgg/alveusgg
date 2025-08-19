@@ -36,3 +36,5 @@ export async function GET() {
     },
   });
 }
+
+export const dynamic = "force-static";
