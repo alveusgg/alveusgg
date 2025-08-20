@@ -146,13 +146,13 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     setRandomClips(shuffled);
   }, [clips]);
 
-  // Iterate through clips
+  // Iterate through clips, showing details in an overlay initially
   const [details, setDetails] = useState<"overlay" | "below">();
   const [idx, setIdx] = useState<number>(0);
   const clip = randomClips[idx];
   const increment = useCallback(() => {
     setIdx((idx) => (idx + 1) % clips.length);
-    setDetails(undefined);
+    setDetails("overlay");
   }, [clips.length]);
 
   // As a fallback, set a timer for 150% of the duration of the clip
@@ -183,15 +183,11 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       clip.duration * 1000 + 2 * 1000, // Fudge factor of 2 seconds for clip loading
     );
 
-    // After 1s overlay the clip details, and 10s later place them below the clip
+    // After 10s of the clip playing, move the details to below the clip
     if (detailsTimer.current) clearTimeout(detailsTimer.current);
     detailsTimer.current = setTimeout(() => {
-      setDetails("overlay");
-
-      detailsTimer.current = setTimeout(() => {
-        setDetails("below");
-      }, 10000);
-    }, 1000);
+      setDetails("below");
+    }, 10000);
   }, [clip, increment]);
 
   // If the clip fails to load, show another after 2 seconds
