@@ -24,12 +24,12 @@
     "format": "prisma format"
   },
   "dependencies": {
-    "@prisma/adapter-planetscale": "^6.13.0",
-    "@prisma/client": "^6.13.0"
+    "@prisma/adapter-planetscale": "^6.14.0",
+    "@prisma/client": "^6.14.0"
   },
   "devDependencies": {
     "@types/node": "^22.17.2",
-    "prisma": "^6.13.0"
+    "prisma": "^6.14.0"
   },
   "exports": {
     ".": {
