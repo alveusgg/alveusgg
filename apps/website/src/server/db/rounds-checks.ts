@@ -49,8 +49,8 @@ const existingRoundsCheckSchemaBase = z
   .and(roundsCheckSchemaBase.partial());
 
 export const existingRoundsCheckSchema = z.union([
-  existingRoundsCheckSchemaBase,
   existingRoundsCheckSchemaBase.and(roundsCheckSchemaImage),
+  existingRoundsCheckSchemaBase,
 ]);
 
 export async function createRoundsCheck(
