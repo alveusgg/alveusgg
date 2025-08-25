@@ -80,6 +80,7 @@
     "react-quill-new": "^3.4.6",
     "react-stately": "^3.37.0",
     "react-textarea-autosize": "^8.5.9",
+    "react-to-text": "^2.0.1",
     "reactflow": "^11.11.4",
     "remark-heading-id": "^1.0.1",
     "schema-dts": "^1.1.5",

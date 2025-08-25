@@ -1,3 +1,5 @@
+import reactToText from "react-to-text";
+
 import { env } from "@/env";
 
 import events from "@/data/events";
@@ -17,7 +19,7 @@ export async function GET() {
       title: event.name,
       id: event.url,
       link: event.url,
-      description: undefined,
+      description: reactToText(event.info),
       date: event.date,
     }));
 
