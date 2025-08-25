@@ -8,6 +8,7 @@ declare module "next-auth" {
     user?: {
       id: string;
       roles: string[];
+      scopes: string[];
       isSuperUser: boolean;
     } & DefaultSession["user"];
     error?: string;

@@ -9,7 +9,7 @@ export const adminActivityFeedRouter = router({
     .input(
       z.object({
         limit: z.number().int().min(1).max(100).nullish(),
-        cursor: z.string().cuid().nullish(),
+        cursor: z.cuid().nullish(),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -38,7 +38,7 @@ export const adminActivityFeedRouter = router({
     }),
 
   retryOutgoingWebhook: superUserProcedure
-    .input(z.object({ id: z.string().cuid() }))
+    .input(z.object({ id: z.cuid() }))
     .mutation(async ({ ctx, input }) => {
       const outgoingWebhook = await ctx.prisma.outgoingWebhook.findUnique({
         where: {

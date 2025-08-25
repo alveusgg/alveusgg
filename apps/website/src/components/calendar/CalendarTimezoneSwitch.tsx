@@ -4,7 +4,7 @@ import { classes } from "@/utils/classes";
 import {
   DATETIME_ALVEUS_ZONE,
   DATETIME_ALVEUS_ZONE_SHORT,
-} from "@/utils/datetime";
+} from "@/utils/timezone";
 
 import { DATETIME_USER_ZONE, DATETIME_USER_ZONE_SHORT } from "@/hooks/timezone";
 

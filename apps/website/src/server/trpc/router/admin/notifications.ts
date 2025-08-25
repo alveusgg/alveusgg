@@ -27,8 +27,8 @@ import {
 
 import { permissions } from "@/data/permissions";
 
+import { inputValueDatetimeLocalToUtc } from "@/utils/datetime-local";
 import { imageMimeTypes } from "@/utils/files";
-import { inputValueDatetimeLocalToUtc } from "@/utils/local-datetime";
 
 const uploadPrefix = "notifications/";
 
@@ -49,10 +49,11 @@ export const adminNotificationsRouter = router({
         text: z.string().max(200).optional(),
         title: z.string(),
         linkUrl: z.union([z.literal(""), z.string().trim().url()]).optional(),
-        imageUrl: z.string().url().optional(),
+        imageUrl: z.url().optional(),
+        vodUrl: z.url().optional(),
         scheduledStartAt: localDatetimeAsDateSchema.optional(),
         scheduledEndAt: localDatetimeAsDateSchema.optional(),
-        fileStorageObjectId: z.string().cuid().optional(),
+        fileStorageObjectId: z.cuid().optional(),
         isPush: z.boolean().optional(),
         isDiscord: z.boolean().optional(),
       }),
@@ -100,7 +101,7 @@ export const adminNotificationsRouter = router({
     .input(
       z.object({
         limit: z.number().int().min(1).optional(),
-        cursor: z.string().cuid().optional(),
+        cursor: z.cuid().optional(),
       }),
     )
     .query(async ({ input: { limit, cursor } }) =>
@@ -108,11 +109,11 @@ export const adminNotificationsRouter = router({
     ),
 
   cancelNotification: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ input }) => cancelNotification(input)),
 
   resendNotification: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ input }) => {
       const notification = await copyNotification(input);
       if (notification) {
@@ -127,7 +128,7 @@ export const adminNotificationsRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(imageMimeTypes),
+        fileType: z.literal(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {

@@ -8,7 +8,15 @@ const CustomLink = ({
   <Link {...props} custom />
 );
 
-const getClassNames = (className?: string, dark = false, filled = false) =>
+const buttonClassNames = ({
+  className,
+  dark = false,
+  filled = false,
+}: {
+  className?: string;
+  dark?: boolean;
+  filled?: boolean;
+}) =>
   classes(
     "rounded-3xl border-2 transition-colors",
     dark
@@ -42,7 +50,10 @@ const Button = <T extends React.ElementType>({
   className,
   ...props
 }: ButtonProps<T>) => (
-  <Element {...props} className={getClassNames(className, dark, filled)} />
+  <Element
+    {...props}
+    className={buttonClassNames({ className, dark, filled })}
+  />
 );
 
 export default Button;

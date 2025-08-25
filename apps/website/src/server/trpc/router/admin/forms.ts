@@ -19,7 +19,7 @@ export const adminFormsRouter = router({
       z
         .discriminatedUnion("action", [
           z.object({ action: z.literal("create") }),
-          z.object({ action: z.literal("edit"), id: z.string().cuid() }),
+          z.object({ action: z.literal("edit"), id: z.cuid() }),
         ])
         .and(formSchema),
     )
@@ -39,13 +39,13 @@ export const adminFormsRouter = router({
     }),
 
   deleteForm: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) =>
       ctx.prisma.form.delete({ where: { id } }),
     ),
 
   purgeFormEntries: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) =>
       ctx.prisma.formEntry.deleteMany({
         where: {
@@ -55,7 +55,7 @@ export const adminFormsRouter = router({
     ),
 
   anonymizeFormEntries: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) =>
       Promise.all([
         ctx.prisma.formEntry.updateMany({
@@ -79,7 +79,7 @@ export const adminFormsRouter = router({
     ),
 
   getForm: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(async ({ ctx, input: id }) =>
       ctx.prisma.form.findUnique({ where: { id } }),
     ),
@@ -97,7 +97,7 @@ export const adminFormsRouter = router({
   toggleFormStatus: permittedProcedure
     .input(
       z.object({
-        id: z.string().cuid(),
+        id: z.cuid(),
         active: z.boolean(),
       }),
     )
@@ -115,8 +115,8 @@ export const adminFormsRouter = router({
   updateFormOutgoingWebhookUrl: permittedProcedure
     .input(
       z.object({
-        id: z.string().cuid(),
-        outgoingWebhookUrl: z.string().url(),
+        id: z.cuid(),
+        outgoingWebhookUrl: z.url(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

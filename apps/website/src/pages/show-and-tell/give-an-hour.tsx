@@ -5,7 +5,7 @@ import { type ReactNode, useCallback, useMemo, useState } from "react";
 import { useLocale } from "react-aria";
 
 import { classes } from "@/utils/classes";
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -113,12 +113,7 @@ const Card = ({
     </div>
 
     <div className="grow text-lg">
-      <Heading
-        level={3}
-        id={id}
-        link
-        className="mt-0 scroll-mt-8 font-sans text-2xl"
-      >
+      <Heading level={3} id={id} link className="mt-0 font-sans text-2xl">
         {heading}
       </Heading>
       {children}

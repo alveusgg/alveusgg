@@ -6,6 +6,7 @@ export const scopeLabels = {
   "user:read:email": "User Email (Read)",
   "user:read:follows": "User Follows (Read)",
   "user:read:subscriptions": "User Subscriptions (Read)",
+  "user:write:chat": "User Chat (Write)",
   // Chat
   "chat:edit": "Chat (Edit)",
   "chat:read": "Chat (Read)",
@@ -22,27 +23,34 @@ export type Scope = keyof typeof scopeLabels;
 
 export const isScope = (scope: string): scope is Scope => scope in scopeLabels;
 
-export const defaultScopes = [
-  "openid",
-  "user:read:email",
-  "user:read:follows",
-  "user:read:subscriptions",
-] as const satisfies Scope[];
+export const scopeGroups = {
+  default: [
+    "openid",
+    "user:read:email",
+    "user:read:follows",
+    "user:read:subscriptions",
+  ],
+  api: [
+    "chat:edit",
+    "chat:read",
+    "moderator:read:followers",
+    "channel:read:charity",
+    "channel:read:subscriptions",
+    "channel:read:vips",
+    "channel:manage:schedule",
+  ],
+  chat: ["user:write:chat"],
+} as const satisfies Record<string, Scope[]>;
 
-export const botScopes = [
-  "chat:edit",
-  "chat:read",
-  "moderator:read:followers",
-  "channel:read:charity",
-  "channel:read:subscriptions",
-  "channel:read:vips",
-  "channel:manage:schedule",
-] as const satisfies Scope[];
+export type ScopeGroup = keyof typeof scopeGroups;
 
-interface Channel {
+export const isScopeGroup = (group: string): group is ScopeGroup =>
+  group in scopeGroups;
+
+interface ChannelData {
   username: string;
   id: string;
-  calendarEventFilter: (event: CalendarEvent) => boolean;
+  calendarEventFilter?: (event: CalendarEvent) => boolean;
 }
 
 export const channels = {
@@ -60,4 +68,25 @@ export const channels = {
       /^maya\b/i.test(event.category) &&
       !/\b(yt|youtube)\b/i.test(event.category),
   },
-} as const satisfies Record<string, Channel>;
+  alveusgg: {
+    username: "AlveusGG",
+    id: "858050963",
+  },
+} as const satisfies Record<string, ChannelData>;
+
+export type Channel = keyof typeof channels;
+
+export type ChannelWithCalendarEvents = {
+  [K in keyof typeof channels]: (typeof channels)[K] extends {
+    calendarEventFilter: Exclude<ChannelData["calendarEventFilter"], undefined>;
+  }
+    ? K
+    : never;
+}[keyof typeof channels];
+
+export const isChannelWithCalendarEvents = (
+  channel: Channel,
+): channel is ChannelWithCalendarEvents => {
+  const channelData = channels[channel];
+  return "calendarEventFilter" in channelData;
+};

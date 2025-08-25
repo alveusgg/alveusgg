@@ -1,19 +1,17 @@
-import pluralize from "pluralize";
-import { useCallback, useMemo, useRef, useState } from "react";
 import {
   BaseEdge,
   EdgeLabelRenderer,
   type EdgeProps,
-  Handle,
-  type NodeProps,
-  Position,
+  type Node as ReactFlowNode,
   getBezierPath,
-  useEdges,
   useNodes,
-} from "reactflow";
+} from "@xyflow/react";
+import pluralize from "pluralize";
+import { useCallback, useRef, useState } from "react";
 
 import network, {
   type NestedNetworkItem,
+  type NetworkConnection,
   type NetworkItem,
   isNestedNetworkItem,
 } from "@/data/tech/network";
@@ -23,32 +21,19 @@ import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
-import Tree, { type TreeNode } from "@/components/tech/Tree";
+import Node, { type NodeData } from "@/components/tech/Node";
+import Tree, { type TreeInstance, type TreeNode } from "@/components/tech/Tree";
 
-import IconExternal from "@/icons/IconExternal";
-
-type Data = {
-  label: string;
-  item: NetworkItem;
+type Data = NodeData & {
+  connection?: NetworkConnection;
 };
-
-const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
-  items.map((item) => ({
-    id: convertToSlug(`${item.name}-${item.type}`),
-    type: "network",
-    data: {
-      label: `${item.name} (${item.type})`,
-      item,
-    },
-    children: "links" in item && item.links ? toTree(item.links) : [],
-  }));
 
 const nodeTypes: {
   [k in NetworkItem["type"]]: {
     container: string;
     stats: boolean;
     eyebrow: {
-      name: string;
+      text: string;
       color: string;
     };
   };
@@ -56,129 +41,64 @@ const nodeTypes: {
   switch: {
     container: "border-blue-700",
     stats: true,
-    eyebrow: { name: "Network Switch", color: "text-blue-700" },
+    eyebrow: { text: "Network Switch", color: "text-blue-700" },
   },
   converter: {
     container: "border-blue-700 border-dashed",
     stats: false,
-    eyebrow: { name: "Media Converter", color: "text-blue-700" },
+    eyebrow: { text: "Media Converter", color: "text-blue-700" },
   },
   accessPoint: {
     container: "border-blue-400",
     stats: true,
-    eyebrow: { name: "WiFi Access Point", color: "text-blue-400" },
+    eyebrow: { text: "WiFi Access Point", color: "text-blue-400" },
   },
   camera: {
     container: "border-green-700",
     stats: true,
-    eyebrow: { name: "Camera", color: "text-green-700" },
+    eyebrow: { text: "Camera", color: "text-green-700" },
   },
   microphone: {
     container: "border-green-400",
     stats: true,
-    eyebrow: { name: "Microphone", color: "text-green-400" },
+    eyebrow: { text: "Microphone", color: "text-green-400" },
   },
   speaker: {
     container: "border-green-400",
     stats: false,
-    eyebrow: { name: "Speaker", color: "text-green-400" },
+    eyebrow: { text: "Speaker", color: "text-green-400" },
   },
   interface: {
     container: "border-green-400",
     stats: false,
-    eyebrow: { name: "Audio I/O Interface", color: "text-green-400" },
+    eyebrow: { text: "Audio I/O Interface", color: "text-green-400" },
   },
   server: {
     container: "border-yellow-700",
     stats: false,
-    eyebrow: { name: "Server", color: "text-yellow-700" },
+    eyebrow: { text: "Server", color: "text-yellow-700" },
   },
   controlunit: {
     container: "border-red-700",
     stats: false,
-    eyebrow: { name: "Camera Control Unit", color: "text-red-700" },
+    eyebrow: { text: "Camera Control Unit", color: "text-red-700" },
   },
 };
 
-const NetworkNode = ({
-  id,
-  data,
-  targetPosition = Position.Top,
-  sourcePosition = Position.Bottom,
-  isConnectable,
-}: NodeProps<Data>) => {
-  // Get the source and target edges
-  const edges = useEdges();
-  let targetEdge, sourceEdge;
-  for (const edge of edges) {
-    if (!targetEdge && edge.target === id) targetEdge = edge;
-    if (!sourceEdge && edge.source === id) sourceEdge = edge;
-    if (targetEdge && sourceEdge) break;
-  }
-
-  // If this node has a URL, we need some extra link props
-  const Element = data.item.url ? "a" : "div";
-  const linkProps = useMemo(
-    () =>
-      data.item.url
-        ? {
-            href: data.item.url,
-            target: "_blank",
-            rel: "noopener noreferrer",
-          }
-        : {},
-    [data.item.url],
-  );
-
-  return (
-    <Element
-      className={classes(
-        "group flex h-20 w-44 cursor-pointer flex-col rounded-xl border-2 bg-white px-2 py-1 hover:min-w-min hover:shadow-md focus:min-w-min focus:shadow-md",
-        nodeTypes[data.item.type].container,
-      )}
-      tabIndex={-1}
-      {...linkProps}
-    >
-      {(targetEdge || isConnectable) && (
-        <Handle
-          type="target"
-          position={targetPosition}
-          isConnectable={isConnectable}
-        />
-      )}
-      {(sourceEdge || isConnectable) && (
-        <Handle
-          type="source"
-          position={sourcePosition}
-          isConnectable={isConnectable}
-        />
-      )}
-
-      <p
-        className={classes("text-xs", nodeTypes[data.item.type].eyebrow.color)}
-      >
-        {nodeTypes[data.item.type].eyebrow.name}
-      </p>
-      <div className="my-auto">
-        <p className="truncate text-alveus-green-900">{data.item.name}</p>
-        <p className="flex items-end gap-1 text-xs text-alveus-green-700">
-          <span
-            className={classes(
-              "shrink overflow-hidden text-ellipsis whitespace-nowrap",
-              data.item.url && "group-hover:underline",
-            )}
-          >
-            {data.item.model}
-          </span>
-
-          {data.item.url && (
-            <IconExternal className="shrink-0 grow-0" size={14} />
-          )}
-        </p>
-      </div>
-    </Element>
-  );
-};
+const toTree = (items: NetworkItem[]): TreeNode<Data>[] =>
+  items.map((item) => ({
+    id: convertToSlug(`${item.name}-${item.type}`),
+    type: "network",
+    data: {
+      container: classes("h-20 w-44", nodeTypes[item.type].container),
+      eyebrow: nodeTypes[item.type].eyebrow,
+      name: item.name,
+      description: item.model,
+      url: item.url,
+      connection: isNestedNetworkItem(item) ? item.connection : undefined,
+    },
+    children: "links" in item && item.links ? toTree(item.links) : [],
+  }));
 
 const edgeTypes: {
   [k in NestedNetworkItem["connection"]["type"]]: {
@@ -234,9 +154,10 @@ const NetworkEdge = ({
   targetX,
   targetY,
   targetPosition,
+  style,
 }: EdgeProps) => {
   // Get the source and target nodes
-  const nodes = useNodes<Data>();
+  const nodes = useNodes<ReactFlowNode<Data>>();
   let sourceNode, targetNode;
   for (const node of nodes) {
     if (!sourceNode && node.id === source) sourceNode = node;
@@ -244,9 +165,7 @@ const NetworkEdge = ({
     if (sourceNode && targetNode) break;
   }
   if (!sourceNode || !targetNode) throw new Error("Missing source or target");
-  if (!isNestedNetworkItem(targetNode.data.item))
-    throw new Error("Invalid target");
-  const targetConnection = targetNode.data.item.connection;
+  if (!targetNode.data.connection) throw new Error("Invalid target");
 
   // Track if the user is hovering, or if the edge is focused
   const [hovered, setHovered] = useState(false);
@@ -304,7 +223,7 @@ const NetworkEdge = ({
       <g
         ref={ref}
         className={classes(
-          edgeTypes[targetConnection.type].stroke.color,
+          edgeTypes[targetNode.data.connection.type].stroke.color,
           !hovered && !focused && "opacity-75",
         )}
       >
@@ -313,7 +232,9 @@ const NetworkEdge = ({
           style={{
             stroke: "inherit",
             strokeWidth: 2,
-            strokeDasharray: edgeTypes[targetConnection.type].stroke.dash,
+            strokeDasharray:
+              edgeTypes[targetNode.data.connection.type].stroke.dash,
+            ...style,
           }}
         />
       </g>
@@ -329,7 +250,7 @@ const NetworkEdge = ({
             }}
             className="absolute rounded-xl border-2 border-alveus-green-100 bg-white px-2 py-1 shadow-md"
           >
-            {edgeTypes[targetConnection.type].name}
+            {edgeTypes[targetNode.data.connection.type].name}
           </div>
         )}
       </EdgeLabelRenderer>
@@ -348,7 +269,7 @@ const NetworkList = ({
     {items.map((item) => (
       <li key={convertToSlug(`${item.name}-${item.type}`)} className="my-2">
         <p>
-          {nodeTypes[item.type].eyebrow.name}: {item.name}
+          {nodeTypes[item.type].eyebrow.text}: {item.name}
         </p>
         <p>
           Model:{" "}
@@ -377,16 +298,32 @@ const NetworkList = ({
 
 const tree = {
   data: toTree(network),
-  nodeTypes: { network: NetworkNode },
+  nodeTypes: { network: Node },
   edgeType: NetworkEdge,
   nodeSize: { width: 176, height: 80 },
-  defaultZoom: 0.75,
+  onInit: (instance: TreeInstance<Data>) => {
+    // After the initial fit, vertically center on the first node
+    window.requestAnimationFrame(() => {
+      const nodes = instance.getNodes();
+
+      const firstNode = nodes[0];
+      if (!firstNode) return;
+
+      const centerX =
+        nodes.reduce((acc, node) => acc + node.position.x, 0) / nodes.length;
+
+      const viewport = instance.getViewport();
+      instance.setCenter(centerX, firstNode.position.y, {
+        zoom: viewport.zoom,
+      });
+    });
+  },
 };
 
 const Network = () => (
   <>
     <div
-      className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan"
+      className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
       aria-hidden
     >
       <Tree {...tree} />
@@ -431,7 +368,7 @@ export const NetworkStats = ({ className }: { className?: string }) => (
   >
     {stats.map(([key, value], idx) => (
       <li key={key}>
-        {value.toLocaleString()} {pluralize(nodeTypes[key].eyebrow.name, value)}
+        {value.toLocaleString()} {pluralize(nodeTypes[key].eyebrow.text, value)}
         {idx < stats.length - 1 && ", "}
       </li>
     ))}

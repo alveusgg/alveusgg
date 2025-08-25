@@ -6,6 +6,7 @@ import type { Notification } from "@alveusgg/database";
 import { getNotificationCategory } from "@/data/notifications";
 
 import { formatDateTime } from "@/utils/datetime";
+import { getNotificationVod } from "@/utils/notifications";
 
 import { NotificationIcon } from "@/components/notifications/NotificationIcon";
 
@@ -14,23 +15,34 @@ export function NotificationEntry({
 }: {
   notification: Notification;
 }) {
+  const showVod = !!getNotificationVod(notification);
+
   const categoryLabel =
     notification.tag && getNotificationCategory(notification.tag)?.label;
 
   const content = (
     <div className="flex w-full items-center gap-3">
       <div className="flex flex-1 flex-col">
-        <strong>{notification.title}</strong>
-        {notification.message && <span>{notification.message}</span>}
-        <time
-          className="text-sm opacity-70"
-          dateTime={notification.createdAt.toISOString()}
-          title={formatDateTime(notification.createdAt)}
-        >
-          {DateTime.fromJSDate(notification.createdAt).toRelative({
-            locale: "en-US",
-          })}
-        </time>
+        <p className="font-bold">{notification.title}</p>
+        {notification.message && <p>{notification.message}</p>}
+
+        <div className="flex items-center gap-2 text-sm opacity-70">
+          <time
+            dateTime={notification.createdAt.toISOString()}
+            title={formatDateTime(notification.createdAt)}
+          >
+            {DateTime.fromJSDate(notification.createdAt).toRelative({
+              locale: "en-US",
+            })}
+          </time>
+
+          {showVod && (
+            <>
+              <div className="mt-0.5 size-1.5 rounded-full bg-alveus-green-800" />
+              <p>VoD available</p>
+            </>
+          )}
+        </div>
       </div>
       <div title={categoryLabel || undefined}>
         <NotificationIcon notification={notification} />
@@ -38,7 +50,7 @@ export function NotificationEntry({
     </div>
   );
 
-  if (notification.linkUrl) {
+  if (notification.linkUrl || showVod) {
     return (
       <Link
         href={`/notifications/${notification.id}`}

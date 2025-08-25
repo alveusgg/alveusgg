@@ -3,6 +3,9 @@ import {
   Dialog,
   DialogPanel,
   DialogTitle,
+  Field,
+  Label,
+  Switch,
 } from "@headlessui/react";
 import { useRouter } from "next/router";
 import {
@@ -18,7 +21,7 @@ import {
 } from "react";
 
 import { classes } from "@/utils/classes";
-import { safeJSONParse } from "@/utils/helpers";
+import { safeJSONParse, typeSafeObjectEntries } from "@/utils/helpers";
 
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
@@ -234,9 +237,9 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
             </Description>
 
             <div className="mt-4 flex flex-col gap-y-2">
-              {Object.entries(consentData).map(([key, data]) => (
-                <label key={key} className="flex items-center">
-                  <div className="grow">
+              {typeSafeObjectEntries(consentData).map(([key, data]) => (
+                <Field key={key} className="flex items-center">
+                  <Label className="grow">
                     <p>{data.name}</p>
                     <p className="text-sm text-alveus-green">
                       {data.description}
@@ -245,33 +248,16 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
                         Privacy Policy
                       </Link>
                     </p>
-                  </div>
+                  </Label>
 
-                  <input
-                    type="checkbox"
-                    checked={consent[key as ConsentKey]}
-                    onChange={(e) => update({ [key]: e.target.checked })}
-                    className="peer sr-only"
-                  />
-
-                  <div
-                    className={classes(
-                      consent[key as ConsentKey]
-                        ? "bg-alveus-green"
-                        : "bg-alveus-green-300",
-                      "relative inline-flex h-6 w-11 cursor-pointer items-center rounded-full shadow-inner outline-blue-500 transition-colors peer-focus:outline",
-                    )}
+                  <Switch
+                    checked={consent[key]}
+                    onChange={(val) => update({ [key]: val })}
+                    className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                   >
-                    <span
-                      className={classes(
-                        consent[key as ConsentKey]
-                          ? "translate-x-6"
-                          : "translate-x-1",
-                        "inline-block h-4 w-4 rounded-full bg-alveus-tan shadow-sm transition-transform",
-                      )}
-                    />
-                  </div>
-                </label>
+                    <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                  </Switch>
+                </Field>
               ))}
             </div>
 

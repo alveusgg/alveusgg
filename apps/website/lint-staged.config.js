@@ -6,7 +6,7 @@ import mainConfig from "../../lint-staged.config.js";
 // https://github.com/vercel/next.js/blob/v15.3.1/packages/next/src/cli/next-lint.ts#L76-L91
 /** @param {string[]} filenames */
 const buildEslintCommand = (filenames) =>
-  `next lint --fix --dir !. ${filenames.map((file) => `--file ${file}`).join(" ")}`;
+  `next lint --fix --max-warnings 0 --dir !. ${filenames.map((file) => `--file ${file}`).join(" ")}`;
 
 const config = {
   ...mainConfig,

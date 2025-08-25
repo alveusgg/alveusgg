@@ -35,14 +35,14 @@ const entriesPerPage = 10;
 
 export const showAndTellRouter = router({
   getEntry: publicProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(({ input }) => getPublicPostById(input)),
 
   getEntries: publicProcedure
     .input(
       z.object({
-        filter: z.enum(["approved", "pendingApproval"]).optional(),
-        cursor: z.string().cuid().nullish(),
+        filter: z.literal(["approved", "pendingApproval"]).optional(),
+        cursor: z.cuid().nullish(),
       }),
     )
     .query(async ({ input }) => {
@@ -90,7 +90,7 @@ export const showAndTellRouter = router({
   ),
 
   getMyEntry: protectedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(({ ctx, input }) =>
       getUserPosts(ctx.session.user.id, input).then(
         (posts) => posts[0] ?? null,
@@ -98,7 +98,7 @@ export const showAndTellRouter = router({
     ),
 
   delete: protectedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input }) => {
       const post = await getUserPosts(ctx.session.user.id, input).then(
         (posts) => posts[0] ?? null,
@@ -121,7 +121,7 @@ export const showAndTellRouter = router({
     .input(
       z.object({
         fileName: z.string(),
-        fileType: z.enum(imageMimeTypes),
+        fileType: z.literal(imageMimeTypes),
       }),
     )
     .mutation(async ({ input }) => {

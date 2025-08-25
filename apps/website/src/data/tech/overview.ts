@@ -1,127 +1,171 @@
 export interface Step {
   id: string;
   name: string;
-  type: "server" | "source" | "service" | "control";
+  type: "server" | "source" | "github" | "service" | "control" | "output";
   description?: string;
+  url?: string;
   children?: Step[];
 }
 
-type Upstream = Omit<Step, "children">;
+// Return a unique chatbot object each time to avoid weird edges in the graph
+const chatBot = (id: string): Step => ({
+  id: `chatbot-${id}`,
+  name: "Chat Bot",
+  type: "control",
+  description:
+    "Custom Node.js application allowing control of stream layout and PTZ cameras from Twitch chat.",
+  children: [
+    {
+      id: `github-chatbot-${id}`,
+      name: "alveusgg/chatbot",
+      type: "github",
+      description:
+        "GitHub repository for the chat bot, allowing control of the stream layout and cameras.",
+      url: "https://github.com/alveusgg/chatbot",
+    },
+  ],
+});
 
-export const upstream: Upstream[] = [
-  {
-    id: "twitch",
-    name: "Twitch",
-    type: "service",
-  },
-  {
-    id: "youtube",
-    name: "YouTube",
-    type: "service",
-  },
-];
+const localObs: Step = {
+  id: "local-obs",
+  name: "Local OBS",
+  type: "server",
+  description: "Open Broadcaster Software, running on a local studio server.",
+  children: [
+    {
+      id: "cameras",
+      name: "Cameras",
+      type: "source",
+      description: "Live IP cameras around the property, mainly Axis devices.",
+      children: [
+        {
+          id: "axis-companion",
+          name: "Axis Companion",
+          type: "control",
+          description:
+            "Axis IP camera management software allowing PTZ control.",
+        },
+        chatBot("cameras"),
+      ],
+    },
+    {
+      id: "overlays",
+      name: "Overlays",
+      type: "source",
+      description:
+        "Browser-based overlays added to the stream in OBS, providing alerts etc., mainly using StreamElements.",
+    },
+    chatBot("local-obs"),
+  ],
+};
 
-const steps: Step = {
+const cloudObs: Step = {
   id: "cloud-obs",
   name: "Cloud OBS",
   type: "server",
   description: "Open Broadcaster Software, running on a remote cloud server.",
   children: [
+    localObs,
     {
-      id: "local-obs",
-      name: "Local OBS",
-      type: "server",
+      id: "liveu",
+      name: "LiveU Service",
+      type: "service",
       description:
-        "Open Broadcaster Software, running on a local studio server.",
+        "LiveU cloud streaming service, for ingesting remote video from a LiveU Solo.",
       children: [
         {
-          id: "cameras",
-          name: "Cameras",
+          id: "liveu-camera",
+          name: "Livestream Backpack",
           type: "source",
           description:
-            "Live IP cameras around the property, mainly using Axis and OBSBot.",
-          children: [
-            {
-              id: "axis-companion",
-              name: "Axis Companion",
-              type: "control",
-              description:
-                "Axis IP camera management software allowing PTZ control.",
-            },
-            {
-              id: "bot-cameras",
-              name: "Chat Bot",
-              type: "control",
-              description:
-                "Custom Node.js application allowing PTZ control from Twitch chat.",
-            },
-          ],
-        },
-        {
-          id: "overlays",
-          name: "Overlays",
-          type: "source",
-          description:
-            "Browser-based overlays added to the stream in OBS, providing alerts etc., mainly using StreamElements.",
-        },
-        {
-          id: "bot-local-obs",
-          name: "Chat Bot",
-          type: "control",
-          description:
-            "Custom Node.js application allowing control of scene/camera layout from Twitch chat.",
+            "LiveU Solo, a portable video encoder for live streaming, with a DSLR camera.",
         },
       ],
     },
     {
-      id: "psynaps",
-      name: "Psynaps RTMP",
-      type: "server",
-      description:
-        "Psynaps Super Stream System, a custom RTMP server for ingesting remote video.",
+      id: "irl-pro",
+      name: "IRL Pro",
+      type: "service",
+      description: "IRL Pro, a mobile app for live streaming from a phone.",
       children: [
         {
-          id: "liveu",
-          name: "LiveU Service",
-          type: "service",
+          id: "irl-pro-camera",
+          name: "Mobile Phone",
+          type: "source",
           description:
-            "LiveU cloud streaming service, for ingesting remote video from a LiveU Solo.",
-          children: [
-            {
-              id: "liveu-camera",
-              name: "Livestream Backpack",
-              type: "source",
-              description:
-                "LiveU Solo, a portable video encoder for live streaming, with a DSLR camera.",
-            },
-          ],
-        },
-        {
-          id: "larix",
-          name: "Larix Broadcaster",
-          type: "service",
-          description:
-            "Larix Broadcaster, a mobile app for live streaming from a phone.",
-          children: [
-            {
-              id: "larix-camera",
-              name: "Mobile Phone",
-              type: "source",
-              description:
-                "Mobile phone, with Larix Broadcaster app, for on-the-go streaming.",
-            },
-          ],
+            "Mobile phone, with IRL Pro app, for on-the-go streaming.",
         },
       ],
     },
-    {
-      id: "bot-cloud-obs",
-      name: "Chat Bot",
-      type: "control",
-      description:
-        "Custom Node.js application allowing control of scene/source swapping from Twitch chat.",
-    },
+    chatBot("cloud-obs"),
   ],
 };
+
+const steps: Step[] = [
+  {
+    id: "twitch",
+    name: "Twitch Stream",
+    type: "output",
+    url: "/live/twitch",
+    children: [
+      cloudObs,
+      {
+        id: "github-extension",
+        name: "alveusgg/extension",
+        type: "github",
+        description:
+          "GitHub repository for the Twitch extension showing ambassador information on the stream.",
+        url: "https://github.com/alveusgg/extension",
+      },
+    ],
+  },
+  {
+    id: "youtube",
+    name: "YouTube Stream",
+    type: "output",
+    url: "/live/youtube",
+    children: [cloudObs],
+  },
+  {
+    id: "website",
+    name: "Website",
+    type: "output",
+    url: "/",
+    children: [
+      {
+        id: "low-latency",
+        name: "Low Latency Feed",
+        type: "output",
+        description:
+          "Low latency feed used by moderators for responsive PTZ control.",
+        children: [
+          {
+            id: "cloudflare-stream",
+            name: "Cloudflare Stream",
+            type: "service",
+            description:
+              "Cloudflare Stream, used for the low latency feed over WebRTC.",
+            children: [localObs],
+          },
+        ],
+      },
+      {
+        id: "vercel",
+        name: "Vercel",
+        type: "service",
+        description: "Vercel hosting for the Alveus Sanctuary website.",
+        children: [
+          {
+            id: "github-website",
+            name: "alveusgg/alveusgg",
+            type: "github",
+            description: "GitHub repository for the Alveus Sanctuary website.",
+            url: "https://github.com/alveusgg/alveusgg",
+          },
+        ],
+      },
+    ],
+  },
+];
 
 export default steps;

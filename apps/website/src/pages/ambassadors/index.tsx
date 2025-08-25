@@ -17,7 +17,7 @@ import { classes } from "@/utils/classes";
 import {
   parsePartialDateString,
   sortPartialDateString,
-} from "@/utils/datetime";
+} from "@/utils/datetime-partial";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab } from "@/utils/string-case";
@@ -96,9 +96,7 @@ const sortByOptions = {
       [...ambassadors]
         .sort(([, a], [, b]) => sortPartialDateString(a.arrival, b.arrival))
         .reduce<GroupedItems<ActiveAmbassadorEntry>>((map, [key, val]) => {
-          const year = parsePartialDateString(val.arrival)
-            ?.getUTCFullYear()
-            ?.toString();
+          const year = parsePartialDateString(val.arrival)?.year.toString();
           const group = year || "unknown";
 
           map.set(group, {
@@ -160,7 +158,7 @@ const AmbassadorItems = ({
     {name && (
       <Heading
         level={2}
-        className="mt-16 mb-8 scroll-mt-22 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+        className="mt-16 mb-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
         id={`${option}:${group}`}
         link
       >
@@ -171,7 +169,7 @@ const AmbassadorItems = ({
       ref={ref}
       className={classes(
         "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
-        group && "scroll-mt-16 xl:grid-cols-5",
+        group && "xl:grid-cols-5",
       )}
     >
       {items.map((ambassador) => (

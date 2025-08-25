@@ -11,7 +11,7 @@ export type BingoSchema = z.infer<typeof bingoSchema>;
 
 export const bingoSchema = z.object({
   label: z.string(),
-  type: z.enum(bingoTypes),
+  type: z.literal([...bingoTypes]),
   slug: z.string().regex(SLUG_REGEX).optional(),
   config: bingoConfigSchema,
   startAt: z.date().optional(),
@@ -20,7 +20,7 @@ export const bingoSchema = z.object({
 
 export const existingBingoSchema = bingoSchema.and(
   z.object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   }),
 );
 

@@ -89,9 +89,10 @@ const Slideshow = ({
 
   // Determine the quality we load based on the image's size
   const qualityLoader = useCallback((props: ImageLoaderProps) => {
-    let quality = 50;
+    let quality;
     if (props.width >= 1280) quality = 90;
     else if (props.width >= 720) quality = 75;
+    else quality = 50;
 
     return createImageUrl({ ...props, quality });
   }, []);
@@ -127,10 +128,32 @@ const Slideshow = ({
             src={src}
             alt={alt}
             sizes="100vw"
-            quality="50"
+            quality={50}
             loader={qualityLoader}
-            priority={idx === 0}
-            className={classes("size-full object-cover", className)}
+            loading="lazy"
+            onLoad={(e) => {
+              e.currentTarget.dataset.loaded = "true";
+            }}
+            className={classes(
+              "peer size-full bg-transparent object-cover",
+              className,
+            )}
+            style={{
+              animationDelay: `${idx * animation.duration.offset}ms`,
+            }}
+          />
+
+          <Image
+            src={src}
+            alt=""
+            width={320}
+            quality={50}
+            priority={true}
+            loading="eager"
+            className={classes(
+              "absolute inset-0 size-full bg-transparent object-cover blur-lg transition-[opacity,visibility] duration-300 peer-data-loaded:invisible peer-data-loaded:opacity-0",
+              className,
+            )}
             style={{
               animationDelay: `${idx * animation.duration.offset}ms`,
             }}

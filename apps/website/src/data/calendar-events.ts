@@ -88,7 +88,7 @@ const animalCareChats: RegularEvent = {
     "Join animal care staff as they carry out their daily tasks and answer your questions.",
   category: "Alveus Regular Stream",
   link: "https://twitch.tv/AlveusSanctuary",
-  startTime: { hour: 14, minute: 30 },
+  startTime: { hour: 10, minute: 30 },
 };
 
 const mayaStream: RegularEvent = {
@@ -108,11 +108,11 @@ export const regularEventsWeekly = [
   [
     mayaStream,
     {
-      title: "Connor Stream",
-      description: "Join Connor as he gets up to his usual antics.",
+      title: "Dan Stream",
+      description: "Join Dan as he gets work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
+      startTime: { hour: 10, minute: 30 },
     },
     {
       title: "Chat Chats w/ Evan",
@@ -122,12 +122,6 @@ export const regularEventsWeekly = [
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 21, minute: 0 },
     },
-    {
-      title: "WAI New Episode",
-      description: "Watch the latest Wine About It episode.",
-      category: "Maya YouTube Video",
-      link: "https://www.youtube.com/@WineAboutItPodcast",
-    },
   ],
   // Thursday
   [
@@ -136,7 +130,7 @@ export const regularEventsWeekly = [
       description: "Join Lukas as he gets work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
+      startTime: { hour: 10, minute: 30 },
     },
     {
       title: "WW New Episode",
@@ -159,8 +153,8 @@ export const regularEventsWeekly = [
   // Saturday
   [
     {
-      title: "Nick Stream",
-      description: "Join Nick as he gets work done around the sanctuary.",
+      title: "Connor Stream",
+      description: "Join Connor as he gets up to his usual antics.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 14, minute: 30 },

@@ -111,6 +111,25 @@ It _seems_ that anyone can sign up for a Wunderground account and register a wea
 
 _In production, we use the actual API key for the account that is associated with the Alveus weather station, which does upload data to the site._
 
+### Cloudflare Stream
+
+We use Cloudflare Stream to host a low-latency variation of the live cams specifically for camera operators. To do that, we need to do some setup with Cloudflare.
+
+1. Login to the Cloudflare dashboard and navigate to Stream -> Live Inputs and click "Create Live Input"
+2. Tick the "Require Signed URLs" box and leave the rest of the defaults
+3. Click "Create Live Input" button
+4. Make a note of the "Live Input ID", this will be used to configure the `CF_STREAM_LOLA_VIDEO_ID` environment variable.
+5. Make a note of the host, this will be used to configure the `CF_STREAM_HOST` environment variable. It will look like `customer-<unique-customer-id>.cloudflarestream.com` and can be found under Connection Info -> WebRTC (WHIP) -> WebRTC (WHIP) URL.
+6. [Create an API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with the `Stream:Edit` permission. This is sometimes referred to as "Stream" under the "Account" dropdown.
+7. Use that token to make a [request to create a set of signing keys for Cloudflare Stream](https://developers.cloudflare.com/api/resources/stream/subresources/keys/methods/create/). This is global to the account, not just this specific stream.
+8. Make a note of the `id` and `jwk` values, these will be used to configure the `CF_STREAM_KEY_ID` and `CF_STREAM_KEY_JWK` environment variables.
+
+9. Ensure that the following environment variables are set in `apps/website/.env`:
+   - `CF_STREAM_KEY_ID`
+   - `CF_STREAM_KEY_JWK`
+   - `CF_STREAM_LOLA_VIDEO_ID`
+   - `CF_STREAM_HOST`
+
 ## Production deployment
 
 ### Website

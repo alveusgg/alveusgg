@@ -34,7 +34,7 @@ export const formSchema = z.object({
 
 export const existingFormSchema = formSchema.and(
   z.object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   }),
 );
 
@@ -62,7 +62,7 @@ const formEntryMailingAddressSchema = z.object({
 export const formEntrySchema = z.object({
   givenName: z.string().min(1),
   familyName: z.string().min(1),
-  email: z.string().email(),
+  email: z.email(),
   allowMarketingEmails: z.boolean().default(false),
   mailingAddress: formEntryMailingAddressSchema.optional(),
 });

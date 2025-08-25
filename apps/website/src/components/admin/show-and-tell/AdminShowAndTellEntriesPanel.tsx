@@ -31,7 +31,9 @@ export function AdminShowAndTellEntriesPanel({
   );
 
   const deletePost = trpc.adminShowAndTell.delete.useMutation({
-    onSettled: () => entries.refetch(),
+    onSettled: async () => {
+      await entries.refetch();
+    },
   });
   const handleDeletePost = useCallback(
     (entry: Entry) => {
@@ -41,7 +43,9 @@ export function AdminShowAndTellEntriesPanel({
   );
 
   const markAsSeen = trpc.adminShowAndTell.markAsSeen.useMutation({
-    onSettled: () => entries.refetch(),
+    onSettled: async () => {
+      await entries.refetch();
+    },
   });
   const handleMarkAsSeen = useCallback(
     (entry: Entry, mode?: MarkPostAsSeenMode) => {
@@ -51,7 +55,9 @@ export function AdminShowAndTellEntriesPanel({
   );
 
   const unmarkAsSeen = trpc.adminShowAndTell.unmarkAsSeen.useMutation({
-    onSettled: () => entries.refetch(),
+    onSettled: async () => {
+      await entries.refetch();
+    },
   });
   const handleUnmarkAsSeen = useCallback(
     (entry: Entry) => {

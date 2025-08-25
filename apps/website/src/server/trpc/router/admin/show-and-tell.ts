@@ -30,7 +30,7 @@ const permittedProcedure = protectedProcedure.use(
 
 export const adminShowAndTellRouter = router({
   getEntry: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(({ input }) => getAdminPost(input)),
 
   review: permittedProcedure
@@ -38,50 +38,48 @@ export const adminShowAndTellRouter = router({
     .mutation(async ({ input }) => await updatePost(input, undefined, true)),
 
   approve: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ input }) => await approvePost(input)),
 
   removeApproval: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ input }) => await removeApprovalFromPost(input)),
 
   markAsSeen: permittedProcedure
     .input(
       z.object({
-        id: z.string().cuid(),
+        id: z.cuid(),
         mode: markPostAsSeenModeSchema,
       }),
     )
     .mutation(async ({ input }) => await markPostAsSeen(input.id, input.mode)),
 
   unmarkAsSeen: permittedProcedure
-    .input(z.object({ id: z.string().cuid() }))
+    .input(z.object({ id: z.cuid() }))
     .mutation(async ({ input }) => await unmarkPostAsSeen(input.id)),
 
-  delete: permittedProcedure
-    .input(z.string().cuid())
-    .mutation(async ({ input }) => {
-      const post = await getAdminPost(input);
-      if (!post) {
-        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
-      }
+  delete: permittedProcedure.input(z.cuid()).mutation(async ({ input }) => {
+    const post = await getAdminPost(input);
+    if (!post) {
+      throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+    }
 
-      await Promise.allSettled([
-        deletePost(post.id),
-        // Delete all file attachments
-        ...post.attachments
-          .map(({ imageAttachment }) => imageAttachment?.fileStorageObject?.id)
-          .filter(notEmpty)
-          .map((id) => deleteFileStorageObject(id)),
-      ]);
-    }),
+    await Promise.allSettled([
+      deletePost(post.id),
+      // Delete all file attachments
+      ...post.attachments
+        .map(({ imageAttachment }) => imageAttachment?.fileStorageObject?.id)
+        .filter(notEmpty)
+        .map((id) => deleteFileStorageObject(id)),
+    ]);
+  }),
 
   getEntries: permittedProcedure
     .input(
       z.object({
-        filter: z.enum(["approved", "pendingApproval"]).optional(),
+        filter: z.literal(["approved", "pendingApproval"]).optional(),
         limit: z.number().min(1).max(100).nullish(),
-        cursor: z.string().cuid().nullish(),
+        cursor: z.cuid().nullish(),
       }),
     )
     .query(async ({ input }) => {

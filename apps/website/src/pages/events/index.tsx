@@ -8,12 +8,13 @@ import { formatDateTime } from "@/utils/datetime";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
+import Box from "@/components/content/Box";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
-import VideoPlayer from "@/components/content/Video";
+import { StreamEmbed } from "@/components/content/Stream";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -71,7 +72,7 @@ const EventItems = ({
           <div className="mx-auto flex basis-full flex-col px-8 lg:basis-1/2">
             <Heading
               level={2}
-              className="my-4 scroll-mt-8 text-center text-4xl"
+              className="my-4 text-center text-4xl"
               id={event.slug}
               link
               linkClassName="flex flex-wrap items-end justify-center gap-x-8 gap-y-2"
@@ -101,15 +102,20 @@ const EventItems = ({
               idx % 2 === 0 && "lg:order-first",
             )}
           >
-            <VideoPlayer
-              className="my-auto aspect-video w-full rounded-xl"
-              poster={event.video.poster}
-              sources={event.video.sources}
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
+            <Box
+              className="z-0 aspect-video p-0"
+              ringClassName="lg:ring-8"
+              dark
+            >
+              <StreamEmbed
+                src={event.video}
+                poster={event.poster}
+                autoplay
+                muted
+                loop
+                className="rounded-none"
+              />
+            </Box>
           </div>
 
           <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">

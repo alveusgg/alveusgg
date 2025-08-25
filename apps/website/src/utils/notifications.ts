@@ -1,3 +1,5 @@
+import type { Notification } from "@alveusgg/database";
+
 import { welcomeMessage, welcomeTitle } from "@/data/notifications";
 
 import { getIsIos, getIsSafari } from "@/utils/browser-detection";
@@ -99,6 +101,18 @@ export function sendWelcomeNotification(
       new Notification(welcomeTitle, {
         body: welcomeMessage,
       });
+    }
+  }
+}
+
+export function getNotificationVod(notification: Notification) {
+  if (notification.vodUrl) {
+    // If the notification has no link URL, offer the VoD URL immediately
+    if (!notification.linkUrl) return notification.vodUrl;
+
+    // Otherwise, only offer the VoD URL if the notification is older than 1 hour
+    if (notification.createdAt.getTime() < Date.now() - 60 * 60 * 1000) {
+      return notification.vodUrl;
     }
   }
 }

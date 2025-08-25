@@ -1,8 +1,7 @@
-import { Stream } from "@cloudflare/stream-react";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 import type { Episode } from "schema-dts";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
@@ -34,8 +33,14 @@ import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
 import JsonLD from "@/components/content/JsonLD";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import {
+  StreamEmbed,
+  getStreamUrlIframe,
+  getStreamUrlMp4,
+} from "@/components/content/Stream";
 
 import animalQuestFull from "@/assets/animal-quest/full.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -57,47 +62,6 @@ const episodes: Record<string, AnimalQuestWithEpisode> = animalQuest
     }),
     {},
   );
-
-const posterUrl =
-  env.NEXT_PUBLIC_BASE_URL +
-  createImageUrl({ src: animalQuestFull.src, width: 1200 });
-
-const getCloudflareEmbed = (
-  customer: string,
-  video: string,
-  {
-    start,
-    autoPlay = true,
-    muted = false,
-    poster,
-    title,
-    link,
-  }: Partial<{
-    start: string | number;
-    autoPlay: boolean;
-    muted: boolean;
-    poster: string;
-    title?: string;
-    link?: string;
-  }> = {},
-): string => {
-  const url = new URL(
-    `https://customer-${customer}.cloudflarestream.com/${video}/iframe`,
-  );
-  url.searchParams.set("autoplay", autoPlay.toString());
-  url.searchParams.set("muted", muted.toString());
-  if (start) url.searchParams.set("startTime", start.toString());
-  if (poster) url.searchParams.set("poster", poster);
-  if (title) url.searchParams.set("title", title);
-  if (link) {
-    url.searchParams.set("channel-link", link);
-    url.searchParams.set("share-link", link);
-  }
-  return url.toString();
-};
-
-const getCloudflareVideo = (customer: string, video: string): string =>
-  `https://customer-${customer}.cloudflarestream.com/${video}/downloads/default.mp4`;
 
 const getPreziEmbed = (id: string): string => {
   const url = new URL(`https://prezi.com/p/embed/${encodeURIComponent(id)}`);
@@ -286,7 +250,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="twitter:player"
           property="twitter:player"
-          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
+          content={getStreamUrlMp4(episode.video)}
         />
         <meta key="twitter:card" property="twitter:card" content="player" />
         <meta
@@ -303,12 +267,12 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta
           key="og:video"
           property="og:video"
-          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
+          content={getStreamUrlMp4(episode.video)}
         />
         <meta
           key="og:video:secure_url"
           property="og:video:secure_url"
-          content={getCloudflareVideo(episode.video.cu, episode.video.id)}
+          content={getStreamUrlMp4(episode.video)}
         />
         <meta
           key="og:video:release_date"
@@ -358,26 +322,15 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             {episode.edition}
           </Heading>
 
-          <Box className="z-0 p-0" ringClassName="lg:ring-8" dark>
-            <Image
-              src={animalQuestFull}
-              alt=""
-              className="absolute inset-0 -z-10 h-full w-full object-cover"
-              width={1200}
-            />
-            <Stream
-              src={episode.video.id}
-              customerCode={episode.video.cu}
-              poster={posterUrl}
+          <Box className="z-0 aspect-video p-0" ringClassName="lg:ring-8" dark>
+            <StreamEmbed
+              src={episode.video}
+              poster={animalQuestFull}
               autoplay
-              preload
               controls
-              muted={false}
-              currentTime={start}
-              letterboxColor="transparent"
-              height="100%"
-              width="100%"
-              className="my-auto aspect-video h-auto w-full bg-transparent"
+              time={start}
+              threshold={0}
+              className="rounded-none"
             />
           </Box>
 
@@ -399,23 +352,23 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                   Featuring:
                 </Heading>
                 <p className="text-xl">
-                  {typeSafeObjectEntries(featured).map(
-                    ([key, ambassador], idx, arr) => (
-                      <Fragment key={key}>
-                        {/* Retired ambassadors don't have pages */}
-                        {isActiveAmbassadorKey(key) ? (
-                          <Link href={`/ambassadors/${camelToKebab(key)}`} dark>
+                  <List
+                    items={typeSafeObjectEntries(featured).map(
+                      ([key, ambassador]) =>
+                        // Retired ambassadors don't have pages
+                        isActiveAmbassadorKey(key) ? (
+                          <Link
+                            key={key}
+                            href={`/ambassadors/${camelToKebab(key)}`}
+                            dark
+                          >
                             {ambassador.name}
                           </Link>
                         ) : (
                           ambassador.name
-                        )}
-                        {idx < arr.length - 2 && ", "}
-                        {idx === arr.length - 2 && arr.length > 2 && ","}
-                        {idx === arr.length - 2 && " and "}
-                      </Fragment>
-                    ),
-                  )}
+                        ),
+                    )}
+                  />
                 </p>
               </div>
 
@@ -546,18 +499,18 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
             url: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
               episode.edition,
             )}`,
-            thumbnailUrl: posterUrl,
+            thumbnailUrl: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({ src: animalQuestFull.src, width: 1200 })}`,
             uploadDate: episode.broadcast.toISOString(),
             duration: secondsToIso8601(episode.length),
-            embedUrl: getCloudflareEmbed(episode.video.cu, episode.video.id, {
+            embedUrl: getStreamUrlIframe(episode.video, {
               start,
-              poster: posterUrl,
+              poster: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({ src: animalQuestFull.src, width: 1200 })}`,
               title: `Animal Quest Episode ${episode.episode}: ${episode.edition}`,
               link: `${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
                 episode.edition,
               )}`,
             }),
-            contentUrl: getCloudflareVideo(episode.video.cu, episode.video.id),
+            contentUrl: getStreamUrlMp4(episode.video),
           },
           partOfSeries: {
             "@type": "CreativeWorkSeries",

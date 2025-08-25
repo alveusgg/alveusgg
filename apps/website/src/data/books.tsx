@@ -1,11 +1,13 @@
 import { type StaticImageData } from "next/image";
 
-import type { PartialDateString } from "@alveusgg/data/build/types";
+import { type PartialDateString } from "@/utils/datetime-partial";
 
 import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
+import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
+import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
 
 const thickness = {
@@ -16,11 +18,13 @@ const thickness = {
   xl: "h-14 -translate-z-14 -mb-14",
 };
 
+export type Month = PartialDateString & `${number}-${number}`;
+
 export type BookInfo = {
   title: string;
   author: string;
   image: StaticImageData;
-  month: PartialDateString & `${number}-${number}`;
+  month: Month[];
   link: string;
   thickness: (typeof thickness)[keyof typeof thickness];
   color: `border-${string}`;
@@ -29,28 +33,48 @@ export type BookInfo = {
 
 const books: BookInfo[] = [
   {
+    title: "Steve & Me",
+    author: "Terri Irwin",
+    image: steveAndMe,
+    month: ["2025-08"],
+    link: "https://amzn.to/4moWrRz",
+    thickness: thickness.sm, // 290 pages
+    color: "border-black",
+  },
+  {
+    title: "The Insect Crisis",
+    author: "Oliver Milman",
+    image: theInsectCrisis,
+    month: ["2025-06", "2025-07"],
+    link: "https://amzn.to/4kZ31gL",
+    thickness: thickness.sm, // 270 pages
+    color: "border-yellow-400",
+  },
+  {
     title: "The Anthropocene Reviewed",
     author: "John Green",
     image: theAnthropoceneReviewed,
-    month: "2025-05",
+    month: ["2025-05"],
     link: "https://amzn.to/42LpJSo",
     thickness: thickness.sm, // 300 pages
     color: "border-black",
+    vodId: "tpRWhSPuHlQ",
   },
   {
     title: "The Last Rhinos",
     author: "Lawrence Anthony",
     image: theLastRhinos,
-    month: "2025-04",
+    month: ["2025-04"],
     link: "https://amzn.to/3YibG59",
     thickness: thickness.md, // 360 pages
     color: "border-alveus-tan-900",
+    vodId: "Kkerq_KvYrI",
   },
   {
     title: "Adventures of a Young Naturalist",
     author: "Sir David Attenborough",
     image: adventuresOfAYoungNaturalist,
-    month: "2025-03",
+    month: ["2025-03"],
     link: "https://amzn.to/41qA2um",
     thickness: thickness.lg, // 400 pages
     color: "border-blue-900",
@@ -60,7 +84,7 @@ const books: BookInfo[] = [
     title: "A Most Remarkable Creature",
     author: "Jonathan Meiburg",
     image: aMostRemarkableCreature,
-    month: "2025-02",
+    month: ["2025-02"],
     link: "https://amzn.to/410hD8x",
     thickness: thickness.lg, // 400 pages
     color: "border-alveus-tan-200/75",
@@ -70,7 +94,7 @@ const books: BookInfo[] = [
     title: "H is for Hawk",
     author: "Helen Macdonald",
     image: hIsForHawk,
-    month: "2025-01",
+    month: ["2025-01"],
     link: "https://amzn.to/4a2ByGQ",
     thickness: thickness.sm, // 320 pages
     color: "border-black",

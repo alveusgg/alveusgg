@@ -1,258 +1,65 @@
 import { type NextPage } from "next";
 import Image from "next/image";
 
-import { classes } from "@/utils/classes";
+import commands, {
+  type OverloadedArguments,
+  isOverloadedArguments,
+} from "@/data/tech/commands";
+import { channels } from "@/data/twitch";
 
+import { classes } from "@/utils/classes";
+import { typeSafeObjectEntries } from "@/utils/helpers";
+
+import Button from "@/components/content/Button";
+import Commands, { type NamedCommand } from "@/components/content/Commands";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import SubNav from "@/components/content/SubNav";
 import Network, { NetworkStats } from "@/components/tech/Network";
 import Overview from "@/components/tech/Overview";
+import Blank from "@/components/tech/servers/Blank";
+import Rack from "@/components/tech/servers/Rack";
+import Storage from "@/components/tech/servers/Storage";
+import Switch from "@/components/tech/servers/Switch";
+import UPS from "@/components/tech/servers/UPS";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
-const broadcastStudio: ListItems = {
-  software: {
-    title: "Software",
-    description: "OBS + Psynaps Cloud Server",
-  },
-  camera: {
-    title: "Camera",
-    items: {
-      dslr: {
-        title: "DSLR",
-        description: "Sony Alpha a6400",
-      },
-      lens: {
-        title: "Studio Lens",
-        description: "Sony SELP1650 16-50mm Power Zoom Lens",
-      },
-      telephoto: {
-        title: "Telephoto Lens",
-        description: "Tamron 70-180mm f/2.8 Di III VXD Lens",
-      },
-      flipLens: {
-        title: "Studio Lens (Station3Media)",
-        description: "Sony Vario-Tessar T* FE 16-35mm f/4 ZA OSS Lens",
-      },
-      flipTripod: {
-        title: "Tripod (Station3Media)",
-        description: "Manfrotto MVT502AM Tripod and MVH500A Fluid Head",
-      },
-    },
-  },
-  audio: {
-    title: "Audio",
-    items: {
-      wirelessMics: {
-        title: "Wireless Mics",
-        description: "4x Sennheiser XSW 1-ME3-A Wireless Headmic Set",
-      },
-      overheadMic: {
-        title: "Overhead Mic",
-        description: "Audio Technica PRO45",
-      },
-      monitoring: {
-        title: "Monitoring",
-        description: "Xvive U4 Wireless in-Ear Monitor System",
-      },
-      audioInterface: {
-        title: "Audio Interface",
-        description: "Focusrite Scarlett 18i8 3rd Gen",
-      },
-    },
-  },
-  lighting: {
-    title: "Lighting",
-    items: {
-      keyLight: {
-        title: "Key Light",
-        description: "Elgato Ring Light",
-      },
-      fillLight: {
-        title: "Fill Light",
-        description:
-          '2x Godox SL150WII w/ Neewer 32"x32" Octagon Flash Softbox',
-      },
-    },
-  },
-  streamingPc: {
-    title: "Streaming PC",
-    items: {
-      cpu: {
-        title: "CPU",
-        description: "AMD Ryzen 9 5900X",
-      },
-      gpu: {
-        title: "GPU",
-        description: "Nvidia RTX 3070",
-      },
-      ram: {
-        title: "RAM",
-        description: "32GB",
-      },
-      storage: {
-        title: "Storage",
-        description: "CORSAIR Force MP600 1TB SSD",
-      },
-      control: {
-        title: "Control",
-        description: "Elgato Stream Deck",
-      },
-      videoOutput: {
-        title: "Video Output",
-        description: "OREI HDMI Splitter UHDS-102C",
-      },
-    },
-  },
-};
+const sectionLinks = [
+  { name: "Live Cam Controls", href: "#controls" },
+  { name: "System Overview", href: "#overview" },
+  { name: "On-Site Compute", href: "#compute" },
+  { name: "Open-source", href: "#open-source" },
+];
 
-const broadcastSystem: ListItems = {
-  localPc: {
-    title: "Local PC",
-    description: "MINISFORUM EliteMini TH80",
-    items: {
-      cpu: {
-        title: "CPU",
-        description: "Intel Core i7-11800H",
-      },
-      ram: {
-        title: "RAM",
-        description: "32GB",
-      },
-      storage: {
-        title: "Storage",
-        description: "512GB SSD",
-      },
-    },
-  },
-  remotePc: {
-    title: "Remote PC",
-    description: "ROG Strix G10 Gaming Desktop PC",
-    items: {
-      cpu: {
-        title: "CPU",
-        description: "Intel Core i7-11700",
-      },
-      gpu: {
-        title: "GPU",
-        description: "Nvidia RTX 3060",
-      },
-      ram: {
-        title: "RAM",
-        description: "16GB DDR4",
-      },
-      storage: {
-        title: "Storage",
-        description: "1TB SSD",
-      },
-    },
-  },
-  software: {
-    title: "Software",
-    items: {
-      obs: {
-        title: "OBS",
-        description: "Used with assorted plugins",
-        items: {
-          transitionTable: "Transition Table",
-          sourceCopy: "Source Copy",
-          advancedSceneSwitcher: "Advanced Scene Switcher",
-        },
-      },
-      chatBot: {
-        title: "Chat Control",
-        description: "Custom Node.js app for Twitch.tv chat features",
-        items: {
-          obs: "Controls local and cloud OBS instances",
-          cams: "Controls Axis PTZ cameras",
-        },
-      },
-    },
-  },
-  nutritionHouse: {
-    title: "Nutrition House",
-    items: {
-      pc: {
-        title: "PC",
-        description: "Beelink Mini PC w/ AMD Ryzen 5 5500U",
-      },
-      cam: {
-        title: "Camera",
-        description: "OBSBot",
-      },
-    },
-  },
-};
+const subCommandNames: (keyof typeof commands)[] = [
+  "ptzlist",
+  "ptzload",
+  "ptzhome",
+  "ptzzoom",
+  "ptzfocus",
+  "ptzautofocus",
+  "swap",
+];
 
-const outsideBroadcasts: { backpack: ListItems; animals: ListItems } = {
-  backpack: {
-    connectivity: {
-      title: "Connectivity",
-      items: {
-        liveU: "LiveU Solo",
-        nighthawk: "Verizon Netgear Nighthawk MR1100-100NAS",
-        inseego: "2 x Inseego MC800 Modems",
-      },
-    },
-    power: {
-      title: "Power",
-      items: {
-        maxoak: "MAXOAK Laptop Power Bank 185Wh/50000mAh",
-        krisdonia: "Krisdonia 50000mAh Laptop Power Bank",
-      },
-    },
-    dslr: {
-      title: "DSLR",
-      items: {
-        dslr: "Sony a7R III Camera",
-        lens: "Tamron 28-75mm F/2.8 Di III RXD Lens",
-        flipLens: "Sigma 24-70mm F2.8 DG DN | Art Lens (Station3Media)",
-        flipFilter:
-          "K&F Concept Nano-X 82mm Circular Polarizer + Variable ND2-32 Filter (1- to 5-Stop) (Station3Media)",
-      },
-    },
-    goPro: {
-      title: "GoPro",
-      items: {
-        camera: "GoPro 11 + MediaMod w/ GoPro Labs firmware (clean HDMI out)",
-        quickRelease: "ULANZI GP-4 Magnetic Quick Release for GoPro",
-        shoulderMount: "STUNTMAN Pack Mount Shoulder Mount for GoPro",
-      },
-    },
-    audio: {
-      title: "Audio",
-      items: {
-        lav: "Rode Wireless GO II",
-        mic: "Rode VideoMicro I Mic (for DSLR)",
-        flipTx:
-          "Rode RodeLink TX-BELT Wireless Beltpack Transmitter (for DSLR; Station3Media)",
-        flipRx:
-          "Rode RodeLink RX-Cam Camera Mounted Wireless Receiver (for DSLR; Station3Media)",
-        flipRecorder: "H6 Audio Recorder (for DSLR; Station3Media)",
-      },
-    },
-  },
-  animals: {
-    device: {
-      title: "Device",
-      description: "Google Pixel 7",
-    },
-    apps: {
-      title: "Apps",
-      items: {
-        larixBroadcaster: "Larix Broadcaster (broadcasting)",
-        speedify: "Speedify (internet bonding)",
-        irlChat: "IRL Chat (alerts + chat)",
-      },
-    },
-  },
-};
+const subCommands: NamedCommand[] = subCommandNames.map((name) => ({
+  name,
+  ...commands[name],
+  args:
+    isOverloadedArguments(commands[name].args) && name === "swap"
+      ? (commands[name].args.filter(
+          (args) =>
+            !args.some(
+              (arg) => arg.type === "choice" && arg.choices.includes("blank"),
+            ) && args.length,
+        ) as OverloadedArguments)
+      : commands[name].args,
+}));
 
 const openSource = {
   website: {
@@ -272,59 +79,35 @@ const openSource = {
   },
 };
 
-type ListItems = {
-  [key: string]:
-    | string
-    | { title: string; description?: string; link?: string; items?: ListItems };
-};
+const Bullet = () => (
+  <span className="mx-1 my-auto inline-block h-0.5 w-2 shrink-0 rounded-xs bg-alveus-green-200" />
+);
 
-type ListProps = {
-  items: ListItems;
+const Spec = ({
+  items,
+  className,
+}: {
+  items: [string, string[]][];
   className?: string;
-  itemClassName?: string;
-  dark?: boolean;
-};
-
-const List = ({ items, className, itemClassName, dark }: ListProps) => (
-  <ul className={className}>
-    {Object.entries(items).map(([key, item], idx) => (
-      <li
-        key={key}
-        className={classes(
-          // Add whitespace above if we're nested and not the first item
-          idx !== 0 && typeof item === "object" && item.items && "mt-2",
-          itemClassName,
-        )}
-      >
-        {typeof item === "string" ? (
-          <p>{item}</p>
-        ) : (
-          <>
-            <p>
-              <span className="font-bold">
-                {item.description || !item.link ? (
-                  item.title
-                ) : (
-                  <Link href={item.link} dark={dark} external>
-                    {item.title}
-                  </Link>
-                )}
-                {item.description && ": "}
-              </span>
-              {item.description &&
-                (item.link ? (
-                  <Link href={item.link} dark={dark} external>
-                    {item.description}
-                  </Link>
-                ) : (
-                  item.description
-                ))}
-            </p>
-            {item.items && (
-              <List items={item.items} dark={dark} className="ml-4" />
-            )}
-          </>
-        )}
+}) => (
+  <ul className={classes("text-sm", className)}>
+    {items.map((item) => (
+      <li key={item.join("-")} className="flex items-start">
+        <span className="flex">
+          <Bullet />
+          <span className="mx-1 font-bold">{item[0]}: </span>
+        </span>
+        <span className="flex flex-wrap">
+          {item[1].map((value, index) => (
+            <span key={index} className="flex">
+              {index !== 0 && <Bullet />}
+              {value}
+              {index < item[1].length - 1 && (
+                <span className="sr-only">, </span>
+              )}
+            </span>
+          ))}
+        </span>
       </li>
     ))}
   </ul>
@@ -345,82 +128,113 @@ const AboutTechPage: NextPage = () => {
         <Image
           src={leafRightImage1}
           alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block xl:max-w-md"
+          className="pointer-events-none absolute -top-8 right-0 z-30 hidden h-auto w-1/2 max-w-sm drop-shadow-md select-none lg:block xl:max-w-md"
         />
 
         <Section dark className="py-24">
-          <div className="w-full lg:w-3/5">
-            <Heading level={1}>Tech at Alveus</Heading>
-            <p className="text-lg">
-              Alveus Sanctuary is a virtual education center, and with that
-              comes the need for a lot of technology to make it all work, from
-              livestream broadcast systems to PTZ cameras and microphones in the
-              ambassador enclosures.
-            </p>
-          </div>
+          <Heading level={1}>Tech at Alveus</Heading>
+          <p className="text-lg text-balance lg:max-w-3/4">
+            Alveus Sanctuary is a virtual education center, and with that comes
+            the need for a lot of technology to make it all work, from
+            livestream broadcast systems to PTZ cameras and microphones in the
+            ambassador enclosures.
+          </p>
         </Section>
       </div>
+
+      <SubNav links={sectionLinks} className="z-20" />
 
       <div className="relative">
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute -bottom-28 -left-8 z-10 hidden h-auto w-1/2 max-w-40 -rotate-45 drop-shadow-md select-none lg:block 2xl:max-w-48"
+          className="pointer-events-none absolute -bottom-20 -left-8 z-10 hidden h-auto w-1/2 max-w-24 -rotate-45 drop-shadow-md select-none lg:block 2xl:-bottom-24 2xl:max-w-32"
         />
 
-        <Section containerClassName="flex flex-wrap -mx-4">
-          <div className="basis-full px-4 pb-8">
-            <Heading level={2} className="mt-0 mb-4" id="overview" link>
-              System Overview
-            </Heading>
-            <Overview />
-          </div>
-
-          <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mt-0 mb-4" id="studio" link>
-              Broadcast Studio
-            </Heading>
-            <List items={broadcastStudio} />
-          </div>
-
-          <div className="basis-full p-4 lg:basis-1/2">
-            <Heading level={2} className="mt-0 mb-4" id="system" link>
-              Broadcast System
-            </Heading>
-            <List items={broadcastSystem} />
-          </div>
-        </Section>
-      </div>
-
-      <div className="relative">
-        <Image
-          src={leafRightImage2}
-          alt=""
-          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
-        />
-
-        <Section dark>
-          <Heading level={2} id="outside" link>
-            Outside Broadcasts
+        <Section>
+          <Heading level={2} className="mt-0 mb-4" id="controls" link>
+            Live Cam Controls
           </Heading>
+          <p className="text-lg text-balance lg:max-w-3/4">
+            Anyone subscribed to{" "}
+            <Link href="/live/twitch" external>
+              Alveus Sanctuary on Twitch
+            </Link>{" "}
+            can control the position of the cameras currently shown on the
+            livestream! Use the commands below in the Twitch chat to load preset
+            positions, change the layout of the stream, or even tweak the focus
+            or zoom of the cameras.
+          </p>
 
-          <div className="flex flex-wrap">
-            <div className="basis-full p-4 lg:basis-1/2">
-              <Heading level={3} className="mt-0 mb-4 text-2xl">
-                Livestream Backpack
-              </Heading>
-              <List items={outsideBroadcasts.backpack} />
-            </div>
+          <Commands commands={subCommands} className="my-8" />
 
-            <div className="basis-full p-4 lg:basis-1/2">
-              <Heading level={3} className="mt-0 mb-4 text-2xl">
-                Roaming Animal Cam
-              </Heading>
-              <List items={outsideBroadcasts.animals} />
-            </div>
-          </div>
+          <p className="mt-2 text-balance text-alveus-green italic">
+            Commands can be run from the{" "}
+            <Link
+              href={`https://twitch.tv/${channels.alveus.username}`}
+              external
+            >
+              {channels.alveus.username} Twitch chat
+            </Link>
+            , or from the{" "}
+            <Link
+              href={`https://twitch.tv/${channels.alveusgg.username}`}
+              external
+            >
+              {channels.alveusgg.username} Twitch chat
+            </Link>{" "}
+            instead to keep the main chat clean. In either case, you need to be
+            a subscriber to the main Alveus Sanctuary Twitch channel to use the
+            commands.
+          </p>
+
+          <p className="mt-2 text-balance text-alveus-green italic">
+            Need help with moving the cameras to a position not covered by
+            presets? Ask the moderators in Twitch chat as they have full access
+            to control the cameras (and edit preset positions for you to use).
+          </p>
         </Section>
       </div>
+
+      <Section className="bg-alveus-green-100">
+        <Heading level={2} className="mt-0 mb-2" id="presets" link>
+          Camera Presets
+        </Heading>
+
+        <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
+          <p className="text-lg">
+            Overwhelmed by the number of camera presets available, or just
+            don&apos;t want to run commands by hand in chat? We&apos;ve got you
+            covered with our camera presets page! View thumbnail previews and
+            descriptions of all the camera presets available, and if you&apos;re
+            signed in as a subscriber, you can load them directly from the page
+            to control what views are shown on stream.
+          </p>
+
+          <Button href="/about/tech/presets" className="shrink-0">
+            View Camera Presets
+          </Button>
+        </div>
+      </Section>
+
+      <Section dark>
+        <Heading level={2} className="mt-0 mb-2" id="commands" link>
+          Chat Commands
+        </Heading>
+
+        <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
+          <p className="text-lg text-balance">
+            The bot that we use in our Twitch chat to control the cameras has
+            many more commands available! Many of the commands are restricted to
+            moderators only, but some of them are available to subscribers
+            (beyond those documented above) or even everyone in chat.
+          </p>
+
+          <Button href="/about/tech/commands" className="shrink-0" dark>
+            Explore More Commands
+          </Button>
+        </div>
+      </Section>
 
       <div className="relative">
         <Image
@@ -430,13 +244,235 @@ const AboutTechPage: NextPage = () => {
         />
 
         <Section>
-          <Heading level={2} className="mt-0 mb-1" id="cameras" link>
+          <Heading level={2} className="mt-0 mb-4" id="overview" link>
+            System Overview
+          </Heading>
+          <Overview />
+
+          <Heading level={2} className="mt-16 mb-1" id="cameras" link>
             Network + Enclosure Cameras
           </Heading>
           <NetworkStats className="mb-4" />
           <Network />
         </Section>
       </div>
+
+      <Section dark>
+        <Heading level={2} className="mt-0 mb-2" id="compute" link>
+          On-Site Compute
+        </Heading>
+
+        <p className="mb-4 text-lg text-balance lg:mb-8">
+          Alongside the complex network of switches and cameras that feed the
+          livestream for Alveus, we also make use of a number of servers on-site
+          to handle the processing of the video feeds and running various bits
+          of tooling to support the livestream and the sanctuary itself.
+        </p>
+
+        <div className="grid grid-cols-1 gap-x-8 gap-y-4 lg:grid-cols-2">
+          <div className="space-y-4">
+            <div>
+              <Heading level={3} className="text-xl">
+                Core Network
+              </Heading>
+
+              <p>
+                Living at the top of our main rack is our core networking
+                equipment. This is where the fiber links from all the enclosures
+                land, as well as the main uplink to the internet.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Fiber Aggregation
+              </Heading>
+              <p>
+                A USW Pro Aggregation switch from Ubiquiti offers us 28 SFP+ 10
+                Gbps ports, and 4 SFP28 ports with 25 Gbps capability, for
+                high-speed connections to the rest of the network. We use this
+                to connect all the enclosure fiber links to the network, as well
+                as our other core networking equipment and the servers below.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Network Router
+              </Heading>
+              <p>
+                A UDM Pro from Ubiquiti serves as our core router, handling all
+                the routing and firewalling for the sanctuary. It provides the
+                rest of the network with an uplink to the internet and is
+                connected to the Pro Aggregation switch via a 10 Gbps direct
+                attach copper cable (DAC) link.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Network Switch
+              </Heading>
+              <p>
+                Also connected to the Pro Aggregation switch over a 10 Gbps
+                fiber link is a USW Pro Max 24 PoE switch from Ubiquiti, which
+                provides 24 GbE RJ45 ports (8 of which are capable of 2.5 Gbps)
+                for connections to the management ports of servers and other
+                equipment in the rack, and miscellaneous other devices like our
+                HomeAssistant server.
+              </p>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Security Recording
+              </Heading>
+              <p>
+                Finally, at the bottom of the networking section of the rack, is
+                a UNVR Network Video Recorder from Ubiquiti, which handles the
+                recording of security cameras around the sanctuary (enclosure
+                camera feeds are recorded to the storage server below),
+                connected to the Pro Max switch via a GbE link.
+              </p>
+            </div>
+
+            <div>
+              <Heading level={3} className="text-xl">
+                Core Compute
+              </Heading>
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Development Server
+              </Heading>
+              <p>
+                A 1U Dell PowerEdge R630 acts as our development server.
+                It&apos;s connected to the network with a GbE link to the Pro
+                Max switch, plus a second link for its management port. Proxmox
+                is installed as the host OS acting as a hypervisor, with
+                Tailscale running on the host for remote access. We have a
+                development Kubernetes cluster running within Proxmox, as well
+                as any other VMs that we need to test or develop on.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x Intel Xeon E5-2650 v4 @ 2.2 GHz"]],
+                  ["RAM", ["20x 32 GB DDR4 ECC @ 2400 MHz"]],
+                  ["Storage", ["2x 120 GB Dell S3510 SATA SSD"]],
+                  ["Networking", ["8x GbE RJ45", "1x BMC RJ45"]],
+                ]}
+                className="mt-1"
+              />
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Application Server
+              </Heading>
+              <p>
+                A 2U SuperMicro AS-2024S-TR Mainstream A+ SuperServer acts as
+                our production application server. The server is networked with
+                a 10 Gbps fiber link to the Pro Aggregation switch, as well as a
+                management port link to the Pro Max switch. As with the
+                development server, Proxmox is installed as the host OS acting
+                as a hypervisor, alongside Tailscale for remote access. A
+                Kubernetes cluster is running within Proxmox, which hosts the
+                majority of our applications. Additional VMs are also run in
+                Proxmox for non-containerized applications, such as our database
+                instances.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x AMD EPYC™ 7313 16-Core @ 3.0 GHz"]],
+                  ["RAM", ["4x 64 GB DDR4 ECC @ 3200 MHz"]],
+                  ["Storage", ["3x 960 GB Micron 7450 PRO NVMe SSD"]],
+                  [
+                    "Networking",
+                    ["2x 10 Gbps SFP+", "2x GbE RJ45", "1x BMC RJ45"],
+                  ],
+                ]}
+                className="mt-1"
+              />
+
+              <Heading
+                level={4}
+                className="mb-0 font-sans text-sm text-alveus-green-200 uppercase"
+              >
+                Storage Server
+              </Heading>
+              <p>
+                A 2U SuperMicro AS-2024S-TR Mainstream A+ SuperServer also acts
+                as our storage server for all our enclosure camera feeds. Like
+                the application server, this server is networked with a 10 Gbps
+                fiber link to the Pro Aggregation switch and a link to the Pro
+                Max switch for the management port. It also has Proxmox
+                installed as the host OS with Tailscale for access. Two key VMs
+                are deployed to the server, running MediaMTX which handles
+                ingesting and re-broadcasting the camera feeds, and TrueNAS to
+                expose the storage RAIDZ2 ZFS array as a network share for the
+                cameras to record their feeds to continually. Additional VMs are
+                run in Proxmox to utilize the spare compute available on the
+                server, complementing the deployments on the application server.
+              </p>
+              <Spec
+                items={[
+                  ["CPU", ["2x AMD EPYC™ 7313 16-Core @ 3.0 GHz"]],
+                  ["RAM", ["4x 64 GB DDR4 ECC @ 3200 MHz"]],
+                  [
+                    "Storage",
+                    [
+                      "8x 14 TB Seagate Exos™ 2X14 SAS HDD",
+                      "1x 960 GB Samsung PM9A3 M.2 SSD",
+                    ],
+                  ],
+                  [
+                    "Networking",
+                    ["2x 10 Gbps SFP+", "2x GbE RJ45", "1x BMC RJ45"],
+                  ],
+                ]}
+                className="mt-1"
+              />
+            </div>
+          </div>
+
+          <Rack sticky="bottom" className="lg:order-first">
+            <Switch rj45={0} sfp={32} rows={2} title="USW Pro Aggregation" />
+            <Switch drives={1} rj45={9} rows={2} title="UDM Pro" />
+
+            <Switch title="USW Pro Max 24 PoE" />
+            <Switch
+              screen={false}
+              drives={4}
+              rj45={0}
+              sfp={0}
+              title="UNVR Network Video Recorder"
+            />
+
+            <Blank />
+
+            <Storage size={1} title="Dell PowerEdge R630 (development)" />
+            <Storage
+              drives={Array(3).fill(true)}
+              title="SuperMicro AS-2024S-TR (application)"
+            />
+            <Storage
+              drives={Array(8).fill(true)}
+              title="SuperMicro AS-2024S-TR (storage)"
+            />
+
+            <Blank />
+
+            <UPS size={2} title="Eaton 5P3000RT UPS" />
+          </Rack>
+        </div>
+      </Section>
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow flex-col">
@@ -446,20 +482,57 @@ const AboutTechPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
-        <Section dark className="grow bg-alveus-green-800">
-          <Heading level={2} className="mt-0 mb-2" id="open-source" link>
+        <Section className="grow" containerClassName="space-y-2">
+          <Heading level={2} className="mt-0" id="open-source" link>
             Open-source
           </Heading>
-          <p className="mb-4">
-            This website, and our Twitch extension, are open-source on GitHub.
-            We&apos;re always looking for contributors to help us improve them!
+
+          <p className="text-balance">
+            We believe in being transparent in all that we do, and that includes
+            the code we&apos;re writing to power Alveus Sanctuary. This website,
+            our Twitch extension, and even that chatbot used to control the
+            cams, are all open-source on GitHub. We&apos;re not just building in
+            public, we&apos;re also always looking for community contributors to
+            help us improve them!
           </p>
-          <List
-            items={openSource}
-            className="flex flex-wrap md:gap-y-4"
-            itemClassName="basis-full md:basis-1/2 lg:basis-1/3"
-            dark
-          />
+
+          <ul className="my-4 grid grid-cols-1 lg:my-8 lg:grid-cols-2 lg:gap-4 xl:grid-cols-3">
+            {typeSafeObjectEntries(openSource).map(([key, item]) => (
+              <li key={key}>
+                <p>
+                  <span className="font-bold">
+                    {item.title}
+                    {": "}
+                  </span>
+                  <Link href={item.link} external>
+                    {item.description}
+                  </Link>
+                </p>
+              </li>
+            ))}
+          </ul>
+
+          <p className="text-balance">
+            If you discover a security vulnerability within the website, or any
+            of our other open-source projects, please email us:{" "}
+            <Link href="mailto:opensource@alveussanctuary.org">
+              opensource@alveussanctuary.org
+            </Link>
+          </p>
+
+          <p className="text-balance">
+            Thanks to{" "}
+            <Link href="https://vercel.com" external>
+              Vercel
+            </Link>{" "}
+            (web hosting), and{" "}
+            <Link href="https://cloudflare.com" external>
+              Cloudflare
+            </Link>{" "}
+            (DNS, video streaming, and web hosting), for providing us their
+            services free of charge as part of their open-source/non-profit
+            programs.
+          </p>
         </Section>
       </div>
     </>

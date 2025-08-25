@@ -1,5 +1,6 @@
 import {
   type ReactNode,
+  type Ref,
   useCallback,
   useEffect,
   useRef,
@@ -21,6 +22,8 @@ type CarouselProps = {
   className?: string;
   wrapperClassName?: string;
   itemClassName?: string;
+  buttonClassName?: string;
+  itemsRef?: Ref<Record<string, HTMLDivElement>>;
 };
 
 const Carousel = ({
@@ -29,7 +32,9 @@ const Carousel = ({
   id,
   className = "",
   wrapperClassName = "",
+  buttonClassName = "",
   itemClassName = "basis-full sm:basis-1/2 lg:basis-1/3 p-4",
+  itemsRef,
 }: CarouselProps) => {
   const reducedMotion = usePrefersReducedMotion();
 
@@ -145,11 +150,15 @@ const Carousel = ({
     return () => clearInterval(interval);
   }, [auto, paused, move, reducedMotion]);
 
+  // Track refs for all the items
+  const internalItemsRef = useRef<Record<string, HTMLDivElement>>({});
+
   return (
     <div id={id} className={classes("flex flex-nowrap", className)}>
       <button
         className={classes(
-          "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
+          "flex-shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0",
+          buttonClassName,
           state === "none" && "hidden",
         )}
         type="button"
@@ -160,10 +169,7 @@ const Carousel = ({
         disabled={state === "start" || state === "none"}
       >
         <span className="sr-only">Previous</span>
-        <IconChevronLeft
-          className="transition-opacity group-disabled:opacity-20"
-          size={24}
-        />
+        <IconChevronLeft size={24} />
       </button>
 
       <div
@@ -181,6 +187,18 @@ const Carousel = ({
             key={key}
             className={`${itemClassName} shrink-0 snap-start`}
             draggable={false}
+            ref={(el) => {
+              if (el) internalItemsRef.current[key] = el;
+              else delete internalItemsRef.current[key];
+
+              if (itemsRef) {
+                if (typeof itemsRef === "function") {
+                  itemsRef({ ...internalItemsRef.current });
+                } else {
+                  itemsRef.current = { ...internalItemsRef.current };
+                }
+              }
+            }}
           >
             {item}
           </div>
@@ -189,7 +207,8 @@ const Carousel = ({
 
       <button
         className={classes(
-          "group flex-shrink-0 cursor-pointer p-1 disabled:cursor-default",
+          "flex-shrink-0 cursor-pointer p-1 transition-all disabled:invisible disabled:cursor-default disabled:opacity-0",
+          buttonClassName,
           state === "none" && "hidden",
         )}
         type="button"
@@ -200,10 +219,7 @@ const Carousel = ({
         disabled={state === "end" || state === "none"}
       >
         <span className="sr-only">Next</span>
-        <IconChevronRight
-          className="transition-opacity group-disabled:opacity-20"
-          size={24}
-        />
+        <IconChevronRight size={24} />
       </button>
     </div>
   );

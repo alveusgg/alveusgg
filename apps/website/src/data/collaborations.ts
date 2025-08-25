@@ -7,7 +7,9 @@ import alinity from "@/assets/collaborations/alinity.png";
 import alluux from "@/assets/collaborations/alluux.png";
 import alpharad from "@/assets/collaborations/alpharad.png";
 import angelskimi from "@/assets/collaborations/angelskimi.png";
+import annieFuchsia from "@/assets/collaborations/annie-fuchsia.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
+import arky from "@/assets/collaborations/arky.png";
 import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
 import bao from "@/assets/collaborations/bao.png";
 import botzSisters from "@/assets/collaborations/botez-sisters.png";
@@ -37,11 +39,13 @@ import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
 import jasonTheWeen from "@/assets/collaborations/jason-the-ween.png";
 import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
 import jinny from "@/assets/collaborations/jinny.png";
+import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lacari from "@/assets/collaborations/lacari.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
+import mari from "@/assets/collaborations/mari.png";
 import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 import peachJars from "@/assets/collaborations/peach-jars.png";
 import pizzaPrincessG from "@/assets/collaborations/pizza-princess-g.png";
@@ -49,6 +53,7 @@ import pointCrow from "@/assets/collaborations/point-crow.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import russel from "@/assets/collaborations/russel.png";
 import scarra from "@/assets/collaborations/scarra.png";
+import sketch from "@/assets/collaborations/sketch.png";
 import squeex from "@/assets/collaborations/squeex.png";
 import steak from "@/assets/collaborations/steak.png";
 import supertf from "@/assets/collaborations/supertf.png";
@@ -58,6 +63,7 @@ import trihex from "@/assets/collaborations/trihex.png";
 import trivi from "@/assets/collaborations/trivi.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
 import xchocobars from "@/assets/collaborations/xchocobars.png";
+import yugi2x from "@/assets/collaborations/yugi2x.png";
 import yungJeff from "@/assets/collaborations/yung-jeff.png";
 import zoil from "@/assets/collaborations/zoil.png";
 
@@ -79,6 +85,94 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Sketch",
+      link: "https://www.twitch.tv/thesketchreal",
+      date: new Date("2025-08-04"),
+      videoId: "qgoqxPAm7G8",
+      creators: [
+        {
+          name: "Sketch",
+          image: sketch,
+          popularity: 1_600_000, // Twitch followers, 2025-08-05
+        },
+      ],
+    },
+    {
+      name: "Annie Fuchsia",
+      link: "https://www.twitch.tv/anniefuchsia",
+      date: new Date("2025-07-27"),
+      videoId: "QylLgVFiWe4",
+      vodId: "ZYfocWgSTs8",
+      creators: [
+        {
+          name: "Annie Fuchsia",
+          image: annieFuchsia,
+          popularity: 502_000, // Twitch followers, 2025-07-28
+        },
+      ],
+    },
+    {
+      name: "Mari",
+      link: "https://www.twitch.tv/mari",
+      date: new Date("2025-06-26"),
+      videoId: "5pSsaPzGCPc",
+      vodId: "YEEWOB39Lw0",
+      creators: [
+        {
+          name: "Mari",
+          image: mari,
+          popularity: 256_000, // Twitch followers, 2025-07-02
+        },
+      ],
+    },
+    {
+      name: "Arky & Yugi2x",
+      link: "https://www.twitch.tv/arky",
+      date: new Date("2025-06-25"),
+      videoId: "Qxkzrctsi5g",
+      vodId: "xrD35a6UnkY",
+      creators: [
+        {
+          name: "Arky",
+          image: arky,
+          popularity: 235_000, // Twitch followers, 2025-06-27
+        },
+        {
+          name: "Yugi2x",
+          image: yugi2x,
+          popularity: 157_000, // Twitch followers, 2025-06-27
+        },
+      ],
+    },
+    {
+      name: "Filian",
+      link: "https://www.twitch.tv/filian",
+      date: new Date("2025-06-06"),
+      videoId: "kMxwBQW68PE",
+      vodId: "jPpNVI5L-nk",
+      creators: [
+        {
+          name: "Filian",
+          image: filian,
+          popularity: 3_050_000, // YouTube subscribers, 2025-06-08
+        },
+      ],
+    },
+    {
+      name: "Juliakins",
+      link: "https://www.twitch.tv/juliakins",
+      date: new Date("2025-05-29"),
+      videoId: "43nh-ln7WkI",
+      vodId: "j3kx9NXwyJ0",
+      creators: [
+        {
+          name: "Juliakins",
+          image: juliakins,
+          popularity: 88_000, // Twitch followers, 2025-05-31
+        },
+      ],
+    },
     {
       name: "PizzaPrincessG",
       link: "https://www.twitch.tv/pizzaprincessg",
@@ -533,13 +627,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/filian",
       date: new Date("2023-10-11"),
       videoId: "WaQcdQBrz0I",
-      creators: [
-        {
-          name: "Filian",
-          image: filian,
-          popularity: 2_880_000, // YouTube subscribers, 2024-10-4
-        },
-      ],
+      creators: [], // Filian has a more recent collaboration
     },
     {
       name: "Trihex",
@@ -780,7 +868,8 @@ const collaborations: Collaboration[] = (
       name: "The Botez Sisters",
       link: "https://www.twitch.tv/botezlive",
       date: new Date("2022-08-30"),
-      videoId: "QgvNy11kU6E",
+      videoId: "qC2enrkLHzo",
+      vodId: "QgvNy11kU6E",
       creators: [
         {
           name: "The Botez Sisters",
@@ -793,7 +882,8 @@ const collaborations: Collaboration[] = (
       name: "Knut",
       link: "https://www.twitch.tv/knut",
       date: new Date("2022-08-09"),
-      videoId: "lFhFx6kf2E4",
+      videoId: "-HhGd3Whld0",
+      vodId: "lFhFx6kf2E4",
       creators: [
         {
           name: "Knut",

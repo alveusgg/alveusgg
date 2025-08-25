@@ -23,7 +23,7 @@ export const adminBingosRouter = router({
       z
         .discriminatedUnion("action", [
           z.object({ action: z.literal("create") }),
-          z.object({ action: z.literal("edit"), id: z.string().cuid() }),
+          z.object({ action: z.literal("edit"), id: z.cuid() }),
         ])
         .and(bingoSchema),
     )
@@ -45,7 +45,7 @@ export const adminBingosRouter = router({
   callCell: permittedProcedure
     .input(
       z.object({
-        bingoId: z.string().cuid(),
+        bingoId: z.cuid(),
         value: bingoValueSchema,
         status: z.boolean(),
       }),
@@ -87,7 +87,7 @@ export const adminBingosRouter = router({
     }),
 
   resetCalledValues: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) => {
       const bingo = await ctx.prisma.bingo.findUnique({
         where: { id },
@@ -116,13 +116,13 @@ export const adminBingosRouter = router({
     }),
 
   deleteBingo: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) =>
       ctx.prisma.bingo.delete({ where: { id } }),
     ),
 
   purgeBingoEntries: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .mutation(async ({ ctx, input: id }) =>
       ctx.prisma.bingoEntry.deleteMany({
         where: {
@@ -132,7 +132,7 @@ export const adminBingosRouter = router({
     ),
 
   getBingo: permittedProcedure
-    .input(z.string().cuid())
+    .input(z.cuid())
     .query(async ({ ctx, input: id }) =>
       ctx.prisma.bingo.findUnique({
         where: { id },
@@ -157,7 +157,7 @@ export const adminBingosRouter = router({
   toggleBingoStatus: permittedProcedure
     .input(
       z.object({
-        id: z.string().cuid(),
+        id: z.cuid(),
         active: z.boolean(),
       }),
     )
@@ -175,8 +175,8 @@ export const adminBingosRouter = router({
   updateBingoOutgoingWebhookUrl: permittedProcedure
     .input(
       z.object({
-        id: z.string().cuid(),
-        outgoingWebhookUrl: z.string().url(),
+        id: z.cuid(),
+        outgoingWebhookUrl: z.url(),
       }),
     )
     .mutation(async ({ ctx, input }) => {

@@ -1,25 +1,30 @@
+import type { StaticImageData } from "next/image";
 import type { ReactNode } from "react";
 
 import { convertToSlug } from "@/utils/slugs";
 
 import Link from "@/components/content/Link";
 
-import artAuction2022Video from "@/assets/events/art-auction-2022.mp4";
-import artAuction2023Video from "@/assets/events/art-auction-2023.mp4";
-import artAuction2024Video from "@/assets/events/art-auction-2024.mp4";
-import artAuction2025Video from "@/assets/events/art-auction-2025.mp4";
-import fallCarnival20232024Video from "@/assets/events/fall-carnival-2023-2024.mp4";
-import fundathon2021Video from "@/assets/events/fundathon-2021.mp4";
-import halloween2021Video from "@/assets/events/halloween-2021.mp4";
-import summerCamp20232024Video from "@/assets/events/summer-camp-2023-2024.mp4";
-import valentines2023Video from "@/assets/events/valentines-2023.mp4";
-import valentines2024Video from "@/assets/events/valentines-2024.mp4";
+import artAuction2022 from "@/assets/events/art-auction-2022.png";
+import artAuction2023 from "@/assets/events/art-auction-2023.png";
+import artAuction2024 from "@/assets/events/art-auction-2024.png";
+import artAuction2025 from "@/assets/events/art-auction-2025.png";
+import fallCarnival2023 from "@/assets/events/fall-carnival-2023.png";
+import fundathon2021 from "@/assets/events/fundathon-2021.png";
+import halloween2021 from "@/assets/events/halloween-2021.png";
+import summerCamp2023 from "@/assets/events/summer-camp-2023.png";
+import valentines2023 from "@/assets/events/valentines-2023.png";
+import valentines2024 from "@/assets/events/valentines-2024.png";
 
 export type Event = {
   name: string;
   slug: string;
   date: Date;
-  video: Video;
+  video: {
+    id: string;
+    cu: string;
+  };
+  poster: StaticImageData;
   stats: Record<string, { title: string; stat: string }>;
   info: ReactNode;
 };
@@ -29,7 +34,11 @@ const events: Event[] = (
     {
       name: "Art Auction 2025",
       date: new Date("2025-04-22"),
-      video: artAuction2025Video,
+      video: {
+        id: "25536e0a167411bbffd9bef7e274d894",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: artAuction2025,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -73,7 +82,11 @@ const events: Event[] = (
     {
       name: "Fall Carnival 2024",
       date: new Date("2024-11-04"),
-      video: fallCarnival20232024Video,
+      video: {
+        id: "3532dac67c6b4a9b8ae8777ae51f59b4",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: fallCarnival2023,
       stats: {
         uniqueViewers: {
           title: "Unique viewers tuned in",
@@ -119,7 +132,11 @@ const events: Event[] = (
     {
       name: "Summer Camp 2024",
       date: new Date("2024-07-13"),
-      video: summerCamp20232024Video,
+      video: {
+        id: "1c38acead1632e2beea5a528323258df",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: summerCamp2023,
       stats: {
         totalViews: {
           title: "Total livestream views",
@@ -168,7 +185,11 @@ const events: Event[] = (
     {
       name: "Art Auction 2024",
       date: new Date("2024-05-23"),
-      video: artAuction2024Video,
+      video: {
+        id: "cb88be46789673f2cea12aeffb8ae14e",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: artAuction2024,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -214,7 +235,11 @@ const events: Event[] = (
     {
       name: "Valentine's Day 2024",
       date: new Date("2024-02-14"),
-      video: valentines2024Video,
+      video: {
+        id: "8e9df2ffbeac7f28f5788b9c7990d8f5",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: valentines2024,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -261,7 +286,11 @@ const events: Event[] = (
     {
       name: "Fall Carnival 2023",
       date: new Date("2023-11-04"),
-      video: fallCarnival20232024Video,
+      video: {
+        id: "3532dac67c6b4a9b8ae8777ae51f59b4",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: fallCarnival2023,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -313,7 +342,11 @@ const events: Event[] = (
     {
       name: "Summer Camp 2023",
       date: new Date("2023-07-21"),
-      video: summerCamp20232024Video,
+      video: {
+        id: "1c38acead1632e2beea5a528323258df",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: summerCamp2023,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -362,7 +395,11 @@ const events: Event[] = (
     {
       name: "Art Auction 2023",
       date: new Date("2023-04-22"),
-      video: artAuction2023Video,
+      video: {
+        id: "af907738666e72545b8936565eed06e3",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: artAuction2023,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -407,7 +444,11 @@ const events: Event[] = (
     {
       name: "Valentine's Day 2023",
       date: new Date("2023-02-14"),
-      video: valentines2023Video,
+      video: {
+        id: "16c8de3e72a943588612963646a5c3bb",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: valentines2023,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -451,7 +492,11 @@ const events: Event[] = (
     {
       name: "Art Auction 2022",
       date: new Date("2022-04-22"),
-      video: artAuction2022Video,
+      video: {
+        id: "ff88e05964a858041249bbb951b1485d",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: artAuction2022,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -485,7 +530,11 @@ const events: Event[] = (
     {
       name: "Halloween 2021",
       date: new Date("2021-10-31"),
-      video: halloween2021Video,
+      video: {
+        id: "7396f8694debfcec37b234967c2eb294",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: halloween2021,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",
@@ -535,7 +584,11 @@ const events: Event[] = (
     {
       name: "Fund-a-thon 2021",
       date: new Date("2021-02-10"),
-      video: fundathon2021Video,
+      video: {
+        id: "c1246e56ba50aeebcad6e5c66af79f15",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: fundathon2021,
       stats: {
         totalDonations: {
           title: "Raised for Alveus Sanctuary",

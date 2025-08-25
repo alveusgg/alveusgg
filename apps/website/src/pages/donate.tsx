@@ -18,8 +18,8 @@ import IconAmazon from "@/icons/IconAmazon";
 import IconArrowRight from "@/icons/IconArrowRight";
 import IconBitcoin from "@/icons/IconBitcoin";
 import IconBox from "@/icons/IconBox";
-import IconGift from "@/icons/IconGift";
 import IconPayPal from "@/icons/IconPayPal";
+import IconTwitch from "@/icons/IconTwitch";
 
 type DonateLink = {
   icon: ComponentType<IconProps>;
@@ -38,13 +38,13 @@ const links = {
     description:
       "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
   },
-  toybox: {
-    icon: IconGift,
-    title: "Wildlife Toy Box",
-    link: "/toybox",
+  twitch: {
+    icon: IconTwitch,
+    title: "Twitch Charity",
+    link: "/twitch-charity",
     external: true,
     description:
-      "Purchase specific items for our ambassadors from our Wildlife Toy Box wishlist.",
+      "Donate to Alveus on Twitch via PayPal's Giving Fund, using a credit/debit card or PayPal account.",
   },
   paypal: {
     icon: IconPayPal,
@@ -52,7 +52,7 @@ const links = {
     link: "/paypal",
     external: true,
     description:
-      "Donate directly to Alveus via credit/debit card, bank account or PayPal funds.",
+      "Use your PayPal account, or your credit/debit card, to donate directly to Alveus.",
   },
   poBox: {
     icon: IconBox,
@@ -119,9 +119,11 @@ const DonatePage: NextPage = () => {
           containerClassName="flex flex-col md:flex-row gap-8 items-start md:items-end"
         >
           <div className="grow">
-            <Heading level={2}>{donationEvent.title}</Heading>
+            <Heading level={2} id="event" link>
+              {donationEvent.title}
+            </Heading>
             {donationEvent.description && (
-              <div className="text-lg">
+              <div className="text-lg text-balance">
                 <Markdown content={donationEvent.description} dark />
               </div>
             )}
@@ -141,13 +143,13 @@ const DonatePage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow" containerClassName="flex flex-wrap">
-        <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
+        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
           {Object.entries(links).map(([key, link]) => (
             <DonateItem key={key} link={link} />
           ))}
         </div>
 
-        <div className="flex basis-full flex-col gap-8 py-4 md:basis-1/2 md:px-4">
+        <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
           {!consent.givingBlock && <DonateItem link={givingBlock} />}
 
           <Consent item="donation widget" consent="givingBlock">

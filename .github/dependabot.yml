@@ -14,6 +14,10 @@ updates:
       day: wednesday
       time: "00:00"
 
+    # Only accept updates that have been published for at least 3 days
+    cooldown:
+      default-days: 3
+
     # Create a grouped PR for minor/patch updates with majors getting dedicated PRs
     groups:
       actions:
@@ -31,6 +35,10 @@ updates:
     # Allow usage of any registry including npm-github w/ auth as above
     registries: "*"
 
+    # Only accept updates that have been published for at least 3 days
+    cooldown:
+      default-days: 3
+
     # Ensure the new version is stored in `package.json`
     versioning-strategy: increase
 
@@ -40,6 +48,7 @@ updates:
         patterns:
           - "next"
           - "@next/*"
+          - "@vercel/*"
       trpc:
         patterns:
           - "@trpc/*"
@@ -48,10 +57,12 @@ updates:
         patterns:
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
       tailwind:
         patterns:
           - "tailwindcss"
           - "@tailwindcss/*"
+          - "@headlessui/react"
 
       # Update `dependencies` and `devDependencies` separately
       # Create grouped PRs for minor/patch updates with majors getting dedicated PRs
@@ -64,12 +75,15 @@ updates:
         exclude-patterns:
           - "next"
           - "@next/*"
+          - "@vercel/*"
           - "@trpc/*"
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
           - "tailwindcss"
           - "@tailwindcss/*"
+          - "@headlessui/react"
       development:
         dependency-type: development
         update-types:
@@ -78,12 +92,15 @@ updates:
         exclude-patterns:
           - "next"
           - "@next/*"
+          - "@vercel/*"
           - "@trpc/*"
           - "@tanstack/react-query"
           - "prisma"
           - "@prisma/*"
+          - "@auth/prisma-adapter"
           - "tailwindcss"
           - "@tailwindcss/*"
+          - "@headlessui/react"
 
     # Manually update major versions of `@types/node` with the version specified within .nvmrc
     ignore:

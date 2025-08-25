@@ -10,7 +10,7 @@ import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters"
 import animalQuest from "@alveusgg/data/build/animal-quest";
 
 import socials from "@/data/socials";
-import { channels } from "@/data/twitch";
+import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
 
 import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
@@ -58,6 +58,11 @@ const config: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn-cf-east.streamable.com",
+      },
+      // Cloudflare Stream Thumbnails
+      {
+        protocol: "https",
+        hostname: "customer-*.cloudflarestream.com",
       },
       // Imgur (stream schedule)
       {
@@ -178,6 +183,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/orgs",
+      destination: "/about/orgs",
+      permanent: true,
+    },
+    {
       source: "/tech",
       destination: "/about/tech",
       permanent: true,
@@ -185,6 +195,11 @@ const config: NextConfig = {
     {
       source: "/commands",
       destination: "/about/tech/commands",
+      permanent: true,
+    },
+    {
+      source: "/presets",
+      destination: "/about/tech/presets",
       permanent: true,
     },
     {
@@ -289,11 +304,6 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      source: "/toybox",
-      destination: "https://www.wildlifetoybox.com/wishlist/56",
-      permanent: true,
-    },
-    {
       source: "/paypal",
       destination:
         "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
@@ -302,6 +312,11 @@ const config: NextConfig = {
     {
       source: "/giving-block",
       destination: "https://thegivingblock.com/donate/alveus-sanctuary/",
+      permanent: true,
+    },
+    {
+      source: "/twitch-charity",
+      destination: "https://www.twitch.tv/charity/alveussanctuary",
       permanent: true,
     },
     {
@@ -383,11 +398,13 @@ const config: NextConfig = {
       destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${channels.alveus.id}`,
       permanent: true,
     },
-    ...typeSafeObjectEntries(channels).map(([key, { id }]) => ({
-      source: `/updates/ical/${key}`,
-      destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
-      permanent: true,
-    })),
+    ...typeSafeObjectEntries(channels)
+      .filter(([key]) => isChannelWithCalendarEvents(key))
+      .map(([key, { id }]) => ({
+        source: `/updates/ical/${key}`,
+        destination: `https://api.twitch.tv/helix/schedule/icalendar?broadcaster_id=${id}`,
+        permanent: true,
+      })),
   ],
   headers: async () => [
     {
@@ -479,7 +496,16 @@ const config: NextConfig = {
     return config;
   },
   experimental: {
+    // Restore scroll position when navigating back
     scrollRestoration: true,
+    // Ensure that server-side code is also minified (with source maps)
+    serverMinification: true,
+    serverSourceMaps: true,
+    // Enable the usage of threads for Webpack
+    webpackBuildWorker: true,
+    // Execute parallelization of server builds
+    parallelServerBuildTraces: true,
+    parallelServerCompiles: true,
   },
   // Move the dev indicator out the way of the consent toggle
   devIndicators: {

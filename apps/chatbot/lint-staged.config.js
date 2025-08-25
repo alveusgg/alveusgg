@@ -2,7 +2,7 @@ import mainConfig from "../../lint-staged.config.js";
 
 /** @param {string[]} filenames */
 const buildEslintCommand = (filenames) =>
-  `pnpm eslint --fix ${filenames.join(" ")}`;
+  `pnpm eslint --fix --max-warnings 0 ${filenames.join(" ")}`;
 
 const config = {
   ...mainConfig,

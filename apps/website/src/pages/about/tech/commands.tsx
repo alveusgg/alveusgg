@@ -3,31 +3,26 @@ import Image from "next/image";
 import { Fragment } from "react";
 
 import commands, {
-  type Argument,
-  type Command,
   type CommandCategoryId,
   commandCategories,
-  isOverloadedArguments,
 } from "@/data/tech/commands";
-import presets from "@/data/tech/presets";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
-import { camelToKebab, sentenceToKebab } from "@/utils/string-case";
+import { sentenceToKebab } from "@/utils/string-case";
 
-import CopyToClipboardButton from "@/components/CopyToClipboardButton";
 import Button from "@/components/content/Button";
+import Commands, {
+  type NamedCommand,
+  signature,
+} from "@/components/content/Commands";
 import Heading from "@/components/content/Heading";
+import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import SubNav from "@/components/content/SubNav";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-
-interface NamedCommand extends Command {
-  name: string;
-}
 
 const grouped = typeSafeObjectEntries(commands).reduce(
   (obj, [name, command]) => ({
@@ -43,47 +38,12 @@ const grouped = typeSafeObjectEntries(commands).reduce(
   {} as Record<CommandCategoryId, NamedCommand[]>,
 );
 
-const signatureArg = (arg: Argument) =>
-  [
-    arg.required ? "<" : "[",
-    arg.type !== "choice" || arg.choices.length > 1 ? `${arg.name}:` : "",
-    arg.prefix ? `'${arg.prefix}' + ` : "",
-    arg.type === "choice"
-      ? arg.choices.map((choice) => `'${choice}'`).join("|")
-      : arg.type,
-    arg.variadic ? "..." : "",
-    arg.suffix ? ` + '${arg.suffix}'` : "",
-    arg.required ? ">" : "]",
-  ].join("");
-
-const signature = (command: NamedCommand) => {
-  const { name, args } = command;
-  const cmd = `!${name}`;
-  if (!args) return cmd;
-
-  const cmdArgs = isOverloadedArguments(args)
-    ? args
-        .map(
-          (nestedArgs) =>
-            nestedArgs.map((arg) => signatureArg(arg)).join(" ") || "[]",
-        )
-        .join(`\n${" ".repeat(cmd.length - 1)}| `)
-    : args.map((arg) => signatureArg(arg)).join(" ");
-
-  return `${cmd} ${cmdArgs}`;
-};
-
-const sectionLinks = [
-  { name: "Commands", href: "#commands" },
-  { name: "Presets", href: "#presets" },
-];
-
-const AboutTechPage: NextPage = () => {
+const AboutTechCommandsPage: NextPage = () => {
   return (
     <>
       <Meta
         title="Chat Commands at Alveus"
-        description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing trusted chat members and moderators to control the live cameras."
+        description="Documentation for the commands available in the Alveus Sanctuary Twitch chat, allowing members of the community to control the live cameras on stream."
       />
 
       {/* Nav background */}
@@ -100,16 +60,14 @@ const AboutTechPage: NextPage = () => {
           <div className="w-full lg:w-3/5">
             <Heading level={1}>Chat Commands at Alveus</Heading>
             <p className="text-lg">
-              Moderators and trusted chat members in the Alveus Sanctuary Twitch
-              live chat can use a variety of commands to control what live
-              cameras are shown on stream, what can be seen on each of the
-              cameras, and what audio can be heard.
+              Moderators and members of the community in the Alveus Sanctuary
+              Twitch live chat have varying levels of access to run commands in
+              chat that can control what live cameras are shown on stream, what
+              can be seen on each of the cameras, and what audio can be heard.
             </p>
           </div>
         </Section>
       </div>
-
-      <SubNav links={sectionLinks} className="z-20" />
 
       <div className="relative">
         <Image
@@ -234,37 +192,9 @@ const AboutTechPage: NextPage = () => {
                     >
                       {category.heading}
                     </Heading>
-
-                    {"description" in category && (
-                      <p className="mb-4">{category.description}</p>
-                    )}
                   </dt>
                   <dd className="mx-2">
-                    <dl className="max-w-full overflow-x-auto">
-                      {commands.map((command) => (
-                        <div
-                          key={command.name}
-                          className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
-                        >
-                          <dt>
-                            <pre>
-                              <code className="text-sm">
-                                {signature(command)}
-                                <CopyToClipboardButton
-                                  text={signature(command)}
-                                />
-                              </code>
-                            </pre>
-                          </dt>
-
-                          <dd>
-                            <p className="text-sm text-alveus-green-400 italic">
-                              {command.description}
-                            </p>
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
+                    <Commands commands={commands} />
                   </dd>
                 </Fragment>
               );
@@ -274,29 +204,23 @@ const AboutTechPage: NextPage = () => {
       </div>
 
       <Section className="bg-alveus-green-100">
-        <Heading
-          level={2}
-          className="mt-0 mb-2 scroll-mt-14"
-          id="fossabot"
-          link
-        >
-          Fossabot
+        <Heading level={2} className="mt-0 mb-2 scroll-mt-14" id="presets" link>
+          Presets
         </Heading>
 
         <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
           <p className="text-lg">
-            Alongside the custom chat bot for all the commands above, Fossabot
-            is also used in the Twitch chat to provide a set of commands that
-            anyone can access, providing easy access to a bunch of common
-            information and links.
+            Almost all of the cameras on the livestream have a set of saved
+            preset positions that can be loaded through chat commands, or
+            directly on the website. Anyone who is subscribed to{" "}
+            <Link href="/live/twitch" external>
+              Alveus Sanctuary on Twitch
+            </Link>{" "}
+            can load these presets to control what views are shown on stream.
           </p>
 
-          <Button
-            href="https://fossabot.com/alveussanctuary/commands"
-            external
-            className="shrink-0"
-          >
-            Explore Fossabot Commands
+          <Button href="/about/tech/presets" className="shrink-0">
+            View Camera Presets
           </Button>
         </div>
       </Section>
@@ -309,76 +233,37 @@ const AboutTechPage: NextPage = () => {
           className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
         />
 
-        <Section className="grow">
+        <Section className="grow bg-alveus-green-900" dark>
           <Heading
             level={2}
             className="mt-0 mb-2 scroll-mt-14"
-            id="presets"
+            id="fossabot"
             link
           >
-            Presets
+            Fossabot
           </Heading>
 
-          <p>
-            These commands will pan, tilt and zoom the respective camera to a
-            preset view described below.
-          </p>
+          <div className="flex flex-row flex-wrap items-center gap-x-16 gap-y-4 lg:flex-nowrap">
+            <p className="text-lg">
+              Alongside the custom chat bot for all the commands above, Fossabot
+              is also used in the Twitch chat to provide a set of commands that
+              anyone can access, providing easy access to a bunch of common
+              information and links.
+            </p>
 
-          <dl>
-            {typeSafeObjectEntries(presets).map(
-              ([camera, { title, presets }]) => (
-                <Fragment key={camera}>
-                  <dt className="mt-6">
-                    <Heading
-                      level={3}
-                      className="scroll-mt-14 text-2xl"
-                      id={`presets:${camelToKebab(camera)}`}
-                      link
-                    >
-                      {title}
-                      <span className="text-sm text-alveus-green-400 italic">
-                        {` (${camera.toLowerCase()})`}
-                      </span>
-                    </Heading>
-                  </dt>
-                  <dd className="mx-2">
-                    <dl className="max-w-full overflow-x-auto">
-                      {typeSafeObjectEntries(presets).map(([name, preset]) => (
-                        <div
-                          key={name}
-                          className="group/preset mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-4"
-                        >
-                          <dt>
-                            <pre>
-                              <code className="text-sm">
-                                <span className="opacity-40 group-first/preset:opacity-100">
-                                  {`!ptzload ${camera.toLowerCase()} `}
-                                </span>
-                                {name}
-                                <CopyToClipboardButton
-                                  text={`!ptzload ${camera.toLowerCase()} ${name}`}
-                                />
-                              </code>
-                            </pre>
-                          </dt>
-
-                          <dd>
-                            <p className="text-sm text-alveus-green-400 italic">
-                              {preset.description}
-                            </p>
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </dd>
-                </Fragment>
-              ),
-            )}
-          </dl>
+            <Button
+              href="https://fossabot.com/alveussanctuary/commands"
+              external
+              className="shrink-0"
+              dark
+            >
+              Explore Fossabot Commands
+            </Button>
+          </div>
         </Section>
       </div>
     </>
   );
 };
 
-export default AboutTechPage;
+export default AboutTechCommandsPage;

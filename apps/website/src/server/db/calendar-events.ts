@@ -24,18 +24,18 @@ import {
 } from "@/server/apis/twitch";
 
 import { getFormattedTitle, regularEventsWeekly } from "@/data/calendar-events";
-import { channels } from "@/data/twitch";
+import { type ChannelWithCalendarEvents, channels } from "@/data/twitch";
 
-import { DATETIME_ALVEUS_ZONE } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { getShortBaseUrl } from "@/utils/short-url";
 import { camelToKebab } from "@/utils/string-case";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 export const calendarEventSchema = z.object({
   title: z.string().min(1),
   category: z.string().min(1),
   description: z.string().min(1).nullable(),
-  link: z.string().url(),
+  link: z.url(),
   startAt: z.date(),
   hasTime: z.boolean().default(true),
 });
@@ -44,7 +44,7 @@ export type CalendarEventSchema = z.infer<typeof calendarEventSchema>;
 
 export const existingCalendarEventSchema = calendarEventSchema.and(
   z.object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   }),
 );
 
@@ -284,7 +284,7 @@ async function syncExternalSchedule<ExternalEvent>(
   }
 }
 
-export async function syncTwitchSchedule(channel: keyof typeof channels) {
+export async function syncTwitchSchedule(channel: ChannelWithCalendarEvents) {
   const { username, calendarEventFilter } = channels[channel];
   const twitchChannel = await prisma.twitchChannel.findFirst({
     where: { username },

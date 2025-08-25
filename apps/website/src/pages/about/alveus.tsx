@@ -1,22 +1,32 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { type ReactNode } from "react";
+import { type ReactNode, useState } from "react";
 
-import type { PartialDateString } from "@alveusgg/data/build/types";
+import { env } from "@/env";
 
-import { formatPartialDateString } from "@/utils/datetime";
+import {
+  type PartialDateString,
+  formatPartialDateString,
+} from "@/utils/datetime-partial";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
+import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import { MayaImage } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import {
+  StreamEmbed,
+  StreamPreview,
+  type StreamSource,
+  getStreamUrlIframe,
+} from "@/components/content/Stream";
 import SubNav from "@/components/content/SubNav";
 import Timeline from "@/components/content/Timeline";
 import Transparency from "@/components/content/Transparency";
-import { Lightbox, Preview } from "@/components/content/YouTube";
+import { YouTubeLightbox } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 
@@ -26,6 +36,7 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 
 const sectionLinks = [
   { name: "Twitch.tv", href: "#twitch" },
+  { name: "In The News", href: "#news" },
   { name: "Founding", href: "#maya" },
   { name: "History", href: "#history" },
   { name: "Tour Part 1", href: "#tour-part-1" },
@@ -33,6 +44,11 @@ const sectionLinks = [
   { name: "Recap 2024", href: "#recap-2024" },
   { name: "Transparency", href: "#transparency" },
 ];
+
+type Source = {
+  text: string;
+  link: string;
+};
 
 const sources = {
   twitchAdvertising: {
@@ -47,7 +63,7 @@ const sources = {
     text: "Semrush, Twitch.tv. June 2023",
     link: "https://www.semrush.com/website/twitch.tv/overview/",
   },
-} as const;
+} as const satisfies Record<string, Source>;
 
 type Stat = {
   source: keyof typeof sources;
@@ -90,7 +106,46 @@ const stats: Record<string, Stat> = {
     caption:
       "The United States accounts for over 20% of Twitch's market share.",
   },
-} as const;
+};
+
+type News = {
+  title: string;
+  video: StreamSource;
+};
+
+const news: Record<string, News> = {
+  cbs: {
+    title: "CBS News Mornings",
+    video: {
+      id: "dc685110b475b84f0052991aa9f93110",
+      cu: "agf91muwks8sd9ee",
+    },
+  },
+  kxan: {
+    title: "KXAN Austin",
+    video: {
+      id: "4572586849db66c2251e6e36f0134edc",
+      cu: "agf91muwks8sd9ee",
+    },
+  },
+  weatherChannel: {
+    title: "The Weather Channel",
+    video: {
+      id: "5cd3c1f8a0c2311c008021bf7973f3fb",
+      cu: "agf91muwks8sd9ee",
+    },
+  },
+};
+
+const newsLightboxItems = Object.entries(news).reduce<
+  Record<string, ReactNode>
+>(
+  (acc, [key, item]) => ({
+    ...acc,
+    [key]: <StreamEmbed src={item.video} caption={item.title} controls />,
+  }),
+  {},
+);
 
 type HistoryCTA = { key: string; cta: ReactNode };
 type HistoryItem = {
@@ -187,13 +242,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Lightbox>
-            {({ Trigger }) => (
-              <Trigger videoId="4_ZrMe_6-CU">
-                <Preview videoId="4_ZrMe_6-CU" />
-              </Trigger>
-            )}
-          </Lightbox>
+          <YouTubeLightbox videoId="4_ZrMe_6-CU" />
         </div>
       </div>
     ),
@@ -295,13 +344,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     cta: (
       <div className="flex flex-wrap-reverse items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Lightbox>
-            {({ Trigger }) => (
-              <Trigger videoId="_PRVsl9Nxok">
-                <Preview videoId="_PRVsl9Nxok" />
-              </Trigger>
-            )}
-          </Lightbox>
+          <YouTubeLightbox videoId="_PRVsl9Nxok" />
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
@@ -493,13 +536,7 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
     cta: (
       <div className="flex flex-wrap-reverse items-center gap-y-16">
         <div className="basis-full md:basis-1/2 md:px-4">
-          <Lightbox>
-            {({ Trigger }) => (
-              <Trigger videoId="y8jQPL_jO2s">
-                <Preview videoId="y8jQPL_jO2s" />
-              </Trigger>
-            )}
-          </Lightbox>
+          <YouTubeLightbox videoId="y8jQPL_jO2s" />
         </div>
 
         <div className="basis-full md:basis-1/2 md:px-4">
@@ -587,6 +624,8 @@ const transformHistoryItem = (item: HistoryItem) => ({
 });
 
 const AboutAlveusPage: NextPage = () => {
+  const [newsLightboxOpen, setNewsLightboxOpen] = useState<string>();
+
   return (
     <>
       <Meta
@@ -641,21 +680,17 @@ const AboutAlveusPage: NextPage = () => {
         </div>
 
         <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4">
-          <Lightbox className="mx-auto max-w-2xl xl:mr-0">
-            {({ Trigger }) => (
-              <Trigger videoId="jXTqWIc--jo">
-                <Preview videoId="jXTqWIc--jo" />
+          <div className="mx-auto max-w-2xl xl:mr-0">
+            <YouTubeLightbox videoId="jXTqWIc--jo" />
 
-                <Heading level={2} className="text-center">
-                  Announcing Alveus
-                </Heading>
+            <Heading level={2} className="text-center">
+              Announcing Alveus
+            </Heading>
 
-                <p className="text-center italic">
-                  Watch the video to learn more about why Maya founded Alveus.
-                </p>
-              </Trigger>
-            )}
-          </Lightbox>
+            <p className="text-center italic">
+              Watch the video to learn more about why Maya founded Alveus.
+            </p>
+          </div>
         </div>
       </Section>
 
@@ -669,7 +704,7 @@ const AboutAlveusPage: NextPage = () => {
         />
 
         <Section className="text-center">
-          <Heading id="twitch" level={2} link className="scroll-mt-14">
+          <Heading id="twitch" level={2} link>
             Why Twitch.tv
           </Heading>
 
@@ -732,6 +767,63 @@ const AboutAlveusPage: NextPage = () => {
         </Section>
       </div>
 
+      <Section className="bg-alveus-green-100">
+        <Heading id="news" level={2} link className="text-center">
+          In The News
+        </Heading>
+
+        <div className="mt-8 flex w-full flex-wrap justify-around gap-y-4">
+          {Object.entries(news).map(([key, item]) => (
+            <div
+              key={key}
+              className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/3"
+            >
+              <Heading
+                level={3}
+                className="order-last mb-0 text-center text-2xl"
+              >
+                {item.title}
+              </Heading>
+
+              <Link
+                href={getStreamUrlIframe(item.video, {
+                  title: `Alveus Sanctuary: ${item.title}`,
+                  link: `${env.NEXT_PUBLIC_BASE_URL}/about/alveus#news`,
+                })}
+                external
+                onClick={(e) => {
+                  e.preventDefault();
+                  setNewsLightboxOpen(key);
+                }}
+                className="group/trigger order-first w-full max-w-2xl"
+                custom
+              >
+                <StreamPreview src={item.video} alt={item.title} />
+              </Link>
+            </div>
+          ))}
+        </div>
+
+        <Lightbox
+          open={newsLightboxOpen}
+          onClose={() => setNewsLightboxOpen(undefined)}
+          items={newsLightboxItems}
+        />
+
+        <p className="mt-8 text-center text-lg text-balance">
+          We also collaborate with various organizations to amplify their
+          efforts and share their important work with our audience, furthering
+          our mission of conservation and education.
+        </p>
+
+        <p className="mt-2 text-center text-lg">
+          <Link href="/about/orgs">
+            Explore some of our NGO collaborations
+            <IconArrowRight size={16} className="ml-1 inline-block" />
+          </Link>
+        </p>
+      </Section>
+
       <Section dark>
         <div className="flex flex-wrap-reverse items-center">
           <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pr-8">
@@ -767,7 +859,7 @@ const AboutAlveusPage: NextPage = () => {
           <Heading
             id="history"
             level={2}
-            className="mb-16 scroll-mt-14 text-center text-5xl text-alveus-green"
+            className="mb-16 text-center text-5xl text-alveus-green"
             link
           >
             Alveus&apos; History

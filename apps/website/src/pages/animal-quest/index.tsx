@@ -1,6 +1,6 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { Fragment, useMemo } from "react";
+import { useMemo } from "react";
 
 import {
   getClassification,
@@ -26,6 +26,7 @@ import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
+import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
 import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
@@ -122,10 +123,7 @@ const AnimalQuestItems = ({
     )}
     <div
       ref={ref}
-      className={classes(
-        "flex flex-wrap",
-        group ? "scroll-mt-16" : "justify-center",
-      )}
+      className={classes("flex flex-wrap", !group && "justify-center")}
     >
       {items.map((episode) => (
         <div
@@ -224,21 +222,21 @@ const AnimalQuestItems = ({
             {episode.ambassadors.featured.length > 0 && (
               <p className="text-lg">
                 <span className="text-base opacity-80">Featuring: </span>
-                {episode.ambassadors.featured.map((ambassador, idx, arr) => (
-                  <Fragment key={ambassador}>
-                    {/* Retired ambassadors don't have pages */}
-                    {isActiveAmbassadorKey(ambassador) ? (
-                      <Link href={`/ambassadors/${camelToKebab(ambassador)}`}>
+                <List
+                  items={episode.ambassadors.featured.map((ambassador) =>
+                    // Retired ambassadors don't have pages
+                    isActiveAmbassadorKey(ambassador) ? (
+                      <Link
+                        key={ambassador}
+                        href={`/ambassadors/${camelToKebab(ambassador)}`}
+                      >
                         {ambassadors[ambassador].name}
                       </Link>
                     ) : (
                       ambassadors[ambassador].name
-                    )}
-                    {idx < arr.length - 2 && ", "}
-                    {idx === arr.length - 2 && arr.length > 2 && ","}
-                    {idx === arr.length - 2 && " and "}
-                  </Fragment>
-                ))}
+                    ),
+                  )}
+                />
               </p>
             )}
           </div>

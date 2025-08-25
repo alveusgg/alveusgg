@@ -105,7 +105,7 @@ const postOrderBy = [
 ] as const;
 
 const attachmentSchema = z.object({
-  url: z.string().url(),
+  url: z.url(),
   title: z.string().max(100),
   caption: z.string().max(200),
   description: z.string().max(200),
@@ -115,19 +115,19 @@ const attachmentSchema = z.object({
 type CreateImageAttachment = z.infer<typeof createImageAttachmentSchema>;
 const createImageAttachmentSchema = attachmentSchema.and(
   z.object({
-    fileStorageObjectId: z.string().cuid(),
+    fileStorageObjectId: z.cuid(),
     name: z.string(),
   }),
 );
 
 type VideoLink = z.infer<typeof videoLinkSchema>;
-const videoLinkSchema = z.string().url().refine(validateNormalizedVideoUrl);
+const videoLinkSchema = z.url().refine(validateNormalizedVideoUrl);
 const videoLinksSchema = z.array(videoLinkSchema);
 
 const imageAttachmentsSchema = z
   .object({
     create: z.array(createImageAttachmentSchema).max(MAX_IMAGES),
-    update: z.record(z.string().cuid(), attachmentSchema),
+    update: z.record(z.cuid(), attachmentSchema),
   })
   .refine(
     ({ update, create }) =>
@@ -161,7 +161,7 @@ export const showAndTellCreateInputSchema = showAndTellSharedInputSchema;
 
 export const showAndTellUpdateInputSchema = showAndTellSharedInputSchema.and(
   z.object({
-    id: z.string().cuid(),
+    id: z.cuid(),
   }),
 );
 
@@ -524,7 +524,7 @@ export async function removeApprovalFromPost(
 }
 
 export const markPostAsSeenModeSchema = z
-  .enum(["this", "thisAndOlder", "thisAndNewer"])
+  .literal(["this", "thisAndOlder", "thisAndNewer"])
   .default("this");
 
 export type MarkPostAsSeenMode = z.infer<typeof markPostAsSeenModeSchema>;

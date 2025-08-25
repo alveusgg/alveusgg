@@ -177,7 +177,7 @@ export function DesktopMenu() {
                     {link.title}
                     <IconChevronDown
                       size={16}
-                      className="translate-y-0.5 transition-transform group-data-[active]/button:translate-y-1"
+                      className="translate-y-0.5 transition-transform group-data-active/button:translate-y-1"
                     />
                   </MenuButton>
 
@@ -192,7 +192,7 @@ export function DesktopMenu() {
                           <NavLinkSub
                             href={link.link}
                             isExternal={link.isExternal}
-                            className="w-full min-w-max group-data-[focus]/item:outline-blue-500 group-data-[focus]/item:group-focus-visible/items:outline"
+                            className="w-full min-w-max outline-blue-500 group-data-focus/item:not-hover:outline-2"
                             onClick={close}
                           >
                             {link.title}

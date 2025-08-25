@@ -146,18 +146,14 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     setRandomClips(shuffled);
   }, [clips]);
 
+  // Iterate through clips
+  const [details, setDetails] = useState<"overlay" | "below">();
   const [idx, setIdx] = useState<number>(0);
   const clip = randomClips[idx];
-  const increment = useCallback(
-    () => setIdx((idx) => (idx + 1) % clips.length),
-    [clips.length],
-  );
-
-  // When we pick a clip, show the details
-  const [details, setDetails] = useState(false);
-  useEffect(() => {
-    setDetails(true);
-  }, [clip]);
+  const increment = useCallback(() => {
+    setIdx((idx) => (idx + 1) % clips.length);
+    setDetails(undefined);
+  }, [clips.length]);
 
   // As a fallback, set a timer for 150% of the duration of the clip
   const fallbackTimer = useRef<NodeJS.Timeout>(null);
@@ -187,8 +183,15 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       clip.duration * 1000 + 2 * 1000, // Fudge factor of 2 seconds for clip loading
     );
 
+    // After 1s overlay the clip details, and 10s later place them below the clip
     if (detailsTimer.current) clearTimeout(detailsTimer.current);
-    detailsTimer.current = setTimeout(() => setDetails(false), 10 * 1000);
+    detailsTimer.current = setTimeout(() => {
+      setDetails("overlay");
+
+      detailsTimer.current = setTimeout(() => {
+        setDetails("below");
+      }, 10000);
+    }, 1000);
   }, [clip, increment]);
 
   // If the clip fails to load, show another after 2 seconds
@@ -220,7 +223,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="relative flex aspect-video w-full items-center justify-center">
             <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
 
-            <Transition show={details}>
+            <Transition show={details === "overlay"}>
               <div className="absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">
                 <h1 className="text-5xl">
                   {clip.title}
@@ -246,6 +249,21 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               onError={onError}
               className="size-full rounded-lg"
             />
+
+            <Transition show={details === "below"}>
+              {/* data-[leave]:duration-0 to ensure the next clip's details aren't show */}
+              <div className="absolute -bottom-4 left-0 flex translate-y-full items-center gap-2 rounded-lg bg-black/25 px-2 py-1 text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-0">
+                <p className="text-lg">{clip.title}</p>
+                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                <p>
+                  {new Date(clip.created).toLocaleDateString(undefined, {
+                    dateStyle: "long",
+                  })}
+                </p>
+                <div className="mt-0.5 h-0.5 w-2 rounded-xs bg-white" />
+                <p>Clipped by {clip.creator}</p>
+              </div>
+            </Transition>
           </div>
         </div>
       )}

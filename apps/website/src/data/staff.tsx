@@ -8,13 +8,13 @@ import chandlerImage from "@/assets/people/chandler.jpg";
 import coltonHolsteImage from "@/assets/people/colton-holste.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
+import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
 import kaylaJacksonImage from "@/assets/people/kayla-jackson.jpg";
 import lindsayBellawFunImage from "@/assets/people/lindsay-bellaw-fun.jpg";
 import lindsayBellawImage from "@/assets/people/lindsay-bellaw.jpg";
 import lukasMeyerImage from "@/assets/people/lukas-meyer.jpg";
 import mayaHigaFunImage from "@/assets/people/maya-higa-fun.jpg";
 import mayaHigaImage from "@/assets/people/maya-higa.jpg";
-import nickFacilitiesImage from "@/assets/people/nick-facilities.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
@@ -179,24 +179,19 @@ const staff: Record<string, Person> = {
     ),
     joinDate: new Date(2025, 0),
   },
-  nick: {
-    image: nickFacilitiesImage,
-    name: "Nick",
-    title: "Facilities",
+  dan: {
+    image: danielDoormanImage,
+    name: "Daniel (Dan the Doorman)",
+    title: "Facilities Specialist",
     description: (
       <>
-        <p>I&apos;m the neighbor.</p>
-      </>
-    ),
-    joinDate: new Date(2025, 0), // TODO placeholder
-  },
-  chandler: {
-    image: [chandlerImage, chandlerFunImage],
-    name: "Chandler",
-    title: "Facilities",
-    description: (
-      <>
-        <p>I&apos;m the zoomer (W Hunger).</p>
+        <p>
+          Daniel has more than 15 years in the construction industry, working in
+          a varied capacity, including: carpentry, drywall, brick, tile,
+          plumbing, and more. His most recent job being in access solutions,
+          mainly overhead sectional doors. He enjoys tinkering with electronics,
+          puzzles, and has a strong appreciation for a good-looking door.
+        </p>
       </>
     ),
     joinDate: new Date(2025, 0), // TODO placeholder
@@ -248,6 +243,17 @@ const staff: Record<string, Person> = {
           <span>&ldquo;</span>Cinema
           <span>&rdquo;</span>
         </p>
+      </>
+    ),
+    joinDate: new Date(2025, 0), // TODO placeholder
+  },
+  chandler: {
+    image: [chandlerImage, chandlerFunImage],
+    name: "Chandler",
+    title: "YouTube Channel Manager",
+    description: (
+      <>
+        <p>I&apos;m the zoomer (W Hunger).</p>
       </>
     ),
     joinDate: new Date(2025, 0), // TODO placeholder

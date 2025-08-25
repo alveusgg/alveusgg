@@ -1,6 +1,13 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import collaborations, {
   type Collaboration,
@@ -15,11 +22,14 @@ import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
+import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
-import { Lightbox, Preview } from "@/components/content/YouTube";
+import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
+
+import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -211,97 +221,114 @@ const CollaborationItems = ({
   index,
   ref,
 }: GroupedProps<Collaboration, HTMLDivElement>) => {
-  const [open, setOpen] = useState<string>();
+  const [lightboxOpen, setLightboxOpen] = useState<string>();
+
+  const lightboxItems = useMemo(
+    () =>
+      items.reduce<Record<string, ReactNode>>(
+        (acc, collaboration) => ({
+          ...acc,
+          [collaboration.slug]: (
+            <YouTubeEmbed
+              videoId={collaboration.videoId}
+              caption={`${collaboration.name}: ${formatDateTime(collaboration.date, { style: "long" })}`}
+            />
+          ),
+        }),
+        {},
+      ),
+    [items],
+  );
+
   useEffect(() => {
     const hash = window.location.hash.slice(1);
-    if (items.some((collaboration) => collaboration.slug === hash))
-      setOpen(hash);
-  }, [items]);
+    if (hash in lightboxItems) setLightboxOpen(hash);
+  }, [lightboxItems]);
 
   return (
     <>
       {name && (
         <Heading
           level={-1}
-          className={classes(
-            "mt-8 mb-6 scroll-mt-16 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800",
-            index === 0 && "sr-only-linkable",
-          )}
+          className={
+            index === 0
+              ? "sr-only-linkable my-0"
+              : "mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+          }
           id={`${option}:${group}`}
           link
         >
           {name}
         </Heading>
       )}
+
+      <div className="flex flex-wrap" ref={ref}>
+        {items.map((collaboration) => (
+          <div
+            key={collaboration.slug}
+            className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
+          >
+            <Heading
+              level={2}
+              className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center"
+              id={collaboration.slug}
+            >
+              {collaboration.link !== null ? (
+                <Link
+                  href={collaboration.link}
+                  className="hover:text-alveus-green-600 hover:underline"
+                  external
+                  custom
+                >
+                  {collaboration.name}
+                </Link>
+              ) : (
+                collaboration.name
+              )}
+              <small className="text-xl text-alveus-green-600">
+                <Link href={`#${collaboration.slug}`} custom>
+                  {formatDateTime(collaboration.date, { style: "long" })}
+                </Link>
+              </small>
+            </Heading>
+
+            <Link
+              href={`https://www.youtube.com/watch?v=${collaboration.videoId}`}
+              external
+              onClick={(e) => {
+                e.preventDefault();
+                setLightboxOpen(collaboration.slug);
+              }}
+              custom
+              className="w-full max-w-2xl"
+            >
+              <YouTubePreview
+                videoId={collaboration.videoId}
+                className="aspect-video h-auto w-full"
+              />
+            </Link>
+
+            {collaboration.vodId && (
+              <p className="mt-2">
+                (
+                <Link
+                  href={`https://www.youtube.com/watch?v=${collaboration.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
+                  external
+                >
+                  Full stream VoD
+                </Link>
+                )
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
       <Lightbox
-        id={`collaborations-${name}`}
-        className="flex flex-wrap"
-        value={open}
-        onChange={setOpen}
-        ref={ref}
-      >
-        {({ Trigger }) => (
-          <>
-            {items.map((collaboration) => (
-              <div
-                key={collaboration.slug}
-                className="mx-auto flex basis-full flex-col items-center justify-start py-8 md:px-8 lg:basis-1/2"
-              >
-                <Heading
-                  level={2}
-                  className="flex flex-wrap items-end justify-center gap-x-8 gap-y-2 text-center"
-                  id={collaboration.slug}
-                >
-                  {collaboration.link !== null ? (
-                    <Link
-                      href={collaboration.link}
-                      className="hover:text-alveus-green-600 hover:underline"
-                      external
-                      custom
-                    >
-                      {collaboration.name}
-                    </Link>
-                  ) : (
-                    collaboration.name
-                  )}
-                  <small className="text-xl text-alveus-green-600">
-                    <Link href={`#${collaboration.slug}`} custom>
-                      {formatDateTime(collaboration.date, { style: "long" })}
-                    </Link>
-                  </small>
-                </Heading>
-
-                <Trigger
-                  videoId={collaboration.videoId}
-                  caption={`${collaboration.name}: ${formatDateTime(
-                    collaboration.date,
-                    {
-                      style: "long",
-                    },
-                  )}`}
-                  triggerId={collaboration.slug}
-                  className="w-full max-w-2xl"
-                >
-                  <Preview videoId={collaboration.videoId} />
-                </Trigger>
-
-                {collaboration.vodId && (
-                  <p className="mt-2">
-                    (
-                    <Link
-                      href={`https://www.youtube.com/watch?v=${collaboration.vodId}&list=PLtQafKoimfLd6dM9CQqiLm79khNgxsoN3`}
-                      external
-                    >
-                      Full stream VoD
-                    </Link>
-                    )
-                  </p>
-                )}
-              </div>
-            ))}
-          </>
-        )}
-      </Lightbox>
+        open={lightboxOpen}
+        onClose={() => setLightboxOpen(undefined)}
+        items={lightboxItems}
+      />
     </>
   );
 };
@@ -340,26 +367,46 @@ const CollaborationsPage: NextPage = () => {
         />
 
         <Section dark className="pt-24 pb-12">
-          <div className="w-full lg:w-4/5">
-            <Heading>Our Collaborations</Heading>
-            <p className="text-lg text-balance">
-              We work with other content creators to educate our combined
-              audiences, introducing them to the educational ambassadors at
-              Alveus and their conservation missions.
-            </p>
+          <div className="flex flex-wrap items-end">
+            <div className="w-full lg:w-2/3">
+              <Heading>Our Collaborations</Heading>
 
-            <p className="mt-2 text-lg text-balance">
-              We&apos;ve hosted{" "}
-              <abbr
-                title={`Across ${collaborations.length.toLocaleString()} collaboration streams`}
-              >
-                {creators.length.toLocaleString()} creators
-              </abbr>{" "}
-              at the sanctuary since {collaborations.at(-1)!.date.getFullYear()}
-              , bringing audiences from Twitch, YouTube, and other platforms,
-              together to learn about the importance of conservation.
-            </p>
+              <p className="text-lg text-balance">
+                We work with other content creators to educate our combined
+                audiences, introducing them to the educational ambassadors at
+                Alveus and their conservation missions.
+              </p>
+
+              <p className="mt-2 text-lg text-balance">
+                We&apos;ve hosted{" "}
+                <abbr
+                  title={`Across ${collaborations.length.toLocaleString()} collaboration streams`}
+                >
+                  {creators.length.toLocaleString()} creators
+                </abbr>{" "}
+                at the sanctuary since{" "}
+                {collaborations.at(-1)!.date.getFullYear()}, bringing audiences
+                from Twitch, YouTube, and other platforms, together to learn
+                about the importance of conservation.
+              </p>
+            </div>
+
+            <div className="w-full lg:w-1/3 lg:pl-2">
+              <p className="text-lg text-balance">
+                We also collaborate with various organizations to amplify their
+                efforts and share their important work with our audience,
+                furthering our mission of conservation and education.
+              </p>
+
+              <p className="mt-2 text-lg">
+                <Link href="/about/orgs" dark>
+                  Explore some of our NGO collaborations
+                  <IconArrowRight size={16} className="ml-1 inline-block" />
+                </Link>
+              </p>
+            </div>
           </div>
+
           <Creators className="mt-6" />
         </Section>
       </div>

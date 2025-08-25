@@ -51,7 +51,6 @@ export type CommandCategoryId = keyof typeof commandCategories;
 
 export interface CommandCategory {
   heading: string;
-  description?: string;
 }
 
 export const commandCategories = {
@@ -69,8 +68,6 @@ export const commandCategories = {
   },
   Presets: {
     heading: "Presets",
-    description:
-      "These commands will pan, tilt and zoom the respective camera to a preset view. The presets are listed below.",
   },
   Audio: {
     heading: "Audio",
@@ -95,7 +92,7 @@ export const commandCategories = {
   },
 } as const satisfies Record<string, CommandCategory>;
 
-const commands: Record<string, Command> = {
+const commands = {
   /**
    * PTZ
    */
@@ -106,7 +103,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -124,7 +121,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -136,32 +133,14 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzzoom: {
-    description: "Change relative zoom level",
-    category: "PTZ",
-    args: [
-      {
-        type: "string",
-        name: "camera",
-        required: false,
-        variadic: false,
-      },
-      {
-        type: "number",
-        name: "zoom",
-        required: true,
-        variadic: false,
-      },
-    ],
-  },
-  ptzzoomr: {
     description:
-      "Zooms by a factor of z/100, greater than 100 zooms in, less than 100 zooms out",
+      "Change the relative zoom level of a camera (greater than 100 zooms in, less than 100 zooms out)",
     category: "PTZ",
     args: [
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -179,7 +158,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -210,7 +189,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -253,7 +232,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -265,7 +244,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -293,7 +272,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -323,7 +302,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -354,7 +333,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -384,7 +363,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -414,7 +393,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -432,7 +411,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -444,7 +423,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -463,7 +442,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -479,7 +458,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -498,7 +477,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -515,13 +494,14 @@ const commands: Record<string, Command> = {
    * Focus
    */
   ptzfocus: {
-    description: "Change absolute focus, 1 to 9999 (if supported)",
+    description:
+      "Change the relative focus distance of a camera (-9999 to 9999)",
     category: "Focus",
     args: [
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -532,14 +512,14 @@ const commands: Record<string, Command> = {
       },
     ],
   },
-  ptzfocusr: {
-    description: "Change relative focus, -9999 to 9999 (if supported)",
+  ptzfocusa: {
+    description: "Set the absolute focus distance of a camera (0 to 9999)",
     category: "Focus",
     args: [
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -558,7 +538,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -576,7 +556,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
@@ -588,7 +568,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -605,25 +585,25 @@ const commands: Record<string, Command> = {
    * Presets
    */
   ptzhome: {
-    description: "Move to home position",
+    description: "Move a camera to its home position",
     category: "Presets",
     args: [
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
     ],
   },
   ptzload: {
-    description: "Move to a preset position",
+    description: "Move a camera to a preset position",
     category: "Presets",
     args: [
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -641,7 +621,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -659,7 +639,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -677,7 +657,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -695,7 +675,8 @@ const commands: Record<string, Command> = {
     ],
   },
   ptzlist: {
-    description: "Get all preset positions",
+    description:
+      "Get all preset positions for a camera, or get the cameras on stream currently",
     category: "Presets",
     args: [
       {
@@ -714,7 +695,7 @@ const commands: Record<string, Command> = {
         {
           type: "string",
           name: "camera",
-          required: false,
+          required: true,
           variadic: false,
         },
         {
@@ -740,7 +721,7 @@ const commands: Record<string, Command> = {
         {
           type: "string",
           name: "camera",
-          required: false,
+          required: true,
           variadic: false,
         },
         {
@@ -836,7 +817,7 @@ const commands: Record<string, Command> = {
       {
         type: "string",
         name: "camera",
-        required: false,
+        required: true,
         variadic: false,
       },
       {
@@ -939,7 +920,7 @@ const commands: Record<string, Command> = {
     args: [],
   },
   swap: {
-    description: "Swap cameras within a layout",
+    description: "Swap the layout of cameras currently on stream",
     category: "Scenes",
     args: [
       [
@@ -1307,14 +1288,14 @@ const commands: Record<string, Command> = {
     category: "Rounds",
     args: [],
   },
-  checkmark: {
-    description: "Mark list items as completed",
+  check: {
+    description: "Toggle whether an item has been checked",
     category: "Rounds",
     args: [
       [
         {
           type: "string",
-          name: "category",
+          name: "item",
           required: true,
           variadic: false,
         },
@@ -1322,27 +1303,14 @@ const commands: Record<string, Command> = {
       [
         {
           type: "choice",
-          name: "all",
+          name: "reset",
           required: true,
           variadic: false,
-          choices: ["all"],
+          choices: ["reset"],
         },
       ],
     ],
   },
-  clearcheck: {
-    description:
-      "Remove checkmarks from list items, no category will remove all checkmarks",
-    category: "Rounds",
-    args: [
-      {
-        type: "string",
-        name: "category",
-        required: false,
-        variadic: false,
-      },
-    ],
-  },
-};
+} as const satisfies Record<string, Command>;
 
 export default commands;

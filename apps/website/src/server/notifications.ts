@@ -23,6 +23,7 @@ type CreateNotificationData = {
   linkUrl?: string;
   title?: string;
   imageUrl?: string;
+  vodUrl?: string;
   scheduledStartAt?: Date | null;
   scheduledEndAt?: Date | null;
   isPush?: boolean;
@@ -61,6 +62,7 @@ export async function createNotification(data: CreateNotificationData) {
       message: data.text || "",
       linkUrl: data.linkUrl,
       imageUrl: data.imageUrl || null,
+      vodUrl: data.vodUrl || null,
       tag: data.tag,
       urgency: tagConfig.urgency,
       scheduledStartAt: data.scheduledStartAt || null,
@@ -90,6 +92,7 @@ export async function copyNotification(notificationId: string) {
     title: oldNotification.title || defaultTitle,
     imageUrl: oldNotification.imageUrl || undefined,
     linkUrl: oldNotification.linkUrl || undefined,
+    vodUrl: oldNotification.vodUrl || undefined,
     text: oldNotification.message,
     scheduledEndAt: oldNotification.scheduledEndAt,
     scheduledStartAt: oldNotification.scheduledStartAt,

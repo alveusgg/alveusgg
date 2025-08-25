@@ -10,7 +10,7 @@ import Meta from "@/components/content/Meta";
 import People from "@/components/content/People";
 import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
-import { Lightbox, Preview } from "@/components/content/YouTube";
+import { YouTubeLightbox } from "@/components/content/YouTube";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
@@ -73,16 +73,13 @@ const AboutStaffPage: NextPage = () => {
         </div>
 
         <div className="basis-full p-4 pt-8 xl:basis-1/2 xl:pt-4">
-          <Lightbox className="mx-auto max-w-2xl xl:mr-0">
-            {({ Trigger }) => (
-              <Trigger videoId="7DvtjAqmWl8">
-                <Preview videoId="7DvtjAqmWl8" />
-                <Heading level={2} className="text-center">
-                  Meet the team
-                </Heading>
-              </Trigger>
-            )}
-          </Lightbox>
+          <div className="mx-auto max-w-2xl xl:mr-0">
+            <YouTubeLightbox videoId="7DvtjAqmWl8" />
+
+            <Heading level={2} className="text-center">
+              Meet the team
+            </Heading>
+          </div>
         </div>
       </Section>
 

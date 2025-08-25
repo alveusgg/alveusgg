@@ -1,4 +1,7 @@
+import { TRPCError } from "@trpc/server";
 import type { Session } from "next-auth";
+
+import { prisma } from "@alveusgg/database";
 
 import { env } from "@/env";
 
@@ -44,3 +47,27 @@ export function checkPermissions(
 
   return false;
 }
+
+export const getUserTwitchAccount = async (userId: string, trpc = true) => {
+  const { access_token: token, providerAccountId: id } =
+    (await prisma.account.findFirst({
+      where: {
+        userId,
+        provider: "twitch",
+      },
+      select: {
+        providerAccountId: true,
+        access_token: true,
+      },
+    })) ?? {};
+  if (!token || !id) {
+    if (trpc) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "No Twitch account found for user",
+      });
+    }
+    throw new Error("No Twitch account found for user");
+  }
+  return { token, id };
+};

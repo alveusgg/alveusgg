@@ -20,6 +20,7 @@ type PendingNotification = {
   text?: string;
   linkUrl?: string;
   imageUrl?: string;
+  vodUrl?: string;
   title: string;
   expiresAt: number;
   isPush: boolean;
@@ -58,6 +59,10 @@ const options = createOptions({
   image: {
     type: "url",
     help: "Set the image URL",
+  },
+  vod: {
+    type: "url",
+    help: "Set the VoD URL",
   },
 });
 
@@ -119,6 +124,7 @@ function renderPendingNotification(notification: PendingNotification) {
     notification.text,
     notification.linkUrl,
     notification.imageUrl ? "has image" : null,
+    notification.vodUrl ? "has VoD" : null,
     notification.isPush ? "will push" : null,
     notification.isDiscord ? "will post in discord" : null,
   ]
@@ -183,6 +189,7 @@ export async function createNotificationCommands() {
       isPush: !optionValues["no-push"],
       isDiscord: !optionValues["no-discord"],
       imageUrl: optionValues.image,
+      vodUrl: optionValues.vod,
     });
     pendingNotifications.set(broadcasterId, pendingNotification);
 
@@ -249,6 +256,7 @@ export async function createNotificationCommands() {
       isPush: !optionValues["no-push"],
       isDiscord: !optionValues["no-discord"],
       imageUrl: optionValues.image,
+      vodUrl: optionValues.vod,
     });
     pendingNotifications.set(broadcasterId, pendingNotification);
 
@@ -286,6 +294,7 @@ export async function createNotificationCommands() {
       isDiscord: pendingNotification.isDiscord,
       isPush: pendingNotification.isPush,
       imageUrl: pendingNotification.imageUrl,
+      vodUrl: pendingNotification.vodUrl,
     })
       .then(() => {
         reply("poggSpin sent notification");

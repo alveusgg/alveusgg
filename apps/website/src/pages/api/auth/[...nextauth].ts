@@ -13,9 +13,24 @@ import {
   refreshAccessToken,
 } from "@/server/utils/oauth2";
 
-import { botScopes, defaultScopes } from "@/data/twitch";
+import { scopeGroups } from "@/data/twitch";
 
 import invariant from "@/utils/invariant";
+
+const requireScopes = (account: { scope: string | null }, scopes: string[]) => {
+  const accountScopes = new Set(account.scope?.split(" "));
+  const missingScopes = scopes.filter((scope) => !accountScopes.has(scope));
+
+  if (missingScopes.length > 0) {
+    const allScopes = [...accountScopes, ...missingScopes].join(" ");
+    return {
+      expires: new Date(0).toISOString(),
+      error: `Additional scopes required: ${allScopes}`,
+    };
+  }
+
+  return null;
+};
 
 const adapter = PrismaAdapter(prisma);
 
@@ -24,7 +39,7 @@ const twitchProvider = TwitchProvider({
   clientSecret: env.TWITCH_CLIENT_SECRET,
   authorization: {
     params: {
-      scope: defaultScopes.join(" "),
+      scope: scopeGroups.default.join(" "),
     },
   },
 });
@@ -44,6 +59,7 @@ export const authOptions: NextAuthOptions = {
           id: true,
           access_token: true,
           refresh_token: true,
+          expires_at: true,
           verified_at: true,
           scope: true,
           twitchChannelBroadcaster: {
@@ -75,6 +91,11 @@ export const authOptions: NextAuthOptions = {
               account.id,
               account.access_token,
               account.refresh_token,
+              // Force the refresh if we're within 1hr of expiry
+              !!(
+                account.expires_at &&
+                account.expires_at - Date.now() / 1000 < 60 * 60
+              ),
             );
           } catch (err) {
             if (!(err instanceof ExpiredAccessTokenError)) console.error(err);
@@ -92,14 +113,8 @@ export const authOptions: NextAuthOptions = {
         account.twitchChannelBroadcaster.length ||
         account.twitchChannelModerator.length
       ) {
-        const scopes = new Set(account.scope?.split(" "));
-        const missingScopes = botScopes.filter((scope) => !scopes.has(scope));
-        if (missingScopes.length > 0) {
-          return {
-            expires: new Date(0).toISOString(),
-            error: "Additional scopes required",
-          };
-        }
+        const err = requireScopes(account, scopeGroups.api);
+        if (err) return err;
       }
 
       // Include user.id on session
@@ -110,6 +125,7 @@ export const authOptions: NextAuthOptions = {
           id: user.id,
           isSuperUser: checkIsSuperUserId(user.id),
           roles: await getRolesForUser(user.id),
+          scopes: account.scope?.split(" ") ?? [],
         },
       };
     },
@@ -178,17 +194,23 @@ export const authOptions: NextAuthOptions = {
     },
   },
   adapter,
-  providers: [
-    // Configure one or more authentication providers
-    twitchProvider,
-    // ...add more providers here
-  ],
+  providers: [twitchProvider],
   pages: {
     signIn: "/auth/signin",
-    //signOut: '/auth/signout',
     error: "/auth/signin", // Error code passed in query string as ?error=
-    //verifyRequest: '/auth/verify-request', // (used for check email message)
-    //newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+  },
+  cookies: {
+    // Set SameSite=none for the session cookie so it can be embedded in an iframe
+    // https://github.com/nextauthjs/next-auth/blob/next-auth%404.24.11/packages/next-auth/src/core/lib/cookie.ts#L57-L68
+    sessionToken: {
+      name: "__Secure-next-auth.session-token",
+      options: {
+        httpOnly: true,
+        sameSite: "none",
+        path: "/",
+        secure: true,
+      },
+    },
   },
 };
 

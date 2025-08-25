@@ -13,7 +13,7 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import { TwitchEmbed } from "@/components/content/TwitchEmbed";
+import Twitch from "@/components/content/Twitch";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { Button } from "@/components/shared/form/Button";
@@ -261,10 +261,7 @@ const PlayBingoPage = () => {
             consent="twitch"
             className="relative h-[90vh] w-full rounded-2xl bg-alveus-green text-alveus-tan lg:h-[calc(56vw-192px)]"
           >
-            <TwitchEmbed
-              channel="maya"
-              className="absolute inset-0 size-full"
-            />
+            <Twitch channel="maya" className="absolute inset-0 size-full" />
           </Consent>
         )}
       </div>
