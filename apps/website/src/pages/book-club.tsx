@@ -77,6 +77,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/4kZ31gL",
     thickness: thickness.sm, // 270 pages
     color: "border-yellow-400",
+    vodId: "X2M4FjTqxiA",
   },
   {
     title: "The Anthropocene Reviewed",
