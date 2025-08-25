@@ -7,6 +7,11 @@ import { getRssFeedContent } from "@/utils/rss-feed";
 export async function GET() {
   const staffPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/about/staff`;
 
+  const staffKeys = Object.keys(staff);
+  const lastStaffKey = staffKeys[staffKeys.length - 1] || "maya";
+  const lastStaffMember = staff[lastStaffKey];
+  const latestStaffJoinDate = lastStaffMember?.joinDate;
+
   const staffFeedItems = Object.entries(staff)
     .map(([key, person]) => ({ ...person, url: `${staffPageUrl}#${key}` }))
     .map((person) => ({
@@ -14,8 +19,7 @@ export async function GET() {
       id: person.url,
       link: person.url,
       description: person.title,
-      content: person.title,
-      date: new Date(), // A date is required, but they aren't available for staff
+      date: person.joinDate,
     }));
 
   const staffFeedContent = getRssFeedContent({
@@ -23,7 +27,7 @@ export async function GET() {
     description: "A feed for new staff members",
     id: staffPageUrl,
     link: staffPageUrl,
-    updated: undefined, // Since the latest staff join date is unavailable
+    updated: latestStaffJoinDate,
     items: staffFeedItems,
   });
 

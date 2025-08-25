@@ -11,6 +11,7 @@ export interface Person {
   name: string;
   title: string;
   description: ReactNode;
+  joinDate: Date;
 }
 
 type PeopleProps = {

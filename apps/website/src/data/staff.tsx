@@ -34,6 +34,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2021, 1),
   },
   connor: {
     image: [connorObrienImage, connorObrienFunImage],
@@ -57,6 +58,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2021, 9),
   },
   kayla: {
     image: kaylaJacksonImage,
@@ -81,6 +83,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2021, 9),
   },
   lindsay: {
     image: [lindsayBellawImage, lindsayBellawFunImage],
@@ -101,6 +104,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2023, 6),
   },
   sruti: {
     image: [srutiJamalapuramImage, srutiJamalapuramFunImage],
@@ -133,6 +137,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2024, 3),
   },
   amanda: {
     image: [amandaDenaroImage, amandaDenaroFunImage],
@@ -154,6 +159,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2024, 6),
   },
   lukas: {
     image: lukasMeyerImage,
@@ -171,6 +177,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2025, 0),
   },
   nick: {
     image: nickFacilitiesImage,
@@ -181,6 +188,7 @@ const staff: Record<string, Person> = {
         <p>I&apos;m the neighbor.</p>
       </>
     ),
+    joinDate: new Date(2025, 0), // TODO placeholder
   },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
@@ -191,6 +199,7 @@ const staff: Record<string, Person> = {
         <p>I&apos;m the zoomer (W Hunger).</p>
       </>
     ),
+    joinDate: new Date(2025, 0), // TODO placeholder
   },
   space: {
     image: spaceVoyageImage,
@@ -215,6 +224,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2025, 0), // TODO placeholder
   },
   colton: {
     image: coltonHolsteImage,
@@ -240,6 +250,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
+    joinDate: new Date(2025, 0), // TODO placeholder
   },
 };
 
