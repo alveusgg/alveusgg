@@ -90,6 +90,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/thesketchreal",
       date: new Date("2025-08-04"),
       videoId: "qgoqxPAm7G8",
+      vodId: "zMH32xEJaBs",
       creators: [
         {
           name: "Sketch",
