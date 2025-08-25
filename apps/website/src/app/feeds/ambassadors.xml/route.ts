@@ -29,7 +29,7 @@ export async function GET() {
       title: ambassador.name,
       id: ambassador.url,
       link: ambassador.url,
-      description: ambassador.story,
+      description: `${ambassador.name} is an Alveus Ambassador. ${ambassador.story} ${ambassador.mission}`,
       date: new Date(ambassador.arrival),
     }));
 
