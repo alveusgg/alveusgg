@@ -28,6 +28,7 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
+import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import Select from "@/components/content/Select";
 import SubNav from "@/components/content/SubNav";
@@ -270,7 +271,12 @@ const AnimalQuestPage: NextPage = () => {
         title="Animal Quest"
         description="Learn about the ambassadors at Alveus through Animal Quest, a series hosted by Maya Higa."
         image={animalQuestFull.src}
-      />
+      >
+        <RssLink
+          title="Alveus Sanctuary Animal Quest Episodes"
+          path="/feeds/animal-quest.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

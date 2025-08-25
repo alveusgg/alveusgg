@@ -12,6 +12,7 @@ import Box from "@/components/content/Box";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import { RssLink } from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import { StreamEmbed } from "@/components/content/Stream";
 
@@ -138,7 +139,9 @@ const EventsPage: NextPage = () => {
       <Meta
         title="Events"
         description="We host one-off fundraising events to increase awareness of our conservation missions and to encourage donations to support Alveus."
-      />
+      >
+        <RssLink title="Alveus Sanctuary Events" path="/feeds/events.xml" />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
