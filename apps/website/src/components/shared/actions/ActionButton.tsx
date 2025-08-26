@@ -48,7 +48,7 @@ const ActionButton = ({
         {tooltip.text}
       </Tooltip>
       <button onClick={onClick} title={tooltip.text}>
-        <Icon className="m-1 inline size-5 cursor-pointer transition-colors" />
+        <Icon className="m-1 size-5 cursor-pointer transition-colors" />
       </button>
     </div>
   );
