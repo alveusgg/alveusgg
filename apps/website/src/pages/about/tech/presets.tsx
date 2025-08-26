@@ -49,6 +49,8 @@ import IconChevronDown from "@/icons/IconChevronDown";
 import IconLoading from "@/icons/IconLoading";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconX from "@/icons/IconX";
+import IconZoomIn from "@/icons/IconZoomIn";
+import IconZoomOut from "@/icons/IconZoomOut";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -505,14 +507,36 @@ const AboutTechPresetsPage: NextPage = () => {
                     </Heading>
 
                     {"presets" in selectedData && (
-                      <Input
-                        type="text"
-                        placeholder="Search presets..."
-                        aria-label="Search presets"
-                        value={searchPresets}
-                        onChange={(e) => setSearchPresets(e.target.value)}
-                        className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
-                      />
+                      <>
+                        {subscription.isSuccess && subscription.data && (
+                          <div className="flex items-center">
+                            <RunCommandButton
+                              command="ptzzoom"
+                              args={[selectedCamera.toLowerCase(), "80"]}
+                              tooltip="Run zoom out command"
+                              icon={IconZoomOut}
+                            />
+
+                            <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded bg-alveus-green-400" />
+
+                            <RunCommandButton
+                              command="ptzzoom"
+                              args={[selectedCamera.toLowerCase(), "120"]}
+                              tooltip="Run zoom in command"
+                              icon={IconZoomIn}
+                            />
+                          </div>
+                        )}
+
+                        <Input
+                          type="text"
+                          placeholder="Search presets..."
+                          aria-label="Search presets"
+                          value={searchPresets}
+                          onChange={(e) => setSearchPresets(e.target.value)}
+                          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                        />
+                      </>
                     )}
                   </div>
 
