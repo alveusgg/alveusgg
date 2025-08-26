@@ -421,6 +421,7 @@ const AboutTechPresetsPage: NextPage = () => {
                             ]}
                             tooltip={`Run swap command for positions ${selectedPosition} and ${i + 1}`}
                             icon={getPositionIcon(i + 1)}
+                            onClick={() => setSelectedPosition(undefined)}
                             className="text-highlight hover:text-black"
                           />
                         ),
