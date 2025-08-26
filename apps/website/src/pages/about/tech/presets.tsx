@@ -428,65 +428,67 @@ const AboutTechPresetsPage: NextPage = () => {
                   className="mb-2 w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 />
 
-                {typeSafeObjectEntries(groupedCameras).map(([name, group]) => {
-                  const groupEntries =
-                    typeSafeObjectEntries(group).filter(isDefinedEntry);
-                  if (groupEntries.length === 0) return null;
+                {typeSafeObjectEntries(groupedCameras)
+                  .sort(([a], [b]) => a.localeCompare(b))
+                  .map(([name, group]) => {
+                    const groupEntries =
+                      typeSafeObjectEntries(group).filter(isDefinedEntry);
+                    if (groupEntries.length === 0) return null;
 
-                  if (groupEntries.length === 1) {
-                    const [camera, { title, group }] = groupEntries[0]!;
+                    if (groupEntries.length === 1) {
+                      const [camera, { title, group }] = groupEntries[0]!;
+                      return (
+                        <Button
+                          key={camera}
+                          camera={camera}
+                          title={title}
+                          group={group}
+                          onClick={() => setSelectedCamera(camera)}
+                          selected={{
+                            camera: selectedCamera,
+                            group: selectedData.group,
+                          }}
+                        />
+                      );
+                    }
+
                     return (
-                      <Button
-                        key={camera}
-                        camera={camera}
-                        title={title}
-                        group={group}
-                        onClick={() => setSelectedCamera(camera)}
-                        selected={{
-                          camera: selectedCamera,
-                          group: selectedData.group,
-                        }}
-                      />
-                    );
-                  }
-
-                  return (
-                    <Disclosure key={name}>
-                      <DisclosureButton
-                        ref={disclosureRef}
-                        className={classes(
-                          "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
-                          selectedData.group === name
-                            ? "bg-alveus-green/75 text-white"
-                            : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
-                        )}
-                      >
-                        <span>
-                          {camelToTitle(name)} Cameras
-                          <span className="text-sm text-alveus-green-400 italic">
-                            {` (${groupEntries.length})`}
+                      <Disclosure key={name}>
+                        <DisclosureButton
+                          ref={disclosureRef}
+                          className={classes(
+                            "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
+                            selectedData.group === name
+                              ? "bg-alveus-green/75 text-white"
+                              : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+                          )}
+                        >
+                          <span>
+                            {camelToTitle(name)} Cameras
+                            <span className="text-sm text-alveus-green-400 italic">
+                              {` (${groupEntries.length})`}
+                            </span>
                           </span>
-                        </span>
-                        <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
-                      </DisclosureButton>
-                      <DisclosurePanel className="ml-4 flex flex-col gap-1">
-                        {groupEntries.map(([camera, { title, group }]) => (
-                          <Button
-                            key={camera}
-                            camera={camera}
-                            title={title}
-                            group={group}
-                            onClick={() => setSelectedCamera(camera)}
-                            selected={{
-                              camera: selectedCamera,
-                              group: selectedData.group,
-                            }}
-                          />
-                        ))}
-                      </DisclosurePanel>
-                    </Disclosure>
-                  );
-                })}
+                          <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
+                        </DisclosureButton>
+                        <DisclosurePanel className="ml-4 flex flex-col gap-1">
+                          {groupEntries.map(([camera, { title, group }]) => (
+                            <Button
+                              key={camera}
+                              camera={camera}
+                              title={title}
+                              group={group}
+                              onClick={() => setSelectedCamera(camera)}
+                              selected={{
+                                camera: selectedCamera,
+                                group: selectedData.group,
+                              }}
+                            />
+                          ))}
+                        </DisclosurePanel>
+                      </Disclosure>
+                    );
+                  })}
               </div>
             </div>
 
