@@ -54,7 +54,7 @@ const Commands = ({
     {commands.map((command) => (
       <div
         key={command.name}
-        className="mb-4 flex flex-col items-baseline lg:mb-0 lg:flex-row lg:gap-2"
+        className="mb-4 flex flex-col items-start lg:mb-0 lg:flex-row lg:gap-2"
       >
         <dt>
           <pre>
