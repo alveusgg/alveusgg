@@ -1,5 +1,11 @@
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { scopeGroups } from "@/data/twitch";
 
@@ -15,6 +21,7 @@ type Command = RouterInputs["stream"]["runCommand"];
 interface RunCommandButtonProps extends Command {
   subOnly?: boolean;
   tooltip?: string;
+  icon?: ({ className }: { className: string }) => ReactNode;
   className?: string;
 }
 
@@ -23,6 +30,7 @@ const RunCommandButton = ({
   args,
   subOnly = false,
   tooltip = "Run command",
+  icon = IconVideoCamera,
   className,
 }: RunCommandButtonProps) => {
   const { data: session } = useSession();
@@ -82,7 +90,7 @@ const RunCommandButton = ({
   return (
     <ActionButton
       onClick={onClick}
-      icon={IconVideoCamera}
+      icon={icon}
       tooltip={{
         text: statusText ?? tooltip,
         elm: statusText ? undefined : PreviewTooltip,

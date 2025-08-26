@@ -81,7 +81,7 @@ const gardenPresets: Record<string, Preset> = {
 
 const garden = {
   title: "Garden",
-  group: "garden",
+  group: "pasture",
   presets: gardenPresets,
 };
 
