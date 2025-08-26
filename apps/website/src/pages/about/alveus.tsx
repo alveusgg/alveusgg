@@ -589,6 +589,30 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/events#art-auction-2025",
         },
       },
+      {
+        key: "colton-chandler",
+        date: "2025-04",
+        content: [
+          "Colton and Chandler join the Alveus team",
+          "Colton joins the team as the Creative Producer, and Chandler joins as the Youtube Channel Manager.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
+        key: "daniel",
+        date: "2025-07",
+        content: [
+          "Daniel joins the Alveus team",
+          "Daniel (Dan the Doorman) joins the team as the Facilities Specialist.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
     ],
   },
 ];

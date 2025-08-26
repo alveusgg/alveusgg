@@ -194,7 +194,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2025, 0), // TODO placeholder
+    joinDate: new Date(2025, 6),
   },
   space: {
     image: spaceVoyageImage,
@@ -219,7 +219,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2025, 0), // TODO placeholder
+    joinDate: new Date(2021, 1),
   },
   colton: {
     image: coltonHolsteImage,
@@ -245,7 +245,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2025, 0), // TODO placeholder
+    joinDate: new Date(2025, 3),
   },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
@@ -256,7 +256,7 @@ const staff: Record<string, Person> = {
         <p>I&apos;m the zoomer (W Hunger).</p>
       </>
     ),
-    joinDate: new Date(2025, 0), // TODO placeholder
+    joinDate: new Date(2025, 3),
   },
 };
 

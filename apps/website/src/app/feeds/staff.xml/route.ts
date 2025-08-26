@@ -7,10 +7,13 @@ import { getRssFeedContent } from "@/utils/rss-feed";
 export async function GET() {
   const staffPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/about/staff`;
 
-  const staffKeys = Object.keys(staff);
-  const lastStaffKey = staffKeys[staffKeys.length - 1] || "maya";
-  const lastStaffMember = staff[lastStaffKey];
-  const latestStaffJoinDate = lastStaffMember?.joinDate;
+  const latestStaffJoinDate = new Date(
+    Math.max(
+      ...Object.values(staff)
+        .map((person) => person.joinDate?.getTime() ?? 0)
+        .filter((time) => time > 0),
+    ),
+  );
 
   const staffFeedItems = Object.entries(staff)
     .map(([key, person]) => ({ ...person, url: `${staffPageUrl}#${key}` }))
