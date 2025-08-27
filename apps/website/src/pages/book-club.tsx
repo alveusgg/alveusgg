@@ -32,6 +32,7 @@ import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
 import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
+import whySharksMatter from "@/assets/book-club/books/why-sharks-matter.jpg";
 import bookClubFull from "@/assets/book-club/full.png";
 import bookClubLogo from "@/assets/book-club/logo.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -60,6 +61,15 @@ type BookInfo = {
 };
 
 const books: BookInfo[] = [
+  {
+    title: "Why Sharks Matter",
+    author: "David Shiffman",
+    image: whySharksMatter,
+    month: ["2025-09"],
+    link: "https://amzn.to/4fS8THm",
+    thickness: thickness.md, // 310 pages
+    color: "border-blue-800",
+  },
   {
     title: "Steve & Me",
     author: "Terri Irwin",
