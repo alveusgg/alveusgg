@@ -1,20 +1,30 @@
 import { env } from "@/env";
 
-import books from "@/data/books";
+import books, { type BookInfo } from "@/data/books";
 
 import { getRssFeedContent } from "@/utils/rss-feed";
+import { convertToSlug } from "@/utils/slugs";
+
+type NonEmptyArray<T> = [T, ...T[]];
 
 export async function GET() {
   const bookClubPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/book-club`;
-  const latestBookDate = books[0] && new Date(books[0].month);
+  // If a book goes for an additional month, keep using the first month as the last updated date
+  const latestBook = (books as NonEmptyArray<BookInfo>)[0];
+  const latestBookDate = new Date(
+    (latestBook.month as NonEmptyArray<string>)[0],
+  );
 
-  const bookFeedItems = books.map((book) => ({
-    title: book.title,
-    id: book.link, // Supposed to be a unique id/link, so can't really be the book club page
-    link: bookClubPageUrl, // Books don't have individual links on the Alveus site
-    description: book.link,
-    date: new Date(book.month),
-  }));
+  const bookFeedItems = books.map((book) => {
+    const month = book.month as NonEmptyArray<string>;
+    return {
+      title: book.title,
+      id: `${bookClubPageUrl}:${convertToSlug(month[0])}`,
+      link: bookClubPageUrl, // Books don't have individual links on the Alveus site
+      description: book.link,
+      date: new Date(month[0]),
+    };
+  });
 
   const bookFeedContent = getRssFeedContent({
     title: "Alveus Sanctuary Book Club",
