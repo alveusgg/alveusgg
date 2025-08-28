@@ -32,6 +32,7 @@ import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
 import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
+import whySharksMatter from "@/assets/book-club/books/why-sharks-matter.jpg";
 import bookClubFull from "@/assets/book-club/full.png";
 import bookClubLogo from "@/assets/book-club/logo.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
@@ -60,6 +61,15 @@ type BookInfo = {
 };
 
 const books: BookInfo[] = [
+  {
+    title: "Why Sharks Matter",
+    author: "David Shiffman",
+    image: whySharksMatter,
+    month: ["2025-09"],
+    link: "https://amzn.to/4fS8THm",
+    thickness: thickness.md, // 310 pages
+    color: "border-blue-800",
+  },
   {
     title: "Steve & Me",
     author: "Terri Irwin",
@@ -242,7 +252,7 @@ const Book = ({
   <Disclosure as="div" className={className}>
     {({ open }) => (
       <>
-        <DisclosureButton className="group overflow-visible text-start perspective-normal focus:outline-hidden">
+        <DisclosureButton className="group w-full overflow-visible text-start perspective-normal focus:outline-hidden">
           <div className="origin-[50%_40%] transition-all duration-1000 transform-3d group-data-[open]:mb-[-100%] group-data-[open]:-translate-y-1/4 group-data-[open]:translate-z-2 group-data-[open]:scale-70 group-data-[open]:scale-3d group-data-[open]:rotate-x-[85deg]">
             <Cover
               title={title}
