@@ -21,7 +21,7 @@
     "dev:push-sw": "tsup --watch --config sw.tsup.config.ts",
     "build": "pnpm run --sequential \"/^build:.*/\"",
     "dev": "pnpm run \"/^(build:manifest|dev:.*)/\"",
-    "lint": "next lint --max-warnings 0",
+    "lint": "eslint --max-warnings 0",
     "types": "tsc --noEmit",
     "start": "next start",
     "test": "vitest"
