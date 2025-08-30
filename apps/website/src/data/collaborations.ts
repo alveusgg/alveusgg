@@ -55,6 +55,7 @@ import russel from "@/assets/collaborations/russel.png";
 import scarra from "@/assets/collaborations/scarra.png";
 import sketch from "@/assets/collaborations/sketch.png";
 import squeex from "@/assets/collaborations/squeex.png";
+import stableRonaldo from "@/assets/collaborations/stable-ronaldo.png";
 import steak from "@/assets/collaborations/steak.png";
 import supertf from "@/assets/collaborations/supertf.png";
 import thePrimeagen from "@/assets/collaborations/the-primeagen.png";
@@ -85,6 +86,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "StableRonaldo",
+      link: "https://www.twitch.tv/stableronaldo",
+      date: new Date("2025-08-28"),
+      videoId: "qJUL4o8Gg4s",
+      creators: [
+        {
+          name: "StableRonaldo",
+          image: stableRonaldo,
+          popularity: 4_100_000, // Twitch followers, 2025-08-30
+        },
+      ],
+    },
     {
       name: "Sketch",
       link: "https://www.twitch.tv/thesketchreal",
