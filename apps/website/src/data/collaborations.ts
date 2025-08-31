@@ -91,6 +91,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/stableronaldo",
       date: new Date("2025-08-28"),
       videoId: "qJUL4o8Gg4s",
+      vodId: "aWESvMr263s",
       creators: [
         {
           name: "StableRonaldo",
