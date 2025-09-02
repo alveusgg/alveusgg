@@ -1,5 +1,5 @@
 import { Transition } from "@headlessui/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import { standardCategories } from "@/data/calendar-events";
 import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
@@ -47,24 +47,27 @@ export function Schedule() {
   const [timeZone, setTimeZone] = useTimezone();
   const today = useToday(timeZone);
   const [selected, setSelected] = useMonthSelection(timeZone, today);
+  const [categories, setCategories] = useState<Set<string>>(new Set());
   const events = useCalendarEventsQuery(timeZone, selected);
   const eventsWithChildren = useMemo(
     () =>
       today &&
-      events.data?.map((event) => ({
-        date: event.startAt,
-        children: (
-          <CalendarItem
-            key={event.id}
-            event={event}
-            today={today}
-            href={event.link}
-            timeZone={timeZone}
-            external
-          />
-        ),
-      })),
-    [today, events.data, timeZone],
+      events.data
+        ?.filter((event) => !categories.size || categories.has(event.category))
+        .map((event) => ({
+          date: event.startAt,
+          children: (
+            <CalendarItem
+              key={event.id}
+              event={event}
+              today={today}
+              href={event.link}
+              timeZone={timeZone}
+              external
+            />
+          ),
+        })),
+    [today, events.data, categories, timeZone],
   );
 
   if (!selected) return null;
@@ -92,7 +95,7 @@ export function Schedule() {
         </Transition>
       </div>
 
-      {typeSafeObjectEntries(groupedCategories).map(([group, categories]) => (
+      {typeSafeObjectEntries(groupedCategories).map(([group, grouped]) => (
         <div key={group}>
           <div className="mb-1 flex flex-wrap items-end justify-end gap-2">
             <h4 className="mr-auto text-lg font-bold">
@@ -135,16 +138,49 @@ export function Schedule() {
           </div>
 
           <div className="grid grid-cols-1 gap-x-4 gap-y-1 md:grid-cols-2 lg:grid-cols-3">
-            {categories.map((category) => (
-              <div key={category.name} className="flex items-center gap-2">
+            {grouped.map((category) => (
+              <label
+                key={category.name}
+                className="group flex items-center gap-2"
+              >
+                <input
+                  type="checkbox"
+                  checked={categories.has(category.name)}
+                  onChange={(e) => {
+                    const newCategories = new Set(categories);
+                    if (e.currentTarget.checked) {
+                      newCategories.add(category.name);
+                    } else {
+                      newCategories.delete(category.name);
+                    }
+                    setCategories(newCategories);
+                  }}
+                  className="sr-only"
+                />
+
                 <div
                   className={classes(
                     category.color,
-                    "rounded-md border-2 border-black/10 p-2 hover:border-black/20",
+                    "rounded-md border-2 p-1 group-hover:border-black/20",
+                    categories.has(category.name)
+                      ? "border-black/20"
+                      : "border-black/10",
                   )}
-                />
-                <p className="shrink-0 opacity-75">{category.name}</p>
-              </div>
+                >
+                  <div
+                    className={classes(
+                      "h-2 w-2 rounded-full",
+                      categories.has(category.name)
+                        ? "bg-black/25"
+                        : "bg-transparent",
+                    )}
+                  />
+                </div>
+                <p className="shrink-0 opacity-75">
+                  <span className="sr-only">Filter by </span>
+                  {category.name}
+                </p>
+              </label>
             ))}
           </div>
         </div>
