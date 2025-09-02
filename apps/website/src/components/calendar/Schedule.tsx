@@ -142,7 +142,7 @@ export function Schedule() {
               {grouped.map((category) => (
                 <label
                   key={category.name}
-                  className="group flex items-center gap-2"
+                  className="group flex cursor-pointer items-center gap-2"
                 >
                   <input
                     type="checkbox"
