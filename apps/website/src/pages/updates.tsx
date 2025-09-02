@@ -106,28 +106,26 @@ const UpdatesPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow">
-        <div className="flex flex-col gap-10 xl:flex-row">
-          <div className="flex flex-1 grow-[2] flex-col gap-8">
-            <section>
-              <Heading level={3} id="schedule" link>
-                Schedule
-              </Heading>
-              <Schedule />
-            </section>
+        <div className="flex flex-col gap-10">
+          <section>
+            <Heading level={3} id="schedule" link>
+              Schedule
+            </Heading>
+            <Schedule />
+          </section>
 
-            <section>
-              <Heading level={3} id="announcements" link>
-                Announcements
-              </Heading>
-              <Announcements />
-            </section>
-          </div>
-
-          <section className="flex-1">
+          <section>
             <Heading level={3} id="recent" link>
               Recent Notifications
             </Heading>
             <RecentNotifications tags={notificationTags} />
+          </section>
+
+          <section>
+            <Heading level={3} id="announcements" link>
+              Announcements
+            </Heading>
+            <Announcements />
           </section>
         </div>
       </Section>

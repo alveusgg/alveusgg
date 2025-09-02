@@ -8,25 +8,40 @@ type StandardCategory = {
 };
 
 export const standardCategories: StandardCategory[] = [
-  { name: "Alveus Regular Stream", color: "bg-yellow-200 hover:bg-yellow-300" },
-  { name: "Alveus Special Stream", color: "bg-green-100 hover:bg-green-200" },
+  {
+    name: "Alveus Regular Stream",
+    color: "bg-yellow-200 hover:bg-yellow-300 group-hover:bg-yellow-300",
+  },
+  {
+    name: "Alveus Special Stream",
+    color: "bg-green-100 hover:bg-green-200 group-hover:bg-green-200",
+  },
   {
     name: "Alveus Collaboration Stream",
-    color: "bg-blue-100 hover:bg-blue-50",
+    color: "bg-blue-100 hover:bg-blue-50 group-hover:bg-blue-50",
   },
   {
     name: "Alveus Ambassador Birthday",
-    color: "bg-pink-100 hover:bg-pink-200",
+    color: "bg-pink-100 hover:bg-pink-200 group-hover:bg-pink-200",
   },
-  { name: "Alveus YouTube Video", color: "bg-red-50 hover:bg-red-100" },
-  { name: "Maya Stream", color: "bg-gray-200 hover:bg-gray-300" },
-  { name: "Maya YouTube Video", color: "bg-red-100 hover:bg-red-50" },
+  {
+    name: "Alveus YouTube Video",
+    color: "bg-red-50 hover:bg-red-100 group-hover:bg-red-100",
+  },
+  {
+    name: "Maya Stream",
+    color: "bg-gray-200 hover:bg-gray-300 group-hover:bg-gray-300",
+  },
+  {
+    name: "Maya YouTube Video",
+    color: "bg-red-100 hover:bg-red-50 group-hover:bg-red-50",
+  },
 ] as const;
 
 export const getStandardCategoryColor = (category: string) =>
   standardCategories.find(
     (c) => c.name.toLowerCase() === category.toLowerCase().trim(),
-  )?.color ?? "bg-gray-100 hover:bg-gray-300";
+  )?.color ?? "bg-gray-100 hover:bg-gray-300 group-hover:bg-gray-300";
 
 type FrequentLink = {
   label: string;

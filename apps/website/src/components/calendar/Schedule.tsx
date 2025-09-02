@@ -1,5 +1,5 @@
 import { Transition } from "@headlessui/react";
-import { useMemo } from "react";
+import { Fragment, useMemo, useState } from "react";
 
 import { standardCategories } from "@/data/calendar-events";
 import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
@@ -47,108 +47,146 @@ export function Schedule() {
   const [timeZone, setTimeZone] = useTimezone();
   const today = useToday(timeZone);
   const [selected, setSelected] = useMonthSelection(timeZone, today);
+  const [categories, setCategories] = useState<Set<string>>(new Set());
   const events = useCalendarEventsQuery(timeZone, selected);
   const eventsWithChildren = useMemo(
     () =>
       today &&
-      events.data?.map((event) => ({
-        date: event.startAt,
-        children: (
-          <CalendarItem
-            key={event.id}
-            event={event}
-            today={today}
-            href={event.link}
-            timeZone={timeZone}
-            external
-          />
-        ),
-      })),
-    [today, events.data, timeZone],
+      events.data
+        ?.filter((event) => !categories.size || categories.has(event.category))
+        .map((event) => ({
+          date: event.startAt,
+          children: (
+            <CalendarItem
+              key={event.id}
+              event={event}
+              today={today}
+              href={event.link}
+              timeZone={timeZone}
+              external
+            />
+          ),
+        })),
+    [today, events.data, categories, timeZone],
   );
 
   if (!selected) return null;
 
   return (
-    <Calendar
-      events={eventsWithChildren || []}
-      selectedDateTime={selected}
-      loading={events.isPending}
-      onChange={setSelected}
-      className="mt-2 md:mt-6"
-      timeZone={timeZone}
-      setTimeZone={setTimeZone}
-    >
-      <div className="flex justify-between gap-2 italic opacity-50">
-        <p>
-          Events and dates/times are subject to change. Enable notifications to
-          know when streams go live.
-        </p>
-
-        <Transition show={events.isPending}>
-          <p className="animate-pulse transition-opacity duration-300 data-[closed]:animate-none data-[closed]:opacity-0">
-            Loading...
+    <div className="grid grid-cols-1 gap-x-8 gap-y-2 xl:grid-cols-3">
+      <Calendar
+        events={eventsWithChildren || []}
+        selectedDateTime={selected}
+        loading={events.isPending}
+        onChange={setSelected}
+        className="mt-2 md:mt-6 xl:col-span-2"
+        timeZone={timeZone}
+        setTimeZone={setTimeZone}
+      >
+        <div className="flex justify-between gap-2 italic opacity-50">
+          <p>
+            Events and dates/times are subject to change. Enable notifications
+            to know when streams go live.
           </p>
-        </Transition>
-      </div>
 
-      {typeSafeObjectEntries(groupedCategories).map(([group, categories]) => (
-        <div key={group}>
-          <div className="mb-1 flex flex-wrap items-end justify-end gap-2">
-            <h4 className="mr-auto text-lg font-bold">
-              {sentenceToTitle(group)}
-            </h4>
-
-            {webcalUrls[group] && (
-              <>
-                <Link
-                  custom
-                  external
-                  className="rounded-lg bg-alveus-green px-2 py-1 text-sm text-alveus-tan transition-colors hover:bg-alveus-green-800"
-                  href={`https://calendar.google.com/calendar/render?cid=${webcalUrls[group]}`}
-                >
-                  Add to Google Calendar
-                  <IconExternal
-                    size="1em"
-                    className="mr-0.5 -mb-0.5 ml-1 inline-block align-baseline"
-                  />
-                </Link>
-                <input
-                  readOnly={true}
-                  type="url"
-                  className="box-content min-w-0 rounded-lg bg-alveus-green-800 p-1 text-center text-sm text-alveus-tan italic outline-hidden"
-                  value={webcalUrls[group]}
-                  onClick={(e) =>
-                    e.currentTarget.setSelectionRange(
-                      0,
-                      e.currentTarget.value.length,
-                    )
-                  }
-                  ref={(input) => {
-                    if (!input) return;
-                    input.style.width = "0";
-                    input.style.width = `${input.scrollWidth}px`;
-                  }}
-                />
-              </>
-            )}
-          </div>
-
-          <div className="grid grid-cols-1 gap-x-4 gap-y-1 md:grid-cols-2 lg:grid-cols-3">
-            {categories.map((category) => (
-              <div key={category.name} className="flex items-center gap-2">
-                <div
-                  className={classes(
-                    category.color,
-                    "rounded-md border-2 border-black/10 p-2 hover:border-black/20",
-                  )}
-                />
-                <p className="shrink-0 opacity-75">{category.name}</p>
-              </div>
-            ))}
-          </div>
+          <Transition show={events.isPending}>
+            <p className="animate-pulse transition-opacity duration-300 data-[closed]:animate-none data-[closed]:opacity-0">
+              Loading...
+            </p>
+          </Transition>
         </div>
-      ))}
-    </Calendar>
+      </Calendar>
+
+      <div className="flex flex-col gap-4 xl:pt-32">
+        {typeSafeObjectEntries(groupedCategories).map(([group, grouped]) => (
+          <Fragment key={group}>
+            <div className="flex flex-col gap-2">
+              <h4 className="text-lg font-bold">{sentenceToTitle(group)}</h4>
+
+              {webcalUrls[group] && (
+                <div className="flex flex-wrap gap-2">
+                  <Link
+                    custom
+                    external
+                    className="rounded-lg bg-alveus-green px-2 py-1 text-sm text-alveus-tan transition-colors hover:bg-alveus-green-800"
+                    href={`https://calendar.google.com/calendar/render?cid=${webcalUrls[group]}`}
+                  >
+                    Add to Google Calendar
+                    <IconExternal
+                      size="1em"
+                      className="mr-0.5 -mb-0.5 ml-1 inline-block align-baseline"
+                    />
+                  </Link>
+                  <input
+                    readOnly={true}
+                    type="url"
+                    className="box-content min-w-0 rounded-lg bg-alveus-green-800 p-1 text-center text-sm text-alveus-tan italic outline-hidden"
+                    value={webcalUrls[group]}
+                    onClick={(e) =>
+                      e.currentTarget.setSelectionRange(
+                        0,
+                        e.currentTarget.value.length,
+                      )
+                    }
+                    ref={(input) => {
+                      if (!input) return;
+                      input.style.width = "0";
+                      input.style.width = `${input.scrollWidth}px`;
+                    }}
+                  />
+                </div>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 gap-x-4 gap-y-1 md:grid-cols-2 xl:grid-cols-1">
+              {grouped.map((category) => (
+                <label
+                  key={category.name}
+                  className="group flex items-center gap-2"
+                >
+                  <input
+                    type="checkbox"
+                    checked={categories.has(category.name)}
+                    onChange={(e) => {
+                      const newCategories = new Set(categories);
+                      if (e.currentTarget.checked) {
+                        newCategories.add(category.name);
+                      } else {
+                        newCategories.delete(category.name);
+                      }
+                      setCategories(newCategories);
+                    }}
+                    className="sr-only"
+                  />
+
+                  <div
+                    className={classes(
+                      category.color,
+                      "rounded-md border-2 p-1 group-hover:border-black/20",
+                      categories.has(category.name)
+                        ? "border-black/20"
+                        : "border-black/10",
+                    )}
+                  >
+                    <div
+                      className={classes(
+                        "h-2 w-2 rounded-full",
+                        categories.has(category.name)
+                          ? "bg-black/25"
+                          : "bg-transparent",
+                      )}
+                    />
+                  </div>
+                  <p className="shrink-0 opacity-75">
+                    <span className="sr-only">Filter by </span>
+                    {category.name}
+                  </p>
+                </label>
+              ))}
+            </div>
+          </Fragment>
+        ))}
+      </div>
+    </div>
   );
 }
