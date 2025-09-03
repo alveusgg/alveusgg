@@ -14,6 +14,7 @@ import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
 import bao from "@/assets/collaborations/bao.png";
 import botzSisters from "@/assets/collaborations/botez-sisters.png";
 import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
+import cdawg from "@/assets/collaborations/cdawg.png";
 import cinna from "@/assets/collaborations/cinna.png";
 import connorEatsPants from "@/assets/collaborations/connor-eats-pants.png";
 import dailyDose from "@/assets/collaborations/daily-dose.png";
@@ -33,6 +34,7 @@ import fuslie from "@/assets/collaborations/fuslie.png";
 import graycen from "@/assets/collaborations/graycen.png";
 import hasanAbi from "@/assets/collaborations/hasan-abi.png";
 import hyoon from "@/assets/collaborations/hyoon.png";
+import ironmouse from "@/assets/collaborations/ironmouse.png";
 import itmeJP from "@/assets/collaborations/itmeJP.png";
 import jackManifold from "@/assets/collaborations/jack-manifold.png";
 import jaidenAnimations from "@/assets/collaborations/jaiden-animations.png";
@@ -86,6 +88,24 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Ironmouse & CDawg",
+      link: "https://www.twitch.tv/ironmouse",
+      date: new Date("2025-09-02"),
+      videoId: "HteU7-hKUlk",
+      creators: [
+        {
+          name: "Ironmouse",
+          image: ironmouse,
+          popularity: 2_400_000, // Twitch followers, 2025-09-03
+        },
+        {
+          name: "CDawg",
+          image: cdawg,
+          popularity: 3_250_000, // YouTube subscribers, 2025-09-03
+        },
+      ],
+    },
     {
       name: "StableRonaldo",
       link: "https://www.twitch.tv/stableronaldo",
