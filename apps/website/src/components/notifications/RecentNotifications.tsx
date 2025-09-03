@@ -3,17 +3,18 @@ import { trpc } from "@/utils/trpc";
 
 import { NotificationEntry } from "@/components/notifications/NotificationEntry";
 
-const backgrounds = [
-  "bg-alveus-green/40",
-  "bg-alveus-green/38",
-  "bg-alveus-green/36",
-  "bg-alveus-green/34",
-  "bg-alveus-green/32",
-  "bg-alveus-green/30",
-  "bg-alveus-green/28",
-  "bg-alveus-green/26",
-  "bg-alveus-green/24",
-  "bg-alveus-green/22",
+const styles = [
+  "opacity-100",
+  "opacity-95",
+  "opacity-90",
+  "opacity-85",
+  "opacity-80",
+  "opacity-75",
+  "opacity-70",
+  "opacity-65",
+  "opacity-60",
+  "opacity-55",
+  "opacity-50",
 ];
 
 export function RecentNotifications({ tags }: { tags: Array<string> }) {
@@ -30,8 +31,8 @@ export function RecentNotifications({ tags }: { tags: Array<string> }) {
         <li
           key={notification.id}
           className={classes(
-            backgrounds[idx] ?? "bg-alveus-green/20",
-            "flex items-center gap-3 rounded-xl px-4 py-2 transition-transform hover:scale-102 hover:bg-alveus-green/40",
+            styles[idx] ?? "opacity-50",
+            "flex items-center gap-3 rounded-xl bg-alveus-green/30 px-4 py-2 transition-transform hover:scale-102 hover:bg-alveus-green/40",
           )}
         >
           <NotificationEntry notification={notification} />
