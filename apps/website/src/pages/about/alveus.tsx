@@ -570,6 +570,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
       {
+        key: "colton-chandler",
+        date: "2025-04",
+        content: [
+          "Colton and Chandler join the Alveus team",
+          "Colton joins the team as Alveus' Creative Producer, and Chandler joins as the YouTube Channel Manager.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
         key: "new-studio",
         date: "2025-03-05",
         content: [
@@ -587,6 +599,42 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         link: {
           text: "Explore Alveus events",
           href: "/events#art-auction-2025",
+        },
+      },
+      {
+        key: "daniel",
+        date: "2025-07",
+        content: [
+          "Daniel joins the Alveus team",
+          "Daniel (Dan the Doorman) joins the team as a Facilities Specialist.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
+        },
+      },
+      {
+        key: "flooded-road",
+        date: "2025-07",
+        content: [
+          "Road washed out by flooding",
+          "Following some severe flooding in Texas, the main road to Alveus was completely washed out. Streamers came together quickly in-person to help get a temporary road in place, and the community raised over $250,000 USD to fund a proper rebuild of the road over the next month.",
+        ],
+        link: {
+          text: "See the before and after",
+          href: "https://x.com/AlveusSanctuary/status/1949205368581792113",
+        },
+      },
+      {
+        key: "summer-camp-2025",
+        date: "2025-08",
+        content: [
+          "Summer Camp and merch drop",
+          'Celebrating summer once again, Alveus hosted a 12-hour long stream at Alveus with staff participating in "The Alveus Games", accompanied by a limited-time merch release, helping to raise funds for the sanctuary.',
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#summer-camp-2025",
         },
       },
     ],
