@@ -21,6 +21,9 @@ import { CalendarItem } from "@/components/calendar/CalendarItem";
 import Link from "@/components/content/Link";
 
 import IconExternal from "@/icons/IconExternal";
+import IconPlus from "@/icons/IconPlus";
+import IconSync from "@/icons/IconSync";
+import IconTrash from "@/icons/IconTrash";
 
 const groupedCategories = standardCategories.reduce(
   (acc, category) => {
@@ -42,6 +45,9 @@ const webcalUrls = typeSafeObjectKeys(channels)
     }),
     {} as Record<string, string>,
   );
+
+const selectionButtonClasses =
+  "flex items-center gap-2 p-1 text-sm leading-none text-alveus-green-500 transition-colors hover:text-alveus-green-800";
 
 export function Schedule() {
   const [timeZone, setTimeZone] = useTimezone();
@@ -183,9 +189,53 @@ export function Schedule() {
                   </p>
                 </label>
               ))}
+
+              <button
+                type="button"
+                onClick={() =>
+                  setCategories((current) => {
+                    const next = new Set(current);
+                    grouped.forEach((category) => next.add(category.name));
+                    return next;
+                  })
+                }
+                className={classes(
+                  selectionButtonClasses,
+                  "col-span-full -mx-0.5 justify-self-start",
+                )}
+              >
+                <IconPlus size={16} /> Select all
+              </button>
             </div>
           </Fragment>
         ))}
+
+        <div className="-mx-0.5 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setCategories(new Set())}
+            className={selectionButtonClasses}
+          >
+            <IconTrash size={16} /> Clear selection
+          </button>
+          <button
+            type="button"
+            onClick={() =>
+              setCategories((current) => {
+                const next = new Set<string>();
+                standardCategories.forEach((category) => {
+                  if (!current.has(category.name)) {
+                    next.add(category.name);
+                  }
+                });
+                return next;
+              })
+            }
+            className={selectionButtonClasses}
+          >
+            <IconSync size={16} /> Invert selection
+          </button>
+        </div>
       </div>
     </div>
   );
