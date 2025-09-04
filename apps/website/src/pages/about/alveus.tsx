@@ -590,6 +590,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
       {
+        key: "flooded-road",
+        date: "2025-07",
+        content: [
+          "Road washed out by flooding",
+          "Following some severe flooding in Texas, the main road to Alveus was completely washed out. Streamers came together quickly in-person to help get a temporary road in place, and the community raised over $250,000 USD to fund a proper rebuild of the road over the next month.",
+        ],
+        link: {
+          text: "See the before and after",
+          href: "https://x.com/AlveusSanctuary/status/1949205368581792113",
+        },
+      },
+      {
         key: "summer-camp-2025",
         date: "2025-08",
         content: [
