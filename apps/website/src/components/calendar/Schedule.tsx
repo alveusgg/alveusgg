@@ -21,6 +21,7 @@ import { CalendarItem } from "@/components/calendar/CalendarItem";
 import Link from "@/components/content/Link";
 
 import IconExternal from "@/icons/IconExternal";
+import IconPlus from "@/icons/IconPlus";
 import IconSync from "@/icons/IconSync";
 import IconTrash from "@/icons/IconTrash";
 
@@ -188,6 +189,23 @@ export function Schedule() {
                   </p>
                 </label>
               ))}
+
+              <button
+                type="button"
+                onClick={() =>
+                  setCategories((current) => {
+                    const next = new Set(current);
+                    grouped.forEach((category) => next.add(category.name));
+                    return next;
+                  })
+                }
+                className={classes(
+                  selectionButtonClasses,
+                  "col-span-full -mx-0.5 justify-self-start",
+                )}
+              >
+                <IconPlus size={16} /> Select all
+              </button>
             </div>
           </Fragment>
         ))}
