@@ -589,6 +589,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/events#art-auction-2025",
         },
       },
+      {
+        key: "summer-camp-2025",
+        date: "2025-08",
+        content: [
+          "Summer Camp and merch drop",
+          'Celebrating summer once again, Alveus hosted a 12-hour long stream at Alveus with staff participating in "The Alveus Games", accompanied by a limited-time merch release, helping to raise funds for the sanctuary.',
+        ],
+        link: {
+          text: "Explore Alveus events",
+          href: "/events#summer-camp-2025",
+        },
+      },
     ],
   },
 ];
