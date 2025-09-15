@@ -176,21 +176,11 @@ export type ShowAndTellUpdateInput =
   | z.infer<typeof showAndTellUpdateInputSchema>
   | z.infer<typeof showAndTellReviewInputSchema>;
 
-async function revalidateCache(postIdOrIds?: string | string[]) {
+async function revalidateCache() {
   const url = new URL(
     `${env.NEXT_PUBLIC_BASE_URL}/api/show-and-tell/revalidate`,
   );
   url.searchParams.set("secret", env.ACTION_API_SECRET);
-
-  if (postIdOrIds) {
-    if (typeof postIdOrIds === "string") {
-      url.searchParams.set("postId", postIdOrIds);
-    } else {
-      postIdOrIds.forEach((postId) =>
-        url.searchParams.append("postId", postId),
-      );
-    }
-  }
 
   return fetch(url);
 }
@@ -278,7 +268,7 @@ export async function createPost(
       dominantColor: input.dominantColor,
     },
   });
-  await revalidateCache(res.id);
+  await revalidateCache();
   return res;
 }
 
@@ -497,7 +487,7 @@ export async function updatePost(
       }),
     ),
   ]);
-  await revalidateCache(input.id);
+  await revalidateCache();
 }
 
 export async function approvePost(id: string, authorUserId?: string) {
@@ -507,7 +497,7 @@ export async function approvePost(id: string, authorUserId?: string) {
       approvedAt: new Date(),
     },
   });
-  await revalidateCache(id);
+  await revalidateCache();
 }
 
 export async function removeApprovalFromPost(
@@ -520,7 +510,7 @@ export async function removeApprovalFromPost(
       approvedAt: null,
     },
   });
-  await revalidateCache(id);
+  await revalidateCache();
 }
 
 export const markPostAsSeenModeSchema = z
@@ -541,7 +531,7 @@ export async function markPostAsSeen(
         seenOnStreamAt: new Date(),
       },
     });
-    await revalidateCache(id);
+    await revalidateCache();
     return;
   }
 
@@ -575,7 +565,7 @@ export async function markPostAsSeen(
     },
   });
 
-  await revalidateCache([id, ...ids]);
+  await revalidateCache();
 }
 
 export async function unmarkPostAsSeen(id: string) {
@@ -586,7 +576,7 @@ export async function unmarkPostAsSeen(id: string) {
       seenOnStreamAt: null,
     },
   });
-  await revalidateCache(id);
+  await revalidateCache();
 }
 
 export async function deletePost(id: string, authorUserId?: string) {
@@ -610,7 +600,7 @@ export async function deletePost(id: string, authorUserId?: string) {
       },
     }),
   ]);
-  await revalidateCache(id);
+  await revalidateCache();
 }
 
 export async function getPostsToShow() {
