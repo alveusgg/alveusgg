@@ -233,7 +233,7 @@ function createVideoAttachments(videoLinks: Array<VideoLink>) {
 }
 
 export async function createPost(
-  resp: NextApiResponse,
+  res: NextApiResponse,
   input: ShowAndTellSubmitInput,
   authorUserId?: string,
   importAt?: Date,
@@ -243,7 +243,7 @@ export async function createPost(
   const newVideos = createVideoAttachments(input.videoLinks);
 
   // TODO: Webhook? Notify mods?
-  const res = await prisma.showAndTellEntry.create({
+  const result = await prisma.showAndTellEntry.create({
     data: {
       ...(importAt
         ? {
@@ -264,8 +264,8 @@ export async function createPost(
       dominantColor: input.dominantColor,
     },
   });
-  revalidateCache(resp);
-  return res;
+  revalidateCache(res);
+  return result;
 }
 
 export async function getPublicPostById(id: string) {
@@ -397,7 +397,7 @@ export async function getAdminPost(id: string, authorUserId?: string) {
 }
 
 export async function updatePost(
-  resp: NextApiResponse,
+  res: NextApiResponse,
   input: ShowAndTellUpdateInput,
   authorUserId?: string,
   keepApproved?: boolean,
@@ -484,11 +484,11 @@ export async function updatePost(
       }),
     ),
   ]);
-  revalidateCache(resp);
+  revalidateCache(res);
 }
 
 export async function approvePost(
-  resp: NextApiResponse,
+  res: NextApiResponse,
   id: string,
   authorUserId?: string,
 ) {
@@ -498,11 +498,11 @@ export async function approvePost(
       approvedAt: new Date(),
     },
   });
-  revalidateCache(resp);
+  revalidateCache(res);
 }
 
 export async function removeApprovalFromPost(
-  resp: NextApiResponse,
+  res: NextApiResponse,
   id: string,
   authorUserId?: string,
 ) {
@@ -512,7 +512,7 @@ export async function removeApprovalFromPost(
       approvedAt: null,
     },
   });
-  revalidateCache(resp);
+  revalidateCache(res);
 }
 
 export const markPostAsSeenModeSchema = z
@@ -522,7 +522,7 @@ export const markPostAsSeenModeSchema = z
 export type MarkPostAsSeenMode = z.infer<typeof markPostAsSeenModeSchema>;
 
 export async function markPostAsSeen(
-  resp: NextApiResponse,
+  res: NextApiResponse,
   id: string,
   mode: MarkPostAsSeenMode = "this",
 ) {
@@ -534,7 +534,7 @@ export async function markPostAsSeen(
         seenOnStreamAt: new Date(),
       },
     });
-    revalidateCache(resp);
+    revalidateCache(res);
     return;
   }
 
@@ -568,10 +568,10 @@ export async function markPostAsSeen(
     },
   });
 
-  revalidateCache(resp);
+  revalidateCache(res);
 }
 
-export async function unmarkPostAsSeen(resp: NextApiResponse, id: string) {
+export async function unmarkPostAsSeen(res: NextApiResponse, id: string) {
   await prisma.showAndTellEntry.update({
     where: { id },
     data: {
@@ -579,11 +579,11 @@ export async function unmarkPostAsSeen(resp: NextApiResponse, id: string) {
       seenOnStreamAt: null,
     },
   });
-  revalidateCache(resp);
+  revalidateCache(res);
 }
 
 export async function deletePost(
-  resp: NextApiResponse,
+  res: NextApiResponse,
   id: string,
   authorUserId?: string,
 ) {
@@ -607,7 +607,7 @@ export async function deletePost(
       },
     }),
   ]);
-  revalidateCache(resp);
+  revalidateCache(res);
 }
 
 export async function getPostsToShow() {
