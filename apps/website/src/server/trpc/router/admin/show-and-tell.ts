@@ -35,15 +35,20 @@ export const adminShowAndTellRouter = router({
 
   review: permittedProcedure
     .input(showAndTellReviewInputSchema)
-    .mutation(async ({ input }) => await updatePost(input, undefined, true)),
+    .mutation(
+      async ({ ctx, input }) =>
+        await updatePost(ctx.res, input, undefined, true),
+    ),
 
   approve: permittedProcedure
     .input(z.cuid())
-    .mutation(async ({ input }) => await approvePost(input)),
+    .mutation(async ({ ctx, input }) => await approvePost(ctx.res, input)),
 
   removeApproval: permittedProcedure
     .input(z.cuid())
-    .mutation(async ({ input }) => await removeApprovalFromPost(input)),
+    .mutation(
+      async ({ ctx, input }) => await removeApprovalFromPost(ctx.res, input),
+    ),
 
   markAsSeen: permittedProcedure
     .input(
@@ -52,27 +57,34 @@ export const adminShowAndTellRouter = router({
         mode: markPostAsSeenModeSchema,
       }),
     )
-    .mutation(async ({ input }) => await markPostAsSeen(input.id, input.mode)),
+    .mutation(
+      async ({ ctx, input }) =>
+        await markPostAsSeen(ctx.res, input.id, input.mode),
+    ),
 
   unmarkAsSeen: permittedProcedure
     .input(z.object({ id: z.cuid() }))
-    .mutation(async ({ input }) => await unmarkPostAsSeen(input.id)),
+    .mutation(
+      async ({ ctx, input }) => await unmarkPostAsSeen(ctx.res, input.id),
+    ),
 
-  delete: permittedProcedure.input(z.cuid()).mutation(async ({ input }) => {
-    const post = await getAdminPost(input);
-    if (!post) {
-      throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
-    }
+  delete: permittedProcedure
+    .input(z.cuid())
+    .mutation(async ({ ctx, input }) => {
+      const post = await getAdminPost(input);
+      if (!post) {
+        throw new TRPCError({ code: "NOT_FOUND", message: "Post not found" });
+      }
 
-    await Promise.allSettled([
-      deletePost(post.id),
-      // Delete all file attachments
-      ...post.attachments
-        .map(({ imageAttachment }) => imageAttachment?.fileStorageObject?.id)
-        .filter(notEmpty)
-        .map((id) => deleteFileStorageObject(id)),
-    ]);
-  }),
+      await Promise.allSettled([
+        deletePost(ctx.res, post.id),
+        // Delete all file attachments
+        ...post.attachments
+          .map(({ imageAttachment }) => imageAttachment?.fileStorageObject?.id)
+          .filter(notEmpty)
+          .map((id) => deleteFileStorageObject(id)),
+      ]);
+    }),
 
   getEntries: permittedProcedure
     .input(
