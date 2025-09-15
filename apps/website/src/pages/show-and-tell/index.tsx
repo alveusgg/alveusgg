@@ -13,7 +13,6 @@ import {
 import scrollIntoView from "smooth-scroll-into-view-if-needed";
 
 import {
-  getMapFeatures,
   getPostsCount,
   getPostsToShow,
   getPublicPosts,
@@ -22,7 +21,6 @@ import {
 
 import { classes } from "@/utils/classes";
 import { delay } from "@/utils/delay";
-import { extractInfoFromMapFeatures } from "@/utils/locations";
 import { trpc } from "@/utils/trpc";
 
 import useOnToggleNativeFullscreen from "@/hooks/fullscreen";
@@ -67,19 +65,19 @@ export const bentoBoxClasses =
 // We pre-render the first page of entries using SSR and then use client-side rendering to
 // update the data and fetch more entries on demand
 export const getStaticProps = async () => {
-  const entries = await getPublicPosts({ take: entriesPerPage + 1 });
+  const [entries, totalPostsCount, usersCount, postsToShowCount] =
+    await Promise.all([
+      getPublicPosts({ take: entriesPerPage + 1 }),
+      getPostsCount(),
+      getUsersCount(),
+      getPostsToShow(),
+    ]);
 
   let nextCursor: string | undefined = undefined;
   if (entries.length > entriesPerPage) {
     const nextItem = entries.pop();
     nextCursor = nextItem?.id || undefined;
   }
-  const totalPostsCount = await getPostsCount();
-  const usersCount = await getUsersCount();
-  const postsToShowCount = await getPostsToShow();
-
-  const { locations, countries, postsFromANewLocation } =
-    extractInfoFromMapFeatures(await getMapFeatures());
 
   return {
     props: {
@@ -88,9 +86,6 @@ export const getStaticProps = async () => {
       totalPostsCount,
       postsToShowCount,
       usersCount,
-      uniqueLocationsCount: locations.size,
-      uniqueCountriesCount: countries.size,
-      postsFromANewLocation,
     },
   };
 };
@@ -107,9 +102,6 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
   totalPostsCount,
   postsToShowCount,
   usersCount,
-  uniqueLocationsCount,
-  uniqueCountriesCount,
-  postsFromANewLocation,
 }) => {
   const entries = trpc.showAndTell.getEntries.useInfiniteQuery(
     {},
@@ -123,11 +115,18 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
     },
   );
 
+  const { data: infoFromMapFeatures, isLoading: infoFromMapFeaturesLoading } =
+    trpc.showAndTell.getInfoFromMapFeatures.useQuery();
+
   // Format the stats
   const totalPostsCountFmt = useLocaleString(totalPostsCount);
   const usersCountFmt = useLocaleString(usersCount);
-  const uniqueLocationsCountFmt = useLocaleString(uniqueLocationsCount);
-  const uniqueCountriesCountFmt = useLocaleString(uniqueCountriesCount);
+  const uniqueLocationsCountFmt = useLocaleString(
+    infoFromMapFeatures?.uniqueLocationsCount || 0,
+  );
+  const uniqueCountriesCountFmt = useLocaleString(
+    infoFromMapFeatures?.uniqueCountriesCount || 0,
+  );
 
   const [isPresentationView, setIsPresentationView] = useState(false);
   const presentationViewRootElementRef = useRef<HTMLDivElement>(null);
@@ -459,15 +458,27 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconMapPin className="size-10" />
-            {uniqueLocationsCountFmt} locations
+            {infoFromMapFeaturesLoading ? (
+              <></>
+            ) : (
+              <>
+                <IconMapPin className="size-10" />
+                {uniqueLocationsCountFmt} locations
+              </>
+            )}
           </Box>
           <Box
             dark
             className={classes(bentoBoxClasses, "items-center p-2 md:text-lg")}
           >
-            <IconGlobe className="size-10" />
-            {uniqueCountriesCountFmt} countries
+            {infoFromMapFeaturesLoading ? (
+              <></>
+            ) : (
+              <>
+                <IconGlobe className="size-10" />
+                {uniqueCountriesCountFmt} countries
+              </>
+            )}
           </Box>
 
           <Box
@@ -518,7 +529,9 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 isPresentationView={isPresentationView}
                 key={entry.id}
                 ref={registerObserveElement}
-                newLocation={postsFromANewLocation.has(entry.id)}
+                newLocation={
+                  !!infoFromMapFeatures?.postsFromANewLocation.has(entry.id)
+                }
               />
             )),
           )}

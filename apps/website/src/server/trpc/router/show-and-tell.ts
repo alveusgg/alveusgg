@@ -157,4 +157,16 @@ export const showAndTellRouter = router({
 
     return extractInfoFromMapFeatures(mapFeatures).postsFromANewLocation;
   }),
+  getInfoFromMapFeatures: publicProcedure.query(async () => {
+    const mapFeatures = await getMapFeatures();
+
+    const { countries, locations, postsFromANewLocation } =
+      extractInfoFromMapFeatures(mapFeatures);
+
+    return {
+      uniqueLocationsCount: locations.size,
+      uniqueCountriesCount: countries.size,
+      postsFromANewLocation,
+    };
+  }),
 });
