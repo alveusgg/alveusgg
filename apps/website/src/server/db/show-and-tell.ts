@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import {
@@ -10,8 +11,6 @@ import {
   type ShowAndTellEntry as ShowAndTellEntryModel,
   prisma,
 } from "@alveusgg/database";
-
-import { env } from "@/env";
 
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
@@ -177,12 +176,8 @@ export type ShowAndTellUpdateInput =
   | z.infer<typeof showAndTellReviewInputSchema>;
 
 async function revalidateCache() {
-  const url = new URL(
-    `${env.NEXT_PUBLIC_BASE_URL}/api/show-and-tell/revalidate`,
-  );
-  url.searchParams.set("secret", env.ACTION_API_SECRET);
-
-  return fetch(url);
+  revalidatePath("/show-and-tell");
+  revalidatePath("/show-and-tell/map");
 }
 
 function createLinkAttachmentForVideoUrl(videoUrl: string, idx: number) {
