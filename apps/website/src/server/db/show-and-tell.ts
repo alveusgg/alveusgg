@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import type { NextApiResponse } from "next";
 import { z } from "zod";
 
 import {
@@ -10,8 +11,6 @@ import {
   type ShowAndTellEntry as ShowAndTellEntryModel,
   prisma,
 } from "@alveusgg/database";
-
-import { env } from "@/env";
 
 import { checkAndFixUploadedImageFileStorageObject } from "@/server/utils/file-storage";
 import { sanitizeUserHtml } from "@/server/utils/sanitize-user-html";
@@ -176,24 +175,10 @@ export type ShowAndTellUpdateInput =
   | z.infer<typeof showAndTellUpdateInputSchema>
   | z.infer<typeof showAndTellReviewInputSchema>;
 
-async function revalidateCache(postIdOrIds?: string | string[]) {
-  const url = new URL(
-    `${env.NEXT_PUBLIC_BASE_URL}/api/show-and-tell/revalidate`,
-  );
-  url.searchParams.set("secret", env.ACTION_API_SECRET);
-
-  if (postIdOrIds) {
-    if (typeof postIdOrIds === "string") {
-      url.searchParams.set("postId", postIdOrIds);
-    } else {
-      postIdOrIds.forEach((postId) =>
-        url.searchParams.append("postId", postId),
-      );
-    }
-  }
-
-  return fetch(url);
-}
+const revalidateCache = (res: NextApiResponse) => {
+  res.revalidate("/show-and-tell");
+  res.revalidate("/show-and-tell/map");
+};
 
 function createLinkAttachmentForVideoUrl(videoUrl: string, idx: number) {
   return {
@@ -248,6 +233,7 @@ function createVideoAttachments(videoLinks: Array<VideoLink>) {
 }
 
 export async function createPost(
+  res: NextApiResponse,
   input: ShowAndTellSubmitInput,
   authorUserId?: string,
   importAt?: Date,
@@ -257,7 +243,7 @@ export async function createPost(
   const newVideos = createVideoAttachments(input.videoLinks);
 
   // TODO: Webhook? Notify mods?
-  const res = await prisma.showAndTellEntry.create({
+  const result = await prisma.showAndTellEntry.create({
     data: {
       ...(importAt
         ? {
@@ -278,8 +264,8 @@ export async function createPost(
       dominantColor: input.dominantColor,
     },
   });
-  await revalidateCache(res.id);
-  return res;
+  revalidateCache(res);
+  return result;
 }
 
 export async function getPublicPostById(id: string) {
@@ -411,6 +397,7 @@ export async function getAdminPost(id: string, authorUserId?: string) {
 }
 
 export async function updatePost(
+  res: NextApiResponse,
   input: ShowAndTellUpdateInput,
   authorUserId?: string,
   keepApproved?: boolean,
@@ -497,20 +484,25 @@ export async function updatePost(
       }),
     ),
   ]);
-  await revalidateCache(input.id);
+  revalidateCache(res);
 }
 
-export async function approvePost(id: string, authorUserId?: string) {
+export async function approvePost(
+  res: NextApiResponse,
+  id: string,
+  authorUserId?: string,
+) {
   await prisma.showAndTellEntry.updateMany({
     where: { id, user: authorUserId ? { id: authorUserId } : undefined },
     data: {
       approvedAt: new Date(),
     },
   });
-  await revalidateCache(id);
+  revalidateCache(res);
 }
 
 export async function removeApprovalFromPost(
+  res: NextApiResponse,
   id: string,
   authorUserId?: string,
 ) {
@@ -520,7 +512,7 @@ export async function removeApprovalFromPost(
       approvedAt: null,
     },
   });
-  await revalidateCache(id);
+  revalidateCache(res);
 }
 
 export const markPostAsSeenModeSchema = z
@@ -530,6 +522,7 @@ export const markPostAsSeenModeSchema = z
 export type MarkPostAsSeenMode = z.infer<typeof markPostAsSeenModeSchema>;
 
 export async function markPostAsSeen(
+  res: NextApiResponse,
   id: string,
   mode: MarkPostAsSeenMode = "this",
 ) {
@@ -541,7 +534,7 @@ export async function markPostAsSeen(
         seenOnStreamAt: new Date(),
       },
     });
-    await revalidateCache(id);
+    revalidateCache(res);
     return;
   }
 
@@ -575,10 +568,10 @@ export async function markPostAsSeen(
     },
   });
 
-  await revalidateCache([id, ...ids]);
+  revalidateCache(res);
 }
 
-export async function unmarkPostAsSeen(id: string) {
+export async function unmarkPostAsSeen(res: NextApiResponse, id: string) {
   await prisma.showAndTellEntry.update({
     where: { id },
     data: {
@@ -586,10 +579,14 @@ export async function unmarkPostAsSeen(id: string) {
       seenOnStreamAt: null,
     },
   });
-  await revalidateCache(id);
+  revalidateCache(res);
 }
 
-export async function deletePost(id: string, authorUserId?: string) {
+export async function deletePost(
+  res: NextApiResponse,
+  id: string,
+  authorUserId?: string,
+) {
   const post = await getAdminPost(id, authorUserId);
   if (!post) return false;
 
@@ -610,7 +607,7 @@ export async function deletePost(id: string, authorUserId?: string) {
       },
     }),
   ]);
-  await revalidateCache(id);
+  revalidateCache(res);
 }
 
 export async function getPostsToShow() {

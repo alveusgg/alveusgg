@@ -4,6 +4,9 @@ import { env } from "@/env";
 
 import timingSafeCompareString from "@/server/utils/timing-safe-compare-string";
 
+/**
+ * @deprecated 2025-09-15
+ */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse,
