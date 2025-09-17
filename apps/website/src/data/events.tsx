@@ -32,6 +32,55 @@ export type Event = {
 const events: Event[] = (
   [
     {
+      name: "Summer Camp 2025",
+      date: new Date("2025-08-06"),
+      video: {
+        id: "1c38acead1632e2beea5a528323258df",
+        cu: "agf91muwks8sd9ee",
+      },
+      poster: summerCamp2023,
+      stats: {
+        hoursStreamed: {
+          title: "Hours streamed live",
+          stat: "12",
+        },
+        totalViews: {
+          title: "Viewers tuned in",
+          stat: "511,145",
+        },
+        signedPrints: {
+          title: "Signed postcards sent",
+          stat: "439",
+        },
+      },
+      info: (
+        <>
+          <p>
+            Just like last year, Summer Camp 2025 was a 12-hour-long event
+            hosted in the Session Yard at Alveus, with staff participating in
+            fun activities as part of &quot;The Alveus Games&quot; for viewers
+            to watch. Teams were formed to try out water-dunk trivia and play
+            some intense games of hockey on the grass. The entire yard was then
+            converted into a massive slip n&apos; slide arena for a chaotic game
+            of basketball. Staff also had the opportunity to practice their
+            archery skills, as well as a group game of chicken tag.
+          </p>
+          <p>
+            Alongside Summer Camp, new limited-time merch was available for
+            viewers to purchase, helping to raise funds for Alveus Sanctuary.
+            Livestream viewers could also donate $25 or more during the event to
+            receive a signed postcard from the event, with 439 postcards sent
+            out to donors by the end of the event. Rounding out the evening for
+            Summer Camp, a campfire cookout was held before tents were set up
+            for the night and a large projector screen for some console gaming.
+            Thanks to everyone who tuned in to watch the stream, donated for a
+            postcard, or who purchased some of the limited-time merch to support
+            Alveus!
+          </p>
+        </>
+      ),
+    },
+    {
       name: "Art Auction 2025",
       date: new Date("2025-04-22"),
       video: {

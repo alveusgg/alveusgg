@@ -9,6 +9,7 @@ import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
 import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
 import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
+import whySharksMatter from "@/assets/book-club/books/why-sharks-matter.jpg";
 
 const thickness = {
   xs: "h-6 -translate-z-6 -mb-6",
@@ -33,6 +34,15 @@ export type BookInfo = {
 
 const books: BookInfo[] = [
   {
+    title: "Why Sharks Matter",
+    author: "David Shiffman",
+    image: whySharksMatter,
+    month: ["2025-09"],
+    link: "https://amzn.to/4fS8THm",
+    thickness: thickness.md, // 310 pages
+    color: "border-blue-800",
+  },
+  {
     title: "Steve & Me",
     author: "Terri Irwin",
     image: steveAndMe,
@@ -49,6 +59,7 @@ const books: BookInfo[] = [
     link: "https://amzn.to/4kZ31gL",
     thickness: thickness.sm, // 270 pages
     color: "border-yellow-400",
+    vodId: "X2M4FjTqxiA",
   },
   {
     title: "The Anthropocene Reviewed",

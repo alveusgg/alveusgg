@@ -15,7 +15,7 @@ jobs:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -45,7 +45,7 @@ jobs:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -58,12 +58,6 @@ jobs:
 
       - name: Prepare .env
         run: pnpm -rc exec "cp .env.example .env || true"
-
-      - name: Prepare next-env.d.ts
-        run: DIR=$(mktemp -d) && pnpm run lint --quiet --dir $DIR && rm -rf $DIR
-        working-directory: apps/website
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
 
       - name: Run linting
         run: pnpm -r run lint
@@ -84,7 +78,7 @@ jobs:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version-file: .nvmrc
           cache: pnpm
@@ -97,12 +91,6 @@ jobs:
 
       - name: Prepare .env
         run: pnpm -rc exec "cp .env.example .env || true"
-
-      - name: Prepare next-env.d.ts
-        run: DIR=$(mktemp -d) && pnpm run lint --quiet --dir $DIR && rm -rf $DIR
-        working-directory: apps/website
-        env:
-          NEXT_TELEMETRY_DISABLED: 1
 
       - name: Check types
         run: pnpm -r run types
@@ -120,7 +108,7 @@ jobs:
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
         with:
           node-version-file: .nvmrc
           cache: pnpm

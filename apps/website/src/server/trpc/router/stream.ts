@@ -16,6 +16,7 @@ import {
   router,
 } from "@/server/trpc/trpc";
 import { getUserTwitchAccount } from "@/server/utils/auth";
+import { getViewUrlForFileStorageObjectKey } from "@/server/utils/file-storage";
 
 import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
@@ -24,7 +25,7 @@ import invariant from "@/utils/invariant";
 import { createJWT, signJWT } from "@/utils/jwt";
 
 export const runCommandSchema = z.object({
-  command: z.literal(["ptzload", "swap"]),
+  command: z.literal(["ptzload", "ptzzoom", "swap"]),
   args: z.array(z.string()).optional(),
 });
 
@@ -36,10 +37,20 @@ export const streamRouter = router({
   getWeather: publicProcedure.query(getWeather),
 
   getRoundsChecks: publicProcedure.query(({ ctx }) =>
-    ctx.prisma.roundsCheck.findMany({
-      where: { hidden: false },
-      orderBy: { order: "asc" },
-    }),
+    ctx.prisma.roundsCheck
+      .findMany({
+        where: { hidden: false },
+        orderBy: { order: "asc" },
+        include: { fileStorageObject: true },
+      })
+      .then((checks) =>
+        checks.map(({ fileStorageObject, ...check }) => ({
+          ...check,
+          fileStorageObjectUrl: fileStorageObject
+            ? getViewUrlForFileStorageObjectKey(fileStorageObject.key)
+            : null,
+        })),
+      ),
   ),
 
   getSubscription: protectedProcedure.query(async ({ ctx }) => {

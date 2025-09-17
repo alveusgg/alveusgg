@@ -443,6 +443,7 @@ model FileStorageObject {
 
   imageAttachment ImageAttachment?
   imageMetadata   ImageMetadata?
+  roundsCheck     RoundsCheck?
 
   @@index([expiresAt, deletedAt], name: "FileStorageObject_cleanup")
   @@index([expiresAt], name: "FileStorageObject_expiresAt")
@@ -483,10 +484,13 @@ model TwitchChannel {
 }
 
 model RoundsCheck {
-  id         String  @id @default(cuid())
-  name       String
-  command    String  @unique
-  ambassador String
-  order      Int
-  hidden     Boolean @default(false)
+  id                  String  @id @default(cuid())
+  name                String
+  command             String  @unique
+  ambassador          String?
+  fileStorageObjectId String? @unique
+  order               Int
+  hidden              Boolean @default(false)
+
+  fileStorageObject FileStorageObject? @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
 }

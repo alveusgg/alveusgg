@@ -1,26 +1,57 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
+import {
+  type ActiveAmbassadorKey,
+  isActiveAmbassadorKey,
+} from "@alveusgg/data/build/ambassadors/filters";
+
 import { prisma } from "@alveusgg/database";
+
+import {
+  checkAndFixUploadedImageFileStorageObject,
+  deleteFileStorageObject,
+} from "@/server/utils/file-storage";
 
 import { SLUG_REGEX } from "@/utils/slugs";
 
-export const MAX_VISIBLE_ROUNDS_CHECKS = 12;
+const MAX_VISIBLE_ROUNDS_CHECKS = 12;
 
-export const roundsCheckSchema = z.object({
+const roundsCheckSchemaBase = z.object({
   name: z.string().min(1),
   command: z.string().regex(SLUG_REGEX),
-  ambassador: z.string(),
   hidden: z.boolean(),
 });
 
+const roundsCheckSchemaImage = z.union([
+  z.object({
+    ambassador: z.custom<ActiveAmbassadorKey>(
+      (value) => typeof value === "string" && isActiveAmbassadorKey(value),
+      "must be a valid active ambassador key",
+    ),
+    fileStorageObjectId: z.null(),
+  }),
+  z.object({
+    ambassador: z.null(),
+    fileStorageObjectId: z.cuid(),
+  }),
+]);
+
+export const roundsCheckSchema = roundsCheckSchemaBase.and(
+  roundsCheckSchemaImage,
+);
 export type RoundsCheckSchema = z.infer<typeof roundsCheckSchema>;
 
-export const existingRoundsCheckSchema = z
+const existingRoundsCheckSchemaBase = z
   .object({
     id: z.cuid(),
   })
-  .merge(roundsCheckSchema.partial());
+  .and(roundsCheckSchemaBase.partial());
+
+export const existingRoundsCheckSchema = z.union([
+  existingRoundsCheckSchemaBase.and(roundsCheckSchemaImage),
+  existingRoundsCheckSchemaBase,
+]);
 
 export async function createRoundsCheck(
   input: z.infer<typeof roundsCheckSchema>,
@@ -33,6 +64,18 @@ export async function createRoundsCheck(
       code: "BAD_REQUEST",
       message: "Command already exists",
     });
+
+  if (input.fileStorageObjectId) {
+    const { error } = await checkAndFixUploadedImageFileStorageObject(
+      input.fileStorageObjectId,
+    );
+    if (error) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: `Error checking file storage object: ${error}`,
+      });
+    }
+  }
 
   if (input.hidden === false) {
     const existingRoundsChecksVisible = await prisma.roundsCheck.aggregate({
@@ -57,9 +100,16 @@ export async function createRoundsCheck(
 export async function editRoundsCheck(
   input: z.infer<typeof existingRoundsCheckSchema>,
 ) {
-  if (typeof input.command === "string") {
+  const { id, ...data } = input;
+
+  const existingRoundsCheck = await prisma.roundsCheck.findUnique({
+    where: { id },
+  });
+  if (!existingRoundsCheck) throw new TRPCError({ code: "NOT_FOUND" });
+
+  if (typeof data.command === "string") {
     const existingRoundsCheckWithCommand = await prisma.roundsCheck.findFirst({
-      where: { command: input.command, id: { not: input.id } },
+      where: { command: data.command, id: { not: id } },
     });
     if (existingRoundsCheckWithCommand)
       throw new TRPCError({
@@ -68,9 +118,9 @@ export async function editRoundsCheck(
       });
   }
 
-  if (input.hidden === false) {
+  if (data.hidden === false) {
     const existingRoundsChecksVisible = await prisma.roundsCheck.aggregate({
-      where: { hidden: false, id: { not: input.id } },
+      where: { hidden: false, id: { not: id } },
       _count: true,
     });
     if (existingRoundsChecksVisible._count >= MAX_VISIBLE_ROUNDS_CHECKS)
@@ -80,7 +130,29 @@ export async function editRoundsCheck(
       });
   }
 
-  const { id, ...data } = input;
+  if ("fileStorageObjectId" in data) {
+    // If there was previously a file storage object, and it has now changed,
+    // we need to remove it from storage.
+    if (
+      existingRoundsCheck.fileStorageObjectId &&
+      existingRoundsCheck.fileStorageObjectId !== data.fileStorageObjectId
+    ) {
+      await deleteFileStorageObject(existingRoundsCheck.fileStorageObjectId);
+    }
+
+    if (data.fileStorageObjectId) {
+      const { error } = await checkAndFixUploadedImageFileStorageObject(
+        data.fileStorageObjectId,
+      );
+      if (error) {
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: `Error checking file storage object: ${error}`,
+        });
+      }
+    }
+  }
+
   return await prisma.roundsCheck.update({
     where: { id },
     data,

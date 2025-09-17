@@ -1,5 +1,11 @@
 import { useSession } from "next-auth/react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { scopeGroups } from "@/data/twitch";
 
@@ -15,6 +21,8 @@ type Command = RouterInputs["stream"]["runCommand"];
 interface RunCommandButtonProps extends Command {
   subOnly?: boolean;
   tooltip?: string;
+  icon?: ({ className }: { className: string }) => ReactNode;
+  onClick?: () => void;
   className?: string;
 }
 
@@ -23,6 +31,8 @@ const RunCommandButton = ({
   args,
   subOnly = false,
   tooltip = "Run command",
+  icon = IconVideoCamera,
+  onClick,
   className,
 }: RunCommandButtonProps) => {
   const { data: session } = useSession();
@@ -36,12 +46,13 @@ const RunCommandButton = ({
 
   const { mutateAsync: runCommand, status } =
     trpc.stream.runCommand.useMutation();
-  const onClick = useCallback(async () => {
+  const onClickRun = useCallback(async () => {
     await runCommand({
       command,
       args,
     });
-  }, [runCommand, command, args]);
+    onClick?.();
+  }, [runCommand, command, args, onClick]);
 
   const [statusText, setStatusText] = useState<string>();
   useEffect(() => {
@@ -81,8 +92,8 @@ const RunCommandButton = ({
 
   return (
     <ActionButton
-      onClick={onClick}
-      icon={IconVideoCamera}
+      onClick={onClickRun}
+      icon={icon}
       tooltip={{
         text: statusText ?? tooltip,
         elm: statusText ? undefined : PreviewTooltip,
