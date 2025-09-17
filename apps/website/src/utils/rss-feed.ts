@@ -8,7 +8,6 @@ export type RssFeedItem = {
   link: string;
   description: string | undefined;
   date: Date;
-  // TODO image?
 };
 
 export type RssFeedParameters = {
@@ -18,7 +17,6 @@ export type RssFeedParameters = {
   link: string;
   updated: Date | undefined;
   items: Array<RssFeedItem>;
-  // TODO favicon?
 };
 
 export function getRssFeedContent(options: RssFeedParameters) {
@@ -29,7 +27,6 @@ export function getRssFeedContent(options: RssFeedParameters) {
     link: options.link,
     copyright: "Copyright 2023 Alveus Sanctuary Inc. and the Alveus.gg team",
     updated: options.updated,
-    // TODO favicon?
   });
 
   options.items.forEach((item) => {
@@ -39,7 +36,6 @@ export function getRssFeedContent(options: RssFeedParameters) {
       link: item.link,
       description: item.description,
       date: item.date,
-      // TODO image?
     });
   });
 
@@ -51,7 +47,6 @@ export type YouTubeRssFeedParameters = {
   description: string;
   id: string;
   link: string;
-  // TODO favicon?
 };
 
 export async function getYouTubeRssFeedContent(
