@@ -37,7 +37,7 @@
     "@dagrejs/dagre": "^1.1.5",
     "@eyevinn/webrtc-player": "^0.13.0",
     "@fontsource/pt-sans": "^5.2.7",
-    "@headlessui/react": "^2.2.7",
+    "@headlessui/react": "^2.2.8",
     "@iframe-resizer/react": "^5.5.5",
     "@maplibre/maplibre-gl-geocoder": "^1.9.0",
     "@next/env": "^15.5.3",
