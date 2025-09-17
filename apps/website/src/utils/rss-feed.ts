@@ -72,7 +72,7 @@ export async function getYouTubeRssFeedContent(
     }))
     .map((video) => ({
       title: video.title,
-      id: video.url,
+      id: video.id,
       link: video.url,
       description: undefined,
       date: video.published,
