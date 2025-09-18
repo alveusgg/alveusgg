@@ -2,6 +2,8 @@ import { DateTime } from "luxon";
 
 import { prisma } from "@alveusgg/database";
 
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
+
 // API for chat bot
 export async function GET() {
   try {
@@ -24,7 +26,7 @@ export async function GET() {
         .map(
           (notification) =>
             // Format the notification to show the title, month/day, and VoD URL
-            `${notification.title} (${DateTime.fromJSDate(notification.createdAt).toFormat("MMMM d")}): ${notification.vodUrl}`,
+            `${notification.title} (${DateTime.fromJSDate(notification.createdAt, { zone: DATETIME_ALVEUS_ZONE }).toFormat("MMMM d")}): ${notification.vodUrl}`,
         )
         .join(" | "),
       {
