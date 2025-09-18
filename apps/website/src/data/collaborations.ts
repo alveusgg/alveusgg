@@ -66,6 +66,7 @@ import trihex from "@/assets/collaborations/trihex.png";
 import trivi from "@/assets/collaborations/trivi.png";
 import valkyrae from "@/assets/collaborations/valkyrae.png";
 import xchocobars from "@/assets/collaborations/xchocobars.png";
+import yourRage from "@/assets/collaborations/your-rage.png";
 import yugi2x from "@/assets/collaborations/yugi2x.png";
 import yungJeff from "@/assets/collaborations/yung-jeff.png";
 import zoil from "@/assets/collaborations/zoil.png";
@@ -88,6 +89,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "YourRAGE",
+      link: "https://www.twitch.tv/yourragegaming",
+      date: new Date("2025-09-17"),
+      videoId: "gXB6PxaN4Hk",
+      creators: [
+        {
+          name: "YourRAGE",
+          image: yourRage,
+          popularity: 1_800_000, // Twitch followers, 2025-09-18
+        },
+      ],
+    },
     {
       name: "Ironmouse & CDawg",
       link: "https://www.twitch.tv/ironmouse",
