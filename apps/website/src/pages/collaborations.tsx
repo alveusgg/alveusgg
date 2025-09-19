@@ -300,7 +300,7 @@ const CollaborationItems = ({
                 setLightboxOpen(collaboration.slug);
               }}
               custom
-              className="w-full max-w-2xl"
+              className="group/trigger w-full max-w-2xl"
             >
               <YouTubePreview
                 videoId={collaboration.videoId}

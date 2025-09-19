@@ -10,6 +10,7 @@ import { env } from "@/env";
 import { classes } from "@/utils/classes";
 import { createImageUrl } from "@/utils/image";
 
+import IconLoading from "@/icons/IconLoading";
 import IconYouTube from "@/icons/IconYouTube";
 
 export type StreamSource = {
@@ -128,6 +129,7 @@ export const StreamEmbed = ({
   const [playing, setPlaying] = useState(autoplay);
   const [visible, setVisible] = useState(false);
   const [seen, setSeen] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const ref = useCallback(
     (node: HTMLDivElement) => {
@@ -198,18 +200,26 @@ export const StreamEmbed = ({
           className,
         )}
       >
-        {poster ? (
-          <Image
-            src={poster}
-            alt=""
-            className="absolute inset-0 -z-10 h-full w-full object-cover"
-            width={1200}
-          />
-        ) : (
-          <div className="absolute inset-0 -z-10 h-full w-full object-cover">
+        <div className="absolute inset-0 -z-10 h-full w-full">
+          {poster ? (
+            <Image
+              src={poster}
+              alt=""
+              className="h-full w-full object-cover"
+              width={1200}
+            />
+          ) : (
             <StreamPreview src={src} className="rounded-none" icon={false} />
-          </div>
-        )}
+          )}
+
+          {!ready && (
+            <IconLoading
+              className="absolute top-1/2 left-1/2 -translate-1/2"
+              size={32}
+            />
+          )}
+        </div>
+
         {seen && (
           <CloudflareStream
             src={src.id}
@@ -227,6 +237,7 @@ export const StreamEmbed = ({
             streamRef={streamRef}
             onPlay={() => visible && controls && setPlaying(true)}
             onPause={() => visible && controls && setPlaying(false)}
+            onCanPlay={() => setReady(true)}
           />
         )}
       </div>
