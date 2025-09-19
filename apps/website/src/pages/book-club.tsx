@@ -17,7 +17,7 @@ import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
-import { RssLink } from "@/components/content/RssLink";
+import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import TransitionHeight from "@/components/content/TransitionHeight";
 import { YouTubeEmbed } from "@/components/content/YouTube";

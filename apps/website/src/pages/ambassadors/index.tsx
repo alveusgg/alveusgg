@@ -27,7 +27,7 @@ import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import { RssLink } from "@/components/content/RssLink";
+import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import Select from "@/components/content/Select";
 import SubNav from "@/components/content/SubNav";

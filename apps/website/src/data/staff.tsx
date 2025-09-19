@@ -34,7 +34,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2021, 1),
+    joined: new Date(2021, 1),
   },
   connor: {
     image: [connorObrienImage, connorObrienFunImage],
@@ -58,7 +58,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2021, 9),
+    joined: new Date(2021, 9),
   },
   kayla: {
     image: kaylaJacksonImage,
@@ -83,7 +83,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2021, 9),
+    joined: new Date(2021, 9),
   },
   lindsay: {
     image: [lindsayBellawImage, lindsayBellawFunImage],
@@ -104,7 +104,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2023, 6),
+    joined: new Date(2023, 6),
   },
   sruti: {
     image: [srutiJamalapuramImage, srutiJamalapuramFunImage],
@@ -137,7 +137,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2024, 3),
+    joined: new Date(2024, 3),
   },
   amanda: {
     image: [amandaDenaroImage, amandaDenaroFunImage],
@@ -159,7 +159,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2024, 6),
+    joined: new Date(2024, 6),
   },
   lukas: {
     image: lukasMeyerImage,
@@ -177,7 +177,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2025, 0),
+    joined: new Date(2025, 0),
   },
   dan: {
     image: danielDoormanImage,
@@ -194,7 +194,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2025, 6),
+    joined: new Date(2025, 6),
   },
   space: {
     image: spaceVoyageImage,
@@ -219,7 +219,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2021, 1),
+    joined: new Date(2021, 1),
   },
   colton: {
     image: coltonHolsteImage,
@@ -245,7 +245,7 @@ const staff: Record<string, Person> = {
         </p>
       </>
     ),
-    joinDate: new Date(2025, 3),
+    joined: new Date(2025, 3),
   },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
@@ -256,7 +256,7 @@ const staff: Record<string, Person> = {
         <p>I&apos;m the zoomer (W Hunger).</p>
       </>
     ),
-    joinDate: new Date(2025, 3),
+    joined: new Date(2025, 3),
   },
 };
 

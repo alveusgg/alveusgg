@@ -8,7 +8,7 @@ import { classes } from "@/utils/classes";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import People from "@/components/content/People";
-import { RssLink } from "@/components/content/RssLink";
+import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import { YouTubeLightbox } from "@/components/content/YouTube";
 

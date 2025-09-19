@@ -25,14 +25,14 @@ export type BookInfo = {
   title: string;
   author: string;
   image: StaticImageData;
-  month: Month[];
+  month: [Month, ...Month[]];
   link: string;
   thickness: (typeof thickness)[keyof typeof thickness];
   color: `border-${string}`;
   vodId?: string;
 };
 
-const books: BookInfo[] = [
+const books: [BookInfo, ...BookInfo[]] = [
   {
     title: "Why Sharks Matter",
     author: "David Shiffman",

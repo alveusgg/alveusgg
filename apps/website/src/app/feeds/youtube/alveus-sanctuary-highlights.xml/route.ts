@@ -21,6 +21,9 @@ export async function GET() {
     return new Response(videoFeedContent, {
       headers: {
         "Content-Type": "application/xml; charset=utf-8",
+        // Response can be cached for 5 minutes
+        "Cache-Control": "max-age=300, s-maxage=300, must-revalidate",
+        "X-Generated-At": new Date().toISOString(),
       },
     });
   } catch (err) {

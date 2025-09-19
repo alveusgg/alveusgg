@@ -28,7 +28,7 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import List from "@/components/content/List";
 import Meta from "@/components/content/Meta";
-import { RssLink } from "@/components/content/RssLink";
+import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import Select from "@/components/content/Select";
 import SubNav from "@/components/content/SubNav";

@@ -1,10 +1,5 @@
-export function RssLink({ title, path }: { title: string; path: string }) {
-  return (
-    <link
-      rel="alternate"
-      type="application/rss+xml"
-      title={title}
-      href={path}
-    />
-  );
-}
+const RssLink = ({ title, path }: { title: string; path: string }) => (
+  <link rel="alternate" type="application/rss+xml" title={title} href={path} />
+);
+
+export default RssLink;

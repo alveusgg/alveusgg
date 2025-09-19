@@ -10,7 +10,7 @@ export async function GET() {
   const latestStaffJoinDate = new Date(
     Math.max(
       ...Object.values(staff)
-        .map((person) => person.joinDate?.getTime() ?? 0)
+        .map((person) => person.joined?.getTime() ?? 0)
         .filter((time) => time > 0),
     ),
   );
@@ -22,7 +22,7 @@ export async function GET() {
       id: person.url,
       link: person.url,
       description: person.title,
-      date: person.joinDate,
+      date: person.joined,
     }));
 
   const staffFeedContent = getRssFeedContent({

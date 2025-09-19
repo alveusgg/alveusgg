@@ -12,7 +12,7 @@ import Box from "@/components/content/Box";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import { RssLink } from "@/components/content/RssLink";
+import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import { StreamEmbed } from "@/components/content/Stream";
 
