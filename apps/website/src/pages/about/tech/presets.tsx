@@ -712,7 +712,10 @@ const AboutTechPresetsPage: NextPage = () => {
         </Section>
 
         {sidebar && (
-          <div className="flex" ref={sidebarContainer}>
+          <div
+            className="sticky top-0 flex max-h-screen"
+            ref={sidebarContainer}
+          >
             <div
               className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
               onMouseDown={() => {
