@@ -6,6 +6,56 @@ import { classes } from "@/utils/classes";
 
 import usePrefersReducedMotion from "@/hooks/motion";
 
+const getChatSrc = ({
+  channel,
+  parent,
+  dark,
+}: {
+  channel: string;
+  parent: string;
+  dark?: boolean;
+}): string => {
+  const url = new URL(
+    `https://www.twitch.tv/embed/${encodeURIComponent(channel)}/chat`,
+  );
+  url.searchParams.set("parent", parent);
+  if (dark) url.searchParams.set("darkpopout", "1");
+  return url.toString();
+};
+
+export const TwitchChat = ({
+  channel,
+  dark,
+  className,
+}: {
+  channel: string;
+  dark?: boolean;
+  className?: string;
+}) => {
+  const src = useMemo(() => {
+    const host = new URL(
+      typeof window !== "undefined"
+        ? window.location.href
+        : env.NEXT_PUBLIC_BASE_URL,
+    ).hostname;
+    return getChatSrc({
+      channel,
+      dark,
+      parent: host,
+    });
+  }, [channel, dark]);
+
+  return (
+    <iframe
+      src={src}
+      title={`twitch.tv/${channel} live chat embed`}
+      referrerPolicy="no-referrer"
+      sandbox="allow-same-origin allow-scripts"
+      className={classes("h-full w-full", className)}
+    ></iframe>
+  );
+};
+
 const getSrc = ({
   channel,
   parent,
