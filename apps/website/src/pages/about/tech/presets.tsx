@@ -246,16 +246,56 @@ const AboutTechPresetsPage: NextPage = () => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("presets:twitch-embed");
       const parsed = safeJSONParse(saved ?? "");
-      if (typeof parsed === "boolean") return parsed;
+      if (typeof parsed === "number") return parsed;
     }
-    return false;
+    return -1;
   });
 
   useEffect(() => {
     localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
   }, [twitchEmbed]);
 
-  const sidebar = subscription.isSuccess && subscription.data && twitchEmbed;
+  // Allow the sidebar to be resized with a draggable handle
+  const sidebarDrag = useRef(false);
+  const sidebarContainer = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!sidebarDrag.current) return;
+
+      const container = sidebarContainer.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      setTwitchEmbed(
+        Math.max(200, Math.min(rect.right - e.clientX, window.innerWidth / 2)),
+      );
+    };
+
+    const handleMouseUp = () => {
+      sidebarDrag.current = false;
+      window.document.body.style.cursor = "";
+    };
+
+    const handleResize = () => {
+      setTwitchEmbed((prev) =>
+        Math.max(200, Math.min(prev, window.innerWidth / 2)),
+      );
+    };
+    handleResize();
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const sidebar =
+    subscription.isSuccess && subscription.data && twitchEmbed !== -1;
 
   return (
     <>
@@ -440,8 +480,8 @@ const AboutTechPresetsPage: NextPage = () => {
                     </Label>
 
                     <Switch
-                      checked={twitchEmbed}
-                      onChange={setTwitchEmbed}
+                      checked={twitchEmbed !== -1}
+                      onChange={(val) => setTwitchEmbed(val ? 400 : -1)}
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                     >
                       <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
@@ -664,8 +704,23 @@ const AboutTechPresetsPage: NextPage = () => {
         </Section>
 
         {sidebar && (
-          <div className="w-2xl overflow-hidden rounded-l-xl bg-alveus-green-900">
-            <Twitch channel="alveussanctuary" />
+          <div className="flex" ref={sidebarContainer}>
+            <div
+              className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
+              onMouseDown={() => {
+                sidebarDrag.current = true;
+                window.document.body.style.cursor = "ew-resize";
+              }}
+              style={{ userSelect: "none" }}
+            >
+              <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
+            </div>
+            <div
+              className="overflow-hidden rounded-l-xl bg-alveus-green-900"
+              style={{ width: twitchEmbed }}
+            >
+              <Twitch channel="alveussanctuary" />
+            </div>
           </div>
         )}
       </div>
