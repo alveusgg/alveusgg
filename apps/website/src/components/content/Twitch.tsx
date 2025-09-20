@@ -9,22 +9,27 @@ import usePrefersReducedMotion from "@/hooks/motion";
 const getChatSrc = ({
   channel,
   parent,
+  dark,
 }: {
   channel: string;
   parent: string;
+  dark?: boolean;
 }): string => {
   const url = new URL(
     `https://www.twitch.tv/embed/${encodeURIComponent(channel)}/chat`,
   );
   url.searchParams.set("parent", parent);
+  if (dark) url.searchParams.set("darkpopout", "1");
   return url.toString();
 };
 
 export const TwitchChat = ({
   channel,
+  dark,
   className,
 }: {
   channel: string;
+  dark?: boolean;
   className?: string;
 }) => {
   const src = useMemo(() => {
@@ -35,9 +40,10 @@ export const TwitchChat = ({
     ).hostname;
     return getChatSrc({
       channel,
+      dark,
       parent: host,
     });
-  }, [channel]);
+  }, [channel, dark]);
 
   return (
     <iframe

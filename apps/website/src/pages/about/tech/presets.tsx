@@ -731,7 +731,7 @@ const AboutTechPresetsPage: NextPage = () => {
               style={{ width: twitchEmbed }}
             >
               <Twitch channel="alveussanctuary" />
-              <TwitchChat channel="alveusgg" />
+              <TwitchChat channel="alveusgg" dark />
             </div>
           </div>
         )}
