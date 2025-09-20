@@ -338,10 +338,13 @@ const AboutTechPresetsPage: NextPage = () => {
         />
 
         <Section
-          className={classes("grow", sidebar && "overflow-hidden rounded-r-xl")}
+          className={classes(
+            "@container grow",
+            sidebar && "overflow-hidden rounded-r-xl",
+          )}
         >
-          <div className="flex flex-col gap-y-4 lg:flex-row">
-            <div className="flex w-full flex-col gap-2 lg:w-3/5">
+          <div className="flex flex-col gap-y-4 @3xl:flex-row">
+            <div className="flex w-full flex-col gap-2 @3xl:w-3/5">
               <p>
                 If you&apos;re subscribed, you can run these commands directly
                 from this page by clicking the{" "}
@@ -386,7 +389,7 @@ const AboutTechPresetsPage: NextPage = () => {
               </p>
             </div>
 
-            <div className="flex w-full flex-col gap-2 lg:w-2/5 lg:px-8">
+            <div className="flex w-full flex-col gap-2 @3xl:w-2/5 @3xl:px-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
               {!subscription.isPaused && (
@@ -471,6 +474,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     </div>
                   </Field>
 
+                  {/* Use a viewport media query, not a container media query, as we don't want the sidebar available on mobile */}
                   <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
                     <Label className="flex flex-col leading-tight">
                       <span>Enable embedded Twitch stream player</span>
@@ -492,11 +496,11 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
             {/* Camera List */}
-            <div className="col-span-1 space-y-2 lg:sticky lg:top-0">
+            <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0">
               {/* Mobile: Dropdown */}
-              <div className="mb-2 block lg:hidden">
+              <div className="mb-2 block @3xl:hidden">
                 <label htmlFor="camera-select" className="sr-only">
                   Select Camera
                 </label>
@@ -517,7 +521,7 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
 
               {/* Desktop: Button List */}
-              <div className="relative hidden lg:flex lg:flex-col lg:gap-1">
+              <div className="relative hidden @3xl:flex @3xl:flex-col @3xl:gap-1">
                 <Image
                   src={leafRightImage2}
                   alt=""
@@ -598,7 +602,7 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
 
             {/* Preset List */}
-            <div className="col-span-1 lg:sticky lg:top-0 lg:col-span-3">
+            <div className="col-span-1 @3xl:sticky @3xl:top-0 @3xl:col-span-2 @5xl:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -647,7 +651,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     )}
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                  <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
                     {"presets" in selectedData &&
                       typeSafeObjectEntries(selectedData.presets)
                         .filter(
