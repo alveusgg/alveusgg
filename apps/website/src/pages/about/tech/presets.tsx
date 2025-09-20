@@ -478,7 +478,8 @@ const AboutTechPresetsPage: NextPage = () => {
                     <Label className="flex flex-col leading-tight">
                       <span>Enable embedded Twitch stream player</span>
                       <span className="text-sm text-alveus-green-400 italic">
-                        (drag to move; hold shift to interact with player)
+                        (also embeds the {channels.alveusgg.username} stream
+                        chat)
                       </span>
                     </Label>
 
