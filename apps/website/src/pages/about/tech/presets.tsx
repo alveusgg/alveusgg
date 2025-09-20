@@ -37,7 +37,7 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import Twitch from "@/components/content/Twitch";
+import Twitch, { TwitchChat } from "@/components/content/Twitch";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
 import ActionButton from "@/components/shared/actions/ActionButton";
 import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
@@ -720,10 +720,11 @@ const AboutTechPresetsPage: NextPage = () => {
               <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
             <div
-              className="overflow-hidden rounded-l-xl bg-alveus-green-900"
+              className="flex flex-col overflow-hidden rounded-l-xl bg-alveus-green-900"
               style={{ width: twitchEmbed }}
             >
               <Twitch channel="alveussanctuary" />
+              <TwitchChat channel="alveusgg" />
             </div>
           </div>
         )}
