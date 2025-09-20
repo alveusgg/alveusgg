@@ -57,6 +57,9 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type Command = RouterInputs["stream"]["runCommand"];
 
+const sidebarClamp = (val: number) =>
+  Math.min(Math.max(val, 400), window.innerWidth / 2);
+
 const getPositionIcon = (position: number) => {
   const PositionIcon = ({ className }: { className?: string }) => (
     <div
@@ -266,9 +269,7 @@ const AboutTechPresetsPage: NextPage = () => {
       if (!container) return;
 
       const rect = container.getBoundingClientRect();
-      setTwitchEmbed(
-        Math.max(200, Math.min(rect.right - e.clientX, window.innerWidth / 2)),
-      );
+      setTwitchEmbed(sidebarClamp(rect.right - e.clientX));
     };
 
     const handleMouseUp = () => {
@@ -277,9 +278,7 @@ const AboutTechPresetsPage: NextPage = () => {
     };
 
     const handleResize = () => {
-      setTwitchEmbed((prev) =>
-        Math.max(200, Math.min(prev, window.innerWidth / 2)),
-      );
+      setTwitchEmbed((prev) => sidebarClamp(prev));
     };
     handleResize();
 
@@ -339,7 +338,7 @@ const AboutTechPresetsPage: NextPage = () => {
 
         <Section
           className={classes(
-            "@container grow",
+            "@container grow py-4",
             sidebar && "overflow-hidden rounded-r-xl",
           )}
         >
@@ -389,7 +388,7 @@ const AboutTechPresetsPage: NextPage = () => {
               </p>
             </div>
 
-            <div className="flex w-full flex-col gap-2 @3xl:w-2/5 @3xl:px-8">
+            <div className="flex w-full flex-col gap-2 @3xl:w-2/5 @3xl:pl-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
               {!subscription.isPaused && (
@@ -485,7 +484,9 @@ const AboutTechPresetsPage: NextPage = () => {
 
                     <Switch
                       checked={twitchEmbed !== -1}
-                      onChange={(val) => setTwitchEmbed(val ? 400 : -1)}
+                      onChange={(val) =>
+                        setTwitchEmbed(val ? sidebarClamp(-1) : -1)
+                      }
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                     >
                       <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
