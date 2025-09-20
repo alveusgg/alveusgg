@@ -33,13 +33,11 @@ import {
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
-import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
-import Moveable from "@/components/content/Moveable";
 import Section from "@/components/content/Section";
-import Twitch from "@/components/content/Twitch";
+import Twitch, { TwitchChat } from "@/components/content/Twitch";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
 import ActionButton from "@/components/shared/actions/ActionButton";
 import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
@@ -58,6 +56,9 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type Command = RouterInputs["stream"]["runCommand"];
+
+const sidebarClamp = (val: number) =>
+  Math.min(Math.max(val, 400), window.innerWidth / 2);
 
 const getPositionIcon = (position: number) => {
   const PositionIcon = ({ className }: { className?: string }) => (
@@ -248,14 +249,52 @@ const AboutTechPresetsPage: NextPage = () => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("presets:twitch-embed");
       const parsed = safeJSONParse(saved ?? "");
-      if (typeof parsed === "boolean") return parsed;
+      if (typeof parsed === "number") return parsed;
     }
-    return false;
+    return -1;
   });
 
   useEffect(() => {
     localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
   }, [twitchEmbed]);
+
+  // Allow the sidebar to be resized with a draggable handle
+  const sidebarDrag = useRef(false);
+  const sidebarContainer = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!sidebarDrag.current) return;
+
+      const container = sidebarContainer.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      setTwitchEmbed(sidebarClamp(rect.right - e.clientX));
+    };
+
+    const handleMouseUp = () => {
+      sidebarDrag.current = false;
+      window.document.body.style.cursor = "";
+    };
+
+    const handleResize = () => {
+      setTwitchEmbed((prev) => (prev === -1 ? -1 : sidebarClamp(prev)));
+    };
+    handleResize();
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const sidebar =
+    subscription.isSuccess && subscription.data && twitchEmbed !== -1;
 
   return (
     <>
@@ -271,7 +310,7 @@ const AboutTechPresetsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="pointer-events-none absolute right-0 -bottom-16 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -290,16 +329,21 @@ const AboutTechPresetsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex grow flex-col">
+      <div className="relative flex grow bg-alveus-green">
         <Image
           src={leafLeftImage3}
           alt=""
           className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
-        <Section className="grow">
-          <div className="flex flex-col gap-y-4 lg:flex-row">
-            <div className="flex w-full flex-col gap-2 lg:w-3/5">
+        <Section
+          className={classes(
+            "@container grow py-4",
+            sidebar && "overflow-hidden rounded-r-xl",
+          )}
+        >
+          <div className="flex flex-col gap-y-4 @3xl:flex-row">
+            <div className="flex w-full flex-col gap-2 @3xl:w-3/5">
               <p>
                 If you&apos;re subscribed, you can run these commands directly
                 from this page by clicking the{" "}
@@ -344,7 +388,7 @@ const AboutTechPresetsPage: NextPage = () => {
               </p>
             </div>
 
-            <div className="flex w-full flex-col gap-2 lg:w-2/5 lg:px-8">
+            <div className="flex w-full flex-col gap-2 @3xl:w-2/5 @3xl:pl-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
               {!subscription.isPaused && (
@@ -429,17 +473,23 @@ const AboutTechPresetsPage: NextPage = () => {
                     </div>
                   </Field>
 
+                  {/* Use a viewport media query, not a container media query, as we don't want the sidebar available on mobile */}
                   <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
                     <Label className="flex flex-col leading-tight">
                       <span>Enable embedded Twitch stream player</span>
                       <span className="text-sm text-alveus-green-400 italic">
-                        (drag to move; hold shift to interact with player)
+                        (also embeds the {channels.alveusgg.username} stream
+                        chat)
                       </span>
                     </Label>
 
                     <Switch
-                      checked={twitchEmbed}
-                      onChange={setTwitchEmbed}
+                      checked={twitchEmbed !== -1}
+                      onChange={(val) =>
+                        setTwitchEmbed(
+                          val ? sidebarClamp(window.innerWidth / 3) : -1,
+                        )
+                      }
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                     >
                       <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
@@ -450,11 +500,11 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-4">
+          <div className="mt-6 grid grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
             {/* Camera List */}
-            <div className="col-span-1 space-y-2 lg:sticky lg:top-0">
+            <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0">
               {/* Mobile: Dropdown */}
-              <div className="mb-2 block lg:hidden">
+              <div className="mb-2 block @3xl:hidden">
                 <label htmlFor="camera-select" className="sr-only">
                   Select Camera
                 </label>
@@ -475,7 +525,7 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
 
               {/* Desktop: Button List */}
-              <div className="relative hidden lg:flex lg:flex-col lg:gap-1">
+              <div className="relative hidden @3xl:flex @3xl:flex-col @3xl:gap-1">
                 <Image
                   src={leafRightImage2}
                   alt=""
@@ -556,7 +606,7 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
 
             {/* Preset List */}
-            <div className="col-span-1 lg:sticky lg:top-0 lg:col-span-3">
+            <div className="col-span-1 @3xl:sticky @3xl:top-0 @3xl:col-span-2 @5xl:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -605,7 +655,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     )}
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+                  <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
                     {"presets" in selectedData &&
                       typeSafeObjectEntries(selectedData.presets)
                         .filter(
@@ -660,19 +710,32 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
           </div>
         </Section>
-      </div>
 
-      {subscription.isSuccess && subscription.data && twitchEmbed && (
-        <Moveable
-          className="right-2 bottom-2 z-50 w-2xl rounded-xl shadow-xl"
-          fixed
-          store="presets:twitch-embed"
-        >
-          <Box className="p-0" dark>
-            <Twitch channel="alveussanctuary" />
-          </Box>
-        </Moveable>
-      )}
+        {sidebar && (
+          <div
+            className="sticky top-0 flex max-h-screen"
+            ref={sidebarContainer}
+          >
+            <div
+              className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
+              onMouseDown={() => {
+                sidebarDrag.current = true;
+                window.document.body.style.cursor = "ew-resize";
+              }}
+              style={{ userSelect: "none" }}
+            >
+              <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
+            </div>
+            <div
+              className="flex flex-col overflow-hidden rounded-l-xl bg-alveus-green-900"
+              style={{ width: twitchEmbed }}
+            >
+              <Twitch channel="alveussanctuary" />
+              <TwitchChat channel="alveusgg" />
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 };
