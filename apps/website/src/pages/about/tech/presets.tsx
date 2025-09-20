@@ -310,7 +310,7 @@ const AboutTechPresetsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-16 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-full max-h-80 w-auto -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -330,18 +330,18 @@ const AboutTechPresetsPage: NextPage = () => {
 
       {/* Grow the last section to cover the page */}
       <div className="relative flex grow bg-alveus-green">
-        <Image
-          src={leafLeftImage3}
-          alt=""
-          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
-        />
-
         <Section
           className={classes(
-            "@container grow py-4",
-            sidebar && "overflow-hidden rounded-r-xl",
+            "@container z-10 grow py-4",
+            sidebar && "rounded-r-xl",
           )}
         >
+          <Image
+            src={leafLeftImage3}
+            alt=""
+            className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+          />
+
           <div className="flex flex-col gap-y-4 @3xl:flex-row">
             <div className="flex w-full flex-col gap-2 @3xl:w-3/5">
               <p>
