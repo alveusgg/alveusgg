@@ -90,7 +90,7 @@ const Button = ({
     group: string;
   };
 }) => (
-  <div className="flex w-full overflow-hidden rounded shadow-md">
+  <div className="flex w-full shrink-0 overflow-hidden rounded shadow-md">
     <button
       onClick={onClick}
       className={classes(
@@ -329,12 +329,13 @@ const AboutTechPresetsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex grow bg-alveus-green">
+      <div className="relative flex bg-alveus-green py-4 lg:h-screen">
         <Section
           className={classes(
-            "@container z-10 grow py-4",
+            "@container z-10 grow py-0 pt-4",
             sidebar && "rounded-r-xl",
           )}
+          containerClassName="h-full flex flex-col"
         >
           <Image
             src={leafLeftImage3}
@@ -500,9 +501,9 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
+          <div className="mt-6 grid min-h-0 shrink grow grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
             {/* Camera List */}
-            <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0">
+            <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col">
               {/* Mobile: Dropdown */}
               <div className="mb-2 block @3xl:hidden">
                 <label htmlFor="camera-select" className="sr-only">
@@ -525,11 +526,11 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
 
               {/* Desktop: Button List */}
-              <div className="relative hidden @3xl:flex @3xl:flex-col @3xl:gap-1">
+              <div className="relative hidden @3xl:contents">
                 <Image
                   src={leafRightImage2}
                   alt=""
-                  className="pointer-events-none absolute top-0 left-0 -z-10 h-96 max-h-full w-auto -translate-x-1/2 drop-shadow-md select-none"
+                  className="pointer-events-none absolute top-0 right-0 -z-10 h-96 max-h-full w-auto drop-shadow-md select-none"
                 />
 
                 <Input
@@ -538,75 +539,79 @@ const AboutTechPresetsPage: NextPage = () => {
                   aria-label="Search cameras"
                   value={searchCamera}
                   onChange={(e) => setSearchCamera(e.target.value)}
-                  className="mb-2 w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                  className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 />
 
-                {typeSafeObjectEntries(groupedCameras)
-                  .sort(([a], [b]) => a.localeCompare(b))
-                  .map(([name, group]) => {
-                    const groupEntries =
-                      typeSafeObjectEntries(group).filter(isDefinedEntry);
-                    if (groupEntries.length === 0) return null;
+                <div className="scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2">
+                  {typeSafeObjectEntries(groupedCameras)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([name, group]) => {
+                      const groupEntries =
+                        typeSafeObjectEntries(group).filter(isDefinedEntry);
+                      if (groupEntries.length === 0) return null;
 
-                    if (groupEntries.length === 1) {
-                      const [camera, { title, group }] = groupEntries[0]!;
+                      if (groupEntries.length === 1) {
+                        const [camera, { title, group }] = groupEntries[0]!;
+                        return (
+                          <Button
+                            key={camera}
+                            camera={camera}
+                            title={title}
+                            group={group}
+                            onClick={() => setSelectedCamera(camera)}
+                            selected={{
+                              camera: selectedCamera,
+                              group: selectedData.group,
+                            }}
+                          />
+                        );
+                      }
+
                       return (
-                        <Button
-                          key={camera}
-                          camera={camera}
-                          title={title}
-                          group={group}
-                          onClick={() => setSelectedCamera(camera)}
-                          selected={{
-                            camera: selectedCamera,
-                            group: selectedData.group,
-                          }}
-                        />
-                      );
-                    }
-
-                    return (
-                      <Disclosure key={name}>
-                        <DisclosureButton
-                          ref={disclosureRef}
-                          className={classes(
-                            "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
-                            selectedData.group === name
-                              ? "bg-alveus-green/75 text-white"
-                              : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
-                          )}
-                        >
-                          <span>
-                            {camelToTitle(name)} Cameras
-                            <span className="text-sm text-alveus-green-400 italic">
-                              {` (${groupEntries.length})`}
+                        <Disclosure key={name}>
+                          <DisclosureButton
+                            ref={disclosureRef}
+                            className={classes(
+                              "group flex w-full shrink-0 items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
+                              selectedData.group === name
+                                ? "bg-alveus-green/75 text-white"
+                                : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+                            )}
+                          >
+                            <span>
+                              {camelToTitle(name)} Cameras
+                              <span className="text-sm text-alveus-green-400 italic">
+                                {` (${groupEntries.length})`}
+                              </span>
                             </span>
-                          </span>
-                          <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
-                        </DisclosureButton>
-                        <DisclosurePanel className="ml-4 flex flex-col gap-1">
-                          {groupEntries.map(([camera, { title, group }]) => (
-                            <Button
-                              key={camera}
-                              camera={camera}
-                              title={title}
-                              group={group}
-                              onClick={() => setSelectedCamera(camera)}
-                              selected={{
-                                camera: selectedCamera,
-                                group: selectedData.group,
-                              }}
-                            />
-                          ))}
-                        </DisclosurePanel>
-                      </Disclosure>
-                    );
-                  })}
+                            <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
+                          </DisclosureButton>
+                          <DisclosurePanel className="ml-4 flex flex-col gap-1">
+                            {groupEntries.map(([camera, { title, group }]) => (
+                              <Button
+                                key={camera}
+                                camera={camera}
+                                title={title}
+                                group={group}
+                                onClick={() => setSelectedCamera(camera)}
+                                selected={{
+                                  camera: selectedCamera,
+                                  group: selectedData.group,
+                                }}
+                              />
+                            ))}
+                          </DisclosurePanel>
+                        </Disclosure>
+                      );
+                    })}
+
+                  <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 shrink-0 mask-t-from-25% backdrop-blur-sm" />
+                </div>
               </div>
             </div>
 
             {/* Preset List */}
-            <div className="col-span-1 @3xl:sticky @3xl:top-0 @3xl:col-span-2 @5xl:col-span-3">
+            <div className="col-span-1 @3xl:sticky @3xl:top-0 @3xl:col-span-2 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col @5xl:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -649,61 +654,68 @@ const AboutTechPresetsPage: NextPage = () => {
                           aria-label="Search presets"
                           value={searchPresets}
                           onChange={(e) => setSearchPresets(e.target.value)}
-                          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
                         />
                       </>
                     )}
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
-                    {"presets" in selectedData &&
-                      typeSafeObjectEntries(selectedData.presets)
-                        .filter(
-                          ([name, preset]) =>
-                            !searchPresetsSanitized.length ||
-                            name
-                              .toLowerCase()
-                              .includes(searchPresetsSanitized) ||
-                            preset.description
-                              .toLowerCase()
-                              .includes(searchPresetsSanitized),
-                        )
-                        .map(([name, preset]) => (
-                          <Card
-                            key={name}
-                            title={name}
-                            image={
-                              preset.image
-                                ? { src: preset.image, alt: preset.description }
-                                : undefined
-                            }
-                            command={{
-                              command: "ptzload",
-                              args: [selectedCamera.toLowerCase(), name],
-                            }}
-                          >
-                            {preset.description}
-                          </Card>
-                        ))}
-
-                    {"multi" in selectedData && (
-                      <Card
-                        title={selectedData.multi.cameras.join(" + ")}
-                        image={
-                          selectedData.multi.image
-                            ? {
-                                src: selectedData.multi.image,
-                                alt:
-                                  selectedData.multi.description ??
-                                  selectedData.multi.cameras.join(" + "),
+                  <div className="scrollbar-none shrink grow overflow-y-auto">
+                    <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
+                      {"presets" in selectedData &&
+                        typeSafeObjectEntries(selectedData.presets)
+                          .filter(
+                            ([name, preset]) =>
+                              !searchPresetsSanitized.length ||
+                              name
+                                .toLowerCase()
+                                .includes(searchPresetsSanitized) ||
+                              preset.description
+                                .toLowerCase()
+                                .includes(searchPresetsSanitized),
+                          )
+                          .map(([name, preset]) => (
+                            <Card
+                              key={name}
+                              title={name}
+                              image={
+                                preset.image
+                                  ? {
+                                      src: preset.image,
+                                      alt: preset.description,
+                                    }
+                                  : undefined
                               }
-                            : undefined
-                        }
-                        className="col-span-2"
-                      >
-                        {selectedData.multi.description}
-                      </Card>
-                    )}
+                              command={{
+                                command: "ptzload",
+                                args: [selectedCamera.toLowerCase(), name],
+                              }}
+                            >
+                              {preset.description}
+                            </Card>
+                          ))}
+
+                      {"multi" in selectedData && (
+                        <Card
+                          title={selectedData.multi.cameras.join(" + ")}
+                          image={
+                            selectedData.multi.image
+                              ? {
+                                  src: selectedData.multi.image,
+                                  alt:
+                                    selectedData.multi.description ??
+                                    selectedData.multi.cameras.join(" + "),
+                                }
+                              : undefined
+                          }
+                          className="col-span-2"
+                        >
+                          {selectedData.multi.description}
+                        </Card>
+                      )}
+                    </div>
+
+                    <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
                   </div>
                 </Fragment>
               )}
@@ -712,10 +724,7 @@ const AboutTechPresetsPage: NextPage = () => {
         </Section>
 
         {sidebar && (
-          <div
-            className="sticky top-0 flex max-h-screen"
-            ref={sidebarContainer}
-          >
+          <div className="flex" ref={sidebarContainer}>
             <div
               className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
               onMouseDown={() => {
