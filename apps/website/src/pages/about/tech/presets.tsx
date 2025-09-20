@@ -486,7 +486,9 @@ const AboutTechPresetsPage: NextPage = () => {
                     <Switch
                       checked={twitchEmbed !== -1}
                       onChange={(val) =>
-                        setTwitchEmbed(val ? sidebarClamp(-1) : -1)
+                        setTwitchEmbed(
+                          val ? sidebarClamp(window.innerWidth / 3) : -1,
+                        )
                       }
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                     >
