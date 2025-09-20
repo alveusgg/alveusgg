@@ -33,11 +33,9 @@ import {
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
-import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
-import Moveable from "@/components/content/Moveable";
 import Section from "@/components/content/Section";
 import Twitch from "@/components/content/Twitch";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
@@ -257,6 +255,8 @@ const AboutTechPresetsPage: NextPage = () => {
     localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
   }, [twitchEmbed]);
 
+  const sidebar = subscription.isSuccess && subscription.data && twitchEmbed;
+
   return (
     <>
       <Meta
@@ -271,7 +271,7 @@ const AboutTechPresetsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="pointer-events-none absolute right-0 -bottom-16 z-10 hidden h-auto w-1/2 max-w-40 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -290,14 +290,16 @@ const AboutTechPresetsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex grow flex-col">
+      <div className="relative flex grow bg-alveus-green">
         <Image
           src={leafLeftImage3}
           alt=""
           className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
-        <Section className="grow">
+        <Section
+          className={classes("grow", sidebar && "overflow-hidden rounded-r-xl")}
+        >
           <div className="flex flex-col gap-y-4 lg:flex-row">
             <div className="flex w-full flex-col gap-2 lg:w-3/5">
               <p>
@@ -660,19 +662,13 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
           </div>
         </Section>
-      </div>
 
-      {subscription.isSuccess && subscription.data && twitchEmbed && (
-        <Moveable
-          className="right-2 bottom-2 z-50 w-2xl rounded-xl shadow-xl"
-          fixed
-          store="presets:twitch-embed"
-        >
-          <Box className="p-0" dark>
+        {sidebar && (
+          <div className="w-2xl overflow-hidden rounded-l-xl bg-alveus-green-900">
             <Twitch channel="alveussanctuary" />
-          </Box>
-        </Moveable>
-      )}
+          </div>
+        )}
+      </div>
     </>
   );
 };
