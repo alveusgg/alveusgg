@@ -274,7 +274,8 @@ const AboutTechPresetsPage: NextPage = () => {
 
     const handleMouseUp = () => {
       sidebarDrag.current = false;
-      window.document.body.style.cursor = "";
+      window.document.documentElement.style.cursor = "";
+      window.document.body.style.pointerEvents = "";
     };
 
     const handleResize = () => {
@@ -729,7 +730,8 @@ const AboutTechPresetsPage: NextPage = () => {
               className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
               onMouseDown={() => {
                 sidebarDrag.current = true;
-                window.document.body.style.cursor = "ew-resize";
+                window.document.documentElement.style.cursor = "ew-resize";
+                window.document.body.style.pointerEvents = "none";
               }}
             >
               <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
