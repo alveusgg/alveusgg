@@ -731,7 +731,6 @@ const AboutTechPresetsPage: NextPage = () => {
                 sidebarDrag.current = true;
                 window.document.body.style.cursor = "ew-resize";
               }}
-              style={{ userSelect: "none" }}
             >
               <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
