@@ -278,7 +278,7 @@ const AboutTechPresetsPage: NextPage = () => {
     };
 
     const handleResize = () => {
-      setTwitchEmbed((prev) => sidebarClamp(prev));
+      setTwitchEmbed((prev) => (prev === -1 ? -1 : sidebarClamp(prev)));
     };
     handleResize();
 
