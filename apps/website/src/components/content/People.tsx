@@ -2,6 +2,7 @@ import Image, { type ImageProps } from "next/image";
 import { type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
+import type { PartialDateString } from "@/utils/datetime-partial";
 
 import Heading from "./Heading";
 import Link from "./Link";
@@ -11,7 +12,7 @@ export interface Person {
   name: string;
   title: string;
   description: ReactNode;
-  joined: Date;
+  joined: PartialDateString;
 }
 
 type PeopleProps = {
