@@ -189,14 +189,13 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           title="All Alveus Sanctuary YouTube Videos"
           path="/feeds/youtube/all.xml"
         />
-        <RssLink
-          title="Alveus Sanctuary Main YouTube Channel"
-          path="/feeds/youtube/alveus-sanctuary.xml"
-        />
-        <RssLink
-          title="Alveus Sanctuary Highlights YouTube Channel"
-          path="/feeds/youtube/alveus-sanctuary-highlights.xml"
-        />
+        {Object.entries(youTubeChannels).map(([channelKey, channel]) => (
+          <RssLink
+            key={channelKey}
+            title={`${channel.name} YouTube Channel Videos`}
+            path={`/feeds/youtube/${channelKey}.xml`}
+          />
+        ))}
       </Meta>
 
       {/* Hero, offset to be navbar background */}

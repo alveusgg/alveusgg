@@ -1,10 +1,10 @@
-import { channels as youTubeChannels } from "@/data/youtube";
+import { channels } from "@/data/youtube";
 
 import { getYouTubeRssFeedContent } from "@/utils/rss-feed";
 
 export async function GET() {
-  const channelUrl = youTubeChannels.alveus.uri;
-  const channelIds = [youTubeChannels.alveus.id, youTubeChannels.highlights.id];
+  const channelUrl = channels.alveus.uri;
+  const channelIds = Object.values(channels).map((channel) => channel.id);
 
   try {
     const videoFeedContent = await getYouTubeRssFeedContent(
@@ -12,7 +12,7 @@ export async function GET() {
         title: "Alveus Sanctuary - All YouTube Videos",
         description:
           "A feed for all new videos on all Alveus Sanctuary YouTube channels",
-        id: "alveus:youtube:all-channels",
+        id: "alveus:youtube:channel:all",
         link: channelUrl,
       },
       channelIds,
