@@ -33,13 +33,11 @@ import {
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
-import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
-import Moveable from "@/components/content/Moveable";
 import Section from "@/components/content/Section";
-import Twitch from "@/components/content/Twitch";
+import Twitch, { TwitchChat } from "@/components/content/Twitch";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
 import ActionButton from "@/components/shared/actions/ActionButton";
 import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
@@ -58,6 +56,9 @@ import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
 type Command = RouterInputs["stream"]["runCommand"];
+
+const sidebarClamp = (val: number) =>
+  Math.min(Math.max(val, 400), window.innerWidth / 2);
 
 const getPositionIcon = (position: number) => {
   const PositionIcon = ({ className }: { className?: string }) => (
@@ -89,7 +90,7 @@ const Button = ({
     group: string;
   };
 }) => (
-  <div className="flex w-full overflow-hidden rounded shadow-md">
+  <div className="flex w-full shrink-0 overflow-hidden rounded shadow-md">
     <button
       onClick={onClick}
       className={classes(
@@ -248,14 +249,53 @@ const AboutTechPresetsPage: NextPage = () => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("presets:twitch-embed");
       const parsed = safeJSONParse(saved ?? "");
-      if (typeof parsed === "boolean") return parsed;
+      if (typeof parsed === "number") return parsed;
     }
-    return false;
+    return -1;
   });
 
   useEffect(() => {
     localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
   }, [twitchEmbed]);
+
+  // Allow the sidebar to be resized with a draggable handle
+  const sidebarDrag = useRef(false);
+  const sidebarContainer = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!sidebarDrag.current) return;
+
+      const container = sidebarContainer.current;
+      if (!container) return;
+
+      const rect = container.getBoundingClientRect();
+      setTwitchEmbed(sidebarClamp(rect.right - e.clientX));
+    };
+
+    const handleMouseUp = () => {
+      sidebarDrag.current = false;
+      window.document.documentElement.style.cursor = "";
+      window.document.body.style.pointerEvents = "";
+    };
+
+    const handleResize = () => {
+      setTwitchEmbed((prev) => (prev === -1 ? -1 : sidebarClamp(prev)));
+    };
+    handleResize();
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const sidebar =
+    subscription.isSuccess && subscription.data && twitchEmbed !== -1;
 
   return (
     <>
@@ -271,7 +311,7 @@ const AboutTechPresetsPage: NextPage = () => {
         <Image
           src={leafLeftImage1}
           alt=""
-          className="pointer-events-none absolute right-0 -bottom-32 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-full max-h-80 w-auto -scale-x-100 drop-shadow-md select-none lg:block"
         />
 
         <Section dark className="py-24">
@@ -290,16 +330,22 @@ const AboutTechPresetsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex grow flex-col">
-        <Image
-          src={leafLeftImage3}
-          alt=""
-          className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
-        />
+      <div className="relative flex bg-alveus-green py-4 lg:h-screen">
+        <Section
+          className={classes(
+            "@container z-10 grow py-0 pt-4",
+            sidebar && "rounded-r-xl",
+          )}
+          containerClassName="h-full flex flex-col"
+        >
+          <Image
+            src={leafLeftImage3}
+            alt=""
+            className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+          />
 
-        <Section className="grow">
-          <div className="flex flex-col gap-y-4 lg:flex-row">
-            <div className="flex w-full flex-col gap-2 lg:w-3/5">
+          <div className="flex flex-col gap-y-4 @3xl:flex-row">
+            <div className="flex w-full flex-col gap-2 @3xl:w-3/5">
               <p>
                 If you&apos;re subscribed, you can run these commands directly
                 from this page by clicking the{" "}
@@ -344,7 +390,7 @@ const AboutTechPresetsPage: NextPage = () => {
               </p>
             </div>
 
-            <div className="flex w-full flex-col gap-2 lg:w-2/5 lg:px-8">
+            <div className="flex w-full flex-col gap-2 @3xl:w-2/5 @3xl:pl-8">
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
               {!subscription.isPaused && (
@@ -429,17 +475,23 @@ const AboutTechPresetsPage: NextPage = () => {
                     </div>
                   </Field>
 
+                  {/* Use a viewport media query, not a container media query, as we don't want the sidebar available on mobile */}
                   <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
                     <Label className="flex flex-col leading-tight">
                       <span>Enable embedded Twitch stream player</span>
                       <span className="text-sm text-alveus-green-400 italic">
-                        (drag to move; hold shift to interact with player)
+                        (also embeds the {channels.alveusgg.username} stream
+                        chat)
                       </span>
                     </Label>
 
                     <Switch
-                      checked={twitchEmbed}
-                      onChange={setTwitchEmbed}
+                      checked={twitchEmbed !== -1}
+                      onChange={(val) =>
+                        setTwitchEmbed(
+                          val ? sidebarClamp(window.innerWidth / 3) : -1,
+                        )
+                      }
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                     >
                       <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
@@ -450,11 +502,11 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
           </div>
 
-          <div className="mt-6 grid grid-cols-1 items-start gap-6 lg:grid-cols-4">
+          <div className="mt-6 grid min-h-0 shrink grow grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
             {/* Camera List */}
-            <div className="col-span-1 space-y-2 lg:sticky lg:top-0">
+            <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col">
               {/* Mobile: Dropdown */}
-              <div className="mb-2 block lg:hidden">
+              <div className="mb-2 block @3xl:hidden">
                 <label htmlFor="camera-select" className="sr-only">
                   Select Camera
                 </label>
@@ -475,11 +527,11 @@ const AboutTechPresetsPage: NextPage = () => {
               </div>
 
               {/* Desktop: Button List */}
-              <div className="relative hidden lg:flex lg:flex-col lg:gap-1">
+              <div className="relative hidden @3xl:contents">
                 <Image
                   src={leafRightImage2}
                   alt=""
-                  className="pointer-events-none absolute top-0 left-0 -z-10 h-96 max-h-full w-auto -translate-x-1/2 drop-shadow-md select-none"
+                  className="pointer-events-none absolute top-0 right-0 -z-10 h-96 max-h-full w-auto drop-shadow-md select-none"
                 />
 
                 <Input
@@ -488,75 +540,79 @@ const AboutTechPresetsPage: NextPage = () => {
                   aria-label="Search cameras"
                   value={searchCamera}
                   onChange={(e) => setSearchCamera(e.target.value)}
-                  className="mb-2 w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                  className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
                 />
 
-                {typeSafeObjectEntries(groupedCameras)
-                  .sort(([a], [b]) => a.localeCompare(b))
-                  .map(([name, group]) => {
-                    const groupEntries =
-                      typeSafeObjectEntries(group).filter(isDefinedEntry);
-                    if (groupEntries.length === 0) return null;
+                <div className="scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2">
+                  {typeSafeObjectEntries(groupedCameras)
+                    .sort(([a], [b]) => a.localeCompare(b))
+                    .map(([name, group]) => {
+                      const groupEntries =
+                        typeSafeObjectEntries(group).filter(isDefinedEntry);
+                      if (groupEntries.length === 0) return null;
 
-                    if (groupEntries.length === 1) {
-                      const [camera, { title, group }] = groupEntries[0]!;
+                      if (groupEntries.length === 1) {
+                        const [camera, { title, group }] = groupEntries[0]!;
+                        return (
+                          <Button
+                            key={camera}
+                            camera={camera}
+                            title={title}
+                            group={group}
+                            onClick={() => setSelectedCamera(camera)}
+                            selected={{
+                              camera: selectedCamera,
+                              group: selectedData.group,
+                            }}
+                          />
+                        );
+                      }
+
                       return (
-                        <Button
-                          key={camera}
-                          camera={camera}
-                          title={title}
-                          group={group}
-                          onClick={() => setSelectedCamera(camera)}
-                          selected={{
-                            camera: selectedCamera,
-                            group: selectedData.group,
-                          }}
-                        />
-                      );
-                    }
-
-                    return (
-                      <Disclosure key={name}>
-                        <DisclosureButton
-                          ref={disclosureRef}
-                          className={classes(
-                            "group flex w-full items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
-                            selectedData.group === name
-                              ? "bg-alveus-green/75 text-white"
-                              : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
-                          )}
-                        >
-                          <span>
-                            {camelToTitle(name)} Cameras
-                            <span className="text-sm text-alveus-green-400 italic">
-                              {` (${groupEntries.length})`}
+                        <Disclosure key={name}>
+                          <DisclosureButton
+                            ref={disclosureRef}
+                            className={classes(
+                              "group flex w-full shrink-0 items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
+                              selectedData.group === name
+                                ? "bg-alveus-green/75 text-white"
+                                : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+                            )}
+                          >
+                            <span>
+                              {camelToTitle(name)} Cameras
+                              <span className="text-sm text-alveus-green-400 italic">
+                                {` (${groupEntries.length})`}
+                              </span>
                             </span>
-                          </span>
-                          <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
-                        </DisclosureButton>
-                        <DisclosurePanel className="ml-4 flex flex-col gap-1">
-                          {groupEntries.map(([camera, { title, group }]) => (
-                            <Button
-                              key={camera}
-                              camera={camera}
-                              title={title}
-                              group={group}
-                              onClick={() => setSelectedCamera(camera)}
-                              selected={{
-                                camera: selectedCamera,
-                                group: selectedData.group,
-                              }}
-                            />
-                          ))}
-                        </DisclosurePanel>
-                      </Disclosure>
-                    );
-                  })}
+                            <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
+                          </DisclosureButton>
+                          <DisclosurePanel className="ml-4 flex flex-col gap-1">
+                            {groupEntries.map(([camera, { title, group }]) => (
+                              <Button
+                                key={camera}
+                                camera={camera}
+                                title={title}
+                                group={group}
+                                onClick={() => setSelectedCamera(camera)}
+                                selected={{
+                                  camera: selectedCamera,
+                                  group: selectedData.group,
+                                }}
+                              />
+                            ))}
+                          </DisclosurePanel>
+                        </Disclosure>
+                      );
+                    })}
+
+                  <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 shrink-0 mask-t-from-25% backdrop-blur-sm" />
+                </div>
               </div>
             </div>
 
             {/* Preset List */}
-            <div className="col-span-1 lg:sticky lg:top-0 lg:col-span-3">
+            <div className="col-span-1 @3xl:sticky @3xl:top-0 @3xl:col-span-2 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col @5xl:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -599,80 +655,97 @@ const AboutTechPresetsPage: NextPage = () => {
                           aria-label="Search presets"
                           value={searchPresets}
                           onChange={(e) => setSearchPresets(e.target.value)}
-                          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
                         />
                       </>
                     )}
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-                    {"presets" in selectedData &&
-                      typeSafeObjectEntries(selectedData.presets)
-                        .filter(
-                          ([name, preset]) =>
-                            !searchPresetsSanitized.length ||
-                            name
-                              .toLowerCase()
-                              .includes(searchPresetsSanitized) ||
-                            preset.description
-                              .toLowerCase()
-                              .includes(searchPresetsSanitized),
-                        )
-                        .map(([name, preset]) => (
-                          <Card
-                            key={name}
-                            title={name}
-                            image={
-                              preset.image
-                                ? { src: preset.image, alt: preset.description }
-                                : undefined
-                            }
-                            command={{
-                              command: "ptzload",
-                              args: [selectedCamera.toLowerCase(), name],
-                            }}
-                          >
-                            {preset.description}
-                          </Card>
-                        ))}
-
-                    {"multi" in selectedData && (
-                      <Card
-                        title={selectedData.multi.cameras.join(" + ")}
-                        image={
-                          selectedData.multi.image
-                            ? {
-                                src: selectedData.multi.image,
-                                alt:
-                                  selectedData.multi.description ??
-                                  selectedData.multi.cameras.join(" + "),
+                  <div className="scrollbar-none shrink grow overflow-y-auto">
+                    <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
+                      {"presets" in selectedData &&
+                        typeSafeObjectEntries(selectedData.presets)
+                          .filter(
+                            ([name, preset]) =>
+                              !searchPresetsSanitized.length ||
+                              name
+                                .toLowerCase()
+                                .includes(searchPresetsSanitized) ||
+                              preset.description
+                                .toLowerCase()
+                                .includes(searchPresetsSanitized),
+                          )
+                          .map(([name, preset]) => (
+                            <Card
+                              key={name}
+                              title={name}
+                              image={
+                                preset.image
+                                  ? {
+                                      src: preset.image,
+                                      alt: preset.description,
+                                    }
+                                  : undefined
                               }
-                            : undefined
-                        }
-                        className="col-span-2"
-                      >
-                        {selectedData.multi.description}
-                      </Card>
-                    )}
+                              command={{
+                                command: "ptzload",
+                                args: [selectedCamera.toLowerCase(), name],
+                              }}
+                            >
+                              {preset.description}
+                            </Card>
+                          ))}
+
+                      {"multi" in selectedData && (
+                        <Card
+                          title={selectedData.multi.cameras.join(" + ")}
+                          image={
+                            selectedData.multi.image
+                              ? {
+                                  src: selectedData.multi.image,
+                                  alt:
+                                    selectedData.multi.description ??
+                                    selectedData.multi.cameras.join(" + "),
+                                }
+                              : undefined
+                          }
+                          className="col-span-2"
+                        >
+                          {selectedData.multi.description}
+                        </Card>
+                      )}
+                    </div>
+
+                    <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
                   </div>
                 </Fragment>
               )}
             </div>
           </div>
         </Section>
-      </div>
 
-      {subscription.isSuccess && subscription.data && twitchEmbed && (
-        <Moveable
-          className="right-2 bottom-2 z-50 w-2xl rounded-xl shadow-xl"
-          fixed
-          store="presets:twitch-embed"
-        >
-          <Box className="p-0" dark>
-            <Twitch channel="alveussanctuary" />
-          </Box>
-        </Moveable>
-      )}
+        {sidebar && (
+          <div className="flex" ref={sidebarContainer}>
+            <div
+              className="group flex cursor-ew-resize items-center justify-center px-2 py-4 select-none"
+              onMouseDown={() => {
+                sidebarDrag.current = true;
+                window.document.documentElement.style.cursor = "ew-resize";
+                window.document.body.style.pointerEvents = "none";
+              }}
+            >
+              <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
+            </div>
+            <div
+              className="flex flex-col overflow-hidden rounded-l-xl bg-alveus-green-900"
+              style={{ width: twitchEmbed }}
+            >
+              <Twitch channel="alveussanctuary" />
+              <TwitchChat channel="alveusgg" dark />
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 };
