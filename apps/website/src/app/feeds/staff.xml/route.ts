@@ -2,6 +2,7 @@ import { env } from "@/env";
 
 import staff from "@/data/staff";
 
+import { parsePartialDateString } from "@/utils/datetime-partial";
 import { getRssFeedContent } from "@/utils/rss-feed";
 
 export async function GET() {
@@ -10,7 +11,7 @@ export async function GET() {
   const latestStaffJoinDate = new Date(
     Math.max(
       ...Object.values(staff)
-        .map((person) => person.joined?.getTime() ?? 0)
+        .map((person) => parsePartialDateString(person.joined).toMillis())
         .filter((time) => time > 0),
     ),
   );
@@ -22,7 +23,7 @@ export async function GET() {
       id: person.url,
       link: person.url,
       description: person.title,
-      date: person.joined,
+      date: parsePartialDateString(person.joined).toJSDate(),
     }));
 
   const staffFeedContent = getRssFeedContent({

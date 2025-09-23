@@ -1,19 +1,11 @@
-import Image, { type ImageProps } from "next/image";
-import { type ReactNode } from "react";
+import Image from "next/image";
+
+import type { Person } from "@/data/staff";
 
 import { classes } from "@/utils/classes";
-import type { PartialDateString } from "@/utils/datetime-partial";
 
 import Heading from "./Heading";
 import Link from "./Link";
-
-export interface Person {
-  image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
-  name: string;
-  title: string;
-  description: ReactNode;
-  joined: PartialDateString;
-}
 
 type PeopleProps = {
   people: Record<string, Person>;

@@ -1,5 +1,9 @@
+import { type ImageProps } from "next/image";
+import { type ReactNode } from "react";
+
+import { type PartialDateString } from "@/utils/datetime-partial";
+
 import { MayaText } from "@/components/content/Maya";
-import { type Person } from "@/components/content/People";
 
 import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
 import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
@@ -18,6 +22,14 @@ import mayaHigaImage from "@/assets/people/maya-higa.jpg";
 import spaceVoyageImage from "@/assets/people/space-voyage.png";
 import srutiJamalapuramFunImage from "@/assets/people/sruti-jamalapuram-fun.jpg";
 import srutiJamalapuramImage from "@/assets/people/sruti-jamalapuram.jpg";
+
+export interface Person {
+  image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
+  name: string;
+  title: string;
+  description: ReactNode;
+  joined: PartialDateString;
+}
 
 const staff: Record<string, Person> = {
   maya: {
