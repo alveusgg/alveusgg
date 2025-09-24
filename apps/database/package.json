@@ -28,7 +28,7 @@
     "@prisma/client": "^6.16.1"
   },
   "devDependencies": {
-    "@types/node": "^22.18.3",
+    "@types/node": "^22.18.6",
     "prisma": "^6.16.1"
   },
   "exports": {
