@@ -33,6 +33,7 @@ import {
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
+import Consent from "@/components/Consent";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -59,6 +60,9 @@ type Command = RouterInputs["stream"]["runCommand"];
 
 const sidebarClamp = (val: number) =>
   Math.min(Math.max(val, 400), window.innerWidth / 2);
+
+const sidebarDefault = () =>
+  typeof window !== "undefined" ? sidebarClamp(window.innerWidth / 3) : -1;
 
 const getPositionIcon = (position: number) => {
   const PositionIcon = ({ className }: { className?: string }) => (
@@ -249,9 +253,9 @@ const AboutTechPresetsPage: NextPage = () => {
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("presets:twitch-embed");
       const parsed = safeJSONParse(saved ?? "");
-      if (typeof parsed === "number") return parsed;
+      if (typeof parsed === "number") return sidebarClamp(parsed);
     }
-    return -1;
+    return sidebarDefault();
   });
 
   useEffect(() => {
@@ -488,9 +492,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     <Switch
                       checked={twitchEmbed !== -1}
                       onChange={(val) =>
-                        setTwitchEmbed(
-                          val ? sidebarClamp(window.innerWidth / 3) : -1,
-                        )
+                        setTwitchEmbed(val ? sidebarDefault() : -1)
                       }
                       className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                     >
@@ -737,11 +739,13 @@ const AboutTechPresetsPage: NextPage = () => {
               <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
             <div
-              className="flex flex-col overflow-hidden rounded-l-xl bg-alveus-green-900"
+              className="overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"
               style={{ width: twitchEmbed }}
             >
-              <Twitch channel="alveussanctuary" />
-              <TwitchChat channel="alveusgg" dark />
+              <Consent item="stream player" consent="twitch" className="h-full">
+                <Twitch channel="alveussanctuary" />
+                <TwitchChat channel="alveusgg" dark />
+              </Consent>
             </div>
           </div>
         )}
