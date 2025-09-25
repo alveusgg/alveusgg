@@ -45,7 +45,12 @@ type ActiveAmbassadorEntry = (typeof activeAmbassadors)[number];
 // Allow the user to sort/group by different options
 const sortByOptions = {
   all: {
-    label: "All Ambassadors",
+    label: (
+      <>
+        All Ambassadors
+        <small className="text-sm">{` (${activeAmbassadors.length.toLocaleString()})`}</small>
+      </>
+    ),
     sort: (ambassadors) => ambassadors,
   },
   classification: {
