@@ -162,11 +162,12 @@ const AmbassadorItems = ({
     {name && (
       <Heading
         level={2}
-        className="mt-16 mb-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
+        className="mt-16 mb-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between"
         id={`${option}:${group}`}
         link
       >
         {name}
+        <small className="text-lg font-medium">{` (${items.length.toLocaleString()})`}</small>
       </Heading>
     )}
     <div
