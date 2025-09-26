@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { type JSX, useCallback, useEffect, useMemo, useState } from "react";
 
 type ObjectKey<T> = Extract<keyof T, string>;
 
@@ -12,7 +12,7 @@ export type Items<T> = T[] | GroupedItems<T>;
 
 export interface Options<T> {
   [key: string]: {
-    label: string;
+    label: string | JSX.Element;
     sort: (items: T[]) => Items<T>;
   };
 }
