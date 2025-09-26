@@ -176,5 +176,13 @@ export const regularEventsWeekly = [
     },
   ],
   // Sunday
-  [],
+  [
+    {
+      title: "Mucking in the Morning",
+      description: "Join Chandler as he mucks out the pasture.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 11, minute: 0 },
+    },
+  ],
 ] as RegularEvent[][];
