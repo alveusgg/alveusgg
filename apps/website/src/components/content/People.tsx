@@ -1,17 +1,11 @@
-import Image, { type ImageProps } from "next/image";
-import { type ReactNode } from "react";
+import Image from "next/image";
+
+import type { Person } from "@/data/staff";
 
 import { classes } from "@/utils/classes";
 
 import Heading from "./Heading";
 import Link from "./Link";
-
-export interface Person {
-  image: ImageProps["src"] | [ImageProps["src"], ImageProps["src"]];
-  name: string;
-  title: string;
-  description: ReactNode;
-}
 
 type PeopleProps = {
   people: Record<string, Person>;
