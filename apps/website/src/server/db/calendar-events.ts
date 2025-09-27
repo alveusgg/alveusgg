@@ -193,8 +193,10 @@ async function syncExternalSchedule<ExternalEvent>(
   calendar: ExternalCalendar<ExternalEvent>,
 ) {
   // Get all the database events that we need to sync
+  // Look ahead to the end of the next month, ensuring we cover all regular events when they're generated
   const internalEvents = await getCalendarEvents({
     start: new Date(),
+    end: DateTime.now().plus({ months: 2 }).startOf("month").toJSDate(),
     hasTime: true,
   }).then((events) => new Set(events.filter(calendar.filter)));
 
