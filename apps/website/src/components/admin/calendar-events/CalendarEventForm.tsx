@@ -15,6 +15,7 @@ import {
   inputValueDatetimeLocalToUtc,
   utcToInputValueDatetimeLocal,
 } from "@/utils/datetime-local";
+import { getStringFromFormData } from "@/utils/forms";
 import { trpc } from "@/utils/trpc";
 
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -61,14 +62,11 @@ export function CalendarEventForm({
       const formData = new FormData(event.currentTarget);
 
       // Add https:// if not present
-      const link =
-        String(formData.get("link")).startsWith("http://") ||
-        String(formData.get("link")).startsWith("https://")
-          ? String(formData.get("link"))
-          : "https://" + String(formData.get("link"));
+      let link = getStringFromFormData(formData, "link");
+      if (!/^https?:\/\//i.test(link)) link = "https://" + link;
 
-      const startAtDate = formData.get("startAtDate");
-      const startAtTime = formData.get("startAtTime");
+      const startAtDate = getStringFromFormData(formData, "startAtDate");
+      const startAtTime = getStringFromFormData(formData, "startAtTime");
       const hasTime = startAtTime !== "";
       const startAt = inputValueDatetimeLocalToUtc(
         // If there is no time selected, default to noon (12 pm)
@@ -76,9 +74,9 @@ export function CalendarEventForm({
       );
 
       const mutationData: CalendarEventSchema = {
-        title: String(formData.get("title")).trim(),
-        category: String(formData.get("category")),
-        description: String(formData.get("description")).trim() || null,
+        title: getStringFromFormData(formData, "title"),
+        category: getStringFromFormData(formData, "category"),
+        description: getStringFromFormData(formData, "description") || null,
         link,
         startAt,
         hasTime,
