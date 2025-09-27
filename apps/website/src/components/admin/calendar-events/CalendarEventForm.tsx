@@ -76,9 +76,9 @@ export function CalendarEventForm({
       );
 
       const mutationData: CalendarEventSchema = {
-        title: String(formData.get("title")),
+        title: String(formData.get("title")).trim(),
         category: String(formData.get("category")),
-        description: String(formData.get("description")) || null,
+        description: String(formData.get("description")).trim() || null,
         link,
         startAt,
         hasTime,
