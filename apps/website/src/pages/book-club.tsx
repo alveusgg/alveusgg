@@ -28,6 +28,7 @@ import IconYouTube from "@/icons/IconYouTube";
 import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
+import onTheWing from "@/assets/book-club/books/on-the-wing.jpg";
 import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
 import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
@@ -61,6 +62,15 @@ type BookInfo = {
 };
 
 const books: BookInfo[] = [
+  {
+    title: "On the Wing",
+    author: "David E. Alexander",
+    image: onTheWing,
+    month: ["2025-10"],
+    link: "https://amzn.to/3KrRFVS",
+    thickness: thickness.xs, // 230 pages
+    color: "border-red-700",
+  },
   {
     title: "Why Sharks Matter",
     author: "David Shiffman",
