@@ -39,3 +39,13 @@ export function calcFormConfig(formConfig?: string) {
 
   return config;
 }
+
+export function getStringFromFormData(
+  formData: FormData,
+  key: string,
+  trim = true,
+) {
+  const value = formData.get(key);
+  if (typeof value !== "string") return "";
+  return trim ? value.trim() : value;
+}
