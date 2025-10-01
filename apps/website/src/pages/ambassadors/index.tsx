@@ -23,6 +23,7 @@ import { convertToSlug } from "@/utils/slugs";
 import { camelToKebab } from "@/utils/string-case";
 
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
+import useLocaleString from "@/hooks/locale";
 
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
@@ -157,36 +158,40 @@ const AmbassadorItems = ({
   group,
   name,
   ref,
-}: GroupedProps<ActiveAmbassadorEntry, HTMLDivElement>) => (
-  <>
-    {name && (
-      <Heading
-        level={2}
-        className="mt-16 mb-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between"
-        id={`${option}:${group}`}
-        link
-      >
-        {name}
-        <small className="text-lg font-medium">{` (${items.length.toLocaleString()})`}</small>
-      </Heading>
-    )}
-    <div
-      ref={ref}
-      className={classes(
-        "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
-        group && "xl:grid-cols-5",
+}: GroupedProps<ActiveAmbassadorEntry, HTMLDivElement>) => {
+  const count = useLocaleString(items.length);
+
+  return (
+    <>
+      {name && (
+        <Heading
+          level={2}
+          className="mt-16 mb-8 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between"
+          id={`${option}:${group}`}
+          link
+        >
+          {name}
+          <small className="text-lg font-medium">{` (${count})`}</small>
+        </Heading>
       )}
-    >
-      {items.map((ambassador) => (
-        <AmbassadorItem
-          key={ambassador[0]}
-          ambassador={ambassador}
-          level={group ? 3 : 2}
-        />
-      ))}
-    </div>
-  </>
-);
+      <div
+        ref={ref}
+        className={classes(
+          "grid gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4",
+          group && "xl:grid-cols-5",
+        )}
+      >
+        {items.map((ambassador) => (
+          <AmbassadorItem
+            key={ambassador[0]}
+            ambassador={ambassador}
+            level={group ? 3 : 2}
+          />
+        ))}
+      </div>
+    </>
+  );
+};
 
 const AmbassadorsPage: NextPage = () => {
   const { option, group, result, update, dropdown } = useGrouped({

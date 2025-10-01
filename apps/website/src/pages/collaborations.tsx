@@ -19,6 +19,7 @@ import { formatDateTime } from "@/utils/datetime";
 
 import useDragScroll from "@/hooks/drag";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
+import useLocaleString from "@/hooks/locale";
 
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
@@ -305,20 +306,22 @@ const CollaborationItems = ({
     if (hash in lightboxItems) setLightboxOpen(hash);
   }, [lightboxItems]);
 
+  const count = useLocaleString(items.length);
+
   return (
     <>
       {name && (
         <Heading
           level={-1}
-          className={
-            index === 0
-              ? "sr-only-linkable my-0"
-              : "mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800"
-          }
+          className={classes(
+            "mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between",
+            index === 0 ? "mt-0" : "mt-8",
+          )}
           id={`${option}:${group}`}
           link
         >
           {name}
+          <small className="text-lg font-medium">{` (${count})`}</small>
         </Heading>
       )}
 
