@@ -19,6 +19,7 @@ import { formatDateTime } from "@/utils/datetime";
 
 import useDragScroll from "@/hooks/drag";
 import useGrouped, { type GroupedItems, type Options } from "@/hooks/grouped";
+import useLocaleString from "@/hooks/locale";
 
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
@@ -305,6 +306,8 @@ const CollaborationItems = ({
     if (hash in lightboxItems) setLightboxOpen(hash);
   }, [lightboxItems]);
 
+  const count = useLocaleString(items.length);
+
   return (
     <>
       {name && (
@@ -318,7 +321,7 @@ const CollaborationItems = ({
           link
         >
           {name}
-          <small className="text-lg font-medium">{` (${items.length.toLocaleString()})`}</small>
+          <small className="text-lg font-medium">{` (${count})`}</small>
         </Heading>
       )}
 
