@@ -103,6 +103,56 @@ const Creators = ({ className }: { className?: string }) => {
     return () => window.removeEventListener("resize", onScroll);
   }, [onScroll]);
 
+  const [barDragging, setBarDragging] = useState(false);
+  const barStart = useRef(0);
+  const barRef = useRef<HTMLDivElement>(null);
+  const onBarMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLDivElement>) => {
+      if (bar.width === dots) return;
+      setBarDragging(true);
+      barStart.current = e.clientX;
+      document.body.style.cursor = "grabbing";
+    },
+    [bar.width, dots],
+  );
+  useEffect(() => {
+    if (!barDragging) return;
+
+    const onMouseMove = (e: MouseEvent) => {
+      const listElm = ref.current;
+      if (!listElm) return;
+
+      const barElm = barRef.current;
+      if (!barElm) return;
+
+      const barParent = barElm.parentElement;
+      if (!barParent) return;
+
+      // Move the list proportionally to how far the bar moved in its container
+      const barDistance = e.clientX - barStart.current;
+      const barWidth = barParent.scrollWidth;
+      const barPercentage = barDistance / barWidth;
+      const listWidth = listElm.scrollWidth;
+      const listDistance = listWidth * barPercentage;
+
+      listElm.scrollBy({ left: listDistance });
+      barStart.current = e.clientX;
+    };
+
+    const onMouseUp = () => {
+      setBarDragging(false);
+      document.body.style.cursor = "";
+    };
+
+    window.addEventListener("mousemove", onMouseMove);
+    window.addEventListener("mouseup", onMouseUp);
+
+    return () => {
+      window.removeEventListener("mousemove", onMouseMove);
+      window.removeEventListener("mouseup", onMouseUp);
+    };
+  }, [barDragging]);
+
   return (
     <div className={classes("flex justify-center", className)}>
       <div className="relative isolate max-w-full">
@@ -181,11 +231,21 @@ const Creators = ({ className }: { className?: string }) => {
             ))}
 
             <div
-              className="pointer-events-none absolute inset-y-0 z-10 m-1 h-3 rounded-full bg-alveus-green-900 shadow-xs transition-[left]"
+              className={classes(
+                "absolute inset-y-0 z-10 m-1 h-3 rounded-full shadow-xs",
+                bar.width === dots
+                  ? "pointer-events-none"
+                  : "cursor-grab select-none hover:bg-alveus-green-800",
+                barDragging
+                  ? "bg-alveus-green-800 transition-[background]"
+                  : "bg-alveus-green-900 transition-[background,left]",
+              )}
               style={{
                 left: `calc((0.75rem * ${bar.start}) + (0.5rem * ${bar.start}))`,
                 width: `calc((0.75rem * ${bar.width}) + (0.5rem * (${bar.width} - 1)))`,
               }}
+              ref={barRef}
+              onMouseDown={onBarMouseDown}
             />
           </div>
         </div>
