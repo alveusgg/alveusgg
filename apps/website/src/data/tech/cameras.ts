@@ -18,6 +18,7 @@ import chin2 from "../presets/chin2";
 import chin3 from "../presets/chin3";
 import crowin from "../presets/crowin";
 import crowout from "../presets/crowout";
+import emu from "../presets/emu";
 import fox from "../presets/fox";
 import foxcorner from "../presets/foxcorner";
 import garden from "../presets/garden";
@@ -93,6 +94,7 @@ const cameras = {
       description: "Crow outdoor camera with crow indoor picture-in-picture",
     },
   },
+  emu,
   fox,
   foxcorner,
   foxmulti: {
