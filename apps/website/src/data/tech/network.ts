@@ -649,6 +649,13 @@ const data: RootNetworkItem[] = [
                           },
                         ],
                       },
+                      {
+                        type: "camera",
+                        name: "Emu",
+                        model: "AXIS P5676-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-p5676-le",
+                        connection: { type: "ethernet", location: "buried" },
+                      },
                     ],
                   },
                   {
