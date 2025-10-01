@@ -310,11 +310,10 @@ const CollaborationItems = ({
       {name && (
         <Heading
           level={-1}
-          className={
-            index === 0
-              ? "sr-only-linkable my-0"
-              : "mt-8 mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between"
-          }
+          className={classes(
+            "mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between",
+            index === 0 ? "mt-0" : "mt-8",
+          )}
           id={`${option}:${group}`}
           link
         >
