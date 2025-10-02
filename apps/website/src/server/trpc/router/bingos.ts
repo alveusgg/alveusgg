@@ -1,8 +1,6 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { prisma } from "@alveusgg/database";
-
 import {
   createEntry,
   findActiveBingo,
@@ -76,7 +74,7 @@ export const bingosRouter = router({
     )
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const bingo = await findActiveBingo(prisma, input.bingoId);
+      const bingo = await findActiveBingo(input.bingoId);
       if (!bingo) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Bingo not found" });
       }
@@ -115,7 +113,7 @@ export const bingosRouter = router({
     )
     .query(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      const bingo = await findActiveBingo(prisma, input.bingoId);
+      const bingo = await findActiveBingo(input.bingoId);
       if (!bingo) {
         throw new TRPCError({ code: "NOT_FOUND", message: "Bingo not found" });
       }
