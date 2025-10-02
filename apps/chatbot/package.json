@@ -20,7 +20,7 @@
     "@twurple/chat": "^7.4.0",
     "@twurple/easy-bot": "^7.4.0",
     "read-pkg": "^9.0.1",
-    "tsx": "^4.20.5",
+    "tsx": "^4.20.6",
     "zod": "^4.1.11"
   },
   "devDependencies": {
