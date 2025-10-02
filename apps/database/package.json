@@ -24,7 +24,6 @@
     "format": "prisma format"
   },
   "dependencies": {
-    "@prisma/adapter-planetscale": "^6.16.3",
     "@prisma/client": "^6.16.3"
   },
   "devDependencies": {
