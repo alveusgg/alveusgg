@@ -147,12 +147,6 @@ export const regularEventsWeekly = [
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 10, minute: 30 },
     },
-    {
-      title: "WW New Episode",
-      description: "Watch the latest World's Wildest episode.",
-      category: "Maya YouTube Video",
-      link: "https://www.youtube.com/@worldswildestpodcast",
-    },
   ],
   // Friday
   [
