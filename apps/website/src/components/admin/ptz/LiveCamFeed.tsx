@@ -28,6 +28,24 @@ const LiveCamFeed = () => {
       const player = new WebRTCPlayer({
         type: "whep",
         video: video,
+        timeoutThreshold: 1000,
+        statsTypeFilter: "^inbound-rtp$",
+      });
+
+      player.on("stats:inbound-rtp", (report) => {
+        if (report.kind === "video") {
+          console.log(
+            `[LOLA] Stats ${report.frameWidth}x${report.frameHeight}@${report.framesPerSecond} (${report.lastPacketReceivedTimestamp - report.timestamp}ms)`,
+            report,
+          );
+        }
+      });
+
+      player.on("no-media", () => {
+        console.log("[LOLA] Media timeout occurred");
+      });
+      player.on("media-recovered", () => {
+        console.log("[LOLA] Media recovered");
       });
 
       player
