@@ -8,8 +8,10 @@ import heatlamp from "@/assets/presets/pushpopindoor/heatlamp.png";
 import home from "@/assets/presets/pushpopindoor/home.png";
 import left from "@/assets/presets/pushpopindoor/left.png";
 import leftcorner from "@/assets/presets/pushpopindoor/leftcorner.png";
+import nearcorner from "@/assets/presets/pushpopindoor/nearcorner.png";
 import right from "@/assets/presets/pushpopindoor/right.png";
 import rightcorner from "@/assets/presets/pushpopindoor/rightcorner.png";
+import rightcornerz from "@/assets/presets/pushpopindoor/rightcornerz.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -54,6 +56,10 @@ const pushpopindoorPresets: Record<string, Preset> = {
     description: "Left Corner",
     image: leftcorner,
   },
+  nearcorner: {
+    description: "Near Corner",
+    image: nearcorner,
+  },
   right: {
     description: "Right",
     image: right,
@@ -61,6 +67,10 @@ const pushpopindoorPresets: Record<string, Preset> = {
   rightcorner: {
     description: "Right Corner",
     image: rightcorner,
+  },
+  rightcornerz: {
+    description: "Right Corner Zoomed",
+    image: rightcornerz,
   },
 };
 

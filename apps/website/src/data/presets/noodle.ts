@@ -1,4 +1,5 @@
 import closebranch from "@/assets/presets/noodle/closebranch.png";
+import closebranchr from "@/assets/presets/noodle/closebranchr.png";
 import down from "@/assets/presets/noodle/down.png";
 import farbranches from "@/assets/presets/noodle/farbranches.png";
 import farrock from "@/assets/presets/noodle/farrock.png";
@@ -17,6 +18,10 @@ const noodlePresets: Record<string, Preset> = {
   closebranch: {
     description: "Close branch",
     image: closebranch,
+  },
+  closebranchr: {
+    description: "Close branch right",
+    image: closebranchr,
   },
   down: {
     description: "Down",

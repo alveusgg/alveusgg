@@ -1,5 +1,7 @@
 import crunchwide from "@/assets/presets/pushpop/crunchwide.png";
 import cubby from "@/assets/presets/pushpop/cubby.png";
+import cubbyl from "@/assets/presets/pushpop/cubbyl.png";
+import cubbyr from "@/assets/presets/pushpop/cubbyr.png";
 import down from "@/assets/presets/pushpop/down.png";
 import downcubby from "@/assets/presets/pushpop/downcubby.png";
 import downl from "@/assets/presets/pushpop/downl.png";
@@ -30,6 +32,14 @@ const pushpopPresets: Record<string, Preset> = {
   cubby: {
     description: "Cubby",
     image: cubby,
+  },
+  cubbyl: {
+    description: "Cubby Left",
+    image: cubbyl,
+  },
+  cubbyr: {
+    description: "Cubby Right",
+    image: cubbyr,
   },
   down: {
     description: "Down",
