@@ -7,6 +7,7 @@ export type TheGivingBlockConfig = {
   uiVersion: string;
   donationFlow: string;
   fundraiserId: string;
+  campaignId: string;
 };
 
 export const theGivingBlockConfig = {
@@ -16,6 +17,7 @@ export const theGivingBlockConfig = {
   buttonId: "tgb-widget-button",
   scriptId: "tgb-widget-script",
   uiVersion: "2",
-  donationFlow: "crypto,card,stock,daf",
+  donationFlow: "card,crypto,stock,daf",
   fundraiserId: "",
+  campaignId: "",
 } as const satisfies TheGivingBlockConfig;
