@@ -91,7 +91,21 @@ export const getStaticProps: GetStaticProps<{
 
     // Filter out any clips marked to be excluded
     const excluded = new Set(env.TWITCH_EXCLUDED_CLIPS);
-    const filtered = clips.filter((clip) => !excluded.has(clip.id));
+    const excludedTitlePhrases = [
+      "animal ambassador 24/7", // Exclude default title clips
+      "seizure",
+      "concern",
+      "for staff",
+      " nilla",
+    ];
+
+    const filtered = clips.filter(
+      (clip) =>
+        !excluded.has(clip.id) &&
+        !excludedTitlePhrases.some((phrase) =>
+          clip.title.toLowerCase().includes(phrase),
+        ),
+    );
     console.log(`Filtered ${clips.length - filtered.length} clips`);
 
     return {
