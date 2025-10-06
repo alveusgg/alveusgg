@@ -104,15 +104,6 @@ export const mainNavStructure: NavStructure = {
       },
     },
   },
-  more: {
-    title: "More",
-    dropdown: {
-      votersGuide: {
-        title: "Voters' Guide",
-        link: "/voters-guide",
-      },
-    },
-  },
   merch: {
     title: "Merch",
     dropdown: {
