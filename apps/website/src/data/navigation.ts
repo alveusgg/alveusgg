@@ -65,10 +65,6 @@ export const mainNavStructure: NavStructure = {
         title: "Found an Animal?",
         link: "/found-animal",
       },
-      events: {
-        title: "Fundraising Events",
-        link: "/events",
-      },
     },
   },
   about: {
@@ -93,6 +89,10 @@ export const mainNavStructure: NavStructure = {
       ngoCollabs: {
         title: "NGO Collaborations",
         link: "/about/orgs",
+      },
+      events: {
+        title: "Fundraising Events",
+        link: "/about/events",
       },
       annualReports: {
         title: "Annual Reports",
