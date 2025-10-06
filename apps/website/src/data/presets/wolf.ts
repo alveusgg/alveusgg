@@ -4,6 +4,7 @@ import belowplatform from "@/assets/presets/wolf/belowplatform.png";
 import bigrocks from "@/assets/presets/wolf/bigrocks.png";
 import center from "@/assets/presets/wolf/center.png";
 import den1 from "@/assets/presets/wolf/den1.png";
+import den1feed from "@/assets/presets/wolf/den1feed.png";
 import den1inside from "@/assets/presets/wolf/den1inside.png";
 import den1l from "@/assets/presets/wolf/den1l.png";
 import den1r from "@/assets/presets/wolf/den1r.png";
@@ -31,6 +32,7 @@ import left from "@/assets/presets/wolf/left.png";
 import leftcorner from "@/assets/presets/wolf/leftcorner.png";
 import log from "@/assets/presets/wolf/log.png";
 import neargrass from "@/assets/presets/wolf/neargrass.png";
+import neargrassr from "@/assets/presets/wolf/neargrassr.png";
 import pond from "@/assets/presets/wolf/pond.png";
 import pump from "@/assets/presets/wolf/pump.png";
 import right from "@/assets/presets/wolf/right.png";
@@ -79,6 +81,10 @@ const wolfPresets: Record<string, Preset> = {
   den1: {
     description: "Den 1",
     image: den1,
+  },
+  den1feed: {
+    description: "Den 1 feeding spot",
+    image: den1feed,
   },
   den1inside: {
     description: "Den 1 inside",
@@ -183,6 +189,10 @@ const wolfPresets: Record<string, Preset> = {
   neargrass: {
     description: "Near Grass",
     image: neargrass,
+  },
+  neargrassr: {
+    description: "Near Grass Right",
+    image: neargrassr,
   },
   pond: {
     description: "Pond",

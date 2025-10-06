@@ -10,6 +10,7 @@ import farleft from "@/assets/presets/wolfswitch/farleft.png";
 import farright from "@/assets/presets/wolfswitch/farright.png";
 import home from "@/assets/presets/wolfswitch/home.png";
 import insidedoor from "@/assets/presets/wolfswitch/insidedoor.png";
+import leftcorner from "@/assets/presets/wolfswitch/leftcorner.png";
 import middleleft from "@/assets/presets/wolfswitch/middleleft.png";
 import pond from "@/assets/presets/wolfswitch/pond.png";
 import water from "@/assets/presets/wolfswitch/water.png";
@@ -65,9 +66,9 @@ const wolfswitchPresets: Record<string, Preset> = {
     description: "Inside Door",
     image: insidedoor,
   },
-  left: {
-    description: "Left",
-    image: denl,
+  leftcorner: {
+    description: "Left Corner",
+    image: leftcorner,
   },
   middleleft: {
     description: "Middle Left",
