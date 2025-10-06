@@ -104,8 +104,8 @@ export const mainNavStructure: NavStructure = {
       },
     },
   },
-  merch: {
-    title: "Merch",
+  shop: {
+    title: "Shop",
     dropdown: {
       apparel: {
         title: "Apparel",
