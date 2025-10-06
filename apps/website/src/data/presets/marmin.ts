@@ -6,7 +6,9 @@ import bridger from "@/assets/presets/marmin/bridger.png";
 import center from "@/assets/presets/marmin/center.png";
 import cornershelf from "@/assets/presets/marmin/cornershelf.png";
 import domeleft from "@/assets/presets/marmin/domeleft.png";
+import domeleftshelf from "@/assets/presets/marmin/domeleftshelf.png";
 import domeright from "@/assets/presets/marmin/domeright.png";
+import domerighttop from "@/assets/presets/marmin/domerighttop.png";
 import down from "@/assets/presets/marmin/down.png";
 import flapl from "@/assets/presets/marmin/flapl.png";
 import flaps from "@/assets/presets/marmin/flaps.png";
@@ -64,9 +66,17 @@ const marminPresets: Record<string, Preset> = {
     description: "Dome Left",
     image: domeleft,
   },
+  domeleftshelf: {
+    description: "Dome Left Shelf",
+    image: domeleftshelf,
+  },
   domeright: {
     description: "Dome Right",
     image: domeright,
+  },
+  domerighttop: {
+    description: "Dome Right Top",
+    image: domerighttop,
   },
   down: {
     description: "Down",

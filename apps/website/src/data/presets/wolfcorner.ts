@@ -42,6 +42,7 @@ import rightfence from "@/assets/presets/wolfcorner/rightfence.png";
 import river from "@/assets/presets/wolfcorner/river.png";
 import switchpen from "@/assets/presets/wolfcorner/switchpen.png";
 import trees from "@/assets/presets/wolfcorner/trees.png";
+import treesl from "@/assets/presets/wolfcorner/treesl.png";
 import water from "@/assets/presets/wolfcorner/water.png";
 import wolfcam from "@/assets/presets/wolfcorner/wolfcam.png";
 
@@ -223,6 +224,10 @@ const wolfcornerPresets: Record<string, Preset> = {
   trees: {
     description: "Trees",
     image: trees,
+  },
+  treesl: {
+    description: "Trees left",
+    image: treesl,
   },
   water: {
     description: "Water",

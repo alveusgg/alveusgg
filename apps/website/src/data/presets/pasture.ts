@@ -2,6 +2,7 @@ import angel from "@/assets/presets/pasture/angel.png";
 import barn2 from "@/assets/presets/pasture/barn2.png";
 import barn2hay from "@/assets/presets/pasture/barn2hay.png";
 import barn2r from "@/assets/presets/pasture/barn2r.png";
+import barn2w from "@/assets/presets/pasture/barn2w.png";
 import barn2z from "@/assets/presets/pasture/barn2z.png";
 import barn from "@/assets/presets/pasture/barn.png";
 import barnfloor from "@/assets/presets/pasture/barnfloor.png";
@@ -20,6 +21,8 @@ import grove2 from "@/assets/presets/pasture/grove2.png";
 import grove2l from "@/assets/presets/pasture/grove2l.png";
 import grove2r from "@/assets/presets/pasture/grove2r.png";
 import grove from "@/assets/presets/pasture/grove.png";
+import grovefl from "@/assets/presets/pasture/grovefl.png";
+import grovel from "@/assets/presets/pasture/grovel.png";
 import home from "@/assets/presets/pasture/home.png";
 import insidebarn from "@/assets/presets/pasture/insidebarn.png";
 import middle from "@/assets/presets/pasture/middle.png";
@@ -68,6 +71,10 @@ const pasturePresets: Record<string, Preset> = {
   barn2r: {
     description: "Barn 2 right",
     image: barn2r,
+  },
+  barn2w: {
+    description: "Barn 2 wide",
+    image: barn2w,
   },
   barn2z: {
     description: "Barn 2 zoomed",
@@ -136,6 +143,14 @@ const pasturePresets: Record<string, Preset> = {
   grove2r: {
     description: "Grove 2 Right",
     image: grove2r,
+  },
+  grovefl: {
+    description: "Grove Front Left",
+    image: grovefl,
+  },
+  grovel: {
+    description: "Grove Left",
+    image: grovel,
   },
   insidebarn: {
     description: "Inside Barn",

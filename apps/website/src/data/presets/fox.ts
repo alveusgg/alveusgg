@@ -9,6 +9,7 @@ import center from "@/assets/presets/fox/center.png";
 import centerleft from "@/assets/presets/fox/centerleft.png";
 import den from "@/assets/presets/fox/den.png";
 import denf from "@/assets/presets/fox/denf.png";
+import denfl from "@/assets/presets/fox/denfl.png";
 import denl from "@/assets/presets/fox/denl.png";
 import denr from "@/assets/presets/fox/denr.png";
 import down from "@/assets/presets/fox/down.png";
@@ -18,6 +19,7 @@ import entry from "@/assets/presets/fox/entry.png";
 import home from "@/assets/presets/fox/home.png";
 import insidedoor from "@/assets/presets/fox/insidedoor.png";
 import left from "@/assets/presets/fox/left.png";
+import leftcorner from "@/assets/presets/fox/leftcorner.png";
 import leftfence from "@/assets/presets/fox/leftfence.png";
 import lefttraining from "@/assets/presets/fox/lefttraining.png";
 import platform from "@/assets/presets/fox/platform.png";
@@ -35,8 +37,10 @@ import shade from "@/assets/presets/fox/shade.png";
 import table from "@/assets/presets/fox/table.png";
 import treeclimb from "@/assets/presets/fox/treeclimb.png";
 import treehouse from "@/assets/presets/fox/treehouse.png";
+import treehousefl from "@/assets/presets/fox/treehousefl.png";
 import treehousel from "@/assets/presets/fox/treehousel.png";
 import treehouser from "@/assets/presets/fox/treehouser.png";
+import treer from "@/assets/presets/fox/treer.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -86,8 +90,12 @@ const foxPresets: Record<string, Preset> = {
     image: den,
   },
   denf: {
-    description: "Den Front",
+    description: "Den Far",
     image: denf,
+  },
+  denfl: {
+    description: "Den Far Left",
+    image: denfl,
   },
   denl: {
     description: "Den Left",
@@ -120,6 +128,10 @@ const foxPresets: Record<string, Preset> = {
   left: {
     description: "Left",
     image: left,
+  },
+  leftcorner: {
+    description: "Left Corner",
+    image: leftcorner,
   },
   leftfence: {
     description: "Left Fence",
@@ -189,6 +201,10 @@ const foxPresets: Record<string, Preset> = {
     description: "Tree House",
     image: treehouse,
   },
+  treehousefl: {
+    description: "Tree House Front Left",
+    image: treehousefl,
+  },
   treehousel: {
     description: "Tree House Left",
     image: treehousel,
@@ -196,6 +212,10 @@ const foxPresets: Record<string, Preset> = {
   treehouser: {
     description: "Tree House Right",
     image: treehouser,
+  },
+  treer: {
+    description: "Tree Right",
+    image: treer,
   },
 };
 
