@@ -41,6 +41,10 @@ export const mainNavStructure: NavStructure = {
         link: "/live",
         isExternal: true,
       },
+      updates: {
+        title: "Schedule & Updates",
+        link: "/updates",
+      },
       animalQuest: {
         title: "Animal Quest",
         link: "/animal-quest",
@@ -49,9 +53,17 @@ export const mainNavStructure: NavStructure = {
         title: "Collaborations",
         link: "/collaborations",
       },
-      updates: {
-        title: "Schedule & Updates",
-        link: "/updates",
+      showAndTell: {
+        title: "Show and Tell",
+        link: "/show-and-tell",
+      },
+      bookClub: {
+        title: "Alveus Book Club",
+        link: "/book-club",
+      },
+      foundAnimal: {
+        title: "Found an Animal?",
+        link: "/found-animal",
       },
       events: {
         title: "Fundraising Events",
@@ -95,18 +107,6 @@ export const mainNavStructure: NavStructure = {
   more: {
     title: "More",
     dropdown: {
-      showAndTell: {
-        title: "Show and Tell",
-        link: "/show-and-tell",
-      },
-      bookClub: {
-        title: "Alveus Book Club",
-        link: "/book-club",
-      },
-      foundAnimal: {
-        title: "Found an Animal?",
-        link: "/found-animal",
-      },
       votersGuide: {
         title: "Voters' Guide",
         link: "/voters-guide",
