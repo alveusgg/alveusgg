@@ -188,6 +188,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/events",
+      destination: "/about/events",
+      permanent: true,
+    },
+    {
       source: "/tech",
       destination: "/about/tech",
       permanent: true,
