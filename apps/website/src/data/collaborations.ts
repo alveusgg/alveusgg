@@ -43,6 +43,7 @@ import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
 import jinny from "@/assets/collaborations/jinny.png";
 import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
+import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lacari from "@/assets/collaborations/lacari.png";
@@ -89,6 +90,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Killdozer_tv",
+      link: "https://www.twitch.tv/killdozer_tv",
+      date: new Date("2025-09-25"),
+      videoId: "QzF5nRfrKBM",
+      creators: [
+        {
+          name: "Killdozer_tv",
+          image: killdozerTv,
+          popularity: 598_000, // YouTube subscribers, 2025-10-07
+        },
+      ],
+    },
     {
       name: "YourRAGE",
       link: "https://www.twitch.tv/yourragegaming",
