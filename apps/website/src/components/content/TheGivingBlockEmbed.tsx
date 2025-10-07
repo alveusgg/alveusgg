@@ -5,7 +5,10 @@ import {
   theGivingBlockConfig,
 } from "@/data/the-giving-block";
 
-const TheGivingBlockEmbed = (props: Partial<TheGivingBlockConfig>) => {
+const TheGivingBlockEmbed = ({
+  className,
+  ...props
+}: { className?: string } & Partial<TheGivingBlockConfig>) => {
   const id = useId();
   const ref = useRef<HTMLDivElement>(null);
 
@@ -38,7 +41,7 @@ const TheGivingBlockEmbed = (props: Partial<TheGivingBlockConfig>) => {
     };
   }, [props, id]);
 
-  return <div ref={ref} />;
+  return <div ref={ref} className={className} />;
 };
 
 export default TheGivingBlockEmbed;
