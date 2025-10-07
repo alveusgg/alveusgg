@@ -6,6 +6,8 @@ const TheGivingBlockEmbed = () => {
   const id = useId();
 
   useEffect(() => {
+    Reflect.deleteProperty(window, "widgetOptions");
+    Reflect.deleteProperty(window, "tgbWidgetOptions");
     window.tgbWidgetOptions = theGivingBlockConfig;
 
     const script = document.createElement("script");
