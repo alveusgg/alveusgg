@@ -41,6 +41,10 @@ export const mainNavStructure: NavStructure = {
         link: "/live",
         isExternal: true,
       },
+      updates: {
+        title: "Schedule & Updates",
+        link: "/updates",
+      },
       animalQuest: {
         title: "Animal Quest",
         link: "/animal-quest",
@@ -49,13 +53,17 @@ export const mainNavStructure: NavStructure = {
         title: "Collaborations",
         link: "/collaborations",
       },
-      updates: {
-        title: "Schedule & Updates",
-        link: "/updates",
+      showAndTell: {
+        title: "Show and Tell",
+        link: "/show-and-tell",
       },
-      events: {
-        title: "Fundraising Events",
-        link: "/events",
+      bookClub: {
+        title: "Alveus Book Club",
+        link: "/book-club",
+      },
+      foundAnimal: {
+        title: "Found an Animal?",
+        link: "/found-animal",
       },
     },
   },
@@ -82,6 +90,10 @@ export const mainNavStructure: NavStructure = {
         title: "NGO Collaborations",
         link: "/about/orgs",
       },
+      events: {
+        title: "Fundraising Events",
+        link: "/about/events",
+      },
       annualReports: {
         title: "Annual Reports",
         link: "/about/annual-reports",
@@ -92,29 +104,8 @@ export const mainNavStructure: NavStructure = {
       },
     },
   },
-  more: {
-    title: "More",
-    dropdown: {
-      showAndTell: {
-        title: "Show and Tell",
-        link: "/show-and-tell",
-      },
-      bookClub: {
-        title: "Alveus Book Club",
-        link: "/book-club",
-      },
-      foundAnimal: {
-        title: "Found an Animal?",
-        link: "/found-animal",
-      },
-      votersGuide: {
-        title: "Voters' Guide",
-        link: "/voters-guide",
-      },
-    },
-  },
-  merch: {
-    title: "Merch",
+  shop: {
+    title: "Shop",
     dropdown: {
       apparel: {
         title: "Apparel",
