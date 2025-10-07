@@ -163,7 +163,7 @@ export function DesktopMenu() {
           {Object.entries(mainNavStructure).map(([key, link]) => (
             <li key={key}>
               {"link" in link ? (
-                <NavLink href={link.link} isExternal={link.isExternal}>
+                <NavLink href={link.link} external={link.external}>
                   {link.title}
                 </NavLink>
               ) : (
@@ -191,7 +191,7 @@ export function DesktopMenu() {
                         {({ close }) => (
                           <NavLinkSub
                             href={link.link}
-                            isExternal={link.isExternal}
+                            external={link.external}
                             className="w-full min-w-max outline-blue-500 group-data-focus/item:not-hover:outline-2"
                             onClick={close}
                           >

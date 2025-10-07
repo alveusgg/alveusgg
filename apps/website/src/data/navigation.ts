@@ -10,7 +10,7 @@ import IconAmazon from "@/icons/IconAmazon";
 export type NavStructureLink = {
   title: string;
   link: string;
-  isExternal?: boolean;
+  external?: boolean;
 };
 
 export type NavStructureDropdown = {
@@ -39,7 +39,7 @@ export const mainNavStructure: NavStructure = {
       live: {
         title: "Live Cams",
         link: "/live",
-        isExternal: true,
+        external: true,
       },
       updates: {
         title: "Schedule & Updates",
@@ -110,12 +110,12 @@ export const mainNavStructure: NavStructure = {
       apparel: {
         title: "Apparel",
         link: "/apparel",
-        isExternal: true,
+        external: true,
       },
       plushies: {
         title: "Plushies",
         link: "/plushies",
-        isExternal: true,
+        external: true,
       },
     },
   },

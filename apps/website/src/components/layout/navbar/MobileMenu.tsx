@@ -28,7 +28,7 @@ export function MobileMenu() {
                 <DisclosureButton
                   as={NavLinkSub}
                   href={link.link}
-                  isExternal={link.isExternal}
+                  external={link.external}
                   className="w-full"
                 >
                   {link.title}
@@ -42,7 +42,7 @@ export function MobileMenu() {
                         <DisclosureButton
                           as={NavLinkSub}
                           href={link.link}
-                          isExternal={link.isExternal}
+                          external={link.external}
                           className="w-full"
                         >
                           {link.title}

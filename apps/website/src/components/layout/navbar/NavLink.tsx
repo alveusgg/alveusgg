@@ -13,7 +13,7 @@ type NavLinkProps = Omit<
   LinkProps & {
     children?: ReactNode;
     variant?: "main" | "sub";
-    isExternal?: boolean;
+    external?: boolean;
     ref?: Ref<HTMLAnchorElement>;
   };
 
@@ -26,7 +26,7 @@ export const navLinkClassesSubActive = "bg-alveus-tan/10";
 export const NavLink = ({
   href,
   variant = "main",
-  isExternal = false,
+  external = false,
   className,
   ref,
   ...props
@@ -47,7 +47,7 @@ export const NavLink = ({
         // custom classes
         className,
       )}
-      {...(isExternal
+      {...(external
         ? {
             target: "_blank",
             rel: "noreferrer",
