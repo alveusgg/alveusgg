@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 import { mainNavStructure } from "@/data/navigation";
 
-const useIsActivePath = (href: LinkProps["href"], exact = false) => {
+export const useActivePath = (href: LinkProps["href"], exact = false) => {
   const router = useRouter();
 
   const url = typeof href === "string" ? href : href.href;
@@ -17,8 +17,6 @@ const useIsActivePath = (href: LinkProps["href"], exact = false) => {
 
   return currentRoute.startsWith(url.replace(/\/?$/, "/"));
 };
-
-export default useIsActivePath;
 
 const flatNavStructure = Object.values(mainNavStructure)
   .flatMap((item) => ("dropdown" in item ? Object.values(item.dropdown) : item))

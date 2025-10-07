@@ -4,7 +4,7 @@ import { type AnchorHTMLAttributes, type ReactNode, type Ref } from "react";
 
 import { classes } from "@/utils/classes";
 
-import useIsActivePath from "@/hooks/active";
+import { useActivePath } from "@/hooks/active";
 
 type NavLinkProps = Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
@@ -31,7 +31,7 @@ export const NavLink = ({
   ref,
   ...props
 }: NavLinkProps) => {
-  const isActive = useIsActivePath(href);
+  const isActive = useActivePath(href);
 
   return (
     <Link

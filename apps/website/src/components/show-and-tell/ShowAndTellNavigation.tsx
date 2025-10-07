@@ -1,4 +1,4 @@
-import useIsActivePath from "@/hooks/active";
+import { useActivePath } from "@/hooks/active";
 
 import Button from "@/components/content/Button";
 
@@ -8,21 +8,21 @@ export function ShowAndTellNavigation() {
       <Button
         href="/show-and-tell"
         dark
-        filled={useIsActivePath("/show-and-tell", true)}
+        filled={useActivePath("/show-and-tell", true)}
       >
         All Posts
       </Button>
       <Button
         href="/show-and-tell/my-posts"
         dark
-        filled={useIsActivePath("/show-and-tell/my-posts")}
+        filled={useActivePath("/show-and-tell/my-posts")}
       >
         My Posts
       </Button>
       <Button
         href="/show-and-tell/submit-post"
         dark
-        filled={useIsActivePath("/show-and-tell/submit-post")}
+        filled={useActivePath("/show-and-tell/submit-post")}
       >
         Submit Post
       </Button>
