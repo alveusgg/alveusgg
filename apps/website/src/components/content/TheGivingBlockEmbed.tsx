@@ -18,7 +18,9 @@ const TheGivingBlockEmbed = () => {
     script.src = `https://widget.thegivingblock.com/widget/script.js#${id}`;
     document.body.appendChild(script);
 
-    return () => script.remove();
+    return () => {
+      script.parentNode?.removeChild(script);
+    };
   }, [id]);
 
   return <div id={`tgb-widget-${id}`} />;
