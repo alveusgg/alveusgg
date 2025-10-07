@@ -1,12 +1,13 @@
 import { DateTime } from "luxon";
 import { useMemo } from "react";
 
-import { classes } from "@/utils/classes";
 import type { PartialDateString } from "@/utils/datetime-partial";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { trpc } from "@/utils/trpc";
 
 import useLocaleString from "@/hooks/locale";
+
+import Progress from "../content/Progress";
 
 export type DateString = PartialDateString & `${number}-${number}-${number}`;
 
@@ -73,9 +74,6 @@ const GiveAnHourProgressText = ({
   );
 };
 
-const barClasses =
-  "absolute inset-y-0 left-0 min-w-10 rounded-full border-4 border-alveus-green-900 transition-all duration-[2s] ease-in-out";
-
 export const GiveAnHourProgress = ({
   target,
   start,
@@ -129,21 +127,7 @@ export const GiveAnHourProgress = ({
         />
       )}
 
-      <div className="relative my-1 h-10 w-full rounded-full bg-alveus-green-900 shadow-lg">
-        <div
-          className={classes(barClasses, "bg-alveus-green")}
-          style={{ width: `${progress}%` }}
-        />
-
-        <div
-          className={classes(
-            barClasses,
-            "bg-alveus-tan bg-gradient-to-r from-blue-800 to-green-600",
-            hours === 0 ? "opacity-0" : "animate-pulse-slow",
-          )}
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      <Progress progress={progress} />
 
       {text === "after" && (
         <GiveAnHourProgressText
