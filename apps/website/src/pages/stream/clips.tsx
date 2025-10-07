@@ -90,25 +90,29 @@ export const getStaticProps: GetStaticProps<{
     console.log(`Fetched ${clips.length} clips`);
 
     // Filter out any clips marked to be excluded
-    const excluded = new Set(env.TWITCH_EXCLUDED_CLIPS);
-    const excludedTitlePatterns = [
-      /animal ambassador 24\/7/i, // Exclude default title clips
-      /^.$/i, // Exclude single character titles
-      /seizure/i,
-      /for staff/i,
-      /\bnilla/i, // Exclude anything with "nilla" in the title
-      /\blimp/i, // Exclude anything with "limp" in the title
-      /puke/i,
-      /vomit/i,
-      /frew up/i,
-      /throw up/i,
-      /throwing up/i,
+    const excludedClips = new Set(env.TWITCH_EXCLUDED_CLIPS);
+    const excludedPhrases = [
+      "animal ambassador 24/7",
+      "seizure",
+      "for staff",
+      "nilla",
+      "limp",
+      "puke",
+      "vomit",
+      "frew up",
+      "throw up",
+      "throwing up",
     ];
+    const excludedTitle = new RegExp(
+      `\\b(${excludedPhrases.join("|")})\\b`,
+      "i",
+    );
 
     const filtered = clips.filter(
       (clip) =>
-        !excluded.has(clip.id) &&
-        !excludedTitlePatterns.some((regex) => regex.test(clip.title)),
+        !excludedClips.has(clip.id) &&
+        clip.title.length > 1 &&
+        !excludedTitle.test(clip.title),
     );
     console.log(`Filtered ${clips.length - filtered.length} clips`);
 
