@@ -7,7 +7,7 @@ import {
 
 import { classes } from "@/utils/classes";
 
-import useIsActivePath from "@/hooks/active";
+import { useActivePath } from "@/hooks/active";
 
 import { type DefaultPageLayoutProps } from "@/components/DefaultPageLayout";
 
@@ -28,7 +28,7 @@ type NavLinkProps = Omit<
     children?: ReactNode;
   } & RefAttributes<HTMLAnchorElement>;
 const NavLink = (props: NavLinkProps) => {
-  const isActive = useIsActivePath(props.href);
+  const isActive = useActivePath(props.href);
 
   return (
     <Link

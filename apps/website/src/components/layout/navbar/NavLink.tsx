@@ -4,8 +4,6 @@ import { type AnchorHTMLAttributes, type ReactNode, type Ref } from "react";
 
 import { classes } from "@/utils/classes";
 
-import useIsActivePath from "@/hooks/active";
-
 type NavLinkProps = Omit<
   AnchorHTMLAttributes<HTMLAnchorElement>,
   keyof LinkProps
@@ -13,7 +11,8 @@ type NavLinkProps = Omit<
   LinkProps & {
     children?: ReactNode;
     variant?: "main" | "sub";
-    isExternal?: boolean;
+    active?: boolean;
+    external?: boolean;
     ref?: Ref<HTMLAnchorElement>;
   };
 
@@ -26,38 +25,35 @@ export const navLinkClassesSubActive = "bg-alveus-tan/10";
 export const NavLink = ({
   href,
   variant = "main",
-  isExternal = false,
+  active = false,
+  external = false,
   className,
   ref,
   ...props
-}: NavLinkProps) => {
-  const isActive = useIsActivePath(href);
-
-  return (
-    <Link
-      href={href}
-      className={classes(
-        // base classes
-        variant === "main" ? navLinkClassesMain : navLinkClassesSub,
-        // active classes
-        isActive &&
-          (variant === "main"
-            ? navLinkClassesMainActive
-            : navLinkClassesSubActive),
-        // custom classes
-        className,
-      )}
-      {...(isExternal
-        ? {
-            target: "_blank",
-            rel: "noreferrer",
-          }
-        : {})}
-      {...props}
-      ref={ref}
-    />
-  );
-};
+}: NavLinkProps) => (
+  <Link
+    href={href}
+    className={classes(
+      // base classes
+      variant === "main" ? navLinkClassesMain : navLinkClassesSub,
+      // active classes
+      active &&
+        (variant === "main"
+          ? navLinkClassesMainActive
+          : navLinkClassesSubActive),
+      // custom classes
+      className,
+    )}
+    {...(external
+      ? {
+          target: "_blank",
+          rel: "noreferrer",
+        }
+      : {})}
+    {...props}
+    ref={ref}
+  />
+);
 
 export const NavLinkSub = (props: NavLinkProps) => (
   <NavLink variant="sub" {...props} />
