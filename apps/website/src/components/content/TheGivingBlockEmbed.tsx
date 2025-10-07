@@ -39,7 +39,8 @@ const TheGivingBlockEmbed = ({
     return () => {
       div.innerHTML = "";
     };
-  }, [props, id]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, JSON.stringify(props)]);
 
   return <div ref={ref} className={className} />;
 };
