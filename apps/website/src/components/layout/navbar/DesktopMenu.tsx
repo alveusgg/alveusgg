@@ -31,6 +31,9 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 import IconChevronDown from "@/icons/IconChevronDown";
 import IconSignIn from "@/icons/IconSignIn";
 
+const utilityLinkClasses =
+  "block rounded-xl bg-transparent p-2 text-white transition-colors hover:bg-white hover:text-alveus-green";
+
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
     transition
@@ -73,7 +76,7 @@ export function DesktopMenu() {
             <li key={key}>
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
               <a
-                className="block rounded-xl bg-transparent p-2 text-white transition-colors hover:bg-white hover:text-alveus-green"
+                className={utilityLinkClasses}
                 target="_blank"
                 rel={link.rel}
                 href={link.link}
@@ -88,7 +91,7 @@ export function DesktopMenu() {
 
         <div className="h-6 border-r"></div>
 
-        <NotificationsButton className="rounded-lg p-2 hover:bg-white hover:text-alveus-green" />
+        <NotificationsButton className={utilityLinkClasses} />
 
         <div className="h-6 border-r"></div>
 
@@ -143,13 +146,13 @@ export function DesktopMenu() {
             </Menu>
           ) : (
             <button
-              className={navLinkClassesSub}
+              className={utilityLinkClasses}
               type="button"
               onClick={() => signIn("twitch")}
               title="Sign in"
             >
               <span className="sr-only">Sign in</span>
-              <IconSignIn size={20} />
+              <IconSignIn size={20} className="m-0.5" />
             </button>
           )}
         </div>
