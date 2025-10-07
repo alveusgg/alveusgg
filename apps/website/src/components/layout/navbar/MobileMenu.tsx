@@ -5,12 +5,15 @@ import { Fragment } from "react";
 import { mainNavStructure } from "@/data/navigation";
 import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
+import { useActiveNav } from "@/hooks/active";
+
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 
 import { NavLinkSub, navLinkClassesSub } from "./NavLink";
 
 export function MobileMenu() {
   const { data: sessionData } = useSession();
+  const active = useActiveNav();
 
   const user = sessionData?.user;
   const showAdminLink =
@@ -28,6 +31,7 @@ export function MobileMenu() {
                 <DisclosureButton
                   as={NavLinkSub}
                   href={link.link}
+                  active={active === link.link}
                   external={link.external}
                   className="w-full"
                 >
@@ -42,6 +46,7 @@ export function MobileMenu() {
                         <DisclosureButton
                           as={NavLinkSub}
                           href={link.link}
+                          active={active === link.link}
                           external={link.external}
                           className="w-full"
                         >

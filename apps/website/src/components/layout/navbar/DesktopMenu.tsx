@@ -14,6 +14,8 @@ import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
 
+import { useActiveNav } from "@/hooks/active";
+
 import {
   NavLink,
   NavLinkSub,
@@ -55,6 +57,7 @@ const DropdownMenuItem = ({
 
 export function DesktopMenu() {
   const { data: sessionData } = useSession();
+  const active = useActiveNav();
 
   const user = sessionData?.user;
   const showAdminLink =
@@ -163,7 +166,11 @@ export function DesktopMenu() {
           {Object.entries(mainNavStructure).map(([key, link]) => (
             <li key={key}>
               {"link" in link ? (
-                <NavLink href={link.link} external={link.external}>
+                <NavLink
+                  href={link.link}
+                  active={active === link.link}
+                  external={link.external}
+                >
                   {link.title}
                 </NavLink>
               ) : (
@@ -191,6 +198,7 @@ export function DesktopMenu() {
                         {({ close }) => (
                           <NavLinkSub
                             href={link.link}
+                            active={active === link.link}
                             external={link.external}
                             className="w-full min-w-max outline-blue-500 group-data-focus/item:not-hover:outline-2"
                             onClick={close}
