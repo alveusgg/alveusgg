@@ -153,7 +153,7 @@ const DonatePage: NextPage = () => {
           {!consent.givingBlock && <DonateItem link={givingBlock} />}
 
           <Consent item="donation widget" consent="givingBlock">
-            <TheGivingBlockEmbed />
+            <TheGivingBlockEmbed className="flex w-full justify-center" />
           </Consent>
         </div>
 
