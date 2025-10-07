@@ -1,29 +1,44 @@
-import { useEffect, useId } from "react";
+import { useEffect, useId, useRef } from "react";
 
-import { theGivingBlockConfig } from "@/data/the-giving-block";
+import {
+  type TheGivingBlockConfig,
+  theGivingBlockConfig,
+} from "@/data/the-giving-block";
 
-const TheGivingBlockEmbed = () => {
+const TheGivingBlockEmbed = (props: Partial<TheGivingBlockConfig>) => {
   const id = useId();
+  const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const div = ref.current;
+    if (!div) return;
+
+    // Create a new injection target for the widget
+    const target = document.createElement("div");
+    target.id = `tgb-widget-${id}`;
+    div.appendChild(target);
+
+    // Set global options for the widget
     Reflect.deleteProperty(window, "widgetOptions");
     Reflect.deleteProperty(window, "tgbWidgetOptions");
     window.tgbWidgetOptions = {
       ...theGivingBlockConfig,
+      ...props,
       scriptId: `tgb-widget-${id}`,
     };
 
+    // Inject the script to load the widget
     const script = document.createElement("script");
     script.async = true;
     script.src = `https://widget.thegivingblock.com/widget/script.js#${id}`;
-    document.body.appendChild(script);
+    div.appendChild(script);
 
     return () => {
-      script.parentNode?.removeChild(script);
+      div.innerHTML = "";
     };
-  }, [id]);
+  }, [props, id]);
 
-  return <div id={`tgb-widget-${id}`} />;
+  return <div ref={ref} />;
 };
 
 export default TheGivingBlockEmbed;
