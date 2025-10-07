@@ -1,22 +1,22 @@
-import Script from "next/script";
-import { useEffect } from "react";
+import { useEffect, useId } from "react";
 
 import { theGivingBlockConfig } from "@/data/the-giving-block";
 
 const TheGivingBlockEmbed = () => {
+  const id = useId();
+
   useEffect(() => {
     window.tgbWidgetOptions = theGivingBlockConfig;
-  }, []);
 
-  return (
-    <>
-      <div id="tgb-widget-script"></div>
-      <Script
-        src="https://widget.thegivingblock.com/widget/script.js"
-        async={true}
-      ></Script>
-    </>
-  );
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://widget.thegivingblock.com/widget/script.js#${id}`;
+    document.body.appendChild(script);
+
+    return () => script.remove();
+  }, [id]);
+
+  return <div id="tgb-widget-script" />;
 };
 
 export default TheGivingBlockEmbed;
