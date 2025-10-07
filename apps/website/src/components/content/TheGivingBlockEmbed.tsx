@@ -8,7 +8,10 @@ const TheGivingBlockEmbed = () => {
   useEffect(() => {
     Reflect.deleteProperty(window, "widgetOptions");
     Reflect.deleteProperty(window, "tgbWidgetOptions");
-    window.tgbWidgetOptions = theGivingBlockConfig;
+    window.tgbWidgetOptions = {
+      ...theGivingBlockConfig,
+      scriptId: `tgb-widget-${id}`,
+    };
 
     const script = document.createElement("script");
     script.async = true;
@@ -18,7 +21,7 @@ const TheGivingBlockEmbed = () => {
     return () => script.remove();
   }, [id]);
 
-  return <div id="tgb-widget-script" />;
+  return <div id={`tgb-widget-${id}`} />;
 };
 
 export default TheGivingBlockEmbed;

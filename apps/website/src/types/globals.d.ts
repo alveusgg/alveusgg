@@ -7,6 +7,6 @@ declare global {
     Twitch: any;
 
     // The Giving Block Donation Widget
-    tgbWidgetOptions: TheGivingBlockConfig;
+    tgbWidgetOptions: TheGivingBlockConfig & { scriptId: string };
   }
 }
