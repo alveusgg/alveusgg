@@ -99,7 +99,7 @@
     "@types/country-list": "^2.1.4",
     "@types/eslint-config-prettier": "^6.11.3",
     "@types/eslint-plugin-tailwindcss": "^3.17.0",
-    "@types/jsdom": "^21.1.7",
+    "@types/jsdom": "^27.0.0",
     "@types/linkify-it": "^5.0.0",
     "@types/lodash": "^4.17.20",
     "@types/luxon": "^3.7.1",
