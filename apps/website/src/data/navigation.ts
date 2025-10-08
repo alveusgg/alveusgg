@@ -33,6 +33,19 @@ export const mainNavStructure: NavStructure = {
     title: "Ambassadors",
     link: "/ambassadors",
   },
+  institute: {
+    title: "Institute",
+    dropdown: {
+      institute: {
+        title: "Research & Recovery",
+        link: "/institute",
+      },
+      pixels: {
+        title: "Pixels Campaign",
+        link: "/institute/pixels",
+      },
+    },
+  },
   explore: {
     title: "Explore",
     dropdown: {

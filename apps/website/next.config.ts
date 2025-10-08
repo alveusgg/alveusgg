@@ -242,6 +242,26 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/research",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/recovery",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/wolf",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/pixel(s)?",
+      destination: "/institute/pixels",
+      permanent: true,
+    },
+    {
       source: "/aq/:path*",
       destination: "/animal-quest/:path*",
       permanent: false,
