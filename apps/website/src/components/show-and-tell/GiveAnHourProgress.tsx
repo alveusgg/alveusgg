@@ -127,7 +127,7 @@ export const GiveAnHourProgress = ({
         />
       )}
 
-      <Progress progress={progress} />
+      <Progress progress={progress} dark />
 
       {text === "after" && (
         <GiveAnHourProgressText
