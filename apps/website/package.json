@@ -52,7 +52,7 @@
     "@trpc/server": "^11.6.0",
     "@twurple/chat": "^7.4.0",
     "@vercel/analytics": "^1.5.0",
-    "@vercel/functions": "^3.1.0",
+    "@vercel/functions": "^3.1.1",
     "@xyflow/react": "^12.8.6",
     "country-list": "^2.4.1",
     "csv-stringify": "^6.6.0",
