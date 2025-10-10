@@ -3,11 +3,13 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
+import { useConsent } from "@/hooks/consent";
 import type { StoredPixel } from "@/hooks/pixels";
 
 import Consent from "@/components/Consent";
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
+import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
@@ -24,6 +26,8 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import usfwsRedWolfWalkingImage from "@/assets/institute/usfws-red-wolf-walking.jpg";
 
 const InstitutePixelsPage: NextPage = () => {
+  const { consent } = useConsent();
+
   const [search, setSearch] = useState("");
 
   const filter = useMemo(() => {
@@ -161,12 +165,17 @@ const InstitutePixelsPage: NextPage = () => {
           </Box>
         </div>
 
-        <Consent item="donation widget" consent="givingBlock">
-          <TheGivingBlockEmbed
-            campaignId="Wolf"
-            className="flex w-full justify-center"
-          />
-        </Consent>
+        <div className="flex flex-col gap-8">
+          <Donate type="twitch" />
+          {!consent.givingBlock && <Donate type="givingBlock" />}
+
+          <Consent item="donation widget" consent="givingBlock">
+            <TheGivingBlockEmbed
+              campaignId="Wolf"
+              className="flex w-full justify-center"
+            />
+          </Consent>
+        </div>
       </Section>
     </>
   );
