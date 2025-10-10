@@ -1,7 +1,8 @@
 import { Input } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
 
 import { useConsent } from "@/hooks/consent";
 import type { StoredPixel } from "@/hooks/pixels";
@@ -27,8 +28,19 @@ import usfwsRedWolfWalkingImage from "@/assets/institute/usfws-red-wolf-walking.
 
 const InstitutePixelsPage: NextPage = () => {
   const { consent } = useConsent();
+  const { query, replace, isReady } = useRouter();
 
-  const [search, setSearch] = useState("");
+  const search = typeof query.s === "string" ? query.s : "";
+  const setSearch = (value: string) => {
+    if (!isReady) return;
+
+    const { s: _, ...updated } = query;
+    if (value.length) {
+      updated.s = value;
+    }
+
+    replace({ query: updated }, undefined, { shallow: true });
+  };
 
   const filter = useMemo(() => {
     const normalized = search.trim().toLowerCase();
