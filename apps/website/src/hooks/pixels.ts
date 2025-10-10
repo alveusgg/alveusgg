@@ -7,6 +7,7 @@ export const PIXEL_GRID_HEIGHT = 50;
 export type Pixel = {
   data: Uint8ClampedArray<ArrayBuffer>;
   username: string;
+  email: string;
   x: number;
   y: number;
 };
@@ -28,7 +29,7 @@ const usePixels = (
   // TODO: Replace with real websocket
   // const bytes = Uint8ClampedArray.from(atob(incoming.data), c => c.charCodeAt(0));
   useEffect(() => {
-    const interval = setInterval(() => {
+    const interval = setInterval(async () => {
       const canvas = document.createElement("canvas");
       canvas.width = PIXEL_SIZE;
       canvas.height = PIXEL_SIZE;
@@ -45,11 +46,20 @@ const usePixels = (
         ctx.fillStyle = `rgb(${r}, ${g}, ${b})`;
         ctx.fillRect(0, 0, PIXEL_SIZE, PIXEL_SIZE);
 
+        const user = `user${Math.floor(Math.random() * 1000)}`;
+
         pixels.push({
           data: new Uint8ClampedArray(
             ctx.getImageData(0, 0, PIXEL_SIZE, PIXEL_SIZE).data,
           ),
-          username: `@user${Math.floor(Math.random() * 1000)}`,
+          username: `@${user}`,
+          email: await window.crypto.subtle
+            .digest("SHA-256", new TextEncoder().encode(`${user}@example.com`))
+            .then((hash) =>
+              Array.from(new Uint8Array(hash))
+                .map((b) => b.toString(16).padStart(2, "0"))
+                .join(""),
+            ),
           x: Math.floor(Math.random() * PIXEL_GRID_WIDTH),
           y: Math.floor(Math.random() * PIXEL_GRID_HEIGHT),
         });

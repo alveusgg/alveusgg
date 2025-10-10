@@ -27,10 +27,16 @@ const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
 
 const Pixels = ({
   onChange,
+  filter,
   className,
   canvasClassName,
 }: {
   onChange?: (newPixels: Pixel[], allPixels: StoredPixel[]) => void;
+  filter?: (
+    pixel: NonNullable<StoredPixel>,
+    index: number,
+    signal: AbortSignal,
+  ) => boolean | Promise<boolean>;
   className?: string;
   canvasClassName?: string;
 }) => {
@@ -73,6 +79,40 @@ const Pixels = ({
     }
   }, []);
 
+  // Redraw filtered pixels when filter changes
+  const filtered = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const ctx = filtered.current?.getContext("2d");
+    if (!ctx) return;
+
+    ctx.clearRect(
+      0,
+      0,
+      PIXEL_GRID_WIDTH * PIXEL_SIZE,
+      PIXEL_GRID_HEIGHT * PIXEL_SIZE,
+    );
+    if (!filter) return;
+
+    const controller = new AbortController();
+    pixels.forEach(async (pixel, i) => {
+      if (!pixel) return;
+
+      if (await filter(pixel, i, controller.signal)) {
+        if (controller.signal.aborted) return;
+
+        const x = i % PIXEL_GRID_WIDTH;
+        const y = Math.floor(i / PIXEL_GRID_WIDTH);
+        ctx.putImageData(
+          new ImageData(pixel.data, PIXEL_SIZE, PIXEL_SIZE),
+          x * PIXEL_SIZE,
+          y * PIXEL_SIZE,
+        );
+      }
+    });
+
+    return () => controller.abort();
+  }, [filter, pixels]);
+
   const [highlight, setHighlight] = useState<{
     x: number;
     y: number;
@@ -112,12 +152,25 @@ const Pixels = ({
           onMouseLeave={() => setHighlight(undefined)}
           width={PIXEL_GRID_WIDTH * PIXEL_SIZE}
           height={PIXEL_GRID_HEIGHT * PIXEL_SIZE}
-          style={{ aspectRatio: `${PIXEL_GRID_WIDTH} / ${PIXEL_GRID_HEIGHT}` }}
           className={classes(
-            "block h-auto w-full",
+            "absolute inset-0 block size-full transition-[filter]",
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
+            filter && "contrast-50 grayscale-100",
+          )}
+        />
+
+        <canvas
+          ref={filtered}
+          width={PIXEL_GRID_WIDTH * PIXEL_SIZE}
+          height={PIXEL_GRID_HEIGHT * PIXEL_SIZE}
+          className={classes(
+            "pointer-events-none absolute inset-0 block size-full transition-[background-color]",
+            (canvasClassName || "").match(
+              /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
+            )?.[1],
+            filter && "bg-black/90",
           )}
         />
 

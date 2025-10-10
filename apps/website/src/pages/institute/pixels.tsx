@@ -1,5 +1,9 @@
+import { Input } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image from "next/image";
+import { useMemo, useState } from "react";
+
+import type { StoredPixel } from "@/hooks/pixels";
 
 import Consent from "@/components/Consent";
 import Box from "@/components/content/Box";
@@ -12,6 +16,7 @@ import Pixels from "@/components/institute/Pixels";
 import Wolves from "@/components/institute/Wolves";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconSearch from "@/icons/IconSearch";
 
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -19,6 +24,25 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import usfwsRedWolfWalkingImage from "@/assets/institute/usfws-red-wolf-walking.jpg";
 
 const InstitutePixelsPage: NextPage = () => {
+  const [search, setSearch] = useState("");
+
+  const filter = useMemo(() => {
+    const normalized = search.trim().toLowerCase();
+    if (!normalized) return undefined;
+
+    const hashed = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(normalized))
+      .then((hash) =>
+        Array.from(new Uint8Array(hash))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join(""),
+      );
+
+    return (pixel: NonNullable<StoredPixel>) =>
+      pixel.username.toLowerCase().includes(normalized) ||
+      hashed.then((h) => pixel.email === h);
+  }, [search]);
+
   return (
     <>
       <Meta
@@ -58,11 +82,28 @@ const InstitutePixelsPage: NextPage = () => {
           <Image
             src={leafLeftImage3}
             alt=""
-            className="pointer-events-none absolute top-full left-0 -z-10 h-1/3 w-auto -translate-x-1/3 -translate-y-1/3 -scale-x-100 drop-shadow-md select-none"
+            className="pointer-events-none absolute top-full left-0 -z-10 h-2/5 w-auto -translate-x-2/5 -translate-y-1/3 -scale-x-100 drop-shadow-md select-none"
           />
 
-          <Pixels canvasClassName="rounded-lg shadow-xl ring-4 ring-alveus-green" />
+          <Pixels
+            filter={filter}
+            canvasClassName="rounded-lg shadow-xl ring-4 ring-alveus-green"
+          />
         </div>
+
+        <Box
+          dark
+          className="relative z-10 col-span-full bg-alveus-green-800/75 p-0 backdrop-blur-xs"
+        >
+          <IconSearch className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
+          <Input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Search for pixels by username or email..."
+            className="w-full rounded-xl py-3 pr-4 pl-10 font-mono text-xs placeholder:text-alveus-tan/75 sm:text-sm"
+          />
+        </Box>
 
         <div className="relative pb-8 max-lg:order-last xl:col-span-2">
           <Image
