@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type Ref, useCallback, useEffect, useRef, useState } from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -30,6 +30,7 @@ const Pixels = ({
   filter,
   className,
   canvasClassName,
+  ref,
 }: {
   onChange?: (newPixels: Pixel[], allPixels: StoredPixel[]) => void;
   filter?: (
@@ -39,6 +40,7 @@ const Pixels = ({
   ) => boolean | Promise<boolean>;
   className?: string;
   canvasClassName?: string;
+  ref?: Ref<HTMLDivElement>;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -134,10 +136,11 @@ const Pixels = ({
   return (
     <div
       className={classes(
-        "flex max-h-full w-full items-center justify-center",
+        "flex max-h-full w-full items-center justify-center pixelated",
         className,
       )}
       style={{ aspectRatio: `${PIXEL_GRID_WIDTH} / ${PIXEL_GRID_HEIGHT}` }}
+      ref={ref}
     >
       <div
         className={classes(

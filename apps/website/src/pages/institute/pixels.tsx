@@ -2,7 +2,11 @@ import { Input } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
+
+import { env } from "@/env";
+
+import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
 import type { StoredPixel } from "@/hooks/pixels";
@@ -19,6 +23,8 @@ import Pixels from "@/components/institute/Pixels";
 import Wolves from "@/components/institute/Wolves";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconArrowsIn from "@/icons/IconArrowsIn";
+import IconArrowsOut from "@/icons/IconArrowsOut";
 import IconSearch from "@/icons/IconSearch";
 
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -59,12 +65,42 @@ const InstitutePixelsPage: NextPage = () => {
       hashed.then((h) => pixel.email === h);
   }, [search]);
 
+  const [fullscreen, setFullscreen] = useState(false);
+  const fullscreenRef = useRef<HTMLDivElement>(null);
+  const fullscreenToggle = useCallback(() => {
+    setFullscreen((v) => {
+      if (v) {
+        document.body.style.overflow = "";
+      } else {
+        document.body.style.overflow = "hidden";
+        window.requestAnimationFrame(() => {
+          if (!fullscreenRef.current) return;
+          const { scrollWidth, clientWidth } = fullscreenRef.current;
+          fullscreenRef.current.scrollLeft = (scrollWidth - clientWidth) / 2;
+        });
+      }
+      return !v;
+    });
+  }, []);
+
   return (
     <>
       <Meta
         title="Pixels Campaign | Research & Recovery Institute"
         description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
-      />
+      >
+        <meta
+          key="canonical"
+          property="canonical"
+          content={`${env.NEXT_PUBLIC_BASE_URL}/institute/pixels`}
+        />
+        {fullscreen && (
+          <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+          />
+        )}
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
@@ -88,38 +124,82 @@ const InstitutePixelsPage: NextPage = () => {
       <Section
         className="grow overflow-hidden py-8"
         containerClassName="grid grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3 items-start"
+        offsetParent={!fullscreen}
       >
-        <div className="relative z-10 col-span-full">
-          <Image
-            src={leafRightImage2}
-            alt=""
-            className="pointer-events-none absolute bottom-0 left-full -z-10 h-3/4 w-auto -translate-x-2 -scale-x-100 drop-shadow-md select-none"
-          />
-          <Image
-            src={leafLeftImage3}
-            alt=""
-            className="pointer-events-none absolute top-full left-0 -z-10 h-2/5 w-auto -translate-x-2/5 -translate-y-1/3 -scale-x-100 drop-shadow-md select-none"
-          />
-
-          <Pixels
-            filter={filter}
-            canvasClassName="rounded-lg shadow-xl ring-4 ring-alveus-green"
-          />
-        </div>
-
-        <Box
-          dark
-          className="relative z-10 col-span-full bg-alveus-green-800/75 p-0 backdrop-blur-xs"
+        <div
+          className={classes(
+            fullscreen
+              ? "fixed inset-0 isolate z-100 flex h-screen w-screen touch-none flex-col gap-8 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
+              : "contents",
+          )}
         >
-          <IconSearch className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
-          <Input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search for pixels by username or email..."
-            className="w-full rounded-xl py-3 pr-4 pl-10 font-mono text-xs placeholder:text-alveus-tan/75 sm:text-sm"
-          />
-        </Box>
+          <div className="relative z-10 col-span-full shrink grow">
+            <Image
+              src={leafRightImage2}
+              alt=""
+              className="pointer-events-none absolute bottom-0 left-full -z-10 h-3/4 max-h-64 w-auto -translate-x-2 -scale-x-100 drop-shadow-md select-none"
+            />
+            <Image
+              src={leafLeftImage3}
+              alt=""
+              className="pointer-events-none absolute top-full left-0 -z-10 h-2/5 max-h-48 w-auto -translate-x-2/5 -translate-y-1/3 -scale-x-100 drop-shadow-md select-none"
+            />
+
+            <Pixels
+              filter={filter}
+              className={classes(
+                fullscreen &&
+                  "scrollbar-none aspect-[unset]! h-full! touch-pan-x justify-start! overflow-x-scroll rounded-lg bg-alveus-green shadow-xl ring-4 ring-alveus-green",
+              )}
+              canvasClassName={classes(
+                "rounded-lg",
+                fullscreen
+                  ? "max-w-none!"
+                  : "shadow-xl ring-4 ring-alveus-green",
+              )}
+              ref={fullscreenRef}
+            />
+
+            {fullscreen && (
+              <div className="pointer-events-none absolute top-1/2 left-1/2 flex w-1/2 max-w-xs -translate-1/2 rounded-xl bg-alveus-green-800/75 p-4 text-alveus-tan opacity-0 shadow-xl backdrop-blur-sm delay-1000 duration-1000 starting:opacity-100">
+                <IconArrowRight className="aspect-square size-auto shrink grow -scale-x-100" />
+                <IconArrowRight className="aspect-square size-auto shrink grow" />
+              </div>
+            )}
+          </div>
+
+          <Box
+            dark
+            className="relative z-10 col-span-full flex shrink-0 bg-alveus-green-800/75 p-0 backdrop-blur-xs"
+          >
+            <IconSearch className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
+            <Input
+              type="text"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              placeholder="Search for pixels by username or email..."
+              className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs outline-none placeholder:text-alveus-tan/75 sm:text-sm"
+            />
+
+            <button
+              type="button"
+              onClick={fullscreenToggle}
+              title={fullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+              className={classes(
+                "z-20 shrink-0 rounded-xl p-3 text-sm transition-colors",
+                fullscreen
+                  ? "hover:bg-alveus-green"
+                  : "hover:bg-alveus-green-800",
+              )}
+            >
+              {fullscreen ? (
+                <IconArrowsIn className="size-5" />
+              ) : (
+                <IconArrowsOut className="size-5" />
+              )}
+            </button>
+          </Box>
+        </div>
 
         <div className="relative pb-8 max-lg:order-last xl:col-span-2">
           <Image
