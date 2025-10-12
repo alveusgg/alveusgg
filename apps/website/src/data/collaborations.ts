@@ -109,6 +109,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/killdozer_tv",
       date: new Date("2025-09-25"),
       videoId: "QzF5nRfrKBM",
+      vodId: "D2R_SZB1eCk",
       creators: [
         {
           name: "Killdozer_tv",
@@ -122,6 +123,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/yourragegaming",
       date: new Date("2025-09-17"),
       videoId: "gXB6PxaN4Hk",
+      vodId: "jt2yU4BNtvY",
       creators: [
         {
           name: "YourRAGE",
@@ -135,6 +137,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/ironmouse",
       date: new Date("2025-09-02"),
       videoId: "HteU7-hKUlk",
+      vodId: "fplj0BIRbWQ",
       creators: [
         {
           name: "Ironmouse",
