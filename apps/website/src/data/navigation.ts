@@ -75,16 +75,8 @@ export const mainNavStructure: NavStructure = {
         link: "/about/alveus",
       },
       staff: {
-        title: "Alveus Staff",
-        link: "/about/staff",
-      },
-      advisoryBoard: {
-        title: "Advisory Board",
-        link: "/about/advisory-board",
-      },
-      boardOfDirectors: {
-        title: "Board of Directors",
-        link: "/about/board-of-directors",
+        title: "Alveus Team",
+        link: "/about/team",
       },
       ngoCollabs: {
         title: "NGO Collaborations",
