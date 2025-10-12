@@ -18,7 +18,6 @@ import amandaDenaroFunImage from "@/assets/people/amanda-denaro-fun.jpg";
 import amandaDenaroImage from "@/assets/people/amanda-denaro.jpg";
 import chandlerFunImage from "@/assets/people/chandler-fun.jpg";
 import chandlerImage from "@/assets/people/chandler.jpg";
-import coltonHolsteImage from "@/assets/people/colton-holste.jpg";
 import connorObrienFunImage from "@/assets/people/connor-obrien-fun.jpg";
 import connorObrienImage from "@/assets/people/connor-obrien.jpg";
 import danielDoormanImage from "@/assets/people/daniel-doorman.jpg";
@@ -232,31 +231,6 @@ const staff: Record<string, Person> = {
       </>
     ),
   },
-  colton: {
-    image: coltonHolsteImage,
-    name: "Colton Holste",
-    title: "Creative Producer",
-    description: (
-      <>
-        <p>
-          Born and raised in Idaho, Colton studied Media Arts at Boise State
-          University before leaving to take on a full-time role managing a
-          production studio. There, he created marketing campaigns, public
-          television programming, and digital content for a range of clients. In
-          the middle of the COVID pandemic (and against all advice), he
-          relocated to Texas to launch his own media company, which he still
-          runs today. His volunteer work at Alveus Animal Sanctuary eventually
-          led to a formal role producing content for the organization, blending
-          his passion for storytelling with a deep respect for animals and
-          education.
-        </p>
-        <p className="font-serif text-lg font-bold text-alveus-green">
-          <span>&ldquo;</span>Cinema
-          <span>&rdquo;</span>
-        </p>
-      </>
-    ),
-  },
   chandler: {
     image: [chandlerImage, chandlerFunImage],
     name: "Chandler",
@@ -282,6 +256,10 @@ const team: Record<string, Member> = {
   dion: {
     name: "Dion (@Dionysus1911)",
     title: "Lead Artist",
+  },
+  colton: {
+    name: "Colton (@coltonactually)",
+    title: "Creative Producer",
   },
   paul: {
     name: "Paul (@pjeweb)",
