@@ -49,6 +49,7 @@ import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lacari from "@/assets/collaborations/lacari.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
 import mari from "@/assets/collaborations/mari.png";
+import misterArther from "@/assets/collaborations/mister-arther.png";
 import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 import peachJars from "@/assets/collaborations/peach-jars.png";
 import pizzaPrincessG from "@/assets/collaborations/pizza-princess-g.png";
@@ -90,6 +91,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Mister Arther",
+      link: "https://www.twitch.tv/misterarther",
+      date: new Date("2025-10-11"),
+      videoId: "sMYuOYXNA9s",
+      creators: [
+        {
+          name: "Mister Arther",
+          image: misterArther,
+          popularity: 139_000, // Twitch followers, 2025-10-12
+        },
+      ],
+    },
     {
       name: "Killdozer_tv",
       link: "https://www.twitch.tv/killdozer_tv",
