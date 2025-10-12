@@ -508,7 +508,7 @@ const AboutTeamPage: NextPage = () => {
       </div>
 
       <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
-        <Heading id="advisory-board" link>
+        <Heading level={2} id="advisory-board" link>
           Alveus Advisory Board
         </Heading>
         <p className="mx-auto max-w-2/3 text-lg">
@@ -529,7 +529,7 @@ const AboutTeamPage: NextPage = () => {
       </div>
 
       <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
-        <Heading id="board-of-directors" link>
+        <Heading level={2} id="board-of-directors" link>
           Alveus Board of Directors
         </Heading>
         <p className="mx-auto max-w-2/3 text-lg">
