@@ -152,19 +152,16 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      // Staff moved to combined team page
       source: "/about/staff",
       destination: "/about/team#staff",
       permanent: true,
     },
     {
-      // Advisory board moved to combined team page
       source: "/about/advisory-board",
       destination: "/about/team#advisory-board",
       permanent: true,
     },
     {
-      // Board of directors moved to combined team page
       source: "/about/board-of-directors",
       destination: "/about/team#board-of-directors",
       permanent: true,
