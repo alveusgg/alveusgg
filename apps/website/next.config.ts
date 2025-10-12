@@ -128,27 +128,45 @@ const config: NextConfig = {
     },
     {
       source: "/about-maya",
-      destination: "/about/staff#maya",
+      destination: "/about/team#maya",
       permanent: true,
     },
     {
       source: "/about/maya",
-      destination: "/about/staff#maya",
+      destination: "/about/team#maya",
       permanent: true,
     },
     {
       source: "/advisory-board",
-      destination: "/about/advisory-board",
+      destination: "/about/team#advisory-board",
       permanent: true,
     },
     {
       source: "/board-of-directors",
-      destination: "/about/board-of-directors",
+      destination: "/about/team#board-of-directors",
       permanent: true,
     },
     {
       source: "/staff",
-      destination: "/about/staff",
+      destination: "/about/team#staff",
+      permanent: true,
+    },
+    {
+      // Staff moved to combined team page
+      source: "/about/staff",
+      destination: "/about/team#staff",
+      permanent: true,
+    },
+    {
+      // Advisory board moved to combined team page
+      source: "/about/advisory-board",
+      destination: "/about/team#advisory-board",
+      permanent: true,
+    },
+    {
+      // Board of directors moved to combined team page
+      source: "/about/board-of-directors",
+      destination: "/about/team#board-of-directors",
       permanent: true,
     },
     {
