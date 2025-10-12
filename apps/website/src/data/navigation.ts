@@ -41,7 +41,7 @@ export const mainNavStructure: NavStructure = {
         link: "/institute",
       },
       pixels: {
-        title: "Pixels Campaign",
+        title: "Pixel Project",
         link: "/institute/pixels",
       },
     },

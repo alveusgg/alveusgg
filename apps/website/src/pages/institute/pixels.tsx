@@ -86,7 +86,7 @@ const InstitutePixelsPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Pixels Campaign | Research & Recovery Institute"
+        title="Pixel Project | Research & Recovery Institute"
         description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
       >
         <meta
@@ -109,7 +109,7 @@ const InstitutePixelsPage: NextPage = () => {
         dark
         containerClassName="flex flex-wrap gap-4 justify-between items-end"
       >
-        <Heading>Alveus Research & Recovery Institute Pixels Campaign</Heading>
+        <Heading>Alveus Research & Recovery Institute Pixel Project</Heading>
         <Button
           href="/institute"
           dark
@@ -247,8 +247,8 @@ const InstitutePixelsPage: NextPage = () => {
             </Wolves>
 
             <p className="mt-4 text-xs text-balance opacity-75">
-              Alveus Sanctuary will use all donations as part of the Pixels
-              Campaign to fund the initial development of the institute.
+              Alveus Sanctuary will use all donations as part of the Pixel
+              Project to fund the initial development of the institute.
               <br />
               In the event that more funds are raised than are needed for the
               project, additional funds will be allocated to the operations of

@@ -75,8 +75,8 @@ const InstitutePage: NextPage = () => {
         <Section>
           <div className="flex flex-col items-center gap-8 lg:flex-row">
             <div>
-              <Heading id="campaign" level={2} link className="text-balance">
-                Support the Institute with the Pixel Campaign
+              <Heading id="pixels" level={2} link className="text-balance">
+                Support the Institute with the Pixel Project
               </Heading>
 
               <p className="text-lg text-balance">
