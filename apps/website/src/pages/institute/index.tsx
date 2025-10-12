@@ -1,16 +1,21 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useCallback, useState } from "react";
 
 import useLocaleString from "@/hooks/locale";
-import usePixels from "@/hooks/pixels";
+import {
+  PIXEL_GRID_HEIGHT,
+  PIXEL_GRID_WIDTH,
+  type Pixel,
+  type StoredPixel,
+} from "@/hooks/pixels";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
-import Progress from "@/components/content/Progress";
 import Section from "@/components/content/Section";
 import Transparency from "@/components/content/Transparency";
+import PixelsProgress from "@/components/institute/PixelsProgress";
 import Wolves from "@/components/institute/Wolves";
 
 import IconArrowRight from "@/icons/IconArrowRight";
@@ -23,14 +28,19 @@ import usfwsMexicanWolfReleasedImage from "@/assets/institute/usfws-mexican-wolf
 import usfwsRedWolfImage from "@/assets/institute/usfws-red-wolf.jpg";
 
 const InstitutePage: NextPage = () => {
-  const pixels = usePixels();
-  const unlocked = useMemo(
-    () => pixels.filter((p) => p !== null).length,
-    [pixels],
+  const [unlocked, setUnlocked] = useState(0);
+  const [total, setTotal] = useState(PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT);
+
+  const onChange = useCallback(
+    (_newPixels: Pixel[], allPixels: StoredPixel[]) => {
+      setTotal(allPixels.length);
+      setUnlocked(allPixels.filter((p) => p !== null).length);
+    },
+    [],
   );
 
   const unlockedLocale = useLocaleString(unlocked);
-  const totalLocale = useLocaleString(pixels.length);
+  const totalLocale = useLocaleString(total);
 
   return (
     <>
@@ -116,10 +126,7 @@ const InstitutePage: NextPage = () => {
           </div>
 
           <div className="mt-8 flex flex-col items-center gap-x-4 gap-y-1 lg:flex-row">
-            <Progress
-              progress={(unlocked / pixels.length) * 100}
-              className="ring-4 ring-alveus-green lg:flex-1"
-            />
+            <PixelsProgress onChange={onChange} className="lg:flex-1" />
 
             <p className="tabular-nums">
               <span className="opacity-10 select-none">
