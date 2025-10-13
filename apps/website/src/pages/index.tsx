@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import { type ReactNode, useMemo, useState } from "react";
+import { type ReactNode, useCallback, useMemo, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
@@ -14,8 +14,17 @@ import { formatDateTime } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
+import useLocaleString from "@/hooks/locale";
+import {
+  PIXEL_GRID_HEIGHT,
+  PIXEL_GRID_WIDTH,
+  type Pixel,
+  type StoredPixel,
+} from "@/hooks/pixels";
+
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
+import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Carousel from "@/components/content/Carousel";
 import Heading from "@/components/content/Heading";
@@ -28,6 +37,7 @@ import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
+import PixelsProgress from "@/components/institute/PixelsProgress";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
@@ -44,6 +54,8 @@ import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
 import sirenHeroImage from "@/assets/hero/siren.jpg";
 import studioHeroImage from "@/assets/hero/studio.jpg";
 import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
+import usfwsMexicanWolfReleasedImage from "@/assets/institute/usfws-mexican-wolf-released.jpg";
+import usfwsRedWolfImage from "@/assets/institute/usfws-red-wolf.jpg";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
@@ -161,6 +173,20 @@ export const getStaticProps = async () => {
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
 }) => {
+  const [unlocked, setUnlocked] = useState(0);
+  const [total, setTotal] = useState(PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT);
+
+  const onChange = useCallback(
+    (_newPixels: Pixel[], allPixels: StoredPixel[]) => {
+      setTotal(allPixels.length);
+      setUnlocked(allPixels.filter((p) => p !== null).length);
+    },
+    [],
+  );
+
+  const unlockedLocale = useLocaleString(unlocked);
+  const totalLocale = useLocaleString(total);
+
   const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
 
   const latestLightboxItems = useMemo(
@@ -189,8 +215,8 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="container mx-auto flex grow flex-wrap items-center text-white lg:pt-40">
-          <div className="basis-full p-4 xl:basis-1/2">
+        <div className="container mx-auto grid grow auto-rows-auto grid-cols-1 flex-wrap content-center items-center gap-8 p-4 text-white lg:pt-40 xl:grid-cols-2 xl:gap-y-16">
+          <div>
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
               World from the Web
@@ -210,7 +236,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
             </div>
           </div>
 
-          <div className="basis-full p-4 xl:basis-1/2">
+          <div>
             <Consent
               item="live cam feed"
               consent="twitch"
@@ -230,11 +256,73 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               </Link>
             </Consent>
           </div>
+
+          <Box
+            dark
+            className="col-span-full rounded-2xl bg-alveus-green-900/50 backdrop-blur-md lg:mb-16"
+          >
+            <Heading level={2} className="mt-0">
+              Pixel Project: Alveus Research & Recovery Institute
+            </Heading>
+
+            <div className="grid grid-cols-1 items-center justify-items-start gap-x-8 gap-y-4 lg:grid-cols-auto-2">
+              <div className="flex flex-col items-center gap-x-8 gap-y-2 lg:gap-y-4 xl:flex-row">
+                <p className="grow text-lg">
+                  We&apos;re taking the Alveus approach to the wild to help save
+                  species from extinction and we need your help! We&apos;re
+                  aiming to raise $1,000,000 to kickstart this brand new
+                  facility. Get involved by donating $100 or more to unlock a
+                  pixel on our institute mural, denoting you as one of the
+                  10,000 vital original supporters of the Alveus Research &
+                  Recovery Institute.
+                </p>
+
+                <div className="flex shrink-0 gap-2 text-center xl:flex-col">
+                  <Button href="/institute/pixels" dark>
+                    Unlock a Pixel
+                  </Button>
+
+                  <Button href="/institute" dark>
+                    Learn More
+                  </Button>
+                </div>
+              </div>
+
+              <div className="z-0 flex max-w-sm items-center justify-center justify-self-center lg:max-w-xs">
+                <Image
+                  src={usfwsRedWolfImage}
+                  width={256}
+                  alt="Red wolf, B. Bartel/USFWS, Public Domain, https://www.fws.gov/media/red-wolf-7"
+                  className="z-10 mr-[-10%] h-auto w-2/5 max-w-64 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+                />
+                <Image
+                  src={usfwsMexicanWolfReleasedImage}
+                  width={384}
+                  alt="Mexican wolf released back into the wild, Mexican Wolf Interagency Field Team, Public Domain, https://www.fws.gov/media/mexican-wolf-released-back-wild"
+                  className="h-auto w-3/5 max-w-96 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+                />
+              </div>
+
+              <PixelsProgress
+                onChange={onChange}
+                className="bg-alveus-green-900/75"
+              />
+
+              <p className="-mt-6 justify-self-center tabular-nums lg:mt-0">
+                <span className="opacity-10 select-none">
+                  {totalLocale
+                    .slice(0, totalLocale.length - unlockedLocale.length)
+                    .replace(/\d/g, "0")}
+                </span>
+                {unlockedLocale} / {totalLocale} pixels unlocked
+              </p>
+            </div>
+          </Box>
         </div>
       </div>
 
       <div className="relative">
-        <div className="pointer-events-none absolute -top-64 right-0 bottom-0 z-10 hidden h-auto w-1/2 max-w-sm overflow-clip select-none lg:block xl:max-w-md 2xl:max-w-lg">
+        <div className="pointer-events-none absolute -top-32 right-0 bottom-0 z-10 hidden h-auto w-1/2 max-w-sm overflow-clip select-none lg:block xl:max-w-md 2xl:max-w-lg">
           <Image
             src={leafRightImage1}
             alt=""
@@ -276,7 +364,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               </p>
 
               <Button href="/about" dark>
-                Learn more about Alveus Sanctuary
+                Learn More About Alveus Sanctuary
               </Button>
             </div>
 
