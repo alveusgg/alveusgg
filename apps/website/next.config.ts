@@ -123,7 +123,12 @@ const config: NextConfig = {
     // WordPress route redirects
     {
       source: "/about-alveus",
-      destination: "/about/alveus",
+      destination: "/about",
+      permanent: true,
+    },
+    {
+      source: "/about/alveus",
+      destination: "/about",
       permanent: true,
     },
     {
@@ -180,11 +185,6 @@ const config: NextConfig = {
     {
       source: "/collabs",
       destination: "/collaborations",
-      permanent: true,
-    },
-    {
-      source: "/about",
-      destination: "/about/alveus",
       permanent: true,
     },
     {

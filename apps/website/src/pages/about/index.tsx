@@ -836,7 +836,7 @@ const AboutAlveusPage: NextPage = () => {
               <Link
                 href={getStreamUrlIframe(item.video, {
                   title: `Alveus Sanctuary: ${item.title}`,
-                  link: `${env.NEXT_PUBLIC_BASE_URL}/about/alveus#news`,
+                  link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
                 })}
                 external
                 onClick={(e) => {
