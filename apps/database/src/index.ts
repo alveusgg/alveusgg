@@ -3,7 +3,11 @@ import { PrismaClient } from "../prisma/generated/client";
 
 const client = () =>
   new PrismaClient({
-    adapter: new PrismaMariaDb(process.env.DATABASE_URL ?? ""),
+    adapter: new PrismaMariaDb(
+      (process.env.DATABASE_URL ?? "")
+        .replace(/^mysql:\/\//, "mariadb://")
+        .replace(/([?&])sslaccept=strict/, "$1ssl=true"),
+    ),
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
