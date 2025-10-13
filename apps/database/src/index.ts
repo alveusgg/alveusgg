@@ -1,7 +1,9 @@
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "../prisma/generated/client";
 
 const client = () =>
   new PrismaClient({
+    adapter: new PrismaMariaDb(process.env.DATABASE_URL ?? ""),
     log:
       process.env.NODE_ENV === "development"
         ? ["query", "error", "warn"]
