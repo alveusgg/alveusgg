@@ -24,6 +24,7 @@
     "format": "prisma format"
   },
   "dependencies": {
+    "@prisma/adapter-mariadb": "^6.17.1",
     "@prisma/client": "^6.16.3"
   },
   "devDependencies": {
@@ -32,7 +33,7 @@
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/src/index.js"
     }
   }
 }

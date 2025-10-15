@@ -1,6 +1,5 @@
 import { resolve } from "node:path";
 
-import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 import type { NextConfig } from "next";
 import { withSuperjson } from "next-superjson";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
@@ -502,11 +501,6 @@ const config: NextConfig = {
       test: /\.pdf$/,
       type: "asset/resource",
     });
-
-    // Ensure Prisma bundles its binaries correctly
-    if (options.isServer) {
-      config.plugins.push(new PrismaPlugin());
-    }
 
     // Disable Webpack caching if not in development
     if (!options.dev && config.cache?.type === "filesystem") {
