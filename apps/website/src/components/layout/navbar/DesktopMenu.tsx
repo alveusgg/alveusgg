@@ -54,6 +54,7 @@ const DropdownMenuItem = ({
   ref?: Ref<HTMLElement>;
 }) => (
   <li {...props}>
+    {/* eslint-disable-next-line react-hooks/refs -- we're passing a ref prop down */}
     {Children.map(children, (child) => cloneElement(child, { ref }))}
   </li>
 );
