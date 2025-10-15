@@ -102,13 +102,13 @@
     "@types/linkify-it": "^5.0.0",
     "@types/lodash": "^4.17.20",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^22.18.8",
+    "@types/node": "^22.18.10",
     "@types/oauth": "^0.9.6",
     "@types/pluralize": "^0.0.33",
     "@types/probe-image-size": "^7.2.5",
-    "@types/react": "^19.2.0",
-    "@types/react-dom": "^19.2.0",
-    "@types/serviceworker": "^0.0.157",
+    "@types/react": "^19.2.2",
+    "@types/react-dom": "^19.2.1",
+    "@types/serviceworker": "^0.0.158",
     "@types/xml2js": "^0.4.14",
     "eslint": "^9.37.0",
     "eslint-config-prettier": "^10.1.8",
@@ -126,9 +126,9 @@
     "tailwindcss": "^4.1.14",
     "tsup": "^8.5.0",
     "tsx": "^4.20.6",
-    "typescript-eslint": "^8.45.0",
+    "typescript-eslint": "^8.46.0",
     "vitest": "^3.2.4",
-    "webpack": "^5.102.0"
+    "webpack": "^5.102.1"
   },
   "prettier": {
     "plugins": [
