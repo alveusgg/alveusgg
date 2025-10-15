@@ -131,7 +131,7 @@ const NotFound: NextPage = () => {
               <CustomLink href="/donate">Donate to Alveus</CustomLink>
             </li>
             <li>
-              <CustomLink href="/about/alveus">About Alveus</CustomLink>
+              <CustomLink href="/about">About Alveus</CustomLink>
             </li>
           </ul>
         </div>

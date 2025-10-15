@@ -275,7 +275,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 spreading conservation messages.
               </p>
 
-              <Button href="/about/alveus" dark>
+              <Button href="/about" dark>
                 Learn more about Alveus Sanctuary
               </Button>
             </div>
