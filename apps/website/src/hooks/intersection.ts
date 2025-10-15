@@ -6,6 +6,8 @@ const useIntersectionObserver = (
 ) => {
   const observerRef = useRef<IntersectionObserver>(null);
   const handlerRef = useRef(handleIntersection);
+
+  // eslint-disable-next-line react-hooks/refs -- we're (ab)using a ref here to avoid needing to recreate the observer and re-observe elements
   handlerRef.current = handleIntersection;
 
   useEffect(() => {
