@@ -322,7 +322,14 @@ const data: RootNetworkItem[] = [
                     links: [
                       {
                         type: "camera",
-                        name: "Parrot",
+                        name: "Littles",
+                        model: "AXIS P5676-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-p5676-le",
+                        connection: { type: "ethernet", location: "wall" },
+                      },
+                      {
+                        type: "camera",
+                        name: "Macaws",
                         model: "AXIS P5676-LE (PTZ)",
                         url: "https://www.axis.com/products/axis-p5676-le",
                         connection: { type: "ethernet", location: "wall" },
