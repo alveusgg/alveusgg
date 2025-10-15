@@ -101,8 +101,6 @@ export const env = createEnv({
       .stringbool()
       .optional()
       .default(false),
-    COMMUNITY_PHOTOS_URL: z.url().optional(),
-    COMMUNITY_PHOTOS_KEY: z.string().optional(),
     CF_STREAM_KEY_ID: z.string().optional(),
     CF_STREAM_KEY_JWK: z.string().optional(),
     CF_STREAM_LOLA_VIDEO_ID: z.string().optional(),
@@ -195,8 +193,6 @@ export const env = createEnv({
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT,
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION,
-    COMMUNITY_PHOTOS_URL: process.env.COMMUNITY_PHOTOS_URL,
-    COMMUNITY_PHOTOS_KEY: process.env.COMMUNITY_PHOTOS_KEY,
     CF_STREAM_KEY_ID: process.env.CF_STREAM_KEY_ID,
     CF_STREAM_KEY_JWK: process.env.CF_STREAM_KEY_JWK,
     CF_STREAM_LOLA_VIDEO_ID: process.env.CF_STREAM_LOLA_VIDEO_ID,

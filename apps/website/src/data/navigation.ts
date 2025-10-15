@@ -72,7 +72,7 @@ export const mainNavStructure: NavStructure = {
     dropdown: {
       alveus: {
         title: "About Alveus",
-        link: "/about/alveus",
+        link: "/about",
       },
       staff: {
         title: "Alveus Team",
