@@ -187,8 +187,16 @@ const AboutTechPresetsPage: NextPage = () => {
   });
 
   // Allow the camera UI to be focused with other page UI hidden
-  const [focused, setFocused] = useState(false);
+  const [focused, setFocused] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("presets:focused");
+      const parsed = safeJSONParse(saved ?? "");
+      if (typeof parsed === "boolean") return parsed;
+    }
+    return false;
+  });
   useEffect(() => {
+    localStorage.setItem("presets:focused", JSON.stringify(focused));
     if (focused) {
       document.body.style.overflow = "hidden";
       return () => {
