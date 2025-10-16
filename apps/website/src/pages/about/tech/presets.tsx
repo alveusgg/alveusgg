@@ -186,6 +186,17 @@ const AboutTechPresetsPage: NextPage = () => {
     ),
   });
 
+  // Allow the camera UI to be focused with other page UI hidden
+  const [focused, setFocused] = useState(false);
+  useEffect(() => {
+    if (focused) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [focused]);
+
   // Track all the disclosure buttons so we can open/close them based on search input
   const disclosures = useRef<Set<HTMLButtonElement>>(new Set());
   const disclosureRef = useCallback((el: HTMLButtonElement) => {
@@ -334,7 +345,12 @@ const AboutTechPresetsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex bg-alveus-green py-4 lg:h-screen">
+      <div
+        className={classes(
+          "flex bg-alveus-green py-4",
+          focused ? "fixed inset-0 z-100 h-screen" : "relative lg:h-screen",
+        )}
+      >
         <Section
           className={classes(
             "@container z-10 grow py-0 pt-4",
@@ -479,26 +495,45 @@ const AboutTechPresetsPage: NextPage = () => {
                     </div>
                   </Field>
 
-                  {/* Use a viewport media query, not a container media query, as we don't want the sidebar available on mobile */}
-                  <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
-                    <Label className="flex flex-col leading-tight">
-                      <span>Enable embedded Twitch stream player</span>
-                      <span className="text-sm text-alveus-green-400 italic">
-                        (also embeds the {channels.alveusgg.username} stream
-                        chat)
-                      </span>
-                    </Label>
+                  {/* Use a viewport media query, not a container media query, as we don't want the focused + sidebar layouts available on mobile */}
+                  <div className="hidden lg:contents">
+                    <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
+                      <Label className="flex flex-col leading-tight">
+                        <span>Enable embedded Twitch stream player</span>
+                        <span className="text-sm text-alveus-green-400 italic">
+                          (also embeds the {channels.alveusgg.username} stream
+                          chat)
+                        </span>
+                      </Label>
 
-                    <Switch
-                      checked={twitchEmbed !== -1}
-                      onChange={(val) =>
-                        setTwitchEmbed(val ? sidebarDefault() : -1)
-                      }
-                      className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
-                    >
-                      <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
-                    </Switch>
-                  </Field>
+                      <Switch
+                        checked={twitchEmbed !== -1}
+                        onChange={(val) =>
+                          setTwitchEmbed(val ? sidebarDefault() : -1)
+                        }
+                        className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                      >
+                        <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                      </Switch>
+                    </Field>
+
+                    <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
+                      <Label className="flex flex-col leading-tight">
+                        <span>Enable focused control mode</span>
+                        <span className="text-sm text-alveus-green-400 italic">
+                          (hides all other page UI elements)
+                        </span>
+                      </Label>
+
+                      <Switch
+                        checked={focused}
+                        onChange={setFocused}
+                        className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                      >
+                        <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                      </Switch>
+                    </Field>
+                  </div>
                 </div>
               )}
             </div>
