@@ -358,65 +358,74 @@ const AboutTechPresetsPage: NextPage = () => {
           )}
           containerClassName="h-full flex flex-col"
         >
-          <Image
-            src={leafLeftImage3}
-            alt=""
-            className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
-          />
+          {!focused && (
+            <Image
+              src={leafLeftImage3}
+              alt=""
+              className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+            />
+          )}
 
-          <div className="flex flex-col gap-y-4 @3xl:flex-row">
-            <div className="flex w-full flex-col gap-2 @3xl:w-3/5">
-              <p>
-                If you&apos;re subscribed, you can run these commands directly
-                from this page by clicking the{" "}
-                <span className="font-semibold text-alveus-green">
-                  Run command{" "}
-                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
-                </span>{" "}
-                button in each preset card. This will automatically send the
-                command to the{" "}
-                <Link
-                  href={`https://twitch.tv/${channels.alveusgg.username}`}
-                  external
-                >
-                  {channels.alveusgg.username} Twitch chat
-                </Link>{" "}
-                as if you had typed it in the chat yourself.
-              </p>
+          <div className="grid grid-cols-1 gap-x-8 gap-y-4 @3xl:grid-cols-5">
+            {!focused && (
+              <div className="grid w-full grid-cols-1 gap-2 @3xl:col-span-3">
+                <p>
+                  If you&apos;re subscribed, you can run these commands directly
+                  from this page by clicking the{" "}
+                  <span className="font-semibold text-alveus-green">
+                    Run command{" "}
+                    <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                  </span>{" "}
+                  button in each preset card. This will automatically send the
+                  command to the{" "}
+                  <Link
+                    href={`https://twitch.tv/${channels.alveusgg.username}`}
+                    external
+                  >
+                    {channels.alveusgg.username} Twitch chat
+                  </Link>{" "}
+                  as if you had typed it in the chat yourself.
+                </p>
 
-              <p className="hidden lg:block">
-                Next to each camera in the menu you&apos;ll also find a{" "}
-                <span className="font-semibold text-alveus-green">
-                  Run swap command{" "}
-                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
-                </span>{" "}
-                button if the camera is in the same enclosure as the currently
-                selected camera, allowing you to swap which camera is shown on
-                stream if you&apos;re subscribed.
-              </p>
+                <p className="hidden lg:block">
+                  Next to each camera in the menu you&apos;ll also find a{" "}
+                  <span className="font-semibold text-alveus-green">
+                    Run swap command{" "}
+                    <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                  </span>{" "}
+                  button if the camera is in the same enclosure as the currently
+                  selected camera, allowing you to swap which camera is shown on
+                  stream if you&apos;re subscribed.
+                </p>
 
-              <p>
-                Make sure to enable the embedded stream player, or have the{" "}
-                <Link href="/live/twitch" external>
-                  livestream
-                </Link>{" "}
-                open in another tab, to see the cameras change as you load
-                presets
-                <span className="hidden lg:inline">
-                  {" "}
-                  and swap which cameras are on stream
-                </span>
-                .
-              </p>
-            </div>
+                <p>
+                  Make sure to enable the embedded stream player, or have the{" "}
+                  <Link href="/live/twitch" external>
+                    livestream
+                  </Link>{" "}
+                  open in another tab, to see the cameras change as you load
+                  presets
+                  <span className="hidden lg:inline">
+                    {" "}
+                    and swap which cameras are on stream
+                  </span>
+                  .
+                </p>
+              </div>
+            )}
 
-            <div className="flex w-full flex-col gap-2 @3xl:w-2/5 @3xl:pl-8">
+            <div
+              className={classes(
+                "grid w-full grid-cols-1 gap-x-8 gap-y-2",
+                focused ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
+              )}
+            >
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
               {!subscription.isPaused && (
                 <div
                   className={classes(
-                    "flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
+                    "mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
                     subscription.isSuccess &&
                       (subscription.data ? "bg-alveus-green" : "bg-red"),
                     subscription.isLoading && "bg-twitch",
@@ -450,10 +459,16 @@ const AboutTechPresetsPage: NextPage = () => {
               )}
 
               {subscription.isSuccess && subscription.data && (
-                <div className="mt-auto flex flex-col gap-2">
+                <>
                   {/* Use a viewport media query, not a container media query, as we don't want the focused + sidebar layouts available on mobile */}
-                  <div className="hidden lg:contents">
-                    <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
+                  <div
+                    className={classes(
+                      focused
+                        ? "order-first row-span-2 grid grid-rows-subgrid"
+                        : "hidden lg:contents",
+                    )}
+                  >
+                    <Field className="flex flex-wrap items-center justify-between gap-2">
                       <Label className="flex flex-col leading-tight">
                         <span>Enable embedded Twitch stream player</span>
                         <span className="text-sm text-alveus-green-400 italic">
@@ -473,7 +488,7 @@ const AboutTechPresetsPage: NextPage = () => {
                       </Switch>
                     </Field>
 
-                    <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
+                    <Field className="flex flex-wrap items-center justify-between gap-2">
                       <Label className="flex flex-col leading-tight">
                         <span>Enable focused control mode</span>
                         <span className="text-sm text-alveus-green-400 italic">
@@ -534,7 +549,7 @@ const AboutTechPresetsPage: NextPage = () => {
                       )}
                     </div>
                   </Field>
-                </div>
+                </>
               )}
             </div>
           </div>
