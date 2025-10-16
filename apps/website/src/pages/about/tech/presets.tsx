@@ -18,6 +18,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { z } from "zod";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import type { CameraMulti, CameraPTZ } from "@/data/tech/cameras.types";
@@ -26,12 +27,13 @@ import { channels, scopeGroups } from "@/data/twitch";
 import { classes } from "@/utils/classes";
 import {
   isDefinedEntry,
-  safeJSONParse,
   typeSafeObjectEntries,
   typeSafeObjectKeys,
 } from "@/utils/helpers";
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
+
+import useLocalStorage from "@/hooks/storage";
 
 import Consent from "@/components/Consent";
 import Heading from "@/components/content/Heading";
@@ -187,16 +189,12 @@ const AboutTechPresetsPage: NextPage = () => {
   });
 
   // Allow the camera UI to be focused with other page UI hidden
-  const [focused, setFocused] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("presets:focused");
-      const parsed = safeJSONParse(saved ?? "");
-      if (typeof parsed === "boolean") return parsed;
-    }
-    return false;
-  });
+  const [focused, setFocused] = useLocalStorage(
+    "presets:focused",
+    useMemo(() => z.boolean(), []),
+    false,
+  );
   useEffect(() => {
-    localStorage.setItem("presets:focused", JSON.stringify(focused));
     if (focused) {
       document.body.style.overflow = "hidden";
       return () => {
@@ -268,20 +266,16 @@ const AboutTechPresetsPage: NextPage = () => {
     setSearchPresets("");
   }, [selectedCamera]);
 
-  const [twitchEmbed, setTwitchEmbed] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("presets:twitch-embed");
-      const parsed = safeJSONParse(saved ?? "");
-      if (typeof parsed === "number") return sidebarClamp(parsed);
-    }
-    return sidebarDefault();
-  });
-
-  useEffect(() => {
-    localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
-  }, [twitchEmbed]);
-
   // Allow the sidebar to be resized with a draggable handle
+  const [twitchEmbed, setTwitchEmbed] = useLocalStorage(
+    "presets:twitch-embed",
+    useMemo(
+      () =>
+        z.number().transform((val) => (val === -1 ? -1 : sidebarClamp(val))),
+      [],
+    ),
+    sidebarDefault(),
+  );
   const sidebarDrag = useRef(false);
   const sidebarContainer = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -315,7 +309,7 @@ const AboutTechPresetsPage: NextPage = () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [setTwitchEmbed]);
 
   const sidebar =
     subscription.isSuccess && subscription.data && twitchEmbed !== -1;
