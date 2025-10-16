@@ -26,6 +26,7 @@ import IconArrowRight from "@/icons/IconArrowRight";
 import IconArrowsIn from "@/icons/IconArrowsIn";
 import IconArrowsOut from "@/icons/IconArrowsOut";
 import IconSearch from "@/icons/IconSearch";
+import IconX from "@/icons/IconX";
 
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -172,13 +173,26 @@ const InstitutePixelsPage: NextPage = () => {
             dark
             className="relative z-10 col-span-full flex shrink-0 bg-alveus-green-800/75 p-0 backdrop-blur-xs"
           >
-            <IconSearch className="pointer-events-none absolute top-1/2 left-3.5 size-4 -translate-y-1/2" />
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              title="Clear search"
+              className="peer absolute inset-y-0 left-0 z-20 rounded-xl p-3 transition-colors hover:bg-alveus-green disabled:pointer-events-none"
+              disabled={!search.length}
+            >
+              {search.length ? (
+                <IconX className="size-5" />
+              ) : (
+                <IconSearch className="m-0.5 size-4" />
+              )}
+            </button>
+
             <Input
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search for pixels by username or email..."
-              className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs outline-none placeholder:text-alveus-tan/75 sm:text-sm"
+              className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75 sm:text-sm"
             />
 
             <button

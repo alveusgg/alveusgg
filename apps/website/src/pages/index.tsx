@@ -215,7 +215,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="container mx-auto grid grow auto-rows-auto grid-cols-1 flex-wrap content-center items-center gap-8 p-4 text-white lg:pt-40 xl:grid-cols-2 xl:gap-y-16">
+        <div className="container mx-auto grid grow auto-rows-auto grid-cols-1 flex-wrap content-center items-center gap-8 p-4 text-white lg:mt-40 lg:pt-8 lg:pb-16 xl:grid-cols-2 xl:gap-y-16">
           <div>
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
@@ -259,14 +259,14 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
           <Box
             dark
-            className="col-span-full rounded-2xl bg-alveus-green-900/50 backdrop-blur-md lg:mb-16"
+            className="col-span-full rounded-2xl bg-alveus-green-900/50 backdrop-blur-md"
           >
             <Heading level={2} className="mt-0">
               Pixel Project: Alveus Research & Recovery Institute
             </Heading>
 
-            <div className="grid grid-cols-1 items-center justify-items-start gap-x-8 gap-y-4 lg:grid-cols-auto-2">
-              <div className="flex flex-col items-center gap-x-8 gap-y-2 lg:gap-y-4 xl:flex-row">
+            <div className="grid grid-cols-1 items-center justify-items-start gap-8 lg:grid-cols-auto-2 lg:gap-y-4">
+              <div className="flex flex-col gap-x-8 gap-y-4 xl:flex-row xl:items-center">
                 <p className="grow text-lg">
                   We&apos;re taking the Alveus approach to the wild to help save
                   species from extinction and we need your help! We&apos;re
@@ -308,7 +308,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 className="bg-alveus-green-900/75"
               />
 
-              <p className="-mt-6 justify-self-center tabular-nums lg:mt-0">
+              <p className="-mt-4 justify-self-center tabular-nums lg:mt-0">
                 <span className="opacity-10 select-none">
                   {totalLocale
                     .slice(0, totalLocale.length - unlockedLocale.length)
