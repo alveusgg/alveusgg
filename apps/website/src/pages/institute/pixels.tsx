@@ -4,12 +4,14 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useMemo, useRef, useState } from "react";
 
+import type { Pixel } from "@alveusgg/donations-core";
+
 import { env } from "@/env";
 
 import { classes } from "@/utils/classes";
 
 import { useConsent } from "@/hooks/consent";
-import type { StoredPixel } from "@/hooks/pixels";
+import { PixelSyncProviderProvider } from "@/hooks/pixels";
 
 import Consent from "@/components/Consent";
 import Box from "@/components/content/Box";
@@ -61,8 +63,8 @@ const InstitutePixelsPage: NextPage = () => {
           .join(""),
       );
 
-    return (pixel: NonNullable<StoredPixel>) =>
-      pixel.username.toLowerCase().includes(normalized) ||
+    return (pixel: NonNullable<Pixel>) =>
+      pixel.identifier.toLowerCase().includes(normalized) ||
       hashed.then((h) => pixel.email === h);
   }, [search]);
 
@@ -85,7 +87,7 @@ const InstitutePixelsPage: NextPage = () => {
   }, []);
 
   return (
-    <>
+    <PixelSyncProviderProvider>
       <Meta
         title="Pixel Project | Research & Recovery Institute"
         description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
@@ -283,7 +285,7 @@ const InstitutePixelsPage: NextPage = () => {
           </Consent>
         </div>
       </Section>
-    </>
+    </PixelSyncProviderProvider>
   );
 };
 

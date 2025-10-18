@@ -1,16 +1,18 @@
-import { type Ref, useCallback, useEffect, useRef, useState } from "react";
+import { type Ref, useCallback, useEffect, useRef } from "react";
+
+import type { DonationAlert, Pixel } from "@alveusgg/donations-core";
 
 import { classes } from "@/utils/classes";
 
-import usePixels, {
+import {
   PIXEL_GRID_HEIGHT,
   PIXEL_GRID_WIDTH,
   PIXEL_SIZE,
-  type Pixel,
-  type StoredPixel,
+  type PixelSyncContext,
+  useLivePixels,
 } from "@/hooks/pixels";
 
-const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
+export const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
   // Convert y to letters (A, B, ..., Z, AA, AB, ..., ZZ, AAA, ...)
   let letters = "";
   let n = y;
@@ -26,15 +28,13 @@ const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
 };
 
 const Pixels = ({
-  onChange,
   filter,
   className,
   canvasClassName,
   ref,
 }: {
-  onChange?: (newPixels: Pixel[], allPixels: StoredPixel[]) => void;
   filter?: (
-    pixel: NonNullable<StoredPixel>,
+    pixel: NonNullable<Pixel>,
     index: number,
     signal: AbortSignal,
   ) => boolean | Promise<boolean>;
@@ -44,32 +44,24 @@ const Pixels = ({
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
-  // Draw new pixels as they come in
-  const pixels = usePixels(
-    useCallback(
-      (newPixels: Pixel[], allPixels: StoredPixel[]) => {
-        onChange?.(newPixels, allPixels);
+  const onEvent = useCallback((alert: DonationAlert) => {
+    const ctx = canvas.current?.getContext("2d");
+    if (!ctx) return;
 
-        const ctx = canvas.current?.getContext("2d");
-        if (!ctx) return;
+    alert.pixels.forEach((pixel) => {
+      const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+        c.charCodeAt(0),
+      );
+      ctx.putImageData(
+        new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
+        pixel.column * PIXEL_SIZE,
+        pixel.row * PIXEL_SIZE,
+      );
+    });
+  }, []);
 
-        newPixels.forEach((pixel) =>
-          ctx.putImageData(
-            new ImageData(pixel.data, PIXEL_SIZE, PIXEL_SIZE),
-            pixel.x * PIXEL_SIZE,
-            pixel.y * PIXEL_SIZE,
-          ),
-        );
-      },
-      [onChange],
-    ),
-  );
-
-  // Fill background with near-white noise on mount
-  useEffect(() => {
-    if (!canvas.current) return;
-
-    const ctx = canvas.current.getContext("2d");
+  const onInit = useCallback((context: PixelSyncContext) => {
+    const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
 
     for (let y = 0; y < PIXEL_GRID_HEIGHT; y++) {
@@ -79,7 +71,20 @@ const Pixels = ({
         ctx.fillRect(x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
       }
     }
+
+    context.pixels.forEach((pixel) => {
+      const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+        c.charCodeAt(0),
+      );
+      ctx.putImageData(
+        new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
+        pixel.column * PIXEL_SIZE,
+        pixel.row * PIXEL_SIZE,
+      );
+    });
   }, []);
+  const pixels = useLivePixels({ onEvent, onInit });
+  // Draw new pixels as they come in
 
   // Redraw filtered pixels when filter changes
   const filtered = useRef<HTMLCanvasElement>(null);
@@ -96,18 +101,19 @@ const Pixels = ({
     if (!filter) return;
 
     const controller = new AbortController();
-    pixels.forEach(async (pixel, i) => {
+    pixels.data?.pixels.forEach(async (pixel, i) => {
       if (!pixel) return;
 
       if (await filter(pixel, i, controller.signal)) {
         if (controller.signal.aborted) return;
 
-        const x = i % PIXEL_GRID_WIDTH;
-        const y = Math.floor(i / PIXEL_GRID_WIDTH);
+        const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+          c.charCodeAt(0),
+        );
         ctx.putImageData(
-          new ImageData(pixel.data, PIXEL_SIZE, PIXEL_SIZE),
-          x * PIXEL_SIZE,
-          y * PIXEL_SIZE,
+          new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
+          pixel.column * PIXEL_SIZE,
+          pixel.row * PIXEL_SIZE,
         );
       }
     });
@@ -115,22 +121,53 @@ const Pixels = ({
     return () => controller.abort();
   }, [filter, pixels]);
 
-  const [highlight, setHighlight] = useState<{
-    x: number;
-    y: number;
-    size: number;
-  }>();
-  const highlightGridRef = highlight ? coordsToGridRef(highlight) : null;
-  const highlightPixel = highlight
-    ? pixels[highlight.y * PIXEL_GRID_WIDTH + highlight.x]
-    : undefined;
-  const move = useCallback((e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    setHighlight({
-      x: Math.floor(((e.clientX - rect.left) / rect.width) * PIXEL_GRID_WIDTH),
-      y: Math.floor(((e.clientY - rect.top) / rect.height) * PIXEL_GRID_HEIGHT),
-      size: rect.width / PIXEL_GRID_WIDTH,
-    });
+  const highlightTooltipRef = useRef<HTMLDivElement>(null);
+  const highlightGridRefRef = useRef<HTMLParagraphElement>(null);
+  const highlightIdentifierRef = useRef<HTMLParagraphElement>(null);
+  const move = useCallback(
+    (e: React.MouseEvent) => {
+      if (
+        !highlightTooltipRef.current ||
+        !highlightGridRefRef.current ||
+        !highlightIdentifierRef.current
+      )
+        return;
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = Math.floor(
+        ((e.clientX - rect.left) / rect.width) * PIXEL_GRID_WIDTH,
+      );
+      const y = Math.floor(
+        ((e.clientY - rect.top) / rect.height) * PIXEL_GRID_HEIGHT,
+      );
+      const size = rect.width / PIXEL_GRID_WIDTH;
+
+      const gridRef = coordsToGridRef({ x, y });
+
+      highlightTooltipRef.current.style.top = `${y * size}px`;
+      highlightTooltipRef.current.style.left = `${x * size}px`;
+      highlightTooltipRef.current.style.width = `${size}px`;
+      highlightTooltipRef.current.style.height = `${size}px`;
+
+      const pixel = pixels.data?.pixels.find(
+        (p) => p.column === x && p.row === y,
+      );
+
+      highlightTooltipRef.current.classList.remove("opacity-0");
+      highlightGridRefRef.current.innerText = `${gridRef.y}:${gridRef.x}`;
+      if (pixel) {
+        highlightIdentifierRef.current.innerText = pixel.identifier;
+        highlightIdentifierRef.current.classList.remove("italic", "opacity-75");
+      } else {
+        highlightIdentifierRef.current.innerText = "Locked";
+        highlightIdentifierRef.current.classList.add("italic", "opacity-75");
+      }
+    },
+    [pixels],
+  );
+
+  const exit = useCallback(() => {
+    if (!highlightTooltipRef.current) return;
+    highlightTooltipRef.current.classList.add("opacity-0");
   }, []);
 
   return (
@@ -152,7 +189,7 @@ const Pixels = ({
         <canvas
           ref={canvas}
           onMouseMove={move}
-          onMouseLeave={() => setHighlight(undefined)}
+          onMouseLeave={exit}
           width={PIXEL_GRID_WIDTH * PIXEL_SIZE}
           height={PIXEL_GRID_HEIGHT * PIXEL_SIZE}
           className={classes(
@@ -178,28 +215,17 @@ const Pixels = ({
         />
 
         <div
+          ref={highlightTooltipRef}
           className={classes(
-            "pointer-events-none absolute ring-2 ring-highlight",
-            highlight ? "opacity-100" : "opacity-0",
+            "pointer-events-none absolute opacity-0 ring-2 ring-highlight",
           )}
-          style={{
-            top: highlight ? highlight.y * highlight.size : 0,
-            left: highlight ? highlight.x * highlight.size : 0,
-            width: highlight?.size || 0,
-            height: highlight?.size || 0,
-          }}
         >
           <div className="absolute top-1/2 right-full mr-2 flex -translate-y-1/2 flex-col rounded bg-alveus-green/75 px-2 py-1 text-sm leading-tight whitespace-nowrap text-alveus-tan backdrop-blur-sm">
-            {highlightGridRef && (
-              <p className="font-mono text-xs opacity-75">
-                {highlightGridRef.y}:{highlightGridRef.x}
-              </p>
-            )}
-            {highlightPixel ? (
-              <p>{highlightPixel.username}</p>
-            ) : (
-              <p className="italic opacity-75">Locked</p>
-            )}
+            <p
+              ref={highlightGridRefRef}
+              className="font-mono text-xs opacity-75"
+            ></p>
+            <p ref={highlightIdentifierRef}></p>
           </div>
         </div>
       </div>

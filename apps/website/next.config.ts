@@ -545,6 +545,7 @@ const config: NextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
+  transpilePackages: ["@alveusgg/donations-core"],
 };
 
 export default withSuperjson()(config);

@@ -1,20 +1,14 @@
 import { type NextPage } from "next";
 import Image from "next/image";
-import { useCallback, useState } from "react";
 
-import useLocaleString from "@/hooks/locale";
-import {
-  PIXEL_GRID_HEIGHT,
-  PIXEL_GRID_WIDTH,
-  type Pixel,
-  type StoredPixel,
-} from "@/hooks/pixels";
+import { PixelSyncProviderProvider } from "@/hooks/pixels";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Transparency from "@/components/content/Transparency";
+import PixelsDescription from "@/components/institute/PixelsDescription";
 import PixelsProgress from "@/components/institute/PixelsProgress";
 import Wolves from "@/components/institute/Wolves";
 
@@ -28,22 +22,8 @@ import usfwsMexicanWolfReleasedImage from "@/assets/institute/usfws-mexican-wolf
 import usfwsRedWolfImage from "@/assets/institute/usfws-red-wolf.jpg";
 
 const InstitutePage: NextPage = () => {
-  const [unlocked, setUnlocked] = useState(0);
-  const [total, setTotal] = useState(PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT);
-
-  const onChange = useCallback(
-    (_newPixels: Pixel[], allPixels: StoredPixel[]) => {
-      setTotal(allPixels.length);
-      setUnlocked(allPixels.filter((p) => p !== null).length);
-    },
-    [],
-  );
-
-  const unlockedLocale = useLocaleString(unlocked);
-  const totalLocale = useLocaleString(total);
-
   return (
-    <>
+    <PixelSyncProviderProvider>
       <Meta
         title="Research & Recovery Institute"
         description="The Alveus Research & Recovery Institute ..."
@@ -126,16 +106,8 @@ const InstitutePage: NextPage = () => {
           </div>
 
           <div className="mt-8 flex flex-col items-center gap-x-4 gap-y-1 lg:flex-row">
-            <PixelsProgress onChange={onChange} className="lg:flex-1" />
-
-            <p className="tabular-nums">
-              <span className="opacity-10 select-none">
-                {totalLocale
-                  .slice(0, totalLocale.length - unlockedLocale.length)
-                  .replace(/\d/g, "0")}
-              </span>
-              {unlockedLocale} / {totalLocale} pixels unlocked
-            </p>
+            <PixelsProgress className="lg:flex-1" />
+            <PixelsDescription />
           </div>
         </Section>
       </div>
@@ -184,7 +156,7 @@ const InstitutePage: NextPage = () => {
 
         <Transparency className="grow" />
       </div>
-    </>
+    </PixelSyncProviderProvider>
   );
 };
 

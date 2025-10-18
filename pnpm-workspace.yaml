@@ -1,5 +1,6 @@
 packages:
   - "apps/*"
+  - "apps/donations/*"
 
 patchedDependencies:
   "eslint-plugin-tailwindcss@3.17.5": "patches/eslint-plugin-tailwindcss@3.17.5.patch"
@@ -38,3 +39,4 @@ onlyBuiltDependencies:
   - "prisma"
   - "sharp"
   - "unrs-resolver"
+  - "workerd"

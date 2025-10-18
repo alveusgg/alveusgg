@@ -473,3 +473,30 @@ model RoundsCheck {
 
   fileStorageObject FileStorageObject? @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
 }
+
+model Donation {
+  id               String    @id
+  provider         String
+  providerUniqueId String    @unique
+  amount           Int
+  donatedAt        DateTime?
+  receivedAt       DateTime
+  note             String?
+  donatedBy        Json
+  tags             Json
+  providerMetadata Json
+
+  pixels Pixel[]
+}
+
+model Pixel {
+  id         String   @id
+  receivedAt DateTime
+  donationId String
+  identifier String
+  email      String?
+  column     Int
+  row        Int
+
+  donation Donation @relation(fields: [donationId], references: [id])
+}

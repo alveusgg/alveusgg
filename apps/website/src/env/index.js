@@ -105,6 +105,7 @@ export const env = createEnv({
     CF_STREAM_KEY_JWK: z.string().optional(),
     CF_STREAM_LOLA_VIDEO_ID: z.string().optional(),
     CF_STREAM_HOST: z.string().optional(),
+    TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -138,6 +139,7 @@ export const env = createEnv({
       .stringbool()
       .optional()
       .default(false),
+    NEXT_PUBLIC_DONATIONS_MANAGER_URL: z.string().optional(),
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -197,6 +199,8 @@ export const env = createEnv({
     CF_STREAM_KEY_JWK: process.env.CF_STREAM_KEY_JWK,
     CF_STREAM_LOLA_VIDEO_ID: process.env.CF_STREAM_LOLA_VIDEO_ID,
     CF_STREAM_HOST: process.env.CF_STREAM_HOST,
+    TRPC_API_SHARED_KEY: process.env.TRPC_API_SHARED_KEY,
+
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
@@ -226,6 +230,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_DONATION_EVENT_LINK,
     NEXT_PUBLIC_DONATION_EVENT_EXTERNAL:
       process.env.NEXT_PUBLIC_DONATION_EVENT_EXTERNAL,
+    NEXT_PUBLIC_DONATIONS_MANAGER_URL:
+      process.env.NEXT_PUBLIC_DONATIONS_MANAGER_URL,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

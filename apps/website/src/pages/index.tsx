@@ -1,6 +1,6 @@
 import type { InferGetStaticPropsType, NextPage } from "next";
 import Image from "next/image";
-import { type ReactNode, useCallback, useMemo, useState } from "react";
+import { type ReactNode, useMemo, useState } from "react";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
@@ -14,13 +14,7 @@ import { formatDateTime } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
-import useLocaleString from "@/hooks/locale";
-import {
-  PIXEL_GRID_HEIGHT,
-  PIXEL_GRID_WIDTH,
-  type Pixel,
-  type StoredPixel,
-} from "@/hooks/pixels";
+import { PixelSyncProviderProvider } from "@/hooks/pixels";
 
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
@@ -37,6 +31,7 @@ import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
+import PixelsDescription from "@/components/institute/PixelsDescription";
 import PixelsProgress from "@/components/institute/PixelsProgress";
 
 import IconAmazon from "@/icons/IconAmazon";
@@ -173,20 +168,6 @@ export const getStaticProps = async () => {
 const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   videos,
 }) => {
-  const [unlocked, setUnlocked] = useState(0);
-  const [total, setTotal] = useState(PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT);
-
-  const onChange = useCallback(
-    (_newPixels: Pixel[], allPixels: StoredPixel[]) => {
-      setTotal(allPixels.length);
-      setUnlocked(allPixels.filter((p) => p !== null).length);
-    },
-    [],
-  );
-
-  const unlockedLocale = useLocaleString(unlocked);
-  const totalLocale = useLocaleString(total);
-
   const [latestLightboxOpen, setLatestLightboxOpen] = useState<string>();
 
   const latestLightboxItems = useMemo(
@@ -207,7 +188,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 
   return (
-    <>
+    <PixelSyncProviderProvider>
       {/* Hero, offset to be navbar background */}
       <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
         <div className="absolute inset-0 -z-10 bg-alveus-green">
@@ -303,19 +284,8 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                 />
               </div>
 
-              <PixelsProgress
-                onChange={onChange}
-                className="bg-alveus-green-900/75"
-              />
-
-              <p className="-mt-4 justify-self-center tabular-nums lg:mt-0">
-                <span className="opacity-10 select-none">
-                  {totalLocale
-                    .slice(0, totalLocale.length - unlockedLocale.length)
-                    .replace(/\d/g, "0")}
-                </span>
-                {unlockedLocale} / {totalLocale} pixels unlocked
-              </p>
+              <PixelsProgress className="bg-alveus-green-900/75" />
+              <PixelsDescription className="-mt-4 justify-self-center lg:mt-0" />
             </div>
           </Box>
         </div>
@@ -601,7 +571,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </div>
         </Section>
       </div>
-    </>
+    </PixelSyncProviderProvider>
   );
 };
 
