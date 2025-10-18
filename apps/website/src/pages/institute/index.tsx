@@ -17,6 +17,7 @@ import IconArrowRight from "@/icons/IconArrowRight";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
+import headerImage from "@/assets/institute/header.png";
 import usfwsMexicanWolfFieldImage from "@/assets/institute/usfws-mexican-wolf-field.jpg";
 import usfwsMexicanWolfReleasedImage from "@/assets/institute/usfws-mexican-wolf-released.jpg";
 import usfwsRedWolfImage from "@/assets/institute/usfws-red-wolf.jpg";
@@ -26,7 +27,8 @@ const InstitutePage: NextPage = () => {
     <PixelSyncProviderProvider>
       <Meta
         title="Research & Recovery Institute"
-        description="The Alveus Research & Recovery Institute ..."
+        description="The Alveus Research & Recovery Institute is taking the Alveus approach to the wild to help save species from extinction, aiming to create a conservation breeding program for the critically endangered Mexican Gray and Red wolves."
+        image={headerImage.src}
       />
 
       {/* Nav background */}
