@@ -1,5 +1,6 @@
 import { type ComponentType } from "react";
 
+import { classes } from "@/utils/classes";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import Heading from "@/components/content/Heading";
@@ -69,11 +70,21 @@ const links = {
 export const types = typeSafeObjectKeys(links);
 export type Type = keyof typeof links;
 
-const Donate = ({ type }: { type: Type }) => {
-  const link = links[type];
+const Donate = ({
+  type,
+  highlight = false,
+  ...overrides
+}: { type: Type; highlight?: boolean } & Partial<DonateLink>) => {
+  const link = { ...links[type], ...overrides };
 
   return (
-    <Box dark className="group p-0 transition hover:scale-102 hover:shadow-2xl">
+    <Box
+      dark
+      className={classes(
+        "group p-0 transition hover:scale-102 hover:shadow-2xl",
+        highlight && "bg-carnival",
+      )}
+    >
       <Link
         href={link.link}
         external={link.external}
@@ -81,7 +92,14 @@ const Donate = ({ type }: { type: Type }) => {
         className="block p-4"
       >
         <div className="mb-2 flex items-center gap-4">
-          <div className="relative block overflow-clip rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 text-alveus-green transition-colors group-hover:bg-alveus-green group-hover:text-alveus-tan">
+          <div
+            className={classes(
+              "relative block overflow-clip rounded-xl border-2 border-alveus-tan bg-alveus-tan p-2 transition-colors",
+              highlight
+                ? "text-carnival group-hover:bg-carnival group-hover:text-alveus-tan"
+                : "text-alveus-green group-hover:bg-alveus-green group-hover:text-alveus-tan",
+            )}
+          >
             <link.icon
               size={24}
               className="transition-opacity group-hover:opacity-0"

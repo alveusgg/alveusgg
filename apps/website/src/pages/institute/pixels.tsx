@@ -10,17 +10,14 @@ import { env } from "@/env";
 
 import { classes } from "@/utils/classes";
 
-import { useConsent } from "@/hooks/consent";
 import { PixelSyncProviderProvider } from "@/hooks/pixels";
 
-import Consent from "@/components/Consent";
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Donate from "@/components/content/Donate";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
-import TheGivingBlockEmbed from "@/components/content/TheGivingBlockEmbed";
 import Pixels from "@/components/institute/Pixels";
 import Wolves from "@/components/institute/Wolves";
 
@@ -36,7 +33,6 @@ import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 import usfwsRedWolfWalkingImage from "@/assets/institute/usfws-red-wolf-walking.jpg";
 
 const InstitutePixelsPage: NextPage = () => {
-  const { consent } = useConsent();
   const { query, replace, isReady } = useRouter();
 
   const search = typeof query.s === "string" ? query.s : "";
@@ -274,15 +270,8 @@ const InstitutePixelsPage: NextPage = () => {
         </div>
 
         <div className="flex flex-col gap-8">
-          <Donate type="twitch" />
-          {!consent.givingBlock && <Donate type="givingBlock" />}
-
-          <Consent item="donation widget" consent="givingBlock">
-            <TheGivingBlockEmbed
-              campaignId="Wolf"
-              className="flex w-full justify-center"
-            />
-          </Consent>
+          <Donate type="twitch" highlight />
+          <Donate type="paypal" link="/paypal/pixels" />
         </div>
       </Section>
     </PixelSyncProviderProvider>

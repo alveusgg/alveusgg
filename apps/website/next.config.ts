@@ -349,6 +349,12 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/paypal/pixels",
+      destination:
+        "https://www.paypal.com/donate/?hosted_button_id=AQ9RASYNG5ZWC",
+      permanent: true,
+    },
+    {
       source: "/giving-block",
       destination: "https://thegivingblock.com/donate/alveus-sanctuary/",
       permanent: true,
