@@ -34,27 +34,6 @@ model TaskExecutionEvent {
   @@index([task, startedAt], name: "TaskExecutionEvent_task_startedAt")
 }
 
-model ChannelUpdateEvent {
-  id            String   @id @default(cuid())
-  service       String
-  channel       String
-  title         String
-  category_id   String
-  category_name String
-  source        String
-  createdAt     DateTime @default(now())
-}
-
-model StreamStatusEvent {
-  id        String    @id @default(cuid())
-  service   String
-  channel   String
-  online    Boolean
-  source    String
-  createdAt DateTime  @default(now())
-  startedAt DateTime?
-}
-
 // Necessary for Next auth
 model Account {
   id                String  @id @default(cuid())
