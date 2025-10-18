@@ -7,7 +7,7 @@ import type { DonationAlert, Pixel } from "@alveusgg/donations-core";
 
 import { env } from "@/env";
 
-export const PIXEL_SIZE = 10;
+export const PIXEL_SIZE = 3;
 export const PIXEL_GRID_WIDTH = 200;
 export const PIXEL_GRID_HEIGHT = 50;
 export const PIXEL_TOTAL = PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT;
