@@ -10,12 +10,45 @@ import {
 } from "@alveusgg/donations-core";
 
 import { sendChatMessage } from "@/server/apis/twitch";
-import { createDonations, createPixels } from "@/server/db/donations";
-import { router, sharedKeyProcedure } from "@/server/trpc/trpc";
+import {
+  createDonations,
+  createPixels,
+  getPublicDonations,
+} from "@/server/db/donations";
+import {
+  publicProcedure,
+  router,
+  sharedKeyProcedure,
+} from "@/server/trpc/trpc";
 
 import { channels } from "@/data/twitch";
 
+const DONATION_FEED_ENTRIES_PER_PAGE = 50;
+
 export const donationsRouter = router({
+  getDonationsPublic: publicProcedure
+    .input(
+      z.object({
+        cursor: z.cuid().nullish(),
+      }),
+    )
+    .query(async ({ input }) => {
+      const { cursor } = input;
+
+      const donations = await getPublicDonations({
+        take: DONATION_FEED_ENTRIES_PER_PAGE + 1,
+        cursor: cursor || undefined,
+      });
+
+      let nextCursor: typeof cursor | undefined = undefined;
+      if (donations.length > DONATION_FEED_ENTRIES_PER_PAGE) {
+        const nextItem = donations.pop();
+        nextCursor = nextItem?.id || undefined;
+      }
+
+      return { donations, nextCursor };
+    }),
+
   createDonations: sharedKeyProcedure
     .input(
       z.object({
@@ -25,6 +58,7 @@ export const donationsRouter = router({
     .mutation(({ input }) => {
       return createDonations(input.donations);
     }),
+
   createPixels: sharedKeyProcedure
     .input(
       z.object({

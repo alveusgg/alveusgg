@@ -1,6 +1,6 @@
 import { type Prisma, prisma } from "@alveusgg/database";
 
-import type { Donation, Pixel } from "@alveusgg/donations-core";
+import type { Donation, Donator, Pixel } from "@alveusgg/donations-core";
 
 export async function createDonations(input: Donation[]) {
   return prisma.donation.createMany({
@@ -8,16 +8,53 @@ export async function createDonations(input: Donation[]) {
   });
 }
 
-export async function getDonations(input: { take?: number; skip?: number }) {
-  const results = await prisma.donation.findMany({
-    take: input.take,
-    skip: input.skip,
-  });
+export async function getPublicDonations({
+  take,
+  cursor,
+}: {
+  take?: number;
+  cursor?: string;
+} = {}) {
+  return (
+    await prisma.donation.findMany({
+      select: {
+        id: true,
+        provider: true,
+        amount: true,
+        receivedAt: true,
+        donatedAt: true,
+        donatedBy: true,
+        tags: true,
+        pixels: {
+          select: { identifier: true, column: true, row: true },
+        },
+      },
+      take: take,
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: {
+        receivedAt: "desc",
+      },
+    })
+  ).map((donation) => {
+    // Enrich underlying database json types with the core types
+    // That can be baked into the database schema in the future
+    // with prisma-json-types-generator.
+    const donatedBy = donation.donatedBy as Donator;
+    const tags = (donation.tags || {}) as Record<string, string>;
 
-  // Enrich underlying database json types with the core types
-  // That can be baked into the database schema in the future
-  // with prisma-json-types-generator.
-  return results as Array<(typeof results)[number] & Donation>;
+    return {
+      id: donation.id,
+      identifier: donatedBy[donatedBy.primary] ?? "Anonymous",
+      amount: donation.amount,
+      donatedAt: donation.donatedAt ?? donation.receivedAt,
+      provider: donation.provider,
+      pixels: donation.pixels,
+      tags: {
+        campaign: tags.campaign,
+        twitchBroadcasterId: tags.twitchBroadcasterId,
+      },
+    };
+  });
 }
 
 export async function createPixels(input: Omit<Pixel, "data">[]) {
