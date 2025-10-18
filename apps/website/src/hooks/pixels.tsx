@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { WebSocket } from "partysocket";
-import { createContext, use, useEffect, useMemo } from "react";
-import { parse } from "superjson";
+import { type ReactNode, createContext, use, useEffect, useMemo } from "react";
+import { parse, stringify } from "superjson";
 
 import type { DonationAlert, Pixel } from "@alveusgg/donations-core";
 
@@ -12,36 +12,34 @@ export const PIXEL_GRID_WIDTH = 200;
 export const PIXEL_GRID_HEIGHT = 50;
 export const PIXEL_TOTAL = PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT;
 
+interface StateEvent {
+  type: "start";
+}
+
+interface UpdateEvent {
+  type: "update";
+  payload: DonationAlert;
+}
+
+type Event = StateEvent | UpdateEvent;
+
 export type PixelSyncContext = { pixels: Pixel[] };
 
 interface SyncProviderOptions {
   url: string;
 }
-export class PixelSyncProvider {
-  socket: WebSocket;
-  url: string;
-  options: SyncProviderOptions;
-  meta?: Record<string, string>;
 
-  private startup: Promise<void>;
+interface IPixelSyncProvider {
+  ready: () => Promise<void>;
+  get: () => Promise<PixelSyncContext>;
+  onEvent: (event: (event: DonationAlert) => void) => () => void;
+  onUpdate: (event: (context: PixelSyncContext) => void) => () => void;
+  close: () => void;
+  reconnect: () => void;
+}
 
-  public async ready() {
-    await this.startup;
-  }
-
-  public close() {
-    this.socket.close(1000, "Closing connection");
-  }
-
-  public reconnect() {
-    this.socket.reconnect();
-  }
-
-  async get(): Promise<PixelSyncContext> {
-    await this.ready();
-    if (!this.context) throw new Error("No context found");
-    return this.context;
-  }
+abstract class BasePixelSyncProvider {
+  protected context?: PixelSyncContext;
 
   private callbacks: Array<(event: DonationAlert) => void> = [];
   public onEvent(callback: (event: DonationAlert) => void) {
@@ -59,9 +57,49 @@ export class PixelSyncProvider {
     };
   }
 
-  private context?: PixelSyncContext;
+  protected handleMessage(raw: MessageEvent<string>) {
+    const event = parse<Event>(raw.data);
+    if (event.type === "update") {
+      if (!this.context)
+        throw new Error(
+          "State should be always initialized before an update event is received.",
+        );
+      this.context = {
+        pixels: [...this.context.pixels, ...event.payload.pixels],
+      };
+
+      this.callbacks.forEach((callback) => callback(event.payload));
+      this.updateCallbacks.forEach((callback) => {
+        if (!this.context) return;
+        callback(this.context);
+      });
+      return;
+    }
+  }
+
+  public async ready() {}
+
+  public async get(): Promise<PixelSyncContext> {
+    await this.ready();
+    if (!this.context) throw new Error("No context found");
+    return this.context;
+  }
+}
+
+export class PixelSyncProvider
+  extends BasePixelSyncProvider
+  implements IPixelSyncProvider
+{
+  socket: WebSocket;
+  url: string;
+  options: SyncProviderOptions;
+  meta?: Record<string, string>;
+
+  private readonly startup: Promise<void>;
 
   constructor(options: SyncProviderOptions) {
+    super();
+
     this.options = options;
     this.url = this.options.url;
     const socket = new WebSocket(this.url, undefined, { startClosed: true });
@@ -71,64 +109,115 @@ export class PixelSyncProvider {
     this.startup = this.init();
   }
 
-  private async init() {
-    this.socket.addEventListener("message", (raw) => {
-      const event = parse<Event>(raw.data);
-      if (event.type === "update") {
-        if (!this.context)
-          throw new Error(
-            "State should be always initialized before an update event is received.",
-          );
-        this.context = {
-          pixels: [...this.context.pixels, ...event.payload.pixels],
-        };
+  public async ready() {
+    await this.startup;
+  }
 
-        this.callbacks.forEach((callback) => callback(event.payload));
-        this.updateCallbacks.forEach((callback) => {
-          if (!this.context) return;
-          callback(this.context);
-        });
-        return;
-      }
-    });
+  public close() {
+    this.socket.close(1000, "Closing connection");
+  }
 
-    const context = await getCurrentContext();
-    this.context = context;
+  public reconnect() {
+    this.socket.reconnect();
+  }
+
+  protected async init() {
+    this.socket.addEventListener("message", (event) =>
+      this.handleMessage(event),
+    );
+    this.context = await this.fetchCurrentContext();
+  }
+
+  protected async fetchCurrentContext(): Promise<PixelSyncContext> {
+    const response = await fetch(
+      `${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/current`,
+    );
+    return response.json();
   }
 }
 
-const getCurrentContext = async (): Promise<PixelSyncContext> => {
-  const response = await fetch(
-    `${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/current`,
-  );
-  return response.json();
-};
+export class DemoPixelSyncProvider
+  extends BasePixelSyncProvider
+  implements IPixelSyncProvider
+{
+  private updateInterval?: NodeJS.Timeout;
 
-interface StateEvent {
-  type: "start";
+  constructor() {
+    super();
+    this.context = { pixels: [] };
+    this.startDemo();
+  }
+
+  private stopDemo() {
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+      this.updateInterval = undefined;
+    }
+  }
+
+  private startDemo() {
+    this.updateInterval = setInterval(() => {
+      const donationId = `demo_donation_${Math.floor(Math.random() * 1000000)}`;
+      const identifier = `demo_user_${Math.floor(Math.random() * 1000)}`;
+
+      const numberOfPixels = Math.floor(Math.random() * 2) + 1;
+
+      const fakeEvent: Event = {
+        type: "update",
+        payload: {
+          identifier,
+          amount: numberOfPixels * 10000 + Math.floor(Math.random() * 3000),
+          pixels: Array.from({ length: numberOfPixels }).map(() => ({
+            id: `pixel_${Math.floor(Math.random() * 1000000)}`,
+            donationId,
+            receivedAt: new Date(),
+            data: btoa(
+              String.fromCharCode(
+                ...Array.from({ length: PIXEL_SIZE * PIXEL_SIZE * 4 }).map(() =>
+                  Math.floor(Math.random() * 256),
+                ),
+              ),
+            ),
+            identifier,
+            column: Math.floor(Math.random() * PIXEL_GRID_WIDTH),
+            row: Math.floor(Math.random() * PIXEL_GRID_HEIGHT),
+          })),
+        },
+      };
+      this.handleMessage(
+        new MessageEvent("message", { data: stringify(fakeEvent) }),
+      );
+    }, 4000);
+  }
+
+  public close() {
+    this.stopDemo();
+  }
+
+  public reconnect() {
+    this.stopDemo();
+    this.startDemo();
+  }
 }
 
-interface UpdateEvent {
-  type: "update";
-  payload: DonationAlert;
-}
+const PixelSyncProviderContext = createContext<IPixelSyncProvider | null>(null);
 
-type Event = StateEvent | UpdateEvent;
-
-const PixelSyncProviderContext = createContext<PixelSyncProvider | null>(null);
 export const PixelSyncProviderProvider = ({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) => {
   const sync = useMemo(() => {
+    if (env.NEXT_PUBLIC_DONATIONS_DEMO_MODE) {
+      return new DemoPixelSyncProvider();
+    }
     if (!env.NEXT_PUBLIC_DONATIONS_MANAGER_URL) {
       throw new Error("NEXT_PUBLIC_DONATIONS_MANAGER_URL is not set");
     }
-    const sync = new PixelSyncProvider({
+
+    return new PixelSyncProvider({
       url: `${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/sync`,
     });
-    return sync;
   }, []);
 
   useEffect(() => {
