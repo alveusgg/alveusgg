@@ -188,7 +188,7 @@ function PixelsAlert() {
       >
         <motion.div
           layout="position"
-          key={`donation-info`}
+          key="donation-info"
           ref={donationInfoRef}
           className="flex flex-col items-center justify-center -space-y-2"
         >
@@ -209,7 +209,7 @@ function PixelsAlert() {
         </motion.div>
         <motion.div
           layout="position"
-          key={`pixel-container`}
+          key="pixel-container"
           className="relative flex flex-col items-center justify-center gap-4"
         >
           <motion.span
@@ -225,7 +225,7 @@ function PixelsAlert() {
           </motion.span>
 
           <motion.div
-            className="h-[100px] w-[100px] overflow-hidden rounded-md bg-white p-1"
+            className="h-[100px] w-[100px] overflow-hidden rounded-md bg-white p-1 ring ring-black"
             ref={pixelRef}
             variants={{
               hidden: { opacity: 0 },
