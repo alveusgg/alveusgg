@@ -111,7 +111,7 @@ export const formatDateTimeRelative = (
   const daysDiff = daysGiven - daysToday;
 
   // If the date is today or tomorrow, show relative date
-  if (daysDiff === 0 || daysDiff === 1) {
+  if (daysDiff >= -1 && daysDiff <= 1) {
     // Get the year -> day parts
     const yearIdx = parts.findIndex((part) => part.type === "year");
     const monthIdx = parts.findIndex((part) => part.type === "month");
@@ -121,17 +121,28 @@ export const formatDateTimeRelative = (
     // Replace the year -> day parts with the relative date
     parts.splice(minIdx, maxIdx - minIdx + 1, {
       type: "literal",
-      value: daysDiff === 0 ? "Today" : "Tomorrow",
+      value:
+        style === "short" && daysDiff === 0
+          ? ""
+          : daysDiff === 0
+            ? "Today"
+            : daysDiff === 1
+              ? "Tomorrow"
+              : "Yesterday",
     });
 
     // If the date is today, and time was requested, show the time
     if (daysDiff === 0 && time) {
+      const secondsDiff = dateGiven.diff(dateToday).as("seconds");
+      const timeFormatted = formatSeconds(Math.abs(secondsDiff), {
+        style: "long",
+        seconds: time === "seconds",
+      });
+
       parts.splice(minIdx + 1, 0, {
         type: "literal",
-        value: ` in ${formatSeconds(dateGiven.diff(dateToday).as("seconds"), {
-          style: "long",
-          seconds: time === "seconds",
-        })}`,
+        value:
+          secondsDiff < 0 ? ` ${timeFormatted} ago` : ` in ${timeFormatted}`,
       });
     }
   }

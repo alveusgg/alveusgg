@@ -460,6 +460,9 @@ model TwitchChannel {
 
   broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
   moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
+
+  @@index([broadcasterAccountId], name: "TwitchChannel_broadcaster")
+  @@index([moderatorAccountId], name: "TwitchChannel_moderator")
 }
 
 model RoundsCheck {
@@ -472,4 +475,35 @@ model RoundsCheck {
   hidden              Boolean @default(false)
 
   fileStorageObject FileStorageObject? @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
+}
+
+model Donation {
+  id               String    @id
+  provider         String
+  providerUniqueId String    @unique
+  amount           Int
+  donatedAt        DateTime?
+  receivedAt       DateTime
+  note             String?
+  donatedBy        Json
+  tags             Json
+  providerMetadata Json
+
+  pixels Pixel[]
+
+  @@index([receivedAt(sort: Desc)], name: "Donation_recent")
+}
+
+model Pixel {
+  id         String   @id
+  receivedAt DateTime
+  donationId String
+  identifier String
+  email      String?
+  column     Int
+  row        Int
+
+  donation Donation @relation(fields: [donationId], references: [id])
+
+  @@index([donationId], name: "Pixel_donationId")
 }

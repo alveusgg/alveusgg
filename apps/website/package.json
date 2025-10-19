@@ -12,6 +12,7 @@
   "bugs": {
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
+  "types": "src/server/trpc/router/_app.ts",
   "scripts": {
     "build:next": "next build",
     "build:next-sitemap": "next-sitemap --config next-sitemap.config.js",
@@ -29,6 +30,7 @@
   "dependencies": {
     "@alveusgg/data": "0.66.1",
     "@alveusgg/database": "workspace:*",
+    "@alveusgg/donations-core": "workspace:*",
     "@auth/prisma-adapter": "^2.11.0",
     "@aws-sdk/client-s3": "^3.908.0",
     "@aws-sdk/s3-request-presigner": "^3.908.0",
@@ -63,12 +65,14 @@
     "linkify-it": "^5.0.0",
     "lodash": "^4.17.21",
     "luxon": "^3.7.2",
+    "motion": "^12.23.24",
     "maplibre-gl": "^5.9.0",
     "next": "^15.5.4",
     "next-auth": "^4.24.11",
     "next-sitemap": "^4.2.3",
     "next-superjson": "^1.0.7",
     "oauth": "^0.10.2",
+    "partysocket": "^1.1.6",
     "pluralize": "^8.0.0",
     "probe-image-size": "^7.2.3",
     "raw-body": "^3.0.1",
@@ -144,6 +148,7 @@
       "<THIRD_PARTY_MODULES>",
       "^@alveusgg/data(/.+)?$",
       "^@alveusgg/database(/.+)?$",
+      "^@alveusgg/donations-core(/.+)?$",
       "^@/env(/.+)?$",
       "^@/server(/.+)?$",
       "^@/data(/.+)?$",

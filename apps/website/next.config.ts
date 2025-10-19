@@ -242,6 +242,26 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/research",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/recovery",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/wolf",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/pixel(s)?",
+      destination: "/institute/pixels",
+      permanent: true,
+    },
+    {
       source: "/aq/:path*",
       destination: "/animal-quest/:path*",
       permanent: false,
@@ -326,6 +346,12 @@ const config: NextConfig = {
       source: "/paypal",
       destination:
         "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
+      permanent: true,
+    },
+    {
+      source: "/paypal/pixels",
+      destination:
+        "https://www.paypal.com/donate/?hosted_button_id=AQ9RASYNG5ZWC",
       permanent: true,
     },
     {
@@ -525,6 +551,7 @@ const config: NextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
+  transpilePackages: ["@alveusgg/donations-core"],
 };
 
 export default withSuperjson()(config);

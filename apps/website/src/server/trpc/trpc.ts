@@ -1,6 +1,8 @@
 import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 
+import { env } from "@/env";
+
 import { type Context } from "@/server/trpc/context";
 import { checkIsSuperUserSession, checkPermissions } from "@/server/utils/auth";
 
@@ -88,3 +90,29 @@ const isAuthedSuperUser = t.middleware(({ ctx, next }) => {
 export const superUserProcedure = t.procedure
   .use(logMutations)
   .use(isAuthedSuperUser);
+
+/**
+ * Reusable middleware to ensure
+ * the request comes with a trusted shared key
+ */
+const isAuthedSharedKey = t.middleware(({ ctx, next }) => {
+  if (!env.TRPC_API_SHARED_KEY) {
+    console.log(
+      `[${new Date().toISOString()}] A shared key trpc procedure was called but the shared key is not set. Set the TRPC_API_SHARED_KEY environment variable.`,
+    );
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  const header = ctx.req.headers["authorization"];
+  const [type, key] = header?.split(" ") ?? [];
+  if (type !== "ApiKey" || !key || !env.TRPC_API_SHARED_KEY.includes(key)) {
+    throw new TRPCError({ code: "UNAUTHORIZED" });
+  }
+  return next({ ctx });
+});
+
+/**
+ * Protected procedure
+ **/
+export const sharedKeyProcedure = t.procedure
+  .use(logMutations)
+  .use(isAuthedSharedKey);

@@ -463,3 +463,80 @@ export async function sendChatMessage(
     throw new Error("Failed to send chat message!");
   }
 }
+
+const setupWebhookSubscriptionResponseSchema = z.object({
+  data: z.array(
+    z.object({
+      id: z.string(),
+    }),
+  ),
+});
+
+export async function setupWebhookSubscriptionForBroadcaster(
+  broadcasterUserId: string,
+  type: string,
+  version: string,
+  callback: string,
+  secret: string,
+) {
+  const accessToken = await getClientCredentialsAccessToken(
+    "twitch",
+    env.TWITCH_CLIENT_ID,
+    env.TWITCH_CLIENT_SECRET,
+  );
+  if (accessToken === undefined) {
+    throw new Error("Twitch API: Could not obtain OAuth access token!");
+  }
+
+  const headers = {
+    "Content-Type": "application/json",
+    "Client-Id": env.TWITCH_CLIENT_ID,
+    Authorization: `Bearer ${accessToken}`,
+  };
+
+  const response = await fetch(
+    `https://api.twitch.tv/helix/eventsub/subscriptions`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        type,
+        version,
+        condition: {
+          broadcaster_user_id: broadcasterUserId,
+        },
+        transport: {
+          method: "webhook",
+          callback,
+          secret,
+        },
+      }),
+    },
+  );
+
+  if (response.status === 409) {
+    return { result: "already_exists" };
+  }
+
+  if (response.status !== 202) {
+    const json = await response.json();
+    console.error(json);
+    throw new Error(
+      `Error creating webhook subscription ${response.status} ${response.statusText}`,
+    );
+  }
+
+  const json = await response.json();
+  const data = await setupWebhookSubscriptionResponseSchema.parseAsync(json);
+  if (data.data.length === 0) {
+    throw new Error("No webhook subscription created!");
+  }
+  if (data.data.length > 1) {
+    throw new Error("Multiple webhook subscriptions found!");
+  }
+  const subscription = data.data[0];
+  if (!subscription) {
+    throw new Error("Failed to setup webhook subscription!");
+  }
+  return { result: "success", subscription };
+}

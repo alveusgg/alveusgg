@@ -26,3 +26,12 @@ yarn-error.log*
 # IDE
 .vscode
 .idea
+
+# wrangler project
+
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+.wrangler/
+worker-configuration.d.ts

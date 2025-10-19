@@ -1,7 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { getUserByName } from "@/server/apis/twitch";
+import {
+  getUserByName,
+  setupWebhookSubscriptionForBroadcaster,
+} from "@/server/apis/twitch";
 import {
   createTwitchChannel,
   deleteTwitchChannel,
@@ -12,9 +15,11 @@ import {
   createCheckPermissionMiddleware,
   protectedProcedure,
   router,
+  sharedKeyProcedure,
 } from "@/server/trpc/trpc";
 
 import { permissions } from "@/data/permissions";
+import { channels } from "@/data/twitch";
 
 const permittedProcedure = protectedProcedure.use(
   createCheckPermissionMiddleware(permissions.manageTwitchApi),
@@ -152,5 +157,37 @@ export const adminTwitchRouter = router({
       }
 
       return { success: true };
+    }),
+
+  setupWebhookSubscription: sharedKeyProcedure
+    .input(
+      z.object({
+        event: z.object({ type: z.string(), version: z.string() }),
+        url: z.string(),
+        secret: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const supportedChannels = [
+        channels.alveusgg.id,
+        channels.maya.id,
+        channels.alveus.id,
+      ];
+
+      for (const channel of supportedChannels) {
+        try {
+          return await setupWebhookSubscriptionForBroadcaster(
+            channel,
+            input.event.type,
+            input.event.version,
+            input.url,
+            input.secret,
+          );
+        } catch {
+          console.error(
+            `Failed to setup webhook subscription for channel ${channel}`,
+          );
+        }
+      }
     }),
 });
