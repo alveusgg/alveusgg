@@ -176,7 +176,7 @@ export const adminTwitchRouter = router({
 
       for (const channel of supportedChannels) {
         try {
-          return await setupWebhookSubscriptionForBroadcaster(
+          await setupWebhookSubscriptionForBroadcaster(
             channel,
             input.event.type,
             input.event.version,
