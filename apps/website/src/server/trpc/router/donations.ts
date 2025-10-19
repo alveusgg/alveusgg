@@ -1,4 +1,5 @@
 import { waitUntil } from "@vercel/functions";
+import pluralize from "pluralize";
 import { z } from "zod";
 
 import { prisma } from "@alveusgg/database";
@@ -117,7 +118,7 @@ const sendChatMessages = async (
           account.broadcasterAccount.access_token,
           channels.alveusgg.id,
           broadcasterId,
-          `alveusLove ${identifier} has unlocked ${pixels?.length} something secret! https://alveus.gg/secret?u=${identifier}`,
+          `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! https://alveus.gg/pixels?s=${identifier}`,
         );
       }
     } catch {

@@ -155,8 +155,12 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
         if (!this.grid) throw new Error("Grid not initialized");
         for (const donation of donations) {
           // Use the primary property of the donatedBy object to get the identifier or default to "Anonymous"
-          const identifier =
+          let identifier =
             donation.donatedBy[donation.donatedBy.primary] ?? "Anonymous";
+
+          if (donation.donatedBy.primary === "username") {
+            identifier = `@${identifier}`;
+          }
 
           const numberOfPixels = determineNumberOfPixels(donation.amount / 100);
           const pixelsForDonation: Pixel[] = [];
