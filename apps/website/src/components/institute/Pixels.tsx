@@ -288,7 +288,7 @@ const Pixels = ({
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
-            filter && "bg-black/90",
+            filter && "bg-white/95",
           )}
         />
 
