@@ -83,6 +83,20 @@ const sendChatMessages = async (
     metadata: { twitchBroadcasterId?: string };
   })[],
 ) => {
+  const account = await prisma.account.findFirst({
+    where: {
+      provider: "twitch",
+      providerAccountId: channels.alveusgg.id,
+    },
+    select: {
+      access_token: true,
+    },
+  });
+
+  if (!account?.access_token) {
+    throw new Error("No Twitch account found");
+  }
+
   const pixelsByBroadcasterId = Object.groupBy(
     pixels,
     (pixel) => pixel.metadata.twitchBroadcasterId ?? channels.alveus.id,
@@ -90,23 +104,6 @@ const sendChatMessages = async (
 
   for (const broadcasterId in pixelsByBroadcasterId) {
     try {
-      const account = await prisma.twitchChannel.findFirst({
-        where: {
-          channelId: broadcasterId,
-        },
-        include: {
-          broadcasterAccount: {
-            select: {
-              access_token: true,
-            },
-          },
-        },
-      });
-
-      if (!account?.broadcasterAccount?.access_token) {
-        throw new Error("No Twitch account found");
-      }
-
       const users = Object.groupBy(
         pixelsByBroadcasterId[broadcasterId] ?? [],
         (pixel) => pixel.identifier,
@@ -115,7 +112,7 @@ const sendChatMessages = async (
         const pixels = users[identifier];
 
         await sendChatMessage(
-          account.broadcasterAccount.access_token,
+          account.access_token,
           channels.alveusgg.id,
           broadcasterId,
           `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! https://alveus.gg/pixels?s=${identifier}`,
