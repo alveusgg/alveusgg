@@ -19,6 +19,7 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Pixels from "@/components/institute/Pixels";
+import PixelsDescription from "@/components/institute/PixelsDescription";
 import Wolves from "@/components/institute/Wolves";
 
 import IconArrowRight from "@/icons/IconArrowRight";
@@ -274,6 +275,10 @@ const InstitutePixelsPage: NextPage = () => {
         <div className="flex flex-col gap-8">
           <Donate type="twitch" highlight />
           <Donate type="paypal" link="/paypal/pixels" />
+
+          <Box dark>
+            <PixelsDescription className="text-center text-2xl" />
+          </Box>
         </div>
       </Section>
     </PixelSyncProviderProvider>

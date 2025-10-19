@@ -69,19 +69,23 @@ const PixelsPage: NextPage = () => {
       >
         <div
           className={classes(
-            "@container-[size] row-span-1 row-start-3 flex flex-col justify-end",
+            "@container-[size] row-span-1 row-start-3 flex flex-col justify-end gap-1",
             mode === "corner"
-              ? "col-span-2 col-start-2 items-end gap-1"
-              : "col-span-full items-center gap-2",
+              ? "col-span-2 col-start-2 items-end"
+              : "col-span-full items-center",
           )}
         >
           <div
-            className="flex shrink-0 flex-row items-center justify-between text-nowrap"
+            className={classes(
+              "flex shrink-0 flex-row items-center justify-between text-nowrap",
+              mode !== "progress" &&
+                "rounded-t bg-alveus-green ring-4 ring-alveus-green",
+            )}
             style={{
               width:
                 mode === "progress"
                   ? "100%"
-                  : `min(100cqw, calc(${PIXEL_GRID_WIDTH / PIXEL_GRID_HEIGHT} * (100cqh - 1lh - (var(--spacing) * ${mode === "corner" ? 1 : 2}))))`,
+                  : `min(100cqw, calc(${PIXEL_GRID_WIDTH / PIXEL_GRID_HEIGHT} * (100cqh - 1lh - var(--spacing))))`,
             }}
           >
             <p className="min-w-0 shrink overflow-hidden px-1 font-bold text-ellipsis text-white tabular-nums text-stroke">
@@ -99,9 +103,7 @@ const PixelsPage: NextPage = () => {
               className="min-h-0 shrink"
               canvasClassName={classes(
                 "ring-4 ring-alveus-green",
-                mode === "corner"
-                  ? "ml-auto rounded-tl"
-                  : "mx-auto rounded shadow-lg",
+                mode === "corner" ? "ml-auto" : "mx-auto rounded-b shadow-lg",
               )}
             />
           )}
