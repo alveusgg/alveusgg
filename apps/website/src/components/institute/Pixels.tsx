@@ -310,7 +310,7 @@ const Pixels = ({
                 height={PIXEL_SIZE}
               />
               <p
-                className="relative z-10 self-end p-4 text-lg font-bold opacity-75"
+                className="relative z-10 max-w-full self-end overflow-hidden p-4 text-lg font-bold text-ellipsis opacity-75"
                 ref={highlightIdentifierRef}
               ></p>
             </div>
