@@ -33,6 +33,46 @@ export const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
   };
 };
 
+function positionTooltip(el: Element, x: number, y: number) {
+  if (x > PIXEL_GRID_WIDTH / 2) {
+    el.classList.add("right-full");
+    el.classList.remove("left-full");
+  } else {
+    el.classList.add("left-full");
+    el.classList.remove("right-full");
+  }
+
+  if (y < PIXEL_GRID_HEIGHT / 3) {
+    el.classList.add("top-full");
+    el.classList.remove("bottom-full", "top-1/2", "-translate-y-1/2");
+  } else if (y > (2 * PIXEL_GRID_HEIGHT) / 3) {
+    el.classList.add("bottom-full");
+    el.classList.remove("top-full", "top-1/2", "-translate-y-1/2");
+  } else {
+    el.classList.add("top-1/2", "-translate-y-1/2");
+    el.classList.remove("top-full", "bottom-full");
+  }
+}
+
+function getHighContrastColor(pixel: Pixel) {
+  const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+    c.charCodeAt(0),
+  );
+  let averageLuminosity = 0;
+  // RGBA, ignore alpha
+  for (let i = 0; i < bytes.length; i += 4) {
+    const r = bytes[i];
+    const g = bytes[i + 1];
+    const b = bytes[i + 2];
+    if (!r || !g || !b) continue;
+    averageLuminosity += r;
+    averageLuminosity += g;
+    averageLuminosity += b;
+  }
+  averageLuminosity /= (bytes.length / 4) * 3;
+  return averageLuminosity < 128 ? "white" : "black";
+}
+
 const Pixels = ({
   filter,
   className,
@@ -127,6 +167,8 @@ const Pixels = ({
     return () => controller.abort();
   }, [filter, pixels]);
 
+  const myPixel = useRef<HTMLCanvasElement>(null);
+
   const highlightTooltipRef = useRef<HTMLDivElement>(null);
   const highlightGridRefRef = useRef<HTMLParagraphElement>(null);
   const highlightIdentifierRef = useRef<HTMLParagraphElement>(null);
@@ -164,15 +206,41 @@ const Pixels = ({
 
       highlightTooltipRef.current.classList.remove("opacity-0");
       highlightGridRefRef.current.innerText = `${gridRef.y}:${gridRef.x}`;
+
+      // Decide which side to place the tooltip on (left/right)
+      const innerTooltipDiv = highlightTooltipRef.current.children[0];
+      if (innerTooltipDiv) {
+        positionTooltip(innerTooltipDiv, x, y);
+      }
+
+      const ctx = myPixel.current?.getContext("2d");
+      if (!ctx) throw new Error("Pixel image canvas context is not found");
       if (pixel) {
+        const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+          c.charCodeAt(0),
+        );
+        const imageData = new ImageData(bytes, PIXEL_SIZE, PIXEL_SIZE);
+        ctx.putImageData(imageData, 0, 0);
+
+        const highContrastColor = getHighContrastColor(pixel);
         highlightIdentifierRef.current.innerText = pixel.identifier;
-        highlightIdentifierRef.current.classList.remove("italic", "opacity-75");
+        if (highContrastColor === "white") {
+          highlightIdentifierRef.current.style.color =
+            "rgba(255, 255, 255, 0.9)";
+        } else {
+          highlightIdentifierRef.current.style.color = "rgba(0, 0, 0, 0.9)";
+        }
+        highlightIdentifierRef.current.classList.remove("italic");
       } else {
+        // fill with light gray
+        ctx.fillStyle = "rgb(230, 230, 230)";
+        ctx.fillRect(0, 0, PIXEL_SIZE, PIXEL_SIZE);
         highlightIdentifierRef.current.innerText = "Locked";
-        highlightIdentifierRef.current.classList.add("italic", "opacity-75");
+        highlightIdentifierRef.current.classList.add("italic");
+        highlightIdentifierRef.current.style.color = "rgba(0, 0, 0, 0.9)";
       }
     },
-    [pixels],
+    [pixels.data?.pixels],
   );
 
   const exit = useCallback(() => {
@@ -191,7 +259,7 @@ const Pixels = ({
     >
       <div
         className={classes(
-          "relative h-full max-w-full bg-white",
+          "relative z-40 h-full max-w-full bg-white",
           canvasClassName,
         )}
         style={{ aspectRatio: `${PIXEL_GRID_WIDTH} / ${PIXEL_GRID_HEIGHT}` }}
@@ -226,16 +294,26 @@ const Pixels = ({
 
         <div
           ref={highlightTooltipRef}
-          className={classes(
-            "pointer-events-none absolute opacity-0 ring-2 ring-highlight",
-          )}
+          className="pointer-events-none absolute z-40 opacity-0 ring-2 ring-highlight"
         >
-          <div className="absolute top-1/2 right-full mr-2 flex -translate-y-1/2 flex-col rounded bg-alveus-green/75 px-2 py-1 text-sm leading-tight whitespace-nowrap text-alveus-tan backdrop-blur-sm">
+          <div className="absolute mx-2 flex flex-col rounded bg-alveus-green/75 p-2 text-sm leading-tight whitespace-nowrap text-alveus-tan backdrop-blur-sm">
             <p
               ref={highlightGridRefRef}
               className="font-mono text-xs opacity-75"
             ></p>
-            <p ref={highlightIdentifierRef}></p>
+            <div className="relative mt-1 flex h-[200px] w-[200px] flex-col justify-end">
+              <canvas
+                className="absolute inset-0 h-full w-full"
+                ref={myPixel}
+                style={{ imageRendering: "pixelated" }}
+                width={PIXEL_SIZE}
+                height={PIXEL_SIZE}
+              />
+              <p
+                className="relative z-10 self-end p-4 text-lg font-bold opacity-75"
+                ref={highlightIdentifierRef}
+              ></p>
+            </div>
           </div>
         </div>
       </div>

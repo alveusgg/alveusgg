@@ -136,6 +136,22 @@ export class PixelSyncProvider
   }
 }
 
+const getDemoColor = () =>
+  [
+    Math.floor(Math.random() * 256),
+    Math.floor(Math.random() * 256),
+    Math.floor(Math.random() * 256),
+    255,
+  ] as const;
+
+const getShiftedColor = (color: readonly [number, number, number, number]) =>
+  [
+    Math.max(0, Math.min(255, color[0] + (Math.random() * 50 - 25))),
+    Math.max(0, Math.min(255, color[1] + (Math.random() * 50 - 25))),
+    Math.max(0, Math.min(255, color[2] + (Math.random() * 50 - 25))),
+    color[3],
+  ] as const;
+
 export class DemoPixelSyncProvider
   extends BasePixelSyncProvider
   implements IPixelSyncProvider
@@ -158,7 +174,7 @@ export class DemoPixelSyncProvider
   private startDemo() {
     this.updateInterval = setInterval(() => {
       const donationId = `demo_donation_${Math.floor(Math.random() * 1000000)}`;
-      const identifier = `demo_user_${Math.floor(Math.random() * 1000)}`;
+      const identifier = `@demo_user_${Math.floor(Math.random() * 1000)}`;
 
       const numberOfPixels = Math.floor(Math.random() * 2) + 1;
 
@@ -167,21 +183,24 @@ export class DemoPixelSyncProvider
         payload: {
           identifier,
           amount: numberOfPixels * 10000 + Math.floor(Math.random() * 3000),
-          pixels: Array.from({ length: numberOfPixels }).map(() => ({
-            id: `pixel_${Math.floor(Math.random() * 1000000)}`,
-            donationId,
-            receivedAt: new Date(),
-            data: btoa(
-              String.fromCharCode(
-                ...Array.from({ length: PIXEL_SIZE * PIXEL_SIZE * 4 }).map(() =>
-                  Math.floor(Math.random() * 256),
+          pixels: Array.from({ length: numberOfPixels }).map(() => {
+            const color = getDemoColor();
+            return {
+              id: `pixel_${Math.floor(Math.random() * 1000000)}`,
+              donationId,
+              receivedAt: new Date(),
+              data: btoa(
+                String.fromCharCode(
+                  ...Array.from({ length: PIXEL_SIZE * PIXEL_SIZE }).flatMap(
+                    () => getShiftedColor(color),
+                  ),
                 ),
               ),
-            ),
-            identifier,
-            column: Math.floor(Math.random() * PIXEL_GRID_WIDTH),
-            row: Math.floor(Math.random() * PIXEL_GRID_HEIGHT),
-          })),
+              identifier,
+              column: Math.floor(Math.random() * PIXEL_GRID_WIDTH),
+              row: Math.floor(Math.random() * PIXEL_GRID_HEIGHT),
+            };
+          }),
         },
       };
       this.handleMessage(
@@ -251,10 +270,6 @@ export const useLivePixels = ({ onEvent, onInit }: LivePixelsParams = {}) => {
   const client = useQueryClient();
   const sync = usePixelSync();
   const query = useQuery({
-    staleTime: Infinity,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
     queryKey: LivePixelsQueryKey,
     queryFn: async ({ client }) => {
       await sync.ready();
