@@ -460,6 +460,9 @@ model TwitchChannel {
 
   broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
   moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
+
+  @@index([broadcasterAccountId], name: "TwitchChannel_broadcaster")
+  @@index([moderatorAccountId], name: "TwitchChannel_moderator")
 }
 
 model RoundsCheck {
@@ -487,6 +490,8 @@ model Donation {
   providerMetadata Json
 
   pixels Pixel[]
+
+  @@index([receivedAt(sort: Desc)], name: "Donation_recent")
 }
 
 model Pixel {
@@ -499,4 +504,6 @@ model Pixel {
   row        Int
 
   donation Donation @relation(fields: [donationId], references: [id])
+
+  @@index([donationId], name: "Pixel_donationId")
 }

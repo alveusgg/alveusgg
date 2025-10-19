@@ -1,4 +1,10 @@
-import { type Ref, useCallback, useEffect, useRef } from "react";
+import {
+  type MouseEvent,
+  type Ref,
+  useCallback,
+  useEffect,
+  useRef,
+} from "react";
 
 import type { DonationAlert, Pixel } from "@alveusgg/donations-core";
 
@@ -125,7 +131,7 @@ const Pixels = ({
   const highlightGridRefRef = useRef<HTMLParagraphElement>(null);
   const highlightIdentifierRef = useRef<HTMLParagraphElement>(null);
   const move = useCallback(
-    (e: React.MouseEvent) => {
+    (e: MouseEvent) => {
       if (
         !highlightTooltipRef.current ||
         !highlightGridRefRef.current ||
@@ -139,6 +145,10 @@ const Pixels = ({
       const y = Math.floor(
         ((e.clientY - rect.top) / rect.height) * PIXEL_GRID_HEIGHT,
       );
+
+      // prevent negative coords
+      if (x < 0 || y < 0) return;
+
       const size = rect.width / PIXEL_GRID_WIDTH;
 
       const gridRef = coordsToGridRef({ x, y });

@@ -214,7 +214,7 @@ function PixelsAlert() {
         >
           <motion.span
             ref={multiplierRef}
-            className="absolute top-12 -right-8 flex items-center"
+            className="absolute top-12 -right-8 z-20 flex items-center"
             variants={{
               hidden: { opacity: 0, x: -20 },
             }}
