@@ -240,7 +240,7 @@ const InstitutePixelsPage: NextPage = () => {
                   step="0.001"
                   value={scrollProgress}
                   onChange={handleScrollbarChange}
-                  className="relative z-10 range-slider h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing"
+                  className="relative z-10 h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing slider-thumb:size-6 slider-thumb:appearance-none slider-thumb:rounded-md slider-thumb:border-0 slider-thumb:bg-alveus-tan slider-thumb:shadow-lg slider-thumb:transition-transform slider-thumb:hover:scale-110 slider-thumb:active:scale-95"
                   title="Scroll horizontally"
                 />
                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-1 text-alveus-tan/50">
