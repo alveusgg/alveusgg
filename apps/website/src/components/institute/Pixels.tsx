@@ -79,12 +79,14 @@ const Pixels = ({
   className,
   canvasClassName,
   ref,
+  onScroll,
 }: {
   filter?: (pixel: Pixel, signal: AbortSignal) => boolean | Promise<boolean>;
   onFilter?: (pixel: Pixel[]) => void;
   className?: string;
   canvasClassName?: string;
   ref?: Ref<HTMLDivElement>;
+  onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -258,6 +260,7 @@ const Pixels = ({
       )}
       style={{ aspectRatio: `${PIXEL_GRID_WIDTH} / ${PIXEL_GRID_HEIGHT}` }}
       ref={ref}
+      onScroll={onScroll}
     >
       <div
         className={classes(

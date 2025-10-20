@@ -68,12 +68,15 @@ const InstitutePixelsPage: NextPage = () => {
 
   const [fullscreen, setFullscreen] = useState(false);
   const fullscreenRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0.5);
+
   const fullscreenToggle = useCallback(() => {
     setFullscreen((v) => {
       if (v) {
         document.body.style.overflow = "";
       } else {
         document.body.style.overflow = "hidden";
+        setScrollProgress(0.5);
         window.requestAnimationFrame(() => {
           if (!fullscreenRef.current) return;
           const { scrollWidth, clientWidth } = fullscreenRef.current;
@@ -82,6 +85,26 @@ const InstitutePixelsPage: NextPage = () => {
       }
       return !v;
     });
+  }, []);
+
+  const handleScrollbarChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const progress = parseFloat(e.target.value);
+      setScrollProgress(progress);
+      if (!fullscreenRef.current) return;
+      const { scrollWidth, clientWidth } = fullscreenRef.current;
+      fullscreenRef.current.scrollLeft = (scrollWidth - clientWidth) * progress;
+    },
+    [],
+  );
+
+  const handleScroll = useCallback(() => {
+    if (!fullscreenRef.current) return;
+    const { scrollLeft, scrollWidth, clientWidth } = fullscreenRef.current;
+    const maxScroll = scrollWidth - clientWidth;
+    if (maxScroll > 0) {
+      setScrollProgress(scrollLeft / maxScroll);
+    }
   }, []);
 
   const pixelsRef = useCallback(
@@ -148,7 +171,7 @@ const InstitutePixelsPage: NextPage = () => {
         <div
           className={classes(
             fullscreen
-              ? "fixed inset-0 isolate z-100 flex h-screen w-screen touch-none flex-col gap-8 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
+              ? "fixed inset-0 isolate z-100 flex h-screen w-screen flex-col gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
               : "contents",
           )}
         >
@@ -183,6 +206,7 @@ const InstitutePixelsPage: NextPage = () => {
                   : "shadow-xl ring-4 ring-alveus-green",
               )}
               ref={pixelsRef}
+              onScroll={handleScroll}
             />
 
             {fullscreen && (
@@ -192,6 +216,29 @@ const InstitutePixelsPage: NextPage = () => {
               </div>
             )}
           </div>
+
+          {fullscreen && (
+            <div className="relative z-10 shrink-0 rounded-lg bg-alveus-green-900/50 p-3 backdrop-blur-xs">
+              <div className="relative">
+                <input
+                  type="range"
+                  min="0"
+                  max="1"
+                  step="0.001"
+                  value={scrollProgress}
+                  onChange={handleScrollbarChange}
+                  className="relative z-10 h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing [&::-moz-range-thumb]:size-6 [&::-moz-range-thumb]:appearance-none [&::-moz-range-thumb]:rounded-md [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:bg-alveus-tan [&::-moz-range-thumb]:shadow-lg [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:active:scale-95 [&::-webkit-slider-thumb]:size-6 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-md [&::-webkit-slider-thumb]:bg-alveus-tan [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-95"
+                  title="Scroll horizontally"
+                />
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-1 text-alveus-tan/50">
+                  <IconArrowRight className="size-4 -scale-x-100" />
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 text-alveus-tan/50">
+                  <IconArrowRight className="size-4" />
+                </div>
+              </div>
+            </div>
+          )}
 
           <Box
             dark
