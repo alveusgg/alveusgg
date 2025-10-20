@@ -495,8 +495,9 @@ model Donation {
 }
 
 model Pixel {
-  id         String   @id
+  id         String    @id
   receivedAt DateTime
+  renamedAt  DateTime?
   donationId String
   identifier String
   email      String?

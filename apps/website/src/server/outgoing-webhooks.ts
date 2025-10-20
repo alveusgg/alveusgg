@@ -238,3 +238,36 @@ export async function triggerDiscordChannelWebhook({
     expiresAt,
   });
 }
+
+export async function triggerPlainDiscordChannelWebhook({
+  webhookUrl,
+  contentMessage,
+  botName: username = env.DISCORD_CHANNEL_WEBHOOK_NAME,
+  expiresAt,
+}: {
+  webhookUrl: string;
+  contentMessage?: string;
+  botName?: string;
+  expiresAt?: Date;
+}) {
+  const body: DiscordWebhookNotificationBody = {
+    username,
+    tts: false,
+    avatar_url: `${env.NEXT_PUBLIC_BASE_URL}/apple-touch-icon.png`,
+    allowed_mentions: {
+      parse: [],
+    },
+    content: contentMessage || "",
+  };
+
+  const url = new URL(webhookUrl);
+  url.searchParams.set("wait", "true");
+
+  return triggerOutgoingWebhook({
+    url: url.toString(),
+    type: OUTGOING_WEBHOOK_TYPE_DISCORD_CHANNEL,
+    body: JSON.stringify(body),
+    retry: true,
+    expiresAt,
+  });
+}

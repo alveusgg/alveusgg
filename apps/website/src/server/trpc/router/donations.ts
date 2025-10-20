@@ -1,4 +1,6 @@
+import { TRPCError } from "@trpc/server";
 import { waitUntil } from "@vercel/functions";
+import type { NextApiRequest } from "next";
 import pluralize from "pluralize";
 import { z } from "zod";
 
@@ -8,28 +10,101 @@ import {
   DonationSchema,
   type Pixel,
   PixelSchema,
+  type Providers,
 } from "@alveusgg/donations-core";
+
+import { env } from "@/env";
 
 import { sendChatMessage } from "@/server/apis/twitch";
 import {
+  type PixelWithDonation,
   createDonations,
   createPixels,
   getDonationFeed,
+  getMyPixels,
+  getPayPalPixelsByVerification,
   getPixels,
+  renamePixel,
 } from "@/server/db/donations";
+import { triggerPlainDiscordChannelWebhook } from "@/server/outgoing-webhooks";
 import {
   createCheckPermissionMiddleware,
   protectedProcedure,
+  publicProcedure,
   router,
   sharedKeyProcedure,
 } from "@/server/trpc/trpc";
+import { limit } from "@/server/utils/rate-limit";
 
 import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
 
 import { getShortBaseUrl } from "@/utils/short-url";
 
+import { payPalVerificationSchema } from "@/components/institute/EditPayPalPixels";
+import { pixelIdentifierSchema } from "@/components/institute/PixelIdentifierInput";
+import { coordsToGridRef } from "@/components/institute/Pixels";
+
 const DONATION_FEED_ENTRIES_PER_PAGE = 50;
+
+export type MyPixel = {
+  id: string;
+  donationId: string;
+  receivedAt: Date;
+  identifier: string;
+  column: number;
+  row: number;
+  provider: Providers;
+  lockedUntil?: Date;
+};
+
+function isPixelLocked(pixel: { renamedAt: Date | null }) {
+  return (
+    pixel.renamedAt &&
+    pixel.renamedAt >
+    new Date(Date.now() - env.NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS)
+  );
+}
+
+export type DonationPixel = ReturnType<typeof mapDonationPixels>[number];
+
+function mapDonationPixels(pixels: PixelWithDonation[]) {
+  return pixels.map((pixel) => {
+    return {
+      provider: pixel.donation.provider as Providers,
+      donationId: pixel.donationId,
+      receivedAt: pixel.receivedAt,
+      id: pixel.id,
+      identifier: pixel.identifier,
+      column: pixel.column,
+      row: pixel.row,
+      lockedUntil: pixel.renamedAt
+        ? new Date(
+          pixel.renamedAt.getTime() +
+          env.NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS,
+        )
+        : undefined,
+    } as const;
+  });
+}
+
+async function guardPayPalSearchMutation(req: NextApiRequest) {
+  const clientIp = req.headers["x-forwarded-for"];
+  if (typeof clientIp === "string") {
+    // FIXME: Increase to a reasonable token window
+    const isAllowed = await limit(
+      `donations-pixels-paypal-search-${clientIp}`,
+      5,
+      "10 s",
+    );
+    if (!isAllowed) {
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Too many attempts. Please wait until you try again.",
+      });
+    }
+  }
+}
 
 export type DonationFeed = Awaited<ReturnType<typeof getDonationFeed>>;
 
@@ -90,7 +165,144 @@ export const donationsRouter = router({
       waitUntil(sendChatMessages(input.pixels));
       await createPixels(input.pixels);
     }),
+
+  getMyPixels: protectedProcedure.query(async ({ ctx }) =>
+    mapDonationPixels(await getMyPixels(ctx.session.user)),
+  ),
+
+  getPayPalPixels: publicProcedure
+    .input(payPalVerificationSchema)
+    .mutation(async ({ input, ctx }) => {
+      await guardPayPalSearchMutation(ctx.req);
+      return mapDonationPixels(await getPayPalPixelsByVerification(input));
+    }),
+
+  renameMyPixels: protectedProcedure
+    .input(
+      z.object({
+        newIdentifier: pixelIdentifierSchema,
+        pixelId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const pixels = await getMyPixels(ctx.session.user, input.pixelId).catch(
+        () => {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Failed to find pixels (database)",
+          });
+        },
+      );
+
+      return renamePixels(
+        pixels,
+        input.newIdentifier,
+        `Twitch login (${ctx.session.user.name})`,
+      );
+    }),
+
+  renamePayPalPixels: publicProcedure
+    .input(
+      z.object({
+        newIdentifier: pixelIdentifierSchema,
+        verification: payPalVerificationSchema,
+        pixelId: z.string().optional(),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      await guardPayPalSearchMutation(ctx.req);
+
+      const pixels = await getPayPalPixelsByVerification(
+        input.verification,
+        input.pixelId,
+      ).catch(() => {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to find pixels (database)",
+        });
+      });
+
+      return renamePixels(
+        pixels,
+        input.newIdentifier,
+        `PayPal info (${input.verification.firstName} ${input.verification.lastName[0]})`,
+      );
+    }),
 });
+
+async function renamePixels(
+  pixels: PixelWithDonation[],
+  newIdentifier: string,
+  auditVerification: string,
+) {
+  const results = await Promise.all(
+    pixels.map((pixel) =>
+      (async () => {
+        if (isPixelLocked(pixel)) {
+          return {
+            pixelId: pixel.id,
+            isSkipped: true,
+            isError: false,
+            isSuccess: false,
+            reason: "locked" as const,
+          };
+        }
+
+        if (pixel.identifier === newIdentifier) {
+          return {
+            pixelId: pixel.id,
+            isSkipped: true,
+            isError: false,
+            isSuccess: false,
+            reason: "same" as const,
+          };
+        }
+
+        try {
+          await renamePixel(pixel.id, newIdentifier);
+          return {
+            pixelId: pixel.id,
+            isSuccess: true,
+            isError: false,
+            isSkipped: false,
+          };
+        } catch (_) {
+          return {
+            pixelId: pixel.id,
+            isError: true,
+            isSuccess: false,
+            isSkipped: false,
+            errorMessage: "Failed to rename pixel",
+          };
+        }
+      })(),
+    ),
+  );
+
+  if (env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL) {
+    const messages: string[] = [];
+
+    const renamedIds = results.filter((r) => r.isSuccess).map((r) => r.pixelId);
+    pixels.forEach((pixel) => {
+      if (!renamedIds.includes(pixel.id)) return;
+
+      const gridRef = coordsToGridRef({ x: pixel.column, y: pixel.row });
+      messages.push(
+        `${gridRef.x}:${gridRef.y} – \`${pixel.identifier}\` to \`${newIdentifier}\` (${pixel.id})`,
+      );
+    });
+
+    if (messages.length) {
+      await triggerPlainDiscordChannelWebhook({
+        webhookUrl: env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+        contentMessage:
+          `Renaming (${auditVerification})\n` + messages.join("\n\n"),
+      });
+    }
+  }
+
+  return results;
+}
 
 const sendChatMessages = async (
   pixels: (Omit<Pixel, "data"> & {

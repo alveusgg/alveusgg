@@ -22,6 +22,7 @@ import PixelsSearch from "@/components/institute/PixelsSearch";
 import Wolves from "@/components/institute/Wolves";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconPencil from "@/icons/IconPencil";
 
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
@@ -252,6 +253,24 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
               PayPal directly, your pixel will show your first name but you can
               also search using your PayPal email address.
             </p>
+
+            <Heading level={2} className="mt-8 text-xl">
+              Want a different name on the mural?
+            </Heading>
+            <p>
+              You can change your name on the pixels you have unlocked here.
+            </p>
+
+            <div className="flex justify-end">
+              <Button
+                href={`/institute/pixels/${muralId}/rename`}
+                dark
+                className="mt-4 inline-flex items-center gap-2"
+              >
+                <IconPencil className="size-5" />
+                Rename your pixels
+              </Button>
+            </div>
           </Box>
         </div>
       </Section>
