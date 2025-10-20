@@ -9,7 +9,6 @@ import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { DashboardOverviewStats } from "@/components/admin/dashboard/DashboardOverviewStats";
 import { DashboardRecentActivity } from "@/components/admin/dashboard/DashboardRecentActivity";
-import { DashboardSystemHealth } from "@/components/admin/dashboard/DashboardSystemHealth";
 import { DashboardTopContributors } from "@/components/admin/dashboard/DashboardTopContributors";
 import { DashboardTrendCharts } from "@/components/admin/dashboard/DashboardTrendCharts";
 import Meta from "@/components/content/Meta";
@@ -38,11 +37,6 @@ const AdminDashboardPage: NextPage<
 
       <AdminPageLayout title="Dashboard" menuItems={menuItems}>
         <div className="space-y-6">
-          {/* System Health Status */}
-          <section>
-            <DashboardSystemHealth />
-          </section>
-
           {/* Overview Statistics */}
           <section>
             <Headline>Overview</Headline>

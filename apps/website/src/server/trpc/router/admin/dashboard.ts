@@ -249,57 +249,6 @@ export const adminDashboardRouter = router({
       return Array.from(dateMap.values()).reverse(); // Oldest to newest
     }),
 
-  getSystemHealth: permittedProcedure.query(async () => {
-    // Check various system health indicators
-    const [
-      failedWebhooks,
-      expiredFileObjects,
-      pendingNotificationPushes,
-      oldestPendingPush,
-    ] = await Promise.all([
-      prisma.outgoingWebhook.count({
-        where: {
-          failedAt: { not: null },
-          deliveredAt: null,
-        },
-      }),
-
-      prisma.fileStorageObject.count({
-        where: {
-          expiresAt: { lt: new Date() },
-          deletedAt: null,
-        },
-      }),
-
-      prisma.notificationPush.count({
-        where: {
-          processingStatus: "PENDING",
-          expiresAt: { gt: new Date() },
-        },
-      }),
-
-      prisma.notificationPush.findFirst({
-        where: {
-          processingStatus: "PENDING",
-          expiresAt: { gt: new Date() },
-        },
-        orderBy: { createdAt: "asc" },
-        select: { createdAt: true },
-      }),
-    ]);
-
-    return {
-      failedWebhooks,
-      expiredFileObjects,
-      pendingNotificationPushes,
-      oldestPendingPushAge: oldestPendingPush
-        ? Math.floor(
-            (Date.now() - oldestPendingPush.createdAt.getTime()) / 1000 / 60,
-          )
-        : null, // age in minutes
-    };
-  }),
-
   getTopContributors: permittedProcedure.query(async () => {
     // Get users with most show and tell posts
     const topShowAndTellUsers = await prisma.showAndTellEntry.groupBy({
