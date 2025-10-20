@@ -31,6 +31,7 @@ const slides = [
   {
     src: buildingHeroImage,
     alt: "Drawing of the Alveus Research & Recovery Institute building",
+    className: "object-[25%_50%]",
   },
   {
     src: denHeroImage,
@@ -39,10 +40,12 @@ const slides = [
   {
     src: prepHeroImage,
     alt: "Drawing of the food preparation area of the institute",
+    className: "object-[75%_50%]",
   },
   {
     src: vetHeroImage,
     alt: "Drawing of the veterinary care area with a wolf being examined",
+    className: "object-[25%_50%]",
   },
   {
     src: labHeroImage,
@@ -51,6 +54,7 @@ const slides = [
   {
     src: wolvesHeroImage,
     alt: "Drawing of released wolves walking through the landscape",
+    className: "object-[75%_50%]",
   },
 ];
 
