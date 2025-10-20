@@ -2,6 +2,7 @@
 @import "@alveusgg/data/build/tailwind.css";
 
 @plugin "./text-stroke.ts";
+@plugin "./range-slider.ts";
 
 /* FIXME: https://github.com/tailwindlabs/tailwindcss/discussions/15253 */
 @theme inline {
