@@ -205,7 +205,11 @@ export function DashboardTrendCharts() {
                   stroke="#9ca3af"
                   style={{ fontSize: "12px" }}
                 />
-                <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+                <YAxis
+                  stroke="#9ca3af"
+                  style={{ fontSize: "12px" }}
+                  allowDecimals={false}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#1f2937",
@@ -258,7 +262,11 @@ export function DashboardTrendCharts() {
                   stroke="#9ca3af"
                   style={{ fontSize: "12px" }}
                 />
-                <YAxis stroke="#9ca3af" style={{ fontSize: "12px" }} />
+                <YAxis
+                  stroke="#9ca3af"
+                  style={{ fontSize: "12px" }}
+                  allowDecimals={false}
+                />
                 <Tooltip
                   contentStyle={{
                     backgroundColor: "#1f2937",
