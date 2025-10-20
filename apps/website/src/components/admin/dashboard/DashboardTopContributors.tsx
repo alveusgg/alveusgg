@@ -1,9 +1,23 @@
 import Image from "next/image";
 
+import { checkRolesGivePermission, permissions } from "@/data/permissions";
+
 import { trpc } from "@/utils/trpc";
 
 export function DashboardTopContributors() {
   const contributors = trpc.adminDashboard.getTopContributors.useQuery();
+  const { data: session } = trpc.auth.getSession.useQuery();
+  const userRoles = session?.user?.roles || [];
+  const isSuperUser = session?.user?.isSuperUser || false;
+
+  const canViewShowAndTell =
+    isSuperUser ||
+    checkRolesGivePermission(userRoles, permissions.manageShowAndTell);
+
+  // Don't show if user doesn't have Show & Tell permissions
+  if (!canViewShowAndTell) {
+    return null;
+  }
 
   if (!contributors.data) {
     return <p className="text-gray-400">Loading top contributors...</p>;
