@@ -130,8 +130,10 @@ const InstitutePixelsPage: NextPage = () => {
   );
 
   useEffect(() => {
+    if (!fullscreen) return;
+
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && fullscreen) {
+      if (e.key === "Escape") {
         fullscreenToggle();
       }
     };
