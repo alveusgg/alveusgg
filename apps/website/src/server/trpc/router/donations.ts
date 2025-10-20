@@ -24,6 +24,8 @@ import {
 
 import { channels } from "@/data/twitch";
 
+import { getShortBaseUrl } from "@/utils/short-url";
+
 const DONATION_FEED_ENTRIES_PER_PAGE = 50;
 
 export const donationsRouter = router({
@@ -115,7 +117,7 @@ const sendChatMessages = async (
           account.access_token,
           channels.alveusgg.id,
           broadcasterId,
-          `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! https://alveus.gg/pixels?s=${identifier}`,
+          `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! ${getShortBaseUrl()}/pixels?s=${encodeURIComponent(identifier).replace(/^%40/, "@")}`,
         );
       }
     } catch {
