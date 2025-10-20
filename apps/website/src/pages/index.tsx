@@ -196,14 +196,14 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="container mx-auto grid grow auto-rows-auto grid-cols-1 flex-wrap content-center items-center gap-8 p-4 text-white lg:mt-40 lg:pt-8 lg:pb-16 xl:grid-cols-2 xl:gap-y-16">
+        <div className="container mx-auto grid grow auto-rows-auto grid-cols-1 content-center items-center gap-8 p-4 text-white lg:mt-40 lg:pt-8 lg:pb-16 xl:grid-cols-2 xl:gap-y-16">
           <div>
             <Heading className="text-5xl">
               Educating the <br className="hidden md:block" />
               World from the Web
             </Heading>
 
-            <p className="mt-8 text-lg">
+            <p className="mt-8 text-xl text-balance">
               Alveus is a virtual education center following the journeys of our
               non-releasable animal ambassadors, aiming to educate and spark an
               appreciation for them and their wild counterparts.
