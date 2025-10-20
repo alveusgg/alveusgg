@@ -161,6 +161,11 @@ const config: NextConfig = {
       permanent: true,
     },
     {
+      source: "/team",
+      destination: "/about/team",
+      permanent: true,
+    },
+    {
       source: "/about/advisory-board",
       destination: "/about/team#advisory-board",
       permanent: true,
