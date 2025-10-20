@@ -3,7 +3,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import pluralize from "pluralize";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { Pixel } from "@alveusgg/donations-core";
 
@@ -128,6 +128,18 @@ const InstitutePixelsPage: NextPage = () => {
     },
     [fullscreen],
   );
+
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && fullscreen) {
+        setFullscreen(false);
+        document.body.style.overflow = "";
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [fullscreen]);
 
   return (
     <PixelSyncProviderProvider>
