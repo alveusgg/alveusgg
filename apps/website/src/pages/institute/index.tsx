@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { PixelSyncProviderProvider } from "@/hooks/pixels";
 
+import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -16,7 +17,6 @@ import Wolves from "@/components/institute/Wolves";
 import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
-import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import buildingHeroImage from "@/assets/institute/hero/building.png";
 import denHeroImage from "@/assets/institute/hero/den.png";
 import labHeroImage from "@/assets/institute/hero/lab.png";
@@ -70,8 +70,8 @@ const InstitutePage: NextPage = () => {
           <div className="absolute inset-0 bg-black/50" />
         </div>
 
-        <div className="container mx-auto flex grow flex-col justify-center gap-8 p-4 text-white lg:mt-40 lg:pt-8 lg:pb-16 xl:gap-16">
-          <div className="lg:max-w-4/5">
+        <div className="container mx-auto flex grow flex-col gap-8 p-4 text-white lg:mt-40 lg:pt-8 lg:pb-16 xl:gap-16">
+          <div className="mt-auto lg:max-w-4/5">
             <Heading className="text-5xl text-balance">
               Alveus Research & Recovery Institute
             </Heading>
@@ -83,64 +83,59 @@ const InstitutePage: NextPage = () => {
               and wildlife.
             </p>
           </div>
+
+          <Box
+            dark
+            className="mt-auto rounded-2xl bg-alveus-green-900/50 backdrop-blur-md"
+          >
+            <div className="flex flex-col items-center gap-8 lg:flex-row">
+              <div>
+                <Heading id="pixels" level={2} link className="text-balance">
+                  Support the Institute with the Pixel Project
+                </Heading>
+
+                <p className="text-lg">
+                  We need your help to fund the initial development of the
+                  Alveus Research & Recovery Institute. We&apos;re aiming to
+                  raise $1,000,000 to kickstart our first projects and build out
+                  the infrastructure needed to ensure long-term success. Every
+                  donation of $100 or more will unlock a pixel on our institute
+                  mural, allowing you to leave your mark on this exciting new
+                  venture.
+                </p>
+
+                <Button
+                  href="/institute/pixels"
+                  dark
+                  className="mt-4 inline-flex items-center gap-2"
+                >
+                  Donate Now to Unlock a Pixel
+                  <IconArrowRight className="size-5" />
+                </Button>
+              </div>
+
+              <div className="z-0 flex w-full max-w-lg items-center justify-center lg:order-first">
+                <Image
+                  src={usfwsRedWolfImage}
+                  width={256}
+                  alt="Red wolf, B. Bartel/USFWS, Public Domain, https://www.fws.gov/media/red-wolf-7"
+                  className="z-10 mr-[-10%] h-auto w-2/5 max-w-64 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+                />
+                <Image
+                  src={usfwsMexicanWolfReleasedImage}
+                  width={384}
+                  alt="Mexican wolf released back into the wild, Mexican Wolf Interagency Field Team, Public Domain, https://www.fws.gov/media/mexican-wolf-released-back-wild"
+                  className="h-auto w-3/5 max-w-96 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+                />
+              </div>
+            </div>
+
+            <div className="mt-8 flex flex-col items-center gap-x-4 gap-y-1 lg:flex-row">
+              <PixelsProgress className="bg-alveus-green-900/75 lg:flex-1" />
+              <PixelsDescription />
+            </div>
+          </Box>
         </div>
-      </div>
-
-      <div className="relative">
-        <Image
-          src={leafLeftImage2}
-          alt=""
-          className="pointer-events-none absolute -bottom-24 left-0 z-10 hidden h-auto w-1/2 max-w-48 drop-shadow-md select-none lg:block"
-        />
-
-        <Section>
-          <div className="flex flex-col items-center gap-8 lg:flex-row">
-            <div>
-              <Heading id="pixels" level={2} link className="text-balance">
-                Support the Institute with the Pixel Project
-              </Heading>
-
-              <p className="text-lg text-balance">
-                We need your help to fund the initial development of the Alveus
-                Research & Recovery Institute. We&apos;re aiming to raise
-                $1,000,000 to kickstart our first projects and build out the
-                infrastructure needed to ensure long-term success. Every
-                donation of $100 or more will unlock a pixel on our institute
-                mural, allowing you to leave your mark on this exciting new
-                venture.
-              </p>
-
-              <Button
-                href="/institute/pixels"
-                filled
-                className="mt-4 inline-flex items-center gap-2"
-              >
-                Donate Now to Unlock a Pixel
-                <IconArrowRight className="size-5" />
-              </Button>
-            </div>
-
-            <div className="z-0 flex w-full max-w-lg items-center justify-center lg:order-first">
-              <Image
-                src={usfwsRedWolfImage}
-                width={256}
-                alt="Red wolf, B. Bartel/USFWS, Public Domain, https://www.fws.gov/media/red-wolf-7"
-                className="z-10 mr-[-10%] h-auto w-2/5 max-w-64 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
-              />
-              <Image
-                src={usfwsMexicanWolfReleasedImage}
-                width={384}
-                alt="Mexican wolf released back into the wild, Mexican Wolf Interagency Field Team, Public Domain, https://www.fws.gov/media/mexican-wolf-released-back-wild"
-                className="h-auto w-3/5 max-w-96 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
-              />
-            </div>
-          </div>
-
-          <div className="mt-8 flex flex-col items-center gap-x-4 gap-y-1 lg:flex-row">
-            <PixelsProgress className="lg:flex-1" />
-            <PixelsDescription />
-          </div>
-        </Section>
       </div>
 
       <Section className="overflow-x-hidden" dark>
