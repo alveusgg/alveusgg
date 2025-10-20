@@ -2,12 +2,13 @@ import { type Node as DagreNode, graphlib, layout } from "@dagrejs/dagre";
 import {
   Background,
   Controls,
+  type Edge,
   type EdgeTypes,
+  type Node,
   type NodeTypes,
   Position,
   ReactFlow,
   type ReactFlowInstance,
-  type XYPosition,
   useEdgesState,
   useNodesState,
 } from "@xyflow/react";
@@ -15,6 +16,7 @@ import { useEffect, useMemo } from "react";
 
 import "@xyflow/react/dist/style.css";
 
+// TreeNode represents our internal nested structure before conversion to React Flow
 export type TreeNode<T> = {
   id: string;
   data: T;
@@ -22,29 +24,10 @@ export type TreeNode<T> = {
   type?: string;
 };
 
-type TreeNodeInternal<T> = TreeNode<T> & {
-  draggable: boolean;
-  connectable: boolean;
-  selectable: boolean;
-  zIndex: number;
-};
-
-type TreeNodePositioned<T> = TreeNodeInternal<T> & {
-  targetPosition: Position;
-  sourcePosition: Position;
-  position: XYPosition;
-};
-
-type TreeEdgeInternal = {
-  id: string;
-  source: string;
-  target: string;
-  focusable: boolean;
-};
-
+// Once converted to React Flow, we use the standard Node<T> type
 export type TreeInstance<T extends Record<string, unknown>> = ReactFlowInstance<
-  TreeNodePositioned<T>,
-  TreeEdgeInternal
+  Node<T>,
+  Edge
 >;
 
 interface TreeProps<T extends Record<string, unknown>> {
@@ -56,8 +39,12 @@ interface TreeProps<T extends Record<string, unknown>> {
   onInit?: (instance: TreeInstance<T>) => void;
 }
 
-const withPositions = <T,>(
-  { nodes, edges }: { nodes: TreeNodeInternal<T>[]; edges: TreeEdgeInternal[] },
+const withPositions = <T extends Record<string, unknown>>(
+  {
+    nodes,
+    edges,
+    childrenMap,
+  }: { nodes: Node<T>[]; edges: Edge[]; childrenMap: Map<string, TreeNode<T>> },
   size: { width: number; height: number },
   separation: { ranks: number; siblings: number },
   direction: "TB" | "LR" = "LR",
@@ -83,9 +70,12 @@ const withPositions = <T,>(
   // Get the nodes where all the children are leaf nodes
   // For each parent, find the nearest child, and fix any misalignment
   // Without this, leaf nodes sometimes appear to not be grouped together
-  nodes.forEach(({ id, children }) => {
+  nodes.forEach(({ id }) => {
+    const treeNode = childrenMap.get(id);
+    if (!treeNode) return;
+    const children = treeNode.children;
     if (!children.length) return;
-    if (children.some((child) => child.children.length)) return;
+    if (children.some((child: TreeNode<T>) => child.children.length)) return;
 
     // Get the parent node
     const dagreParent = dagreGraph.node(id);
@@ -98,19 +88,19 @@ const withPositions = <T,>(
     // Get the children nodes
     type ChildNode = { id: string } & DagreNode;
     const dagreChildren = children
-      .reduce<ChildNode[]>((acc, { id }) => {
+      .reduce<ChildNode[]>((acc: ChildNode[], { id }: TreeNode<T>) => {
         const node = dagreGraph.node(id);
         if (!node) return acc;
         return [...acc, { id, ...node }];
       }, [])
-      .sort((a, b) => a[axis] - b[axis]);
+      .sort((a: ChildNode, b: ChildNode) => a[axis] - b[axis]);
     if (!dagreChildren[0]) return;
 
     // Find the child node that is nearest to the parent
     const [nearestNode, nearestIdx] = dagreChildren
       .slice(1)
       .reduce<[ChildNode, number]>(
-        (acc, child, idx) => {
+        (acc: [ChildNode, number], child: ChildNode, idx: number) => {
           const accDistance = Math.abs(acc[0][axis] - dagreParent[axis]);
           const childDistance = Math.abs(child[axis] - dagreParent[axis]);
           return childDistance < accDistance ? [child, idx + 1] : acc;
@@ -150,7 +140,7 @@ const withPositions = <T,>(
   });
 
   // Store the node positions
-  const nodesWithPosition: TreeNodePositioned<T>[] = nodes.map((node) => {
+  const nodesWithPosition: Node<T>[] = nodes.map((node) => {
     const nodeWithPosition = dagreGraph.node(node.id);
     const isHorizontal = direction === "LR";
     return {
@@ -169,10 +159,13 @@ const withPositions = <T,>(
   return { nodes: nodesWithPosition, edges };
 };
 
-const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
+const getNodesEdges = <T extends Record<string, unknown>>(
+  data: TreeNode<T> | TreeNode<T>[],
+) => {
   const ids = new Map<string, TreeNode<T>>();
-  const nodes = [] as TreeNodeInternal<T>[];
-  const edges = [] as TreeEdgeInternal[];
+  const childrenMap = new Map<string, TreeNode<T>>();
+  const nodes = [] as Node<T>[];
+  const edges = [] as Edge[];
   let deepest = 0;
 
   const queue = Array.isArray(data)
@@ -189,13 +182,17 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
       continue;
     }
     ids.set(node.id, node);
+    childrenMap.set(node.id, node);
 
     // Keep track of the deepest node
     if (depth > deepest) deepest = depth;
 
     // Store the node
     nodes.push({
-      ...node,
+      id: node.id,
+      type: node.type,
+      data: node.data,
+      position: { x: 0, y: 0 }, // Temporary position, will be set by withPositions
       // Tell reactflow to not allow dragging
       draggable: false,
       connectable: false,
@@ -223,9 +220,10 @@ const getNodesEdges = <T,>(data: TreeNode<T> | TreeNode<T>[]) => {
     nodes: nodes.map((node) => ({
       ...node,
       // Invert the z-index so that the shallowest node is on top
-      zIndex: deepest - node.zIndex,
+      zIndex: deepest - (node.zIndex ?? 0),
     })),
     edges,
+    childrenMap,
   };
 };
 
@@ -235,10 +233,10 @@ const useNodesEdgesState = <T extends Record<string, unknown>>(
   nodeSpacing: { ranks: number; siblings: number },
 ) => {
   // Take the nested data and convert it to a flat list of nodes and edges
-  const { nodes, edges } = useMemo(
-    () => withPositions(getNodesEdges(data), nodeSize, nodeSpacing),
-    [data, nodeSize, nodeSpacing],
-  );
+  const { nodes, edges } = useMemo(() => {
+    const result = getNodesEdges(data);
+    return withPositions(result, nodeSize, nodeSpacing);
+  }, [data, nodeSize, nodeSpacing]);
 
   const [statefulNodes, setNodes, onNodesChange] = useNodesState(nodes);
   useEffect(() => {
