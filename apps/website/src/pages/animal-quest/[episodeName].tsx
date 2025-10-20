@@ -289,13 +289,6 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
         <meta key="og:video:height" property="og:video:height" content="360" />
 
         <meta
-          key="canonical"
-          property="canonical"
-          content={`${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(
-            episode.edition,
-          )}`}
-        />
-        <meta
           key="og:url"
           property="og:url"
           content={`${env.NEXT_PUBLIC_BASE_URL}/animal-quest/${sentenceToKebab(

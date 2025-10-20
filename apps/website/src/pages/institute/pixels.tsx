@@ -6,8 +6,6 @@ import { useCallback, useMemo, useRef, useState } from "react";
 
 import type { Pixel } from "@alveusgg/donations-core";
 
-import { env } from "@/env";
-
 import { classes } from "@/utils/classes";
 
 import { PixelSyncProviderProvider } from "@/hooks/pixels";
@@ -91,11 +89,6 @@ const InstitutePixelsPage: NextPage = () => {
         description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
         image={buildingHeroImage.src}
       >
-        <meta
-          key="canonical"
-          property="canonical"
-          content={`${env.NEXT_PUBLIC_BASE_URL}/institute/pixels`}
-        />
         {fullscreen && (
           <meta
             name="viewport"
