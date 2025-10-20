@@ -132,14 +132,13 @@ const InstitutePixelsPage: NextPage = () => {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && fullscreen) {
-        setFullscreen(false);
-        document.body.style.overflow = "";
+        fullscreenToggle();
       }
     };
 
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
-  }, [fullscreen]);
+  }, [fullscreen, fullscreenToggle]);
 
   return (
     <PixelSyncProviderProvider>
