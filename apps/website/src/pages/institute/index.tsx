@@ -7,6 +7,7 @@ import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import Slideshow from "@/components/content/Slideshow";
 import Transparency from "@/components/content/Transparency";
 import PixelsDescription from "@/components/institute/PixelsDescription";
 import PixelsProgress from "@/components/institute/PixelsProgress";
@@ -16,11 +17,42 @@ import IconArrowRight from "@/icons/IconArrowRight";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
-import leafRightImage1 from "@/assets/floral/leaf-right-1.png";
-import headerImage from "@/assets/institute/header.png";
+import buildingHeroImage from "@/assets/institute/hero/building.png";
+import denHeroImage from "@/assets/institute/hero/den.png";
+import labHeroImage from "@/assets/institute/hero/lab.png";
+import prepHeroImage from "@/assets/institute/hero/prep.png";
+import vetHeroImage from "@/assets/institute/hero/vet.png";
+import wolvesHeroImage from "@/assets/institute/hero/wolves.png";
 import usfwsMexicanWolfFieldImage from "@/assets/institute/usfws-mexican-wolf-field.jpg";
 import usfwsMexicanWolfReleasedImage from "@/assets/institute/usfws-mexican-wolf-released.jpg";
 import usfwsRedWolfImage from "@/assets/institute/usfws-red-wolf.jpg";
+
+const slides = [
+  {
+    src: buildingHeroImage,
+    alt: "Drawing of the Alveus Research & Recovery Institute building",
+  },
+  {
+    src: denHeroImage,
+    alt: "Drawing of three wolf pups in a den",
+  },
+  {
+    src: prepHeroImage,
+    alt: "Drawing of the food preparation area of the institute",
+  },
+  {
+    src: vetHeroImage,
+    alt: "Drawing of the veterinary care area with a wolf being examined",
+  },
+  {
+    src: labHeroImage,
+    alt: "Drawing of the technology lab area of the institute",
+  },
+  {
+    src: wolvesHeroImage,
+    alt: "Drawing of released wolves walking through the landscape",
+  },
+];
 
 const InstitutePage: NextPage = () => {
   return (
@@ -28,33 +60,30 @@ const InstitutePage: NextPage = () => {
       <Meta
         title="Research & Recovery Institute"
         description="The Alveus Research & Recovery Institute is taking the Alveus approach to the wild to help save species from extinction, aiming to create a conservation breeding program for the critically endangered Mexican Gray and Red wolves."
-        image={headerImage.src}
+        image={buildingHeroImage.src}
       />
 
-      {/* Nav background */}
-      <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+      {/* Hero, offset to be navbar background */}
+      <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
+        <div className="absolute inset-0 -z-10 bg-alveus-green">
+          <Slideshow images={slides} />
+          <div className="absolute inset-0 bg-black/50" />
+        </div>
 
-      <div className="relative">
-        <Image
-          src={leafRightImage1}
-          alt=""
-          className="pointer-events-none absolute -top-8 right-0 z-10 hidden h-auto w-1/2 max-w-xs drop-shadow-md select-none lg:block 2xl:max-w-sm"
-        />
-
-        <Section dark>
-          <div className="w-full lg:w-4/5 lg:py-8">
-            <Heading className="text-balance">
+        <div className="container mx-auto flex grow flex-col justify-center gap-8 p-4 text-white lg:mt-40 lg:pt-8 lg:pb-16 xl:gap-16">
+          <div className="lg:max-w-4/5">
+            <Heading className="text-5xl text-balance">
               Alveus Research & Recovery Institute
             </Heading>
 
-            <p className="text-lg text-balance">
+            <p className="mt-8 text-xl text-balance">
               We are taking the Alveus approach to the wild. Pushing forward
               conservation technology, public involvement in science, and
               recovery ecology to make our world a better place for both people
               and wildlife.
             </p>
           </div>
-        </Section>
+        </div>
       </div>
 
       <div className="relative">

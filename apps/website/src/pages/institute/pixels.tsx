@@ -31,7 +31,7 @@ import IconX from "@/icons/IconX";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-import headerImage from "@/assets/institute/header.png";
+import buildingHeroImage from "@/assets/institute/hero/building.png";
 import usfwsRedWolfWalkingImage from "@/assets/institute/usfws-red-wolf-walking.jpg";
 
 const InstitutePixelsPage: NextPage = () => {
@@ -89,7 +89,7 @@ const InstitutePixelsPage: NextPage = () => {
       <Meta
         title="Pixel Project | Research & Recovery Institute"
         description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
-        image={headerImage.src}
+        image={buildingHeroImage.src}
       >
         <meta
           key="canonical"
