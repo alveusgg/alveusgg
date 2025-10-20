@@ -7,7 +7,7 @@ import {
   useNodes,
 } from "@xyflow/react";
 import pluralize from "pluralize";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 import network, {
   type NestedNetworkItem,
@@ -296,42 +296,48 @@ const NetworkList = ({
   </ul>
 );
 
-const tree = {
-  data: toTree(network),
-  nodeTypes: { network: Node },
-  edgeType: NetworkEdge,
-  nodeSize: { width: 176, height: 80 },
-  onInit: (instance: TreeInstance<Data>) => {
-    // After the initial fit, vertically center on the first node
-    window.requestAnimationFrame(() => {
-      const nodes = instance.getNodes();
+const Network = () => {
+  const tree = useMemo(
+    () => ({
+      data: toTree(network),
+      nodeTypes: { network: Node },
+      edgeType: NetworkEdge,
+      nodeSize: { width: 176, height: 80 },
+      onInit: (instance: TreeInstance<Data>) => {
+        // After the initial fit, vertically center on the first node
+        window.requestAnimationFrame(() => {
+          const nodes = instance.getNodes();
 
-      const firstNode = nodes[0];
-      if (!firstNode) return;
+          const firstNode = nodes[0];
+          if (!firstNode) return;
 
-      const centerX =
-        nodes.reduce((acc, node) => acc + node.position.x, 0) / nodes.length;
+          const centerX =
+            nodes.reduce((acc, node) => acc + node.position.x, 0) /
+            nodes.length;
 
-      const viewport = instance.getViewport();
-      instance.setCenter(centerX, firstNode.position.y, {
-        zoom: viewport.zoom,
-      });
-    });
-  },
+          const viewport = instance.getViewport();
+          instance.setCenter(centerX, firstNode.position.y, {
+            zoom: viewport.zoom,
+          });
+        });
+      },
+    }),
+    [], // network is a static import, so no dependencies needed
+  );
+
+  return (
+    <>
+      <div
+        className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
+        aria-hidden
+      >
+        <Tree {...tree} />
+      </div>
+
+      <NetworkList items={network} className="sr-only" />
+    </>
+  );
 };
-
-const Network = () => (
-  <>
-    <div
-      className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
-      aria-hidden
-    >
-      <Tree {...tree} />
-    </div>
-
-    <NetworkList items={network} className="sr-only" />
-  </>
-);
 
 export default Network;
 

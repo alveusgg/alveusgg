@@ -87,13 +87,14 @@ const withPositions = <T extends Record<string, unknown>>(
 
     // Get the children nodes
     type ChildNode = { id: string } & DagreNode;
-    const dagreChildren = children
-      .reduce<ChildNode[]>((acc: ChildNode[], { id }: TreeNode<T>) => {
-        const node = dagreGraph.node(id);
-        if (!node) return acc;
-        return [...acc, { id, ...node }];
-      }, [])
-      .sort((a: ChildNode, b: ChildNode) => a[axis] - b[axis]);
+    const dagreChildren: ChildNode[] = [];
+    for (const child of children) {
+      const node = dagreGraph.node(child.id);
+      if (node) {
+        dagreChildren.push({ id: child.id, ...node });
+      }
+    }
+    dagreChildren.sort((a, b) => a[axis] - b[axis]);
     if (!dagreChildren[0]) return;
 
     // Find the child node that is nearest to the parent
@@ -162,7 +163,6 @@ const withPositions = <T extends Record<string, unknown>>(
 const getNodesEdges = <T extends Record<string, unknown>>(
   data: TreeNode<T> | TreeNode<T>[],
 ) => {
-  const ids = new Map<string, TreeNode<T>>();
   const childrenMap = new Map<string, TreeNode<T>>();
   const nodes = [] as Node<T>[];
   const edges = [] as Edge[];
@@ -176,12 +176,11 @@ const getNodesEdges = <T extends Record<string, unknown>>(
 
     // Check for duplicate ids
     // While this is a tree, we do allow for children to be shared
-    const existing = ids.get(node.id);
+    const existing = childrenMap.get(node.id);
     if (existing) {
       if (existing !== node) throw new Error(`Duplicate node id: ${node.id}`);
       continue;
     }
-    ids.set(node.id, node);
     childrenMap.set(node.id, node);
 
     // Keep track of the deepest node
@@ -198,7 +197,7 @@ const getNodesEdges = <T extends Record<string, unknown>>(
       connectable: false,
       // But do allow focusing
       selectable: true,
-      // And use the depth as the z-index
+      // And use the depth as the z-index (will be inverted after loop)
       zIndex: depth,
     });
 
@@ -216,12 +215,13 @@ const getNodesEdges = <T extends Record<string, unknown>>(
     });
   }
 
+  // Invert the z-index so that the shallowest node is on top
+  for (const node of nodes) {
+    node.zIndex = deepest - (node.zIndex ?? 0);
+  }
+
   return {
-    nodes: nodes.map((node) => ({
-      ...node,
-      // Invert the z-index so that the shallowest node is on top
-      zIndex: deepest - (node.zIndex ?? 0),
-    })),
+    nodes,
     edges,
     childrenMap,
   };

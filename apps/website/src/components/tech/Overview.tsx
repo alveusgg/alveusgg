@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import steps, { type Step } from "@/data/tech/overview";
 
 import { classes } from "@/utils/classes";
@@ -104,24 +106,29 @@ const OverviewList = ({
   </ul>
 );
 
-const tree = {
-  data: toTree(steps),
-  nodeTypes: { overview: Node },
-  nodeSize: { width: 192, height: 80 },
-  nodeSpacing: { ranks: 60, siblings: 20 },
+const Overview = () => {
+  const tree = useMemo(
+    () => ({
+      data: toTree(steps),
+      nodeTypes: { overview: Node },
+      nodeSize: { width: 192, height: 80 },
+      nodeSpacing: { ranks: 60, siblings: 20 },
+    }),
+    [], // steps is a static import, so no dependencies needed
+  );
+
+  return (
+    <>
+      <div
+        className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
+        aria-hidden
+      >
+        <Tree {...tree} />
+      </div>
+
+      <OverviewList items={steps} className="sr-only" />
+    </>
+  );
 };
-
-const Overview = () => (
-  <>
-    <div
-      className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
-      aria-hidden
-    >
-      <Tree {...tree} />
-    </div>
-
-    <OverviewList items={steps} className="sr-only" />
-  </>
-);
 
 export default Overview;
