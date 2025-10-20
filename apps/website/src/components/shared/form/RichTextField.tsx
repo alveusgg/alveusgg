@@ -52,6 +52,14 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
   const { labelProps, inputProps } = useTextField(props, ref);
   const [value, setValue] = useState(defaultValue || "");
 
+  const handleChange = (newValue: string) => {
+    setValue(newValue);
+    // Call the onChange prop if provided
+    if (props.onChange) {
+      props.onChange(newValue);
+    }
+  };
+
   return (
     <div className={classes("flex-1", props.className)}>
       <div className="flex flex-row items-end justify-between">
@@ -81,7 +89,7 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
       <ReactQuill
         {...quillConfig}
         value={value}
-        onChange={(value) => setValue(value)}
+        onChange={handleChange}
         className="alveus-rte bg-white"
         forwardedRef={(ref) => {
           editorRef.current = ref;
