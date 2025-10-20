@@ -58,7 +58,7 @@ const InstitutePage: NextPage = () => {
   return (
     <PixelSyncProviderProvider>
       <Meta
-        title="Research & Recovery Institute"
+        title="Alveus Research & Recovery Institute"
         description="The Alveus Research & Recovery Institute is taking the Alveus approach to the wild to help save species from extinction, aiming to create a conservation breeding program for the critically endangered Mexican Gray and Red wolves."
         image={buildingHeroImage.src}
       />

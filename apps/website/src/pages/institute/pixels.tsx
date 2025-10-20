@@ -87,7 +87,7 @@ const InstitutePixelsPage: NextPage = () => {
   return (
     <PixelSyncProviderProvider>
       <Meta
-        title="Pixel Project | Research & Recovery Institute"
+        title="Pixel Project | Alveus Research & Recovery Institute"
         description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
         image={buildingHeroImage.src}
       >
