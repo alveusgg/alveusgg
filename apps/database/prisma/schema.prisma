@@ -480,11 +480,11 @@ model RoundsCheck {
 model Donation {
   id               String    @id
   provider         String
-  providerUniqueId String    @unique
+  providerUniqueId String    @unique @db.VarChar(500)
   amount           Int
   donatedAt        DateTime?
   receivedAt       DateTime
-  note             String?
+  note             String?   @db.Text
   donatedBy        Json
   tags             Json
   providerMetadata Json
