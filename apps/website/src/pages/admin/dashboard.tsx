@@ -6,7 +6,12 @@ import { getAdminSSP } from "@/server/utils/admin";
 import { permissions } from "@/data/permissions";
 
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
-import { Panel } from "@/components/admin/Panel";
+import { Headline } from "@/components/admin/Headline";
+import { DashboardOverviewStats } from "@/components/admin/dashboard/DashboardOverviewStats";
+import { DashboardRecentActivity } from "@/components/admin/dashboard/DashboardRecentActivity";
+import { DashboardSystemHealth } from "@/components/admin/dashboard/DashboardSystemHealth";
+import { DashboardTopContributors } from "@/components/admin/dashboard/DashboardTopContributors";
+import { DashboardTrendCharts } from "@/components/admin/dashboard/DashboardTrendCharts";
 import Meta from "@/components/content/Meta";
 
 export async function getServerSideProps(context: NextPageContext) {
@@ -29,10 +34,38 @@ const AdminDashboardPage: NextPage<
 > = ({ menuItems }) => {
   return (
     <>
-      <Meta title="Admin" />
+      <Meta title="Admin Dashboard" />
 
       <AdminPageLayout title="Dashboard" menuItems={menuItems}>
-        <Panel>TODO: Add something useful here</Panel>
+        <div className="space-y-6">
+          {/* System Health Status */}
+          <section>
+            <DashboardSystemHealth />
+          </section>
+
+          {/* Overview Statistics */}
+          <section>
+            <Headline>Overview</Headline>
+            <DashboardOverviewStats />
+          </section>
+
+          {/* Trend Charts */}
+          <section>
+            <DashboardTrendCharts />
+          </section>
+
+          {/* Recent Activity */}
+          <section>
+            <Headline>Recent Activity</Headline>
+            <DashboardRecentActivity />
+          </section>
+
+          {/* Top Contributors - Shows top 5 Show & Tell contributors with rankings */}
+          <section>
+            <Headline>Community Highlights</Headline>
+            <DashboardTopContributors />
+          </section>
+        </div>
       </AdminPageLayout>
     </>
   );
