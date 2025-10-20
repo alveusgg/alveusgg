@@ -25,11 +25,8 @@ export const adminDashboardRouter = router({
       totalNotifications,
       totalPushSubscriptions,
       totalFormEntries,
-      totalBingoEntries,
       totalCalendarEvents,
       totalShortLinks,
-      totalDonations,
-      recentSignups,
     ] = await Promise.all([
       // Total users
       prisma.user.count(),
@@ -51,9 +48,6 @@ export const adminDashboardRouter = router({
       // Forms
       prisma.formEntry.count(),
 
-      // Bingo entries
-      prisma.bingoEntry.count(),
-
       // Calendar events (future)
       prisma.calendarEvent.count({
         where: {
@@ -65,25 +59,6 @@ export const adminDashboardRouter = router({
 
       // Short links
       prisma.shortLinks.count(),
-
-      // Donations (last 30 days)
-      prisma.donation.count({
-        where: {
-          receivedAt: {
-            gte: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
-          },
-        },
-      }),
-
-      // Recent push subscriptions (last 7 days as proxy for engagement)
-      prisma.pushSubscription.count({
-        where: {
-          createdAt: {
-            gte: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-          },
-          deletedAt: null,
-        },
-      }),
     ]);
 
     return {
@@ -93,11 +68,8 @@ export const adminDashboardRouter = router({
       totalNotifications,
       totalPushSubscriptions,
       totalFormEntries,
-      totalBingoEntries,
       totalCalendarEvents,
       totalShortLinks,
-      totalDonations,
-      recentSignups,
     };
   }),
 
