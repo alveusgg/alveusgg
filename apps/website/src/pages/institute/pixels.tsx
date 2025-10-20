@@ -185,7 +185,7 @@ const InstitutePixelsPage: NextPage = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search for pixels by username or email..."
+              placeholder="Search for pixels by Twitch username or PayPal email..."
               className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75 sm:text-sm"
             />
 
@@ -271,6 +271,16 @@ const InstitutePixelsPage: NextPage = () => {
 
           <Box dark>
             <PixelsDescription className="text-center text-2xl" />
+
+            <Heading level={2} className="mt-8 text-xl">
+              Can&apos;t find your pixel?
+            </Heading>
+            <p>
+              If you donated via Twitch Charity, your pixel will show your
+              Twitch username and you can search using that. If you donated via
+              PayPal directly, your pixel will show your first name but you can
+              also search using your PayPal email address.
+            </p>
           </Box>
         </div>
       </Section>
