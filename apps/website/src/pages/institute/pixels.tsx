@@ -182,7 +182,7 @@ const InstitutePixelsPage: NextPage = () => {
         <div
           className={classes(
             fullscreen
-              ? "fixed inset-0 isolate z-100 flex h-screen w-screen flex-col gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
+              ? "fixed inset-0 isolate z-100 flex h-screen w-screen touch-none flex-col gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
               : "contents",
           )}
         >
