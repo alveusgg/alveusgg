@@ -64,6 +64,7 @@ const Meta = ({
         href={BASE_URL + (icon || "/favicon-512x512.png")}
       />
       <link key="canonical" rel="canonical" href={computedCanonical} />
+      <meta key="og:url" property="og:url" content={computedCanonical} />
       <meta key="og:title" property="og:title" content={computedTitle} />
       <meta
         key="og:description"
