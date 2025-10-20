@@ -115,7 +115,7 @@ const sendChatMessages = async (
           account.access_token,
           channels.alveusgg.id,
           broadcasterId,
-          `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! https://alveus.gg/pixels?s=${identifier}`,
+          `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! https://alveus.gg/pixels?s=${encodeURIComponent(identifier)}`,
         );
       }
     } catch {
