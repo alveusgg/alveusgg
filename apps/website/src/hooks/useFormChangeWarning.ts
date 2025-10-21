@@ -52,7 +52,7 @@ export function useFormChangeWarning(enabled: boolean = true) {
         if (!confirmLeave) {
           router.events.emit("routeChangeError");
           // Throw an error to abort the route change
-          throw "Route change aborted by user";
+          throw new Error("Route change aborted by user");
         }
       }
       isNavigatingRef.current = true;
