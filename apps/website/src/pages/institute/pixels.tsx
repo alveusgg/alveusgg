@@ -47,6 +47,7 @@ const InstitutePixelsPage: NextPage = () => {
     replace({ query: updated }, undefined, { shallow: true });
   };
 
+  const [, setFiltered] = useState<number | null>(null);
   const filter = useMemo(() => {
     const normalized = search.trim().toLowerCase();
     if (!normalized) return undefined;
@@ -142,6 +143,12 @@ const InstitutePixelsPage: NextPage = () => {
 
             <Pixels
               filter={filter}
+              onFilter={useCallback(
+                (pixels: Pixel[]) => {
+                  setFiltered(pixels.length);
+                },
+                [setFiltered],
+              )}
               className={classes(
                 fullscreen &&
                   "scrollbar-none aspect-[unset]! h-full! touch-pan-x justify-start! overflow-x-scroll rounded-lg bg-alveus-green shadow-xl ring-4 ring-alveus-green",

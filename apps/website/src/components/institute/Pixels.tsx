@@ -75,6 +75,7 @@ function getHighContrastColor(pixel: Pixel) {
 
 const Pixels = ({
   filter,
+  onFilter,
   className,
   canvasClassName,
   ref,
@@ -83,6 +84,7 @@ const Pixels = ({
   className?: string;
   canvasClassName?: string;
   ref?: Ref<HTMLDivElement>;
+  onFilter?: (pixel: Pixel[]) => void;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
@@ -143,22 +145,29 @@ const Pixels = ({
     if (!filter) return;
 
     const controller = new AbortController();
-    pixels.data?.pixels.forEach(async (pixel) => {
-      const match = await filter(pixel, controller.signal);
-      if (controller.signal.aborted || !match) return;
+    Promise.all(
+      pixels.data?.pixels.map(async (pixel) => {
+        const match = await filter(pixel, controller.signal);
+        if (controller.signal.aborted || !match) return;
 
-      const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
-        c.charCodeAt(0),
-      );
-      ctx.putImageData(
-        new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
-        pixel.column * PIXEL_SIZE,
-        pixel.row * PIXEL_SIZE,
-      );
+        const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+          c.charCodeAt(0),
+        );
+        ctx.putImageData(
+          new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
+          pixel.column * PIXEL_SIZE,
+          pixel.row * PIXEL_SIZE,
+        );
+
+        return pixel;
+      }) || [],
+    ).then((filtered) => {
+      if (controller.signal.aborted) return;
+      onFilter?.(filtered.filter((p): p is Pixel => !!p));
     });
 
     return () => controller.abort();
-  }, [filter, pixels.data?.pixels]);
+  }, [filter, onFilter, pixels.data?.pixels]);
 
   const myPixel = useRef<HTMLCanvasElement>(null);
 
