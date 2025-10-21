@@ -200,7 +200,7 @@ const InstitutePixelsPage: NextPage = () => {
               className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75 sm:text-sm"
             />
 
-            <Transition show={!!search.trim().toLowerCase()}>
+            <Transition show={!!search.trim()}>
               <p
                 className={classes(
                   "shrink-0 text-sm tabular-nums opacity-75 transition-all data-closed:opacity-0 max-md:absolute max-md:top-full max-md:left-2 md:my-auto md:pl-2",
