@@ -84,6 +84,28 @@ const InstitutePixelsPage: NextPage = () => {
     });
   }, []);
 
+  const pixelsRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) return;
+      fullscreenRef.current = node;
+
+      // Map vertical scrolling to horizontal scrolling, only when in fullscreen
+      if (!fullscreen) return;
+
+      const onWheel = (e: WheelEvent) => {
+        if (!e.deltaY) return;
+        node.scrollLeft += e.deltaY + e.deltaX;
+        e.preventDefault();
+      };
+
+      node.addEventListener("wheel", onWheel, { passive: false });
+      return () => {
+        node.removeEventListener("wheel", onWheel);
+      };
+    },
+    [fullscreen],
+  );
+
   return (
     <PixelSyncProviderProvider>
       <Meta
@@ -160,7 +182,7 @@ const InstitutePixelsPage: NextPage = () => {
                   ? "max-w-none!"
                   : "shadow-xl ring-4 ring-alveus-green",
               )}
-              ref={fullscreenRef}
+              ref={pixelsRef}
             />
 
             {fullscreen && (
