@@ -165,7 +165,7 @@ const Pixels = ({
     });
 
     return () => controller.abort();
-  }, [filter, pixels]);
+  }, [filter, pixels.data?.pixels]);
 
   const myPixel = useRef<HTMLCanvasElement>(null);
 
