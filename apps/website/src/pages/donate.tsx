@@ -70,7 +70,10 @@ const DonatePage: NextPage = () => {
       <Section className="grow" containerClassName="flex flex-wrap">
         <div className="flex basis-full flex-col gap-8 py-4 lg:basis-1/2 lg:px-4">
           {types.map(
-            (key) => key !== "givingBlock" && <Donate key={key} type={key} />,
+            (key) =>
+              key !== "givingBlock" && (
+                <Donate key={key} type={key} highlight={key === "twitch"} />
+              ),
           )}
         </div>
 
