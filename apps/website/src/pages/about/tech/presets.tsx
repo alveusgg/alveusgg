@@ -194,14 +194,15 @@ const AboutTechPresetsPage: NextPage = () => {
     useMemo(() => z.boolean(), []),
     false,
   );
+  const zen = subscription.isSuccess && subscription.data && focused;
   useEffect(() => {
-    if (focused) {
+    if (zen) {
       document.body.style.overflow = "hidden";
       return () => {
         document.body.style.overflow = "";
       };
     }
-  }, [focused]);
+  }, [zen]);
 
   // Track all the disclosure buttons so we can open/close them based on search input
   const disclosures = useRef<Set<HTMLButtonElement>>(new Set());
@@ -350,7 +351,7 @@ const AboutTechPresetsPage: NextPage = () => {
       <div
         className={classes(
           "flex bg-alveus-green py-4",
-          focused ? "fixed inset-0 z-100 h-screen" : "relative lg:h-screen",
+          zen ? "fixed inset-0 z-100 h-screen" : "relative lg:h-screen",
         )}
       >
         <Section
@@ -360,7 +361,7 @@ const AboutTechPresetsPage: NextPage = () => {
           )}
           containerClassName="h-full flex flex-col"
         >
-          {!focused && (
+          {!zen && (
             <Image
               src={leafLeftImage3}
               alt=""
@@ -369,7 +370,7 @@ const AboutTechPresetsPage: NextPage = () => {
           )}
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-4 @3xl:grid-cols-5">
-            {!focused && (
+            {!zen && (
               <div className="grid w-full grid-cols-1 gap-2 @3xl:col-span-3">
                 <p>
                   If you&apos;re subscribed, you can run these commands directly
@@ -419,7 +420,7 @@ const AboutTechPresetsPage: NextPage = () => {
             <div
               className={classes(
                 "grid w-full grid-cols-1 gap-x-8 gap-y-2",
-                focused ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
+                zen ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
               )}
             >
               <ProvideAuth scopeGroup="chat" className="mb-4" />
@@ -465,13 +466,13 @@ const AboutTechPresetsPage: NextPage = () => {
                   {/* Use a viewport media query, not a container media query, as we don't want the focused + sidebar layouts available on mobile */}
                   <div
                     className={classes(
-                      focused
+                      zen
                         ? "order-first row-span-2 grid grid-rows-subgrid"
                         : "hidden lg:contents",
                     )}
                   >
                     <Field className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="flex flex-col leading-tight">
+                      <Label className="flex grow cursor-pointer flex-col leading-tight">
                         <span>Enable embedded Twitch stream player</span>
                         <span className="text-sm text-alveus-green-400 italic">
                           (also embeds the {channels.alveusgg.username} stream
@@ -484,15 +485,15 @@ const AboutTechPresetsPage: NextPage = () => {
                         onChange={(val) =>
                           setTwitchEmbed(val ? sidebarDefault() : -1)
                         }
-                        className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                       >
                         <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
                       </Switch>
                     </Field>
 
                     <Field className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="flex flex-col leading-tight">
-                        <span>Enable focused control mode</span>
+                      <Label className="flex grow cursor-pointer flex-col leading-tight">
+                        <span>Enable zen control mode</span>
                         <span className="text-sm text-alveus-green-400 italic">
                           (hides all other page UI elements)
                         </span>
@@ -501,7 +502,7 @@ const AboutTechPresetsPage: NextPage = () => {
                       <Switch
                         checked={focused}
                         onChange={setFocused}
-                        className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                       >
                         <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
                       </Switch>
