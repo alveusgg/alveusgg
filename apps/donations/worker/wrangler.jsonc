@@ -117,7 +117,7 @@
 
       "vars": {
         "SANDBOX": "true",
-        "SITE_URL": "https://alveusgg-private-git-private-preview-alveus.vercel.app",
+        "SITE_URL": "https://preview.alveus.gg",
         "SELF_URL": "https://donation-manager.preview.workers.alveussanctuary.org",
         "TWITCH_CHARITY_NAME": "Example Charity",
         "PAYPAL_BUSINESS_EMAIL": "sb-pkpnu46749573@business.example.com",
