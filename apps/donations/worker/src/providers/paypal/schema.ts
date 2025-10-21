@@ -6,7 +6,7 @@ const Tags = z.string().transform((val) => {
   return keyValuePairs.reduce(
     (output, pair) => {
       const [key, value] = pair.split("_");
-      output[key] = value;
+      if (key && value) output[key] = value;
       return output;
     },
     {} as Record<string, string>,

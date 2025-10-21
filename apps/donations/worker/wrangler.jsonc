@@ -62,11 +62,11 @@
 
       "vars": {
         "SANDBOX": "false",
-        "SITE_URL": "https://alveussanctuary.org",
+        "SITE_URL": "https://www.alveussanctuary.org",
         "SELF_URL": "https://donation-manager.workers.alveussanctuary.org",
         "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
         "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
-        "STATE_KEY": "prod1",
+        "STATE_KEY": "prod3",
       },
 
       "migrations": [
@@ -106,6 +106,61 @@
           {
             "queue": "alveus-donations",
             "dead_letter_queue": "alveus-donations-dead-letter",
+            "max_batch_size": 50,
+            "max_batch_timeout": 5,
+          },
+        ],
+      },
+    },
+    "preview": {
+      "route": "https://donation-manager.preview.workers.alveussanctuary.org",
+
+      "vars": {
+        "SANDBOX": "true",
+        "SITE_URL": "https://preview.alveus.gg",
+        "SELF_URL": "https://donation-manager.preview.workers.alveussanctuary.org",
+        "TWITCH_CHARITY_NAME": "Example Charity",
+        "PAYPAL_BUSINESS_EMAIL": "sb-pkpnu46749573@business.example.com",
+        "STATE_KEY": "preview1",
+      },
+
+      "migrations": [
+        {
+          "new_sqlite_classes": [
+            "DonationsManagerDurableObject",
+            "PixelsManagerDurableObject",
+          ],
+          "tag": "v1",
+        },
+      ],
+      "durable_objects": {
+        "bindings": [
+          {
+            "class_name": "DonationsManagerDurableObject",
+            "name": "DONATIONS_MANAGER",
+          },
+          {
+            "class_name": "PixelsManagerDurableObject",
+            "name": "PIXELS_MANAGER",
+          },
+        ],
+      },
+
+      "queues": {
+        "producers": [
+          {
+            "queue": "alveus-preview-donations",
+            "binding": "DONATION_QUEUE",
+          },
+          {
+            "queue": "alveus-preview-donations-dead-letter",
+            "binding": "DEAD_LETTER_QUEUE",
+          },
+        ],
+        "consumers": [
+          {
+            "queue": "alveus-preview-donations",
+            "dead_letter_queue": "alveus-preview-donations-dead-letter",
             "max_batch_size": 50,
             "max_batch_timeout": 5,
           },
