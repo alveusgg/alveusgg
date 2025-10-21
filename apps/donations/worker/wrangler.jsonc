@@ -62,11 +62,11 @@
 
       "vars": {
         "SANDBOX": "false",
-        "SITE_URL": "https://alveussanctuary.org",
+        "SITE_URL": "https://www.alveussanctuary.org",
         "SELF_URL": "https://donation-manager.workers.alveussanctuary.org",
         "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
         "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
-        "STATE_KEY": "prod1",
+        "STATE_KEY": "prod3",
       },
 
       "migrations": [
