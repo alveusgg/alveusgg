@@ -166,7 +166,11 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           const pixelsForDonation: Pixel[] = [];
           for (let i = 0; i < numberOfPixels; i++) {
             const location = getRandomEmptySquare(
-              [...state.pixels, ...Object.values(pixels).flat()],
+              [
+                ...state.pixels,
+                ...Object.values(pixels).flat(),
+                ...pixelsForDonation,
+              ],
               this.grid,
             );
             if (!location) continue;
