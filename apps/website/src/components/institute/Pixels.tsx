@@ -81,10 +81,10 @@ const Pixels = ({
   ref,
 }: {
   filter?: (pixel: Pixel, signal: AbortSignal) => boolean | Promise<boolean>;
+  onFilter?: (pixel: Pixel[]) => void;
   className?: string;
   canvasClassName?: string;
   ref?: Ref<HTMLDivElement>;
-  onFilter?: (pixel: Pixel[]) => void;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
