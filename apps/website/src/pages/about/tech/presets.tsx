@@ -472,7 +472,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     )}
                   >
                     <Field className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="flex flex-col leading-tight">
+                      <Label className="flex grow cursor-pointer flex-col leading-tight">
                         <span>Enable embedded Twitch stream player</span>
                         <span className="text-sm text-alveus-green-400 italic">
                           (also embeds the {channels.alveusgg.username} stream
@@ -485,14 +485,14 @@ const AboutTechPresetsPage: NextPage = () => {
                         onChange={(val) =>
                           setTwitchEmbed(val ? sidebarDefault() : -1)
                         }
-                        className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                       >
                         <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
                       </Switch>
                     </Field>
 
                     <Field className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="flex flex-col leading-tight">
+                      <Label className="flex grow cursor-pointer flex-col leading-tight">
                         <span>Enable zen control mode</span>
                         <span className="text-sm text-alveus-green-400 italic">
                           (hides all other page UI elements)
@@ -502,7 +502,7 @@ const AboutTechPresetsPage: NextPage = () => {
                       <Switch
                         checked={focused}
                         onChange={setFocused}
-                        className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
                       >
                         <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
                       </Switch>
