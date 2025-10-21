@@ -112,6 +112,61 @@
         ],
       },
     },
+    "preview": {
+      "route": "https://donation-manager.preview.workers.alveussanctuary.org",
+
+      "vars": {
+        "SANDBOX": "true",
+        "SITE_URL": "https://alveusgg-private-git-private-preview-alveus.vercel.app",
+        "SELF_URL": "https://donation-manager.preview.workers.alveussanctuary.org",
+        "TWITCH_CHARITY_NAME": "Example Charity",
+        "PAYPAL_BUSINESS_EMAIL": "sb-pkpnu46749573@business.example.com",
+        "STATE_KEY": "preview1",
+      },
+
+      "migrations": [
+        {
+          "new_sqlite_classes": [
+            "DonationsManagerDurableObject",
+            "PixelsManagerDurableObject",
+          ],
+          "tag": "v1",
+        },
+      ],
+      "durable_objects": {
+        "bindings": [
+          {
+            "class_name": "DonationsManagerDurableObject",
+            "name": "DONATIONS_MANAGER",
+          },
+          {
+            "class_name": "PixelsManagerDurableObject",
+            "name": "PIXELS_MANAGER",
+          },
+        ],
+      },
+
+      "queues": {
+        "producers": [
+          {
+            "queue": "alveus-preview-donations",
+            "binding": "DONATION_QUEUE",
+          },
+          {
+            "queue": "alveus-preview-donations-dead-letter",
+            "binding": "DEAD_LETTER_QUEUE",
+          },
+        ],
+        "consumers": [
+          {
+            "queue": "alveus-preview-donations",
+            "dead_letter_queue": "alveus-preview-donations-dead-letter",
+            "max_batch_size": 50,
+            "max_batch_timeout": 5,
+          },
+        ],
+      },
+    },
   },
 
   "placement": { "mode": "smart" },
