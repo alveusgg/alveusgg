@@ -79,17 +79,14 @@ const Pixels = ({
   canvasClassName,
   ref,
 }: {
-  filter?: (
-    pixel: NonNullable<Pixel>,
-    index: number,
-    signal: AbortSignal,
-  ) => boolean | Promise<boolean>;
+  filter?: (pixel: Pixel, signal: AbortSignal) => boolean | Promise<boolean>;
   className?: string;
   canvasClassName?: string;
   ref?: Ref<HTMLDivElement>;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
+  // Draw new pixels as they come in
   const onEvent = useCallback((alert: DonationAlert) => {
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
@@ -130,7 +127,6 @@ const Pixels = ({
     });
   }, []);
   const pixels = useLivePixels({ onEvent, onInit });
-  // Draw new pixels as they come in
 
   // Redraw filtered pixels when filter changes
   const filtered = useRef<HTMLCanvasElement>(null);
@@ -147,21 +143,18 @@ const Pixels = ({
     if (!filter) return;
 
     const controller = new AbortController();
-    pixels.data?.pixels.forEach(async (pixel, i) => {
-      if (!pixel) return;
+    pixels.data?.pixels.forEach(async (pixel) => {
+      const match = await filter(pixel, controller.signal);
+      if (controller.signal.aborted || !match) return;
 
-      if (await filter(pixel, i, controller.signal)) {
-        if (controller.signal.aborted) return;
-
-        const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
-          c.charCodeAt(0),
-        );
-        ctx.putImageData(
-          new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
-          pixel.column * PIXEL_SIZE,
-          pixel.row * PIXEL_SIZE,
-        );
-      }
+      const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+        c.charCodeAt(0),
+      );
+      ctx.putImageData(
+        new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
+        pixel.column * PIXEL_SIZE,
+        pixel.row * PIXEL_SIZE,
+      );
     });
 
     return () => controller.abort();

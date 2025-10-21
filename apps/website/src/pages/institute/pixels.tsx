@@ -59,7 +59,7 @@ const InstitutePixelsPage: NextPage = () => {
           .join(""),
       );
 
-    return (pixel: NonNullable<Pixel>) =>
+    return (pixel: Pixel) =>
       pixel.identifier.toLowerCase().includes(normalized) ||
       hashed.then((h) => pixel.email === h);
   }, [search]);
