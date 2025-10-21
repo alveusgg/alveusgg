@@ -12,7 +12,9 @@ type BoxProps = {
 const Box = ({ dark, className, ringClassName, children }: BoxProps) => (
   <div
     className={classes(
-      "relative isolate overflow-hidden shadow-xl",
+      "relative isolate shadow-xl",
+      // add overflow if not overwritten via className
+      !/\boverflow-/.test(className || "") && "overflow-hidden",
       // add rounding if not overwritten via className
       !/\brounded-/.test(className || "") && "rounded-xl",
       // add padding if not overwritten via className

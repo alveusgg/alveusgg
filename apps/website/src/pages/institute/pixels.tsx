@@ -1,7 +1,8 @@
-import { Input } from "@headlessui/react";
+import { Input, Transition } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import pluralize from "pluralize";
 import { useCallback, useMemo, useRef, useState } from "react";
 
 import type { Pixel } from "@alveusgg/donations-core";
@@ -47,6 +48,7 @@ const InstitutePixelsPage: NextPage = () => {
     replace({ query: updated }, undefined, { shallow: true });
   };
 
+  const [filtered, setFiltered] = useState<number>(0);
   const filter = useMemo(() => {
     const normalized = search.trim().toLowerCase();
     if (!normalized) return undefined;
@@ -59,7 +61,7 @@ const InstitutePixelsPage: NextPage = () => {
           .join(""),
       );
 
-    return (pixel: NonNullable<Pixel>) =>
+    return (pixel: Pixel) =>
       pixel.identifier.toLowerCase().includes(normalized) ||
       hashed.then((h) => pixel.email === h);
   }, [search]);
@@ -142,6 +144,12 @@ const InstitutePixelsPage: NextPage = () => {
 
             <Pixels
               filter={filter}
+              onFilter={useCallback(
+                (pixels: Pixel[]) => {
+                  setFiltered(pixels.length);
+                },
+                [setFiltered],
+              )}
               className={classes(
                 fullscreen &&
                   "scrollbar-none aspect-[unset]! h-full! touch-pan-x justify-start! overflow-x-scroll rounded-lg bg-alveus-green shadow-xl ring-4 ring-alveus-green",
@@ -165,7 +173,10 @@ const InstitutePixelsPage: NextPage = () => {
 
           <Box
             dark
-            className="relative z-10 col-span-full flex shrink-0 bg-alveus-green-800/75 p-0 backdrop-blur-xs"
+            className={classes(
+              "z-10 col-span-full flex shrink-0 overflow-visible bg-alveus-green-800/75 p-0 backdrop-blur-xs",
+              fullscreen && "max-md:mb-4",
+            )}
           >
             <button
               type="button"
@@ -188,6 +199,19 @@ const InstitutePixelsPage: NextPage = () => {
               placeholder="Search for pixels by Twitch username or PayPal email..."
               className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75 sm:text-sm"
             />
+
+            <Transition show={!!search.trim()}>
+              <p
+                className={classes(
+                  "shrink-0 text-sm tabular-nums opacity-75 transition-all data-closed:opacity-0 max-md:absolute max-md:top-full max-md:left-2 md:my-auto md:pl-2",
+                  fullscreen
+                    ? "text-alveus-tan"
+                    : "text-alveus-green md:text-alveus-tan",
+                )}
+              >
+                {`Found ${filtered.toLocaleString()} ${pluralize("pixel", filtered)}`}
+              </p>
+            </Transition>
 
             <button
               type="button"

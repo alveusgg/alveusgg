@@ -75,21 +75,20 @@ function getHighContrastColor(pixel: Pixel) {
 
 const Pixels = ({
   filter,
+  onFilter,
   className,
   canvasClassName,
   ref,
 }: {
-  filter?: (
-    pixel: NonNullable<Pixel>,
-    index: number,
-    signal: AbortSignal,
-  ) => boolean | Promise<boolean>;
+  filter?: (pixel: Pixel, signal: AbortSignal) => boolean | Promise<boolean>;
   className?: string;
   canvasClassName?: string;
   ref?: Ref<HTMLDivElement>;
+  onFilter?: (pixel: Pixel[]) => void;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
 
+  // Draw new pixels as they come in
   const onEvent = useCallback((alert: DonationAlert) => {
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
@@ -130,7 +129,6 @@ const Pixels = ({
     });
   }, []);
   const pixels = useLivePixels({ onEvent, onInit });
-  // Draw new pixels as they come in
 
   // Redraw filtered pixels when filter changes
   const filtered = useRef<HTMLCanvasElement>(null);
@@ -147,11 +145,10 @@ const Pixels = ({
     if (!filter) return;
 
     const controller = new AbortController();
-    pixels.data?.pixels.forEach(async (pixel, i) => {
-      if (!pixel) return;
-
-      if (await filter(pixel, i, controller.signal)) {
-        if (controller.signal.aborted) return;
+    Promise.all(
+      pixels.data?.pixels.map(async (pixel) => {
+        const match = await filter(pixel, controller.signal);
+        if (controller.signal.aborted || !match) return;
 
         const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
           c.charCodeAt(0),
@@ -161,11 +158,16 @@ const Pixels = ({
           pixel.column * PIXEL_SIZE,
           pixel.row * PIXEL_SIZE,
         );
-      }
+
+        return pixel;
+      }) || [],
+    ).then((filtered) => {
+      if (controller.signal.aborted) return;
+      onFilter?.(filtered.filter((p): p is Pixel => !!p));
     });
 
     return () => controller.abort();
-  }, [filter, pixels]);
+  }, [filter, onFilter, pixels.data?.pixels]);
 
   const myPixel = useRef<HTMLCanvasElement>(null);
 
