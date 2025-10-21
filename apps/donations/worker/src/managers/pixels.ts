@@ -235,22 +235,29 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 function getRandomEmptySquare(pixels: Pixel[], grid: Grid) {
   const totalPossibleSquares = grid.columns * grid.rows;
   const totalPixels = pixels.length;
-  if (totalPixels === totalPossibleSquares) {
+  const remainingSquares = totalPossibleSquares - totalPixels;
+  if (remainingSquares <= 0) {
     console.warn("No empty squares found");
     return;
   }
 
-  let column: number;
-  let row: number;
+  const chosenIndex = Math.floor(Math.random() * remainingSquares);
 
-  do {
-    column = Math.floor(Math.random() * grid.columns);
-    row = Math.floor(Math.random() * grid.rows);
-  } while (
-    pixels.some((pixel) => pixel.column === column && pixel.row === row)
-  );
-
-  return { column, row };
+  let emptyCounter = 0;
+  for (let column = 0; column < grid.columns; column++) {
+    const subset = pixels.filter((p) => p.column === column);
+    for (let row = 0; row < grid.rows; row++) {
+      if (
+        subset.some((pixel) => pixel.column === column && pixel.row === row)
+      ) {
+        continue;
+      }
+      if (emptyCounter === chosenIndex) {
+        return { column, row };
+      }
+      emptyCounter++;
+    }
+  }
 }
 
 const PIXEL_PRICE = 100; // Each pixel costs $100 USD
