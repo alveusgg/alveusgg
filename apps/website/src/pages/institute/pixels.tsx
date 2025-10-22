@@ -5,11 +5,9 @@ import { useRouter } from "next/router";
 import pluralize from "pluralize";
 import { useCallback, useMemo, useRef, useState } from "react";
 
-import type { Pixel } from "@alveusgg/donations-core";
-
 import { classes } from "@/utils/classes";
 
-import { PixelSyncProviderProvider } from "@/hooks/pixels";
+import type { Pixel } from "@/hooks/pixels";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
@@ -117,7 +115,7 @@ const InstitutePixelsPage: NextPage = () => {
   );
 
   return (
-    <PixelSyncProviderProvider>
+    <>
       <Meta
         title="Pixel Project | Alveus Research & Recovery Institute"
         description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
@@ -340,7 +338,7 @@ const InstitutePixelsPage: NextPage = () => {
           <Donate type="paypal" link="/paypal/pixels" />
         </div>
       </Section>
-    </PixelSyncProviderProvider>
+    </>
   );
 };
 
