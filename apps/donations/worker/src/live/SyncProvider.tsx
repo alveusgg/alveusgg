@@ -7,7 +7,6 @@ interface SyncProviderOptions<Context> {
 
 interface SyncProviderStateOptions<Context> {
   state?: Context;
-  persistState: (state: Context) => Promise<void>;
 }
 
 export class SyncProvider<Context> {
@@ -22,7 +21,6 @@ export class SyncProvider<Context> {
 
   update(fn: (context: Context) => void) {
     this.context = produce(this.context, fn);
-    this.options.state.persistState(this.context);
   }
 
   public getContext() {
