@@ -63,7 +63,7 @@ export const donationsRouter = router({
       return createDonations(input.donations);
     }),
 
-  getPixels: sharedKeyProcedure.query(async () => {
+  getPixels: publicProcedure.query(async () => {
     const pixels = await getPixels();
     return pixels;
   }),
