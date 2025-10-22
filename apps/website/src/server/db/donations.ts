@@ -8,6 +8,10 @@ export async function createDonations(input: Donation[]) {
   });
 }
 
+export async function getPixels() {
+  return prisma.pixel.findMany();
+}
+
 export async function getPublicDonations({
   take,
   cursor,

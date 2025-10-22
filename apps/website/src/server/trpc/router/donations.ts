@@ -14,6 +14,7 @@ import { sendChatMessage } from "@/server/apis/twitch";
 import {
   createDonations,
   createPixels,
+  getPixels,
   getPublicDonations,
 } from "@/server/db/donations";
 import {
@@ -61,6 +62,11 @@ export const donationsRouter = router({
     .mutation(({ input }) => {
       return createDonations(input.donations);
     }),
+
+  getPixels: sharedKeyProcedure.query(async () => {
+    const pixels = await getPixels();
+    return pixels;
+  }),
 
   createPixels: sharedKeyProcedure
     .input(
