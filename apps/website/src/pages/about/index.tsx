@@ -637,6 +637,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
           href: "/events#summer-camp-2025",
         },
       },
+      {
+        key: "institute-launch",
+        date: "2025-10-19",
+        content: [
+          "Alveus Research & Recovery Institute was launched",
+          "Live on stage at TwitchCon, Maya and the Alveus team announced the launch of the Alveus Research & Recovery Institute, with the Pixel Project launched to fund the initial development, and cMexican Gray and Red wolves revealed as the first species.",
+        ],
+        link: {
+          text: "Learn more about the institute",
+          href: "/institute",
+        },
+      },
     ],
   },
 ];
