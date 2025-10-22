@@ -110,7 +110,7 @@ const InstitutePixelsPage: NextPage = () => {
     <PixelSyncProviderProvider>
       <Meta
         title="Pixel Project | Alveus Research & Recovery Institute"
-        description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
+        description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
         image={buildingHeroImage.src}
       >
         {fullscreen && (
@@ -266,14 +266,14 @@ const InstitutePixelsPage: NextPage = () => {
             <Heading level={2}>Saving Animals From Extinction</Heading>
 
             <p className="text-lg">
-              We&apos;re taking the Alveus approach to the wild, and need your
-              help. Each donation of $100 or more unlocks a pixel on our mural,
-              on our way to raising $1,000,000 to fund the initial development
-              of the Alveus Research & Recovery Institute. Each pixel unlocked
-              by your donation will display your name, denoting you as one of
-              the 10,000 vital original supporters of the Institute. More pixels
-              can be unlocked for each additional $100 included in your
-              donation.
+              We&apos;re taking the Alveus approach to the wild, and with your
+              help, we successfully raised $1,000,000 to fund the initial
+              development of the Alveus Research & Recovery Institute. All
+              10,000 pixels on our mural have been unlocked by generous donors
+              like you, each displaying the name of a vital original supporter
+              of the Institute. While all pixels have been claimed, donations
+              are still greatly needed to support the ongoing development and
+              operations of the institute.
             </p>
 
             <Wolves
