@@ -1,6 +1,5 @@
 import { resolve } from "node:path";
 
-import { PrismaPlugin } from "@prisma/nextjs-monorepo-workaround-plugin";
 import type { NextConfig } from "next";
 import { withSuperjson } from "next-superjson";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
@@ -123,32 +122,57 @@ const config: NextConfig = {
     // WordPress route redirects
     {
       source: "/about-alveus",
-      destination: "/about/alveus",
+      destination: "/about",
+      permanent: true,
+    },
+    {
+      source: "/about/alveus",
+      destination: "/about",
       permanent: true,
     },
     {
       source: "/about-maya",
-      destination: "/about/staff#maya",
+      destination: "/about/team#maya",
       permanent: true,
     },
     {
       source: "/about/maya",
-      destination: "/about/staff#maya",
+      destination: "/about/team#maya",
       permanent: true,
     },
     {
       source: "/advisory-board",
-      destination: "/about/advisory-board",
+      destination: "/about/team#advisory-board",
       permanent: true,
     },
     {
       source: "/board-of-directors",
-      destination: "/about/board-of-directors",
+      destination: "/about/team#board-of-directors",
       permanent: true,
     },
     {
       source: "/staff",
-      destination: "/about/staff",
+      destination: "/about/team#staff",
+      permanent: true,
+    },
+    {
+      source: "/about/staff",
+      destination: "/about/team#staff",
+      permanent: true,
+    },
+    {
+      source: "/team",
+      destination: "/about/team",
+      permanent: true,
+    },
+    {
+      source: "/about/advisory-board",
+      destination: "/about/team#advisory-board",
+      permanent: true,
+    },
+    {
+      source: "/about/board-of-directors",
+      destination: "/about/team#board-of-directors",
       permanent: true,
     },
     {
@@ -168,11 +192,6 @@ const config: NextConfig = {
       permanent: true,
     },
     {
-      source: "/about",
-      destination: "/about/alveus",
-      permanent: true,
-    },
-    {
       source: "/annual-reports/:path*",
       destination: "/about/annual-reports/:path*",
       permanent: true,
@@ -185,6 +204,11 @@ const config: NextConfig = {
     {
       source: "/orgs",
       destination: "/about/orgs",
+      permanent: true,
+    },
+    {
+      source: "/events",
+      destination: "/about/events",
       permanent: true,
     },
     {
@@ -220,6 +244,26 @@ const config: NextConfig = {
     {
       source: "/calendar",
       destination: "/updates",
+      permanent: true,
+    },
+    {
+      source: "/research",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/recovery",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/wolf",
+      destination: "/institute",
+      permanent: true,
+    },
+    {
+      source: "/pixel(s)?",
+      destination: "/institute/pixels",
       permanent: true,
     },
     {
@@ -307,6 +351,12 @@ const config: NextConfig = {
       source: "/paypal",
       destination:
         "https://www.paypal.com/donate/?hosted_button_id=9HMGFKWST8XD4",
+      permanent: true,
+    },
+    {
+      source: "/paypal/pixels",
+      destination:
+        "https://www.paypal.com/donate/?hosted_button_id=AQ9RASYNG5ZWC",
       permanent: true,
     },
     {
@@ -483,11 +533,6 @@ const config: NextConfig = {
       type: "asset/resource",
     });
 
-    // Ensure Prisma bundles its binaries correctly
-    if (options.isServer) {
-      config.plugins.push(new PrismaPlugin());
-    }
-
     // Disable Webpack caching if not in development
     if (!options.dev && config.cache?.type === "filesystem") {
       config.cache = false;
@@ -511,6 +556,7 @@ const config: NextConfig = {
   devIndicators: {
     position: "bottom-right",
   },
+  transpilePackages: ["@alveusgg/donations-core"],
 };
 
 export default withSuperjson()(config);

@@ -1,18 +1,24 @@
+import bottomshelfc from "@/assets/presets/marmout/bottomshelfc.png";
 import bottomshelfl from "@/assets/presets/marmout/bottomshelfl.png";
 import bottomshelfr from "@/assets/presets/marmout/bottomshelfr.png";
 import domel from "@/assets/presets/marmout/domel.png";
 import domelt from "@/assets/presets/marmout/domelt.png";
 import domer from "@/assets/presets/marmout/domer.png";
 import domes from "@/assets/presets/marmout/domes.png";
+import domeswide from "@/assets/presets/marmout/domeswide.png";
 import door from "@/assets/presets/marmout/door.png";
 import flapl from "@/assets/presets/marmout/flapl.png";
 import flapr from "@/assets/presets/marmout/flapr.png";
 import flaps from "@/assets/presets/marmout/flaps.png";
 import frontdoor from "@/assets/presets/marmout/frontdoor.png";
+import frontropes from "@/assets/presets/marmout/frontropes.png";
+import ground from "@/assets/presets/marmout/ground.png";
 import home from "@/assets/presets/marmout/home.png";
 import hose from "@/assets/presets/marmout/hose.png";
 import ir from "@/assets/presets/marmout/ir.png";
 import left from "@/assets/presets/marmout/left.png";
+import leftcorner from "@/assets/presets/marmout/leftcorner.png";
+import leftpostfloor from "@/assets/presets/marmout/leftpostfloor.png";
 import leftpostshelves from "@/assets/presets/marmout/leftpostshelves.png";
 import leftpostshelvesl from "@/assets/presets/marmout/leftpostshelvesl.png";
 import leftpostshelvest from "@/assets/presets/marmout/leftpostshelvest.png";
@@ -25,10 +31,12 @@ import rightpost from "@/assets/presets/marmout/rightpost.png";
 import rightpostb from "@/assets/presets/marmout/rightpostb.png";
 import rightscreen from "@/assets/presets/marmout/rightscreen.png";
 import rightshelvesb from "@/assets/presets/marmout/rightshelvesb.png";
+import rightshelvesm from "@/assets/presets/marmout/rightshelvesm.png";
 import rightshelvest from "@/assets/presets/marmout/rightshelvest.png";
 import rope from "@/assets/presets/marmout/rope.png";
 import table from "@/assets/presets/marmout/table.png";
 import top from "@/assets/presets/marmout/top.png";
+import topshelfc from "@/assets/presets/marmout/topshelfc.png";
 import topshelfl from "@/assets/presets/marmout/topshelfl.png";
 import topshelfr from "@/assets/presets/marmout/topshelfr.png";
 
@@ -38,6 +46,10 @@ const marmoutPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+  },
+  bottomshelfc: {
+    description: "Bottom Shelf Center",
+    image: bottomshelfc,
   },
   bottomshelfl: {
     description: "Bottom Shelf Left",
@@ -63,6 +75,10 @@ const marmoutPresets: Record<string, Preset> = {
     description: "Domes",
     image: domes,
   },
+  domeswide: {
+    description: "Domes Wide",
+    image: domeswide,
+  },
   door: {
     description: "Door",
     image: door,
@@ -83,6 +99,14 @@ const marmoutPresets: Record<string, Preset> = {
     description: "Front Door",
     image: frontdoor,
   },
+  frontropes: {
+    description: "Front Ropes",
+    image: frontropes,
+  },
+  ground: {
+    description: "Ground",
+    image: ground,
+  },
   hose: {
     description: "Hose reel",
     image: hose,
@@ -94,6 +118,14 @@ const marmoutPresets: Record<string, Preset> = {
   left: {
     description: "Left",
     image: left,
+  },
+  leftcorner: {
+    description: "Left Corner",
+    image: leftcorner,
+  },
+  leftpostfloor: {
+    description: "left post floor",
+    image: leftpostfloor,
   },
   leftpostshelves: {
     description: "left post shelves",
@@ -143,6 +175,10 @@ const marmoutPresets: Record<string, Preset> = {
     description: "right shelves bottom",
     image: rightshelvesb,
   },
+  rightshelvesm: {
+    description: "right shelves middle",
+    image: rightshelvesm,
+  },
   rightshelvest: {
     description: "right shelves top",
     image: rightshelvest,
@@ -158,6 +194,10 @@ const marmoutPresets: Record<string, Preset> = {
   top: {
     description: "Top",
     image: top,
+  },
+  topshelfc: {
+    description: "Top Shelf Center",
+    image: topshelfc,
   },
   topshelfl: {
     description: "top shelf left side",

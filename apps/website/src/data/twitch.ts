@@ -33,6 +33,7 @@ export const scopeGroups = {
   api: [
     "chat:edit",
     "chat:read",
+    "user:write:chat",
     "moderator:read:followers",
     "channel:read:charity",
     "channel:read:subscriptions",

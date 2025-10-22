@@ -146,3 +146,20 @@
 @utility animation-delay-* {
   animation-delay: calc(--value(integer, [integer]) * 1ms);
 }
+
+@utility pixelated {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+@utility h-screen {
+  @supports (height: 100dvh) {
+    height: 100dvh;
+  }
+}
+
+@utility w-screen {
+  @supports (width: 100dvw) {
+    width: 100dvw;
+  }
+}

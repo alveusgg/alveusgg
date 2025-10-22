@@ -4,7 +4,7 @@ import nextPlugin from "@next/eslint-plugin-next";
 import prettiereslint from "eslint-config-prettier";
 import { flatConfigs as importXPluginConfigs } from "eslint-plugin-import-x";
 import reactPlugin from "eslint-plugin-react";
-import * as hooksPlugin from "eslint-plugin-react-hooks";
+import hooksPlugin from "eslint-plugin-react-hooks";
 // FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/325
 // FIXME: https://github.com/francoismassart/eslint-plugin-tailwindcss/issues/384
 // import tailwindPlugin from "eslint-plugin-tailwindcss";
@@ -74,10 +74,7 @@ export default tseslint.config(
   },
   {
     name: "react-hooks/recommended",
-    plugins: {
-      "react-hooks": hooksPlugin,
-    },
-    rules: hooksPlugin.configs.recommended.rules,
+    ...hooksPlugin.configs.flat.recommended,
   },
   {
     name: "next/core-web-vitals",
@@ -134,6 +131,7 @@ export default tseslint.config(
         },
       ],
       "react/prop-types": "off",
+      "react-hooks/set-state-in-effect": "off",
     },
   },
   {

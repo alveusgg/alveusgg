@@ -1,7 +1,7 @@
 generator client {
-  provider        = "prisma-client-js"
-  output          = "./client"
-  previewFeatures = ["driverAdapters"]
+  provider   = "prisma-client"
+  engineType = "client"
+  output     = "./generated"
 }
 
 datasource db {
@@ -32,27 +32,6 @@ model TaskExecutionEvent {
   @@index([task], name: "TaskExecutionEvent_task")
   @@index([startedAt], name: "TaskExecutionEvent_startedAt")
   @@index([task, startedAt], name: "TaskExecutionEvent_task_startedAt")
-}
-
-model ChannelUpdateEvent {
-  id            String   @id @default(cuid())
-  service       String
-  channel       String
-  title         String
-  category_id   String
-  category_name String
-  source        String
-  createdAt     DateTime @default(now())
-}
-
-model StreamStatusEvent {
-  id        String    @id @default(cuid())
-  service   String
-  channel   String
-  online    Boolean
-  source    String
-  createdAt DateTime  @default(now())
-  startedAt DateTime?
 }
 
 // Necessary for Next auth
@@ -481,6 +460,9 @@ model TwitchChannel {
 
   broadcasterAccount Account? @relation(name: "BroadcasterAccount", fields: [broadcasterAccountId], references: [id])
   moderatorAccount   Account? @relation(name: "ModeratorAccount", fields: [moderatorAccountId], references: [id])
+
+  @@index([broadcasterAccountId], name: "TwitchChannel_broadcaster")
+  @@index([moderatorAccountId], name: "TwitchChannel_moderator")
 }
 
 model RoundsCheck {
@@ -493,4 +475,35 @@ model RoundsCheck {
   hidden              Boolean @default(false)
 
   fileStorageObject FileStorageObject? @relation(fields: [fileStorageObjectId], references: [id], onDelete: Cascade)
+}
+
+model Donation {
+  id               String    @id
+  provider         String
+  providerUniqueId String    @unique @db.VarChar(500)
+  amount           Int
+  donatedAt        DateTime?
+  receivedAt       DateTime
+  note             String?   @db.Text
+  donatedBy        Json
+  tags             Json
+  providerMetadata Json
+
+  pixels Pixel[]
+
+  @@index([receivedAt(sort: Desc)], name: "Donation_recent")
+}
+
+model Pixel {
+  id         String   @id
+  receivedAt DateTime
+  donationId String
+  identifier String
+  email      String?
+  column     Int
+  row        Int
+
+  donation Donation @relation(fields: [donationId], references: [id])
+
+  @@index([donationId], name: "Pixel_donationId")
 }

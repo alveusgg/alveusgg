@@ -111,7 +111,7 @@ const mayaStream: RegularEvent = {
   description: "Tune in to see what Maya is up to today!",
   category: "Maya Stream",
   link: "https://twitch.tv/maya",
-  startTime: { hour: 12, minute: 0 },
+  startTime: { hour: 10, minute: 0 },
 };
 
 export const regularEventsWeekly = [
@@ -147,12 +147,6 @@ export const regularEventsWeekly = [
       link: "https://twitch.tv/AlveusSanctuary",
       startTime: { hour: 10, minute: 30 },
     },
-    {
-      title: "WW New Episode",
-      description: "Watch the latest World's Wildest episode.",
-      category: "Maya YouTube Video",
-      link: "https://www.youtube.com/@worldswildestpodcast",
-    },
   ],
   // Friday
   [
@@ -176,5 +170,13 @@ export const regularEventsWeekly = [
     },
   ],
   // Sunday
-  [],
+  [
+    {
+      title: "Mucking in the Morning",
+      description: "Join Chandler as he mucks out the pasture.",
+      category: "Alveus Regular Stream",
+      link: "https://twitch.tv/AlveusSanctuary",
+      startTime: { hour: 11, minute: 0 },
+    },
+  ],
 ] as RegularEvent[][];

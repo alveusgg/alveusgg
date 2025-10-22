@@ -94,7 +94,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
             columns === 1 && align === "center" && "text-center",
           )}
         >
-          <Heading level={2} className="mt-0 text-4xl">
+          <Heading level={3} className="mt-0 text-4xl">
             {link ? (
               <Link href={`#${key}`} custom>
                 {person.name}
@@ -103,7 +103,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
               person.name
             )}
           </Heading>
-          <Heading level={3} className="text-xl">
+          <Heading level={4} className="text-xl">
             {person.title}
           </Heading>
           <div className="flex flex-col gap-4 text-gray-500">

@@ -18,6 +18,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { z } from "zod";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import type { CameraMulti, CameraPTZ } from "@/data/tech/cameras.types";
@@ -26,13 +27,15 @@ import { channels, scopeGroups } from "@/data/twitch";
 import { classes } from "@/utils/classes";
 import {
   isDefinedEntry,
-  safeJSONParse,
   typeSafeObjectEntries,
   typeSafeObjectKeys,
 } from "@/utils/helpers";
 import { camelToKebab, camelToTitle } from "@/utils/string-case";
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
+import useLocalStorage from "@/hooks/storage";
+
+import Consent from "@/components/Consent";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -59,6 +62,9 @@ type Command = RouterInputs["stream"]["runCommand"];
 
 const sidebarClamp = (val: number) =>
   Math.min(Math.max(val, 400), window.innerWidth / 2);
+
+const sidebarDefault = () =>
+  typeof window !== "undefined" ? sidebarClamp(window.innerWidth / 3) : -1;
 
 const getPositionIcon = (position: number) => {
   const PositionIcon = ({ className }: { className?: string }) => (
@@ -182,6 +188,22 @@ const AboutTechPresetsPage: NextPage = () => {
     ),
   });
 
+  // Allow the camera UI to be focused with other page UI hidden
+  const [focused, setFocused] = useLocalStorage(
+    "presets:focused",
+    useMemo(() => z.boolean(), []),
+    false,
+  );
+  const zen = subscription.isSuccess && subscription.data && focused;
+  useEffect(() => {
+    if (zen) {
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = "";
+      };
+    }
+  }, [zen]);
+
   // Track all the disclosure buttons so we can open/close them based on search input
   const disclosures = useRef<Set<HTMLButtonElement>>(new Set());
   const disclosureRef = useCallback((el: HTMLButtonElement) => {
@@ -245,20 +267,16 @@ const AboutTechPresetsPage: NextPage = () => {
     setSearchPresets("");
   }, [selectedCamera]);
 
-  const [twitchEmbed, setTwitchEmbed] = useState(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("presets:twitch-embed");
-      const parsed = safeJSONParse(saved ?? "");
-      if (typeof parsed === "number") return parsed;
-    }
-    return -1;
-  });
-
-  useEffect(() => {
-    localStorage.setItem("presets:twitch-embed", JSON.stringify(twitchEmbed));
-  }, [twitchEmbed]);
-
   // Allow the sidebar to be resized with a draggable handle
+  const [twitchEmbed, setTwitchEmbed] = useLocalStorage(
+    "presets:twitch-embed",
+    useMemo(
+      () =>
+        z.number().transform((val) => (val === -1 ? -1 : sidebarClamp(val))),
+      [],
+    ),
+    sidebarDefault(),
+  );
   const sidebarDrag = useRef(false);
   const sidebarContainer = useRef<HTMLDivElement>(null);
   useEffect(() => {
@@ -292,7 +310,7 @@ const AboutTechPresetsPage: NextPage = () => {
       window.removeEventListener("mouseup", handleMouseUp);
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [setTwitchEmbed]);
 
   const sidebar =
     subscription.isSuccess && subscription.data && twitchEmbed !== -1;
@@ -330,7 +348,12 @@ const AboutTechPresetsPage: NextPage = () => {
       </div>
 
       {/* Grow the last section to cover the page */}
-      <div className="relative flex bg-alveus-green py-4 lg:h-screen">
+      <div
+        className={classes(
+          "flex bg-alveus-green py-4",
+          zen ? "fixed inset-0 z-100 h-screen" : "relative lg:h-screen",
+        )}
+      >
         <Section
           className={classes(
             "@container z-10 grow py-0 pt-4",
@@ -338,65 +361,74 @@ const AboutTechPresetsPage: NextPage = () => {
           )}
           containerClassName="h-full flex flex-col"
         >
-          <Image
-            src={leafLeftImage3}
-            alt=""
-            className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
-          />
+          {!zen && (
+            <Image
+              src={leafLeftImage3}
+              alt=""
+              className="pointer-events-none absolute right-0 -bottom-24 z-10 hidden h-auto w-1/2 max-w-48 -scale-x-100 drop-shadow-md select-none lg:block"
+            />
+          )}
 
-          <div className="flex flex-col gap-y-4 @3xl:flex-row">
-            <div className="flex w-full flex-col gap-2 @3xl:w-3/5">
-              <p>
-                If you&apos;re subscribed, you can run these commands directly
-                from this page by clicking the{" "}
-                <span className="font-semibold text-alveus-green">
-                  Run command{" "}
-                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
-                </span>{" "}
-                button in each preset card. This will automatically send the
-                command to the{" "}
-                <Link
-                  href={`https://twitch.tv/${channels.alveusgg.username}`}
-                  external
-                >
-                  {channels.alveusgg.username} Twitch chat
-                </Link>{" "}
-                as if you had typed it in the chat yourself.
-              </p>
+          <div className="grid grid-cols-1 gap-x-8 gap-y-4 @3xl:grid-cols-5">
+            {!zen && (
+              <div className="grid w-full grid-cols-1 gap-2 @3xl:col-span-3">
+                <p>
+                  If you&apos;re subscribed, you can run these commands directly
+                  from this page by clicking the{" "}
+                  <span className="font-semibold text-alveus-green">
+                    Run command{" "}
+                    <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                  </span>{" "}
+                  button in each preset card. This will automatically send the
+                  command to the{" "}
+                  <Link
+                    href={`https://twitch.tv/${channels.alveusgg.username}`}
+                    external
+                  >
+                    {channels.alveusgg.username} Twitch chat
+                  </Link>{" "}
+                  as if you had typed it in the chat yourself.
+                </p>
 
-              <p className="hidden lg:block">
-                Next to each camera in the menu you&apos;ll also find a{" "}
-                <span className="font-semibold text-alveus-green">
-                  Run swap command{" "}
-                  <IconVideoCamera className="mb-0.5 inline-block size-4" />
-                </span>{" "}
-                button if the camera is in the same enclosure as the currently
-                selected camera, allowing you to swap which camera is shown on
-                stream if you&apos;re subscribed.
-              </p>
+                <p className="hidden lg:block">
+                  Next to each camera in the menu you&apos;ll also find a{" "}
+                  <span className="font-semibold text-alveus-green">
+                    Run swap command{" "}
+                    <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                  </span>{" "}
+                  button if the camera is in the same enclosure as the currently
+                  selected camera, allowing you to swap which camera is shown on
+                  stream if you&apos;re subscribed.
+                </p>
 
-              <p>
-                Make sure to enable the embedded stream player, or have the{" "}
-                <Link href="/live/twitch" external>
-                  livestream
-                </Link>{" "}
-                open in another tab, to see the cameras change as you load
-                presets
-                <span className="hidden lg:inline">
-                  {" "}
-                  and swap which cameras are on stream
-                </span>
-                .
-              </p>
-            </div>
+                <p>
+                  Make sure to enable the embedded stream player, or have the{" "}
+                  <Link href="/live/twitch" external>
+                    livestream
+                  </Link>{" "}
+                  open in another tab, to see the cameras change as you load
+                  presets
+                  <span className="hidden lg:inline">
+                    {" "}
+                    and swap which cameras are on stream
+                  </span>
+                  .
+                </p>
+              </div>
+            )}
 
-            <div className="flex w-full flex-col gap-2 @3xl:w-2/5 @3xl:pl-8">
+            <div
+              className={classes(
+                "grid w-full grid-cols-1 gap-x-8 gap-y-2",
+                zen ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
+              )}
+            >
               <ProvideAuth scopeGroup="chat" className="mb-4" />
 
               {!subscription.isPaused && (
                 <div
                   className={classes(
-                    "flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
+                    "mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
                     subscription.isSuccess &&
                       (subscription.data ? "bg-alveus-green" : "bg-red"),
                     subscription.isLoading && "bg-twitch",
@@ -430,7 +462,53 @@ const AboutTechPresetsPage: NextPage = () => {
               )}
 
               {subscription.isSuccess && subscription.data && (
-                <div className="mt-auto flex flex-col gap-2">
+                <>
+                  {/* Use a viewport media query, not a container media query, as we don't want the focused + sidebar layouts available on mobile */}
+                  <div
+                    className={classes(
+                      zen
+                        ? "order-first row-span-2 grid grid-rows-subgrid"
+                        : "hidden lg:contents",
+                    )}
+                  >
+                    <Field className="flex flex-wrap items-center justify-between gap-2">
+                      <Label className="flex grow cursor-pointer flex-col leading-tight">
+                        <span>Enable embedded Twitch stream player</span>
+                        <span className="text-sm text-alveus-green-400 italic">
+                          (also embeds the {channels.alveusgg.username} stream
+                          chat)
+                        </span>
+                      </Label>
+
+                      <Switch
+                        checked={twitchEmbed !== -1}
+                        onChange={(val) =>
+                          setTwitchEmbed(val ? sidebarDefault() : -1)
+                        }
+                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                      >
+                        <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                      </Switch>
+                    </Field>
+
+                    <Field className="flex flex-wrap items-center justify-between gap-2">
+                      <Label className="flex grow cursor-pointer flex-col leading-tight">
+                        <span>Enable zen control mode</span>
+                        <span className="text-sm text-alveus-green-400 italic">
+                          (hides all other page UI elements)
+                        </span>
+                      </Label>
+
+                      <Switch
+                        checked={focused}
+                        onChange={setFocused}
+                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                      >
+                        <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                      </Switch>
+                    </Field>
+                  </div>
+
                   <Field className="flex flex-wrap items-center justify-between gap-2">
                     <Label className="flex flex-col leading-tight">
                       <span>Swap camera positions on stream</span>
@@ -474,30 +552,7 @@ const AboutTechPresetsPage: NextPage = () => {
                       )}
                     </div>
                   </Field>
-
-                  {/* Use a viewport media query, not a container media query, as we don't want the sidebar available on mobile */}
-                  <Field className="hidden flex-wrap items-center justify-between gap-2 lg:flex">
-                    <Label className="flex flex-col leading-tight">
-                      <span>Enable embedded Twitch stream player</span>
-                      <span className="text-sm text-alveus-green-400 italic">
-                        (also embeds the {channels.alveusgg.username} stream
-                        chat)
-                      </span>
-                    </Label>
-
-                    <Switch
-                      checked={twitchEmbed !== -1}
-                      onChange={(val) =>
-                        setTwitchEmbed(
-                          val ? sidebarClamp(window.innerWidth / 3) : -1,
-                        )
-                      }
-                      className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
-                    >
-                      <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
-                    </Switch>
-                  </Field>
-                </div>
+                </>
               )}
             </div>
           </div>
@@ -737,11 +792,13 @@ const AboutTechPresetsPage: NextPage = () => {
               <div className="h-1/3 max-h-full w-1 rounded bg-alveus-green-200 transition-colors group-hover:bg-alveus-green-400 group-active:bg-alveus-green-400" />
             </div>
             <div
-              className="flex flex-col overflow-hidden rounded-l-xl bg-alveus-green-900"
+              className="overflow-hidden rounded-l-xl bg-alveus-green-900 text-alveus-tan"
               style={{ width: twitchEmbed }}
             >
-              <Twitch channel="alveussanctuary" />
-              <TwitchChat channel="alveusgg" dark />
+              <Consent item="stream player" consent="twitch" className="h-full">
+                <Twitch channel="alveussanctuary" />
+                <TwitchChat channel="alveusgg" dark />
+              </Consent>
             </div>
           </div>
         )}

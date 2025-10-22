@@ -18,17 +18,19 @@ import chin2 from "../presets/chin2";
 import chin3 from "../presets/chin3";
 import crowin from "../presets/crowin";
 import crowout from "../presets/crowout";
+import emu from "../presets/emu";
 import fox from "../presets/fox";
 import foxcorner from "../presets/foxcorner";
 import garden from "../presets/garden";
 import georgie from "../presets/georgie";
 import georgiewater from "../presets/georgiewater";
 import hank from "../presets/hank";
+import littles from "../presets/littles";
+import macaws from "../presets/macaws";
 import marmin from "../presets/marmin";
 import marmout from "../presets/marmout";
 import marty from "../presets/marty";
 import noodle from "../presets/noodle";
-import parrot from "../presets/parrots";
 import pasture from "../presets/pasture";
 import pasturefeeder from "../presets/pasturefeeder";
 import patchy from "../presets/patchy";
@@ -93,6 +95,7 @@ const cameras = {
       description: "Crow outdoor camera with crow indoor picture-in-picture",
     },
   },
+  emu,
   fox,
   foxcorner,
   foxmulti: {
@@ -122,7 +125,8 @@ const cameras = {
   },
   marty,
   noodle,
-  parrot,
+  littles,
+  macaws,
   pasture,
   pasturefeeder,
   patchy,

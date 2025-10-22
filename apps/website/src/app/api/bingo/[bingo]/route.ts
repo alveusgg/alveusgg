@@ -1,5 +1,3 @@
-import { prisma } from "@alveusgg/database";
-
 import { findActiveBingo } from "@/server/db/bingos";
 
 import {
@@ -9,7 +7,6 @@ import {
   parseBingoPlayData,
 } from "@/utils/bingo";
 
-export const runtime = "edge";
 export const revalidate = 2;
 
 export async function GET(
@@ -25,7 +22,7 @@ export async function GET(
   try {
     const { bingo: bingoSlugOrId } = await params;
 
-    const bingo = await findActiveBingo(prisma.edge, bingoSlugOrId);
+    const bingo = await findActiveBingo(bingoSlugOrId);
     if (!bingo) {
       return new Response("Row not found", { status: 404 });
     }

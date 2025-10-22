@@ -101,12 +101,11 @@ export const env = createEnv({
       .stringbool()
       .optional()
       .default(false),
-    COMMUNITY_PHOTOS_URL: z.url().optional(),
-    COMMUNITY_PHOTOS_KEY: z.string().optional(),
     CF_STREAM_KEY_ID: z.string().optional(),
     CF_STREAM_KEY_JWK: z.string().optional(),
     CF_STREAM_LOLA_VIDEO_ID: z.string().optional(),
     CF_STREAM_HOST: z.string().optional(),
+    TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -140,6 +139,8 @@ export const env = createEnv({
       .stringbool()
       .optional()
       .default(false),
+    NEXT_PUBLIC_DONATIONS_MANAGER_URL: z.string().optional(),
+    NEXT_PUBLIC_DONATIONS_DEMO_MODE: z.stringbool().optional().default(false),
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -195,12 +196,12 @@ export const env = createEnv({
       process.env.DISCORD_CHANNEL_WEBHOOK_URLS_ANNOUNCEMENT,
     DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION:
       process.env.DISCORD_CHANNEL_WEBHOOK_TO_EVERYONE_STREAM_NOTIFICATION,
-    COMMUNITY_PHOTOS_URL: process.env.COMMUNITY_PHOTOS_URL,
-    COMMUNITY_PHOTOS_KEY: process.env.COMMUNITY_PHOTOS_KEY,
     CF_STREAM_KEY_ID: process.env.CF_STREAM_KEY_ID,
     CF_STREAM_KEY_JWK: process.env.CF_STREAM_KEY_JWK,
     CF_STREAM_LOLA_VIDEO_ID: process.env.CF_STREAM_LOLA_VIDEO_ID,
     CF_STREAM_HOST: process.env.CF_STREAM_HOST,
+    TRPC_API_SHARED_KEY: process.env.TRPC_API_SHARED_KEY,
+
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
     // If there is a NEXT_PUBLIC_VERCEL_URL set, use that like NextAuth.js does
@@ -230,6 +231,10 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_DONATION_EVENT_LINK,
     NEXT_PUBLIC_DONATION_EVENT_EXTERNAL:
       process.env.NEXT_PUBLIC_DONATION_EVENT_EXTERNAL,
+    NEXT_PUBLIC_DONATIONS_MANAGER_URL:
+      process.env.NEXT_PUBLIC_DONATIONS_MANAGER_URL,
+    NEXT_PUBLIC_DONATIONS_DEMO_MODE:
+      process.env.NEXT_PUBLIC_DONATIONS_DEMO_MODE,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

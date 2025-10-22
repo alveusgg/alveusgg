@@ -17,6 +17,8 @@ import left from "@/assets/presets/crowout/left.png";
 import platform from "@/assets/presets/crowout/platform.png";
 import platforminside from "@/assets/presets/crowout/platforminside.png";
 import right from "@/assets/presets/crowout/right.png";
+import stick from "@/assets/presets/crowout/stick.png";
+import stickl from "@/assets/presets/crowout/stickl.png";
 import stickz from "@/assets/presets/crowout/stickz.png";
 import table from "@/assets/presets/crowout/table.png";
 import training from "@/assets/presets/crowout/training.png";
@@ -104,6 +106,14 @@ const crowoutPresets: Record<string, Preset> = {
   right: {
     description: "right of crow enclosure",
     image: right,
+  },
+  stick: {
+    description: "stick",
+    image: stick,
+  },
+  stickl: {
+    description: "stick left",
+    image: stickl,
   },
   stickz: {
     description: "stick zoomed in",

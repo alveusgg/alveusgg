@@ -10,7 +10,7 @@ import IconAmazon from "@/icons/IconAmazon";
 export type NavStructureLink = {
   title: string;
   link: string;
-  isExternal?: boolean;
+  external?: boolean;
 };
 
 export type NavStructureDropdown = {
@@ -33,13 +33,30 @@ export const mainNavStructure: NavStructure = {
     title: "Ambassadors",
     link: "/ambassadors",
   },
+  institute: {
+    title: "Institute",
+    dropdown: {
+      institute: {
+        title: "Research & Recovery",
+        link: "/institute",
+      },
+      pixels: {
+        title: "Pixel Project",
+        link: "/institute/pixels",
+      },
+    },
+  },
   explore: {
     title: "Explore",
     dropdown: {
       live: {
         title: "Live Cams",
         link: "/live",
-        isExternal: true,
+        external: true,
+      },
+      updates: {
+        title: "Schedule & Updates",
+        link: "/updates",
       },
       animalQuest: {
         title: "Animal Quest",
@@ -49,52 +66,6 @@ export const mainNavStructure: NavStructure = {
         title: "Collaborations",
         link: "/collaborations",
       },
-      updates: {
-        title: "Schedule & Updates",
-        link: "/updates",
-      },
-      events: {
-        title: "Fundraising Events",
-        link: "/events",
-      },
-    },
-  },
-  about: {
-    title: "About",
-    dropdown: {
-      alveus: {
-        title: "About Alveus",
-        link: "/about/alveus",
-      },
-      staff: {
-        title: "Alveus Staff",
-        link: "/about/staff",
-      },
-      advisoryBoard: {
-        title: "Advisory Board",
-        link: "/about/advisory-board",
-      },
-      boardOfDirectors: {
-        title: "Board of Directors",
-        link: "/about/board-of-directors",
-      },
-      ngoCollabs: {
-        title: "NGO Collaborations",
-        link: "/about/orgs",
-      },
-      annualReports: {
-        title: "Annual Reports",
-        link: "/about/annual-reports",
-      },
-      tech: {
-        title: "Tech at Alveus",
-        link: "/about/tech",
-      },
-    },
-  },
-  more: {
-    title: "More",
-    dropdown: {
       showAndTell: {
         title: "Show and Tell",
         link: "/show-and-tell",
@@ -107,24 +78,49 @@ export const mainNavStructure: NavStructure = {
         title: "Found an Animal?",
         link: "/found-animal",
       },
-      votersGuide: {
-        title: "Voters' Guide",
-        link: "/voters-guide",
+    },
+  },
+  about: {
+    title: "About",
+    dropdown: {
+      alveus: {
+        title: "About Alveus",
+        link: "/about",
+      },
+      staff: {
+        title: "Alveus Team",
+        link: "/about/team",
+      },
+      ngoCollabs: {
+        title: "NGO Collaborations",
+        link: "/about/orgs",
+      },
+      events: {
+        title: "Fundraising Events",
+        link: "/about/events",
+      },
+      annualReports: {
+        title: "Annual Reports",
+        link: "/about/annual-reports",
+      },
+      tech: {
+        title: "Tech at Alveus",
+        link: "/about/tech",
       },
     },
   },
-  merch: {
-    title: "Merch",
+  shop: {
+    title: "Shop",
     dropdown: {
       apparel: {
         title: "Apparel",
         link: "/apparel",
-        isExternal: true,
+        external: true,
       },
       plushies: {
         title: "Plushies",
         link: "/plushies",
-        isExternal: true,
+        external: true,
       },
     },
   },

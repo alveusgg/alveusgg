@@ -1,15 +1,18 @@
 import barn1r from "@/assets/presets/garden/barn1r.png";
 import barn2 from "@/assets/presets/garden/barn2.png";
+import bughotel2 from "@/assets/presets/garden/bughotel2.png";
 import bughotel from "@/assets/presets/garden/bughotel.png";
 import gate from "@/assets/presets/garden/gate.png";
 import home from "@/assets/presets/garden/home.png";
 import pasturebrush from "@/assets/presets/garden/pasturebrush.png";
 import pasturegrove from "@/assets/presets/garden/pasturegrove.png";
 import pastureleft from "@/assets/presets/garden/pastureleft.png";
+import pasturepole from "@/assets/presets/garden/pasturepole.png";
 import pastureright from "@/assets/presets/garden/pastureright.png";
 import pasturewater from "@/assets/presets/garden/pasturewater.png";
 import poolright from "@/assets/presets/garden/poolright.png";
 import roundpen from "@/assets/presets/garden/roundpen.png";
+import sunrise from "@/assets/presets/garden/sunrise.png";
 import tccenter from "@/assets/presets/garden/tccenter.png";
 import tcleft from "@/assets/presets/garden/tcleft.png";
 import tcright from "@/assets/presets/garden/tcright.png";
@@ -33,6 +36,10 @@ const gardenPresets: Record<string, Preset> = {
     description: "Bug Hotel",
     image: bughotel,
   },
+  bughotel2: {
+    description: "Bug Hotel 2",
+    image: bughotel2,
+  },
   gate: {
     description: "Gate",
     image: gate,
@@ -49,6 +56,10 @@ const gardenPresets: Record<string, Preset> = {
     description: "Pasture Left",
     image: pastureleft,
   },
+  pasturepole: {
+    description: "Pasture Pole",
+    image: pasturepole,
+  },
   pastureright: {
     description: "Pasture Right",
     image: pastureright,
@@ -64,6 +75,10 @@ const gardenPresets: Record<string, Preset> = {
   roundpen: {
     description: "Round Pen",
     image: roundpen,
+  },
+  sunrise: {
+    description: "Sunrise",
+    image: sunrise,
   },
   tccenter: {
     description: "TC Center",

@@ -14,7 +14,7 @@ import IconCheck from "@/icons/IconCheck";
 import IconChevronVertical from "@/icons/IconChevronVertical";
 
 type SelectProps = {
-  options: Record<string, string>;
+  options: Record<string, string | JSX.Element>;
   value: string;
   onChange: (value: string) => void;
   label?: string | JSX.Element;

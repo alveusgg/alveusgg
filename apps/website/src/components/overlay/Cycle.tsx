@@ -22,6 +22,7 @@ const Cycle = ({
   const refs = useRef<(HTMLElement | null)[]>([]);
   const cloned = useMemo(
     () =>
+      // eslint-disable-next-line react-hooks/refs -- we're passing a ref prop down
       items.map((item, idx) =>
         cloneElement(item, {
           className: classes(

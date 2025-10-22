@@ -1,7 +1,7 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 
-import { type PrismaClient, prisma } from "@alveusgg/database";
+import { prisma } from "@alveusgg/database";
 
 import type { BingoPlayData } from "@/utils/bingo";
 import { assignCardToUser, bingoConfigSchema, bingoTypes } from "@/utils/bingo";
@@ -27,13 +27,9 @@ export const existingBingoSchema = bingoSchema.and(
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const bingoEntrySchema = z.object({});
 
-// This accepts a PrismaClient so that we can also use it in edge functions
-export async function findActiveBingo(
-  client: PrismaClient,
-  bingoSlugOrId: string,
-) {
+export async function findActiveBingo(bingoSlugOrId: string) {
   const now = new Date();
-  return await client.bingo.findFirst({
+  return await prisma.bingo.findFirst({
     where: {
       active: true,
       startAt: { lt: now },

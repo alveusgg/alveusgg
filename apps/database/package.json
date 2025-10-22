@@ -24,16 +24,16 @@
     "format": "prisma format"
   },
   "dependencies": {
-    "@prisma/adapter-planetscale": "^6.16.1",
-    "@prisma/client": "^6.16.1"
+    "@prisma/adapter-mariadb": "^6.17.1",
+    "@prisma/client": "^6.17.1"
   },
   "devDependencies": {
-    "@types/node": "^22.18.3",
-    "prisma": "^6.16.1"
+    "@types/node": "^22.18.11",
+    "prisma": "^6.17.1"
   },
   "exports": {
     ".": {
-      "import": "./dist/index.js"
+      "import": "./dist/src/index.js"
     }
   }
 }

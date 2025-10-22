@@ -43,11 +43,13 @@ import jessicaNigri from "@/assets/collaborations/jessica-nigri.png";
 import jinny from "@/assets/collaborations/jinny.png";
 import juliakins from "@/assets/collaborations/juliakins.png";
 import julien from "@/assets/collaborations/julien.png";
+import killdozerTv from "@/assets/collaborations/killdozer-tv.png";
 import knut from "@/assets/collaborations/knut.png";
 import kreekcraft from "@/assets/collaborations/kreekcraft.png";
 import lacari from "@/assets/collaborations/lacari.png";
 import ludwig from "@/assets/collaborations/ludwig.png";
 import mari from "@/assets/collaborations/mari.png";
+import misterArther from "@/assets/collaborations/mister-arther.png";
 import moistCr1TiKaL from "@/assets/collaborations/moist-cr1tikal.png";
 import peachJars from "@/assets/collaborations/peach-jars.png";
 import pizzaPrincessG from "@/assets/collaborations/pizza-princess-g.png";
@@ -90,10 +92,38 @@ export type Collaboration = {
 const collaborations: Collaboration[] = (
   [
     {
+      name: "Mister Arther",
+      link: "https://www.twitch.tv/misterarther",
+      date: new Date("2025-10-11"),
+      videoId: "sMYuOYXNA9s",
+      creators: [
+        {
+          name: "Mister Arther",
+          image: misterArther,
+          popularity: 139_000, // Twitch followers, 2025-10-12
+        },
+      ],
+    },
+    {
+      name: "Killdozer_tv",
+      link: "https://www.twitch.tv/killdozer_tv",
+      date: new Date("2025-09-25"),
+      videoId: "QzF5nRfrKBM",
+      vodId: "D2R_SZB1eCk",
+      creators: [
+        {
+          name: "Killdozer_tv",
+          image: killdozerTv,
+          popularity: 598_000, // YouTube subscribers, 2025-10-07
+        },
+      ],
+    },
+    {
       name: "YourRAGE",
       link: "https://www.twitch.tv/yourragegaming",
       date: new Date("2025-09-17"),
       videoId: "gXB6PxaN4Hk",
+      vodId: "jt2yU4BNtvY",
       creators: [
         {
           name: "YourRAGE",
@@ -107,6 +137,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/ironmouse",
       date: new Date("2025-09-02"),
       videoId: "HteU7-hKUlk",
+      vodId: "fplj0BIRbWQ",
       creators: [
         {
           name: "Ironmouse",

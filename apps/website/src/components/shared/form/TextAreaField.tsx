@@ -37,6 +37,7 @@ export const TextAreaField = (props: TextAreaFieldProps) => {
           if (typeof forwardedRef === "function") {
             forwardedRef(element);
           } else if (forwardedRef) {
+            // eslint-disable-next-line react-hooks/immutability -- this is a ref, it can be mutated
             forwardedRef.current = element;
           }
         }}

@@ -14,6 +14,8 @@ import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { classes } from "@/utils/classes";
 
+import { useActiveNav } from "@/hooks/active";
+
 import {
   NavLink,
   NavLinkSub,
@@ -28,6 +30,9 @@ import { NotificationsButton } from "@/components/notifications/NotificationsBut
 
 import IconChevronDown from "@/icons/IconChevronDown";
 import IconSignIn from "@/icons/IconSignIn";
+
+const utilityLinkClasses =
+  "block rounded-xl bg-transparent p-2 text-white transition-colors hover:bg-white hover:text-alveus-green";
 
 const DropdownMenuItems: typeof MenuItems = ({ ...props }) => (
   <MenuItems
@@ -49,12 +54,14 @@ const DropdownMenuItem = ({
   ref?: Ref<HTMLElement>;
 }) => (
   <li {...props}>
+    {/* eslint-disable-next-line react-hooks/refs -- we're passing a ref prop down */}
     {Children.map(children, (child) => cloneElement(child, { ref }))}
   </li>
 );
 
 export function DesktopMenu() {
   const { data: sessionData } = useSession();
+  const active = useActiveNav();
 
   const user = sessionData?.user;
   const showAdminLink =
@@ -70,7 +77,7 @@ export function DesktopMenu() {
             <li key={key}>
               {/* eslint-disable-next-line react/jsx-no-target-blank */}
               <a
-                className="block rounded-xl bg-transparent p-2 text-white transition-colors hover:bg-white hover:text-alveus-green"
+                className={utilityLinkClasses}
                 target="_blank"
                 rel={link.rel}
                 href={link.link}
@@ -85,7 +92,7 @@ export function DesktopMenu() {
 
         <div className="h-6 border-r"></div>
 
-        <NotificationsButton className="rounded-lg p-2 hover:bg-white hover:text-alveus-green" />
+        <NotificationsButton className={utilityLinkClasses} />
 
         <div className="h-6 border-r"></div>
 
@@ -140,13 +147,13 @@ export function DesktopMenu() {
             </Menu>
           ) : (
             <button
-              className={navLinkClassesSub}
+              className={utilityLinkClasses}
               type="button"
               onClick={() => signIn("twitch")}
               title="Sign in"
             >
               <span className="sr-only">Sign in</span>
-              <IconSignIn size={20} />
+              <IconSignIn size={20} className="m-0.5" />
             </button>
           )}
         </div>
@@ -163,7 +170,11 @@ export function DesktopMenu() {
           {Object.entries(mainNavStructure).map(([key, link]) => (
             <li key={key}>
               {"link" in link ? (
-                <NavLink href={link.link} isExternal={link.isExternal}>
+                <NavLink
+                  href={link.link}
+                  active={active === link.link}
+                  external={link.external}
+                >
                   {link.title}
                 </NavLink>
               ) : (
@@ -191,7 +202,8 @@ export function DesktopMenu() {
                         {({ close }) => (
                           <NavLinkSub
                             href={link.link}
-                            isExternal={link.isExternal}
+                            active={active === link.link}
+                            external={link.external}
                             className="w-full min-w-max outline-blue-500 group-data-focus/item:not-hover:outline-2"
                             onClick={close}
                           >

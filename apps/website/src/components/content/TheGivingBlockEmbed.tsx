@@ -1,22 +1,48 @@
-import Script from "next/script";
-import { useEffect } from "react";
+import { useEffect, useId, useRef } from "react";
 
-import { theGivingBlockConfig } from "@/data/the-giving-block";
+import {
+  type TheGivingBlockConfig,
+  theGivingBlockConfig,
+} from "@/data/the-giving-block";
 
-const TheGivingBlockEmbed = () => {
+const TheGivingBlockEmbed = ({
+  className,
+  ...props
+}: { className?: string } & Partial<TheGivingBlockConfig>) => {
+  const id = useId();
+  const ref = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    window.tgbWidgetOptions = theGivingBlockConfig;
-  }, []);
+    const div = ref.current;
+    if (!div) return;
 
-  return (
-    <div className="inline-block [&>*]:max-w-full">
-      <div id="tgb-widget-script"></div>
-      <Script
-        src="https://widget.thegivingblock.com/widget/script.js"
-        async={true}
-      ></Script>
-    </div>
-  );
+    // Create a new injection target for the widget
+    const target = document.createElement("div");
+    target.id = `tgb-widget-${id}`;
+    div.appendChild(target);
+
+    // Set global options for the widget
+    Reflect.deleteProperty(window, "widgetOptions");
+    Reflect.deleteProperty(window, "tgbWidgetOptions");
+    window.tgbWidgetOptions = {
+      ...theGivingBlockConfig,
+      ...props,
+      scriptId: `tgb-widget-${id}`,
+    };
+
+    // Inject the script to load the widget
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = `https://widget.thegivingblock.com/widget/script.js#${id}`;
+    div.appendChild(script);
+
+    return () => {
+      div.innerHTML = "";
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, JSON.stringify(props)]);
+
+  return <div ref={ref} className={className} />;
 };
 
 export default TheGivingBlockEmbed;

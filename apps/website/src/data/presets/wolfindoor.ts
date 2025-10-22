@@ -3,6 +3,7 @@ import doors from "@/assets/presets/wolfindoor/doors.png";
 import down from "@/assets/presets/wolfindoor/down.png";
 import downleft from "@/assets/presets/wolfindoor/downleft.png";
 import downright from "@/assets/presets/wolfindoor/downright.png";
+import fencel from "@/assets/presets/wolfindoor/fencel.png";
 import home from "@/assets/presets/wolfindoor/home.png";
 import left from "@/assets/presets/wolfindoor/left.png";
 import leftcorner from "@/assets/presets/wolfindoor/leftcorner.png";
@@ -41,6 +42,10 @@ const wolfindoorPresets: Record<string, Preset> = {
   downright: {
     description: "Down Right",
     image: downright,
+  },
+  fencel: {
+    description: "Fence Left",
+    image: fencel,
   },
   left: {
     description: "Left",
