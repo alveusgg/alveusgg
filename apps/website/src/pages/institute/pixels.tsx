@@ -312,9 +312,6 @@ const InstitutePixelsPage: NextPage = () => {
         </div>
 
         <div className="flex flex-col gap-8">
-          <Donate type="twitch" highlight />
-          <Donate type="paypal" link="/paypal/pixels" />
-
           <Box dark>
             <PixelsDescription className="text-center text-2xl" />
 
@@ -328,6 +325,9 @@ const InstitutePixelsPage: NextPage = () => {
               also search using your PayPal email address.
             </p>
           </Box>
+
+          <Donate type="twitch" highlight />
+          <Donate type="paypal" link="/paypal/pixels" />
         </div>
       </Section>
     </PixelSyncProviderProvider>
