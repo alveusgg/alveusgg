@@ -293,8 +293,8 @@ importers:
         specifier: ^4.2.3
         version: 4.2.3(next@15.5.4(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))
       next-superjson:
-        specifier: ^1.0.7
-        version: 1.0.7(@swc/helpers@0.5.17)(next@15.5.4(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(superjson@2.2.2)
+        specifier: ^2.0.0
+        version: 2.0.0(@swc/helpers@0.5.17)(next@15.5.4(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(superjson@2.2.2)
       oauth:
         specifier: ^0.10.2
         version: 0.10.2
@@ -488,9 +488,6 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
-    peerDependenciesMeta:
-      tailwindcss:
-        optional: true
 
   '@ark/schema@0.46.0':
     resolution: {integrity: sha512-c2UQdKgP2eqqDArfBqQIJppxJHvNNXuQPeuSPlDML4rjw+f1cu0qAlzOG4b8ujgm9ctIDWwhpyw6gjG5ledIVQ==}
@@ -5593,10 +5590,10 @@ packages:
       next: ^13.0 || ^14.0
       superjson: ^1 || ^2
 
-  next-superjson@1.0.7:
-    resolution: {integrity: sha512-07zs+A+oyCmpJm4qwo5M8pjnBIrYgnd2eox77wafB1shdCSxbaHNwejCKMK2e2sPtJ1u+iNPG1bG4mO6xwOz6g==}
+  next-superjson@2.0.0:
+    resolution: {integrity: sha512-WU4+UnZto2n/l8Tzz7vO8B0uO70Wud5g82zEc0WRsNkGUwvh7+iO9JyWMIMF7C2cC5UdGQOth9/ySmn1yoxx+g==}
     peerDependencies:
-      next: '>=10'
+      next: '>=16'
 
   next@15.5.4:
     resolution: {integrity: sha512-xH4Yjhb82sFYQfY3vbkJfgSDgXvBB6a8xPs9i35k6oZJRoQRihZH+4s9Yo2qsWpzBmZ3lPXaJ2KPXLfkvW4LnA==}
@@ -7020,9 +7017,8 @@ snapshots:
 
   '@alveusgg/data@0.66.1(tailwindcss@4.1.14)(zod@4.1.12)':
     dependencies:
-      zod: 4.1.12
-    optionalDependencies:
       tailwindcss: 4.1.14
+      zod: 4.1.12
 
   '@ark/schema@0.46.0':
     dependencies:
@@ -13204,7 +13200,7 @@ snapshots:
       next: 15.5.4(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
       superjson: 2.2.2
 
-  next-superjson@1.0.7(@swc/helpers@0.5.17)(next@15.5.4(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(superjson@2.2.2):
+  next-superjson@2.0.0(@swc/helpers@0.5.17)(next@15.5.4(@babel/core@7.28.4)(react-dom@19.2.0(react@19.2.0))(react@19.2.0))(superjson@2.2.2):
     dependencies:
       '@swc/core': 1.4.17(@swc/helpers@0.5.17)
       '@swc/types': 0.1.12

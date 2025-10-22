@@ -70,7 +70,7 @@
     "next": "^15.5.4",
     "next-auth": "^4.24.11",
     "next-sitemap": "^4.2.3",
-    "next-superjson": "^1.0.7",
+    "next-superjson": "^2.0.0",
     "oauth": "^0.10.2",
     "partysocket": "^1.1.6",
     "pluralize": "^8.0.0",
