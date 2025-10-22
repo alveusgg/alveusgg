@@ -45,8 +45,8 @@ import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
 import sirenHeroImage from "@/assets/hero/siren.jpg";
 import studioHeroImage from "@/assets/hero/studio.jpg";
 import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
-import usfwsMexicanWolfReleasedImage from "@/assets/institute/usfws-mexican-wolf-released.jpg";
-import usfwsRedWolfImage from "@/assets/institute/usfws-red-wolf.jpg";
+import instituteBuildingHeroImage from "@/assets/institute/hero/building.png";
+import instituteWolvesHeroImage from "@/assets/institute/hero/wolves.png";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
@@ -261,18 +261,18 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               </div>
             </div>
 
-            <div className="z-0 flex items-center justify-center self-center lg:max-w-md">
+            <div className="z-0 flex items-center justify-center self-center lg:max-w-lg">
               <Image
-                src={usfwsRedWolfImage}
-                width={256}
-                alt="Red wolf, B. Bartel/USFWS, Public Domain, https://www.fws.gov/media/red-wolf-7"
-                className="z-10 mr-[-10%] h-auto w-2/5 max-w-64 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+                src={instituteBuildingHeroImage}
+                width={300}
+                alt="Drawing of the Alveus Research & Recovery Institute building"
+                className="z-10 mr-[-10%] h-auto w-2/5 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
               />
               <Image
-                src={usfwsMexicanWolfReleasedImage}
-                width={384}
-                alt="Mexican wolf released back into the wild, Mexican Wolf Interagency Field Team, Public Domain, https://www.fws.gov/media/mexican-wolf-released-back-wild"
-                className="h-auto w-3/5 max-w-96 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+                src={instituteWolvesHeroImage}
+                width={400}
+                alt="Drawing of released wolves walking through the landscape"
+                className="h-auto w-3/5 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
               />
             </div>
           </Box>
