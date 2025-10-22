@@ -11,6 +11,11 @@ import {
   checkSubject,
 } from "./vapid.js";
 
+console.log(
+  "Node.js version:",
+  typeof process !== "undefined" && process.version,
+);
+
 /**
  * @template {import("zod").ZodTypeAny} T
  * @param {T} schema
