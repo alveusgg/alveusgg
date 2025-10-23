@@ -1,10 +1,7 @@
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 
-import {
-  PIXEL_RENAME_LOCK_DURATION_TEXT,
-  PixelSyncProviderProvider,
-} from "@/hooks/pixels";
+import { PIXEL_RENAME_LOCK_DURATION_TEXT } from "@/hooks/pixels";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
@@ -51,49 +48,42 @@ const MyPixelsPage: NextPage = () => {
         </Button>
       </Section>
 
-      <PixelSyncProviderProvider>
-        <>
-          <Section containerClassName="space-y-4 text-lg max-w-screen-lg">
-            <Heading level={2}>
-              Pixels connected with your Twitch account
-            </Heading>
-            <p>
-              Here you can find all the Pixels you have placed through Twitch
-              Charity or PayPal donations using the same email address.
-            </p>
+      <Section containerClassName="space-y-4 text-lg max-w-screen-lg">
+        <Heading level={2}>Pixels connected with your Twitch account</Heading>
+        <p>
+          Here you can find all the Pixels you have placed through Twitch
+          Charity or PayPal donations using the same email address.
+        </p>
 
-            <div className="mt-6">
-              {!session.data?.user ? (
-                <MessageBox>
-                  <p className="mb-4">
-                    You need to be logged in to view and edit your Pixels!
-                  </p>
+        <div className="mt-6">
+          {!session.data?.user ? (
+            <MessageBox>
+              <p className="mb-4">
+                You need to be logged in to view and edit your Pixels!
+              </p>
 
-                  <LoginWithTwitchButton />
-                </MessageBox>
-              ) : (
-                <EditMyPixels user={session.data.user} />
-              )}
-            </div>
-          </Section>
+              <LoginWithTwitchButton />
+            </MessageBox>
+          ) : (
+            <EditMyPixels user={session.data.user} />
+          )}
+        </div>
+      </Section>
 
-          {/* Grow the last section to cover the page */}
-          <Section
-            className="grow"
-            containerClassName="space-y-4 text-lg max-w-screen-lg"
-          >
-            <Heading level={2}>Pixels through PayPal donations</Heading>
+      {/* Grow the last section to cover the page */}
+      <Section
+        className="grow"
+        containerClassName="space-y-4 text-lg max-w-screen-lg"
+      >
+        <Heading level={2}>Pixels through PayPal donations</Heading>
 
-            <p>
-              Here you can search for more Pixels unlocked through PayPal
-              donations by providing the exact donation info (Full name and
-              email address).
-            </p>
+        <p>
+          Here you can search for more Pixels unlocked through PayPal donations
+          by providing the exact donation info (Full name and email address).
+        </p>
 
-            <EditPayPalPixels />
-          </Section>
-        </>
-      </PixelSyncProviderProvider>
+        <EditPayPalPixels />
+      </Section>
     </>
   );
 };

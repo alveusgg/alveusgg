@@ -77,28 +77,6 @@ export type MyPixel = {
   lockedUntil?: Date;
 };
 
-function updatePixelOnDonationsManager(
-  column: number,
-  row: number,
-  identifier: string,
-) {
-  return fetch(
-    `${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/update/${column}/${row}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `ApiKey ${env.TRPC_API_SHARED_KEY}`,
-      },
-      body: JSON.stringify({
-        data: {
-          identifier,
-        },
-      }),
-    },
-  );
-}
-
 function isPixelLocked(pixel: { renamedAt: Date | null }) {
   return (
     pixel.renamedAt &&
@@ -380,30 +358,12 @@ async function renameDonationPixels(
 
       renamePromises.push(
         (async () => {
-          const res = await updatePixelOnDonationsManager(
-            pixel.column,
-            pixel.row,
-            newIdentifier,
-          ).catch(() => {});
-
-          if (!res?.ok) {
-            failedCount++;
-            return;
-          }
-
           try {
             await renamePixel(pixel.id, newIdentifier);
             renamedCount++;
             return pixel;
           } catch (_) {
             failedCount++;
-
-            // Try to roll back the change on the donations manager
-            updatePixelOnDonationsManager(
-              pixel.column,
-              pixel.row,
-              pixel.identifier,
-            ).catch(() => {});
           }
         })(),
       );
@@ -427,10 +387,6 @@ async function renamePixelByFilterMutation(
   filter: Omit<Prisma.DonationWhereInput, "id">,
   auditVerification: string,
 ) {
-  if (!env.NEXT_PUBLIC_DONATIONS_MANAGER_URL || !env.TRPC_API_SHARED_KEY) {
-    throw new Error("Donations manager is not configured");
-  }
-
   const pixel = await prisma.pixel
     .findFirst({
       where: {
@@ -470,29 +426,7 @@ async function renamePixelByFilterMutation(
     });
   }
 
-  const res = await updatePixelOnDonationsManager(
-    pixel.column,
-    pixel.row,
-    newIdentifier,
-  ).catch(() => {});
-
-  if (!res?.ok) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to rename Pixel (donations manager)",
-    });
-  }
-
   await renamePixel(pixel.id, newIdentifier).catch(() => {
-    // Try to roll back the change on the donations manager
-    updatePixelOnDonationsManager(
-      pixel.column,
-      pixel.row,
-      pixel.identifier,
-    ).catch(() => {
-      console.error("Failed to roll back Pixel");
-    });
-
     throw new TRPCError({
       code: "INTERNAL_SERVER_ERROR",
       message: "Failed to rename Pixel (database)",

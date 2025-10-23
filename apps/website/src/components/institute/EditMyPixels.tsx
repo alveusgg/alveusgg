@@ -3,8 +3,6 @@ import { useState } from "react";
 
 import { trpc } from "@/utils/trpc";
 
-import { useOptimisticallyUpdatePixel } from "@/hooks/pixels";
-
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
 
 import IconCheck from "@/icons/IconCheck";
@@ -17,8 +15,6 @@ export function EditMyPixels({ user }: { user: User }) {
   const [overrideIdentifier, setOverrideIdentifier] = useState<string>(
     `@${username}`,
   );
-
-  const updatePixel = useOptimisticallyUpdatePixel();
 
   return (
     <>
@@ -43,7 +39,6 @@ export function EditMyPixels({ user }: { user: User }) {
             },
             {
               onSuccess: () => {
-                updatePixel(pixel.column, pixel.row, newIdentifier);
                 utils.donations.getMyPixels.invalidate();
               },
             },

@@ -5,8 +5,6 @@ import type { DonationPixel } from "@/server/trpc/router/donations";
 
 import { trpc } from "@/utils/trpc";
 
-import { useOptimisticallyUpdatePixel } from "@/hooks/pixels";
-
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { Button as FormButton } from "@/components/shared/form/Button";
@@ -22,8 +20,6 @@ export const payPalVerificationSchema = z.object({
 });
 
 export function EditPayPalPixels() {
-  const updatePixel = useOptimisticallyUpdatePixel();
-
   const [lastPixelsData, setLastPixelsData] = useState<
     DonationPixel[] | undefined
   >(undefined);
@@ -149,7 +145,6 @@ export function EditPayPalPixels() {
               },
               {
                 onSuccess: () => {
-                  updatePixel(pixel.column, pixel.row, newIdentifier);
                   getPayPalPixels.mutate(verification);
                 },
               },

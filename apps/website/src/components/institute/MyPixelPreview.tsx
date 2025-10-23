@@ -8,9 +8,7 @@ import {
   useRef,
 } from "react";
 
-import type { Pixel } from "@alveusgg/donations-core";
-
-import { PIXEL_SIZE, useLivePixels } from "@/hooks/pixels";
+import { PIXEL_SIZE, type Pixel, usePixels } from "@/hooks/pixels";
 
 function getHighContrastColor(pixel: Pixel) {
   const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
@@ -46,7 +44,7 @@ function MyPixelPreview({
   ref?: Ref<MyPixelPreviewRef>;
   identifier?: ReactNode;
 }) {
-  const pixels = useLivePixels();
+  const pixels = usePixels();
   const myPixelRef = useRef<HTMLCanvasElement>(null);
   const identifierRef = useRef<HTMLParagraphElement>(null);
 
@@ -58,9 +56,7 @@ function MyPixelPreview({
     ({ x, y }: { x: number; y: number }) => {
       coordinatesRef.current = { x, y };
 
-      const pixel = pixels.data?.pixels.find(
-        (p) => p.column === x && p.row === y,
-      );
+      const pixel = pixels?.find((p) => p.column === x && p.row === y);
       const identifierElement = identifierRef?.current;
       if (identifierElement) {
         if (pixel) {
@@ -96,7 +92,7 @@ function MyPixelPreview({
         }
       }
     },
-    [hasIdentifier, pixels.data?.pixels],
+    [hasIdentifier, pixels],
   );
 
   useImperativeHandle(ref, () => ({
