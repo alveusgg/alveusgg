@@ -69,6 +69,10 @@ export async function getPublicDonations({
   });
 }
 
+export async function getPixels() {
+  return prisma.pixel.findMany();
+}
+
 export async function createPixels(input: Omit<Pixel, "data">[]) {
   return prisma.pixel.createMany({
     data: input.map(
