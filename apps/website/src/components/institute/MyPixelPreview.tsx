@@ -73,8 +73,7 @@ function MyPixelPreview({
           }
           identifierElement.classList.remove("italic");
         } else {
-          if (!hasIdentifier)
-            identifierElement.innerText = "Locked " + `(${x}, ${y})`;
+          if (!hasIdentifier) identifierElement.innerText = "Locked";
           identifierElement.classList.add("italic");
           identifierElement.style.color = "rgba(0, 0, 0, 0.9)";
         }
