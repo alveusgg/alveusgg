@@ -242,7 +242,7 @@ export const donationsRouter = router({
       );
     }),
 
-  renameAllPayPalPixels: protectedProcedure
+  renameAllPayPalPixels: publicProcedure
     .input(
       z.object({
         newIdentifier: pixelIdentifierSchema,
