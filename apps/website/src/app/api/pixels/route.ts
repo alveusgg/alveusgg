@@ -5,6 +5,11 @@ const headers = {
 };
 
 export async function GET() {
-  const pixels = await getPixels();
-  return Response.json(pixels, { headers });
+  try {
+    const pixels = await getPixels();
+    return Response.json(pixels, { headers });
+  } catch (err) {
+    console.error("Error getting pixels", err);
+    return new Response("Pixels not available", { status: 500 });
+  }
 }

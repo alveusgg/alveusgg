@@ -11,9 +11,12 @@ export const PIXEL_GRID_WIDTH = 200;
 export const PIXEL_GRID_HEIGHT = 50;
 export const PIXEL_TOTAL = PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT;
 
-export const getPixels = async () => {
+const getPixels = async () => {
   const response = await fetch("/api/pixels");
   const data = await response.json();
+  if (!response.ok) {
+    throw new Error("Failed to get pixels");
+  }
   const pixels = data as Pixel[];
   return pixels.map((pixel) => {
     const location =
