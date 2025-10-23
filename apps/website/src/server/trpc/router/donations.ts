@@ -85,7 +85,7 @@ function isPixelLocked(pixel: { renamedAt: Date | null }) {
 }
 
 async function auditLogPixelRename(
-  verifiction: string,
+  verification: string,
   newIdentifier: string,
   pixels: Array<{
     id: string;
@@ -102,7 +102,7 @@ async function auditLogPixelRename(
       messages.push(
         [
           `${gridRef.x}:${gridRef.y} – \`${pixel.identifier}\` to \`${newIdentifier}\``,
-          `Verification: ${verifiction}`,
+          `Verification: ${verification}`,
           `Pixel: ${pixel.id}`,
         ].join("\n"),
       );
@@ -137,6 +137,7 @@ function mapDonationPixels(donation: DonationWithPixel) {
 async function guardPayPalSearchMutation(req: NextApiRequest) {
   const clientIp = req.headers["x-forwarded-for"];
   if (typeof clientIp === "string") {
+    // FIXME: Increase to a reasonable token window
     const isAllowed = await limit(
       `donations-pixels-paypal-search-${clientIp}`,
       5,
@@ -145,7 +146,7 @@ async function guardPayPalSearchMutation(req: NextApiRequest) {
     if (!isAllowed) {
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: "Too many attempts. Please wait one hour until you try again.",
+        message: "Too many attempts. Please wait until you try again.",
       });
     }
   }

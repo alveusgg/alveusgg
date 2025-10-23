@@ -82,7 +82,7 @@ export function EditPixelForm<TMutation extends AnyRenamePixelMutation>({
         </div>
       </div>
       <div className="flex flex-row items-center justify-center">
-        <div className="s-[200px] overflow-hidden rounded-sm border border-gray-300 shadow-sm">
+        <div className="overflow-hidden rounded-sm border border-gray-300 shadow-sm">
           <MyPixelPreview
             x={pixel.column}
             y={pixel.row}
