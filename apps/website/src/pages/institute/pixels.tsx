@@ -50,11 +50,19 @@ const InstitutePixelsPage: NextPage = () => {
 
   const [filtered, setFiltered] = useState<number>(0);
   const filter = useMemo(() => {
-    const normalized = search.trim().toLowerCase();
-    if (!normalized) return undefined;
+    const trimmed = search.trim();
+    if (!trimmed) return undefined;
 
-    const hashed = window.crypto.subtle
-      .digest("SHA-256", new TextEncoder().encode(normalized))
+    const hashedExact = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(trimmed))
+      .then((hash) =>
+        Array.from(new Uint8Array(hash))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join(""),
+      );
+
+    const hashedNormalized = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(trimmed.toLowerCase()))
       .then((hash) =>
         Array.from(new Uint8Array(hash))
           .map((b) => b.toString(16).padStart(2, "0"))
@@ -62,8 +70,10 @@ const InstitutePixelsPage: NextPage = () => {
       );
 
     return (pixel: Pixel) =>
-      pixel.identifier.toLowerCase().includes(normalized) ||
-      hashed.then((h) => pixel.email === h);
+      pixel.identifier.toLowerCase().includes(trimmed.toLowerCase()) ||
+      Promise.all([hashedExact, hashedNormalized]).then(
+        ([exact, norm]) => pixel.email === exact || pixel.email === norm,
+      );
   }, [search]);
 
   const [fullscreen, setFullscreen] = useState(false);
