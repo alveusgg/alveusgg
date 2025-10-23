@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
-import type { Pixel as DatabasePixel } from "@alveusgg/database";
+import type { PublicPixel } from "@/server/db/donations";
 
 import grid from "@/data/pixel-project-grid.json";
 
-export type Pixel = DatabasePixel & { data: string };
+export type Pixel = PublicPixel & { data: string };
 
 export const PIXEL_SIZE = 3;
 export const PIXEL_GRID_WIDTH = 200;

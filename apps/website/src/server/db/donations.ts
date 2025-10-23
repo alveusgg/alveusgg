@@ -20,6 +20,8 @@ export async function getPublicPixels() {
   });
 }
 
+export type PublicPixel = Awaited<ReturnType<typeof getPublicPixels>>[number];
+
 export async function getPublicDonations({
   take,
   cursor,
