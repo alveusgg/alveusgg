@@ -49,6 +49,7 @@ import {
   pixelIdentifierSchema,
 } from "@/hooks/pixels";
 
+import { payPalVerificationSchema } from "@/components/institute/EditPayPalPixels";
 import { coordsToGridRef } from "@/components/institute/Pixels";
 
 const DONATION_FEED_ENTRIES_PER_PAGE = 50;
