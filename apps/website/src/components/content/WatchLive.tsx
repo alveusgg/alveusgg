@@ -48,7 +48,8 @@ const WatchLive = () => (
 
       <MenuItems
         transition
-        className="group/items absolute top-full left-0 z-30 mt-1.5 -ml-4 flex flex-col rounded-sm bg-alveus-tan text-alveus-green shadow-lg outline-1 outline-black/20 transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
+        anchor="bottom start"
+        className="group/items mt-1.5 -ml-4 flex flex-col rounded-sm bg-alveus-tan text-alveus-green shadow-lg outline-1 outline-black/20 transition ease-in-out data-[closed]:scale-95 data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75"
         as="ul"
         modal={false}
       >
