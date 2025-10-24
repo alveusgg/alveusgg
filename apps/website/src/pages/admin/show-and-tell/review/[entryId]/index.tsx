@@ -1,6 +1,7 @@
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useCallback, useRef } from "react";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
@@ -53,6 +54,17 @@ const AdminReviewShowAndTellPage: NextPage<
     enabled: !!entryId,
   });
 
+  // Store a reference to the form's confirmIfUnsaved function
+  const confirmIfUnsavedRef = useRef<((message?: string) => boolean) | null>(
+    null,
+  );
+  const setConfirmIfUnsaved = useCallback(
+    (fn: (message?: string) => boolean) => {
+      confirmIfUnsavedRef.current = fn;
+    },
+    [],
+  );
+
   const deleteMutation = trpc.adminShowAndTell.delete.useMutation({
     onSettled: async () => {
       await getEntry.refetch();
@@ -72,6 +84,52 @@ const AdminReviewShowAndTellPage: NextPage<
 
   const entry = getEntry.data;
   const status = entry && getEntityStatus(entry);
+
+  // Handlers that check for unsaved changes
+  const handleApprove = useCallback(() => {
+    if (
+      confirmIfUnsavedRef.current?.(
+        "You have unsaved changes. Approving will discard them. Do you want to continue?",
+      ) === false
+    ) {
+      return;
+    }
+    if (entry) {
+      approveMutation.mutate(entry.id);
+    }
+  }, [approveMutation, entry]);
+
+  const handleRemoveApproval = useCallback(() => {
+    if (
+      confirmIfUnsavedRef.current?.(
+        "You have unsaved changes. Removing approval will discard them. Do you want to continue?",
+      ) === false
+    ) {
+      return;
+    }
+    if (!window.confirm("Please confirm removing the approval!")) {
+      return;
+    }
+    if (entry) {
+      removeApprovalMutation.mutate(entry.id);
+    }
+  }, [removeApprovalMutation, entry]);
+
+  const handleDelete = useCallback(() => {
+    if (
+      confirmIfUnsavedRef.current?.(
+        "You have unsaved changes. Deleting will discard them. Do you want to continue?",
+      ) === false
+    ) {
+      return;
+    }
+    if (!window.confirm("Please confirm deletion!")) {
+      return;
+    }
+    if (entry) {
+      deleteMutation.mutate(entry.id);
+    }
+  }, [deleteMutation, entry]);
 
   return (
     <>
@@ -126,8 +184,7 @@ const AdminReviewShowAndTellPage: NextPage<
                   <Button
                     size="small"
                     className={defaultButtonClasses}
-                    confirmationMessage="Please confirm removing the approval!"
-                    onClick={() => removeApprovalMutation.mutate(entry.id)}
+                    onClick={handleRemoveApproval}
                   >
                     <IconMinus className="size-4" />
                     Remove approval
@@ -137,7 +194,7 @@ const AdminReviewShowAndTellPage: NextPage<
                   <Button
                     size="small"
                     className={approveButtonClasses}
-                    onClick={() => approveMutation.mutate(entry.id)}
+                    onClick={handleApprove}
                   >
                     <IconCheckCircle className="size-4" />
                     Approve
@@ -146,8 +203,7 @@ const AdminReviewShowAndTellPage: NextPage<
                 <Button
                   size="small"
                   className={dangerButtonClasses}
-                  confirmationMessage="Please confirm deletion!"
-                  onClick={() => deleteMutation.mutate(entry.id)}
+                  onClick={handleDelete}
                 >
                   <IconTrash className="size-4" />
                   Delete
@@ -165,6 +221,7 @@ const AdminReviewShowAndTellPage: NextPage<
                 action="review"
                 entry={entry}
                 onUpdate={() => getEntry.refetch()}
+                onUnsavedChangesRef={setConfirmIfUnsaved}
               />
             </Panel>
           </>
