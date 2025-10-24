@@ -3,7 +3,14 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import pluralize from "pluralize";
-import { useCallback, useMemo, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -76,6 +83,8 @@ const InstitutePixelsPage: NextPage = () => {
 
   const [fullscreen, setFullscreen] = useState(false);
   const fullscreenRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0.5);
+
   const fullscreenToggle = useCallback(() => {
     setFullscreen((v) => {
       if (v) {
@@ -92,6 +101,17 @@ const InstitutePixelsPage: NextPage = () => {
     });
   }, []);
 
+  const handleScrollbarChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const progress = parseFloat(e.target.value);
+      setScrollProgress(progress);
+      if (!fullscreenRef.current) return;
+      const { scrollWidth, clientWidth } = fullscreenRef.current;
+      fullscreenRef.current.scrollLeft = (scrollWidth - clientWidth) * progress;
+    },
+    [],
+  );
+
   const pixelsRef = useCallback(
     (node: HTMLDivElement | null) => {
       if (!node) return;
@@ -106,13 +126,36 @@ const InstitutePixelsPage: NextPage = () => {
         e.preventDefault();
       };
 
+      const onScroll = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = node;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll > 0) {
+          setScrollProgress(scrollLeft / maxScroll);
+        }
+      };
+
       node.addEventListener("wheel", onWheel, { passive: false });
+      node.addEventListener("scroll", onScroll);
       return () => {
         node.removeEventListener("wheel", onWheel);
+        node.removeEventListener("scroll", onScroll);
       };
     },
     [fullscreen],
   );
+
+  useEffect(() => {
+    if (!fullscreen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        fullscreenToggle();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [fullscreen, fullscreenToggle]);
 
   return (
     <>
@@ -156,7 +199,7 @@ const InstitutePixelsPage: NextPage = () => {
         <div
           className={classes(
             fullscreen
-              ? "fixed inset-0 isolate z-100 flex h-screen w-screen touch-none flex-col gap-8 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
+              ? "fixed inset-0 isolate z-100 flex h-screen w-screen touch-none flex-col gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
               : "contents",
           )}
         >
@@ -192,14 +235,22 @@ const InstitutePixelsPage: NextPage = () => {
               )}
               ref={pixelsRef}
             />
-
-            {fullscreen && (
-              <div className="pointer-events-none absolute top-1/2 left-1/2 flex w-1/2 max-w-xs -translate-1/2 rounded-xl bg-alveus-green-800/75 p-4 text-alveus-tan opacity-0 shadow-xl backdrop-blur-sm delay-1000 duration-1000 starting:opacity-100">
-                <IconArrowRight className="aspect-square size-auto shrink grow -scale-x-100" />
-                <IconArrowRight className="aspect-square size-auto shrink grow" />
-              </div>
-            )}
           </div>
+
+          {fullscreen && (
+            <div className="relative z-10 shrink-0 rounded-lg bg-alveus-green-900/50 p-3 backdrop-blur-xs">
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.001"
+                value={scrollProgress}
+                onChange={handleScrollbarChange}
+                className="h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing slider-thumb:size-6 slider-thumb:appearance-none slider-thumb:rounded-md slider-thumb:border-0 slider-thumb:bg-alveus-tan slider-thumb:shadow-lg slider-thumb:transition-transform slider-thumb:hover:scale-110 slider-thumb:active:scale-95"
+                title="Scroll horizontally"
+              />
+            </div>
+          )}
 
           <Box
             dark
