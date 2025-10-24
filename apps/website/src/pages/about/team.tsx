@@ -269,6 +269,10 @@ const team: Record<string, Member> = {
     name: "Matt (@MattIPv4)",
     title: "Open-Source Developer",
   },
+  james: {
+    name: "James (@strangecyan)",
+    title: "Open-Source Developer",
+  },
 };
 
 const advisors = {

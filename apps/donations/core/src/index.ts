@@ -40,7 +40,7 @@ export const DonatorSchema = z.union([
 ]);
 export type Donator = z.infer<typeof DonatorSchema>;
 
-export const Providers = z.literal(["twitch", "paypal"]);
+export const Providers = z.literal(["twitch", "paypal", "thegivingblock"]);
 export type Providers = z.infer<typeof Providers>;
 
 export const CoreDonationSchema = z.object({
@@ -69,6 +69,19 @@ export const TwitchDonationSchema = CoreDonationSchema.extend({
 });
 export type TwitchDonation = z.infer<typeof TwitchDonationSchema>;
 
+export const TheGivingBlockDonationMetadataSchema = z.object({
+  donationMethod: z.literal(["card", "crypto", "stock", "daf"]),
+  processorTransactionId: z.string(),
+});
+
+export const TheGivingBlockDonationSchema = CoreDonationSchema.extend({
+  provider: z.literal("thegivingblock"),
+  providerMetadata: TheGivingBlockDonationMetadataSchema,
+});
+export type TheGivingBlockDonation = z.infer<
+  typeof TheGivingBlockDonationSchema
+>;
+
 const PaypalDonationMetadataSchema = z.object({
   payerId: z.string(),
 });
@@ -82,6 +95,7 @@ export type PaypalDonation = z.infer<typeof PaypalDonationSchema>;
 export const DonationSchema = z.discriminatedUnion("provider", [
   TwitchDonationSchema,
   PaypalDonationSchema,
+  TheGivingBlockDonationSchema,
 ]);
 
 export type Donation = z.infer<typeof DonationSchema>;

@@ -1,16 +1,20 @@
-import { Input } from "@headlessui/react";
+import { Input, Transition } from "@headlessui/react";
 import { type NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useCallback, useMemo, useRef, useState } from "react";
-
-import type { Pixel } from "@alveusgg/donations-core";
-
-import { env } from "@/env";
+import pluralize from "pluralize";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
-import { PixelSyncProviderProvider } from "@/hooks/pixels";
+import type { Pixel } from "@/hooks/pixels";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
@@ -49,25 +53,38 @@ const InstitutePixelsPage: NextPage = () => {
     replace({ query: updated }, undefined, { shallow: true });
   };
 
+  const [filtered, setFiltered] = useState<number>(0);
   const filter = useMemo(() => {
-    const normalized = search.trim().toLowerCase();
-    if (!normalized) return undefined;
+    const trimmed = search.trim();
+    if (!trimmed) return undefined;
 
-    const hashed = window.crypto.subtle
-      .digest("SHA-256", new TextEncoder().encode(normalized))
+    const hashedExact = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(trimmed))
       .then((hash) =>
         Array.from(new Uint8Array(hash))
           .map((b) => b.toString(16).padStart(2, "0"))
           .join(""),
       );
 
-    return (pixel: NonNullable<Pixel>) =>
-      pixel.identifier.toLowerCase().includes(normalized) ||
-      hashed.then((h) => pixel.email === h);
+    const hashedNormalized = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(trimmed.toLowerCase()))
+      .then((hash) =>
+        Array.from(new Uint8Array(hash))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join(""),
+      );
+
+    return (pixel: Pixel) =>
+      pixel.identifier.toLowerCase().includes(trimmed.toLowerCase()) ||
+      Promise.all([hashedExact, hashedNormalized]).then(
+        ([exact, norm]) => pixel.email === exact || pixel.email === norm,
+      );
   }, [search]);
 
   const [fullscreen, setFullscreen] = useState(false);
   const fullscreenRef = useRef<HTMLDivElement>(null);
+  const [scrollProgress, setScrollProgress] = useState(0.5);
+
   const fullscreenToggle = useCallback(() => {
     setFullscreen((v) => {
       if (v) {
@@ -84,18 +101,69 @@ const InstitutePixelsPage: NextPage = () => {
     });
   }, []);
 
+  const handleScrollbarChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const progress = parseFloat(e.target.value);
+      setScrollProgress(progress);
+      if (!fullscreenRef.current) return;
+      const { scrollWidth, clientWidth } = fullscreenRef.current;
+      fullscreenRef.current.scrollLeft = (scrollWidth - clientWidth) * progress;
+    },
+    [],
+  );
+
+  const pixelsRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (!node) return;
+      fullscreenRef.current = node;
+
+      // Map vertical scrolling to horizontal scrolling, only when in fullscreen
+      if (!fullscreen) return;
+
+      const onWheel = (e: WheelEvent) => {
+        if (!e.deltaY) return;
+        node.scrollLeft += e.deltaY + e.deltaX;
+        e.preventDefault();
+      };
+
+      const onScroll = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = node;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll > 0) {
+          setScrollProgress(scrollLeft / maxScroll);
+        }
+      };
+
+      node.addEventListener("wheel", onWheel, { passive: false });
+      node.addEventListener("scroll", onScroll);
+      return () => {
+        node.removeEventListener("wheel", onWheel);
+        node.removeEventListener("scroll", onScroll);
+      };
+    },
+    [fullscreen],
+  );
+
+  useEffect(() => {
+    if (!fullscreen) return;
+
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        fullscreenToggle();
+      }
+    };
+
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [fullscreen, fullscreenToggle]);
+
   return (
-    <PixelSyncProviderProvider>
+    <>
       <Meta
         title="Pixel Project | Alveus Research & Recovery Institute"
-        description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
+        description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
         image={buildingHeroImage.src}
       >
-        <meta
-          key="canonical"
-          property="canonical"
-          content={`${env.NEXT_PUBLIC_BASE_URL}/institute/pixels`}
-        />
         {fullscreen && (
           <meta
             name="viewport"
@@ -131,7 +199,7 @@ const InstitutePixelsPage: NextPage = () => {
         <div
           className={classes(
             fullscreen
-              ? "fixed inset-0 isolate z-100 flex h-screen w-screen touch-none flex-col gap-8 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
+              ? "fixed inset-0 isolate z-100 flex h-screen w-screen touch-none flex-col gap-4 bg-alveus-green-900 p-4 ring-8 ring-alveus-green"
               : "contents",
           )}
         >
@@ -149,6 +217,12 @@ const InstitutePixelsPage: NextPage = () => {
 
             <Pixels
               filter={filter}
+              onFilter={useCallback(
+                (pixels: Pixel[]) => {
+                  setFiltered(pixels.length);
+                },
+                [setFiltered],
+              )}
               className={classes(
                 fullscreen &&
                   "scrollbar-none aspect-[unset]! h-full! touch-pan-x justify-start! overflow-x-scroll rounded-lg bg-alveus-green shadow-xl ring-4 ring-alveus-green",
@@ -159,20 +233,31 @@ const InstitutePixelsPage: NextPage = () => {
                   ? "max-w-none!"
                   : "shadow-xl ring-4 ring-alveus-green",
               )}
-              ref={fullscreenRef}
+              ref={pixelsRef}
             />
-
-            {fullscreen && (
-              <div className="pointer-events-none absolute top-1/2 left-1/2 flex w-1/2 max-w-xs -translate-1/2 rounded-xl bg-alveus-green-800/75 p-4 text-alveus-tan opacity-0 shadow-xl backdrop-blur-sm delay-1000 duration-1000 starting:opacity-100">
-                <IconArrowRight className="aspect-square size-auto shrink grow -scale-x-100" />
-                <IconArrowRight className="aspect-square size-auto shrink grow" />
-              </div>
-            )}
           </div>
+
+          {fullscreen && (
+            <div className="relative z-10 shrink-0 rounded-lg bg-alveus-green-900/50 p-3 backdrop-blur-xs">
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.001"
+                value={scrollProgress}
+                onChange={handleScrollbarChange}
+                className="h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing slider-thumb:size-6 slider-thumb:appearance-none slider-thumb:rounded-md slider-thumb:border-0 slider-thumb:bg-alveus-tan slider-thumb:shadow-lg slider-thumb:transition-transform slider-thumb:hover:scale-110 slider-thumb:active:scale-95"
+                title="Scroll horizontally"
+              />
+            </div>
+          )}
 
           <Box
             dark
-            className="relative z-10 col-span-full flex shrink-0 bg-alveus-green-800/75 p-0 backdrop-blur-xs"
+            className={classes(
+              "z-10 col-span-full flex shrink-0 overflow-visible bg-alveus-green-800/75 p-0 backdrop-blur-xs",
+              fullscreen && "max-md:mb-4",
+            )}
           >
             <button
               type="button"
@@ -192,9 +277,22 @@ const InstitutePixelsPage: NextPage = () => {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Search for pixels by username or email..."
+              placeholder="Search for pixels by Twitch username or PayPal email..."
               className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75 sm:text-sm"
             />
+
+            <Transition show={!!search.trim()}>
+              <p
+                className={classes(
+                  "shrink-0 text-sm tabular-nums opacity-75 transition-all data-closed:opacity-0 max-md:absolute max-md:top-full max-md:left-2 md:my-auto md:pl-2",
+                  fullscreen
+                    ? "text-alveus-tan"
+                    : "text-alveus-green md:text-alveus-tan",
+                )}
+              >
+                {`Found ${filtered.toLocaleString()} ${pluralize("pixel", filtered)}`}
+              </p>
+            </Transition>
 
             <button
               type="button"
@@ -227,14 +325,14 @@ const InstitutePixelsPage: NextPage = () => {
             <Heading level={2}>Saving Animals From Extinction</Heading>
 
             <p className="text-lg">
-              We&apos;re taking the Alveus approach to the wild, and need your
-              help. Each donation of $100 or more unlocks a pixel on our mural,
-              on our way to raising $1,000,000 to fund the initial development
-              of the Alveus Research & Recovery Institute. Each pixel unlocked
-              by your donation will display your name, denoting you as one of
-              the 10,000 vital original supporters of the Institute. More pixels
-              can be unlocked for each additional $100 included in your
-              donation.
+              We&apos;re taking the Alveus approach to the wild, and with your
+              help, we successfully raised $1,000,000 to fund the initial
+              development of the Alveus Research & Recovery Institute. All
+              10,000 pixels on our mural have been unlocked by generous donors
+              like you, each displaying the name of a vital original supporter
+              of the Institute. While all pixels have been claimed, donations
+              are still greatly needed to support the ongoing development and
+              operations of the institute.
             </p>
 
             <Wolves
@@ -273,15 +371,25 @@ const InstitutePixelsPage: NextPage = () => {
         </div>
 
         <div className="flex flex-col gap-8">
-          <Donate type="twitch" highlight />
-          <Donate type="paypal" link="/paypal/pixels" />
-
           <Box dark>
             <PixelsDescription className="text-center text-2xl" />
+
+            <Heading level={2} className="mt-8 text-xl">
+              Can&apos;t find your pixel?
+            </Heading>
+            <p>
+              If you donated via Twitch Charity, your pixel will show your
+              Twitch username and you can search using that. If you donated via
+              PayPal directly, your pixel will show your first name but you can
+              also search using your PayPal email address.
+            </p>
           </Box>
+
+          <Donate type="twitch" highlight />
+          <Donate type="paypal" link="/paypal/pixels" />
         </div>
       </Section>
-    </PixelSyncProviderProvider>
+    </>
   );
 };
 

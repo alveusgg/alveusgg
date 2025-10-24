@@ -83,7 +83,7 @@ export class PaypalDonationProvider implements DonationProvider {
       },
     } satisfies PaypalDonation;
 
-    this.service.add(donation);
+    await this.service.add(donation);
     return new Response("OK", { status: 200 });
   }
 }

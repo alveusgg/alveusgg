@@ -36,14 +36,17 @@ export class TwitchDonationProvider implements DonationProvider {
     const config =
       await service.config.get<TwitchDonationProviderConfig>("twitch");
     if (!config) {
+      const headers: Record<string, string> = {};
+      if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
+        headers["x-vercel-protection-bypass"] =
+          env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
+      }
       await setupTwitchSubscription(
         env.SITE_URL,
         env.SELF_URL,
         env.SHARED_KEY,
         env.TWITCH_SUBSCRIPTION_SECRET,
-        {
-          "x-vercel-protection-bypass": env.OPTIONAL_VERCEL_PROTECTION_BYPASS,
-        },
+        headers,
       );
 
       const config = {
@@ -138,7 +141,7 @@ export class TwitchDonationProvider implements DonationProvider {
         },
       } satisfies TwitchDonation;
 
-      this.service.add(donation);
+      await this.service.add(donation);
 
       return Response.json({ success: true }, { status: 201 });
     }

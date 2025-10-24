@@ -27,6 +27,12 @@ app.all("/pixels/*", async (c) => {
 export default {
   fetch: app.fetch,
   queue: async (batch, env) => {
+    const headers: Record<string, string> = {};
+    if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
+      headers["x-vercel-protection-bypass"] =
+        env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
+    }
+
     const api = createTRPCProxyClient<AppRouter>({
       links: [
         httpLink({
@@ -34,7 +40,7 @@ export default {
           transformer: superjson,
           headers: {
             Authorization: `ApiKey ${env.SHARED_KEY}`,
-            "x-vercel-protection-bypass": env.OPTIONAL_VERCEL_PROTECTION_BYPASS,
+            ...headers,
           },
         }),
       ],

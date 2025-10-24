@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { useRouter } from "next/router";
 import { type ReactNode } from "react";
 
 import { env } from "@/env";
@@ -13,6 +14,7 @@ type MetaProps = {
   image?: string;
   icon?: string;
   noindex?: boolean;
+  canonical?: string;
   children?: ReactNode;
 };
 
@@ -25,8 +27,10 @@ const Meta = ({
   image,
   icon,
   noindex,
+  canonical,
   children,
 }: MetaProps) => {
+  const { asPath } = useRouter();
   const defaultTitle = "Alveus Sanctuary";
   const defaultDescription =
     "Alveus is a 501(c)(3) nonprofit organization functioning as a wildlife sanctuary & virtual education center following the journeys of our non-releasable ambassadors, aiming to educate and spark an appreciation for them and their wild counterparts.";
@@ -41,6 +45,11 @@ const Meta = ({
       width: 1200,
     });
 
+  // Generate canonical URL from the current path
+  // Remove query strings and hash fragments for clean URLs
+  const canonicalPath = asPath.split("?")[0]?.split("#")[0] || "/";
+  const computedCanonical = canonical || BASE_URL + canonicalPath;
+
   return (
     <Head>
       <title key="title">{computedTitle}</title>
@@ -54,6 +63,8 @@ const Meta = ({
         rel="shortcut icon"
         href={BASE_URL + (icon || "/favicon-512x512.png")}
       />
+      <link key="canonical" rel="canonical" href={computedCanonical} />
+      <meta key="og:url" property="og:url" content={computedCanonical} />
       <meta key="og:title" property="og:title" content={computedTitle} />
       <meta
         key="og:description"

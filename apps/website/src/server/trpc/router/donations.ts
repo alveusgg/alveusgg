@@ -14,6 +14,7 @@ import { sendChatMessage } from "@/server/apis/twitch";
 import {
   createDonations,
   createPixels,
+  getPixels,
   getPublicDonations,
 } from "@/server/db/donations";
 import {
@@ -23,6 +24,8 @@ import {
 } from "@/server/trpc/trpc";
 
 import { channels } from "@/data/twitch";
+
+import { getShortBaseUrl } from "@/utils/short-url";
 
 const DONATION_FEED_ENTRIES_PER_PAGE = 50;
 
@@ -59,6 +62,11 @@ export const donationsRouter = router({
     .mutation(({ input }) => {
       return createDonations(input.donations);
     }),
+
+  getPixels: sharedKeyProcedure.query(async () => {
+    const pixels = await getPixels();
+    return pixels;
+  }),
 
   createPixels: sharedKeyProcedure
     .input(
@@ -115,7 +123,7 @@ const sendChatMessages = async (
           account.access_token,
           channels.alveusgg.id,
           broadcasterId,
-          `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! https://alveus.gg/pixels?s=${identifier}`,
+          `alveusLove ${identifier} has unlocked ${pixels?.length} ${pluralize("pixel", pixels?.length)}! ${getShortBaseUrl()}/pixels?s=${encodeURIComponent(identifier).replace(/^%40/, "@")}`,
         );
       }
     } catch {
