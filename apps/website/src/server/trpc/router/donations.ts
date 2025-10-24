@@ -287,18 +287,17 @@ async function renamePixels(
 
       const gridRef = coordsToGridRef({ x: pixel.column, y: pixel.row });
       messages.push(
-        [
-          `${gridRef.x}:${gridRef.y} – \`${pixel.identifier}\` to \`${newIdentifier}\``,
-          `Verification: ${auditVerification}`,
-          `Pixel: ${pixel.id}`,
-        ].join("\n"),
+        `${gridRef.x}:${gridRef.y} – \`${pixel.identifier}\` to \`${newIdentifier}\` (${pixel.id})`,
       );
     });
 
-    await triggerPlainDiscordChannelWebhook({
-      webhookUrl: env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
-      contentMessage: "Renaming\n" + messages.join("\n\n"),
-    });
+    if (messages.length) {
+      await triggerPlainDiscordChannelWebhook({
+        webhookUrl: env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+        contentMessage:
+          `Renaming (${auditVerification})\n` + messages.join("\n\n"),
+      });
+    }
   }
 
   return results;
