@@ -5,11 +5,9 @@ import { useRouter } from "next/router";
 import pluralize from "pluralize";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import type { Pixel } from "@alveusgg/donations-core";
-
 import { classes } from "@/utils/classes";
 
-import { PixelSyncProviderProvider } from "@/hooks/pixels";
+import type { Pixel } from "@/hooks/pixels";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
@@ -50,11 +48,19 @@ const InstitutePixelsPage: NextPage = () => {
 
   const [filtered, setFiltered] = useState<number>(0);
   const filter = useMemo(() => {
-    const normalized = search.trim().toLowerCase();
-    if (!normalized) return undefined;
+    const trimmed = search.trim();
+    if (!trimmed) return undefined;
 
-    const hashed = window.crypto.subtle
-      .digest("SHA-256", new TextEncoder().encode(normalized))
+    const hashedExact = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(trimmed))
+      .then((hash) =>
+        Array.from(new Uint8Array(hash))
+          .map((b) => b.toString(16).padStart(2, "0"))
+          .join(""),
+      );
+
+    const hashedNormalized = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(trimmed.toLowerCase()))
       .then((hash) =>
         Array.from(new Uint8Array(hash))
           .map((b) => b.toString(16).padStart(2, "0"))
@@ -62,8 +68,10 @@ const InstitutePixelsPage: NextPage = () => {
       );
 
     return (pixel: Pixel) =>
-      pixel.identifier.toLowerCase().includes(normalized) ||
-      hashed.then((h) => pixel.email === h);
+      pixel.identifier.toLowerCase().includes(trimmed.toLowerCase()) ||
+      Promise.all([hashedExact, hashedNormalized]).then(
+        ([exact, norm]) => pixel.email === exact || pixel.email === norm,
+      );
   }, [search]);
 
   const [fullscreen, setFullscreen] = useState(false);
@@ -143,10 +151,10 @@ const InstitutePixelsPage: NextPage = () => {
   }, [fullscreen, fullscreenToggle]);
 
   return (
-    <PixelSyncProviderProvider>
+    <>
       <Meta
         title="Pixel Project | Alveus Research & Recovery Institute"
-        description="Donate $100 or more to unlock a pixel on the institute mural and support the development of the Alveus Research & Recovery Institute."
+        description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
         image={buildingHeroImage.src}
       >
         {fullscreen && (
@@ -326,14 +334,14 @@ const InstitutePixelsPage: NextPage = () => {
             <Heading level={2}>Saving Animals From Extinction</Heading>
 
             <p className="text-lg">
-              We&apos;re taking the Alveus approach to the wild, and need your
-              help. Each donation of $100 or more unlocks a pixel on our mural,
-              on our way to raising $1,000,000 to fund the initial development
-              of the Alveus Research & Recovery Institute. Each pixel unlocked
-              by your donation will display your name, denoting you as one of
-              the 10,000 vital original supporters of the Institute. More pixels
-              can be unlocked for each additional $100 included in your
-              donation.
+              We&apos;re taking the Alveus approach to the wild, and with your
+              help, we successfully raised $1,000,000 to fund the initial
+              development of the Alveus Research & Recovery Institute. All
+              10,000 pixels on our mural have been unlocked by generous donors
+              like you, each displaying the name of a vital original supporter
+              of the Institute. While all pixels have been claimed, donations
+              are still greatly needed to support the ongoing development and
+              operations of the institute.
             </p>
 
             <Wolves
@@ -372,9 +380,6 @@ const InstitutePixelsPage: NextPage = () => {
         </div>
 
         <div className="flex flex-col gap-8">
-          <Donate type="twitch" highlight />
-          <Donate type="paypal" link="/paypal/pixels" />
-
           <Box dark>
             <PixelsDescription className="text-center text-2xl" />
 
@@ -388,9 +393,12 @@ const InstitutePixelsPage: NextPage = () => {
               also search using your PayPal email address.
             </p>
           </Box>
+
+          <Donate type="twitch" highlight />
+          <Donate type="paypal" link="/paypal/pixels" />
         </div>
       </Section>
-    </PixelSyncProviderProvider>
+    </>
   );
 };
 

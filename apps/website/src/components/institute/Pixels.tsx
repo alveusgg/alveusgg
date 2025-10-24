@@ -6,16 +6,14 @@ import {
   useRef,
 } from "react";
 
-import type { DonationAlert, Pixel } from "@alveusgg/donations-core";
-
 import { classes } from "@/utils/classes";
 
 import {
   PIXEL_GRID_HEIGHT,
   PIXEL_GRID_WIDTH,
   PIXEL_SIZE,
-  type PixelSyncContext,
-  useLivePixels,
+  type Pixel,
+  usePixels,
 } from "@/hooks/pixels";
 
 export const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
@@ -89,13 +87,13 @@ const Pixels = ({
   onScroll?: (event: React.UIEvent<HTMLDivElement>) => void;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const pixels = usePixels();
 
-  // Draw new pixels as they come in
-  const onEvent = useCallback((alert: DonationAlert) => {
+  useEffect(() => {
+    if (!pixels) return;
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
-
-    alert.pixels.forEach((pixel) => {
+    pixels.forEach((pixel) => {
       const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
         c.charCodeAt(0),
       );
@@ -105,32 +103,7 @@ const Pixels = ({
         pixel.row * PIXEL_SIZE,
       );
     });
-  }, []);
-
-  const onInit = useCallback((context: PixelSyncContext) => {
-    const ctx = canvas.current?.getContext("2d");
-    if (!ctx) return;
-
-    for (let y = 0; y < PIXEL_GRID_HEIGHT; y++) {
-      for (let x = 0; x < PIXEL_GRID_WIDTH; x++) {
-        const gray = 255 - Math.floor(Math.random() * 10);
-        ctx.fillStyle = `rgb(${gray}, ${gray}, ${gray})`;
-        ctx.fillRect(x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE);
-      }
-    }
-
-    context.pixels.forEach((pixel) => {
-      const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
-        c.charCodeAt(0),
-      );
-      ctx.putImageData(
-        new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
-        pixel.column * PIXEL_SIZE,
-        pixel.row * PIXEL_SIZE,
-      );
-    });
-  }, []);
-  const pixels = useLivePixels({ onEvent, onInit });
+  }, [pixels]);
 
   // Redraw filtered pixels when filter changes
   const filtered = useRef<HTMLCanvasElement>(null);
@@ -148,7 +121,7 @@ const Pixels = ({
 
     const controller = new AbortController();
     Promise.all(
-      pixels.data?.pixels.map(async (pixel) => {
+      pixels?.map(async (pixel) => {
         const match = await filter(pixel, controller.signal);
         if (controller.signal.aborted || !match) return;
 
@@ -169,7 +142,7 @@ const Pixels = ({
     });
 
     return () => controller.abort();
-  }, [filter, onFilter, pixels.data?.pixels]);
+  }, [filter, onFilter, pixels]);
 
   const myPixel = useRef<HTMLCanvasElement>(null);
 
@@ -204,9 +177,7 @@ const Pixels = ({
       highlightTooltipRef.current.style.width = `${size}px`;
       highlightTooltipRef.current.style.height = `${size}px`;
 
-      const pixel = pixels.data?.pixels.find(
-        (p) => p.column === x && p.row === y,
-      );
+      const pixel = pixels?.find((p) => p.column === x && p.row === y);
 
       highlightTooltipRef.current.classList.remove("opacity-0");
       highlightGridRefRef.current.innerText = `${gridRef.y}:${gridRef.x}`;
@@ -244,7 +215,7 @@ const Pixels = ({
         highlightIdentifierRef.current.style.color = "rgba(0, 0, 0, 0.9)";
       }
     },
-    [pixels.data?.pixels],
+    [pixels],
   );
 
   const exit = useCallback(() => {
