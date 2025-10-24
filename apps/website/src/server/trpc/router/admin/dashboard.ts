@@ -8,6 +8,7 @@ import {
   protectedProcedure,
   router,
 } from "@/server/trpc/trpc";
+import { checkPermissions } from "@/server/utils/auth";
 
 import { permissions } from "@/data/permissions";
 
@@ -16,7 +17,15 @@ const permittedProcedure = protectedProcedure.use(
 );
 
 export const adminDashboardRouter = router({
-  getOverviewStats: permittedProcedure.query(async () => {
+  getOverviewStats: permittedProcedure.query(async ({ ctx }) => {
+    const user = ctx.session.user;
+
+    // Check permissions for user stats
+    const canViewUsers = checkPermissions(
+      permissions.manageUsersAndRoles,
+      user,
+    );
+
     // Gather various statistics in parallel
     const [
       totalUsers,
@@ -28,8 +37,8 @@ export const adminDashboardRouter = router({
       totalCalendarEvents,
       totalShortLinks,
     ] = await Promise.all([
-      // Total users
-      prisma.user.count(),
+      // Total users - only if user has permission
+      canViewUsers ? prisma.user.count() : Promise.resolve(null),
 
       // Show and Tell stats
       getPostsCount(),
@@ -119,7 +128,19 @@ export const adminDashboardRouter = router({
         days: z.number().min(7).max(90).default(30),
       }),
     )
-    .query(async ({ input }) => {
+    .query(async ({ ctx, input }) => {
+      const user = ctx.session.user;
+
+      // Check permissions
+      const canViewUsers = checkPermissions(
+        permissions.manageUsersAndRoles,
+        user,
+      );
+      const canViewDonations = checkPermissions(
+        permissions.manageDonations,
+        user,
+      );
+
       const daysAgo = new Date(Date.now() - input.days * 24 * 60 * 60 * 1000);
 
       // Get daily breakdown of activities
@@ -129,32 +150,38 @@ export const adminDashboardRouter = router({
         donationAmountByDay,
         showAndTellByDay,
       ] = await Promise.all([
-        // User growth (accounts created per day)
-        prisma.$queryRaw<
-          { date: Date; count: bigint }[]
-        >`SELECT DATE(u.emailVerified) as date, COUNT(DISTINCT u.id) as count 
+        // User growth (accounts created per day) - only if user has permission
+        canViewUsers
+          ? prisma.$queryRaw<
+              { date: Date; count: bigint }[]
+            >`SELECT DATE(u.emailVerified) as date, COUNT(DISTINCT u.id) as count 
            FROM User u
            WHERE u.emailVerified >= ${daysAgo} AND u.emailVerified IS NOT NULL
            GROUP BY DATE(u.emailVerified)
-           ORDER BY date ASC`,
+           ORDER BY date ASC`
+          : Promise.resolve([]),
 
-        // Donations count per day
-        prisma.$queryRaw<
-          { date: Date; count: bigint }[]
-        >`SELECT DATE(receivedAt) as date, COUNT(*) as count 
+        // Donations count per day - only if user has permission
+        canViewDonations
+          ? prisma.$queryRaw<
+              { date: Date; count: bigint }[]
+            >`SELECT DATE(receivedAt) as date, COUNT(*) as count 
            FROM Donation 
            WHERE receivedAt >= ${daysAgo}
            GROUP BY DATE(receivedAt)
-           ORDER BY date ASC`,
+           ORDER BY date ASC`
+          : Promise.resolve([]),
 
-        // Donation amounts per day
-        prisma.$queryRaw<
-          { date: Date; total: bigint }[]
-        >`SELECT DATE(receivedAt) as date, SUM(amount) as total 
+        // Donation amounts per day - only if user has permission
+        canViewDonations
+          ? prisma.$queryRaw<
+              { date: Date; total: bigint }[]
+            >`SELECT DATE(receivedAt) as date, SUM(amount) as total 
            FROM Donation 
            WHERE receivedAt >= ${daysAgo}
            GROUP BY DATE(receivedAt)
-           ORDER BY date ASC`,
+           ORDER BY date ASC`
+          : Promise.resolve([]),
 
         // Show and Tell posts per day
         prisma.$queryRaw<
@@ -169,9 +196,9 @@ export const adminDashboardRouter = router({
       // Fill in missing dates with 0 values
       interface ChartDayData {
         date: string;
-        users: number;
-        donations: number;
-        donationAmount: number;
+        users: number | null;
+        donations: number | null;
+        donationAmount: number | null;
         showAndTell: number;
       }
       const dateMap = new Map<string, ChartDayData>();
@@ -181,35 +208,39 @@ export const adminDashboardRouter = router({
         if (dateStr) {
           dateMap.set(dateStr, {
             date: dateStr,
-            users: 0,
-            donations: 0,
-            donationAmount: 0,
+            users: canViewUsers ? 0 : null,
+            donations: canViewDonations ? 0 : null,
+            donationAmount: canViewDonations ? 0 : null,
             showAndTell: 0,
           });
         }
       }
 
       // Populate with actual data
-      usersByDay.forEach((row) => {
-        const dateStr = row.date.toISOString().split("T")[0];
-        if (dateStr && dateMap.has(dateStr)) {
-          dateMap.get(dateStr)!.users = Number(row.count);
-        }
-      });
+      if (canViewUsers) {
+        usersByDay.forEach((row) => {
+          const dateStr = row.date.toISOString().split("T")[0];
+          if (dateStr && dateMap.has(dateStr)) {
+            dateMap.get(dateStr)!.users = Number(row.count);
+          }
+        });
+      }
 
-      donationsByDay.forEach((row) => {
-        const dateStr = row.date.toISOString().split("T")[0];
-        if (dateStr && dateMap.has(dateStr)) {
-          dateMap.get(dateStr)!.donations = Number(row.count);
-        }
-      });
+      if (canViewDonations) {
+        donationsByDay.forEach((row) => {
+          const dateStr = row.date.toISOString().split("T")[0];
+          if (dateStr && dateMap.has(dateStr)) {
+            dateMap.get(dateStr)!.donations = Number(row.count);
+          }
+        });
 
-      donationAmountByDay.forEach((row) => {
-        const dateStr = row.date.toISOString().split("T")[0];
-        if (dateStr && dateMap.has(dateStr)) {
-          dateMap.get(dateStr)!.donationAmount = Number(row.total);
-        }
-      });
+        donationAmountByDay.forEach((row) => {
+          const dateStr = row.date.toISOString().split("T")[0];
+          if (dateStr && dateMap.has(dateStr)) {
+            dateMap.get(dateStr)!.donationAmount = Number(row.total);
+          }
+        });
+      }
 
       showAndTellByDay.forEach((row) => {
         const dateStr = row.date.toISOString().split("T")[0];

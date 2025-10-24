@@ -42,6 +42,9 @@ export const permissions = {
   manageRoundsChecks: {
     requiredRole: "roundsChecks",
   },
+  manageDonations: {
+    requiredRole: "donations",
+  },
 } as const satisfies Record<string, PermissionConfig>;
 
 export function checkRolesGivePermission(
