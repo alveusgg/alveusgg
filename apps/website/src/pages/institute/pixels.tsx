@@ -3,7 +3,14 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import pluralize from "pluralize";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  type ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import { classes } from "@/utils/classes";
 
@@ -84,7 +91,6 @@ const InstitutePixelsPage: NextPage = () => {
         document.body.style.overflow = "";
       } else {
         document.body.style.overflow = "hidden";
-        setScrollProgress(0.5);
         window.requestAnimationFrame(() => {
           if (!fullscreenRef.current) return;
           const { scrollWidth, clientWidth } = fullscreenRef.current;
@@ -96,7 +102,7 @@ const InstitutePixelsPage: NextPage = () => {
   }, []);
 
   const handleScrollbarChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
+    (e: ChangeEvent<HTMLInputElement>) => {
       const progress = parseFloat(e.target.value);
       setScrollProgress(progress);
       if (!fullscreenRef.current) return;
@@ -105,15 +111,6 @@ const InstitutePixelsPage: NextPage = () => {
     },
     [],
   );
-
-  const handleScroll = useCallback(() => {
-    if (!fullscreenRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = fullscreenRef.current;
-    const maxScroll = scrollWidth - clientWidth;
-    if (maxScroll > 0) {
-      setScrollProgress(scrollLeft / maxScroll);
-    }
-  }, []);
 
   const pixelsRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -129,9 +126,19 @@ const InstitutePixelsPage: NextPage = () => {
         e.preventDefault();
       };
 
+      const onScroll = () => {
+        const { scrollLeft, scrollWidth, clientWidth } = node;
+        const maxScroll = scrollWidth - clientWidth;
+        if (maxScroll > 0) {
+          setScrollProgress(scrollLeft / maxScroll);
+        }
+      };
+
       node.addEventListener("wheel", onWheel, { passive: false });
+      node.addEventListener("scroll", onScroll);
       return () => {
         node.removeEventListener("wheel", onWheel);
+        node.removeEventListener("scroll", onScroll);
       };
     },
     [fullscreen],
@@ -227,37 +234,21 @@ const InstitutePixelsPage: NextPage = () => {
                   : "shadow-xl ring-4 ring-alveus-green",
               )}
               ref={pixelsRef}
-              onScroll={handleScroll}
             />
-
-            {fullscreen && (
-              <div className="pointer-events-none absolute top-1/2 left-1/2 flex w-1/2 max-w-xs -translate-1/2 rounded-xl bg-alveus-green-800/75 p-4 text-alveus-tan opacity-0 shadow-xl backdrop-blur-sm delay-1000 duration-1000 starting:opacity-100">
-                <IconArrowRight className="aspect-square size-auto shrink grow -scale-x-100" />
-                <IconArrowRight className="aspect-square size-auto shrink grow" />
-              </div>
-            )}
           </div>
 
           {fullscreen && (
             <div className="relative z-10 shrink-0 rounded-lg bg-alveus-green-900/50 p-3 backdrop-blur-xs">
-              <div className="relative">
-                <input
-                  type="range"
-                  min="0"
-                  max="1"
-                  step="0.001"
-                  value={scrollProgress}
-                  onChange={handleScrollbarChange}
-                  className="relative z-10 h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing slider-thumb:size-6 slider-thumb:appearance-none slider-thumb:rounded-md slider-thumb:border-0 slider-thumb:bg-alveus-tan slider-thumb:shadow-lg slider-thumb:transition-transform slider-thumb:hover:scale-110 slider-thumb:active:scale-95"
-                  title="Scroll horizontally"
-                />
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-1 text-alveus-tan/50">
-                  <IconArrowRight className="size-4 -scale-x-100" />
-                </div>
-                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-1 text-alveus-tan/50">
-                  <IconArrowRight className="size-4" />
-                </div>
-              </div>
+              <input
+                type="range"
+                min="0"
+                max="1"
+                step="0.001"
+                value={scrollProgress}
+                onChange={handleScrollbarChange}
+                className="h-3 w-full cursor-grab appearance-none rounded-full bg-alveus-green-800 shadow-inner active:cursor-grabbing slider-thumb:size-6 slider-thumb:appearance-none slider-thumb:rounded-md slider-thumb:border-0 slider-thumb:bg-alveus-tan slider-thumb:shadow-lg slider-thumb:transition-transform slider-thumb:hover:scale-110 slider-thumb:active:scale-95"
+                title="Scroll horizontally"
+              />
             </div>
           )}
 
