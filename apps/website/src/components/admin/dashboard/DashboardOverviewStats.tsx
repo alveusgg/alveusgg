@@ -105,9 +105,10 @@ export function DashboardOverviewStats() {
       {cards
         .filter(
           (card) =>
-            !card.permission ||
-            isSuperUser ||
-            checkRolesGivePermission(userRoles, card.permission),
+            card.value !== null &&
+            (!card.permission ||
+              isSuperUser ||
+              checkRolesGivePermission(userRoles, card.permission)),
         )
         .map((card) => {
           const { Icon } = card;
@@ -115,7 +116,7 @@ export function DashboardOverviewStats() {
             <div className="cursor-pointer rounded-xl border border-gray-700 bg-gray-800 p-4 transition-transform hover:scale-105">
               <div className="flex items-center justify-between">
                 <strong className="block text-3xl">
-                  {nf.format(card.value)}
+                  {nf.format(card.value!)}
                 </strong>
                 <Icon className="h-8 w-8" />
               </div>
