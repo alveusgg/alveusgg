@@ -16,6 +16,8 @@ export function EditMyPixels({ user }: { user: User }) {
     `@${username}`,
   );
 
+  const renameMutation = trpc.donations.renameMyPixels.useMutation();
+
   return (
     <>
       <p className="mb-4 flex flex-row items-center gap-2">
@@ -25,28 +27,12 @@ export function EditMyPixels({ user }: { user: User }) {
 
       <EditPixelsForm
         pixelsQuery={pixels}
-        renameMutation={trpc.donations.renameMyPixel}
-        renameAllMutation={trpc.donations.renameAllMyPixels}
+        renameMutation={renameMutation}
         overrideIdentifier={overrideIdentifier}
         setOverrideIdentifier={setOverrideIdentifier}
-        onRename={(mutate, pixel, newIdentifier) => {
-          mutate(
-            {
-              provider: pixel.provider,
-              donationId: pixel.donationId,
-              pixelId: pixel.id,
-              newIdentifier,
-            },
-            {
-              onSuccess: () => {
-                utils.donations.getMyPixels.invalidate();
-              },
-            },
-          );
-        }}
-        onRenameAll={(mutate) => {
-          mutate(
-            { newIdentifier: overrideIdentifier },
+        onRename={(newIdentifier, pixelId) => {
+          renameMutation.mutate(
+            { newIdentifier, pixelId },
             {
               onSuccess: () => {
                 utils.donations.getMyPixels.invalidate();

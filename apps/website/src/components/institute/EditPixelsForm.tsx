@@ -2,27 +2,24 @@ import { Field, Label, Switch } from "@headlessui/react";
 import { type FormEvent, type ReactNode, useState } from "react";
 
 import type {
-  AnyRenameAllPixelsMutation,
-  AnyRenamePixelMutation,
+  AnyRenamePixelsMutation,
   DonationPixel,
-  MyPixel,
 } from "@/server/trpc/router/donations";
-
-import {
-  PIXEL_IDENTIFIER_MAX_LENGTH,
-  PIXEL_IDENTIFIER_MIN_LENGTH,
-  normalizePixelIdentifier,
-} from "@/hooks/pixels";
 
 import Box from "@/components/content/Box";
 import { EditPixelForm } from "@/components/institute/EditPixelForm";
+import { PixelIdentifierInput } from "@/components/institute/PixelIdentifierInput";
 import { MessageBox } from "@/components/shared/MessageBox";
 import { Button } from "@/components/shared/form/Button";
 
-type EditPixelsFormProps<
-  TMutation extends AnyRenamePixelMutation,
-  TAllMutation extends AnyRenameAllPixelsMutation,
-> = {
+export type SharedEditPixelProps = {
+  overrideIdentifier: string | null;
+  renameMutation: ReturnType<AnyRenamePixelsMutation["useMutation"]>;
+  onRename: (newIdentifier: string, pixelId?: string) => unknown;
+};
+
+type EditPixelsFormProps = SharedEditPixelProps & {
+  setOverrideIdentifier: (identifier: string) => void;
   pixelsQuery: {
     isError: boolean;
     isPending: boolean;
@@ -31,51 +28,45 @@ type EditPixelsFormProps<
     data?: DonationPixel[];
     error: { message: string } | null;
   };
-  overrideIdentifier: string;
-  setOverrideIdentifier: (identifier: string) => void;
-  renameMutation: TMutation;
-  renameAllMutation: TAllMutation;
-  onRename: (
-    mutate: ReturnType<TMutation["useMutation"]>["mutate"],
-    pixel: MyPixel,
-    newIdentifier: string,
-  ) => unknown;
-  onRenameAll: (
-    mutate: ReturnType<TAllMutation["useMutation"]>["mutate"],
-  ) => unknown;
 };
 
-export function EditPixelsForm<
-  TMutation extends AnyRenamePixelMutation,
-  TAllMutation extends AnyRenameAllPixelsMutation,
->({
+export function EditPixelsForm({
   overrideIdentifier,
   setOverrideIdentifier,
   renameMutation,
-  renameAllMutation,
   pixelsQuery,
   onRename,
-  onRenameAll,
-}: EditPixelsFormProps<TMutation, TAllMutation>) {
+}: EditPixelsFormProps) {
   const [enableOverridePreview, setEnableOverridePreview] = useState(false);
-  const renameAll = renameAllMutation.useMutation();
 
   const submitRenameAll = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    onRenameAll(renameAll.mutate);
+    onRename(overrideIdentifier ?? "Anonymous");
   };
 
   let infoBox: ReactNode;
-  if (renameAll.isPending) {
+  if (renameMutation.isPending) {
     infoBox = <MessageBox>Renaming all your Pixels…</MessageBox>;
-  } else if (renameAll.isError) {
+  } else if (renameMutation.isError) {
     infoBox = (
       <MessageBox variant="failure">
-        Error renaming Pixels: {renameAll.error.message}
+        Error renaming Pixels: {renameMutation.error.message}
       </MessageBox>
     );
-  } else if (renameAll.isSuccess) {
-    const { renamedCount, failedCount, skippedCount } = renameAll.data || {};
+  } else if (renameMutation.isSuccess) {
+    let renamedCount = 0;
+    let failedCount = 0;
+    let skippedCount = 0;
+    (renameMutation.data || []).forEach((result) => {
+      if (result.isError) {
+        failedCount++;
+      } else if (result.isSkipped) {
+        skippedCount++;
+      } else if (result.isSuccess) {
+        renamedCount++;
+      }
+    });
+
     const skippedMessage =
       skippedCount > 0 ? (
         <p className="mt-2 text-sm text-gray-700 italic">
@@ -89,8 +80,14 @@ export function EditPixelsForm<
     if (failedCount > 0) {
       infoBox = (
         <MessageBox variant="failure">
-          Renamed {renamedCount} Pixels, but failed to rename {failedCount}{" "}
-          Pixels.
+          {!renamedCount ? (
+            <>Failed to rename Pixels.</>
+          ) : (
+            <>
+              Renamed {renamedCount} Pixels, but failed to rename {failedCount}{" "}
+              Pixels.
+            </>
+          )}
           {skippedMessage}
         </MessageBox>
       );
@@ -134,26 +131,10 @@ export function EditPixelsForm<
               className="mt-4 justify-between gap-6 md:flex md:flex-row"
             >
               <div className="flex max-w-sm grow flex-col gap-2">
-                <label htmlFor="all-identifier" className="text-sm">
-                  Your label:
-                </label>
-                <textarea
+                <PixelIdentifierInput
                   id="all-identifier"
-                  name="identifier"
-                  autoComplete="username nickname given-name"
-                  required
-                  minLength={PIXEL_IDENTIFIER_MIN_LENGTH}
-                  maxLength={PIXEL_IDENTIFIER_MAX_LENGTH}
-                  value={overrideIdentifier}
-                  wrap="hard"
-                  rows={2}
-                  cols={20}
-                  className="block max-h-[calc(2lh+2*var(--sizing))] resize-none overflow-hidden rounded border border-gray-300 bg-white p-2"
-                  onChange={(e) => {
-                    setOverrideIdentifier(
-                      normalizePixelIdentifier(e.target.value),
-                    );
-                  }}
+                  value={overrideIdentifier ?? ""}
+                  setValue={setOverrideIdentifier}
                 />
               </div>
 

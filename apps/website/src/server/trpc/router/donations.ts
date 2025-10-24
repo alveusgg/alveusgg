@@ -4,32 +4,28 @@ import type { NextApiRequest } from "next";
 import pluralize from "pluralize";
 import { z } from "zod";
 
-import { type Prisma, prisma } from "@alveusgg/database";
+import { prisma } from "@alveusgg/database";
 
 import {
   DonationSchema,
   type Pixel,
   PixelSchema,
-  Providers,
+  type Providers,
 } from "@alveusgg/donations-core";
 
 import { env } from "@/env";
 
 import { sendChatMessage } from "@/server/apis/twitch";
 import {
-  type DonationWithPixel,
+  type PixelWithDonation,
   createDonations,
   createPixels,
-  filterDonationByPayPalEmail,
-  filterDonationByPayPalVerification,
-  filterDonationByTwitchUserId,
-  getMyDonationsWithPixels,
-  getPayPalDonationsByVerification,
+  getMyPixels,
+  getPayPalPixelsByVerification,
   getPixels,
   getPublicDonations,
   renamePixel,
 } from "@/server/db/donations";
-import { getTwitchUserId } from "@/server/db/users";
 import { triggerPlainDiscordChannelWebhook } from "@/server/outgoing-webhooks";
 import {
   protectedProcedure,
@@ -52,19 +48,14 @@ import {
 import { payPalVerificationSchema } from "@/components/institute/EditPayPalPixels";
 import { coordsToGridRef } from "@/components/institute/Pixels";
 
+export type RenameMyPixelsMutation = typeof trpc.donations.renameMyPixels;
+export type RenamePayPalPixelsMutation =
+  typeof trpc.donations.renamePayPalPixels;
+export type AnyRenamePixelsMutation =
+  | RenameMyPixelsMutation
+  | RenamePayPalPixelsMutation;
+
 const DONATION_FEED_ENTRIES_PER_PAGE = 50;
-
-export type RenameMyPixelMutation = typeof trpc.donations.renameMyPixel;
-export type RenamePayPalPixelMutation = typeof trpc.donations.renamePayPalPixel;
-export type AnyRenamePixelMutation =
-  | RenameMyPixelMutation
-  | RenamePayPalPixelMutation;
-
-export type RenameAllMyPixelsMutation = typeof trpc.donations.renameAllMyPixels;
-export type RenameAllPayPalPixels = typeof trpc.donations.renameAllPayPalPixels;
-export type AnyRenameAllPixelsMutation =
-  | RenameAllMyPixelsMutation
-  | RenameAllPayPalPixels;
 
 export type MyPixel = {
   id: string;
@@ -84,45 +75,14 @@ function isPixelLocked(pixel: { renamedAt: Date | null }) {
   );
 }
 
-async function auditLogPixelRename(
-  verification: string,
-  newIdentifier: string,
-  pixels: Array<{
-    id: string;
-    identifier: string;
-    column: number;
-    row: number;
-  }>,
-) {
-  if (env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL) {
-    const messages: string[] = [];
-
-    pixels.forEach((pixel) => {
-      const gridRef = coordsToGridRef({ x: pixel.column, y: pixel.row });
-      messages.push(
-        [
-          `${gridRef.x}:${gridRef.y} – \`${pixel.identifier}\` to \`${newIdentifier}\``,
-          `Verification: ${verification}`,
-          `Pixel: ${pixel.id}`,
-        ].join("\n"),
-      );
-    });
-
-    await triggerPlainDiscordChannelWebhook({
-      webhookUrl: env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
-      contentMessage: "Renaming\n" + messages.join("\n\n"),
-    });
-  }
-}
-
 export type DonationPixel = ReturnType<typeof mapDonationPixels>[number];
 
-function mapDonationPixels(donation: DonationWithPixel) {
-  return donation.pixels.map((pixel) => {
+function mapDonationPixels(pixels: PixelWithDonation[]) {
+  return pixels.map((pixel) => {
     return {
-      provider: donation.provider as Providers,
-      donationId: donation.id,
-      receivedAt: donation.receivedAt,
+      provider: pixel.donation.provider as Providers,
+      donationId: pixel.donationId,
+      receivedAt: pixel.receivedAt,
       id: pixel.id,
       identifier: pixel.identifier,
       column: pixel.column,
@@ -205,28 +165,26 @@ export const donationsRouter = router({
       await createPixels(input.pixels);
     }),
 
-  getMyPixels: protectedProcedure.query(async ({ ctx }) => {
-    const donations = await getMyDonationsWithPixels(ctx.session.user);
-    return donations.flatMap(mapDonationPixels);
-  }),
+  getMyPixels: protectedProcedure.query(async ({ ctx }) =>
+    mapDonationPixels(await getMyPixels(ctx.session.user)),
+  ),
 
   getPayPalPixels: publicProcedure
     .input(payPalVerificationSchema)
     .mutation(async ({ input, ctx }) => {
       await guardPayPalSearchMutation(ctx.req);
-
-      const donations = await getPayPalDonationsByVerification(input);
-      return donations.flatMap(mapDonationPixels);
+      return mapDonationPixels(await getPayPalPixelsByVerification(input));
     }),
 
-  renameAllMyPixels: protectedProcedure
+  renameMyPixels: protectedProcedure
     .input(
       z.object({
         newIdentifier: pixelIdentifierSchema,
+        pixelId: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const donations = await getMyDonationsWithPixels(ctx.session.user).catch(
+      const pixels = await getMyPixels(ctx.session.user, input.pixelId).catch(
         () => {
           throw new TRPCError({
             code: "INTERNAL_SERVER_ERROR",
@@ -235,25 +193,27 @@ export const donationsRouter = router({
         },
       );
 
-      return renameDonationPixels(
-        donations,
+      return renamePixels(
+        pixels,
         input.newIdentifier,
         `Twitch login (${ctx.session.user.name})`,
       );
     }),
 
-  renameAllPayPalPixels: publicProcedure
+  renamePayPalPixels: publicProcedure
     .input(
       z.object({
         newIdentifier: pixelIdentifierSchema,
         verification: payPalVerificationSchema,
+        pixelId: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
       await guardPayPalSearchMutation(ctx.req);
 
-      const donations = await getPayPalDonationsByVerification(
+      const pixels = await getPayPalPixelsByVerification(
         input.verification,
+        input.pixelId,
       ).catch(() => {
         throw new TRPCError({
           code: "INTERNAL_SERVER_ERROR",
@@ -261,180 +221,87 @@ export const donationsRouter = router({
         });
       });
 
-      return renameDonationPixels(
-        donations,
+      return renamePixels(
+        pixels,
         input.newIdentifier,
-        `PayPal info (${input.verification.firstName} ${input.verification.lastName[0]})`,
-      );
-    }),
-
-  renameMyPixel: protectedProcedure
-    .input(
-      z.object({
-        provider: Providers,
-        donationId: z.string(),
-        pixelId: z.string(),
-        newIdentifier: pixelIdentifierSchema,
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      const twitchUserId = await getTwitchUserId(ctx.session.user.id);
-      if (!twitchUserId) {
-        throw new TRPCError({
-          code: "BAD_REQUEST",
-          message: "No Twitch account linked",
-        });
-      }
-
-      let filter: Prisma.DonationWhereInput;
-      if (input.provider === "twitch") {
-        filter = filterDonationByTwitchUserId(twitchUserId);
-      } else {
-        const emailAddress = ctx.session.user.email;
-        if (!emailAddress) {
-          throw new TRPCError({
-            code: "BAD_REQUEST",
-            message: "No email address associated with account",
-          });
-        }
-        filter = filterDonationByPayPalEmail(emailAddress);
-      }
-
-      await renamePixelByFilterMutation(
-        input.pixelId,
-        input.donationId,
-        input.newIdentifier,
-        filter,
-        `Twitch login (${ctx.session.user.name})`,
-      );
-    }),
-
-  renamePayPalPixel: publicProcedure
-    .input(
-      z.object({
-        donationId: z.string(),
-        pixelId: z.string(),
-        newIdentifier: pixelIdentifierSchema,
-        verification: payPalVerificationSchema,
-      }),
-    )
-    .mutation(async ({ input, ctx }) => {
-      await guardPayPalSearchMutation(ctx.req);
-
-      await renamePixelByFilterMutation(
-        input.pixelId,
-        input.donationId,
-        input.newIdentifier,
-        filterDonationByPayPalVerification(input.verification),
         `PayPal info (${input.verification.firstName} ${input.verification.lastName[0]})`,
       );
     }),
 });
 
-async function renameDonationPixels(
-  donations: DonationWithPixel[],
+async function renamePixels(
+  pixels: PixelWithDonation[],
   newIdentifier: string,
   auditVerification: string,
 ) {
-  let renamedCount = 0;
-  let failedCount = 0;
-  let skippedCount = 0;
+  const results = await Promise.all(
+    pixels.map((pixel) =>
+      (async () => {
+        if (isPixelLocked(pixel)) {
+          return {
+            pixelId: pixel.id,
+            isSkipped: true,
+            isError: false,
+            isSuccess: false,
+            reason: "locked",
+          };
+        }
 
-  const renamePromises: Promise<
-    DonationWithPixel["pixels"][number] | undefined
-  >[] = [];
+        if (pixel.identifier === newIdentifier) {
+          return {
+            pixelId: pixel.id,
+            isSkipped: true,
+            isError: false,
+            isSuccess: false,
+            reason: "same",
+          };
+        }
 
-  for (const donation of donations) {
-    for (const pixel of donation.pixels) {
-      if (isPixelLocked(pixel)) {
-        skippedCount++;
-        continue;
-      }
+        try {
+          await renamePixel(pixel.id, newIdentifier);
+          return {
+            pixelId: pixel.id,
+            isSuccess: true,
+            isError: false,
+            isSkipped: false,
+          };
+        } catch (_) {
+          return {
+            pixelId: pixel.id,
+            isError: true,
+            isSuccess: false,
+            isSkipped: false,
+            errorMessage: "Failed to rename pixel",
+          };
+        }
+      })(),
+    ),
+  );
 
-      if (pixel.identifier === newIdentifier) {
-        // We skip but do not tell the user,
-        // this is basically just an optimization
-        continue;
-      }
+  if (env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL) {
+    const messages: string[] = [];
 
-      renamePromises.push(
-        (async () => {
-          try {
-            await renamePixel(pixel.id, newIdentifier);
-            renamedCount++;
-            return pixel;
-          } catch (_) {
-            failedCount++;
-          }
-        })(),
+    const renamedIds = results.filter((r) => r.isSuccess).map((r) => r.pixelId);
+    pixels.forEach((pixel) => {
+      if (!renamedIds.includes(pixel.id)) return;
+
+      const gridRef = coordsToGridRef({ x: pixel.column, y: pixel.row });
+      messages.push(
+        [
+          `${gridRef.x}:${gridRef.y} – \`${pixel.identifier}\` to \`${newIdentifier}\``,
+          `Verification: ${auditVerification}`,
+          `Pixel: ${pixel.id}`,
+        ].join("\n"),
       );
-    }
-  }
-
-  const renamedPixels = (await Promise.allSettled(renamePromises))
-    .filter((r) => r.status === "fulfilled")
-    .map((r) => r.value)
-    .filter((p) => p !== undefined);
-
-  await auditLogPixelRename(auditVerification, newIdentifier, renamedPixels);
-
-  return { renamedCount, failedCount, skippedCount };
-}
-
-async function renamePixelByFilterMutation(
-  id: string,
-  donationId: string,
-  newIdentifier: string,
-  filter: Omit<Prisma.DonationWhereInput, "id">,
-  auditVerification: string,
-) {
-  const pixel = await prisma.pixel
-    .findFirst({
-      where: {
-        id,
-        donation: {
-          id: donationId,
-          ...filter,
-        },
-      },
-    })
-    .catch(() => {
-      throw new TRPCError({
-        code: "INTERNAL_SERVER_ERROR",
-        message: "Failed to verify Pixel ownership (database)",
-      });
     });
 
-  if (!pixel) {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Could not verify Pixel ownership (not found)",
+    await triggerPlainDiscordChannelWebhook({
+      webhookUrl: env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
+      contentMessage: "Renaming\n" + messages.join("\n\n"),
     });
   }
 
-  if (isPixelLocked(pixel)) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message:
-        "Pixel has been renamed recently and cannot be renamed again yet",
-    });
-  }
-
-  if (pixel.identifier === newIdentifier) {
-    throw new TRPCError({
-      code: "BAD_REQUEST",
-      message: "New identifier is the same as the current identifier",
-    });
-  }
-
-  await renamePixel(pixel.id, newIdentifier).catch(() => {
-    throw new TRPCError({
-      code: "INTERNAL_SERVER_ERROR",
-      message: "Failed to rename Pixel (database)",
-    });
-  });
-
-  await auditLogPixelRename(auditVerification, newIdentifier, [pixel]);
+  return results;
 }
 
 const sendChatMessages = async (

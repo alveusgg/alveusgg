@@ -1,22 +1,15 @@
 import { type FormEvent, useState } from "react";
 
-import type {
-  AnyRenamePixelMutation,
-  MyPixel,
-} from "@/server/trpc/router/donations";
+import type { MyPixel } from "@/server/trpc/router/donations";
 
-import { classes } from "@/utils/classes";
 import { formatDateTimeLocal } from "@/utils/datetime";
 
-import {
-  PIXEL_IDENTIFIER_MAX_LENGTH,
-  PIXEL_IDENTIFIER_MIN_LENGTH,
-  PIXEL_RENAME_LOCK_DURATION_TEXT,
-  normalizePixelIdentifier,
-} from "@/hooks/pixels";
+import { PIXEL_RENAME_LOCK_DURATION_TEXT } from "@/hooks/pixels";
 import { useTimestamp } from "@/hooks/timestamp";
 
+import type { SharedEditPixelProps } from "@/components/institute/EditPixelsForm";
 import MyPixelPreview from "@/components/institute/MyPixelPreview";
+import { PixelIdentifierInput } from "@/components/institute/PixelIdentifierInput";
 import { coordsToGridRef } from "@/components/institute/Pixels";
 import DonationProviderIcon from "@/components/shared/DonationProviderIcon";
 import { Button } from "@/components/shared/form/Button";
@@ -26,29 +19,20 @@ const confirmationMessage = (oldIdent: string, newIdent: string) =>
   `You will only be able to change your Pixel every ${PIXEL_RENAME_LOCK_DURATION_TEXT}. ` +
   `The last date to change Pixel labels will be announced on Alveus channels!`;
 
-type EditPixelFormProps<TMutation extends AnyRenamePixelMutation> = {
+type EditPixelFormProps = SharedEditPixelProps & {
   pixel: MyPixel;
   provider: "twitch" | "paypal";
-  overrideIdentifier?: string | null;
-  renameMutation: TMutation;
-  onRename: (
-    mutate: ReturnType<TMutation["useMutation"]>["mutate"],
-    pixel: MyPixel,
-    newIdentifier: string,
-  ) => unknown;
 };
 
-export function EditPixelForm<TMutation extends AnyRenamePixelMutation>({
+export function EditPixelForm({
   pixel,
   provider,
-  overrideIdentifier = null,
+  overrideIdentifier,
   renameMutation,
   onRename,
-}: EditPixelFormProps<TMutation>) {
+}: EditPixelFormProps) {
   // Refresh every 30 seconds to update locked status
   useTimestamp(30_000);
-
-  const rename = renameMutation.useMutation();
 
   const submit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -57,7 +41,7 @@ export function EditPixelForm<TMutation extends AnyRenamePixelMutation>({
     const newIdentifier = formData.get("identifier");
     if (typeof newIdentifier !== "string" || !newIdentifier) return;
 
-    onRename(rename.mutate, pixel, newIdentifier);
+    onRename(newIdentifier, pixel.id);
   };
 
   const [identifier, setIdentifier] = useState(pixel.identifier);
@@ -81,6 +65,7 @@ export function EditPixelForm<TMutation extends AnyRenamePixelMutation>({
           <DonationProviderIcon className="size-3" provider={provider} />
         </div>
       </div>
+
       <div className="flex flex-row items-center justify-center">
         <div className="overflow-hidden rounded-sm border border-gray-300 shadow-sm">
           <MyPixelPreview
@@ -92,40 +77,23 @@ export function EditPixelForm<TMutation extends AnyRenamePixelMutation>({
           />
         </div>
       </div>
+
       <div className="w-full">
-        <label htmlFor={`${pixel.id}-identifier`} className="block text-sm">
-          Your label:
-        </label>
-        <textarea
+        <PixelIdentifierInput
           id={`${pixel.id}-identifier`}
-          name="identifier"
-          autoComplete="username nickname given-name"
-          required
-          minLength={PIXEL_IDENTIFIER_MIN_LENGTH}
-          maxLength={PIXEL_IDENTIFIER_MAX_LENGTH}
           value={identifier}
-          wrap="hard"
-          rows={2}
-          cols={20}
-          disabled={isDisabled}
-          className={classes(
-            "block max-h-[calc(2lh+2*var(--sizing))] resize-none overflow-hidden rounded border border-gray-300 p-2",
-            isDisabled
-              ? "cursor-not-allowed bg-gray-100 text-gray-500"
-              : "bg-white",
-          )}
-          onChange={(e) => {
-            setIdentifier(normalizePixelIdentifier(e.target.value));
-          }}
+          setValue={setIdentifier}
+          isDisabled={isDisabled}
         />
       </div>
+
       <Button
         type="submit"
         size="small"
         confirmationMessage={confirmationMessage(pixel.identifier, identifier)}
-        disabled={rename.isPending || isDisabled}
+        disabled={renameMutation.isPending || isDisabled}
       >
-        {rename.isPending
+        {renameMutation.isPending
           ? "Saving..."
           : isLocked
             ? `Locked until ${formatDateTimeLocal(pixel.lockedUntil!, {
@@ -137,11 +105,45 @@ export function EditPixelForm<TMutation extends AnyRenamePixelMutation>({
               : "Save change"}
       </Button>
 
-      {rename.isError ? (
-        <em className="text-red-600">Error: {rename.error.message}</em>
+      {renameMutation.isError ? (
+        <em className="text-red-600">Error: {renameMutation.error.message}</em>
       ) : null}
 
-      {rename.isSuccess ? <em className="text-green-600">Updated!</em> : null}
+      {renameMutation.isSuccess && renameMutation.data.length === 0 ? (
+        <em className="text-red-600">Error: Could not find or verify pixel!</em>
+      ) : null}
+
+      {renameMutation.isSuccess
+        ? renameMutation.data.map((res) => {
+            if (res.pixelId !== pixel.id) return null;
+
+            if (res.isSuccess) {
+              return (
+                <em key={res.pixelId} className="text-green-600">
+                  Updated!
+                </em>
+              );
+            } else if (res.isError) {
+              return (
+                <em key={res.pixelId} className="text-red-600">
+                  Error: {res.errorMessage ?? "Failed to rename Pixel!"}
+                </em>
+              );
+            } else if (res.isSkipped && res.reason === "lock") {
+              return (
+                <em key={res.pixelId} className="text-red-600">
+                  Error: Pixel is currently locked!
+                </em>
+              );
+            } else if (res.isSkipped && res.reason === "same") {
+              return (
+                <em key={res.pixelId} className="text-yellow">
+                  Pixel already has that identifier (skipped)
+                </em>
+              );
+            }
+          })
+        : null}
     </form>
   );
 }

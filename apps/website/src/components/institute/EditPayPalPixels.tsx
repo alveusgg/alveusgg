@@ -69,6 +69,8 @@ export function EditPayPalPixels() {
     [getPayPalPixels, persistedPixelsData],
   );
 
+  const renameMutation = trpc.donations.renamePayPalPixels.useMutation();
+
   return (
     <>
       <form onSubmit={submit}>
@@ -126,38 +128,17 @@ export function EditPayPalPixels() {
       {persistedPixelsData ? (
         <EditPixelsForm
           pixelsQuery={pixelsQuery}
-          renameMutation={trpc.donations.renamePayPalPixel}
-          renameAllMutation={trpc.donations.renameAllPayPalPixels}
+          renameMutation={renameMutation}
           overrideIdentifier={overrideIdentifier}
           setOverrideIdentifier={setOverrideIdentifier}
-          onRename={(mutate, pixel, newIdentifier) => {
+          onRename={(newIdentifier, pixelId?: string) => {
             const verification = verificationRef.current;
             if (!verification) {
               return;
             }
 
-            mutate(
-              {
-                donationId: pixel.donationId,
-                pixelId: pixel.id,
-                newIdentifier,
-                verification,
-              },
-              {
-                onSuccess: () => {
-                  getPayPalPixels.mutate(verification);
-                },
-              },
-            );
-          }}
-          onRenameAll={(mutate) => {
-            const verification = verificationRef.current;
-            if (!verification) {
-              return;
-            }
-
-            mutate(
-              { newIdentifier: overrideIdentifier, verification },
+            renameMutation.mutate(
+              { newIdentifier, pixelId, verification },
               {
                 onSuccess: () => {
                   getPayPalPixels.mutate(verification);

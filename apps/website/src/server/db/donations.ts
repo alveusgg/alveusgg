@@ -98,9 +98,7 @@ export async function createPixels(input: Omit<Pixel, "data">[]) {
   });
 }
 
-export function filterDonationByTwitchUserId<T extends string>(
-  twitchUserId: T,
-) {
+function filterDonationByTwitchUserId<T extends string>(twitchUserId: T) {
   if (!twitchUserId) {
     throw new Error("Twitch user ID is required for Twitch donations filter");
   }
@@ -114,7 +112,7 @@ export function filterDonationByTwitchUserId<T extends string>(
   } as const satisfies Prisma.DonationWhereInput;
 }
 
-export function filterDonationByPayPalEmail<T extends string>(emailAddress: T) {
+function filterDonationByPayPalEmail<T extends string>(emailAddress: T) {
   if (!emailAddress) {
     throw new Error("Email address is required for PayPal donations filter");
   }
@@ -128,9 +126,7 @@ export function filterDonationByPayPalEmail<T extends string>(emailAddress: T) {
   } as const satisfies Prisma.DonationWhereInput;
 }
 
-export function filterDonationByPayPalVerification(
-  verification: PayPalVerification,
-) {
+function filterDonationByPayPalVerification(verification: PayPalVerification) {
   return {
     AND: [
       { provider: "paypal" },
@@ -156,34 +152,38 @@ export function filterDonationByPayPalVerification(
   } as const satisfies Prisma.DonationWhereInput;
 }
 
-export type DonationWithPixel = Awaited<
-  ReturnType<typeof getFilteredDonationsWithPixels>
+export type PixelWithDonation = Awaited<
+  ReturnType<typeof getFilteredPixelsByDonation>
 >[number];
 
-async function getFilteredDonationsWithPixels(
+async function getFilteredPixelsByDonation(
   filters: Prisma.DonationWhereInput[],
+  pixelId?: string,
 ) {
   if (filters.length === 0) {
     return [];
   }
 
-  return prisma.donation.findMany({
+  return prisma.pixel.findMany({
     select: {
       id: true,
+      identifier: true,
+      column: true,
+      row: true,
+      renamedAt: true,
+      donationId: true,
       receivedAt: true,
-      provider: true,
-      pixels: {
+      donation: {
         select: {
-          id: true,
-          identifier: true,
-          column: true,
-          row: true,
-          renamedAt: true,
+          provider: true,
         },
       },
     },
     where: {
-      OR: filters,
+      ...(pixelId ? { id: pixelId } : undefined),
+      donation: {
+        OR: filters,
+      },
     },
     orderBy: {
       receivedAt: "asc",
@@ -191,15 +191,17 @@ async function getFilteredDonationsWithPixels(
   });
 }
 
-export async function getPayPalDonationsByVerification(
+export async function getPayPalPixelsByVerification(
   verification: PayPalVerification,
+  pixelId?: string,
 ) {
-  return getFilteredDonationsWithPixels([
-    filterDonationByPayPalVerification(verification),
-  ]);
+  return getFilteredPixelsByDonation(
+    [filterDonationByPayPalVerification(verification)],
+    pixelId,
+  );
 }
 
-export async function getMyDonationsWithPixels(user: User) {
+export async function getMyPixels(user: User, pixelId?: string) {
   const filters: Prisma.DonationWhereInput[] = [];
 
   const twitchUserId = await getTwitchUserId(user.id);
@@ -212,7 +214,7 @@ export async function getMyDonationsWithPixels(user: User) {
     filters.push(filterDonationByPayPalEmail(emailAddress));
   }
 
-  return getFilteredDonationsWithPixels(filters);
+  return getFilteredPixelsByDonation(filters, pixelId);
 }
 
 export async function renamePixel(id: string, identifier: string) {
