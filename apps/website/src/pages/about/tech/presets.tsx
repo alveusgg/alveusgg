@@ -667,7 +667,7 @@ const AboutTechPresetsPage: NextPage = () => {
             </div>
 
             {/* Preset List */}
-            <div className="col-span-1 @3xl:sticky @3xl:top-0 @3xl:col-span-2 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col @5xl:col-span-3">
+            <div className="col-span-1 flex max-h-full min-h-0 flex-col @3xl:sticky @3xl:top-0 @3xl:col-span-2 @5xl:col-span-3">
               {selectedCamera && (
                 <Fragment key={selectedCamera}>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
