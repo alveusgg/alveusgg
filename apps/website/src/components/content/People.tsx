@@ -11,7 +11,6 @@ export interface Person {
   name: string;
   title: string;
   description: ReactNode;
-  // joined: PartialDateString;
 }
 
 type PeopleProps = {
