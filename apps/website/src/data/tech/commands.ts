@@ -90,6 +90,9 @@ export const commandCategories = {
   Rounds: {
     heading: "Daily Rounds",
   },
+  Feeder: {
+    heading: "Feeder",
+  },
 } as const satisfies Record<string, CommandCategory>;
 
 const commands = {
@@ -1310,6 +1313,65 @@ const commands = {
         },
       ],
     ],
+  },
+
+  /**
+   * Feeder
+   */
+  feed: {
+    description: "Provide basic information on how !feed works",
+    category: "Feeder",
+    args: [],
+  },
+  feedpasture: {
+    description: "Include in a donation of $5 to feed the pasture animals",
+    category: "Feeder",
+    args: [],
+  },
+  feedemu: {
+    description: "Include in a donation of $5 to feed the emus",
+    category: "Feeder",
+    args: [],
+  },
+  runpasturefeeder: {
+    description: "Activate the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  runemufeeder: {
+    description: "Activate the emu feeder",
+    category: "Feeder",
+    args: [],
+  },
+  pasturefeederstatus: {
+    description: "Get the status of the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  emufeederstatus: {
+    description: "Get the status of the emu feeder",
+    category: "Feeder",
+    args: [],
+  },
+  disablepasturefeeder: {
+    description: "Disable the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  disableemufeeder: {
+    description: "Disable the emu feeder",
+    category: "Feeder",
+    args: [],
+  },
+  enablepasturefeeder: {
+    description: "Enable the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  enableemufeeder: {
+    description: "Enable the emu feeder",
+    category: "Feeder",
+    args: [],
   },
 } as const satisfies Record<string, Command>;
 
