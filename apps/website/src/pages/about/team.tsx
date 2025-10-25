@@ -231,7 +231,7 @@ const AboutTeamPage: NextPage = () => {
   return (
     <>
       <Meta
-        title="Alveus Staff"
+        title="Alveus Team"
         description="Learn more about the Alveus staff, advisory board, and board of directors."
       >
         <RssLink title="Alveus Sanctuary Staff" path="/feeds/staff.xml" />
