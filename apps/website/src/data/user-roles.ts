@@ -42,6 +42,10 @@ export const userRoles = {
     label: "Rounds Checks",
     description: "Can manage rounds checks",
   },
+  donations: {
+    label: "Donations",
+    description: "Can view and manage donation statistics",
+  },
 } as const satisfies Record<string, UserRoleConfig>;
 
 export function isValidUserRole(role: string) {
