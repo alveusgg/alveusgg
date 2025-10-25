@@ -19,6 +19,11 @@ export const router = t.router;
 
 // Middleware to log mutations
 const logMutations = t.middleware(async ({ path, type, next, ctx }) => {
+  console.log(
+    "Node.js version:",
+    typeof process !== "undefined" && process.version,
+  );
+
   if (type === "mutation") {
     const user = ctx.session?.user
       ? `@${ctx.session.user.name ?? "unknown"} (${ctx.session.user.id})`
