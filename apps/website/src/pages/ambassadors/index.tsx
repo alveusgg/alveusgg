@@ -28,6 +28,7 @@ import useLocaleString from "@/hooks/locale";
 import Grouped, { type GroupedProps } from "@/components/content/Grouped";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
+import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import Select from "@/components/content/Select";
 import SubNav from "@/components/content/SubNav";
@@ -217,7 +218,12 @@ const AmbassadorsPage: NextPage = () => {
       <Meta
         title="Ambassadors"
         description="Each and every ambassador at Alveus plays an important role as a representative of their species, sharing unique stories about conservation and consumer choice."
-      />
+      >
+        <RssLink
+          title="Alveus Sanctuary Ambassadors"
+          path="/feeds/ambassadors.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
