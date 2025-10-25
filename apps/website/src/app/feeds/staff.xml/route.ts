@@ -6,7 +6,7 @@ import { parsePartialDateString } from "@/utils/datetime-partial";
 import { getRssFeedContent } from "@/utils/rss-feed";
 
 export async function GET() {
-  const staffPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/about/staff`;
+  const staffPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/about/team`;
 
   const latestStaffJoinDate = new Date(
     Math.max(
