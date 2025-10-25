@@ -113,13 +113,16 @@ const InstitutePixelsPage: NextPage = () => {
     });
   }, []);
 
-  const handleScrollbarChange = useCallback((e: ChangeEvent) => {
-    const progress = parseFloat(e.target.value);
-    setScrollProgress(progress);
-    if (!fullscreenRef.current) return;
-    const { scrollWidth, clientWidth } = fullscreenRef.current;
-    fullscreenRef.current.scrollLeft = (scrollWidth - clientWidth) * progress;
-  }, []);
+  const handleScrollbarChange = useCallback(
+    (e: ChangeEvent<HTMLInputElement>) => {
+      const progress = parseFloat(e.target.value);
+      setScrollProgress(progress);
+      if (!fullscreenRef.current) return;
+      const { scrollWidth, clientWidth } = fullscreenRef.current;
+      fullscreenRef.current.scrollLeft = (scrollWidth - clientWidth) * progress;
+    },
+    [],
+  );
 
   const pixelsRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -299,10 +302,7 @@ const InstitutePixelsPage: NextPage = () => {
                     : "text-alveus-green md:text-alveus-tan",
                 )}
               >
-                {`Found ${filtered.toLocaleString()} ${pluralize(
-                  "pixel",
-                  filtered,
-                )}`}
+                {`Found ${filtered.toLocaleString()} ${pluralize("pixel", filtered)}`}
               </p>
             </Transition>
 
