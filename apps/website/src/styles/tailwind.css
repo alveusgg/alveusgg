@@ -124,6 +124,8 @@
   }
 }
 
+@custom-variant slider-thumb (&::-webkit-slider-thumb, &::-moz-range-thumb);
+
 @utility scrollbar-none {
   scrollbar-width: none; /* Firefox */
   -ms-overflow-style: none; /* Internet Explorer 10+ */

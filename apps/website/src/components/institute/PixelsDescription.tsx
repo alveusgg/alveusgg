@@ -1,11 +1,11 @@
 import { classes } from "@/utils/classes";
 
 import useLocaleString from "@/hooks/locale";
-import { PIXEL_TOTAL, useLivePixels } from "@/hooks/pixels";
+import { PIXEL_TOTAL, usePixels } from "@/hooks/pixels";
 
 function PixelsDescription({ className }: { className?: string }) {
-  const pixels = useLivePixels();
-  const unlocked = pixels.data?.pixels.length ?? 0;
+  const pixels = usePixels();
+  const unlocked = pixels?.length ?? 0;
   const total = PIXEL_TOTAL;
 
   const unlockedLocale = useLocaleString(unlocked);
