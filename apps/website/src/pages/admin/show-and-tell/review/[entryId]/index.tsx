@@ -281,7 +281,8 @@ const AdminReviewShowAndTellPage: NextPage<
             closeModal={() => setIsPreviewOpen(false)}
             formData={previewFormData ?? undefined}
             canApprove={status === "pendingApproval"}
-            onApprove={handleSaveAndApprove}
+            onSaveAndApprove={handleSaveAndApprove}
+            onSave={handleSave}
           />
         )}
       </AdminPageLayout>

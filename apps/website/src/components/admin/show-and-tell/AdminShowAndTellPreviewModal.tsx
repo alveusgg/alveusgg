@@ -5,7 +5,11 @@ import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and
 
 import { classes } from "@/utils/classes";
 
-import { Button, approveButtonClasses } from "@/components/shared/form/Button";
+import {
+  Button,
+  approveButtonClasses,
+  defaultButtonClasses,
+} from "@/components/shared/form/Button";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
@@ -15,7 +19,8 @@ type AdminShowAndTellPreviewModalProps = {
   newLocation: boolean;
   isOpen: boolean;
   closeModal: () => void;
-  onApprove?: () => void;
+  onSave?: () => void;
+  onSaveAndApprove?: () => void;
   canApprove?: boolean;
   formData?: Partial<PublicShowAndTellEntryWithAttachments>;
 };
@@ -25,7 +30,8 @@ export function AdminShowAndTellPreviewModal({
   newLocation,
   isOpen,
   closeModal,
-  onApprove,
+  onSave,
+  onSaveAndApprove,
   canApprove = false,
   formData,
 }: AdminShowAndTellPreviewModalProps) {
@@ -81,10 +87,10 @@ export function AdminShowAndTellPreviewModal({
               <Button onClick={closeModal} width="auto">
                 Close
               </Button>
-              {canApprove && onApprove && (
+              {canApprove && onSaveAndApprove && (
                 <Button
                   onClick={() => {
-                    onApprove();
+                    onSaveAndApprove();
                     closeModal();
                   }}
                   className={approveButtonClasses}
@@ -92,6 +98,19 @@ export function AdminShowAndTellPreviewModal({
                 >
                   <IconCheckCircle className="size-4" />
                   Save & Approve
+                </Button>
+              )}
+              {!canApprove && onSave && (
+                <Button
+                  onClick={() => {
+                    onSave();
+                    closeModal();
+                  }}
+                  className={defaultButtonClasses}
+                  width="auto"
+                >
+                  <IconCheckCircle className="size-4" />
+                  Save
                 </Button>
               )}
             </div>
