@@ -1,0 +1,27 @@
+name: Sync from Public
+
+on:
+  schedule:
+    - cron: "0 * * * *" # hourly
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    if: github.repository == 'alveusgg/alveusgg-private'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.ref }}
+
+      - name: Fetch public repo and push
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          git remote add upstream https://github.com/alveusgg/alveusgg.git
+          git fetch upstream "$BRANCH"
+          git push origin "upstream/$BRANCH:$BRANCH"
