@@ -1,0 +1,81 @@
+name: Sync from Public (PR-based)
+
+on:
+  schedule:
+    - cron: "0 * * * *" # hourly
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  sync:
+    if: github.repository == 'alveusgg/alveusgg-private'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout private repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure git user
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Add public upstream and fetch main
+        run: |
+          if ! git remote | grep -q '^upstream$'; then
+            git remote add upstream https://github.com/alveusgg/alveusgg.git
+          fi
+          git fetch upstream main
+
+      - name: Fast-forward tracking branch to upstream/main
+        run: |
+          # Create/update a branch that exactly mirrors public main
+          git checkout -B public-sync upstream/main
+          # Push (force) the tracking branch to origin
+          git push --force origin public-sync
+
+      - name: Ensure PR from public-sync -> main exists/updated
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const {owner, repo} = context.repo;
+            const head = 'public-sync';
+            const base = 'main';
+            // Find existing open PR from head to base
+            const { data: prs } = await github.rest.pulls.list({
+              owner, repo, state: 'open', head: `${owner}:${head}`, base
+            });
+
+            if (prs.length === 0) {
+              const title = "Sync from public (upstream main → private main)";
+              const body = [
+                "This PR syncs the latest changes from **alveusgg/alveusgg@main** into the private repo.",
+                "",
+                "- `public-sync` is an exact mirror of the public repo's `main`.",
+                "- Review/merge to bring changes into private `main`.",
+              ].join("\n");
+              await github.rest.pulls.create({ owner, repo, title, head, base, body });
+            } else {
+              // Optional: update PR body/title if desired
+              const pr = prs[0];
+              // Try auto-merge when mergeable & no conflicts (optional)
+              try {
+                const { data: refreshed } = await github.rest.pulls.get({ owner, repo, pull_number: pr.number });
+                if (refreshed.mergeable && !refreshed.draft) {
+                  // Use 'merge' (or 'squash'/'rebase') strategy if you prefer
+                  await github.rest.pulls.merge({
+                    owner, repo, pull_number: pr.number,
+                    merge_method: 'merge',
+                    commit_title: `Merge upstream public main into private main (#${pr.number})`
+                  });
+                }
+              } catch(e) {
+                core.info(`Auto-merge skipped: ${e.message}`);
+              }
+            }
