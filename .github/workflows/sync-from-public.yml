@@ -76,7 +76,7 @@ jobs:
               // Try auto-merge when mergeable & no conflicts (optional)
               try {
                 const { data: refreshed } = await github.rest.pulls.get({ owner, repo, pull_number: pr.number });
-                if (refreshed.mergeable && !refreshed.draft) {
+                if (refreshed.mergeable === true && !refreshed.draft) {
                   // Use 'merge' (or 'squash'/'rebase') strategy if you prefer
                   await github.rest.pulls.merge({
                     owner, repo, pull_number: pr.number,
