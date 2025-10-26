@@ -26,6 +26,7 @@ export function AdminShowAndTellEntriesPanel({
   filter,
 }: AdminShowAndTellEntriesPanelProps) {
   const [previewEntryId, setPreviewEntryId] = useState<string | null>(null);
+  const utils = trpc.useUtils();
 
   const entries = trpc.adminShowAndTell.getEntries.useInfiniteQuery(
     { filter },
@@ -43,8 +44,8 @@ export function AdminShowAndTellEntriesPanel({
     trpc.showAndTell.getPostsFromANewLocation.useQuery();
 
   const approveMutation = trpc.adminShowAndTell.approve.useMutation({
-    onSettled: async () => {
-      await entries.refetch();
+    onSuccess: async () => {
+      await utils.adminShowAndTell.getEntries.invalidate();
     },
   });
 
