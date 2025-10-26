@@ -1,4 +1,5 @@
 import { Transition } from "@headlessui/react";
+import type { ChatMessage } from "@twurple/chat";
 import type { GetStaticProps, InferGetStaticPropsType, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -12,6 +13,8 @@ import { type Clip, getClips } from "@/server/apis/twitch";
 import { channels } from "@/data/twitch";
 
 import { queryArray } from "@/utils/array";
+
+import useChat from "@/hooks/chat";
 
 async function getTwitchClips(
   userAccessToken: string,
@@ -238,12 +241,37 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
     [],
   );
 
+  // Allow a title to be set by mods in chat
+  const [title, setTitle] = useState("");
+  useChat(
+    useMemo(() => {
+      const param = queryArray(query.channels);
+      return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
+    }, [query.channels]),
+    useCallback((message: ChatMessage) => {
+      const { text, userInfo } = message;
+      if (!userInfo.isMod && !userInfo.isBroadcaster) return;
+
+      const [command, ...title] = text.split(" ");
+      if (command === "!clipstitle") {
+        setTitle(title.join(" "));
+      }
+    }, []),
+  );
+
   return (
     <div className="flex h-screen w-full items-center justify-center p-20">
       {clip && (
         <div className="flex aspect-video h-full max-w-full items-center justify-center">
           <div className="relative flex aspect-video w-full items-center justify-center">
             <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
+
+            <Transition show={!!title.trim()}>
+              {/* data-[leave]:duration-0 to ensure the text doesn't disappear before the box */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-0">
+                <p className="text-center text-3xl font-bold">{title.trim()}</p>
+              </div>
+            </Transition>
 
             <Transition show={details === "overlay"}>
               <div className="absolute top-2 left-2 rounded-lg bg-black/25 px-4 py-2 text-white backdrop-blur-sm transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300">

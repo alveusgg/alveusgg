@@ -1179,6 +1179,21 @@ const commands = {
     category: "Text",
     args: [],
   },
+  clipstitle: {
+    description: "Sets the title to be displayed on the clips player",
+    category: "Text",
+    args: [
+      [
+        {
+          type: "string",
+          name: "title",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [],
+    ],
+  },
 
   /**
    * Wheel
