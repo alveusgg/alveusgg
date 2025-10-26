@@ -1,6 +1,7 @@
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { useState } from "react";
 
 import { getAdminSSP } from "@/server/utils/admin";
 
@@ -12,6 +13,7 @@ import { trpc } from "@/utils/trpc";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
+import { AdminShowAndTellPreviewModal } from "@/components/admin/show-and-tell/AdminShowAndTellPreviewModal";
 import DateTime from "@/components/content/DateTime";
 import Meta from "@/components/content/Meta";
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -20,10 +22,12 @@ import {
   approveButtonClasses,
   dangerButtonClasses,
   defaultButtonClasses,
+  secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconEye from "@/icons/IconEye";
 import IconMinus from "@/icons/IconMinus";
 import IconTrash from "@/icons/IconTrash";
 
@@ -52,6 +56,11 @@ const AdminReviewShowAndTellPage: NextPage<
   const getEntry = trpc.adminShowAndTell.getEntry.useQuery(String(entryId), {
     enabled: !!entryId,
   });
+
+  const { data: postsFromANewLocation } =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery();
+
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const deleteMutation = trpc.adminShowAndTell.delete.useMutation({
     onSettled: async () => {
@@ -122,6 +131,14 @@ const AdminReviewShowAndTellPage: NextPage<
                 )}
               </div>
               <div className="flex flex-col gap-2">
+                <Button
+                  size="small"
+                  className={secondaryButtonClasses}
+                  onClick={() => setIsPreviewOpen(true)}
+                >
+                  <IconEye className="size-4" />
+                  Preview
+                </Button>
                 {status === "approved" && (
                   <Button
                     size="small"
@@ -168,6 +185,15 @@ const AdminReviewShowAndTellPage: NextPage<
               />
             </Panel>
           </>
+        )}
+
+        {entry && postsFromANewLocation && (
+          <AdminShowAndTellPreviewModal
+            entry={entry}
+            newLocation={postsFromANewLocation.has(entry.id)}
+            isOpen={isPreviewOpen}
+            closeModal={() => setIsPreviewOpen(false)}
+          />
         )}
       </AdminPageLayout>
     </>
