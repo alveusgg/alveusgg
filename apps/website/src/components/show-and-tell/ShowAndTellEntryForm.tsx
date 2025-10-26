@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import {
   type ComponentProps,
   type FormEvent,
+  type Ref,
   useCallback,
   useEffect,
   useMemo,
@@ -77,6 +78,8 @@ type ShowAndTellEntryFormProps = {
   entry?: PublicShowAndTellEntryWithAttachments & Partial<ShowAndTellEntry>;
   action: "review" | "create" | "update";
   onUpdate?: () => void;
+  onSaveSuccess?: () => void;
+  formRef?: Ref<HTMLFormElement>;
   onUnsavedChangesRef?: (confirmFn: (message?: string) => boolean) => void;
 };
 
@@ -225,6 +228,8 @@ export function ShowAndTellEntryForm({
   action = "create",
   entry,
   onUpdate,
+  onSaveSuccess,
+  formRef,
   onUnsavedChangesRef,
 }: ShowAndTellEntryFormProps) {
   const [isProcessing, setIsProcessing] = useState(false);
@@ -583,6 +588,7 @@ export function ShowAndTellEntryForm({
             resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
+            onSaveSuccess?.();
           },
           onError: (err) => {
             setError(err.message);
@@ -610,7 +616,11 @@ export function ShowAndTellEntryForm({
   const wasApproved = entry && getEntityStatus(entry) === "approved";
 
   return (
-    <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form
+      className="my-5 flex flex-col gap-5"
+      onSubmit={handleSubmit}
+      ref={formRef}
+    >
       {action === "update" && wasApproved && (
         <MessageBox variant="warning" className="my-4 flex items-center gap-2">
           <IconWarningTriangle className="size-6 text-yellow-900" />

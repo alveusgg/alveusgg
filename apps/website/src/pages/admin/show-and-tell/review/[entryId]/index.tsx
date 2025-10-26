@@ -3,6 +3,7 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useCallback, useRef, useState } from "react";
 
+import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
 import { getAdminSSP } from "@/server/utils/admin";
 
 import { permissions } from "@/data/permissions";
@@ -61,6 +62,10 @@ const AdminReviewShowAndTellPage: NextPage<
     trpc.showAndTell.getPostsFromANewLocation.useQuery();
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [previewFormData, setPreviewFormData] =
+    useState<Partial<PublicShowAndTellEntryWithAttachments> | null>(null);
+  const shouldApproveAfterSaveRef = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   // Store a reference to the form's confirmIfUnsaved function
   const confirmIfUnsavedRef = useRef<((message?: string) => boolean) | null>(
@@ -92,6 +97,29 @@ const AdminReviewShowAndTellPage: NextPage<
 
   const entry = getEntry.data;
   const status = entry && getEntityStatus(entry);
+
+  const handlePreviewClick = useCallback(() => {
+    if (!formRef.current) {
+      setPreviewFormData(null);
+      setIsPreviewOpen(true);
+      return;
+    }
+
+    // Extract form data for preview
+    const form = formRef.current;
+    const formData = new FormData(form);
+
+    setPreviewFormData({
+      displayName: (formData.get("displayName") as string) || "",
+      title: (formData.get("title") as string) || "",
+      text: (formData.get("text") as string) || "",
+      location: (formData.get("location") as string) || "",
+      // Note: latitude/longitude and attachments would need more complex handling
+      // For now, we'll use the existing entry's attachments
+    });
+
+    setIsPreviewOpen(true);
+  }, []);
 
   // Handlers that check for unsaved changes
   const handleApprove = useCallback(() => {
@@ -191,7 +219,7 @@ const AdminReviewShowAndTellPage: NextPage<
                 <Button
                   size="small"
                   className={secondaryButtonClasses}
-                  onClick={() => setIsPreviewOpen(true)}
+                  onClick={handlePreviewClick}
                 >
                   <IconEye className="size-4" />
                   Preview
@@ -237,6 +265,8 @@ const AdminReviewShowAndTellPage: NextPage<
                 action="review"
                 entry={entry}
                 onUpdate={() => getEntry.refetch()}
+                onSaveSuccess={handleSaveSuccess}
+                formRef={formRef}
                 onUnsavedChangesRef={setConfirmIfUnsaved}
               />
             </Panel>
@@ -249,6 +279,9 @@ const AdminReviewShowAndTellPage: NextPage<
             newLocation={postsFromANewLocation.has(entry.id)}
             isOpen={isPreviewOpen}
             closeModal={() => setIsPreviewOpen(false)}
+            formData={previewFormData ?? undefined}
+            canApprove={status === "pendingApproval"}
+            onApprove={handleSaveAndApprove}
           />
         )}
       </AdminPageLayout>
