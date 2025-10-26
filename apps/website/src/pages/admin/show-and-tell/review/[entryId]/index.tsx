@@ -120,6 +120,13 @@ const AdminReviewShowAndTellPage: NextPage<
     formRef.current.requestSubmit();
   }, [entry]);
 
+  const handleSave = useCallback(() => {
+    if (!formRef.current || !entry) return;
+
+    // Just save without approving
+    formRef.current.requestSubmit();
+  }, [entry]);
+
   const handleSaveSuccess = useCallback(() => {
     // If we should approve after save, do it now
     if (shouldApproveAfterSaveRef.current && entry) {
@@ -243,7 +250,8 @@ const AdminReviewShowAndTellPage: NextPage<
             closeModal={() => setIsPreviewOpen(false)}
             formData={previewFormData ?? undefined}
             canApprove={status === "pendingApproval"}
-            onApprove={handleSaveAndApprove}
+            onSaveAndApprove={handleSaveAndApprove}
+            onSave={handleSave}
           />
         )}
       </AdminPageLayout>
