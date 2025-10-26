@@ -80,6 +80,10 @@ type ShowAndTellEntryFormProps = {
   onUpdate?: () => void;
   onSaveSuccess?: () => void;
   formRef?: Ref<HTMLFormElement>;
+  onAttachmentsChange?: (data: {
+    imageFiles: FileReference[];
+    videoUrls: string[];
+  }) => void;
   onUnsavedChangesRef?: (confirmFn: (message?: string) => boolean) => void;
 };
 
@@ -231,6 +235,7 @@ export function ShowAndTellEntryForm({
   onSaveSuccess,
   formRef,
   onUnsavedChangesRef,
+  onAttachmentsChange,
 }: ShowAndTellEntryFormProps) {
   const [isProcessing, setIsProcessing] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -406,6 +411,18 @@ export function ShowAndTellEntryForm({
       attachments.filter((att) => att.type === "video").map((att) => att.url),
     [attachments],
   );
+
+  // Notify parent when attachments change
+  useEffect(() => {
+    onAttachmentsChange?.({
+      imageFiles: imageAttachmentsData.files,
+      videoUrls: videoLinksData.videoUrls,
+    });
+  }, [
+    imageAttachmentsData.files,
+    videoLinksData.videoUrls,
+    onAttachmentsChange,
+  ]);
 
   const createFileUpload = trpc.showAndTell.createFileUpload.useMutation();
   const upload = useFileUpload<ImageMimeType>(

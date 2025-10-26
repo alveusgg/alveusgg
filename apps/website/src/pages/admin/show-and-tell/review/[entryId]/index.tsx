@@ -25,6 +25,7 @@ import {
   defaultButtonClasses,
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
+import type { FileReference } from "@/components/shared/form/UploadAttachmentsField";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
@@ -66,6 +67,17 @@ const AdminReviewShowAndTellPage: NextPage<
     useState<Partial<PublicShowAndTellEntryWithAttachments> | null>(null);
   const shouldApproveAfterSaveRef = useRef(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const currentAttachmentsRef = useRef<{
+    imageFiles: FileReference[];
+    videoUrls: string[];
+  }>({ imageFiles: [], videoUrls: [] });
+
+  const handleAttachmentsChange = useCallback(
+    (data: { imageFiles: FileReference[]; videoUrls: string[] }) => {
+      currentAttachmentsRef.current = data;
+    },
+    [],
+  );
 
   // Store a reference to the form's confirmIfUnsaved function
   const confirmIfUnsavedRef = useRef<((message?: string) => boolean) | null>(
@@ -99,7 +111,7 @@ const AdminReviewShowAndTellPage: NextPage<
   const status = entry && getEntityStatus(entry);
 
   const handlePreviewClick = useCallback(() => {
-    if (!formRef.current) {
+    if (!formRef.current || !entry) {
       setPreviewFormData(null);
       setIsPreviewOpen(true);
       return;
@@ -109,17 +121,104 @@ const AdminReviewShowAndTellPage: NextPage<
     const form = formRef.current;
     const formData = new FormData(form);
 
+    // Get current attachment state
+    const { imageFiles, videoUrls } = currentAttachmentsRef.current;
+
+    // Build attachment previews - filter and map based on file status
+    const imageAttachments = imageFiles
+      .map((file, idx) => {
+        // Handle saved files (existing attachments)
+        if (file.status === "saved") {
+          const existingAttachment = entry.attachments.find(
+            (a) => a.imageAttachment?.id === file.id,
+          );
+          return existingAttachment || null;
+        }
+
+        // Handle uploaded files
+        if (file.status === "upload.done") {
+          return {
+            id: `preview-image-${idx}`,
+            entryId: entry.id,
+            attachmentType: "image" as const,
+            showAndTellEntryId: entry.id,
+            linkAttachmentId: null,
+            imageAttachmentId: file.id,
+            linkAttachment: null,
+            imageAttachment: {
+              id: file.id,
+              fileStorageObjectId: file.fileStorageObjectId,
+              url: file.url,
+              alt: null,
+              caption: null,
+              fileStorageObject: null,
+            },
+          };
+        }
+
+        // Handle files with data URLs (pending/initial)
+        if (
+          file.status === "upload.pending" ||
+          file.status === "upload.failed"
+        ) {
+          return {
+            id: `preview-image-${idx}`,
+            entryId: entry.id,
+            attachmentType: "image" as const,
+            showAndTellEntryId: entry.id,
+            linkAttachmentId: null,
+            imageAttachmentId: `temp-${idx}`,
+            linkAttachment: null,
+            imageAttachment: {
+              id: `temp-${idx}`,
+              fileStorageObjectId: null,
+              url: file.dataURL,
+              alt: null,
+              caption: null,
+              fileStorageObject: null,
+            },
+          };
+        }
+
+        return null;
+      })
+      .filter((a) => a !== null);
+
+    const videoAttachments = videoUrls.map((url, idx) => {
+      // Check if this video was in the original entry
+      const existingVideo = entry.attachments.find(
+        (a) => a.linkAttachment?.url === url,
+      );
+
+      if (existingVideo) {
+        return existingVideo;
+      }
+
+      return {
+        id: `preview-video-${idx}`,
+        entryId: entry.id,
+        attachmentType: "video" as const,
+        showAndTellEntryId: entry.id,
+        linkAttachmentId: `preview-link-${idx}`,
+        imageAttachmentId: null,
+        linkAttachment: {
+          id: `preview-link-${idx}`,
+          url,
+        },
+        imageAttachment: null,
+      };
+    });
+
     setPreviewFormData({
       displayName: (formData.get("displayName") as string) || "",
       title: (formData.get("title") as string) || "",
       text: (formData.get("text") as string) || "",
       location: (formData.get("location") as string) || "",
-      // Note: latitude/longitude and attachments would need more complex handling
-      // For now, we'll use the existing entry's attachments
-    });
+      attachments: [...imageAttachments, ...videoAttachments],
+    } as Partial<PublicShowAndTellEntryWithAttachments>);
 
     setIsPreviewOpen(true);
-  }, []);
+  }, [entry]);
 
   // Handlers that check for unsaved changes
   const handleApprove = useCallback(() => {
@@ -268,6 +367,7 @@ const AdminReviewShowAndTellPage: NextPage<
                 onSaveSuccess={handleSaveSuccess}
                 formRef={formRef}
                 onUnsavedChangesRef={setConfirmIfUnsaved}
+                onAttachmentsChange={handleAttachmentsChange}
               />
             </Panel>
           </>
