@@ -44,7 +44,7 @@ jobs:
     name: Update Chatbot (Preview)
     runs-on: ubuntu-latest
     environment: preview
-    if: github.repository == 'alveusgg/alveusgg' && github.ref == 'refs/heads/preview'
+    if: github.ref == 'refs/heads/preview'
     steps:
       - name: Update Chatbot SSH (Preview)
         uses: appleboy/ssh-action@2ead5e36573f08b82fbfce1504f1a4b05a647c6f # v1.2.2

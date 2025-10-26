@@ -1,4 +1,4 @@
-name: Sync from Public (PR-based)
+name: Sync from Public
 
 on:
   schedule:
@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   sync:
@@ -16,24 +15,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - name: Checkout private repo
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
 
-      - name: Configure git user
+      - name: Fetch public repo and push to main
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-      - name: Add public upstream and fetch main
-        run: |
-          if ! git remote | grep -q '^upstream$'; then
-            git remote add upstream https://github.com/alveusgg/alveusgg.git
-          fi
+          git remote add upstream https://github.com/alveusgg/alveusgg.git
           git fetch upstream main
-
-      - name: Merge upstream/main into main and push
-        run: |
-          git checkout main
-          git merge upstream/main --ff-only
-          git push origin main
+          git push origin upstream/main:main
