@@ -54,7 +54,7 @@ export function AdminShowAndTellPreviewModal({
     <Dialog
       as="div"
       open={isOpen}
-      className="relative z-20"
+      className="relative z-[100]"
       onClose={closeModal}
     >
       <div className="fixed inset-0 bg-black/25" />

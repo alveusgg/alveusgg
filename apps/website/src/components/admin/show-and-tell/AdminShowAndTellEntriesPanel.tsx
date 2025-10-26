@@ -1,5 +1,5 @@
 import type { inferRouterOutputs } from "@trpc/server";
-import { Fragment, useCallback } from "react";
+import { Fragment, useCallback, useState } from "react";
 
 import type { MarkPostAsSeenMode } from "@/server/db/show-and-tell";
 import type { AppRouter } from "@/server/trpc/router/_app";
@@ -12,6 +12,7 @@ import IconLoading from "@/icons/IconLoading";
 
 import { Panel } from "../Panel";
 import { AdminShowAndTellEntry } from "./AdminShowAndTellEntry";
+import { AdminShowAndTellPreviewModal } from "./AdminShowAndTellPreviewModal";
 
 type AdminShowAndTellEntriesPanelProps = {
   filter: "pendingApproval" | "approved";
@@ -23,12 +24,22 @@ type Entry = RouterOutput["adminShowAndTell"]["getEntries"]["items"][number];
 export function AdminShowAndTellEntriesPanel({
   filter,
 }: AdminShowAndTellEntriesPanelProps) {
+  const [previewEntryId, setPreviewEntryId] = useState<string | null>(null);
+
   const entries = trpc.adminShowAndTell.getEntries.useInfiniteQuery(
     { filter },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     },
   );
+
+  const { data: previewEntry } = trpc.adminShowAndTell.getEntry.useQuery(
+    previewEntryId || "",
+    { enabled: !!previewEntryId },
+  );
+
+  const { data: postsFromANewLocation } =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery();
 
   const deletePost = trpc.adminShowAndTell.delete.useMutation({
     onSettled: async () => {
@@ -65,6 +76,10 @@ export function AdminShowAndTellEntriesPanel({
     },
     [unmarkAsSeen],
   );
+
+  const handlePreview = useCallback((entry: Entry) => {
+    setPreviewEntryId(entry.id);
+  }, []);
 
   const canLoadMore = entries.hasNextPage && !entries.isFetchingNextPage;
 
@@ -104,6 +119,7 @@ export function AdminShowAndTellEntriesPanel({
                       markSeen={handleMarkAsSeen}
                       unmarkSeen={handleUnmarkAsSeen}
                       deletePost={handleDeletePost}
+                      onPreview={handlePreview}
                     />
                   ))}
                 </Fragment>
@@ -129,6 +145,15 @@ export function AdminShowAndTellEntriesPanel({
             )}
           </div>
         </>
+      )}
+
+      {previewEntry && postsFromANewLocation && (
+        <AdminShowAndTellPreviewModal
+          entry={previewEntry}
+          newLocation={postsFromANewLocation.has(previewEntry.id)}
+          isOpen={!!previewEntryId}
+          closeModal={() => setPreviewEntryId(null)}
+        />
       )}
     </Panel>
   );
