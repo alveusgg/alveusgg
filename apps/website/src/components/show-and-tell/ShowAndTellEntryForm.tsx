@@ -10,6 +10,7 @@ import {
   type FormEvent,
   type Ref,
   useCallback,
+  useEffect,
   useMemo,
   useState,
 } from "react";
@@ -57,6 +58,7 @@ import { RichTextField } from "../shared/form/RichTextField";
 import { TextAreaField } from "../shared/form/TextAreaField";
 import { TextField } from "../shared/form/TextField";
 import {
+  type FileReference,
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
@@ -73,6 +75,10 @@ type ShowAndTellEntryFormProps = {
   onUpdate?: () => void;
   onSaveSuccess?: () => void;
   formRef?: Ref<HTMLFormElement>;
+  onAttachmentsChange?: (data: {
+    imageFiles: FileReference[];
+    videoUrls: string[];
+  }) => void;
 };
 
 function ImageAttachment({
@@ -202,6 +208,7 @@ export function ShowAndTellEntryForm({
   onUpdate,
   onSaveSuccess,
   formRef,
+  onAttachmentsChange,
 }: ShowAndTellEntryFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -283,6 +290,18 @@ export function ShowAndTellEntryForm({
       [entry?.attachments],
     ),
   );
+
+  // Notify parent when attachments change
+  useEffect(() => {
+    onAttachmentsChange?.({
+      imageFiles: imageAttachmentsData.files,
+      videoUrls: videoLinksData.videoUrls,
+    });
+  }, [
+    imageAttachmentsData.files,
+    videoLinksData.videoUrls,
+    onAttachmentsChange,
+  ]);
 
   const createFileUpload = trpc.showAndTell.createFileUpload.useMutation();
   const upload = useFileUpload<ImageMimeType>(
