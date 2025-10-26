@@ -1,9 +1,10 @@
 import type { inferRouterOutputs } from "@trpc/server";
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useMemo, useState } from "react";
 
 import type { MarkPostAsSeenMode } from "@/server/db/show-and-tell";
 import type { AppRouter } from "@/server/trpc/router/_app";
 
+import { getEntityStatus } from "@/utils/entity-helpers";
 import { trpc } from "@/utils/trpc";
 
 import { Button } from "@/components/shared/form/Button";
@@ -40,6 +41,12 @@ export function AdminShowAndTellEntriesPanel({
 
   const { data: postsFromANewLocation } =
     trpc.showAndTell.getPostsFromANewLocation.useQuery();
+
+  const approveMutation = trpc.adminShowAndTell.approve.useMutation({
+    onSettled: async () => {
+      await entries.refetch();
+    },
+  });
 
   const deletePost = trpc.adminShowAndTell.delete.useMutation({
     onSettled: async () => {
@@ -80,6 +87,18 @@ export function AdminShowAndTellEntriesPanel({
   const handlePreview = useCallback((entry: Entry) => {
     setPreviewEntryId(entry.id);
   }, []);
+
+  const handleApprove = useCallback(() => {
+    if (previewEntryId) {
+      approveMutation.mutate(previewEntryId);
+      setPreviewEntryId(null);
+    }
+  }, [previewEntryId, approveMutation]);
+
+  const previewEntryStatus = useMemo(
+    () => (previewEntry ? getEntityStatus(previewEntry) : null),
+    [previewEntry],
+  );
 
   const canLoadMore = entries.hasNextPage && !entries.isFetchingNextPage;
 
@@ -153,6 +172,8 @@ export function AdminShowAndTellEntriesPanel({
           newLocation={postsFromANewLocation.has(previewEntry.id)}
           isOpen={!!previewEntryId}
           closeModal={() => setPreviewEntryId(null)}
+          canApprove={previewEntryStatus === "pendingApproval"}
+          onApprove={handleApprove}
         />
       )}
     </Panel>

@@ -21,6 +21,7 @@ type AdminShowAndTellPreviewModalProps = {
   closeModal: () => void;
   onSave?: () => void;
   onSaveAndApprove?: () => void;
+  onApprove?: () => void;
   canApprove?: boolean;
   formData?: Partial<PublicShowAndTellEntryWithAttachments>;
 };
@@ -32,6 +33,7 @@ export function AdminShowAndTellPreviewModal({
   closeModal,
   onSave,
   onSaveAndApprove,
+  onApprove,
   canApprove = false,
   formData,
 }: AdminShowAndTellPreviewModalProps) {
@@ -98,6 +100,19 @@ export function AdminShowAndTellPreviewModal({
                 >
                   <IconCheckCircle className="size-4" />
                   Save & Approve
+                </Button>
+              )}
+              {canApprove && !onSaveAndApprove && onApprove && (
+                <Button
+                  onClick={() => {
+                    onApprove();
+                    closeModal();
+                  }}
+                  className={approveButtonClasses}
+                  width="auto"
+                >
+                  <IconCheckCircle className="size-4" />
+                  Approve
                 </Button>
               )}
               {!canApprove && onSave && (
