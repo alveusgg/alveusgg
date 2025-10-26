@@ -31,6 +31,7 @@ type AdminShowAndTellEntryProps = {
   ) => void;
   unmarkSeen: (entry: ShowAndTellEntryWithUser) => void;
   deletePost: (entry: ShowAndTellEntryWithUser) => void;
+  onPreview?: (entry: ShowAndTellEntryWithUser) => void;
 };
 
 const cellClasses = "p-1 md:p-2 align-top tabular-nums";
@@ -40,6 +41,7 @@ export function AdminShowAndTellEntry({
   markSeen,
   unmarkSeen,
   deletePost,
+  onPreview,
 }: AdminShowAndTellEntryProps) {
   const status = getEntityStatus(entry);
 
@@ -128,14 +130,25 @@ export function AdminShowAndTellEntry({
           Review
         </LinkButton>
         <div className="flex gap-1">
-          <LinkButton
-            size="small"
-            className={secondaryButtonClasses}
-            href={`/admin/show-and-tell/review/${entry.id}/preview`}
-          >
-            <IconEye className="size-5" />
-            Preview
-          </LinkButton>
+          {onPreview ? (
+            <Button
+              size="small"
+              className={secondaryButtonClasses}
+              onClick={() => onPreview(entry)}
+            >
+              <IconEye className="size-5" />
+              Preview
+            </Button>
+          ) : (
+            <LinkButton
+              size="small"
+              className={secondaryButtonClasses}
+              href={`/admin/show-and-tell/review/${entry.id}/preview`}
+            >
+              <IconEye className="size-5" />
+              Preview
+            </LinkButton>
+          )}
           <Button
             size="small"
             className={dangerButtonClasses}
