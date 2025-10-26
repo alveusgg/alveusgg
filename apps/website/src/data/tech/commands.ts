@@ -1373,6 +1373,26 @@ const commands = {
     category: "Feeder",
     args: [],
   },
+  pasturefeederqueue: {
+    description: "Get the current pasture feeder queue",
+    category: "Feeder",
+    args: [],
+  },
+  emufeederqueue: {
+    description: "Get the current emu feeder queue",
+    category: "Feeder",
+    args: [],
+  },
+  addpasturefeederqueue: {
+    description: "Add a feed to the pasture feeder queue",
+    category: "Feeder",
+    args: [],
+  },
+  addemufeederqueue: {
+    description: "Add a feed to the emu feeder queue",
+    category: "Feeder",
+    args: [],
+  },
 } as const satisfies Record<string, Command>;
 
 export default commands;
