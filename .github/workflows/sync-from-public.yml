@@ -60,7 +60,16 @@ jobs:
                 "- `public-sync` is an exact mirror of the public repo's `main`.",
                 "- Review/merge to bring changes into private `main`.",
               ].join("\n");
-              await github.rest.pulls.create({ owner, repo, title, head, base, body });
+              // Check if there are actually changes before creating PR
+              const { data: comparison } = await github.rest.repos.compareCommits({
+                owner, repo, base, head
+              });
+              
+              if (comparison.ahead_by > 0) {
+                await github.rest.pulls.create({ owner, repo, title, head, base, body });
+              } else {
+                core.info('No changes to sync, skipping PR creation');
+              }
             } else {
               // Optional: update PR body/title if desired
               const pr = prs[0];
