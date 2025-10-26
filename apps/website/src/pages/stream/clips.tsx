@@ -243,6 +243,9 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
   // Allow a title to be set by mods in chat
   const [title, setTitle] = useState("");
+  useEffect(() => {
+    setTitle(typeof query.title === "string" ? query.title : "");
+  }, [query.title]);
   useChat(
     useMemo(() => {
       const param = queryArray(query.channels);
