@@ -59,10 +59,14 @@ const AdminReviewShowAndTellPage: NextPage<
     enabled: !!entryId,
   });
 
-  const { data: postsFromANewLocation } =
-    trpc.showAndTell.getPostsFromANewLocation.useQuery();
+  const entry = getEntry.data;
 
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const { data: postsFromANewLocation } =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery(undefined, {
+      enabled: isPreviewOpen,
+    });
+
   const [previewFormData, setPreviewFormData] =
     useState<Partial<PublicShowAndTellEntryWithAttachments> | null>(null);
   const shouldApproveAfterSaveRef = useRef(false);
@@ -107,15 +111,10 @@ const AdminReviewShowAndTellPage: NextPage<
       },
     });
 
-  const entry = getEntry.data;
   const status = entry && getEntityStatus(entry);
 
   const handlePreviewClick = useCallback(() => {
-    if (!formRef.current || !entry) {
-      setPreviewFormData(null);
-      setIsPreviewOpen(true);
-      return;
-    }
+    if (!formRef.current || !entry) return;
 
     // Extract form data for preview
     const form = formRef.current;
@@ -220,6 +219,7 @@ const AdminReviewShowAndTellPage: NextPage<
     setIsPreviewOpen(true);
   }, [entry]);
 
+<<<<<<< HEAD
   // Handlers that check for unsaved changes
   const handleApprove = useCallback(() => {
     if (
@@ -228,6 +228,32 @@ const AdminReviewShowAndTellPage: NextPage<
       ) === false
     ) {
       return;
+=======
+  const handleSaveAndApprove = useCallback(() => {
+    if (!formRef.current || !entry) return;
+
+    // Set flag to approve after save completes
+    shouldApproveAfterSaveRef.current = true;
+
+    // Trigger form submission which will save the data
+    formRef.current.requestSubmit();
+  }, [entry]);
+
+  const handleSave = useCallback(() => {
+    if (!formRef.current || !entry) return;
+
+    // Just save without approving
+    formRef.current.requestSubmit();
+  }, [entry]);
+
+  const handleSaveSuccess = useCallback(() => {
+    // If we should approve after save, do it now
+    // Note: shouldApproveAfterSaveRef is not in dependencies because refs don't trigger re-renders
+    // and we always want to read the latest value from the ref
+    if (shouldApproveAfterSaveRef.current && entry) {
+      approveMutation.mutate(entry.id);
+      shouldApproveAfterSaveRef.current = false;
+>>>>>>> 78cb5350 (Address review comments)
     }
     if (entry) {
       approveMutation.mutate(entry.id);
