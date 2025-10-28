@@ -90,6 +90,9 @@ export const commandCategories = {
   Rounds: {
     heading: "Daily Rounds",
   },
+  Feeder: {
+    heading: "Feeder",
+  },
 } as const satisfies Record<string, CommandCategory>;
 
 const commands = {
@@ -1176,6 +1179,21 @@ const commands = {
     category: "Text",
     args: [],
   },
+  clipstitle: {
+    description: "Sets the title to be displayed on the clips player",
+    category: "Text",
+    args: [
+      [
+        {
+          type: "string",
+          name: "title",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [],
+    ],
+  },
 
   /**
    * Wheel
@@ -1310,6 +1328,85 @@ const commands = {
         },
       ],
     ],
+  },
+
+  /**
+   * Feeder
+   */
+  feed: {
+    description: "Provide basic information on how !feed works",
+    category: "Feeder",
+    args: [],
+  },
+  feedpasture: {
+    description: "Include in a donation of $5 to feed the pasture animals",
+    category: "Feeder",
+    args: [],
+  },
+  feedemu: {
+    description: "Include in a donation of $5 to feed the emus",
+    category: "Feeder",
+    args: [],
+  },
+  runpasturefeeder: {
+    description: "Activate the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  runemufeeder: {
+    description: "Activate the emu feeder",
+    category: "Feeder",
+    args: [],
+  },
+  pasturefeederstatus: {
+    description: "Get the status of the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  emufeederstatus: {
+    description: "Get the status of the emu feeder",
+    category: "Feeder",
+    args: [],
+  },
+  disablepasturefeeder: {
+    description: "Disable the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  disableemufeeder: {
+    description: "Disable the emu feeder",
+    category: "Feeder",
+    args: [],
+  },
+  enablepasturefeeder: {
+    description: "Enable the pasture feeder",
+    category: "Feeder",
+    args: [],
+  },
+  enableemufeeder: {
+    description: "Enable the emu feeder",
+    category: "Feeder",
+    args: [],
+  },
+  pasturefeederqueue: {
+    description: "Get the current pasture feeder queue",
+    category: "Feeder",
+    args: [],
+  },
+  emufeederqueue: {
+    description: "Get the current emu feeder queue",
+    category: "Feeder",
+    args: [],
+  },
+  addpasturefeederqueue: {
+    description: "Add a feed to the pasture feeder queue",
+    category: "Feeder",
+    args: [],
+  },
+  addemufeederqueue: {
+    description: "Add a feed to the emu feeder queue",
+    category: "Feeder",
+    args: [],
   },
 } as const satisfies Record<string, Command>;
 

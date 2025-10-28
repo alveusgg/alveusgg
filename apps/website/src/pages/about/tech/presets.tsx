@@ -369,412 +369,420 @@ const AboutTechPresetsPage: NextPage = () => {
             />
           )}
 
-          <div className="grid grid-cols-1 gap-x-8 gap-y-4 @3xl:grid-cols-5">
-            {!zen && (
-              <div className="grid w-full grid-cols-1 gap-2 @3xl:col-span-3">
-                <p>
-                  If you&apos;re subscribed, you can run these commands directly
-                  from this page by clicking the{" "}
-                  <span className="font-semibold text-alveus-green">
-                    Run command{" "}
-                    <IconVideoCamera className="mb-0.5 inline-block size-4" />
-                  </span>{" "}
-                  button in each preset card. This will automatically send the
-                  command to the{" "}
-                  <Link
-                    href={`https://twitch.tv/${channels.alveusgg.username}`}
-                    external
-                  >
-                    {channels.alveusgg.username} Twitch chat
-                  </Link>{" "}
-                  as if you had typed it in the chat yourself.
-                </p>
-
-                <p className="hidden lg:block">
-                  Next to each camera in the menu you&apos;ll also find a{" "}
-                  <span className="font-semibold text-alveus-green">
-                    Run swap command{" "}
-                    <IconVideoCamera className="mb-0.5 inline-block size-4" />
-                  </span>{" "}
-                  button if the camera is in the same enclosure as the currently
-                  selected camera, allowing you to swap which camera is shown on
-                  stream if you&apos;re subscribed.
-                </p>
-
-                <p>
-                  Make sure to enable the embedded stream player, or have the{" "}
-                  <Link href="/live/twitch" external>
-                    livestream
-                  </Link>{" "}
-                  open in another tab, to see the cameras change as you load
-                  presets
-                  <span className="hidden lg:inline">
-                    {" "}
-                    and swap which cameras are on stream
-                  </span>
-                  .
-                </p>
-              </div>
-            )}
-
-            <div
-              className={classes(
-                "grid w-full grid-cols-1 gap-x-8 gap-y-2",
-                zen ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
-              )}
-            >
-              <ProvideAuth scopeGroup="chat" className="mb-4" />
-
-              {!subscription.isPaused && (
-                <div
-                  className={classes(
-                    "mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
-                    subscription.isSuccess &&
-                      (subscription.data ? "bg-alveus-green" : "bg-red"),
-                    subscription.isLoading && "bg-twitch",
-                    subscription.isError && "bg-red",
-                  )}
-                >
+          <div className="scrollbar-none flex h-full max-h-full flex-col overflow-x-hidden overflow-y-auto">
+            <div className="grid grid-cols-1 gap-x-8 gap-y-4 @3xl:grid-cols-5">
+              {!zen && (
+                <div className="grid w-full grid-cols-1 gap-2 @3xl:col-span-3">
                   <p>
-                    {subscription.isSuccess &&
-                      (subscription.data
-                        ? `@${session?.user?.name} is subscribed at Tier ${subscription.data.tier.replace(/0+$/, "")}`
-                        : `@${session?.user?.name} is not subscribed`)}
-
-                    {subscription.isLoading &&
-                      "Checking subscription status..."}
-                    {subscription.isError &&
-                      "Failed to check subscription status"}
+                    If you&apos;re subscribed, you can run these commands
+                    directly from this page by clicking the{" "}
+                    <span className="font-semibold text-alveus-green">
+                      Run command{" "}
+                      <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                    </span>{" "}
+                    button in each preset card. This will automatically send the
+                    command to the{" "}
+                    <Link
+                      href={`https://twitch.tv/${channels.alveusgg.username}`}
+                      external
+                    >
+                      {channels.alveusgg.username} Twitch chat
+                    </Link>{" "}
+                    as if you had typed it in the chat yourself.
                   </p>
 
-                  {subscription.isSuccess &&
-                    (subscription.data ? (
-                      <IconCheck className="size-6" />
-                    ) : (
-                      <IconX className="size-6" />
-                    ))}
+                  <p className="hidden lg:block">
+                    Next to each camera in the menu you&apos;ll also find a{" "}
+                    <span className="font-semibold text-alveus-green">
+                      Run swap command{" "}
+                      <IconVideoCamera className="mb-0.5 inline-block size-4" />
+                    </span>{" "}
+                    button if the camera is in the same enclosure as the
+                    currently selected camera, allowing you to swap which camera
+                    is shown on stream if you&apos;re subscribed.
+                  </p>
 
-                  {subscription.isLoading && (
-                    <IconLoading className="size-6 animate-spin" />
-                  )}
-                  {subscription.isError && <IconX className="size-6" />}
+                  <p>
+                    Make sure to enable the embedded stream player, or have the{" "}
+                    <Link href="/live/twitch" external>
+                      livestream
+                    </Link>{" "}
+                    open in another tab, to see the cameras change as you load
+                    presets
+                    <span className="hidden lg:inline">
+                      {" "}
+                      and swap which cameras are on stream
+                    </span>
+                    .
+                  </p>
                 </div>
               )}
 
-              {subscription.isSuccess && subscription.data && (
-                <>
-                  {/* Use a viewport media query, not a container media query, as we don't want the focused + sidebar layouts available on mobile */}
+              <div
+                className={classes(
+                  "grid w-full grid-cols-1 gap-x-8 gap-y-2",
+                  zen ? "col-span-full @3xl:grid-cols-2" : "@3xl:col-span-2",
+                )}
+              >
+                <ProvideAuth scopeGroup="chat" className="mb-4" />
+
+                {!subscription.isPaused && (
                   <div
                     className={classes(
-                      zen
-                        ? "order-first row-span-2 grid grid-rows-subgrid"
-                        : "hidden lg:contents",
+                      "mb-auto flex items-center justify-between rounded-xl p-3 text-lg text-alveus-tan",
+                      subscription.isSuccess &&
+                        (subscription.data ? "bg-alveus-green" : "bg-red"),
+                      subscription.isLoading && "bg-twitch",
+                      subscription.isError && "bg-red",
                     )}
                   >
-                    <Field className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="flex grow cursor-pointer flex-col leading-tight">
-                        <span>Enable embedded Twitch stream player</span>
-                        <span className="text-sm text-alveus-green-400 italic">
-                          (also embeds the {channels.alveusgg.username} stream
-                          chat)
-                        </span>
-                      </Label>
+                    <p>
+                      {subscription.isSuccess &&
+                        (subscription.data
+                          ? `@${session?.user?.name} is subscribed at Tier ${subscription.data.tier.replace(/0+$/, "")}`
+                          : `@${session?.user?.name} is not subscribed`)}
 
-                      <Switch
-                        checked={twitchEmbed !== -1}
-                        onChange={(val) =>
-                          setTwitchEmbed(val ? sidebarDefault() : -1)
-                        }
-                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
-                      >
-                        <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
-                      </Switch>
-                    </Field>
+                      {subscription.isLoading &&
+                        "Checking subscription status..."}
+                      {subscription.isError &&
+                        "Failed to check subscription status"}
+                    </p>
 
-                    <Field className="flex flex-wrap items-center justify-between gap-2">
-                      <Label className="flex grow cursor-pointer flex-col leading-tight">
-                        <span>Enable zen control mode</span>
-                        <span className="text-sm text-alveus-green-400 italic">
-                          (hides all other page UI elements)
-                        </span>
-                      </Label>
+                    {subscription.isSuccess &&
+                      (subscription.data ? (
+                        <IconCheck className="size-6" />
+                      ) : (
+                        <IconX className="size-6" />
+                      ))}
 
-                      <Switch
-                        checked={focused}
-                        onChange={setFocused}
-                        className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
-                      >
-                        <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
-                      </Switch>
-                    </Field>
+                    {subscription.isLoading && (
+                      <IconLoading className="size-6 animate-spin" />
+                    )}
+                    {subscription.isError && <IconX className="size-6" />}
                   </div>
+                )}
 
-                  <Field className="flex flex-wrap items-center justify-between gap-2">
-                    <Label className="flex flex-col leading-tight">
-                      <span>Swap camera positions on stream</span>
-                      <span className="text-sm text-alveus-green-400 italic">
-                        (select two grid positions to swap them)
-                      </span>
-                    </Label>
-
-                    <div className="flex">
-                      {Array.from({ length: 6 }).map((_, i) =>
-                        !selectedPosition || selectedPosition === i + 1 ? (
-                          <ActionButton
-                            key={i}
-                            onClick={() =>
-                              setSelectedPosition(
-                                selectedPosition === i + 1 ? undefined : i + 1,
-                              )
-                            }
-                            icon={getPositionIcon(i + 1)}
-                            tooltip={{
-                              text:
-                                selectedPosition === i + 1
-                                  ? "Cancel position swap"
-                                  : `Swap position ${i + 1} with another`,
-                            }}
-                          />
-                        ) : (
-                          <RunCommandButton
-                            key={i}
-                            command="swap"
-                            args={[
-                              selectedPosition.toString(),
-                              (i + 1).toString(),
-                            ]}
-                            tooltip={`Run swap command for positions ${selectedPosition} and ${i + 1}`}
-                            icon={getPositionIcon(i + 1)}
-                            onClick={() => setSelectedPosition(undefined)}
-                            className="text-highlight hover:text-black"
-                          />
-                        ),
+                {subscription.isSuccess && subscription.data && (
+                  <>
+                    {/* Use a viewport media query, not a container media query, as we don't want the focused + sidebar layouts available on mobile */}
+                    <div
+                      className={classes(
+                        zen
+                          ? "order-first row-span-2 grid grid-rows-subgrid"
+                          : "hidden lg:contents",
                       )}
+                    >
+                      <Field className="flex flex-wrap items-center justify-between gap-2">
+                        <Label className="flex grow cursor-pointer flex-col leading-tight">
+                          <span>Enable embedded Twitch stream player</span>
+                          <span className="text-sm text-alveus-green-400 italic">
+                            (also embeds the {channels.alveusgg.username} stream
+                            chat)
+                          </span>
+                        </Label>
+
+                        <Switch
+                          checked={twitchEmbed !== -1}
+                          onChange={(val) =>
+                            setTwitchEmbed(val ? sidebarDefault() : -1)
+                          }
+                          className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                        >
+                          <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                        </Switch>
+                      </Field>
+
+                      <Field className="flex flex-wrap items-center justify-between gap-2">
+                        <Label className="flex grow cursor-pointer flex-col leading-tight">
+                          <span>Enable zen control mode</span>
+                          <span className="text-sm text-alveus-green-400 italic">
+                            (hides all other page UI elements)
+                          </span>
+                        </Label>
+
+                        <Switch
+                          checked={focused}
+                          onChange={setFocused}
+                          className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
+                        >
+                          <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
+                        </Switch>
+                      </Field>
                     </div>
-                  </Field>
-                </>
-              )}
-            </div>
-          </div>
 
-          <div className="mt-6 grid min-h-0 shrink grow grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
-            {/* Camera List */}
-            <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col">
-              {/* Mobile: Dropdown */}
-              <div className="mb-2 block @3xl:hidden">
-                <label htmlFor="camera-select" className="sr-only">
-                  Select Camera
-                </label>
-                <select
-                  id="camera-select"
-                  value={selectedCamera}
-                  onChange={(e) => setSelectedCamera(e.target.value as Camera)}
-                  className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
-                >
-                  {Object.values(groupedCameras)
-                    .flatMap((group) => typeSafeObjectKeys(group))
-                    .map((camera) => (
-                      <option key={camera} value={camera}>
-                        {cameras[camera].title} ({camera.toLowerCase()})
-                      </option>
-                    ))}
-                </select>
+                    <Field className="flex flex-wrap items-center justify-between gap-2">
+                      <Label className="flex flex-col leading-tight">
+                        <span>Swap camera positions on stream</span>
+                        <span className="text-sm text-alveus-green-400 italic">
+                          (select two grid positions to swap them)
+                        </span>
+                      </Label>
+
+                      <div className="flex">
+                        {Array.from({ length: 6 }).map((_, i) =>
+                          !selectedPosition || selectedPosition === i + 1 ? (
+                            <ActionButton
+                              key={i}
+                              onClick={() =>
+                                setSelectedPosition(
+                                  selectedPosition === i + 1
+                                    ? undefined
+                                    : i + 1,
+                                )
+                              }
+                              icon={getPositionIcon(i + 1)}
+                              tooltip={{
+                                text:
+                                  selectedPosition === i + 1
+                                    ? "Cancel position swap"
+                                    : `Swap position ${i + 1} with another`,
+                              }}
+                            />
+                          ) : (
+                            <RunCommandButton
+                              key={i}
+                              command="swap"
+                              args={[
+                                selectedPosition.toString(),
+                                (i + 1).toString(),
+                              ]}
+                              tooltip={`Run swap command for positions ${selectedPosition} and ${i + 1}`}
+                              icon={getPositionIcon(i + 1)}
+                              onClick={() => setSelectedPosition(undefined)}
+                              className="text-highlight hover:text-black"
+                            />
+                          ),
+                        )}
+                      </div>
+                    </Field>
+                  </>
+                )}
               </div>
+            </div>
 
-              {/* Desktop: Button List */}
-              <div className="relative hidden @3xl:contents">
-                <Image
-                  src={leafRightImage2}
-                  alt=""
-                  className="pointer-events-none absolute top-0 right-0 -z-10 h-96 max-h-full w-auto drop-shadow-md select-none"
-                />
+            <div className="mt-6 grid min-h-0 shrink grow grid-cols-1 items-start gap-6 @3xl:grid-cols-3 @5xl:grid-cols-4">
+              {/* Camera List */}
+              <div className="col-span-1 space-y-2 @3xl:sticky @3xl:top-0 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col">
+                {/* Mobile: Dropdown */}
+                <div className="mb-2 block @3xl:hidden">
+                  <label htmlFor="camera-select" className="sr-only">
+                    Select Camera
+                  </label>
+                  <select
+                    id="camera-select"
+                    value={selectedCamera}
+                    onChange={(e) =>
+                      setSelectedCamera(e.target.value as Camera)
+                    }
+                    className="w-full rounded border border-alveus-green-200 bg-alveus-green-50 px-3 py-2 text-lg font-semibold focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                  >
+                    {Object.values(groupedCameras)
+                      .flatMap((group) => typeSafeObjectKeys(group))
+                      .map((camera) => (
+                        <option key={camera} value={camera}>
+                          {cameras[camera].title} ({camera.toLowerCase()})
+                        </option>
+                      ))}
+                  </select>
+                </div>
 
-                <Input
-                  type="text"
-                  placeholder="Search cameras..."
-                  aria-label="Search cameras"
-                  value={searchCamera}
-                  onChange={(e) => setSearchCamera(e.target.value)}
-                  className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
-                />
+                {/* Desktop: Button List */}
+                <div className="relative hidden @3xl:contents">
+                  <Image
+                    src={leafRightImage2}
+                    alt=""
+                    className="pointer-events-none absolute top-0 right-0 -z-10 h-96 max-h-full w-auto drop-shadow-md select-none"
+                  />
 
-                <div className="scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2">
-                  {typeSafeObjectEntries(groupedCameras)
-                    .sort(([a], [b]) => a.localeCompare(b))
-                    .map(([name, group]) => {
-                      const groupEntries =
-                        typeSafeObjectEntries(group).filter(isDefinedEntry);
-                      if (groupEntries.length === 0) return null;
+                  <Input
+                    type="text"
+                    placeholder="Search cameras..."
+                    aria-label="Search cameras"
+                    value={searchCamera}
+                    onChange={(e) => setSearchCamera(e.target.value)}
+                    className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                  />
 
-                      if (groupEntries.length === 1) {
-                        const [camera, { title, group }] = groupEntries[0]!;
+                  <div className="scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2">
+                    {typeSafeObjectEntries(groupedCameras)
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([name, group]) => {
+                        const groupEntries =
+                          typeSafeObjectEntries(group).filter(isDefinedEntry);
+                        if (groupEntries.length === 0) return null;
+
+                        if (groupEntries.length === 1) {
+                          const [camera, { title, group }] = groupEntries[0]!;
+                          return (
+                            <Button
+                              key={camera}
+                              camera={camera}
+                              title={title}
+                              group={group}
+                              onClick={() => setSelectedCamera(camera)}
+                              selected={{
+                                camera: selectedCamera,
+                                group: selectedData.group,
+                              }}
+                            />
+                          );
+                        }
+
                         return (
-                          <Button
-                            key={camera}
-                            camera={camera}
-                            title={title}
-                            group={group}
-                            onClick={() => setSelectedCamera(camera)}
-                            selected={{
-                              camera: selectedCamera,
-                              group: selectedData.group,
-                            }}
-                          />
-                        );
-                      }
-
-                      return (
-                        <Disclosure key={name}>
-                          <DisclosureButton
-                            ref={disclosureRef}
-                            className={classes(
-                              "group flex w-full shrink-0 items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
-                              selectedData.group === name
-                                ? "bg-alveus-green/75 text-white"
-                                : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
-                            )}
-                          >
-                            <span>
-                              {camelToTitle(name)} Cameras
-                              <span className="text-sm text-alveus-green-400 italic">
-                                {` (${groupEntries.length})`}
+                          <Disclosure key={name}>
+                            <DisclosureButton
+                              ref={disclosureRef}
+                              className={classes(
+                                "group flex w-full shrink-0 items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
+                                selectedData.group === name
+                                  ? "bg-alveus-green/75 text-white"
+                                  : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+                              )}
+                            >
+                              <span>
+                                {camelToTitle(name)} Cameras
+                                <span className="text-sm text-alveus-green-400 italic">
+                                  {` (${groupEntries.length})`}
+                                </span>
                               </span>
-                            </span>
-                            <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
-                          </DisclosureButton>
-                          <DisclosurePanel className="ml-4 flex flex-col gap-1">
-                            {groupEntries.map(([camera, { title, group }]) => (
-                              <Button
-                                key={camera}
-                                camera={camera}
-                                title={title}
-                                group={group}
-                                onClick={() => setSelectedCamera(camera)}
-                                selected={{
-                                  camera: selectedCamera,
-                                  group: selectedData.group,
-                                }}
-                              />
-                            ))}
-                          </DisclosurePanel>
-                        </Disclosure>
-                      );
-                    })}
+                              <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
+                            </DisclosureButton>
+                            <DisclosurePanel className="ml-4 flex flex-col gap-1">
+                              {groupEntries.map(
+                                ([camera, { title, group }]) => (
+                                  <Button
+                                    key={camera}
+                                    camera={camera}
+                                    title={title}
+                                    group={group}
+                                    onClick={() => setSelectedCamera(camera)}
+                                    selected={{
+                                      camera: selectedCamera,
+                                      group: selectedData.group,
+                                    }}
+                                  />
+                                ),
+                              )}
+                            </DisclosurePanel>
+                          </Disclosure>
+                        );
+                      })}
 
-                  <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 shrink-0 mask-t-from-25% backdrop-blur-sm" />
+                    <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 shrink-0 mask-t-from-25% backdrop-blur-sm" />
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {/* Preset List */}
-            <div className="col-span-1 @3xl:sticky @3xl:top-0 @3xl:col-span-2 @3xl:flex @3xl:max-h-full @3xl:min-h-0 @3xl:flex-col @5xl:col-span-3">
-              {selectedCamera && (
-                <Fragment key={selectedCamera}>
-                  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                    <Heading
-                      level={3}
-                      className="my-0 shrink-0 scroll-mt-14 text-2xl"
-                      id={`presets:${camelToKebab(selectedCamera)}`}
-                    >
-                      {selectedData.title}
-                      <span className="text-sm text-alveus-green-400 italic">
-                        {` (${selectedCamera.toLowerCase()})`}
-                      </span>
-                    </Heading>
+              {/* Preset List */}
+              <div className="col-span-1 flex max-h-full min-h-64 flex-col @3xl:sticky @3xl:top-0 @3xl:col-span-2 @5xl:col-span-3">
+                {selectedCamera && (
+                  <Fragment key={selectedCamera}>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                      <Heading
+                        level={3}
+                        className="my-0 shrink-0 scroll-mt-14 text-2xl"
+                        id={`presets:${camelToKebab(selectedCamera)}`}
+                      >
+                        {selectedData.title}
+                        <span className="text-sm text-alveus-green-400 italic">
+                          {` (${selectedCamera.toLowerCase()})`}
+                        </span>
+                      </Heading>
 
-                    {"presets" in selectedData && (
-                      <>
-                        {subscription.isSuccess && subscription.data && (
-                          <div className="flex items-center">
-                            <RunCommandButton
-                              command="ptzzoom"
-                              args={[selectedCamera.toLowerCase(), "80"]}
-                              tooltip="Run zoom out command"
-                              icon={IconZoomOut}
-                            />
+                      {"presets" in selectedData && (
+                        <>
+                          {subscription.isSuccess && subscription.data && (
+                            <div className="flex items-center">
+                              <RunCommandButton
+                                command="ptzzoom"
+                                args={[selectedCamera.toLowerCase(), "80"]}
+                                tooltip="Run zoom out command"
+                                icon={IconZoomOut}
+                              />
 
-                            <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded bg-alveus-green-400" />
+                              <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded bg-alveus-green-400" />
 
-                            <RunCommandButton
-                              command="ptzzoom"
-                              args={[selectedCamera.toLowerCase(), "120"]}
-                              tooltip="Run zoom in command"
-                              icon={IconZoomIn}
-                            />
-                          </div>
-                        )}
+                              <RunCommandButton
+                                command="ptzzoom"
+                                args={[selectedCamera.toLowerCase(), "120"]}
+                                tooltip="Run zoom in command"
+                                icon={IconZoomIn}
+                              />
+                            </div>
+                          )}
 
-                        <Input
-                          type="text"
-                          placeholder="Search presets..."
-                          aria-label="Search presets"
-                          value={searchPresets}
-                          onChange={(e) => setSearchPresets(e.target.value)}
-                          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
-                        />
-                      </>
-                    )}
-                  </div>
-
-                  <div className="scrollbar-none shrink grow overflow-y-auto">
-                    <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
-                      {"presets" in selectedData &&
-                        typeSafeObjectEntries(selectedData.presets)
-                          .filter(
-                            ([name, preset]) =>
-                              !searchPresetsSanitized.length ||
-                              name
-                                .toLowerCase()
-                                .includes(searchPresetsSanitized) ||
-                              preset.description
-                                .toLowerCase()
-                                .includes(searchPresetsSanitized),
-                          )
-                          .map(([name, preset]) => (
-                            <Card
-                              key={name}
-                              title={name}
-                              image={
-                                preset.image
-                                  ? {
-                                      src: preset.image,
-                                      alt: preset.description,
-                                    }
-                                  : undefined
-                              }
-                              command={{
-                                command: "ptzload",
-                                args: [selectedCamera.toLowerCase(), name],
-                              }}
-                            >
-                              {preset.description}
-                            </Card>
-                          ))}
-
-                      {"multi" in selectedData && (
-                        <Card
-                          title={selectedData.multi.cameras.join(" + ")}
-                          image={
-                            selectedData.multi.image
-                              ? {
-                                  src: selectedData.multi.image,
-                                  alt:
-                                    selectedData.multi.description ??
-                                    selectedData.multi.cameras.join(" + "),
-                                }
-                              : undefined
-                          }
-                          className="col-span-2"
-                        >
-                          {selectedData.multi.description}
-                        </Card>
+                          <Input
+                            type="text"
+                            placeholder="Search presets..."
+                            aria-label="Search presets"
+                            value={searchPresets}
+                            onChange={(e) => setSearchPresets(e.target.value)}
+                            className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
+                          />
+                        </>
                       )}
                     </div>
 
-                    <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
-                  </div>
-                </Fragment>
-              )}
+                    <div className="scrollbar-none shrink grow overflow-y-auto">
+                      <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
+                        {"presets" in selectedData &&
+                          typeSafeObjectEntries(selectedData.presets)
+                            .filter(
+                              ([name, preset]) =>
+                                !searchPresetsSanitized.length ||
+                                name
+                                  .toLowerCase()
+                                  .includes(searchPresetsSanitized) ||
+                                preset.description
+                                  .toLowerCase()
+                                  .includes(searchPresetsSanitized),
+                            )
+                            .map(([name, preset]) => (
+                              <Card
+                                key={name}
+                                title={name}
+                                image={
+                                  preset.image
+                                    ? {
+                                        src: preset.image,
+                                        alt: preset.description,
+                                      }
+                                    : undefined
+                                }
+                                command={{
+                                  command: "ptzload",
+                                  args: [selectedCamera.toLowerCase(), name],
+                                }}
+                              >
+                                {preset.description}
+                              </Card>
+                            ))}
+
+                        {"multi" in selectedData && (
+                          <Card
+                            title={selectedData.multi.cameras.join(" + ")}
+                            image={
+                              selectedData.multi.image
+                                ? {
+                                    src: selectedData.multi.image,
+                                    alt:
+                                      selectedData.multi.description ??
+                                      selectedData.multi.cameras.join(" + "),
+                                  }
+                                : undefined
+                            }
+                            className="col-span-2"
+                          >
+                            {selectedData.multi.description}
+                          </Card>
+                        )}
+                      </div>
+
+                      <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
+                    </div>
+                  </Fragment>
+                )}
+              </div>
             </div>
           </div>
         </Section>
