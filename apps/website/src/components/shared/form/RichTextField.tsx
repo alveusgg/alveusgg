@@ -51,17 +51,26 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
   const counterRef = useRef<HTMLSpanElement>(null);
   const { labelProps, inputProps } = useTextField(props, ref);
   const [value, setValue] = useState(defaultValue || "");
-  const isInitialMount = useRef(true);
+  const initialValueRef = useRef(defaultValue || "");
+  const hasUserInteractedRef = useRef(false);
 
-  // Skip onChange on initial mount to avoid triggering unsaved changes
+  // Update value when defaultValue changes (e.g., when entry data loads)
+  // but don't trigger onChange for this update
   useEffect(() => {
-    isInitialMount.current = false;
-  }, []);
+    if (
+      defaultValue !== undefined &&
+      defaultValue !== initialValueRef.current
+    ) {
+      setValue(defaultValue);
+      initialValueRef.current = defaultValue;
+    }
+  }, [defaultValue]);
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
-    // Only call onChange after initial mount to avoid triggering on default value
-    if (!isInitialMount.current && props.onChange) {
+    // Only call onChange after user has actually interacted with the editor
+    // Not when the value is being set programmatically
+    if (hasUserInteractedRef.current && props.onChange) {
       props.onChange(newValue);
     }
   };
@@ -102,7 +111,13 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
           if (ref) {
             const quill = ref.getEditor();
 
-            quill.on("text-change", () => {
+            // Mark as user-interacted on first user-initiated text change
+            quill.on("text-change", (delta, oldDelta, source) => {
+              // Only mark as user-interacted if the change came from the user, not from API/programmatic changes
+              if (source === "user") {
+                hasUserInteractedRef.current = true;
+              }
+
               if (props.maxLength) {
                 const len = quill.getLength() - 1;
                 if (len > props.maxLength) {
