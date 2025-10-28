@@ -1,5 +1,5 @@
 import dynamic from "next/dynamic";
-import { type LegacyRef, useRef, useState } from "react";
+import { type LegacyRef, useEffect, useRef, useState } from "react";
 import { type AriaTextFieldOptions, useTextField } from "react-aria";
 import type { default as ReactQuillType } from "react-quill-new";
 
@@ -51,11 +51,17 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
   const counterRef = useRef<HTMLSpanElement>(null);
   const { labelProps, inputProps } = useTextField(props, ref);
   const [value, setValue] = useState(defaultValue || "");
+  const isInitialMount = useRef(true);
+
+  // Skip onChange on initial mount to avoid triggering unsaved changes
+  useEffect(() => {
+    isInitialMount.current = false;
+  }, []);
 
   const handleChange = (newValue: string) => {
     setValue(newValue);
-    // Call the onChange prop if provided
-    if (props.onChange) {
+    // Only call onChange after initial mount to avoid triggering on default value
+    if (!isInitialMount.current && props.onChange) {
       props.onChange(newValue);
     }
   };
