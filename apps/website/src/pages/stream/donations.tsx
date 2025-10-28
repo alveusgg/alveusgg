@@ -1,6 +1,6 @@
 import { motion } from "motion/react";
 import { type NextPage } from "next";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { z } from "zod";
 
 import { classes } from "@/utils/classes";
@@ -8,45 +8,15 @@ import { formatDateTimeRelative } from "@/utils/datetime";
 import { trpc } from "@/utils/trpc";
 
 import useLocalStorage from "@/hooks/storage";
+import { useTimestamp } from "@/hooks/timestamp";
 
 import PixelsDescription from "@/components/institute/PixelsDescription";
+import DonationProviderIcon from "@/components/shared/DonationProviderIcon";
 
-import type { IconProps } from "@/icons/BaseIcon";
-import IconGift from "@/icons/IconGift";
-import IconPayPal from "@/icons/IconPayPal";
 import IconSearch from "@/icons/IconSearch";
-import IconTwitch from "@/icons/IconTwitch";
-
-function DonationProviderIcon({
-  provider,
-  ...iconProps
-}: { provider: string } & IconProps) {
-  switch (provider) {
-    case "twitch":
-      return <IconTwitch {...iconProps} />;
-    case "paypal":
-      return <IconPayPal {...iconProps} />;
-    default:
-      return <IconGift {...iconProps} />;
-  }
-}
-
-function useTimestamp() {
-  const [timestamp, setTimestamp] = useState(() => Date.now());
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setTimestamp(Date.now());
-    }, 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  return timestamp;
-}
 
 function Donations() {
   const renderTime = useTimestamp();
-
   const entries = trpc.donations.getDonationsPublic.useInfiniteQuery(
     {},
     {
@@ -107,7 +77,7 @@ function Donations() {
                 onChange={() => setOnlyPixels(!onlyPixels)}
               />
               <label htmlFor="onlyPixels" className="ml-2">
-                Only Pixel Donations
+                Only pixel donations
               </label>
             </form>
           </div>
@@ -165,7 +135,7 @@ function Donations() {
               {donation.pixels.length > 0 && (
                 <div className="text-right">
                   {donation.pixels.length.toLocaleString()}{" "}
-                  {donation.pixels.length > 1 ? "Pixels" : "Pixel"}
+                  {donation.pixels.length > 1 ? "pixels" : "pixel"}
                 </div>
               )}
               <div className="min-w-24 shrink-0 text-right">
