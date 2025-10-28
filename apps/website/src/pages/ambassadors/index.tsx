@@ -217,7 +217,14 @@ const AmbassadorsPage: NextPage = () => {
       <Meta
         title="Ambassadors"
         description="Each and every ambassador at Alveus plays an important role as a representative of their species, sharing unique stories about conservation and consumer choice."
-      />
+      >
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Alveus Sanctuary Ambassadors"
+          href="/feeds/ambassadors.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

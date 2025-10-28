@@ -4,14 +4,13 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import { type NextPage } from "next";
-import Image, { type StaticImageData } from "next/image";
+import Image from "next/image";
 import { type ReactNode, useState } from "react";
 
+import books, { type BookInfo, type Month } from "@/data/books";
+
 import { classes } from "@/utils/classes";
-import {
-  type PartialDateString,
-  formatPartialDateString,
-} from "@/utils/datetime-partial";
+import { formatPartialDateString } from "@/utils/datetime-partial";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
@@ -25,131 +24,11 @@ import { YouTubeEmbed } from "@/components/content/YouTube";
 import IconExternal from "@/icons/IconExternal";
 import IconYouTube from "@/icons/IconYouTube";
 
-import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
-import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
-import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
-import onTheWing from "@/assets/book-club/books/on-the-wing.jpg";
-import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
-import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
-import theInsectCrisis from "@/assets/book-club/books/the-insect-crisis.jpg";
-import theLastRhinos from "@/assets/book-club/books/the-last-rhinos.jpg";
-import whySharksMatter from "@/assets/book-club/books/why-sharks-matter.jpg";
 import bookClubFull from "@/assets/book-club/full.png";
 import bookClubLogo from "@/assets/book-club/logo.png";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-
-const thickness = {
-  xs: "h-6 -translate-z-6 -mb-6",
-  sm: "h-8 -translate-z-8 -mb-8",
-  md: "h-10 -translate-z-10 -mb-10",
-  lg: "h-12 -translate-z-12 -mb-12",
-  xl: "h-14 -translate-z-14 -mb-14",
-};
-
-type Month = PartialDateString & `${number}-${number}`;
-
-type BookInfo = {
-  title: string;
-  author: string;
-  image: StaticImageData;
-  month: Month[];
-  link: string;
-  thickness: (typeof thickness)[keyof typeof thickness];
-  color: `border-${string}`;
-  vodId?: string;
-};
-
-const books: BookInfo[] = [
-  {
-    title: "On the Wing",
-    author: "David E. Alexander",
-    image: onTheWing,
-    month: ["2025-10"],
-    link: "https://amzn.to/3KrRFVS",
-    thickness: thickness.xs, // 230 pages
-    color: "border-red-700",
-  },
-  {
-    title: "Why Sharks Matter",
-    author: "David Shiffman",
-    image: whySharksMatter,
-    month: ["2025-09"],
-    link: "https://amzn.to/4fS8THm",
-    thickness: thickness.md, // 310 pages
-    color: "border-blue-800",
-  },
-  {
-    title: "Steve & Me",
-    author: "Terri Irwin",
-    image: steveAndMe,
-    month: ["2025-08"],
-    link: "https://amzn.to/4moWrRz",
-    thickness: thickness.sm, // 290 pages
-    color: "border-black",
-  },
-  {
-    title: "The Insect Crisis",
-    author: "Oliver Milman",
-    image: theInsectCrisis,
-    month: ["2025-06", "2025-07"],
-    link: "https://amzn.to/4kZ31gL",
-    thickness: thickness.sm, // 270 pages
-    color: "border-yellow-400",
-    vodId: "X2M4FjTqxiA",
-  },
-  {
-    title: "The Anthropocene Reviewed",
-    author: "John Green",
-    image: theAnthropoceneReviewed,
-    month: ["2025-05"],
-    link: "https://amzn.to/42LpJSo",
-    thickness: thickness.sm, // 300 pages
-    color: "border-black",
-    vodId: "tpRWhSPuHlQ",
-  },
-  {
-    title: "The Last Rhinos",
-    author: "Lawrence Anthony",
-    image: theLastRhinos,
-    month: ["2025-04"],
-    link: "https://amzn.to/3YibG59",
-    thickness: thickness.md, // 360 pages
-    color: "border-alveus-tan-900",
-    vodId: "Kkerq_KvYrI",
-  },
-  {
-    title: "Adventures of a Young Naturalist",
-    author: "Sir David Attenborough",
-    image: adventuresOfAYoungNaturalist,
-    month: ["2025-03"],
-    link: "https://amzn.to/41qA2um",
-    thickness: thickness.lg, // 400 pages
-    color: "border-blue-900",
-    vodId: "fRjxSfOhk94",
-  },
-  {
-    title: "A Most Remarkable Creature",
-    author: "Jonathan Meiburg",
-    image: aMostRemarkableCreature,
-    month: ["2025-02"],
-    link: "https://amzn.to/410hD8x",
-    thickness: thickness.lg, // 400 pages
-    color: "border-alveus-tan-200/75",
-    vodId: "AH0mwSckVns",
-  },
-  {
-    title: "H is for Hawk",
-    author: "Helen Macdonald",
-    image: hIsForHawk,
-    month: ["2025-01"],
-    link: "https://amzn.to/4a2ByGQ",
-    thickness: thickness.sm, // 320 pages
-    color: "border-black",
-    vodId: "EfCksCFlq84",
-  },
-];
 
 const formatMonths = (months: Month[]) =>
   [...months]
@@ -342,7 +221,14 @@ const BookClubPage: NextPage = () => {
         title="Book Club"
         description="Join the staff at Alveus and the community in reading and discussing books together."
         image={bookClubFull.src}
-      />
+      >
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Alveus Sanctuary Book Club"
+          href="/feeds/book-club.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

@@ -495,7 +495,7 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
                     e.preventDefault();
                     setClipsLightboxOpen(id);
                   }}
-                  className="w-full max-w-2xl"
+                  className="group/trigger w-full max-w-2xl"
                   custom
                 >
                   <YouTubePreview

@@ -138,7 +138,14 @@ const EventsPage: NextPage = () => {
       <Meta
         title="Events"
         description="We host one-off fundraising events to increase awareness of our conservation missions and to encourage donations to support Alveus."
-      />
+      >
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Alveus Sanctuary Events"
+          href="/feeds/events.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

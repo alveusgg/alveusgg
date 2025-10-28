@@ -41,14 +41,10 @@ import usfwsRedWolfWalkingImage from "@/assets/institute/usfws-red-wolf-walking.
 const InstitutePixelsPage: NextPage = () => {
   const { query, replace, isReady } = useRouter();
 
-  const [search, setSearchState] = useState(() =>
-    typeof query.s === "string" ? query.s : "",
-  );
-
   // Sync search state with URL query on mount and query changes
+  const [search, setSearchState] = useState("");
   useEffect(() => {
-    const querySearch = typeof query.s === "string" ? query.s : "";
-    setSearchState(querySearch);
+    setSearchState(typeof query.s === "string" ? query.s : "");
   }, [query.s]);
 
   const setSearch = (value: string) => {

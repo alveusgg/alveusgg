@@ -12,6 +12,7 @@ import {
   useCallback,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { useLocale } from "react-aria";
@@ -40,6 +41,7 @@ import { splitAttachments } from "@/utils/split-attachments";
 import { trpc } from "@/utils/trpc";
 
 import useFileUpload from "@/hooks/files/upload";
+import { useFormChangeWarning } from "@/hooks/useFormChangeWarning";
 
 import IconChevronDown from "@/icons/IconChevronDown";
 import IconLoading from "@/icons/IconLoading";
@@ -73,6 +75,7 @@ type ShowAndTellEntryFormProps = {
   entry?: PublicShowAndTellEntryWithAttachments & Partial<ShowAndTellEntry>;
   action: "review" | "create" | "update";
   onUpdate?: () => void;
+  onUnsavedChangesRef?: (confirmFn: (message?: string) => boolean) => void;
   onSaveSuccess?: () => void;
   formRef?: Ref<HTMLFormElement>;
   onAttachmentsChange?: (data: {
@@ -206,6 +209,7 @@ export function ShowAndTellEntryForm({
   action = "create",
   entry,
   onUpdate,
+  onUnsavedChangesRef,
   onSaveSuccess,
   formRef,
   onAttachmentsChange,
@@ -220,9 +224,28 @@ export function ShowAndTellEntryForm({
   const review = trpc.adminShowAndTell.review.useMutation();
   const isLoading = create.isPending || update.isPending || review.isPending;
 
+  // Only enable unsaved changes warning for admin review action
+  const { markAsChanged, resetChanges, confirmIfUnsaved } =
+    useFormChangeWarning(action === "review");
+
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
     !!entry?.volunteeringMinutes,
   );
+
+  // Track the initial state to detect when the checkbox changes
+  const initialWantsToTrack = useRef(!!entry?.volunteeringMinutes);
+
+  // Mark as changed when checkbox state changes
+  useEffect(() => {
+    if (wantsToTrackGiveAnHour !== initialWantsToTrack.current) {
+      markAsChanged();
+    }
+  }, [wantsToTrackGiveAnHour, markAsChanged]);
+
+  // Expose confirmIfUnsaved to parent component
+  useEffect(() => {
+    onUnsavedChangesRef?.(confirmIfUnsaved);
+  }, [confirmIfUnsaved, onUnsavedChangesRef]);
 
   const closeModal = () => {
     setPreviewImageUrl(null);
@@ -251,8 +274,9 @@ export function ShowAndTellEntryForm({
   const handlePostLocation = useCallback(
     (userSelectedLocation: MapLocation) => {
       setPostLocation(userSelectedLocation);
+      markAsChanged();
     },
-    [],
+    [markAsChanged],
   );
 
   const imageAttachmentsData = useUploadAttachmentsData(
@@ -415,6 +439,7 @@ export function ShowAndTellEntryForm({
     if (action === "create") {
       create.mutate(data, {
         onSuccess: () => {
+          resetChanges();
           if (isAnonymous) {
             // We can't redirect to the entry because the user is anonymous
             setIsSubmitted(true);
@@ -434,6 +459,7 @@ export function ShowAndTellEntryForm({
         { ...data, id: entry.id },
         {
           onSuccess: () => {
+            resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
           },
@@ -453,6 +479,7 @@ export function ShowAndTellEntryForm({
         },
         {
           onSuccess: () => {
+            resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
             onSaveSuccess?.();
@@ -512,6 +539,7 @@ export function ShowAndTellEntryForm({
               maxLength={100}
               defaultValue={entry?.displayName || undefined}
               placeholder="What should we call you?"
+              onChange={markAsChanged}
             />
           </Fieldset>
           <Fieldset legend="Post">
@@ -523,6 +551,7 @@ export function ShowAndTellEntryForm({
               name="title"
               defaultValue={entry?.title}
               placeholder="What's your post about?"
+              onChange={markAsChanged}
             />
             <MapPickerField
               name="postLocation"
@@ -537,6 +566,7 @@ export function ShowAndTellEntryForm({
               name="text"
               defaultValue={entry?.text}
               maxLength={getMaxTextLengthForCreatedAt(entry?.createdAt)}
+              onChange={markAsChanged}
             />
           </Fieldset>
         </div>
@@ -613,12 +643,14 @@ export function ShowAndTellEntryForm({
                   label="Private Note (only visible in review mode)"
                   name="notePrivate"
                   defaultValue={entry?.notePrivate || undefined}
+                  onChange={markAsChanged}
                 />
 
                 <RichTextField
                   label="Public Note (visible on the post)"
                   name="notePublic"
                   defaultValue={entry?.notePublic || undefined}
+                  onChange={markAsChanged}
                 />
               </div>
             </Fieldset>
