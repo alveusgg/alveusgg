@@ -1,4 +1,11 @@
-import { type ReactNode, useCallback, useMemo, useRef, useState } from "react";
+import {
+  type ReactNode,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { type AriaTextFieldOptions, useTextField } from "react-aria";
 
 import { classes } from "@/utils/classes";
@@ -21,6 +28,21 @@ export function TextField(props: TextFieldProps) {
   const [showResetButton, setShowResetButton] = useState(
     () => props.showResetButton && Boolean(props.value || props.defaultValue),
   );
+  const hasUserInteractedRef = useRef(false);
+
+  // Mark as user-interacted after component mounts and receives input
+  useEffect(() => {
+    const input = ref.current;
+    if (!input) return;
+
+    const handleInput = () => {
+      hasUserInteractedRef.current = true;
+    };
+
+    input.addEventListener("input", handleInput, { once: true });
+    return () => input.removeEventListener("input", handleInput);
+  }, []);
+
   const customizedProps = useMemo(() => {
     return {
       ...props,
@@ -29,7 +51,8 @@ export function TextField(props: TextFieldProps) {
           setShowResetButton(Boolean(value));
         }
 
-        if (props.onChange) {
+        // Only call onChange if user has interacted with the field
+        if (hasUserInteractedRef.current && props.onChange) {
           props.onChange(value);
         }
       },
