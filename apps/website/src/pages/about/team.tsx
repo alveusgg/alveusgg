@@ -9,7 +9,6 @@ import Heading from "@/components/content/Heading";
 import { MayaText } from "@/components/content/Maya";
 import Meta from "@/components/content/Meta";
 import People from "@/components/content/People";
-import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
 
@@ -234,7 +233,12 @@ const AboutTeamPage: NextPage = () => {
         title="Alveus Team"
         description="Learn more about the Alveus staff, advisory board, and board of directors."
       >
-        <RssLink title="Alveus Sanctuary Staff" path="/feeds/staff.xml" />
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Alveus Sanctuary Staff"
+          href="/feeds/staff.xml"
+        />
       </Meta>
 
       {/* Nav background */}

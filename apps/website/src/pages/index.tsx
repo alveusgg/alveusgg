@@ -25,7 +25,6 @@ import Link from "@/components/content/Link";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
 import Meta from "@/components/content/Meta";
-import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
@@ -188,15 +187,19 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   return (
     <>
       <Meta>
-        <RssLink
+        <link
+          rel="alternate"
+          type="application/rss+xml"
           title="All Alveus Sanctuary YouTube Videos"
-          path="/feeds/youtube/all.xml"
+          href="/feeds/youtube/all.xml"
         />
         {Object.entries(youTubeChannels).map(([channelKey, channel]) => (
-          <RssLink
+          <link
             key={channelKey}
+            rel="alternate"
+            type="application/rss+xml"
             title={`${channel.name} YouTube Channel Videos`}
-            path={`/feeds/youtube/${channelKey}.xml`}
+            href={`/feeds/youtube/${channelKey}.xml`}
           />
         ))}
       </Meta>

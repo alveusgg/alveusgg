@@ -17,7 +17,6 @@ import Heading from "@/components/content/Heading";
 import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
-import RssLink from "@/components/content/RssLink";
 import Section from "@/components/content/Section";
 import TransitionHeight from "@/components/content/TransitionHeight";
 import { YouTubeEmbed } from "@/components/content/YouTube";
@@ -223,9 +222,11 @@ const BookClubPage: NextPage = () => {
         description="Join the staff at Alveus and the community in reading and discussing books together."
         image={bookClubFull.src}
       >
-        <RssLink
+        <link
+          rel="alternate"
+          type="application/rss+xml"
           title="Alveus Sanctuary Book Club"
-          path="/feeds/book-club.xml"
+          href="/feeds/book-club.xml"
         />
       </Meta>
 
