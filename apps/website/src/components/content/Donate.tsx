@@ -25,14 +25,6 @@ type DonateLink = {
 };
 
 const links = {
-  wishlist: {
-    icon: IconAmazon,
-    title: "Amazon Wishlist",
-    link: "/wishlist",
-    external: true,
-    description:
-      "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
-  },
   twitch: {
     icon: IconTwitch,
     title: "Twitch Charity",
@@ -48,6 +40,14 @@ const links = {
     external: true,
     description:
       "Use your PayPal account, or your credit/debit card, to donate directly to Alveus.",
+  },
+  wishlist: {
+    icon: IconAmazon,
+    title: "Amazon Wishlist",
+    link: "/wishlist",
+    external: true,
+    description:
+      "Donate specific items we are in need of at Alveus through our Amazon wishlist.",
   },
   poBox: {
     icon: IconBox,

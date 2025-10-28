@@ -30,14 +30,7 @@ export const Footer = () => {
           <ul className="flex flex-wrap items-center justify-between">
             <li className="basis-full p-2 md:basis-1/3">
               <p>
-                Original design by{" "}
-                <Link
-                  className={footerLinkClasses}
-                  href="https://chanelrooh.com"
-                  target="_blank"
-                >
-                  Chanelrooh
-                </Link>
+                Original design by Chanelrooh
                 {", "}
                 <br />
                 built by the{" "}

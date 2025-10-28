@@ -14,8 +14,6 @@ import { formatDateTime } from "@/utils/datetime";
 import { typeSafeObjectEntries } from "@/utils/helpers";
 import { camelToKebab } from "@/utils/string-case";
 
-import { PixelSyncProviderProvider } from "@/hooks/pixels";
-
 import Consent from "@/components/Consent";
 import AnimalQuest from "@/components/content/AnimalQuest";
 import Box from "@/components/content/Box";
@@ -26,13 +24,12 @@ import Lightbox from "@/components/content/Lightbox";
 import Link from "@/components/content/Link";
 import { MayaImage } from "@/components/content/Maya";
 import MerchCarousel from "@/components/content/MerchCarousel";
+import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Slideshow from "@/components/content/Slideshow";
 import Twitch from "@/components/content/Twitch";
 import WatchLive from "@/components/content/WatchLive";
 import { YouTubeEmbed, YouTubePreview } from "@/components/content/YouTube";
-import PixelsDescription from "@/components/institute/PixelsDescription";
-import PixelsProgress from "@/components/institute/PixelsProgress";
 
 import IconAmazon from "@/icons/IconAmazon";
 import IconBox from "@/icons/IconBox";
@@ -49,8 +46,8 @@ import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
 import sirenHeroImage from "@/assets/hero/siren.jpg";
 import studioHeroImage from "@/assets/hero/studio.jpg";
 import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
-import usfwsMexicanWolfReleasedImage from "@/assets/institute/usfws-mexican-wolf-released.jpg";
-import usfwsRedWolfImage from "@/assets/institute/usfws-red-wolf.jpg";
+import instituteBuildingHeroImage from "@/assets/institute/hero/building.png";
+import instituteWolvesHeroImage from "@/assets/institute/hero/wolves.png";
 
 import { ambassadorImageHover } from "@/pages/ambassadors";
 
@@ -188,7 +185,25 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   );
 
   return (
-    <PixelSyncProviderProvider>
+    <>
+      <Meta>
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="All Alveus Sanctuary YouTube Videos"
+          href="/feeds/youtube/all.xml"
+        />
+        {Object.entries(youTubeChannels).map(([channelKey, channel]) => (
+          <link
+            key={channelKey}
+            rel="alternate"
+            type="application/rss+xml"
+            title={`${channel.name} YouTube Channel Videos`}
+            href={`/feeds/youtube/${channelKey}.xml`}
+          />
+        ))}
+      </Meta>
+
       {/* Hero, offset to be navbar background */}
       <div className="relative z-0 flex min-h-[95vh] flex-col lg:-mt-40">
         <div className="absolute inset-0 -z-10 bg-alveus-green">
@@ -240,52 +255,44 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
           <Box
             dark
-            className="col-span-full rounded-2xl bg-alveus-green-900/50 backdrop-blur-md"
+            className="col-span-full flex flex-col gap-x-4 gap-y-8 rounded-2xl bg-alveus-green-900/25 backdrop-blur-sm lg:flex-row"
           >
-            <Heading level={2} className="mt-0">
-              Pixel Project: Alveus Research & Recovery Institute
-            </Heading>
+            <div className="flex grow flex-col items-start gap-4">
+              <Heading level={2} className="my-0 text-balance">
+                Introducing the Alveus Research & Recovery Institute
+              </Heading>
 
-            <div className="grid grid-cols-1 items-center justify-items-start gap-8 lg:grid-cols-auto-2 lg:gap-y-4">
-              <div className="flex flex-col gap-x-8 gap-y-4 xl:flex-row xl:items-center">
-                <p className="grow text-lg">
-                  We&apos;re taking the Alveus approach to the wild to help save
-                  species from extinction and we need your help! We&apos;re
-                  aiming to raise $1,000,000 to kickstart this brand new
-                  facility. Get involved by donating $100 or more to unlock a
-                  pixel on our institute mural, denoting you as one of the
-                  10,000 vital original supporters of the Alveus Research &
-                  Recovery Institute.
-                </p>
+              <p className="text-lg text-balance">
+                We&apos;re taking the Alveus approach to the wild; creating
+                conservation breeding programs to help save species from
+                extinction, while pushing forward technology and public
+                engagement in conservation.
+              </p>
 
-                <div className="flex shrink-0 gap-2 text-center xl:flex-col">
-                  <Button href="/institute/pixels" dark>
-                    Unlock a Pixel
-                  </Button>
+              <div className="flex flex-wrap gap-4">
+                <Button href="/institute" dark>
+                  Learn More About the Institute
+                </Button>
 
-                  <Button href="/institute" dark>
-                    Learn More
-                  </Button>
-                </div>
+                <Button href="/donate" dark>
+                  Donate to Support the Institute
+                </Button>
               </div>
+            </div>
 
-              <div className="z-0 flex max-w-sm items-center justify-center justify-self-center lg:max-w-xs">
-                <Image
-                  src={usfwsRedWolfImage}
-                  width={256}
-                  alt="Red wolf, B. Bartel/USFWS, Public Domain, https://www.fws.gov/media/red-wolf-7"
-                  className="z-10 mr-[-10%] h-auto w-2/5 max-w-64 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
-                />
-                <Image
-                  src={usfwsMexicanWolfReleasedImage}
-                  width={384}
-                  alt="Mexican wolf released back into the wild, Mexican Wolf Interagency Field Team, Public Domain, https://www.fws.gov/media/mexican-wolf-released-back-wild"
-                  className="h-auto w-3/5 max-w-96 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
-                />
-              </div>
-
-              <PixelsProgress className="bg-alveus-green-900/75" />
-              <PixelsDescription className="-mt-4 justify-self-center lg:mt-0" />
+            <div className="z-0 flex items-center justify-center self-center lg:max-w-lg">
+              <Image
+                src={instituteBuildingHeroImage}
+                width={300}
+                alt="Drawing of the Alveus Research & Recovery Institute building"
+                className="z-10 mr-[-10%] h-auto w-2/5 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+              />
+              <Image
+                src={instituteWolvesHeroImage}
+                width={400}
+                alt="Drawing of released wolves walking through the landscape"
+                className="h-auto w-3/5 rounded-2xl shadow-lg transition-all hover:scale-102 hover:shadow-xl"
+              />
             </div>
           </Box>
         </div>
@@ -571,7 +578,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           </div>
         </Section>
       </div>
-    </PixelSyncProviderProvider>
+    </>
   );
 };
 

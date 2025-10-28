@@ -75,13 +75,6 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
   }
 
   async init() {
-    const state = await this.ctx.storage.get<PixelsManagerState>(
-      `${this.key}-state`,
-    );
-    const persistState = async (state: PixelsManagerState) => {
-      await this.ctx.storage.put(`${this.key}-state`, state);
-    };
-
     const grid = await getGrid(this.env.GRID_URL);
     this.grid = grid;
 
@@ -99,8 +92,19 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       ],
     });
 
+    const pixels: Omit<Pixel, "data">[] =
+      await this.api.donations.getPixels.query();
+
+    const pixelsWithImageData = pixels.map((pixel) => {
+      if (!this.grid) throw new Error("Grid not initialized");
+      return {
+        ...pixel,
+        data: this.grid.squares[`${pixel.column}:${pixel.row}`],
+      };
+    });
+
     this.provider = new SyncProvider({
-      state: { state, persistState },
+      state: { state: { pixels: pixelsWithImageData } },
       init: { pixels: [] },
     });
   }
@@ -148,52 +152,59 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       await this.ready();
       if (!this.provider) throw new Error("Provider not initialized");
       if (!this.api) throw new Error("API not initialized");
-      const pixels: Record<string, Pixel[]> = {};
+      if (!this.grid) throw new Error("Grid not initialized");
+
+      // Lookups
       const emailHashMap = await getEmailHashedMap(donations);
       const twitchBroadcasterIdHashMap = getTwitchBroadcasterMap(donations);
-      this.provider.update((state) => {
-        if (!this.grid) throw new Error("Grid not initialized");
-        for (const donation of donations) {
-          // Use the primary property of the donatedBy object to get the identifier or default to "Anonymous"
-          let identifier =
-            donation.donatedBy[donation.donatedBy.primary] ?? "Anonymous";
+      // Current state
+      const current = this.provider.getContext();
+      // New pixels
+      const pixels: Record<string, Pixel[]> = {};
+      for (const donation of donations) {
+        // Use the primary property of the donatedBy object to get the identifier or default to "Anonymous"
+        let identifier =
+          donation.donatedBy[donation.donatedBy.primary] ?? "Anonymous";
 
-          if (donation.donatedBy.primary === "username") {
-            identifier = `@${identifier}`;
-          }
-
-          const numberOfPixels = determineNumberOfPixels(donation.amount / 100);
-          const pixelsForDonation: Pixel[] = [];
-          for (let i = 0; i < numberOfPixels; i++) {
-            const location = getRandomEmptySquare(
-              [...state.pixels, ...Object.values(pixels).flat()],
-              this.grid,
-            );
-            if (!location) continue;
-
-            const data =
-              this.grid.squares[`${location.column}:${location.row}`];
-
-            pixelsForDonation.push({
-              id: crypto.randomUUID(),
-              donationId: donation.id,
-              receivedAt: donation.receivedAt,
-              data,
-              identifier,
-              email: donation.donatedBy.email
-                ? emailHashMap.get(donation.donatedBy.email)
-                : undefined,
-              column: location.column,
-              row: location.row,
-            });
-          }
-
-          pixels[donation.id] = pixelsForDonation;
+        if (donation.donatedBy.primary === "username") {
+          identifier = `@${identifier}`;
         }
 
-        state.pixels = [...state.pixels, ...Object.values(pixels).flat()];
-      });
+        const numberOfPixels = determineNumberOfPixels(donation.amount / 100);
+        const pixelsForDonation: Pixel[] = [];
+        for (let i = 0; i < numberOfPixels; i++) {
+          const location = getRandomEmptySquare(
+            [
+              ...current.pixels,
+              ...Object.values(pixels).flat(),
+              ...pixelsForDonation,
+            ],
+            this.grid,
+          );
+          if (!location) continue;
 
+          const data = this.grid.squares[`${location.column}:${location.row}`];
+
+          pixelsForDonation.push({
+            id: crypto.randomUUID(),
+            donationId: donation.id,
+            receivedAt: donation.receivedAt,
+            data,
+            identifier,
+            email: donation.donatedBy.email
+              ? emailHashMap.get(donation.donatedBy.email)
+              : undefined,
+            column: location.column,
+            row: location.row,
+          });
+        }
+
+        pixels[donation.id] = pixelsForDonation;
+      }
+
+      // Calling the API
+      // This means the whole batch of donations will be deadlettered if the
+      // a pixel location is invalid. This allows us to retry easily.
       await this.api.donations.createPixels.mutate({
         pixels: Object.values(pixels)
           .flat()
@@ -213,9 +224,14 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           })),
       });
 
+      this.provider.update((state) => {
+        state.pixels = [...state.pixels, ...Object.values(pixels).flat()];
+      });
+
       for (const donation of donations) {
         const identifier =
           donation.donatedBy[donation.donatedBy.primary] ?? "Anonymous";
+
         const alert = {
           amount: donation.amount,
           identifier,
@@ -235,22 +251,29 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 function getRandomEmptySquare(pixels: Pixel[], grid: Grid) {
   const totalPossibleSquares = grid.columns * grid.rows;
   const totalPixels = pixels.length;
-  if (totalPixels === totalPossibleSquares) {
+  const remainingSquares = totalPossibleSquares - totalPixels;
+  if (remainingSquares <= 0) {
     console.warn("No empty squares found");
     return;
   }
 
-  let column: number;
-  let row: number;
+  const chosenIndex = Math.floor(Math.random() * remainingSquares);
 
-  do {
-    column = Math.floor(Math.random() * grid.columns);
-    row = Math.floor(Math.random() * grid.rows);
-  } while (
-    pixels.some((pixel) => pixel.column === column && pixel.row === row)
-  );
-
-  return { column, row };
+  let emptyCounter = 0;
+  for (let column = 0; column < grid.columns; column++) {
+    const subset = pixels.filter((p) => p.column === column);
+    for (let row = 0; row < grid.rows; row++) {
+      if (
+        subset.some((pixel) => pixel.column === column && pixel.row === row)
+      ) {
+        continue;
+      }
+      if (emptyCounter === chosenIndex) {
+        return { column, row };
+      }
+      emptyCounter++;
+    }
+  }
 }
 
 const PIXEL_PRICE = 100; // Each pixel costs $100 USD
