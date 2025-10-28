@@ -111,7 +111,7 @@ const mayaStream: RegularEvent = {
   description: "Tune in to see what Maya is up to today!",
   category: "Maya Stream",
   link: "https://twitch.tv/maya",
-  startTime: { hour: 10, minute: 0 },
+  startTime: { hour: 10, minute: 30 },
 };
 
 export const regularEventsWeekly = [
