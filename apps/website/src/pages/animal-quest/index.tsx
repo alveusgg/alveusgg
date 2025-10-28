@@ -270,7 +270,14 @@ const AnimalQuestPage: NextPage = () => {
         title="Animal Quest"
         description="Learn about the ambassadors at Alveus through Animal Quest, a series hosted by Maya Higa."
         image={animalQuestFull.src}
-      />
+      >
+        <link
+          rel="alternate"
+          type="application/rss+xml"
+          title="Alveus Sanctuary Animal Quest Episodes"
+          href="/feeds/animal-quest.xml"
+        />
+      </Meta>
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />

@@ -570,18 +570,6 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         },
       },
       {
-        key: "colton-chandler",
-        date: "2025-04",
-        content: [
-          "Colton and Chandler join the Alveus team",
-          "Colton joins the team as Alveus' Creative Producer, and Chandler joins as the YouTube Channel Manager.",
-        ],
-        link: {
-          text: "Meet our staff",
-          href: "/about/staff",
-        },
-      },
-      {
         key: "new-studio",
         date: "2025-03-05",
         content: [
@@ -599,6 +587,18 @@ const history: [HistoryItems, ...(HistoryCTA | HistoryItems)[]] = [
         link: {
           text: "Explore Alveus events",
           href: "/events#art-auction-2025",
+        },
+      },
+      {
+        key: "colton-chandler",
+        date: "2025-04",
+        content: [
+          "Colton and Chandler join the Alveus team",
+          "Colton joins the team as Alveus' Creative Producer, and Chandler joins as the YouTube Channel Manager.",
+        ],
+        link: {
+          text: "Meet our staff",
+          href: "/about/staff",
         },
       },
       {
