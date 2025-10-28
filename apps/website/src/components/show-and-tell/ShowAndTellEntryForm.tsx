@@ -214,12 +214,8 @@ export function ShowAndTellEntryForm({
   const isLoading = create.isPending || update.isPending || review.isPending;
 
   // Only enable unsaved changes warning for admin review action
-  const {
-    hasUnsavedChanges: _hasUnsavedChanges,
-    markAsChanged,
-    resetChanges,
-    confirmIfUnsaved,
-  } = useFormChangeWarning(action === "review");
+  const { markAsChanged, resetChanges, confirmIfUnsaved } =
+    useFormChangeWarning(action === "review");
 
   const [wantsToTrackGiveAnHour, setWantsToTrackGiveAnHour] = useState(
     !!entry?.volunteeringMinutes,
