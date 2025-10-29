@@ -72,7 +72,7 @@ export async function getPublicDonations({
   });
 }
 
-export async function getPixels(muralId: string) {
+export function getPixels(muralId: string) {
   return prisma.pixel.findMany({
     where: { muralId: muralId },
   });
