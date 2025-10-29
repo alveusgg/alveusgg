@@ -69,7 +69,7 @@
     "maplibre-gl": "^5.9.0",
     "motion": "^12.23.24",
     "next": "^16.0.0",
-    "next-auth": "^4.24.11",
+    "next-auth": "^4.24.12",
     "next-sitemap": "^4.2.3",
     "next-superjson": "^1.0.7",
     "oauth": "^0.10.2",
@@ -133,7 +133,7 @@
     "tsup": "^8.5.0",
     "tsx": "^4.20.6",
     "typescript-eslint": "^8.46.2",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.3",
     "webpack": "^5.102.1"
   },
   "prettier": {
