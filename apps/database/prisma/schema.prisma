@@ -500,6 +500,7 @@ model Pixel {
   donationId String
   identifier String
   email      String?
+  muralId    String?  @db.VarChar(16)
   column     Int
   row        Int
 
@@ -507,4 +508,5 @@ model Pixel {
 
   @@unique([column, row], name: "Pixel_coordinate")
   @@index([donationId], name: "Pixel_donationId")
+  @@index([muralId], name: "Pixel_muralId")
 }
