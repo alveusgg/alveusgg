@@ -8,8 +8,9 @@ export async function createDonations(input: Donation[]) {
   });
 }
 
-export async function getPublicPixels() {
+export async function getPublicPixels(muralId?: string) {
   return prisma.pixel.findMany({
+    where: { muralId: muralId },
     select: {
       identifier: true,
       email: true,
@@ -71,8 +72,10 @@ export async function getPublicDonations({
   });
 }
 
-export async function getPixels() {
-  return prisma.pixel.findMany();
+export async function getPixels(muralId: string) {
+  return prisma.pixel.findMany({
+    where: { muralId: muralId },
+  });
 }
 
 export async function createPixels(input: Omit<Pixel, "data">[]) {
@@ -81,6 +84,7 @@ export async function createPixels(input: Omit<Pixel, "data">[]) {
       (pixel) =>
         ({
           id: pixel.id,
+          muralId: pixel.muralId,
           receivedAt: pixel.receivedAt,
           donationId: pixel.donationId,
           identifier: pixel.identifier,

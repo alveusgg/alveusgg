@@ -102,11 +102,12 @@ export type Donation = z.infer<typeof DonationSchema>;
 
 export const PixelSchema = z.object({
   id: z.string(),
+  muralId: z.string(),
   donationId: z.string(),
   receivedAt: z.date(),
   data: z.string(), // Base64 encoded raw bytes
   identifier: z.string(),
-  email: z.string().optional(),
+  email: z.string().nullable(),
   column: z.number(),
   row: z.number(),
 });

@@ -2,6 +2,8 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
 
+import { PixelProvider } from "@/hooks/pixels";
+
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Donate from "@/components/content/Donate";
@@ -22,7 +24,7 @@ const InstitutePixelsPage: NextPage = () => {
   const [fullscreen, setFullscreen] = useState(false);
 
   return (
-    <>
+    <PixelProvider muralId="one" type="static">
       <Meta
         title="Pixel Project | Alveus Research & Recovery Institute"
         description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
@@ -137,7 +139,7 @@ const InstitutePixelsPage: NextPage = () => {
           <Donate type="paypal" link="/paypal/pixels" />
         </div>
       </Section>
-    </>
+    </PixelProvider>
   );
 };
 
