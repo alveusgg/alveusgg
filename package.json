@@ -15,7 +15,7 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "engines": {
-    "node": "22.x",
+    "node": ">=24.11.0",
     "pnpm": "^10.11.1"
   },
   "packageManager": "pnpm@10.11.1",
