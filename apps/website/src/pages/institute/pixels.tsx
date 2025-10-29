@@ -14,7 +14,7 @@ import {
 
 import { classes } from "@/utils/classes";
 
-import type { Pixel } from "@/hooks/pixels";
+import { type Pixel, PixelProvider } from "@/hooks/pixels";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
@@ -166,7 +166,7 @@ const InstitutePixelsPage: NextPage = () => {
   }, [fullscreen, fullscreenToggle]);
 
   return (
-    <>
+    <PixelProvider muralId="one" type="static">
       <Meta
         title="Pixel Project | Alveus Research & Recovery Institute"
         description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
@@ -397,7 +397,7 @@ const InstitutePixelsPage: NextPage = () => {
           <Donate type="paypal" link="/paypal/pixels" />
         </div>
       </Section>
-    </>
+    </PixelProvider>
   );
 };
 
