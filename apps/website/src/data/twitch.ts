@@ -85,6 +85,9 @@ export type ChannelWithCalendarEvents = {
     : never;
 }[keyof typeof channels];
 
+export const isChannel = (channel: string): channel is keyof typeof channels =>
+  channel in channels;
+
 export const isChannelWithCalendarEvents = (
   channel: Channel,
 ): channel is ChannelWithCalendarEvents => {
