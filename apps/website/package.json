@@ -14,11 +14,11 @@
   },
   "types": "src/server/trpc/router/_app.ts",
   "scripts": {
-    "build:next": "next build",
+    "build:next": "next build --webpack",
     "build:next-sitemap": "next-sitemap --config next-sitemap.config.js",
     "build:push-sw": "tsup --config sw.tsup.config.ts",
     "build:manifest": "tsx ./build-scripts/create-manifest.ts",
-    "dev:next": "next dev",
+    "dev:next": "next dev --webpack",
     "dev:push-sw": "tsup --watch --config sw.tsup.config.ts",
     "build": "pnpm run --sequential \"/^build:.*/\"",
     "dev": "pnpm run \"/^(build:manifest|dev:.*)/\"",
