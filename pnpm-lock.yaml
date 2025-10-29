@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  jsdom>parse5: ^7.3.0
+
 patchedDependencies:
   eslint-plugin-tailwindcss@3.17.5:
     hash: e68ba67a3525bc4b23056140334272fb1a90721db49b16680274a371890796d0
@@ -5893,9 +5896,6 @@ packages:
 
   parse5@7.3.0:
     resolution: {integrity: sha512-IInvU7fabl34qmi9gY8XOVxhYyMyuH2xUNpb2q8/Y+7552KlejkRvqvD19nMoUW/uQGGbqNpA6Tufu5FL5BZgw==}
-
-  parse5@8.0.0:
-    resolution: {integrity: sha512-9m4m5GSgXjL4AjumKzq1Fgfp3Z8rsvjRNbnkVwfu2ImRqE5D0LnY2QfDen18FSY9C573YU5XxSapdHZTZ2WolA==}
 
   partysocket@1.1.6:
     resolution: {integrity: sha512-LkEk8N9hMDDsDT0iDK0zuwUDFVrVMUXFXCeN3850Ng8wtjPqPBeJlwdeY6ROlJSEh3tPoTTasXoSBYH76y118w==}
@@ -12826,7 +12826,7 @@ snapshots:
       http-proxy-agent: 7.0.2
       https-proxy-agent: 7.0.6
       is-potential-custom-element-name: 1.0.1
-      parse5: 8.0.0
+      parse5: 7.3.0
       rrweb-cssom: 0.8.0
       saxes: 6.0.0
       symbol-tree: 3.2.4
@@ -13591,10 +13591,6 @@ snapshots:
       type-fest: 4.41.0
 
   parse5@7.3.0:
-    dependencies:
-      entities: 6.0.1
-
-  parse5@8.0.0:
     dependencies:
       entities: 6.0.1
 
