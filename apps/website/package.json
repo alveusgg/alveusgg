@@ -133,7 +133,7 @@
     "tsup": "^8.5.0",
     "tsx": "^4.20.6",
     "typescript-eslint": "^8.46.2",
-    "vitest": "^3.2.4",
+    "vitest": "^4.0.3",
     "webpack": "^5.102.1"
   },
   "prettier": {
