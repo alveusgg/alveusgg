@@ -21,7 +21,7 @@
   "packageManager": "pnpm@10.11.1",
   "devDependencies": {
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.4",
+    "lint-staged": "^16.2.6",
     "prettier": "^3.6.2",
     "typescript": "^5.9.3"
   },
