@@ -110,7 +110,7 @@
     "@types/linkify-it": "^5.0.0",
     "@types/lodash": "^4.17.21",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^22.19.1",
+    "@types/node": "^24.10.1",
     "@types/oauth": "^0.9.6",
     "@types/pluralize": "^0.0.33",
     "@types/probe-image-size": "^7.2.5",
