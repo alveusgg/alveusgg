@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import { useCallback, useState } from "react";
 
 import { featuredAttachmentsImage } from "@/utils/attachments";
 import { getEntityStatus } from "@/utils/entity-helpers";
@@ -18,6 +19,7 @@ import {
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 import { ShowAndTellNavigation } from "@/components/show-and-tell/ShowAndTellNavigation";
+import { ShowAndTellPreviewModal } from "@/components/show-and-tell/ShowAndTellPreviewModal";
 
 import IconEye from "@/icons/IconEye";
 import IconPencil from "@/icons/IconPencil";
@@ -35,6 +37,22 @@ const MyShowAndTellEntriesPage: NextPage = () => {
       await myEntries.refetch();
     },
   });
+
+  const [previewEntryId, setPreviewEntryId] = useState<string | null>(null);
+
+  const { data: previewEntry } = trpc.showAndTell.getMyEntry.useQuery(
+    previewEntryId || "",
+    { enabled: !!previewEntryId },
+  );
+
+  const { data: postsFromANewLocation } =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery(undefined, {
+      enabled: !!previewEntryId,
+    });
+
+  const handlePreview = useCallback((entryId: string) => {
+    setPreviewEntryId(entryId);
+  }, []);
 
   return (
     <>
@@ -185,15 +203,15 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                               <IconPencil className="size-5" />
                               Edit
                             </LinkButton>
-                            <LinkButton
+                            <Button
                               width="auto"
                               size="small"
                               className={secondaryButtonClasses}
-                              href={`/show-and-tell/my-posts/${entry.id}/preview`}
+                              onClick={() => handlePreview(entry.id)}
                             >
                               <IconEye className="size-5" />
                               Preview
-                            </LinkButton>
+                            </Button>
                             <Button
                               width="auto"
                               size="small"
@@ -213,6 +231,15 @@ const MyShowAndTellEntriesPage: NextPage = () => {
               </div>
             )}
           </>
+        )}
+
+        {previewEntry && postsFromANewLocation && (
+          <ShowAndTellPreviewModal
+            entry={previewEntry}
+            newLocation={postsFromANewLocation.has(previewEntry.id)}
+            isOpen={!!previewEntryId}
+            closeModal={() => setPreviewEntryId(null)}
+          />
         )}
       </Section>
     </>
