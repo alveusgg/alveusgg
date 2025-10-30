@@ -65,7 +65,7 @@ export const donationsRouter = router({
 
   getPixels: sharedKeyProcedure
     .input(z.object({ muralId: z.string() }))
-    .query({ input }) => getPixels(input.muralId)),
+    .query(({ input }) => getPixels(input.muralId)),
 
   createPixels: sharedKeyProcedure
     .input(

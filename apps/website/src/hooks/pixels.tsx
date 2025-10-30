@@ -297,7 +297,7 @@ export const PixelProvider = ({
       } satisfies IPixelStaticProvider;
     }
 
-    if (env.NEXT_PUBLIC_DONATIONS_DEMO_MODE) {
+    if (env.NEXT_PUBLIC_DONATIONS_DEMO_MODE || typeof window === "undefined") {
       return new DemoPixelSyncProvider({ muralId });
     }
 
