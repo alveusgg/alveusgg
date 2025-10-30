@@ -12,6 +12,9 @@
   "bugs": {
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
+  "engines": {
+    "node": "24.x"
+  },
   "types": "src/server/trpc/router/_app.ts",
   "scripts": {
     "build:next": "next build --webpack",
