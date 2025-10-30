@@ -177,7 +177,7 @@ const AdminReviewShowAndTellPage: NextPage<
           const existingAttachment = entry.attachments.find(
             (a) => a.imageAttachment?.id === file.id,
           );
-          return existingAttachment || null;
+          return existingAttachment ?? null;
         }
 
         // Handle uploaded files
@@ -201,33 +201,10 @@ const AdminReviewShowAndTellPage: NextPage<
           };
         }
 
-        // Handle files with data URLs (pending/initial)
-        if (
-          file.status === "upload.pending" ||
-          file.status === "upload.failed"
-        ) {
-          return {
-            id: `preview-image-${idx}`,
-            entryId: entry.id,
-            attachmentType: "image" as const,
-            showAndTellEntryId: entry.id,
-            linkAttachmentId: null,
-            imageAttachmentId: `temp-${idx}`,
-            linkAttachment: null,
-            imageAttachment: {
-              id: `temp-${idx}`,
-              fileStorageObjectId: null,
-              url: file.dataURL,
-              alt: null,
-              caption: null,
-              fileStorageObject: null,
-            },
-          };
-        }
-
+        // Skip pending/failed uploads - they haven't been saved yet
         return null;
       })
-      .filter((a) => a !== null);
+      .filter((a): a is NonNullable<typeof a> => a !== null);
 
     const videoAttachments = videoUrls.map((url, idx) => {
       // Check if this video was in the original entry
