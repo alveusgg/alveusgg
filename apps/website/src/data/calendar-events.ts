@@ -103,7 +103,7 @@ const animalCareChats: RegularEvent = {
     "Join animal care staff as they carry out their daily tasks and answer your questions.",
   category: "Alveus Regular Stream",
   link: "https://twitch.tv/AlveusSanctuary",
-  startTime: { hour: 10, minute: 30 },
+  startTime: { hour: 13, minute: 0 },
 };
 
 const mayaStream: RegularEvent = {
@@ -111,7 +111,7 @@ const mayaStream: RegularEvent = {
   description: "Tune in to see what Maya is up to today!",
   category: "Maya Stream",
   link: "https://twitch.tv/maya",
-  startTime: { hour: 10, minute: 0 },
+  startTime: { hour: 10, minute: 30 },
 };
 
 export const regularEventsWeekly = [
@@ -127,7 +127,7 @@ export const regularEventsWeekly = [
       description: "Join Dan as he gets work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 10, minute: 30 },
+      startTime: { hour: 13, minute: 0 },
     },
     {
       title: "Chat Chats w/ Evan",
@@ -145,7 +145,7 @@ export const regularEventsWeekly = [
       description: "Join Lukas as he gets work done around the sanctuary.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 10, minute: 30 },
+      startTime: { hour: 13, minute: 0 },
     },
   ],
   // Friday
@@ -156,7 +156,7 @@ export const regularEventsWeekly = [
         "Join Maya as she reviews this week's community submissions for Show and Tell.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
+      startTime: { hour: 13, minute: 0 },
     },
   ],
   // Saturday
@@ -166,7 +166,7 @@ export const regularEventsWeekly = [
       description: "Join Connor as he gets up to his usual antics.",
       category: "Alveus Regular Stream",
       link: "https://twitch.tv/AlveusSanctuary",
-      startTime: { hour: 14, minute: 30 },
+      startTime: { hour: 13, minute: 0 },
     },
   ],
   // Sunday

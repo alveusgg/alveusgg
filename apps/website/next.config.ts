@@ -27,9 +27,6 @@ function urlOriginAsRemotePattern(url: string): RemotePattern {
 
 const config: NextConfig = {
   reactStrictMode: true,
-  eslint: {
-    dirs: ["."],
-  },
   images: {
     // limits the quality levels to limit cache variations for image optimization:
     qualities: [50, 75, 90, 100],
