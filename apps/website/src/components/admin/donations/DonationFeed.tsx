@@ -121,12 +121,12 @@ export function DonationFeed() {
 
           if (i > 0 && donation.id === lastShownDonation?.id) {
             return (
-              <>
+              <React.Fragment key={donation.id}>
                 <div className="bg-gray-600 p-1 text-center text-sm text-white italic">
                   <div>– Seen before –</div>
                 </div>
                 {item}
-              </>
+              </React.Fragment>
             );
           }
 
