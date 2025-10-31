@@ -55,6 +55,7 @@ import peachJars from "@/assets/collaborations/peach-jars.png";
 import pizzaPrincessG from "@/assets/collaborations/pizza-princess-g.png";
 import pointCrow from "@/assets/collaborations/point-crow.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
+import realKatieB from "@/assets/collaborations/real-katie-b.png";
 import russel from "@/assets/collaborations/russel.png";
 import scarra from "@/assets/collaborations/scarra.png";
 import sketch from "@/assets/collaborations/sketch.png";
@@ -91,6 +92,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "RealKatieB",
+      link: "https://www.twitch.tv/realkatieb",
+      date: new Date("2025-10-30"),
+      videoId: "64e7ys5Fllk",
+      creators: [
+        {
+          name: "RealKatieB",
+          image: realKatieB,
+          popularity: 213_000, // Twitch followers, 2025-10-31
+        },
+      ],
+    },
     {
       name: "Mister Arther",
       link: "https://www.twitch.tv/misterarther",
