@@ -119,7 +119,7 @@ export function DonationFeed() {
             />
           );
 
-          if (i > 0 && donation === lastShownDonation) {
+          if (i > 0 && donation.id === lastShownDonation?.id) {
             return (
               <>
                 <div className="bg-gray-600 p-1 text-center text-sm text-white italic">
