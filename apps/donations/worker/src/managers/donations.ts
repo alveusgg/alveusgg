@@ -5,7 +5,11 @@ import { Hono } from "hono";
 import { logger } from "hono/logger";
 import type { DonationProvider } from "../providers";
 import { PaypalDonationProvider } from "../providers/paypal/paypal";
-import { DurableObjectDonationStorage } from "../providers/storage";
+import {
+  createIfNotExistsDonationsTable,
+  createIfNotExistsProviderMetadataTable,
+  DurableObjectDonationStorage,
+} from "../providers/storage";
 import { TwitchDonationProvider } from "../providers/twitch/twitch";
 
 export class DonationsManagerDurableObject extends DurableObject<Env> {
@@ -47,11 +51,14 @@ export class DonationsManagerDurableObject extends DurableObject<Env> {
   }
 
   async init() {
+    await createIfNotExistsDonationsTable(this.ctx.storage.sql);
+    await createIfNotExistsProviderMetadataTable(this.ctx.storage.sql);
+
     const storage = new DurableObjectDonationStorage(
-      this.env.STATE_KEY,
       this.ctx,
       this.env.DONATION_QUEUE,
     );
+
     const [twitchProvider, paypalProvider] = await Promise.all([
       TwitchDonationProvider.init(storage, this.env),
       PaypalDonationProvider.init(storage, this.env),

@@ -7,6 +7,7 @@ import { classes } from "@/utils/classes";
 import { formatDateTimeRelative } from "@/utils/datetime";
 import { trpc } from "@/utils/trpc";
 
+import { PixelProvider } from "@/hooks/pixels";
 import useLocalStorage from "@/hooks/storage";
 import { useTimestamp } from "@/hooks/timestamp";
 
@@ -50,7 +51,9 @@ function Donations() {
     <div className="w-full grow text-lg text-black">
       <div className="flex w-full flex-row border-b border-gray-400">
         <div className="grow p-2 text-center text-xl">
-          <PixelsDescription />
+          <PixelProvider muralId="one">
+            <PixelsDescription />
+          </PixelProvider>
         </div>
 
         <details className="relative">

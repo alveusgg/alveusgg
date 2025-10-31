@@ -3,7 +3,11 @@ import { useRouter } from "next/router";
 
 import { classes } from "@/utils/classes";
 
-import { PIXEL_GRID_HEIGHT, PIXEL_GRID_WIDTH } from "@/hooks/pixels";
+import {
+  PIXEL_GRID_HEIGHT,
+  PIXEL_GRID_WIDTH,
+  PixelProvider,
+} from "@/hooks/pixels";
 
 import Pixels from "@/components/institute/Pixels";
 import PixelsDescription from "@/components/institute/PixelsDescription";
@@ -18,7 +22,7 @@ const PixelsPage: NextPage = () => {
   const mode = isMode(query.mode) ? query.mode : "corner";
 
   return (
-    <>
+    <PixelProvider muralId="one">
       <div
         className={classes(
           "grid h-screen w-full grid-cols-3 grid-rows-3",
@@ -67,7 +71,7 @@ const PixelsPage: NextPage = () => {
           )}
         </div>
       </div>
-    </>
+    </PixelProvider>
   );
 };
 
