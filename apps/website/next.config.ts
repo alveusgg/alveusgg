@@ -25,6 +25,12 @@ function urlOriginAsRemotePattern(url: string): RemotePattern {
   };
 }
 
+const s3Pattern = urlOriginAsRemotePattern(
+  process.env.FILE_STORAGE_CDN_URL ||
+    process.env.FILE_STORAGE_ENDPOINT ||
+    "https://localhost",
+);
+
 const config: NextConfig = {
   reactStrictMode: true,
   images: {
@@ -76,12 +82,10 @@ const config: NextConfig = {
         hostname: "www.alveussanctuary.org",
       },
       // S3 - File Storage
-      urlOriginAsRemotePattern(
-        process.env.FILE_STORAGE_CDN_URL ||
-          process.env.FILE_STORAGE_ENDPOINT ||
-          "https://localhost",
-      ),
+      s3Pattern,
     ],
+    // Allow localhost requests if the S3 pattern requires it
+    dangerouslyAllowLocalIP: s3Pattern.hostname === "localhost",
     // Allow SVGs to be proxied through Next.js
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",

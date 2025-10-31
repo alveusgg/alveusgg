@@ -1,26 +1,44 @@
 import { getCalendarEvents } from "@/server/db/calendar-events";
 
 import { getFormattedTitle } from "@/data/calendar-events";
-import { channels } from "@/data/twitch";
+import {
+  channels,
+  isChannel,
+  isChannelWithCalendarEvents,
+} from "@/data/twitch";
 
 import { formatDateTimeRelative } from "@/utils/datetime";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 // API for chat bot
 // Matches the implementation of src/components/overlay/Event.tsx
-export async function GET() {
+export async function GET(
+  request: Request,
+  {
+    params,
+  }: {
+    params: Promise<{
+      channel: string;
+    }>;
+  },
+) {
+  const { channel } = await params;
+  if (!isChannel(channel) || !isChannelWithCalendarEvents(channel)) {
+    return new Response("Twitch channel not available", { status: 404 });
+  }
+
   try {
-    // Get the next event for the Alveus channel within the next 3 days
+    // Get the next event for the channel within the next 3 days
     const now = new Date();
     const next = new Date(now);
     next.setDate(next.getDate() + 3);
     const upcoming = await getCalendarEvents({
       start: now,
       end: next,
-    }).then((events) => events.find(channels.alveus.calendarEventFilter));
+    }).then((events) => events.find(channels[channel].calendarEventFilter));
 
     const title =
-      upcoming && getFormattedTitle(upcoming, channels.alveus.username, 30);
+      upcoming && getFormattedTitle(upcoming, channels[channel].username, 30);
     const time =
       upcoming &&
       formatDateTimeRelative(
