@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 
 import { trpc } from "@/utils/trpc";
@@ -30,9 +30,12 @@ export function DonationFeed() {
     "stream/donation-feed/last-shown",
     nullableDateSchema,
     null,
-    (val) => {
-      setInitialLastShown(val);
-    },
+    useCallback(
+      (val: Date | null) => {
+        setInitialLastShown(val);
+      },
+      [setInitialLastShown],
+    ),
   );
 
   const donationsQuery = trpc.donations.getDonationFeed.useInfiniteQuery(
@@ -121,12 +124,12 @@ export function DonationFeed() {
 
           if (i > 0 && donation.id === lastShownDonation?.id) {
             return (
-              <React.Fragment key={donation.id}>
+              <Fragment key={donation.id}>
                 <div className="bg-gray-600 p-1 text-center text-sm text-white italic">
                   <div>– Seen before –</div>
                 </div>
                 {item}
-              </React.Fragment>
+              </Fragment>
             );
           }
 
