@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type MouseEvent,
   type Ref,
   useCallback,
@@ -14,6 +15,7 @@ import {
   PIXEL_SIZE,
   type Pixel,
   usePixels,
+  usePixelsKey,
 } from "@/hooks/pixels";
 
 import PixelPreview, {
@@ -56,7 +58,7 @@ function positionTooltip(el: Element, x: number, y: number) {
   }
 }
 
-const Pixels = ({
+const PixelsInternal = ({
   filter,
   onFilter,
   className,
@@ -72,10 +74,13 @@ const Pixels = ({
   const canvas = useRef<HTMLCanvasElement>(null);
   const pixels = usePixels();
 
+  // Draw new pixels when we get them
   useEffect(() => {
     if (!pixels) return;
+
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
+
     pixels.forEach((pixel) => {
       const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
         c.charCodeAt(0),
@@ -229,6 +234,11 @@ const Pixels = ({
       </div>
     </div>
   );
+};
+
+const Pixels = (props: ComponentProps<typeof PixelsInternal>) => {
+  const key = usePixelsKey();
+  return <PixelsInternal key={key.join()} {...props} />;
 };
 
 export default Pixels;
