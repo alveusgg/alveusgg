@@ -399,3 +399,8 @@ export const usePixels = ({ onInit, onEvent }: LivePixelsParams = {}) => {
 
   return query.data;
 };
+
+export const usePixelsKey = () => {
+  const provider = usePixelContext();
+  return provider.key;
+};
