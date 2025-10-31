@@ -23,7 +23,7 @@ const flatNavStructure = Object.values(mainNavStructure)
   .map((item) => item.link);
 
 export const useActiveNav = () => {
-  const { pathname } = useRouter();
+  const { asPath } = useRouter();
 
   // Find the path with the most matching segments in the nav structure
   return useMemo(
@@ -31,7 +31,7 @@ export const useActiveNav = () => {
       flatNavStructure.reduce(
         ({ path, segments }, link) => {
           const linkSegments = link.split("/").filter(Boolean);
-          const pathSegments = pathname.split("/").filter(Boolean);
+          const pathSegments = asPath.split("/").filter(Boolean);
 
           const invalidSegment = linkSegments.findIndex(
             (seg, i) => seg !== pathSegments[i],
@@ -46,6 +46,6 @@ export const useActiveNav = () => {
         },
         { path: "/", segments: 0 },
       ).path,
-    [pathname],
+    [asPath],
   );
 };
