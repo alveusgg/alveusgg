@@ -72,6 +72,7 @@ const PixelsInternal = ({
   ref?: Ref<HTMLDivElement>;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const drawn = useRef<Set<string>>(new Set());
   const pixels = usePixels();
 
   // Draw new pixels when we get them
@@ -82,6 +83,10 @@ const PixelsInternal = ({
     if (!ctx) return;
 
     pixels.forEach((pixel) => {
+      const key = `${pixel.column}:${pixel.row}`;
+      if (drawn.current.has(key)) return;
+      drawn.current.add(key);
+
       const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
         c.charCodeAt(0),
       );
