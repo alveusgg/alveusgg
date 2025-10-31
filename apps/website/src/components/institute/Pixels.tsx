@@ -22,6 +22,8 @@ import PixelPreview, {
   type PixelPreviewRef,
 } from "@/components/institute/PixelPreview";
 
+import IconLoading from "@/icons/IconLoading";
+
 export const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
   // Convert y to letters (A, B, ..., Z, AA, AB, ..., ZZ, AAA, ...)
   let letters = "";
@@ -236,6 +238,13 @@ const PixelsInternal = ({
             <PixelPreview ref={pixelPreviewRef} />
           </div>
         </div>
+
+        <IconLoading
+          className={classes(
+            "pointer-events-none absolute top-1/2 left-1/2 -translate-1/2 transition-opacity",
+            pixels && "opacity-0",
+          )}
+        />
       </div>
     </div>
   );
