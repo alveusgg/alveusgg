@@ -3,6 +3,8 @@
 
 @plugin "./text-stroke.ts";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* FIXME: https://github.com/tailwindlabs/tailwindcss/discussions/15253 */
 @theme inline {
   --font-sans:

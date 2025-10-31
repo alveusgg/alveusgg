@@ -5,7 +5,7 @@ import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
 import { type AppType } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { type ReactNode, useEffect } from "react";
 
 import { unregisterServiceWorker } from "@/utils/sw";
 import { trpc } from "@/utils/trpc";
@@ -16,6 +16,8 @@ import FontProvider from "@/components/layout/Fonts";
 import Layout from "@/components/layout/Layout";
 
 import "@/styles/tailwind.css";
+
+import { ThemeScript } from "@/hooks/theme";
 
 unregisterServiceWorker();
 
@@ -54,12 +56,17 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
 }) => {
   const { pathname } = useRouter();
   const isStream = pathname.startsWith("/stream/");
+  const isAdminPopout =
+    pathname.startsWith("/admin/") && pathname.match(/\/popout\/?$/) !== null;
 
   // Add stream class to the root for stream pages
   useEffect(() => {
     if (isStream) document.documentElement.classList.add("stream");
     else document.documentElement.classList.remove("stream");
-  }, [isStream]);
+
+    if (isAdminPopout) document.documentElement.classList.add("admin-popout");
+    else document.documentElement.classList.remove("admin-popout");
+  }, [isStream, isAdminPopout]);
 
   if (isStream) {
     return (
@@ -67,7 +74,31 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
         <Head>
           <meta name="robots" content="noindex" />
         </Head>
+        <FontProvider>
+          <Component {...pageProps} />
+        </FontProvider>
+      </>
+    );
+  }
 
+  let content: ReactNode = (
+    <ConsentProvider>
+      <FontProvider>
+        <Layout>
+          <Component {...pageProps} />
+          <Analytics />
+        </Layout>
+      </FontProvider>
+    </ConsentProvider>
+  );
+
+  if (isAdminPopout) {
+    content = (
+      <>
+        <Head>
+          <meta name="robots" content="noindex" />
+        </Head>
+        <ThemeScript />
         <FontProvider>
           <Component {...pageProps} />
         </FontProvider>
@@ -79,14 +110,7 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
     <SessionProvider session={session}>
       <SessionChecker>
         <QueryClientProvider client={queryClient}>
-          <ConsentProvider>
-            <FontProvider>
-              <Layout>
-                <Component {...pageProps} />
-                <Analytics />
-              </Layout>
-            </FontProvider>
-          </ConsentProvider>
+          {content}
         </QueryClientProvider>
       </SessionChecker>
     </SessionProvider>

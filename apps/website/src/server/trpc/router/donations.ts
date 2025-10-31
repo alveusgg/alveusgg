@@ -14,34 +14,41 @@ import { sendChatMessage } from "@/server/apis/twitch";
 import {
   createDonations,
   createPixels,
+  getDonationFeed,
   getPixels,
-  getPublicDonations,
 } from "@/server/db/donations";
 import {
-  publicProcedure,
+  createCheckPermissionMiddleware,
+  protectedProcedure,
   router,
   sharedKeyProcedure,
 } from "@/server/trpc/trpc";
 
+import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
 
 import { getShortBaseUrl } from "@/utils/short-url";
 
 const DONATION_FEED_ENTRIES_PER_PAGE = 50;
 
+export type DonationFeed = Awaited<ReturnType<typeof getDonationFeed>>;
+
 export const donationsRouter = router({
-  getDonationsPublic: publicProcedure
+  getDonationFeed: protectedProcedure
+    .use(createCheckPermissionMiddleware(permissions.manageDonations))
     .input(
       z.object({
-        cursor: z.cuid().nullish(),
+        cursor: z.string().nullish(),
+        onlyPixels: z.boolean().default(false),
       }),
     )
     .query(async ({ input }) => {
       const { cursor } = input;
 
-      const donations = await getPublicDonations({
+      const donations = await getDonationFeed({
         take: DONATION_FEED_ENTRIES_PER_PAGE + 1,
         cursor: cursor || undefined,
+        onlyPixels: input.onlyPixels,
       });
 
       let nextCursor: typeof cursor | undefined = undefined;
