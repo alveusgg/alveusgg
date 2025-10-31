@@ -1,5 +1,3 @@
-import muralV1Grid from "@/data/pixel-project-grid.json";
-
 interface Grid {
   columns: number;
   rows: number;
@@ -13,7 +11,7 @@ interface CoreMural {
 
 interface StaticMural extends CoreMural {
   type: "static";
-  grid: Grid;
+  grid: Promise<Grid>;
 }
 
 interface LiveMural extends CoreMural {
@@ -22,11 +20,15 @@ interface LiveMural extends CoreMural {
 
 type Mural = StaticMural | LiveMural;
 
+const gridCache: Record<string, Promise<Grid>> = {};
+
 const murals = {
   one: {
     name: "Pixel Project",
     type: "static",
-    grid: muralV1Grid as Grid,
+    get grid() {
+      return (gridCache["one"] ??= import("@/data/pixel-project-grid.json"));
+    },
   },
   two: {
     name: "Pixel Project 2",

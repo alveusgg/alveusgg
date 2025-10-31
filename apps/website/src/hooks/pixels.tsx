@@ -347,9 +347,10 @@ const getStaticPixels = async (muralId: MuralId) => {
   }
 
   const pixels = data as PublicPixel[];
+  const grid = await mural.grid;
   return pixels.map((pixel) => {
     const location = `${pixel.column}:${pixel.row}`;
-    const data = mural.grid.squares[location];
+    const data = grid.squares[location];
     if (!data) throw new Error(`Data for pixel ${location} not found`);
     return { ...pixel, data };
   });
