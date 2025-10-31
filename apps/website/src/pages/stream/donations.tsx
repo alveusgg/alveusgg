@@ -51,7 +51,7 @@ function Donations() {
     <div className="w-full grow text-lg text-black">
       <div className="flex w-full flex-row border-b border-gray-400">
         <div className="grow p-2 text-center text-xl">
-          <PixelProvider muralId="one" type="static">
+          <PixelProvider muralId="one">
             <PixelsDescription />
           </PixelProvider>
         </div>

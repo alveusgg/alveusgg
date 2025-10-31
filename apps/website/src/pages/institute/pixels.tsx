@@ -24,7 +24,7 @@ const InstitutePixelsPage: NextPage = () => {
   const [fullscreen, setFullscreen] = useState(false);
 
   return (
-    <PixelProvider muralId="one" type="static">
+    <PixelProvider muralId="one">
       <Meta
         title="Pixel Project | Alveus Research & Recovery Institute"
         description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."

@@ -9,11 +9,8 @@ import { env } from "@/env";
 
 import type { PublicPixel } from "@/server/db/donations";
 
-import muralV1Grid from "@/data/pixel-project-grid.json";
-
-const COMPLETED_GRIDS = {
-  v1: muralV1Grid,
-};
+import type { MuralId } from "@/data/murals";
+import murals from "@/data/murals";
 
 export type Pixel = PublicPixel & { data: string };
 
@@ -24,13 +21,11 @@ export const PIXEL_TOTAL = PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT;
 
 interface SyncProviderOptions {
   url: string;
-  muralId: string;
 }
 
 interface CorePixelProvider {
   type: "sync" | "static";
   key: QueryKey;
-  muralId: string;
 }
 
 export type PixelSyncContext = Pixel[];
@@ -47,6 +42,7 @@ interface IPixelSyncProvider extends CorePixelProvider {
 
 interface IPixelStaticProvider extends CorePixelProvider {
   type: "static";
+  muralId: MuralId;
 }
 
 interface StateEvent {
@@ -75,7 +71,6 @@ type Callback = EventCallback | UpdateCallback;
 export class PixelSyncProvider implements IPixelSyncProvider {
   type = "sync" as const;
   key: QueryKey;
-  muralId: string;
   socket: WebSocket;
   url: string;
   options: SyncProviderOptions;
@@ -86,8 +81,7 @@ export class PixelSyncProvider implements IPixelSyncProvider {
   constructor(options: SyncProviderOptions) {
     this.options = options;
     this.url = this.options.url;
-    this.muralId = this.options.muralId;
-    this.key = ["pixels", this.muralId];
+    this.key = ["pixels", "live"];
     const socket = new WebSocket(this.url, undefined, { startClosed: true });
     socket.binaryType = "arraybuffer";
     this.socket = socket;
@@ -179,12 +173,12 @@ const getShiftedColor = (color: readonly [number, number, number, number]) =>
   ] as const;
 
 interface DemoPixelSyncProviderOptions {
-  muralId: string;
+  muralId: MuralId;
 }
 
 export class DemoPixelSyncProvider implements IPixelSyncProvider {
   key: QueryKey;
-  muralId: string;
+  muralId: MuralId;
   private updateInterval?: NodeJS.Timeout;
 
   constructor(options: DemoPixelSyncProviderOptions) {
@@ -281,15 +275,14 @@ const PixelSyncProviderContext = createContext<
 export const PixelProvider = ({
   children,
   muralId,
-  type,
 }: {
-  muralId: string;
-  type: "sync" | "static";
+  muralId: MuralId;
   children: ReactNode;
 }) => {
   const sync = useMemo(() => {
+    const mural = murals[muralId];
     // If the mural is static, we don't need to connect to the websocket
-    if (type === "static") {
+    if (mural.type === "static") {
       return {
         type: "static",
         key: ["pixels", "static", muralId],
@@ -308,9 +301,8 @@ export const PixelProvider = ({
     // If the mural is sync, we need to connect to the websocket
     return new PixelSyncProvider({
       url: `${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/sync`,
-      muralId,
     });
-  }, [muralId, type]);
+  }, [muralId]);
 
   useEffect(() => {
     if (sync.type === "static") return;
@@ -339,7 +331,12 @@ interface LivePixelsParams {
   onEvent?: (alert: DonationAlert) => void;
 }
 
-const getStaticPixels = async (muralId: string) => {
+const getStaticPixels = async (muralId: MuralId) => {
+  const mural = murals[muralId];
+  if (!mural) throw new Error(`Mural ${muralId} not found`);
+  if (mural.type !== "static")
+    throw new Error(`Mural ${muralId} is not static`);
+
   const response = await fetch(`/api/pixels/${muralId}`);
   const data = await response.json();
   if (!response.ok) {
@@ -347,9 +344,8 @@ const getStaticPixels = async (muralId: string) => {
   }
   const pixels = data as PublicPixel[];
   return pixels.map((pixel) => {
-    const location =
-      `${pixel.column}:${pixel.row}` as keyof typeof COMPLETED_GRIDS.v1.squares;
-    return { ...pixel, data: COMPLETED_GRIDS.v1.squares[location] };
+    const location = `${pixel.column}:${pixel.row}`;
+    return { ...pixel, data: mural.grid.squares[location] };
   });
 };
 
