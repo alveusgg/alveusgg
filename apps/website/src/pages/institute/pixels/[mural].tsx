@@ -64,7 +64,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
     <PixelProvider muralId={muralId}>
       <Meta
         title={`${mural.name} | Alveus Research & Recovery Institute`}
-        description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
+        description={mural.description}
         image={buildingHeroImage.src}
       >
         {fullscreen && (
