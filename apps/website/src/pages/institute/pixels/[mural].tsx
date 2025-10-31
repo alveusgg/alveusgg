@@ -1,6 +1,11 @@
-import { type NextPage } from "next";
+import { type GetStaticPaths, type GetStaticProps, type NextPage } from "next";
 import Image from "next/image";
 import { useState } from "react";
+
+import murals, { type MuralId, isMuralId } from "@/data/murals";
+
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { camelToKebab, kebabToCamel } from "@/utils/string-case";
 
 import { PixelProvider } from "@/hooks/pixels";
 
@@ -20,13 +25,45 @@ import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import buildingHeroImage from "@/assets/institute/hero/building.png";
 import usfwsRedWolfWalkingImage from "@/assets/institute/usfws-red-wolf-walking.jpg";
 
-const InstitutePixelsPage: NextPage = () => {
+export const getStaticPaths: GetStaticPaths = () => {
+  return {
+    paths: typeSafeObjectKeys(murals).map((key) => ({
+      params: { mural: camelToKebab(key) },
+    })),
+    fallback: false,
+  };
+};
+
+type InstitutePixelsPageProps = {
+  muralId: MuralId;
+};
+
+export const getStaticProps: GetStaticProps<InstitutePixelsPageProps> = async (
+  context,
+) => {
+  const mural = context.params?.mural;
+  if (typeof mural !== "string") return { notFound: true };
+
+  const muralId = kebabToCamel(mural);
+  if (!isMuralId(muralId)) return { notFound: true };
+
+  return {
+    props: {
+      muralId,
+    },
+  };
+};
+
+const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
+  muralId,
+}) => {
+  const mural = murals[muralId];
   const [fullscreen, setFullscreen] = useState(false);
 
   return (
-    <PixelProvider muralId="one">
+    <PixelProvider muralId={muralId}>
       <Meta
-        title="Pixel Project | Alveus Research & Recovery Institute"
+        title={`${mural.name} | Alveus Research & Recovery Institute`}
         description="Explore the institute mural featuring 10,000 pixels unlocked by generous donors, raising $1,000,000 to fund the initial development of the Alveus Research & Recovery Institute."
         image={buildingHeroImage.src}
       >
@@ -45,7 +82,7 @@ const InstitutePixelsPage: NextPage = () => {
         dark
         containerClassName="flex flex-wrap gap-4 justify-between items-end"
       >
-        <Heading>Alveus Research & Recovery Institute Pixel Project</Heading>
+        <Heading>Alveus Research & Recovery Institute {mural.name}</Heading>
         <Button
           href="/institute"
           dark

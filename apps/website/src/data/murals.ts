@@ -35,4 +35,7 @@ const murals = {
 } satisfies Record<string, Mural>;
 
 export type MuralId = keyof typeof murals;
+export const isMuralId = (value: unknown): value is MuralId =>
+  typeof value === "string" && value in murals;
+
 export default murals;
