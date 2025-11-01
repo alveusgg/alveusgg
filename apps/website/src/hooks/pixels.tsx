@@ -10,7 +10,7 @@ import { env } from "@/env";
 import type { PublicPixel } from "@/server/db/donations";
 
 import type { MuralId } from "@/data/murals";
-import murals, { isMuralId } from "@/data/murals";
+import murals from "@/data/murals";
 
 export type Pixel = PublicPixel & { data: string };
 
@@ -332,19 +332,13 @@ interface LivePixelsParams {
 }
 
 const getStaticPixels = async (muralId: MuralId) => {
-  if (!isMuralId(muralId)) {
-    throw new Error(`Invalid mural ID: ${muralId}`);
-  }
-
   const mural = murals[muralId];
   if (mural.type !== "static")
     throw new Error(`Mural ${muralId} is not static`);
 
   const response = await fetch(`/api/pixels/${muralId}`);
   const data = await response.json();
-  if (!response.ok) {
-    throw new Error("Failed to get pixels");
-  }
+  if (!response.ok) throw new Error("Failed to get pixels");
 
   const pixels = data as PublicPixel[];
   const grid = await mural.grid;
