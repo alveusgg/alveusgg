@@ -23,12 +23,14 @@ export async function getPublicPixels(muralId?: string) {
 
 export type PublicPixel = Awaited<ReturnType<typeof getPublicPixels>>[number];
 
-export async function getPublicDonations({
+export async function getDonationFeed({
   take,
   cursor,
+  onlyPixels = false,
 }: {
   take?: number;
   cursor?: string;
+  onlyPixels?: boolean;
 } = {}) {
   return (
     await prisma.donation.findMany({
@@ -40,12 +42,20 @@ export async function getPublicDonations({
         donatedAt: true,
         donatedBy: true,
         tags: true,
-        pixels: {
-          select: { identifier: true, column: true, row: true },
+        note: true,
+        _count: {
+          select: { pixels: true },
         },
       },
       take: take,
       cursor: cursor ? { id: cursor } : undefined,
+      where: onlyPixels
+        ? {
+            pixels: {
+              some: {},
+            },
+          }
+        : undefined,
       orderBy: {
         receivedAt: "desc",
       },
@@ -63,7 +73,8 @@ export async function getPublicDonations({
       amount: donation.amount,
       donatedAt: donation.donatedAt ?? donation.receivedAt,
       provider: donation.provider,
-      pixels: donation.pixels,
+      pixels: donation._count.pixels,
+      note: donation.note,
       tags: {
         campaign: tags.campaign,
         twitchBroadcasterId: tags.twitchBroadcasterId,
