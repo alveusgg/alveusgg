@@ -210,6 +210,7 @@ const PixelsInternal = ({
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
             filter && "contrast-50 grayscale-100",
+            !pixels && "pointer-events-none",
           )}
         />
 
