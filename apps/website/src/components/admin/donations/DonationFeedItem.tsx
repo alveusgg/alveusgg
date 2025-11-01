@@ -14,6 +14,18 @@ import DonationProviderIcon from "@/components/shared/DonationProviderIcon";
 import IconCheck from "@/icons/IconCheck";
 import IconPhoto from "@/icons/IconPhoto";
 
+const currencyFormatter = new Intl.NumberFormat(undefined, {
+  style: "currency",
+  currency: "USD",
+  unitDisplay: "narrow",
+  currencyDisplay: "narrowSymbol",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 2,
+});
+
+const formatDonationAmount = (amount: number) =>
+  currencyFormatter.format(Math.round(amount / 100));
+
 const timeAgo = (
   date: Date,
   { zone = "UTC" }: Partial<DateTimeOptions> = {},
@@ -32,15 +44,6 @@ const timeAgo = (
   const seconds = Math.floor(diff.seconds ?? 0);
   return seconds < 20 ? "now" : `${seconds}s`;
 };
-
-const formatDonationAmount = (amount: number) =>
-  Math.round(amount / 100).toLocaleString(undefined, {
-    style: "currency",
-    currency: "USD",
-    unitDisplay: "narrow",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 2,
-  });
 
 type Donation = DonationFeed[number];
 
