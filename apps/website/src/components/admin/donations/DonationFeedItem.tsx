@@ -1,5 +1,6 @@
 import { DateTime } from "luxon";
 import { motion } from "motion/react";
+import type { ReactNode } from "react";
 
 import type { DonationFeed } from "@/server/trpc/router/donations";
 
@@ -11,6 +12,7 @@ import { useTimestamp } from "@/hooks/timestamp";
 import DonationProviderIcon from "@/components/shared/DonationProviderIcon";
 
 import IconCheck from "@/icons/IconCheck";
+import IconPhoto from "@/icons/IconPhoto";
 
 const timeAgo = (
   date: Date,
@@ -41,6 +43,28 @@ const formatDonationAmount = (amount: number) =>
   });
 
 type Donation = DonationFeed[number];
+
+function Badge({
+  icon,
+  children,
+  className,
+}: {
+  icon: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div
+      className={classes(
+        "flex flex-row items-center gap-2 rounded-lg px-2 py-0.5 text-white",
+        className,
+      )}
+    >
+      <div className="shrink-0">{icon}</div>
+      <div>{children}</div>
+    </div>
+  );
+}
 
 function DonationFeedItem({
   donation,
@@ -97,18 +121,24 @@ function DonationFeedItem({
           )}
         </button>
 
-        <div className="flex flex-row items-center gap-2 rounded-lg bg-carnival px-2 py-0.5 text-white">
-          <DonationProviderIcon
-            className="size-3 shrink-0"
-            provider={donation.provider}
-          />
+        <Badge
+          className="bg-carnival"
+          icon={
+            <DonationProviderIcon
+              className="size-3"
+              provider={donation.provider}
+            />
+          }
+        >
           {formatDonationAmount(donation.amount)}
-        </div>
+        </Badge>
         {donation.pixels > 0 && (
-          <div className="rounded-lg bg-alveus-green-900 px-2 py-0.5 text-white">
-            🖼&nbsp;
+          <Badge
+            className="bg-alveus-green-900"
+            icon={<IconPhoto className="size-6" />}
+          >
             {donation.pixels.toLocaleString()}
-          </div>
+          </Badge>
         )}
         <div
           className={classes(
