@@ -1,7 +1,10 @@
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 
+import murals, { isMuralId } from "@/data/murals";
+
 import { classes } from "@/utils/classes";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import {
   PIXEL_GRID_HEIGHT,
@@ -20,9 +23,12 @@ const isMode = (mode: unknown): mode is Mode => modes.includes(mode as Mode);
 const PixelsPage: NextPage = () => {
   const { query } = useRouter();
   const mode = isMode(query.mode) ? query.mode : "corner";
+  const mural = isMuralId(query.mural)
+    ? query.mural
+    : typeSafeObjectKeys(murals).at(-1)!;
 
   return (
-    <PixelProvider muralId="one">
+    <PixelProvider muralId={mural}>
       <div
         className={classes(
           "grid h-screen w-full grid-cols-3 grid-rows-3",
