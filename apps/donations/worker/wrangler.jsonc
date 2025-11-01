@@ -67,6 +67,7 @@
         "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
         "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
         "STATE_KEY": "prod3",
+        "MURAL_ID": "one",
       },
 
       "migrations": [
@@ -123,6 +124,7 @@
         "TWITCH_CHARITY_NAME": "Example Charity",
         "PAYPAL_BUSINESS_EMAIL": "sb-pkpnu46749573@business.example.com",
         "STATE_KEY": "preview1",
+        "MURAL_ID": "one",
       },
 
       "migrations": [
