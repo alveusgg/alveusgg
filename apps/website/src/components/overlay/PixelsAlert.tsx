@@ -72,6 +72,8 @@ function PixelsAlert() {
         { ease: "anticipate" },
       );
 
+      const quick = info.pixels.length > 1;
+
       for (const pixel of info.pixels) {
         await animate([
           [multiplierRef.current, { opacity: 0, x: -20 }, { duration: 0 }],
@@ -100,7 +102,7 @@ function PixelsAlert() {
         await animate(
           pixelRef.current,
           { scale: 1.05, rotate: [0, 1, -1, 1.8, -0.8, 0], opacity: 1, y: 0 },
-          { ease: "easeInOut", duration: 1 },
+          { ease: "easeInOut", duration: quick ? 0.25 : 1 },
         );
 
         let current = parseInt(multiplierTextRef.current.innerText);
@@ -143,6 +145,8 @@ function PixelsAlert() {
           ),
         ]);
 
+        await delay(quick ? 500 : 1000);
+
         await animate([
           [multiplierRef.current, { opacity: 0, x: -20 }],
           [
@@ -150,7 +154,7 @@ function PixelsAlert() {
             { height: "105%", x: "-50%", y: "-2.5%" },
             { duration: 0 },
           ],
-          [pixelTitleRef.current, { opacity: 0, y: 40 }],
+          [pixelTitleRef.current, { opacity: 0, y: 40 }, { duration: 0.15 }],
           [
             pixelRef.current,
             { opacity: 0, y: 40, scale: 0.8 },
@@ -268,6 +272,8 @@ function PixelsAlert() {
 export default PixelsAlert;
 
 type Task<T> = () => Promise<T>;
+
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // A basic but robust promise lock
 export const createPromiseLock = () => {
