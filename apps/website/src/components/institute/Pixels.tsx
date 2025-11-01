@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type MouseEvent,
   type Ref,
   useCallback,
@@ -14,11 +15,14 @@ import {
   PIXEL_SIZE,
   type Pixel,
   usePixels,
+  usePixelsKey,
 } from "@/hooks/pixels";
 
 import PixelPreview, {
   type PixelPreviewRef,
 } from "@/components/institute/PixelPreview";
+
+import IconLoading from "@/icons/IconLoading";
 
 export const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
   // Convert y to letters (A, B, ..., Z, AA, AB, ..., ZZ, AAA, ...)
@@ -56,7 +60,7 @@ function positionTooltip(el: Element, x: number, y: number) {
   }
 }
 
-const Pixels = ({
+const PixelsInternal = ({
   filter,
   onFilter,
   className,
@@ -70,13 +74,21 @@ const Pixels = ({
   ref?: Ref<HTMLDivElement>;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const drawn = useRef<Set<string>>(new Set());
   const pixels = usePixels();
 
+  // Draw new pixels when we get them
   useEffect(() => {
     if (!pixels) return;
+
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
+
     pixels.forEach((pixel) => {
+      const key = `${pixel.column}:${pixel.row}`;
+      if (drawn.current.has(key)) return;
+      drawn.current.add(key);
+
       const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
         c.charCodeAt(0),
       );
@@ -198,6 +210,7 @@ const Pixels = ({
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
             filter && "contrast-50 grayscale-100",
+            !pixels && "pointer-events-none",
           )}
         />
 
@@ -226,9 +239,21 @@ const Pixels = ({
             <PixelPreview ref={pixelPreviewRef} />
           </div>
         </div>
+
+        <IconLoading
+          className={classes(
+            "pointer-events-none absolute top-1/2 left-1/2 -translate-1/2 transition-opacity",
+            pixels && "opacity-0",
+          )}
+        />
       </div>
     </div>
   );
+};
+
+const Pixels = (props: ComponentProps<typeof PixelsInternal>) => {
+  const key = usePixelsKey();
+  return <PixelsInternal key={key.join()} {...props} />;
 };
 
 export default Pixels;

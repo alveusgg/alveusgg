@@ -12,7 +12,7 @@ const Wolves = ({
   image: { src: ImageProps["src"]; alt: string };
 }) => (
   <>
-    <div className="@container relative my-8 grid auto-rows-fr grid-cols-1 gap-4">
+    <div className="@container relative my-4 grid w-full auto-rows-fr grid-cols-1 gap-4">
       <Image
         src={image.src}
         width={240}
@@ -53,7 +53,7 @@ const Wolves = ({
 
     {children}
 
-    <ul className="mt-8 text-left text-xs opacity-75" id="wolf-sources">
+    <ul className="mt-4 text-left text-xs opacity-75" id="wolf-sources">
       <li className="mb-1">
         [1]{" "}
         <Link

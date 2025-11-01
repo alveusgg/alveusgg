@@ -274,7 +274,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
                   Learn More About the Institute
                 </Button>
 
-                <Button href="/donate" dark>
+                <Button href="/institute/pixels/two" dark>
                   Donate to Support the Institute
                 </Button>
               </div>

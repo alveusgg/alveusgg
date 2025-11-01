@@ -10,7 +10,7 @@ import { env } from "@/env";
 import type { PublicPixel } from "@/server/db/donations";
 
 import type { MuralId } from "@/data/murals";
-import murals from "@/data/murals";
+import murals, { isMuralId } from "@/data/murals";
 
 export type Pixel = PublicPixel & { data: string };
 
@@ -332,8 +332,11 @@ interface LivePixelsParams {
 }
 
 const getStaticPixels = async (muralId: MuralId) => {
+  if (!isMuralId(muralId)) {
+    throw new Error(`Invalid mural ID: ${muralId}`);
+  }
+
   const mural = murals[muralId];
-  if (!mural) throw new Error(`Mural ${muralId} not found`);
   if (mural.type !== "static")
     throw new Error(`Mural ${muralId} is not static`);
 
@@ -342,10 +345,12 @@ const getStaticPixels = async (muralId: MuralId) => {
   if (!response.ok) {
     throw new Error("Failed to get pixels");
   }
+
   const pixels = data as PublicPixel[];
+  const grid = await mural.grid;
   return pixels.map((pixel) => {
     const location = `${pixel.column}:${pixel.row}`;
-    const data = mural.grid.squares[location];
+    const data = grid.squares[location];
     if (!data) throw new Error(`Data for pixel ${location} not found`);
     return { ...pixel, data };
   });
@@ -393,4 +398,9 @@ export const usePixels = ({ onInit, onEvent }: LivePixelsParams = {}) => {
   }, [onEvent, onInit, provider, client, query.isSuccess]);
 
   return query.data;
+};
+
+export const usePixelsKey = () => {
+  const provider = usePixelContext();
+  return provider.key;
 };
