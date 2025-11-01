@@ -1,7 +1,10 @@
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 
+import murals, { isMuralId } from "@/data/murals";
+
 import { classes } from "@/utils/classes";
+import { typeSafeObjectKeys } from "@/utils/helpers";
 
 import {
   PIXEL_GRID_HEIGHT,
@@ -32,6 +35,9 @@ const isAlertVariant = (variant: unknown): variant is AlertVariant =>
 const PixelsPage: NextPage = () => {
   const { query } = useRouter();
   const mode = isMode(query.mode) ? query.mode : "corner";
+  const mural = isMuralId(query.mural)
+    ? query.mural
+    : typeSafeObjectKeys(murals).at(-1)!;
 
   if (mode === "alert") {
     return (
@@ -45,7 +51,7 @@ const PixelsPage: NextPage = () => {
   const showAlert = alertVariant !== "none";
 
   return (
-    <PixelProvider muralId="two">
+    <PixelProvider muralId={mural}>
       {showAlert && (
         <div
           className={classes(
