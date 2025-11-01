@@ -3,6 +3,7 @@ import { z } from "zod";
 
 import { trpc } from "@/utils/trpc";
 
+import { usePrependScrollLock } from "@/hooks/prepend-scroll-lock";
 import useLocalStorage from "@/hooks/storage";
 
 import { LoadMoreTrigger } from "@/components/LoadMoreTrigger";
@@ -60,6 +61,8 @@ export function DonationFeed() {
     (donation) =>
       initialLastShown !== null && donation.donatedAt <= initialLastShown,
   );
+
+  usePrependScrollLock(donations.length);
 
   const onLoadMore = useCallback(() => {
     if (
