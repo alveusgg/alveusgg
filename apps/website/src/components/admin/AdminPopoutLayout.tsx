@@ -55,7 +55,8 @@ function AdminPopoutLayout({
                 await signOut();
               }}
             >
-              Log Out ({session.data?.user?.name})
+              Log Out
+              {user?.name ? ` (${user.name})` : ""}
             </button>
           )}
         </div>
