@@ -73,7 +73,7 @@ export function DonationFeed() {
   }, [donationsQuery]);
 
   return (
-    <div className="w-full text-lg tabular-nums select-none">
+    <div className="w-full text-lg tabular-nums">
       <div className="flex w-full flex-row gap-2 border-t border-b border-gray-400 px-2">
         <div className="grow text-center text-xl">
           {/* <PixelsDescription /> */}

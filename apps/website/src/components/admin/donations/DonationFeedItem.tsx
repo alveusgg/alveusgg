@@ -88,7 +88,7 @@ function DonationFeedItem({
     <motion.div
       key={donation.id}
       className={classes(
-        "group border-b border-gray/50 px-2 py-1",
+        "border-b border-gray/50 px-2 py-1",
         isNow && "text-red-800",
         !isNow && isRecent && "text-red-900",
       )}
@@ -151,7 +151,7 @@ function DonationFeedItem({
         <div className="text-right">{timeFormatted}</div>
       </div>
       {donation.note ? (
-        <div className="text-md ml-6 overflow-hidden px-2 py-1 text-ellipsis whitespace-nowrap text-black/80 italic group-hover:whitespace-normal dark:text-white/80">
+        <div className="text-md ml-6 overflow-hidden px-2 py-1 text-ellipsis text-black/80 italic dark:text-white/80">
           {donation.note}
         </div>
       ) : null}
