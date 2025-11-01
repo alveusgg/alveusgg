@@ -506,7 +506,7 @@ model Pixel {
 
   donation Donation @relation(fields: [donationId], references: [id])
 
-  @@unique([column, row], name: "Pixel_coordinate")
+  @@unique([column, row, muralId], name: "Pixel_coordinate")
   @@index([donationId], name: "Pixel_donationId")
   @@index([muralId], name: "Pixel_muralId")
 }
