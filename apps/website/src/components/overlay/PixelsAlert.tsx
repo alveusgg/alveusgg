@@ -3,6 +3,8 @@ import { useCallback, useMemo, useRef } from "react";
 
 import type { DonationAlert } from "@alveusgg/donations-core";
 
+import { delay } from "@/utils/delay";
+
 import { PIXEL_SIZE, usePixels } from "@/hooks/pixels";
 
 import { coordsToGridRef } from "@/components/institute/Pixels";
@@ -272,8 +274,6 @@ function PixelsAlert() {
 export default PixelsAlert;
 
 type Task<T> = () => Promise<T>;
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 // A basic but robust promise lock
 export const createPromiseLock = () => {
