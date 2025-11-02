@@ -128,22 +128,25 @@ const PixelsInternal = ({
       const filteredPixels = filtered.filter((p): p is Pixel => !!p);
       onFilter?.(filteredPixels);
 
-      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
-      ctx.filter = "blur(1px)";
-      await Promise.all(
-        filteredPixels.map(async (pixel) => {
-          if (controller.signal.aborted) return;
+      // Draw glow, but only if we have less than 200 pixels to draw
+      if (filteredPixels.length <= 200) {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.filter = "blur(1px)";
+        await Promise.all(
+          filteredPixels.map(async (pixel) => {
+            if (controller.signal.aborted) return;
 
-          ctx.fillRect(
-            pixel.column * PIXEL_SIZE - 1,
-            pixel.row * PIXEL_SIZE - 1,
-            PIXEL_SIZE + 2,
-            PIXEL_SIZE + 2,
-          );
-        }),
-      );
+            ctx.fillRect(
+              pixel.column * PIXEL_SIZE - 1,
+              pixel.row * PIXEL_SIZE - 1,
+              PIXEL_SIZE + 2,
+              PIXEL_SIZE + 2,
+            );
+          }),
+        );
 
-      ctx.filter = "none";
+        ctx.filter = "none";
+      }
 
       await Promise.all(
         filteredPixels.map(async (pixel) => {
@@ -248,7 +251,7 @@ const PixelsInternal = ({
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
-            filter && "bg-gray-400/90",
+            filter && "bg-alveus-green-900/60",
           )}
         />
 
