@@ -295,10 +295,9 @@ export function ShowAndTellEntryForm({
         if (
           hadInitialLocation &&
           hasLocation &&
-          initialLocation &&
-          initialLocation.latitude === userSelectedLocation.latitude &&
-          initialLocation.longitude === userSelectedLocation.longitude &&
-          initialLocation.location === userSelectedLocation.location
+          initialLocation?.latitude === userSelectedLocation.latitude &&
+          initialLocation?.longitude === userSelectedLocation.longitude &&
+          initialLocation?.location === userSelectedLocation.location
         ) {
           return;
         }
