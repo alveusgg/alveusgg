@@ -9,7 +9,12 @@ import Box from "@/components/content/Box";
 import { EditPixelForm } from "@/components/institute/EditPixelForm";
 import { PixelIdentifierInput } from "@/components/institute/PixelIdentifierInput";
 import { MessageBox } from "@/components/shared/MessageBox";
-import { Button } from "@/components/shared/form/Button";
+import {
+  Button,
+  secondaryButtonClasses,
+} from "@/components/shared/form/Button";
+
+import IconX from "@/icons/IconX";
 
 export type SharedEditPixelProps = {
   overrideIdentifier: string | null;
@@ -47,11 +52,11 @@ export function EditPixelsForm({
 
   let infoBox: ReactNode;
   if (renameMutation.isPending) {
-    infoBox = <MessageBox>Renaming all your Pixels…</MessageBox>;
+    infoBox = <MessageBox>Renaming your pixels…</MessageBox>;
   } else if (renameMutation.isError) {
     infoBox = (
       <MessageBox variant="failure">
-        Error renaming Pixels: {renameMutation.error.message}
+        Error renaming pixels: {renameMutation.error.message}
       </MessageBox>
     );
   } else if (renameMutation.isSuccess) {
@@ -71,7 +76,7 @@ export function EditPixelsForm({
     const skippedMessage =
       skippedCount > 0 ? (
         <p className="mt-2 text-sm text-gray-700 italic">
-          {skippedCount} Pixels were skipped because they could not be renamed
+          {skippedCount} pixels were skipped because they could not be renamed
           at this time.
         </p>
       ) : (
@@ -82,10 +87,10 @@ export function EditPixelsForm({
       infoBox = (
         <MessageBox variant="failure">
           {!renamedCount ? (
-            <>Failed to rename Pixels.</>
+            <>Failed to rename pixels.</>
           ) : (
             <>
-              Renamed {renamedCount} Pixels, but failed to rename {failedCount}{" "}
+              Renamed {renamedCount} pixels, but failed to rename {failedCount}{" "}
               Pixels.
             </>
           )}
@@ -95,14 +100,14 @@ export function EditPixelsForm({
     } else if (renamedCount > 0) {
       infoBox = (
         <MessageBox variant="success">
-          Successfully renamed {renamedCount} Pixels!
+          Successfully renamed {renamedCount} pixels!
           {skippedMessage}
         </MessageBox>
       );
     } else {
       infoBox = (
         <MessageBox variant="warning">
-          No Pixels were renamed.
+          No pixels were renamed.
           {skippedMessage}
         </MessageBox>
       );
@@ -129,6 +134,7 @@ export function EditPixelsForm({
 
               <form
                 onSubmit={submitRenameAll}
+                onReset={() => setOverrideIdentifier("")}
                 className="mt-4 flex flex-col gap-6"
               >
                 <PixelIdentifierInput
@@ -138,21 +144,37 @@ export function EditPixelsForm({
                   placeholder={defaultIdentifier}
                 />
 
-                <Button
-                  size="small"
-                  type="submit"
-                  disabled={overridablePixelsCount === 0}
-                >
-                  Save {overridablePixelsCount}{" "}
-                  {pluralize("pixel", overridablePixelsCount)}
-                </Button>
+                <div>
+                  <div className="flex items-center gap-6">
+                    <div className="grow">
+                      <Button
+                        size="small"
+                        type="submit"
+                        disabled={overridablePixelsCount === 0}
+                      >
+                        Save {overridablePixelsCount}{" "}
+                        {pluralize("pixel", overridablePixelsCount)}
+                      </Button>
+                    </div>
+                    <div className="shrink">
+                      <Button
+                        size="small"
+                        type="reset"
+                        className={secondaryButtonClasses}
+                        disabled={!overrideIdentifier}
+                      >
+                        <IconX /> Reset
+                      </Button>
+                    </div>
+                  </div>
 
-                {overridablePixelsCount < totalCount ? (
-                  <p className="text-center text-sm">
-                    {totalCount - overridablePixelsCount} of {totalCount} Pixels
-                    are currently locked!
-                  </p>
-                ) : null}
+                  {overridablePixelsCount < totalCount ? (
+                    <p className="mt-2 text-center text-sm">
+                      {totalCount - overridablePixelsCount} of {totalCount}{" "}
+                      pixels are currently locked!
+                    </p>
+                  ) : null}
+                </div>
               </form>
             </Box>
           </div>
