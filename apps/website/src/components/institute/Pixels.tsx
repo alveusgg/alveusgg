@@ -122,46 +122,42 @@ const PixelsInternal = ({
         if (controller.signal.aborted || !match) return;
         return pixel;
       }) || [],
-    ).then(async (filtered) => {
+    ).then((filtered) => {
       if (controller.signal.aborted) return;
 
       const filteredPixels = filtered.filter((p): p is Pixel => !!p);
       onFilter?.(filteredPixels);
 
+      if (controller.signal.aborted) return;
+
       // Draw glow, but only if we have less than 200 pixels to draw
       if (filteredPixels.length <= 200) {
         ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
         ctx.filter = "blur(1px)";
-        await Promise.all(
-          filteredPixels.map(async (pixel) => {
-            if (controller.signal.aborted) return;
-
-            ctx.fillRect(
-              pixel.column * PIXEL_SIZE - 1,
-              pixel.row * PIXEL_SIZE - 1,
-              PIXEL_SIZE + 2,
-              PIXEL_SIZE + 2,
-            );
-          }),
-        );
-
+        filteredPixels.forEach((pixel) => {
+          ctx.fillRect(
+            pixel.column * PIXEL_SIZE - 1,
+            pixel.row * PIXEL_SIZE - 1,
+            PIXEL_SIZE + 2,
+            PIXEL_SIZE + 2,
+          );
+        });
         ctx.filter = "none";
       }
 
-      await Promise.all(
-        filteredPixels.map(async (pixel) => {
-          if (controller.signal.aborted) return;
+      // Draw the actual pixels
+      filteredPixels.forEach((pixel) => {
+        if (controller.signal.aborted) return;
 
-          const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
-            c.charCodeAt(0),
-          );
-          ctx.putImageData(
-            new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
-            pixel.column * PIXEL_SIZE,
-            pixel.row * PIXEL_SIZE,
-          );
-        }),
-      );
+        const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+          c.charCodeAt(0),
+        );
+        ctx.putImageData(
+          new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
+          pixel.column * PIXEL_SIZE,
+          pixel.row * PIXEL_SIZE,
+        );
+      });
     });
 
     return () => controller.abort();
