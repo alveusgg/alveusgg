@@ -257,15 +257,74 @@ export function ShowAndTellEntryForm({
         : undefined,
     [entry],
   );
+  // Track if we've processed the initial location from MapPickerField
+  // This prevents false positives when MapPickerField initializes with existing location
+  // Use entry ID as key to reset when entry changes
+  const hasProcessedInitialLocationRef = useRef<{
+    entryId: string | undefined;
+    processed: boolean;
+  }>({ entryId: entry?.id, processed: false });
+
+  // Reset tracking when entry changes
+  useEffect(() => {
+    hasProcessedInitialLocationRef.current.entryId = entry?.id;
+    hasProcessedInitialLocationRef.current.processed = false;
+  }, [entry?.id]);
+
   const [postLocation, setPostLocation] = useState<MapLocation>(
     {} as MapLocation,
   );
   const handlePostLocation = useCallback(
     (userSelectedLocation: MapLocation) => {
       setPostLocation(userSelectedLocation);
-      markAsChanged();
+
+      // Check if location changed from initial value
+      const hasLocation =
+        userSelectedLocation.location &&
+        typeof userSelectedLocation.latitude === "number" &&
+        typeof userSelectedLocation.longitude === "number";
+      const hadInitialLocation =
+        initialLocation?.location &&
+        typeof initialLocation.latitude === "number" &&
+        typeof initialLocation.longitude === "number";
+
+      // On first call, check if this matches the initial location (from MapPickerField init)
+      if (!hasProcessedInitialLocationRef.current.processed) {
+        hasProcessedInitialLocationRef.current.processed = true;
+
+        // If it matches the initial location, this is just initialization - don't mark as changed
+        if (
+          hadInitialLocation &&
+          hasLocation &&
+          initialLocation.latitude === userSelectedLocation.latitude &&
+          initialLocation.longitude === userSelectedLocation.longitude &&
+          initialLocation.location === userSelectedLocation.location
+        ) {
+          return;
+        }
+
+        // Otherwise, this is a user action (adding location when there wasn't one, or changing it)
+        // Continue to check if it's different and mark as changed
+      }
+
+      // Location changed if:
+      // - Had location, now doesn't (cleared)
+      // - Didn't have location, now does (added)
+      // - Had location, now has different location (changed)
+      const locationChanged =
+        (!hadInitialLocation && hasLocation) ||
+        (hadInitialLocation && !hasLocation) ||
+        (hadInitialLocation &&
+          hasLocation &&
+          (initialLocation.latitude !== userSelectedLocation.latitude ||
+            initialLocation.longitude !== userSelectedLocation.longitude ||
+            initialLocation.location !== userSelectedLocation.location));
+
+      if (locationChanged) {
+        markAsChanged();
+      }
     },
-    [markAsChanged],
+    [markAsChanged, initialLocation],
   );
 
   const imageAttachmentsData = useUploadAttachmentsData(
