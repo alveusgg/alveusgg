@@ -2,9 +2,12 @@ import { type FormEvent, useState } from "react";
 
 import { env } from "@/env";
 
-import type { MyPixel } from "@/server/trpc/router/donations";
+import type { DonationPixel } from "@/server/trpc/router/donations";
 
+import { classes } from "@/utils/classes";
 import { formatDateTimeLocal } from "@/utils/datetime";
+
+import { PixelProvider } from "@/hooks/pixels";
 
 import type { SharedEditPixelProps } from "@/components/institute/EditPixelsForm";
 import { PixelIdentifierInput } from "@/components/institute/PixelIdentifierInput";
@@ -28,7 +31,7 @@ const confirmationMessage = (oldIdent: string, newIdent: string) =>
   `Pixels can only be renamed once every ${formatPixelRenameLockDuration()}.`;
 
 type EditPixelFormProps = SharedEditPixelProps & {
-  pixel: MyPixel;
+  pixel: DonationPixel;
   provider: "twitch" | "paypal";
 };
 
@@ -49,9 +52,11 @@ export function EditPixelForm({
     onRename(newIdentifier, pixel.id);
   };
 
-  const [identifier, setIdentifier] = useState(pixel.identifier);
+  const [identifier, setIdentifier] = useState("");
 
   const gridRef = coordsToGridRef({ x: pixel.column, y: pixel.row });
+
+  const hasOverride = !!overrideIdentifier;
 
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
@@ -70,32 +75,39 @@ export function EditPixelForm({
 
       <div className="flex flex-row items-center justify-center">
         <div className="overflow-hidden rounded-sm border border-gray-300 shadow-sm">
-          <RenderTimeLocked lockedUntil={pixel.lockedUntil}>
-            {(isLocked) => (
-              <PixelPreview
-                x={pixel.column}
-                y={pixel.row}
-                identifier={
-                  isLocked ? pixel.identifier : overrideIdentifier || identifier
-                }
-              />
-            )}
-          </RenderTimeLocked>
+          <PixelProvider muralId={pixel.muralId}>
+            <RenderTimeLocked lockedUntil={pixel.lockedUntil}>
+              {(isLocked) => (
+                <PixelPreview
+                  x={pixel.column}
+                  y={pixel.row}
+                  identifier={
+                    isLocked
+                      ? pixel.identifier
+                      : overrideIdentifier || identifier || pixel.identifier
+                  }
+                />
+              )}
+            </RenderTimeLocked>
+          </PixelProvider>
         </div>
       </div>
 
-      <div className="w-full">
-        <RenderTimeLocked lockedUntil={pixel.lockedUntil}>
-          {(isLocked) => (
+      <RenderTimeLocked lockedUntil={pixel.lockedUntil}>
+        {(isLocked) => (
+          <div
+            className={classes("w-full", !isLocked && hasOverride && "hidden")}
+          >
             <PixelIdentifierInput
               id={`${pixel.id}-identifier`}
               value={identifier}
               setValue={setIdentifier}
-              isDisabled={overrideIdentifier !== null || isLocked}
+              placeholder={pixel.identifier}
+              isDisabled={hasOverride || isLocked}
             />
-          )}
-        </RenderTimeLocked>
-      </div>
+          </div>
+        )}
+      </RenderTimeLocked>
 
       <RenderTimeLocked lockedUntil={pixel.lockedUntil}>
         {(isLocked) => (
@@ -106,20 +118,17 @@ export function EditPixelForm({
               pixel.identifier,
               identifier,
             )}
-            disabled={
-              renameMutation.isPending ||
-              overrideIdentifier !== null ||
-              isLocked
-            }
+            disabled={renameMutation.isPending || isLocked}
+            hidden={!isLocked && hasOverride}
           >
             {renameMutation.isPending
-              ? "Saving..."
+              ? "Saving…"
               : isLocked
                 ? `Locked until ${formatDateTimeLocal(pixel.lockedUntil!, {
                     time: "minutes",
                     timezone: false,
                   })}`
-                : "Save change"}
+                : "Save pixel"}
           </Button>
         )}
       </RenderTimeLocked>

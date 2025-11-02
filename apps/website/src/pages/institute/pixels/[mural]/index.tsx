@@ -97,7 +97,7 @@ export const getStaticPaths: GetStaticPaths = () => {
   };
 };
 
-type InstitutePixelsPageProps = {
+export type InstitutePixelsPageProps = {
   muralId: MuralId;
 };
 

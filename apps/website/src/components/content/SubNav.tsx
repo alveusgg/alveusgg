@@ -3,6 +3,7 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
+import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 import { classes } from "@/utils/classes";
@@ -20,21 +21,36 @@ type SubNavProps = {
   className?: string;
 };
 
-const SubNavInner = ({ links, className }: SubNavProps) => (
-  <div className={classes("gap-2", className)}>
-    {links.map(({ name, href }) => (
-      <Link
-        key={name}
-        href={href}
-        custom
-        className="flex items-center gap-1 rounded-full px-2 py-1 transition-colors hover:bg-alveus-green-200"
-      >
-        <IconChevronRight className="size-5" />
-        {name}
-      </Link>
-    ))}
-  </div>
-);
+const SubNavInner = ({ links, className }: SubNavProps) => {
+  const { asPath } = useRouter();
+
+  return (
+    <div className={classes("gap-2", className)}>
+      {links.map(({ name, href }) => {
+        const isActive = asPath === href;
+        const isAnchorLink = href.startsWith("#");
+
+        return (
+          <Link
+            key={name}
+            href={href}
+            custom
+            className={classes(
+              "flex items-center gap-1 rounded-full py-1 transition-colors",
+              isActive
+                ? "bg-alveus-green-800 text-white"
+                : "hover:bg-alveus-green-200",
+              isAnchorLink ? "px-2" : "px-4",
+            )}
+          >
+            {isAnchorLink ? <IconChevronRight className="size-5" /> : null}
+            {name}
+          </Link>
+        );
+      })}
+    </div>
+  );
+};
 
 const SubNav = ({ links, className }: SubNavProps) => (
   <nav

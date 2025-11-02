@@ -1,5 +1,5 @@
-import { Field, Label, Switch } from "@headlessui/react";
-import { type FormEvent, type ReactNode, useState } from "react";
+import pluralize from "pluralize";
+import { type FormEvent, type ReactNode } from "react";
 
 import type { DonationPixel } from "@/server/trpc/router/donations";
 
@@ -40,8 +40,6 @@ export function EditPixelsForm({
   onRename,
   defaultIdentifier = "",
 }: EditPixelsFormProps) {
-  const [enableOverridePreview, setEnableOverridePreview] = useState(false);
-
   const submitRenameAll = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onRename(overrideIdentifier ?? "Anonymous");
@@ -119,66 +117,49 @@ export function EditPixelsForm({
 
   return (
     <>
+      {infoBox}
+
       {totalCount > 1 ? (
         <>
           <h3 className="mt-8 mb-4 font-bold">Rename all your pixels</h3>
-          <Box className="bg-white p-4">
-            <div className="flex flex-row items-center justify-between leading-none">
-              <strong className="text-lg">All Pixels</strong>
-            </div>
 
-            <form
-              onSubmit={submitRenameAll}
-              className="mt-4 justify-between gap-6 md:flex md:flex-row"
-            >
-              <div className="flex max-w-sm grow flex-col gap-2">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            <Box className="bg-white p-4 lg:col-span-2">
+              <strong className="text-lg">All Pixels</strong>
+
+              <form
+                onSubmit={submitRenameAll}
+                className="mt-4 flex flex-col gap-6"
+              >
                 <PixelIdentifierInput
                   id="all-identifier"
                   value={overrideIdentifier ?? ""}
                   setValue={setOverrideIdentifier}
                   placeholder={defaultIdentifier}
                 />
-              </div>
-
-              <div className="flex max-w-sm grow flex-col gap-4">
-                <Field className="flex flex-wrap items-center justify-between gap-2">
-                  <Label className="flex flex-col leading-tight">
-                    <span>Enable preview mode</span>
-                    <span className="text-sm text-alveus-green-400 italic">
-                      (updates preview below without saving)
-                    </span>
-                  </Label>
-
-                  <Switch
-                    checked={enableOverridePreview}
-                    onChange={setEnableOverridePreview}
-                    className="group inline-flex h-6 w-11 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-green"
-                  >
-                    <span className="size-4 translate-x-1 rounded-full bg-alveus-tan transition-transform group-data-checked:translate-x-6" />
-                  </Switch>
-                </Field>
 
                 <Button
                   size="small"
                   type="submit"
                   disabled={overridablePixelsCount === 0}
                 >
-                  Save pixels ({overridablePixelsCount})
+                  Save {overridablePixelsCount}{" "}
+                  {pluralize("pixel", overridablePixelsCount)}
                 </Button>
 
-                <p className="text-center text-sm">
-                  {totalCount - overridablePixelsCount} of {totalCount} Pixels
-                  are currently locked!
-                </p>
-
-                {infoBox}
-              </div>
-            </form>
-          </Box>
+                {overridablePixelsCount < totalCount ? (
+                  <p className="text-center text-sm">
+                    {totalCount - overridablePixelsCount} of {totalCount} Pixels
+                    are currently locked!
+                  </p>
+                ) : null}
+              </form>
+            </Box>
+          </div>
         </>
       ) : null}
 
-      <h3 className="mt-8 mb-4 font-bold">Rename individual pixels</h3>
+      <h3 className="mt-8 mb-4 font-bold">Individual pixels</h3>
 
       {pixelsQuery.isError && pixelsQuery.error ? (
         <MessageBox variant="failure">
@@ -193,7 +174,7 @@ export function EditPixelsForm({
         <MessageBox>Could not find any Pixels!</MessageBox>
       ) : null}
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
         {pixelsQuery.data?.map((pixel) => {
           if (pixel.provider !== "paypal" && pixel.provider !== "twitch") {
             return null;
@@ -205,9 +186,7 @@ export function EditPixelsForm({
                 provider={pixel.provider}
                 renameMutation={renameMutation}
                 pixel={pixel}
-                overrideIdentifier={
-                  enableOverridePreview ? overrideIdentifier : null
-                }
+                overrideIdentifier={overrideIdentifier}
                 onRename={onRename}
               />
             </Box>

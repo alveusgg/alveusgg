@@ -3,6 +3,8 @@ import { z } from "zod";
 
 import type { DonationPixel } from "@/server/trpc/router/donations";
 
+import type { MuralId } from "@/data/murals";
+
 import { trpc } from "@/utils/trpc";
 
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
@@ -19,7 +21,7 @@ export const payPalVerificationSchema = z.object({
   email: z.email(),
 });
 
-export function EditPayPalPixels() {
+export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
   const [lastPixelsData, setLastPixelsData] = useState<
     DonationPixel[] | undefined
   >(undefined);
@@ -54,7 +56,10 @@ export function EditPayPalPixels() {
 
     if (input.success) {
       verificationRef.current = input.data;
-      getPayPalPixels.mutate(input.data);
+      getPayPalPixels.mutate({
+        muralId,
+        verification: input.data,
+      });
     } else {
       verificationRef.current = null;
     }
@@ -139,10 +144,13 @@ export function EditPayPalPixels() {
             }
 
             renameMutation.mutate(
-              { newIdentifier, pixelId, verification },
+              { muralId, newIdentifier, pixelId, verification },
               {
                 onSuccess: () => {
-                  getPayPalPixels.mutate(verification);
+                  getPayPalPixels.mutate({
+                    muralId,
+                    verification,
+                  });
                 },
               },
             );

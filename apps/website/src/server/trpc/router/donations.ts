@@ -36,6 +36,7 @@ import {
 } from "@/server/trpc/trpc";
 import { limit } from "@/server/utils/rate-limit";
 
+import { type MuralId, isMuralId } from "@/data/murals";
 import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
 
@@ -47,45 +48,37 @@ import { coordsToGridRef } from "@/components/institute/Pixels";
 
 const DONATION_FEED_ENTRIES_PER_PAGE = 50;
 
-export type MyPixel = {
-  id: string;
-  donationId: string;
-  receivedAt: Date;
-  identifier: string;
-  column: number;
-  row: number;
-  provider: Providers;
-  lockedUntil?: Date;
-};
-
 function isPixelLocked(pixel: { renamedAt: Date | null }) {
   return (
     pixel.renamedAt &&
     pixel.renamedAt >
-    new Date(Date.now() - env.NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS)
+      new Date(Date.now() - env.NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS)
   );
 }
 
 export type DonationPixel = ReturnType<typeof mapDonationPixels>[number];
 
 function mapDonationPixels(pixels: PixelWithDonation[]) {
-  return pixels.map((pixel) => {
-    return {
-      provider: pixel.donation.provider as Providers,
-      donationId: pixel.donationId,
-      receivedAt: pixel.receivedAt,
-      id: pixel.id,
-      identifier: pixel.identifier,
-      column: pixel.column,
-      row: pixel.row,
-      lockedUntil: pixel.renamedAt
-        ? new Date(
-          pixel.renamedAt.getTime() +
-          env.NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS,
-        )
-        : undefined,
-    } as const;
-  });
+  return pixels
+    .filter((pixel) => isMuralId(pixel.muralId))
+    .map((pixel) => {
+      return {
+        muralId: pixel.muralId as MuralId,
+        provider: pixel.donation.provider as Providers,
+        donationId: pixel.donationId,
+        receivedAt: pixel.receivedAt,
+        id: pixel.id,
+        identifier: pixel.identifier,
+        column: pixel.column,
+        row: pixel.row,
+        lockedUntil: pixel.renamedAt
+          ? new Date(
+              pixel.renamedAt.getTime() +
+                env.NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS,
+            )
+          : undefined,
+      } as const;
+    });
 }
 
 async function guardPayPalSearchMutation(req: NextApiRequest) {
@@ -166,33 +159,45 @@ export const donationsRouter = router({
       await createPixels(input.pixels);
     }),
 
-  getMyPixels: protectedProcedure.query(async ({ ctx }) =>
-    mapDonationPixels(await getMyPixels(ctx.session.user)),
-  ),
+  getMyPixels: protectedProcedure
+    .input(z.object({ muralId: z.string() }))
+    .query(async ({ input, ctx }) =>
+      mapDonationPixels(await getMyPixels(input.muralId, ctx.session.user)),
+    ),
 
   getPayPalPixels: publicProcedure
-    .input(payPalVerificationSchema)
+    .input(
+      z.object({
+        muralId: z.string(),
+        verification: payPalVerificationSchema,
+      }),
+    )
     .mutation(async ({ input, ctx }) => {
       await guardPayPalSearchMutation(ctx.req);
-      return mapDonationPixels(await getPayPalPixelsByVerification(input));
+      return mapDonationPixels(
+        await getPayPalPixelsByVerification(input.muralId, input.verification),
+      );
     }),
 
   renameMyPixels: protectedProcedure
     .input(
       z.object({
+        muralId: z.string(),
         newIdentifier: pixelIdentifierSchema,
         pixelId: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const pixels = await getMyPixels(ctx.session.user, input.pixelId).catch(
-        () => {
-          throw new TRPCError({
-            code: "INTERNAL_SERVER_ERROR",
-            message: "Failed to find pixels (database)",
-          });
-        },
-      );
+      const pixels = await getMyPixels(
+        input.muralId,
+        ctx.session.user,
+        input.pixelId,
+      ).catch(() => {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Failed to find pixels (database)",
+        });
+      });
 
       return renamePixels(
         pixels,
@@ -204,6 +209,7 @@ export const donationsRouter = router({
   renamePayPalPixels: publicProcedure
     .input(
       z.object({
+        muralId: z.string(),
         newIdentifier: pixelIdentifierSchema,
         verification: payPalVerificationSchema,
         pixelId: z.string().optional(),
@@ -213,6 +219,7 @@ export const donationsRouter = router({
       await guardPayPalSearchMutation(ctx.req);
 
       const pixels = await getPayPalPixelsByVerification(
+        input.muralId,
         input.verification,
         input.pixelId,
       ).catch(() => {

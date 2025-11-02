@@ -1,15 +1,23 @@
 import type { User } from "next-auth";
 import { useState } from "react";
 
+import type { MuralId } from "@/data/murals";
+
 import { trpc } from "@/utils/trpc";
 
 import { EditPixelsForm } from "@/components/institute/EditPixelsForm";
 
 import IconCheck from "@/icons/IconCheck";
 
-export function EditMyPixels({ user }: { user: User }) {
+export function EditMyPixels({
+  user,
+  muralId,
+}: {
+  user: User;
+  muralId: MuralId;
+}) {
   const utils = trpc.useUtils();
-  const pixels = trpc.donations.getMyPixels.useQuery();
+  const pixels = trpc.donations.getMyPixels.useQuery({ muralId });
   const username = user.name ?? "anonymous";
   const email = user.email ?? "no-email";
   const [overrideIdentifier, setOverrideIdentifier] = useState("");
@@ -31,7 +39,7 @@ export function EditMyPixels({ user }: { user: User }) {
         setOverrideIdentifier={setOverrideIdentifier}
         onRename={(newIdentifier, pixelId) => {
           renameMutation.mutate(
-            { newIdentifier, pixelId },
+            { muralId, newIdentifier, pixelId },
             {
               onSuccess: () => {
                 utils.donations.getMyPixels.invalidate();
