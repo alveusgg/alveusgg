@@ -80,7 +80,11 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
               <LoginWithTwitchButton />
             </MessageBox>
           ) : (
-            <EditMyPixels muralId={muralId} user={session.data.user} />
+            <EditMyPixels
+              key={muralId}
+              muralId={muralId}
+              user={session.data.user}
+            />
           )}
         </div>
       </Section>
@@ -94,7 +98,7 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
           information used to unlock them.
         </p>
 
-        <EditPayPalPixels muralId={muralId} />
+        <EditPayPalPixels key={muralId} muralId={muralId} />
       </Section>
     </PixelProvider>
   );
