@@ -122,7 +122,7 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
 
           {getPayPalPixels.isSuccess && getPayPalPixels.data.length < 1 ? (
             <MessageBox variant="warning">
-              No Pixels found! Please check the exact spelling including spaces
+              No pixels found! Please check the exact spelling including spaces
               and capitalization. Check the PayPal donation receipt you received
               via email.
             </MessageBox>
