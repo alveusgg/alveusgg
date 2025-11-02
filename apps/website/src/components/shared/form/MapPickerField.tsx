@@ -96,7 +96,13 @@ export const MapPickerField = ({
    * @param map The rendered map
    */
   const handleLocationSet = useCallback(
-    async (map: Map, lat: number, lon: number, location?: string) => {
+    async (
+      map: Map,
+      lat: number,
+      lon: number,
+      location?: string,
+      { isInitialSet = false } = {},
+    ) => {
       const roundedCoords = {
         lat: roundCoord(lat, coordsPrecision),
         lon: roundCoord(lon, coordsPrecision),
@@ -138,7 +144,7 @@ export const MapPickerField = ({
       };
 
       setPostLocation(newPostLocation);
-      onLocationChange(newPostLocation);
+      if (!isInitialSet) onLocationChange(newPostLocation);
     },
     [coordsPrecision, allowMultipleMarkers, onLocationChange],
   );
@@ -212,6 +218,7 @@ export const MapPickerField = ({
         initialLocation.latitude,
         initialLocation.longitude,
         initialLocation.location,
+        { isInitialSet: true },
       );
     }
 
