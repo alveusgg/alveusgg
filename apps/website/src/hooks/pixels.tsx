@@ -81,7 +81,7 @@ export class PixelSyncProvider implements IPixelSyncProvider {
   constructor(options: SyncProviderOptions) {
     this.options = options;
     this.url = this.options.url;
-    this.key = ["pixels", "live"];
+    this.key = ["pixels", "live", Math.random()];
     const socket = new WebSocket(this.url, undefined, { startClosed: true });
     socket.binaryType = "arraybuffer";
     this.socket = socket;
