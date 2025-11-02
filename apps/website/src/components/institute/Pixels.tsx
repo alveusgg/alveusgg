@@ -122,7 +122,7 @@ const PixelsInternal = ({
         if (controller.signal.aborted || !match) return;
         return pixel;
       }) || [],
-    ).then((filtered) => {
+    ).then(async (filtered) => {
       if (controller.signal.aborted) return;
 
       const filteredPixels = filtered.filter((p): p is Pixel => !!p);
@@ -146,8 +146,9 @@ const PixelsInternal = ({
       }
 
       // Draw the actual pixels
-      filteredPixels.forEach((pixel) => {
-        if (controller.signal.aborted) return;
+      for (let i = 0; i < filteredPixels.length; i++) {
+        const pixel = filteredPixels[i];
+        if (controller.signal.aborted || !pixel) continue;
 
         const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
           c.charCodeAt(0),
@@ -157,7 +158,11 @@ const PixelsInternal = ({
           pixel.column * PIXEL_SIZE,
           pixel.row * PIXEL_SIZE,
         );
-      });
+
+        if (i % 500 === 0) {
+          await new Promise(requestAnimationFrame);
+        }
+      }
     });
 
     return () => controller.abort();
