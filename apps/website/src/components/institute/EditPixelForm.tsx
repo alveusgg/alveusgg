@@ -114,7 +114,12 @@ export function EditPixelForm({
               pixel.identifier,
               identifier,
             )}
-            disabled={renameMutation.isPending || isLocked}
+            disabled={
+              !identifier ||
+              identifier === pixel.identifier ||
+              renameMutation.isPending ||
+              isLocked
+            }
             hidden={!isLocked && hasOverride}
           >
             {renameMutation.isPending

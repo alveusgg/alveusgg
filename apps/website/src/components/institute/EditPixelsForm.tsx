@@ -150,7 +150,9 @@ export function EditPixelsForm({
                       <Button
                         size="small"
                         type="submit"
-                        disabled={overridablePixelsCount === 0}
+                        disabled={
+                          !overrideIdentifier || overridablePixelsCount === 0
+                        }
                       >
                         Save {overridablePixelsCount}{" "}
                         {pluralize("pixel", overridablePixelsCount)}
