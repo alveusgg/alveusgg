@@ -1,5 +1,9 @@
 import { type ReactNode } from "react";
 
+import { classes } from "@/utils/classes";
+
+import Box from "@/components/content/Box";
+
 type MessageBoxProps = {
   children: ReactNode | ReactNode[];
   className?: string;
@@ -24,9 +28,5 @@ export function MessageBox({
       break;
   }
 
-  return (
-    <div className={`rounded-lg ${variantClasses} p-2 shadow-xl ${className}`}>
-      {children}
-    </div>
-  );
+  return <Box className={classes(variantClasses, className)}>{children}</Box>;
 }
