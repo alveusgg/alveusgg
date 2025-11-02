@@ -7,8 +7,6 @@ import type { DonationPixel } from "@/server/trpc/router/donations";
 import { classes } from "@/utils/classes";
 import { formatDateTimeLocal } from "@/utils/datetime";
 
-import { PixelProvider } from "@/hooks/pixels";
-
 import type { SharedEditPixelProps } from "@/components/institute/EditPixelsForm";
 import { PixelIdentifierInput } from "@/components/institute/PixelIdentifierInput";
 import PixelPreview from "@/components/institute/PixelPreview";
@@ -75,21 +73,19 @@ export function EditPixelForm({
 
       <div className="flex flex-row items-center justify-center">
         <div className="overflow-hidden rounded-sm border border-gray-300 shadow-sm">
-          <PixelProvider muralId={pixel.muralId}>
-            <RenderTimeLocked lockedUntil={pixel.lockedUntil}>
-              {(isLocked) => (
-                <PixelPreview
-                  x={pixel.column}
-                  y={pixel.row}
-                  identifier={
-                    isLocked
-                      ? pixel.identifier
-                      : overrideIdentifier || identifier || pixel.identifier
-                  }
-                />
-              )}
-            </RenderTimeLocked>
-          </PixelProvider>
+          <RenderTimeLocked lockedUntil={pixel.lockedUntil}>
+            {(isLocked) => (
+              <PixelPreview
+                x={pixel.column}
+                y={pixel.row}
+                identifier={
+                  isLocked
+                    ? pixel.identifier
+                    : overrideIdentifier || identifier || pixel.identifier
+                }
+              />
+            )}
+          </RenderTimeLocked>
         </div>
       </div>
 
