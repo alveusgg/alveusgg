@@ -59,7 +59,7 @@ function Badge({
   return (
     <div
       className={classes(
-        "flex flex-row items-center gap-2 rounded-lg px-2 py-0.5 text-white",
+        "flex flex-row items-center gap-1 rounded-lg px-1 py-0.5 text-sm text-white",
         className,
       )}
     >
@@ -111,7 +111,7 @@ function DonationFeedItem({
         duration: 10,
       }}
     >
-      <div className="flex flex-row items-center gap-2">
+      <div className="flex flex-row items-center gap-1">
         <button
           className="w-6"
           onClick={() => setLastSeen(donation.donatedAt)}
@@ -138,7 +138,7 @@ function DonationFeedItem({
         {donation.pixels > 0 && (
           <Badge
             className="bg-alveus-green-900"
-            icon={<IconPhoto className="size-6" />}
+            icon={<IconPhoto className="size-4" />}
           >
             {donation.pixels.toLocaleString()}
           </Badge>
@@ -151,7 +151,7 @@ function DonationFeedItem({
         >
           {donation.identifier}
         </div>
-        <div className="text-right">{timeFormatted}</div>
+        <div className="text-right text-sm">{timeFormatted}</div>
       </div>
       {donation.note ? (
         <div className="text-md ml-6 overflow-hidden px-2 py-1 text-ellipsis text-black/80 italic dark:text-white/80">

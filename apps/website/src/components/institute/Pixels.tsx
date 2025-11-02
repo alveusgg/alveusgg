@@ -1,4 +1,5 @@
 import {
+  type ComponentProps,
   type MouseEvent,
   type Ref,
   useCallback,
@@ -14,11 +15,14 @@ import {
   PIXEL_SIZE,
   type Pixel,
   usePixels,
+  usePixelsKey,
 } from "@/hooks/pixels";
 
 import PixelPreview, {
   type PixelPreviewRef,
 } from "@/components/institute/PixelPreview";
+
+import IconLoading from "@/icons/IconLoading";
 
 export const coordsToGridRef = ({ x, y }: { x: number; y: number }) => {
   // Convert y to letters (A, B, ..., Z, AA, AB, ..., ZZ, AAA, ...)
@@ -56,7 +60,7 @@ function positionTooltip(el: Element, x: number, y: number) {
   }
 }
 
-const Pixels = ({
+const PixelsInternal = ({
   filter,
   onFilter,
   className,
@@ -70,13 +74,21 @@ const Pixels = ({
   ref?: Ref<HTMLDivElement>;
 }) => {
   const canvas = useRef<HTMLCanvasElement>(null);
+  const drawn = useRef<Set<string>>(new Set());
   const pixels = usePixels();
 
+  // Draw new pixels when we get them
   useEffect(() => {
     if (!pixels) return;
+
     const ctx = canvas.current?.getContext("2d");
     if (!ctx) return;
+
     pixels.forEach((pixel) => {
+      const key = `${pixel.column}:${pixel.row}`;
+      if (drawn.current.has(key)) return;
+      drawn.current.add(key);
+
       const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
         c.charCodeAt(0),
       );
@@ -103,10 +115,40 @@ const Pixels = ({
     if (!filter) return;
 
     const controller = new AbortController();
+
     Promise.all(
       pixels?.map(async (pixel) => {
         const match = await filter(pixel, controller.signal);
         if (controller.signal.aborted || !match) return;
+        return pixel;
+      }) || [],
+    ).then(async (filtered) => {
+      if (controller.signal.aborted) return;
+
+      const filteredPixels = filtered.filter((p): p is Pixel => !!p);
+      onFilter?.(filteredPixels);
+
+      if (controller.signal.aborted) return;
+
+      // Draw glow, but only if we have less than 200 pixels to draw
+      if (filteredPixels.length <= 200) {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.filter = "blur(1px)";
+        filteredPixels.forEach((pixel) => {
+          ctx.fillRect(
+            pixel.column * PIXEL_SIZE - 1,
+            pixel.row * PIXEL_SIZE - 1,
+            PIXEL_SIZE + 2,
+            PIXEL_SIZE + 2,
+          );
+        });
+        ctx.filter = "none";
+      }
+
+      // Draw the actual pixels
+      for (let i = 0; i < filteredPixels.length; i++) {
+        const pixel = filteredPixels[i];
+        if (controller.signal.aborted || !pixel) continue;
 
         const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
           c.charCodeAt(0),
@@ -117,11 +159,10 @@ const Pixels = ({
           pixel.row * PIXEL_SIZE,
         );
 
-        return pixel;
-      }) || [],
-    ).then((filtered) => {
-      if (controller.signal.aborted) return;
-      onFilter?.(filtered.filter((p): p is Pixel => !!p));
+        if (i % 500 === 0) {
+          await new Promise(requestAnimationFrame);
+        }
+      }
     });
 
     return () => controller.abort();
@@ -181,7 +222,7 @@ const Pixels = ({
     >
       <div
         className={classes(
-          "relative z-40 h-full max-w-full bg-white",
+          "relative z-40 h-full max-w-full bg-gray-200",
           canvasClassName,
         )}
         style={{ aspectRatio: `${PIXEL_GRID_WIDTH} / ${PIXEL_GRID_HEIGHT}` }}
@@ -198,6 +239,7 @@ const Pixels = ({
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
             filter && "contrast-50 grayscale-100",
+            !pixels && "pointer-events-none",
           )}
         />
 
@@ -210,7 +252,7 @@ const Pixels = ({
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
-            filter && "bg-white/95",
+            filter && "bg-alveus-green-900/60",
           )}
         />
 
@@ -226,9 +268,21 @@ const Pixels = ({
             <PixelPreview ref={pixelPreviewRef} />
           </div>
         </div>
+
+        <IconLoading
+          className={classes(
+            "pointer-events-none absolute top-1/2 left-1/2 -translate-1/2 transition-opacity",
+            pixels && "opacity-0",
+          )}
+        />
       </div>
     </div>
   );
+};
+
+const Pixels = (props: ComponentProps<typeof PixelsInternal>) => {
+  const key = usePixelsKey();
+  return <PixelsInternal key={key.join()} {...props} />;
 };
 
 export default Pixels;

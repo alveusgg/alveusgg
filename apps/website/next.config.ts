@@ -8,6 +8,7 @@ import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import animalQuest from "@alveusgg/data/build/animal-quest";
 
+import murals from "@/data/murals";
 import socials from "@/data/socials";
 import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
 
@@ -260,11 +261,18 @@ const config: NextConfig = {
     {
       source: "/wolf",
       destination: "/institute",
-      permanent: true,
+      permanent: false,
     },
     {
       source: "/pixel(s)?",
-      destination: "/institute/pixels",
+      // Send the short URL to the most recent mural (for incoming donations)
+      destination: `/institute/pixels/${typeSafeObjectKeys(murals).at(-1)}`,
+      permanent: false,
+    },
+    {
+      source: "/institute/pixels",
+      // Send the /institute/pixels URL to the original mural
+      destination: `/institute/pixels/${typeSafeObjectKeys(murals).at(0)}`,
       permanent: true,
     },
     {

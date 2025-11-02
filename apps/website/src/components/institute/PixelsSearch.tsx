@@ -1,9 +1,9 @@
 import { Input, Transition } from "@headlessui/react";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import pluralize from "pluralize";
 import {
   type ChangeEvent,
+  type ReactNode,
   useCallback,
   useEffect,
   useMemo,
@@ -23,13 +23,12 @@ import IconArrowsOut from "@/icons/IconArrowsOut";
 import IconSearch from "@/icons/IconSearch";
 import IconX from "@/icons/IconX";
 
-import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
-import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-
 const PixelsSearch = ({
+  children,
   className,
   onFullscreen,
 }: {
+  children?: ReactNode;
   className?: string;
   onFullscreen?: (fullscreen: boolean) => void;
 }) => {
@@ -171,16 +170,7 @@ const PixelsSearch = ({
       )}
     >
       <div className="relative z-10 shrink grow">
-        <Image
-          src={leafRightImage2}
-          alt=""
-          className="pointer-events-none absolute bottom-0 left-full -z-10 h-3/4 max-h-64 w-auto -translate-x-2 -scale-x-100 drop-shadow-md select-none"
-        />
-        <Image
-          src={leafLeftImage3}
-          alt=""
-          className="pointer-events-none absolute top-full left-0 -z-10 h-2/5 max-h-48 w-auto -translate-x-2/5 -translate-y-1/3 -scale-x-100 drop-shadow-md select-none"
-        />
+        {children}
 
         <Pixels
           filter={filter}

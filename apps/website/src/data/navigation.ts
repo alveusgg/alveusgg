@@ -1,11 +1,15 @@
 import {
   typeSafeObjectEntries,
   typeSafeObjectFromEntries,
+  typeSafeObjectKeys,
 } from "@/utils/helpers";
+import { camelToKebab } from "@/utils/string-case";
 
 import socials from "@/components/shared/data/socials";
 
 import IconAmazon from "@/icons/IconAmazon";
+
+import murals from "./murals";
 
 export type NavStructureLink = {
   title: string;
@@ -40,10 +44,15 @@ export const mainNavStructure: NavStructure = {
         title: "Research & Recovery",
         link: "/institute",
       },
-      pixels: {
-        title: "Pixel Project",
-        link: "/institute/pixels",
-      },
+      ...typeSafeObjectFromEntries(
+        typeSafeObjectKeys(murals).map((key) => [
+          `mural-${key}`,
+          {
+            title: murals[key].name,
+            link: `/institute/pixels/${camelToKebab(key)}`,
+          },
+        ]),
+      ),
     },
   },
   explore: {
