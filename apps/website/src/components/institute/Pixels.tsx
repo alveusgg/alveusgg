@@ -115,25 +115,47 @@ const PixelsInternal = ({
     if (!filter) return;
 
     const controller = new AbortController();
+
     Promise.all(
       pixels?.map(async (pixel) => {
         const match = await filter(pixel, controller.signal);
         if (controller.signal.aborted || !match) return;
-
-        const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
-          c.charCodeAt(0),
-        );
-        ctx.putImageData(
-          new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
-          pixel.column * PIXEL_SIZE,
-          pixel.row * PIXEL_SIZE,
-        );
-
         return pixel;
       }) || [],
-    ).then((filtered) => {
+    ).then(async (filtered) => {
       if (controller.signal.aborted) return;
-      onFilter?.(filtered.filter((p): p is Pixel => !!p));
+
+      const filteredPixels = filtered.filter((p): p is Pixel => !!p);
+      onFilter?.(filteredPixels);
+
+      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+      await Promise.all(
+        filteredPixels.map(async (pixel) => {
+          if (controller.signal.aborted) return;
+
+          ctx.fillRect(
+            pixel.column * PIXEL_SIZE - 1,
+            pixel.row * PIXEL_SIZE - 1,
+            PIXEL_SIZE + 2,
+            PIXEL_SIZE + 2,
+          );
+        }),
+      );
+
+      await Promise.all(
+        filteredPixels.map(async (pixel) => {
+          if (controller.signal.aborted) return;
+
+          const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+            c.charCodeAt(0),
+          );
+          ctx.putImageData(
+            new ImageData(data, PIXEL_SIZE, PIXEL_SIZE),
+            pixel.column * PIXEL_SIZE,
+            pixel.row * PIXEL_SIZE,
+          );
+        }),
+      );
     });
 
     return () => controller.abort();
@@ -193,7 +215,7 @@ const PixelsInternal = ({
     >
       <div
         className={classes(
-          "relative z-40 h-full max-w-full bg-white",
+          "relative z-40 h-full max-w-full bg-gray-200",
           canvasClassName,
         )}
         style={{ aspectRatio: `${PIXEL_GRID_WIDTH} / ${PIXEL_GRID_HEIGHT}` }}
@@ -223,7 +245,7 @@ const PixelsInternal = ({
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
-            filter && "bg-white/95",
+            filter && "bg-gray-400/90",
           )}
         />
 
