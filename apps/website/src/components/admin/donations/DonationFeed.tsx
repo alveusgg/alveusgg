@@ -60,7 +60,7 @@ export function DonationFeed() {
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      refetchInterval: 5_000,
+      refetchInterval: 2_000,
     },
   );
 
