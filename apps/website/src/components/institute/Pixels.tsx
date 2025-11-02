@@ -128,7 +128,8 @@ const PixelsInternal = ({
       const filteredPixels = filtered.filter((p): p is Pixel => !!p);
       onFilter?.(filteredPixels);
 
-      ctx.fillStyle = "rgba(255, 255, 255, 0.8)";
+      ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+      ctx.filter = "blur(1px)";
       await Promise.all(
         filteredPixels.map(async (pixel) => {
           if (controller.signal.aborted) return;
@@ -141,6 +142,8 @@ const PixelsInternal = ({
           );
         }),
       );
+
+      ctx.filter = "none";
 
       await Promise.all(
         filteredPixels.map(async (pixel) => {
