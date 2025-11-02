@@ -130,7 +130,7 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
         </div>
       </form>
 
-      {persistedPixelsData ? (
+      {persistedPixelsData?.length ? (
         <EditPixelsForm
           defaultIdentifier={defaultIdentifier}
           pixelsQuery={pixelsQuery}
