@@ -270,14 +270,14 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
             </p>
 
             <div className="flex">
-              <Button
+              <Link
                 href={`/institute/pixels/${muralId}/rename`}
                 dark
                 className="mt-4 inline-flex items-center gap-2"
               >
-                <IconPencil className="size-5" />
+                <IconPencil className="size-4" />
                 Rename your pixels
-              </Button>
+              </Link>
             </div>
           </Box>
         </div>
