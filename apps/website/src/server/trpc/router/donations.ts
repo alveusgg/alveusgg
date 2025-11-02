@@ -36,7 +36,7 @@ import {
 } from "@/server/trpc/trpc";
 import { limit } from "@/server/utils/rate-limit";
 
-import { type MuralId, isMuralId } from "@/data/murals";
+import murals, { type MuralId, isMuralId } from "@/data/murals";
 import { permissions } from "@/data/permissions";
 import { channels } from "@/data/twitch";
 
@@ -241,6 +241,7 @@ async function renamePixels(
   newIdentifier: string,
   auditVerification: string,
 ) {
+  const affectedMurals = new Set<MuralId>();
   const results = await Promise.all(
     pixels.map((pixel) =>
       (async () => {
@@ -265,6 +266,8 @@ async function renamePixels(
         }
 
         try {
+          if (isMuralId(pixel.muralId)) affectedMurals.add(pixel.muralId);
+
           await renamePixel(pixel.id, newIdentifier);
           return {
             pixelId: pixel.id,
@@ -284,6 +287,23 @@ async function renamePixels(
       })(),
     ),
   );
+
+  if (env.NEXT_PUBLIC_DONATIONS_MANAGER_URL) {
+    const doesAffectLiveMural = affectedMurals
+      .values()
+      .some((muralId) => murals[muralId].type === "live");
+
+    if (doesAffectLiveMural) {
+      // Trigger a rebuild of the dynamic mural cache
+      fetch(`${env.NEXT_PUBLIC_DONATIONS_MANAGER_URL}/pixels/resync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `ApiKey ${env.TRPC_API_SHARED_KEY}`,
+        },
+      }).catch((_err) => {});
+    }
+  }
 
   if (env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL) {
     const messages: string[] = [];
