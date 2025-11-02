@@ -1,8 +1,13 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
 import { z } from "zod";
 
+import murals from "@/data/murals";
+
+import { typeSafeObjectKeys } from "@/utils/helpers";
 import { trpc } from "@/utils/trpc";
 
+import useLocaleString from "@/hooks/locale";
+import { PixelProvider, usePixels } from "@/hooks/pixels";
 import { usePrependScrollLock } from "@/hooks/prepend-scroll-lock";
 import useLocalStorage from "@/hooks/storage";
 
@@ -12,8 +17,18 @@ import IconFunnel from "@/icons/IconFunnel";
 
 import DonationFeedItem from "./DonationFeedItem";
 
+const newestMuralId = typeSafeObjectKeys(murals).at(-1);
+
 const nullableDateSchema = z.coerce.date().nullable();
 const boolSchema = z.boolean();
+
+function PixelsCount() {
+  return (
+    <p className="tabular-nums">
+      {useLocaleString(usePixels()?.length ?? 0)} pixels unlocked
+    </p>
+  );
+}
 
 export function DonationFeed() {
   const [onlyPixels, setOnlyPixels] = useLocalStorage(
@@ -45,7 +60,7 @@ export function DonationFeed() {
     },
     {
       getNextPageParam: (lastPage) => lastPage.nextCursor,
-      refetchInterval: 5_000,
+      refetchInterval: 2_000,
     },
   );
 
@@ -77,9 +92,13 @@ export function DonationFeed() {
 
   return (
     <div className="w-full tabular-nums">
-      <div className="flex w-full flex-row gap-2 border-t border-b border-gray-400 px-2">
-        <div className="grow text-center text-xl">
-          {/* <PixelsDescription /> */}
+      <div className="flex w-full flex-row items-center gap-2 border-t border-b border-gray-400 px-2">
+        <div className="grow text-center">
+          {newestMuralId ? (
+            <PixelProvider muralId={newestMuralId}>
+              <PixelsCount />
+            </PixelProvider>
+          ) : null}
         </div>
 
         <details className="relative">
