@@ -113,6 +113,24 @@ export async function createPixels(input: Omit<Pixel, "data">[]) {
   });
 }
 
+export function getPixelLeaderboard(muralId: string, take: number = 10) {
+  return prisma.pixel.groupBy({
+    by: ["identifier", "email"],
+    where: {
+      muralId: muralId,
+    },
+    _count: {
+      id: true,
+    },
+    orderBy: {
+      _count: {
+        id: "desc",
+      },
+    },
+    take: take,
+  });
+}
+
 function filterDonationByTwitchUserId<T extends string>(twitchUserId: T) {
   if (!twitchUserId) {
     throw new Error("Twitch user ID is required for Twitch donations filter");
