@@ -257,18 +257,23 @@ export function ShowAndTellEntryForm({
         : undefined,
     [entry],
   );
+
+  // Helper function to check if a location is valid
+  const isValidLocation = useCallback((location?: MapLocation): boolean => {
+    return (
+      !!location?.location &&
+      typeof location.latitude === "number" &&
+      typeof location.longitude === "number"
+    );
+  }, []);
+
   // Track if we've processed the initial location from MapPickerField
   // This prevents false positives when MapPickerField initializes with existing location
-  // Use entry ID as key to reset when entry changes
-  const hasProcessedInitialLocationRef = useRef<{
-    entryId: string | undefined;
-    processed: boolean;
-  }>({ entryId: entry?.id, processed: false });
+  const hasProcessedInitialLocationRef = useRef(false);
 
   // Reset tracking when entry changes
   useEffect(() => {
-    hasProcessedInitialLocationRef.current.entryId = entry?.id;
-    hasProcessedInitialLocationRef.current.processed = false;
+    hasProcessedInitialLocationRef.current = false;
   }, [entry?.id]);
 
   const [postLocation, setPostLocation] = useState<MapLocation>(
@@ -279,23 +284,18 @@ export function ShowAndTellEntryForm({
       setPostLocation(userSelectedLocation);
 
       // Check if location changed from initial value
-      const hasLocation =
-        userSelectedLocation.location &&
-        typeof userSelectedLocation.latitude === "number" &&
-        typeof userSelectedLocation.longitude === "number";
-      const hadInitialLocation =
-        initialLocation?.location &&
-        typeof initialLocation.latitude === "number" &&
-        typeof initialLocation.longitude === "number";
+      const hasLocation = isValidLocation(userSelectedLocation);
+      const hadInitialLocation = isValidLocation(initialLocation);
 
       // On first call, check if this matches the initial location (from MapPickerField init)
-      if (!hasProcessedInitialLocationRef.current.processed) {
-        hasProcessedInitialLocationRef.current.processed = true;
+      if (!hasProcessedInitialLocationRef.current) {
+        hasProcessedInitialLocationRef.current = true;
 
         // If it matches the initial location, this is just initialization - don't mark as changed
         if (
           hadInitialLocation &&
           hasLocation &&
+          initialLocation &&
           initialLocation.latitude === userSelectedLocation.latitude &&
           initialLocation.longitude === userSelectedLocation.longitude &&
           initialLocation.location === userSelectedLocation.location
@@ -316,15 +316,15 @@ export function ShowAndTellEntryForm({
         (hadInitialLocation && !hasLocation) ||
         (hadInitialLocation &&
           hasLocation &&
-          (initialLocation.latitude !== userSelectedLocation.latitude ||
-            initialLocation.longitude !== userSelectedLocation.longitude ||
-            initialLocation.location !== userSelectedLocation.location));
+          (initialLocation?.latitude !== userSelectedLocation.latitude ||
+            initialLocation?.longitude !== userSelectedLocation.longitude ||
+            initialLocation?.location !== userSelectedLocation.location));
 
       if (locationChanged) {
         markAsChanged();
       }
     },
-    [markAsChanged, initialLocation],
+    [markAsChanged, initialLocation, isValidLocation],
   );
 
   const imageAttachmentsData = useUploadAttachmentsData(
