@@ -6,7 +6,10 @@ import type { DonationPixel } from "@/server/trpc/router/donations";
 import type { trpc } from "@/utils/trpc";
 
 import Box from "@/components/content/Box";
-import { EditPixelForm } from "@/components/institute/EditPixelForm";
+import {
+  EditPixelForm,
+  formatPixelRenameLockDuration,
+} from "@/components/institute/EditPixelForm";
 import { PixelIdentifierInput } from "@/components/institute/PixelIdentifierInput";
 import { MessageBox } from "@/components/shared/MessageBox";
 import {
@@ -37,6 +40,10 @@ type EditPixelsFormProps = SharedEditPixelProps & {
     error: { message: string } | null;
   };
 };
+
+const confirmationMessage = (numberOfPixels: number, newIdent: string) =>
+  `Are you sure you want to rename ${numberOfPixels} ${pluralize("pixel", numberOfPixels)} to "${newIdent}"? ` +
+  `Pixels can only be renamed once every ${formatPixelRenameLockDuration()}.`;
 
 export function EditPixelsForm({
   overrideIdentifier,
@@ -159,6 +166,10 @@ export function EditPixelsForm({
                         disabled={
                           !overrideIdentifier || overridablePixelsCount === 0
                         }
+                        confirmationMessage={confirmationMessage(
+                          overridablePixelsCount,
+                          overrideIdentifier ?? "",
+                        )}
                       >
                         {renameMutation.isPending ? (
                           <>
