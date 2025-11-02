@@ -46,9 +46,7 @@ export default function PixelLeaderboard({
       <tbody>
         {query.data?.map(([identifier, count], index) => (
           <tr key={identifier} className="border-t border-current/10">
-            <td className="tablular-nums px-1 py-0.5 text-right">
-              {index + 1}
-            </td>
+            <td className="px-1 py-0.5 text-right tabular-nums">{index + 1}</td>
             <td className="w-full px-1 py-0.5">
               {showLinks ? (
                 <Link
@@ -61,7 +59,7 @@ export default function PixelLeaderboard({
                 identifier
               )}
             </td>
-            <td className="tablular-nums px-1 py-0.5 text-right">
+            <td className="px-1 py-0.5 text-right tabular-nums">
               {count.toLocaleString()}
             </td>
           </tr>
