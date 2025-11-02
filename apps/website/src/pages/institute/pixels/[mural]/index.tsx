@@ -269,7 +269,7 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
               mural.
             </p>
 
-            <div className="flex justify-end">
+            <div className="flex">
               <Button
                 href={`/institute/pixels/${muralId}/rename`}
                 dark
