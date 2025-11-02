@@ -3,21 +3,29 @@ import type { ZodType } from "zod";
 
 import { safeJSONParse } from "@/utils/helpers";
 
-const useLocalStorage = <T>(key: string, schema: ZodType<T>, initial: T) => {
+const useLocalStorage = <T>(
+  key: string,
+  schema: ZodType<T>,
+  initial: T,
+  onFetch?: (newValue: T) => void,
+) => {
   const [stored, setStored] = useState<T>(initial);
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const item = localStorage.getItem(key);
-      if (item) {
-        const parsed = safeJSONParse(item);
-        const result = schema.safeParse(parsed);
-        if (result.success) {
-          setStored(result.data);
-        }
+    if (typeof window === "undefined") return;
+
+    const item = localStorage.getItem(key);
+    if (!item) return;
+
+    const parsed = safeJSONParse(item);
+    const result = schema.safeParse(parsed);
+    if (result.success) {
+      setStored(result.data);
+      if (onFetch) {
+        onFetch(result.data);
       }
     }
-  }, [key, schema]);
+  }, [key, schema, onFetch]);
 
   const setValue = useCallback(
     (value: T | ((val: T) => T)) => {

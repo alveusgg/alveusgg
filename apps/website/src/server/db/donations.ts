@@ -8,8 +8,9 @@ export async function createDonations(input: Donation[]) {
   });
 }
 
-export async function getPublicPixels() {
+export async function getPublicPixels(muralId?: string) {
   return prisma.pixel.findMany({
+    where: { muralId: muralId },
     select: {
       identifier: true,
       email: true,
@@ -22,12 +23,14 @@ export async function getPublicPixels() {
 
 export type PublicPixel = Awaited<ReturnType<typeof getPublicPixels>>[number];
 
-export async function getPublicDonations({
+export async function getDonationFeed({
   take,
   cursor,
+  onlyPixels = false,
 }: {
   take?: number;
   cursor?: string;
+  onlyPixels?: boolean;
 } = {}) {
   return (
     await prisma.donation.findMany({
@@ -39,12 +42,20 @@ export async function getPublicDonations({
         donatedAt: true,
         donatedBy: true,
         tags: true,
-        pixels: {
-          select: { identifier: true, column: true, row: true },
+        note: true,
+        _count: {
+          select: { pixels: true },
         },
       },
       take: take,
       cursor: cursor ? { id: cursor } : undefined,
+      where: onlyPixels
+        ? {
+            pixels: {
+              some: {},
+            },
+          }
+        : undefined,
       orderBy: {
         receivedAt: "desc",
       },
@@ -62,7 +73,8 @@ export async function getPublicDonations({
       amount: donation.amount,
       donatedAt: donation.donatedAt ?? donation.receivedAt,
       provider: donation.provider,
-      pixels: donation.pixels,
+      pixels: donation._count.pixels,
+      note: donation.note,
       tags: {
         campaign: tags.campaign,
         twitchBroadcasterId: tags.twitchBroadcasterId,
@@ -71,8 +83,10 @@ export async function getPublicDonations({
   });
 }
 
-export async function getPixels() {
-  return prisma.pixel.findMany();
+export function getPixels(muralId: string) {
+  return prisma.pixel.findMany({
+    where: { muralId: muralId },
+  });
 }
 
 export async function createPixels(input: Omit<Pixel, "data">[]) {
@@ -81,6 +95,7 @@ export async function createPixels(input: Omit<Pixel, "data">[]) {
       (pixel) =>
         ({
           id: pixel.id,
+          muralId: pixel.muralId,
           receivedAt: pixel.receivedAt,
           donationId: pixel.donationId,
           identifier: pixel.identifier,

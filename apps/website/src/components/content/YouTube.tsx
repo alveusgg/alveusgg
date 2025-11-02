@@ -81,7 +81,7 @@ export const YouTubeEmbed = ({ videoId, caption }: EmbedProps) => (
       <iframe
         src={iframeSrc(videoId)}
         title="Video embed"
-        referrerPolicy="no-referrer"
+        referrerPolicy="strict-origin-when-cross-origin"
         allow="fullscreen; encrypted-media"
         sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox"
         loading="lazy"

@@ -10,6 +10,8 @@ import Slideshow from "@/components/content/Slideshow";
 import Transparency from "@/components/content/Transparency";
 import Wolves from "@/components/institute/Wolves";
 
+import IconArrowRight from "@/icons/IconArrowRight";
+
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import buildingHeroImage from "@/assets/institute/hero/building.png";
 import denHeroImage from "@/assets/institute/hero/den.png";
@@ -88,28 +90,27 @@ const InstitutePage: NextPage = () => {
           >
             <div className="flex grow flex-col items-start gap-4">
               <Heading id="pixels" level={2} link className="my-0 text-balance">
-                The Pixel Project is Complete!
+                The Pixel Project is Back!
               </Heading>
 
               <p className="text-lg text-balance">
-                Thanks to your incredible support, all 10,000 pixels in our
-                mural have been unlocked, raising $1,000,000 to fund the initial
-                development of the institute! While this milestone has been
-                reached, we still need your continued support to fund the
-                ongoing work at the Alveus Research & Recovery Institute. Every
-                donation helps us work towards our goal of saving species from
-                extinction.
+                Following your incredible support with the original Pixel
+                Project, unlocking all 10,000 pixels in our mural and raising
+                $1,000,000 to fund the initial development of the institute, we
+                are excited to announce the launch of Pixel Project 2! If you
+                didn&apos;t get a chance to unlock a pixel on the original
+                mural, now is your chance to join us as we continue fundraising
+                to support the development of ARRI.
               </p>
 
-              <div className="flex flex-wrap gap-4">
-                <Button href="/institute/pixels" dark>
-                  Explore the Completed Mural
-                </Button>
-
-                <Button href="/donate" dark>
-                  Donate to Support the Institute
-                </Button>
-              </div>
+              <Button
+                href="/institute/pixels/two"
+                dark
+                className="flex items-center gap-2"
+              >
+                Donate to Unlock a Pixel on Pixel Project 2
+                <IconArrowRight className="size-5" />
+              </Button>
             </div>
 
             <div className="z-0 flex w-full items-center justify-center lg:order-first lg:max-w-lg">
@@ -130,8 +131,12 @@ const InstitutePage: NextPage = () => {
         </div>
       </div>
 
-      <Section className="overflow-x-hidden" dark>
-        <Heading id="safe" level={2} link className="text-balance">
+      <Section
+        className="overflow-x-hidden"
+        containerClassName="flex flex-col gap-4 items-start"
+        dark
+      >
+        <Heading id="safe" level={2} link className="my-0 text-balance">
           Saving Animals From Extinction
         </Heading>
 

@@ -1,24 +1,72 @@
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 
-import { classes } from "@/utils/classes";
+import murals, { isMuralId } from "@/data/murals";
 
-import { PIXEL_GRID_HEIGHT, PIXEL_GRID_WIDTH } from "@/hooks/pixels";
+import { classes } from "@/utils/classes";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+
+import {
+  PIXEL_GRID_HEIGHT,
+  PIXEL_GRID_WIDTH,
+  PixelProvider,
+} from "@/hooks/pixels";
 
 import Pixels from "@/components/institute/Pixels";
 import PixelsDescription from "@/components/institute/PixelsDescription";
 import PixelsProgress from "@/components/institute/PixelsProgress";
+import PixelsAlert from "@/components/overlay/PixelsAlert";
 
-const modes = ["center", "corner", "progress"] as const;
+const modes = ["center", "corner", "progress", "alert"] as const;
 type Mode = (typeof modes)[number];
 const isMode = (mode: unknown): mode is Mode => modes.includes(mode as Mode);
+
+const alertVariants = [
+  "none",
+  "top-left",
+  "top-right",
+  "bottom-left",
+  "bottom-right",
+] as const;
+type AlertVariant = (typeof alertVariants)[number];
+const isAlertVariant = (variant: unknown): variant is AlertVariant =>
+  alertVariants.includes(variant as AlertVariant);
 
 const PixelsPage: NextPage = () => {
   const { query } = useRouter();
   const mode = isMode(query.mode) ? query.mode : "corner";
+  const mural = isMuralId(query.mural)
+    ? query.mural
+    : typeSafeObjectKeys(murals).at(-1)!;
+
+  if (mode === "alert") {
+    return (
+      <PixelProvider muralId="two">
+        <PixelsAlert />
+      </PixelProvider>
+    );
+  }
+
+  const alertVariant = isAlertVariant(query.alert) ? query.alert : "top-left";
+  const showAlert = alertVariant !== "none";
 
   return (
-    <>
+    <PixelProvider muralId={mural}>
+      {showAlert && (
+        <div
+          className={classes(
+            "absolute z-50 overflow-hidden",
+            alertVariant === "top-left" && "top-0 left-0",
+            alertVariant === "top-right" && "top-0 right-0",
+            alertVariant === "bottom-left" && "bottom-0 left-0",
+            alertVariant === "bottom-right" && "right-0 bottom-0",
+            mode === "progress" && "mb-24",
+          )}
+        >
+          <PixelsAlert />
+        </div>
+      )}
+
       <div
         className={classes(
           "grid h-screen w-full grid-cols-3 grid-rows-3",
@@ -67,7 +115,7 @@ const PixelsPage: NextPage = () => {
           )}
         </div>
       </div>
-    </>
+    </PixelProvider>
   );
 };
 

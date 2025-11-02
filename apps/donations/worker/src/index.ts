@@ -19,7 +19,7 @@ app.all("/donations/*", async (c) => {
 });
 
 app.all("/pixels/*", async (c) => {
-  const manager = c.env.PIXELS_MANAGER.getByName("alveus");
+  const manager = c.env.PIXELS_MANAGER.getByName(`alveus-${c.env.MURAL_ID}`);
   const request = forwardWithoutRoutePrefix(c);
   return await manager.fetch(request);
 });
@@ -51,7 +51,7 @@ export default {
     );
     await api.donations.createDonations.mutate({ donations });
 
-    const manager = env.PIXELS_MANAGER.getByName("alveus");
-    await manager.add(donations);
+    const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
+    await manager.process(donations);
   },
 } satisfies ExportedHandler<Env, string>;

@@ -5,7 +5,6 @@ import type { AppRouter } from "@alveusgg/alveusgg-website";
 import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
-import { logger } from "hono/logger";
 import { stringify, SuperJSON } from "superjson";
 import { z } from "zod";
 import { SyncProvider } from "../live/SyncProvider";
@@ -29,7 +28,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
   private provider?: SyncProvider<PixelsManagerState>;
   private grid?: Grid;
   private api?: ReturnType<typeof createTRPCProxyClient<AppRouter>>;
-  private key: string;
+  private muralId: string;
 
   public async ready() {
     if (!this.startup) {
@@ -40,11 +39,10 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
-    this.key = `pixels-${env.STATE_KEY}`;
+    this.muralId = env.MURAL_ID;
     const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()
-      .use(logger())
       .use(cors())
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
@@ -59,17 +57,21 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       .get("/sync", async () => {
         const { 0: client, 1: server } = new WebSocketPair();
         this.ctx.acceptWebSocket(server);
-        await this.sync(server);
+        await this.startWebsocketConnection(server);
         return new Response(null, { status: 101, webSocket: client });
       })
-      .post("/update/:column/:row", sharedKeyMiddleware, async (c) => {
-        const { column, row } = c.req.param();
-        const { data } = await c.req.json();
+      .post("/resync", sharedKeyMiddleware, async (c) => {
         try {
-          await this.update(column, row, data);
+          await this.ctx.blockConcurrencyWhile(async () => {
+            await this.resync();
+          });
           return c.json({ success: true });
-        } catch {
-          return c.json({ error: "Failed to update pixel" }, 500);
+        } catch (error) {
+          console.error(error);
+          return c.json(
+            { error: "Failed to resync pixels", success: false },
+            500,
+          );
         }
       });
   }
@@ -92,8 +94,25 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       ],
     });
 
+    const pixels = await this.getStateFromAPI();
+    this.provider = new SyncProvider({
+      state: { state: { pixels } },
+      init: { pixels: [] },
+    });
+  }
+
+  private async resync() {
+    if (!this.provider) throw new Error("Provider not initialized");
+    const pixels = await this.getStateFromAPI();
+    this.provider.update((state) => {
+      state.pixels = pixels;
+    });
+  }
+
+  private async getStateFromAPI() {
+    if (!this.api) throw new Error("API not initialized");
     const pixels: Omit<Pixel, "data">[] =
-      await this.api.donations.getPixels.query();
+      await this.api.donations.getPixels.query({ muralId: this.muralId });
 
     const pixelsWithImageData = pixels.map((pixel) => {
       if (!this.grid) throw new Error("Grid not initialized");
@@ -103,42 +122,18 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       };
     });
 
-    this.provider = new SyncProvider({
-      state: { state: { pixels: pixelsWithImageData } },
-      init: { pixels: [] },
-    });
+    return pixelsWithImageData;
   }
 
-  private async update(column: string, row: string, data: object) {
-    const schema = z.object({
-      identifier: z.string(),
-      column: z.coerce.number(),
-      row: z.coerce.number(),
-    });
-    const parsed = schema.parse({
-      column: parseInt(column),
-      row: parseInt(row),
-      ...data,
-    });
-    if (!this.provider) throw new Error("Provider not initialized");
-    this.provider.update((state) => {
-      const index = state.pixels.findIndex(
-        (pixel) => pixel.column === parsed.column && pixel.row === parsed.row,
-      );
-      if (index === -1) throw new Error("Pixel not found");
-      state.pixels[index] = {
-        ...state.pixels[index],
-        identifier: parsed.identifier,
-      };
-    });
-  }
-
-  private async sync(server: WebSocket) {
+  private async startWebsocketConnection(server: WebSocket) {
     if (!this.provider) throw new Error("Provider not initialized");
     server.send(stringify({ type: "start" }));
   }
 
-  private async broadcast(type: string, payload: unknown) {
+  private async broadcastToAllConnectedWebsockets(
+    type: string,
+    payload: unknown,
+  ) {
     const sockets = this.ctx.getWebSockets();
 
     for await (const socket of sockets) {
@@ -147,7 +142,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
     }
   }
 
-  async add(donations: Donation[]) {
+  async process(donations: Donation[]) {
     await this.ctx.blockConcurrencyWhile(async () => {
       await this.ready();
       if (!this.provider) throw new Error("Provider not initialized");
@@ -155,8 +150,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       if (!this.grid) throw new Error("Grid not initialized");
 
       // Lookups
-      const emailHashMap = await getEmailHashedMap(donations);
-      const twitchBroadcasterIdHashMap = getTwitchBroadcasterMap(donations);
+      const twitchBroadcasterIdHashMap = makeTwitchBroadcasterMap(donations);
       // Current state
       const current = this.provider.getContext();
       // New pixels
@@ -184,16 +178,18 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           if (!location) continue;
 
           const data = this.grid.squares[`${location.column}:${location.row}`];
+          const emailHash = donation.donatedBy.email
+            ? await hash(donation.donatedBy.email)
+            : undefined;
 
           pixelsForDonation.push({
             id: crypto.randomUUID(),
+            muralId: this.muralId,
             donationId: donation.id,
             receivedAt: donation.receivedAt,
             data,
             identifier,
-            email: donation.donatedBy.email
-              ? emailHashMap.get(donation.donatedBy.email)
-              : undefined,
+            email: emailHash ?? null,
             column: location.column,
             row: location.row,
           });
@@ -208,20 +204,24 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
       await this.api.donations.createPixels.mutate({
         pixels: Object.values(pixels)
           .flat()
-          .map((pixel) => ({
-            id: pixel.id,
-            donationId: pixel.donationId,
-            receivedAt: pixel.receivedAt,
-            identifier: pixel.identifier,
-            email: pixel.email,
-            column: pixel.column,
-            row: pixel.row,
-            metadata: {
-              twitchBroadcasterId: twitchBroadcasterIdHashMap.get(
-                pixel.donationId,
-              ),
-            },
-          })),
+          .map((pixel) => {
+            const optionalTwitchBroadcasterId = twitchBroadcasterIdHashMap.get(
+              pixel.donationId,
+            );
+            return {
+              id: pixel.id,
+              muralId: pixel.muralId,
+              donationId: pixel.donationId,
+              receivedAt: pixel.receivedAt,
+              identifier: pixel.identifier,
+              email: pixel.email,
+              column: pixel.column,
+              row: pixel.row,
+              metadata: {
+                twitchBroadcasterId: optionalTwitchBroadcasterId,
+              },
+            };
+          }),
       });
 
       this.provider.update((state) => {
@@ -238,7 +238,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           pixels: pixels[donation.id],
         } satisfies DonationAlert;
 
-        await this.broadcast("update", alert);
+        await this.broadcastToAllConnectedWebsockets("update", alert);
       }
     });
   }
@@ -285,7 +285,7 @@ function determineNumberOfPixels(donationAmountDollars: number) {
 
 async function hash(identifier: string) {
   return await crypto.subtle
-    .digest("SHA-256", new TextEncoder().encode(identifier))
+    .digest("SHA-256", new TextEncoder().encode(identifier.toLowerCase()))
     .then((hash) =>
       Array.from(new Uint8Array(hash))
         .map((b) => b.toString(16).padStart(2, "0"))
@@ -293,19 +293,7 @@ async function hash(identifier: string) {
     );
 }
 
-async function getEmailHashedMap(donations: Donation[]) {
-  const hashes = new Map<string, string>();
-  await Promise.all(
-    donations.map(async (donation) => {
-      if (!donation.donatedBy.email) return;
-      const hashed = await hash(donation.donatedBy.email);
-      hashes.set(donation.donatedBy.email, hashed);
-    }),
-  );
-  return hashes;
-}
-
-function getTwitchBroadcasterMap(donations: Donation[]) {
+function makeTwitchBroadcasterMap(donations: Donation[]) {
   const hashes = new Map<string, string>();
   donations.map((donation) => {
     if ("twitchBroadcasterId" in donation.providerMetadata) {

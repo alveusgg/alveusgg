@@ -6,7 +6,7 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "donation-manager",
   "main": "src/index.ts",
-  "compatibility_date": "2025-10-08",
+  "compatibility_date": "2025-11-01",
   "compatibility_flags": ["nodejs_compat"],
   "migrations": [
     {
@@ -51,9 +51,6 @@
   },
   "observability": {
     "enabled": true,
-    "traces": {
-      "enabled": true,
-    },
   },
 
   "env": {
@@ -67,6 +64,7 @@
         "TWITCH_CHARITY_NAME": "Alveus Sanctuary",
         "PAYPAL_BUSINESS_EMAIL": "donate@alveussanctuary.org",
         "STATE_KEY": "prod3",
+        "MURAL_ID": "two",
       },
 
       "migrations": [
@@ -123,6 +121,7 @@
         "TWITCH_CHARITY_NAME": "Example Charity",
         "PAYPAL_BUSINESS_EMAIL": "sb-pkpnu46749573@business.example.com",
         "STATE_KEY": "preview1",
+        "MURAL_ID": "two",
       },
 
       "migrations": [

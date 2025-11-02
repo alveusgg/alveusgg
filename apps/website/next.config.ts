@@ -8,6 +8,7 @@ import ambassadors from "@alveusgg/data/build/ambassadors/core";
 import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import animalQuest from "@alveusgg/data/build/animal-quest";
 
+import murals from "@/data/murals";
 import socials from "@/data/socials";
 import { channels, isChannelWithCalendarEvents } from "@/data/twitch";
 
@@ -24,6 +25,12 @@ function urlOriginAsRemotePattern(url: string): RemotePattern {
     port: parsed.port,
   };
 }
+
+const s3Pattern = urlOriginAsRemotePattern(
+  process.env.FILE_STORAGE_CDN_URL ||
+    process.env.FILE_STORAGE_ENDPOINT ||
+    "https://localhost",
+);
 
 const config: NextConfig = {
   reactStrictMode: true,
@@ -76,12 +83,10 @@ const config: NextConfig = {
         hostname: "www.alveussanctuary.org",
       },
       // S3 - File Storage
-      urlOriginAsRemotePattern(
-        process.env.FILE_STORAGE_CDN_URL ||
-          process.env.FILE_STORAGE_ENDPOINT ||
-          "https://localhost",
-      ),
+      s3Pattern,
     ],
+    // Allow localhost requests if the S3 pattern requires it
+    dangerouslyAllowLocalIP: s3Pattern.hostname === "localhost",
     // Allow SVGs to be proxied through Next.js
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -256,11 +261,18 @@ const config: NextConfig = {
     {
       source: "/wolf",
       destination: "/institute",
-      permanent: true,
+      permanent: false,
     },
     {
       source: "/pixel(s)?",
-      destination: "/institute/pixels",
+      // Send the short URL to the most recent mural (for incoming donations)
+      destination: `/institute/pixels/${typeSafeObjectKeys(murals).at(-1)}`,
+      permanent: false,
+    },
+    {
+      source: "/institute/pixels",
+      // Send the /institute/pixels URL to the original mural
+      destination: `/institute/pixels/${typeSafeObjectKeys(murals).at(0)}`,
       permanent: true,
     },
     {

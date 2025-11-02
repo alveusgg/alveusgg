@@ -139,6 +139,8 @@ export const env = createEnv({
       .stringbool()
       .optional()
       .default(false),
+    NEXT_PUBLIC_DONATIONS_MANAGER_URL: z.string().optional(),
+    NEXT_PUBLIC_DONATIONS_DEMO_MODE: z.stringbool().optional(),
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -229,6 +231,10 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_DONATION_EVENT_LINK,
     NEXT_PUBLIC_DONATION_EVENT_EXTERNAL:
       process.env.NEXT_PUBLIC_DONATION_EVENT_EXTERNAL,
+    NEXT_PUBLIC_DONATIONS_MANAGER_URL:
+      process.env.NEXT_PUBLIC_DONATIONS_MANAGER_URL,
+    NEXT_PUBLIC_DONATIONS_DEMO_MODE:
+      process.env.NEXT_PUBLIC_DONATIONS_DEMO_MODE,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.
