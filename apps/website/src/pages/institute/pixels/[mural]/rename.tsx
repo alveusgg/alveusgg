@@ -37,8 +37,8 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
   return (
     <PixelProvider muralId={muralId}>
       <Meta
-        title={`Rename your Pixels | ${mural.name} | Alveus Research & Recovery Institute`}
-        description={`View and rename your unlocked pixels of ${mural.name}.`}
+        title={`Rename Your Pixels | ${mural.name} | Alveus Research & Recovery Institute`}
+        description={`View and rename your unlocked pixels on the ${mural.name} mural.`}
         image={buildingHeroImage.src}
         noindex
       />
