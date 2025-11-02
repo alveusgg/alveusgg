@@ -101,7 +101,7 @@ export const MapPickerField = ({
       lat: number,
       lon: number,
       location?: string,
-      { isInitialSet = false } = {},
+      options: { isInitialSet?: boolean } = {},
     ) => {
       const roundedCoords = {
         lat: roundCoord(lat, coordsPrecision),
@@ -144,7 +144,7 @@ export const MapPickerField = ({
       };
 
       setPostLocation(newPostLocation);
-      if (!isInitialSet) onLocationChange(newPostLocation);
+      if (!options.isInitialSet) onLocationChange(newPostLocation);
     },
     [coordsPrecision, allowMultipleMarkers, onLocationChange],
   );
