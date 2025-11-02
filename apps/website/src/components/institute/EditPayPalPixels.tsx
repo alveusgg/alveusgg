@@ -13,6 +13,8 @@ import { Button as FormButton } from "@/components/shared/form/Button";
 import { Fieldset } from "@/components/shared/form/Fieldset";
 import { TextField } from "@/components/shared/form/TextField";
 
+import IconLoading from "@/icons/IconLoading";
+
 export type PayPalVerification = z.infer<typeof payPalVerificationSchema>;
 
 export const payPalVerificationSchema = z.object({
@@ -111,7 +113,10 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
           </div>
 
           {getPayPalPixels.isPending ? (
-            <MessageBox>Searching for your pixels…</MessageBox>
+            <MessageBox className="flex flex-row items-center gap-4">
+              <IconLoading />
+              Searching for your pixels…
+            </MessageBox>
           ) : null}
 
           {getPayPalPixels.isError ? (

@@ -4,6 +4,8 @@ import type { MuralId } from "@/data/murals";
 
 import Link from "@/components/content/Link";
 
+import IconLoading from "@/icons/IconLoading";
+
 import type { Leaderboard } from "@/app/api/pixels/[mural]/leaderboard/route";
 
 export default function PixelLeaderboard({
@@ -27,7 +29,11 @@ export default function PixelLeaderboard({
   });
 
   if (query.isLoading) {
-    return <div>Loading leaderboard...</div>;
+    return (
+      <div className="flex flex-row gap-4">
+        <IconLoading className="size-4" /> Loading leaderboard…
+      </div>
+    );
   }
 
   if (query.isError) {

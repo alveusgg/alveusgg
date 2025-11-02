@@ -14,6 +14,8 @@ import { coordsToGridRef } from "@/components/institute/Pixels";
 import DonationProviderIcon from "@/components/shared/DonationProviderIcon";
 import { Button } from "@/components/shared/form/Button";
 
+import IconLoading from "@/icons/IconLoading";
+
 import { RenderTimeLocked } from "../shared/RenderTimeLocked";
 
 export function formatPixelRenameLockDuration() {
@@ -122,14 +124,18 @@ export function EditPixelForm({
             }
             hidden={!isLocked && hasOverride}
           >
-            {renameMutation.isPending
-              ? "Saving…"
-              : isLocked
-                ? `Locked until ${formatDateTimeLocal(pixel.lockedUntil!, {
-                    time: "minutes",
-                    timezone: false,
-                  })}`
-                : "Save pixel"}
+            {renameMutation.isPending ? (
+              <>
+                <IconLoading /> Saving…
+              </>
+            ) : isLocked ? (
+              `Locked until ${formatDateTimeLocal(pixel.lockedUntil!, {
+                time: "minutes",
+                timezone: false,
+              })}`
+            ) : (
+              "Save pixel"
+            )}
           </Button>
         )}
       </RenderTimeLocked>

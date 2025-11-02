@@ -14,6 +14,7 @@ import {
   secondaryButtonClasses,
 } from "@/components/shared/form/Button";
 
+import IconLoading from "@/icons/IconLoading";
 import IconX from "@/icons/IconX";
 
 export type SharedEditPixelProps = {
@@ -52,7 +53,12 @@ export function EditPixelsForm({
 
   let infoBox: ReactNode;
   if (renameMutation.isPending) {
-    infoBox = <MessageBox>Renaming your pixels…</MessageBox>;
+    infoBox = (
+      <MessageBox className="flex flex-row items-center gap-4">
+        <IconLoading />
+        Renaming your pixels…
+      </MessageBox>
+    );
   } else if (renameMutation.isError) {
     infoBox = (
       <MessageBox variant="failure">
@@ -154,8 +160,14 @@ export function EditPixelsForm({
                           !overrideIdentifier || overridablePixelsCount === 0
                         }
                       >
-                        Save {overridablePixelsCount}{" "}
-                        {pluralize("pixel", overridablePixelsCount)}
+                        {renameMutation.isPending ? (
+                          <>
+                            <IconLoading />
+                            Saving…
+                          </>
+                        ) : (
+                          `Save ${overridablePixelsCount} ${pluralize("pixel", overridablePixelsCount)}`
+                        )}
                       </Button>
                     </div>
                     <div className="shrink">
@@ -193,7 +205,10 @@ export function EditPixelsForm({
 
       {("isLoading" in pixelsQuery && pixelsQuery.isLoading) ||
       ("isPending" in pixelsQuery && pixelsQuery.isPending) ? (
-        <MessageBox>Loading your pixels…</MessageBox>
+        <MessageBox className="flex flex-row items-center gap-4">
+          <IconLoading />
+          Loading your pixels…
+        </MessageBox>
       ) : totalCount < 1 ? (
         <MessageBox>Could not find any pixels!</MessageBox>
       ) : null}
