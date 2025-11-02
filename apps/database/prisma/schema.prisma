@@ -501,7 +501,7 @@ model Pixel {
   donationId String
   identifier String
   email      String?
-  muralId    String?  @db.VarChar(16)
+  muralId    String?   @db.VarChar(16)
   column     Int
   row        Int
 
