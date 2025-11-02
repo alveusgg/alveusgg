@@ -111,12 +111,12 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
           </div>
 
           {getPayPalPixels.isPending ? (
-            <MessageBox>Searching for your Pixels…</MessageBox>
+            <MessageBox>Searching for your pixels…</MessageBox>
           ) : null}
 
           {getPayPalPixels.isError ? (
             <MessageBox variant="failure">
-              Failed to find your Pixels: {getPayPalPixels.error.message}
+              Failed to find your pixels: {getPayPalPixels.error.message}
             </MessageBox>
           ) : null}
 

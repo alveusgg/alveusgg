@@ -91,7 +91,7 @@ export function EditPixelsForm({
           ) : (
             <>
               Renamed {renamedCount} pixels, but failed to rename {failedCount}{" "}
-              Pixels.
+              pixels.
             </>
           )}
           {skippedMessage}
@@ -130,7 +130,7 @@ export function EditPixelsForm({
 
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
             <Box className="bg-white p-4 lg:col-span-2">
-              <strong className="text-lg">All Pixels</strong>
+              <strong className="text-lg">All pixels</strong>
 
               <form
                 onSubmit={submitRenameAll}
@@ -185,15 +185,15 @@ export function EditPixelsForm({
 
       {pixelsQuery.isError && pixelsQuery.error ? (
         <MessageBox variant="failure">
-          Error loading Pixels: {pixelsQuery.error.message}
+          Error loading pixels: {pixelsQuery.error.message}
         </MessageBox>
       ) : null}
 
       {("isLoading" in pixelsQuery && pixelsQuery.isLoading) ||
       ("isPending" in pixelsQuery && pixelsQuery.isPending) ? (
-        <MessageBox>Loading your Pixels…</MessageBox>
+        <MessageBox>Loading your pixels…</MessageBox>
       ) : totalCount < 1 ? (
-        <MessageBox>Could not find any Pixels!</MessageBox>
+        <MessageBox>Could not find any pixels!</MessageBox>
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
