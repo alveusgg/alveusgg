@@ -115,10 +115,40 @@ const PixelsInternal = ({
     if (!filter) return;
 
     const controller = new AbortController();
+
     Promise.all(
       pixels?.map(async (pixel) => {
         const match = await filter(pixel, controller.signal);
         if (controller.signal.aborted || !match) return;
+        return pixel;
+      }) || [],
+    ).then(async (filtered) => {
+      if (controller.signal.aborted) return;
+
+      const filteredPixels = filtered.filter((p): p is Pixel => !!p);
+      onFilter?.(filteredPixels);
+
+      if (controller.signal.aborted) return;
+
+      // Draw glow, but only if we have less than 200 pixels to draw
+      if (filteredPixels.length <= 200) {
+        ctx.fillStyle = "rgba(255, 255, 255, 0.6)";
+        ctx.filter = "blur(1px)";
+        filteredPixels.forEach((pixel) => {
+          ctx.fillRect(
+            pixel.column * PIXEL_SIZE - 1,
+            pixel.row * PIXEL_SIZE - 1,
+            PIXEL_SIZE + 2,
+            PIXEL_SIZE + 2,
+          );
+        });
+        ctx.filter = "none";
+      }
+
+      // Draw the actual pixels
+      for (let i = 0; i < filteredPixels.length; i++) {
+        const pixel = filteredPixels[i];
+        if (controller.signal.aborted || !pixel) continue;
 
         const data = Uint8ClampedArray.from(atob(pixel.data), (c) =>
           c.charCodeAt(0),
@@ -129,11 +159,10 @@ const PixelsInternal = ({
           pixel.row * PIXEL_SIZE,
         );
 
-        return pixel;
-      }) || [],
-    ).then((filtered) => {
-      if (controller.signal.aborted) return;
-      onFilter?.(filtered.filter((p): p is Pixel => !!p));
+        if (i % 500 === 0) {
+          await new Promise(requestAnimationFrame);
+        }
+      }
     });
 
     return () => controller.abort();
@@ -193,7 +222,7 @@ const PixelsInternal = ({
     >
       <div
         className={classes(
-          "relative z-40 h-full max-w-full bg-white",
+          "relative z-40 h-full max-w-full bg-gray-200",
           canvasClassName,
         )}
         style={{ aspectRatio: `${PIXEL_GRID_WIDTH} / ${PIXEL_GRID_HEIGHT}` }}
@@ -223,7 +252,7 @@ const PixelsInternal = ({
             (canvasClassName || "").match(
               /(?:^| )(rounded(?:-[^ ]+)?)(?: |$)/,
             )?.[1],
-            filter && "bg-white/95",
+            filter && "bg-alveus-green-900/60",
           )}
         />
 
