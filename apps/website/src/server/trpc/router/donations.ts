@@ -84,11 +84,10 @@ function mapDonationPixels(pixels: PixelWithDonation[]) {
 async function guardPayPalSearchMutation(req: NextApiRequest) {
   const clientIp = req.headers["x-forwarded-for"];
   if (typeof clientIp === "string") {
-    // FIXME: Increase to a reasonable token window
     const isAllowed = await limit(
       `donations-pixels-paypal-search-${clientIp}`,
       5,
-      "10 s",
+      "60 s",
     );
     if (!isAllowed) {
       throw new TRPCError({
