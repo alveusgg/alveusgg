@@ -166,7 +166,7 @@ function filterDonationByPayPalVerification(verification: PayPalVerification) {
       {
         donatedBy: {
           path: "$.email",
-          equals: verification.email,
+          equals: verification.email.trim().toLowerCase(),
         },
       },
       {
