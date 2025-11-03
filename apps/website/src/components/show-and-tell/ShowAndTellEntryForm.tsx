@@ -257,9 +257,8 @@ export function ShowAndTellEntryForm({
         : undefined,
     [entry],
   );
-  const [postLocation, setPostLocation] = useState<MapLocation>(
-    {} as MapLocation,
-  );
+
+  const [postLocation, setPostLocation] = useState(initialLocation);
   const handlePostLocation = useCallback(
     (userSelectedLocation: MapLocation) => {
       setPostLocation(userSelectedLocation);
@@ -280,8 +279,8 @@ export function ShowAndTellEntryForm({
             id: imageAttachment.id,
             url: imageAttachment.url,
             fileStorageObjectId: imageAttachment.fileStorageObjectId,
-            extractColor: async () =>
-              await extractColorFromImage(
+            extractColor: () =>
+              extractColorFromImage(
                 createImageUrl({
                   src: imageAttachment.url,
                   width: 1280,
@@ -558,16 +557,15 @@ export function ShowAndTellEntryForm({
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
-              renderAttachment={({ fileReference, ...props }) => {
-                return (
-                  <ImageAttachment
-                    entry={entry}
-                    fileReference={fileReference}
-                    onClick={openModal}
-                    {...props}
-                  />
-                );
-              }}
+              renderAttachment={({ key, fileReference, ...props }) => (
+                <ImageAttachment
+                  key={key}
+                  entry={entry}
+                  fileReference={fileReference}
+                  onClick={openModal}
+                  {...props}
+                />
+              )}
             />
           </Fieldset>
         </div>
