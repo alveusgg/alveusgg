@@ -56,19 +56,11 @@ const PixelsSearch = ({
 
   const [filtered, setFiltered] = useState<number>(0);
   const filter = useMemo(() => {
-    const trimmed = search.trim();
-    if (!trimmed) return undefined;
+    const normalized = search.trim().toLowerCase();
+    if (!normalized) return undefined;
 
-    const hashedExact = window.crypto.subtle
-      .digest("SHA-256", new TextEncoder().encode(trimmed))
-      .then((hash) =>
-        Array.from(new Uint8Array(hash))
-          .map((b) => b.toString(16).padStart(2, "0"))
-          .join(""),
-      );
-
-    const hashedNormalized = window.crypto.subtle
-      .digest("SHA-256", new TextEncoder().encode(trimmed.toLowerCase()))
+    const hashed = window.crypto.subtle
+      .digest("SHA-256", new TextEncoder().encode(normalized))
       .then((hash) =>
         Array.from(new Uint8Array(hash))
           .map((b) => b.toString(16).padStart(2, "0"))
@@ -76,10 +68,8 @@ const PixelsSearch = ({
       );
 
     return (pixel: Pixel) =>
-      pixel.identifier.toLowerCase().includes(trimmed.toLowerCase()) ||
-      Promise.all([hashedExact, hashedNormalized]).then(
-        ([exact, norm]) => pixel.email === exact || pixel.email === norm,
-      );
+      pixel.identifier.toLowerCase().includes(normalized) ||
+      hashed.then((h) => pixel.email === h);
   }, [search]);
 
   const [fullscreen, setFullscreen] = useState(false);
