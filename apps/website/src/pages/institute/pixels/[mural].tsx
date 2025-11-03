@@ -17,6 +17,7 @@ import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
+import PixelLeaderboard from "@/components/institute/PixelLeaderboard";
 import PixelsDescription from "@/components/institute/PixelsDescription";
 import PixelsSearch from "@/components/institute/PixelsSearch";
 import Wolves from "@/components/institute/Wolves";
@@ -242,6 +243,11 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
             className={classes(mural.type === "static" && "order-first")}
           >
             <PixelsDescription className="text-center text-2xl" />
+
+            <Heading level={2} className="mt-8 text-xl">
+              Leaderboard
+            </Heading>
+            <PixelLeaderboard showLinks muralId={muralId} />
 
             <Heading level={2} className="mt-8 text-xl">
               Can&apos;t find your pixel?

@@ -12,12 +12,13 @@ import {
   PixelProvider,
 } from "@/hooks/pixels";
 
+import PixelLeaderboard from "@/components/institute/PixelLeaderboard";
 import Pixels from "@/components/institute/Pixels";
 import PixelsDescription from "@/components/institute/PixelsDescription";
 import PixelsProgress from "@/components/institute/PixelsProgress";
 import PixelsAlert from "@/components/overlay/PixelsAlert";
 
-const modes = ["center", "corner", "progress", "alert"] as const;
+const modes = ["center", "corner", "progress", "alert", "leaderboard"] as const;
 type Mode = (typeof modes)[number];
 const isMode = (mode: unknown): mode is Mode => modes.includes(mode as Mode);
 
@@ -38,6 +39,14 @@ const PixelsPage: NextPage = () => {
   const mural = isMuralId(query.mural)
     ? query.mural
     : typeSafeObjectKeys(murals).at(-1)!;
+
+  if (mode === "leaderboard") {
+    return (
+      <div className="p-2 text-xl font-bold text-ellipsis text-white tabular-nums text-stroke">
+        <PixelLeaderboard muralId={mural} />
+      </div>
+    );
+  }
 
   if (mode === "alert") {
     return (
