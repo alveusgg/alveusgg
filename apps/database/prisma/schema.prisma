@@ -495,12 +495,13 @@ model Donation {
 }
 
 model Pixel {
-  id         String   @id
+  id         String    @id
   receivedAt DateTime
+  renamedAt  DateTime?
   donationId String
   identifier String
   email      String?
-  muralId    String?  @db.VarChar(16)
+  muralId    String?   @db.VarChar(16)
   column     Int
   row        Int
 

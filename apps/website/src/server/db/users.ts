@@ -8,3 +8,17 @@ export async function getRolesForUser(userId: string) {
     })
   ).map(({ role }) => role);
 }
+
+export async function getTwitchUserId(userId: string) {
+  return (
+    await prisma.account.findFirst({
+      where: {
+        provider: "twitch",
+        userId,
+      },
+      select: {
+        providerAccountId: true,
+      },
+    })
+  )?.providerAccountId;
+}

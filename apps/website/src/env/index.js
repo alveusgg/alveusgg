@@ -78,6 +78,8 @@ export const env = createEnv({
     FILE_STORAGE_PATH_STYLE: z.stringbool().optional().default(false),
     UPSTASH_QSTASH_URL: z.url().optional(),
     UPSTASH_QSTASH_KEY: z.string().optional(),
+    UPSTASH_REDIS_REST_URL: z.url().optional(),
+    UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
     PUSH_LANG: z.string().default("en"),
     PUSH_TEXT_DIR: z.literal(["ltr", "rtl"]).default("ltr"),
     PUSH_BATCH_SIZE: z.coerce.number().int().min(1).default(50),
@@ -106,6 +108,7 @@ export const env = createEnv({
     CF_STREAM_LOLA_VIDEO_ID: z.string().optional(),
     CF_STREAM_HOST: z.string().optional(),
     TRPC_API_SHARED_KEY: listOfSchema(z.string()).default([]),
+    PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL: z.url().optional(),
   },
   client: {
     NEXT_PUBLIC_NODE_ENV: z
@@ -141,6 +144,11 @@ export const env = createEnv({
       .default(false),
     NEXT_PUBLIC_DONATIONS_MANAGER_URL: z.string().optional(),
     NEXT_PUBLIC_DONATIONS_DEMO_MODE: z.stringbool().optional(),
+    NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS: z.coerce
+      .number()
+      .int()
+      .optional()
+      .default(60 * 1000),
   },
   /**
    * You can't destruct `process.env` as a regular object, so you have to do
@@ -178,6 +186,8 @@ export const env = createEnv({
     FILE_STORAGE_PATH_STYLE: process.env.FILE_STORAGE_PATH_STYLE,
     UPSTASH_QSTASH_URL: process.env.UPSTASH_QSTASH_URL,
     UPSTASH_QSTASH_KEY: process.env.UPSTASH_QSTASH_KEY,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     PUSH_LANG: process.env.PUSH_LANG,
     PUSH_TEXT_DIR: process.env.PUSH_TEXT_DIR,
     PUSH_BATCH_SIZE: process.env.PUSH_BATCH_SIZE,
@@ -201,6 +211,8 @@ export const env = createEnv({
     CF_STREAM_LOLA_VIDEO_ID: process.env.CF_STREAM_LOLA_VIDEO_ID,
     CF_STREAM_HOST: process.env.CF_STREAM_HOST,
     TRPC_API_SHARED_KEY: process.env.TRPC_API_SHARED_KEY,
+    PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL:
+      process.env.PIXELS_AUDIT_LOG_DISCORD_WEBHOOK_URL,
 
     // Client:
     NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
@@ -235,6 +247,8 @@ export const env = createEnv({
       process.env.NEXT_PUBLIC_DONATIONS_MANAGER_URL,
     NEXT_PUBLIC_DONATIONS_DEMO_MODE:
       process.env.NEXT_PUBLIC_DONATIONS_DEMO_MODE,
+    NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS:
+      process.env.NEXT_PUBLIC_PIXELS_RENAME_LOCK_DURATION_MS,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

@@ -1,6 +1,12 @@
+import type { User } from "next-auth";
+
 import { type Prisma, prisma } from "@alveusgg/database";
 
 import type { Donation, Donator, Pixel } from "@alveusgg/donations-core";
+
+import type { PayPalVerification } from "@/components/institute/EditPayPalPixels";
+
+import { getTwitchUserId } from "./users";
 
 export async function createDonations(input: Donation[]) {
   return prisma.donation.createMany({
@@ -122,5 +128,144 @@ export function getPixelLeaderboard(muralId: string, take: number = 10) {
       },
     },
     take: take,
+  });
+}
+
+function filterDonationByTwitchUserId<T extends string>(twitchUserId: T) {
+  if (!twitchUserId) {
+    throw new Error("Twitch user ID is required for Twitch donations filter");
+  }
+
+  return {
+    provider: "twitch",
+    providerMetadata: {
+      path: "$.twitchDonatorId",
+      equals: twitchUserId,
+    },
+  } as const satisfies Prisma.DonationWhereInput;
+}
+
+function filterDonationByPayPalEmail<T extends string>(emailAddress: T) {
+  if (!emailAddress) {
+    throw new Error("Email address is required for PayPal donations filter");
+  }
+
+  return {
+    provider: "paypal",
+    donatedBy: {
+      path: "$.email",
+      equals: emailAddress,
+    },
+  } as const satisfies Prisma.DonationWhereInput;
+}
+
+function filterDonationByPayPalVerification(verification: PayPalVerification) {
+  return {
+    AND: [
+      { provider: "paypal" },
+      {
+        donatedBy: {
+          path: "$.email",
+          equals: verification.email.trim().toLowerCase(),
+        },
+      },
+      {
+        donatedBy: {
+          path: "$.lastName",
+          equals: verification.lastName,
+        },
+      },
+      {
+        donatedBy: {
+          path: "$.firstName",
+          equals: verification.firstName,
+        },
+      },
+    ],
+  } as const satisfies Prisma.DonationWhereInput;
+}
+
+export type PixelWithDonation = Awaited<
+  ReturnType<typeof getFilteredPixelsByDonation>
+>[number];
+
+async function getFilteredPixelsByDonation(
+  muralId: string,
+  filters: Prisma.DonationWhereInput[],
+  pixelId?: string,
+) {
+  if (filters.length === 0) {
+    return [];
+  }
+
+  return prisma.pixel.findMany({
+    select: {
+      id: true,
+      identifier: true,
+      column: true,
+      row: true,
+      renamedAt: true,
+      donationId: true,
+      receivedAt: true,
+      muralId: true,
+      donation: {
+        select: {
+          provider: true,
+        },
+      },
+    },
+    where: {
+      muralId: muralId,
+      ...(pixelId ? { id: pixelId } : undefined),
+      donation: {
+        OR: filters,
+      },
+    },
+    orderBy: {
+      receivedAt: "asc",
+    },
+  });
+}
+
+export async function getPayPalPixelsByVerification(
+  muralId: string,
+  verification: PayPalVerification,
+  pixelId?: string,
+) {
+  return getFilteredPixelsByDonation(
+    muralId,
+    [filterDonationByPayPalVerification(verification)],
+    pixelId,
+  );
+}
+
+export async function getMyPixels(
+  muralId: string,
+  user: User,
+  pixelId?: string,
+) {
+  const filters: Prisma.DonationWhereInput[] = [];
+
+  const twitchUserId = await getTwitchUserId(user.id);
+  if (twitchUserId) {
+    filters.push(filterDonationByTwitchUserId(twitchUserId));
+  }
+
+  const emailAddress = user.email;
+  if (emailAddress) {
+    filters.push(filterDonationByPayPalEmail(emailAddress));
+  }
+
+  return getFilteredPixelsByDonation(muralId, filters, pixelId);
+}
+
+export async function renamePixel(id: string, identifier: string) {
+  await prisma.pixel.update({
+    select: { id: true },
+    where: { id },
+    data: {
+      identifier,
+      renamedAt: new Date(),
+    },
   });
 }
