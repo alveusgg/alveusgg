@@ -73,7 +73,7 @@ export class PaypalDonationProvider implements DonationProvider {
       note: payload.data.memo,
       donatedBy: {
         primary: "firstName",
-        email: payload.data.payer_email,
+        email: payload.data.payer_email.trim().toLowerCase(),
         firstName: payload.data.first_name,
         lastName: payload.data.last_name,
       },
