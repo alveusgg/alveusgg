@@ -29,6 +29,74 @@ function getHighContrastColor(pixel: Pixel) {
   return averageLuminosity < 128 ? "white" : "black";
 }
 
+function _wrapCanvasText(
+  measure: (text: string) => number,
+  text: string,
+  maxWidth: number,
+) {
+  if (text.includes("\n")) {
+    throw new Error("wrapCanvasText does not support new lines");
+  }
+
+  // Split the text into individual words with separators
+  const locale = Intl?.Segmenter?.supportedLocalesOf("en-US");
+  const words = locale
+    ? Array.from(
+        new Intl.Segmenter(locale, { granularity: "word" }).segment(text),
+        (s) => s.segment,
+      )
+    : text
+        .split(" ")
+        .flatMap((word, idx) => (idx === 0 ? [word] : [" ", word]));
+
+  // Track the final constructed lines, and the current line being built
+  const lines: string[] = [];
+  const line: string[] = [];
+
+  // Work through all the words one by one
+  while (words.length > 0) {
+    const word = words.shift()!;
+
+    // If the current line is empty and this word is just whitespace, skip it
+    if (line.length === 0 && /^\s+$/.test(word)) continue;
+
+    // If adding this word to the current line will fit, add it and continue to the next word
+    if (measure(line.join("") + word) <= maxWidth) {
+      line.push(word);
+      continue;
+    }
+
+    // If the line is empty, we're going to need to truncate this word
+    if (line.length === 0) {
+      const chars = locale
+        ? Array.from(
+            new Intl.Segmenter(locale, { granularity: "grapheme" }).segment(
+              word,
+            ),
+            (s) => s.segment,
+          )
+        : Array.from(word);
+
+      while (measure(chars.join("") + "…") > maxWidth && chars.length > 0) {
+        chars.pop();
+      }
+
+      line.push(chars.join("") + "…");
+      continue;
+    }
+
+    // Otherwise, push the current line and start a new one, and then try again with this word
+    lines.push(line.join(""));
+    while (line.length > 0) line.pop();
+    words.unshift(word);
+  }
+
+  // Push any remaining text as the last line
+  if (line.length > 0) lines.push(line.join(""));
+
+  return lines;
+}
+
 export type PixelPreviewRef = {
   setPixel: (coordinates: { x: number; y: number }) => void;
 };
@@ -79,7 +147,7 @@ function PixelPreview({
       if (myPixelCanvas) {
         const ctx = myPixelCanvas.getContext("2d");
         if (!ctx) throw new Error("Pixel image canvas context is not found");
-        if (pixel?.data) {
+        if (pixel) {
           const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
             c.charCodeAt(0),
           );
