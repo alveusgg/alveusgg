@@ -128,6 +128,13 @@ function PixelPreview({
       const ctx = elm.getContext("2d");
       if (!ctx) throw new Error("Pixel image canvas context is not found");
 
+      // Scale the canvas using the device pixel ratio for high-DPI displays
+      const dpr = window.devicePixelRatio || 1;
+      const displayWidth = elm.offsetWidth;
+      const displayHeight = elm.offsetHeight;
+      elm.width = displayWidth * dpr;
+      elm.height = displayHeight * dpr;
+
       if (pixel) {
         // Draw the raw pixel data offscreen
         const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
@@ -166,6 +173,11 @@ function PixelPreview({
       const lineHeight = fontSize * 1.2;
       ctx.font = `bold ${fontSize}px ${getComputedStyle(elm).fontFamily}`;
 
+      // Improve text rendering quality
+      ctx.textRendering = "optimizeLegibility";
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = "high";
+
       // Draw the identifier (or locked) text bottom-right
       const maxTextWidth = elm.width - padding * 2;
       const lines = wrapCanvasText(
@@ -178,7 +190,6 @@ function PixelPreview({
         : "rgba(0, 0, 0, 0.75)";
       ctx.textAlign = "right";
       ctx.textBaseline = "bottom";
-      ctx.textRendering = "optimizeLegibility";
       lines.forEach((line, index) => {
         ctx.fillText(
           line,
@@ -206,14 +217,7 @@ function PixelPreview({
     }
   }, [x, y, update]);
 
-  return (
-    <canvas
-      className="h-[200px] w-[200px]"
-      ref={canvas}
-      width={PIXEL_SIZE * 100}
-      height={PIXEL_SIZE * 100}
-    />
-  );
+  return <canvas className="h-[200px] w-[200px]" ref={canvas} />;
 }
 
 export default PixelPreview;
