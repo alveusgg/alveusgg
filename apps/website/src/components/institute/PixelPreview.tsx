@@ -180,11 +180,12 @@ function PixelPreview({
 
       // Draw the identifier (or locked) text bottom-right
       const maxTextWidth = elm.width - padding * 2;
-      const lines = wrapCanvasText(
-        (text) => ctx.measureText(text).width,
-        pixel ? (identifier ?? pixel.identifier) : "Locked",
-        maxTextWidth,
-      );
+      const text = pixel ? (identifier ?? pixel.identifier) : "Locked";
+      const lines = text
+        .split("\n")
+        .flatMap((line) =>
+          wrapCanvasText((t) => ctx.measureText(t).width, line, maxTextWidth),
+        );
       ctx.fillStyle = pixel
         ? getHighContrastColor(pixel)
         : "rgba(0, 0, 0, 0.75)";
