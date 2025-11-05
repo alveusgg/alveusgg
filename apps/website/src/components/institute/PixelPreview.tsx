@@ -1,5 +1,4 @@
 import {
-  type ReactNode,
   type Ref,
   useCallback,
   useEffect,
@@ -26,10 +25,12 @@ function getHighContrastColor(pixel: Pixel) {
     averageLuminosity += b;
   }
   averageLuminosity /= (bytes.length / 4) * 3;
-  return averageLuminosity < 128 ? "white" : "black";
+  return averageLuminosity < 128
+    ? "rgba(255, 255, 255, 0.75)"
+    : "rgba(0, 0, 0, 0.75)";
 }
 
-function _wrapCanvasText(
+function wrapCanvasText(
   measure: (text: string) => number,
   text: string,
   maxWidth: number,
@@ -110,57 +111,83 @@ function PixelPreview({
   x?: number;
   y?: number;
   ref?: Ref<PixelPreviewRef>;
-  identifier?: ReactNode;
+  identifier?: string;
 }) {
   const pixels = usePixels();
-  const myPixelRef = useRef<HTMLCanvasElement>(null);
-  const identifierRef = useRef<HTMLParagraphElement>(null);
-
-  const coordinatesRef = useRef<{ x: number; y: number } | null>(null);
-
-  const hasIdentifier = identifier !== null && identifier !== undefined;
+  const canvas = useRef<HTMLCanvasElement>(null);
+  const coordinates = useRef<{ x: number; y: number } | null>(null);
 
   const update = useCallback(
     ({ x, y }: { x: number; y: number }) => {
-      coordinatesRef.current = { x, y };
-
+      coordinates.current = { x, y };
       const pixel = pixels?.find((p) => p.column === x && p.row === y);
-      const identifierElement = identifierRef?.current;
-      if (identifierElement) {
-        if (pixel) {
-          const highContrastColor = getHighContrastColor(pixel);
-          if (!hasIdentifier) identifierElement.innerText = pixel.identifier;
-          if (highContrastColor === "white") {
-            identifierElement.style.color = "rgba(255, 255, 255, 0.9)";
-          } else {
-            identifierElement.style.color = "rgba(0, 0, 0, 0.9)";
-          }
-          identifierElement.classList.remove("italic");
-        } else {
-          if (!hasIdentifier) identifierElement.innerText = "Locked";
-          identifierElement.classList.add("italic");
-          identifierElement.style.color = "rgba(0, 0, 0, 0.9)";
-        }
+
+      const elm = canvas.current;
+      if (!elm) throw new Error("Pixel image canvas is not found");
+
+      const ctx = elm.getContext("2d");
+      if (!ctx) throw new Error("Pixel image canvas context is not found");
+
+      if (pixel) {
+        // Draw the raw pixel data offscreen
+        const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+          c.charCodeAt(0),
+        );
+        const imageData = new ImageData(bytes, PIXEL_SIZE, PIXEL_SIZE);
+        const offscreen = new OffscreenCanvas(PIXEL_SIZE, PIXEL_SIZE);
+        const offscreenCtx = offscreen.getContext("2d");
+        if (!offscreenCtx)
+          throw new Error("Offscreen canvas context is not found");
+        offscreenCtx.putImageData(imageData, 0, 0);
+
+        // Scale up the pixel data to fill the canvas
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(
+          offscreen,
+          0,
+          0,
+          offscreen.width,
+          offscreen.height,
+          0,
+          0,
+          elm.width,
+          elm.height,
+        );
+        ctx.imageSmoothingEnabled = true;
+      } else {
+        // Fill with light gray
+        ctx.fillStyle = "rgb(230, 230, 230)";
+        ctx.fillRect(0, 0, elm.width, elm.height);
       }
 
-      const myPixelCanvas = myPixelRef?.current;
-      if (myPixelCanvas) {
-        const ctx = myPixelCanvas.getContext("2d");
-        if (!ctx) throw new Error("Pixel image canvas context is not found");
-        if (pixel) {
-          const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
-            c.charCodeAt(0),
-          );
-          const imageData = new ImageData(bytes, PIXEL_SIZE, PIXEL_SIZE);
-          ctx.putImageData(imageData, 0, 0);
-        } else {
-          // fill with light gray
-          ctx.fillStyle = "rgb(230, 230, 230)";
-          ctx.fillRect(0, 0, PIXEL_SIZE, PIXEL_SIZE);
-        }
-      }
+      // Use the font family from the canvas element
+      const padding = elm.width * 0.05;
+      const fontSize = elm.width * 0.1;
+      const lineHeight = fontSize * 1.2;
+      ctx.font = `bold ${fontSize}px ${getComputedStyle(elm).fontFamily}`;
+
+      // Draw the identifier (or locked) text bottom-right
+      const maxTextWidth = elm.width - padding * 2;
+      const lines = wrapCanvasText(
+        (text) => ctx.measureText(text).width,
+        pixel ? (identifier ?? pixel.identifier) : "Locked",
+        maxTextWidth,
+      );
+      ctx.fillStyle = pixel
+        ? getHighContrastColor(pixel)
+        : "rgba(0, 0, 0, 0.75)";
+      ctx.textAlign = "right";
+      ctx.textBaseline = "bottom";
+      ctx.textRendering = "optimizeLegibility";
+      lines.forEach((line, index) => {
+        ctx.fillText(
+          line,
+          elm.width - padding,
+          elm.height - padding - (lines.length - 1 - index) * lineHeight,
+        );
+      });
     },
-    [hasIdentifier, pixels],
+    [identifier, pixels],
   );
 
   useImperativeHandle(ref, () => ({
@@ -170,7 +197,7 @@ function PixelPreview({
   }));
 
   useEffect(() => {
-    if (coordinatesRef.current) update(coordinatesRef.current);
+    if (coordinates.current) update(coordinates.current);
   }, [update]);
 
   useLayoutEffect(() => {
@@ -180,21 +207,12 @@ function PixelPreview({
   }, [x, y, update]);
 
   return (
-    <div className="relative flex h-[200px] w-[200px] flex-col justify-end">
-      <canvas
-        className="absolute inset-0 h-full w-full"
-        ref={myPixelRef}
-        style={{ imageRendering: "pixelated" }}
-        width={PIXEL_SIZE}
-        height={PIXEL_SIZE}
-      />
-      <p
-        className="relative z-10 max-w-full self-end overflow-hidden p-4 text-right text-lg font-bold text-ellipsis whitespace-pre-line opacity-75"
-        ref={identifierRef}
-      >
-        {identifier}
-      </p>
-    </div>
+    <canvas
+      className="h-[200px] w-[200px]"
+      ref={canvas}
+      width={PIXEL_SIZE * 100}
+      height={PIXEL_SIZE * 100}
+    />
   );
 }
 
