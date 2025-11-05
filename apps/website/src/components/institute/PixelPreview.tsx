@@ -171,7 +171,8 @@ function PixelPreview({
       const padding = elm.width * 0.05;
       const fontSize = elm.width * 0.1;
       const lineHeight = fontSize * 1.2;
-      ctx.font = `bold ${fontSize}px ${getComputedStyle(elm).fontFamily}`;
+      const fontStyle = pixel ? "bold" : "italic bold";
+      ctx.font = `${fontStyle} ${fontSize}px ${getComputedStyle(elm).fontFamily}`;
 
       // Improve text rendering quality
       ctx.textRendering = "optimizeLegibility";
