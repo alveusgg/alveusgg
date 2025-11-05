@@ -40,7 +40,7 @@ function wrapCanvasText(
   }
 
   // Split the text into individual words with separators
-  const locale = Intl?.Segmenter?.supportedLocalesOf("en-US");
+  const locale = Intl?.Segmenter?.supportedLocalesOf("en-US")[0];
   const words = locale
     ? Array.from(
         new Intl.Segmenter(locale, { granularity: "word" }).segment(text),
