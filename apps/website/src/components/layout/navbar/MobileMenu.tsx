@@ -1,5 +1,6 @@
 import { DisclosureButton, DisclosurePanel } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
 import { Fragment } from "react";
 
 import { mainNavStructure } from "@/data/navigation";
@@ -9,12 +10,15 @@ import { useActiveNav } from "@/hooks/active";
 
 import { ProfileInfo } from "@/components/layout/navbar/ProfileInfo";
 
+import IconMoon from "@/icons/IconMoon";
+import IconSun from "@/icons/IconSun";
+
 import { NavLinkSub, navLinkClassesSub } from "./NavLink";
 
 export function MobileMenu() {
   const { data: sessionData } = useSession();
   const active = useActiveNav();
-
+  const { theme, setTheme } = useTheme();
   const user = sessionData?.user;
   const showAdminLink =
     user &&
@@ -103,6 +107,12 @@ export function MobileMenu() {
               </DisclosureButton>
             </li>
           )}
+          <li
+            className="cursor-pointer"
+            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+          >
+            {theme === "light" ? <IconMoon /> : <IconSun />}
+          </li>
         </ul>
       </div>
     </DisclosurePanel>

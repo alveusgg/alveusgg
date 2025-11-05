@@ -117,7 +117,7 @@ const EventItems = ({
             </Box>
           </div>
 
-          <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600">
+          <div className="flex basis-full flex-col gap-3 px-8 text-lg text-gray-600 dark:text-white">
             {event.info}
           </div>
         </div>

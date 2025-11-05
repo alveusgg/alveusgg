@@ -362,7 +362,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
               <Link
                 href="/ambassadors"
                 custom
-                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green"
+                className="group relative inline-block text-lg text-alveus-green-900 uppercase transition-colors hover:text-alveus-green dark:text-white"
               >
                 See All
                 <span className="absolute inset-x-0 bottom-0 block h-0.5 max-w-0 bg-alveus-green transition-all group-hover:max-w-full" />

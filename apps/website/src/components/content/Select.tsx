@@ -41,11 +41,11 @@ const Select = ({
             "relative w-full rounded-lg border py-2 pr-10 pl-3 text-left",
             dark
               ? "border-alveus-tan/40 bg-alveus-green text-alveus-tan"
-              : "border-alveus-green/40 bg-alveus-tan text-alveus-green",
+              : "border-alveus-green/40 bg-alveus-tan text-alveus-green dark:bg-[#1a1a1a] dark:text-white",
           )}
         >
           <span className="block">{options[value]}</span>
-          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+          <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2 dark:fill-white">
             <IconChevronVertical
               className="size-5 opacity-75"
               aria-hidden="true"

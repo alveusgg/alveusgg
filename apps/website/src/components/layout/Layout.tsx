@@ -1,3 +1,4 @@
+import { ThemeProvider } from "next-themes";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type ReactNode, useMemo } from "react";
@@ -27,7 +28,12 @@ const Layout = ({ children }: LayoutProps) => {
   );
 
   return (
-    <>
+    <ThemeProvider
+      attribute="class"
+      enableColorScheme
+      enableSystem
+      defaultTheme="system"
+    >
       <Meta />
 
       <Head>
@@ -81,7 +87,7 @@ const Layout = ({ children }: LayoutProps) => {
         </main>
         <Footer />
       </div>
-    </>
+    </ThemeProvider>
   );
 };
 
