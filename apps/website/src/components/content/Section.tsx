@@ -34,8 +34,8 @@ const Section = ({
         // add background color if not overwritten via className
         !/\bbg-/.test(className || "") &&
           (dark
-            ? "bg-alveus-green dark:bg-[#1a1a1a]"
-            : "bg-alveus-tan dark:bg-[#111]"),
+            ? "bg-alveus-green dark:bg-gray-800"
+            : "bg-alveus-tan dark:bg-gray-900"),
         className,
       )}
     >

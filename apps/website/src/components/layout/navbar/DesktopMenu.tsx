@@ -1,6 +1,5 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { signIn, signOut, useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
 import Link from "next/link";
 import {
   Children,
@@ -17,6 +16,7 @@ import { classes } from "@/utils/classes";
 
 import { useActiveNav } from "@/hooks/active";
 
+import ThemeToggleButton from "@/components/content/ThemeToggleButton";
 import {
   NavLink,
   NavLinkSub,
@@ -30,9 +30,7 @@ import {
 import { NotificationsButton } from "@/components/notifications/NotificationsButton";
 
 import IconChevronDown from "@/icons/IconChevronDown";
-import IconMoon from "@/icons/IconMoon";
 import IconSignIn from "@/icons/IconSignIn";
-import IconSun from "@/icons/IconSun";
 
 const utilityLinkClasses =
   "block rounded-xl bg-transparent p-2 text-white transition-colors hover:bg-white hover:text-alveus-green";
@@ -65,7 +63,6 @@ const DropdownMenuItem = ({
 export function DesktopMenu() {
   const { data: sessionData } = useSession();
   const active = useActiveNav();
-  const { theme, setTheme } = useTheme();
   const user = sessionData?.user;
   const showAdminLink =
     user &&
@@ -76,12 +73,7 @@ export function DesktopMenu() {
     <div className="hidden grow flex-col gap-2 lg:flex">
       <div className="flex items-center justify-end gap-2">
         <ul className="contents">
-          <li
-            className="cursor-pointer"
-            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-          >
-            {theme === "light" ? <IconMoon /> : <IconSun />}
-          </li>
+          <ThemeToggleButton />
           {Object.entries(utilityNavStructure).map(([key, link]) => (
             <li key={key}>
               {/* eslint-disable-next-line react/jsx-no-target-blank */}

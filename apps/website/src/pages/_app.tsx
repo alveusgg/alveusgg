@@ -7,6 +7,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { type ReactNode, useEffect } from "react";
 
+import { ThemeProvider } from "next-themes";
 import { unregisterServiceWorker } from "@/utils/sw";
 import { trpc } from "@/utils/trpc";
 
@@ -16,6 +17,7 @@ import FontProvider from "@/components/layout/Fonts";
 import Layout from "@/components/layout/Layout";
 
 import "@/styles/tailwind.css";
+
 
 import { ThemeScript } from "@/hooks/theme";
 
@@ -107,13 +109,20 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   }
 
   return (
-    <SessionProvider session={session}>
-      <SessionChecker>
-        <QueryClientProvider client={queryClient}>
-          {content}
-        </QueryClientProvider>
-      </SessionChecker>
-    </SessionProvider>
+    <ThemeProvider
+      attribute={"class"}
+      enableColorScheme
+      enableSystem
+      defaultTheme="system"
+    >
+      <SessionProvider session={session}>
+        <SessionChecker>
+          <QueryClientProvider client={queryClient}>
+            {content}
+          </QueryClientProvider>
+        </SessionChecker>
+      </SessionProvider>
+    </ThemeProvider>
   );
 };
 
