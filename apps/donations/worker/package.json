@@ -28,9 +28,9 @@
     "@alveusgg/donations-core": "workspace:*",
     "@trpc/client": "^11.7.0",
     "@trpc/server": "^11.7.0",
-    "hono": "^4.10.3",
+    "hono": "^4.10.4",
     "immer": "^10.2.0",
-    "superjson": "^2.2.3",
+    "superjson": "^2.2.5",
     "zod": "^4.1.11"
   }
 }
