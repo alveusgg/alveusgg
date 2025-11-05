@@ -9,7 +9,7 @@ import {
 
 import { PIXEL_SIZE, type Pixel, usePixels } from "@/hooks/pixels";
 
-function getHighContrastColor(pixel: Pixel) {
+function getHighContrastColor(pixel: Pixel, opacity = 1) {
   const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
     c.charCodeAt(0),
   );
@@ -26,8 +26,8 @@ function getHighContrastColor(pixel: Pixel) {
   }
   averageLuminosity /= (bytes.length / 4) * 3;
   return averageLuminosity < 128
-    ? "rgba(255, 255, 255, 0.75)"
-    : "rgba(0, 0, 0, 0.75)";
+    ? `rgba(255, 255, 255, ${opacity})`
+    : `rgba(0, 0, 0, ${opacity})`;
 }
 
 function wrapCanvasText(
@@ -188,8 +188,8 @@ function PixelPreview({
           wrapCanvasText((t) => ctx.measureText(t).width, line, maxTextWidth),
         );
       ctx.fillStyle = pixel
-        ? getHighContrastColor(pixel)
-        : "rgba(0, 0, 0, 0.75)";
+        ? getHighContrastColor(pixel, 0.65)
+        : "rgba(0, 0, 0, 0.65)";
       ctx.textAlign = "right";
       ctx.textBaseline = "bottom";
       lines.forEach((line, index) => {
