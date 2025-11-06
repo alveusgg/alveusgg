@@ -103,7 +103,9 @@ export function MobileMenu() {
               </DisclosureButton>
             </li>
           )}
-          <ThemeToggleButton />
+          <li>
+            <ThemeToggleButton />
+          </li>
         </ul>
       </div>
     </DisclosurePanel>

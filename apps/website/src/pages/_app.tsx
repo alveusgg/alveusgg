@@ -2,12 +2,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Analytics } from "@vercel/analytics/react";
 import { type Session } from "next-auth";
 import { SessionProvider, signIn, signOut, useSession } from "next-auth/react";
+import { ThemeProvider } from "next-themes";
 import { type AppType } from "next/app";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { type ReactNode, useEffect } from "react";
 
-import { ThemeProvider } from "next-themes";
 import { unregisterServiceWorker } from "@/utils/sw";
 import { trpc } from "@/utils/trpc";
 
@@ -17,9 +17,6 @@ import FontProvider from "@/components/layout/Fonts";
 import Layout from "@/components/layout/Layout";
 
 import "@/styles/tailwind.css";
-
-
-import { ThemeScript } from "@/hooks/theme";
 
 unregisterServiceWorker();
 
@@ -100,7 +97,6 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
         <Head>
           <meta name="robots" content="noindex" />
         </Head>
-        <ThemeScript />
         <FontProvider>
           <Component {...pageProps} />
         </FontProvider>

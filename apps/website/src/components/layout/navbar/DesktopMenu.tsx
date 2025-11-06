@@ -73,7 +73,9 @@ export function DesktopMenu() {
     <div className="hidden grow flex-col gap-2 lg:flex">
       <div className="flex items-center justify-end gap-2">
         <ul className="contents">
-          <ThemeToggleButton />
+          <li>
+            <ThemeToggleButton />
+          </li>
           {Object.entries(utilityNavStructure).map(([key, link]) => (
             <li key={key}>
               {/* eslint-disable-next-line react/jsx-no-target-blank */}

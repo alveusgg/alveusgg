@@ -9,13 +9,11 @@ export default function ThemeToggleButton() {
   const { theme, setTheme } = useTheme();
 
   return (
-    <li>
-      <button
-        className="grid cursor-pointer"
-        onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      >
-        {theme === "light" ? <IconMoon /> : <IconSun />}
-      </button>
-    </li>
+    <button
+      className="grid cursor-pointer"
+      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+    >
+      {theme === "light" ? <IconMoon /> : <IconSun />}
+    </button>
   );
 }
