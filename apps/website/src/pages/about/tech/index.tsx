@@ -196,7 +196,7 @@ const AboutTechPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section className="bg-alveus-green-100">
+      <Section className="bg-alveus-green-100 dark:bg-gray-800">
         <Heading level={2} className="mt-0 mb-2" id="presets" link>
           Camera Presets
         </Heading>

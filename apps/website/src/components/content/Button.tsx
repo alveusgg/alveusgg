@@ -22,10 +22,10 @@ const buttonClassNames = ({
     dark
       ? filled
         ? "border-alveus-tan bg-alveus-tan text-alveus-green hover:border-alveus-tan hover:bg-transparent hover:text-alveus-tan"
-        : "border-alveus-tan bg-transparent text-alveus-tan hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green"
+        : "border-alveus-tan bg-transparent text-alveus-tan hover:border-alveus-tan hover:bg-alveus-tan hover:text-alveus-green dark:bg-gray-900 dark:text-alveus-tan"
       : filled
         ? "border-alveus-green bg-alveus-green text-alveus-tan hover:border-alveus-green hover:bg-transparent hover:text-alveus-green"
-        : "border-alveus-green bg-transparent text-alveus-green hover:border-alveus-green hover:bg-alveus-green hover:text-alveus-tan",
+        : "border-alveus-green bg-transparent text-alveus-green hover:border-alveus-green hover:bg-alveus-green hover:text-alveus-tan dark:bg-gray-900 dark:text-alveus-tan",
     !/(^|\s)text-(xs|sm|base|lg|[2-6]?xl)(\s|$)/.test(className || "") &&
       "text-lg",
     !/(^|\s)((inline-)?(block|flex|grid|table)|inline|contents)(\s|$)/.test(

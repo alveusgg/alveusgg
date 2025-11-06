@@ -77,7 +77,7 @@ const Consent = ({
 
             <p className="m-6 mb-3 text-2xl">Loading {item}...</p>
 
-            <Box className="m-6 mt-3 flex max-w-2xl flex-col gap-4 p-6 py-4 text-alveus-green">
+            <Box className="m-6 mt-3 flex max-w-2xl flex-col gap-4 p-6 py-4">
               <p>
                 This content is from a third party and we need your consent to
                 show it. It {consentExplainer}.

@@ -250,7 +250,7 @@ const AboutTeamPage: NextPage = () => {
 
       <SubNav links={sectionLinks} className="z-20" />
 
-      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
+      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900 dark:bg-gray-900 dark:text-alveus-tan">
         <Heading level={2} id="staff" link>
           Alveus Staff
         </Heading>
@@ -300,7 +300,7 @@ const AboutTeamPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
+      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900 dark:bg-gray-800 dark:text-alveus-tan">
         <Heading level={2} id="advisory-board" link>
           Alveus Advisory Board
         </Heading>
@@ -321,7 +321,7 @@ const AboutTeamPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900">
+      <Section className="bg-alveus-green-100 py-16 text-center text-alveus-green-900 dark:bg-gray-900 dark:text-alveus-tan">
         <Heading level={2} id="board-of-directors" link>
           Alveus Board of Directors
         </Heading>

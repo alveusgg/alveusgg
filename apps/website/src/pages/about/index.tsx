@@ -827,7 +827,7 @@ const AboutAlveusPage: NextPage = () => {
         </Section>
       </div>
 
-      <Section className="bg-alveus-green-100">
+      <Section dark>
         <Heading id="news" level={2} link className="text-center">
           In The News
         </Heading>
@@ -884,7 +884,7 @@ const AboutAlveusPage: NextPage = () => {
         </p>
       </Section>
 
-      <Section dark>
+      <Section>
         <div className="flex flex-wrap-reverse items-center">
           <div className="basis-full pt-8 md:basis-1/2 md:pt-0 md:pr-8">
             <MayaImage className="mx-auto h-auto w-full max-w-lg lg:mr-0" />

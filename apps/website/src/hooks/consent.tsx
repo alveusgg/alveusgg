@@ -205,7 +205,7 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
         <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
 
         <div className="fixed inset-0 flex items-center justify-center p-4">
-          <DialogPanel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan px-4 shadow-2xl">
+          <DialogPanel className="max-h-full w-full max-w-xl overflow-y-auto rounded-2xl bg-alveus-tan px-4 shadow-2xl dark:bg-gray-800">
             <DialogTitle
               as={Heading}
               level={2}
@@ -270,8 +270,8 @@ const ConsentDialog = ({ context }: { context: ConsentContext }) => {
               .
             </p>
 
-            <div className="sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4">
-              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-gradient-to-b from-alveus-tan/0 to-alveus-tan" />
+            <div className="sticky bottom-0 z-0 -mx-4 mt-6 bg-alveus-tan px-4 pb-4 dark:bg-gray-800">
+              <div className="pointer-events-none absolute inset-x-0 -top-6 -z-10 h-6 bg-gradient-to-b from-alveus-tan/0 to-alveus-tan dark:from-gray-800/0 dark:to-gray-800" />
 
               <div className="flex flex-wrap gap-2 sm:flex-nowrap">
                 {hasInteracted && (

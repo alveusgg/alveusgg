@@ -21,10 +21,14 @@ const Box = ({ dark, className, ringClassName, children }: BoxProps) => (
       !/\bp-\d+\b/.test(className || "") && "p-8",
       // add background color if not overwritten via className
       !/\bbg-/.test(className || "") &&
-        (dark ? "bg-alveus-green" : "bg-alveus-tan"),
+        (dark
+          ? "bg-alveus-green dark:bg-gray-800"
+          : "bg-alveus-tan dark:bg-gray-900"),
       // add text color if not overwritten via className
       !/\btext-/.test(className || "") &&
-        (dark ? "text-alveus-tan" : "text-alveus-green-900"),
+        (dark
+          ? "text-alveus-tan"
+          : "text-alveus-green-900 dark:text-alveus-tan"),
       className,
     )}
   >

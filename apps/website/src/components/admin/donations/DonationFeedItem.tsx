@@ -154,7 +154,7 @@ function DonationFeedItem({
         <div className="text-right text-sm">{timeFormatted}</div>
       </div>
       {donation.note ? (
-        <div className="text-md ml-6 overflow-hidden px-2 py-1 text-ellipsis text-black/80 italic dark:text-white/80">
+        <div className="text-md ml-6 overflow-hidden px-2 py-1 text-ellipsis text-black/80 italic dark:text-alveus-tan/80">
           {donation.note}
         </div>
       ) : null}

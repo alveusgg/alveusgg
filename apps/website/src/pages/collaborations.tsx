@@ -196,11 +196,11 @@ const Creators = ({ className }: { className?: string }) => {
         </ul>
 
         <div
-          className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-l from-transparent to-alveus-green"
+          className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-l from-transparent to-alveus-green dark:to-gray-800"
           style={{ zIndex: creators.length + 1 }}
         />
         <div
-          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-green"
+          className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-r from-transparent to-alveus-green dark:to-gray-800"
           style={{ zIndex: creators.length + 1 }}
         />
 
@@ -236,10 +236,10 @@ const Creators = ({ className }: { className?: string }) => {
                 "absolute inset-y-0 z-10 m-1 h-3 rounded-full shadow-xs",
                 bar.width === dots
                   ? "pointer-events-none"
-                  : "cursor-grab select-none hover:bg-alveus-green-800",
+                  : "cursor-grab select-none hover:bg-alveus-green-800 hover:dark:bg-alveus-green-400",
                 barDragging
                   ? "bg-alveus-green-800 transition-[background]"
-                  : "bg-alveus-green-900 transition-[background,left]",
+                  : "bg-alveus-green-900 transition-[background,left] dark:bg-alveus-green-600",
               )}
               style={{
                 left: `calc((0.75rem * ${bar.start}) + (0.5rem * ${bar.start}))`,
@@ -314,7 +314,7 @@ const CollaborationItems = ({
         <Heading
           level={-1}
           className={classes(
-            "mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 [&>a]:flex [&>a]:items-end [&>a]:justify-between",
+            "mb-6 border-b-2 border-alveus-green-300/25 pb-2 text-4xl text-alveus-green-800 dark:text-alveus-green-400 [&>a]:flex [&>a]:items-end [&>a]:justify-between",
             index === 0 ? "mt-0" : "mt-8",
           )}
           id={`${option}:${group}`}
@@ -339,7 +339,7 @@ const CollaborationItems = ({
               {collaboration.link !== null ? (
                 <Link
                   href={collaboration.link}
-                  className="hover:text-alveus-green-600 hover:underline"
+                  className="hover:text-alveus-green-600 hover:underline dark:hover:text-alveus-green-400"
                   external
                   custom
                 >
@@ -348,7 +348,7 @@ const CollaborationItems = ({
               ) : (
                 collaboration.name
               )}
-              <small className="text-xl text-alveus-green-600">
+              <small className="text-xl text-alveus-green-600 dark:text-alveus-green-400">
                 <Link href={`#${collaboration.slug}`} custom>
                   {formatDateTime(collaboration.date, { style: "long" })}
                 </Link>

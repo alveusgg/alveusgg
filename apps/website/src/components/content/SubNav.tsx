@@ -55,7 +55,7 @@ const SubNavInner = ({ links, className }: SubNavProps) => {
 const SubNav = ({ links, className }: SubNavProps) => (
   <nav
     className={classes(
-      "sticky inset-x-0 top-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl",
+      "sticky inset-x-0 top-0 bg-alveus-green-100/50 text-xl font-bold shadow-md backdrop-blur-2xl dark:bg-alveus-green-800 dark:text-white",
       className,
     )}
   >

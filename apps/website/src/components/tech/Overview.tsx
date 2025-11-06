@@ -120,7 +120,7 @@ const Overview = () => {
   return (
     <>
       <div
-        className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
+        className="h-[50vh] min-h-[50vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan text-gray-900 shadow-lg dark:bg-gray-800"
         aria-hidden
       >
         <Tree {...tree} />

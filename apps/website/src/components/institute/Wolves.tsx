@@ -17,7 +17,7 @@ const Wolves = ({
         src={image.src}
         width={240}
         alt={image.alt}
-        className="pointer-events-none absolute top-1/2 right-0 z-10 aspect-square size-40 translate-x-1/2 -translate-y-1/2 rounded-full border-12 border-alveus-green object-cover @md:size-60 @md:border-16"
+        className="pointer-events-none absolute top-1/2 right-0 z-10 aspect-square size-40 translate-x-1/2 -translate-y-1/2 rounded-full border-12 border-alveus-green object-cover @md:size-60 @md:border-16 dark:border-gray-800"
       />
 
       <div className="relative rounded-r-xl bg-red py-2 pr-20 before:absolute before:inset-y-0 before:-left-full before:w-full before:bg-red @md:pr-30">

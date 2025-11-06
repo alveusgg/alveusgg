@@ -105,7 +105,7 @@ const People = ({ people, columns = 1, align = "left", link }: PeopleProps) => (
           <Heading level={4} className="text-xl">
             {person.title}
           </Heading>
-          <div className="flex flex-col gap-4 text-gray-500">
+          <div className="flex flex-col gap-4 text-gray-500 dark:text-alveus-tan">
             {person.description}
           </div>
         </div>

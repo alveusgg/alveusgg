@@ -479,7 +479,7 @@ const Home: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
 
           <MerchCarousel more />
 
-          <p className="text-center text-alveus-green italic">
+          <p className="text-center text-alveus-green italic dark:text-alveus-tan">
             All proceeds go directly into Alveus and the support + care of our
             educational ambassadors!
           </p>

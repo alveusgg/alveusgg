@@ -125,8 +125,8 @@ const FoundAnimalPage: NextPage = () => {
             className="pointer-events-none absolute top-[40vh] left-0 -z-10 h-auto w-1/2 max-w-40 drop-shadow-md select-none"
           />
 
-          <div className="mx-auto flex h-[80vh] w-full max-w-lg shrink-0 flex-col overflow-hidden rounded-xl border border-alveus-green bg-alveus-tan/75 shadow-lg backdrop-blur-sm xl:mx-0">
-            <div className="shrink-0 grow-0 border-b border-alveus-green bg-alveus-green-50/75 p-4 text-alveus-green-800">
+          <div className="mx-auto flex h-[80vh] w-full max-w-lg shrink-0 flex-col overflow-hidden rounded-xl border border-alveus-green bg-alveus-tan/75 shadow-lg backdrop-blur-sm xl:mx-0 dark:bg-gray-800/75">
+            <div className="shrink-0 grow-0 border-b border-alveus-green bg-alveus-green-50/75 p-4 text-alveus-green-800 dark:bg-gray-800/75 dark:text-alveus-tan">
               <Heading>Found an Animal?</Heading>
               <p>
                 Use this interactive tool to get guidance on how to help an

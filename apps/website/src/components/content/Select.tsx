@@ -41,7 +41,7 @@ const Select = ({
             "relative w-full rounded-lg border py-2 pr-10 pl-3 text-left",
             dark
               ? "border-alveus-tan/40 bg-alveus-green text-alveus-tan"
-              : "border-alveus-green/40 bg-alveus-tan text-alveus-green dark:bg-gray-800 dark:text-white",
+              : "border-alveus-green/40 bg-alveus-tan text-alveus-green dark:bg-gray-800 dark:text-alveus-tan",
           )}
         >
           <span className="block">{options[value]}</span>
@@ -58,8 +58,8 @@ const Select = ({
             "group absolute top-full z-30 mt-1 flex max-h-60 min-w-[10rem] flex-col gap-0.5 overflow-auto rounded-md border p-2 shadow-lg transition-opacity duration-100 ease-in-out focus:outline-hidden data-[closed]:opacity-0",
             align === "left" ? "left-0" : "right-0",
             dark
-              ? "border-alveus-tan/20 bg-alveus-green text-alveus-tan"
-              : "border-alveus-green/20 bg-alveus-tan text-alveus-green",
+              ? "border-alveus-tan/20 bg-alveus-green text-alveus-tan dark:bg-alveus-green-900"
+              : "border-alveus-green/20 bg-alveus-tan dark:bg-gray-800 dark:text-alveus-tan",
           )}
           as="ul"
         >

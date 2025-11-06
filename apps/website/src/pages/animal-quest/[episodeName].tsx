@@ -195,7 +195,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
           <Link
             href={`/ambassadors/${camelToKebab(key)}`}
             draggable={false}
-            className="group text-center transition-colors hover:text-alveus-green"
+            className="group text-center transition-colors hover:text-alveus-green hover:dark:text-alveus-tan-200"
             custom
           >
             <Image
@@ -215,7 +215,7 @@ const AnimalQuestEpisodePage: NextPage<AnimalQuestEpisodePageProps> = ({
                   ? "Featured in this episode"
                   : "Related to this episode"
               }
-              className="text-sm font-bold text-alveus-green-900 uppercase"
+              className="text-sm font-bold uppercase"
             >
               {relation}
             </p>

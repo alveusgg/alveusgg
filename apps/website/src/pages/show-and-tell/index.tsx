@@ -603,7 +603,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             )}
             <div className="flex flex-row gap-2">
               <Button
-                className="bg-white shadow-lg"
+                className="bg-white shadow-lg dark:bg-alveus-green-900"
                 disabled={!hasPrevEntry}
                 onClick={scrollToPrev}
               >
@@ -611,7 +611,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
                 <span className="sr-only">Previous Post</span>
               </Button>
               <Button
-                className="bg-white shadow-lg"
+                className="bg-white shadow-lg dark:bg-alveus-green-900"
                 disabled={!hasNextEntry}
                 onClick={scrollToNext}
               >
@@ -621,7 +621,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
             </div>
 
             <Button
-              className="hidden bg-white shadow-lg lg:flex"
+              className="hidden bg-white shadow-lg lg:flex dark:bg-alveus-green-900"
               onClick={handleTogglePresentationView}
             >
               {isPresentationView ? (
@@ -639,7 +639,7 @@ const ShowAndTellIndexPage: NextPage<ShowAndTellPageProps> = ({
 
             <LinkButton
               href="/show-and-tell/submit-post"
-              className="bg-white shadow-lg"
+              className="bg-white shadow-lg dark:bg-alveus-green-900"
             >
               <IconPencil className="size-5" />
               <span>

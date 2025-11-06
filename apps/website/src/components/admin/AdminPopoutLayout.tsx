@@ -30,7 +30,7 @@ function AdminPopoutLayout({
         checkRolesGivePermission(user.roles, needsPermission)));
 
   return (
-    <div className="h-full min-h-screen w-full bg-white text-black dark:bg-gray-900 dark:text-white">
+    <div className="h-full min-h-screen w-full bg-white text-black dark:bg-gray-900 dark:text-alveus-tan">
       <div className="flex flex-row items-center justify-between p-1">
         <ThemeToggleButton />
         <div className="shrink overflow-hidden text-ellipsis">{title}</div>

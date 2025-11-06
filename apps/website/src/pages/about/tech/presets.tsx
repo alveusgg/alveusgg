@@ -100,14 +100,14 @@ const Button = ({
     <button
       onClick={onClick}
       className={classes(
-        "my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm",
+        "group my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm",
         camera === selected.camera
           ? "bg-alveus-green/75 text-white"
-          : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+          : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90 dark:bg-alveus-green-600 hover:dark:text-alveus-green-800",
       )}
     >
       {title}
-      <span className="text-sm text-alveus-green-400 italic">
+      <span className="text-sm text-alveus-green-400 italic group-hover:text-alveus-green-900 dark:text-alveus-tan">
         {` (${camera.toLowerCase()})`}
       </span>
     </button>
@@ -157,7 +157,7 @@ const Card = ({
         </div>
       )}
     </div>
-    <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
+    <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2 dark:bg-alveus-green-900 dark:text-alveus-tan">
       <div className="flex items-center justify-between">
         <h4 className="text-lg font-semibold">{title}</h4>
         {command && (
@@ -600,7 +600,7 @@ const AboutTechPresetsPage: NextPage = () => {
                     aria-label="Search cameras"
                     value={searchCamera}
                     onChange={(e) => setSearchCamera(e.target.value)}
-                    className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none"
+                    className="w-full rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md backdrop-blur-sm focus:ring-2 focus:ring-alveus-green focus:outline-none dark:bg-alveus-green-900"
                   />
 
                   <div className="scrollbar-none flex shrink grow flex-col gap-1 overflow-y-auto pt-2">
@@ -635,18 +635,19 @@ const AboutTechPresetsPage: NextPage = () => {
                               className={classes(
                                 "group flex w-full shrink-0 items-center justify-between rounded px-3 py-2 text-left text-lg font-semibold shadow-md backdrop-blur-sm",
                                 selectedData.group === name
-                                  ? "bg-alveus-green/75 text-white"
-                                  : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
+                                  ? "bg-alveus-green/75 text-white dark:bg-alveus-green-800"
+                                  : "bg-alveus-green-50/75 hover:bg-alveus-green-100 dark:bg-alveus-green-500 hover:dark:text-alveus-green-800",
                               )}
                             >
                               <span>
                                 {camelToTitle(name)} Cameras
-                                <span className="text-sm text-alveus-green-400 italic">
+                                <span className="text-sm text-alveus-green-400 italic group-hover:text-alveus-green-800 dark:text-alveus-tan">
                                   {` (${groupEntries.length})`}
                                 </span>
                               </span>
                               <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
                             </DisclosureButton>
+
                             <DisclosurePanel className="ml-4 flex flex-col gap-1">
                               {groupEntries.map(
                                 ([camera, { title, group }]) => (
@@ -717,7 +718,7 @@ const AboutTechPresetsPage: NextPage = () => {
                             aria-label="Search presets"
                             value={searchPresets}
                             onChange={(e) => setSearchPresets(e.target.value)}
-                            className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
+                            className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset dark:bg-alveus-green-900"
                           />
                         </>
                       )}

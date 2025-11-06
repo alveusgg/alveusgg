@@ -248,7 +248,7 @@ const NetworkEdge = ({
               // (the first node will have the highest z-index)
               zIndex: ((nodes[0] && nodes[0].zIndex) || 0) + 1,
             }}
-            className="absolute rounded-xl border-2 border-alveus-green-100 bg-white px-2 py-1 shadow-md"
+            className="absolute rounded-xl border-2 border-alveus-green-100 bg-white px-2 py-1 text-black shadow-md"
           >
             {edgeTypes[targetNode.data.connection.type].name}
           </div>
@@ -328,7 +328,7 @@ const Network = () => {
   return (
     <>
       <div
-        className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg"
+        className="h-[80vh] min-h-[80vh] resize-y overflow-hidden rounded-2xl rounded-br-none border border-alveus-green bg-alveus-tan shadow-lg dark:bg-gray-800"
         aria-hidden
       >
         <Tree {...tree} />
