@@ -278,7 +278,7 @@ importers:
         specifier: ^5.2.7
         version: 5.2.7(@types/react@19.2.2)(react@19.2.0)
       jsdom:
-        specifier: 27.1.0
+        specifier: ^27.1.0
         version: 27.1.0
       linkify-it:
         specifier: ^5.0.0
