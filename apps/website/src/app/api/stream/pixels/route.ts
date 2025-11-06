@@ -1,10 +1,8 @@
 import { prisma } from "@alveusgg/database";
 
-import murals from "@/data/murals";
+import murals, { PIXEL_TOTAL } from "@/data/murals";
 
 import { typeSafeObjectKeys } from "@/utils/helpers";
-
-import { PIXEL_TOTAL } from "@/hooks/pixels";
 
 // API for chat bot
 export async function GET() {

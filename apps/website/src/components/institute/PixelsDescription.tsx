@@ -1,7 +1,9 @@
+import { PIXEL_TOTAL } from "@/data/murals";
+
 import { classes } from "@/utils/classes";
 
 import useLocaleString from "@/hooks/locale";
-import { PIXEL_TOTAL, usePixels } from "@/hooks/pixels";
+import { usePixels } from "@/hooks/pixels";
 
 function PixelsDescription({ className }: { className?: string }) {
   const pixels = usePixels();
