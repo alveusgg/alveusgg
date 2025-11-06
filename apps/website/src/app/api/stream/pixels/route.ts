@@ -12,7 +12,7 @@ export async function GET() {
       .then((count) => count.toLocaleString());
     const locked = PIXEL_TOTAL.toLocaleString();
 
-    return Response.json(`${unlocked} / ${locked} pixels unlocked`, {
+    return new Response(`${unlocked} / ${locked} pixels unlocked`, {
       headers: {
         // Response can be cached for 15 seconds
         "Cache-Control": "max-age=15, s-maxage=15, must-revalidate",
