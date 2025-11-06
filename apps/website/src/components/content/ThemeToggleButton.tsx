@@ -10,7 +10,7 @@ export default function ThemeToggleButton() {
 
   return (
     <button
-      className="grid cursor-pointer"
+      className="cursor-pointer align-middle"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       {theme === "light" ? <IconMoon /> : <IconSun />}
