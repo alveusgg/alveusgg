@@ -41,8 +41,13 @@ const murals = {
   },
 } satisfies Record<string, Mural>;
 
+export default murals;
+
 export type MuralId = keyof typeof murals;
 export const isMuralId = (value: unknown): value is MuralId =>
   typeof value === "string" && value in murals;
 
-export default murals;
+export const PIXEL_SIZE = 3;
+export const PIXEL_GRID_WIDTH = 200;
+export const PIXEL_GRID_HEIGHT = 50;
+export const PIXEL_TOTAL = PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT;

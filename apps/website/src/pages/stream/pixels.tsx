@@ -1,16 +1,16 @@
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 
-import murals, { isMuralId } from "@/data/murals";
+import murals, {
+  PIXEL_GRID_HEIGHT,
+  PIXEL_GRID_WIDTH,
+  isMuralId,
+} from "@/data/murals";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectKeys } from "@/utils/helpers";
 
-import {
-  PIXEL_GRID_HEIGHT,
-  PIXEL_GRID_WIDTH,
-  PixelProvider,
-} from "@/hooks/pixels";
+import { PixelProvider } from "@/hooks/pixels";
 
 import PixelLeaderboard from "@/components/institute/PixelLeaderboard";
 import Pixels from "@/components/institute/Pixels";

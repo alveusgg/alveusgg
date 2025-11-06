@@ -1,6 +1,8 @@
+import { PIXEL_TOTAL } from "@/data/murals";
+
 import { classes } from "@/utils/classes";
 
-import { PIXEL_TOTAL, usePixels } from "@/hooks/pixels";
+import { usePixels } from "@/hooks/pixels";
 
 import Progress from "../content/Progress";
 
