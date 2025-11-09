@@ -7,7 +7,9 @@ import {
   useRef,
 } from "react";
 
-import { PIXEL_SIZE, type Pixel, usePixels } from "@/hooks/pixels";
+import { PIXEL_SIZE } from "@/data/murals";
+
+import { type Pixel, usePixels } from "@/hooks/pixels";
 
 function getHighContrastColor(pixel: Pixel, opacity = 1) {
   const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>

@@ -3,9 +3,11 @@ import { useCallback, useMemo, useRef } from "react";
 
 import type { DonationAlert } from "@alveusgg/donations-core";
 
+import { PIXEL_SIZE } from "@/data/murals";
+
 import { delay } from "@/utils/delay";
 
-import { PIXEL_SIZE, usePixels } from "@/hooks/pixels";
+import { usePixels } from "@/hooks/pixels";
 
 import { coordsToGridRef } from "@/components/institute/Pixels";
 

@@ -10,14 +10,13 @@ import { env } from "@/env";
 import type { PublicPixel } from "@/server/db/donations";
 
 import type { MuralId } from "@/data/murals";
-import murals from "@/data/murals";
+import murals, {
+  PIXEL_GRID_HEIGHT,
+  PIXEL_GRID_WIDTH,
+  PIXEL_SIZE,
+} from "@/data/murals";
 
 export type Pixel = PublicPixel & { data: string };
-
-export const PIXEL_SIZE = 3;
-export const PIXEL_GRID_WIDTH = 200;
-export const PIXEL_GRID_HEIGHT = 50;
-export const PIXEL_TOTAL = PIXEL_GRID_WIDTH * PIXEL_GRID_HEIGHT;
 
 interface SyncProviderOptions {
   url: string;

@@ -7,16 +7,11 @@ import {
   useRef,
 } from "react";
 
+import { PIXEL_GRID_HEIGHT, PIXEL_GRID_WIDTH, PIXEL_SIZE } from "@/data/murals";
+
 import { classes } from "@/utils/classes";
 
-import {
-  PIXEL_GRID_HEIGHT,
-  PIXEL_GRID_WIDTH,
-  PIXEL_SIZE,
-  type Pixel,
-  usePixels,
-  usePixelsKey,
-} from "@/hooks/pixels";
+import { type Pixel, usePixels, usePixelsKey } from "@/hooks/pixels";
 
 import PixelPreview, {
   type PixelPreviewRef,
