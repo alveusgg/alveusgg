@@ -52,6 +52,17 @@ function wrapCanvasText(
         .split(" ")
         .flatMap((word, idx) => (idx === 0 ? [word] : [" ", word]));
 
+  // Recombine any `@` symbols split from usernames
+  for (let i = 0; i < words.length - 1; i++) {
+    const word = words[i];
+    if (word !== "@") continue;
+
+    const next = words[i + 1];
+    if (next === undefined || next.trim().length === 0) continue;
+
+    words.splice(i, 2, "@" + next);
+  }
+
   // Track the final constructed lines, and the current line being built
   const lines: string[] = [];
   const line: string[] = [];
