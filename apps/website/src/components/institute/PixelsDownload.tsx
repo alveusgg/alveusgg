@@ -1,10 +1,11 @@
-import { type MouseEvent, useCallback } from "react";
+import { type MouseEvent, useCallback, useState } from "react";
 
 import { PIXEL_GRID_HEIGHT, PIXEL_GRID_WIDTH } from "@/data/murals";
 
 import { type Pixel, usePixels } from "@/hooks/pixels";
 
 import IconDownload from "@/icons/IconDownload";
+import IconLoading from "@/icons/IconLoading";
 
 import Link from "../content/Link";
 import { renderPixelPreview } from "./PixelPreview";
@@ -13,26 +14,27 @@ const PIXEL_PPI = 300;
 const PIXEL_INCHES = 1.5;
 const PIXEL_SIZE = PIXEL_PPI * PIXEL_INCHES;
 
-function checkSize(width: number, height: number) {
+async function checkSize(width: number, height: number) {
   const canvas = new OffscreenCanvas(width, height);
   const ctx = canvas.getContext("2d");
   if (!ctx) throw new Error("Offscreen canvas context is not found");
 
   try {
     ctx.putImageData(new ImageData(1, 1), 0, 0);
+    await canvas.convertToBlob({ type: "image/png" });
     return true;
   } catch {
     return false;
   }
 }
 
-function renderPixels(pixels?: Pixel[]) {
+async function renderPixels(pixels?: Pixel[]) {
   let chunks = 1;
   while (
-    !checkSize(
+    !(await checkSize(
       (PIXEL_SIZE * PIXEL_GRID_WIDTH) / chunks,
       PIXEL_SIZE * PIXEL_GRID_HEIGHT,
-    )
+    ))
   ) {
     if (chunks > PIXEL_GRID_WIDTH) {
       throw new Error("Canvas size too large to render");
@@ -86,41 +88,50 @@ function renderPixels(pixels?: Pixel[]) {
     blobs.push(canvasFull.convertToBlob({ type: "image/png" }));
   }
 
-  return blobs;
+  return Promise.all(blobs);
 }
 
 function PixelsDownload() {
   const pixels = usePixels();
 
+  const [loading, setLoading] = useState(false);
   const download = useCallback(
-    (e: MouseEvent<HTMLAnchorElement>) => {
+    async (e: MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
 
-      const blobs = renderPixels(pixels);
-      Promise.all(blobs).then((blobParts) => {
-        blobParts.forEach((blob, index) => {
-          const url = URL.createObjectURL(blob);
-          const a = document.createElement("a");
-          a.href = url;
-          a.download = `alveus-mural-part-${index + 1}.png`;
-          document.body.appendChild(a);
-          a.click();
-          document.body.removeChild(a);
-          URL.revokeObjectURL(url);
-        });
+      if (loading) return;
+      setLoading(true);
+
+      const blobs = await renderPixels(pixels);
+      blobs.forEach((blob, index) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `alveus-mural-part-${index + 1}.png`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       });
+
+      setLoading(false);
     },
-    [pixels],
+    [loading, pixels],
   );
 
   return (
     <Link
       href="#"
       onClick={download}
+      aria-disabled={loading}
       dark
-      className="mt-4 inline-flex items-center gap-2"
+      className="mt-4 inline-flex items-center gap-2 aria-disabled:cursor-progress aria-disabled:opacity-50"
     >
-      <IconDownload className="size-4" />
+      {loading ? (
+        <IconLoading className="size-4" />
+      ) : (
+        <IconDownload className="size-4" />
+      )}
       Download full mural
     </Link>
   );
