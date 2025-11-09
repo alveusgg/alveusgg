@@ -117,19 +117,23 @@ function PixelsDownload() {
       if (loading) return;
       setLoading(true);
 
-      const blobs = await renderPixels(pixels);
-      blobs.forEach((blob, index) => {
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = `alveus-mural-part-${index + 1}.png`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-
-      setLoading(false);
+      try {
+        const blobs = await renderPixels(pixels);
+        blobs.forEach((blob, index) => {
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url;
+          a.download = `alveus-mural-part-${index + 1}.png`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+        });
+      } catch (error) {
+        console.error("Error generating mural download:", error);
+      } finally {
+        setLoading(false);
+      }
     },
     [loading, pixels],
   );
