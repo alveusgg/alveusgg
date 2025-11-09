@@ -9,7 +9,9 @@ import IconDownload from "@/icons/IconDownload";
 import Link from "../content/Link";
 import { renderPixelPreview } from "./PixelPreview";
 
-const PIXEL_SIZE = 200;
+const PIXEL_PPI = 300;
+const PIXEL_INCHES = 1.5;
+const PIXEL_SIZE = PIXEL_PPI * PIXEL_INCHES;
 
 function checkSize(width: number, height: number) {
   const canvas = new OffscreenCanvas(width, height);
