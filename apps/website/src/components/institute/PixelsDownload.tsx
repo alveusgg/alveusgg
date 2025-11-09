@@ -30,21 +30,27 @@ async function checkSize(width: number, height: number) {
   }
 }
 
-async function renderPixels(pixels?: Pixel[]) {
-  let chunks = 1;
-  while (
-    !(await checkSize(
-      (PIXEL_SIZE * PIXEL_GRID_WIDTH) / chunks,
-      PIXEL_SIZE * PIXEL_GRID_HEIGHT,
-    ))
-  ) {
-    if (chunks > PIXEL_GRID_WIDTH) {
-      throw new Error("Canvas size too large to render");
+async function getChunks() {
+  const divisors: number[] = [];
+  for (let i = 1; i <= PIXEL_GRID_WIDTH; i++) {
+    if (PIXEL_GRID_WIDTH % i === 0) {
+      divisors.push(i);
     }
-
-    chunks *= 2;
   }
 
+  for (const divisor of divisors) {
+    const width = (PIXEL_SIZE * PIXEL_GRID_WIDTH) / divisor;
+    const height = PIXEL_SIZE * PIXEL_GRID_HEIGHT;
+    if (await checkSize(width, height)) {
+      return divisor;
+    }
+  }
+
+  throw new Error("Canvas size too large to render");
+}
+
+async function renderPixels(pixels?: Pixel[]) {
+  const chunks = await getChunks();
   const blobs: Promise<Blob>[] = [];
   for (let chunk = 0; chunk < chunks; chunk++) {
     console.log(
