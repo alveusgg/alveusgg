@@ -100,6 +100,79 @@ function wrapCanvasText(
   return lines;
 }
 
+export function renderPixelPreview(
+  ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D,
+  { x, y }: { x: number; y: number },
+  pixels?: Pixel[],
+  identifier?: string,
+) {
+  const pixel = pixels?.find((p) => p.column === x && p.row === y);
+
+  if (pixel) {
+    // Draw the raw pixel data offscreen
+    const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
+      c.charCodeAt(0),
+    );
+    const imageData = new ImageData(bytes, PIXEL_SIZE, PIXEL_SIZE);
+    const offscreen = new OffscreenCanvas(PIXEL_SIZE, PIXEL_SIZE);
+    const offscreenCtx = offscreen.getContext("2d");
+    if (!offscreenCtx) throw new Error("Offscreen canvas context is not found");
+    offscreenCtx.putImageData(imageData, 0, 0);
+
+    // Scale up the pixel data to fill the canvas
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(
+      offscreen,
+      0,
+      0,
+      offscreen.width,
+      offscreen.height,
+      0,
+      0,
+      ctx.canvas.width,
+      ctx.canvas.height,
+    );
+    ctx.imageSmoothingEnabled = true;
+  } else {
+    // Fill with light gray
+    ctx.fillStyle = "rgb(230, 230, 230)";
+    ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+  }
+
+  // Use the font family from the canvas element
+  const padding = ctx.canvas.width * 0.05;
+  const fontSize = ctx.canvas.width * 0.1;
+  const lineHeight = fontSize * 1.2;
+  const fontStyle = pixel ? "bold" : "italic bold";
+  ctx.font = `${fontStyle} ${fontSize}px ${getComputedStyle(document.body).fontFamily}`;
+
+  // Improve text rendering quality
+  ctx.textRendering = "optimizeLegibility";
+  ctx.imageSmoothingEnabled = true;
+  ctx.imageSmoothingQuality = "high";
+
+  // Draw the identifier (or locked) text bottom-right
+  const maxTextWidth = ctx.canvas.width - padding * 2;
+  const text = pixel ? (identifier ?? pixel.identifier) : "Locked";
+  const lines = text
+    .split("\n")
+    .flatMap((line) =>
+      wrapCanvasText((t) => ctx.measureText(t).width, line, maxTextWidth),
+    );
+  ctx.fillStyle = pixel
+    ? getHighContrastColor(pixel, 0.65)
+    : "rgba(0, 0, 0, 0.65)";
+  ctx.textAlign = "right";
+  ctx.textBaseline = "bottom";
+  lines.forEach((line, index) => {
+    ctx.fillText(
+      line,
+      ctx.canvas.width - padding,
+      ctx.canvas.height - padding - (lines.length - 1 - index) * lineHeight,
+    );
+  });
+}
+
 export type PixelPreviewRef = {
   setPixel: (coordinates: { x: number; y: number }) => void;
 };
@@ -122,85 +195,21 @@ function PixelPreview({
   const update = useCallback(
     ({ x, y }: { x: number; y: number }) => {
       coordinates.current = { x, y };
-      const pixel = pixels?.find((p) => p.column === x && p.row === y);
 
       const elm = canvas.current;
-      if (!elm) throw new Error("Pixel image canvas is not found");
+      if (!elm) throw new Error("Canvas element is not found");
 
       const ctx = elm.getContext("2d");
-      if (!ctx) throw new Error("Pixel image canvas context is not found");
+      if (!ctx) throw new Error("Canvas context is not found");
 
       // Scale the canvas using the device pixel ratio for high-DPI displays
       const dpr = window.devicePixelRatio || 1;
-      const displayWidth = elm.offsetWidth;
-      const displayHeight = elm.offsetHeight;
-      elm.width = displayWidth * dpr;
-      elm.height = displayHeight * dpr;
+      const displayWidth = ctx.canvas.offsetWidth;
+      const displayHeight = ctx.canvas.offsetHeight;
+      ctx.canvas.width = displayWidth * dpr;
+      ctx.canvas.height = displayHeight * dpr;
 
-      if (pixel) {
-        // Draw the raw pixel data offscreen
-        const bytes = Uint8ClampedArray.from(atob(pixel.data), (c) =>
-          c.charCodeAt(0),
-        );
-        const imageData = new ImageData(bytes, PIXEL_SIZE, PIXEL_SIZE);
-        const offscreen = new OffscreenCanvas(PIXEL_SIZE, PIXEL_SIZE);
-        const offscreenCtx = offscreen.getContext("2d");
-        if (!offscreenCtx)
-          throw new Error("Offscreen canvas context is not found");
-        offscreenCtx.putImageData(imageData, 0, 0);
-
-        // Scale up the pixel data to fill the canvas
-        ctx.imageSmoothingEnabled = false;
-        ctx.drawImage(
-          offscreen,
-          0,
-          0,
-          offscreen.width,
-          offscreen.height,
-          0,
-          0,
-          elm.width,
-          elm.height,
-        );
-        ctx.imageSmoothingEnabled = true;
-      } else {
-        // Fill with light gray
-        ctx.fillStyle = "rgb(230, 230, 230)";
-        ctx.fillRect(0, 0, elm.width, elm.height);
-      }
-
-      // Use the font family from the canvas element
-      const padding = elm.width * 0.05;
-      const fontSize = elm.width * 0.1;
-      const lineHeight = fontSize * 1.2;
-      const fontStyle = pixel ? "bold" : "italic bold";
-      ctx.font = `${fontStyle} ${fontSize}px ${getComputedStyle(elm).fontFamily}`;
-
-      // Improve text rendering quality
-      ctx.textRendering = "optimizeLegibility";
-      ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
-
-      // Draw the identifier (or locked) text bottom-right
-      const maxTextWidth = elm.width - padding * 2;
-      const text = pixel ? (identifier ?? pixel.identifier) : "Locked";
-      const lines = text
-        .split("\n")
-        .flatMap((line) =>
-          wrapCanvasText((t) => ctx.measureText(t).width, line, maxTextWidth),
-        );
-      ctx.fillStyle = pixel
-        ? getHighContrastColor(pixel, 0.65)
-        : "rgba(0, 0, 0, 0.65)";
-      ctx.textAlign = "right";
-      ctx.textBaseline = "bottom";
-      lines.forEach((line, index) => {
-        ctx.fillText(
-          line,
-          elm.width - padding,
-          elm.height - padding - (lines.length - 1 - index) * lineHeight,
-        );
-      });
+      renderPixelPreview(ctx, { x, y }, pixels, identifier);
     },
     [identifier, pixels],
   );
