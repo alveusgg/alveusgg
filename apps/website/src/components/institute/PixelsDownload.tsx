@@ -1,6 +1,8 @@
+import { useSession } from "next-auth/react";
 import { type MouseEvent, useCallback, useState } from "react";
 
 import { PIXEL_GRID_HEIGHT, PIXEL_GRID_WIDTH } from "@/data/murals";
+import { checkRolesGivePermission, permissions } from "@/data/permissions";
 
 import { type Pixel, usePixels } from "@/hooks/pixels";
 
@@ -92,6 +94,13 @@ async function renderPixels(pixels?: Pixel[]) {
 }
 
 function PixelsDownload() {
+  const session = useSession();
+  const user = session.data?.user;
+  const hasPermission =
+    user &&
+    (user.isSuperUser ||
+      checkRolesGivePermission(user.roles, permissions.manageDonations));
+
   const pixels = usePixels();
 
   const [loading, setLoading] = useState(false);
@@ -118,6 +127,8 @@ function PixelsDownload() {
     },
     [loading, pixels],
   );
+
+  if (!hasPermission) return null;
 
   return (
     <Link
