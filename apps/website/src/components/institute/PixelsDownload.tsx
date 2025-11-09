@@ -63,13 +63,12 @@ function renderPixels(pixels?: Pixel[]) {
 
     for (let row = 0; row < PIXEL_GRID_HEIGHT; row++) {
       for (let column = 0; column < PIXEL_GRID_WIDTH / chunks; column++) {
-        const x = column + chunk * (PIXEL_GRID_WIDTH / chunks);
-        const y = row;
-
-        console.log(` Rendering pixel at (${x}, ${y})`);
-
         ctxPreview.clearRect(0, 0, PIXEL_SIZE, PIXEL_SIZE);
-        renderPixelPreview(ctxPreview, { x, y }, pixels);
+        renderPixelPreview(
+          ctxPreview,
+          { x: column + chunk * (PIXEL_GRID_WIDTH / chunks), y: row },
+          pixels,
+        );
         ctxFull.drawImage(
           canvasPreview,
           0,
