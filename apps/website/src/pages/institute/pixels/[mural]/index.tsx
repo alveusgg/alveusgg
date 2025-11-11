@@ -19,6 +19,7 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import PixelLeaderboard from "@/components/institute/PixelLeaderboard";
 import PixelsDescription from "@/components/institute/PixelsDescription";
+import PixelsDownload from "@/components/institute/PixelsDownload";
 import PixelsSearch from "@/components/institute/PixelsSearch";
 import Wolves from "@/components/institute/Wolves";
 
@@ -279,6 +280,8 @@ const InstitutePixelsPage: NextPage<InstitutePixelsPageProps> = ({
                 Rename your pixels
               </Link>
             </div>
+
+            <PixelsDownload />
           </Box>
         </div>
       </Section>
