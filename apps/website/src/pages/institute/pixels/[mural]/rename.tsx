@@ -12,8 +12,8 @@ import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import SubNav from "@/components/content/SubNav";
+import { EditExternalPixels } from "@/components/institute/EditExternalPixels";
 import { EditMyPixels } from "@/components/institute/EditMyPixels";
-import { EditPayPalPixels } from "@/components/institute/EditPayPalPixels";
 import { LoginWithTwitchButton } from "@/components/shared/LoginWithTwitchButton";
 import { MessageBox } from "@/components/shared/MessageBox";
 
@@ -91,14 +91,14 @@ const PixelsRenamePage: NextPage<InstitutePixelsPageProps> = ({ muralId }) => {
 
       {/* Grow the last section to cover the page */}
       <Section className="grow" containerClassName="space-y-4 text-lg">
-        <Heading level={2}>Pixels through PayPal donations</Heading>
+        <Heading level={2}>Pixels through other donations</Heading>
 
         <p>
-          Search for pixels to rename using the exact PayPal donation
-          information used to unlock them.
+          Search for pixels to rename using the exact PayPal or Giving Block
+          donation information used to unlock them.
         </p>
 
-        <EditPayPalPixels key={muralId} muralId={muralId} />
+        <EditExternalPixels key={muralId} muralId={muralId} />
       </Section>
     </PixelProvider>
   );

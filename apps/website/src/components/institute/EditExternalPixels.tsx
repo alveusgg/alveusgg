@@ -15,19 +15,19 @@ import { TextField } from "@/components/shared/form/TextField";
 
 import IconLoading from "@/icons/IconLoading";
 
-export type PayPalVerification = z.infer<typeof payPalVerificationSchema>;
+export type ExternalVerification = z.infer<typeof externalVerificationSchema>;
 
-export const payPalVerificationSchema = z.object({
+export const externalVerificationSchema = z.object({
   firstName: z.string(),
   lastName: z.string(),
   email: z.email(),
 });
 
-export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
+export function EditExternalPixels({ muralId }: { muralId: MuralId }) {
   const [lastPixelsData, setLastPixelsData] = useState<
     DonationPixel[] | undefined
   >(undefined);
-  const getPayPalPixels = trpc.donations.getPayPalPixels.useMutation({
+  const getExternalPixels = trpc.donations.getExternalPixels.useMutation({
     onSuccess: (data) => {
       setLastPixelsData(data);
     },
@@ -36,7 +36,7 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
   const [overrideIdentifier, setOverrideIdentifier] = useState("");
   const [defaultIdentifier, setDefaultIdentifier] = useState("Anonymous");
 
-  const verificationRef = useRef<PayPalVerification | null>(null);
+  const verificationRef = useRef<ExternalVerification | null>(null);
 
   const submit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -46,7 +46,7 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
     const lastName = String(formData.get("lastName"));
     const email = String(formData.get("email"));
 
-    const input = payPalVerificationSchema.safeParse({
+    const input = externalVerificationSchema.safeParse({
       firstName,
       lastName,
       email,
@@ -58,7 +58,7 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
 
     if (input.success) {
       verificationRef.current = input.data;
-      getPayPalPixels.mutate({
+      getExternalPixels.mutate({
         muralId,
         verification: input.data,
       });
@@ -67,23 +67,23 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
     }
   };
 
-  const persistedPixelsData = getPayPalPixels.data ?? lastPixelsData;
+  const persistedPixelsData = getExternalPixels.data ?? lastPixelsData;
   const pixelsQuery = useMemo(
     () => ({
-      ...getPayPalPixels,
+      ...getExternalPixels,
       data: persistedPixelsData,
     }),
-    [getPayPalPixels, persistedPixelsData],
+    [getExternalPixels, persistedPixelsData],
   );
 
-  const renameMutation = trpc.donations.renamePayPalPixels.useMutation();
+  const renameMutation = trpc.donations.renameExternalPixels.useMutation();
 
   return (
     <>
       <form onSubmit={submit}>
         <div className="mb-4 space-y-4">
           <div className="max-w-xl space-y-4">
-            <Fieldset legend="Your PayPal donation info">
+            <Fieldset legend="Your donation info">
               <TextField
                 label="First name(s)"
                 name="firstName"
@@ -112,24 +112,24 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
             </FormButton>
           </div>
 
-          {getPayPalPixels.isPending ? (
+          {getExternalPixels.isPending ? (
             <MessageBox className="flex flex-row items-center gap-4">
               <IconLoading />
               Searching for your pixels…
             </MessageBox>
           ) : null}
 
-          {getPayPalPixels.isError ? (
+          {getExternalPixels.isError ? (
             <MessageBox variant="failure">
-              Failed to find your pixels: {getPayPalPixels.error.message}
+              Failed to find your pixels: {getExternalPixels.error.message}
             </MessageBox>
           ) : null}
 
-          {getPayPalPixels.isSuccess && getPayPalPixels.data.length < 1 ? (
+          {getExternalPixels.isSuccess && getExternalPixels.data.length < 1 ? (
             <MessageBox variant="warning">
               No pixels found! Please check the exact spelling including spaces
-              and capitalization. Check the PayPal donation receipt you received
-              via email.
+              and capitalization. Check the donation receipt you received via
+              email.
             </MessageBox>
           ) : null}
         </div>
@@ -152,7 +152,7 @@ export function EditPayPalPixels({ muralId }: { muralId: MuralId }) {
               { muralId, newIdentifier, pixelId, verification },
               {
                 onSuccess: () => {
-                  getPayPalPixels.mutate({
+                  getExternalPixels.mutate({
                     muralId,
                     verification,
                   });
