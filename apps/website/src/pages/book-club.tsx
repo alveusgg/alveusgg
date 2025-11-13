@@ -268,14 +268,14 @@ const BookClubPage: NextPage = () => {
             <Heading>Alveus Book Club</Heading>
             <p className="text-lg">
               Join the staff at Alveus and the community in reading books
-              together! Every other month we&apos;ll all meet together in a{" "}
+              together and discussing them in the{" "}
               <Link href="/live" external dark>
                 livestream chat
               </Link>{" "}
-              to discuss the most recent book. Head to your local library or
-              bookstore to pick up a copy of the book, or use the links below to
-              purchase a copy online. If reading isn&apos;t your thing, we also
-              encourage listening to the audiobook version of each book.
+              when we meet! Head to your local library or bookshop to pick up a
+              copy of the book we&apos;re currently reading, or use the links
+              below to purchase a copy online. If reading isn&apos;t your thing,
+              we also encourage listening to the audiobook version of each book.
             </p>
           </div>
 
