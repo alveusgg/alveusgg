@@ -7,7 +7,7 @@ import { type NextPage } from "next";
 import Image from "next/image";
 import { type ReactNode, useState } from "react";
 
-import books, { type BookInfo, type Month } from "@/data/books";
+import books, { type BookInfo } from "@/data/books";
 
 import { classes } from "@/utils/classes";
 import { formatPartialDateString } from "@/utils/datetime-partial";
@@ -30,24 +30,6 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
-const formatMonths = (months: Month[]) =>
-  [...months]
-    .reverse()
-    .reduce((formattedMonths, month) => {
-      const [formattedMonth, formattedYear] = formatPartialDateString(
-        month,
-      ).split(" ") as [string, string];
-
-      // If the year is the same as the previous month, just return the month
-      if (formattedMonths[0]?.includes(formattedYear)) {
-        return [formattedMonth, ...formattedMonths];
-      }
-
-      // Otherwise, return the month and year
-      return [`${formattedMonth} ${formattedYear}`, ...formattedMonths];
-    }, [] as string[])
-    .join(" + ");
-
 const lightboxItems = books.reduce<Record<string, ReactNode>>(
   (acc, book) =>
     book.vodId
@@ -56,7 +38,7 @@ const lightboxItems = books.reduce<Record<string, ReactNode>>(
           [book.vodId]: (
             <YouTubeEmbed
               videoId={book.vodId}
-              caption={`${book.title} | ${formatMonths(book.month)}`}
+              caption={`${book.title} | ${formatPartialDateString(book.month)}`}
             />
           ),
         }
@@ -164,7 +146,7 @@ const Book = ({
             className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
           >
             <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
-            {formatMonths(month)}
+            {formatPartialDateString(month)}
           </Heading>
         </DisclosureButton>
 
