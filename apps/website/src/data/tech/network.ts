@@ -250,8 +250,8 @@ const data: RootNetworkItem[] = [
                   {
                     type: "accessPoint",
                     name: "Pasture",
-                    model: "Ubiquiti UAP-AC-M-Pro",
-                    url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/unifi-ac-mesh-pro-ap",
+                    model: "Ubiquiti U7-Pro-Outdoor",
+                    url: "https://store.ui.com/us/en/category/wifi-outdoor/products/u7-pro-outdoor-us",
                     connection: { type: "ethernet", location: "buried" },
                   },
                 ],
@@ -280,8 +280,8 @@ const data: RootNetworkItem[] = [
                           {
                             type: "camera",
                             name: "Pasture",
-                            model: "AXIS Q6135-LE (PTZ)",
-                            url: "https://www.axis.com/products/axis-q6135-le",
+                            model: "AXIS Q6318-LE (PTZ)",
+                            url: "https://www.axis.com/products/axis-q6318-le",
                             connection: { type: "ethernet", location: "wall" },
                           },
                           {
@@ -622,22 +622,22 @@ const data: RootNetworkItem[] = [
                       {
                         type: "camera",
                         name: "Marmoset Outside",
-                        model: "AXIS M5525-E (PTZ)",
-                        url: "https://www.axis.com/products/axis-m5525-e",
+                        model: "AXIS Q6318-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-q6318-le",
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
                         type: "camera",
                         name: "Marmoset Inside",
-                        model: "AXIS M5525-E (PTZ)",
-                        url: "https://www.axis.com/products/axis-m5525-e",
+                        model: "AXIS P5676-LE (PTZ)",
+                        url: "https://www.axis.com/products/axis-p5676-le",
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
                         type: "accessPoint",
                         name: "Marmoset",
-                        model: "Ubiquiti U6-Mesh",
-                        url: "https://store.ui.com/us/en/pro/category/wiif-outdoor/products/u6-mesh",
+                        model: "Ubiquiti U7-Pro-Outdoor",
+                        url: "https://store.ui.com/us/en/category/wifi-outdoor/products/u7-pro-outdoor-us",
                         connection: { type: "ethernet", location: "wall" },
                       },
                       {
