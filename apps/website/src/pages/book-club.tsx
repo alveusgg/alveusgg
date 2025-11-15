@@ -30,23 +30,42 @@ import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
 
-const formatMonths = (months: Month[]) =>
-  [...months]
-    .reverse()
-    .reduce((formattedMonths, month) => {
-      const [formattedMonth, formattedYear] = formatPartialDateString(
-        month,
-      ).split(" ") as [string, string];
+type BookOrPlaceholder =
+  | ({ type: "book" } & BookInfo)
+  | { type: "placeholder"; month: Month };
 
-      // If the year is the same as the previous month, just return the month
-      if (formattedMonths[0]?.includes(formattedYear)) {
-        return [formattedMonth, ...formattedMonths];
+const booksWithPlaceholders = books.reduce<BookOrPlaceholder[]>(
+  (acc, book, index) => {
+    acc.push({ type: "book", ...book });
+
+    // Get the next book's month
+    const nextMonth = books[index + 1]?.month;
+    if (nextMonth) {
+      // Parse the current and next months
+      const currentDate = new Date(`${book.month}-01`);
+      const nextDate = new Date(`${nextMonth}-01`);
+
+      // Add cover placeholders for each missing month
+      const monthDiff =
+        (currentDate.getFullYear() - nextDate.getFullYear()) * 12 +
+        (currentDate.getMonth() - nextDate.getMonth());
+      for (let i = 1; i < monthDiff; i++) {
+        const date = new Date(
+          currentDate.getFullYear(),
+          currentDate.getMonth() - i,
+          1,
+        );
+        const monthString =
+          `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, "0")}` as Month;
+
+        acc.push({ type: "placeholder", month: monthString });
       }
+    }
 
-      // Otherwise, return the month and year
-      return [`${formattedMonth} ${formattedYear}`, ...formattedMonths];
-    }, [] as string[])
-    .join(" + ");
+    return acc;
+  },
+  [],
+);
 
 const lightboxItems = books.reduce<Record<string, ReactNode>>(
   (acc, book) =>
@@ -56,7 +75,7 @@ const lightboxItems = books.reduce<Record<string, ReactNode>>(
           [book.vodId]: (
             <YouTubeEmbed
               videoId={book.vodId}
-              caption={`${book.title} | ${formatMonths(book.month)}`}
+              caption={`${book.title} | ${formatPartialDateString(book.month)}`}
             />
           ),
         }
@@ -164,7 +183,7 @@ const Book = ({
             className="relative mt-4 mb-0 transition-[color,font-size,line-height] duration-[150ms,1000ms,1000ms] group-data-[open]:text-lg group-hover:group-[&:not([data-open])]:text-alveus-green-700 group-focus:group-[&:not([data-open])]:text-alveus-green-700"
           >
             <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
-            {formatMonths(month)}
+            {formatPartialDateString(month)}
           </Heading>
         </DisclosureButton>
 
@@ -249,14 +268,14 @@ const BookClubPage: NextPage = () => {
             <Heading>Alveus Book Club</Heading>
             <p className="text-lg">
               Join the staff at Alveus and the community in reading books
-              together! Every other month we&apos;ll all meet together in a{" "}
+              together and discussing them in the{" "}
               <Link href="/live" external dark>
                 livestream chat
               </Link>{" "}
-              to discuss the most recent book. Head to your local library or
-              bookstore to pick up a copy of the book, or use the links below to
-              purchase a copy online. If reading isn&apos;t your thing, we also
-              encourage listening to the audiobook version of each book.
+              when we meet! Head to your local library or bookshop to pick up a
+              copy of the book we&apos;re currently reading, or use the links
+              below to purchase a copy online. If reading isn&apos;t your thing,
+              we also encourage listening to the audiobook version of each book.
             </p>
           </div>
 
@@ -284,32 +303,45 @@ const BookClubPage: NextPage = () => {
 
         <Section className="grow">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
-            {books.map((book) => (
-              <Book
-                key={book.title}
-                {...book}
-                lightbox={setLightboxOpen}
-                width={256}
-                className="mx-auto w-64"
-              />
-            ))}
-
-            {/* Pad with placeholders to a multiple of 4 */}
-            {Array.from({ length: (4 - (books.length % 4)) % 4 }).map(
-              (_, i) => (
-                <div
-                  key={i}
-                  className={classes(
-                    "group mx-auto hidden w-64",
-                    // If we have an even number of books, show on desktop only
-                    // Otherwise, show on desktop except the first which is shown on tablet
-                    books.length % 2 === 0 || i > 0 ? "xl:block" : "md:block",
-                  )}
-                >
+            {booksWithPlaceholders.map((book, i) =>
+              book.type === "placeholder" ? (
+                <div key={`placeholder-${i}`} className="mx-auto w-64">
                   <Cover />
+
+                  <Heading level={2} className="relative mt-4 mb-0">
+                    <div className="absolute -top-1 left-0 h-1 w-16 bg-alveus-green/50" />
+                    <span className="opacity-25">
+                      {formatPartialDateString(book.month)}
+                    </span>
+                  </Heading>
                 </div>
+              ) : (
+                <Book
+                  key={book.title}
+                  {...book}
+                  lightbox={setLightboxOpen}
+                  width={256}
+                  className="mx-auto w-64"
+                />
               ),
             )}
+
+            {/* Pad with placeholders to a multiple of 4 */}
+            {Array.from({
+              length: (4 - (booksWithPlaceholders.length % 4)) % 4,
+            }).map((_, i) => (
+              <div
+                key={i}
+                className={classes(
+                  "mx-auto hidden w-64",
+                  // If we have an even number of books, show on desktop only
+                  // Otherwise, show on desktop except the first which is shown on tablet
+                  books.length % 2 === 0 || i > 0 ? "xl:block" : "md:block",
+                )}
+              >
+                <Cover />
+              </div>
+            ))}
           </div>
 
           <Lightbox

@@ -63,6 +63,12 @@ export type PublicShowAndTellEntryWithAttachments = PublicShowAndTellEntry & {
   attachments: ShowAndTellEntryAttachments;
 };
 
+const OwnShowAndTellFields = [
+  ...PublicShowAndTellFields,
+  "longitude",
+  "latitude",
+] as const satisfies (keyof ShowAndTellEntryModel)[];
+
 const withAttachments = {
   include: {
     attachments: {
@@ -79,6 +85,11 @@ const withAttachments = {
 const selectPublic = PublicShowAndTellFields.reduce(
   (acc, field) => ({ ...acc, [field]: true }),
   {} as { [K in (typeof PublicShowAndTellFields)[number]]: true },
+);
+
+const selectOwn = OwnShowAndTellFields.reduce(
+  (acc, field) => ({ ...acc, [field]: true }),
+  {} as { [K in (typeof OwnShowAndTellFields)[number]]: true },
 );
 
 const whereApproved = {
@@ -303,7 +314,7 @@ export async function getPublicPosts({
 export async function getUserPosts(authorUserId: string, postId?: string) {
   return prisma.showAndTellEntry.findMany({
     select: {
-      ...selectPublic,
+      ...selectOwn,
       attachments: withAttachments.include.attachments,
     },
     where: {

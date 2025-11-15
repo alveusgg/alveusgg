@@ -9,15 +9,15 @@ export async function GET() {
   const bookClubPageUrl = `${env.NEXT_PUBLIC_BASE_URL}/book-club`;
   // If a book goes for an additional month, keep using the first month as the last updated date
   const latestBook = books[0];
-  const latestBookDate = new Date(latestBook.month[0]);
+  const latestBookDate = new Date(latestBook.month);
 
   const bookFeedItems = books.map((book) => {
     return {
       title: book.title,
-      id: `${bookClubPageUrl}:${convertToSlug(book.month[0])}`,
+      id: `${bookClubPageUrl}:${convertToSlug(book.month)}`,
       link: bookClubPageUrl, // Books don't have individual links on the Alveus site
       description: book.link,
-      date: new Date(book.month[0]),
+      date: new Date(book.month),
     };
   });
 

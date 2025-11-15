@@ -1,31 +1,27 @@
-import bowll from "@/assets/presets/marmin/bowll.png";
-import bridgecl from "@/assets/presets/marmin/bridgecl.png";
-import bridgel from "@/assets/presets/marmin/bridgel.png";
-import bridgem from "@/assets/presets/marmin/bridgem.png";
-import bridger from "@/assets/presets/marmin/bridger.png";
-import center from "@/assets/presets/marmin/center.png";
-import cornershelf from "@/assets/presets/marmin/cornershelf.png";
-import domeleft from "@/assets/presets/marmin/domeleft.png";
-import domeleftshelf from "@/assets/presets/marmin/domeleftshelf.png";
-import domeright from "@/assets/presets/marmin/domeright.png";
-import domerighttop from "@/assets/presets/marmin/domerighttop.png";
-import down from "@/assets/presets/marmin/down.png";
-import flapl from "@/assets/presets/marmin/flapl.png";
+import behind from "@/assets/presets/marmin/behind.png";
+import domel from "@/assets/presets/marmin/domel.png";
+import domelshelf from "@/assets/presets/marmin/domelshelf.png";
+import domelt from "@/assets/presets/marmin/domelt.png";
+import domer from "@/assets/presets/marmin/domer.png";
+import domerl from "@/assets/presets/marmin/domerl.png";
+import domerr from "@/assets/presets/marmin/domerr.png";
+import domert from "@/assets/presets/marmin/domert.png";
+import downleft from "@/assets/presets/marmin/downleft.png";
 import flaps from "@/assets/presets/marmin/flaps.png";
 import floor from "@/assets/presets/marmin/floor.png";
+import floorbranch from "@/assets/presets/marmin/floorbranch.png";
+import hammock from "@/assets/presets/marmin/hammock.png";
 import home from "@/assets/presets/marmin/home.png";
 import left from "@/assets/presets/marmin/left.png";
-import leftw from "@/assets/presets/marmin/leftw.png";
-import pole from "@/assets/presets/marmin/pole.png";
+import leftcornerb from "@/assets/presets/marmin/leftcornerb.png";
+import leftcornert from "@/assets/presets/marmin/leftcornert.png";
+import nearrightshelf from "@/assets/presets/marmin/nearrightshelf.png";
 import right from "@/assets/presets/marmin/right.png";
 import table from "@/assets/presets/marmin/table.png";
 import win1 from "@/assets/presets/marmin/win1.png";
 import win2 from "@/assets/presets/marmin/win2.png";
 import win3 from "@/assets/presets/marmin/win3.png";
 import win4 from "@/assets/presets/marmin/win4.png";
-import windows from "@/assets/presets/marmin/windows.png";
-import winl from "@/assets/presets/marmin/winl.png";
-import winr from "@/assets/presets/marmin/winr.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -34,57 +30,41 @@ const marminPresets: Record<string, Preset> = {
     description: "Home",
     image: home,
   },
-  bowll: {
-    description: "Bowl Left",
-    image: bowll,
+  behind: {
+    description: "Behind",
+    image: behind,
   },
-  bridgecl: {
-    description: "Bridge Close Left",
-    image: bridgecl,
-  },
-  bridgel: {
-    description: "Bridge Left",
-    image: bridgel,
-  },
-  bridgem: {
-    description: "Bridge Middle",
-    image: bridgem,
-  },
-  bridger: {
-    description: "Bridge Right",
-    image: bridger,
-  },
-  center: {
-    description: "Center",
-    image: center,
-  },
-  cornershelf: {
-    description: "Corner Shelf",
-    image: cornershelf,
-  },
-  domeleft: {
+  domel: {
     description: "Dome Left",
-    image: domeleft,
+    image: domel,
   },
-  domeleftshelf: {
+  domelshelf: {
     description: "Dome Left Shelf",
-    image: domeleftshelf,
+    image: domelshelf,
   },
-  domeright: {
+  domelt: {
+    description: "Dome Left Top",
+    image: domelt,
+  },
+  domer: {
     description: "Dome Right",
-    image: domeright,
+    image: domer,
   },
-  domerighttop: {
+  domerl: {
+    description: "Dome Right Left Shelf",
+    image: domerl,
+  },
+  domerr: {
+    description: "Dome Right Right Shelf",
+    image: domerr,
+  },
+  domert: {
     description: "Dome Right Top",
-    image: domerighttop,
+    image: domert,
   },
-  down: {
-    description: "Down",
-    image: down,
-  },
-  flapl: {
-    description: "Flap Left",
-    image: flapl,
+  downleft: {
+    description: "Down Left",
+    image: downleft,
   },
   flaps: {
     description: "Flaps",
@@ -94,17 +74,29 @@ const marminPresets: Record<string, Preset> = {
     description: "Floor",
     image: floor,
   },
+  floorbranch: {
+    description: "Floor Branch",
+    image: floorbranch,
+  },
+  hammock: {
+    description: "Hammock",
+    image: hammock,
+  },
   left: {
     description: "Left",
     image: left,
   },
-  leftw: {
-    description: "Left Wall",
-    image: leftw,
+  leftcornerb: {
+    description: "Left Corner Bottom",
+    image: leftcornerb,
   },
-  pole: {
-    description: "Pole",
-    image: pole,
+  leftcornert: {
+    description: "Left Corner Top",
+    image: leftcornert,
+  },
+  nearrightshelf: {
+    description: "Near Right Shelf",
+    image: nearrightshelf,
   },
   right: {
     description: "Right",
@@ -129,18 +121,6 @@ const marminPresets: Record<string, Preset> = {
   win4: {
     description: "Window 4",
     image: win4,
-  },
-  winl: {
-    description: "Window Left",
-    image: winl,
-  },
-  winr: {
-    description: "Window Right",
-    image: winr,
-  },
-  windows: {
-    description: "Windows",
-    image: windows,
   },
 };
 
