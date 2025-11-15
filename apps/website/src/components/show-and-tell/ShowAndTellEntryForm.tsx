@@ -369,7 +369,12 @@ export function ShowAndTellEntryForm({
       };
 
       if (!data.dominantColor) {
-        data.dominantColor = await fileReference.extractColor();
+        try {
+          data.dominantColor = await fileReference.extractColor();
+        } catch {
+          setError("Failed to extract dominant color from attached image");
+          return;
+        }
       }
 
       if (fileReference.status === "saved") {
@@ -406,9 +411,18 @@ export function ShowAndTellEntryForm({
       );
 
       if (featuredImage) {
-        data.dominantColor = await extractColorFromImage(
-          createImageUrl({ src: featuredImage.url, width: 1280, quality: 100 }),
-        );
+        try {
+          data.dominantColor = await extractColorFromImage(
+            createImageUrl({
+              src: featuredImage.url,
+              width: 1280,
+              quality: 100,
+            }),
+          );
+        } catch {
+          setError("Failed to extract dominant color from attached video");
+          return;
+        }
       }
     }
 

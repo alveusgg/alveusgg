@@ -50,7 +50,7 @@ export async function resizeImage(
 }
 
 export async function extractColorFromImage(imageSrc: string) {
-  return new Promise<string>((resolve) => {
+  return new Promise<string>((resolve, reject) => {
     const image = new Image();
     image.onload = () => {
       const { height, width } = image;
@@ -63,6 +63,7 @@ export async function extractColorFromImage(imageSrc: string) {
 
       resolve(dominantColor.join(","));
     };
+    image.onerror = reject;
     image.src = imageSrc;
   });
 }
