@@ -232,6 +232,8 @@ const pasturePresets: Record<string, Preset> = {
     description: "Water",
     image: water,
   },
+  downleft: { description: "Down and to the right" },
+  grove3: { description: "Between pen and pool" },
 };
 
 const pasture = {
