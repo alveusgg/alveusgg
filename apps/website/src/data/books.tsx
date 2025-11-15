@@ -26,7 +26,7 @@ export type BookInfo = {
   title: string;
   author: string;
   image: StaticImageData;
-  month: [Month, ...Month[]];
+  month: Month;
   link: string;
   thickness: (typeof thickness)[keyof typeof thickness];
   color: `border-${string}`;
@@ -38,7 +38,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "On the Wing",
     author: "David E. Alexander",
     image: onTheWing,
-    month: ["2025-10"],
+    month: "2025-10",
     link: "https://amzn.to/3KrRFVS",
     thickness: thickness.xs, // 230 pages
     color: "border-red-700",
@@ -47,7 +47,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "Why Sharks Matter",
     author: "David Shiffman",
     image: whySharksMatter,
-    month: ["2025-09"],
+    month: "2025-09",
     link: "https://amzn.to/4fS8THm",
     thickness: thickness.md, // 310 pages
     color: "border-blue-800",
@@ -56,16 +56,17 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "Steve & Me",
     author: "Terri Irwin",
     image: steveAndMe,
-    month: ["2025-08"],
+    month: "2025-08",
     link: "https://amzn.to/4moWrRz",
     thickness: thickness.sm, // 290 pages
     color: "border-black",
   },
+  // no 2025-07 book
   {
     title: "The Insect Crisis",
     author: "Oliver Milman",
     image: theInsectCrisis,
-    month: ["2025-06", "2025-07"],
+    month: "2025-06",
     link: "https://amzn.to/4kZ31gL",
     thickness: thickness.sm, // 270 pages
     color: "border-yellow-400",
@@ -75,7 +76,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "The Anthropocene Reviewed",
     author: "John Green",
     image: theAnthropoceneReviewed,
-    month: ["2025-05"],
+    month: "2025-05",
     link: "https://amzn.to/42LpJSo",
     thickness: thickness.sm, // 300 pages
     color: "border-black",
@@ -85,7 +86,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "The Last Rhinos",
     author: "Lawrence Anthony",
     image: theLastRhinos,
-    month: ["2025-04"],
+    month: "2025-04",
     link: "https://amzn.to/3YibG59",
     thickness: thickness.md, // 360 pages
     color: "border-alveus-tan-900",
@@ -95,7 +96,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "Adventures of a Young Naturalist",
     author: "Sir David Attenborough",
     image: adventuresOfAYoungNaturalist,
-    month: ["2025-03"],
+    month: "2025-03",
     link: "https://amzn.to/41qA2um",
     thickness: thickness.lg, // 400 pages
     color: "border-blue-900",
@@ -105,7 +106,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "A Most Remarkable Creature",
     author: "Jonathan Meiburg",
     image: aMostRemarkableCreature,
-    month: ["2025-02"],
+    month: "2025-02",
     link: "https://amzn.to/410hD8x",
     thickness: thickness.lg, // 400 pages
     color: "border-alveus-tan-200/75",
@@ -115,7 +116,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     title: "H is for Hawk",
     author: "Helen Macdonald",
     image: hIsForHawk,
-    month: ["2025-01"],
+    month: "2025-01",
     link: "https://amzn.to/4a2ByGQ",
     thickness: thickness.sm, // 320 pages
     color: "border-black",
