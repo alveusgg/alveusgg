@@ -32,7 +32,7 @@ const confirmationMessage = (oldIdent: string, newIdent: string) =>
 
 type EditPixelFormProps = SharedEditPixelProps & {
   pixel: DonationPixel;
-  provider: "twitch" | "paypal";
+  provider: string;
 };
 
 export function EditPixelForm({

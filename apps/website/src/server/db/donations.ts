@@ -2,9 +2,14 @@ import type { User } from "next-auth";
 
 import { type Prisma, prisma } from "@alveusgg/database";
 
-import type { Donation, Donator, Pixel } from "@alveusgg/donations-core";
+import type {
+  Donation,
+  Donator,
+  Pixel,
+  Providers,
+} from "@alveusgg/donations-core";
 
-import type { PayPalVerification } from "@/components/institute/EditPayPalPixels";
+import type { ExternalVerification } from "@/components/institute/EditExternalPixels";
 
 import { getTwitchUserId } from "./users";
 
@@ -137,7 +142,7 @@ function filterDonationByTwitchUserId<T extends string>(twitchUserId: T) {
   }
 
   return {
-    provider: "twitch",
+    provider: "twitch" satisfies Providers,
     providerMetadata: {
       path: "$.twitchDonatorId",
       equals: twitchUserId,
@@ -145,13 +150,13 @@ function filterDonationByTwitchUserId<T extends string>(twitchUserId: T) {
   } as const satisfies Prisma.DonationWhereInput;
 }
 
-function filterDonationByPayPalEmail<T extends string>(emailAddress: T) {
+function filterDonationByExternalEmail<T extends string>(emailAddress: T) {
   if (!emailAddress) {
-    throw new Error("Email address is required for PayPal donations filter");
+    throw new Error("Email address is required for external donations filter");
   }
 
   return {
-    provider: "paypal",
+    provider: { in: ["paypal", "thegivingblock"] satisfies Providers[] },
     donatedBy: {
       path: "$.email",
       equals: emailAddress,
@@ -159,10 +164,12 @@ function filterDonationByPayPalEmail<T extends string>(emailAddress: T) {
   } as const satisfies Prisma.DonationWhereInput;
 }
 
-function filterDonationByPayPalVerification(verification: PayPalVerification) {
+function filterDonationByExternalVerification(
+  verification: ExternalVerification,
+) {
   return {
     AND: [
-      { provider: "paypal" },
+      { provider: { in: ["paypal", "thegivingblock"] satisfies Providers[] } },
       {
         donatedBy: {
           path: "$.email",
@@ -227,14 +234,14 @@ async function getFilteredPixelsByDonation(
   });
 }
 
-export async function getPayPalPixelsByVerification(
+export async function getExternalPixelsByVerification(
   muralId: string,
-  verification: PayPalVerification,
+  verification: ExternalVerification,
   pixelId?: string,
 ) {
   return getFilteredPixelsByDonation(
     muralId,
-    [filterDonationByPayPalVerification(verification)],
+    [filterDonationByExternalVerification(verification)],
     pixelId,
   );
 }
@@ -253,7 +260,7 @@ export async function getMyPixels(
 
   const emailAddress = user.email;
   if (emailAddress) {
-    filters.push(filterDonationByPayPalEmail(emailAddress));
+    filters.push(filterDonationByExternalEmail(emailAddress));
   }
 
   return getFilteredPixelsByDonation(muralId, filters, pixelId);

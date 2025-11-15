@@ -24,7 +24,7 @@ export type SharedEditPixelProps = {
   overrideIdentifier: string | null;
   renameMutation:
     | ReturnType<(typeof trpc.donations.renameMyPixels)["useMutation"]>
-    | ReturnType<(typeof trpc.donations.renamePayPalPixels)["useMutation"]>;
+    | ReturnType<(typeof trpc.donations.renameExternalPixels)["useMutation"]>;
   onRename: (newIdentifier: string, pixelId?: string) => unknown;
 };
 
@@ -225,23 +225,17 @@ export function EditPixelsForm({
       ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-        {pixelsQuery.data?.map((pixel) => {
-          if (pixel.provider !== "paypal" && pixel.provider !== "twitch") {
-            return null;
-          }
-
-          return (
-            <Box className="bg-white p-4" key={pixel.id}>
-              <EditPixelForm
-                provider={pixel.provider}
-                renameMutation={renameMutation}
-                pixel={pixel}
-                overrideIdentifier={overrideIdentifier}
-                onRename={onRename}
-              />
-            </Box>
-          );
-        })}
+        {pixelsQuery.data?.map((pixel) => (
+          <Box className="bg-white p-4" key={pixel.id}>
+            <EditPixelForm
+              provider={pixel.provider}
+              renameMutation={renameMutation}
+              pixel={pixel}
+              overrideIdentifier={overrideIdentifier}
+              onRename={onRename}
+            />
+          </Box>
+        ))}
       </div>
     </>
   );

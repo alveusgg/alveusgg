@@ -222,7 +222,7 @@ const PixelsSearch = ({
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search for pixels by Twitch username or PayPal email..."
+          placeholder="Search for pixels by Twitch username or donation email..."
           className="shrink grow rounded-xl py-3 pl-10 font-mono text-xs transition-[padding] outline-none peer-hover:pl-12 placeholder:text-alveus-tan/75 sm:text-sm"
         />
 

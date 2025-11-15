@@ -21,8 +21,8 @@ import {
   createDonations,
   createPixels,
   getDonationFeed,
+  getExternalPixelsByVerification,
   getMyPixels,
-  getPayPalPixelsByVerification,
   getPixels,
   renamePixel,
 } from "@/server/db/donations";
@@ -42,7 +42,7 @@ import { channels } from "@/data/twitch";
 
 import { getShortBaseUrl } from "@/utils/short-url";
 
-import { payPalVerificationSchema } from "@/components/institute/EditPayPalPixels";
+import { externalVerificationSchema } from "@/components/institute/EditExternalPixels";
 import { pixelIdentifierSchema } from "@/components/institute/PixelIdentifierInput";
 import { coordsToGridRef } from "@/components/institute/Pixels";
 
@@ -81,11 +81,11 @@ function mapDonationPixels(pixels: PixelWithDonation[]) {
     });
 }
 
-async function guardPayPalSearchMutation(req: NextApiRequest) {
+async function guardExternalSearchMutation(req: NextApiRequest) {
   const clientIp = req.headers["x-forwarded-for"];
   if (typeof clientIp === "string") {
     const isAllowed = await limit(
-      `donations-pixels-paypal-search-${clientIp}`,
+      `donations-pixels-external-search-${clientIp}`,
       5,
       "60 s",
     );
@@ -164,17 +164,20 @@ export const donationsRouter = router({
       mapDonationPixels(await getMyPixels(input.muralId, ctx.session.user)),
     ),
 
-  getPayPalPixels: publicProcedure
+  getExternalPixels: publicProcedure
     .input(
       z.object({
         muralId: z.string(),
-        verification: payPalVerificationSchema,
+        verification: externalVerificationSchema,
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await guardPayPalSearchMutation(ctx.req);
+      await guardExternalSearchMutation(ctx.req);
       return mapDonationPixels(
-        await getPayPalPixelsByVerification(input.muralId, input.verification),
+        await getExternalPixelsByVerification(
+          input.muralId,
+          input.verification,
+        ),
       );
     }),
 
@@ -205,19 +208,19 @@ export const donationsRouter = router({
       );
     }),
 
-  renamePayPalPixels: publicProcedure
+  renameExternalPixels: publicProcedure
     .input(
       z.object({
         muralId: z.string(),
         newIdentifier: pixelIdentifierSchema,
-        verification: payPalVerificationSchema,
+        verification: externalVerificationSchema,
         pixelId: z.string().optional(),
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      await guardPayPalSearchMutation(ctx.req);
+      await guardExternalSearchMutation(ctx.req);
 
-      const pixels = await getPayPalPixelsByVerification(
+      const pixels = await getExternalPixelsByVerification(
         input.muralId,
         input.verification,
         input.pixelId,
@@ -231,7 +234,7 @@ export const donationsRouter = router({
       return renamePixels(
         pixels,
         input.newIdentifier,
-        `PayPal info (${input.verification.firstName} ${input.verification.lastName[0]})`,
+        `Donation info (${input.verification.firstName} ${input.verification.lastName[0]})`,
       );
     }),
 });
