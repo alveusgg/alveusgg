@@ -22,6 +22,13 @@ const macawsPresets: Record<string, Preset> = {
     description: "Window",
     image: window,
   },
+  bowlr: { description: "Bowl next to window" },
+  bowld: { description: "Down under camera" },
+  winl: { description: "Left of window" },
+  postmt: { description: "Middle left post top" },
+  postmb: { description: "Middle left post bottom" },
+  perchbr: { description: "Perch back right" },
+  winr: { description: "Right of window" },
 };
 
 const macaws = {

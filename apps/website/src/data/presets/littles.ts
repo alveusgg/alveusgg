@@ -42,6 +42,15 @@ const littlesPresets: Record<string, Preset> = {
     description: "Window",
     image: window,
   },
+  miasleep: { description: "A spot Mia slept at once" },
+  sirensleep: { description: "A spot Siren slept at once" },
+  bowlr: { description: "Bowl in the back near human door" },
+  bowlm: { description: "Bowl in the middle" },
+  waterl: { description: "Water close to the camera" },
+  bowll: { description: "Bowl close to the camera" },
+  winl: { description: "Left of window" },
+  awning: { description: "Awning above window" },
+  inside: { description: "Close up inside window" },
 };
 
 const littles = {

@@ -82,6 +82,7 @@ const wolfswitchPresets: Record<string, Preset> = {
     description: "Water",
     image: water,
   },
+  left: { description: "Left" },
 };
 
 const wolfswitch = {
