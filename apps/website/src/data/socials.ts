@@ -28,6 +28,10 @@ const socials = {
     link: "https://www.tiktok.com/@alveussanctuary",
     title: "TikTok",
   },
+  snapchat: {
+    link: "https://www.snapchat.com/@alveussanctuary",
+    title: "Snapchat",
+  },
   youtube: {
     link: "https://www.youtube.com/AlveusSanctuary",
     title: "YouTube",
