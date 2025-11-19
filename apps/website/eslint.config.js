@@ -1,4 +1,6 @@
 // @ts-check
+import { fileURLToPath } from "node:url";
+
 import eslint from "@eslint/js";
 import nextPlugin from "@next/eslint-plugin-next";
 import prettiereslint from "eslint-config-prettier";
@@ -152,7 +154,8 @@ export default tseslint.config(
     files: ["src/sw/**/*"],
     languageOptions: {
       parserOptions: {
-        project: "./src/sw/tsconfig.json",
+        projectService: true,
+        tsconfigRootDir: fileURLToPath(new URL("./src/sw", import.meta.url)),
       },
     },
   },
