@@ -15,7 +15,7 @@
   "scripts": {
     "types": "tsc --noEmit",
     "build:generate": "prisma generate",
-    "build:compile": "tsc --outDir dist --declaration --sourcemap",
+    "build:compile": "tsup",
     "build": "pnpm run --sequential \"/^build:.*/\"",
     "postinstall": "pnpm build",
     "lint:validate": "prisma validate",
@@ -25,16 +25,19 @@
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.0.0",
-    "@prisma/client": "^7.0.0"
+    "@prisma/client": "^7.0.0",
+    "@prisma/client-runtime-utils": "^7.0.0"
   },
   "devDependencies": {
     "@types/node": "^22.19.1",
     "dotenv": "^17.2.3",
-    "prisma": "^7.0.0"
+    "prisma": "^7.0.0",
+    "tsup": "^8.3.5"
   },
   "exports": {
     ".": {
-      "import": "./dist/src/index.js"
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
     }
   }
 }
