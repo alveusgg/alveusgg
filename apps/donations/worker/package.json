@@ -26,8 +26,8 @@
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
-    "@trpc/client": "^11.7.1",
-    "@trpc/server": "^11.7.1",
+    "@trpc/client": "^11.7.2",
+    "@trpc/server": "^11.7.2",
     "hono": "^4.10.6",
     "immer": "^10.2.0",
     "superjson": "^2.2.5",
