@@ -55,7 +55,7 @@
     "@upstash/ratelimit": "^2.0.7",
     "@upstash/redis": "^1.35.6",
     "@vercel/analytics": "^1.5.0",
-    "@vercel/functions": "^3.3.2",
+    "@vercel/functions": "^3.3.3",
     "@xyflow/react": "^12.9.3",
     "country-list": "^2.4.1",
     "csv-stringify": "^6.6.0",
