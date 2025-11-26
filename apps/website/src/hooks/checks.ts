@@ -70,7 +70,7 @@ const useChecks = (channels: string[], users?: string[]) => {
     useCallback(
       (message: ChatMessage) => {
         const { text, userInfo } = message;
-        const [command, ...keys] = text.split(" ");
+        const [command, ...keys] = text.toLowerCase().split(" ");
 
         if (command !== "!check") return;
         if (
