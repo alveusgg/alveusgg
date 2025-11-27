@@ -27,7 +27,7 @@ const Cycle = ({
         cloneElement(item, {
           className: classes(
             item.props.className,
-            "transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
+            "z-0 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
           ),
           ref: (el) => {
             refs.current[idx] = el;
@@ -56,23 +56,6 @@ const Cycle = ({
       beforeLeave={() => {
         const ref = refs.current[idx];
         if (!ref) return;
-
-        // Only offset if not absolute positioned
-        if (window.getComputedStyle(ref).position !== "absolute") {
-          // Offset by the width of the element and any gap between elements
-          const { width } = ref.getBoundingClientRect();
-          const gap = ref.parentElement
-            ? Number(
-                window
-                  .getComputedStyle(ref.parentElement)
-                  .rowGap.replace(/px$/, ""),
-              )
-            : 0;
-
-          // If we're the last element, we need to offset an element that will be to the left of us
-          ref.style[idx === items.length - 1 ? "marginLeft" : "marginRight"] =
-            `-${width + gap}px`;
-        }
 
         ref.style.zIndex = "0";
       }}

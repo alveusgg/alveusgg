@@ -22,27 +22,29 @@ const cycleTime = 60;
 
 const Socials = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
   <div className={classes(className, "flex items-center gap-2")} {...props}>
-    <Cycle
-      items={useMemo(
-        () => [
-          <Image
-            key="logo"
-            src={logoImage}
-            alt=""
-            height={64}
-            className="size-16 object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
-          />,
-          <QRCode
-            key="qr"
-            className="size-16 rounded-lg border-2 border-black/75 bg-white p-0.5 opacity-90 drop-shadow-sm"
-            value={`${getShortBaseUrl()}/socials`}
-          />,
-        ],
-        [],
-      )}
-      // We want to be back on the logo before the parent cycle switches
-      interval={cycleTime / 3 + 1}
-    />
+    <div className="relative size-16">
+      <Cycle
+        items={useMemo(
+          () => [
+            <Image
+              key="logo"
+              src={logoImage}
+              alt=""
+              height={64}
+              className="absolute inset-0 object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
+            />,
+            <QRCode
+              key="qr"
+              className="absolute inset-0 rounded-lg border-2 border-black/75 bg-white p-0.5 opacity-90 drop-shadow-sm"
+              value={`${getShortBaseUrl()}/socials`}
+            />,
+          ],
+          [],
+        )}
+        // We want to be back on the logo before the parent cycle switches
+        interval={cycleTime / 3 + 1}
+      />
+    </div>
 
     <div className="text-xl font-bold text-white text-stroke">
       <p>alveussanctuary.org</p>
