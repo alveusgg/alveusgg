@@ -53,7 +53,7 @@ const Socials = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
   </div>
 );
 
-const useUpcoming = () => {
+const Upcoming = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
   // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
@@ -106,48 +106,40 @@ const useUpcoming = () => {
     }
   }, [events, event]);
 
-  return event;
+  if (!event) return null;
+
+  return (
+    <div
+      className={classes(className, "font-bold text-white text-stroke")}
+      {...props}
+    >
+      <p>Upcoming:</p>
+      <p className="text-xl">
+        {getFormattedTitle(event, channels.alveus.username, 30)}
+      </p>
+      <p className="text-xl">
+        {formatDateTimeRelative(
+          event.startAt,
+          {
+            style: "long",
+            time: event.hasTime ? "minutes" : undefined,
+            timezone: event.hasTime,
+          },
+          { zone: DATETIME_ALVEUS_ZONE },
+        )}
+      </p>
+    </div>
+  );
 };
 
-const Upcoming = ({
-  event,
-  className,
-  ...props
-}: { event: CalendarEvent } & HTMLProps<HTMLDivElement>) => (
-  <div
-    className={classes(className, "font-bold text-white text-stroke")}
-    {...props}
-  >
-    <p>Upcoming:</p>
-    <p className="text-xl">
-      {getFormattedTitle(event, channels.alveus.username, 30)}
-    </p>
-    <p className="text-xl">
-      {formatDateTimeRelative(
-        event.startAt,
-        {
-          style: "long",
-          time: event.hasTime ? "minutes" : undefined,
-          timezone: event.hasTime,
-        },
-        { zone: DATETIME_ALVEUS_ZONE },
-      )}
-    </p>
-  </div>
-);
-
 const Event = ({ className }: { className?: string }) => {
-  const upcoming = useUpcoming();
-
   const items = useMemo(
     () =>
       [
         <Socials key="socials" className={className} />,
-        upcoming && (
-          <Upcoming key="upcoming" event={upcoming} className={className} />
-        ),
+        <Upcoming key="upcoming" className={className} />,
       ].filter((x) => !!x),
-    [upcoming, className],
+    [className],
   );
 
   return <Cycle items={items} interval={cycleTime} />;
