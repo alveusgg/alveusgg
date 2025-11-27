@@ -22,6 +22,7 @@
  * "MIT" license. For details, see src/third-party/qrcodegen.
  */
 import type React from "react";
+import { useMemo } from "react";
 
 import { QrCode } from "@/third-party/qrcodegen";
 
@@ -70,19 +71,18 @@ export function QRCode({
   value,
   ...attributes
 }: { value: string } & React.SVGAttributes<SVGSVGElement>) {
-  const svgModules = QrCode.encodeText(value).getModules();
+  const { length, path } = useMemo(() => {
+    const modules = QrCode.encodeText(value).getModules();
+    return {
+      length: modules.length,
+      path: modulesToSvgPath(modules),
+    };
+  }, [value]);
 
   return (
-    <svg
-      viewBox={`0 0 ${svgModules.length} ${svgModules.length}`}
-      {...attributes}
-    >
+    <svg viewBox={`0 0 ${length} ${length}`} {...attributes}>
       {children}
-      <path
-        fill="currentColor"
-        d={modulesToSvgPath(svgModules)}
-        shapeRendering="crispEdges"
-      />
+      <path fill="currentColor" d={path} shapeRendering="crispEdges" />
     </svg>
   );
 }
