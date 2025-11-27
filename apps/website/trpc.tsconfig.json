@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "incremental": false,
+    "paths": {
+      "@/*": ["./src/*"],
+      "@alveusgg/database": ["../database/src/index.ts"]
+    }
+  }
+}
