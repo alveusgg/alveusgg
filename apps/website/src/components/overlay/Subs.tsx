@@ -24,14 +24,16 @@ const Subs = ({ className }: { className?: string }) => {
 
   return (
     subscriptions && (
-      <p
+      <div
         className={classes(
           className,
-          "font-mono text-4xl text-stroke-2 font-medium text-white",
+          "font-mono text-stroke-2 font-medium text-white",
         )}
       >
-        Subs: {totalFmt} / {targetFmt}
-      </p>
+        <p className="text-3xl">
+          Subs: {totalFmt} / {targetFmt}
+        </p>
+      </div>
     )
   );
 };
