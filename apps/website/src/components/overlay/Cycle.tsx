@@ -4,6 +4,7 @@ import {
   type ReactElement,
   type Ref,
   cloneElement,
+  useCallback,
   useEffect,
   useMemo,
   useRef,
@@ -20,6 +21,30 @@ const Cycle = ({
   interval?: number;
 }) => {
   const refs = useRef<(HTMLElement | null)[]>([]);
+
+  const [index, setIndex] = useState(0);
+  const next = useCallback(() => {
+    setIndex((prev) => {
+      // Move to the next item that has a ref
+      let next = (prev + 1) % items.length;
+      while (!refs.current[next]) {
+        next = (next + 1) % items.length;
+
+        if (next === prev) {
+          // All refs are null, stay on the current index
+          return prev;
+        }
+      }
+      return next;
+    });
+  }, [items.length]);
+
+  // Whenever index changes, start a timer for cycling to the next item
+  useEffect(() => {
+    const timeout = setTimeout(next, interval * 1000);
+    return () => clearTimeout(timeout);
+  }, [index, next, interval]);
+
   const cloned = useMemo(
     () =>
       // eslint-disable-next-line react-hooks/refs -- we're passing a ref prop down
@@ -30,19 +55,21 @@ const Cycle = ({
             "z-0 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
           ),
           ref: (el) => {
+            const previous = refs.current[idx];
             refs.current[idx] = el;
+
+            // If we've removed a ref, move to the next item immediately if we were visible
+            if (previous && !el) {
+              const display = window.getComputedStyle(previous).display;
+              if (display !== "none") {
+                next();
+              }
+            }
           },
         }),
       ),
-    [items],
+    [items, next],
   );
-
-  const [index, setIndex] = useState(0);
-  useEffect(() => {
-    const nextIndex = (index + 1) % items.length;
-    const timeout = setTimeout(() => setIndex(nextIndex), interval * 1000);
-    return () => clearTimeout(timeout);
-  }, [index, items, interval]);
 
   return Children.map(cloned, (item, idx) => (
     <Transition
