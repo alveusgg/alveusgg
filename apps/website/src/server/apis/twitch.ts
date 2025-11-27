@@ -186,6 +186,69 @@ export async function getUserSubscribedToBroadcaster(
   return data.data[0]!;
 }
 
+const usersSubscribedToResponseSchema = z.object({
+  data: z.array(
+    z
+      .object({
+        broadcaster_id: z.string(),
+        broadcaster_login: z.string(),
+        broadcaster_name: z.string(),
+        tier: z.literal(["1000", "2000", "3000"]),
+      })
+      .and(
+        z.discriminatedUnion("is_gift", [
+          z.object({
+            is_gift: z.literal(false),
+          }),
+          z.object({
+            is_gift: z.literal(true),
+            gifter_id: z.string(),
+            gifter_login: z.string(),
+            gifter_name: z.string(),
+          }),
+        ]),
+      ),
+  ),
+  pagination: paginationSchema,
+  total: z.number(),
+  points: z.number(),
+});
+
+export async function getUsersSubscribedToBroadcaster(
+  userAccessToken: string,
+  broadcasterId: string,
+  first?: number,
+  after?: string,
+) {
+  const params = new URLSearchParams({
+    broadcaster_id: broadcasterId,
+  });
+  if (first) params.append("first", first.toString());
+  if (after) params.append("after", after);
+
+  const response = await fetch(
+    `https://api.twitch.tv/helix/subscriptions?${params}`,
+    {
+      method: "GET",
+      headers: {
+        ...(await getUserAuthHeaders(userAccessToken)),
+      },
+    },
+  );
+
+  if (response.status === 403) {
+    throw new ExpiredAccessTokenError();
+  }
+
+  const json = await response.json();
+  if (response.status !== 200) {
+    console.error(json);
+    throw new Error("Could not get subscriptions!");
+  }
+
+  return usersSubscribedToResponseSchema.parseAsync(json);
+}
+
 const usersResponseSchema = z.object({
   data: z.array(
     z.object({

@@ -6,6 +6,7 @@ import { queryArray } from "@/utils/array";
 
 import Datetime from "@/components/overlay/Datetime";
 import Event from "@/components/overlay/Event";
+import Subs from "@/components/overlay/Subs";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
 
@@ -23,6 +24,10 @@ const OverlayPage: NextPage = () => {
       )}
 
       {!hide.has("event") && <Event className="absolute bottom-2 left-2" />}
+
+      {!hide.has("subs") && (
+        <Subs className="absolute right-2 bottom-2 text-right" />
+      )}
 
       {!hide.has("timecode") && (
         <Timecode className="absolute right-0 bottom-0" />
