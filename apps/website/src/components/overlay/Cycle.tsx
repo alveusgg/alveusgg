@@ -46,7 +46,9 @@ const Cycle = ({
 
   return Children.map(cloned, (item, idx) => (
     <Transition
+      unmount={false}
       show={idx === index}
+      appear={idx !== 0}
       beforeEnter={() => {
         const ref = refs.current[idx];
         if (!ref) return;
