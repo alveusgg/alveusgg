@@ -134,11 +134,10 @@ const Upcoming = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
 
 const Event = ({ className }: { className?: string }) => {
   const items = useMemo(
-    () =>
-      [
-        <Socials key="socials" className={className} />,
-        <Upcoming key="upcoming" className={className} />,
-      ].filter((x) => !!x),
+    () => [
+      <Socials key="socials" className={className} />,
+      <Upcoming key="upcoming" className={className} />,
+    ],
     [className],
   );
 
