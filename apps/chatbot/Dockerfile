@@ -13,7 +13,8 @@ COPY ./patches/ patches/
 WORKDIR /app/apps/database
 COPY ./apps/database/tsconfig.json .
 COPY ./apps/database/package.json .
-COPY ./apps/database/prisma/schema.prisma prisma/schema.prisma
+COPY ./apps/database/tsup.config.ts .
+COPY ./apps/database/prisma.config.ts .
 COPY ./apps/database/src/ src/
 
 ## Copy chatbot files
