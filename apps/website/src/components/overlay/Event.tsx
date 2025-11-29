@@ -42,7 +42,7 @@ const Socials = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
           [],
         )}
         // We want to be back on the logo before the parent cycle switches
-        interval={cycleTime / 3 + 1}
+        interval={cycleTime / 3}
       />
     </div>
 
