@@ -5,10 +5,8 @@ generator client {
 }
 
 datasource db {
-  provider          = "mysql"
-  relationMode      = "prisma"
-  url               = env("DATABASE_URL")
-  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+  provider     = "mysql"
+  relationMode = "prisma"
 }
 
 model ClientAccessToken {

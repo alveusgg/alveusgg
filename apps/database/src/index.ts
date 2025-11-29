@@ -1,5 +1,5 @@
 import { PrismaMariaDb } from "@prisma/adapter-mariadb";
-import { PrismaClient } from "../prisma/generated/client";
+import { PrismaClient } from "./generated/client";
 
 const client = () =>
   new PrismaClient({
@@ -30,4 +30,4 @@ export const prisma = new Proxy(
   },
 ) as ReturnType<typeof client>;
 
-export * from "../prisma/generated/client";
+export * from "./generated/client";
