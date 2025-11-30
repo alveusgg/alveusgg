@@ -16,7 +16,15 @@ const textStroke = plugin(
           `-${step}px -${step}px 0px var(--ts-text-stroke-color)`, // top left
         );
       }
-      return classes.toString();
+      return {
+        textShadow: classes.join(","),
+        "@supports (-webkit-text-stroke: 1px black) and (paint-order: stroke fill)":
+          {
+            textShadow: "none",
+            "-webkit-text-stroke": `calc(${steps}px * 2.5) var(--ts-text-stroke-color)`,
+            paintOrder: "stroke fill",
+          },
+      };
     };
 
     addBase({
@@ -26,9 +34,7 @@ const textStroke = plugin(
     });
 
     addComponents({
-      ".text-stroke": {
-        textShadow: generateShadows(),
-      },
+      ".text-stroke": generateShadows(),
     });
 
     matchUtilities(
@@ -45,9 +51,7 @@ const textStroke = plugin(
 
     matchUtilities(
       {
-        "text-stroke": (value) => ({
-          textShadow: generateShadows(Number(value)),
-        }),
+        "text-stroke": (value) => generateShadows(Number(value)),
       },
       {
         values: theme("fontStroke"),
