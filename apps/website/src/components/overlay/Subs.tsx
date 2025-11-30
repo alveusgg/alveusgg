@@ -27,7 +27,7 @@ const Subs = ({ className }: { className?: string }) => {
       <div
         className={classes(
           className,
-          "font-mono text-stroke-2 font-medium text-white",
+          "font-mono font-medium text-white text-stroke-2",
         )}
       >
         <p className="text-3xl">

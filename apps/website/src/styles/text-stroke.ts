@@ -50,12 +50,13 @@ const textStroke = plugin(
         }),
       },
       {
-        values: theme("textStroke"),
+        values: theme("fontStroke"),
         type: "number",
       },
     );
   },
-  { theme: { textStroke: { 1: 1, 2: 2, 3: 3, 4: 4 } } },
+  // Use `fontStroke` rather than `textStroke` to avoid internal Tailwind conflicts with `--text-*` being used for `font-size`
+  { theme: { fontStroke: { 1: "1", 2: "2", 3: "3", 4: "4" } } },
 );
 
 export default textStroke;
