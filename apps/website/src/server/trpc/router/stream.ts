@@ -2,10 +2,13 @@ import { track } from "@vercel/analytics/server";
 import { waitUntil } from "@vercel/functions";
 import { z } from "zod";
 
+import { prisma } from "@alveusgg/database";
+
 import { env } from "@/env";
 
 import {
   getUserSubscribedToBroadcaster,
+  getUsersSubscribedToBroadcaster,
   sendChatMessage,
 } from "@/server/apis/twitch";
 import { getWeather } from "@/server/apis/weather";
@@ -35,6 +38,31 @@ const ptzProcedure = protectedProcedure.use(
 
 export const streamRouter = router({
   getWeather: publicProcedure.query(getWeather),
+
+  getSubscriptions: publicProcedure.query(async () => {
+    // Get auth for the Twitch account
+    const twitchChannel = await prisma.twitchChannel.findFirst({
+      where: { username: channels.alveus.username },
+      select: {
+        broadcasterAccount: {
+          select: {
+            providerAccountId: true,
+            access_token: true,
+          },
+        },
+      },
+    });
+    if (!twitchChannel?.broadcasterAccount?.access_token) {
+      throw new Error("No Twitch account found");
+    }
+
+    const { total, points } = await getUsersSubscribedToBroadcaster(
+      twitchChannel.broadcasterAccount.access_token,
+      twitchChannel.broadcasterAccount.providerAccountId,
+      1,
+    );
+    return { total, points };
+  }),
 
   getRoundsChecks: publicProcedure.query(({ ctx }) =>
     ctx.prisma.roundsCheck
