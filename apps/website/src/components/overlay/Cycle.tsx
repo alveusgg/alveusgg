@@ -15,9 +15,11 @@ import { classes } from "@/utils/classes";
 
 const Cycle = ({
   items,
+  className,
   interval = 60,
 }: {
   items: ReactElement<{ className: string; ref: Ref<HTMLElement> }>[];
+  className?: string;
   interval?: number;
 }) => {
   const refs = useRef<(HTMLElement | null)[]>([]);
@@ -52,6 +54,7 @@ const Cycle = ({
         cloneElement(item, {
           className: classes(
             item.props.className,
+            className,
             "z-0 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
           ),
           ref: (el) => {
@@ -68,7 +71,7 @@ const Cycle = ({
           },
         }),
       ),
-    [items, next],
+    [items, className, next],
   );
 
   return Children.map(cloned, (item, idx) => (

@@ -4,11 +4,15 @@ import { useMemo } from "react";
 
 import { queryArray } from "@/utils/array";
 
+import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Event from "@/components/overlay/Event";
+import Socials from "@/components/overlay/Socials";
 import Subs from "@/components/overlay/Subs";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
+
+const cycleTime = 60;
 
 const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components
@@ -23,7 +27,21 @@ const OverlayPage: NextPage = () => {
         </Datetime>
       )}
 
-      {!hide.has("event") && <Event className="absolute bottom-2 left-2" />}
+      <Cycle
+        items={useMemo(
+          () =>
+            [
+              !hide.has("socials") && (
+                // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
+                <Socials interval={cycleTime / 3} key="socials" />
+              ),
+              !hide.has("event") && <Event key="event" />,
+            ].filter((x) => !!x),
+          [hide],
+        )}
+        interval={cycleTime}
+        className="absolute bottom-2 left-2"
+      />
 
       {!hide.has("subs") && (
         <Subs className="absolute right-2 bottom-2 text-right" />
