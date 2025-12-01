@@ -56,8 +56,9 @@ export class PaypalDonationProvider implements DonationProvider {
       Object.fromEntries(params.entries()),
     );
     if (!payload.success) {
-      return new Response(`Invalid IPN. Rejected. ${payload.error.message}`, {
-        status: 400,
+      console.warn(`Valid message but ignored. Schema validation failed.`);
+      return new Response(`Valid message but ignored.`, {
+        status: 200,
       });
     }
 
