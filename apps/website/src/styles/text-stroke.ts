@@ -16,7 +16,15 @@ const textStroke = plugin(
           `-${step}px -${step}px 0px var(--ts-text-stroke-color)`, // top left
         );
       }
-      return classes.toString();
+      return {
+        textShadow: classes.join(","),
+        "@supports (-webkit-text-stroke: 1px black) and (paint-order: stroke fill)":
+          {
+            textShadow: "none",
+            "-webkit-text-stroke": `${steps * 2.5}px var(--ts-text-stroke-color)`,
+            paintOrder: "stroke fill",
+          },
+      };
     };
 
     addBase({
@@ -26,9 +34,7 @@ const textStroke = plugin(
     });
 
     addComponents({
-      ".text-stroke": {
-        textShadow: generateShadows(),
-      },
+      ".text-stroke": generateShadows(),
     });
 
     matchUtilities(
@@ -45,17 +51,16 @@ const textStroke = plugin(
 
     matchUtilities(
       {
-        "text-stroke": (value) => ({
-          textShadow: generateShadows(Number(value)),
-        }),
+        "text-stroke": (value) => generateShadows(Number(value)),
       },
       {
-        values: theme("textStroke"),
+        values: theme("fontStroke"),
         type: "number",
       },
     );
   },
-  { theme: { textStroke: { 1: 1, 2: 2, 3: 3, 4: 4 } } },
+  // Use `fontStroke` rather than `textStroke` to avoid internal Tailwind conflicts with `--text-*` being used for `font-size`
+  { theme: { fontStroke: { 1: "1", 2: "2", 3: "3", 4: "4" } } },
 );
 
 export default textStroke;

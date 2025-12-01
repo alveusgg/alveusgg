@@ -64,7 +64,7 @@ const Datetime = ({
     <div
       className={classes(
         className,
-        "flex flex-col gap-1 font-mono text-stroke-2 font-medium text-white",
+        "flex flex-col gap-1 font-mono font-medium text-white text-stroke-2",
       )}
     >
       {time && (
