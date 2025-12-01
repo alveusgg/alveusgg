@@ -1,3 +1,4 @@
+import missingscreenshot from "@/assets/presets/missing_screenshot.png";
 import angel from "@/assets/presets/pasture/angel.png";
 import barn2 from "@/assets/presets/pasture/barn2.png";
 import barn2hay from "@/assets/presets/pasture/barn2hay.png";
@@ -231,6 +232,18 @@ const pasturePresets: Record<string, Preset> = {
   water: {
     description: "Water",
     image: water,
+  },
+  downleft: {
+    description: "Up and to the right of Down",
+    image: missingscreenshot,
+  },
+  grove3: {
+    description: "Between pen and pool",
+    image: missingscreenshot,
+  },
+  insidebarnz: {
+    description: "Zoom in to inside the barn",
+    image: missingscreenshot,
   },
 };
 

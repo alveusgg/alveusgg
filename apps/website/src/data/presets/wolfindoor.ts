@@ -1,3 +1,4 @@
+import missingscreenshot from "@/assets/presets/missing_screenshot.png";
 import center from "@/assets/presets/wolfindoor/center.png";
 import doors from "@/assets/presets/wolfindoor/doors.png";
 import down from "@/assets/presets/wolfindoor/down.png";
@@ -86,6 +87,10 @@ const wolfindoorPresets: Record<string, Preset> = {
   water: {
     description: "Water",
     image: water,
+  },
+  platformlefttop: {
+    description: "Platform Left top",
+    image: missingscreenshot,
   },
 };
 

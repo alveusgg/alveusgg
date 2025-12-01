@@ -1,3 +1,4 @@
+import missingscreenshot from "@/assets/presets/missing_screenshot.png";
 import back from "@/assets/presets/wolfswitch/back.png";
 import den from "@/assets/presets/wolfswitch/den.png";
 import denl from "@/assets/presets/wolfswitch/denl.png";
@@ -82,6 +83,7 @@ const wolfswitchPresets: Record<string, Preset> = {
     description: "Water",
     image: water,
   },
+  left: { description: "Left", image: missingscreenshot },
 };
 
 const wolfswitch = {
