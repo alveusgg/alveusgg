@@ -6,6 +6,7 @@ import { queryArray } from "@/utils/array";
 
 import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
+import Disclaimer from "@/components/overlay/Disclaimer";
 import Event from "@/components/overlay/Event";
 import Socials from "@/components/overlay/Socials";
 import Subs from "@/components/overlay/Subs";
@@ -43,9 +44,20 @@ const OverlayPage: NextPage = () => {
         className="absolute bottom-2 left-2"
       />
 
-      {!hide.has("subs") && (
-        <Subs className="absolute right-2 bottom-2 text-right" />
-      )}
+      <Cycle
+        items={useMemo(
+          () =>
+            [
+              !hide.has("disclaimer") && (
+                <Disclaimer key="disclaimer" className="text-xl text-stroke" />
+              ),
+              !hide.has("subs") && <Subs key="subs" />,
+            ].filter((x) => !!x),
+          [hide],
+        )}
+        interval={cycleTime / 2}
+        className="absolute right-2 bottom-2 text-right"
+      />
 
       {!hide.has("timecode") && (
         <Timecode className="absolute right-0 bottom-0" />
