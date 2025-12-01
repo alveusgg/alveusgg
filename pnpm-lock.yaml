@@ -203,8 +203,8 @@ importers:
         specifier: ^1.9.2
         version: 1.9.3(react@19.2.0)
       '@dagrejs/dagre':
-        specifier: ^1.1.8
-        version: 1.1.8
+        specifier: ^2.0.0
+        version: 2.0.0
       '@eyevinn/webrtc-player':
         specifier: ^0.13.0
         version: 0.13.0
@@ -499,7 +499,7 @@ importers:
         version: 4.0.13(@types/debug@4.1.12)(@types/node@22.19.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
       webpack:
         specifier: ^5.103.0
-        version: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)
+        version: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))
 
 packages:
 
@@ -515,9 +515,6 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
-    peerDependenciesMeta:
-      tailwindcss:
-        optional: true
 
   '@ark/schema@0.46.0':
     resolution: {integrity: sha512-c2UQdKgP2eqqDArfBqQIJppxJHvNNXuQPeuSPlDML4rjw+f1cu0qAlzOG4b8ujgm9ctIDWwhpyw6gjG5ledIVQ==}
@@ -941,8 +938,8 @@ packages:
   '@d-fischer/typed-event-emitter@3.3.3':
     resolution: {integrity: sha512-OvSEOa8icfdWDqcRtjSEZtgJTFOFNgTjje7zaL0+nAtu2/kZtRCSK5wUMrI/aXtCH8o0Qz2vA8UqkhWUTARFQQ==}
 
-  '@dagrejs/dagre@1.1.8':
-    resolution: {integrity: sha512-5SEDlndt4W/LaVzPYJW+bSmSEZc9EzTf8rJ20WCKvjS5EAZAN0b+x0Yww7VMT4R3Wootkg+X9bUfUxazYw6Blw==}
+  '@dagrejs/dagre@2.0.0':
+    resolution: {integrity: sha512-L87v5pFRQDjTSXULl5HbJyMfGZRS2fqvbQsmROt9pmy7CeoC54n7kRBsYs4AmvVnNdChIWuE1F9EEWAL+ZJNGw==}
 
   '@dagrejs/graphlib@2.2.4':
     resolution: {integrity: sha512-mepCf/e9+SKYy1d02/UkvSy6+6MoyXhVxP8lLDfA7BPE1X1d4dR0sZznmbM8/XVJ1GPM+Svnx7Xj6ZweByWUkw==}
@@ -7473,9 +7470,8 @@ snapshots:
 
   '@alveusgg/data@0.69.0(tailwindcss@4.1.17)(zod@4.1.12)':
     dependencies:
-      zod: 4.1.12
-    optionalDependencies:
       tailwindcss: 4.1.17
+      zod: 4.1.12
 
   '@ark/schema@0.46.0':
     dependencies:
@@ -8253,7 +8249,7 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
-  '@dagrejs/dagre@1.1.8':
+  '@dagrejs/dagre@2.0.0':
     dependencies:
       '@dagrejs/graphlib': 2.2.4
 
@@ -14970,17 +14966,16 @@ snapshots:
 
   tapable@2.3.0: {}
 
-  terser-webpack-plugin@5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)):
+  terser-webpack-plugin@5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.44.1
-      webpack: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)
+      webpack: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))
     optionalDependencies:
       '@swc/core': 1.4.17(@swc/helpers@0.5.17)
-      esbuild: 0.27.0
 
   terser@5.44.1:
     dependencies:
@@ -15387,7 +15382,7 @@ snapshots:
 
   webpack-sources@3.3.3: {}
 
-  webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0):
+  webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17)):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -15411,7 +15406,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.0
-      terser-webpack-plugin: 5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0))
+      terser-webpack-plugin: 5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17)))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
     transitivePeerDependencies:
