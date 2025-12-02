@@ -33,11 +33,15 @@ const OverlayPage: NextPage = () => {
     channels,
     useCallback((message: ChatMessage) => {
       const { text } = message;
-      const [command] = text.toLowerCase().split(" ");
+      const [command, arg] = text.toLowerCase().split(" ");
 
       // Anyone can run the command to toggle the disclaimer
-      if (command === "!disclaimer") {
-        setDisclaimer((prev) => !prev);
+      if (command === "!disclaimer" || command === "!wolftext") {
+        setDisclaimer((prev) => {
+          if (arg === "on" || arg === "enable") return true;
+          if (arg === "off" || arg === "disable") return false;
+          return !prev;
+        });
         return;
       }
     }, []),
