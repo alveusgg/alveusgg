@@ -1,8 +1,11 @@
+import type { ChatMessage } from "@twurple/chat";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { queryArray } from "@/utils/array";
+
+import useChat from "@/hooks/chat";
 
 import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
@@ -19,6 +22,26 @@ const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components
   const { query } = useRouter();
   const hide = useMemo(() => new Set(queryArray(query.hide)), [query.hide]);
+
+  // Add a chat command to toggle the large disclaimer
+  const channels = useMemo(() => {
+    const param = queryArray(query.channels);
+    return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
+  }, [query.channels]);
+  const [disclaimer, setDisclaimer] = useState(false);
+  useChat(
+    channels,
+    useCallback((message: ChatMessage) => {
+      const { text } = message;
+      const [command] = text.toLowerCase().split(" ");
+
+      // Anyone can run the command to toggle the disclaimer
+      if (command === "!disclaimer") {
+        setDisclaimer((prev) => !prev);
+        return;
+      }
+    }, []),
+  );
 
   return (
     <div className="h-screen w-full">
@@ -44,16 +67,20 @@ const OverlayPage: NextPage = () => {
         className="absolute bottom-2 left-2"
       />
 
+      {!hide.has("disclaimer") && disclaimer && (
+        <Disclaimer className="absolute inset-x-0 bottom-2 w-full text-center text-4xl" />
+      )}
+
       <Cycle
         items={useMemo(
           () =>
             [
-              !hide.has("disclaimer") && (
+              !hide.has("disclaimer") && !disclaimer && (
                 <Disclaimer key="disclaimer" className="text-xl text-stroke" />
               ),
               !hide.has("subs") && <Subs key="subs" />,
             ].filter((x) => !!x),
-          [hide],
+          [hide, disclaimer],
         )}
         interval={cycleTime / 2}
         className="absolute right-2 bottom-2 text-right"
