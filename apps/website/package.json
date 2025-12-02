@@ -28,6 +28,7 @@
     "dev:trpc-types": "tsup --watch --config trpc.tsup.config.ts",
     "build": "pnpm run --sequential \"/^build:(?!presets$).*$/\"",
     "dev": "pnpm run \"/^(build:manifest|dev:.*)/\"",
+    "postinstall": "pnpm build:trpc-types",
     "lint": "next typegen && eslint --max-warnings 0",
     "types": "next typegen && tsc --noEmit",
     "start": "next start",

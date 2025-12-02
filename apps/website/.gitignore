@@ -18,4 +18,4 @@ next-env.d.ts
 /.vercel/
 
 # trpc types
-/dist/trpc.d.ts
+/dist/
