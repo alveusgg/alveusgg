@@ -25,21 +25,33 @@ const Cycle = ({
   const refs = useRef<(HTMLElement | null)[]>([]);
 
   const [index, setIndex] = useState(0);
-  const next = useCallback(() => {
-    setIndex((prev) => {
-      // Move to the next item that has a ref
-      let next = (prev + 1) % items.length;
-      while (!refs.current[next]) {
-        next = (next + 1) % items.length;
-
-        if (next === prev) {
-          // All refs are null, stay on the current index
-          return prev;
+  const next = useCallback(
+    (check = false) => {
+      setIndex((prev) => {
+        // If check is true, only advance if the current ref is null
+        // However, if the current index is beyond the items length, we must advance
+        if (check && prev < items.length) {
+          const currentRef = refs.current[prev];
+          if (currentRef) {
+            return prev;
+          }
         }
-      }
-      return next;
-    });
-  }, [items.length]);
+
+        // Move to the next item that has a ref
+        let next = (prev + 1) % items.length;
+        while (!refs.current[next]) {
+          next = (next + 1) % items.length;
+
+          if (next === prev) {
+            // All refs are null, stay on the current index
+            return prev;
+          }
+        }
+        return next;
+      });
+    },
+    [items.length],
+  );
 
   // Whenever index changes, start a timer for cycling to the next item
   useEffect(() => {
@@ -57,16 +69,13 @@ const Cycle = ({
             className,
             "z-0 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
           ),
+          // Whenever an item is (un)mounted, update the ref and check if we need to advance
           ref: (el) => {
             const previous = refs.current[idx];
             refs.current[idx] = el;
 
-            // If we've removed a ref, move to the next item immediately if we were visible
-            if (previous && !el) {
-              const display = window.getComputedStyle(previous).display;
-              if (display !== "none") {
-                next();
-              }
+            if (previous !== el && !!previous !== !!el) {
+              next(true);
             }
           },
         }),
