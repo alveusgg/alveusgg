@@ -9,7 +9,7 @@ const config = defineConfig({
   dts: {
     only: true,
   },
-  clean: true,
+  clean: false,
   tsconfig: "./trpc.tsconfig.json",
 });
 
