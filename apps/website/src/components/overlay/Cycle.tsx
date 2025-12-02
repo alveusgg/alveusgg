@@ -64,11 +64,7 @@ const Cycle = ({
       // eslint-disable-next-line react-hooks/refs -- we're passing a ref prop down
       items.map((item, idx) =>
         cloneElement(item, {
-          className: classes(
-            item.props.className,
-            className,
-            "z-0 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-300",
-          ),
+          className: classes(item.props.className, className),
           // Whenever an item is (un)mounted, update the ref and check if we need to advance
           ref: (el) => {
             const previous = refs.current[idx];
@@ -88,18 +84,8 @@ const Cycle = ({
       unmount={false}
       show={idx === index}
       appear={idx !== 0}
-      beforeEnter={() => {
-        const ref = refs.current[idx];
-        if (!ref) return;
-
-        ref.style.zIndex = "1";
-      }}
-      beforeLeave={() => {
-        const ref = refs.current[idx];
-        if (!ref) return;
-
-        ref.style.zIndex = "0";
-      }}
+      as="div"
+      className="contents *:z-0 *:transition-opacity data-closed:*:opacity-0 data-enter:*:z-10 data-enter:*:duration-700 data-leave:*:duration-300"
     >
       {item}
     </Transition>
