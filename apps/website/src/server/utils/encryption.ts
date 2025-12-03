@@ -1,5 +1,3 @@
-import { webcrypto as crypto } from "node:crypto";
-
 import { env } from "@/env";
 
 const KEY_ALGORITHM_NAME = "PBKDF2";
@@ -53,7 +51,7 @@ async function importEncryptionKey(key: string) {
 }
 
 export async function deriveSaltedEncryptionKey(
-  key: crypto.CryptoKey,
+  key: CryptoKey,
   salt: BufferSource,
 ) {
   return crypto.subtle.deriveKey(
@@ -79,7 +77,7 @@ export async function createSaltedEncryptionKey(salt: BufferSource) {
 
 export async function encrypt(
   plainText: string,
-  saltedEncryptionKey: crypto.CryptoKey,
+  saltedEncryptionKey: CryptoKey,
 ) {
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
   const plainTextBuffer = encoder.encode(plainText);
@@ -101,7 +99,7 @@ export async function encrypt(
 
 export async function decrypt(
   encryptedText: string,
-  saltedEncryptionKey: crypto.CryptoKey,
+  saltedEncryptionKey: CryptoKey,
   { allowEmpty = true } = {},
 ) {
   if (allowEmpty && encryptedText === "") {

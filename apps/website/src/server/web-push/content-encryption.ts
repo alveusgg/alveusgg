@@ -1,5 +1,3 @@
-import { webcrypto as crypto } from "node:crypto";
-
 import {
   concatArrayBuffers,
   createUintArrayBEFromNumber,
@@ -19,8 +17,8 @@ type KeyAndNonce = {
 };
 
 export async function computeSecret(
-  privateKey: crypto.CryptoKey,
-  publicKey: crypto.CryptoKey,
+  privateKey: CryptoKey,
+  publicKey: CryptoKey,
 ) {
   return crypto.subtle.deriveBits(
     {
@@ -80,8 +78,8 @@ export async function deriveHmacKey(
 export async function deriveKeyAndNonce(params: {
   salt: BufferSource;
   authSecret: BufferSource;
-  dh: Uint8Array;
-  localKeypair: { privateKey: crypto.CryptoKey; publicKey: crypto.CryptoKey };
+  dh: Uint8Array<ArrayBuffer>;
+  localKeypair: { privateKey: CryptoKey; publicKey: CryptoKey };
 }): Promise<KeyAndNonce> {
   const userPublicKey = await crypto.subtle.importKey(
     "raw",
@@ -173,7 +171,7 @@ export function createCipherHeader(keyId: ArrayBufferLike, recordSize: number) {
 }
 
 export async function createCipherText(
-  localPublicKey: crypto.CryptoKey,
+  localPublicKey: CryptoKey,
   salt: Uint8Array,
   payload: ArrayBufferLike,
   keyAndNonce: KeyAndNonce,
