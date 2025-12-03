@@ -27,7 +27,9 @@ const ActionButton = ({
 }: ActionButtonProps) => {
   const Tooltip = tooltip.elm ?? "div";
   return (
-    <div
+    <button
+      onClick={onClick}
+      title={tooltip.text}
       className={classes(
         "group relative",
         !/\b((inline-)?(block|flex|grid|table)|inline|contents)\b/.test(
@@ -40,17 +42,15 @@ const ActionButton = ({
     >
       <Tooltip
         className={classes(
-          "pointer-events-none absolute top-1/2 z-10 -translate-x-full -translate-y-1/2 rounded-md bg-alveus-green-900 px-1 py-0.5 leading-tight text-nowrap text-white transition-opacity",
+          "pointer-events-none absolute top-1/2 z-10 -translate-x-full -translate-y-1/2 rounded-md bg-alveus-green-900 px-1 py-0.5 text-left leading-tight text-nowrap text-white transition-opacity",
           tooltip.force ? "opacity-100" : "opacity-0 group-hover:opacity-100",
           /\bbg-/.test(className || "") ? "-left-1" : "left-0",
         )}
       >
         {tooltip.text}
       </Tooltip>
-      <button onClick={onClick} title={tooltip.text}>
-        <Icon className="m-1 size-5 cursor-pointer transition-colors" />
-      </button>
-    </div>
+      <Icon className="m-1 size-5 cursor-pointer transition-colors" />
+    </button>
   );
 };
 
