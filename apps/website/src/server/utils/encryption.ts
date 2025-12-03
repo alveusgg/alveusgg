@@ -1,5 +1,3 @@
-import { webcrypto as crypto } from "node:crypto";
-
 import { env } from "@/env";
 
 const KEY_ALGORITHM_NAME = "PBKDF2";
