@@ -21,7 +21,7 @@
     "@twurple/easy-bot": "^7.4.0",
     "read-pkg": "^10.0.0",
     "tsx": "^4.20.6",
-    "zod": "^4.1.12"
+    "zod": "^4.1.13"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",

@@ -6,6 +6,6 @@
   "types": "src/index.ts",
   "scripts": {},
   "dependencies": {
-    "zod": "^4.1.11"
+    "zod": "^4.1.13"
   }
 }
