@@ -1,6 +1,5 @@
 import { keepPreviousData } from "@tanstack/react-query";
-import Image from "next/image";
-import { type HTMLProps, useEffect, useMemo, useRef, useState } from "react";
+import { type HTMLProps, useEffect, useRef, useState } from "react";
 
 import type { CalendarEvent } from "@alveusgg/database";
 
@@ -9,51 +8,10 @@ import { channels } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
 import { formatDateTimeRelative } from "@/utils/datetime";
-import { getShortBaseUrl } from "@/utils/short-url";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 import { trpc } from "@/utils/trpc";
 
-import { QRCode } from "@/components/QrCode";
-import Cycle from "@/components/overlay/Cycle";
-
-import logoImage from "@/assets/logo.png";
-
-const cycleTime = 60;
-
-const Socials = ({ className, ...props }: HTMLProps<HTMLDivElement>) => (
-  <div className={classes(className, "flex items-center gap-2")} {...props}>
-    <div className="relative size-16">
-      <Cycle
-        items={useMemo(
-          () => [
-            <Image
-              key="logo"
-              src={logoImage}
-              alt=""
-              height={64}
-              className="absolute inset-0 object-contain opacity-75 brightness-150 contrast-125 drop-shadow-sm grayscale"
-            />,
-            <QRCode
-              key="qr"
-              className="absolute inset-0 rounded-lg border-2 border-black/75 bg-white p-0.5 opacity-90 drop-shadow-sm"
-              value={`${getShortBaseUrl()}/socials`}
-            />,
-          ],
-          [],
-        )}
-        // We want to be back on the logo before the parent cycle switches
-        interval={cycleTime / 3}
-      />
-    </div>
-
-    <div className="text-xl font-bold text-white text-stroke">
-      <p>alveussanctuary.org</p>
-      <p>@alveussanctuary</p>
-    </div>
-  </div>
-);
-
-const Upcoming = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
+const Event = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
   // Set the range for upcoming events to the next 3 days
   // Refresh every 60s
   const [upcomingRange, setUpcomingRange] = useState<[Date, Date]>();
@@ -130,18 +88,6 @@ const Upcoming = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
       </p>
     </div>
   );
-};
-
-const Event = ({ className }: { className?: string }) => {
-  const items = useMemo(
-    () => [
-      <Socials key="socials" className={className} />,
-      <Upcoming key="upcoming" className={className} />,
-    ],
-    [className],
-  );
-
-  return <Cycle items={items} interval={cycleTime} />;
 };
 
 export default Event;
