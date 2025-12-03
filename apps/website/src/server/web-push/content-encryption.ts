@@ -19,8 +19,8 @@ type KeyAndNonce = {
 };
 
 export async function computeSecret(
-  privateKey: CryptoKey,
-  publicKey: CryptoKey,
+  privateKey: crypto.CryptoKey,
+  publicKey: crypto.CryptoKey,
 ) {
   return crypto.subtle.deriveBits(
     {
@@ -81,7 +81,7 @@ export async function deriveKeyAndNonce(params: {
   salt: BufferSource;
   authSecret: BufferSource;
   dh: Uint8Array;
-  localKeypair: { privateKey: CryptoKey; publicKey: CryptoKey };
+  localKeypair: { privateKey: crypto.CryptoKey; publicKey: crypto.CryptoKey };
 }): Promise<KeyAndNonce> {
   const userPublicKey = await crypto.subtle.importKey(
     "raw",
@@ -173,7 +173,7 @@ export function createCipherHeader(keyId: ArrayBufferLike, recordSize: number) {
 }
 
 export async function createCipherText(
-  localPublicKey: CryptoKey,
+  localPublicKey: crypto.CryptoKey,
   salt: Uint8Array,
   payload: ArrayBufferLike,
   keyAndNonce: KeyAndNonce,

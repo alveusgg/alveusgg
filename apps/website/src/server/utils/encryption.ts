@@ -53,7 +53,7 @@ async function importEncryptionKey(key: string) {
 }
 
 export async function deriveSaltedEncryptionKey(
-  key: CryptoKey,
+  key: crypto.CryptoKey,
   salt: BufferSource,
 ) {
   return crypto.subtle.deriveKey(
@@ -79,7 +79,7 @@ export async function createSaltedEncryptionKey(salt: BufferSource) {
 
 export async function encrypt(
   plainText: string,
-  saltedEncryptionKey: CryptoKey,
+  saltedEncryptionKey: crypto.CryptoKey,
 ) {
   const iv = crypto.getRandomValues(new Uint8Array(IV_LENGTH));
   const plainTextBuffer = encoder.encode(plainText);
@@ -101,7 +101,7 @@ export async function encrypt(
 
 export async function decrypt(
   encryptedText: string,
-  saltedEncryptionKey: CryptoKey,
+  saltedEncryptionKey: crypto.CryptoKey,
   { allowEmpty = true } = {},
 ) {
   if (allowEmpty && encryptedText === "") {
