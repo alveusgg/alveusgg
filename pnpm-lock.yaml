@@ -47,8 +47,8 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0(@twurple/auth@7.4.0)
       '@twurple/easy-bot':
-        specifier: ^7.4.0
-        version: 7.4.0
+        specifier: ^8.0.2
+        version: 8.0.2
       read-pkg:
         specifier: ^10.0.0
         version: 10.0.0
@@ -249,7 +249,7 @@ importers:
         version: 11.7.2(typescript@5.9.3)
       '@twurple/chat':
         specifier: ^7.4.0
-        version: 7.4.0(@twurple/auth@7.4.0)
+        version: 7.4.0(@twurple/auth@8.0.2)
       '@upstash/ratelimit':
         specifier: ^2.0.7
         version: 2.0.7(@upstash/redis@1.35.7)
@@ -3627,24 +3627,43 @@ packages:
   '@twurple/api-call@7.4.0':
     resolution: {integrity: sha512-WNxvjp/hMqZREElbvE4rHMyUIrHdGY5cbG8xbqgSM9CESFvJ1wm5BubhyANOyKd1TxABacLddbfbO//Fz9YHgA==}
 
+  '@twurple/api-call@8.0.2':
+    resolution: {integrity: sha512-Qalqb20+VdFKcRpWe9lRoatLxbsCCcbUS70ODQ0pcRgNvVYO4SIL1FcoOwNK+ra1Gtu7x2DdYnJn1Era1HhIOg==}
+
   '@twurple/api@7.4.0':
     resolution: {integrity: sha512-RlXLs4ZvS8n0+iIk7YyVDwrjhlwpn+N+h7fX5Q61HoxlmzoCShmnnFo03abYw9i8Cc3deGpbQATOSVmigXM4qg==}
     peerDependencies:
       '@twurple/auth': 7.4.0
 
+  '@twurple/api@8.0.2':
+    resolution: {integrity: sha512-zBWU/UaNGjCu5IQzYTWJONbG7FyXtDP5TYRVIKdUqZ3EXCi9H6j6kcx+GVNfikd3zx7boHDVZqCzOt4VGdgsPA==}
+    peerDependencies:
+      '@twurple/auth': 8.0.2
+
   '@twurple/auth@7.4.0':
     resolution: {integrity: sha512-WAQV6nJGkfY7r2BkRYhnzUpdfozLvjNsCxkyNVprl4dCWdJzccnTvqkKTdDRJc5ZJxDVaB9Drzwx9/fCp/gRDA==}
+
+  '@twurple/auth@8.0.2':
+    resolution: {integrity: sha512-FbkZqvyw7ZedMdXKP2xDQ/G22EY56LB0J14yZXHfrcLDnh7yofgAe8nQAT4gDIF+kl51AnMxt1Zsay6C8b2Gmw==}
 
   '@twurple/chat@7.4.0':
     resolution: {integrity: sha512-SYppFwnWt7I8mH/I7fF/ZPO61aBzOz7BOOHQhVWzuQ/7qgPfZnmPJmUwfMnsMmKJ95TfsScZnAWxhdwNdRe3wg==}
     peerDependencies:
       '@twurple/auth': 7.4.0
 
+  '@twurple/chat@8.0.2':
+    resolution: {integrity: sha512-lYVTz8EoZuPf+RanEs/hvCiNLE5bfLYQA+4CMjBOaDZM1rn2lAGqZcUTH+LMefBt5wdYAi9+34U/ul5lWDZ7aw==}
+    peerDependencies:
+      '@twurple/auth': 8.0.2
+
   '@twurple/common@7.4.0':
     resolution: {integrity: sha512-lX5cVkYar6jGvni6iLmMYjhxH1oPSl2v7XVeZ4C7U1GbLz/Jwk0L0uldQNGUIf9gpRHPY+TXRlk0UIpz2yo8DA==}
 
-  '@twurple/easy-bot@7.4.0':
-    resolution: {integrity: sha512-mJIyPBRsvb7wOJeHQqR3Xz3Zv67HwvRufZf4MZ89BpVzVV+0WDUPVrbacYwqK3Rvq23NlwIFZ2NnlK77t9MIEQ==}
+  '@twurple/common@8.0.2':
+    resolution: {integrity: sha512-67PpI8z0KAQhgjpf4vdKLC/jur7iHFay4whtJ4EP+Tj/qHBqgfjHxKIhFpRJqpTb+68TpUz0v2J5CVA7ugMDuQ==}
+
+  '@twurple/easy-bot@8.0.2':
+    resolution: {integrity: sha512-9TDGxUBWJ2Ys4LGs3QwtsFhGxB8OrUPu0p9nk6ljswPWuBhLvHspQM0sJTH9pb7QgBF4GqevpHCkE1JfGHX+dQ==}
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
@@ -11048,6 +11067,12 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@twurple/api-call@8.0.2':
+    dependencies:
+      '@d-fischer/shared-utils': 3.6.4
+      '@twurple/common': 8.0.2
+      tslib: 2.8.1
+
   '@twurple/api@7.4.0(@twurple/auth@7.4.0)':
     dependencies:
       '@d-fischer/cache-decorators': 4.0.1
@@ -11065,6 +11090,20 @@ snapshots:
     transitivePeerDependencies:
       - encoding
 
+  '@twurple/api@8.0.2(@twurple/auth@8.0.2)':
+    dependencies:
+      '@d-fischer/cache-decorators': 4.0.1
+      '@d-fischer/detect-node': 3.0.1
+      '@d-fischer/logger': 4.2.4
+      '@d-fischer/rate-limiter': 1.1.0
+      '@d-fischer/shared-utils': 3.6.4
+      '@d-fischer/typed-event-emitter': 3.3.3
+      '@twurple/api-call': 8.0.2
+      '@twurple/auth': 8.0.2
+      '@twurple/common': 8.0.2
+      retry: 0.13.1
+      tslib: 2.8.1
+
   '@twurple/auth@7.4.0':
     dependencies:
       '@d-fischer/logger': 4.2.4
@@ -11075,6 +11114,15 @@ snapshots:
       tslib: 2.8.1
     transitivePeerDependencies:
       - encoding
+
+  '@twurple/auth@8.0.2':
+    dependencies:
+      '@d-fischer/logger': 4.2.4
+      '@d-fischer/shared-utils': 3.6.4
+      '@d-fischer/typed-event-emitter': 3.3.3
+      '@twurple/api-call': 8.0.2
+      '@twurple/common': 8.0.2
+      tslib: 2.8.1
 
   '@twurple/chat@7.4.0(@twurple/auth@7.4.0)':
     dependencies:
@@ -11092,25 +11140,62 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@twurple/chat@7.4.0(@twurple/auth@8.0.2)':
+    dependencies:
+      '@d-fischer/cache-decorators': 4.0.1
+      '@d-fischer/deprecate': 2.0.2
+      '@d-fischer/logger': 4.2.4
+      '@d-fischer/rate-limiter': 1.1.0
+      '@d-fischer/shared-utils': 3.6.4
+      '@d-fischer/typed-event-emitter': 3.3.3
+      '@twurple/auth': 8.0.2
+      '@twurple/common': 7.4.0
+      ircv3: 0.33.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  '@twurple/chat@8.0.2(@twurple/auth@8.0.2)':
+    dependencies:
+      '@d-fischer/cache-decorators': 4.0.1
+      '@d-fischer/deprecate': 2.0.2
+      '@d-fischer/logger': 4.2.4
+      '@d-fischer/rate-limiter': 1.1.0
+      '@d-fischer/shared-utils': 3.6.4
+      '@d-fischer/typed-event-emitter': 3.3.3
+      '@twurple/auth': 8.0.2
+      '@twurple/common': 8.0.2
+      ircv3: 0.33.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@twurple/common@7.4.0':
     dependencies:
       '@d-fischer/shared-utils': 3.6.4
       klona: 2.0.6
       tslib: 2.8.1
 
-  '@twurple/easy-bot@7.4.0':
+  '@twurple/common@8.0.2':
+    dependencies:
+      '@d-fischer/shared-utils': 3.6.4
+      klona: 2.0.6
+      tslib: 2.8.1
+
+  '@twurple/easy-bot@8.0.2':
     dependencies:
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/api': 7.4.0(@twurple/auth@7.4.0)
-      '@twurple/auth': 7.4.0
-      '@twurple/chat': 7.4.0(@twurple/auth@7.4.0)
-      '@twurple/common': 7.4.0
+      '@twurple/api': 8.0.2(@twurple/auth@8.0.2)
+      '@twurple/auth': 8.0.2
+      '@twurple/chat': 8.0.2(@twurple/auth@8.0.2)
+      '@twurple/common': 8.0.2
       tslib: 2.8.1
     transitivePeerDependencies:
       - bufferutil
-      - encoding
       - utf-8-validate
 
   '@tybys/wasm-util@0.9.0':
