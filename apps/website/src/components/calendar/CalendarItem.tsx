@@ -9,8 +9,10 @@ import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 import Link from "@/components/content/Link";
 
-interface CalendarItemProps
-  extends Omit<Parameters<typeof Link>[0], "children"> {
+interface CalendarItemProps extends Omit<
+  Parameters<typeof Link>[0],
+  "children"
+> {
   event: CalendarEvent;
   today: DateTime;
   timeZone?: string;
