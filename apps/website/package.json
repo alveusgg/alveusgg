@@ -12,6 +12,9 @@
   "bugs": {
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
+  "engines": {
+    "node": "24.x"
+  },
   "types": "src/server/trpc/router/_app.ts",
   "scripts": {
     "build:next": "next build --webpack",
@@ -42,7 +45,7 @@
     "@headlessui/react": "^2.2.9",
     "@iframe-resizer/react": "^5.5.7",
     "@maplibre/maplibre-gl-geocoder": "^1.9.1",
-    "@next/env": "^16.0.5",
+    "@next/env": "^16.0.7",
     "@paralleldrive/cuid2": "^3.1.0",
     "@t3-oss/env-nextjs": "^0.13.8",
     "@tailwindcss/postcss": "^4.1.17",
@@ -70,7 +73,7 @@
     "luxon": "^3.7.2",
     "maplibre-gl": "^5.13.0",
     "motion": "^12.23.24",
-    "next": "^16.0.5",
+    "next": "^16.0.7",
     "next-auth": "^4.24.13",
     "next-sitemap": "^4.2.3",
     "next-superjson": "^1.0.7",
@@ -79,9 +82,9 @@
     "pluralize": "^8.0.0",
     "probe-image-size": "^7.2.3",
     "raw-body": "^3.0.2",
-    "react": "^19.2.0",
+    "react": "^19.2.1",
     "react-aria": "^3.44.0",
-    "react-dom": "^19.2.0",
+    "react-dom": "^19.2.1",
     "react-error-boundary": "^6.0.0",
     "react-markdown": "^10.1.0",
     "react-quill-new": "^3.6.0",
@@ -101,7 +104,7 @@
     "@eslint/js": "^9.39.1",
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@ffprobe-installer/ffprobe": "^2.1.2",
-    "@next/eslint-plugin-next": "^16.0.5",
+    "@next/eslint-plugin-next": "^16.0.7",
     "@trivago/prettier-plugin-sort-imports": "^6.0.0",
     "@types/country-list": "^2.1.4",
     "@types/eslint-config-prettier": "^6.11.3",
@@ -110,7 +113,7 @@
     "@types/linkify-it": "^5.0.0",
     "@types/lodash": "^4.17.21",
     "@types/luxon": "^3.7.1",
-    "@types/node": "^22.19.1",
+    "@types/node": "^24.10.1",
     "@types/oauth": "^0.9.6",
     "@types/pluralize": "^0.0.33",
     "@types/probe-image-size": "^7.2.5",

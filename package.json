@@ -15,10 +15,10 @@
     "url": "https://github.com/alveusgg/alveusgg/issues"
   },
   "engines": {
-    "node": "22.x",
-    "pnpm": "^10.11.1"
+    "node": ">=24.11.0",
+    "pnpm": "^10.20.0"
   },
-  "packageManager": "pnpm@10.11.1",
+  "packageManager": "pnpm@10.20.0",
   "devDependencies": {
     "husky": "^9.1.7",
     "lint-staged": "^16.2.7",

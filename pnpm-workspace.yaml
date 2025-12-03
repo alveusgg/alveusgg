@@ -7,7 +7,7 @@ patchedDependencies:
 
 peerDependencyRules:
   allowedVersions:
-    "next-superjson-plugin>next": "^15.0"
+    "next-superjson-plugin>next": "^16.0"
     "react-to-text>react": "^19.0"
     "react-to-text>react-dom": "^19.0"
 
