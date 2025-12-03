@@ -6,7 +6,7 @@ import { PaypalDonationSchema } from "./schema";
 
 interface PaypalDonationProviderOptions {
   sandbox: boolean;
-  schema: ReturnType<typeof PaypalDonationSchema>;
+  expectedBusinessEmailAddress: string;
 }
 
 export class PaypalDonationProvider implements DonationProvider {
@@ -22,9 +22,7 @@ export class PaypalDonationProvider implements DonationProvider {
   ): Promise<PaypalDonationProvider> {
     const options = {
       sandbox: env.SANDBOX === "true",
-      schema: PaypalDonationSchema({
-        expectedBusinessEmailAddress: env.PAYPAL_BUSINESS_EMAIL,
-      }),
+      expectedBusinessEmailAddress: env.PAYPAL_BUSINESS_EMAIL,
     };
     return new PaypalDonationProvider(options, service);
   }
@@ -52,12 +50,28 @@ export class PaypalDonationProvider implements DonationProvider {
       return new Response("Invalid IPN. Rejected.", { status: 400 });
     }
 
-    const payload = this.options.schema.safeParse(
+    const payload = PaypalDonationSchema.safeParse(
       Object.fromEntries(params.entries()),
     );
     if (!payload.success) {
-      return new Response(`Invalid IPN. Rejected. ${payload.error.message}`, {
+      console.warn(`Valid IPN but parsing failed.`);
+      console.log(payload.error);
+      return new Response(`Valid IPN but ignored.`, {
         status: 400,
+      });
+    }
+
+    if (payload.data.business !== this.options.expectedBusinessEmailAddress) {
+      console.warn(`Valid IPN but business email address mismatch.`);
+      return new Response(`Valid IPN but business email address mismatch.`, {
+        status: 200,
+      });
+    }
+
+    if (payload.data.payment_status !== "Completed") {
+      console.warn(`Valid IPN but payment status is not Completed.`);
+      return new Response(`Valid IPN but payment status is not Completed.`, {
+        status: 200,
       });
     }
 
