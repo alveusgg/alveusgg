@@ -1,6 +1,7 @@
 node_modules/
 pnpm-lock.yaml
 
+apps/website/dist/
 apps/website/.next/
 apps/website/public/push/alveus/
 
