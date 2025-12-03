@@ -63,6 +63,9 @@ updates:
           - "tailwindcss"
           - "@tailwindcss/*"
           - "@headlessui/react"
+      twurple:
+        patterns:
+          - "@twurple/*"
 
       # Update `dependencies` and `devDependencies` separately
       # Create grouped PRs for minor/patch updates with majors getting dedicated PRs
@@ -84,6 +87,7 @@ updates:
           - "tailwindcss"
           - "@tailwindcss/*"
           - "@headlessui/react"
+          - "@twurple/*"
       development:
         dependency-type: development
         update-types:
@@ -101,6 +105,7 @@ updates:
           - "tailwindcss"
           - "@tailwindcss/*"
           - "@headlessui/react"
+          - "@twurple/*"
 
     # Manually update major versions of `@types/node` with the version specified within .nvmrc
     ignore:

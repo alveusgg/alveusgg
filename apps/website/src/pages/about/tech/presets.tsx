@@ -132,7 +132,7 @@ const Card = ({
   children,
 }: {
   title: string;
-  image?: { src: StaticImageData; alt: string };
+  image: StaticImageData;
   command?: Command;
   className?: string;
   children?: ReactNode;
@@ -143,20 +143,12 @@ const Card = ({
       className,
     )}
   >
-    <div className="group relative aspect-video overflow-hidden rounded-t-lg">
-      {image ? (
-        <Image
-          src={image.src}
-          alt={image.alt}
-          fill
-          className="aspect-video w-full object-cover transition-transform"
-        />
-      ) : (
-        <div className="flex aspect-video items-center justify-center bg-alveus-green-50 text-xs text-alveus-green-300">
-          No Image
-        </div>
-      )}
-    </div>
+    <Image
+      src={image}
+      alt=""
+      width={300}
+      className="aspect-video w-full rounded-t-lg object-cover transition-transform"
+    />
     <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
       <div className="flex items-center justify-between">
         <h4 className="text-lg font-semibold">{title}</h4>
@@ -741,14 +733,7 @@ const AboutTechPresetsPage: NextPage = () => {
                               <Card
                                 key={name}
                                 title={name}
-                                image={
-                                  preset.image
-                                    ? {
-                                        src: preset.image,
-                                        alt: preset.description,
-                                      }
-                                    : undefined
-                                }
+                                image={preset.image}
                                 command={{
                                   command: "ptzload",
                                   args: [selectedCamera.toLowerCase(), name],
@@ -761,16 +746,7 @@ const AboutTechPresetsPage: NextPage = () => {
                         {"multi" in selectedData && (
                           <Card
                             title={selectedData.multi.cameras.join(" + ")}
-                            image={
-                              selectedData.multi.image
-                                ? {
-                                    src: selectedData.multi.image,
-                                    alt:
-                                      selectedData.multi.description ??
-                                      selectedData.multi.cameras.join(" + "),
-                                  }
-                                : undefined
-                            }
+                            image={selectedData.multi.image}
                             className="col-span-2"
                           >
                             {selectedData.multi.description}

@@ -1,11 +1,12 @@
 import { keepPreviousData } from "@tanstack/react-query";
+import type { HTMLProps } from "react";
 
 import { classes } from "@/utils/classes";
 import { trpc } from "@/utils/trpc";
 
 import useLocaleString from "@/hooks/locale";
 
-const Subs = ({ className }: { className?: string }) => {
+const Subs = ({ className, ...props }: HTMLProps<HTMLParagraphElement>) => {
   const { data: subscriptions } = trpc.stream.getSubscriptions.useQuery(
     undefined,
     {
@@ -22,17 +23,18 @@ const Subs = ({ className }: { className?: string }) => {
   const target = Math.ceil(total / 100) * 100;
   const targetFmt = useLocaleString(target);
 
+  if (!subscriptions) return null;
+
   return (
-    subscriptions && (
-      <p
-        className={classes(
-          className,
-          "text-3xl font-medium text-white tabular-nums text-stroke-2",
-        )}
-      >
-        Subs: {totalFmt} / {targetFmt}
-      </p>
-    )
+    <p
+      className={classes(
+        className,
+        "text-3xl font-medium text-white tabular-nums text-stroke-2",
+      )}
+      {...props}
+    >
+      Subs: {totalFmt} / {targetFmt}
+    </p>
   );
 };
 

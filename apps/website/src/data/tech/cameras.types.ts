@@ -2,7 +2,7 @@ import { type StaticImageData } from "next/image";
 
 export interface Preset {
   description: string;
-  image?: StaticImageData;
+  image: StaticImageData;
 }
 
 interface CameraCore {
@@ -17,7 +17,7 @@ export interface CameraPTZ extends CameraCore {
 export interface CameraMulti extends CameraCore {
   multi: {
     cameras: string[];
-    description?: string;
-    image?: StaticImageData;
+    description: string;
+    image: StaticImageData;
   };
 }

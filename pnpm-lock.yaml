@@ -38,17 +38,17 @@ importers:
         specifier: ^0.13.8
         version: 0.13.8(arktype@2.1.20)(typescript@5.9.3)(valibot@1.1.0(typescript@5.9.3))(zod@4.1.13)
       '@twurple/api':
-        specifier: ^7.4.0
-        version: 7.4.0(@twurple/auth@7.4.0)
+        specifier: ^8.0.2
+        version: 8.0.2(@twurple/auth@8.0.2)
       '@twurple/auth':
-        specifier: ^7.4.0
-        version: 7.4.0
+        specifier: ^8.0.2
+        version: 8.0.2
       '@twurple/chat':
-        specifier: ^7.4.0
-        version: 7.4.0(@twurple/auth@7.4.0)
+        specifier: ^8.0.2
+        version: 8.0.2(@twurple/auth@8.0.2)
       '@twurple/easy-bot':
-        specifier: ^7.4.0
-        version: 7.4.0
+        specifier: ^8.0.2
+        version: 8.0.2
       read-pkg:
         specifier: ^10.0.0
         version: 10.0.0
@@ -245,8 +245,8 @@ importers:
         specifier: ^11.7.2
         version: 11.7.2(typescript@5.9.3)
       '@twurple/chat':
-        specifier: ^7.4.0
-        version: 7.4.0(@twurple/auth@7.4.0)
+        specifier: ^8.0.2
+        version: 8.0.2(@twurple/auth@8.0.2)
       '@upstash/ratelimit':
         specifier: ^2.0.7
         version: 2.0.7(@upstash/redis@1.35.7)
@@ -901,9 +901,6 @@ packages:
   '@d-fischer/connection@9.0.0':
     resolution: {integrity: sha512-Mljp/EbaE+eYWfsFXUOk+RfpbHgrWGL/60JkAvjYixw6KREfi5r17XdUiXe54ByAQox6jwgdN2vebdmW1BT+nQ==}
 
-  '@d-fischer/cross-fetch@5.0.5':
-    resolution: {integrity: sha512-symjDUPInTrkfIsZc2n2mo9hiAJLcTJsZkNICjZajEWnWpJ3s3zn50/FY8xpNUAf5w3eFuQii2wxztTGpvG1Xg==}
-
   '@d-fischer/deprecate@2.0.2':
     resolution: {integrity: sha512-wlw3HwEanJFJKctwLzhfOM6LKwR70FPfGZGoKOhWBKyOPXk+3a9Cc6S9zhm6tka7xKtpmfxVIReGUwPnMbIaZg==}
 
@@ -921,10 +918,6 @@ packages:
 
   '@d-fischer/logger@4.2.4':
     resolution: {integrity: sha512-TFMZ/SVW8xyQtyJw9Rcuci4betSKy0qbQn2B5+1+72vVXeO8Qb1pYvuwF5qr0vDGundmSWq7W8r19nVPnXXSvA==}
-
-  '@d-fischer/qs@7.0.2':
-    resolution: {integrity: sha512-yAu3xDooiL+ef84Jo8nLjDjWBRk7RXk163Y6aTvRB7FauYd3spQD/dWvgT7R4CrN54Juhrrc3dMY7mc+jZGurQ==}
-    engines: {node: '>=0.6'}
 
   '@d-fischer/rate-limiter@1.1.0':
     resolution: {integrity: sha512-O5HgACwApyCZhp4JTEBEtbv/W3eAwEkrARFvgWnEsDmXgCMWjIHwohWoHre5BW6IYXFSHBGsuZB/EvNL3942kQ==}
@@ -3621,27 +3614,27 @@ packages:
     peerDependencies:
       typescript: '>=5.7.2'
 
-  '@twurple/api-call@7.4.0':
-    resolution: {integrity: sha512-WNxvjp/hMqZREElbvE4rHMyUIrHdGY5cbG8xbqgSM9CESFvJ1wm5BubhyANOyKd1TxABacLddbfbO//Fz9YHgA==}
+  '@twurple/api-call@8.0.2':
+    resolution: {integrity: sha512-Qalqb20+VdFKcRpWe9lRoatLxbsCCcbUS70ODQ0pcRgNvVYO4SIL1FcoOwNK+ra1Gtu7x2DdYnJn1Era1HhIOg==}
 
-  '@twurple/api@7.4.0':
-    resolution: {integrity: sha512-RlXLs4ZvS8n0+iIk7YyVDwrjhlwpn+N+h7fX5Q61HoxlmzoCShmnnFo03abYw9i8Cc3deGpbQATOSVmigXM4qg==}
+  '@twurple/api@8.0.2':
+    resolution: {integrity: sha512-zBWU/UaNGjCu5IQzYTWJONbG7FyXtDP5TYRVIKdUqZ3EXCi9H6j6kcx+GVNfikd3zx7boHDVZqCzOt4VGdgsPA==}
     peerDependencies:
-      '@twurple/auth': 7.4.0
+      '@twurple/auth': 8.0.2
 
-  '@twurple/auth@7.4.0':
-    resolution: {integrity: sha512-WAQV6nJGkfY7r2BkRYhnzUpdfozLvjNsCxkyNVprl4dCWdJzccnTvqkKTdDRJc5ZJxDVaB9Drzwx9/fCp/gRDA==}
+  '@twurple/auth@8.0.2':
+    resolution: {integrity: sha512-FbkZqvyw7ZedMdXKP2xDQ/G22EY56LB0J14yZXHfrcLDnh7yofgAe8nQAT4gDIF+kl51AnMxt1Zsay6C8b2Gmw==}
 
-  '@twurple/chat@7.4.0':
-    resolution: {integrity: sha512-SYppFwnWt7I8mH/I7fF/ZPO61aBzOz7BOOHQhVWzuQ/7qgPfZnmPJmUwfMnsMmKJ95TfsScZnAWxhdwNdRe3wg==}
+  '@twurple/chat@8.0.2':
+    resolution: {integrity: sha512-lYVTz8EoZuPf+RanEs/hvCiNLE5bfLYQA+4CMjBOaDZM1rn2lAGqZcUTH+LMefBt5wdYAi9+34U/ul5lWDZ7aw==}
     peerDependencies:
-      '@twurple/auth': 7.4.0
+      '@twurple/auth': 8.0.2
 
-  '@twurple/common@7.4.0':
-    resolution: {integrity: sha512-lX5cVkYar6jGvni6iLmMYjhxH1oPSl2v7XVeZ4C7U1GbLz/Jwk0L0uldQNGUIf9gpRHPY+TXRlk0UIpz2yo8DA==}
+  '@twurple/common@8.0.2':
+    resolution: {integrity: sha512-67PpI8z0KAQhgjpf4vdKLC/jur7iHFay4whtJ4EP+Tj/qHBqgfjHxKIhFpRJqpTb+68TpUz0v2J5CVA7ugMDuQ==}
 
-  '@twurple/easy-bot@7.4.0':
-    resolution: {integrity: sha512-mJIyPBRsvb7wOJeHQqR3Xz3Zv67HwvRufZf4MZ89BpVzVV+0WDUPVrbacYwqK3Rvq23NlwIFZ2NnlK77t9MIEQ==}
+  '@twurple/easy-bot@8.0.2':
+    resolution: {integrity: sha512-9TDGxUBWJ2Ys4LGs3QwtsFhGxB8OrUPu0p9nk6ljswPWuBhLvHspQM0sJTH9pb7QgBF4GqevpHCkE1JfGHX+dQ==}
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
@@ -6043,15 +6036,6 @@ packages:
   node-fetch-native@1.6.7:
     resolution: {integrity: sha512-g9yhqoedzIUm0nTnTqAQvueMPVOuIY16bqgAJJC8XOOubYFNwz6IER9qs0Gq2Xd0+CecCKFjtdDTMA4u4xG06Q==}
 
-  node-fetch@2.7.0:
-    resolution: {integrity: sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==}
-    engines: {node: 4.x || >=6.0.0}
-    peerDependencies:
-      encoding: ^0.1.0
-    peerDependenciesMeta:
-      encoding:
-        optional: true
-
   node-releases@2.0.27:
     resolution: {integrity: sha512-nmh3lCkYZ3grZvqcCH+fjmQ7X+H0OeZgP40OierEaAptX4XofMh5kwNbWh7lBduUzCcV/8kZ+NDLCwm2iorIlA==}
 
@@ -6970,9 +6954,6 @@ packages:
     resolution: {integrity: sha512-kXuRi1mtaKMrsLUxz3sQYvVl37B0Ns6MzfrtV5DvJceE9bPyspOqk9xxv7XbZWcfLWbFmm997vl83qUWVJA64w==}
     engines: {node: '>=16'}
 
-  tr46@0.0.3:
-    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
-
   tr46@6.0.0:
     resolution: {integrity: sha512-bLVMLPtstlZ4iMQHpFHTR7GAGj2jxi8Dg0s2h2MafAE4uSWF98FC/3MomU51iQAMf8/qDUbKWf5GxuvvVcXEhw==}
     engines: {node: '>=20'}
@@ -7286,9 +7267,6 @@ packages:
     resolution: {integrity: sha512-c5EGNOiyxxV5qmTtAB7rbiXxi1ooX1pQKMLX/MIabJjRA0SJBQOjKF+KSVfHkr9U1cADPon0mRiVe/riyaiDUA==}
     engines: {node: '>=10.13.0'}
 
-  webidl-conversions@3.0.1:
-    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
-
   webidl-conversions@8.0.0:
     resolution: {integrity: sha512-n4W4YFyz5JzOfQeA8oN7dUYpR+MBP3PIUsn2jLjWXwK5ASUzt0Jc/A5sAUZoCYFJRGF0FBKJ+1JjN43rNdsQzA==}
     engines: {node: '>=20'}
@@ -7318,9 +7296,6 @@ packages:
   whatwg-url@15.1.0:
     resolution: {integrity: sha512-2ytDk0kiEj/yu90JOAp44PVPUkO9+jVhyf+SybKlRHSDlvOOZhdPIrr7xTH64l4WixO2cP+wQIcgujkGBPPz6g==}
     engines: {node: '>=20'}
-
-  whatwg-url@5.0.0:
-    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
 
   which-boxed-primitive@1.1.1:
     resolution: {integrity: sha512-TbX3mj8n0odCBFVlY8AxkqcHASw3L60jIuF8jFP78az3C2YhmGvqbHBpAjTRH2/xqYunrJ9g1jSyjCjpoWzIAA==}
@@ -8221,12 +8196,6 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@d-fischer/cross-fetch@5.0.5':
-    dependencies:
-      node-fetch: 2.7.0
-    transitivePeerDependencies:
-      - encoding
-
   '@d-fischer/deprecate@2.0.2': {}
 
   '@d-fischer/detect-node@3.0.1': {}
@@ -8242,8 +8211,6 @@ snapshots:
       '@d-fischer/detect-node': 3.0.1
       '@d-fischer/shared-utils': 3.6.4
       tslib: 2.8.1
-
-  '@d-fischer/qs@7.0.2': {}
 
   '@d-fischer/rate-limiter@1.1.0':
     dependencies:
@@ -11035,45 +11002,36 @@ snapshots:
     dependencies:
       typescript: 5.9.3
 
-  '@twurple/api-call@7.4.0':
+  '@twurple/api-call@8.0.2':
     dependencies:
-      '@d-fischer/cross-fetch': 5.0.5
-      '@d-fischer/qs': 7.0.2
       '@d-fischer/shared-utils': 3.6.4
-      '@twurple/common': 7.4.0
+      '@twurple/common': 8.0.2
       tslib: 2.8.1
-    transitivePeerDependencies:
-      - encoding
 
-  '@twurple/api@7.4.0(@twurple/auth@7.4.0)':
+  '@twurple/api@8.0.2(@twurple/auth@8.0.2)':
     dependencies:
       '@d-fischer/cache-decorators': 4.0.1
-      '@d-fischer/cross-fetch': 5.0.5
       '@d-fischer/detect-node': 3.0.1
       '@d-fischer/logger': 4.2.4
       '@d-fischer/rate-limiter': 1.1.0
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/api-call': 7.4.0
-      '@twurple/auth': 7.4.0
-      '@twurple/common': 7.4.0
+      '@twurple/api-call': 8.0.2
+      '@twurple/auth': 8.0.2
+      '@twurple/common': 8.0.2
       retry: 0.13.1
       tslib: 2.8.1
-    transitivePeerDependencies:
-      - encoding
 
-  '@twurple/auth@7.4.0':
+  '@twurple/auth@8.0.2':
     dependencies:
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/api-call': 7.4.0
-      '@twurple/common': 7.4.0
+      '@twurple/api-call': 8.0.2
+      '@twurple/common': 8.0.2
       tslib: 2.8.1
-    transitivePeerDependencies:
-      - encoding
 
-  '@twurple/chat@7.4.0(@twurple/auth@7.4.0)':
+  '@twurple/chat@8.0.2(@twurple/auth@8.0.2)':
     dependencies:
       '@d-fischer/cache-decorators': 4.0.1
       '@d-fischer/deprecate': 2.0.2
@@ -11081,33 +11039,32 @@ snapshots:
       '@d-fischer/rate-limiter': 1.1.0
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/auth': 7.4.0
-      '@twurple/common': 7.4.0
+      '@twurple/auth': 8.0.2
+      '@twurple/common': 8.0.2
       ircv3: 0.33.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@twurple/common@7.4.0':
+  '@twurple/common@8.0.2':
     dependencies:
       '@d-fischer/shared-utils': 3.6.4
       klona: 2.0.6
       tslib: 2.8.1
 
-  '@twurple/easy-bot@7.4.0':
+  '@twurple/easy-bot@8.0.2':
     dependencies:
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/api': 7.4.0(@twurple/auth@7.4.0)
-      '@twurple/auth': 7.4.0
-      '@twurple/chat': 7.4.0(@twurple/auth@7.4.0)
-      '@twurple/common': 7.4.0
+      '@twurple/api': 8.0.2(@twurple/auth@8.0.2)
+      '@twurple/auth': 8.0.2
+      '@twurple/chat': 8.0.2(@twurple/auth@8.0.2)
+      '@twurple/common': 8.0.2
       tslib: 2.8.1
     transitivePeerDependencies:
       - bufferutil
-      - encoding
       - utf-8-validate
 
   '@tybys/wasm-util@0.9.0':
@@ -13962,10 +13919,6 @@ snapshots:
 
   node-fetch-native@1.6.7: {}
 
-  node-fetch@2.7.0:
-    dependencies:
-      whatwg-url: 5.0.0
-
   node-releases@2.0.27: {}
 
   normalize-package-data@8.0.0:
@@ -15046,8 +14999,6 @@ snapshots:
     dependencies:
       tldts: 7.0.18
 
-  tr46@0.0.3: {}
-
   tr46@6.0.0:
     dependencies:
       punycode: 2.3.1
@@ -15386,8 +15337,6 @@ snapshots:
       glob-to-regexp: 0.4.1
       graceful-fs: 4.2.11
 
-  webidl-conversions@3.0.1: {}
-
   webidl-conversions@8.0.0: {}
 
   webpack-sources@3.3.3: {}
@@ -15434,11 +15383,6 @@ snapshots:
     dependencies:
       tr46: 6.0.0
       webidl-conversions: 8.0.0
-
-  whatwg-url@5.0.0:
-    dependencies:
-      tr46: 0.0.3
-      webidl-conversions: 3.0.1
 
   which-boxed-primitive@1.1.1:
     dependencies:
