@@ -44,8 +44,8 @@ importers:
         specifier: ^7.4.0
         version: 7.4.0
       '@twurple/chat':
-        specifier: ^7.4.0
-        version: 7.4.0(@twurple/auth@7.4.0)
+        specifier: ^8.0.2
+        version: 8.0.2(@twurple/auth@7.4.0)
       '@twurple/easy-bot':
         specifier: ^7.4.0
         version: 7.4.0
@@ -248,8 +248,8 @@ importers:
         specifier: ^11.7.2
         version: 11.7.2(typescript@5.9.3)
       '@twurple/chat':
-        specifier: ^7.4.0
-        version: 7.4.0(@twurple/auth@7.4.0)
+        specifier: ^8.0.2
+        version: 8.0.2(@twurple/auth@7.4.0)
       '@upstash/ratelimit':
         specifier: ^2.0.7
         version: 2.0.7(@upstash/redis@1.35.6)
@@ -499,7 +499,7 @@ importers:
         version: 4.0.13(@types/debug@4.1.12)(@types/node@22.19.1)(jiti@2.6.1)(jsdom@27.2.0)(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.20.6)(yaml@2.8.1)
       webpack:
         specifier: ^5.103.0
-        version: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)
+        version: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))
 
 packages:
 
@@ -515,9 +515,6 @@ packages:
     peerDependencies:
       tailwindcss: ^4.0.0
       zod: ^4.0.0
-    peerDependenciesMeta:
-      tailwindcss:
-        optional: true
 
   '@ark/schema@0.46.0':
     resolution: {integrity: sha512-c2UQdKgP2eqqDArfBqQIJppxJHvNNXuQPeuSPlDML4rjw+f1cu0qAlzOG4b8ujgm9ctIDWwhpyw6gjG5ledIVQ==}
@@ -3631,8 +3628,16 @@ packages:
     peerDependencies:
       '@twurple/auth': 7.4.0
 
+  '@twurple/chat@8.0.2':
+    resolution: {integrity: sha512-lYVTz8EoZuPf+RanEs/hvCiNLE5bfLYQA+4CMjBOaDZM1rn2lAGqZcUTH+LMefBt5wdYAi9+34U/ul5lWDZ7aw==}
+    peerDependencies:
+      '@twurple/auth': 8.0.2
+
   '@twurple/common@7.4.0':
     resolution: {integrity: sha512-lX5cVkYar6jGvni6iLmMYjhxH1oPSl2v7XVeZ4C7U1GbLz/Jwk0L0uldQNGUIf9gpRHPY+TXRlk0UIpz2yo8DA==}
+
+  '@twurple/common@8.0.2':
+    resolution: {integrity: sha512-67PpI8z0KAQhgjpf4vdKLC/jur7iHFay4whtJ4EP+Tj/qHBqgfjHxKIhFpRJqpTb+68TpUz0v2J5CVA7ugMDuQ==}
 
   '@twurple/easy-bot@7.4.0':
     resolution: {integrity: sha512-mJIyPBRsvb7wOJeHQqR3Xz3Zv67HwvRufZf4MZ89BpVzVV+0WDUPVrbacYwqK3Rvq23NlwIFZ2NnlK77t9MIEQ==}
@@ -7473,9 +7478,8 @@ snapshots:
 
   '@alveusgg/data@0.69.0(tailwindcss@4.1.17)(zod@4.1.12)':
     dependencies:
-      zod: 4.1.12
-    optionalDependencies:
       tailwindcss: 4.1.17
+      zod: 4.1.12
 
   '@ark/schema@0.46.0':
     dependencies:
@@ -11083,7 +11087,29 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
+  '@twurple/chat@8.0.2(@twurple/auth@7.4.0)':
+    dependencies:
+      '@d-fischer/cache-decorators': 4.0.1
+      '@d-fischer/deprecate': 2.0.2
+      '@d-fischer/logger': 4.2.4
+      '@d-fischer/rate-limiter': 1.1.0
+      '@d-fischer/shared-utils': 3.6.4
+      '@d-fischer/typed-event-emitter': 3.3.3
+      '@twurple/auth': 7.4.0
+      '@twurple/common': 8.0.2
+      ircv3: 0.33.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
   '@twurple/common@7.4.0':
+    dependencies:
+      '@d-fischer/shared-utils': 3.6.4
+      klona: 2.0.6
+      tslib: 2.8.1
+
+  '@twurple/common@8.0.2':
     dependencies:
       '@d-fischer/shared-utils': 3.6.4
       klona: 2.0.6
@@ -14970,17 +14996,16 @@ snapshots:
 
   tapable@2.3.0: {}
 
-  terser-webpack-plugin@5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)):
+  terser-webpack-plugin@5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.44.1
-      webpack: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)
+      webpack: 5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))
     optionalDependencies:
       '@swc/core': 1.4.17(@swc/helpers@0.5.17)
-      esbuild: 0.27.0
 
   terser@5.44.1:
     dependencies:
@@ -15387,7 +15412,7 @@ snapshots:
 
   webpack-sources@3.3.3: {}
 
-  webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0):
+  webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17)):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -15411,7 +15436,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.0
-      terser-webpack-plugin: 5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0))
+      terser-webpack-plugin: 5.3.14(@swc/core@1.4.17(@swc/helpers@0.5.17))(webpack@5.103.0(@swc/core@1.4.17(@swc/helpers@0.5.17)))
       watchpack: 2.4.4
       webpack-sources: 3.3.3
     transitivePeerDependencies:
