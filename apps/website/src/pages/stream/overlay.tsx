@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useCallback, useMemo, useState } from "react";
 
 import { queryArray } from "@/utils/array";
+import { classes } from "@/utils/classes";
 
 import useChat from "@/hooks/chat";
 
@@ -26,7 +27,7 @@ const isLayout = (layout: unknown): layout is Layout =>
 const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components
   const { query } = useRouter();
-  const _layout = isLayout(query.layout) ? query.layout : "fullscreen";
+  const layout = isLayout(query.layout) ? query.layout : "fullscreen";
   const hide = useMemo(() => new Set(queryArray(query.hide)), [query.hide]);
 
   // Add a chat command to toggle the large disclaimer
@@ -78,7 +79,14 @@ const OverlayPage: NextPage = () => {
       />
 
       {!hide.has("disclaimer") && disclaimer && (
-        <Disclaimer className="absolute inset-x-0 bottom-2 w-full text-center text-4xl" />
+        <Disclaimer
+          className={classes(
+            "absolute text-4xl",
+            layout === "6cam"
+              ? "bottom-1/3 left-1/3 w-2/3 pb-6 pl-6"
+              : "inset-x-0 bottom-2 w-full text-center",
+          )}
+        />
       )}
 
       <Cycle
