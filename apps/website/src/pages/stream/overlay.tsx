@@ -18,9 +18,15 @@ import Weather from "@/components/overlay/Weather";
 
 const cycleTime = 60;
 
+const layouts = ["fullscreen", "6cam"] as const;
+type Layout = (typeof layouts)[number];
+const isLayout = (layout: unknown): layout is Layout =>
+  layouts.includes(layout as Layout);
+
 const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components
   const { query } = useRouter();
+  const _layout = isLayout(query.layout) ? query.layout : "fullscreen";
   const hide = useMemo(() => new Set(queryArray(query.hide)), [query.hide]);
 
   // Add a chat command to toggle the large disclaimer
