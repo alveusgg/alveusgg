@@ -1,7 +1,7 @@
 import type { ChatMessage } from "@twurple/chat";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { queryArray } from "@/utils/array";
 import { classes } from "@/utils/classes";
@@ -53,6 +53,22 @@ const OverlayPage: NextPage = () => {
       }
     }, []),
   );
+
+  // Request fullscreen when the page is clicked
+  useEffect(() => {
+    const fullscreen = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {
+          // Ignore errors
+        });
+      }
+    };
+
+    document.body.addEventListener("click", fullscreen);
+    return () => {
+      document.body.removeEventListener("click", fullscreen);
+    };
+  }, []);
 
   return (
     <div className="h-screen w-full">
