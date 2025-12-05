@@ -1,11 +1,6 @@
 import { spawnSync } from "node:child_process";
 
-import {
-  Project,
-  StructureKind,
-  SyntaxKind,
-  VariableDeclarationKind,
-} from "ts-morph";
+import { Project, StructureKind, SyntaxKind } from "ts-morph";
 import { z } from "zod";
 
 const upstreamPresetsSchema = z.object({
@@ -29,59 +24,20 @@ const getUpstreamPresets = async () => {
 
 const processCamera = (project: Project, camera: UpstreamPresets) => {
   const name = camera.name;
-  const file =
-    project.addSourceFileAtPathIfExists(`src/data/presets/${name}.ts`) ||
-    project.createSourceFile(`src/data/presets/${name}.ts`);
+  const file = project.addSourceFileAtPathIfExists(
+    `src/data/presets/${name}.ts`,
+  );
+  if (!file) {
+    console.error(`No preset file found for camera ${name}`);
+    return;
+  }
 
-  let obj = file
+  const obj = file
     .getVariableDeclaration(`${name}Presets`)
     ?.getFirstDescendantByKind(SyntaxKind.ObjectLiteralExpression);
   if (!obj) {
-    obj = file
-      .addVariableStatement({
-        declarationKind: VariableDeclarationKind.Const,
-        declarations: [
-          {
-            name: `${name}Presets`,
-            type: "Record<string, Preset>",
-            initializer: (writer) => {
-              writer.block();
-            },
-          },
-        ],
-      })
-      .getFirstDescendantByKindOrThrow(SyntaxKind.ObjectLiteralExpression);
-
-    // Add an import for the `Preset` type at the top of the file
-    file.addImportDeclaration({
-      moduleSpecifier: "../tech/cameras.types",
-      namedImports: ["Preset"],
-      isTypeOnly: true,
-    });
-
-    // Add the main camera export at the bottom of the file
-    file
-      .addVariableStatement({
-        declarationKind: VariableDeclarationKind.Const,
-        declarations: [
-          {
-            name: name,
-            initializer: (writer) => {
-              writer.block(() => {
-                writer.writeLine(`title: "${camera.name}",`);
-                writer.writeLine(`group: "${name}",`);
-                writer.writeLine(`presets: ${name}Presets,`);
-              });
-            },
-          },
-        ],
-      })
-      .prependWhitespace("\n");
-
-    file.addExportAssignment({
-      expression: name,
-      isExportEquals: false,
-    });
+    console.error(`No presets object found for camera ${name}`);
+    return;
   }
 
   const presets = new Set(camera.presets);
@@ -149,11 +105,13 @@ const main = async () => {
   const upstreamPresets = await getUpstreamPresets();
   upstreamPresets.forEach((camera) => processCamera(project, camera));
 
-  // Remove any preset files that are no longer in the upstream list
+  // Warn about any local preset files that don't have a corresponding upstream camera
   const cameras = new Set(upstreamPresets.map((camera) => camera.name));
   project.addSourceFilesAtPaths("src/data/presets/*.ts").forEach((file) => {
     if (!cameras.has(file.getBaseNameWithoutExtension())) {
-      file.delete();
+      console.warn(
+        `No upstream camera found for preset file ${file.getBaseName()}`,
+      );
     }
   });
 
