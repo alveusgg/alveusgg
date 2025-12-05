@@ -1,4 +1,5 @@
 import { spawnSync } from "node:child_process";
+import { unlink } from "node:fs/promises";
 
 import { Project, StructureKind, SyntaxKind } from "ts-morph";
 import { z } from "zod";
@@ -102,8 +103,26 @@ const processCamera = (project: Project, camera: UpstreamPresets) => {
   }
 
   // Remove any imports that are no longer used
-  // TODO: Remove old preset images
-  file.fixUnusedIdentifiers();
+  const removed = file
+    .getImportDeclarations()
+    .map((imp) => {
+      const importDefault = imp.getDefaultImport();
+      if (
+        !importDefault ||
+        importDefault
+          .findReferencesAsNodes()
+          .filter((ref) => ref !== importDefault).length > 0
+      ) {
+        return null;
+      }
+
+      const importPath = imp.getModuleSpecifierValue();
+      imp.remove();
+      return importPath;
+    })
+    .filter((imp) => imp !== null);
+
+  return { removed };
 };
 
 const main = async () => {
@@ -111,7 +130,17 @@ const main = async () => {
 
   // Update all the preset data files for each camera from the upstream API
   const upstreamPresets = await getUpstreamPresets();
-  upstreamPresets.forEach((camera) => processCamera(project, camera));
+  const { removed } = upstreamPresets
+    .map((camera) => processCamera(project, camera))
+    .reduce<{ removed: string[] }>(
+      (acc, curr) => {
+        if (curr) {
+          acc.removed.push(...curr.removed);
+        }
+        return acc;
+      },
+      { removed: [] },
+    );
 
   // Warn about any local preset files that don't have a corresponding upstream camera
   const cameras = new Set(
@@ -142,6 +171,16 @@ const main = async () => {
     );
     process.exit(prettier.status || 1);
   }
+
+  // Clean up any imported images that are no longer used
+  await Promise.all(
+    removed.map((importPath) =>
+      unlink(
+        project.getDirectoryOrThrow("src").getPath() +
+          importPath.replace("@/", "/"),
+      ),
+    ),
+  );
 };
 
 await main();
