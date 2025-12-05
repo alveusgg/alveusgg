@@ -4,6 +4,7 @@ import bughotel2 from "@/assets/presets/garden/bughotel2.png";
 import bughotel from "@/assets/presets/garden/bughotel.png";
 import gate from "@/assets/presets/garden/gate.png";
 import home from "@/assets/presets/garden/home.png";
+import katydidbughunt from "@/assets/presets/garden/katydidbughunt.png";
 import pasturebrush from "@/assets/presets/garden/pasturebrush.png";
 import pasturegrove from "@/assets/presets/garden/pasturegrove.png";
 import pastureleft from "@/assets/presets/garden/pastureleft.png";
@@ -13,9 +14,13 @@ import pasturewater from "@/assets/presets/garden/pasturewater.png";
 import poolright from "@/assets/presets/garden/poolright.png";
 import roundpen from "@/assets/presets/garden/roundpen.png";
 import sunrise from "@/assets/presets/garden/sunrise.png";
+import sunriser from "@/assets/presets/garden/sunriser.png";
 import tccenter from "@/assets/presets/garden/tccenter.png";
 import tcleft from "@/assets/presets/garden/tcleft.png";
 import tcright from "@/assets/presets/garden/tcright.png";
+import tmp1 from "@/assets/presets/garden/tmp1.png";
+import tmp2 from "@/assets/presets/garden/tmp2.png";
+import tmp3 from "@/assets/presets/garden/tmp3.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -43,6 +48,10 @@ const gardenPresets: Record<string, Preset> = {
   gate: {
     description: "Gate",
     image: gate,
+  },
+  katydidbughunt: {
+    description: "katydidbughunt",
+    image: katydidbughunt,
   },
   pasturebrush: {
     description: "Pasture Brush",
@@ -80,6 +89,10 @@ const gardenPresets: Record<string, Preset> = {
     description: "Sunrise",
     image: sunrise,
   },
+  sunriser: {
+    description: "sunriser",
+    image: sunriser,
+  },
   tccenter: {
     description: "TC Center",
     image: tccenter,
@@ -91,6 +104,18 @@ const gardenPresets: Record<string, Preset> = {
   tcright: {
     description: "TC Right",
     image: tcright,
+  },
+  tmp1: {
+    description: "tmp1",
+    image: tmp1,
+  },
+  tmp2: {
+    description: "tmp2",
+    image: tmp2,
+  },
+  tmp3: {
+    description: "tmp3",
+    image: tmp3,
   },
 };
 

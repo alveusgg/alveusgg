@@ -9,6 +9,7 @@ import kiwibottomleft from "@/assets/presets/tarantulaptz/kiwibottomleft.png";
 import kiwibottomright from "@/assets/presets/tarantulaptz/kiwibottomright.png";
 import kiwitopleft from "@/assets/presets/tarantulaptz/kiwitopleft.png";
 import kiwitopright from "@/assets/presets/tarantulaptz/kiwitopright.png";
+import tmp from "@/assets/presets/tarantulaptz/tmp.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -56,6 +57,10 @@ const tarantulaptzPresets: Record<string, Preset> = {
   kiwitopright: {
     description: "Kiwi Top Right",
     image: kiwitopright,
+  },
+  tmp: {
+    description: "tmp",
+    image: tmp,
   },
 };
 

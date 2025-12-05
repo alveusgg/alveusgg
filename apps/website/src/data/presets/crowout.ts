@@ -21,6 +21,7 @@ import stick from "@/assets/presets/crowout/stick.png";
 import stickl from "@/assets/presets/crowout/stickl.png";
 import stickz from "@/assets/presets/crowout/stickz.png";
 import table from "@/assets/presets/crowout/table.png";
+import temp from "@/assets/presets/crowout/temp.png";
 import training from "@/assets/presets/crowout/training.png";
 import tree from "@/assets/presets/crowout/tree.png";
 import treeb from "@/assets/presets/crowout/treeb.png";
@@ -122,6 +123,10 @@ const crowoutPresets: Record<string, Preset> = {
   table: {
     description: "indoor crow table",
     image: table,
+  },
+  temp: {
+    description: "temp",
+    image: temp,
   },
   training: {
     description: "training area",

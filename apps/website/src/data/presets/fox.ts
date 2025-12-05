@@ -35,9 +35,9 @@ import rightcorner from "@/assets/presets/fox/rightcorner.png";
 import righttraining from "@/assets/presets/fox/righttraining.png";
 import shade from "@/assets/presets/fox/shade.png";
 import table from "@/assets/presets/fox/table.png";
+import temp from "@/assets/presets/fox/temp.png";
 import treeclimb from "@/assets/presets/fox/treeclimb.png";
 import treehouse from "@/assets/presets/fox/treehouse.png";
-import treehousefl from "@/assets/presets/fox/treehousefl.png";
 import treehousel from "@/assets/presets/fox/treehousel.png";
 import treehouser from "@/assets/presets/fox/treehouser.png";
 import treer from "@/assets/presets/fox/treer.png";
@@ -57,10 +57,6 @@ const foxPresets: Record<string, Preset> = {
     description: "Behind Tree (below platform)",
     image: behindtree,
   },
-  bench: {
-    description: "Bench",
-    image: bench,
-  },
   belowplatform: {
     description: "Below Platform",
     image: belowplatform,
@@ -72,6 +68,10 @@ const foxPresets: Record<string, Preset> = {
   belowramp: {
     description: "Below Ramp",
     image: belowramp,
+  },
+  bench: {
+    description: "Bench",
+    image: bench,
   },
   brush: {
     description: "Brush",
@@ -193,6 +193,10 @@ const foxPresets: Record<string, Preset> = {
     description: "Table",
     image: table,
   },
+  temp: {
+    description: "temp",
+    image: temp,
+  },
   treeclimb: {
     description: "Tree Climb",
     image: treeclimb,
@@ -200,10 +204,6 @@ const foxPresets: Record<string, Preset> = {
   treehouse: {
     description: "Tree House",
     image: treehouse,
-  },
-  treehousefl: {
-    description: "Tree House Front Left",
-    image: treehousefl,
   },
   treehousel: {
     description: "Tree House Left",

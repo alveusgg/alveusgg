@@ -1,3 +1,4 @@
+import bedtmp from "@/assets/presets/wolfindoor/bedtmp.png";
 import center from "@/assets/presets/wolfindoor/center.png";
 import doors from "@/assets/presets/wolfindoor/doors.png";
 import down from "@/assets/presets/wolfindoor/down.png";
@@ -11,8 +12,10 @@ import neardoor from "@/assets/presets/wolfindoor/neardoor.png";
 import platformcenter from "@/assets/presets/wolfindoor/platformcenter.png";
 import platformleft from "@/assets/presets/wolfindoor/platformleft.png";
 import platformleftb from "@/assets/presets/wolfindoor/platformleftb.png";
+import platformlefttop from "@/assets/presets/wolfindoor/platformlefttop.png";
 import platformright from "@/assets/presets/wolfindoor/platformright.png";
 import platformrightb from "@/assets/presets/wolfindoor/platformrightb.png";
+import reedtmp from "@/assets/presets/wolfindoor/reedtmp.png";
 import right from "@/assets/presets/wolfindoor/right.png";
 import water from "@/assets/presets/wolfindoor/water.png";
 
@@ -22,6 +25,10 @@ const wolfindoorPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+  },
+  bedtmp: {
+    description: "bedtmp",
+    image: bedtmp,
   },
   center: {
     description: "Center",
@@ -71,6 +78,10 @@ const wolfindoorPresets: Record<string, Preset> = {
     description: "Platform Left bottom",
     image: platformleftb,
   },
+  platformlefttop: {
+    description: "platformlefttop",
+    image: platformlefttop,
+  },
   platformright: {
     description: "Platform Right",
     image: platformright,
@@ -78,6 +89,10 @@ const wolfindoorPresets: Record<string, Preset> = {
   platformrightb: {
     description: "Platform Right bottom",
     image: platformrightb,
+  },
+  reedtmp: {
+    description: "reedtmp",
+    image: reedtmp,
   },
   right: {
     description: "Right",

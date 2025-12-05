@@ -7,6 +7,7 @@ import home from "@/assets/presets/toast/home.png";
 import log from "@/assets/presets/toast/log.png";
 import logz from "@/assets/presets/toast/logz.png";
 import rocksandwich from "@/assets/presets/toast/rocksandwich.png";
+import toastsleep from "@/assets/presets/toast/toastsleep.png";
 import tunnel from "@/assets/presets/toast/tunnel.png";
 import water from "@/assets/presets/toast/water.png";
 
@@ -48,6 +49,10 @@ const toastPresets: Record<string, Preset> = {
   rocksandwich: {
     description: "Rock Sandwich",
     image: rocksandwich,
+  },
+  toastsleep: {
+    description: "toastsleep",
+    image: toastsleep,
   },
   tunnel: {
     description: "Tunnel",

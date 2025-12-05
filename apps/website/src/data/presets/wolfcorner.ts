@@ -1,3 +1,4 @@
+import awasleeptmp from "@/assets/presets/wolfcorner/awasleeptmp.png";
 import back from "@/assets/presets/wolfcorner/back.png";
 import backfence from "@/assets/presets/wolfcorner/backfence.png";
 import belowplatform from "@/assets/presets/wolfcorner/belowplatform.png";
@@ -52,6 +53,10 @@ const wolfcornerPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+  },
+  awasleeptmp: {
+    description: "awasleeptmp",
+    image: awasleeptmp,
   },
   back: {
     description: "Back",
