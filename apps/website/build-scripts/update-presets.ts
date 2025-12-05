@@ -192,6 +192,10 @@ const main = async () => {
 
   // Save all the modified files and run Prettier on them
   const modified = project.getSourceFiles().filter((file) => !file.isSaved());
+  if (!modified.length) {
+    console.log("No changes to presets");
+    return;
+  }
   await project.save();
   const prettier = spawnSync("pnpm", [
     "exec",
