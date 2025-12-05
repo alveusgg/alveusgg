@@ -5,6 +5,9 @@ on:
   schedule:
     # Run every day at midnight to sync any changes from the day
     - cron: "0 0 * * *"
+  push:
+    branches:
+      - MattIPv4/sync-presets-ptz-app
 
 jobs:
   update:
