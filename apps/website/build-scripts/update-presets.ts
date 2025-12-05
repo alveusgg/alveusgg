@@ -1,5 +1,6 @@
 import { spawnSync } from "node:child_process";
-import { unlink } from "node:fs/promises";
+import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { dirname } from "node:path";
 
 import { Project, StructureKind, SyntaxKind } from "ts-morph";
 import { z } from "zod";
@@ -31,7 +32,20 @@ const getUpstreamPresets = async () => {
   return z.array(upstreamPresetsSchema).parse(data);
 };
 
-const processCamera = (project: Project, camera: UpstreamPresets) => {
+const getUpstreamImage = async (camera: string, preset: string) => {
+  const response = await fetch(
+    `https://ptz.app/images/button-img/${encodeURIComponent(camera)}/${encodeURIComponent(preset)}.png`,
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch upstream image for ${camera} ${preset}: ${response.status} ${response.statusText}`,
+    );
+  }
+
+  return response.arrayBuffer();
+};
+
+const processCamera = async (project: Project, camera: UpstreamPresets) => {
   const name = upstreamCameraMap[camera.name] || camera.name;
   const file = project.addSourceFileAtPathIfExists(
     `src/data/presets/${name}.ts`,
@@ -50,28 +64,39 @@ const processCamera = (project: Project, camera: UpstreamPresets) => {
   }
 
   const presets = new Set(camera.presets);
+  const added: [string, ArrayBuffer][] = [];
   for (const preset of camera.presets) {
     const existing = obj.getProperty(preset);
     if (existing) continue;
 
-    // Add a new property for the preset
-    obj.addPropertyAssignment({
-      name: preset,
-      initializer: (writer) => {
-        writer.block(() => {
-          writer.writeLine(`description: "${preset}",`);
-          writer.writeLine(`image: ${preset},`);
-        });
-      },
-    });
+    try {
+      // Download the preset image from the upstream API and add an import for it
+      // Intentionally use the original camera name here for the upstream API, not the mapped name
+      const data = await getUpstreamImage(camera.name, preset);
+      const imp = file.addImportDeclaration({
+        moduleSpecifier: `@/assets/presets/${name}/${preset}.png`,
+        defaultImport: preset,
+      });
+      added.push([imp.getModuleSpecifierValue(), data]);
 
-    // Add a new import for the preset image at the top of the file
-    file.addImportDeclaration({
-      moduleSpecifier: `@/assets/presets/${name}/${preset}.png`,
-      defaultImport: preset,
-    });
-
-    // TODO: Download and save the preset image locally
+      // Add a new property for the preset
+      obj.addPropertyAssignment({
+        name: preset,
+        initializer: (writer) => {
+          writer.block(() => {
+            writer.writeLine(`description: "${preset}",`);
+            writer.writeLine(`image: ${preset},`);
+          });
+        },
+      });
+    } catch (error) {
+      // Log an error on failure but continue processing other presets
+      // We should only hit this if the upstream API does not have an image for the preset
+      console.error(
+        `Failed to process preset ${preset} for camera ${name}:`,
+        error instanceof Error ? error.message : error,
+      );
+    }
   }
 
   // Sort the presets alphabetically
@@ -122,7 +147,7 @@ const processCamera = (project: Project, camera: UpstreamPresets) => {
     })
     .filter((imp) => imp !== null);
 
-  return { removed };
+  return { added, removed };
 };
 
 const main = async () => {
@@ -130,17 +155,20 @@ const main = async () => {
 
   // Update all the preset data files for each camera from the upstream API
   const upstreamPresets = await getUpstreamPresets();
-  const { removed } = upstreamPresets
-    .map((camera) => processCamera(project, camera))
-    .reduce<{ removed: string[] }>(
+  const { added, removed } = await Promise.all(
+    upstreamPresets.map((camera) => processCamera(project, camera)),
+  ).then((results) =>
+    results.reduce<{ added: [string, ArrayBuffer][]; removed: string[] }>(
       (acc, curr) => {
         if (curr) {
+          acc.added.push(...curr.added);
           acc.removed.push(...curr.removed);
         }
         return acc;
       },
-      { removed: [] },
-    );
+      { added: [], removed: [] },
+    ),
+  );
 
   // Warn about any local preset files that don't have a corresponding upstream camera
   const cameras = new Set(
@@ -171,6 +199,17 @@ const main = async () => {
     );
     process.exit(prettier.status || 1);
   }
+
+  // Write all the newly imported images to disk
+  await Promise.all(
+    added.map(async ([importPath, data]) => {
+      const path =
+        project.getDirectoryOrThrow("src").getPath() +
+        importPath.replace("@/", "/");
+      await mkdir(dirname(path), { recursive: true });
+      await writeFile(path, Buffer.from(data));
+    }),
+  );
 
   // Clean up any imported images that are no longer used
   await Promise.all(
