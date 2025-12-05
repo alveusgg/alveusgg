@@ -69,6 +69,12 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
     const existing = obj.getProperty(preset);
     if (existing) continue;
 
+    // Ignore any temporary presets
+    if (/^te?mp/i.test(preset) || /te?mp$/i.test(preset)) {
+      console.warn(`Ignoring temporary preset ${preset} for camera ${name}`);
+      continue;
+    }
+
     try {
       // Download the preset image from the upstream API and add an import for it
       // Intentionally use the original camera name here for the upstream API, not the mapped name
