@@ -3,6 +3,14 @@ import { spawnSync } from "node:child_process";
 import { Project, StructureKind, SyntaxKind } from "ts-morph";
 import { z } from "zod";
 
+const upstreamCameraMap: Record<string, string> = {
+  chickenin: "chickenindoor",
+  pushcrunch: "pushpopcrunch",
+  pushinptz: "pushpopindoor",
+  parrots: "littles",
+  macaw: "macaws",
+};
+
 const upstreamPresetsSchema = z.object({
   name: z.string().toLowerCase(),
   presets: z.array(z.string()),
@@ -23,7 +31,7 @@ const getUpstreamPresets = async () => {
 };
 
 const processCamera = (project: Project, camera: UpstreamPresets) => {
-  const name = camera.name;
+  const name = upstreamCameraMap[camera.name] || camera.name;
   const file = project.addSourceFileAtPathIfExists(
     `src/data/presets/${name}.ts`,
   );
@@ -106,7 +114,11 @@ const main = async () => {
   upstreamPresets.forEach((camera) => processCamera(project, camera));
 
   // Warn about any local preset files that don't have a corresponding upstream camera
-  const cameras = new Set(upstreamPresets.map((camera) => camera.name));
+  const cameras = new Set(
+    upstreamPresets.map(
+      (camera) => upstreamCameraMap[camera.name] || camera.name,
+    ),
+  );
   project.addSourceFilesAtPaths("src/data/presets/*.ts").forEach((file) => {
     if (!cameras.has(file.getBaseNameWithoutExtension())) {
       console.warn(
