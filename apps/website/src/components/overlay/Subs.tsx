@@ -29,7 +29,7 @@ const Subs = ({ className, ...props }: HTMLProps<HTMLParagraphElement>) => {
     <p
       className={classes(
         className,
-        "text-3xl font-medium text-white tabular-nums text-stroke-2",
+        "text-xl font-bold text-white tabular-nums text-stroke",
       )}
       {...props}
     >
