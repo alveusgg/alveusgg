@@ -71,6 +71,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     link: "https://amzn.to/4moWrRz",
     thickness: thickness.sm, // 290 pages
     color: "border-black",
+    vodId: "L-VuRN1_ekA",
   },
   // no 2025-07 book
   {
