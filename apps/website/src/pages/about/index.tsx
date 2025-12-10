@@ -968,14 +968,19 @@ const AboutAlveusPage: NextPage = () => {
                   )}
                 </Link>
               ) : (
-                <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-linear-to-br from-alveus-green-900/90 to-alveus-green-700/90 p-4">
+                <Link
+                  href={item.href}
+                  external
+                  className="group/trigger flex aspect-video w-full items-center justify-center rounded-2xl bg-linear-to-br from-alveus-green-900/90 to-alveus-green-700/90 p-4 shadow-xl transition hover:scale-102 hover:shadow-2xl"
+                  custom
+                >
                   <Image
                     src={item.logo}
                     alt=""
                     width={480}
-                    className="h-12 w-auto object-contain"
+                    className="pointer-events-none h-12 w-auto object-contain drop-shadow-md transition group-hover/trigger:scale-102 group-hover/trigger:drop-shadow-xl"
                   />
-                </div>
+                </Link>
               )}
             </div>
           ))}
