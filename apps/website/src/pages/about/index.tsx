@@ -1,5 +1,5 @@
 import { type NextPage } from "next";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { type ReactNode, useState } from "react";
 
 import { env } from "@/env";
@@ -33,13 +33,14 @@ import {
 } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
-import IconDocument from "@/icons/IconDocument";
 import IconExternal from "@/icons/IconExternal";
 import IconQuote from "@/icons/IconQuote";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import forbes from "@/assets/in-the-news/forbes.svg";
+import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
 
 const sectionLinks = [
   { name: "Twitch.tv", href: "#twitch" },
@@ -122,9 +123,10 @@ type NewsCore = {
 type NewsArticle = {
   href: string;
   quote: string;
+  logo: StaticImageData;
 };
 
-type NewsVideo = Partial<NewsArticle> & {
+type NewsVideo = Partial<Omit<NewsArticle, "logo">> & {
   video: ({ type: "stream" } & StreamSource) | { type: "youtube"; id: string };
 };
 
@@ -157,6 +159,7 @@ const news: Record<string, News> = {
     href: "https://www.forbes.com/sites/anharkarim/2025/12/01/what-makes-twitch-streams-so-engaging/",
     quote:
       "Conservationist and Twitch streamer Maya Higa brings education and entertainment to the platform",
+    logo: forbes,
   },
   lowes: {
     title: "Lowe's Red Vests x MrBeast",
@@ -173,6 +176,7 @@ const news: Record<string, News> = {
     href: "https://www.yahoo.com/entertainment/articles/winnie-cow-going-viral-twitch-220000265.html",
     quote:
       "Twitch isn't just for gamers anymore, as evidenced by a cow named Winnie who has become a viral sensation on the livestreaming platform",
+    logo: yahooEntertainment,
   },
   powderBlue: {
     title: "Powder Blue",
@@ -964,8 +968,13 @@ const AboutAlveusPage: NextPage = () => {
                   )}
                 </Link>
               ) : (
-                <div className="relative aspect-video w-full rounded-2xl bg-linear-to-br from-alveus-green-800 to-alveus-green-600 opacity-75">
-                  <IconDocument className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2 text-alveus-green-900" />
+                <div className="flex aspect-video w-full items-center justify-center rounded-2xl bg-linear-to-br from-alveus-green-900/90 to-alveus-green-700/90 p-4">
+                  <Image
+                    src={item.logo}
+                    alt=""
+                    width={480}
+                    className="h-12 w-auto object-contain"
+                  />
                 </div>
               )}
             </div>
