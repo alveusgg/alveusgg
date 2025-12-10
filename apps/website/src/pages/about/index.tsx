@@ -33,6 +33,7 @@ import {
 } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconDocument from "@/icons/IconDocument";
 import IconExternal from "@/icons/IconExternal";
 import IconQuote from "@/icons/IconQuote";
 
@@ -114,12 +115,20 @@ const stats: Record<string, Stat> = {
   },
 };
 
-type News = {
+type NewsCore = {
   title: string;
-  href?: string;
-  quote?: string;
+};
+
+type NewsArticle = {
+  href: string;
+  quote: string;
+};
+
+type NewsVideo = Partial<NewsArticle> & {
   video: ({ type: "stream" } & StreamSource) | { type: "youtube"; id: string };
 };
+
+type News = NewsCore & (NewsArticle | NewsVideo);
 
 const news: Record<string, News> = {
   cbs: {
@@ -143,6 +152,12 @@ const news: Record<string, News> = {
       cu: "agf91muwks8sd9ee",
     },
   },
+  forbes: {
+    title: "Forbes",
+    href: "https://www.forbes.com/sites/anharkarim/2025/12/01/what-makes-twitch-streams-so-engaging/",
+    quote:
+      "Conservationist and Twitch streamer Maya Higa brings education and entertainment to the platform",
+  },
   lowes: {
     title: "Lowe's Red Vests x MrBeast",
     href: "https://corporate.lowes.com/newsroom/stories/serving-communities/lowes-red-vests-power-sanctuary-makeover-alongside-mrbeast",
@@ -152,6 +167,12 @@ const news: Record<string, News> = {
       type: "youtube",
       id: "8TieP5VgieE",
     },
+  },
+  yahoo: {
+    title: "Yahoo! Entertainment",
+    href: "https://www.yahoo.com/entertainment/articles/winnie-cow-going-viral-twitch-220000265.html",
+    quote:
+      "Twitch isn't just for gamers anymore, as evidenced by a cow named Winnie who has become a viral sensation on the livestreaming platform",
   },
   powderBlue: {
     title: "Powder Blue",
@@ -175,18 +196,22 @@ const news: Record<string, News> = {
 
 const newsLightboxItems = Object.entries(news).reduce<
   Record<string, ReactNode>
->((acc, [key, { title, video }]) => {
-  switch (video.type) {
+>((acc, [key, item]) => {
+  if (!("video" in item)) {
+    return acc;
+  }
+
+  switch (item.video.type) {
     case "stream":
       return {
         ...acc,
-        [key]: <StreamEmbed src={video} caption={title} controls />,
+        [key]: <StreamEmbed src={item.video} caption={item.title} controls />,
       };
 
     case "youtube":
       return {
         ...acc,
-        [key]: <YouTubeEmbed videoId={video.id} caption={title} />,
+        [key]: <YouTubeEmbed videoId={item.video.id} caption={item.title} />,
       };
   }
 }, {});
@@ -907,36 +932,42 @@ const AboutAlveusPage: NextPage = () => {
                 )}
               </div>
 
-              <Link
-                href={(() => {
-                  switch (item.video.type) {
-                    case "stream":
-                      return getStreamUrlIframe(item.video, {
-                        title: `Alveus Sanctuary: ${item.title}`,
-                        link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
-                      });
+              {"video" in item ? (
+                <Link
+                  href={(() => {
+                    switch (item.video.type) {
+                      case "stream":
+                        return getStreamUrlIframe(item.video, {
+                          title: `Alveus Sanctuary: ${item.title}`,
+                          link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
+                        });
 
-                    case "youtube":
-                      return `https://www.youtube.com/watch?v=${encodeURIComponent(
-                        item.video.id,
-                      )}`;
-                  }
-                })()}
-                external
-                onClick={(e) => {
-                  e.preventDefault();
-                  setNewsLightboxOpen(key);
-                }}
-                className="group/trigger w-full"
-                custom
-              >
-                {item.video.type === "stream" && (
-                  <StreamPreview src={item.video} alt={item.title} />
-                )}
-                {item.video.type === "youtube" && (
-                  <YouTubePreview videoId={item.video.id} alt={item.title} />
-                )}
-              </Link>
+                      case "youtube":
+                        return `https://www.youtube.com/watch?v=${encodeURIComponent(
+                          item.video.id,
+                        )}`;
+                    }
+                  })()}
+                  external
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setNewsLightboxOpen(key);
+                  }}
+                  className="group/trigger w-full"
+                  custom
+                >
+                  {item.video.type === "stream" && (
+                    <StreamPreview src={item.video} alt={item.title} />
+                  )}
+                  {item.video.type === "youtube" && (
+                    <YouTubePreview videoId={item.video.id} alt={item.title} />
+                  )}
+                </Link>
+              ) : (
+                <div className="relative aspect-video w-full rounded-2xl bg-linear-to-br from-alveus-green-800 to-alveus-green-600 opacity-75">
+                  <IconDocument className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2 text-alveus-green-900" />
+                </div>
+              )}
             </div>
           ))}
         </div>
