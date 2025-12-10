@@ -26,9 +26,16 @@ import {
 import SubNav from "@/components/content/SubNav";
 import Timeline from "@/components/content/Timeline";
 import Transparency from "@/components/content/Transparency";
-import { YouTubeLightbox } from "@/components/content/YouTube";
+import {
+  YouTubeEmbed,
+  YouTubeLightbox,
+  YouTubePreview,
+} from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconDocument from "@/icons/IconDocument";
+import IconExternal from "@/icons/IconExternal";
+import IconQuote from "@/icons/IconQuote";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -108,29 +115,79 @@ const stats: Record<string, Stat> = {
   },
 };
 
-type News = {
+type NewsCore = {
   title: string;
-  video: StreamSource;
 };
+
+type NewsArticle = {
+  href: string;
+  quote: string;
+};
+
+type NewsVideo = Partial<NewsArticle> & {
+  video: ({ type: "stream" } & StreamSource) | { type: "youtube"; id: string };
+};
+
+type News = NewsCore & (NewsArticle | NewsVideo);
 
 const news: Record<string, News> = {
   cbs: {
     title: "CBS News Mornings",
+    href: "https://www.cbsnews.com/boston/video/gen-z-jane-goodall-saves-wildlife-with-streaming-wildlife-sanctuary/",
+    quote: 'At 26, Maya Higa is the "Gen Z Jane Goodall"',
     video: {
+      type: "stream",
       id: "dc685110b475b84f0052991aa9f93110",
       cu: "agf91muwks8sd9ee",
     },
   },
   kxan: {
     title: "KXAN Austin",
+    href: "https://www.kxan.com/news/texas/how-a-texas-sanctuary-uses-social-media-to-highlight-animal-conservation-needs/",
+    quote:
+      "a global outreach where thousands tune in at any given time to watch the animals in their sanctuary habitat",
     video: {
+      type: "stream",
       id: "4572586849db66c2251e6e36f0134edc",
       cu: "agf91muwks8sd9ee",
+    },
+  },
+  forbes: {
+    title: "Forbes",
+    href: "https://www.forbes.com/sites/anharkarim/2025/12/01/what-makes-twitch-streams-so-engaging/",
+    quote:
+      "Conservationist and Twitch streamer Maya Higa brings education and entertainment to the platform",
+  },
+  lowes: {
+    title: "Lowe's Red Vests x MrBeast",
+    href: "https://corporate.lowes.com/newsroom/stories/serving-communities/lowes-red-vests-power-sanctuary-makeover-alongside-mrbeast",
+    quote:
+      "Seeing the habitats up close and the sanctuary's dedication to protecting animals across Texas was inspiring",
+    video: {
+      type: "youtube",
+      id: "8TieP5VgieE",
+    },
+  },
+  yahoo: {
+    title: "Yahoo! Entertainment",
+    href: "https://www.yahoo.com/entertainment/articles/winnie-cow-going-viral-twitch-220000265.html",
+    quote:
+      "Twitch isn't just for gamers anymore, as evidenced by a cow named Winnie who has become a viral sensation on the livestreaming platform",
+  },
+  powderBlue: {
+    title: "Powder Blue",
+    href: "https://www.creatormag.blog/p/introducing-our-next-cover-star",
+    quote:
+      "Maya has become a beloved science communicator as well as a staple in the streamer community",
+    video: {
+      type: "youtube",
+      id: "xM62zRCqcnI",
     },
   },
   weatherChannel: {
     title: "The Weather Channel",
     video: {
+      type: "stream",
       id: "5cd3c1f8a0c2311c008021bf7973f3fb",
       cu: "agf91muwks8sd9ee",
     },
@@ -139,13 +196,25 @@ const news: Record<string, News> = {
 
 const newsLightboxItems = Object.entries(news).reduce<
   Record<string, ReactNode>
->(
-  (acc, [key, item]) => ({
-    ...acc,
-    [key]: <StreamEmbed src={item.video} caption={item.title} controls />,
-  }),
-  {},
-);
+>((acc, [key, item]) => {
+  if (!("video" in item)) {
+    return acc;
+  }
+
+  switch (item.video.type) {
+    case "stream":
+      return {
+        ...acc,
+        [key]: <StreamEmbed src={item.video} caption={item.title} controls />,
+      };
+
+    case "youtube":
+      return {
+        ...acc,
+        [key]: <YouTubeEmbed videoId={item.video.id} caption={item.title} />,
+      };
+  }
+}, {});
 
 type HistoryCTA = { key: string; cta: ReactNode };
 type HistoryItem = {
@@ -832,34 +901,73 @@ const AboutAlveusPage: NextPage = () => {
           In The News
         </Heading>
 
-        <div className="mt-8 flex w-full flex-wrap justify-around gap-y-4">
+        <div className="mt-8 grid w-full grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {Object.entries(news).map(([key, item]) => (
-            <div
-              key={key}
-              className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/3"
-            >
-              <Heading
-                level={3}
-                className="order-last mb-0 text-center text-2xl"
-              >
-                {item.title}
-              </Heading>
+            <div key={key} className="flex flex-col">
+              <div className="order-last">
+                <Heading level={3}>
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      external
+                      custom
+                      className="flex items-baseline justify-between gap-1 transition-colors hover:text-alveus-green-800 hover:underline"
+                    >
+                      {item.title}
+                      <IconExternal className="relative -bottom-0.5" />
+                    </Link>
+                  ) : (
+                    item.title
+                  )}
+                </Heading>
 
-              <Link
-                href={getStreamUrlIframe(item.video, {
-                  title: `Alveus Sanctuary: ${item.title}`,
-                  link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
-                })}
-                external
-                onClick={(e) => {
-                  e.preventDefault();
-                  setNewsLightboxOpen(key);
-                }}
-                className="group/trigger order-first w-full max-w-2xl"
-                custom
-              >
-                <StreamPreview src={item.video} alt={item.title} />
-              </Link>
+                {item.quote ? (
+                  <blockquote className="relative pl-10 text-xl text-balance text-alveus-green italic">
+                    <div className="absolute inset-y-0 left-0 h-full w-1 rounded-xs bg-alveus-green" />
+                    <IconQuote className="absolute top-0 left-3 size-6 opacity-50" />
+                    {item.quote}
+                  </blockquote>
+                ) : (
+                  <div className="h-1 w-32 max-w-full rounded-xs bg-alveus-green" />
+                )}
+              </div>
+
+              {"video" in item ? (
+                <Link
+                  href={(() => {
+                    switch (item.video.type) {
+                      case "stream":
+                        return getStreamUrlIframe(item.video, {
+                          title: `Alveus Sanctuary: ${item.title}`,
+                          link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
+                        });
+
+                      case "youtube":
+                        return `https://www.youtube.com/watch?v=${encodeURIComponent(
+                          item.video.id,
+                        )}`;
+                    }
+                  })()}
+                  external
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setNewsLightboxOpen(key);
+                  }}
+                  className="group/trigger w-full"
+                  custom
+                >
+                  {item.video.type === "stream" && (
+                    <StreamPreview src={item.video} alt={item.title} />
+                  )}
+                  {item.video.type === "youtube" && (
+                    <YouTubePreview videoId={item.video.id} alt={item.title} />
+                  )}
+                </Link>
+              ) : (
+                <div className="relative aspect-video w-full rounded-2xl bg-linear-to-br from-alveus-green-800 to-alveus-green-600 opacity-75">
+                  <IconDocument className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2 text-alveus-green-900" />
+                </div>
+              )}
             </div>
           ))}
         </div>
