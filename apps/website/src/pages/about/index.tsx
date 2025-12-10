@@ -29,6 +29,8 @@ import Transparency from "@/components/content/Transparency";
 import { YouTubeLightbox } from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
+import IconExternal from "@/icons/IconExternal";
+import IconQuote from "@/icons/IconQuote";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
@@ -110,12 +112,16 @@ const stats: Record<string, Stat> = {
 
 type News = {
   title: string;
+  href?: string;
+  quote?: string;
   video: StreamSource;
 };
 
 const news: Record<string, News> = {
   cbs: {
     title: "CBS News Mornings",
+    href: "https://www.cbsnews.com/boston/video/gen-z-jane-goodall-saves-wildlife-with-streaming-wildlife-sanctuary/",
+    quote: 'At 26, Maya Higa is the "Gen Z Jane Goodall"',
     video: {
       id: "dc685110b475b84f0052991aa9f93110",
       cu: "agf91muwks8sd9ee",
@@ -123,6 +129,9 @@ const news: Record<string, News> = {
   },
   kxan: {
     title: "KXAN Austin",
+    href: "https://www.kxan.com/news/texas/how-a-texas-sanctuary-uses-social-media-to-highlight-animal-conservation-needs/",
+    quote:
+      "a global outreach where thousands tune in at any given time to watch the animals in their sanctuary habitat",
     video: {
       id: "4572586849db66c2251e6e36f0134edc",
       cu: "agf91muwks8sd9ee",
@@ -832,18 +841,36 @@ const AboutAlveusPage: NextPage = () => {
           In The News
         </Heading>
 
-        <div className="mt-8 flex w-full flex-wrap justify-around gap-y-4">
+        <div className="mt-8 grid w-full grid-cols-1 gap-8 lg:grid-cols-2 xl:grid-cols-3">
           {Object.entries(news).map(([key, item]) => (
-            <div
-              key={key}
-              className="mx-auto flex basis-full flex-col items-center justify-start p-2 md:basis-1/2 lg:basis-1/3"
-            >
-              <Heading
-                level={3}
-                className="order-last mb-0 text-center text-2xl"
-              >
-                {item.title}
-              </Heading>
+            <div key={key} className="flex flex-col">
+              <div className="order-last">
+                <Heading level={3}>
+                  {item.href ? (
+                    <Link
+                      href={item.href}
+                      external
+                      custom
+                      className="flex items-baseline justify-between gap-1 transition-colors hover:text-alveus-green-800 hover:underline"
+                    >
+                      {item.title}
+                      <IconExternal className="relative -bottom-0.5" />
+                    </Link>
+                  ) : (
+                    item.title
+                  )}
+                </Heading>
+
+                {item.quote ? (
+                  <blockquote className="relative pl-10 text-xl text-balance text-alveus-green italic">
+                    <div className="absolute inset-y-0 left-0 h-full w-1 rounded-xs bg-alveus-green" />
+                    <IconQuote className="absolute top-0 left-3 size-6 opacity-50" />
+                    {item.quote}
+                  </blockquote>
+                ) : (
+                  <div className="h-1 w-32 max-w-full rounded-xs bg-alveus-green" />
+                )}
+              </div>
 
               <Link
                 href={getStreamUrlIframe(item.video, {
@@ -855,7 +882,7 @@ const AboutAlveusPage: NextPage = () => {
                   e.preventDefault();
                   setNewsLightboxOpen(key);
                 }}
-                className="group/trigger order-first w-full max-w-2xl"
+                className="group/trigger w-full"
                 custom
               >
                 <StreamPreview src={item.video} alt={item.title} />
