@@ -26,7 +26,11 @@ import {
 import SubNav from "@/components/content/SubNav";
 import Timeline from "@/components/content/Timeline";
 import Transparency from "@/components/content/Transparency";
-import { YouTubeLightbox } from "@/components/content/YouTube";
+import {
+  YouTubeEmbed,
+  YouTubeLightbox,
+  YouTubePreview,
+} from "@/components/content/YouTube";
 
 import IconArrowRight from "@/icons/IconArrowRight";
 import IconExternal from "@/icons/IconExternal";
@@ -114,7 +118,7 @@ type News = {
   title: string;
   href?: string;
   quote?: string;
-  video: StreamSource;
+  video: ({ type: "stream" } & StreamSource) | { type: "youtube"; id: string };
 };
 
 const news: Record<string, News> = {
@@ -123,6 +127,7 @@ const news: Record<string, News> = {
     href: "https://www.cbsnews.com/boston/video/gen-z-jane-goodall-saves-wildlife-with-streaming-wildlife-sanctuary/",
     quote: 'At 26, Maya Higa is the "Gen Z Jane Goodall"',
     video: {
+      type: "stream",
       id: "dc685110b475b84f0052991aa9f93110",
       cu: "agf91muwks8sd9ee",
     },
@@ -133,13 +138,35 @@ const news: Record<string, News> = {
     quote:
       "a global outreach where thousands tune in at any given time to watch the animals in their sanctuary habitat",
     video: {
+      type: "stream",
       id: "4572586849db66c2251e6e36f0134edc",
       cu: "agf91muwks8sd9ee",
+    },
+  },
+  lowes: {
+    title: "Lowe's Red Vests x MrBeast",
+    href: "https://corporate.lowes.com/newsroom/stories/serving-communities/lowes-red-vests-power-sanctuary-makeover-alongside-mrbeast",
+    quote:
+      "Seeing the habitats up close and the sanctuary's dedication to protecting animals across Texas was inspiring",
+    video: {
+      type: "youtube",
+      id: "8TieP5VgieE",
+    },
+  },
+  powderBlue: {
+    title: "Powder Blue",
+    href: "https://www.creatormag.blog/p/introducing-our-next-cover-star",
+    quote:
+      "Maya has become a beloved science communicator as well as a staple in the streamer community",
+    video: {
+      type: "youtube",
+      id: "xM62zRCqcnI",
     },
   },
   weatherChannel: {
     title: "The Weather Channel",
     video: {
+      type: "stream",
       id: "5cd3c1f8a0c2311c008021bf7973f3fb",
       cu: "agf91muwks8sd9ee",
     },
@@ -148,13 +175,21 @@ const news: Record<string, News> = {
 
 const newsLightboxItems = Object.entries(news).reduce<
   Record<string, ReactNode>
->(
-  (acc, [key, item]) => ({
-    ...acc,
-    [key]: <StreamEmbed src={item.video} caption={item.title} controls />,
-  }),
-  {},
-);
+>((acc, [key, { title, video }]) => {
+  switch (video.type) {
+    case "stream":
+      return {
+        ...acc,
+        [key]: <StreamEmbed src={video} caption={title} controls />,
+      };
+
+    case "youtube":
+      return {
+        ...acc,
+        [key]: <YouTubeEmbed videoId={video.id} caption={title} />,
+      };
+  }
+}, {});
 
 type HistoryCTA = { key: string; cta: ReactNode };
 type HistoryItem = {
@@ -873,10 +908,20 @@ const AboutAlveusPage: NextPage = () => {
               </div>
 
               <Link
-                href={getStreamUrlIframe(item.video, {
-                  title: `Alveus Sanctuary: ${item.title}`,
-                  link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
-                })}
+                href={(() => {
+                  switch (item.video.type) {
+                    case "stream":
+                      return getStreamUrlIframe(item.video, {
+                        title: `Alveus Sanctuary: ${item.title}`,
+                        link: `${env.NEXT_PUBLIC_BASE_URL}/about#news`,
+                      });
+
+                    case "youtube":
+                      return `https://www.youtube.com/watch?v=${encodeURIComponent(
+                        item.video.id,
+                      )}`;
+                  }
+                })()}
                 external
                 onClick={(e) => {
                   e.preventDefault();
@@ -885,7 +930,12 @@ const AboutAlveusPage: NextPage = () => {
                 className="group/trigger w-full"
                 custom
               >
-                <StreamPreview src={item.video} alt={item.title} />
+                {item.video.type === "stream" && (
+                  <StreamPreview src={item.video} alt={item.title} />
+                )}
+                {item.video.type === "youtube" && (
+                  <YouTubePreview videoId={item.video.id} alt={item.title} />
+                )}
               </Link>
             </div>
           ))}
