@@ -5,6 +5,7 @@ import { type PartialDateString } from "@/utils/datetime-partial";
 import aMostRemarkableCreature from "@/assets/book-club/books/a-most-remarkable-creature.jpg";
 import adventuresOfAYoungNaturalist from "@/assets/book-club/books/adventures-of-a-young-naturalist.jpg";
 import hIsForHawk from "@/assets/book-club/books/h-is-for-hawk.jpg";
+import livingWithLynx from "@/assets/book-club/books/living-with-lynx.jpg";
 import onTheWing from "@/assets/book-club/books/on-the-wing.jpg";
 import steveAndMe from "@/assets/book-club/books/steve-and-me.jpg";
 import theAnthropoceneReviewed from "@/assets/book-club/books/the-anthropocene-reviewed.jpg";
@@ -34,6 +35,16 @@ export type BookInfo = {
 };
 
 const books: [BookInfo, ...BookInfo[]] = [
+  {
+    title: "Living with Lynx",
+    author: "Jonny Hanson",
+    image: livingWithLynx,
+    month: "2025-12",
+    link: "https://amzn.to/48Le5cT",
+    thickness: thickness.sm, // 280 pages
+    color: "border-gray-200",
+  },
+  // no 2025-11 book
   {
     title: "On the Wing",
     author: "David E. Alexander",
