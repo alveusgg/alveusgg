@@ -25,8 +25,7 @@
   },
   "dependencies": {
     "@prisma/adapter-mariadb": "^7.1.0",
-    "@prisma/client": "^7.1.0",
-    "@prisma/client-runtime-utils": "^7.1.0"
+    "@prisma/client": "^7.1.0"
   },
   "devDependencies": {
     "@types/node": "^24.10.2",
