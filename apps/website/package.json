@@ -32,7 +32,11 @@
     "lint": "next typegen && eslint --max-warnings 0",
     "types": "next typegen && tsc --noEmit",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "murals:import-paypal-donations": "tsx --env-file=.env ./scripts/import-paypal-donations.ts",
+    "murals:import-thegivingblock-donations": "tsx --env-file=.env ./scripts/import-thegivingblock-donations.ts",
+    "murals:import-twitch-charity-donations": "tsx --env-file=.env ./scripts/import-twitch-charity-donations.ts",
+    "murals:fill-pixels": "tsx --env-file=.env ./scripts/fill-pixels.ts"
   },
   "dependencies": {
     "@alveusgg/data": "0.72.0",
