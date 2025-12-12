@@ -13,25 +13,20 @@ const Tags = z.string().transform((val) => {
   );
 });
 
-export const PaypalDonationSchema = ({
-  expectedBusinessEmailAddress,
-}: {
-  expectedBusinessEmailAddress: string;
-}) =>
-  z.object({
-    mc_gross: z.string(),
-    mc_fee: z.string(),
-    payment_status: z.literal("Completed"),
-    charset: z.literal("UTF-8"),
+export const PaypalDonationSchema = z.object({
+  mc_gross: z.string(),
+  mc_fee: z.string(),
+  payment_status: z.string(),
+  charset: z.literal("UTF-8"),
 
-    first_name: z.string(),
-    last_name: z.string(),
-    custom: Tags.optional(),
-    business: z.literal(expectedBusinessEmailAddress),
-    payer_email: z.string(),
-    memo: z.string().optional(),
-    txn_id: z.string(),
-    mc_currency: z.literal("USD"),
-    payer_id: z.string(),
-    payment_date: z.coerce.date(),
-  });
+  first_name: z.string(),
+  last_name: z.string(),
+  custom: Tags.optional(),
+  business: z.string(),
+  payer_email: z.string(),
+  memo: z.string().optional(),
+  txn_id: z.string(),
+  mc_currency: z.literal("USD"),
+  payer_id: z.string(),
+  payment_date: z.coerce.date(),
+});
