@@ -10,27 +10,26 @@
     "lint": "eslint . --max-warnings 0"
   },
   "devDependencies": {
-    "@types/node": "^22.19.1",
-    "globals": "^16.5.0",
-    "jpeg-js": "^0.4.4",
-    "typescript": "^5.5.2",
-    "wrangler": "^4.50.0",
+    "@eslint/js": "^9.39.1",
+    "@types/node": "^24.10.2",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-import-x": "^4.16.1",
-    "typescript-eslint": "^8.47.0",
-    "@eslint/js": "^9.39.1"
+    "globals": "^16.5.0",
+    "jpeg-js": "^0.4.4",
+    "typescript": "^5.5.2",
+    "typescript-eslint": "^8.49.0",
+    "wrangler": "^4.53.0"
   },
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@trpc/client": "^11.7.2",
     "@trpc/server": "^11.7.2",
-    "hono": "^4.10.6",
-    "immer": "^10.2.0",
-    "superjson": "^2.2.5",
-    "zod": "^4.1.11"
+    "hono": "^4.10.7",
+    "superjson": "^2.2.6",
+    "zod": "^4.1.13"
   }
 }

@@ -1,5 +1,3 @@
-import { produce } from "immer";
-
 interface SyncProviderOptions<Context> {
   state: SyncProviderStateOptions<Context>;
   init: Context;
@@ -19,8 +17,8 @@ export class SyncProvider<Context> {
     }
   }
 
-  update(fn: (context: Context) => void) {
-    this.context = produce(this.context, fn);
+  update(fn: (context: Context) => Context) {
+    this.context = fn(this.context);
   }
 
   public getContext() {

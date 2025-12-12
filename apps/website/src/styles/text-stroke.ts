@@ -21,7 +21,7 @@ const textStroke = plugin(
         "@supports (-webkit-text-stroke: 1px black) and (paint-order: stroke fill)":
           {
             textShadow: "none",
-            "-webkit-text-stroke": `${steps * 2.5}px var(--ts-text-stroke-color)`,
+            "-webkit-text-stroke": `${steps * 3}px var(--ts-text-stroke-color)`,
             paintOrder: "stroke fill",
           },
       };

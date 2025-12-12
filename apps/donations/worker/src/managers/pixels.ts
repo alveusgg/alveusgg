@@ -104,9 +104,10 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
   private async resync() {
     if (!this.provider) throw new Error("Provider not initialized");
     const pixels = await this.getStateFromAPI();
-    this.provider.update((state) => {
-      state.pixels = pixels;
-    });
+    this.provider.update((state) => ({
+      ...state,
+      pixels,
+    }));
   }
 
   private async getStateFromAPI() {
@@ -224,9 +225,10 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
           }),
       });
 
-      this.provider.update((state) => {
-        state.pixels = [...state.pixels, ...Object.values(pixels).flat()];
-      });
+      this.provider.update((state) => ({
+        ...state,
+        pixels: [...state.pixels, ...Object.values(pixels).flat()],
+      }));
 
       for (const donation of donations) {
         const identifier =

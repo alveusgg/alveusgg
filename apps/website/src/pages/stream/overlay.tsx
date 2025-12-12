@@ -1,33 +1,154 @@
+import type { ChatMessage } from "@twurple/chat";
 import { type NextPage } from "next";
+import Image from "next/image";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import { queryArray } from "@/utils/array";
+import { classes } from "@/utils/classes";
+import { getToday } from "@/utils/datetime";
 
+import useChat from "@/hooks/chat";
+
+import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
+import Disclaimer from "@/components/overlay/Disclaimer";
 import Event from "@/components/overlay/Event";
+import Socials from "@/components/overlay/Socials";
 import Subs from "@/components/overlay/Subs";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
 
+import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
+import border6cam from "@/assets/stream/border-6cam.png";
+
+const cycleTime = 60;
+
+const layouts = ["fullscreen", "6cam"] as const;
+type Layout = (typeof layouts)[number];
+const isLayout = (layout: unknown): layout is Layout =>
+  layouts.includes(layout as Layout);
+
 const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components
   const { query } = useRouter();
+  const layout = isLayout(query.layout) ? query.layout : "fullscreen";
   const hide = useMemo(() => new Set(queryArray(query.hide)), [query.hide]);
+
+  // Add a chat command to toggle the large disclaimer
+  const channels = useMemo(() => {
+    const param = queryArray(query.channels);
+    return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
+  }, [query.channels]);
+  const [disclaimer, setDisclaimer] = useState(false);
+  useChat(
+    channels,
+    useCallback((message: ChatMessage) => {
+      const { text } = message;
+      const [command, arg] = text.trim().toLowerCase().split(/\s+/);
+
+      // Anyone can run the command to toggle the disclaimer
+      if (command === "!disclaimer" || command === "!wolftext") {
+        setDisclaimer((prev) => {
+          if (arg === "on" || arg === "enable") return true;
+          if (arg === "off" || arg === "disable") return false;
+          return !prev;
+        });
+        return;
+      }
+    }, []),
+  );
+
+  // Track the current date to switch 6cam borders during December
+  const [date, setDate] = useState<`${number}-${number}`>();
+  useEffect(() => {
+    const updateDate = () => {
+      const today = getToday();
+      const month = String(today.month).padStart(2, "0");
+      const day = String(today.day).padStart(2, "0");
+      setDate(`${month}-${day}` as `${number}-${number}`);
+    };
+
+    updateDate();
+    const interval = setInterval(updateDate, 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Request fullscreen when the page is clicked
+  useEffect(() => {
+    const fullscreen = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {
+          // Ignore errors
+        });
+      }
+    };
+
+    document.body.addEventListener("click", fullscreen);
+    return () => {
+      document.body.removeEventListener("click", fullscreen);
+    };
+  }, []);
 
   return (
     <div className="h-screen w-full">
+      {layout === "6cam" && (
+        <Image
+          src={date?.startsWith("12-") ? border6camChristmas : border6cam}
+          alt=""
+          fill
+          priority
+          className="pointer-events-none select-none"
+        />
+      )}
+
       {!hide.has("datetime") && (
         <Datetime className="absolute top-2 right-2 text-right">
           {!hide.has("weather") && <Weather />}
         </Datetime>
       )}
 
-      {!hide.has("event") && <Event className="absolute bottom-2 left-2" />}
+      <Cycle
+        items={useMemo(
+          () =>
+            [
+              !hide.has("socials") && (
+                // Cycle every third of the total cycle time, so that we're always back on the logo when this shows
+                <Socials interval={cycleTime / 3} key="socials" />
+              ),
+              !hide.has("event") && <Event key="event" />,
+            ].filter((x) => !!x),
+          [hide],
+        )}
+        interval={cycleTime}
+        className="absolute bottom-2 left-2"
+      />
 
-      {!hide.has("subs") && (
-        <Subs className="absolute right-2 bottom-2 text-right" />
+      {!hide.has("disclaimer") && disclaimer && (
+        <Disclaimer
+          className={classes(
+            "absolute text-4xl",
+            layout === "6cam"
+              ? "bottom-1/3 left-1/3 w-2/3 pb-6 pl-6"
+              : "inset-x-0 bottom-2 w-full text-center",
+          )}
+        />
       )}
+
+      <Cycle
+        items={useMemo(
+          () =>
+            [
+              !hide.has("disclaimer") && !disclaimer && (
+                <Disclaimer key="disclaimer" className="text-xl text-stroke" />
+              ),
+              !hide.has("subs") && <Subs key="subs" />,
+            ].filter((x) => !!x),
+          [hide, disclaimer],
+        )}
+        interval={cycleTime / 2}
+        className="absolute right-2 bottom-2 text-right"
+      />
 
       {!hide.has("timecode") && (
         <Timecode className="absolute right-0 bottom-0" />
