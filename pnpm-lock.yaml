@@ -108,6 +108,10 @@ importers:
       zod:
         specifier: ^4.1.13
         version: 4.1.13
+    devDependencies:
+      '@types/node':
+        specifier: ^24.10.2
+        version: 24.10.2
 
   apps/donations/worker:
     dependencies:

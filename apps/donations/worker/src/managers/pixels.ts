@@ -1,4 +1,8 @@
 import type { Donation, DonationAlert, Pixel } from "@alveusgg/donations-core";
+import {
+  determineNumberOfPixels,
+  hashPixelIdentifier,
+} from "@alveusgg/donations-core/pixels";
 import { DurableObject } from "cloudflare:workers";
 
 import type { AppRouter } from "@alveusgg/alveusgg-website";
@@ -180,7 +184,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
           const data = this.grid.squares[`${location.column}:${location.row}`];
           const emailHash = donation.donatedBy.email
-            ? await hash(donation.donatedBy.email)
+            ? await hashPixelIdentifier(donation.donatedBy.email)
             : undefined;
 
           pixelsForDonation.push({
@@ -276,23 +280,6 @@ function getRandomEmptySquare(pixels: Pixel[], grid: Grid) {
       emptyCounter++;
     }
   }
-}
-
-const PIXEL_PRICE = 100; // Each pixel costs $100 USD
-const DONATION_TOLERANCE = 5; // $5 USD wiggle room
-
-function determineNumberOfPixels(donationAmountDollars: number) {
-  return Math.floor((donationAmountDollars + DONATION_TOLERANCE) / PIXEL_PRICE);
-}
-
-async function hash(identifier: string) {
-  return await crypto.subtle
-    .digest("SHA-256", new TextEncoder().encode(identifier.toLowerCase()))
-    .then((hash) =>
-      Array.from(new Uint8Array(hash))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join(""),
-    );
 }
 
 function makeTwitchBroadcasterMap(donations: Donation[]) {
