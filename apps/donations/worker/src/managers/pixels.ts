@@ -26,6 +26,23 @@ const Grid = z.object({
 });
 type Grid = z.infer<typeof Grid>;
 
+function generateExampleGrid() {
+  return {
+    columns: 10,
+    rows: 2,
+    size: 4,
+    squares: Array.from({ length: 20 }).reduce(
+      (acc: Record<string, string>, _, index) => {
+        const column = Math.floor(index / 2);
+        const row = index % 2;
+        acc[`${column}:${row}`] = `EXAMPLEDATA${index}`;
+        return acc;
+      },
+      {},
+    ),
+  };
+}
+
 export class PixelsManagerDurableObject extends DurableObject<Env> {
   private router: Hono;
   private startup?: Promise<void>;
@@ -48,6 +65,9 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
     this.router = new Hono()
       .use(cors())
+      .get("/example-grid", () =>
+        Response.json(generateExampleGrid(), { status: 200 }),
+      )
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
           await this.ready();
