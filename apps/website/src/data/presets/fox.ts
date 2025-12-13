@@ -20,7 +20,7 @@ import type { Preset } from "../tech/cameras.types";
 
 const foxPresets: Record<string, Preset> = {
   home: {
-    description: "Home",
+    description: "home",
     image: home,
   },
   den1: {
@@ -56,7 +56,7 @@ const foxPresets: Record<string, Preset> = {
     image: farcorner,
   },
   left: {
-    description: "Left",
+    description: "left",
     image: left,
   },
   leftplatform: {
@@ -72,7 +72,7 @@ const foxPresets: Record<string, Preset> = {
     image: reed,
   },
   right: {
-    description: "Right",
+    description: "right",
     image: right,
   },
   rightplatform: {
