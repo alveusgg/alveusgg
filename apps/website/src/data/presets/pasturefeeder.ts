@@ -8,14 +8,17 @@ const pasturefeederPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.320Z
   },
   feeder: {
     description: "Feeder",
     image: feeder,
+    // modified: 2025-10-09T11:10:30.320Z
   },
   stompy: {
     description: "Stompy feeder",
     image: stompy,
+    // modified: 2025-10-09T11:10:30.320Z
   },
 };
 

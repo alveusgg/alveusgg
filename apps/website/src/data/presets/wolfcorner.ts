@@ -52,190 +52,237 @@ const wolfcornerPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   back: {
     description: "Back",
     image: back,
+    // modified: 2025-11-30T18:56:30.540Z
   },
   backfence: {
     description: "Back Fence",
     image: backfence,
+    // modified: 2025-10-09T11:10:30.244Z
   },
   belowplatform: {
     description: "Below Platform",
     image: belowplatform,
+    // modified: 2025-10-09T11:10:30.244Z
   },
   belowplatforml: {
     description: "Below Platform left",
     image: belowplatforml,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   belowplatformr: {
     description: "Below Platform right",
     image: belowplatformr,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   belowrampl: {
     description: "Below Ramp left",
     image: belowrampl,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   belowramplz: {
     description: "Below Ramp left zoomed",
     image: belowramplz,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   belowrampr: {
     description: "Below Ramp right",
     image: belowrampr,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   brushl: {
     description: "Brush left",
     image: brushl,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   center: {
     description: "Center",
     image: center,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   den1: {
     description: "Den 1 (was visible once)",
     image: den1,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   den2: {
     description: "Den 2",
     image: den2,
+    // modified: 2025-10-09T11:10:30.248Z
   },
   den2b: {
     description: "Den 2 bottom platform",
     image: den2b,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   den2door: {
     description: "Den 2 'door'",
     image: den2door,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   den2entrance: {
     description: "Den 2 entrance area",
     image: den2entrance,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   den2inside: {
     description: "Den 2 inside",
     image: den2inside,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   den2l: {
     description: "Den 2 left",
     image: den2l,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   den2m: {
     description: "Den 2 middle platform",
     image: den2m,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   den2r: {
     description: "Den 2 right",
     image: den2r,
+    // modified: 2025-11-30T18:56:30.540Z
   },
   den2shade: {
     description: "Den 2 shade under top platform",
     image: den2shade,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   den2shadel: {
     description: "Den 2 shade left",
     image: den2shadel,
+    // modified: 2025-11-30T18:56:30.540Z
   },
   den2t: {
     description: "Den 2 top platform",
     image: den2t,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   down: {
     description: "Down",
     image: down,
+    // modified: 2025-10-09T11:10:30.252Z
   },
   downleft: {
     description: "Down left",
     image: downleft,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   downright: {
     description: "Down right",
     image: downright,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   grass: {
     description: "Grass",
     image: grass,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   grassl: {
     description: "Grass left",
     image: grassl,
+    // modified: 2025-10-09T11:10:30.240Z
   },
   grassr: {
     description: "Grass right",
     image: grassr,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   left: {
     description: "Left",
     image: left,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   leftcorner: {
     description: "Left Corner",
     image: leftcorner,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   leftcornerw: {
     description: "Left Corner wide",
     image: leftcornerw,
+    // modified: 2025-10-09T11:10:30.240Z
   },
   leftfence: {
     description: "Left Fence",
     image: leftfence,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   leftw: {
     description: "Left wide",
     image: leftw,
+    // modified: 2025-10-09T11:10:30.256Z
   },
   log: {
     description: "Training Log",
     image: log,
+    // modified: 2025-10-09T11:10:30.244Z
   },
   nearcorner: {
     description: "Near Corner",
     image: nearcorner,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   rampl: {
     description: "Ramp left",
     image: rampl,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   rampr: {
     description: "Ramp right",
     image: rampr,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   right: {
     description: "Right",
     image: right,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   rightcorner: {
     description: "Right Corner",
     image: rightcorner,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   rightfence: {
     description: "Right Fence",
     image: rightfence,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   river: {
     description: "River",
     image: river,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   switchpen: {
     description: "Switch Pen",
     image: switchpen,
+    // modified: 2025-10-09T11:10:30.240Z
   },
   trees: {
     description: "Trees",
     image: trees,
+    // modified: 2025-11-30T18:56:30.540Z
   },
   treesl: {
     description: "Trees left",
     image: treesl,
+    // modified: 2025-10-09T11:10:30.244Z
   },
   water: {
     description: "Water",
     image: water,
+    // modified: 2025-10-09T11:10:30.260Z
   },
   wolfcam: {
     description: "Wolf Cam",
     image: wolfcam,
+    // modified: 2025-10-09T11:10:30.260Z
   },
 };
 

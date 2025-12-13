@@ -23,74 +23,92 @@ const emuPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.328Z
   },
   feeder: {
     description: "feeder",
     image: feeder,
+    // modified: 2025-10-25T18:38:15.313Z
   },
   feedwide: {
     description: "feedwide",
     image: feedwide,
+    // modified: 2025-10-28T22:40:32.291Z
   },
   foodleft: {
     description: "Food Left",
     image: foodleft,
+    // modified: 2025-10-09T11:10:30.324Z
   },
   foodright: {
     description: "Food Right",
     image: foodright,
+    // modified: 2025-10-09T11:10:30.324Z
   },
   gate: {
     description: "Gate",
     image: gate,
+    // modified: 2025-10-09T11:10:30.324Z
   },
   gateleft: {
     description: "Gate Left",
     image: gateleft,
+    // modified: 2025-10-09T11:10:30.332Z
   },
   marmgate: {
     description: "Marmoset Gate",
     image: marmgate,
+    // modified: 2025-10-09T11:10:30.328Z
   },
   marmwin3: {
     description: "Marmoset Window 3",
     image: marmwin3,
+    // modified: 2025-10-09T11:10:30.332Z
   },
   marmwindows: {
     description: "Marmoset Windows",
     image: marmwindows,
+    // modified: 2025-10-09T11:10:30.332Z
   },
   pen1center: {
     description: "Pen 1 Center",
     image: pen1center,
+    // modified: 2025-10-09T11:10:30.328Z
   },
   pen1centerright: {
     description: "Pen 1 Center Right",
     image: pen1centerright,
+    // modified: 2025-10-09T11:10:30.332Z
   },
   pen1left: {
     description: "Pen 1 Left",
     image: pen1left,
+    // modified: 2025-10-09T11:10:30.328Z
   },
   pen1right: {
     description: "Pen 1 Right",
     image: pen1right,
+    // modified: 2025-10-09T11:10:30.328Z
   },
   pen1shelter: {
     description: "Pen 1 Shelter",
     image: pen1shelter,
+    // modified: 2025-10-09T11:10:30.332Z
   },
   pen2left: {
     description: "Pen 2 Left",
     image: pen2left,
+    // modified: 2025-10-09T11:10:30.324Z
   },
   pen2middleish: {
     description: "Pen 2 Middle-ish",
     image: pen2middleish,
+    // modified: 2025-12-04T00:17:59.334Z
   },
   pen2right: {
     description: "Pen 2 Right",
     image: pen2right,
+    // modified: 2025-10-09T11:10:30.324Z
   },
 };
 

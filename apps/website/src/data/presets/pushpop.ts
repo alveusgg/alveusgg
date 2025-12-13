@@ -23,74 +23,92 @@ const pushpopPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.332Z
   },
   crunchwide: {
     description: "Crunch Wide",
     image: crunchwide,
+    // modified: 2025-10-09T11:10:30.344Z
   },
   cubby: {
     description: "Cubby",
     image: cubby,
+    // modified: 2025-10-09T11:10:30.336Z
   },
   cubbyl: {
     description: "Cubby Left",
     image: cubbyl,
+    // modified: 2025-10-09T11:10:30.344Z
   },
   down: {
     description: "Down",
     image: down,
+    // modified: 2025-10-09T11:10:30.336Z
   },
   downcubby: {
     description: "Down Cubby",
     image: downcubby,
+    // modified: 2025-10-09T11:10:30.336Z
   },
   downl: {
     description: "Down Left",
     image: downl,
+    // modified: 2025-10-09T11:10:30.336Z
   },
   downr: {
     description: "Down Right",
     image: downr,
+    // modified: 2025-10-09T11:10:30.340Z
   },
   farcenter: {
     description: "Far Center",
     image: farcenter,
+    // modified: 2025-10-09T11:10:30.340Z
   },
   farfence: {
     description: "Far Fence",
     image: farfence,
+    // modified: 2025-10-09T11:10:30.340Z
   },
   farleft: {
     description: "Far Left",
     image: farleft,
+    // modified: 2025-10-09T11:10:30.340Z
   },
   farright: {
     description: "Far Right",
     image: farright,
+    // modified: 2025-10-09T11:10:30.340Z
   },
   hut: {
     description: "Hut",
     image: hut,
+    // modified: 2025-10-09T11:10:30.340Z
   },
   hutz: {
     description: "Hut Zoomed",
     image: hutz,
+    // modified: 2025-10-09T11:10:30.340Z
   },
   insidedoor: {
     description: "Inside Door",
     image: insidedoor,
+    // modified: 2025-10-09T11:10:30.344Z
   },
   left: {
     description: "Left",
     image: left,
+    // modified: 2025-10-09T11:10:30.344Z
   },
   right: {
     description: "Right",
     image: right,
+    // modified: 2025-10-09T11:10:30.348Z
   },
   water: {
     description: "Water",
     image: water,
+    // modified: 2025-10-09T11:10:30.344Z
   },
 };
 

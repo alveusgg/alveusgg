@@ -16,46 +16,57 @@ const tarantulaptzPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.304Z
   },
   eva: {
     description: "Eva",
     image: eva,
+    // modified: 2025-10-09T11:10:30.300Z
   },
   evabottomleft: {
     description: "Eva Bottom Left",
     image: evabottomleft,
+    // modified: 2025-10-09T11:10:30.304Z
   },
   evabottomright: {
     description: "Eva Bottom Right",
     image: evabottomright,
+    // modified: 2025-10-09T11:10:30.304Z
   },
   evatopleft: {
     description: "Eva Top Left",
     image: evatopleft,
+    // modified: 2025-10-09T11:10:30.304Z
   },
   evatopright: {
     description: "Eva Top Right",
     image: evatopright,
+    // modified: 2025-10-09T11:10:30.304Z
   },
   kiwi: {
     description: "Kiwi",
     image: kiwi,
+    // modified: 2025-10-09T11:10:30.300Z
   },
   kiwibottomleft: {
     description: "Kiwi Bottom Left",
     image: kiwibottomleft,
+    // modified: 2025-10-09T11:10:30.300Z
   },
   kiwibottomright: {
     description: "Kiwi Bottom Right",
     image: kiwibottomright,
+    // modified: 2025-10-09T11:10:30.304Z
   },
   kiwitopleft: {
     description: "Kiwi Top Left",
     image: kiwitopleft,
+    // modified: 2025-10-09T11:10:30.304Z
   },
   kiwitopright: {
     description: "Kiwi Top Right",
     image: kiwitopright,
+    // modified: 2025-10-09T11:10:30.304Z
   },
 };
 

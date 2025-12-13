@@ -17,50 +17,62 @@ const toastPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.364Z
   },
   closerock: {
     description: "Close Rock",
     image: closerock,
+    // modified: 2025-11-30T18:58:30.606Z
   },
   down: {
     description: "Down",
     image: down,
+    // modified: 2025-10-09T11:10:30.360Z
   },
   downright: {
     description: "Down Right",
     image: downright,
+    // modified: 2025-10-09T11:10:30.364Z
   },
   far: {
     description: "Far",
     image: far,
+    // modified: 2025-10-09T11:10:30.364Z
   },
   food: {
     description: "Food",
     image: food,
+    // modified: 2025-10-09T11:10:30.364Z
   },
   log: {
     description: "Log",
     image: log,
+    // modified: 2025-10-09T11:10:30.364Z
   },
   logz: {
     description: "Log zoomed",
     image: logz,
+    // modified: 2025-10-09T11:10:30.364Z
   },
   rocksandwich: {
     description: "Rock Sandwich",
     image: rocksandwich,
+    // modified: 2025-11-30T18:58:30.610Z
   },
   toastsleep: {
     description: "toastsleep",
     image: toastsleep,
+    // modified: 2025-10-09T11:10:30.360Z
   },
   tunnel: {
     description: "Tunnel",
     image: tunnel,
+    // modified: 2025-10-09T11:10:30.360Z
   },
   water: {
     description: "Water",
     image: water,
+    // modified: 2025-10-09T11:10:30.364Z
   },
 };
 
