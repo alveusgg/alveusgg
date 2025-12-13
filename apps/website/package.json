@@ -15,17 +15,20 @@
   "engines": {
     "node": "24.x"
   },
-  "types": "src/server/trpc/router/_app.ts",
+  "types": "dist/trpc.d.ts",
   "scripts": {
     "build:next": "next build --webpack",
     "build:next-sitemap": "next-sitemap --config next-sitemap.config.js",
     "build:push-sw": "tsup --config sw.tsup.config.ts",
+    "build:trpc-types": "tsup --config trpc.tsup.config.ts",
     "build:manifest": "tsx ./build-scripts/create-manifest.ts",
     "build:presets": "tsx ./build-scripts/update-presets.ts",
     "dev:next": "next dev --webpack",
     "dev:push-sw": "tsup --watch --config sw.tsup.config.ts",
+    "dev:trpc-types": "tsup --watch --config trpc.tsup.config.ts",
     "build": "pnpm run --sequential \"/^build:(?!presets$).*$/\"",
     "dev": "pnpm run \"/^(build:manifest|dev:.*)/\"",
+    "postinstall": "pnpm build:trpc-types",
     "lint": "next typegen && eslint --max-warnings 0",
     "types": "next typegen && tsc --noEmit",
     "start": "next start",

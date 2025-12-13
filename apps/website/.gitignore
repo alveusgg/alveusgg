@@ -16,3 +16,6 @@ next-env.d.ts
 
 # vercel
 /.vercel/
+
+# trpc types
+/dist/

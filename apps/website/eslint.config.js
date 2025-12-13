@@ -112,7 +112,7 @@ export default tseslint.config(
   },
   {
     name: "custom/ignores",
-    ignores: ["public/*", ".next/*", "next-env.d.ts"],
+    ignores: ["dist/", "public/*", ".next/*", "next-env.d.ts"],
   },
   {
     name: "custom/rules",
