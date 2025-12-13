@@ -29,98 +29,122 @@ const marminPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-11-07T22:27:17.457Z
   },
   behind: {
     description: "Behind",
     image: behind,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   domel: {
     description: "Dome Left",
     image: domel,
+    // modified: 2025-11-07T22:45:52.543Z
   },
   domelshelf: {
     description: "Dome Left Shelf",
     image: domelshelf,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   domelt: {
     description: "Dome Left Top",
     image: domelt,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   domer: {
     description: "Dome Right",
     image: domer,
+    // modified: 2025-11-07T22:46:18.752Z
   },
   domerl: {
     description: "Dome Right Left Shelf",
     image: domerl,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   domerr: {
     description: "Dome Right Right Shelf",
     image: domerr,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   domert: {
     description: "Dome Right Top",
     image: domert,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   downleft: {
     description: "Down Left",
     image: downleft,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   flaps: {
     description: "Flaps",
     image: flaps,
+    // modified: 2025-11-07T22:33:26.919Z
   },
   floor: {
     description: "Floor",
     image: floor,
+    // modified: 2025-10-09T11:10:29.916Z
   },
   floorbranch: {
     description: "Floor Branch",
     image: floorbranch,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   hammock: {
     description: "Hammock",
     image: hammock,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   left: {
     description: "Left",
     image: left,
+    // modified: 2025-11-07T22:33:41.483Z
   },
   leftcornerb: {
     description: "Left Corner Bottom",
     image: leftcornerb,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   leftcornert: {
     description: "Left Corner Top",
     image: leftcornert,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   nearrightshelf: {
     description: "Near Right Shelf",
     image: nearrightshelf,
+    // modified: 2025-11-30T18:54:42.538Z
   },
   right: {
     description: "Right",
     image: right,
+    // modified: 2025-11-07T22:30:41.644Z
   },
   table: {
     description: "Table",
     image: table,
+    // modified: 2025-10-09T11:10:29.916Z
   },
   win1: {
     description: "Window 1",
     image: win1,
+    // modified: 2025-11-07T22:28:34.226Z
   },
   win2: {
     description: "Window 2",
     image: win2,
+    // modified: 2025-11-07T22:29:03.578Z
   },
   win3: {
     description: "Window 3",
     image: win3,
+    // modified: 2025-11-07T22:29:32.171Z
   },
   win4: {
     description: "Window 4",
     image: win4,
+    // modified: 2025-11-07T22:30:09.203Z
   },
 };
 

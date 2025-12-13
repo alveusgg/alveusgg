@@ -34,118 +34,147 @@ const crowoutPresets: Record<string, Preset> = {
   home: {
     description: "home",
     image: home,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   backcorner: {
     description: "back corner perch",
     image: backcorner,
+    // modified: 2025-10-09T11:10:29.836Z
   },
   bench: {
     description: "corner perches",
     image: bench,
+    // modified: 2025-10-09T11:10:29.836Z
   },
   cache: {
     description: "cache",
     image: cache,
+    // modified: 2025-10-09T11:10:29.836Z
   },
   corner: {
     description: "corner perch",
     image: corner,
+    // modified: 2025-10-09T11:10:29.836Z
   },
   cornerc: {
     description: "corner perch zoomed in",
     image: cornerc,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   down: {
     description: "straight down",
     image: down,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   entry: {
     description: "crow indoor entry area",
     image: entry,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   escape: {
     description: "escape hatch",
     image: escape,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   ground: {
     description: "view of the ground",
     image: ground,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   groundl: {
     description: "ground left corner",
     image: groundl,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   groundr: {
     description: "ground right corner",
     image: groundr,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   inside: {
     description: "indoor area",
     image: inside,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   insideperch: {
     description: "view of indoor perch",
     image: insideperch,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   insidewater: {
     description: "indoor water bowl",
     image: insidewater,
+    // modified: 2025-10-09T11:10:29.840Z
   },
   left: {
     description: "left of outdoor crow enclosure",
     image: left,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   platform: {
     description: "outdoor crow platform",
     image: platform,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   platforminside: {
     description: "indoor crow platform",
     image: platforminside,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   right: {
     description: "right of crow enclosure",
     image: right,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   stick: {
     description: "stick",
     image: stick,
+    // modified: 2025-10-09T11:10:29.836Z
   },
   stickl: {
     description: "stick left",
     image: stickl,
+    // modified: 2025-10-09T11:10:29.836Z
   },
   stickz: {
     description: "stick zoomed in",
     image: stickz,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   table: {
     description: "indoor crow table",
     image: table,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   training: {
     description: "training area",
     image: training,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   tree: {
     description: "perch tree to the left",
     image: tree,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   treeb: {
     description: "perch tree base",
     image: treeb,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   treebase: {
     description: "very base of tree",
     image: treebase,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   treet: {
     description: "perch tree top",
     image: treet,
+    // modified: 2025-10-09T11:10:29.844Z
   },
   water: {
     description: "crow water source",
     image: water,
+    // modified: 2025-10-09T11:10:29.848Z
   },
 };
 

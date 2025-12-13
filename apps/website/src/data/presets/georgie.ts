@@ -14,22 +14,27 @@ const georgiePresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:29.896Z
   },
   cave: {
     description: "Cave",
     image: cave,
+    // modified: 2025-10-09T11:10:29.892Z
   },
   down: {
     description: "Down",
     image: down,
+    // modified: 2025-10-09T11:10:29.892Z
   },
   downl: {
     description: "Down left",
     image: downl,
+    // modified: 2025-10-09T11:10:29.892Z
   },
   downr: {
     description: "Down right",
     image: downr,
+    // modified: 2025-10-09T11:10:29.892Z
   },
   far: {
     description: "Far",
@@ -38,14 +43,17 @@ const georgiePresets: Record<string, Preset> = {
   land: {
     description: "Land",
     image: land,
+    // modified: 2025-10-09T11:10:29.892Z
   },
   landz: {
     description: "Land zoomed in",
     image: landz,
+    // modified: 2025-10-09T11:10:29.892Z
   },
   shore: {
     description: "Shore",
     image: shore,
+    // modified: 2025-10-09T11:10:29.896Z
   },
 };
 

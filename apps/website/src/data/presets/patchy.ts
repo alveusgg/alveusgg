@@ -14,38 +14,47 @@ const patchyPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.368Z
   },
   cave: {
     description: "Cave",
     image: cave,
+    // modified: 2025-10-09T11:10:30.368Z
   },
   closebranches: {
     description: "Close Branches",
     image: closebranches,
+    // modified: 2025-10-09T11:10:30.368Z
   },
   down: {
     description: "Down",
     image: down,
+    // modified: 2025-10-09T11:10:30.372Z
   },
   farbranches: {
     description: "Far Branches",
     image: farbranches,
+    // modified: 2025-10-09T11:10:30.368Z
   },
   groundm: {
     description: "Ground Middle",
     image: groundm,
+    // modified: 2025-10-09T11:10:30.372Z
   },
   log: {
     description: "Log",
     image: log,
+    // modified: 2025-10-09T11:10:30.368Z
   },
   rightcorner: {
     description: "Right Corner",
     image: rightcorner,
+    // modified: 2025-10-09T11:10:30.368Z
   },
   water: {
     description: "Water",
     image: water,
+    // modified: 2025-10-09T11:10:30.372Z
   },
 };
 

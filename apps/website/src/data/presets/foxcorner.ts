@@ -15,42 +15,52 @@ const foxcornerPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   bowl: {
     description: "Bowl",
     image: bowl,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   den: {
     description: "Den",
     image: den,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   hillleft: {
     description: "Hill Left",
     image: hillleft,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   hillright: {
     description: "Hill Right",
     image: hillright,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   hillwide: {
     description: "Hill Wide",
     image: hillwide,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   insidedoor: {
     description: "Inside Door",
     image: insidedoor,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   table: {
     description: "Table",
     image: table,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   training: {
     description: "Training",
     image: training,
+    // modified: 2025-10-09T11:10:29.888Z
   },
   training2: {
     description: "Training 2",
     image: training2,
+    // modified: 2025-10-09T11:10:29.884Z
   },
 };
 
