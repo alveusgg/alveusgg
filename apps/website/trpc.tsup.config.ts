@@ -8,9 +8,11 @@ const config = defineConfig({
   format: "esm",
   dts: {
     only: true,
+    compilerOptions: {
+      incremental: false,
+    },
   },
   clean: false,
-  tsconfig: "./trpc.tsconfig.json",
 });
 
 export default config;
