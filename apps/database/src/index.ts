@@ -31,3 +31,7 @@ export const prisma = new Proxy(
 ) as ReturnType<typeof client>;
 
 export * from "./generated/client";
+export * from "./generated/models";
+
+// Re-export the underlying PrismaClient class to allow TS to infer types
+export type { PrismaClient as _PrismaClient } from "./generated/internal/class";
