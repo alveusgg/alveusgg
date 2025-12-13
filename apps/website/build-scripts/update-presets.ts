@@ -15,7 +15,12 @@ const upstreamCameraMap: Record<string, string> = {
 
 const upstreamPresetsSchema = z.object({
   name: z.string().toLowerCase(),
-  presets: z.array(z.string()),
+  presets: z.array(
+    z.object({
+      name: z.string(),
+      modified: z.coerce.date(),
+    }),
+  ),
 });
 
 type UpstreamPresets = z.infer<typeof upstreamPresetsSchema>;
@@ -63,9 +68,9 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
     return;
   }
 
-  const presets = new Set(camera.presets);
+  const presets = new Set(camera.presets.map((p) => p.name));
   const added: [string, ArrayBuffer][] = [];
-  for (const preset of camera.presets) {
+  for (const { name: preset } of camera.presets) {
     const existing = obj.getProperty(preset);
     if (existing) continue;
 
