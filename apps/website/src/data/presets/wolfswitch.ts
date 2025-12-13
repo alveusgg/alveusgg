@@ -22,70 +22,87 @@ const wolfswitchPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.396Z
   },
   back: {
     description: "Back",
     image: back,
+    // modified: 2025-10-09T11:10:30.408Z
   },
   den: {
     description: "Den",
     image: den,
+    // modified: 2025-10-09T11:10:30.396Z
   },
   denl: {
     description: "Den Left",
     image: denl,
+    // modified: 2025-11-30T18:56:37.816Z
   },
   denr: {
     description: "Den Right",
     image: denr,
+    // modified: 2025-11-30T18:56:37.816Z
   },
   dentop: {
     description: "Den Top",
     image: dentop,
+    // modified: 2025-10-09T11:10:30.400Z
   },
   down: {
     description: "Down",
     image: down,
+    // modified: 2025-10-09T11:10:30.400Z
   },
   downleft: {
     description: "Down Left",
     image: downleft,
+    // modified: 2025-10-09T11:10:30.396Z
   },
   downright: {
     description: "Down Right",
     image: downright,
+    // modified: 2025-10-09T11:10:30.396Z
   },
   farleft: {
     description: "Far Left",
     image: farleft,
+    // modified: 2025-10-09T11:10:30.396Z
   },
   farright: {
     description: "Far Right",
     image: farright,
+    // modified: 2025-10-09T11:10:30.396Z
   },
   insidedoor: {
     description: "Inside Door",
     image: insidedoor,
+    // modified: 2025-10-09T11:10:30.400Z
   },
   left: {
     description: "left",
     image: left,
+    // modified: 2025-11-03T22:57:47.957Z
   },
   leftcorner: {
     description: "Left Corner",
     image: leftcorner,
+    // modified: 2025-10-09T11:10:30.412Z
   },
   middleleft: {
     description: "Middle Left",
     image: middleleft,
+    // modified: 2025-11-30T18:56:37.816Z
   },
   pond: {
     description: "Pond",
     image: pond,
+    // modified: 2025-11-30T18:56:37.816Z
   },
   water: {
     description: "Water",
     image: water,
+    // modified: 2025-10-09T11:10:30.408Z
   },
 };
 

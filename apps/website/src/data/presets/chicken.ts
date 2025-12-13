@@ -26,86 +26,107 @@ const chickenPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.456Z
   },
   backcenter: {
     description: "Back center",
     image: backcenter,
+    // modified: 2025-10-09T11:10:30.460Z
   },
   backlb: {
     description: "Back left branch",
     image: backlb,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   backleft: {
     description: "Back left",
     image: backleft,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   backright: {
     description: "Back right",
     image: backright,
+    // modified: 2025-10-09T11:10:30.460Z
   },
   barrels: {
     description: "Barrels",
     image: barrels,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   center: {
     description: "Center",
     image: center,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   down: {
     description: "Down",
     image: down,
+    // modified: 2025-10-09T11:10:30.460Z
   },
   downleft: {
     description: "Down left",
     image: downleft,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   downright: {
     description: "Down right",
     image: downright,
+    // modified: 2025-10-09T11:10:30.460Z
   },
   food: {
     description: "Food",
     image: food,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   left: {
     description: "Left",
     image: left,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   leftrock: {
     description: "Left rock",
     image: leftrock,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   nuggethide: {
     description: "nuggethide",
     image: nuggethide,
+    // modified: 2025-12-05T14:25:30.041Z
   },
   nuggetsleep: {
     description: "Nugget sleep spot",
     image: nuggetsleep,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   oliversleep: {
     description: "Oliver/Henrique sleep spot",
     image: oliversleep,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   ramp: {
     description: "Ramps",
     image: ramp,
+    // modified: 2025-10-09T11:10:30.464Z
   },
   right: {
     description: "Right",
     image: right,
+    // modified: 2025-10-09T11:10:30.456Z
   },
   rightcorner: {
     description: "Right corner",
     image: rightcorner,
+    // modified: 2025-10-09T11:10:30.468Z
   },
   water: {
     description: "Water",
     image: water,
+    // modified: 2025-10-09T11:10:30.468Z
   },
   window: {
     description: "Window",
     image: window,
+    // modified: 2025-10-09T11:10:30.460Z
   },
 };
 

@@ -1,216 +1,114 @@
-import bed from "@/assets/presets/fox/bed.png";
-import behindtree from "@/assets/presets/fox/behindtree.png";
-import belowplatform from "@/assets/presets/fox/belowplatform.png";
-import belowplatformz from "@/assets/presets/fox/belowplatformz.png";
-import belowramp from "@/assets/presets/fox/belowramp.png";
-import bench from "@/assets/presets/fox/bench.png";
-import brush from "@/assets/presets/fox/brush.png";
-import center from "@/assets/presets/fox/center.png";
-import centerleft from "@/assets/presets/fox/centerleft.png";
-import den from "@/assets/presets/fox/den.png";
-import denf from "@/assets/presets/fox/denf.png";
-import denfl from "@/assets/presets/fox/denfl.png";
-import denl from "@/assets/presets/fox/denl.png";
-import denr from "@/assets/presets/fox/denr.png";
-import down from "@/assets/presets/fox/down.png";
+import den1 from "@/assets/presets/fox/den1.png";
+import den1t from "@/assets/presets/fox/den1t.png";
+import den2 from "@/assets/presets/fox/den2.png";
+import dirtpile from "@/assets/presets/fox/dirtpile.png";
+import doorleft from "@/assets/presets/fox/doorleft.png";
+import doorright from "@/assets/presets/fox/doorright.png";
 import downleft from "@/assets/presets/fox/downleft.png";
 import downright from "@/assets/presets/fox/downright.png";
-import entry from "@/assets/presets/fox/entry.png";
+import farcorner from "@/assets/presets/fox/farcorner.png";
 import home from "@/assets/presets/fox/home.png";
-import insidedoor from "@/assets/presets/fox/insidedoor.png";
 import left from "@/assets/presets/fox/left.png";
-import leftcorner from "@/assets/presets/fox/leftcorner.png";
-import leftfence from "@/assets/presets/fox/leftfence.png";
-import lefttraining from "@/assets/presets/fox/lefttraining.png";
-import platform from "@/assets/presets/fox/platform.png";
-import platformbl from "@/assets/presets/fox/platformbl.png";
-import platformbr from "@/assets/presets/fox/platformbr.png";
-import platformfl from "@/assets/presets/fox/platformfl.png";
-import platformfr from "@/assets/presets/fox/platformfr.png";
-import platforml from "@/assets/presets/fox/platforml.png";
-import rampl from "@/assets/presets/fox/rampl.png";
-import rampt from "@/assets/presets/fox/rampt.png";
+import leftplatform from "@/assets/presets/fox/leftplatform.png";
+import middleplatform from "@/assets/presets/fox/middleplatform.png";
+import reed from "@/assets/presets/fox/reed.png";
 import right from "@/assets/presets/fox/right.png";
-import rightcorner from "@/assets/presets/fox/rightcorner.png";
-import righttraining from "@/assets/presets/fox/righttraining.png";
-import shade from "@/assets/presets/fox/shade.png";
-import table from "@/assets/presets/fox/table.png";
-import treeclimb from "@/assets/presets/fox/treeclimb.png";
-import treehouse from "@/assets/presets/fox/treehouse.png";
-import treehousel from "@/assets/presets/fox/treehousel.png";
-import treehouser from "@/assets/presets/fox/treehouser.png";
-import treer from "@/assets/presets/fox/treer.png";
+import rightplatform from "@/assets/presets/fox/rightplatform.png";
+import rightramp from "@/assets/presets/fox/rightramp.png";
+import river from "@/assets/presets/fox/river.png";
 
 import type { Preset } from "../tech/cameras.types";
 
 const foxPresets: Record<string, Preset> = {
   home: {
-    description: "Home",
+    description: "home",
     image: home,
+    // modified: 2025-12-13T18:01:21.562Z
   },
-  bed: {
-    description: "Bed (old)",
-    image: bed,
+  den1: {
+    description: "den1",
+    image: den1,
+    // modified: 2025-12-13T18:21:14.116Z
   },
-  behindtree: {
-    description: "Behind Tree (below platform)",
-    image: behindtree,
+  den1t: {
+    description: "den1t",
+    image: den1t,
+    // modified: 2025-12-13T15:35:57.034Z
   },
-  belowplatform: {
-    description: "Below Platform",
-    image: belowplatform,
+  den2: {
+    description: "den2",
+    image: den2,
+    // modified: 2025-12-13T18:22:27.505Z
   },
-  belowplatformz: {
-    description: "Below Platform Zoomed",
-    image: belowplatformz,
+  dirtpile: {
+    description: "dirtpile",
+    image: dirtpile,
+    // modified: 2025-12-13T18:16:32.644Z
   },
-  belowramp: {
-    description: "Below Ramp",
-    image: belowramp,
+  doorleft: {
+    description: "doorleft",
+    image: doorleft,
+    // modified: 2025-12-13T18:27:15.310Z
   },
-  bench: {
-    description: "Bench",
-    image: bench,
-  },
-  brush: {
-    description: "Brush",
-    image: brush,
-  },
-  center: {
-    description: "Center",
-    image: center,
-  },
-  centerleft: {
-    description: "Center Left",
-    image: centerleft,
-  },
-  den: {
-    description: "Den",
-    image: den,
-  },
-  denf: {
-    description: "Den Far",
-    image: denf,
-  },
-  denfl: {
-    description: "Den Far Left",
-    image: denfl,
-  },
-  denl: {
-    description: "Den Left",
-    image: denl,
-  },
-  denr: {
-    description: "Den Right",
-    image: denr,
-  },
-  down: {
-    description: "Down",
-    image: down,
+  doorright: {
+    description: "doorright",
+    image: doorright,
+    // modified: 2025-12-13T18:26:47.245Z
   },
   downleft: {
     description: "Down Left",
     image: downleft,
+    // modified: 2025-12-13T18:17:51.469Z
   },
   downright: {
     description: "Down Right",
     image: downright,
+    // modified: 2025-12-13T18:20:33.520Z
   },
-  entry: {
-    description: "Entry",
-    image: entry,
-  },
-  insidedoor: {
-    description: "Inside Door",
-    image: insidedoor,
+  farcorner: {
+    description: "farcorner",
+    image: farcorner,
+    // modified: 2025-12-13T18:26:14.225Z
   },
   left: {
-    description: "Left",
+    description: "left",
     image: left,
+    // modified: 2025-12-13T18:17:07.908Z
   },
-  leftcorner: {
-    description: "Left Corner",
-    image: leftcorner,
+  leftplatform: {
+    description: "leftplatform",
+    image: leftplatform,
+    // modified: 2025-12-13T18:19:34.095Z
   },
-  leftfence: {
-    description: "Left Fence",
-    image: leftfence,
+  middleplatform: {
+    description: "middleplatform",
+    image: middleplatform,
+    // modified: 2025-12-13T18:20:04.315Z
   },
-  lefttraining: {
-    description: "Left Training",
-    image: lefttraining,
-  },
-  platform: {
-    description: "Platform",
-    image: platform,
-  },
-  platformbl: {
-    description: "Platform Back Left",
-    image: platformbl,
-  },
-  platformbr: {
-    description: "Platform Back Right",
-    image: platformbr,
-  },
-  platformfl: {
-    description: "Platform Front Left",
-    image: platformfl,
-  },
-  platformfr: {
-    description: "Platform Front Right",
-    image: platformfr,
-  },
-  platforml: {
-    description: "Platform Left",
-    image: platforml,
-  },
-  rampl: {
-    description: "Ramp Left",
-    image: rampl,
-  },
-  rampt: {
-    description: "Ramp Top",
-    image: rampt,
+  reed: {
+    description: "reed",
+    image: reed,
+    // modified: 2025-12-13T03:23:06.731Z
   },
   right: {
-    description: "Right",
+    description: "right",
     image: right,
+    // modified: 2025-12-13T18:15:59.683Z
   },
-  rightcorner: {
-    description: "Right Corner",
-    image: rightcorner,
+  rightplatform: {
+    description: "rightplatform",
+    image: rightplatform,
+    // modified: 2025-12-13T18:24:52.292Z
   },
-  righttraining: {
-    description: "Right Training",
-    image: righttraining,
+  rightramp: {
+    description: "rightramp",
+    image: rightramp,
+    // modified: 2025-12-13T18:18:29.562Z
   },
-  shade: {
-    description: "Shade",
-    image: shade,
-  },
-  table: {
-    description: "Table",
-    image: table,
-  },
-  treeclimb: {
-    description: "Tree Climb",
-    image: treeclimb,
-  },
-  treehouse: {
-    description: "Tree House",
-    image: treehouse,
-  },
-  treehousel: {
-    description: "Tree House Left",
-    image: treehousel,
-  },
-  treehouser: {
-    description: "Tree House Right",
-    image: treehouser,
-  },
-  treer: {
-    description: "Tree Right",
-    image: treer,
+  river: {
+    description: "river",
+    image: river,
+    // modified: 2025-12-13T18:15:17.407Z
   },
 };
 

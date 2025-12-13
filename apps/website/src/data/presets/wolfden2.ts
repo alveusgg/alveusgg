@@ -10,22 +10,27 @@ const wolfden2Presets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:30.388Z
   },
   bottomright: {
     description: "Bottom Right",
     image: bottomright,
+    // modified: 2025-10-09T11:10:30.388Z
   },
   left: {
     description: "Left",
     image: left,
+    // modified: 2025-10-09T11:10:30.388Z
   },
   leftcorner: {
     description: "Left Corner",
     image: leftcorner,
+    // modified: 2025-10-09T11:10:30.388Z
   },
   rightcorner: {
     description: "Right Corner",
     image: rightcorner,
+    // modified: 2025-10-09T11:10:30.388Z
   },
 };
 

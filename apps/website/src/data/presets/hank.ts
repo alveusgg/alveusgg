@@ -12,30 +12,37 @@ const hankPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    // modified: 2025-10-09T11:10:29.904Z
   },
   backleft: {
     description: "Back Left",
     image: backleft,
+    // modified: 2025-10-09T11:10:29.900Z
   },
   backright: {
     description: "Back Right",
     image: backright,
+    // modified: 2025-10-09T11:10:29.904Z
   },
   center: {
     description: "Center",
     image: center,
+    // modified: 2025-10-09T11:10:29.900Z
   },
   downleft: {
     description: "Down Left",
     image: downleft,
+    // modified: 2025-10-09T11:10:29.900Z
   },
   downright: {
     description: "Down Right",
     image: downright,
+    // modified: 2025-10-09T11:10:29.900Z
   },
   water: {
     description: "Water",
     image: water,
+    // modified: 2025-10-09T11:10:29.900Z
   },
 };
 
