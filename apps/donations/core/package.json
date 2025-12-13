@@ -2,10 +2,24 @@
   "name": "@alveusgg/donations-core",
   "version": "0.0.1",
   "private": true,
+  "type": "module",
   "main": "src/index.ts",
   "types": "src/index.ts",
+  "exports": {
+    ".": {
+      "import": "./src/index.ts",
+      "types": "./src/index.ts"
+    },
+    "./pixels": {
+      "import": "./src/pixels.ts",
+      "types": "./src/pixels.ts"
+    }
+  },
   "scripts": {},
   "dependencies": {
     "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@types/node": "^24.10.2"
   }
 }

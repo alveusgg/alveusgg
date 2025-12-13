@@ -1,4 +1,8 @@
 import type { Donation, DonationAlert, Pixel } from "@alveusgg/donations-core";
+import {
+  determineNumberOfPixels,
+  hashPixelIdentifier,
+} from "@alveusgg/donations-core/pixels";
 import { DurableObject } from "cloudflare:workers";
 
 import type { AppRouter } from "@alveusgg/alveusgg-website";
@@ -22,6 +26,23 @@ const Grid = z.object({
 });
 type Grid = z.infer<typeof Grid>;
 
+function generateExampleGrid() {
+  return {
+    columns: 10,
+    rows: 2,
+    size: 4,
+    squares: Array.from({ length: 20 }).reduce(
+      (acc: Record<string, string>, _, index) => {
+        const column = Math.floor(index / 2);
+        const row = index % 2;
+        acc[`${column}:${row}`] = `EXAMPLEDATA${index}`;
+        return acc;
+      },
+      {},
+    ),
+  };
+}
+
 export class PixelsManagerDurableObject extends DurableObject<Env> {
   private router: Hono;
   private startup?: Promise<void>;
@@ -44,6 +65,9 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
     this.router = new Hono()
       .use(cors())
+      .get("/example-grid", () =>
+        Response.json(generateExampleGrid(), { status: 200 }),
+      )
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
           await this.ready();
@@ -180,7 +204,7 @@ export class PixelsManagerDurableObject extends DurableObject<Env> {
 
           const data = this.grid.squares[`${location.column}:${location.row}`];
           const emailHash = donation.donatedBy.email
-            ? await hash(donation.donatedBy.email)
+            ? await hashPixelIdentifier(donation.donatedBy.email)
             : undefined;
 
           pixelsForDonation.push({
@@ -276,23 +300,6 @@ function getRandomEmptySquare(pixels: Pixel[], grid: Grid) {
       emptyCounter++;
     }
   }
-}
-
-const PIXEL_PRICE = 100; // Each pixel costs $100 USD
-const DONATION_TOLERANCE = 5; // $5 USD wiggle room
-
-function determineNumberOfPixels(donationAmountDollars: number) {
-  return Math.floor((donationAmountDollars + DONATION_TOLERANCE) / PIXEL_PRICE);
-}
-
-async function hash(identifier: string) {
-  return await crypto.subtle
-    .digest("SHA-256", new TextEncoder().encode(identifier.toLowerCase()))
-    .then((hash) =>
-      Array.from(new Uint8Array(hash))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join(""),
-    );
 }
 
 function makeTwitchBroadcasterMap(donations: Donation[]) {
