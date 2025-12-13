@@ -1,3 +1,5 @@
+import feeder from "@/assets/presets/emu/feeder.png";
+import feedwide from "@/assets/presets/emu/feedwide.png";
 import foodleft from "@/assets/presets/emu/foodleft.png";
 import foodright from "@/assets/presets/emu/foodright.png";
 import gate from "@/assets/presets/emu/gate.png";
@@ -21,6 +23,14 @@ const emuPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+  },
+  feeder: {
+    description: "feeder",
+    image: feeder,
+  },
+  feedwide: {
+    description: "feedwide",
+    image: feedwide,
   },
   foodleft: {
     description: "Food Left",

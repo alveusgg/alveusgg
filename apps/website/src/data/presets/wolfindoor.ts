@@ -11,6 +11,7 @@ import neardoor from "@/assets/presets/wolfindoor/neardoor.png";
 import platformcenter from "@/assets/presets/wolfindoor/platformcenter.png";
 import platformleft from "@/assets/presets/wolfindoor/platformleft.png";
 import platformleftb from "@/assets/presets/wolfindoor/platformleftb.png";
+import platformlefttop from "@/assets/presets/wolfindoor/platformlefttop.png";
 import platformright from "@/assets/presets/wolfindoor/platformright.png";
 import platformrightb from "@/assets/presets/wolfindoor/platformrightb.png";
 import right from "@/assets/presets/wolfindoor/right.png";
@@ -70,6 +71,10 @@ const wolfindoorPresets: Record<string, Preset> = {
   platformleftb: {
     description: "Platform Left bottom",
     image: platformleftb,
+  },
+  platformlefttop: {
+    description: "platformlefttop",
+    image: platformlefttop,
   },
   platformright: {
     description: "Platform Right",

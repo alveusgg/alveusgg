@@ -10,6 +10,7 @@ import brush from "@/assets/presets/pasture/brush.png";
 import brushr from "@/assets/presets/pasture/brushr.png";
 import donksleep from "@/assets/presets/pasture/donksleep.png";
 import down from "@/assets/presets/pasture/down.png";
+import downleft from "@/assets/presets/pasture/downleft.png";
 import feeder from "@/assets/presets/pasture/feeder.png";
 import feederstatus from "@/assets/presets/pasture/feederstatus.png";
 import feedstall from "@/assets/presets/pasture/feedstall.png";
@@ -20,13 +21,14 @@ import groundr from "@/assets/presets/pasture/groundr.png";
 import grove2 from "@/assets/presets/pasture/grove2.png";
 import grove2l from "@/assets/presets/pasture/grove2l.png";
 import grove2r from "@/assets/presets/pasture/grove2r.png";
+import grove3 from "@/assets/presets/pasture/grove3.png";
 import grove from "@/assets/presets/pasture/grove.png";
 import grovefl from "@/assets/presets/pasture/grovefl.png";
 import grovel from "@/assets/presets/pasture/grovel.png";
 import home from "@/assets/presets/pasture/home.png";
 import insidebarn from "@/assets/presets/pasture/insidebarn.png";
+import insidebarnz from "@/assets/presets/pasture/insidebarnz.png";
 import middle from "@/assets/presets/pasture/middle.png";
-import pedrocorner from "@/assets/presets/pasture/pedrocorner.png";
 import pen from "@/assets/presets/pasture/pen.png";
 import penl from "@/assets/presets/pasture/penl.png";
 import penr from "@/assets/presets/pasture/penr.png";
@@ -100,6 +102,10 @@ const pasturePresets: Record<string, Preset> = {
     description: "Down",
     image: down,
   },
+  downleft: {
+    description: "downleft",
+    image: downleft,
+  },
   feeder: {
     description: "Feeder",
     image: feeder,
@@ -144,6 +150,10 @@ const pasturePresets: Record<string, Preset> = {
     description: "Grove 2 Right",
     image: grove2r,
   },
+  grove3: {
+    description: "grove3",
+    image: grove3,
+  },
   grovefl: {
     description: "Grove Front Left",
     image: grovefl,
@@ -156,13 +166,13 @@ const pasturePresets: Record<string, Preset> = {
     description: "Inside Barn",
     image: insidebarn,
   },
+  insidebarnz: {
+    description: "insidebarnz",
+    image: insidebarnz,
+  },
   middle: {
     description: "Middle",
     image: middle,
-  },
-  pedrocorner: {
-    description: "where pedro comes and goes",
-    image: pedrocorner,
   },
   pen: {
     description: "Pen",

@@ -11,6 +11,7 @@ import food from "@/assets/presets/chicken/food.png";
 import home from "@/assets/presets/chicken/home.png";
 import left from "@/assets/presets/chicken/left.png";
 import leftrock from "@/assets/presets/chicken/leftrock.png";
+import nuggethide from "@/assets/presets/chicken/nuggethide.png";
 import nuggetsleep from "@/assets/presets/chicken/nuggetsleep.png";
 import oliversleep from "@/assets/presets/chicken/oliversleep.png";
 import ramp from "@/assets/presets/chicken/ramp.png";
@@ -73,6 +74,10 @@ const chickenPresets: Record<string, Preset> = {
   leftrock: {
     description: "Left rock",
     image: leftrock,
+  },
+  nuggethide: {
+    description: "nuggethide",
+    image: nuggethide,
   },
   nuggetsleep: {
     description: "Nugget sleep spot",
