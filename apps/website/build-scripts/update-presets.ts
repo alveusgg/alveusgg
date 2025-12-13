@@ -70,41 +70,82 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
 
   const presets = new Set(camera.presets.map((p) => p.name));
   const added: [string, ArrayBuffer][] = [];
-  for (const { name: preset } of camera.presets) {
-    const existing = obj.getProperty(preset);
-    if (existing) continue;
-
+  for (const preset of camera.presets) {
     // Ignore any temporary presets
-    if (/^te?mp/i.test(preset) || /te?mp$/i.test(preset)) {
-      console.warn(`Ignoring temporary preset ${preset} for camera ${name}`);
+    if (/^te?mp/i.test(preset.name) || /te?mp$/i.test(preset.name)) {
+      console.warn(
+        `Ignoring temporary preset ${preset.name} for camera ${name}`,
+      );
       continue;
+    }
+
+    const existing = obj.getProperty(preset.name);
+    if (existing) {
+      // Try to find a modified comment within the existing preset
+      const modified = existing
+        .getDescendantsOfKind(SyntaxKind.SingleLineCommentTrivia)
+        .map((comment) => {
+          const text = comment.getText();
+          if (!text.startsWith("// modified: ")) return null;
+
+          const dateStr = text.replace("// modified: ", "").trim();
+          const date = new Date(dateStr);
+          if (isNaN(date.getTime())) return null;
+
+          return {
+            comment,
+            date,
+          };
+        })
+        .find((date) => date !== null);
+
+      // If the modified date is the same or newer, skip updating this preset
+      if (modified && modified.date >= preset.modified) {
+        continue;
+      }
     }
 
     try {
       // Download the preset image from the upstream API and add an import for it
       // Intentionally use the original camera name here for the upstream API, not the mapped name
-      const data = await getUpstreamImage(camera.name, preset);
+      const data = await getUpstreamImage(camera.name, preset.name);
       const imp = file.addImportDeclaration({
-        moduleSpecifier: `@/assets/presets/${name}/${preset}.png`,
-        defaultImport: preset,
+        moduleSpecifier: `@/assets/presets/${name}/${preset.name}.png`,
+        defaultImport: preset.name,
       });
       added.push([imp.getModuleSpecifierValue(), data]);
 
+      // Get the old description if it exists
+      const description = existing
+        ? existing
+            .getFirstChildByKindOrThrow(SyntaxKind.ObjectLiteralExpression)
+            .getPropertyOrThrow("description")
+            .getFirstChildByKindOrThrow(SyntaxKind.StringLiteral)
+            .getText()
+        : JSON.stringify(preset.name);
+
       // Add a new property for the preset
       obj.addPropertyAssignment({
-        name: preset,
+        name: preset.name,
         initializer: (writer) => {
           writer.block(() => {
-            writer.writeLine(`description: "${preset}",`);
-            writer.writeLine(`image: ${preset},`);
+            writer.writeLine(`description: ${description},`);
+            writer.writeLine(`image: ${preset.name},`);
+            writer.writeLine(`// modified: ${preset.modified.toISOString()}`);
           });
         },
       });
+
+      // Remove the old preset property if it exists (and remove the duplicate import we just added)
+      if (existing) {
+        existing.remove();
+        imp.remove();
+      }
     } catch (error) {
       // Log an error on failure but continue processing other presets
       // We should only hit this if the upstream API does not have an image for the preset
       console.error(
-        `Failed to process preset ${preset} for camera ${name}:`,
+        `Failed to process preset ${preset.name} for camera ${name}:`,
         error instanceof Error ? error.message : error,
       );
     }
