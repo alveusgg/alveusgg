@@ -151,7 +151,7 @@ const Card = ({
     />
     <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
       <div className="flex items-center justify-between">
-        <h4 className="text-lg font-semibold">{title}</h4>
+        <h4 className="truncate text-lg font-semibold">{title}</h4>
         {command && (
           <div className="flex gap-1">
             <CopyToClipboardButton
