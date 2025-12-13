@@ -4,7 +4,6 @@ import food from "@/assets/presets/roaches/food.png";
 import home from "@/assets/presets/roaches/home.png";
 import left from "@/assets/presets/roaches/left.png";
 import right from "@/assets/presets/roaches/right.png";
-import stickl from "@/assets/presets/roaches/stickl.png";
 import sticklt from "@/assets/presets/roaches/sticklt.png";
 import stickr from "@/assets/presets/roaches/stickr.png";
 import stickrt from "@/assets/presets/roaches/stickrt.png";
@@ -35,10 +34,6 @@ const roachesPresets: Record<string, Preset> = {
   right: {
     description: "Right",
     image: right,
-  },
-  stickl: {
-    description: "Stick Left",
-    image: stickl,
   },
   sticklt: {
     description: "Stick Left Top",
