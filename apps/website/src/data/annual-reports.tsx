@@ -1,6 +1,7 @@
 import { type ImageProps } from "next/image";
 import { type ReactNode } from "react";
 
+import Box from "@/components/content/Box";
 import Heading from "@/components/content/Heading";
 
 import filing2021Pdf from "@/assets/filings/990-2021.pdf";
@@ -19,13 +20,18 @@ export type Report = {
   filing: string;
 };
 
+const tableClasses =
+  "w-full table-auto [&_tbody]:rounded [&_tbody]:overflow-clip [&_td]:p-1 [&_tr]:odd:bg-alveus-tan/10";
+const tableHeadClasses = "bg-alveus-green-900!";
+const tableBreakClasses = "*:px-0! *:py-4! bg-transparent!";
+
 const reports = [
   {
     year: 2021,
     image: report2021Image,
     alt: (
       <>
-        <div>
+        <Box dark className="space-y-4">
           <Heading level={2}>Viewer Demographics</Heading>
 
           <p>
@@ -90,15 +96,7 @@ const reports = [
             diverse online audience.
           </p>
 
-          <table className="w-full table-auto">
-            <thead>
-              <tr>
-                <th className="text-start">Platform</th>
-                <th className="text-start">2021</th>
-                <th className="text-start">2022</th>
-              </tr>
-            </thead>
-
+          <table className={tableClasses}>
             <tbody>
               <tr>
                 <td>Twitch</td>
@@ -127,9 +125,9 @@ const reports = [
               </tr>
             </tbody>
           </table>
-        </div>
+        </Box>
 
-        <div>
+        <Box dark>
           <Heading level={2}>Financial Report</Heading>
 
           <p>
@@ -152,22 +150,30 @@ const reports = [
             Care Coordinator) in addition to general animal care costs.
           </p>
 
-          <dl>
-            <dt className="mt-2 font-bold">Construction</dt>
-            <dd>67.30%</dd>
+          <dl className="flex flex-wrap gap-4">
+            <div>
+              <dt className="mt-2 font-bold">Construction</dt>
+              <dd>67.30%</dd>
+            </div>
 
-            <dt className="mt-2 font-bold">Operating</dt>
-            <dd>17.79%</dd>
+            <div>
+              <dt className="mt-2 font-bold">Operating</dt>
+              <dd>17.79%</dd>
+            </div>
 
-            <dt className="mt-2 font-bold">Fundraising</dt>
-            <dd>8.46%</dd>
+            <div>
+              <dt className="mt-2 font-bold">Fundraising</dt>
+              <dd>8.46%</dd>
+            </div>
 
-            <dt className="mt-2 font-bold">Management</dt>
-            <dd>6.45%</dd>
+            <div>
+              <dt className="mt-2 font-bold">Management</dt>
+              <dd>6.45%</dd>
+            </div>
           </dl>
-        </div>
+        </Box>
 
-        <div className="space-y-4">
+        <Box dark className="space-y-4">
           <Heading level={2}>Continuing Our Mission</Heading>
 
           <p>
@@ -186,7 +192,7 @@ const reports = [
           <p>
             <strong>Thank you.</strong>
           </p>
-        </div>
+        </Box>
       </>
     ),
     filing: filing2021Pdf,
@@ -196,18 +202,10 @@ const reports = [
     image: report2022Image,
     alt: (
       <>
-        <div>
+        <Box dark>
           <Heading level={2}>Followers</Heading>
 
-          <table className="w-full table-auto">
-            <thead>
-              <tr>
-                <th className="text-start">Platform</th>
-                <th className="text-start">Start 2022</th>
-                <th className="text-start">End 2022</th>
-              </tr>
-            </thead>
-
+          <table className={tableClasses}>
             <tbody>
               <tr>
                 <td>Twitch</td>
@@ -236,80 +234,106 @@ const reports = [
               </tr>
             </tbody>
           </table>
-        </div>
+        </Box>
 
-        <div>
+        <Box dark className="space-y-4">
           <Heading level={2}>Twitch Demographics</Heading>
 
-          <div className="flex flex-wrap justify-between gap-8">
-            <dl>
+          <dl className="flex flex-wrap gap-4">
+            <div>
               <dt className="mt-2 font-bold">Male</dt>
               <dd>78.36%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">Female</dt>
               <dd>19.64%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">Other</dt>
               <dd>2%</dd>
-            </dl>
+            </div>
+          </dl>
 
-            <dl>
+          <dl className="flex flex-wrap gap-4">
+            <div>
               <dt className="mt-2 font-bold">18-24</dt>
               <dd>35.85%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">25-34</dt>
               <dd>32.14%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">35-44</dt>
               <dd>15.33%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">45-54</dt>
               <dd>8.62%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">55-64</dt>
               <dd>4.97%</dd>
-            </dl>
+            </div>
+          </dl>
 
-            <dl>
+          <dl className="flex flex-wrap gap-4">
+            <div>
               <dt className="mt-2 font-bold">USA</dt>
               <dd>20.48%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">Germany</dt>
               <dd>6.54%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">South Korea</dt>
               <dd>5.09%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">Russia</dt>
               <dd>4.7%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">France</dt>
               <dd>4.27%</dd>
+            </div>
 
+            <div>
               <dt className="mt-2 font-bold">Others</dt>
               <dd>58.95%</dd>
-            </dl>
-          </div>
+            </div>
+          </dl>
 
           <div className="flex flex-wrap justify-between gap-8">
-            <Heading level={3} className="text-xl">
+            <Heading level={-1} className="text-xl">
               50.3 million minutes watched
             </Heading>
-            <Heading level={3} className="text-xl">
+            <Heading level={-1} className="text-xl">
               2.65 million live views
             </Heading>
-            <Heading level={3} className="text-xl">
+            <Heading level={-1} className="text-xl">
               18,689 peak viewership
             </Heading>
           </div>
-        </div>
+        </Box>
 
-        <div>
+        <Box dark>
           <Heading level={2}>Financial Report</Heading>
 
-          <table className="w-full table-auto">
+          <table className={tableClasses}>
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Income</strong>
                 </td>
@@ -328,7 +352,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -336,7 +360,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Expenses</strong>
                 </td>
@@ -411,7 +435,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -419,7 +443,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Net Income</strong>
                 </td>
@@ -430,7 +454,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -438,7 +462,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Assets</strong>
                 </td>
@@ -457,7 +481,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -476,7 +500,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -495,7 +519,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -513,9 +537,9 @@ const reports = [
               </tr>
             </tbody>
           </table>
-        </div>
+        </Box>
 
-        <div className="space-y-4">
+        <Box dark className="space-y-4">
           <Heading level={2}>Continuing Our Mission</Heading>
 
           <p>
@@ -534,7 +558,7 @@ const reports = [
           <p>
             <strong>Thank you.</strong>
           </p>
-        </div>
+        </Box>
       </>
     ),
     filing: filing2022Pdf,
@@ -544,18 +568,10 @@ const reports = [
     image: report2023Image,
     alt: (
       <>
-        <div>
+        <Box dark>
           <Heading level={2}>Followers</Heading>
 
-          <table className="w-full table-auto">
-            <thead>
-              <tr>
-                <th className="text-start">Platform</th>
-                <th className="text-start">Start 2023</th>
-                <th className="text-start">End 2023</th>
-              </tr>
-            </thead>
-
+          <table className={tableClasses}>
             <tbody>
               <tr>
                 <td>Twitch</td>
@@ -584,20 +600,20 @@ const reports = [
               </tr>
             </tbody>
           </table>
-        </div>
+        </Box>
 
-        <div>
-          <Heading level={3} className="text-xl">
+        <Box dark>
+          <Heading level={-1}>
             319 million minutes watched on Twitch by the end of 2023
           </Heading>
-        </div>
+        </Box>
 
-        <div>
+        <Box dark>
           <Heading level={2}>Financial Report</Heading>
 
-          <table className="w-full table-auto">
+          <table className={tableClasses}>
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Income</strong>
                 </td>
@@ -620,7 +636,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -628,7 +644,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Expenses</strong>
                 </td>
@@ -699,7 +715,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -707,7 +723,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Net Income</strong>
                 </td>
@@ -718,7 +734,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -726,7 +742,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Assets</strong>
                 </td>
@@ -744,9 +760,9 @@ const reports = [
               </tr>
             </tbody>
           </table>
-        </div>
+        </Box>
 
-        <div className="space-y-4">
+        <Box dark className="space-y-4">
           <Heading level={2}>Continuing Our Mission</Heading>
 
           <p>
@@ -764,7 +780,7 @@ const reports = [
             to vulnerable species around the globe while providing excellent
             quality of care for our animal ambassadors.
           </p>
-        </div>
+        </Box>
       </>
     ),
     filing: filing2023Pdf,
@@ -774,7 +790,7 @@ const reports = [
     image: report2024Image,
     alt: (
       <>
-        <div className="space-y-4">
+        <Box dark className="space-y-4">
           <Heading level={2}>2024 Overview</Heading>
 
           <p>
@@ -798,12 +814,12 @@ const reports = [
             vulnerable species around the globe and providing excellent care to
             our animal ambassadors.
           </p>
-        </div>
+        </Box>
 
-        <div>
+        <Box dark>
           <Heading level={2}>Follower Growth</Heading>
 
-          <table className="w-full table-auto">
+          <table className={tableClasses}>
             <tbody>
               <tr>
                 <td>Twitch</td>
@@ -832,20 +848,20 @@ const reports = [
               </tr>
             </tbody>
           </table>
-        </div>
+        </Box>
 
-        <div>
-          <Heading level={3} className="text-xl">
+        <Box dark>
+          <Heading level={-1}>
             Over 100 Million impressions across all platforms
           </Heading>
-        </div>
+        </Box>
 
-        <div>
+        <Box dark>
           <Heading level={2}>Financial Report</Heading>
 
-          <table className="w-full table-auto">
+          <table className={tableClasses}>
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Income</strong>
                 </td>
@@ -868,7 +884,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -876,7 +892,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Total Expenses</strong>
                 </td>
@@ -967,7 +983,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -975,7 +991,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Net Income</strong>
                 </td>
@@ -986,7 +1002,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableBreakClasses}>
                 <td colSpan={2}>
                   <hr />
                 </td>
@@ -994,7 +1010,7 @@ const reports = [
             </tbody>
 
             <tbody>
-              <tr>
+              <tr className={tableHeadClasses}>
                 <td>
                   <strong>Net Assets</strong>
                 </td>
@@ -1012,7 +1028,7 @@ const reports = [
               </tr>
             </tbody>
           </table>
-        </div>
+        </Box>
       </>
     ),
     filing: filing2024Pdf,
