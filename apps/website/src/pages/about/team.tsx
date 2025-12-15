@@ -39,10 +39,6 @@ const team: Record<string, Member> = {
     name: "Dion (@Dionysus1911)",
     title: "Lead Artist",
   },
-  colton: {
-    name: "Colton (@coltonactually)",
-    title: "Creative Producer",
-  },
   paul: {
     name: "Paul (@pjeweb)",
     title: "Open-Source Developer",
