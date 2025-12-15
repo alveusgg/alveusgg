@@ -6,9 +6,11 @@ import Heading from "@/components/content/Heading";
 import filing2021Pdf from "@/assets/filings/990-2021.pdf";
 import filing2022Pdf from "@/assets/filings/990-2022.pdf";
 import filing2023Pdf from "@/assets/filings/990-2023.pdf";
+import filing2024Pdf from "@/assets/filings/990-2024.pdf";
 import report2021Image from "@/assets/reports/2021.svg";
 import report2022Image from "@/assets/reports/2022.svg";
 import report2023Image from "@/assets/reports/2023.svg";
+import report2024Image from "@/assets/reports/2024.svg";
 
 export type Report = {
   year: number;
@@ -636,7 +638,7 @@ const reports = [
               </tr>
               <tr>
                 <td>Operational Expenses</td>
-                <td>90,618.626</td>
+                <td>90,618.62</td>
               </tr>
               <tr>
                 <td>Advertising Expense</td>
@@ -766,6 +768,254 @@ const reports = [
       </>
     ),
     filing: filing2023Pdf,
+  },
+  {
+    year: 2024,
+    image: report2024Image,
+    alt: (
+      <>
+        <div className="space-y-4">
+          <Heading level={2}>2024 Overview</Heading>
+
+          <p>
+            In 2024 Alveus continued our mission to inspire online audiences to
+            engage in conservation efforts by creating content that teaches them
+            to fall in love with a myriad of species represented by
+            non-releasable animal ambassadors. Alveus hosted over 30 content
+            creators for collaborations that reached millions of people around
+            the world.
+          </p>
+
+          <p>
+            Together, the Alveus community also contributed over 9,000 hours to
+            our planet through volunteering, exploring, picking up trash, and
+            much more, sharing them through Show and Tell.
+          </p>
+
+          <p>
+            Thank you so much to the Alveus community for your continued
+            support. With your help, we are able to continue giving a voice to
+            vulnerable species around the globe and providing excellent care to
+            our animal ambassadors.
+          </p>
+        </div>
+
+        <div>
+          <Heading level={2}>Follower Growth</Heading>
+
+          <table className="w-full table-auto">
+            <tbody>
+              <tr>
+                <td>Twitch</td>
+                <td>144,000</td>
+                <td>248,529</td>
+              </tr>
+              <tr>
+                <td>YouTube</td>
+                <td>197,000</td>
+                <td>347,877</td>
+              </tr>
+              <tr>
+                <td>Instagram</td>
+                <td>96,000</td>
+                <td>132,438</td>
+              </tr>
+              <tr>
+                <td>TikTok</td>
+                <td>127,500</td>
+                <td>211,000</td>
+              </tr>
+              <tr>
+                <td>X (Twitter)</td>
+                <td>81,650</td>
+                <td>95,772</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div>
+          <Heading level={3} className="text-xl">
+            Over 100 Million impressions across all platforms
+          </Heading>
+        </div>
+
+        <div>
+          <Heading level={2}>Financial Report</Heading>
+
+          <table className="w-full table-auto">
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Total Income</strong>
+                </td>
+                <td>
+                  <strong>1,592,716</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>Donations and Grants</td>
+                <td>1,083,539.20</td>
+              </tr>
+              <tr>
+                <td>Ads and Sponsorships</td>
+                <td>395,338.83</td>
+              </tr>
+              <tr>
+                <td>Sales of Merchandise</td>
+                <td>113,837.97</td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr>
+                <td colSpan={2}>
+                  <hr />
+                </td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Total Expenses</strong>
+                </td>
+                <td>
+                  <strong>901,591</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>Expense</td>
+                <td>2,740.12</td>
+              </tr>
+              <tr>
+                <td>Contractor Expense</td>
+                <td>107,299.05</td>
+              </tr>
+              <tr>
+                <td>Fundraising Expense</td>
+                <td>14,202.94</td>
+              </tr>
+              <tr>
+                <td>Salary Expense</td>
+                <td>405,030.00</td>
+              </tr>
+              <tr>
+                <td>Insurance</td>
+                <td>37,681.12</td>
+              </tr>
+              <tr>
+                <td>Repairs &amp; Maintenance</td>
+                <td>100,955.66</td>
+              </tr>
+              <tr>
+                <td>Meals &amp; Entertainment</td>
+                <td>10,348.05</td>
+              </tr>
+              <tr>
+                <td>Office Supplies &amp; Software</td>
+                <td>28,622.63</td>
+              </tr>
+              <tr>
+                <td>Taxes &amp; Licenses</td>
+                <td>22,286.42</td>
+              </tr>
+              <tr>
+                <td>Depreciation</td>
+                <td>29,453.41</td>
+              </tr>
+              <tr>
+                <td>Utilities</td>
+                <td>18,877.97</td>
+              </tr>
+              <tr>
+                <td>Travel</td>
+                <td>24,748.49</td>
+              </tr>
+              <tr>
+                <td>Other Business Expenses</td>
+                <td>187.00</td>
+              </tr>
+              <tr>
+                <td>Streaming Supplies</td>
+                <td>26,194.52</td>
+              </tr>
+              <tr>
+                <td>Legal &amp; Professional Fees</td>
+                <td>1,278.16</td>
+              </tr>
+              <tr>
+                <td>Vet Fees &amp; Medicine</td>
+                <td>32,101.05</td>
+              </tr>
+              <tr>
+                <td>Feed &amp; Animal Supplies</td>
+                <td>37,603.97</td>
+              </tr>
+              <tr>
+                <td>Advertising &amp; Marketing</td>
+                <td>0.00</td>
+              </tr>
+              <tr>
+                <td>Keeper Equipment</td>
+                <td>3,559.55</td>
+              </tr>
+              <tr>
+                <td>Bank Charges &amp; Fees</td>
+                <td>-1,579.38</td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr>
+                <td colSpan={2}>
+                  <hr />
+                </td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Net Income</strong>
+                </td>
+                <td>
+                  <strong>691,126</strong>
+                </td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr>
+                <td colSpan={2}>
+                  <hr />
+                </td>
+              </tr>
+            </tbody>
+
+            <tbody>
+              <tr>
+                <td>
+                  <strong>Net Assets</strong>
+                </td>
+                <td>
+                  <strong>1,633,405</strong>
+                </td>
+              </tr>
+              <tr>
+                <td>Total Assets</td>
+                <td>1,645,560.00</td>
+              </tr>
+              <tr>
+                <td>Total Liabilities</td>
+                <td>12,155.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </>
+    ),
+    filing: filing2024Pdf,
   },
 ] as const satisfies Report[];
 
