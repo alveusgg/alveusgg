@@ -1,6 +1,7 @@
+import { Field, Label, Switch } from "@headlessui/react";
 import { type GetStaticPaths, type GetStaticProps, type NextPage } from "next";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 
 import {
   type ReportYear,
@@ -8,6 +9,8 @@ import {
   isReportYear,
   reportYears,
 } from "@/data/annual-reports";
+
+import { classes } from "@/utils/classes";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
@@ -48,6 +51,7 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
 }) => {
   // TODO: Make Report#alt serializable, pass whole report as prop
   const report = useMemo(() => getReport(year), [year]);
+  const [graphic, setGraphic] = useState(true);
 
   return (
     <>
@@ -61,24 +65,56 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
 
       <Section
         dark
-        containerClassName="flex flex-wrap gap-4 justify-between items-end"
+        containerClassName="flex flex-wrap gap-4 justify-between items-center"
       >
-        <Heading>{report.year} Annual Report</Heading>
+        <div>
+          <Heading>{report.year} Annual Report</Heading>
+
+          <Field className="-mx-4 mt-4 flex items-center text-sm leading-none">
+            <button
+              className="px-4 py-1"
+              type="button"
+              onClick={() => setGraphic(false)}
+            >
+              Text
+            </button>
+
+            <Label className="sr-only">Show report graphic</Label>
+            <Switch
+              checked={graphic}
+              onChange={setGraphic}
+              className="group inline-flex h-6 w-11 shrink-0 items-center rounded-full bg-alveus-green-300 transition-colors data-checked:bg-alveus-tan"
+            >
+              <span className="size-4 translate-x-1 rounded-full bg-alveus-green transition-transform group-data-checked:translate-x-6" />
+            </Switch>
+
+            <button
+              className="px-4 py-1"
+              type="button"
+              onClick={() => setGraphic(true)}
+            >
+              Graphic
+            </button>
+          </Field>
+        </div>
+
         <Button href="/about/annual-reports" dark>
           Explore other reports
         </Button>
       </Section>
 
       <Section containerClassName="space-y-16">
-        <Image
-          src={report.image}
-          quality={100}
-          className="mx-auto h-auto w-full max-w-3xl bg-alveus-green"
-          alt="Report graphic"
-          aria-describedby="report"
-        />
+        {graphic && (
+          <Image
+            src={report.image}
+            quality={100}
+            className="mx-auto h-auto w-full max-w-3xl bg-alveus-green"
+            alt="Report graphic"
+            aria-describedby="report"
+          />
+        )}
 
-        <div className="sr-only space-y-8" id="report">
+        <div className={classes("space-y-8", graphic && "sr-only")} id="report">
           {report.alt}
         </div>
 
