@@ -1,8 +1,9 @@
 import type { InferGetStaticPropsType, NextPage, NextPageContext } from "next";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useCallback, useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 
+import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
 import { getAdminSSP } from "@/server/utils/admin";
 
 import { permissions } from "@/data/permissions";
@@ -13,6 +14,7 @@ import { trpc } from "@/utils/trpc";
 import { AdminPageLayout } from "@/components/admin/AdminPageLayout";
 import { Headline } from "@/components/admin/Headline";
 import { Panel } from "@/components/admin/Panel";
+import { AdminShowAndTellPreviewModal } from "@/components/admin/show-and-tell/AdminShowAndTellPreviewModal";
 import DateTime from "@/components/content/DateTime";
 import Meta from "@/components/content/Meta";
 import { MessageBox } from "@/components/shared/MessageBox";
@@ -21,10 +23,13 @@ import {
   approveButtonClasses,
   dangerButtonClasses,
   defaultButtonClasses,
+  secondaryButtonClasses,
 } from "@/components/shared/form/Button";
+import type { FileReference } from "@/components/shared/form/UploadAttachmentsField";
 import { ShowAndTellEntryForm } from "@/components/show-and-tell/ShowAndTellEntryForm";
 
 import IconCheckCircle from "@/icons/IconCheckCircle";
+import IconEye from "@/icons/IconEye";
 import IconMinus from "@/icons/IconMinus";
 import IconTrash from "@/icons/IconTrash";
 
@@ -65,6 +70,30 @@ const AdminReviewShowAndTellPage: NextPage<
     [],
   );
 
+  const entry = getEntry.data;
+
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const { data: postsFromANewLocation } =
+    trpc.showAndTell.getPostsFromANewLocation.useQuery(undefined, {
+      enabled: isPreviewOpen,
+    });
+
+  const [previewFormData, setPreviewFormData] =
+    useState<Partial<PublicShowAndTellEntryWithAttachments> | null>(null);
+  const shouldApproveAfterSaveRef = useRef(false);
+  const formRef = useRef<HTMLFormElement>(null);
+  const currentAttachmentsRef = useRef<{
+    imageFiles: FileReference[];
+    videoUrls: string[];
+  }>({ imageFiles: [], videoUrls: [] });
+
+  const handleAttachmentsChange = useCallback(
+    (data: { imageFiles: FileReference[]; videoUrls: string[] }) => {
+      currentAttachmentsRef.current = data;
+    },
+    [],
+  );
+
   const deleteMutation = trpc.adminShowAndTell.delete.useMutation({
     onSettled: async () => {
       await getEntry.refetch();
@@ -82,7 +111,6 @@ const AdminReviewShowAndTellPage: NextPage<
       },
     });
 
-  const entry = getEntry.data;
   const status = entry && getEntityStatus(entry);
 
   // Handlers that check for unsaved changes
@@ -130,6 +158,116 @@ const AdminReviewShowAndTellPage: NextPage<
       deleteMutation.mutate(entry.id);
     }
   }, [deleteMutation, entry]);
+
+  const handlePreviewClick = useCallback(() => {
+    if (!formRef.current || !entry) return;
+
+    // Extract form data for preview
+    const form = formRef.current;
+    const formData = new FormData(form);
+
+    // Get current attachment state
+    const { imageFiles, videoUrls } = currentAttachmentsRef.current;
+
+    // Build attachment previews - filter and map based on file status
+    const imageAttachments = imageFiles
+      .map((file, idx) => {
+        // Handle saved files (existing attachments)
+        if (file.status === "saved") {
+          const existingAttachment = entry.attachments.find(
+            (a) => a.imageAttachment?.id === file.id,
+          );
+          return existingAttachment ?? null;
+        }
+
+        // Handle uploaded files
+        if (file.status === "upload.done") {
+          return {
+            id: `preview-image-${idx}`,
+            entryId: entry.id,
+            attachmentType: "image" as const,
+            showAndTellEntryId: entry.id,
+            linkAttachmentId: null,
+            imageAttachmentId: file.id,
+            linkAttachment: null,
+            imageAttachment: {
+              id: file.id,
+              fileStorageObjectId: file.fileStorageObjectId,
+              url: file.url,
+              alt: null,
+              caption: null,
+              fileStorageObject: null,
+            },
+          };
+        }
+
+        // Skip pending/failed uploads - they haven't been saved yet
+        return null;
+      })
+      .filter((a): a is NonNullable<typeof a> => a !== null);
+
+    const videoAttachments = videoUrls.map((url, idx) => {
+      // Check if this video was in the original entry
+      const existingVideo = entry.attachments.find(
+        (a) => a.linkAttachment?.url === url,
+      );
+
+      if (existingVideo) {
+        return existingVideo;
+      }
+
+      return {
+        id: `preview-video-${idx}`,
+        entryId: entry.id,
+        attachmentType: "video" as const,
+        showAndTellEntryId: entry.id,
+        linkAttachmentId: `preview-link-${idx}`,
+        imageAttachmentId: null,
+        linkAttachment: {
+          id: `preview-link-${idx}`,
+          url,
+        },
+        imageAttachment: null,
+      };
+    });
+
+    setPreviewFormData({
+      displayName: (formData.get("displayName") as string) || "",
+      title: (formData.get("title") as string) || "",
+      text: (formData.get("text") as string) || "",
+      location: (formData.get("location") as string) || "",
+      attachments: [...imageAttachments, ...videoAttachments],
+    } as Partial<PublicShowAndTellEntryWithAttachments>);
+
+    setIsPreviewOpen(true);
+  }, [entry]);
+
+  const handleSaveAndApprove = useCallback(() => {
+    if (!formRef.current || !entry) return;
+
+    // Set flag to approve after save completes
+    shouldApproveAfterSaveRef.current = true;
+
+    // Trigger form submission which will save the data
+    formRef.current.requestSubmit();
+  }, [entry]);
+
+  const handleSave = useCallback(() => {
+    if (!formRef.current || !entry) return;
+
+    // Just save without approving
+    formRef.current.requestSubmit();
+  }, [entry]);
+
+  const handleSaveSuccess = useCallback(() => {
+    // If we should approve after save, do it now
+    // Note: shouldApproveAfterSaveRef is not in dependencies because refs don't trigger re-renders
+    // and we always want to read the latest value from the ref
+    if (shouldApproveAfterSaveRef.current && entry) {
+      approveMutation.mutate(entry.id);
+      shouldApproveAfterSaveRef.current = false;
+    }
+  }, [entry, approveMutation]);
 
   return (
     <>
@@ -180,6 +318,14 @@ const AdminReviewShowAndTellPage: NextPage<
                 )}
               </div>
               <div className="flex flex-col gap-2">
+                <Button
+                  size="small"
+                  className={secondaryButtonClasses}
+                  onClick={handlePreviewClick}
+                >
+                  <IconEye className="size-4" />
+                  Preview
+                </Button>
                 {status === "approved" && (
                   <Button
                     size="small"
@@ -222,9 +368,25 @@ const AdminReviewShowAndTellPage: NextPage<
                 entry={entry}
                 onUpdate={() => getEntry.refetch()}
                 onUnsavedChangesRef={setConfirmIfUnsaved}
+                onSaveSuccess={handleSaveSuccess}
+                formRef={formRef}
+                onAttachmentsChange={handleAttachmentsChange}
               />
             </Panel>
           </>
+        )}
+
+        {entry && postsFromANewLocation && (
+          <AdminShowAndTellPreviewModal
+            entry={entry}
+            newLocation={postsFromANewLocation.has(entry.id)}
+            isOpen={isPreviewOpen}
+            closeModal={() => setIsPreviewOpen(false)}
+            formData={previewFormData ?? undefined}
+            canApprove={status === "pendingApproval"}
+            onSaveAndApprove={handleSaveAndApprove}
+            onSave={handleSave}
+          />
         )}
       </AdminPageLayout>
     </>
