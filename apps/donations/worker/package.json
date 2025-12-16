@@ -27,7 +27,7 @@
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
     "@trpc/client": "^11.7.2",
-    "@trpc/server": "^11.7.2",
+    "@trpc/server": "^11.8.0",
     "hono": "^4.10.8",
     "superjson": "^2.2.6",
     "zod": "^4.1.13"
