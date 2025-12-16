@@ -9,6 +9,7 @@ import water from "@/assets/presets/macaws/water.png";
 import window from "@/assets/presets/macaws/window.png";
 import winl from "@/assets/presets/macaws/winl.png";
 import winr from "@/assets/presets/macaws/winr.png";
+import winrf from "@/assets/presets/macaws/winrf.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -67,6 +68,11 @@ const macawsPresets: Record<string, Preset> = {
     description: "winr",
     image: winr,
     // modified: 2025-11-07T14:12:21.543Z
+  },
+  winrf: {
+    description: "winrf",
+    image: winrf,
+    // modified: 2025-12-15T21:35:47.893Z
   },
 };
 

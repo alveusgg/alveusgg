@@ -2,6 +2,7 @@ import awning from "@/assets/presets/littles/awning.png";
 import bowll from "@/assets/presets/littles/bowll.png";
 import bowlm from "@/assets/presets/littles/bowlm.png";
 import bowlr from "@/assets/presets/littles/bowlr.png";
+import door from "@/assets/presets/littles/door.png";
 import down from "@/assets/presets/littles/down.png";
 import floorr from "@/assets/presets/littles/floorr.png";
 import home from "@/assets/presets/littles/home.png";
@@ -46,6 +47,11 @@ const littlesPresets: Record<string, Preset> = {
     description: "bowlr",
     image: bowlr,
     // modified: 2025-10-15T13:34:22.097Z
+  },
+  door: {
+    description: "door",
+    image: door,
+    // modified: 2025-12-15T21:40:40.730Z
   },
   down: {
     description: "Down",
