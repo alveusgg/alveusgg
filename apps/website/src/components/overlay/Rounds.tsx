@@ -43,7 +43,7 @@ const isNotNull = <T,>(value: T | null): value is T => value !== null;
 
 const transformChecks = (
   checks: DatabaseCheck[],
-  statues: Record<string, boolean>,
+  statuses: Record<string, boolean>,
 ): Check[] =>
   checks
     .map((check) => {
@@ -60,7 +60,7 @@ const transformChecks = (
         name: check.name,
         description: `!check ${check.command}`,
         icon,
-        status: statues[check.command] ?? false,
+        status: statuses[check.command] ?? false,
       };
     })
     .filter(isNotNull);
@@ -70,10 +70,10 @@ const useChecks = (channels: string[], users?: string[]) => {
     refetchInterval: 15_000,
   });
 
-  const [statues, setStatues] = useState<Record<string, boolean>>({});
+  const [statuses, setStatuses] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
-    setStatues((prev) =>
+    setStatuses((prev) =>
       typeSafeObjectFromEntries(
         (checks.data ?? []).map(({ command }) => [
           command,
@@ -97,7 +97,7 @@ const useChecks = (channels: string[], users?: string[]) => {
           users?.includes(userInfo.userName.toLowerCase().trim())
         ) {
           if (command === "!check") {
-            setStatues((prev) =>
+            setStatuses((prev) =>
               typeSafeObjectFromEntries(
                 typeSafeObjectEntries(prev).map(([key, value]) => {
                   if (keys[0] === "reset") return [key, false];
@@ -114,8 +114,8 @@ const useChecks = (channels: string[], users?: string[]) => {
   );
 
   return useMemo(
-    () => transformChecks(checks.data ?? [], statues),
-    [checks.data, statues],
+    () => transformChecks(checks.data ?? [], statuses),
+    [checks.data, statuses],
   );
 };
 
