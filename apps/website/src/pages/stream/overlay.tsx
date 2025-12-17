@@ -14,6 +14,7 @@ import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Disclaimer from "@/components/overlay/Disclaimer";
 import Event from "@/components/overlay/Event";
+import Raid from "@/components/overlay/Raid";
 import Rounds from "@/components/overlay/Rounds";
 import Socials from "@/components/overlay/Socials";
 import Subs from "@/components/overlay/Subs";
@@ -38,6 +39,7 @@ const OverlayPage: NextPage = () => {
 
   const [disclaimer, setDisclaimer] = useState(false);
   const [rounds, setRounds] = useState(false);
+  const [raid, setRaid] = useState(false);
 
   // Add chat commands to toggle certain features
   const channels = useMemo(() => {
@@ -66,14 +68,24 @@ const OverlayPage: NextPage = () => {
           return;
         }
 
-        // Mods (or trusted users) can run the command to toggle the rounds overlay
         if (
           userInfo.isMod ||
           userInfo.isBroadcaster ||
           users?.includes(userInfo.userName.toLowerCase().trim())
         ) {
+          // Mods (or trusted users) can run the command to toggle the rounds overlay
           if (command === "!rounds") {
             setRounds((prev) => {
+              if (arg === "on" || arg === "start") return true;
+              if (arg === "off" || arg === "stop") return false;
+              return !prev;
+            });
+            return;
+          }
+
+          // Mods (or trusted users) can run the command to toggle the raid video
+          if (command === "!raidvideo") {
+            setRaid((prev) => {
               if (arg === "on" || arg === "start") return true;
               if (arg === "off" || arg === "stop") return false;
               return !prev;
@@ -119,6 +131,16 @@ const OverlayPage: NextPage = () => {
 
   return (
     <div className="relative h-screen w-full overflow-clip">
+      {/* Raid video should render below the cam borders and text elements */}
+      {raid && (
+        <Raid
+          className={classes(
+            "absolute",
+            layout === "6cam" ? "top-0 left-1/3 h-2/3 w-2/3" : "inset-0",
+          )}
+        />
+      )}
+
       {layout === "6cam" && (
         <Image
           src={date?.startsWith("12-") ? border6camChristmas : border6cam}

@@ -200,12 +200,12 @@ export const StreamEmbed = ({
           className,
         )}
       >
-        <div className="absolute inset-0 -z-10 h-full w-full">
+        <div className="absolute inset-0 -z-10 flex h-full w-full flex-col justify-center">
           {poster ? (
             <Image
               src={poster}
               alt=""
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
               width={1200}
             />
           ) : (
