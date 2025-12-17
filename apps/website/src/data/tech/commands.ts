@@ -1194,6 +1194,22 @@ const commands = {
       [],
     ],
   },
+  disclaimer: {
+    description: "Toggle the larger disclaimer text on stream",
+    category: "Text",
+    args: [
+      [
+        {
+          type: "choice",
+          name: "mode",
+          required: true,
+          variadic: false,
+          choices: ["on", "enable", "off", "disable"],
+        },
+      ],
+      [],
+    ],
+  },
 
   /**
    * Wheel
@@ -1296,18 +1312,24 @@ const commands = {
   /**
    * Rounds
    */
-  showrounds: {
-    description: "Enable the Daily Rounds overlay",
+  rounds: {
+    description: "Toggle the rounds overlay",
     category: "Rounds",
-    args: [],
-  },
-  hiderounds: {
-    description: "Disable the Daily Rounds overlay",
-    category: "Rounds",
-    args: [],
+    args: [
+      [
+        {
+          type: "choice",
+          name: "mode",
+          required: true,
+          variadic: false,
+          choices: ["on", "start", "off", "stop"],
+        },
+      ],
+      [],
+    ],
   },
   check: {
-    description: "Toggle whether an item has been checked",
+    description: "Toggle a check in the rounds overlay",
     category: "Rounds",
     args: [
       [
