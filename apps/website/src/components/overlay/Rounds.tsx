@@ -1,25 +1,123 @@
+import type { ChatMessage } from "@twurple/chat";
 import { DateTime } from "luxon";
 import Image, { type StaticImageData } from "next/image";
-import { type CSSProperties, useEffect, useId, useMemo, useState } from "react";
+import {
+  type CSSProperties,
+  useCallback,
+  useEffect,
+  useId,
+  useMemo,
+  useState,
+} from "react";
+
+import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
+import { getAmbassadorImages } from "@alveusgg/data/build/ambassadors/images";
 
 import { classes, objToCss } from "@/utils/classes";
+import {
+  typeSafeObjectEntries,
+  typeSafeObjectFromEntries,
+} from "@/utils/helpers";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
+import { type RouterOutputs, trpc } from "@/utils/trpc";
 
-import useChecks from "@/hooks/checks";
+import useChat from "@/hooks/chat";
+
+import Video from "@/components/content/Video";
 
 import IconCheckFancy from "@/icons/IconCheckFancy";
 
 import roundsDayBackground from "@/assets/rounds/day.webm";
 import roundsNightBackground from "@/assets/rounds/night.webm";
 
-import Video from "@/components/content/Video";
+type DatabaseCheck = RouterOutputs["stream"]["getRoundsChecks"][number];
 
-export interface Check {
+interface Check {
   name: string;
   description?: string;
   icon: { src: string | StaticImageData; position?: string };
   status: boolean;
 }
+
+const isNotNull = <T,>(value: T | null): value is T => value !== null;
+
+const transformChecks = (
+  checks: DatabaseCheck[],
+  statues: Record<string, boolean>,
+): Check[] =>
+  checks
+    .map((check) => {
+      let icon: Check["icon"];
+      if (check.ambassador) {
+        if (!isActiveAmbassadorKey(check.ambassador)) return null;
+        icon = getAmbassadorImages(check.ambassador)[0];
+      } else {
+        if (!check.fileStorageObjectUrl) return null;
+        icon = { src: check.fileStorageObjectUrl.toString() };
+      }
+
+      return {
+        name: check.name,
+        description: `!check ${check.command}`,
+        icon,
+        status: statues[check.command] ?? false,
+      };
+    })
+    .filter(isNotNull);
+
+const useChecks = (channels: string[], users?: string[]) => {
+  const checks = trpc.stream.getRoundsChecks.useQuery(undefined, {
+    refetchInterval: 15_000,
+  });
+
+  const [statues, setStatues] = useState<Record<string, boolean>>({});
+
+  useEffect(() => {
+    setStatues((prev) =>
+      typeSafeObjectFromEntries(
+        (checks.data ?? []).map(({ command }) => [
+          command,
+          prev[command] ?? false,
+        ]),
+      ),
+    );
+  }, [checks.data]);
+
+  useChat(
+    channels,
+    useCallback(
+      (message: ChatMessage) => {
+        const { text, userInfo } = message;
+        const [command, ...keys] = text.toLowerCase().split(" ");
+
+        // Mods (or trusted users) can run the command to toggle checks
+        if (
+          userInfo.isMod ||
+          userInfo.isBroadcaster ||
+          users?.includes(userInfo.userName.toLowerCase().trim())
+        ) {
+          if (command === "!check") {
+            setStatues((prev) =>
+              typeSafeObjectFromEntries(
+                typeSafeObjectEntries(prev).map(([key, value]) => {
+                  if (keys[0] === "reset") return [key, false];
+                  return [key, keys.includes(key) ? !value : value];
+                }),
+              ),
+            );
+            return;
+          }
+        }
+      },
+      [users],
+    ),
+  );
+
+  return useMemo(
+    () => transformChecks(checks.data ?? [], statues),
+    [checks.data, statues],
+  );
+};
 
 const Check = ({
   check,
