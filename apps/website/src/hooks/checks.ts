@@ -12,7 +12,7 @@ import { type RouterOutputs, trpc } from "@/utils/trpc";
 
 import useChat from "@/hooks/chat";
 
-import type { Check } from "@/components/overlay/Checks";
+import type { Check } from "@/components/overlay/Rounds";
 
 const isNotNull = <T>(value: T | null): value is T => value !== null;
 

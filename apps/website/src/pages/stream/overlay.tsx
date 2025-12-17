@@ -14,6 +14,7 @@ import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Disclaimer from "@/components/overlay/Disclaimer";
 import Event from "@/components/overlay/Event";
+import Rounds from "@/components/overlay/Rounds";
 import Socials from "@/components/overlay/Socials";
 import Subs from "@/components/overlay/Subs";
 import Timecode from "@/components/overlay/Timecode";
@@ -35,28 +36,54 @@ const OverlayPage: NextPage = () => {
   const layout = isLayout(query.layout) ? query.layout : "fullscreen";
   const hide = useMemo(() => new Set(queryArray(query.hide)), [query.hide]);
 
-  // Add a chat command to toggle the large disclaimer
+  const [disclaimer, setDisclaimer] = useState(false);
+  const [rounds, setRounds] = useState(false);
+
+  // Add chat commands to toggle certain features
   const channels = useMemo(() => {
     const param = queryArray(query.channels);
     return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
   }, [query.channels]);
-  const [disclaimer, setDisclaimer] = useState(false);
+  const users = useMemo(() => {
+    return query.users
+      ? queryArray(query.users).map((user) => user.toLowerCase().trim())
+      : undefined;
+  }, [query.users]);
   useChat(
     channels,
-    useCallback((message: ChatMessage) => {
-      const { text } = message;
-      const [command, arg] = text.trim().toLowerCase().split(/\s+/);
+    useCallback(
+      (message: ChatMessage) => {
+        const { text, userInfo } = message;
+        const [command, arg] = text.trim().toLowerCase().split(/\s+/);
 
-      // Anyone can run the command to toggle the disclaimer
-      if (command === "!disclaimer" || command === "!wolftext") {
-        setDisclaimer((prev) => {
-          if (arg === "on" || arg === "enable") return true;
-          if (arg === "off" || arg === "disable") return false;
-          return !prev;
-        });
-        return;
-      }
-    }, []),
+        // Anyone can run the command to toggle the disclaimer
+        if (command === "!disclaimer" || command === "!wolftext") {
+          setDisclaimer((prev) => {
+            if (arg === "on" || arg === "enable") return true;
+            if (arg === "off" || arg === "disable") return false;
+            return !prev;
+          });
+          return;
+        }
+
+        // Mods (or trusted users) can run the command to toggle the rounds overlay
+        if (
+          userInfo.isMod ||
+          userInfo.isBroadcaster ||
+          users?.includes(userInfo.userName.toLowerCase().trim())
+        ) {
+          if (command === "!rounds") {
+            setRounds((prev) => {
+              if (arg === "on" || arg === "start") return true;
+              if (arg === "off" || arg === "stop") return false;
+              return !prev;
+            });
+            return;
+          }
+        }
+      },
+      [users],
+    ),
   );
 
   // Track the current date to switch 6cam borders during December
@@ -91,7 +118,7 @@ const OverlayPage: NextPage = () => {
   }, []);
 
   return (
-    <div className="h-screen w-full">
+    <div className="relative h-screen w-full overflow-clip">
       {layout === "6cam" && (
         <Image
           src={date?.startsWith("12-") ? border6camChristmas : border6cam}
@@ -101,6 +128,9 @@ const OverlayPage: NextPage = () => {
           className="pointer-events-none select-none"
         />
       )}
+
+      {/* Rounds overlay should render above the cam borders, but below text elements */}
+      {rounds && <Rounds channels={channels} users={users} />}
 
       {!hide.has("datetime") && (
         <Datetime className="absolute top-2 right-2 text-right">

@@ -1,9 +1,18 @@
+import { DateTime } from "luxon";
 import Image, { type StaticImageData } from "next/image";
-import { type CSSProperties, useId, useMemo } from "react";
+import { type CSSProperties, useEffect, useId, useMemo, useState } from "react";
 
 import { classes, objToCss } from "@/utils/classes";
+import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
+
+import useChecks from "@/hooks/checks";
 
 import IconCheckFancy from "@/icons/IconCheckFancy";
+
+import roundsDayBackground from "@/assets/rounds/day.webm";
+import roundsNightBackground from "@/assets/rounds/night.webm";
+
+import Video from "@/components/content/Video";
 
 export interface Check {
   name: string;
@@ -62,33 +71,49 @@ const Check = ({
   );
 };
 
-const Checks = ({
-  checks,
+const Rounds = ({
+  channels,
+  users,
   timing = {
     duration: 750,
     delay: { item: -600, before: 1000, after: 9000 },
   },
   scale = { from: 1, to: 1.15 },
-  className,
 }: {
-  checks: Check[];
+  channels: string[];
+  users?: string[];
   timing?: {
     duration: number;
     delay: { item: number; before: number; after: number };
   };
   scale?: { from: number; to: number };
-  className?: string;
 }) => {
+  // Determine which background animation to use based on time of day
+  const [night, setNight] = useState(false);
+  useEffect(() => {
+    const update = () => {
+      const now = DateTime.now().setZone(DATETIME_ALVEUS_ZONE);
+      setNight(now.hour < 6 || now.hour >= 18);
+    };
+
+    update();
+    const interval = setInterval(update, 15_000);
+    return () => clearInterval(interval);
+  }, []);
+  const background = night ? roundsNightBackground : roundsDayBackground;
+
+  // Get the checks with chat command controls
+  const checks = useChecks(channels, users);
+
   // Define the animation keyframes
   const id = useId().replace(/:/g, "");
-  const length = Object.keys(checks).length;
   const animation = useMemo<{
     duration: { total: number; item: number };
     keyframes: string;
   }>(() => {
     const itemDuration = timing.duration + timing.delay.item;
     const totalDuration =
-      itemDuration * length + timing.delay.before + timing.delay.after;
+      itemDuration * checks.length + timing.delay.before + timing.delay.after;
 
     return {
       duration: {
@@ -115,25 +140,33 @@ const Checks = ({
         },
       }),
     };
-  }, [timing, length, scale]);
+  }, [timing, checks.length, scale]);
 
   return (
     <>
-      <style
-        dangerouslySetInnerHTML={{
-          __html: [
-            `@keyframes checks-${id}-item { ${animation.keyframes} }`,
-            `.checks-${id}-item { animation: ${animation.duration.total}ms checks-${id}-item infinite; will-change: scale; }`,
-            `@media (prefers-reduced-motion) { .checks-${id}-item { animation: none !important; } }`,
-          ].join("\n"),
-        }}
+      <Video
+        sources={background.sources}
+        poster={background.poster}
+        className="absolute inset-0 h-full w-full object-cover object-top-left"
+        width={1920}
+        height={1080}
+        autoPlay
+        loop
+        muted
+        playsInline
+        disablePictureInPicture
       />
-      <div
-        className={classes(
-          "flex flex-col items-start justify-center",
-          className,
-        )}
-      >
+
+      <div className="absolute inset-y-0 left-0 flex h-full origin-center animate-wiggle-slow flex-col items-start justify-center px-16">
+        <style
+          dangerouslySetInnerHTML={{
+            __html: [
+              `@keyframes checks-${id}-item { ${animation.keyframes} }`,
+              `.checks-${id}-item { animation: ${animation.duration.total}ms checks-${id}-item infinite; will-change: scale; }`,
+              `@media (prefers-reduced-motion) { .checks-${id}-item { animation: none !important; } }`,
+            ].join("\n"),
+          }}
+        />
         {checks.map((check, idx) => (
           <Check
             key={`${check.name}-${idx}`}
@@ -149,4 +182,4 @@ const Checks = ({
   );
 };
 
-export default Checks;
+export default Rounds;
