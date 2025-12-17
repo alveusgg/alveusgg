@@ -110,6 +110,7 @@ type EmbedProps = {
   caption?: string;
   poster?: StaticImageData;
   threshold?: number;
+  onEnded?: () => void;
 };
 
 export const StreamEmbed = ({
@@ -124,6 +125,7 @@ export const StreamEmbed = ({
   caption,
   poster,
   threshold = 0.1,
+  onEnded,
 }: EmbedProps) => {
   const streamRef = useRef<StreamPlayerApi>(undefined);
   const [playing, setPlaying] = useState(autoplay);
@@ -238,6 +240,7 @@ export const StreamEmbed = ({
             onPlay={() => visible && controls && setPlaying(true)}
             onPause={() => visible && controls && setPlaying(false)}
             onCanPlay={() => setReady(true)}
+            onEnded={onEnded}
           />
         )}
       </div>

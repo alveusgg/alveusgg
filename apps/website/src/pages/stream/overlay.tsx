@@ -39,7 +39,11 @@ const OverlayPage: NextPage = () => {
 
   const [disclaimer, setDisclaimer] = useState(false);
   const [rounds, setRounds] = useState(false);
+
   const [raid, setRaid] = useState(false);
+  const raidEnded = useCallback(() => {
+    setRaid(false);
+  }, []);
 
   // Add chat commands to toggle certain features
   const channels = useMemo(() => {
@@ -134,6 +138,7 @@ const OverlayPage: NextPage = () => {
       {/* Raid video should render below the cam borders and text elements */}
       {raid && (
         <Raid
+          onEnded={raidEnded}
           className={classes(
             "absolute",
             layout === "6cam" ? "top-0 left-1/3 h-2/3 w-2/3" : "inset-0",
