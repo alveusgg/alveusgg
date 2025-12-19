@@ -14,7 +14,7 @@ const Disclaimer = ({
           "text-3xl",
         !/(^|\s)text-stroke(-\d+)?(\s|$)/.test(className || "") &&
           "text-stroke-2",
-        "font-bold text-white",
+        "font-bold text-balance text-white",
       )}
       {...props}
     >

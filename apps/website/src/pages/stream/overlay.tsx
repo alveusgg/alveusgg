@@ -21,12 +21,14 @@ import Subs from "@/components/overlay/Subs";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
 
+import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
+import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
 import border6cam from "@/assets/stream/border-6cam.png";
 
 const cycleTime = 60;
 
-const layouts = ["fullscreen", "6cam"] as const;
+const layouts = ["fullscreen", "4cam", "6cam"] as const;
 type Layout = (typeof layouts)[number];
 const isLayout = (layout: unknown): layout is Layout =>
   layouts.includes(layout as Layout);
@@ -44,6 +46,19 @@ const grid: Record<Layout, Grid> = {
   fullscreen: {
     grid: "grid-cols-1 grid-rows-1",
     slots: ["1 / 1 / span 1 / span 1"],
+  },
+  "4cam": {
+    grid: "grid-cols-2 grid-rows-2",
+    border: {
+      default: border4cam,
+      xmas: border4camChristmas,
+    },
+    slots: [
+      "1 / 1 / span 1 / span 1", // top-left
+      "1 / 2 / span 1 / span 1", // top-right
+      "2 / 1 / span 1 / span 1", // bottom-left
+      "2 / 2 / span 1 / span 1", // bottom-right
+    ],
   },
   "6cam": {
     grid: "grid-cols-3 grid-rows-3",
