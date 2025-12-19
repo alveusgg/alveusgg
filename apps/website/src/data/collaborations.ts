@@ -57,6 +57,7 @@ import pointCrow from "@/assets/collaborations/point-crow.png";
 import pokimane from "@/assets/collaborations/pokimane.png";
 import realKatieB from "@/assets/collaborations/real-katie-b.png";
 import russel from "@/assets/collaborations/russel.png";
+import sakura from "@/assets/collaborations/sakura.png";
 import scarra from "@/assets/collaborations/scarra.png";
 import sketch from "@/assets/collaborations/sketch.png";
 import squeex from "@/assets/collaborations/squeex.png";
@@ -92,6 +93,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Sakura",
+      link: "https://www.twitch.tv/sakurashymko",
+      date: new Date("2025-12-18"),
+      videoId: "fFphvoIZkh8",
+      creators: [
+        {
+          name: "Sakura",
+          image: sakura,
+          popularity: 424_000, // Twitch followers, 2025-12-19
+        },
+      ],
+    },
     {
       name: "RealKatieB",
       link: "https://www.twitch.tv/realkatieb",
