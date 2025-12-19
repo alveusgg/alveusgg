@@ -14,7 +14,6 @@ import left from "@/assets/presets/fox/left.png";
 import leftplatform from "@/assets/presets/fox/leftplatform.png";
 import leftplatformb from "@/assets/presets/fox/leftplatformb.png";
 import middleplatform from "@/assets/presets/fox/middleplatform.png";
-import reed from "@/assets/presets/fox/reed.png";
 import right from "@/assets/presets/fox/right.png";
 import rightplatform from "@/assets/presets/fox/rightplatform.png";
 import rightramp from "@/assets/presets/fox/rightramp.png";
@@ -102,11 +101,6 @@ const foxPresets: Record<string, Preset> = {
     description: "middleplatform",
     image: middleplatform,
     // modified: 2025-12-13T18:20:04.315Z
-  },
-  reed: {
-    description: "reed",
-    image: reed,
-    // modified: 2025-12-13T03:23:06.731Z
   },
   right: {
     description: "right",
