@@ -72,7 +72,7 @@ const marmoutPresets: Record<string, Preset> = {
   flaps: {
     description: "Flaps",
     image: flaps,
-    // modified: 2025-11-07T22:48:05.505Z
+    // modified: 2025-12-18T21:16:12.211Z
   },
   ground: {
     description: "Ground",
@@ -117,7 +117,7 @@ const marmoutPresets: Record<string, Preset> = {
   table: {
     description: "Table",
     image: table,
-    // modified: 2025-11-07T22:34:27.440Z
+    // modified: 2025-12-18T21:17:08.440Z
   },
   tablet: {
     description: "Tablet",
@@ -127,7 +127,7 @@ const marmoutPresets: Record<string, Preset> = {
   upleft: {
     description: "Up Left",
     image: upleft,
-    // modified: 2025-11-07T22:55:48.741Z
+    // modified: 2025-12-18T21:20:14.519Z
   },
   upright: {
     description: "Up Right",
