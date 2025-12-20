@@ -39,6 +39,7 @@ const georgiePresets: Record<string, Preset> = {
   far: {
     description: "Far",
     image: far,
+    // modified: 2025-12-19T02:46:46.222Z
   },
   land: {
     description: "Land",
