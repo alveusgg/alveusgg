@@ -9,6 +9,7 @@ import downright from "@/assets/presets/fox/downright.png";
 import farcorner from "@/assets/presets/fox/farcorner.png";
 import home from "@/assets/presets/fox/home.png";
 import insideleft from "@/assets/presets/fox/insideleft.png";
+import insideplatform from "@/assets/presets/fox/insideplatform.png";
 import insideright from "@/assets/presets/fox/insideright.png";
 import left from "@/assets/presets/fox/left.png";
 import leftplatform from "@/assets/presets/fox/leftplatform.png";
@@ -76,6 +77,11 @@ const foxPresets: Record<string, Preset> = {
     description: "insideleft",
     image: insideleft,
     // modified: 2025-12-14T20:09:15.410Z
+  },
+  insideplatform: {
+    description: "insideplatform",
+    image: insideplatform,
+    // modified: 2025-12-19T17:42:49.501Z
   },
   insideright: {
     description: "insideright",
