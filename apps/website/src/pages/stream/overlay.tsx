@@ -1,6 +1,6 @@
 import type { ChatMessage } from "@twurple/chat";
 import { type NextPage } from "next";
-import Image from "next/image";
+import Image, { type StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
@@ -21,15 +21,61 @@ import Subs from "@/components/overlay/Subs";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
 
+import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
+import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
 import border6cam from "@/assets/stream/border-6cam.png";
 
 const cycleTime = 60;
 
-const layouts = ["fullscreen", "6cam"] as const;
+const layouts = ["fullscreen", "4cam", "6cam"] as const;
 type Layout = (typeof layouts)[number];
 const isLayout = (layout: unknown): layout is Layout =>
   layouts.includes(layout as Layout);
+
+interface Grid {
+  grid: string;
+  border?: {
+    default: StaticImageData;
+    xmas?: StaticImageData;
+  };
+  slots: [string, ...string[]];
+}
+
+const grid: Record<Layout, Grid> = {
+  fullscreen: {
+    grid: "grid-cols-1 grid-rows-1",
+    slots: ["1 / 1 / span 1 / span 1"],
+  },
+  "4cam": {
+    grid: "grid-cols-2 grid-rows-2",
+    border: {
+      default: border4cam,
+      xmas: border4camChristmas,
+    },
+    slots: [
+      "1 / 1 / span 1 / span 1", // top-left
+      "1 / 2 / span 1 / span 1", // top-right
+      "2 / 1 / span 1 / span 1", // bottom-left
+      "2 / 2 / span 1 / span 1", // bottom-right
+    ],
+  },
+  "6cam": {
+    grid: "grid-cols-3 grid-rows-3",
+    border: {
+      default: border6cam,
+      xmas: border6camChristmas,
+    },
+    slots: [
+      "1 / 2 / span 2 / span 2", // top-right
+      "1 / 1 / span 1 / span 1", // top-left
+      "2 / 1 / span 1 / span 1", // middle-left
+      "3 / 1 / span 1 / span 1", // bottom-left
+      "3 / 2 / span 1 / span 1", // bottom-center
+      "3 / 3 / span 1 / span 1", // bottom-right
+    ],
+  },
+};
 
 const OverlayPage: NextPage = () => {
   // Allow the hide query parameter to hide components
@@ -135,20 +181,37 @@ const OverlayPage: NextPage = () => {
 
   return (
     <div className="relative h-screen w-full overflow-clip">
-      {/* Raid video should render below the cam borders and text elements */}
-      {raid && (
-        <Raid
-          onEnded={raidEnded}
-          className={classes(
-            "absolute",
-            layout === "6cam" ? "top-0 left-1/3 h-2/3 w-2/3" : "inset-0",
-          )}
-        />
-      )}
+      <div className={classes("absolute inset-0 grid", grid[layout].grid)}>
+        {grid[layout].slots.map((slot, index) => (
+          <div
+            key={`${layout}-${index}`}
+            className="relative h-full w-full"
+            style={{
+              gridArea: slot,
+            }}
+          >
+            {index === 0 && !hide.has("raid") && raid && (
+              <Raid onEnded={raidEnded} className="absolute inset-0" />
+            )}
 
-      {layout === "6cam" && (
+            {index === 0 && !hide.has("disclaimer") && disclaimer && (
+              <Disclaimer
+                className={classes(
+                  "absolute inset-x-0 bottom-0 p-6 text-4xl",
+                  layout === "fullscreen" && "text-center",
+                )}
+              />
+            )}
+          </div>
+        ))}
+      </div>
+
+      {!hide.has("border") && grid[layout].border && (
         <Image
-          src={date?.startsWith("12-") ? border6camChristmas : border6cam}
+          src={
+            (date?.startsWith("12-") && grid[layout].border.xmas) ||
+            grid[layout].border.default
+          }
           alt=""
           fill
           priority
@@ -156,8 +219,9 @@ const OverlayPage: NextPage = () => {
         />
       )}
 
-      {/* Rounds overlay should render above the cam borders, but below text elements */}
-      {rounds && <Rounds channels={channels} users={users} />}
+      {!hide.has("rounds") && rounds && (
+        <Rounds channels={channels} users={users} />
+      )}
 
       {!hide.has("datetime") && (
         <Datetime className="absolute top-2 right-2 text-right">
@@ -180,17 +244,6 @@ const OverlayPage: NextPage = () => {
         interval={cycleTime}
         className="absolute bottom-2 left-2"
       />
-
-      {!hide.has("disclaimer") && disclaimer && (
-        <Disclaimer
-          className={classes(
-            "absolute text-4xl",
-            layout === "6cam"
-              ? "bottom-1/3 left-1/3 w-2/3 pb-6 pl-6"
-              : "inset-x-0 bottom-2 w-full text-center",
-          )}
-        />
-      )}
 
       <Cycle
         items={useMemo(
