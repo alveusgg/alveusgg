@@ -1103,14 +1103,20 @@ const commands = {
     args: [],
   },
   raidvideo: {
-    description: "Show the raid video in cam slot 1, generally for raids >50",
+    description: "Toggle the video to welcome a raid, generally for raids >50",
     category: "Scenes",
-    args: [],
-  },
-  stopraidvideo: {
-    description: "Stop the raid video",
-    category: "Scenes",
-    args: [],
+    args: [
+      [
+        {
+          type: "choice",
+          name: "mode",
+          required: true,
+          variadic: false,
+          choices: ["on", "start", "off", "stop"],
+        },
+      ],
+      [],
+    ],
   },
 
   /**

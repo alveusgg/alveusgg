@@ -81,7 +81,8 @@ export const StreamPreview = ({
       alt={alt}
       loading="lazy"
       className={classes(
-        "pointer-events-none aspect-video w-full bg-alveus-green-800 object-cover shadow-xl transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
+        "pointer-events-none aspect-video w-full bg-alveus-green-800 object-cover transition group-hover/trigger:scale-102 group-hover/trigger:shadow-2xl",
+        !/\bshadow-/.test(className || "") && "shadow-xl",
         !/\brounded-/.test(className || "") && "rounded-2xl",
         className,
       )}
@@ -110,6 +111,7 @@ type EmbedProps = {
   caption?: string;
   poster?: StaticImageData;
   threshold?: number;
+  onEnded?: () => void;
 };
 
 export const StreamEmbed = ({
@@ -124,6 +126,7 @@ export const StreamEmbed = ({
   caption,
   poster,
   threshold = 0.1,
+  onEnded,
 }: EmbedProps) => {
   const streamRef = useRef<StreamPlayerApi>(undefined);
   const [playing, setPlaying] = useState(autoplay);
@@ -200,16 +203,20 @@ export const StreamEmbed = ({
           className,
         )}
       >
-        <div className="absolute inset-0 -z-10 h-full w-full">
+        <div className="absolute inset-0 -z-10 flex h-full w-full flex-col justify-center">
           {poster ? (
             <Image
               src={poster}
               alt=""
-              className="h-full w-full object-cover"
+              className="h-full w-full object-contain"
               width={1200}
             />
           ) : (
-            <StreamPreview src={src} className="rounded-none" icon={false} />
+            <StreamPreview
+              src={src}
+              className="rounded-none shadow-none"
+              icon={false}
+            />
           )}
 
           {!ready && (
@@ -238,6 +245,7 @@ export const StreamEmbed = ({
             onPlay={() => visible && controls && setPlaying(true)}
             onPause={() => visible && controls && setPlaying(false)}
             onCanPlay={() => setReady(true)}
+            onEnded={onEnded}
           />
         )}
       </div>
