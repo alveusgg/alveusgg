@@ -1,9 +1,7 @@
 import type { JSX } from "react";
 import { useMemo, useState } from "react";
 
-import type { LinkAttachment } from "@alveusgg/database";
-
-import type { ImageAttachmentWithFileStorageObject } from "@/server/db/show-and-tell";
+import type { ShowAndTellEntryAttachments } from "@/server/db/show-and-tell";
 
 import { classes } from "@/utils/classes";
 
@@ -18,60 +16,110 @@ import { ImageItemEmbed, ImageItemPreview } from "./ImageItem";
 
 export const ShowAndTellGallery = ({
   isPresentationView,
-  imageAttachments,
-  videoAttachments,
+  attachments,
 }: {
   isPresentationView: boolean;
-  imageAttachments: Array<ImageAttachmentWithFileStorageObject>;
-  videoAttachments: Array<LinkAttachment>;
+  attachments: ShowAndTellEntryAttachments;
 }) => {
   const [lightboxOpen, setLightboxOpen] = useState<string>();
 
-  const lightboxItems = useMemo(() => {
-    const imageItems: [string, JSX.Element][] = imageAttachments.map(
-      (image) => [
-        image.id,
-        <ImageItemEmbed key={image.id} imageAttachment={image} />,
-      ],
-    );
+  const lightboxItems = useMemo(
+    () =>
+      Object.fromEntries(
+        attachments
+          .map<[string, JSX.Element] | null>((att) => {
+            if (att.attachmentType === "image" && att.imageAttachment) {
+              return [
+                att.imageAttachment.id,
+                <ImageItemEmbed
+                  key={att.imageAttachment.id}
+                  imageAttachment={att.imageAttachment}
+                />,
+              ];
+            }
 
-    const videoItems: [string, JSX.Element][] = videoAttachments.map(
-      (video) => [
-        video.id,
-        <VideoItemEmbed key={video.id} videoAttachment={video} />,
-      ],
-    );
+            if (att.attachmentType === "video" && att.linkAttachment) {
+              return [
+                att.linkAttachment.id,
+                <VideoItemEmbed
+                  key={att.linkAttachment.id}
+                  videoAttachment={att.linkAttachment}
+                />,
+              ];
+            }
 
-    return Object.fromEntries([...videoItems, ...imageItems]);
-  }, [videoAttachments, imageAttachments]);
+            return null;
+          })
+          .filter((item) => item !== null),
+      ),
+    [attachments],
+  );
 
-  const carouselItems = useMemo(() => {
-    const videoItems: [string, JSX.Element][] = videoAttachments.map(
-      (video) => [
-        video.id,
-        <VideoItemPreview
-          key={video.id}
-          videoAttachment={video}
-          lightbox={setLightboxOpen}
-          preview
-        />,
-      ],
-    );
+  const carouselItems = useMemo(
+    () =>
+      Object.fromEntries(
+        attachments
+          .map<[string, JSX.Element] | null>((att) => {
+            if (att.attachmentType === "image" && att.imageAttachment) {
+              return [
+                att.imageAttachment.id,
+                <ImageItemPreview
+                  key={att.imageAttachment.id}
+                  imageAttachment={att.imageAttachment}
+                  lightbox={setLightboxOpen}
+                  preview
+                />,
+              ];
+            }
 
-    const imageItems: [string, JSX.Element][] = imageAttachments.map(
-      (image) => [
-        image.id,
-        <ImageItemPreview
-          key={image.id}
-          imageAttachment={image}
-          lightbox={setLightboxOpen}
-          preview
-        />,
-      ],
-    );
+            if (att.attachmentType === "video" && att.linkAttachment) {
+              return [
+                att.linkAttachment.id,
+                <VideoItemPreview
+                  key={att.id}
+                  videoAttachment={att.linkAttachment}
+                  lightbox={setLightboxOpen}
+                  preview
+                />,
+              ];
+            }
 
-    return Object.fromEntries([...videoItems, ...imageItems]);
-  }, [videoAttachments, imageAttachments]);
+            return null;
+          })
+          .filter((item) => item !== null),
+      ),
+    [attachments],
+  );
+
+  const thumbnailItems = useMemo(
+    () =>
+      attachments
+        .map<JSX.Element | null>((att) => {
+          if (att.attachmentType === "image" && att.imageAttachment) {
+            return (
+              <ImageItemPreview
+                key={att.imageAttachment.id}
+                imageAttachment={att.imageAttachment}
+                lightbox={setLightboxOpen}
+              />
+            );
+          }
+
+          if (att.attachmentType === "video" && att.linkAttachment) {
+            return (
+              <VideoItemPreview
+                key={att.id}
+                videoAttachment={att.linkAttachment}
+                lightbox={setLightboxOpen}
+              />
+            );
+          }
+
+          return null;
+        })
+        .filter((item) => item !== null),
+    [attachments],
+  );
 
   const carouselCount = Object.keys(carouselItems).length;
 
@@ -107,21 +155,7 @@ export const ShowAndTellGallery = ({
 
       {carouselCount > 1 && (
         <div className="my-2 flex flex-row flex-wrap items-center justify-center gap-2">
-          {videoAttachments.map((video) => (
-            <VideoItemPreview
-              key={video.id}
-              videoAttachment={video}
-              lightbox={setLightboxOpen}
-            />
-          ))}
-
-          {imageAttachments.map((image) => (
-            <ImageItemPreview
-              key={image.id}
-              imageAttachment={image}
-              lightbox={setLightboxOpen}
-            />
-          ))}
+          {thumbnailItems}
         </div>
       )}
     </div>

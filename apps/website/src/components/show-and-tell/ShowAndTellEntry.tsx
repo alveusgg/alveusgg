@@ -18,9 +18,9 @@ import { ErrorBoundary } from "react-error-boundary";
 
 import type { PublicShowAndTellEntryWithAttachments } from "@/server/db/show-and-tell";
 
+import { featuredAttachmentsImage } from "@/utils/attachments";
 import { classes } from "@/utils/classes";
 import { formatDateTime } from "@/utils/datetime";
-import { splitAttachments } from "@/utils/split-attachments";
 import { DATETIME_ALVEUS_ZONE } from "@/utils/timezone";
 
 import Link from "@/components/content/Link";
@@ -275,8 +275,10 @@ export const ShowAndTellEntry = ({
     [forwardedRef],
   );
 
-  const { featuredImage, imageAttachments, videoAttachments } =
-    splitAttachments(entry.attachments);
+  const featuredImage = useMemo(
+    () => featuredAttachmentsImage(entry.attachments),
+    [entry.attachments],
+  );
 
   return (
     <article
@@ -334,11 +336,10 @@ export const ShowAndTellEntry = ({
           isPresentationView={isPresentationView}
         />
 
-        {imageAttachments.length || videoAttachments.length ? (
+        {entry.attachments.length ? (
           <ShowAndTellGallery
             isPresentationView={isPresentationView}
-            imageAttachments={imageAttachments}
-            videoAttachments={videoAttachments}
+            attachments={entry.attachments}
           />
         ) : (
           <div className="flex flex-1 flex-col items-center justify-center gap-2 p-4">
