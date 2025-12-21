@@ -3,10 +3,8 @@ import { useCallback, useState } from "react";
 import { parseVideoUrl } from "@/utils/video-urls";
 
 import IconPlus from "@/icons/IconPlus";
-import IconTrash from "@/icons/IconTrash";
 
 import { MessageBox } from "../MessageBox";
-import { VideoPlatformIcon } from "../VideoPlatformIcon";
 import { Button, defaultButtonClasses, disabledButtonClasses } from "./Button";
 import type { TextAreaFieldProps } from "./TextAreaField";
 import { TextAreaField } from "./TextAreaField";
@@ -110,41 +108,6 @@ export function VideoLinksField({
         >
           <IconPlus className="size-6" /> Add Videos
         </Button>
-
-        {videoUrls.length > 0 && (
-          <ul className="mt-4 flex flex-col gap-2">
-            {videoUrls.map((url) => (
-              <li
-                key={url}
-                className="flex flex-row items-center justify-between gap-2 rounded-xl bg-white p-1 px-3 shadow-xl"
-              >
-                <VideoPlatformIcon
-                  className="size-5"
-                  platform={parseVideoUrl(url)?.platform}
-                />
-                <a
-                  href={url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-700 underline hover:cursor-pointer"
-                >
-                  <span className="min-w-0 flex-1 truncate text-left">
-                    {url}
-                  </span>
-                </a>
-                <Button
-                  size="small"
-                  width="auto"
-                  onClick={() => {
-                    setVideoUrls(videoUrls.filter((item) => item !== url));
-                  }}
-                >
-                  <IconTrash className="size-6" /> Remove
-                </Button>
-              </li>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
   );
