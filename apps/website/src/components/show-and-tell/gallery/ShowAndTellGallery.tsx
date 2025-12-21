@@ -76,7 +76,7 @@ export const ShowAndTellGallery = ({
               return [
                 att.linkAttachment.id,
                 <VideoItemPreview
-                  key={att.id}
+                  key={att.linkAttachment.id}
                   videoAttachment={att.linkAttachment}
                   lightbox={setLightboxOpen}
                   preview
@@ -108,7 +108,7 @@ export const ShowAndTellGallery = ({
           if (att.attachmentType === "video" && att.linkAttachment) {
             return (
               <VideoItemPreview
-                key={att.id}
+                key={att.linkAttachment.id}
                 videoAttachment={att.linkAttachment}
                 lightbox={setLightboxOpen}
               />
