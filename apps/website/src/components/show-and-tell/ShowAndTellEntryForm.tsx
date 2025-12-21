@@ -395,6 +395,7 @@ export function ShowAndTellEntryForm({
         videoLinksData.videoUrls.map((url) => ({
           id: "",
           entryId: "",
+          order: 0,
           attachmentType: "video",
           linkAttachmentId: "",
           imageAttachmentId: null,

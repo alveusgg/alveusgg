@@ -7,6 +7,7 @@ import {
   type ImageAttachment,
   type ImageMetadata,
   type LinkAttachment,
+  type ShowAndTellEntry$attachmentsArgs,
   type ShowAndTellEntryAttachment,
   type ShowAndTellEntry as ShowAndTellEntryModel,
   prisma,
@@ -78,8 +79,11 @@ const withAttachments = {
           include: { fileStorageObject: { include: { imageMetadata: true } } },
         },
       },
+      orderBy: [{ order: "asc" }, { attachmentType: "desc" }, { id: "asc" }],
     },
   },
+} as const satisfies {
+  include: { attachments: ShowAndTellEntry$attachmentsArgs };
 };
 
 const selectPublic = PublicShowAndTellFields.reduce(
