@@ -30,13 +30,13 @@ import {
   resizeImageOptions,
 } from "@/data/show-and-tell";
 
+import { featuredAttachmentsImage } from "@/utils/attachments";
 import { classes } from "@/utils/classes";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 import { notEmpty } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
 import { extractColorFromImage } from "@/utils/process-image";
-import { splitAttachments } from "@/utils/split-attachments";
 import { trpc } from "@/utils/trpc";
 
 import useFileUpload from "@/hooks/files/upload";
@@ -388,7 +388,7 @@ export function ShowAndTellEntryForm({
     }
 
     if (!data.dominantColor) {
-      const { featuredImage } = splitAttachments(
+      const featuredImage = featuredAttachmentsImage(
         videoLinksData.videoUrls.map((url) => ({
           id: "",
           entryId: "",
