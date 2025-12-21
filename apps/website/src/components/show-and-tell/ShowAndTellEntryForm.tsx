@@ -613,7 +613,6 @@ export function ShowAndTellEntryForm({
               {imageAttachmentsData.files.map((file) => (
                 <li key={file.id}>
                   <ImageAttachment
-                    key={file.id}
                     entry={entry}
                     fileReference={file}
                     removeFileReference={(id) =>
