@@ -32,7 +32,9 @@
     "lint": "next typegen && eslint --max-warnings 0",
     "types": "next typegen && tsc --noEmit",
     "start": "next start",
-    "test": "vitest"
+    "test": "vitest",
+    "murals:import-twitch-charity-donations": "tsx ./scripts/import-twitch-charity-donations.ts",
+    "murals:fill-pixels": "tsx ./scripts/fill-pixels.ts"
   },
   "dependencies": {
     "@alveusgg/data": "0.69.0",
