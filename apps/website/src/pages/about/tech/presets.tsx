@@ -143,12 +143,22 @@ const Card = ({
       className,
     )}
   >
-    <Image
-      src={image}
-      alt=""
-      width={300}
-      className="aspect-video w-full rounded-t-lg object-cover transition-transform"
-    />
+    <div className="relative overflow-hidden rounded-t-lg">
+      <Image
+        src={image}
+        alt=""
+        width={300}
+        className="aspect-video w-full object-cover"
+      />
+      {command && (
+        <RunCommandButton
+          command={command.command}
+          args={command.args}
+          subOnly
+          className="absolute inset-0 flex items-center justify-center text-alveus-green-100 opacity-25 transition-all hover:bg-black/50 hover:text-alveus-green-300 hover:opacity-100 [&>svg]:size-12"
+        />
+      )}
+    </div>
     <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
       <div className="flex items-center justify-between">
         <h4 className="truncate text-lg font-semibold">{title}</h4>

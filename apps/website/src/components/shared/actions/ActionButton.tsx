@@ -31,7 +31,9 @@ const ActionButton = ({
       onClick={onClick}
       title={tooltip.text}
       className={classes(
-        "group relative",
+        "group",
+        !/\b(relative|absolute|fixed|sticky)\b/.test(className || "") &&
+          "relative",
         !/\b((inline-)?(block|flex|grid|table)|inline|contents)\b/.test(
           className || "",
         ) && "inline-block",
