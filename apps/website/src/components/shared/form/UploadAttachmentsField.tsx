@@ -97,7 +97,7 @@ type FileUploadingPropsType = {
   attachmentsClassName?: string;
 };
 
-type FileAction =
+export type FileAction =
   | { type: "add"; files: FileReference[] }
   | { type: "remove"; id: string }
   | {
@@ -108,7 +108,7 @@ type FileAction =
     }
   | { type: "upload.failed"; id: string; error?: string };
 
-function fileReducer(
+export function fileReducer(
   state: FileReference[],
   action: FileAction,
 ): FileReference[] {
