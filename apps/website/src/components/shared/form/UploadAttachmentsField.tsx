@@ -78,7 +78,6 @@ type FailedUploadFileReference = {
 export type FileUploadRenderProps = {
   key: Key;
   fileReference: FileReference;
-  removeFileReference: (id: string) => void;
 };
 
 type FileUploadingPropsType = {
@@ -192,7 +191,7 @@ export const UploadAttachmentsField = ({
   maxFileSize,
   allowedFileTypes,
   resizeImageOptions,
-  renderAttachment,
+  renderAttachment: RenderAttachment,
   attachmentsClassName = "my-3 flex flex-col gap-3",
 }: FileUploadingPropsType) => {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -219,13 +218,6 @@ export const UploadAttachmentsField = ({
       inputRef.current.click();
     }
   }, [inputRef]);
-
-  const onFileRemove = useCallback(
-    (id: string): void => {
-      dispatch({ type: "remove", id });
-    },
-    [dispatch],
-  );
 
   const addFiles = async (filesToAdd: FileList | null) => {
     if (!filesToAdd) return;
@@ -348,15 +340,11 @@ export const UploadAttachmentsField = ({
         id={id}
       />
       <div>
-        {renderAttachment && files.length > 0 && (
+        {RenderAttachment && files.length > 0 && (
           <div className={attachmentsClassName}>
-            {files.map((file) =>
-              renderAttachment({
-                key: file.id,
-                fileReference: file,
-                removeFileReference: onFileRemove,
-              }),
-            )}
+            {files.map((file) => (
+              <RenderAttachment key={file.id} fileReference={file} />
+            ))}
           </div>
         )}
         <Button
