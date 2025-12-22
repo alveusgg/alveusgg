@@ -99,6 +99,7 @@ function ImageAttachment({
   entry,
   fileReference,
   onClick,
+  children,
   ...props
 }: Omit<ComponentProps<typeof ImageUploadAttachment>, "onClick"> &
   Pick<ShowAndTellEntryFormProps, "entry"> & {
@@ -176,6 +177,8 @@ function ImageAttachment({
           />
         </DisclosurePanel>
       </Disclosure>
+
+      {children}
     </ImageUploadAttachment>
   );
 }
@@ -647,21 +650,31 @@ export function ShowAndTellEntryForm({
 
             <ul className="mt-4 flex flex-col gap-2 lg:mt-8">
               {attachments.map((att) => {
+                const buttons = (
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      size="small"
+                      width="auto"
+                      onClick={() =>
+                        setAttachments((prev) => prev.filter((a) => a !== att))
+                      }
+                    >
+                      <IconTrash className="size-5" />
+                      Remove
+                    </Button>
+                  </div>
+                );
+
                 if (att.type === "image") {
                   return (
                     <li key={att.file.id}>
                       <ImageAttachment
                         entry={entry}
                         fileReference={att.file}
-                        removeFileReference={(id) =>
-                          setAttachments((prev) =>
-                            prev.filter(
-                              (a) => a.type !== "image" || a.file.id !== id,
-                            ),
-                          )
-                        }
                         onClick={openModal}
-                      />
+                      >
+                        {buttons}
+                      </ImageAttachment>
                     </li>
                   );
                 }
@@ -670,35 +683,26 @@ export function ShowAndTellEntryForm({
                   return (
                     <li
                       key={att.url}
-                      className="flex flex-row items-center justify-between gap-2 rounded-xl bg-white p-1 px-3 shadow-xl"
+                      className="flex flex-col gap-2 rounded-lg bg-white p-4 shadow-lg"
                     >
-                      <VideoPlatformIcon
-                        className="size-5"
-                        platform={parseVideoUrl(att.url)?.platform}
-                      />
-                      <a
+                      <Link
                         href={att.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-700 underline hover:cursor-pointer"
+                        external
+                        className="group flex items-center"
                       >
-                        <span className="min-w-0 flex-1 truncate text-left">
+                        <div className="relative mr-5 size-32 rounded-lg bg-gray-200 text-alveus-green-900 transition-transform group-hover:scale-105">
+                          <VideoPlatformIcon
+                            className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2"
+                            platform={parseVideoUrl(att.url)?.platform}
+                          />
+                        </div>
+
+                        <span className="min-w-0 truncate text-left">
                           {att.url}
                         </span>
-                      </a>
-                      <Button
-                        size="small"
-                        width="auto"
-                        onClick={() =>
-                          setAttachments((prev) =>
-                            prev.filter(
-                              (a) => a.type !== "video" || a.url !== att.url,
-                            ),
-                          )
-                        }
-                      >
-                        <IconTrash className="size-6" /> Remove
-                      </Button>
+                      </Link>
+
+                      {buttons}
                     </li>
                   );
                 }
