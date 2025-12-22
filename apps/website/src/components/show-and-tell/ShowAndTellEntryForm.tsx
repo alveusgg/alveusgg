@@ -341,8 +341,7 @@ export function ShowAndTellEntryForm({
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
       text: formData.get("text") as string,
-      imageAttachments: { create: [], update: {} },
-      videoLinks: videoLinksData.videoUrls,
+      attachments: [],
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
       location: postLocation?.location ?? "",
       latitude: postLocation?.latitude ?? null,
@@ -350,6 +349,12 @@ export function ShowAndTellEntryForm({
       dominantColor,
     };
 
+    // Videos can be added directly from the video links data
+    for (const url of videoLinksData.videoUrls) {
+      data.attachments.push({ type: "video", url });
+    }
+
+    // Images need to be processed from the upload attachments data
     for (const fileReference of imageAttachmentsData.files) {
       if (
         fileReference.status !== "upload.done" &&
@@ -360,9 +365,8 @@ export function ShowAndTellEntryForm({
       }
 
       const imageId = fileReference.id;
-      const linkAttachmentData = {
-        url: fileReference.url,
-        fileStorageObjectId: fileReference.fileStorageObjectId,
+      const imageObj = {
+        type: "image" as const,
         title: "", // Currently not supported
         description: "", // Currently not supported
         caption: String(formData.get(`image[${imageId}][caption]`) || ""),
@@ -381,10 +385,11 @@ export function ShowAndTellEntryForm({
       }
 
       if (fileReference.status === "saved") {
-        data.imageAttachments.update[imageId] = linkAttachmentData;
+        data.attachments.push({ ...imageObj, id: imageId });
       } else {
-        data.imageAttachments.create.push({
-          ...linkAttachmentData,
+        data.attachments.push({
+          ...imageObj,
+          fileStorageObjectId: fileReference.fileStorageObjectId,
           name: fileReference.file.name,
         });
       }

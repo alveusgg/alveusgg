@@ -9,6 +9,7 @@ import {
   type LinkAttachment,
   type ShowAndTellEntry$attachmentsArgs,
   type ShowAndTellEntryAttachment,
+  type ShowAndTellEntryAttachmentCreateWithoutEntryInput,
   type ShowAndTellEntry as ShowAndTellEntryModel,
   prisma,
 } from "@alveusgg/database";
@@ -118,36 +119,46 @@ const postOrderBy = [
   { createdAt: "desc" },
 ] as const;
 
-const attachmentSchema = z.object({
-  url: z.url(),
+const imageBaseSchema = z.object({
+  type: z.literal("image"),
   title: z.string().max(100),
   caption: z.string().max(200),
   description: z.string().max(200),
   alternativeText: z.string().max(300),
 });
 
-type CreateImageAttachment = z.infer<typeof createImageAttachmentSchema>;
-const createImageAttachmentSchema = attachmentSchema.and(
-  z.object({
-    fileStorageObjectId: z.cuid(),
-    name: z.string(),
-  }),
-);
+const imageNewSchema = imageBaseSchema.extend({
+  fileStorageObjectId: z.cuid(),
+  name: z.string(),
+});
 
-type VideoLink = z.infer<typeof videoLinkSchema>;
-const videoLinkSchema = z.url().refine(validateNormalizedVideoUrl);
-const videoLinksSchema = z.array(videoLinkSchema);
+const imageExistingSchema = imageBaseSchema.extend({
+  id: z.cuid(),
+});
 
-const imageAttachmentsSchema = z
-  .object({
-    create: z.array(createImageAttachmentSchema).max(MAX_IMAGES),
-    update: z.record(z.cuid(), attachmentSchema),
-  })
+const videoSchema = z.object({
+  type: z.literal("video"),
+  url: z.url().refine(validateNormalizedVideoUrl),
+});
+
+const attachmentSchema = z.union([
+  imageNewSchema,
+  imageExistingSchema,
+  videoSchema,
+]);
+
+const attachmentsSchema = z
+  .array(attachmentSchema)
   .refine(
-    ({ update, create }) =>
-      Object.keys(update).length + create.length <= MAX_IMAGES,
+    (list) => list.filter((a) => a.type === "image").length <= MAX_IMAGES,
     {
       message: `Too many image attachments. Max ${MAX_IMAGES}.`,
+    },
+  )
+  .refine(
+    (list) => list.filter((a) => a.type === "video").length <= MAX_VIDEOS,
+    {
+      message: `Too many video attachments. Max ${MAX_VIDEOS}.`,
     },
   );
 
@@ -158,8 +169,7 @@ const showAndTellSharedInputSchema = z.object({
   displayName: z.string().max(100),
   title: z.string().max(100),
   text: z.string().max(MAX_TEXT_HTML_LENGTH),
-  imageAttachments: imageAttachmentsSchema,
-  videoLinks: videoLinksSchema.max(MAX_VIDEOS),
+  attachments: attachmentsSchema,
   volunteeringMinutes: z.number().int().positive().nullable(),
   location: z.string().max(MYSQL_MAX_VARCHAR_LENGTH).nullable(),
   longitude: z.number().nullable(),
@@ -195,29 +205,47 @@ const revalidateCache = (res: NextApiResponse) => {
   res.revalidate("/show-and-tell/map");
 };
 
-function createLinkAttachmentForVideoUrl(videoUrl: string, idx: number) {
+function createVideoAttachment({
+  type: _,
+  ...attachment
+}: z.infer<typeof videoSchema>) {
   return {
     attachmentType: "video",
     linkAttachment: {
       create: {
-        type: parseVideoUrl(videoUrl)?.platform || "video",
-        url: videoUrl,
-        title: `Video ${idx + 1}`,
-        name: `Video ${idx + 1}`,
+        type: parseVideoUrl(attachment.url)?.platform || "video",
+        url: attachment.url,
+        title: "Video",
+        name: "Video",
         caption: "",
         alternativeText: "",
         description: "",
       },
     },
-  };
+  } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
 }
 
-async function createImageAttachment(attachment: CreateImageAttachment) {
-  const { error } = await checkAndFixUploadedImageFileStorageObject(
+async function createImageAttachment({
+  type: _,
+  ...attachment
+}: z.infer<typeof imageNewSchema> | z.infer<typeof imageExistingSchema>) {
+  if ("id" in attachment) {
+    await prisma.imageAttachment.update({
+      where: { id: attachment.id },
+      data: attachment,
+    });
+
+    return {
+      attachmentType: "image",
+      imageAttachment: { connect: { id: attachment.id } },
+    } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
+  }
+
+  const { error, metaData } = await checkAndFixUploadedImageFileStorageObject(
     attachment.fileStorageObjectId,
   );
 
-  if (error) {
+  if (error || !metaData) {
     throw new TRPCError({
       code: "BAD_REQUEST",
       message: `Error uploading file: ${error}`,
@@ -225,26 +253,16 @@ async function createImageAttachment(attachment: CreateImageAttachment) {
   }
 
   const imageAttachment = await prisma.imageAttachment.create({
-    data: attachment,
+    data: {
+      ...attachment,
+      url: metaData.url,
+    },
   });
 
   return {
     attachmentType: "image",
     imageAttachment: { connect: { id: imageAttachment.id } },
-  };
-}
-
-async function createImageAttachments(
-  attachmentsToCreate: Array<CreateImageAttachment>,
-) {
-  // Check and fix new uploaded image attachments
-  return Promise.all(attachmentsToCreate.map(createImageAttachment));
-}
-
-function createVideoAttachments(videoLinks: Array<VideoLink>) {
-  return videoLinks.map((videoUrl, idx) =>
-    createLinkAttachmentForVideoUrl(videoUrl, idx),
-  );
+  } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
 }
 
 export async function createPost(
@@ -254,10 +272,32 @@ export async function createPost(
   importAt?: Date,
 ) {
   const text = sanitizeUserHtml(input.text);
-  const newImages = await createImageAttachments(input.imageAttachments.create);
-  const newVideos = createVideoAttachments(input.videoLinks);
 
-  // TODO: Webhook? Notify mods?
+  const processedAttachments = await Promise.all(
+    input.attachments.map((attachment) => {
+      if (attachment.type === "image") {
+        if ("id" in attachment) {
+          throw new TRPCError({
+            code: "BAD_REQUEST",
+            message:
+              "Existing image attachments cannot be used when creating a post.",
+          });
+        }
+
+        return createImageAttachment(attachment);
+      }
+
+      if (attachment.type === "video") {
+        return createVideoAttachment(attachment);
+      }
+
+      throw new TRPCError({
+        code: "BAD_REQUEST",
+        message: "Unknown attachment type",
+      });
+    }),
+  ).then((results) => results.map((res, idx) => ({ ...res, order: idx })));
+
   const result = await prisma.showAndTellEntry.create({
     data: {
       ...(importAt
@@ -272,7 +312,7 @@ export async function createPost(
       title: input.title,
       text,
       volunteeringMinutes: input.volunteeringMinutes,
-      attachments: { create: [...newImages, ...newVideos] },
+      attachments: { create: processedAttachments },
       location: input.location,
       longitude: input.longitude,
       latitude: input.latitude,
@@ -426,16 +466,39 @@ export async function updatePost(
     },
     include: { attachments: true },
   });
+  const existingEntryImageAttachmentIds = new Set(
+    existingEntry.attachments
+      .map((att) => att.imageAttachmentId)
+      .filter((id) => id !== null),
+  );
 
   // Check that the only existing image attachments that are connected to the entry are updated
-  for (const id of Object.keys(input.imageAttachments.update)) {
-    if (!existingEntry.attachments.find((a) => a.imageAttachmentId === id)) {
+  const processedAttachments = await Promise.all(
+    input.attachments.map((attachment) => {
+      if (attachment.type === "image") {
+        if ("id" in attachment) {
+          if (!existingEntryImageAttachmentIds.has(attachment.id)) {
+            throw new TRPCError({
+              code: "BAD_REQUEST",
+              message:
+                "Tried to update attachment that is not connected to the entry.",
+            });
+          }
+        }
+
+        return createImageAttachment(attachment);
+      }
+
+      if (attachment.type === "video") {
+        return createVideoAttachment(attachment);
+      }
+
       throw new TRPCError({
         code: "BAD_REQUEST",
-        message: `Tried to update attachment that is not connected to the entry.`,
+        message: "Unknown attachment type",
       });
-    }
-  }
+    }),
+  ).then((results) => results.map((res, idx) => ({ ...res, order: idx })));
 
   const text = sanitizeUserHtml(input.text);
   const notePrivate =
@@ -446,59 +509,65 @@ export async function updatePost(
     "notePublic" in input
       ? sanitizeUserHtml(input.notePublic || "")
       : undefined;
-  const newImages = await createImageAttachments(input.imageAttachments.create);
-  const newVideos = createVideoAttachments(input.videoLinks);
 
   const now = new Date();
   const wasApproved = getEntityStatus(existingEntry) === "approved";
 
   // TODO: Webhook? Notify mods?
-  await Promise.allSettled([
-    prisma.showAndTellEntry.update({
-      where: {
-        id: input.id,
-      },
-      data: {
-        displayName: input.displayName,
-        title: input.title,
-        text,
-        volunteeringMinutes: input.volunteeringMinutes,
-        updatedAt: now,
-        approvedAt:
-          keepApproved && wasApproved ? now : existingEntry.approvedAt,
-        attachments: {
-          deleteMany: {
-            OR: [
-              // Delete all video attachments (we add them back later if they are still in the input)
-              { attachmentType: "video", linkAttachmentId: { not: null } },
-              // Delete image attachments that are no longer in the update list
-              {
-                attachmentType: "image",
-                imageAttachmentId: {
-                  notIn: Object.keys(input.imageAttachments.update),
-                },
+  await prisma.showAndTellEntry.update({
+    where: {
+      id: input.id,
+    },
+    data: {
+      displayName: input.displayName,
+      title: input.title,
+      text,
+      volunteeringMinutes: input.volunteeringMinutes,
+      updatedAt: now,
+      approvedAt: keepApproved && wasApproved ? now : existingEntry.approvedAt,
+      attachments: {
+        deleteMany: {
+          OR: [
+            // Delete all video attachments (we add them back later if they are still in the input)
+            { attachmentType: { not: "image" } },
+            // Delete image attachments that are no longer in the update list
+            {
+              attachmentType: "image",
+              imageAttachmentId: {
+                notIn: processedAttachments
+                  .filter((att) => att.attachmentType === "image")
+                  .map((att) => att.imageAttachment.connect.id),
               },
-            ],
-          },
-          // Create attachments that are in the creation list
-          create: [...newImages, ...newVideos],
+            },
+          ],
         },
-        location: input.location,
-        longitude: input.longitude,
-        latitude: input.latitude,
-        notePrivate,
-        notePublic,
-        dominantColor: input.dominantColor,
+        // Create any new attachments (all videos and new images)
+        create: processedAttachments.filter(
+          (att) =>
+            att.attachmentType !== "image" ||
+            !existingEntryImageAttachmentIds.has(
+              att.imageAttachment.connect.id,
+            ),
+        ),
+        // Ensure existing images have the correct order applied
+        updateMany: processedAttachments
+          .filter((att) => att.attachmentType === "image")
+          .filter((att) =>
+            existingEntryImageAttachmentIds.has(att.imageAttachment.connect.id),
+          )
+          .map((att) => ({
+            where: { imageAttachmentId: att.imageAttachment.connect.id },
+            data: { order: att.order },
+          })),
       },
-    }),
-    // Update image attachments that are in the update list
-    ...Object.entries(input.imageAttachments.update).map(([id, attachment]) =>
-      prisma.imageAttachment.update({
-        where: { id },
-        data: attachment,
-      }),
-    ),
-  ]);
+      location: input.location,
+      longitude: input.longitude,
+      latitude: input.latitude,
+      notePrivate,
+      notePublic,
+      dominantColor: input.dominantColor,
+    },
+  });
   revalidateCache(res);
 }
 
