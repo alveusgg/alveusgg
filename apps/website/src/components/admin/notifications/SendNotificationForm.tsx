@@ -30,6 +30,7 @@ import {
 } from "@/components/shared/form/UploadAttachmentsField";
 
 import IconLoading from "@/icons/IconLoading";
+import IconTrash from "@/icons/IconTrash";
 
 const resizeImageOptions = {
   maxWidth: 1920,
@@ -180,8 +181,24 @@ export function SendNotificationForm() {
             upload={upload}
             allowedFileTypes={imageMimeTypes}
             resizeImageOptions={resizeImageOptions}
-            renderAttachment={({ fileReference, ...props }) => (
-              <ImageUploadAttachment {...props} fileReference={fileReference} />
+            renderAttachment={(props) => (
+              <ImageUploadAttachment {...props}>
+                <div className="flex h-full flex-col items-start justify-center">
+                  <Button
+                    size="small"
+                    width="auto"
+                    onClick={() =>
+                      imageAttachmentData.dispatch({
+                        type: "remove",
+                        id: props.fileReference.id,
+                      })
+                    }
+                  >
+                    <IconTrash className="size-5" />
+                    Remove
+                  </Button>
+                </div>
+              </ImageUploadAttachment>
             )}
           />
 
