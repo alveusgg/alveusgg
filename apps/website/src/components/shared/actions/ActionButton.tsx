@@ -23,9 +23,6 @@ const ActionButton = ({
     <button
       onClick={onClick}
       className={classes(
-        "group",
-        !/\b(relative|absolute|fixed|sticky)\b/.test(className || "") &&
-          "relative",
         !/\b((inline-)?(block|flex|grid|table)|inline|contents)\b/.test(
           className || "",
         ) && "inline-block",
