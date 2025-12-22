@@ -42,6 +42,8 @@ import { parseVideoUrl } from "@/utils/video-urls";
 import useFileUpload from "@/hooks/files/upload";
 import { useFormChangeWarning } from "@/hooks/useFormChangeWarning";
 
+import IconArrowDown from "@/icons/IconArrowDown";
+import IconArrowUp from "@/icons/IconArrowUp";
 import IconChevronDown from "@/icons/IconChevronDown";
 import IconLoading from "@/icons/IconLoading";
 import IconTrash from "@/icons/IconTrash";
@@ -309,6 +311,20 @@ export function ShowAndTellEntryForm({
         throw new Error("Unknown attachment type");
       }) || [],
   );
+  const swapAttachments = useCallback((fromIdx: number, toIdx: number) => {
+    setAttachments((prev) => {
+      const fromAtt = prev[fromIdx];
+      if (!fromAtt) return prev;
+
+      const toAtt = prev[toIdx];
+      if (!toAtt) return prev;
+
+      const newAttachments = [...prev];
+      newAttachments[fromIdx] = toAtt;
+      newAttachments[toIdx] = fromAtt;
+      return newAttachments;
+    });
+  }, []);
 
   const imageDispatch = useCallback((action: FileAction) => {
     setAttachments((prev) => {
@@ -649,9 +665,27 @@ export function ShowAndTellEntryForm({
             />
 
             <ul className="mt-4 flex flex-col gap-2 lg:mt-8">
-              {attachments.map((att) => {
+              {attachments.map((att, idx) => {
                 const buttons = (
                   <div className="flex justify-end gap-2">
+                    <Button
+                      size="small"
+                      width="auto"
+                      disabled={idx === 0}
+                      onClick={() => swapAttachments(idx, idx - 1)}
+                    >
+                      <IconArrowUp className="size-5" />
+                      <span className="sr-only">Move Up</span>
+                    </Button>
+                    <Button
+                      size="small"
+                      width="auto"
+                      disabled={idx === attachments.length - 1}
+                      onClick={() => swapAttachments(idx, idx + 1)}
+                    >
+                      <IconArrowDown className="size-5" />
+                      <span className="sr-only">Move Down</span>
+                    </Button>
                     <Button
                       size="small"
                       width="auto"
