@@ -22,6 +22,7 @@ export async function probeImageMeta(url: string) {
       height: isRotated ? width : height,
       type,
       mimeType: mime,
+      url,
     };
   } catch (_) {
     return false;
