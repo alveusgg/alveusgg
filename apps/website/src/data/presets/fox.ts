@@ -1,3 +1,4 @@
+import backleftcorner from "@/assets/presets/fox/backleftcorner.png";
 import den1 from "@/assets/presets/fox/den1.png";
 import den1t from "@/assets/presets/fox/den1t.png";
 import den2 from "@/assets/presets/fox/den2.png";
@@ -19,6 +20,7 @@ import right from "@/assets/presets/fox/right.png";
 import rightplatform from "@/assets/presets/fox/rightplatform.png";
 import rightramp from "@/assets/presets/fox/rightramp.png";
 import river from "@/assets/presets/fox/river.png";
+import stump from "@/assets/presets/fox/stump.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -27,6 +29,11 @@ const foxPresets: Record<string, Preset> = {
     description: "home",
     image: home,
     // modified: 2025-12-13T18:01:21.562Z
+  },
+  backleftcorner: {
+    description: "backleftcorner",
+    image: backleftcorner,
+    // modified: 2025-12-22T19:51:18.491Z
   },
   den1: {
     description: "den1",
@@ -127,6 +134,11 @@ const foxPresets: Record<string, Preset> = {
     description: "river",
     image: river,
     // modified: 2025-12-13T18:15:17.407Z
+  },
+  stump: {
+    description: "stump",
+    image: stump,
+    // modified: 2025-12-22T19:51:37.299Z
   },
 };
 
