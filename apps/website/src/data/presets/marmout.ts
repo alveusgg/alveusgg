@@ -1,5 +1,6 @@
 import domell from "@/assets/presets/marmout/domell.png";
 import domelu from "@/assets/presets/marmout/domelu.png";
+import domelut from "@/assets/presets/marmout/domelut.png";
 import domer from "@/assets/presets/marmout/domer.png";
 import down from "@/assets/presets/marmout/down.png";
 import downleft from "@/assets/presets/marmout/downleft.png";
@@ -38,6 +39,11 @@ const marmoutPresets: Record<string, Preset> = {
     description: "Dome Left Upper",
     image: domelu,
     // modified: 2025-11-09T15:41:24.398Z
+  },
+  domelut: {
+    description: "domelut",
+    image: domelut,
+    // modified: 2025-12-23T21:06:51.012Z
   },
   domer: {
     description: "Dome Right",
