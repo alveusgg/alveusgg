@@ -44,7 +44,7 @@ const useTooltip = ({
     onOpenChange: setIsOpen,
     whileElementsMounted: autoUpdate,
     placement: placement,
-    middleware: [flip(), shift(), offset(offsetOpts)],
+    middleware: [offset(offsetOpts), flip(), shift()],
   });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
