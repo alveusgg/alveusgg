@@ -92,7 +92,7 @@ type FileUploadingPropsType = {
   multiple?: boolean;
   maxNumber?: number;
   maxFileSize?: number;
-  renderAttachment: (props: FileUploadRenderProps) => ReactNode;
+  renderAttachment?: (props: FileUploadRenderProps) => ReactNode;
   resizeImageOptions?: Omit<ResizeImageOptions, "type">;
   attachmentsClassName?: string;
 };
@@ -348,7 +348,7 @@ export const UploadAttachmentsField = ({
         id={id}
       />
       <div>
-        {files.length > 0 && (
+        {renderAttachment && files.length > 0 && (
           <div className={attachmentsClassName}>
             {files.map((file) =>
               renderAttachment({

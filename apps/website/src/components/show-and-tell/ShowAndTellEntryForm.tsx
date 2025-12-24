@@ -30,25 +30,28 @@ import {
   resizeImageOptions,
 } from "@/data/show-and-tell";
 
+import { featuredAttachmentsImage } from "@/utils/attachments";
 import { classes } from "@/utils/classes";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
 import { notEmpty } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
 import { extractColorFromImage } from "@/utils/process-image";
-import { splitAttachments } from "@/utils/split-attachments";
 import { trpc } from "@/utils/trpc";
+import { parseVideoUrl } from "@/utils/video-urls";
 
 import useFileUpload from "@/hooks/files/upload";
 import { useFormChangeWarning } from "@/hooks/useFormChangeWarning";
 
 import IconChevronDown from "@/icons/IconChevronDown";
 import IconLoading from "@/icons/IconLoading";
+import IconTrash from "@/icons/IconTrash";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
 import Link from "../content/Link";
 import { MessageBox } from "../shared/MessageBox";
 import { ModalDialog } from "../shared/ModalDialog";
+import { VideoPlatformIcon } from "../shared/VideoPlatformIcon";
 import { Button } from "../shared/form/Button";
 import { Fieldset } from "../shared/form/Fieldset";
 import { ImageUploadAttachment } from "../shared/form/ImageUploadAttachment";
@@ -388,10 +391,11 @@ export function ShowAndTellEntryForm({
     }
 
     if (!data.dominantColor) {
-      const { featuredImage } = splitAttachments(
+      const featuredImage = featuredAttachmentsImage(
         videoLinksData.videoUrls.map((url) => ({
           id: "",
           entryId: "",
+          order: 0,
           attachmentType: "video",
           linkAttachmentId: "",
           imageAttachmentId: null,
@@ -557,13 +561,12 @@ export function ShowAndTellEntryForm({
         </div>
         <div className="flex flex-[2] flex-col gap-5">
           <Fieldset legend="Attachments">
-            <div className="lg:mb-10">
-              <VideoLinksField
-                name="videoUrls"
-                maxNumber={MAX_VIDEOS}
-                {...videoLinksData}
-              />
-            </div>
+            <VideoLinksField
+              name="videoUrls"
+              maxNumber={MAX_VIDEOS}
+              {...videoLinksData}
+            />
+
             <UploadAttachmentsField
               {...imageAttachmentsData}
               label="Pictures"
@@ -571,16 +574,55 @@ export function ShowAndTellEntryForm({
               maxNumber={MAX_IMAGES}
               allowedFileTypes={imageMimeTypes}
               resizeImageOptions={resizeImageOptions}
-              renderAttachment={({ key, fileReference, ...props }) => (
-                <ImageAttachment
-                  key={key}
-                  entry={entry}
-                  fileReference={fileReference}
-                  onClick={openModal}
-                  {...props}
-                />
-              )}
             />
+
+            <ul className="mt-4 flex flex-col gap-2 lg:mt-8">
+              {videoLinksData.videoUrls.map((url) => (
+                <li
+                  key={url}
+                  className="flex flex-row items-center justify-between gap-2 rounded-xl bg-white p-1 px-3 shadow-xl"
+                >
+                  <VideoPlatformIcon
+                    className="size-5"
+                    platform={parseVideoUrl(url)?.platform}
+                  />
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-700 underline hover:cursor-pointer"
+                  >
+                    <span className="min-w-0 flex-1 truncate text-left">
+                      {url}
+                    </span>
+                  </a>
+                  <Button
+                    size="small"
+                    width="auto"
+                    onClick={() => {
+                      videoLinksData.setVideoUrls(
+                        videoLinksData.videoUrls.filter((item) => item !== url),
+                      );
+                    }}
+                  >
+                    <IconTrash className="size-6" /> Remove
+                  </Button>
+                </li>
+              ))}
+
+              {imageAttachmentsData.files.map((file) => (
+                <li key={file.id}>
+                  <ImageAttachment
+                    entry={entry}
+                    fileReference={file}
+                    removeFileReference={(id) =>
+                      imageAttachmentsData.dispatch({ type: "remove", id })
+                    }
+                    onClick={openModal}
+                  />
+                </li>
+              ))}
+            </ul>
           </Fieldset>
         </div>
       </div>

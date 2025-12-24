@@ -395,6 +395,7 @@ model ShowAndTellEntry {
 model ShowAndTellEntryAttachment {
   id                String  @id @default(cuid())
   entryId           String
+  order             Int     @default(0)
   attachmentType    String
   linkAttachmentId  String? @unique
   imageAttachmentId String? @unique
