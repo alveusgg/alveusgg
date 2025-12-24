@@ -14,14 +14,14 @@
   },
   "dependencies": {
     "@alveusgg/database": "workspace:*",
-    "@t3-oss/env-core": "^0.13.8",
+    "@t3-oss/env-core": "^0.13.10",
     "@twurple/api": "^8.0.2",
     "@twurple/auth": "^8.0.2",
     "@twurple/chat": "^8.0.2",
     "@twurple/easy-bot": "^8.0.2",
     "read-pkg": "^10.0.0",
     "tsx": "^4.21.0",
-    "zod": "^4.1.13"
+    "zod": "^4.2.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.2",
