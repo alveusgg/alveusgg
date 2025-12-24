@@ -123,7 +123,7 @@
     "@types/probe-image-size": "^7.2.5",
     "@types/react": "^19.2.7",
     "@types/react-dom": "^19.2.3",
-    "@types/serviceworker": "^0.0.168",
+    "@types/serviceworker": "^0.0.170",
     "@types/xml2js": "^0.4.14",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
@@ -142,9 +142,9 @@
     "ts-morph": "^27.0.2",
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
-    "typescript-eslint": "^8.49.0",
-    "vitest": "^4.0.15",
-    "webpack": "^5.103.0"
+    "typescript-eslint": "^8.50.0",
+    "vitest": "^4.0.16",
+    "webpack": "^5.104.1"
   },
   "prettier": {
     "plugins": [
