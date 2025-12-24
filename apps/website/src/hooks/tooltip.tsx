@@ -3,7 +3,9 @@ import {
   type OffsetOptions,
   type Placement,
   autoUpdate,
-  offset as offsetMiddleware,
+  flip,
+  offset,
+  shift,
   useFloating,
   useFocus,
   useHover,
@@ -33,7 +35,7 @@ const useTooltip = ({
   aria,
   force,
   placement,
-  offset,
+  offset: offsetOpts,
 }: UseTooltipProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -42,7 +44,7 @@ const useTooltip = ({
     onOpenChange: setIsOpen,
     whileElementsMounted: autoUpdate,
     placement: placement,
-    middleware: [offsetMiddleware(offset)],
+    middleware: [flip(), shift(), offset(offsetOpts)],
   });
 
   const { getReferenceProps, getFloatingProps } = useInteractions([
