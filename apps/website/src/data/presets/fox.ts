@@ -1,4 +1,5 @@
 import backleftcorner from "@/assets/presets/fox/backleftcorner.png";
+import backrightcorner from "@/assets/presets/fox/backrightcorner.png";
 import den1 from "@/assets/presets/fox/den1.png";
 import den1t from "@/assets/presets/fox/den1t.png";
 import den2 from "@/assets/presets/fox/den2.png";
@@ -8,6 +9,7 @@ import doorright from "@/assets/presets/fox/doorright.png";
 import downleft from "@/assets/presets/fox/downleft.png";
 import downright from "@/assets/presets/fox/downright.png";
 import farcorner from "@/assets/presets/fox/farcorner.png";
+import farfencel from "@/assets/presets/fox/farfencel.png";
 import home from "@/assets/presets/fox/home.png";
 import insideleft from "@/assets/presets/fox/insideleft.png";
 import insideplatform from "@/assets/presets/fox/insideplatform.png";
@@ -21,6 +23,7 @@ import rightplatform from "@/assets/presets/fox/rightplatform.png";
 import rightramp from "@/assets/presets/fox/rightramp.png";
 import river from "@/assets/presets/fox/river.png";
 import stump from "@/assets/presets/fox/stump.png";
+import timbertree from "@/assets/presets/fox/timbertree.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -34,6 +37,11 @@ const foxPresets: Record<string, Preset> = {
     description: "backleftcorner",
     image: backleftcorner,
     // modified: 2025-12-22T19:51:18.491Z
+  },
+  backrightcorner: {
+    description: "backrightcorner",
+    image: backrightcorner,
+    // modified: 2025-12-23T20:58:43.156Z
   },
   den1: {
     description: "den1",
@@ -79,6 +87,11 @@ const foxPresets: Record<string, Preset> = {
     description: "farcorner",
     image: farcorner,
     // modified: 2025-12-13T18:26:14.225Z
+  },
+  farfencel: {
+    description: "farfencel",
+    image: farfencel,
+    // modified: 2025-12-23T20:59:40.513Z
   },
   insideleft: {
     description: "insideleft",
@@ -138,7 +151,12 @@ const foxPresets: Record<string, Preset> = {
   stump: {
     description: "stump",
     image: stump,
-    // modified: 2025-12-22T19:51:37.299Z
+    // modified: 2025-12-23T21:00:17.089Z
+  },
+  timbertree: {
+    description: "timbertree",
+    image: timbertree,
+    // modified: 2025-12-23T20:59:12.048Z
   },
 };
 
