@@ -2,20 +2,12 @@ import { type ReactNode } from "react";
 
 import { classes } from "@/utils/classes";
 
+import useTooltip, { type UseTooltipProps } from "@/hooks/tooltip";
+
 type ActionButtonProps = {
   onClick: () => void;
   icon: ({ className }: { className: string }) => ReactNode;
-  tooltip: {
-    text: string;
-    elm?: ({
-      className,
-      children,
-    }: {
-      className: string;
-      children: string;
-    }) => ReactNode;
-    force?: boolean;
-  };
+  tooltip: UseTooltipProps;
   className?: string;
 };
 
@@ -25,13 +17,12 @@ const ActionButton = ({
   tooltip,
   className,
 }: ActionButtonProps) => {
-  const Tooltip = tooltip.elm ?? "div";
+  const { props: ttProps, element: ttElm } = useTooltip(tooltip);
+
   return (
     <button
       onClick={onClick}
-      title={tooltip.text}
       className={classes(
-        "group relative",
         !/\b((inline-)?(block|flex|grid|table)|inline|contents)\b/.test(
           className || "",
         ) && "inline-block",
@@ -39,16 +30,9 @@ const ActionButton = ({
           "text-alveus-green-400 hover:text-black",
         className,
       )}
+      {...ttProps}
     >
-      <Tooltip
-        className={classes(
-          "pointer-events-none absolute top-1/2 z-10 -translate-x-full -translate-y-1/2 rounded-md bg-alveus-green-900 px-1 py-0.5 text-left leading-tight text-nowrap text-white transition-opacity",
-          tooltip.force ? "opacity-100" : "opacity-0 group-hover:opacity-100",
-          /\bbg-/.test(className || "") ? "-left-1" : "left-0",
-        )}
-      >
-        {tooltip.text}
-      </Tooltip>
+      {ttElm}
       <Icon className="m-1 size-5 cursor-pointer transition-colors" />
     </button>
   );

@@ -117,7 +117,7 @@ const Button = ({
         command="swap"
         args={[selected.camera.toLowerCase(), camera.toLowerCase()]}
         subOnly
-        tooltip="Run swap command"
+        tooltip={{ text: "Run swap command", offset: 8 }}
         className="flex items-center rounded-r bg-alveus-green/75 px-2 text-alveus-tan backdrop-blur-sm transition-colors hover:bg-alveus-green-900/90"
       />
     )}
@@ -143,12 +143,23 @@ const Card = ({
       className,
     )}
   >
-    <Image
-      src={image}
-      alt=""
-      width={300}
-      className="aspect-video w-full rounded-t-lg object-cover transition-transform"
-    />
+    <div className="relative overflow-hidden rounded-t-lg">
+      <Image
+        src={image}
+        alt=""
+        width={300}
+        className="aspect-video w-full object-cover"
+      />
+      {command && (
+        <RunCommandButton
+          command={command.command}
+          args={command.args}
+          subOnly
+          tooltip={{ offset: 8 }}
+          className="absolute inset-0 flex items-center justify-center text-alveus-green-100 opacity-25 transition-all hover:bg-black/50 hover:text-alveus-green-300 hover:opacity-100 [&>svg]:size-12"
+        />
+      )}
+    </div>
     <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
       <div className="flex items-center justify-between">
         <h4 className="truncate text-lg font-semibold">{title}</h4>
@@ -524,7 +535,7 @@ const AboutTechPresetsPage: NextPage = () => {
                               }
                               icon={getPositionIcon(i + 1)}
                               tooltip={{
-                                text:
+                                content:
                                   selectedPosition === i + 1
                                     ? "Cancel position swap"
                                     : `Swap position ${i + 1} with another`,
@@ -538,7 +549,9 @@ const AboutTechPresetsPage: NextPage = () => {
                                 selectedPosition.toString(),
                                 (i + 1).toString(),
                               ]}
-                              tooltip={`Run swap command for positions ${selectedPosition} and ${i + 1}`}
+                              tooltip={{
+                                text: `Run swap command for positions ${selectedPosition} and ${i + 1}`,
+                              }}
                               icon={getPositionIcon(i + 1)}
                               onClick={() => setSelectedPosition(undefined)}
                               className="text-highlight hover:text-black"
@@ -688,7 +701,7 @@ const AboutTechPresetsPage: NextPage = () => {
                               <RunCommandButton
                                 command="ptzzoom"
                                 args={[selectedCamera.toLowerCase(), "80"]}
-                                tooltip="Run zoom out command"
+                                tooltip={{ text: "Run zoom out command" }}
                                 icon={IconZoomOut}
                               />
 
@@ -697,7 +710,7 @@ const AboutTechPresetsPage: NextPage = () => {
                               <RunCommandButton
                                 command="ptzzoom"
                                 args={[selectedCamera.toLowerCase(), "120"]}
-                                tooltip="Run zoom in command"
+                                tooltip={{ text: "Run zoom in command" }}
                                 icon={IconZoomIn}
                               />
                             </div>

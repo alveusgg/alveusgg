@@ -45,6 +45,7 @@
     "@cloudflare/stream-react": "^1.9.2",
     "@dagrejs/dagre": "^1.1.8",
     "@eyevinn/webrtc-player": "^0.13.0",
+    "@floating-ui/react": "^0.27.16",
     "@fontsource/pt-sans": "^5.2.8",
     "@headlessui/react": "^2.2.9",
     "@iframe-resizer/react": "^5.5.7",

@@ -147,7 +147,7 @@ importers:
         version: 4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-import:
         specifier: ^2.32.0
-        version: 2.32.0(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
+        version: 2.32.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-import-x:
         specifier: ^4.16.1
         version: 4.16.1(@typescript-eslint/utils@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1))
@@ -199,6 +199,9 @@ importers:
       '@eyevinn/webrtc-player':
         specifier: ^0.13.0
         version: 0.13.0
+      '@floating-ui/react':
+        specifier: ^0.27.16
+        version: 0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
       '@fontsource/pt-sans':
         specifier: ^5.2.8
         version: 5.2.8
@@ -445,7 +448,7 @@ importers:
         version: 4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-import:
         specifier: ^2.32.0
-        version: 2.32.0(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
+        version: 2.32.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-import-x:
         specifier: ^4.16.1
         version: 4.16.1(@typescript-eslint/utils@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1))
@@ -493,7 +496,7 @@ importers:
         version: 4.0.16(@types/node@24.10.4)(jiti@2.6.1)(jsdom@27.3.0(postcss@8.5.6))(lightningcss@1.30.2)(terser@5.44.1)(tsx@4.21.0)(yaml@2.8.1)
       webpack:
         specifier: ^5.104.1
-        version: 5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))
+        version: 5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)
 
 packages:
 
@@ -1631,6 +1634,12 @@ packages:
     peerDependencies:
       react: '>=16.8.0'
       react-dom: '>=16.8.0'
+
+  '@floating-ui/react@0.27.16':
+    resolution: {integrity: sha512-9O8N4SeG2z++TSM8QA/KTeKFBVCNEz/AGS7gWPJf6KFRzmRWixFRnCnkPHRDwSVZW6QPDO6uT0P2SpWNKCc9/g==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
 
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
@@ -8625,6 +8634,14 @@ snapshots:
       react-dom: 19.2.3(react@19.2.3)
       tabbable: 6.2.0
 
+  '@floating-ui/react@0.27.16(react-dom@19.2.3(react@19.2.3))(react@19.2.3)':
+    dependencies:
+      '@floating-ui/react-dom': 2.1.6(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      '@floating-ui/utils': 0.2.10
+      react: 19.2.3
+      react-dom: 19.2.3(react@19.2.3)
+      tabbable: 6.2.0
+
   '@floating-ui/utils@0.2.10': {}
 
   '@fontsource/pt-sans@5.2.8': {}
@@ -12221,15 +12238,16 @@ snapshots:
       tinyglobby: 0.2.14
       unrs-resolver: 1.9.2
     optionalDependencies:
-      eslint-plugin-import: 2.32.0(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
+      eslint-plugin-import: 2.32.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
       eslint-plugin-import-x: 4.16.1(@typescript-eslint/utils@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1))
     transitivePeerDependencies:
       - supports-color
 
-  eslint-module-utils@2.12.1(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1)):
+  eslint-module-utils@2.12.1(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1)):
     dependencies:
       debug: 3.2.7
     optionalDependencies:
+      '@typescript-eslint/parser': 8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
       eslint: 9.39.2(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
       eslint-import-resolver-typescript: 4.4.4(eslint-plugin-import-x@4.16.1(@typescript-eslint/utils@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint@9.39.2(jiti@2.6.1)))(eslint-plugin-import@2.32.0)(eslint@9.39.2(jiti@2.6.1))
@@ -12254,7 +12272,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  eslint-plugin-import@2.32.0(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1)):
+  eslint-plugin-import@2.32.0(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1)):
     dependencies:
       '@rtsao/scc': 1.1.0
       array-includes: 3.1.9
@@ -12265,7 +12283,7 @@ snapshots:
       doctrine: 2.1.0
       eslint: 9.39.2(jiti@2.6.1)
       eslint-import-resolver-node: 0.3.9
-      eslint-module-utils: 2.12.1(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
+      eslint-module-utils: 2.12.1(@typescript-eslint/parser@8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint-import-resolver-node@0.3.9)(eslint-import-resolver-typescript@4.4.4)(eslint@9.39.2(jiti@2.6.1))
       hasown: 2.0.2
       is-core-module: 2.16.1
       is-glob: 4.0.3
@@ -12276,6 +12294,8 @@ snapshots:
       semver: 6.3.1
       string.prototype.trimend: 1.0.9
       tsconfig-paths: 3.15.0
+    optionalDependencies:
+      '@typescript-eslint/parser': 8.50.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
     transitivePeerDependencies:
       - eslint-import-resolver-typescript
       - eslint-import-resolver-webpack
@@ -14779,16 +14799,17 @@ snapshots:
 
   tapable@2.3.0: {}
 
-  terser-webpack-plugin@5.3.16(@swc/core@1.4.17(@swc/helpers@0.5.17))(webpack@5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))):
+  terser-webpack-plugin@5.3.16(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)(webpack@5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)):
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       jest-worker: 27.5.1
       schema-utils: 4.3.3
       serialize-javascript: 6.0.2
       terser: 5.44.1
-      webpack: 5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))
+      webpack: 5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)
     optionalDependencies:
       '@swc/core': 1.4.17(@swc/helpers@0.5.17)
+      esbuild: 0.27.0
 
   terser@5.44.1:
     dependencies:
@@ -15192,7 +15213,7 @@ snapshots:
 
   webpack-sources@3.3.3: {}
 
-  webpack@5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17)):
+  webpack@5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0):
     dependencies:
       '@types/eslint-scope': 3.7.7
       '@types/estree': 1.0.8
@@ -15216,7 +15237,7 @@ snapshots:
       neo-async: 2.6.2
       schema-utils: 4.3.3
       tapable: 2.3.0
-      terser-webpack-plugin: 5.3.16(@swc/core@1.4.17(@swc/helpers@0.5.17))(webpack@5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17)))
+      terser-webpack-plugin: 5.3.16(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0)(webpack@5.104.1(@swc/core@1.4.17(@swc/helpers@0.5.17))(esbuild@0.27.0))
       watchpack: 2.5.0
       webpack-sources: 3.3.3
     transitivePeerDependencies:

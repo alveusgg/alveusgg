@@ -11,16 +11,22 @@ import { scopeGroups } from "@/data/twitch";
 
 import { type RouterInputs, trpc } from "@/utils/trpc";
 
+import type { UseTooltipProps } from "@/hooks/tooltip";
+
 import IconVideoCamera from "@/icons/IconVideoCamera";
 
 import ActionButton from "./ActionButton";
-import getActionPreviewTooltip from "./ActionPreviewTooltip";
+import ActionPreviewTooltip from "./ActionPreviewTooltip";
 
 type Command = RouterInputs["stream"]["runCommand"];
 
 interface RunCommandButtonProps extends Command {
   subOnly?: boolean;
-  tooltip?: string;
+  tooltip?: {
+    text?: string;
+    placement?: UseTooltipProps["placement"];
+    offset?: UseTooltipProps["offset"];
+  };
   icon?: ({ className }: { className: string }) => ReactNode;
   onClick?: () => void;
   className?: string;
@@ -30,7 +36,7 @@ const RunCommandButton = ({
   command,
   args,
   subOnly = false,
-  tooltip = "Run command",
+  tooltip,
   icon = IconVideoCamera,
   onClick,
   className,
@@ -83,9 +89,16 @@ const RunCommandButton = ({
     }
   }, [status]);
 
-  const PreviewTooltip = useMemo(
-    () => getActionPreviewTooltip(`!${[command, ...(args ?? [])].join(" ")}`),
-    [command, args],
+  const textTooltip = tooltip?.text ?? "Run command";
+  const previewTooltip = useMemo(
+    () => (
+      <ActionPreviewTooltip
+        preview={`!${[command, ...(args ?? [])].join(" ")}`}
+      >
+        {textTooltip}
+      </ActionPreviewTooltip>
+    ),
+    [command, args, textTooltip],
   );
 
   if (!hasScopes || (subOnly && !subscription.data)) return null;
@@ -95,9 +108,11 @@ const RunCommandButton = ({
       onClick={onClickRun}
       icon={icon}
       tooltip={{
-        text: statusText ?? tooltip,
-        elm: statusText ? undefined : PreviewTooltip,
+        content: statusText ?? previewTooltip,
+        aria: statusText ?? textTooltip,
         force: !!statusText,
+        placement: tooltip?.placement,
+        offset: tooltip?.offset,
       }}
       className={className}
     />

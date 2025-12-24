@@ -8,7 +8,7 @@ import {
 import IconClipboard from "@/icons/IconClipboard";
 
 import ActionButton from "./ActionButton";
-import getActionPreviewTooltip from "./ActionPreviewTooltip";
+import ActionPreviewTooltip from "./ActionPreviewTooltip";
 
 type CopyToClipboardButtonProps = {
   text: string;
@@ -27,15 +27,23 @@ const CopyToClipboardButton = ({
     await copy(text);
   }, [copy, text]);
 
-  const PreviewTooltip = useMemo(() => getActionPreviewTooltip(text), [text]);
+  const content = useMemo(
+    () =>
+      preview && !status ? (
+        <ActionPreviewTooltip preview={text}>{statusText}</ActionPreviewTooltip>
+      ) : (
+        statusText
+      ),
+    [preview, text, status, statusText],
+  );
 
   return (
     <ActionButton
       onClick={onClick}
       icon={IconClipboard}
       tooltip={{
-        text: statusText,
-        elm: preview && !status ? PreviewTooltip : undefined,
+        content,
+        aria: statusText,
         force: status !== undefined,
       }}
     />
