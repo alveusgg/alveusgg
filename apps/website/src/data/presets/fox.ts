@@ -2,6 +2,7 @@ import backleftcorner from "@/assets/presets/fox/backleftcorner.png";
 import backrightcorner from "@/assets/presets/fox/backrightcorner.png";
 import den1 from "@/assets/presets/fox/den1.png";
 import den1t from "@/assets/presets/fox/den1t.png";
+import den1tr from "@/assets/presets/fox/den1tr.png";
 import den2 from "@/assets/presets/fox/den2.png";
 import dirtpile from "@/assets/presets/fox/dirtpile.png";
 import doorleft from "@/assets/presets/fox/doorleft.png";
@@ -52,6 +53,11 @@ const foxPresets: Record<string, Preset> = {
     description: "den1t",
     image: den1t,
     // modified: 2025-12-13T15:35:57.034Z
+  },
+  den1tr: {
+    description: "den1tr",
+    image: den1tr,
+    // modified: 2025-12-25T19:33:06.635Z
   },
   den2: {
     description: "den2",
