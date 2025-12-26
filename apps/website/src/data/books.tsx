@@ -62,6 +62,7 @@ const books: [BookInfo, ...BookInfo[]] = [
     link: "https://amzn.to/4fS8THm",
     thickness: thickness.md, // 310 pages
     color: "border-blue-800",
+    vodId: "cpyFCwkKVA4",
   },
   {
     title: "Steve & Me",
