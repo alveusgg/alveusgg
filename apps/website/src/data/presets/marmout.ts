@@ -17,6 +17,7 @@ import nearleftshelf from "@/assets/presets/marmout/nearleftshelf.png";
 import nearlefttop from "@/assets/presets/marmout/nearlefttop.png";
 import nearrightshelves from "@/assets/presets/marmout/nearrightshelves.png";
 import right from "@/assets/presets/marmout/right.png";
+import rightpost from "@/assets/presets/marmout/rightpost.png";
 import table from "@/assets/presets/marmout/table.png";
 import tablet from "@/assets/presets/marmout/tablet.png";
 import upleft from "@/assets/presets/marmout/upleft.png";
@@ -119,6 +120,11 @@ const marmoutPresets: Record<string, Preset> = {
     description: "Right",
     image: right,
     // modified: 2025-11-07T22:53:17.546Z
+  },
+  rightpost: {
+    description: "rightpost",
+    image: rightpost,
+    // modified: 2025-12-27T13:43:27.137Z
   },
   table: {
     description: "Table",
