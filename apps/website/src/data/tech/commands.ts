@@ -93,6 +93,9 @@ export const commandCategories = {
   Feeder: {
     heading: "Feeder",
   },
+  Access: {
+    heading: "Access Controls",
+  },
 } as const satisfies Record<string, CommandCategory>;
 
 const commands = {
@@ -1118,6 +1121,29 @@ const commands = {
       [],
     ],
   },
+  fix: {
+    description: "Tries to fix the stream (used if stream PC/bot is down)",
+    category: "Scenes",
+    args: [],
+  },
+  ss: {
+    description: "Switches to the provided scene",
+    category: "Scenes",
+    args: [
+      {
+        type: "choice",
+        name: "scene",
+        required: true,
+        variadic: false,
+        choices: ["server", "brb"],
+      },
+    ],
+  },
+  bitrate: {
+    description: "Get the current bitrate",
+    category: "Scenes",
+    args: [],
+  },
 
   /**
    * Sources
@@ -1434,6 +1460,208 @@ const commands = {
   addemufeederqueue: {
     description: "Add a feed to the emu feeder queue",
     category: "Feeder",
+    args: [],
+  },
+
+  /**
+   * Access Controls
+   */
+  blockuser: {
+    description: "Block a user from using the bot",
+    category: "Access",
+    args: [
+      {
+        type: "string",
+        name: "username",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  unblockuser: {
+    description: "Unblock a user from using the bot",
+    category: "Access",
+    args: [
+      {
+        type: "string",
+        name: "username",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  listblocked: {
+    description: "List all blocked users",
+    category: "Access",
+    args: [],
+  },
+  removecam: {
+    description: "Remove camera from stream and lock controls",
+    category: "Access",
+    args: [
+      {
+        type: "string",
+        name: "camera",
+        required: true,
+        variadic: false,
+      },
+    ],
+  },
+  lockcam: {
+    description:
+      "Lock swap controls for users below command sender level for specified camera or all cameras",
+    category: "Access",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+    ],
+  },
+  unlockcam: {
+    description: "Unlock swap controls for specified camera or all cameras",
+    category: "Access",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+    ],
+  },
+  lockptz: {
+    description:
+      "Lock PTZ controls for users below command sender level for specified camera or all cameras",
+    category: "Access",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+    ],
+  },
+  unlockptz: {
+    description: "Unlock PTZ controls for specified camera or all cameras",
+    category: "Access",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+    ],
+  },
+  lockboth: {
+    description:
+      "Lock both swap and PTZ controls for users below command sender level for specified camera or all cameras",
+    category: "Access",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+    ],
+  },
+  unlockboth: {
+    description:
+      "Unlock both swap and PTZ controls for specified camera or all cameras",
+    category: "Access",
+    args: [
+      [
+        {
+          type: "string",
+          name: "camera",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "all",
+          required: true,
+          variadic: false,
+          choices: ["all"],
+        },
+      ],
+    ],
+  },
+  listlocked: {
+    description: "List all locked cameras and their lock status",
+    category: "Access",
+    args: [],
+  },
+  enablesubs: {
+    description: "Enable commands for Twitch subscribers",
+    category: "Access",
+    args: [],
+  },
+  disablesubs: {
+    description: "Disable commands for Twitch subscribers",
+    category: "Access",
     args: [],
   },
 } as const satisfies Record<string, Command>;
