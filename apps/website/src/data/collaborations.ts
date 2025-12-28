@@ -98,6 +98,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/sakurashymko",
       date: new Date("2025-12-18"),
       videoId: "fFphvoIZkh8",
+      vodId: "VZDGgU4a-Tw",
       creators: [
         {
           name: "Sakura",
@@ -111,6 +112,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/realkatieb",
       date: new Date("2025-10-30"),
       videoId: "64e7ys5Fllk",
+      vodId: "n05sAUxGwsc",
       creators: [
         {
           name: "RealKatieB",
@@ -124,6 +126,7 @@ const collaborations: Collaboration[] = (
       link: "https://www.twitch.tv/misterarther",
       date: new Date("2025-10-11"),
       videoId: "sMYuOYXNA9s",
+      vodId: "0gVrwqK9i5E",
       creators: [
         {
           name: "Mister Arther",
