@@ -28,6 +28,11 @@ const Cycle = ({
   const next = useCallback(
     (check = false) => {
       setIndex((prev) => {
+        // If we have no items, stay where we are
+        if (items.length === 0) {
+          return prev;
+        }
+
         // If check is true, only advance if the current ref is null
         // However, if the current index is beyond the items length, we must advance
         if (check && prev < items.length) {
