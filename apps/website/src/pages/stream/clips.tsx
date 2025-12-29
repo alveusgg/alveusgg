@@ -104,6 +104,7 @@ export const getStaticProps: GetStaticProps<{
       "vomit",
       "frew up",
       "throw up",
+      "throws up",
       "throwing up",
     ];
     const excludedTitle = new RegExp(
