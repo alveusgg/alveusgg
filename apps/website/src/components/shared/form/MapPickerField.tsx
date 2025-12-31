@@ -178,17 +178,14 @@ export const MapPickerField = ({
       },
       debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
     });
-    geocoder.on(
-      "result",
-      ({
-        result: {
-          geometry: { coordinates },
-          text,
-        },
-      }) => {
-        handleLocationSet(map, coordinates[1], coordinates[0], text);
-      },
-    );
+    geocoder.on("result", ({ result: { geometry, text } }) => {
+      if (geometry.type !== "Point") return;
+
+      const [lon, lat] = geometry.coordinates;
+      if (typeof lat !== "number" || typeof lon !== "number") return;
+
+      handleLocationSet(map, lat, lon, text);
+    });
     map.addControl(geocoder);
 
     // Add geolocation button
