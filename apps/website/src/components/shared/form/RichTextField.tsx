@@ -71,7 +71,8 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
     // Only call onChange after user has actually interacted with the editor
     // Not when the value is being set programmatically
     if (hasUserInteractedRef.current && props.onChange) {
-      props.onChange(newValue);
+      // FIXME: https://github.com/VaguelySerious/react-quill/issues/52
+      props.onChange(newValue.replaceAll("&nbsp;", " "));
     }
   };
 
