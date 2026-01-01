@@ -10,6 +10,7 @@ import angelskimi from "@/assets/collaborations/angelskimi.png";
 import annieFuchsia from "@/assets/collaborations/annie-fuchsia.png";
 import ariaSaki from "@/assets/collaborations/aria-saki.png";
 import arky from "@/assets/collaborations/arky.png";
+import austinShow from "@/assets/collaborations/austin-show.png";
 import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
 import bao from "@/assets/collaborations/bao.png";
 import botzSisters from "@/assets/collaborations/botez-sisters.png";
@@ -93,6 +94,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "AustinShow",
+      link: "https://www.twitch.tv/austinshow",
+      date: new Date("2025-12-28"),
+      videoId: "LyJRAqYvx_E",
+      creators: [
+        {
+          name: "AustinShow",
+          image: austinShow,
+          popularity: 1_700_000, // Twitch followers, 2025-12-29
+        },
+      ],
+    },
     {
       name: "Sakura",
       link: "https://www.twitch.tv/sakurashymko",
