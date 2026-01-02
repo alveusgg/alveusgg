@@ -122,8 +122,14 @@ export function CommunityMap({
       const url = URL.createObjectURL(svgBlob);
       const image = new Image();
       const promise = new Promise<void>((resolve, reject) => {
-        image.onload = () => resolve();
-        image.onerror = () => reject(new Error("Failed to load marker image"));
+        image.onload = () => {
+          URL.revokeObjectURL(url);
+          resolve();
+        };
+        image.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error("Failed to load marker image"));
+        };
       });
       image.src = url;
       await promise;
