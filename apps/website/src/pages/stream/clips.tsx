@@ -102,9 +102,8 @@ export const getStaticProps: GetStaticProps<{
       "limp",
       "puke",
       "vomit",
-      "frew up",
-      "throw up",
-      "throwing up",
+      "(th|f)rew up",
+      "throw(s|ing)? up",
     ];
     const excludedTitle = new RegExp(
       `\\b(${excludedPhrases.join("|")})\\b`,
