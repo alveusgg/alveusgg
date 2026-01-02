@@ -1,5 +1,6 @@
 import backleftcorner from "@/assets/presets/fox/backleftcorner.png";
 import backrightcorner from "@/assets/presets/fox/backrightcorner.png";
+import belowleftplatform from "@/assets/presets/fox/belowleftplatform.png";
 import den1 from "@/assets/presets/fox/den1.png";
 import den1t from "@/assets/presets/fox/den1t.png";
 import den1tr from "@/assets/presets/fox/den1tr.png";
@@ -43,6 +44,11 @@ const foxPresets: Record<string, Preset> = {
     description: "backrightcorner",
     image: backrightcorner,
     // modified: 2025-12-23T20:58:43.156Z
+  },
+  belowleftplatform: {
+    description: "belowleftplatform",
+    image: belowleftplatform,
+    // modified: 2025-12-31T23:29:43.173Z
   },
   den1: {
     description: "den1",
