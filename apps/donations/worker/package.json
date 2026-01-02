@@ -20,7 +20,7 @@
     "globals": "^16.5.0",
     "jpeg-js": "^0.4.4",
     "typescript": "^5.5.2",
-    "typescript-eslint": "^8.50.0",
+    "typescript-eslint": "^8.50.1",
     "wrangler": "^4.56.0"
   },
   "dependencies": {
@@ -28,7 +28,7 @@
     "@alveusgg/donations-core": "workspace:*",
     "@trpc/client": "^11.8.1",
     "@trpc/server": "^11.8.1",
-    "hono": "^4.11.1",
+    "hono": "^4.11.3",
     "superjson": "^2.2.6",
     "zod": "^4.2.1"
   }

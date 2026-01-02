@@ -853,7 +853,7 @@ const reports = [
 
         <Box dark>
           <Heading level={-1}>
-            Over 100 Million impressions across all platforms
+            Reached over 100 million people across all platforms
           </Heading>
         </Box>
 
