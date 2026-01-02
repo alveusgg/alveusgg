@@ -1,19 +1,18 @@
 import { type GeoJSONSource, Map, Popup } from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { env } from "@/env";
-
 import type { LocationFeature } from "@/server/db/show-and-tell";
 
 import mapStyle from "@/data/map-style";
 
 import { trpc } from "@/utils/trpc";
 
+import Section from "@/components/content/Section";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ModalDialog } from "@/components/shared/ModalDialog";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
-import Section from "../content/Section";
-import { ModalDialog } from "../shared/ModalDialog";
+import mapPin from "@/assets/show-and-tell/map-pin.png";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
@@ -93,9 +92,7 @@ export function CommunityMap({
 
       renderFeaturesOnMap(features);
 
-      const image = await map.loadImage(
-        env.NEXT_PUBLIC_BASE_URL + "/assets/map-pin.png",
-      );
+      const image = await map.loadImage(mapPin.src);
       map.addImage("custom-marker", image.data);
 
       map.addLayer({
