@@ -98,7 +98,8 @@ export function RichTextField({ defaultValue, ...props }: FormFieldProps) {
         {...inputProps}
         type="hidden"
         name={props.name}
-        value={value}
+        // FIXME: https://github.com/VaguelySerious/react-quill/issues/52
+        value={value.replaceAll("&nbsp;", " ")}
         ref={ref}
       />
 
