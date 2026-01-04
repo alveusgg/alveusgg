@@ -59,15 +59,6 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
   const isAdminPopout =
     pathname.startsWith("/admin/") && pathname.match(/\/popout\/?$/) !== null;
 
-  // Add stream class to the root for stream pages
-  useEffect(() => {
-    if (isStream) document.documentElement.classList.add("stream");
-    else document.documentElement.classList.remove("stream");
-
-    if (isAdminPopout) document.documentElement.classList.add("admin-popout");
-    else document.documentElement.classList.remove("admin-popout");
-  }, [isStream, isAdminPopout]);
-
   if (isStream) {
     return (
       <>
@@ -75,7 +66,9 @@ const AlveusGgWebsiteApp: AppType<{ session: Session | null }> = ({
           <meta name="robots" content="noindex" />
         </Head>
         <FontProvider>
-          <Component {...pageProps} />
+          <div className="html:transparent">
+            <Component {...pageProps} />
+          </div>
         </FontProvider>
       </>
     );
