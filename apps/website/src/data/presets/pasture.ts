@@ -7,6 +7,7 @@ import barn2z from "@/assets/presets/pasture/barn2z.png";
 import barn from "@/assets/presets/pasture/barn.png";
 import barnfloor from "@/assets/presets/pasture/barnfloor.png";
 import brush from "@/assets/presets/pasture/brush.png";
+import brushl from "@/assets/presets/pasture/brushl.png";
 import brushr from "@/assets/presets/pasture/brushr.png";
 import donksleep from "@/assets/presets/pasture/donksleep.png";
 import down from "@/assets/presets/pasture/down.png";
@@ -22,9 +23,11 @@ import grove2 from "@/assets/presets/pasture/grove2.png";
 import grove2l from "@/assets/presets/pasture/grove2l.png";
 import grove2r from "@/assets/presets/pasture/grove2r.png";
 import grove3 from "@/assets/presets/pasture/grove3.png";
+import grove3l from "@/assets/presets/pasture/grove3l.png";
 import grove from "@/assets/presets/pasture/grove.png";
 import grovefl from "@/assets/presets/pasture/grovefl.png";
 import grovel from "@/assets/presets/pasture/grovel.png";
+import grover from "@/assets/presets/pasture/grover.png";
 import home from "@/assets/presets/pasture/home.png";
 import insidebarn from "@/assets/presets/pasture/insidebarn.png";
 import insidebarnz from "@/assets/presets/pasture/insidebarnz.png";
@@ -99,6 +102,11 @@ const pasturePresets: Record<string, Preset> = {
     description: "Squitchy",
     image: brush,
     // modified: 2025-10-09T11:10:30.088Z
+  },
+  brushl: {
+    description: "brushl",
+    image: brushl,
+    // modified: 2026-01-03T20:31:53.192Z
   },
   brushr: {
     description: "Brush right",
@@ -180,6 +188,11 @@ const pasturePresets: Record<string, Preset> = {
     image: grove3,
     // modified: 2025-10-18T14:39:40.510Z
   },
+  grove3l: {
+    description: "grove3l",
+    image: grove3l,
+    // modified: 2026-01-03T20:11:34.212Z
+  },
   grovefl: {
     description: "Grove Front Left",
     image: grovefl,
@@ -189,6 +202,11 @@ const pasturePresets: Record<string, Preset> = {
     description: "Grove Left",
     image: grovel,
     // modified: 2025-10-09T11:10:30.084Z
+  },
+  grover: {
+    description: "grover",
+    image: grover,
+    // modified: 2026-01-03T20:40:36.816Z
   },
   insidebarn: {
     description: "Inside Barn",

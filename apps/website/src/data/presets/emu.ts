@@ -6,6 +6,8 @@ import gate from "@/assets/presets/emu/gate.png";
 import gateleft from "@/assets/presets/emu/gateleft.png";
 import home from "@/assets/presets/emu/home.png";
 import marmgate from "@/assets/presets/emu/marmgate.png";
+import pen1center from "@/assets/presets/emu/pen1center.png";
+import pen1centerright from "@/assets/presets/emu/pen1centerright.png";
 import pen1left from "@/assets/presets/emu/pen1left.png";
 import pen1right from "@/assets/presets/emu/pen1right.png";
 import pen1shelter from "@/assets/presets/emu/pen1shelter.png";
@@ -55,6 +57,16 @@ const emuPresets: Record<string, Preset> = {
     description: "Marmoset Gate",
     image: marmgate,
     // modified: 2025-10-09T11:10:30.328Z
+  },
+  pen1center: {
+    description: "pen1center",
+    image: pen1center,
+    // modified: 2025-10-09T11:10:30.328Z
+  },
+  pen1centerright: {
+    description: "pen1centerright",
+    image: pen1centerright,
+    // modified: 2025-10-09T11:10:30.332Z
   },
   pen1left: {
     description: "Pen 1 Left",
