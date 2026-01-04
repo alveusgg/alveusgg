@@ -44,10 +44,10 @@
   }
 }
 
-@layer base {
+@layer utilities {
   html {
-    &.stream {
-      @apply !bg-transparent !bg-none;
+    &:has(.html\:transparent) {
+      @apply bg-transparent bg-none;
     }
   }
 }
