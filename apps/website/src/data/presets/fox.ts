@@ -163,7 +163,7 @@ const foxPresets: Record<string, Preset> = {
   stump: {
     description: "stump",
     image: stump,
-    // modified: 2025-12-23T21:00:17.089Z
+    // modified: 2026-01-03T20:24:47.181Z
   },
   timbertree: {
     description: "timbertree",
