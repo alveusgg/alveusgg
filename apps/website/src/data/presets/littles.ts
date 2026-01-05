@@ -19,6 +19,7 @@ import water from "@/assets/presets/littles/water.png";
 import waterl from "@/assets/presets/littles/waterl.png";
 import window from "@/assets/presets/littles/window.png";
 import winl from "@/assets/presets/littles/winl.png";
+import wint from "@/assets/presets/littles/wint.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -127,6 +128,11 @@ const littlesPresets: Record<string, Preset> = {
     description: "winl",
     image: winl,
     // modified: 2025-10-16T14:57:01.624Z
+  },
+  wint: {
+    description: "wint",
+    image: wint,
+    // modified: 2026-01-04T17:33:41.110Z
   },
 };
 

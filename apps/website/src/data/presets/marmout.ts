@@ -13,6 +13,7 @@ import ground from "@/assets/presets/marmout/ground.png";
 import home from "@/assets/presets/marmout/home.png";
 import left from "@/assets/presets/marmout/left.png";
 import leftcornerhideb from "@/assets/presets/marmout/leftcornerhideb.png";
+import lefthammock from "@/assets/presets/marmout/lefthammock.png";
 import leftposttop from "@/assets/presets/marmout/leftposttop.png";
 import nearleftshelf from "@/assets/presets/marmout/nearleftshelf.png";
 import nearlefttop from "@/assets/presets/marmout/nearlefttop.png";
@@ -24,6 +25,7 @@ import tablet from "@/assets/presets/marmout/tablet.png";
 import upleft from "@/assets/presets/marmout/upleft.png";
 import upleftbranch from "@/assets/presets/marmout/upleftbranch.png";
 import upright from "@/assets/presets/marmout/upright.png";
+import uprightbranches from "@/assets/presets/marmout/uprightbranches.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -103,6 +105,11 @@ const marmoutPresets: Record<string, Preset> = {
     image: leftcornerhideb,
     // modified: 2025-11-09T15:49:08.621Z
   },
+  lefthammock: {
+    description: "lefthammock",
+    image: lefthammock,
+    // modified: 2026-01-04T17:27:14.612Z
+  },
   leftposttop: {
     description: "Left Post Top",
     image: leftposttop,
@@ -157,6 +164,11 @@ const marmoutPresets: Record<string, Preset> = {
     description: "Up Right",
     image: upright,
     // modified: 2025-11-07T22:55:24.472Z
+  },
+  uprightbranches: {
+    description: "uprightbranches",
+    image: uprightbranches,
+    // modified: 2026-01-04T17:30:27.751Z
   },
 };
 
