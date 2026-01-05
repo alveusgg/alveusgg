@@ -21,6 +21,7 @@ import leftplatform from "@/assets/presets/fox/leftplatform.png";
 import leftplatformb from "@/assets/presets/fox/leftplatformb.png";
 import middleplatform from "@/assets/presets/fox/middleplatform.png";
 import right from "@/assets/presets/fox/right.png";
+import rightcorner from "@/assets/presets/fox/rightcorner.png";
 import rightplatform from "@/assets/presets/fox/rightplatform.png";
 import rightramp from "@/assets/presets/fox/rightramp.png";
 import river from "@/assets/presets/fox/river.png";
@@ -48,7 +49,7 @@ const foxPresets: Record<string, Preset> = {
   belowleftplatform: {
     description: "belowleftplatform",
     image: belowleftplatform,
-    // modified: 2025-12-31T23:29:43.173Z
+    // modified: 2026-01-04T20:19:30.771Z
   },
   den1: {
     description: "den1",
@@ -144,6 +145,11 @@ const foxPresets: Record<string, Preset> = {
     description: "right",
     image: right,
     // modified: 2025-12-13T18:15:59.683Z
+  },
+  rightcorner: {
+    description: "rightcorner",
+    image: rightcorner,
+    // modified: 2026-01-04T17:35:05.911Z
   },
   rightplatform: {
     description: "rightplatform",

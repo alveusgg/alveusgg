@@ -1,5 +1,6 @@
 import bowld from "@/assets/presets/macaws/bowld.png";
 import bowlr from "@/assets/presets/macaws/bowlr.png";
+import closebranches from "@/assets/presets/macaws/closebranches.png";
 import home from "@/assets/presets/macaws/home.png";
 import perchbr from "@/assets/presets/macaws/perchbr.png";
 import postmb from "@/assets/presets/macaws/postmb.png";
@@ -28,6 +29,11 @@ const macawsPresets: Record<string, Preset> = {
     description: "bowlr",
     image: bowlr,
     // modified: 2025-10-15T13:47:42.390Z
+  },
+  closebranches: {
+    description: "closebranches",
+    image: closebranches,
+    // modified: 2026-01-04T17:41:33.617Z
   },
   perchbr: {
     description: "perchbr",
