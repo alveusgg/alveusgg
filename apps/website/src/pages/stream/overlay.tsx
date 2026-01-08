@@ -131,30 +131,27 @@ const OverlayPage: NextPage = () => {
         ) {
           // Mods (or trusted users) can run the command to toggle the rounds overlay
           if (command === "!rounds") {
-            setRounds((prev) => {
-              if (arg === "on" || arg === "start") return true;
+            setRounds(() => {
               if (arg === "off" || arg === "stop") return false;
-              return !prev;
+              return true;
             });
             return;
           }
 
           // Mods (or trusted users) can run the command to toggle the raid video
           if (command === "!raidvideo" || command === "!raidvid") {
-            setRaid((prev) => {
-              if (arg === "on" || arg === "start") return true;
+            setRaid(() => {
               if (arg === "off" || arg === "stop") return false;
-              return !prev;
+              return true;
             });
             return;
           }
 
           // Mods (or trusted users) can run the command to toggle the crunch video
           if (command === "!crunchvideo" || command === "!crunchvid") {
-            setCrunch((prev) => {
-              if (arg === "on" || arg === "start") return true;
+            setCrunch(() => {
               if (arg === "off" || arg === "stop") return false;
-              return !prev;
+              return true;
             });
             return;
           }

@@ -1109,32 +1109,26 @@ const commands = {
     description: "Toggle the video to welcome a raid, generally for raids >50",
     category: "Scenes",
     args: [
-      [
-        {
-          type: "choice",
-          name: "mode",
-          required: true,
-          variadic: false,
-          choices: ["on", "start", "off", "stop"],
-        },
-      ],
-      [],
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
     ],
   },
   crunchvideo: {
     description: "Toggle the stinger video for Push Pop's crunch cam",
     category: "Scenes",
     args: [
-      [
-        {
-          type: "choice",
-          name: "mode",
-          required: true,
-          variadic: false,
-          choices: ["on", "start", "off", "stop"],
-        },
-      ],
-      [],
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
     ],
   },
   fix: {
@@ -1364,16 +1358,13 @@ const commands = {
     description: "Toggle the rounds overlay",
     category: "Rounds",
     args: [
-      [
-        {
-          type: "choice",
-          name: "mode",
-          required: true,
-          variadic: false,
-          choices: ["on", "start", "off", "stop"],
-        },
-      ],
-      [],
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
     ],
   },
   check: {
