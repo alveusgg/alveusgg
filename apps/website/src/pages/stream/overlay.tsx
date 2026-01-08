@@ -10,6 +10,7 @@ import { getToday } from "@/utils/datetime";
 
 import useChat from "@/hooks/chat";
 
+import Crunch from "@/components/overlay/Crunch";
 import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
 import Disclaimer from "@/components/overlay/Disclaimer";
@@ -91,6 +92,11 @@ const OverlayPage: NextPage = () => {
     setRaid(false);
   }, []);
 
+  const [crunch, setCrunch] = useState(false);
+  const crunchEnded = useCallback(() => {
+    setCrunch(false);
+  }, []);
+
   // Add chat commands to toggle certain features
   const channels = useMemo(() => {
     const param = queryArray(query.channels);
@@ -134,8 +140,18 @@ const OverlayPage: NextPage = () => {
           }
 
           // Mods (or trusted users) can run the command to toggle the raid video
-          if (command === "!raidvideo") {
+          if (command === "!raidvideo" || command === "!raidvid") {
             setRaid((prev) => {
+              if (arg === "on" || arg === "start") return true;
+              if (arg === "off" || arg === "stop") return false;
+              return !prev;
+            });
+            return;
+          }
+
+          // Mods (or trusted users) can run the command to toggle the crunch video
+          if (command === "!crunchvideo" || command === "!crunchvid") {
+            setCrunch((prev) => {
               if (arg === "on" || arg === "start") return true;
               if (arg === "off" || arg === "stop") return false;
               return !prev;
@@ -192,6 +208,10 @@ const OverlayPage: NextPage = () => {
           >
             {index === 0 && !hide.has("raid") && raid && (
               <Raid onEnded={raidEnded} className="absolute inset-0" />
+            )}
+
+            {index === 0 && !hide.has("crunch") && crunch && (
+              <Crunch onEnded={crunchEnded} className="absolute inset-0" />
             )}
 
             {index === 0 && !hide.has("disclaimer") && disclaimer && (

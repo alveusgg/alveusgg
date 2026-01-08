@@ -1121,6 +1121,22 @@ const commands = {
       [],
     ],
   },
+  crunchvideo: {
+    description: "Toggle the stinger video for Push Pop's crunch cam",
+    category: "Scenes",
+    args: [
+      [
+        {
+          type: "choice",
+          name: "mode",
+          required: true,
+          variadic: false,
+          choices: ["on", "start", "off", "stop"],
+        },
+      ],
+      [],
+    ],
+  },
   fix: {
     description: "Tries to fix the stream (used if stream PC/bot is down)",
     category: "Scenes",
