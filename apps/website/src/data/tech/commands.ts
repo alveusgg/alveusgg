@@ -1106,7 +1106,7 @@ const commands = {
     args: [],
   },
   raidvideo: {
-    description: "Toggle the video to welcome a raid, generally for raids >50",
+    description: "Show the video to welcome a raid, generally for raids >50",
     category: "Scenes",
     args: [
       {
@@ -1119,7 +1119,7 @@ const commands = {
     ],
   },
   crunchvideo: {
-    description: "Toggle the stinger video for Push Pop's crunch cam",
+    description: "Show the stinger video for Push Pop's crunch cam",
     category: "Scenes",
     args: [
       {
@@ -1355,7 +1355,7 @@ const commands = {
    * Rounds
    */
   rounds: {
-    description: "Toggle the rounds overlay",
+    description: "Show the rounds overlay",
     category: "Rounds",
     args: [
       {
