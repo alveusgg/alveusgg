@@ -1,7 +1,10 @@
 FROM node:24-alpine
-ENV PNPM_HOME="/pnpm"
 ENV CI="true"
+
+## Install pnpm
+ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
 
 ## Copy root files
 WORKDIR /app
@@ -25,7 +28,6 @@ COPY ./apps/chatbot/package.json .
 COPY ./apps/chatbot/.env .
 
 ## Install dependencies
-RUN npm install -g corepack@latest && corepack enable && corepack install
 RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile --filter "{.}..."
 
 ## Copy code
