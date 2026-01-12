@@ -4,7 +4,10 @@ ENV CI="true"
 ## Install pnpm
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
-RUN wget -qO- https://get.pnpm.io/install.sh | ENV="$HOME/.shrc" SHELL="$(which sh)" sh -
+RUN wget -qO /tmp/install-pnpm.sh https://get.pnpm.io/install.sh && \
+  echo "9bbfd08ac1bd3001828b7a645ab071d31cbc7a26c92808554dbb6283313121ec  /tmp/install-pnpm.sh" | sha256sum -c - && \
+  ENV="$HOME/.shrc" SHELL="$(which sh)" sh /tmp/install-pnpm.sh && \
+  rm /tmp/install-pnpm.sh
 
 ## Copy root files
 WORKDIR /app
