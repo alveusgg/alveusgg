@@ -14,8 +14,8 @@ export default async function handler(
     return;
   }
 
-  const url = new URL(req.url, "https://localhost/"); // FIXME: Trick JS to parse the partial URL /api/...
-  const params = url.searchParams;
+  // Parse the partial URL (/api/...) to extract query parameters
+  const params = new URL(req.url, "https://localhost/").searchParams;
 
   //const tag = params.get('notification_tag');
   //const action = params.get('notification_action');
