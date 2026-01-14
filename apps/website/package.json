@@ -63,7 +63,7 @@
     "@upstash/ratelimit": "^2.0.7",
     "@upstash/redis": "^1.36.0",
     "@vercel/analytics": "^1.6.1",
-    "@vercel/functions": "^3.3.4",
+    "@vercel/functions": "^3.3.5",
     "@xyflow/react": "^12.10.0",
     "country-list": "^2.4.1",
     "csv-stringify": "^6.6.0",
