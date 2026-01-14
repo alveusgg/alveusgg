@@ -1,21 +1,20 @@
 import { type GeoJSONSource, Map, Popup } from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { env } from "@/env";
-
 import type { LocationFeature } from "@/server/db/show-and-tell";
 
 import mapStyle from "@/data/map-style";
 
 import { trpc } from "@/utils/trpc";
 
+import Section from "@/components/content/Section";
 import { MessageBox } from "@/components/shared/MessageBox";
+import { ModalDialog } from "@/components/shared/ModalDialog";
 import { ShowAndTellEntry } from "@/components/show-and-tell/ShowAndTellEntry";
 
-import Section from "../content/Section";
-import { ModalDialog } from "../shared/ModalDialog";
-
 import "maplibre-gl/dist/maplibre-gl.css";
+
+import { getDefaultMarker } from "@/utils/geolocation";
 
 const MAX_ZOOM = 8;
 const TOOLTIP_MIN_ZOOM = 3;
@@ -93,10 +92,49 @@ export function CommunityMap({
 
       renderFeaturesOnMap(features);
 
-      const image = await map.loadImage(
-        env.NEXT_PUBLIC_BASE_URL + "/assets/map-pin.png",
+      // Use the default marker to create a custom image for the map markers
+      const markerElement = getDefaultMarker()
+        .getElement()
+        .childNodes[0]?.cloneNode(true);
+      if (!(markerElement instanceof SVGElement))
+        throw new Error("Marker element is not an SVGElement");
+
+      // Ensure Tailwind CSS variables are applied to the SVG marker
+      const stylesComputed = getComputedStyle(map.getContainer());
+      const stylesVariables = Array.from(stylesComputed)
+        .filter((name) => name.startsWith("--"))
+        .map(
+          (name) => `${name}: ${stylesComputed.getPropertyValue(name).trim()};`,
+        )
+        .join(" ");
+      const styleElement = document.createElementNS(
+        markerElement.namespaceURI,
+        "style",
       );
-      map.addImage("custom-marker", image.data);
+      styleElement.textContent = `svg { ${stylesVariables} }`;
+      markerElement.insertBefore(styleElement, markerElement.firstChild);
+
+      // Create an image from the stringified SVG
+      const svgData = new XMLSerializer().serializeToString(markerElement);
+      const svgBlob = new Blob([svgData], {
+        type: "image/svg+xml;charset=utf-8",
+      });
+      const url = URL.createObjectURL(svgBlob);
+      const image = new Image();
+      const promise = new Promise<void>((resolve, reject) => {
+        image.onload = () => {
+          URL.revokeObjectURL(url);
+          resolve();
+        };
+        image.onerror = () => {
+          URL.revokeObjectURL(url);
+          reject(new Error("Failed to load marker image"));
+        };
+      });
+      image.src = url;
+      await promise;
+
+      map.addImage("custom-marker", image);
 
       map.addLayer({
         id: "features",

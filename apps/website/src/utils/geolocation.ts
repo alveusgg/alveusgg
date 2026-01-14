@@ -4,7 +4,7 @@ import type {
   MaplibreGeocoderApiConfig,
   MaplibreGeocoderFeatureResults,
 } from "@maplibre/maplibre-gl-geocoder";
-import { type Map, Marker } from "maplibre-gl";
+import { Marker } from "maplibre-gl";
 
 import { env } from "@/env";
 
@@ -193,24 +193,9 @@ export const geocoderApi: MaplibreGeocoderApi = {
 };
 
 /**
- * Generates a default marker in Alveus green on the map and coordinates provided.
- * @param coords
- * @param map
+ * Generates a default marker in Alveus green
  * @see {@link https://maplibre.org/maplibre-gl-js/docs/API/type-aliases/MarkerOptions/#type-declaration|Default Marker Options}
  * @returns Marker
  */
-export const getDefaultMarker = (
-  coords: { lat: number; lon: number },
-  map: Map | null,
-) => {
-  if (map) {
-    const marker = new Marker({
-      color: "var(--color-alveus-green)",
-      draggable: true,
-    })
-      .setLngLat(coords)
-      .addTo(map);
-    return marker;
-  }
-  return new Marker();
-};
+export const getDefaultMarker = () =>
+  new Marker({ color: "var(--color-alveus-green)" });
