@@ -14,6 +14,7 @@ import austinShow from "@/assets/collaborations/austin-show.png";
 import avaKrisTyson from "@/assets/collaborations/ava-kris-tyson.png";
 import bao from "@/assets/collaborations/bao.png";
 import botzSisters from "@/assets/collaborations/botez-sisters.png";
+import carlyIncontro from "@/assets/collaborations/carly-incontro.png";
 import carolineKwan from "@/assets/collaborations/caroline-kwan.png";
 import cdawg from "@/assets/collaborations/cdawg.png";
 import cinna from "@/assets/collaborations/cinna.png";
@@ -94,6 +95,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Carly Incontro",
+      link: "https://www.youtube.com/@carlyincontro",
+      date: new Date("2026-01-13"),
+      videoId: "Ieh_aqKEpOw",
+      creators: [
+        {
+          name: "Carly Incontro",
+          image: carlyIncontro,
+          popularity: 197_000, // YouTube subscribers, 2026-01-14
+        },
+      ],
+    },
     {
       name: "AustinShow",
       link: "https://www.twitch.tv/austinshow",
