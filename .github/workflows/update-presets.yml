@@ -52,6 +52,9 @@ jobs:
         with:
           token: ${{ secrets.GH_PR_TOKEN }}
           title: Update presets data
-          body: Generated via `pnpm build:presets` in `apps/website`
+          body: |
+            Generated via `pnpm build:presets` in `apps/website`.
+
+            Check this workflow's logs at ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}.
           commit-message: Update presets data
           branch: automated/presets

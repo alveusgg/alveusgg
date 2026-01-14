@@ -97,7 +97,6 @@ export const MapPickerField = ({
    */
   const handleLocationSet = useCallback(
     async (
-      map: Map,
       lat: number,
       lon: number,
       location?: string,
@@ -120,17 +119,14 @@ export const MapPickerField = ({
         // There's already a marker on the map and we don't allow multiple, so we just update its location.
         markersRef.current[0]?.setLngLat(roundedCoords);
       } else {
-        // There are no markers yet or we allow multiple, so let's create one.
-        const marker = getDefaultMarker(roundedCoords, mapRef.current);
-
-        if (marker) {
+        const map = mapRef.current;
+        if (map) {
+          // There are no markers yet or we allow multiple, so let's create one.
+          const marker = getDefaultMarker();
+          marker.setLngLat(roundedCoords).setDraggable(true).addTo(map);
           marker.on("dragstart", () => (isDraggingRef.current = true));
           marker.on("dragend", () => {
-            handleLocationSet(
-              map,
-              marker.getLngLat().lat,
-              marker.getLngLat().lng,
-            );
+            handleLocationSet(marker.getLngLat().lat, marker.getLngLat().lng);
             isDraggingRef.current = false;
           });
           markersRef.current.push(marker);
@@ -184,7 +180,7 @@ export const MapPickerField = ({
       const [lon, lat] = geometry.coordinates;
       if (typeof lat !== "number" || typeof lon !== "number") return;
 
-      handleLocationSet(map, lat, lon, text);
+      handleLocationSet(lat, lon, text);
     });
     map.addControl(geocoder);
 
@@ -194,7 +190,7 @@ export const MapPickerField = ({
       showUserLocation: false,
     });
     geolocate.on("geolocate", ({ coords }) => {
-      handleLocationSet(map, coords.latitude, coords.longitude);
+      handleLocationSet(coords.latitude, coords.longitude);
     });
     map.addControl(geolocate);
 
@@ -202,7 +198,7 @@ export const MapPickerField = ({
     map.on("mouseup", ({ lngLat: { lat, lng } }) => {
       // If the click is part of a click and drag to move around, ignore it.
       if (isDraggingRef.current) return;
-      handleLocationSet(map, lat, lng);
+      handleLocationSet(lat, lng);
     });
     // To avoid setting post location on mouse Dragging.
     map.on("dragstart", () => (isDraggingRef.current = true));
@@ -211,7 +207,6 @@ export const MapPickerField = ({
     mapRef.current = map;
     if (initialLocation?.location) {
       handleLocationSet(
-        map,
         initialLocation.latitude,
         initialLocation.longitude,
         initialLocation.location,
