@@ -2,8 +2,8 @@ import type { NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 
+import { featuredAttachmentsImage } from "@/utils/attachments";
 import { getEntityStatus } from "@/utils/entity-helpers";
-import { splitAttachments } from "@/utils/split-attachments";
 import { trpc } from "@/utils/trpc";
 
 import DateTime from "@/components/content/DateTime";
@@ -123,7 +123,7 @@ const MyShowAndTellEntriesPage: NextPage = () => {
                   </thead>
                   <tbody>
                     {myEntries.data.map((entry) => {
-                      const { featuredImage } = splitAttachments(
+                      const featuredImage = featuredAttachmentsImage(
                         entry.attachments,
                       );
 
