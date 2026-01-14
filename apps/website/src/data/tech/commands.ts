@@ -1106,19 +1106,29 @@ const commands = {
     args: [],
   },
   raidvideo: {
-    description: "Toggle the video to welcome a raid, generally for raids >50",
+    description: "Show the video to welcome a raid, generally for raids >50",
     category: "Scenes",
     args: [
-      [
-        {
-          type: "choice",
-          name: "mode",
-          required: true,
-          variadic: false,
-          choices: ["on", "start", "off", "stop"],
-        },
-      ],
-      [],
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
+    ],
+  },
+  crunchvideo: {
+    description: "Show the stinger video for Push Pop's crunch cam",
+    category: "Scenes",
+    args: [
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
     ],
   },
   fix: {
@@ -1345,19 +1355,16 @@ const commands = {
    * Rounds
    */
   rounds: {
-    description: "Toggle the rounds overlay",
+    description: "Show the rounds overlay",
     category: "Rounds",
     args: [
-      [
-        {
-          type: "choice",
-          name: "mode",
-          required: true,
-          variadic: false,
-          choices: ["on", "start", "off", "stop"],
-        },
-      ],
-      [],
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
     ],
   },
   check: {

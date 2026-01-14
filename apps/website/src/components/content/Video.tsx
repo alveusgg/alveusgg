@@ -19,6 +19,7 @@ type VideoProps = {
     type: string;
   }[];
   threshold?: number;
+  onEnded?: () => void;
 };
 
 const Video = ({
@@ -34,6 +35,7 @@ const Video = ({
   height,
   sources,
   threshold = 0.1,
+  onEnded,
 }: VideoProps) => {
   const [seen, setSeen] = useState(false);
   const observer = useRef<IntersectionObserver>(null);
@@ -87,6 +89,7 @@ const Video = ({
       title={title}
       width={width}
       height={height || sources[0]?.size}
+      onEnded={onEnded}
       poster={computedPoster}
       key={computedKey}
       ref={ref}

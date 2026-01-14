@@ -27,8 +27,8 @@ import Video from "@/components/content/Video";
 
 import IconCheckFancy from "@/icons/IconCheckFancy";
 
-import roundsDayBackground from "@/assets/rounds/day.webm";
-import roundsNightBackground from "@/assets/rounds/night.webm";
+import roundsDayBackground from "@/assets/stream/rounds-day.webm";
+import roundsNightBackground from "@/assets/stream/rounds-night.webm";
 
 type DatabaseCheck = RouterOutputs["stream"]["getRoundsChecks"][number];
 
