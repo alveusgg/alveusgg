@@ -230,14 +230,16 @@ async function createImageAttachment({
   ...attachment
 }: z.infer<typeof imageNewSchema> | z.infer<typeof imageExistingSchema>) {
   if ("id" in attachment) {
+    const { id, ...attachmentData } = attachment;
+
     await prisma.imageAttachment.update({
-      where: { id: attachment.id },
-      data: attachment,
+      where: { id },
+      data: attachmentData,
     });
 
     return {
       attachmentType: "image",
-      imageAttachment: { connect: { id: attachment.id } },
+      imageAttachment: { connect: { id } },
     } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
   }
 
