@@ -369,7 +369,7 @@ export function ShowAndTellEntryForm({
         .map((att) => {
           if (att.type === "video") {
             const updated = updatedVideoUrls.find((v) => v.url === att.url);
-            return updated ? updated : null;
+            return updated ?? null;
           }
 
           return att;
