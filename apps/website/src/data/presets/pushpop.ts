@@ -9,7 +9,6 @@ import farcenter from "@/assets/presets/pushpop/farcenter.png";
 import farfence from "@/assets/presets/pushpop/farfence.png";
 import farleft from "@/assets/presets/pushpop/farleft.png";
 import farright from "@/assets/presets/pushpop/farright.png";
-import frank from "@/assets/presets/pushpop/frank.png";
 import home from "@/assets/presets/pushpop/home.png";
 import hut from "@/assets/presets/pushpop/hut.png";
 import hutz from "@/assets/presets/pushpop/hutz.png";
@@ -80,11 +79,6 @@ const pushpopPresets: Record<string, Preset> = {
     description: "Far Right",
     image: farright,
     // modified: 2025-10-09T11:10:30.340Z
-  },
-  frank: {
-    description: "frank",
-    image: frank,
-    // modified: 2026-01-15T02:28:47.925Z
   },
   hut: {
     description: "Hut",
