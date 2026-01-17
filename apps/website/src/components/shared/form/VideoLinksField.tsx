@@ -14,20 +14,15 @@ type VideoUrlFieldProps = Omit<
   "value" | "onChange" | "label"
 > & {
   label?: string;
-  videoUrls: string[];
-  setVideoUrls: (videoUrls: string[]) => void;
+  value: string[];
+  onChange: (videoUrls: string[]) => void;
   maxNumber?: number;
-};
-
-export const useVideoLinksData = (initialVideoUrls: string[] = []) => {
-  const [videoUrls, setVideoUrls] = useState<string[]>(initialVideoUrls);
-  return { videoUrls, setVideoUrls };
 };
 
 export function VideoLinksField({
   label = "Videos",
-  videoUrls,
-  setVideoUrls,
+  value,
+  onChange,
   maxNumber,
   ...props
 }: VideoUrlFieldProps) {
@@ -35,8 +30,8 @@ export function VideoLinksField({
   const [errors, setErrors] = useState<string[] | null>(null);
 
   const handleChange = useCallback(
-    (value: string) => {
-      const lines = value.split("\n").map((line) => line.trim());
+    (str: string) => {
+      const lines = str.split("\n").map((line) => line.trim());
 
       const matches = [];
       const unmatched = [];
@@ -50,19 +45,19 @@ export function VideoLinksField({
           newErrors.push(`"${line}" is not a valid video URL`);
           unmatched.push(line);
         } else {
-          if (videoUrls.includes(match.normalizedUrl)) {
+          if (value.includes(match.normalizedUrl)) {
             newErrors.push(`"${line}" is already added`);
           } else {
             matches.push(match.normalizedUrl);
           }
         }
 
-        setVideoUrls([...videoUrls, ...matches]);
+        onChange([...value, ...matches]);
         setInputValue(unmatched.join("\n"));
         setErrors(newErrors);
       }
     },
-    [setVideoUrls, videoUrls],
+    [onChange, value],
   );
 
   return (
@@ -85,7 +80,7 @@ export function VideoLinksField({
               <span>{label}</span>
               {maxNumber && (
                 <span className="text-sm text-gray-600">
-                  {videoUrls.length} / {maxNumber}
+                  {value.length} / {maxNumber}
                 </span>
               )}
             </span>
