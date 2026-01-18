@@ -7,11 +7,13 @@ const toastcrunchPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    position: { pan: 0, tilt: 0, zoom: 1 },
     // modified: 2025-10-09T11:10:30.308Z
   },
   right: {
     description: "Right",
     image: right,
+    position: { pan: 76.03, tilt: 47.33, zoom: 6336 },
     // modified: 2025-10-09T11:10:30.308Z
   },
 };
