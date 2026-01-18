@@ -6,8 +6,8 @@ import { getClassification } from "@alveusgg/data/build/ambassadors/classificati
 import ambassadors, {
   type Ambassador,
   type AmbassadorKey,
+  isAmbassadorKey,
 } from "@alveusgg/data/build/ambassadors/core";
-import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import {
   type AmbassadorImage,
   type AmbassadorImages,
@@ -122,7 +122,7 @@ const getStats = (ambassador: Ambassador): Stats => {
         value: (
           <>
             <p>{formatPartialDateString(ambassador.birth)}</p>
-            {ambassador.birth && (
+            {ambassador.birth && !ambassador.retired && (
               <p className="text-base text-alveus-green-700 italic">
                 <PartialDateDiff date={ambassador.birth} suffix="old" />
               </p>
@@ -139,7 +139,7 @@ const getStats = (ambassador: Ambassador): Stats => {
         value: (
           <>
             <p>{formatPartialDateString(ambassador.arrival)}</p>
-            {ambassador.arrival && (
+            {ambassador.arrival && !ambassador.retired && (
               <p className="text-base text-alveus-green-700 italic">
                 <PartialDateDiff date={ambassador.arrival} suffix="ago" />
               </p>
@@ -167,11 +167,9 @@ const getStats = (ambassador: Ambassador): Stats => {
 
 export const getStaticPaths: GetStaticPaths = () => {
   return {
-    paths: typeSafeObjectKeys(ambassadors)
-      .filter(isActiveAmbassadorKey)
-      .map((key) => ({
-        params: { ambassadorName: camelToKebab(key) },
-      })),
+    paths: typeSafeObjectKeys(ambassadors).map((key) => ({
+      params: { ambassadorName: camelToKebab(key) },
+    })),
     fallback: false,
   };
 };
@@ -192,7 +190,7 @@ export const getStaticProps: GetStaticProps<AmbassadorPageProps> = async (
   if (typeof ambassadorName !== "string") return { notFound: true };
 
   const ambassadorKey = kebabToCamel(ambassadorName);
-  if (!isActiveAmbassadorKey(ambassadorKey)) return { notFound: true };
+  if (!isAmbassadorKey(ambassadorKey)) return { notFound: true };
 
   const ambassador = ambassadors[ambassadorKey];
   return {
@@ -309,13 +307,29 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
     <>
       <Meta
         title={`${ambassador.name} | Ambassadors`}
-        description={`${ambassador.name} is an Alveus Ambassador. ${ambassador.story} ${ambassador.mission}`}
+        description={`${ambassador.name} ${ambassador.retired ? "was" : "is"} an Alveus Ambassador. ${ambassador.story.replace(/\n+/g, " ")} ${ambassador.mission.replace(/\n+/g, " ")}`}
         image={images[0].src.src}
         icon={iconImage?.src?.src}
+        noindex={!!ambassador.retired}
       />
 
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
+
+      {ambassador.retired && (
+        <Section dark className="py-4">
+          <Heading level={-1} className="text-center text-2xl text-balance">
+            {ambassador.name} retired on{" "}
+            {formatPartialDateString(ambassador.retired)}.{" "}
+            {ambassador.sex === "Male"
+              ? "He is"
+              : ambassador.sex === "Female"
+                ? "She is"
+                : "They are"}{" "}
+            no longer an active ambassador at Alveus Sanctuary.
+          </Heading>
+        </Section>
+      )}
 
       <div className="relative">
         <Section
@@ -345,9 +359,12 @@ const AmbassadorPage: NextPage<AmbassadorPageProps> = ({
               </p>
             )}
 
-            <div className="my-2 text-xl">
-              <p className="my-2">{ambassador.story}</p>
-              <p className="my-2">{ambassador.mission}</p>
+            <div className="my-2 space-y-2 text-xl">
+              {[ambassador.story, ambassador.mission]
+                .flatMap((text) => text.split("\n\n"))
+                .map((text, idx) => (
+                  <p key={idx}>{text}</p>
+                ))}
             </div>
 
             <dl className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-auto-2 lg:grid-cols-auto-2">

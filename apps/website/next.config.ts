@@ -5,7 +5,6 @@ import { withSuperjson } from "next-superjson";
 import type { RemotePattern } from "next/dist/shared/lib/image-config";
 
 import ambassadors from "@alveusgg/data/build/ambassadors/core";
-import { isActiveAmbassadorKey } from "@alveusgg/data/build/ambassadors/filters";
 import animalQuest from "@alveusgg/data/build/animal-quest";
 
 import murals from "@/data/murals";
@@ -281,7 +280,6 @@ const config: NextConfig = {
       permanent: false,
     },
     ...typeSafeObjectKeys(ambassadors)
-      .filter(isActiveAmbassadorKey) // We don't want to generate pages for retired ambassadors
       .map((key) => camelToKebab(key))
       .map((slug) => ({
         source: `/${slug}`,
