@@ -2,8 +2,10 @@ import backleftcorner from "@/assets/presets/fox/backleftcorner.png";
 import backrightcorner from "@/assets/presets/fox/backrightcorner.png";
 import belowleftplatform from "@/assets/presets/fox/belowleftplatform.png";
 import den1 from "@/assets/presets/fox/den1.png";
+import den1r from "@/assets/presets/fox/den1r.png";
 import den1t from "@/assets/presets/fox/den1t.png";
 import den1tr from "@/assets/presets/fox/den1tr.png";
+import den1w from "@/assets/presets/fox/den1w.png";
 import den2 from "@/assets/presets/fox/den2.png";
 import dirtpile from "@/assets/presets/fox/dirtpile.png";
 import doorleft from "@/assets/presets/fox/doorleft.png";
@@ -13,6 +15,7 @@ import downright from "@/assets/presets/fox/downright.png";
 import farcorner from "@/assets/presets/fox/farcorner.png";
 import farfencel from "@/assets/presets/fox/farfencel.png";
 import home from "@/assets/presets/fox/home.png";
+import insidecenter from "@/assets/presets/fox/insidecenter.png";
 import insideleft from "@/assets/presets/fox/insideleft.png";
 import insideplatform from "@/assets/presets/fox/insideplatform.png";
 import insideright from "@/assets/presets/fox/insideright.png";
@@ -20,6 +23,7 @@ import left from "@/assets/presets/fox/left.png";
 import leftplatform from "@/assets/presets/fox/leftplatform.png";
 import leftplatformb from "@/assets/presets/fox/leftplatformb.png";
 import middleplatform from "@/assets/presets/fox/middleplatform.png";
+import nearleft from "@/assets/presets/fox/nearleft.png";
 import right from "@/assets/presets/fox/right.png";
 import rightcorner from "@/assets/presets/fox/rightcorner.png";
 import rightplatform from "@/assets/presets/fox/rightplatform.png";
@@ -56,6 +60,11 @@ const foxPresets: Record<string, Preset> = {
     image: den1,
     // modified: 2025-12-13T18:21:14.116Z
   },
+  den1r: {
+    description: "den1r",
+    image: den1r,
+    // modified: 2026-01-17T19:56:16.332Z
+  },
   den1t: {
     description: "den1t",
     image: den1t,
@@ -65,6 +74,11 @@ const foxPresets: Record<string, Preset> = {
     description: "den1tr",
     image: den1tr,
     // modified: 2025-12-25T19:33:06.635Z
+  },
+  den1w: {
+    description: "den1w",
+    image: den1w,
+    // modified: 2026-01-17T19:57:47.429Z
   },
   den2: {
     description: "den2",
@@ -106,6 +120,11 @@ const foxPresets: Record<string, Preset> = {
     image: farfencel,
     // modified: 2025-12-23T20:59:40.513Z
   },
+  insidecenter: {
+    description: "insidecenter",
+    image: insidecenter,
+    // modified: 2026-01-17T20:13:35.723Z
+  },
   insideleft: {
     description: "insideleft",
     image: insideleft,
@@ -140,6 +159,11 @@ const foxPresets: Record<string, Preset> = {
     description: "middleplatform",
     image: middleplatform,
     // modified: 2025-12-13T18:20:04.315Z
+  },
+  nearleft: {
+    description: "nearleft",
+    image: nearleft,
+    // modified: 2026-01-17T20:01:25.937Z
   },
   right: {
     description: "right",
