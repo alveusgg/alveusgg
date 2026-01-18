@@ -18,7 +18,10 @@ const upstreamPresetsSchema = z.object({
   presets: z.array(
     z.object({
       name: z.string(),
-      modified: z.coerce.date(),
+      modified: z.iso
+        .datetime()
+        .transform((str) => new Date(str))
+        .nullable(),
     }),
   ),
 });
@@ -79,6 +82,14 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
       continue;
     }
 
+    // Ignore any presets with an invalid modified date
+    if (!preset.modified) {
+      console.warn(
+        `Ignoring preset ${preset.name} for camera ${name} with invalid modified date`,
+      );
+      continue;
+    }
+
     const existing = obj.getProperty(preset.name);
     if (existing) {
       // Try to find a modified comment within the existing preset
@@ -131,7 +142,7 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
           writer.block(() => {
             writer.writeLine(`description: ${description},`);
             writer.writeLine(`image: ${preset.name},`);
-            writer.writeLine(`// modified: ${preset.modified.toISOString()}`);
+            writer.writeLine(`// modified: ${preset.modified?.toISOString()}`);
           });
         },
       });
