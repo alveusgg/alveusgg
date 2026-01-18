@@ -3,6 +3,7 @@ import { type StaticImageData } from "next/image";
 export interface Preset {
   description: string;
   image: StaticImageData;
+  position?: { pan: number; tilt: number; zoom: number };
 }
 
 interface CameraCore {

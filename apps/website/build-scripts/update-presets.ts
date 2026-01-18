@@ -22,6 +22,9 @@ const upstreamPresetsSchema = z.object({
         .datetime()
         .transform((str) => new Date(str))
         .nullable(),
+      pan: z.number().optional(),
+      tilt: z.number().optional(),
+      zoom: z.number().optional(),
     }),
   ),
 });
@@ -29,7 +32,7 @@ const upstreamPresetsSchema = z.object({
 type UpstreamPresets = z.infer<typeof upstreamPresetsSchema>;
 
 const getUpstreamPresets = async () => {
-  const response = await fetch("https://ptz.app/api/presets");
+  const response = await fetch("https://ptz.app/api/presets-ext");
   if (!response.ok) {
     throw new Error(
       `Failed to fetch upstream presets: ${response.status} ${response.statusText}`,
@@ -143,6 +146,21 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
           writer.block(() => {
             writer.writeLine(`description: ${description},`);
             writer.writeLine(`image: ${preset.name},`);
+
+            if (
+              preset.pan !== undefined &&
+              preset.tilt !== undefined &&
+              preset.zoom !== undefined
+            ) {
+              writer.writeLine(
+                `position: { pan: ${preset.pan}, tilt: ${preset.tilt}, zoom: ${preset.zoom} },`,
+              );
+            } else {
+              console.warn(
+                `Preset ${preset.name} for camera ${name} is missing position data`,
+              );
+            }
+
             writer.writeLine(`// modified: ${preset.modified?.toISOString()}`);
           });
         },
