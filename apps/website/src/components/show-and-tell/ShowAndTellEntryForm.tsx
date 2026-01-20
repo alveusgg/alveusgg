@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import {
   type ComponentProps,
   type FormEvent,
+  type Ref,
   useCallback,
   useEffect,
   useMemo,
@@ -62,6 +63,7 @@ import { RichTextField } from "../shared/form/RichTextField";
 import { TextAreaField } from "../shared/form/TextAreaField";
 import { TextField } from "../shared/form/TextField";
 import {
+  type FileReference,
   UploadAttachmentsField,
   useUploadAttachmentsData,
 } from "../shared/form/UploadAttachmentsField";
@@ -77,6 +79,12 @@ type ShowAndTellEntryFormProps = {
   action: "review" | "create" | "update";
   onUpdate?: () => void;
   onUnsavedChangesRef?: (confirmFn: (message?: string) => boolean) => void;
+  onSaveSuccess?: () => void;
+  formRef?: Ref<HTMLFormElement>;
+  onAttachmentsChange?: (data: {
+    imageFiles: FileReference[];
+    videoUrls: string[];
+  }) => void;
 };
 
 function ImageAttachment({
@@ -205,6 +213,9 @@ export function ShowAndTellEntryForm({
   entry,
   onUpdate,
   onUnsavedChangesRef,
+  onSaveSuccess,
+  formRef,
+  onAttachmentsChange,
 }: ShowAndTellEntryFormProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -305,6 +316,18 @@ export function ShowAndTellEntryForm({
       [entry?.attachments],
     ),
   );
+
+  // Notify parent when attachments change
+  useEffect(() => {
+    onAttachmentsChange?.({
+      imageFiles: imageAttachmentsData.files,
+      videoUrls: videoLinksData.videoUrls,
+    });
+  }, [
+    imageAttachmentsData.files,
+    videoLinksData.videoUrls,
+    onAttachmentsChange,
+  ]);
 
   const createFileUpload = trpc.showAndTell.createFileUpload.useMutation();
   const upload = useFileUpload<ImageMimeType>(
@@ -476,6 +499,7 @@ export function ShowAndTellEntryForm({
             resetChanges();
             setSuccessMessage("Entry updated successfully!");
             onUpdate?.();
+            onSaveSuccess?.();
           },
           onError: (err) => {
             setError(err.message);
@@ -502,7 +526,11 @@ export function ShowAndTellEntryForm({
   const wasApproved = entry && getEntityStatus(entry) === "approved";
 
   return (
-    <form className="my-5 flex flex-col gap-5" onSubmit={handleSubmit}>
+    <form
+      className="my-5 flex flex-col gap-5"
+      onSubmit={handleSubmit}
+      ref={formRef}
+    >
       {action === "update" && wasApproved && (
         <MessageBox variant="warning" className="my-4 flex items-center gap-2">
           <IconWarningTriangle className="size-6 text-yellow-900" />
