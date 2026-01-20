@@ -24,13 +24,28 @@ import {
 import { createImageUrl } from "@/utils/image";
 
 // If these types change, the extension schema MUST be updated as well
-type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
+type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"| "wild" | "captivity"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
   species: Omit<Species, "iucn" | "class"> & {
     key: string;
     iucn: Species["iucn"] & { title: string };
     class: { key: string; title: string };
   };
+  source: string,
+  enclosure: {
+    key: string;
+    title: string;
+  };
+};
+
+type AmbassadorV4 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
+  image: Omit<AmbassadorImage, "src"> & { src: string };
+  species: Omit<Species, "iucn" | "class"> & {
+    key: string;
+    iucn: Species["iucn"] & { title: string };
+    class: { key: string; title: string };
+  };
+  source: string,
   enclosure: {
     key: string;
     title: string;
