@@ -26,10 +26,32 @@ import { createImageUrl } from "@/utils/image";
 // If these types change, the extension schema MUST be updated as well
 type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
-  species: Omit<Species, "iucn" | "class"> & {
+  species: Omit<Species, "iucn" | "class" | "lifespan"> & {
     key: string;
     iucn: Species["iucn"] & { title: string };
     class: { key: string; title: string };
+    lifespan: {
+      source: string
+      wild?: number | {min: number, max: number}
+      captive?: number | {min: number, max: number}
+    }
+  };
+  enclosure: {
+    key: string;
+    title: string;
+  };
+};
+
+type AmbassadorV4 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
+  image: Omit<AmbassadorImage, "src"> & { src: string };
+  species: Omit<Species, "iucn" | "class" | "lifespan"> & {
+    key: string;
+    iucn: Species["iucn"] & { title: string };
+    class: { key: string; title: string };
+    lifespan: Omit<Species["lifespan"], "source"> & {
+      wild: "Not Applicable" | "Unknown" | number | {min: number, max: number},
+      captive: "Not Applicable" | "Unknown" | number | {min: number, max: number},
+    }
   };
   enclosure: {
     key: string;
@@ -47,6 +69,12 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
     .map<[string, AmbassadorV3]>(([key, val]) => {
       const image = getAmbassadorImages(key)[0];
       const species = getSpecies(val.species);
+
+      const lifespan = {
+        wild: typeof species.lifespan.wild == "string" ? undefined : species.lifespan.wild,
+        captive: typeof species.lifespan.captive == "string" ? undefined : species.lifespan.captive,
+        source: ''
+      }
 
       return [
         key,
@@ -70,6 +98,7 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
               key: species.class,
               title: getClassification(species.class),
             },
+            lifespan
           },
           enclosure: {
             key: val.enclosure,
