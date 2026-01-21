@@ -4,6 +4,7 @@ import down from "@/assets/presets/wolfindoor/down.png";
 import downleft from "@/assets/presets/wolfindoor/downleft.png";
 import downright from "@/assets/presets/wolfindoor/downright.png";
 import fencel from "@/assets/presets/wolfindoor/fencel.png";
+import fencer from "@/assets/presets/wolfindoor/fencer.png";
 import home from "@/assets/presets/wolfindoor/home.png";
 import left from "@/assets/presets/wolfindoor/left.png";
 import leftcorner from "@/assets/presets/wolfindoor/leftcorner.png";
@@ -61,6 +62,12 @@ const wolfindoorPresets: Record<string, Preset> = {
     image: fencel,
     position: { pan: -112.45, tilt: -8.69, zoom: 1 },
     // modified: 2025-10-09T11:10:30.280Z
+  },
+  fencer: {
+    description: "fencer",
+    image: fencer,
+    position: { pan: -84.95, tilt: -11.84, zoom: 1 },
+    // modified: 2026-01-20T14:39:32.950Z
   },
   left: {
     description: "Left",
