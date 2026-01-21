@@ -39,6 +39,7 @@ import IconQuote from "@/icons/IconQuote";
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage2 from "@/assets/floral/leaf-left-2.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
+import amazonAds from "@/assets/in-the-news/amazon-ads.svg";
 import forbes from "@/assets/in-the-news/forbes.svg";
 import yahooEntertainment from "@/assets/in-the-news/yahoo-entertainment.svg";
 
@@ -170,6 +171,13 @@ const news: Record<string, News> = {
       type: "youtube",
       id: "8TieP5VgieE",
     },
+  },
+  amazon: {
+    title: "Amazon Ads",
+    href: "https://advertising.amazon.com/library/expert-advice/maya-higa-wildlife-streamer",
+    quote:
+      "For Higa, success on Twitch isn't just about building a following—it's about creating meaningful change, one viewer at a time.",
+    logo: amazonAds,
   },
   yahoo: {
     title: "Yahoo! Entertainment",
