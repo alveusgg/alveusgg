@@ -70,11 +70,52 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
       const image = getAmbassadorImages(key)[0];
       const species = getSpecies(val.species);
 
-      const lifespan = {
-        wild: typeof species.lifespan.wild == "string" ? undefined : species.lifespan.wild,
-        captive: typeof species.lifespan.captive == "string" ? undefined : species.lifespan.captive,
-        source: ''
-      }
+      return [
+        key,
+        {
+          ...val,
+          image: {
+            ...image,
+            src: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({
+              src: image.src.src,
+              width: 600,
+            })}`,
+          },
+          species: {
+            ...species,
+            key: val.species,
+            iucn: {
+              ...species.iucn,
+              title: getIUCNStatus(species.iucn.status),
+            },
+            class: {
+              key: species.class,
+              title: getClassification(species.class),
+            },
+            lifespan: {
+              wild: typeof species.lifespan.wild == "string" ? undefined : species.lifespan.wild,
+              captive: typeof species.lifespan.captive == "string" ? undefined : species.lifespan.captive,
+              source: ''
+            }
+          },
+          enclosure: {
+            key: val.enclosure,
+            title: enclosures[val.enclosure].name,
+          },
+        },
+      ];
+    }),
+);
+
+
+const ambassadorsV4 = typeSafeObjectFromEntries(
+  typeSafeObjectEntries(allAmbassadors)
+    .filter(isActiveAmbassadorEntry)
+    .map<[string, AmbassadorV4]>(([key, val]) => {
+      const image = getAmbassadorImages(key)[0];
+      const species = getSpecies(val.species);
+
+      const {source, ...lifespan} = species.lifespan;
 
       return [
         key,
