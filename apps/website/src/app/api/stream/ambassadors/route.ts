@@ -26,15 +26,19 @@ import { createImageUrl } from "@/utils/image";
 // If these types change, the extension schema MUST be updated as well
 type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
-  species: Omit<Species, "iucn" | "class" | "lifespan"> & {
+  species: Omit<Species, "iucn" | "class" | "lifespan | native"> & {
     key: string;
     iucn: Species["iucn"] & { title: string };
     class: { key: string; title: string };
     lifespan: {
-      source: string
-      wild?: number | {min: number, max: number}
-      captive?: number | {min: number, max: number}
-    }
+      source: string;
+      wild?: number | { min: number; max: number };
+      captivity?: number | { min: number; max: number };
+    };
+    native: {
+      text: string;
+      source: string;
+    };
   };
   enclosure: {
     key: string;
@@ -90,10 +94,23 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
               title: getClassification(species.class),
             },
             lifespan: {
-              wild: typeof species.lifespan.wild == "string" ? undefined : species.lifespan.wild,
-              captive: typeof species.lifespan.captive == "string" ? undefined : species.lifespan.captive,
-              source: ''
-            }
+              wild:
+                typeof species.lifespan.wild === "string"
+                  ? undefined
+                  : species.lifespan.wild,
+              captive:
+                typeof species.lifespan.captivity === "string"
+                  ? undefined
+                  : species.lifespan.captivity,
+              source: "",
+            },
+            native:
+              typeof species.native === "string"
+                ? {
+                    text: species.native,
+                    source: "",
+                  }
+                : species.native,
           },
           enclosure: {
             key: val.enclosure,
@@ -103,7 +120,6 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
       ];
     }),
 );
-
 
 const ambassadorsV4 = typeSafeObjectFromEntries(
   typeSafeObjectEntries(allAmbassadors)
@@ -133,7 +149,7 @@ const ambassadorsV4 = typeSafeObjectFromEntries(
             class: {
               key: species.class,
               title: getClassification(species.class),
-            }
+            },
           },
           enclosure: {
             key: val.enclosure,
@@ -156,7 +172,7 @@ const headers = {
 
 // API for extension
 export async function GET() {
-  const resp: AmbassadorsResponse = { v3: ambassadorsV3 , v4: ambassadorsV4 };
+  const resp: AmbassadorsResponse = { v3: ambassadorsV3, v4: ambassadorsV4 };
   return Response.json(resp, { headers });
 }
 

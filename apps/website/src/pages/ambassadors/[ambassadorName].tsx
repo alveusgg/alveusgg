@@ -92,7 +92,7 @@ const getStats = (ambassador: Ambassador): Stats => {
     },
     {
       title: "Native To",
-      value: <p>{species.native.text}</p>,
+      value: <p>{species.native}</p>,
     },
     {
       title: "Species Lifespan",
