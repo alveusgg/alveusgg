@@ -18,7 +18,13 @@ const upstreamPresetsSchema = z.object({
   presets: z.array(
     z.object({
       name: z.string(),
-      modified: z.coerce.date(),
+      modified: z.iso
+        .datetime()
+        .transform((str) => new Date(str))
+        .nullable(),
+      pan: z.number().optional(),
+      tilt: z.number().optional(),
+      zoom: z.number().optional(),
     }),
   ),
 });
@@ -26,7 +32,7 @@ const upstreamPresetsSchema = z.object({
 type UpstreamPresets = z.infer<typeof upstreamPresetsSchema>;
 
 const getUpstreamPresets = async () => {
-  const response = await fetch("https://ptz.app/api/presets");
+  const response = await fetch("https://ptz.app/api/presets-ext");
   if (!response.ok) {
     throw new Error(
       `Failed to fetch upstream presets: ${response.status} ${response.statusText}`,
@@ -79,41 +85,50 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
       continue;
     }
 
-    const existing = obj.getProperty(preset.name);
-    if (existing) {
-      // Try to find a modified comment within the existing preset
-      const modified = existing
-        .getDescendantsOfKind(SyntaxKind.SingleLineCommentTrivia)
-        .map((comment) => {
-          const text = comment.getText();
-          if (!text.startsWith("// modified: ")) return null;
-
-          const dateStr = text.replace("// modified: ", "").trim();
-          const date = new Date(dateStr);
-          if (isNaN(date.getTime())) return null;
-
-          return {
-            comment,
-            date,
-          };
-        })
-        .find((date) => date !== null);
-
-      // If the modified date is the same or newer, skip updating this preset
-      if (modified && modified.date >= preset.modified) {
-        continue;
-      }
+    // Ignore any presets with an invalid modified date
+    if (!preset.modified) {
+      console.warn(
+        `Ignoring preset ${preset.name} for camera ${name} with invalid modified date`,
+      );
+      continue;
     }
 
+    // Try to find an existing entry for the preset
+    const existing = obj.getProperty(preset.name);
+    const modified = existing
+      ?.getDescendantsOfKind(SyntaxKind.SingleLineCommentTrivia)
+      .map((comment) => {
+        const text = comment.getText();
+        if (!text.startsWith("// modified: ")) return null;
+
+        const dateStr = text.replace("// modified: ", "").trim();
+        const date = new Date(dateStr);
+        if (isNaN(date.getTime())) return null;
+
+        return {
+          comment,
+          date,
+        };
+      })
+      .find((date) => date !== null);
+
     try {
-      // Download the preset image from the upstream API and add an import for it
-      // Intentionally use the original camera name here for the upstream API, not the mapped name
-      const data = await getUpstreamImage(camera.name, preset.name);
-      const imp = file.addImportDeclaration({
-        moduleSpecifier: `@/assets/presets/${name}/${preset.name}.png`,
-        defaultImport: preset.name,
-      });
-      added.push([imp.getModuleSpecifierValue(), data]);
+      // If we don't have a modified date, or the upstream is newer, download the image
+      if (!modified || modified.date < preset.modified) {
+        // Download the preset image from the upstream API and add an import for it
+        // Intentionally use the original camera name here for the upstream API, not the mapped name
+        const data = await getUpstreamImage(camera.name, preset.name);
+        const imp = file.addImportDeclaration({
+          moduleSpecifier: `@/assets/presets/${name}/${preset.name}.png`,
+          defaultImport: preset.name,
+        });
+        added.push([imp.getModuleSpecifierValue(), data]);
+
+        // If there was already an existing entry, we don't need to duplicate the import
+        if (existing) {
+          imp.remove();
+        }
+      }
 
       // Get the old description if it exists
       const description = existing
@@ -131,15 +146,29 @@ const processCamera = async (project: Project, camera: UpstreamPresets) => {
           writer.block(() => {
             writer.writeLine(`description: ${description},`);
             writer.writeLine(`image: ${preset.name},`);
-            writer.writeLine(`// modified: ${preset.modified.toISOString()}`);
+
+            if (
+              preset.pan !== undefined &&
+              preset.tilt !== undefined &&
+              preset.zoom !== undefined
+            ) {
+              writer.writeLine(
+                `position: { pan: ${preset.pan}, tilt: ${preset.tilt}, zoom: ${preset.zoom} },`,
+              );
+            } else {
+              console.warn(
+                `Preset ${preset.name} for camera ${name} is missing position data`,
+              );
+            }
+
+            writer.writeLine(`// modified: ${preset.modified?.toISOString()}`);
           });
         },
       });
 
-      // Remove the old preset property if it exists (and remove the duplicate import we just added)
+      // Remove the old preset property if it exists, now that we've used it for the description
       if (existing) {
         existing.remove();
-        imp.remove();
       }
     } catch (error) {
       // Log an error on failure but continue processing other presets

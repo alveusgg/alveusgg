@@ -6,6 +6,7 @@ const pushpopcrunchPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
+    position: { pan: 0, tilt: 0, zoom: 1 },
     // modified: 2025-10-09T11:10:30.452Z
   },
 };
