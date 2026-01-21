@@ -112,8 +112,6 @@ const ambassadorsV4 = typeSafeObjectFromEntries(
       const image = getAmbassadorImages(key)[0];
       const species = getSpecies(val.species);
 
-      const {source, ...lifespan} = species.lifespan;
-
       return [
         key,
         {
@@ -135,8 +133,7 @@ const ambassadorsV4 = typeSafeObjectFromEntries(
             class: {
               key: species.class,
               title: getClassification(species.class),
-            },
-            lifespan
+            }
           },
           enclosure: {
             key: val.enclosure,
@@ -159,7 +156,7 @@ const headers = {
 
 // API for extension
 export async function GET() {
-  const resp: AmbassadorsResponse = { v3: ambassadorsV3 };
+  const resp: AmbassadorsResponse = { v3: ambassadorsV3 , v4: ambassadorsV4 };
   return Response.json(resp, { headers });
 }
 
