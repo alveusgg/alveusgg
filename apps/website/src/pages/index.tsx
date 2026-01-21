@@ -43,7 +43,6 @@ import momoAppaHeroImage from "@/assets/hero/momo-appa.jpg";
 import noodleHeroImage from "@/assets/hero/noodle.jpg";
 import pushPopHeroImage from "@/assets/hero/push-pop.jpg";
 import serranoJalapenoHeroImage from "@/assets/hero/serrano-jalapeno.jpg";
-import sirenHeroImage from "@/assets/hero/siren.jpg";
 import studioHeroImage from "@/assets/hero/studio.jpg";
 import ticoMileyHeroImage from "@/assets/hero/tico-miley.jpg";
 import instituteBuildingHeroImage from "@/assets/institute/hero/building.png";
@@ -53,9 +52,9 @@ import { ambassadorImageHover } from "@/pages/ambassadors";
 
 const slides = [
   {
-    src: sirenHeroImage,
-    alt: ambassadors.siren.name,
-    className: "object-[40%_50%] lg:object-left",
+    src: pushPopHeroImage,
+    alt: ambassadors.pushPop.name,
+    className: "object-[25%_50%] lg:object-center",
   },
   {
     src: studioHeroImage,
@@ -64,11 +63,6 @@ const slides = [
   {
     src: serranoJalapenoHeroImage,
     alt: `${ambassadors.serrano.name} and ${ambassadors.jalapeno.name}`,
-  },
-  {
-    src: pushPopHeroImage,
-    alt: ambassadors.pushPop.name,
-    className: "object-[25%_50%] lg:object-center",
   },
   {
     src: ticoMileyHeroImage,

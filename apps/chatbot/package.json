@@ -15,10 +15,10 @@
   "dependencies": {
     "@alveusgg/database": "workspace:*",
     "@t3-oss/env-core": "^0.13.10",
-    "@twurple/api": "^8.0.2",
-    "@twurple/auth": "^8.0.2",
-    "@twurple/chat": "^8.0.2",
-    "@twurple/easy-bot": "^8.0.2",
+    "@twurple/api": "^8.0.3",
+    "@twurple/auth": "^8.0.3",
+    "@twurple/chat": "^8.0.3",
+    "@twurple/easy-bot": "^8.0.3",
     "read-pkg": "^10.0.0",
     "tsx": "^4.21.0",
     "zod": "^4.3.5"
@@ -26,11 +26,11 @@
   "devDependencies": {
     "@eslint/js": "^9.39.2",
     "@types/eslint-config-prettier": "^6.11.3",
-    "@types/node": "^24.10.7",
+    "@types/node": "^24.10.9",
     "eslint": "^9.39.2",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import-x": "^4.16.1",
-    "typescript-eslint": "^8.52.0"
+    "typescript-eslint": "^8.53.0"
   },
   "scripts": {
     "start": "tsx --env-file=.env src/server.ts",

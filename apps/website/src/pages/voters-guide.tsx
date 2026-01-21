@@ -90,13 +90,13 @@ interface Issue {
 
 const issues: Record<string, Issue> = {
   climate: {
-    ambassador: "siren",
+    ambassador: "mia",
     title: "Confront Climate Change",
     content: (
       <>
         <p>
-          Siren wants leaders who will take action to protect the environment
-          and address climate change.
+          Mia wants leaders who will take action to protect the environment and
+          address climate change.
         </p>
 
         <p>
