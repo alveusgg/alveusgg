@@ -44,14 +44,10 @@ type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
 
 type AmbassadorV4 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
-  species: Omit<Species, "iucn" | "class" | "lifespan"> & {
+  species: Omit<Species, "iucn" | "class"> & {
     key: string;
     iucn: Species["iucn"] & { title: string };
     class: { key: string; title: string };
-    lifespan: Omit<Species["lifespan"], "source"> & {
-      wild: "Not Applicable" | "Unknown" | number | {min: number, max: number},
-      captive: "Not Applicable" | "Unknown" | number | {min: number, max: number},
-    }
   };
   enclosure: {
     key: string;
@@ -61,6 +57,7 @@ type AmbassadorV4 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
 
 export type AmbassadorsResponse = {
   v3: Record<string, AmbassadorV3>;
+  v4: Record<string, AmbassadorV4>;
 };
 
 const ambassadorsV3 = typeSafeObjectFromEntries(
