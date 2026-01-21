@@ -30,17 +30,17 @@ importers:
         specifier: ^0.13.10
         version: 0.13.10(arktype@2.1.20)(typescript@5.9.3)(valibot@1.2.0(typescript@5.9.3))(zod@4.3.5)
       '@twurple/api':
-        specifier: ^8.0.2
-        version: 8.0.2(@twurple/auth@8.0.2)
+        specifier: ^8.0.3
+        version: 8.0.3(@twurple/auth@8.0.3)
       '@twurple/auth':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.0.3
+        version: 8.0.3
       '@twurple/chat':
-        specifier: ^8.0.2
-        version: 8.0.2(@twurple/auth@8.0.2)
+        specifier: ^8.0.3
+        version: 8.0.3(@twurple/auth@8.0.3)
       '@twurple/easy-bot':
-        specifier: ^8.0.2
-        version: 8.0.2
+        specifier: ^8.0.3
+        version: 8.0.3
       read-pkg:
         specifier: ^10.0.0
         version: 10.0.0
@@ -237,8 +237,8 @@ importers:
         specifier: ^11.8.1
         version: 11.8.1(typescript@5.9.3)
       '@twurple/chat':
-        specifier: ^8.0.2
-        version: 8.0.2(@twurple/auth@8.0.2)
+        specifier: ^8.0.3
+        version: 8.0.3(@twurple/auth@8.0.3)
       '@upstash/ratelimit':
         specifier: ^2.0.7
         version: 2.0.7(@upstash/redis@1.36.1)
@@ -3213,27 +3213,27 @@ packages:
   '@ts-morph/common@0.28.1':
     resolution: {integrity: sha512-W74iWf7ILp1ZKNYXY5qbddNaml7e9Sedv5lvU1V8lftlitkc9Pq1A+jlH23ltDgWYeZFFEqGCD1Ies9hqu3O+g==}
 
-  '@twurple/api-call@8.0.2':
-    resolution: {integrity: sha512-Qalqb20+VdFKcRpWe9lRoatLxbsCCcbUS70ODQ0pcRgNvVYO4SIL1FcoOwNK+ra1Gtu7x2DdYnJn1Era1HhIOg==}
+  '@twurple/api-call@8.0.3':
+    resolution: {integrity: sha512-/5DBTqFjpYB+qqOkkFzoTWE79a7+I8uLXmBIIIYjGoq/CIPxKcHnlemXlU8cQhTr87PVa3th8zJXGYiNkpRx8w==}
 
-  '@twurple/api@8.0.2':
-    resolution: {integrity: sha512-zBWU/UaNGjCu5IQzYTWJONbG7FyXtDP5TYRVIKdUqZ3EXCi9H6j6kcx+GVNfikd3zx7boHDVZqCzOt4VGdgsPA==}
+  '@twurple/api@8.0.3':
+    resolution: {integrity: sha512-vnqVi9YlNDbCqgpUUvTIq4sDitKCY0dkTw9zPluZvRNqUB1eCsuoaRNW96HQDhKtA9P4pRzwZ8xU7v/1KU2ytg==}
     peerDependencies:
-      '@twurple/auth': 8.0.2
+      '@twurple/auth': 8.0.3
 
-  '@twurple/auth@8.0.2':
-    resolution: {integrity: sha512-FbkZqvyw7ZedMdXKP2xDQ/G22EY56LB0J14yZXHfrcLDnh7yofgAe8nQAT4gDIF+kl51AnMxt1Zsay6C8b2Gmw==}
+  '@twurple/auth@8.0.3':
+    resolution: {integrity: sha512-Xlv+WNXmGQir4aBXYeRCqdno5XurA6jzYTIovSEHa7FZf3AMHMFqtzW7yqTCUn4iOahfUSA2TIIxmxFM0wis0g==}
 
-  '@twurple/chat@8.0.2':
-    resolution: {integrity: sha512-lYVTz8EoZuPf+RanEs/hvCiNLE5bfLYQA+4CMjBOaDZM1rn2lAGqZcUTH+LMefBt5wdYAi9+34U/ul5lWDZ7aw==}
+  '@twurple/chat@8.0.3':
+    resolution: {integrity: sha512-rhm6xhWKp+4zYFimaEj5fPm6lw/yjrAOsGXXSvPDsEqFR+fc0cVXzmHmglTavkmEELRajFiqNBKZjg73JZWhTQ==}
     peerDependencies:
-      '@twurple/auth': 8.0.2
+      '@twurple/auth': 8.0.3
 
-  '@twurple/common@8.0.2':
-    resolution: {integrity: sha512-67PpI8z0KAQhgjpf4vdKLC/jur7iHFay4whtJ4EP+Tj/qHBqgfjHxKIhFpRJqpTb+68TpUz0v2J5CVA7ugMDuQ==}
+  '@twurple/common@8.0.3':
+    resolution: {integrity: sha512-JQ2lb5qSFT21Y9qMfIouAILb94ppedLHASq49Fe/AP8oq0k3IC9Q7tX2n6tiMzGWqn+n8MnONUpMSZ6FhulMXA==}
 
-  '@twurple/easy-bot@8.0.2':
-    resolution: {integrity: sha512-9TDGxUBWJ2Ys4LGs3QwtsFhGxB8OrUPu0p9nk6ljswPWuBhLvHspQM0sJTH9pb7QgBF4GqevpHCkE1JfGHX+dQ==}
+  '@twurple/easy-bot@8.0.3':
+    resolution: {integrity: sha512-DLZ0Sq9imQ2/QzSuu2n7PJuveZjOL0l+ueOHNfaFEYwiylm6fKeUe4LkChCf6TfcK1KsfZJQK998FhgcRGV1ZQ==}
 
   '@tybys/wasm-util@0.9.0':
     resolution: {integrity: sha512-6+7nlbMVX/PVDCwaIQ8nTOPveOcFLSt8GcXdx8hD0bt39uWxYT88uXzqTd4fTvqta7oeUJqudepapKNt2DYJFw==}
@@ -10289,13 +10289,13 @@ snapshots:
       path-browserify: 1.0.1
       tinyglobby: 0.2.15
 
-  '@twurple/api-call@8.0.2':
+  '@twurple/api-call@8.0.3':
     dependencies:
       '@d-fischer/shared-utils': 3.6.4
-      '@twurple/common': 8.0.2
+      '@twurple/common': 8.0.3
       tslib: 2.8.1
 
-  '@twurple/api@8.0.2(@twurple/auth@8.0.2)':
+  '@twurple/api@8.0.3(@twurple/auth@8.0.3)':
     dependencies:
       '@d-fischer/cache-decorators': 4.0.1
       '@d-fischer/detect-node': 3.0.1
@@ -10303,22 +10303,22 @@ snapshots:
       '@d-fischer/rate-limiter': 1.1.0
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/api-call': 8.0.2
-      '@twurple/auth': 8.0.2
-      '@twurple/common': 8.0.2
+      '@twurple/api-call': 8.0.3
+      '@twurple/auth': 8.0.3
+      '@twurple/common': 8.0.3
       retry: 0.13.1
       tslib: 2.8.1
 
-  '@twurple/auth@8.0.2':
+  '@twurple/auth@8.0.3':
     dependencies:
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/api-call': 8.0.2
-      '@twurple/common': 8.0.2
+      '@twurple/api-call': 8.0.3
+      '@twurple/common': 8.0.3
       tslib: 2.8.1
 
-  '@twurple/chat@8.0.2(@twurple/auth@8.0.2)':
+  '@twurple/chat@8.0.3(@twurple/auth@8.0.3)':
     dependencies:
       '@d-fischer/cache-decorators': 4.0.1
       '@d-fischer/deprecate': 2.0.2
@@ -10326,29 +10326,29 @@ snapshots:
       '@d-fischer/rate-limiter': 1.1.0
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/auth': 8.0.2
-      '@twurple/common': 8.0.2
+      '@twurple/auth': 8.0.3
+      '@twurple/common': 8.0.3
       ircv3: 0.33.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - bufferutil
       - utf-8-validate
 
-  '@twurple/common@8.0.2':
+  '@twurple/common@8.0.3':
     dependencies:
       '@d-fischer/shared-utils': 3.6.4
       klona: 2.0.6
       tslib: 2.8.1
 
-  '@twurple/easy-bot@8.0.2':
+  '@twurple/easy-bot@8.0.3':
     dependencies:
       '@d-fischer/logger': 4.2.4
       '@d-fischer/shared-utils': 3.6.4
       '@d-fischer/typed-event-emitter': 3.3.3
-      '@twurple/api': 8.0.2(@twurple/auth@8.0.2)
-      '@twurple/auth': 8.0.2
-      '@twurple/chat': 8.0.2(@twurple/auth@8.0.2)
-      '@twurple/common': 8.0.2
+      '@twurple/api': 8.0.3(@twurple/auth@8.0.3)
+      '@twurple/auth': 8.0.3
+      '@twurple/chat': 8.0.3(@twurple/auth@8.0.3)
+      '@twurple/common': 8.0.3
       tslib: 2.8.1
     transitivePeerDependencies:
       - bufferutil
