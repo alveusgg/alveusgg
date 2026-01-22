@@ -98,7 +98,7 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
                 typeof species.lifespan.wild === "string"
                   ? undefined
                   : species.lifespan.wild,
-              captive:
+              captivity:
                 typeof species.lifespan.captivity === "string"
                   ? undefined
                   : species.lifespan.captivity,
