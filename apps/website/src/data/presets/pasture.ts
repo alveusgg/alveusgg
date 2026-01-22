@@ -41,6 +41,7 @@ import pooll from "@/assets/presets/pasture/pooll.png";
 import poolr from "@/assets/presets/pasture/poolr.png";
 import purplebase from "@/assets/presets/pasture/purplebase.png";
 import purplebasel from "@/assets/presets/pasture/purplebasel.png";
+import purplebaser from "@/assets/presets/pasture/purplebaser.png";
 import purplenest from "@/assets/presets/pasture/purplenest.png";
 import right from "@/assets/presets/pasture/right.png";
 import roundpen from "@/assets/presets/pasture/roundpen.png";
@@ -310,6 +311,12 @@ const pasturePresets: Record<string, Preset> = {
     image: purplebasel,
     position: { pan: -3.35, tilt: -4.53, zoom: 2312 },
     // modified: 2025-11-30T18:57:16.637Z
+  },
+  purplebaser: {
+    description: "purplebaser",
+    image: purplebaser,
+    position: { pan: 1.22, tilt: -4.58, zoom: 1019 },
+    // modified: 2026-01-21T13:42:32.709Z
   },
   purplenest: {
     description: "Purple Martin Nest",
