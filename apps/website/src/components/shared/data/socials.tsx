@@ -7,7 +7,6 @@ import {
   typeSafeObjectFromEntries,
 } from "@/utils/helpers";
 
-import IconBluesky from "@/icons/IconBluesky";
 import IconFacebook from "@/icons/IconFacebook";
 import IconInstagram from "@/icons/IconInstagram";
 import IconSnapchat from "@/icons/IconSnapchat";
@@ -20,7 +19,6 @@ const icons = {
   twitch: IconTwitch,
   instagram: IconInstagram,
   twitter: IconTwitter,
-  bluesky: IconBluesky,
   facebook: IconFacebook,
   tiktok: IconTikTok,
   snapchat: IconSnapchat,
