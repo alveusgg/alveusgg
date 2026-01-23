@@ -92,7 +92,7 @@ const getStats = (ambassador: Ambassador): Stats => {
     },
     {
       title: "Native To",
-      value: <p>{species.native.text}</p>,
+      value: <p>{species.native}</p>,
     },
     {
       title: "Species Lifespan",
@@ -100,16 +100,16 @@ const getStats = (ambassador: Ambassador): Stats => {
         <div className="flex flex-col flex-nowrap gap-x-4 gap-y-2 md:flex-row md:items-center lg:flex-col lg:items-start xl:flex-row xl:items-center">
           <p>
             Wild:{" "}
-            {species.lifespan.wild
-              ? `${stringifyLifespan(species.lifespan.wild)} years`
-              : "Unknown"}
+            {typeof species.lifespan.wild === "string"
+              ? species.lifespan.wild
+              : `${stringifyLifespan(species.lifespan.wild)} years`}
           </p>
           <div className="hidden h-4 w-px bg-alveus-green opacity-75 md:block lg:hidden xl:block" />
           <p>
             Captivity:{" "}
-            {species.lifespan.captivity
-              ? `${stringifyLifespan(species.lifespan.captivity)} years`
-              : "Unknown"}
+            {typeof species.lifespan.captivity === "string"
+              ? species.lifespan.captivity
+              : `${stringifyLifespan(species.lifespan.captivity)} years`}
           </p>
         </div>
       ),
