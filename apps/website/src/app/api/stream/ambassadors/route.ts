@@ -26,7 +26,7 @@ import { createImageUrl } from "@/utils/image";
 // If these types change, the extension schema MUST be updated as well
 type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
-  species: Omit<Species, "iucn" | "class" | "lifespan | native"> & {
+  species: Omit<Species, "iucn" | "class" | "lifespan" | "native"> & {
     key: string;
     iucn: Species["iucn"] & { title: string };
     class: { key: string; title: string };
@@ -104,13 +104,10 @@ const ambassadorsV3 = typeSafeObjectFromEntries(
                   : species.lifespan.captivity,
               source: "",
             },
-            native:
-              typeof species.native === "string"
-                ? {
-                    text: species.native,
-                    source: "",
-                  }
-                : species.native,
+            native: {
+              text: species.native,
+              source: "",
+            },
           },
           enclosure: {
             key: val.enclosure,
