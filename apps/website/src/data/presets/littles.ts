@@ -51,7 +51,7 @@ const littlesPresets: Record<string, Preset> = {
   bowlr: {
     description: "bowlr",
     image: bowlr,
-    position: { pan: 150.96, tilt: -4.42, zoom: 1 },
+    position: { pan: 150.96, tilt: -4.42, zoom: 1218 },
     // modified: 2025-10-15T13:34:22.097Z
   },
   door: {

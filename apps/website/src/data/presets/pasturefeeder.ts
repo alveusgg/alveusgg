@@ -1,3 +1,4 @@
+import down from "@/assets/presets/pasturefeeder/down.png";
 import feeder from "@/assets/presets/pasturefeeder/feeder.png";
 import home from "@/assets/presets/pasturefeeder/home.png";
 import stompy from "@/assets/presets/pasturefeeder/stompy.png";
@@ -10,6 +11,12 @@ const pasturefeederPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 65.42, tilt: 18.8, zoom: 3865 },
     // modified: 2025-10-09T11:10:30.320Z
+  },
+  down: {
+    description: "down",
+    image: down,
+    position: { pan: 65.42, tilt: -65.48, zoom: 3865 },
+    // modified: 2026-01-22T15:37:54.375Z
   },
   feeder: {
     description: "Feeder",
