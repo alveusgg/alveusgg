@@ -88,6 +88,7 @@ const OverlayPage: NextPage = () => {
 
   const [disclaimer, setDisclaimer] = useState(false);
   const [rounds, setRounds] = useState(false);
+  const [text, setText] = useState("");
 
   const [raid, setRaid] = useState(false);
   const raidEnded = useCallback(() => {
@@ -137,6 +138,12 @@ const OverlayPage: NextPage = () => {
               if (arg === "off" || arg === "stop") return false;
               return true;
             });
+            return;
+          }
+
+          // Mods (or trusted users) can run the command to set the text overlay
+          if (command === "!text") {
+            setText(text.slice(command.length + 1).trim());
             return;
           }
 
@@ -216,11 +223,17 @@ const OverlayPage: NextPage = () => {
             {index === 0 && !hide.has("disclaimer") && disclaimer && (
               <Text
                 className={classes(
-                  "absolute inset-x-0 bottom-0 p-6 text-4xl",
+                  "absolute inset-x-0 bottom-0 p-8 text-4xl",
                   layout === "fullscreen" && "text-center",
                 )}
               >
                 {disclaimerText}
+              </Text>
+            )}
+
+            {index === 0 && !hide.has("text") && text && (
+              <Text className="absolute inset-x-0 bottom-0 bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md">
+                {text}
               </Text>
             )}
           </div>
