@@ -139,7 +139,7 @@ function ImageAttachment({
         defaultValue={initialData?.caption}
       />
 
-      <Disclosure as="div" className="mt-4" defaultOpen={hasAlt}>
+      <Disclosure as="div" className="my-4" defaultOpen={hasAlt}>
         <DisclosureButton
           className={classes(
             "group flex w-full items-center justify-between text-left text-gray-500",
