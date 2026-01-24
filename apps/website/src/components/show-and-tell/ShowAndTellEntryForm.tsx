@@ -311,77 +311,90 @@ export function ShowAndTellEntryForm({
         throw new Error("Unknown attachment type");
       }) || [],
   );
-  const swapAttachments = useCallback((fromIdx: number, toIdx: number) => {
-    setAttachments((prev) => {
-      const fromAtt = prev[fromIdx];
-      if (!fromAtt) return prev;
+  const swapAttachments = useCallback(
+    (fromIdx: number, toIdx: number) => {
+      setAttachments((prev) => {
+        const fromAtt = prev[fromIdx];
+        if (!fromAtt) return prev;
 
-      const toAtt = prev[toIdx];
-      if (!toAtt) return prev;
+        const toAtt = prev[toIdx];
+        if (!toAtt) return prev;
 
-      const newAttachments = [...prev];
-      newAttachments[fromIdx] = toAtt;
-      newAttachments[toIdx] = fromAtt;
-      return newAttachments;
-    });
-  }, []);
+        const newAttachments = [...prev];
+        newAttachments[fromIdx] = toAtt;
+        newAttachments[toIdx] = fromAtt;
 
-  const imageDispatch = useCallback((action: FileAction) => {
-    setAttachments((prev) => {
-      const prevFileRefs = prev
-        .filter((att) => att.type === "image")
-        .map((att) => att.file);
-      const updatedImageFileRefs = fileReducer(prevFileRefs, action);
+        markAsChanged();
+        return newAttachments;
+      });
+    },
+    [markAsChanged],
+  );
 
-      return prev
-        .map((att) => {
-          if (att.type === "image") {
-            const updated = updatedImageFileRefs.find(
-              (f) => f.id === att.file.id,
-            );
-            return updated ? { type: "image" as const, file: updated } : null;
-          }
+  const imageDispatch = useCallback(
+    (action: FileAction) => {
+      setAttachments((prev) => {
+        const prevFileRefs = prev
+          .filter((att) => att.type === "image")
+          .map((att) => att.file);
+        const updatedImageFileRefs = fileReducer(prevFileRefs, action);
 
-          return att;
-        })
-        .concat(
-          updatedImageFileRefs
-            .filter((f) => !prevFileRefs.find((p) => p.id === f.id))
-            .map((f) => ({ type: "image" as const, file: f })),
-        )
-        .filter((att) => att !== null);
-    });
-  }, []);
+        markAsChanged();
+        return prev
+          .map((att) => {
+            if (att.type === "image") {
+              const updated = updatedImageFileRefs.find(
+                (f) => f.id === att.file.id,
+              );
+              return updated ? { type: "image" as const, file: updated } : null;
+            }
+
+            return att;
+          })
+          .concat(
+            updatedImageFileRefs
+              .filter((f) => !prevFileRefs.find((p) => p.id === f.id))
+              .map((f) => ({ type: "image" as const, file: f })),
+          )
+          .filter((att) => att !== null);
+      });
+    },
+    [markAsChanged],
+  );
   const imageAttachments = useMemo(
     () =>
       attachments.filter((att) => att.type === "image").map((att) => att.file),
     [attachments],
   );
 
-  const videoDispatch = useCallback((videoUrls: string[]) => {
-    setAttachments((prev) => {
-      const updatedVideoUrls = videoUrls.map((url) => ({
-        type: "video" as const,
-        url,
-      }));
+  const videoDispatch = useCallback(
+    (videoUrls: string[]) => {
+      setAttachments((prev) => {
+        const updatedVideoUrls = videoUrls.map((url) => ({
+          type: "video" as const,
+          url,
+        }));
 
-      return prev
-        .map((att) => {
-          if (att.type === "video") {
-            const updated = updatedVideoUrls.find((v) => v.url === att.url);
-            return updated ?? null;
-          }
+        markAsChanged();
+        return prev
+          .map((att) => {
+            if (att.type === "video") {
+              const updated = updatedVideoUrls.find((v) => v.url === att.url);
+              return updated ?? null;
+            }
 
-          return att;
-        })
-        .concat(
-          updatedVideoUrls.filter(
-            (v) => !prev.find((p) => p.type === "video" && p.url === v.url),
-          ),
-        )
-        .filter((att) => att !== null);
-    });
-  }, []);
+            return att;
+          })
+          .concat(
+            updatedVideoUrls.filter(
+              (v) => !prev.find((p) => p.type === "video" && p.url === v.url),
+            ),
+          )
+          .filter((att) => att !== null);
+      });
+    },
+    [markAsChanged],
+  );
   const videoAttachments = useMemo(
     () =>
       attachments.filter((att) => att.type === "video").map((att) => att.url),
