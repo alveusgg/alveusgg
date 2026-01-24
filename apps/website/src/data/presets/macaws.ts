@@ -24,7 +24,7 @@ const macawsPresets: Record<string, Preset> = {
   bowld: {
     description: "bowld",
     image: bowld,
-    position: { pan: -159.8, tilt: -59.98, zoom: 1 },
+    position: { pan: -159.8, tilt: -59.98, zoom: 345 },
     // modified: 2025-10-15T13:51:22.838Z
   },
   bowlr: {
@@ -54,7 +54,7 @@ const macawsPresets: Record<string, Preset> = {
   postmt: {
     description: "postmt",
     image: postmt,
-    position: { pan: 165.64, tilt: -14.46, zoom: 601 },
+    position: { pan: 165.63, tilt: -22.03, zoom: 601 },
     // modified: 2025-10-16T15:10:37.349Z
   },
   right: {

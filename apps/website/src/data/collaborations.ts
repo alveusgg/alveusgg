@@ -23,6 +23,7 @@ import dailyDose from "@/assets/collaborations/daily-dose.png";
 import dareon from "@/assets/collaborations/dareon.png";
 import deanSoCool from "@/assets/collaborations/dean-so-cool.png";
 import emilyWang from "@/assets/collaborations/emily-wang.png";
+import emiru from "@/assets/collaborations/emiru.png";
 import eret from "@/assets/collaborations/eret.png";
 import esfandtv from "@/assets/collaborations/esfandtv.png";
 import evanAndKatelyn from "@/assets/collaborations/evan-and-katelyn.png";
@@ -95,6 +96,19 @@ export type Collaboration = {
 
 const collaborations: Collaboration[] = (
   [
+    {
+      name: "Emiru",
+      link: "https://www.twitch.tv/emiru",
+      date: new Date("2026-01-22"),
+      videoId: "vm6IVBA8Ke8",
+      creators: [
+        {
+          name: "Emiru",
+          image: emiru,
+          popularity: 2_000_000, // Twitch followers, 2026-01-24
+        },
+      ],
+    },
     {
       name: "Carly Incontro",
       link: "https://www.youtube.com/@carlyincontro",
