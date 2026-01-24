@@ -1213,49 +1213,41 @@ const commands = {
    * Text
    */
   text: {
-    description: "Sets the text to be displayed on stream",
+    description: "Sets, or clears, the text to be displayed on stream",
     category: "Text",
     args: [
-      [
-        {
-          type: "string",
-          name: "text",
-          required: true,
-          variadic: false,
-        },
-      ],
-      [],
+      {
+        type: "string",
+        name: "text",
+        required: false,
+        variadic: true,
+      },
     ],
   },
   clipstitle: {
-    description: "Sets the title to be displayed on the clips player",
+    description:
+      "Sets, or clears, the title to be displayed on the clips player",
     category: "Text",
     args: [
-      [
-        {
-          type: "string",
-          name: "title",
-          required: true,
-          variadic: false,
-        },
-      ],
-      [],
+      {
+        type: "string",
+        name: "title",
+        required: false,
+        variadic: true,
+      },
     ],
   },
   disclaimer: {
     description: "Toggle the larger disclaimer text on stream",
     category: "Text",
     args: [
-      [
-        {
-          type: "choice",
-          name: "mode",
-          required: true,
-          variadic: false,
-          choices: ["on", "enable", "off", "disable"],
-        },
-      ],
-      [],
+      {
+        type: "choice",
+        name: "mode",
+        required: false,
+        variadic: false,
+        choices: ["on", "enable", "off", "disable"],
+      },
     ],
   },
 
