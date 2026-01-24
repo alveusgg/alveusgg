@@ -28,12 +28,13 @@ import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
 import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
 import border6cam from "@/assets/stream/border-6cam.png";
+import borderPip from "@/assets/stream/border-pip.png";
 
 const cycleTime = 60;
 const disclaimerText =
   "The rescued animals on screen are educational ambassadors, not pets!";
 
-const layouts = ["fullscreen", "4cam", "6cam"] as const;
+const layouts = ["fullscreen", "4cam", "6cam", "pipbl"] as const;
 type Layout = (typeof layouts)[number];
 const isLayout = (layout: unknown): layout is Layout =>
   layouts.includes(layout as Layout);
@@ -78,6 +79,16 @@ const grid: Record<Layout, Grid> = {
       "3 / 1 / span 1 / span 1", // bottom-left
       "3 / 2 / span 1 / span 1", // bottom-center
       "3 / 3 / span 1 / span 1", // bottom-right
+    ],
+  },
+  pipbl: {
+    grid: "grid-cols-3 grid-rows-3",
+    border: {
+      default: borderPip,
+    },
+    slots: [
+      "1 / 1 / span 3 / span 3", // full
+      "3 / 1 / span 1 / span 1", // bottom-left
     ],
   },
 };
@@ -226,55 +237,81 @@ const OverlayPage: NextPage = () => {
 
   return (
     <div className="relative h-screen w-full overflow-clip">
-      <div className={classes("absolute inset-0 grid", grid[layout].grid)}>
-        {grid[layout].slots.map((slot, index) => (
-          <div
-            key={`${layout}-${index}`}
-            className="relative h-full w-full"
-            style={{
-              gridArea: slot,
-            }}
-          >
-            {index === 0 && !hide.has("raid") && raid && (
-              <Raid onEnded={raidEnded} className="absolute inset-0" />
-            )}
+      <div className="absolute inset-0 isolate">
+        <div className={classes("absolute inset-0 grid", grid[layout].grid)}>
+          {grid[layout].slots.map((slot, index) => (
+            <div
+              key={`${layout}-${index}`}
+              className="relative h-full w-full"
+              style={{
+                gridArea: slot,
+              }}
+            >
+              {index === 0 && !hide.has("raid") && raid && (
+                <Raid
+                  onEnded={raidEnded}
+                  className={classes(
+                    "absolute inset-0",
+                    // Hoist videos above the PiP border, but isolated below datetime etc.
+                    layout.startsWith("pip") && "z-10",
+                  )}
+                />
+              )}
 
-            {index === 0 && !hide.has("crunch") && crunch && (
-              <Crunch onEnded={crunchEnded} className="absolute inset-0" />
-            )}
+              {index === 0 && !hide.has("crunch") && crunch && (
+                <Crunch
+                  onEnded={crunchEnded}
+                  className={classes(
+                    "absolute inset-0",
+                    // Hoist videos above the PiP border, but isolated below datetime etc.
+                    layout.startsWith("pip") && "z-10",
+                  )}
+                />
+              )}
 
-            {index === 0 && !hide.has("disclaimer") && disclaimer && (
-              <Text
-                className={classes(
-                  "absolute inset-x-0 bottom-0 p-8 text-4xl",
-                  layout === "fullscreen" && "text-center",
-                )}
-              >
-                {disclaimerText}
-              </Text>
-            )}
+              {index === 0 && !hide.has("disclaimer") && disclaimer && (
+                <Text
+                  className={classes(
+                    "absolute inset-x-0 bottom-0 p-8 text-4xl",
+                    // Don't overlap PiP borders with text
+                    layout === "pipbl" && "left-1/3",
+                    // When we have a fullscreen slot, center the text
+                    (layout === "fullscreen" || layout.startsWith("pip")) &&
+                      "text-center",
+                  )}
+                >
+                  {disclaimerText}
+                </Text>
+              )}
 
-            {index === 0 && !hide.has("text") && text && (
-              <Text className="absolute inset-x-0 bottom-0 bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md">
-                {text}
-              </Text>
-            )}
-          </div>
-        ))}
+              {index === 0 && !hide.has("text") && text && (
+                <Text
+                  className={classes(
+                    "absolute inset-x-0 bottom-0 bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md",
+                    // Don't overlap PiP borders with text
+                    layout === "pipbl" && "left-1/3",
+                  )}
+                >
+                  {text}
+                </Text>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {!hide.has("border") && grid[layout].border && (
+          <Image
+            src={
+              (date?.startsWith("12-") && grid[layout].border.xmas) ||
+              grid[layout].border.default
+            }
+            alt=""
+            fill
+            priority
+            className="pointer-events-none select-none"
+          />
+        )}
       </div>
-
-      {!hide.has("border") && grid[layout].border && (
-        <Image
-          src={
-            (date?.startsWith("12-") && grid[layout].border.xmas) ||
-            grid[layout].border.default
-          }
-          alt=""
-          fill
-          priority
-          className="pointer-events-none select-none"
-        />
-      )}
 
       {!hide.has("rounds") && rounds && (
         <Rounds channels={channels} users={users} />
