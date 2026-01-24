@@ -28,6 +28,7 @@ import border4camChristmas from "@/assets/stream/border-4cam-christmas.png";
 import border4cam from "@/assets/stream/border-4cam.png";
 import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
 import border6cam from "@/assets/stream/border-6cam.png";
+import borderPipChristmas from "@/assets/stream/border-pip-christmas.png";
 import borderPip from "@/assets/stream/border-pip.png";
 
 const cycleTime = 60;
@@ -94,6 +95,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
+      xmas: borderPipChristmas,
     },
     slots: [
       "1 / 1 / span 3 / span 3", // full
@@ -104,6 +106,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
+      xmas: borderPipChristmas,
       flip: { x: true, y: false },
     },
     slots: [
@@ -115,6 +118,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
+      xmas: borderPipChristmas,
       flip: { x: false, y: true },
     },
     slots: [
@@ -126,6 +130,7 @@ const grid: Record<Layout, Grid> = {
     grid: "grid-cols-3 grid-rows-3",
     border: {
       default: borderPip,
+      xmas: borderPipChristmas,
       flip: { x: true, y: true },
     },
     slots: [
