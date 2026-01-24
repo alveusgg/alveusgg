@@ -114,8 +114,8 @@ const OverlayPage: NextPage = () => {
     channels,
     useCallback(
       (message: ChatMessage) => {
-        const { text, userInfo } = message;
-        const [command, arg] = text.trim().toLowerCase().split(/\s+/);
+        const { text: raw, userInfo } = message;
+        const [command, arg] = raw.trim().toLowerCase().split(/\s+/);
 
         // Anyone can run the command to toggle the disclaimer
         if (command === "!disclaimer" || command === "!wolftext") {
@@ -152,7 +152,7 @@ const OverlayPage: NextPage = () => {
           // Mods (or trusted users) can run the command to set the text overlay
           if (command === "!text") {
             setText(
-              text
+              raw
                 .trimStart()
                 .slice(command.length + 1)
                 .trim(),
