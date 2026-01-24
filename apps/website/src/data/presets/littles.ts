@@ -39,13 +39,13 @@ const littlesPresets: Record<string, Preset> = {
   bowll: {
     description: "bowll",
     image: bowll,
-    position: { pan: 128.06, tilt: -24.85, zoom: 1 },
+    position: { pan: 128.06, tilt: -24.85, zoom: 428 },
     // modified: 2025-10-15T13:37:21.948Z
   },
   bowlm: {
     description: "bowlm",
     image: bowlm,
-    position: { pan: 150.75, tilt: -12.7, zoom: 1 },
+    position: { pan: 150.75, tilt: -12.7, zoom: 768 },
     // modified: 2025-10-15T13:35:50.222Z
   },
   bowlr: {
@@ -81,7 +81,7 @@ const littlesPresets: Record<string, Preset> = {
   left: {
     description: "Left",
     image: left,
-    position: { pan: 119.59, tilt: -12.56, zoom: 1 },
+    position: { pan: 172.31, tilt: -8.86, zoom: 1152 },
     // modified: 2025-10-13T20:59:44.329Z
   },
   leftb: {
@@ -135,7 +135,7 @@ const littlesPresets: Record<string, Preset> = {
   waterl: {
     description: "waterl",
     image: waterl,
-    position: { pan: 129.01, tilt: -10.98, zoom: 1 },
+    position: { pan: 129.01, tilt: -10.98, zoom: 638 },
     // modified: 2025-10-15T13:41:08.436Z
   },
   window: {

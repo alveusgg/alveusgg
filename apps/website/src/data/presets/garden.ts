@@ -24,7 +24,7 @@ const gardenPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
-    position: { pan: 141.49, tilt: -16.98, zoom: 1 },
+    position: { pan: 141.5, tilt: -16.98, zoom: 1 },
     // modified: 2025-10-09T11:10:30.308Z
   },
   barn1r: {
@@ -78,25 +78,25 @@ const gardenPresets: Record<string, Preset> = {
   pasturepole: {
     description: "Pasture Pole",
     image: pasturepole,
-    position: { pan: -89.6, tilt: -9.48, zoom: 1 },
+    position: { pan: -89.6, tilt: -9.48, zoom: 591 },
     // modified: 2025-10-09T11:10:30.320Z
   },
   pastureright: {
     description: "Pasture Right",
     image: pastureright,
-    position: { pan: 75.57, tilt: -12.38, zoom: 1 },
+    position: { pan: 75.57, tilt: -12.38, zoom: 60 },
     // modified: 2025-10-09T11:10:30.312Z
   },
   pasturewater: {
     description: "Pasture Water",
     image: pasturewater,
-    position: { pan: -100.08, tilt: -18.66, zoom: 1 },
+    position: { pan: -100.08, tilt: -18.66, zoom: 689 },
     // modified: 2025-10-09T11:10:30.312Z
   },
   poolright: {
     description: "Pool Right",
     image: poolright,
-    position: { pan: -85.44, tilt: -10.65, zoom: 1 },
+    position: { pan: -85.44, tilt: -10.65, zoom: 664 },
     // modified: 2025-10-09T11:10:30.316Z
   },
   roundpen: {

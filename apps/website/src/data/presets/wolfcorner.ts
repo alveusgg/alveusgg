@@ -196,7 +196,7 @@ const wolfcornerPresets: Record<string, Preset> = {
   downleft: {
     description: "Down left",
     image: downleft,
-    position: { pan: -1.59, tilt: -33.78, zoom: 1 },
+    position: { pan: 14.77, tilt: -54.29, zoom: 1 },
     // modified: 2025-10-09T11:10:30.256Z
   },
   downright: {
