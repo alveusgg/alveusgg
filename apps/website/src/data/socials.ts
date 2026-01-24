@@ -16,10 +16,6 @@ const socials = {
     link: "https://x.com/AlveusSanctuary",
     title: "X (Twitter)",
   },
-  bluesky: {
-    link: "https://bsky.app/profile/alveussanctuary.org",
-    title: "Bluesky",
-  },
   facebook: {
     link: "https://www.facebook.com/AlveusSanctuary",
     title: "Facebook",
