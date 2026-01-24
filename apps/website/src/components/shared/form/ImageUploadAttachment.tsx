@@ -7,7 +7,6 @@ import type { FileReference } from "@/components/shared/form/UploadAttachmentsFi
 
 import IconCheck from "@/icons/IconCheck";
 import IconLoading from "@/icons/IconLoading";
-import IconTrash from "@/icons/IconTrash";
 import IconWarningTriangle from "@/icons/IconWarningTriangle";
 
 export function ImageUploadFilePreview({
@@ -62,39 +61,23 @@ export function ImageUploadFilePreview({
 }
 
 export function ImageUploadAttachment({
-  removeFileReference,
   fileReference,
-  children = "",
-  showRemoveButton = true,
+  children,
   onClick,
 }: {
-  removeFileReference: (id: string) => void;
   fileReference: FileReference;
   children?: ReactNode | ReactNode[];
-  showRemoveButton?: boolean;
   onClick?: () => void;
 }) {
   return (
-    <div className="flex flex-row gap-5 rounded-lg bg-white p-2 px-4 shadow-lg">
-      <div className="py-2">
+    <div className="flex flex-row gap-5 rounded-lg bg-white p-4 shadow-lg">
+      <div className="size-32">
         <Button
           onClick={onClick}
-          className="relative size-32 overflow-hidden rounded-lg bg-gray-200"
+          className="relative h-full overflow-hidden rounded-lg bg-gray-200 transition-transform hover:scale-105"
         >
           <ImageUploadFilePreview fileReference={fileReference} />
         </Button>
-
-        {showRemoveButton && (
-          <div className="p-2">
-            <Button
-              size="small"
-              onClick={() => removeFileReference(fileReference.id)}
-            >
-              <IconTrash className="size-5" />
-              Remove
-            </Button>
-          </div>
-        )}
       </div>
       <div className="flex-1">{children}</div>
     </div>

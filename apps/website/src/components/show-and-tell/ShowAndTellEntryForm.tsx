@@ -16,7 +16,7 @@ import {
 } from "react";
 import { useLocale } from "react-aria";
 
-import type { ShowAndTellEntry } from "@alveusgg/database";
+import type { ImageAttachment, ShowAndTellEntry } from "@alveusgg/database";
 
 import type {
   PublicShowAndTellEntryWithAttachments,
@@ -34,7 +34,6 @@ import { featuredAttachmentsImage } from "@/utils/attachments";
 import { classes } from "@/utils/classes";
 import { getEntityStatus } from "@/utils/entity-helpers";
 import { type ImageMimeType, imageMimeTypes } from "@/utils/files";
-import { notEmpty } from "@/utils/helpers";
 import { createImageUrl } from "@/utils/image";
 import { extractColorFromImage } from "@/utils/process-image";
 import { trpc } from "@/utils/trpc";
@@ -43,6 +42,8 @@ import { parseVideoUrl } from "@/utils/video-urls";
 import useFileUpload from "@/hooks/files/upload";
 import { useFormChangeWarning } from "@/hooks/useFormChangeWarning";
 
+import IconArrowDown from "@/icons/IconArrowDown";
+import IconArrowUp from "@/icons/IconArrowUp";
 import IconChevronDown from "@/icons/IconChevronDown";
 import IconLoading from "@/icons/IconLoading";
 import IconTrash from "@/icons/IconTrash";
@@ -62,13 +63,13 @@ import { RichTextField } from "../shared/form/RichTextField";
 import { TextAreaField } from "../shared/form/TextAreaField";
 import { TextField } from "../shared/form/TextField";
 import {
+  type FileAction,
+  type FileReference,
+  type SavedFileReference,
   UploadAttachmentsField,
-  useUploadAttachmentsData,
+  fileReducer,
 } from "../shared/form/UploadAttachmentsField";
-import {
-  VideoLinksField,
-  useVideoLinksData,
-} from "../shared/form/VideoLinksField";
+import { VideoLinksField } from "../shared/form/VideoLinksField";
 import { DominantColorFieldset } from "./DominantColorFieldset";
 
 type ShowAndTellEntryFormProps = {
@@ -79,10 +80,28 @@ type ShowAndTellEntryFormProps = {
   onUnsavedChangesRef?: (confirmFn: (message?: string) => boolean) => void;
 };
 
+type LocalAttachment =
+  | { type: "image"; file: FileReference }
+  | { type: "video"; url: string };
+
+const makeSavedFileRef = (
+  imageAttachment: ImageAttachment,
+): SavedFileReference => ({
+  status: "saved",
+  id: imageAttachment.id,
+  url: imageAttachment.url,
+  fileStorageObjectId: imageAttachment.fileStorageObjectId,
+  extractColor: () =>
+    extractColorFromImage(
+      createImageUrl({ src: imageAttachment.url, width: 1280, quality: 100 }),
+    ),
+});
+
 function ImageAttachment({
   entry,
   fileReference,
   onClick,
+  children,
   ...props
 }: Omit<ComponentProps<typeof ImageUploadAttachment>, "onClick"> &
   Pick<ShowAndTellEntryFormProps, "entry"> & {
@@ -120,7 +139,7 @@ function ImageAttachment({
         defaultValue={initialData?.caption}
       />
 
-      <Disclosure as="div" className="mt-4" defaultOpen={hasAlt}>
+      <Disclosure as="div" className="my-4" defaultOpen={hasAlt}>
         <DisclosureButton
           className={classes(
             "group flex w-full items-center justify-between text-left text-gray-500",
@@ -160,6 +179,8 @@ function ImageAttachment({
           />
         </DisclosurePanel>
       </Disclosure>
+
+      {children}
     </ImageUploadAttachment>
   );
 }
@@ -270,40 +291,114 @@ export function ShowAndTellEntryForm({
     [markAsChanged],
   );
 
-  const imageAttachmentsData = useUploadAttachmentsData(
-    useMemo(
-      () =>
-        entry?.attachments
-          .filter((attachment) => attachment.attachmentType === "image")
-          .map(({ imageAttachment }) => imageAttachment)
-          .filter(notEmpty)
-          .map((imageAttachment) => ({
-            status: "saved",
-            id: imageAttachment.id,
-            url: imageAttachment.url,
-            fileStorageObjectId: imageAttachment.fileStorageObjectId,
-            extractColor: () =>
-              extractColorFromImage(
-                createImageUrl({
-                  src: imageAttachment.url,
-                  width: 1280,
-                  quality: 100,
-                }),
-              ),
-          })),
-      [entry?.attachments],
-    ),
+  const [attachments, setAttachments] = useState<LocalAttachment[]>(
+    () =>
+      entry?.attachments.map((att) => {
+        if (att.attachmentType === "image" && att.imageAttachment) {
+          return {
+            type: "image",
+            file: makeSavedFileRef(att.imageAttachment),
+          };
+        }
+
+        if (att.attachmentType === "video" && att.linkAttachment) {
+          return {
+            type: "video",
+            url: att.linkAttachment.url,
+          };
+        }
+
+        throw new Error("Unknown attachment type");
+      }) || [],
   );
-  const videoLinksData = useVideoLinksData(
-    useMemo(
-      () =>
-        entry?.attachments
-          .filter((attachment) => attachment.attachmentType === "video")
-          .map(({ linkAttachment }) => linkAttachment)
-          .filter(notEmpty)
-          .map(({ url }) => url),
-      [entry?.attachments],
-    ),
+  const swapAttachments = useCallback(
+    (fromIdx: number, toIdx: number) => {
+      setAttachments((prev) => {
+        const fromAtt = prev[fromIdx];
+        if (!fromAtt) return prev;
+
+        const toAtt = prev[toIdx];
+        if (!toAtt) return prev;
+
+        const newAttachments = [...prev];
+        newAttachments[fromIdx] = toAtt;
+        newAttachments[toIdx] = fromAtt;
+
+        markAsChanged();
+        return newAttachments;
+      });
+    },
+    [markAsChanged],
+  );
+
+  const imageDispatch = useCallback(
+    (action: FileAction) => {
+      setAttachments((prev) => {
+        const prevFileRefs = prev
+          .filter((att) => att.type === "image")
+          .map((att) => att.file);
+        const updatedImageFileRefs = fileReducer(prevFileRefs, action);
+
+        markAsChanged();
+        return prev
+          .map((att) => {
+            if (att.type === "image") {
+              const updated = updatedImageFileRefs.find(
+                (f) => f.id === att.file.id,
+              );
+              return updated ? { type: "image" as const, file: updated } : null;
+            }
+
+            return att;
+          })
+          .concat(
+            updatedImageFileRefs
+              .filter((f) => !prevFileRefs.find((p) => p.id === f.id))
+              .map((f) => ({ type: "image" as const, file: f })),
+          )
+          .filter((att) => att !== null);
+      });
+    },
+    [markAsChanged],
+  );
+  const imageAttachments = useMemo(
+    () =>
+      attachments.filter((att) => att.type === "image").map((att) => att.file),
+    [attachments],
+  );
+
+  const videoDispatch = useCallback(
+    (videoUrls: string[]) => {
+      setAttachments((prev) => {
+        const updatedVideoUrls = videoUrls.map((url) => ({
+          type: "video" as const,
+          url,
+        }));
+
+        markAsChanged();
+        return prev
+          .map((att) => {
+            if (att.type === "video") {
+              const updated = updatedVideoUrls.find((v) => v.url === att.url);
+              return updated ?? null;
+            }
+
+            return att;
+          })
+          .concat(
+            updatedVideoUrls.filter(
+              (v) => !prev.find((p) => p.type === "video" && p.url === v.url),
+            ),
+          )
+          .filter((att) => att !== null);
+      });
+    },
+    [markAsChanged],
+  );
+  const videoAttachments = useMemo(
+    () =>
+      attachments.filter((att) => att.type === "video").map((att) => att.url),
+    [attachments],
   );
 
   const createFileUpload = trpc.showAndTell.createFileUpload.useMutation();
@@ -341,8 +436,7 @@ export function ShowAndTellEntryForm({
       displayName: formData.get("displayName") as string,
       title: formData.get("title") as string,
       text: formData.get("text") as string,
-      imageAttachments: { create: [], update: {} },
-      videoLinks: videoLinksData.videoUrls,
+      attachments: [],
       volunteeringMinutes: wantsToTrackGiveAnHour && hours ? hours * 60 : null,
       location: postLocation?.location ?? "",
       latitude: postLocation?.latitude ?? null,
@@ -350,19 +444,21 @@ export function ShowAndTellEntryForm({
       dominantColor,
     };
 
-    for (const fileReference of imageAttachmentsData.files) {
-      if (
-        fileReference.status !== "upload.done" &&
-        fileReference.status !== "saved"
-      ) {
+    for (const att of attachments) {
+      // Non-image attachments don't need special handling
+      if (att.type !== "image") {
+        data.attachments.push(att);
+        continue;
+      }
+
+      if (att.file.status !== "upload.done" && att.file.status !== "saved") {
         setError("Please wait for all uploads to finish");
         return;
       }
 
-      const imageId = fileReference.id;
-      const linkAttachmentData = {
-        url: fileReference.url,
-        fileStorageObjectId: fileReference.fileStorageObjectId,
+      const imageId = att.file.id;
+      const imageObj = {
+        type: "image" as const,
         title: "", // Currently not supported
         description: "", // Currently not supported
         caption: String(formData.get(`image[${imageId}][caption]`) || ""),
@@ -373,45 +469,48 @@ export function ShowAndTellEntryForm({
 
       if (!data.dominantColor) {
         try {
-          data.dominantColor = await fileReference.extractColor();
+          data.dominantColor = await att.file.extractColor();
         } catch {
           setError("Failed to extract dominant color from attached image");
           return;
         }
       }
 
-      if (fileReference.status === "saved") {
-        data.imageAttachments.update[imageId] = linkAttachmentData;
+      if (att.file.status === "saved") {
+        data.attachments.push({ ...imageObj, id: imageId });
       } else {
-        data.imageAttachments.create.push({
-          ...linkAttachmentData,
-          name: fileReference.file.name,
+        data.attachments.push({
+          ...imageObj,
+          fileStorageObjectId: att.file.fileStorageObjectId,
+          name: att.file.file.name,
         });
       }
     }
 
     if (!data.dominantColor) {
       const featuredImage = featuredAttachmentsImage(
-        videoLinksData.videoUrls.map((url) => ({
-          id: "",
-          entryId: "",
-          order: 0,
-          attachmentType: "video",
-          linkAttachmentId: "",
-          imageAttachmentId: null,
-
-          linkAttachment: {
+        attachments
+          .filter((att) => att.type === "video")
+          .map((att) => ({
             id: "",
-            type: "",
-            name: "",
-            title: "",
-            alternativeText: "",
-            caption: "",
-            description: "",
-            url,
-          },
-          imageAttachment: null,
-        })),
+            entryId: "",
+            order: 0,
+            attachmentType: "video",
+            linkAttachmentId: "",
+            imageAttachmentId: null,
+
+            linkAttachment: {
+              id: "",
+              type: "",
+              name: "",
+              title: "",
+              alternativeText: "",
+              caption: "",
+              description: "",
+              url: att.url,
+            },
+            imageAttachment: null,
+          })),
       );
 
       if (featuredImage) {
@@ -564,11 +663,13 @@ export function ShowAndTellEntryForm({
             <VideoLinksField
               name="videoUrls"
               maxNumber={MAX_VIDEOS}
-              {...videoLinksData}
+              value={videoAttachments}
+              onChange={videoDispatch}
             />
 
             <UploadAttachmentsField
-              {...imageAttachmentsData}
+              files={imageAttachments}
+              dispatch={imageDispatch}
               label="Pictures"
               upload={upload}
               maxNumber={MAX_IMAGES}
@@ -577,51 +678,84 @@ export function ShowAndTellEntryForm({
             />
 
             <ul className="mt-4 flex flex-col gap-2 lg:mt-8">
-              {videoLinksData.videoUrls.map((url) => (
-                <li
-                  key={url}
-                  className="flex flex-row items-center justify-between gap-2 rounded-xl bg-white p-1 px-3 shadow-xl"
-                >
-                  <VideoPlatformIcon
-                    className="size-5"
-                    platform={parseVideoUrl(url)?.platform}
-                  />
-                  <a
-                    href={url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-700 underline hover:cursor-pointer"
-                  >
-                    <span className="min-w-0 flex-1 truncate text-left">
-                      {url}
-                    </span>
-                  </a>
-                  <Button
-                    size="small"
-                    width="auto"
-                    onClick={() => {
-                      videoLinksData.setVideoUrls(
-                        videoLinksData.videoUrls.filter((item) => item !== url),
-                      );
-                    }}
-                  >
-                    <IconTrash className="size-6" /> Remove
-                  </Button>
-                </li>
-              ))}
+              {attachments.map((att, idx) => {
+                const buttons = (
+                  <div className="flex justify-end gap-2">
+                    <Button
+                      size="small"
+                      width="auto"
+                      disabled={idx === 0}
+                      onClick={() => swapAttachments(idx, idx - 1)}
+                    >
+                      <IconArrowUp className="size-5" />
+                      <span className="sr-only">Move Up</span>
+                    </Button>
+                    <Button
+                      size="small"
+                      width="auto"
+                      disabled={idx === attachments.length - 1}
+                      onClick={() => swapAttachments(idx, idx + 1)}
+                    >
+                      <IconArrowDown className="size-5" />
+                      <span className="sr-only">Move Down</span>
+                    </Button>
+                    <Button
+                      size="small"
+                      width="auto"
+                      onClick={() =>
+                        setAttachments((prev) => prev.filter((a) => a !== att))
+                      }
+                    >
+                      <IconTrash className="size-5" />
+                      Remove
+                    </Button>
+                  </div>
+                );
 
-              {imageAttachmentsData.files.map((file) => (
-                <li key={file.id}>
-                  <ImageAttachment
-                    entry={entry}
-                    fileReference={file}
-                    removeFileReference={(id) =>
-                      imageAttachmentsData.dispatch({ type: "remove", id })
-                    }
-                    onClick={openModal}
-                  />
-                </li>
-              ))}
+                if (att.type === "image") {
+                  return (
+                    <li key={att.file.id}>
+                      <ImageAttachment
+                        entry={entry}
+                        fileReference={att.file}
+                        onClick={openModal}
+                      >
+                        {buttons}
+                      </ImageAttachment>
+                    </li>
+                  );
+                }
+
+                if (att.type === "video") {
+                  return (
+                    <li
+                      key={att.url}
+                      className="flex flex-col gap-2 rounded-lg bg-white p-4 shadow-lg"
+                    >
+                      <Link
+                        href={att.url}
+                        external
+                        className="group flex items-center"
+                      >
+                        <div className="relative mr-5 size-32 rounded-lg bg-gray-200 text-alveus-green-900 transition-transform group-hover:scale-105">
+                          <VideoPlatformIcon
+                            className="absolute top-1/2 left-1/2 size-12 -translate-x-1/2 -translate-y-1/2"
+                            platform={parseVideoUrl(att.url)?.platform}
+                          />
+                        </div>
+
+                        <span className="min-w-0 truncate text-left">
+                          {att.url}
+                        </span>
+                      </Link>
+
+                      {buttons}
+                    </li>
+                  );
+                }
+
+                return null;
+              })}
             </ul>
           </Fieldset>
         </div>

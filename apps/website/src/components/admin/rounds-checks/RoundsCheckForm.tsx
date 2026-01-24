@@ -29,6 +29,8 @@ import {
   useUploadAttachmentsData,
 } from "@/components/shared/form/UploadAttachmentsField";
 
+import IconTrash from "@/icons/IconTrash";
+
 const resizeImageOptions = {
   maxWidth: 512,
   maxHeight: 512,
@@ -214,8 +216,24 @@ export function RoundsCheckForm({ action, check }: RoundsCheckFormProps) {
             upload={upload}
             allowedFileTypes={imageMimeTypes}
             resizeImageOptions={resizeImageOptions}
-            renderAttachment={({ fileReference, ...props }) => (
-              <ImageUploadAttachment {...props} fileReference={fileReference} />
+            renderAttachment={(props) => (
+              <ImageUploadAttachment {...props}>
+                <div className="flex h-full flex-col items-start justify-center">
+                  <Button
+                    size="small"
+                    width="auto"
+                    onClick={() =>
+                      imageAttachmentData.dispatch({
+                        type: "remove",
+                        id: props.fileReference.id,
+                      })
+                    }
+                  >
+                    <IconTrash className="size-5" />
+                    Remove
+                  </Button>
+                </div>
+              </ImageUploadAttachment>
             )}
           />
         )}
