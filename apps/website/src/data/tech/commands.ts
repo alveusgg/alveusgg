@@ -1195,6 +1195,19 @@ const commands = {
     category: "Sources",
     args: [],
   },
+  refresh: {
+    description: "Refresh the stream overlay or the extension ambassador data",
+    category: "Sources",
+    args: [
+      {
+        type: "choice",
+        name: "target",
+        required: true,
+        variadic: false,
+        choices: ["overlay", "extension"],
+      },
+    ],
+  },
 
   /**
    * Text
@@ -1203,23 +1216,16 @@ const commands = {
     description: "Sets the text to be displayed on stream",
     category: "Text",
     args: [
-      {
-        type: "string",
-        name: "text",
-        required: true,
-        variadic: false,
-      },
+      [
+        {
+          type: "string",
+          name: "text",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [],
     ],
-  },
-  showtext: {
-    description: "Shows text on stream",
-    category: "Text",
-    args: [],
-  },
-  hidetext: {
-    description: "Hides text on stream",
-    category: "Text",
-    args: [],
   },
   clipstitle: {
     description: "Sets the title to be displayed on the clips player",
