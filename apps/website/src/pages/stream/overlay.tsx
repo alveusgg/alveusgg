@@ -34,7 +34,7 @@ const cycleTime = 60;
 const disclaimerText =
   "The rescued animals on screen are educational ambassadors, not pets!";
 
-const layouts = ["fullscreen", "4cam", "6cam", "pipbl"] as const;
+const layouts = ["fullscreen", "4cam", "6cam", "pipbl", "pipbr"] as const;
 type Layout = (typeof layouts)[number];
 const isLayout = (layout: unknown): layout is Layout =>
   layouts.includes(layout as Layout);
@@ -44,6 +44,7 @@ interface Grid {
   border?: {
     default: StaticImageData;
     xmas?: StaticImageData;
+    flip?: { x: boolean; y: boolean };
   };
   slots: [string, ...string[]];
 }
@@ -89,6 +90,17 @@ const grid: Record<Layout, Grid> = {
     slots: [
       "1 / 1 / span 3 / span 3", // full
       "3 / 1 / span 1 / span 1", // bottom-left
+    ],
+  },
+  pipbr: {
+    grid: "grid-cols-3 grid-rows-3",
+    border: {
+      default: borderPip,
+      flip: { x: true, y: false },
+    },
+    slots: [
+      "1 / 1 / span 3 / span 3", // full
+      "3 / 3 / span 1 / span 1", // bottom-right
     ],
   },
 };
@@ -275,6 +287,7 @@ const OverlayPage: NextPage = () => {
                     "absolute inset-x-0 bottom-0 p-8 text-4xl",
                     // Don't overlap PiP borders with text
                     layout === "pipbl" && "left-1/3",
+                    layout === "pipbr" && "right-1/3",
                     // When we have a fullscreen slot, center the text
                     (layout === "fullscreen" || layout.startsWith("pip")) &&
                       "text-center",
@@ -290,6 +303,7 @@ const OverlayPage: NextPage = () => {
                     "absolute inset-x-0 bottom-0 bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md",
                     // Don't overlap PiP borders with text
                     layout === "pipbl" && "left-1/3",
+                    layout === "pipbr" && "right-1/3",
                   )}
                 >
                   {text}
@@ -308,7 +322,11 @@ const OverlayPage: NextPage = () => {
             alt=""
             fill
             priority
-            className="pointer-events-none select-none"
+            className={classes(
+              "pointer-events-none select-none",
+              grid[layout].border?.flip?.x && "-scale-x-100",
+              grid[layout].border?.flip?.y && "-scale-y-100",
+            )}
           />
         )}
       </div>
