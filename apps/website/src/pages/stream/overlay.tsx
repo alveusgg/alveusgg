@@ -132,6 +132,14 @@ const OverlayPage: NextPage = () => {
           userInfo.isBroadcaster ||
           users?.includes(userInfo.userName.toLowerCase().trim())
         ) {
+          // Mods (or trusted users) can run the command to refresh the overlay
+          if (command === "!refresh" && arg === "overlay") {
+            const url = new URL(window.location.href);
+            url.searchParams.set("reload", Date.now().toString());
+            window.location.href = url.toString();
+            return;
+          }
+
           // Mods (or trusted users) can run the command to toggle the rounds overlay
           if (command === "!rounds") {
             setRounds(() => {
