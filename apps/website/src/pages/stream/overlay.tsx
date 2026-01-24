@@ -151,7 +151,12 @@ const OverlayPage: NextPage = () => {
 
           // Mods (or trusted users) can run the command to set the text overlay
           if (command === "!text") {
-            setText(text.slice(command.length + 1).trim());
+            setText(
+              text
+                .trimStart()
+                .slice(command.length + 1)
+                .trim(),
+            );
             return;
           }
 
