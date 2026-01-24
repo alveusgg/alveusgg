@@ -13,12 +13,12 @@ import useChat from "@/hooks/chat";
 import Crunch from "@/components/overlay/Crunch";
 import Cycle from "@/components/overlay/Cycle";
 import Datetime from "@/components/overlay/Datetime";
-import Disclaimer from "@/components/overlay/Disclaimer";
 import Event from "@/components/overlay/Event";
 import Raid from "@/components/overlay/Raid";
 import Rounds from "@/components/overlay/Rounds";
 import Socials from "@/components/overlay/Socials";
 import Subs from "@/components/overlay/Subs";
+import Text from "@/components/overlay/Text";
 import Timecode from "@/components/overlay/Timecode";
 import Weather from "@/components/overlay/Weather";
 
@@ -28,6 +28,8 @@ import border6camChristmas from "@/assets/stream/border-6cam-christmas.png";
 import border6cam from "@/assets/stream/border-6cam.png";
 
 const cycleTime = 60;
+const disclaimerText =
+  "The rescued animals on screen are educational ambassadors, not pets!";
 
 const layouts = ["fullscreen", "4cam", "6cam"] as const;
 type Layout = (typeof layouts)[number];
@@ -86,6 +88,7 @@ const OverlayPage: NextPage = () => {
 
   const [disclaimer, setDisclaimer] = useState(false);
   const [rounds, setRounds] = useState(false);
+  const [text, setText] = useState("");
 
   const [raid, setRaid] = useState(false);
   const raidEnded = useCallback(() => {
@@ -111,8 +114,8 @@ const OverlayPage: NextPage = () => {
     channels,
     useCallback(
       (message: ChatMessage) => {
-        const { text, userInfo } = message;
-        const [command, arg] = text.trim().toLowerCase().split(/\s+/);
+        const { text: raw, userInfo } = message;
+        const [command, arg] = raw.trim().toLowerCase().split(/\s+/);
 
         // Anyone can run the command to toggle the disclaimer
         if (command === "!disclaimer" || command === "!wolftext") {
@@ -129,12 +132,31 @@ const OverlayPage: NextPage = () => {
           userInfo.isBroadcaster ||
           users?.includes(userInfo.userName.toLowerCase().trim())
         ) {
+          // Mods (or trusted users) can run the command to refresh the overlay
+          if (command === "!refresh" && arg === "overlay") {
+            const url = new URL(window.location.href);
+            url.searchParams.set("reload", Date.now().toString());
+            window.location.href = url.toString();
+            return;
+          }
+
           // Mods (or trusted users) can run the command to toggle the rounds overlay
           if (command === "!rounds") {
             setRounds(() => {
               if (arg === "off" || arg === "stop") return false;
               return true;
             });
+            return;
+          }
+
+          // Mods (or trusted users) can run the command to set the text overlay
+          if (command === "!text") {
+            setText(
+              raw
+                .trimStart()
+                .slice(command.length + 1)
+                .trim(),
+            );
             return;
           }
 
@@ -212,12 +234,20 @@ const OverlayPage: NextPage = () => {
             )}
 
             {index === 0 && !hide.has("disclaimer") && disclaimer && (
-              <Disclaimer
+              <Text
                 className={classes(
-                  "absolute inset-x-0 bottom-0 p-6 text-4xl",
+                  "absolute inset-x-0 bottom-0 p-8 text-4xl",
                   layout === "fullscreen" && "text-center",
                 )}
-              />
+              >
+                {disclaimerText}
+              </Text>
+            )}
+
+            {index === 0 && !hide.has("text") && text && (
+              <Text className="absolute inset-x-0 bottom-0 bg-black/50 p-8 pt-6 text-center text-4xl backdrop-blur-md">
+                {text}
+              </Text>
             )}
           </div>
         ))}
@@ -267,7 +297,9 @@ const OverlayPage: NextPage = () => {
           () =>
             [
               !hide.has("disclaimer") && !disclaimer && (
-                <Disclaimer key="disclaimer" className="text-xl text-stroke" />
+                <Text key="disclaimer" className="text-xl text-stroke">
+                  {disclaimerText}
+                </Text>
               ),
               !hide.has("subs") && <Subs key="subs" />,
             ].filter((x) => !!x),

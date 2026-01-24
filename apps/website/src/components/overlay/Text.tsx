@@ -2,8 +2,9 @@ import type { HTMLProps } from "react";
 
 import { classes } from "@/utils/classes";
 
-const Disclaimer = ({
+const Text = ({
   className,
+  children,
   ...props
 }: HTMLProps<HTMLParagraphElement>) => {
   return (
@@ -18,9 +19,9 @@ const Disclaimer = ({
       )}
       {...props}
     >
-      The rescued animals on screen are educational ambassadors, not pets!
+      {children}
     </p>
   );
 };
 
-export default Disclaimer;
+export default Text;
