@@ -34,7 +34,15 @@ const cycleTime = 60;
 const disclaimerText =
   "The rescued animals on screen are educational ambassadors, not pets!";
 
-const layouts = ["fullscreen", "4cam", "6cam", "pipbl", "pipbr"] as const;
+const layouts = [
+  "fullscreen",
+  "4cam",
+  "6cam",
+  "pipbl",
+  "pipbr",
+  "piptl",
+  "piptr",
+] as const;
 type Layout = (typeof layouts)[number];
 const isLayout = (layout: unknown): layout is Layout =>
   layouts.includes(layout as Layout);
@@ -101,6 +109,28 @@ const grid: Record<Layout, Grid> = {
     slots: [
       "1 / 1 / span 3 / span 3", // full
       "3 / 3 / span 1 / span 1", // bottom-right
+    ],
+  },
+  piptl: {
+    grid: "grid-cols-3 grid-rows-3",
+    border: {
+      default: borderPip,
+      flip: { x: false, y: true },
+    },
+    slots: [
+      "1 / 1 / span 3 / span 3", // full
+      "1 / 1 / span 1 / span 1", // top-left
+    ],
+  },
+  piptr: {
+    grid: "grid-cols-3 grid-rows-3",
+    border: {
+      default: borderPip,
+      flip: { x: true, y: true },
+    },
+    slots: [
+      "1 / 1 / span 3 / span 3", // full
+      "1 / 3 / span 1 / span 1", // top-right
     ],
   },
 };
