@@ -64,7 +64,7 @@ const crowoutPresets: Record<string, Preset> = {
   cornerc: {
     description: "corner perch zoomed in",
     image: cornerc,
-    position: { pan: -101.59, tilt: -3.69, zoom: 4498 },
+    position: { pan: -100.22, tilt: -4.26, zoom: 4498 },
     // modified: 2025-10-09T11:10:29.840Z
   },
   down: {
@@ -94,7 +94,7 @@ const crowoutPresets: Record<string, Preset> = {
   groundl: {
     description: "ground left corner",
     image: groundl,
-    position: { pan: -168.19, tilt: -36.84, zoom: 1 },
+    position: { pan: 174.18, tilt: -36.78, zoom: 1 },
     // modified: 2025-10-09T11:10:29.840Z
   },
   groundr: {

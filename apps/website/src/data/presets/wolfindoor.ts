@@ -66,7 +66,7 @@ const wolfindoorPresets: Record<string, Preset> = {
   fencer: {
     description: "fencer",
     image: fencer,
-    position: { pan: -84.95, tilt: -11.84, zoom: 1 },
+    position: { pan: -84.95, tilt: -11.85, zoom: 1 },
     // modified: 2026-01-20T14:39:32.950Z
   },
   left: {
