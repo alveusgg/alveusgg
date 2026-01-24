@@ -225,7 +225,7 @@ function createVideoAttachment({
   } as const satisfies ShowAndTellEntryAttachmentCreateWithoutEntryInput;
 }
 
-async function createImageAttachment({
+async function createOrUpdateImageAttachment({
   type: _,
   ...attachment
 }: z.infer<typeof imageNewSchema> | z.infer<typeof imageExistingSchema>) {
@@ -286,7 +286,7 @@ export async function createPost(
           });
         }
 
-        return createImageAttachment(attachment);
+        return createOrUpdateImageAttachment(attachment);
       }
 
       if (attachment.type === "video") {
@@ -488,7 +488,7 @@ export async function updatePost(
           }
         }
 
-        return createImageAttachment(attachment);
+        return createOrUpdateImageAttachment(attachment);
       }
 
       if (attachment.type === "video") {
