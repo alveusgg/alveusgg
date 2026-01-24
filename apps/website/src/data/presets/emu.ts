@@ -81,7 +81,7 @@ const emuPresets: Record<string, Preset> = {
   pen1left: {
     description: "Pen 1 Left",
     image: pen1left,
-    position: { pan: 127.4, tilt: -3.14, zoom: 1 },
+    position: { pan: -127.41, tilt: -3.15, zoom: 1 },
     // modified: 2025-10-09T11:10:30.328Z
   },
   pen1right: {

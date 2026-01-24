@@ -76,7 +76,7 @@ const wolfswitchPresets: Record<string, Preset> = {
   farleft: {
     description: "Far Left",
     image: farleft,
-    position: { pan: -61.9, tilt: -5.82, zoom: 2963 },
+    position: { pan: -61.93, tilt: -5.81, zoom: 6270 },
     // modified: 2026-01-21T14:55:30.245Z
   },
   farright: {

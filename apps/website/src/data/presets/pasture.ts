@@ -189,7 +189,7 @@ const pasturePresets: Record<string, Preset> = {
   grove: {
     description: "grove of trees near barn 2",
     image: grove,
-    position: { pan: -15.8, tilt: -5.27, zoom: 2098 },
+    position: { pan: -25.82, tilt: -5.26, zoom: 2108 },
     // modified: 2025-12-03T15:02:46.490Z
   },
   grove2: {

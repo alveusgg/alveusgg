@@ -13,11 +13,11 @@ import doorright from "@/assets/presets/fox/doorright.png";
 import downleft from "@/assets/presets/fox/downleft.png";
 import downright from "@/assets/presets/fox/downright.png";
 import farcorner from "@/assets/presets/fox/farcorner.png";
+import farcornerz from "@/assets/presets/fox/farcornerz.png";
 import farfencel from "@/assets/presets/fox/farfencel.png";
 import home from "@/assets/presets/fox/home.png";
 import insidecenter from "@/assets/presets/fox/insidecenter.png";
 import insideleft from "@/assets/presets/fox/insideleft.png";
-import insideplatform from "@/assets/presets/fox/insideplatform.png";
 import insideright from "@/assets/presets/fox/insideright.png";
 import left from "@/assets/presets/fox/left.png";
 import leftplatform from "@/assets/presets/fox/leftplatform.png";
@@ -131,6 +131,12 @@ const foxPresets: Record<string, Preset> = {
     position: { pan: -78.76, tilt: -1, zoom: 2144 },
     // modified: 2025-12-13T18:26:14.225Z
   },
+  farcornerz: {
+    description: "farcornerz",
+    image: farcornerz,
+    position: { pan: -76.95, tilt: -1.02, zoom: 10090 },
+    // modified: 2026-01-23T14:32:06.965Z
+  },
   farfencel: {
     description: "farfencel",
     image: farfencel,
@@ -149,12 +155,6 @@ const foxPresets: Record<string, Preset> = {
     position: { pan: 140.96, tilt: -14.89, zoom: 5608 },
     // modified: 2025-12-14T20:09:15.410Z
   },
-  insideplatform: {
-    description: "insideplatform",
-    image: insideplatform,
-    position: { pan: 153.76, tilt: -5.1, zoom: 1510 },
-    // modified: 2025-12-19T17:42:49.501Z
-  },
   insideright: {
     description: "insideright",
     image: insideright,
@@ -170,7 +170,7 @@ const foxPresets: Record<string, Preset> = {
   leftplatform: {
     description: "leftplatform",
     image: leftplatform,
-    position: { pan: -107.39, tilt: -0.32, zoom: 1 },
+    position: { pan: -107.39, tilt: -0.32, zoom: 588 },
     // modified: 2025-12-13T18:19:34.095Z
   },
   leftplatformb: {
