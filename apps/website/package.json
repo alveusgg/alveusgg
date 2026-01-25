@@ -74,7 +74,7 @@
     "html-react-parser": "^5.2.11",
     "jsdom": "^27.4.0",
     "linkify-it": "^5.0.0",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "luxon": "^3.7.2",
     "maplibre-gl": "^5.16.0",
     "motion": "^12.26.2",
