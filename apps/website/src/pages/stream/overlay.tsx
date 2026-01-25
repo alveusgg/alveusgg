@@ -3,12 +3,14 @@ import { type NextPage } from "next";
 import Image, { type StaticImageData } from "next/image";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { z } from "zod";
 
 import { queryArray } from "@/utils/array";
 import { classes } from "@/utils/classes";
 import { getToday } from "@/utils/datetime";
 
 import useChat from "@/hooks/chat";
+import useLocalStorage from "@/hooks/storage";
 
 import Crunch from "@/components/overlay/Crunch";
 import Cycle from "@/components/overlay/Cycle";
@@ -86,9 +88,17 @@ const OverlayPage: NextPage = () => {
   const layout = isLayout(query.layout) ? query.layout : "fullscreen";
   const hide = useMemo(() => new Set(queryArray(query.hide)), [query.hide]);
 
-  const [disclaimer, setDisclaimer] = useState(false);
+  const [disclaimer, setDisclaimer] = useLocalStorage(
+    "stream/overlay:disclaimer",
+    useMemo(() => z.boolean(), []),
+    false,
+  );
   const [rounds, setRounds] = useState(false);
-  const [text, setText] = useState("");
+  const [text, setText] = useLocalStorage(
+    "stream/overlay:text",
+    useMemo(() => z.string(), []),
+    "",
+  );
 
   const [raid, setRaid] = useState(false);
   const raidEnded = useCallback(() => {
@@ -179,7 +189,7 @@ const OverlayPage: NextPage = () => {
           }
         }
       },
-      [users],
+      [setDisclaimer, setText, users],
     ),
   );
 
