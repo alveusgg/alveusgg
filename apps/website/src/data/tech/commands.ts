@@ -78,9 +78,6 @@ export const commandCategories = {
   Sources: {
     heading: "Sources",
   },
-  Text: {
-    heading: "Text",
-  },
   Overlays: {
     heading: "Overlays",
   },
@@ -1210,11 +1207,11 @@ const commands = {
   },
 
   /**
-   * Text
+   * Overlays
    */
   text: {
     description: "Sets, or clears, the text to be displayed on stream",
-    category: "Text",
+    category: "Overlays",
     args: [
       {
         type: "string",
@@ -1227,7 +1224,7 @@ const commands = {
   clipstitle: {
     description:
       "Sets, or clears, the title to be displayed on the clips player",
-    category: "Text",
+    category: "Overlays",
     args: [
       {
         type: "string",
@@ -1239,7 +1236,7 @@ const commands = {
   },
   disclaimer: {
     description: "Toggle the larger disclaimer text on stream",
-    category: "Text",
+    category: "Overlays",
     args: [
       {
         type: "choice",
@@ -1250,10 +1247,6 @@ const commands = {
       },
     ],
   },
-
-  /**
-   * Overlays
-   */
   enablewheel: {
     description: "Enable the wheel overlay and subscription tracking",
     category: "Overlays",
