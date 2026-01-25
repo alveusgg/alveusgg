@@ -9,11 +9,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import cameras, { type Camera } from "@/data/tech/cameras";
 
 import { classes } from "@/utils/classes";
-import {
-  isDefinedEntry,
-  typeSafeObjectEntries,
-  typeSafeObjectKeys,
-} from "@/utils/helpers";
+import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
 import { camelToTitle } from "@/utils/string-case";
 
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
@@ -22,45 +18,39 @@ import IconChevronDown from "@/icons/IconChevronDown";
 
 const Button = ({
   camera,
-  title,
-  group,
   onClick,
   selected,
 }: {
   camera: Camera;
-  title: string;
-  group: string;
   onClick: () => void;
-  selected: {
-    camera: Camera;
-    group: string;
-  };
+  selected: Camera;
 }) => (
   <div className="flex w-full shrink-0 overflow-hidden rounded shadow-md">
     <button
       onClick={onClick}
       className={classes(
         "my-auto grow px-3 py-2 text-left text-lg font-semibold backdrop-blur-sm",
-        camera === selected.camera
+        camera === selected
           ? "bg-alveus-green/75 text-white"
           : "bg-alveus-green-50/75 hover:bg-alveus-green-100/90",
       )}
     >
-      {title}
+      {cameras[camera].title}
       <span className="text-sm text-alveus-green-400 italic">
         {` (${camera.toLowerCase()})`}
       </span>
     </button>
 
-    {camera !== selected.camera && group === selected.group && (
-      <RunCommandButton
-        command="swap"
-        args={[selected.camera.toLowerCase(), camera.toLowerCase()]}
-        subOnly
-        tooltip={{ text: "Run swap command", offset: 8 }}
-        className="flex items-center rounded-r bg-alveus-green/75 px-2 text-alveus-tan backdrop-blur-sm transition-colors hover:bg-alveus-green-900/90"
-      />
-    )}
+    {camera !== selected &&
+      cameras[camera].group === cameras[selected].group && (
+        <RunCommandButton
+          command="swap"
+          args={[selected.toLowerCase(), camera.toLowerCase()]}
+          subOnly
+          tooltip={{ text: "Run swap command", offset: 8 }}
+          className="flex items-center rounded-r bg-alveus-green/75 px-2 text-alveus-tan backdrop-blur-sm transition-colors hover:bg-alveus-green-900/90"
+        />
+      )}
   </div>
 );
 
@@ -110,13 +100,10 @@ export const CamListFull = ({
           value.title.toLowerCase().includes(searchClean)
             ? {
                 ...acc,
-                [value.group]: {
-                  ...acc[value.group],
-                  [key]: value,
-                },
+                [value.group]: [...(acc[value.group] ?? []), key],
               }
             : acc,
-        {} as Record<string, Partial<typeof cameras>>,
+        {} as Record<string, Camera[]>,
       ),
     [searchClean],
   );
@@ -136,23 +123,16 @@ export const CamListFull = ({
         {typeSafeObjectEntries(groupedCameras)
           .sort(([a], [b]) => a.localeCompare(b))
           .map(([name, group]) => {
-            const groupEntries =
-              typeSafeObjectEntries(group).filter(isDefinedEntry);
-            if (groupEntries.length === 0) return null;
+            if (group.length === 0) return null;
 
-            if (groupEntries.length === 1) {
-              const [camera, { title, group }] = groupEntries[0]!;
+            if (group.length === 1) {
+              const item = group[0]!;
               return (
                 <Button
-                  key={camera}
-                  camera={camera}
-                  title={title}
-                  group={group}
-                  onClick={() => onChange(camera)}
-                  selected={{
-                    camera: camera,
-                    group: cameras[camera].group,
-                  }}
+                  key={item}
+                  camera={item}
+                  onClick={() => onChange(item)}
+                  selected={camera}
                 />
               );
             }
@@ -171,23 +151,18 @@ export const CamListFull = ({
                   <span>
                     {camelToTitle(name)} Cameras
                     <span className="text-sm text-alveus-green-400 italic">
-                      {` (${groupEntries.length})`}
+                      {` (${group.length})`}
                     </span>
                   </span>
                   <IconChevronDown className="ml-auto size-5 group-data-[open]:-scale-y-100" />
                 </DisclosureButton>
                 <DisclosurePanel className="ml-4 flex flex-col gap-1">
-                  {groupEntries.map(([camera, { title, group }]) => (
+                  {group.map((item) => (
                     <Button
-                      key={camera}
-                      camera={camera}
-                      title={title}
-                      group={group}
-                      onClick={() => onChange(camera)}
-                      selected={{
-                        camera: camera,
-                        group: cameras[camera].group,
-                      }}
+                      key={item}
+                      camera={item}
+                      onClick={() => onChange(item)}
+                      selected={camera}
                     />
                   ))}
                 </DisclosurePanel>

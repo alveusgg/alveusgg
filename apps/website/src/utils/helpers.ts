@@ -14,10 +14,6 @@ export const typeSafeObjectFromEntries = <T extends [string, unknown][]>(
   entries: T,
 ) => Object.fromEntries(entries) as { [K in T[number][0]]: T[number][1] };
 
-export const isDefinedEntry = <T, U>(
-  entry: [T, U | undefined],
-): entry is [T, U] => entry[1] !== undefined;
-
 export const safeJSONParse = (val: string): unknown => {
   try {
     return JSON.parse(val);
