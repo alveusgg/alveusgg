@@ -16,6 +16,7 @@ import platformlefttop from "@/assets/presets/wolfindoor/platformlefttop.png";
 import platformright from "@/assets/presets/wolfindoor/platformright.png";
 import platformrightb from "@/assets/presets/wolfindoor/platformrightb.png";
 import right from "@/assets/presets/wolfindoor/right.png";
+import staffdoor from "@/assets/presets/wolfindoor/staffdoor.png";
 import water from "@/assets/presets/wolfindoor/water.png";
 
 import type { Preset } from "../tech/cameras.types";
@@ -128,6 +129,12 @@ const wolfindoorPresets: Record<string, Preset> = {
     image: right,
     position: { pan: -101.98, tilt: -26.91, zoom: 1 },
     // modified: 2025-10-09T11:10:30.284Z
+  },
+  staffdoor: {
+    description: "staffdoor",
+    image: staffdoor,
+    position: { pan: -71.08, tilt: -11.32, zoom: 1 },
+    // modified: 2026-01-24T00:29:51.846Z
   },
   water: {
     description: "Water",
