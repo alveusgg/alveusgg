@@ -1097,7 +1097,7 @@ const commands = {
     args: [],
   },
   ss: {
-    description: "Switches to the provided scene",
+    description: "Switch to the provided scene",
     category: "Scenes",
     args: [
       {
@@ -1151,7 +1151,7 @@ const commands = {
    * Overlays
    */
   text: {
-    description: "Sets, or clears, the text to be displayed on stream",
+    description: "Set, or clear, the text to be displayed on stream",
     category: "Overlays",
     args: [
       {
@@ -1163,8 +1163,7 @@ const commands = {
     ],
   },
   clipstitle: {
-    description:
-      "Sets, or clears, the title to be displayed on the clips player",
+    description: "Set, or clear, the title to be displayed on the clips player",
     category: "Overlays",
     args: [
       {
@@ -1189,7 +1188,8 @@ const commands = {
     ],
   },
   raidvideo: {
-    description: "Show the video to welcome a raid, generally for raids >50",
+    description:
+      "Start, or stop, the video to welcome a raid, generally for raids >50",
     category: "Overlays",
     args: [
       {
@@ -1202,7 +1202,7 @@ const commands = {
     ],
   },
   crunchvideo: {
-    description: "Show the stinger video for Push Pop's crunch cam",
+    description: "Start, or stop, the stinger video for Push Pop's crunch cam",
     category: "Overlays",
     args: [
       {
@@ -1215,7 +1215,7 @@ const commands = {
     ],
   },
   rounds: {
-    description: "Show the rounds overlay",
+    description: "Start, or stop, the ambassador rounds overlay",
     category: "Overlays",
     args: [
       {
@@ -1228,7 +1228,7 @@ const commands = {
     ],
   },
   check: {
-    description: "Toggle a check in the rounds overlay",
+    description: "Toggle a check in the ambassador rounds overlay",
     category: "Overlays",
     args: [
       [
