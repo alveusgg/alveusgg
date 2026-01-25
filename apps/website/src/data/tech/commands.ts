@@ -1092,42 +1092,6 @@ const commands = {
       },
     ],
   },
-  showchat: {
-    description: "Show Twitch chat overlay (if enabled in the scene)",
-    category: "Scenes",
-    args: [],
-  },
-  hidechat: {
-    description: "Remove Twitch chat overlay",
-    category: "Scenes",
-    args: [],
-  },
-  raidvideo: {
-    description: "Show the video to welcome a raid, generally for raids >50",
-    category: "Scenes",
-    args: [
-      {
-        type: "choice",
-        name: "stop",
-        required: false,
-        variadic: false,
-        choices: ["stop", "off"],
-      },
-    ],
-  },
-  crunchvideo: {
-    description: "Show the stinger video for Push Pop's crunch cam",
-    category: "Scenes",
-    args: [
-      {
-        type: "choice",
-        name: "stop",
-        required: false,
-        variadic: false,
-        choices: ["stop", "off"],
-      },
-    ],
-  },
   fix: {
     description: "Tries to fix the stream (used if stream PC/bot is down)",
     category: "Scenes",
@@ -1192,19 +1156,6 @@ const commands = {
     category: "Sources",
     args: [],
   },
-  refresh: {
-    description: "Refresh the stream overlay or the extension ambassador data",
-    category: "Sources",
-    args: [
-      {
-        type: "choice",
-        name: "target",
-        required: true,
-        variadic: false,
-        choices: ["overlay", "extension"],
-      },
-    ],
-  },
 
   /**
    * Overlays
@@ -1247,6 +1198,42 @@ const commands = {
       },
     ],
   },
+  raidvideo: {
+    description: "Show the video to welcome a raid, generally for raids >50",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
+    ],
+  },
+  crunchvideo: {
+    description: "Show the stinger video for Push Pop's crunch cam",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
+    ],
+  },
+  showchat: {
+    description: "Show Twitch chat overlay (if enabled in the scene)",
+    category: "Overlays",
+    args: [],
+  },
+  hidechat: {
+    description: "Remove Twitch chat overlay",
+    category: "Overlays",
+    args: [],
+  },
   enablewheel: {
     description: "Enable the wheel overlay and subscription tracking",
     category: "Overlays",
@@ -1288,6 +1275,19 @@ const commands = {
         name: "count",
         required: true,
         variadic: false,
+      },
+    ],
+  },
+  refresh: {
+    description: "Refresh the stream overlay or the extension ambassador data",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "target",
+        required: true,
+        variadic: false,
+        choices: ["overlay", "extension"],
       },
     ],
   },
