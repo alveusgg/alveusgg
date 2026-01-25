@@ -81,8 +81,8 @@ export const commandCategories = {
   Text: {
     heading: "Text",
   },
-  Wheel: {
-    heading: "Wheel",
+  Overlays: {
+    heading: "Overlays",
   },
   Notify: {
     heading: "Notify",
@@ -1252,31 +1252,31 @@ const commands = {
   },
 
   /**
-   * Wheel
+   * Overlays
    */
   enablewheel: {
     description: "Enable the wheel overlay and subscription tracking",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   disablewheel: {
     description: "Disable the wheel overlay and subscription tracking",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   resetwheel: {
     description: "Reset the wheel overlay and subscription count",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   resetspins: {
     description: "Reset the wheel spin count",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   setwheelcount: {
     description: "Set the subscription count for the wheel",
-    category: "Wheel",
+    category: "Overlays",
     args: [
       {
         type: "number",
@@ -1288,7 +1288,7 @@ const commands = {
   },
   setspins: {
     description: "Set the spin count for the wheel",
-    category: "Wheel",
+    category: "Overlays",
     args: [
       {
         type: "number",
