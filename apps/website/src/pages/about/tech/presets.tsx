@@ -1,24 +1,15 @@
-import { Field, Input, Label, Switch } from "@headlessui/react";
+import { Field, Label, Switch } from "@headlessui/react";
 import { type NextPage } from "next";
-import Image, { type StaticImageData } from "next/image";
-import {
-  Fragment,
-  type ReactNode,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { z } from "zod";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
-import type { CameraMulti, CameraPTZ } from "@/data/tech/cameras.types";
 import { channels, scopeGroups } from "@/data/twitch";
 
 import { classes } from "@/utils/classes";
-import { typeSafeObjectEntries, typeSafeObjectKeys } from "@/utils/helpers";
-import { camelToKebab } from "@/utils/string-case";
-import { type RouterInputs, trpc } from "@/utils/trpc";
+import { typeSafeObjectKeys } from "@/utils/helpers";
+import { trpc } from "@/utils/trpc";
 
 import useLocalStorage from "@/hooks/storage";
 
@@ -29,23 +20,19 @@ import Meta from "@/components/content/Meta";
 import Section from "@/components/content/Section";
 import Twitch, { TwitchChat } from "@/components/content/Twitch";
 import { CamListDropdown, CamListFull } from "@/components/ptz/CamList";
+import PresetList from "@/components/ptz/PresetList";
 import ProvideAuth from "@/components/shared/LoginWithExtraScopes";
 import ActionButton from "@/components/shared/actions/ActionButton";
-import CopyToClipboardButton from "@/components/shared/actions/CopyToClipboardButton";
 import RunCommandButton from "@/components/shared/actions/RunCommandButton";
 
 import IconCheck from "@/icons/IconCheck";
 import IconLoading from "@/icons/IconLoading";
 import IconVideoCamera from "@/icons/IconVideoCamera";
 import IconX from "@/icons/IconX";
-import IconZoomIn from "@/icons/IconZoomIn";
-import IconZoomOut from "@/icons/IconZoomOut";
 
 import leafLeftImage1 from "@/assets/floral/leaf-left-1.png";
 import leafLeftImage3 from "@/assets/floral/leaf-left-3.png";
 import leafRightImage2 from "@/assets/floral/leaf-right-2.png";
-
-type Command = RouterInputs["stream"]["runCommand"];
 
 const sidebarClamp = (val: number) =>
   Math.min(Math.max(val, 400), window.innerWidth / 2);
@@ -66,65 +53,6 @@ const getPositionIcon = (position: number) => {
   );
   return PositionIcon;
 };
-
-const Card = ({
-  title,
-  image,
-  command,
-  className,
-  children,
-}: {
-  title: string;
-  image: StaticImageData;
-  command?: Command;
-  className?: string;
-  children?: ReactNode;
-}) => (
-  <div
-    className={classes(
-      "rounded-lg border border-alveus-green-900 shadow-lg",
-      className,
-    )}
-  >
-    <div className="relative overflow-hidden rounded-t-lg">
-      <Image
-        src={image}
-        alt=""
-        width={300}
-        className="aspect-video w-full object-cover"
-      />
-      {command && (
-        <RunCommandButton
-          command={command.command}
-          args={command.args}
-          subOnly
-          tooltip={{ offset: 8 }}
-          className="absolute inset-0 flex items-center justify-center text-alveus-green-100 opacity-25 transition-all hover:bg-black/50 hover:text-alveus-green-300 hover:opacity-100 [&>svg]:size-12"
-        />
-      )}
-    </div>
-    <div className="flex flex-col gap-1 rounded-b-lg bg-alveus-tan p-2">
-      <div className="flex items-center justify-between">
-        <h4 className="truncate text-lg font-semibold">{title}</h4>
-        {command && (
-          <div className="flex gap-1">
-            <CopyToClipboardButton
-              text={`!${[command.command, ...(command.args ?? [])].join(" ")}`}
-              options={{ initialText: "Copy command" }}
-              preview
-            />
-            <RunCommandButton
-              command={command.command}
-              args={command.args}
-              subOnly
-            />
-          </div>
-        )}
-      </div>
-      <p className="text-sm text-alveus-green-600 italic">{children}</p>
-    </div>
-  </div>
-);
 
 const AboutTechPresetsPage: NextPage = () => {
   const { data: session } = trpc.auth.getSession.useQuery();
@@ -153,15 +81,7 @@ const AboutTechPresetsPage: NextPage = () => {
   const [selectedCamera, setSelectedCamera] = useState<Camera>(
     typeSafeObjectKeys(cameras)[0]!,
   );
-  const selectedData = cameras[selectedCamera] as CameraPTZ | CameraMulti;
   const [selectedPosition, setSelectedPosition] = useState<number>();
-
-  const [searchPresets, setSearchPresets] = useState("");
-  const searchPresetsSanitized = searchPresets.trim().toLowerCase();
-  useEffect(() => {
-    // Reset the search presets when the selected camera changes
-    setSearchPresets("");
-  }, [selectedCamera]);
 
   // Allow the sidebar to be resized with a draggable handle
   const [twitchEmbed, setTwitchEmbed] = useLocalStorage(
@@ -487,95 +407,10 @@ const AboutTechPresetsPage: NextPage = () => {
               {/* Preset List */}
               <div className="col-span-1 flex max-h-full min-h-64 flex-col @3xl:sticky @3xl:top-0 @3xl:col-span-2 @5xl:col-span-3">
                 {selectedCamera && (
-                  <Fragment key={selectedCamera}>
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                      <Heading
-                        level={3}
-                        className="my-0 shrink-0 scroll-mt-14 text-2xl"
-                        id={`presets:${camelToKebab(selectedCamera)}`}
-                      >
-                        {selectedData.title}
-                        <span className="text-sm text-alveus-green-400 italic">
-                          {` (${selectedCamera.toLowerCase()})`}
-                        </span>
-                      </Heading>
-
-                      {"presets" in selectedData && (
-                        <>
-                          {subscription.isSuccess && subscription.data && (
-                            <div className="flex items-center">
-                              <RunCommandButton
-                                command="ptzzoom"
-                                args={[selectedCamera.toLowerCase(), "80"]}
-                                tooltip={{ text: "Run zoom out command" }}
-                                icon={IconZoomOut}
-                              />
-
-                              <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded bg-alveus-green-400" />
-
-                              <RunCommandButton
-                                command="ptzzoom"
-                                args={[selectedCamera.toLowerCase(), "120"]}
-                                tooltip={{ text: "Run zoom in command" }}
-                                icon={IconZoomIn}
-                              />
-                            </div>
-                          )}
-
-                          <Input
-                            type="text"
-                            placeholder="Search presets..."
-                            aria-label="Search presets"
-                            value={searchPresets}
-                            onChange={(e) => setSearchPresets(e.target.value)}
-                            className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
-                          />
-                        </>
-                      )}
-                    </div>
-
-                    <div className="scrollbar-none shrink grow overflow-y-auto">
-                      <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
-                        {"presets" in selectedData &&
-                          typeSafeObjectEntries(selectedData.presets)
-                            .filter(
-                              ([name, preset]) =>
-                                !searchPresetsSanitized.length ||
-                                name
-                                  .toLowerCase()
-                                  .includes(searchPresetsSanitized) ||
-                                preset.description
-                                  .toLowerCase()
-                                  .includes(searchPresetsSanitized),
-                            )
-                            .map(([name, preset]) => (
-                              <Card
-                                key={name}
-                                title={name}
-                                image={preset.image}
-                                command={{
-                                  command: "ptzload",
-                                  args: [selectedCamera.toLowerCase(), name],
-                                }}
-                              >
-                                {preset.description}
-                              </Card>
-                            ))}
-
-                        {"multi" in selectedData && (
-                          <Card
-                            title={selectedData.multi.cameras.join(" + ")}
-                            image={selectedData.multi.image}
-                            className="col-span-2"
-                          >
-                            {selectedData.multi.description}
-                          </Card>
-                        )}
-                      </div>
-
-                      <div className="pointer-events-none sticky bottom-0 z-10 -mt-2 h-16 mask-t-from-25% backdrop-blur-sm" />
-                    </div>
-                  </Fragment>
+                  <PresetList
+                    camera={selectedCamera}
+                    zoom={subscription.isSuccess && !!subscription.data}
+                  />
                 )}
               </div>
             </div>
