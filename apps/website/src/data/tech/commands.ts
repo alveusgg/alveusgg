@@ -84,9 +84,6 @@ export const commandCategories = {
   Notify: {
     heading: "Notify",
   },
-  Rounds: {
-    heading: "Daily Rounds",
-  },
   Feeder: {
     heading: "Feeder",
   },
@@ -1224,6 +1221,42 @@ const commands = {
       },
     ],
   },
+  rounds: {
+    description: "Show the rounds overlay",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
+    ],
+  },
+  check: {
+    description: "Toggle a check in the rounds overlay",
+    category: "Overlays",
+    args: [
+      [
+        {
+          type: "string",
+          name: "item",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "reset",
+          required: true,
+          variadic: false,
+          choices: ["reset"],
+        },
+      ],
+    ],
+  },
   showchat: {
     description: "Show Twitch chat overlay (if enabled in the scene)",
     category: "Overlays",
@@ -1339,46 +1372,6 @@ const commands = {
         variadic: false,
         prefix: "--image=",
       },
-    ],
-  },
-
-  /**
-   * Rounds
-   */
-  rounds: {
-    description: "Show the rounds overlay",
-    category: "Rounds",
-    args: [
-      {
-        type: "choice",
-        name: "stop",
-        required: false,
-        variadic: false,
-        choices: ["stop", "off"],
-      },
-    ],
-  },
-  check: {
-    description: "Toggle a check in the rounds overlay",
-    category: "Rounds",
-    args: [
-      [
-        {
-          type: "string",
-          name: "item",
-          required: true,
-          variadic: false,
-        },
-      ],
-      [
-        {
-          type: "choice",
-          name: "reset",
-          required: true,
-          variadic: false,
-          choices: ["reset"],
-        },
-      ],
     ],
   },
 
