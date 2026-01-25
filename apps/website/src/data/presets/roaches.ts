@@ -1,12 +1,9 @@
 import down from "@/assets/presets/roaches/down.png";
-import downr from "@/assets/presets/roaches/downr.png";
 import food from "@/assets/presets/roaches/food.png";
 import home from "@/assets/presets/roaches/home.png";
 import left from "@/assets/presets/roaches/left.png";
 import right from "@/assets/presets/roaches/right.png";
-import sticklt from "@/assets/presets/roaches/sticklt.png";
-import stickr from "@/assets/presets/roaches/stickr.png";
-import stickrt from "@/assets/presets/roaches/stickrt.png";
+import stickt from "@/assets/presets/roaches/stickt.png";
 
 import type { Preset } from "../tech/cameras.types";
 
@@ -14,56 +11,38 @@ const roachesPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
-    position: { pan: 97.7, tilt: -25.91, zoom: 1 },
-    // modified: 2025-10-27T21:52:07.447Z
+    position: { pan: -51.04, tilt: -37.64, zoom: 524 },
+    // modified: 2026-01-24T22:50:39.779Z
   },
   down: {
     description: "Down",
     image: down,
-    position: { pan: 161.47, tilt: -86.13, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.432Z
-  },
-  downr: {
-    description: "Down Right",
-    image: downr,
-    position: { pan: -135.23, tilt: -87.33, zoom: 524 },
-    // modified: 2025-10-09T11:10:30.436Z
+    position: { pan: -53.85, tilt: -70.61, zoom: 524 },
+    // modified: 2026-01-24T22:54:53.415Z
   },
   food: {
     description: "Food",
     image: food,
-    position: { pan: 96.45, tilt: -58.76, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.432Z
+    position: { pan: -135.23, tilt: -87.33, zoom: 524 },
+    // modified: 2026-01-24T22:48:10.244Z
   },
   left: {
     description: "Left",
     image: left,
-    position: { pan: 87.25, tilt: -17.88, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.436Z
+    position: { pan: -93.72, tilt: -46.68, zoom: 524 },
+    // modified: 2026-01-24T22:50:01.410Z
   },
   right: {
     description: "Right",
     image: right,
-    position: { pan: 150.98, tilt: -22.04, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.432Z
+    position: { pan: -9.93, tilt: -29.7, zoom: 524 },
+    // modified: 2026-01-24T22:51:49.676Z
   },
-  sticklt: {
-    description: "Stick Left Top",
-    image: sticklt,
-    position: { pan: 91.98, tilt: -8.39, zoom: 1648 },
-    // modified: 2025-10-09T11:10:30.436Z
-  },
-  stickr: {
-    description: "Stick Right",
-    image: stickr,
-    position: { pan: 173.21, tilt: -13.87, zoom: 1 },
-    // modified: 2025-10-09T11:10:30.436Z
-  },
-  stickrt: {
-    description: "Stick Right Top",
-    image: stickrt,
-    position: { pan: 171.55, tilt: -9.75, zoom: 1423 },
-    // modified: 2025-10-09T11:10:30.440Z
+  stickt: {
+    description: "stickt",
+    image: stickt,
+    position: { pan: -83.03, tilt: -8.66, zoom: 524 },
+    // modified: 2026-01-24T22:53:00.153Z
   },
 };
 
