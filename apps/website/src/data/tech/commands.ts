@@ -75,9 +75,6 @@ export const commandCategories = {
   Scenes: {
     heading: "Scenes",
   },
-  Sources: {
-    heading: "Sources",
-  },
   Overlays: {
     heading: "Overlays",
   },
@@ -1089,8 +1086,13 @@ const commands = {
       },
     ],
   },
-  fix: {
-    description: "Tries to fix the stream (used if stream PC/bot is down)",
+  brbscreen: {
+    description: "Switch the stream to the BRB screen with clips",
+    category: "Scenes",
+    args: [],
+  },
+  livecams: {
+    description: "Switch the stream to the camera layout",
     category: "Scenes",
     args: [],
   },
@@ -1107,18 +1109,9 @@ const commands = {
       },
     ],
   },
-  bitrate: {
-    description: "Get the current bitrate",
-    category: "Scenes",
-    args: [],
-  },
-
-  /**
-   * Sources
-   */
   resetcam: {
     description: "Reset a camera feed source",
-    category: "Sources",
+    category: "Scenes",
     args: [
       {
         type: "string",
@@ -1130,27 +1123,27 @@ const commands = {
   },
   resetlivecams: {
     description: "Reset the camera layout source",
-    category: "Sources",
+    category: "Scenes",
     args: [],
   },
   resetbackpack: {
     description: "Reset the backpack source",
-    category: "Sources",
+    category: "Scenes",
     args: [],
   },
   resetphone: {
     description: "Reset the phone source",
-    category: "Sources",
+    category: "Scenes",
     args: [],
   },
-  brbscreen: {
-    description: "Switch the stream to the BRB screen with clips",
-    category: "Sources",
+  fix: {
+    description: "Tries to fix the stream (used if stream PC/bot is down)",
+    category: "Scenes",
     args: [],
   },
-  livecams: {
-    description: "Switch the stream to the camera layout",
-    category: "Sources",
+  bitrate: {
+    description: "Get the current bitrate",
+    category: "Scenes",
     args: [],
   },
 
