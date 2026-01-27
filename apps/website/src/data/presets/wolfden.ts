@@ -13,8 +13,8 @@ const wolfdenPresets: Record<string, Preset> = {
   rightcorner: {
     description: "Right Corner",
     image: rightcorner,
-    position: { pan: 0, tilt: -9.83, zoom: 3001 },
-    // modified: 2025-10-09T11:10:30.380Z
+    position: { pan: 65.62, tilt: -3.66, zoom: 3978 },
+    // modified: 2026-01-26T01:52:12.185Z
   },
 };
 
