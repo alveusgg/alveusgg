@@ -43,7 +43,7 @@
     "@aws-sdk/s3-request-presigner": "^3.971.0",
     "@bart-krakowski/get-week-info-polyfill": "^1.0.8",
     "@cloudflare/stream-react": "^1.9.2",
-    "@dagrejs/dagre": "^1.1.8",
+    "@dagrejs/dagre": "^2.0.3",
     "@eyevinn/webrtc-player": "^0.13.0",
     "@floating-ui/react": "^0.27.16",
     "@fontsource/pt-sans": "^5.2.8",
