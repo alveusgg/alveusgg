@@ -75,20 +75,11 @@ export const commandCategories = {
   Scenes: {
     heading: "Scenes",
   },
-  Sources: {
-    heading: "Sources",
-  },
-  Text: {
-    heading: "Text",
-  },
-  Wheel: {
-    heading: "Wheel",
+  Overlays: {
+    heading: "Overlays",
   },
   Notify: {
     heading: "Notify",
-  },
-  Rounds: {
-    heading: "Daily Rounds",
   },
   Feeder: {
     heading: "Feeder",
@@ -1095,49 +1086,18 @@ const commands = {
       },
     ],
   },
-  showchat: {
-    description: "Show Twitch chat overlay (if enabled in the scene)",
+  brbscreen: {
+    description: "Switch the stream to the BRB screen with clips",
     category: "Scenes",
     args: [],
   },
-  hidechat: {
-    description: "Remove Twitch chat overlay",
-    category: "Scenes",
-    args: [],
-  },
-  raidvideo: {
-    description: "Show the video to welcome a raid, generally for raids >50",
-    category: "Scenes",
-    args: [
-      {
-        type: "choice",
-        name: "stop",
-        required: false,
-        variadic: false,
-        choices: ["stop", "off"],
-      },
-    ],
-  },
-  crunchvideo: {
-    description: "Show the stinger video for Push Pop's crunch cam",
-    category: "Scenes",
-    args: [
-      {
-        type: "choice",
-        name: "stop",
-        required: false,
-        variadic: false,
-        choices: ["stop", "off"],
-      },
-    ],
-  },
-  fix: {
-    description: "Tries to fix the stream (used if stream PC/bot is down)",
+  livecams: {
+    description: "Switch the stream to the camera layout",
     category: "Scenes",
     args: [],
   },
   ss: {
-    description: "Switches to the provided scene",
+    description: "Switch to the provided scene",
     category: "Scenes",
     args: [
       {
@@ -1149,18 +1109,9 @@ const commands = {
       },
     ],
   },
-  bitrate: {
-    description: "Get the current bitrate",
-    category: "Scenes",
-    args: [],
-  },
-
-  /**
-   * Sources
-   */
   resetcam: {
     description: "Reset a camera feed source",
-    category: "Sources",
+    category: "Scenes",
     args: [
       {
         type: "string",
@@ -1172,49 +1123,36 @@ const commands = {
   },
   resetlivecams: {
     description: "Reset the camera layout source",
-    category: "Sources",
+    category: "Scenes",
     args: [],
   },
   resetbackpack: {
     description: "Reset the backpack source",
-    category: "Sources",
+    category: "Scenes",
     args: [],
   },
   resetphone: {
     description: "Reset the phone source",
-    category: "Sources",
+    category: "Scenes",
     args: [],
   },
-  brbscreen: {
-    description: "Switch the stream to the BRB screen with clips",
-    category: "Sources",
+  fix: {
+    description: "Tries to fix the stream (used if stream PC/bot is down)",
+    category: "Scenes",
     args: [],
   },
-  livecams: {
-    description: "Switch the stream to the camera layout",
-    category: "Sources",
+  bitrate: {
+    description: "Get the current bitrate",
+    category: "Scenes",
     args: [],
-  },
-  refresh: {
-    description: "Refresh the stream overlay or the extension ambassador data",
-    category: "Sources",
-    args: [
-      {
-        type: "choice",
-        name: "target",
-        required: true,
-        variadic: false,
-        choices: ["overlay", "extension"],
-      },
-    ],
   },
 
   /**
-   * Text
+   * Overlays
    */
   text: {
-    description: "Sets, or clears, the text to be displayed on stream",
-    category: "Text",
+    description: "Set, or clear, the text to be displayed on stream",
+    category: "Overlays",
     args: [
       {
         type: "string",
@@ -1225,9 +1163,8 @@ const commands = {
     ],
   },
   clipstitle: {
-    description:
-      "Sets, or clears, the title to be displayed on the clips player",
-    category: "Text",
+    description: "Set, or clear, the title to be displayed on the clips player",
+    category: "Overlays",
     args: [
       {
         type: "string",
@@ -1239,7 +1176,7 @@ const commands = {
   },
   disclaimer: {
     description: "Toggle the larger disclaimer text on stream",
-    category: "Text",
+    category: "Overlays",
     args: [
       {
         type: "choice",
@@ -1250,33 +1187,102 @@ const commands = {
       },
     ],
   },
-
-  /**
-   * Wheel
-   */
+  raidvideo: {
+    description:
+      "Start, or stop, the video to welcome a raid, generally for raids >50",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
+    ],
+  },
+  crunchvideo: {
+    description: "Start, or stop, the stinger video for Push Pop's crunch cam",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
+    ],
+  },
+  rounds: {
+    description: "Start, or stop, the ambassador rounds overlay",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "stop",
+        required: false,
+        variadic: false,
+        choices: ["stop", "off"],
+      },
+    ],
+  },
+  check: {
+    description: "Toggle a check in the ambassador rounds overlay",
+    category: "Overlays",
+    args: [
+      [
+        {
+          type: "string",
+          name: "item",
+          required: true,
+          variadic: false,
+        },
+      ],
+      [
+        {
+          type: "choice",
+          name: "reset",
+          required: true,
+          variadic: false,
+          choices: ["reset"],
+        },
+      ],
+    ],
+  },
+  showchat: {
+    description: "Show Twitch chat overlay (if enabled in the scene)",
+    category: "Overlays",
+    args: [],
+  },
+  hidechat: {
+    description: "Remove Twitch chat overlay",
+    category: "Overlays",
+    args: [],
+  },
   enablewheel: {
     description: "Enable the wheel overlay and subscription tracking",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   disablewheel: {
     description: "Disable the wheel overlay and subscription tracking",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   resetwheel: {
     description: "Reset the wheel overlay and subscription count",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   resetspins: {
     description: "Reset the wheel spin count",
-    category: "Wheel",
+    category: "Overlays",
     args: [],
   },
   setwheelcount: {
     description: "Set the subscription count for the wheel",
-    category: "Wheel",
+    category: "Overlays",
     args: [
       {
         type: "number",
@@ -1288,13 +1294,26 @@ const commands = {
   },
   setspins: {
     description: "Set the spin count for the wheel",
-    category: "Wheel",
+    category: "Overlays",
     args: [
       {
         type: "number",
         name: "count",
         required: true,
         variadic: false,
+      },
+    ],
+  },
+  refresh: {
+    description: "Refresh the stream overlay or the extension ambassador data",
+    category: "Overlays",
+    args: [
+      {
+        type: "choice",
+        name: "target",
+        required: true,
+        variadic: false,
+        choices: ["overlay", "extension"],
       },
     ],
   },
@@ -1346,46 +1365,6 @@ const commands = {
         variadic: false,
         prefix: "--image=",
       },
-    ],
-  },
-
-  /**
-   * Rounds
-   */
-  rounds: {
-    description: "Show the rounds overlay",
-    category: "Rounds",
-    args: [
-      {
-        type: "choice",
-        name: "stop",
-        required: false,
-        variadic: false,
-        choices: ["stop", "off"],
-      },
-    ],
-  },
-  check: {
-    description: "Toggle a check in the rounds overlay",
-    category: "Rounds",
-    args: [
-      [
-        {
-          type: "string",
-          name: "item",
-          required: true,
-          variadic: false,
-        },
-      ],
-      [
-        {
-          type: "choice",
-          name: "reset",
-          required: true,
-          variadic: false,
-          choices: ["reset"],
-        },
-      ],
     ],
   },
 
