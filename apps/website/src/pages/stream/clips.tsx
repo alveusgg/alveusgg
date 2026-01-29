@@ -243,7 +243,7 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
   // Allow a title to be set by mods in chat
   const [title, setTitle] = useState("");
   useEffect(() => {
-    setTitle(typeof query.title === "string" ? query.title : "");
+    setTitle(typeof query.title === "string" ? query.title.trim() : "");
   }, [query.title]);
   useChat(
     useMemo(() => {
@@ -251,13 +251,18 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
       return param.length > 0 ? param : ["AlveusSanctuary", "AlveusGG"];
     }, [query.channels]),
     useCallback((message: ChatMessage) => {
-      const { text, userInfo } = message;
-      if (!userInfo.isMod && !userInfo.isBroadcaster) return;
+      const { text: raw, userInfo } = message;
+      const [command] = raw.trim().toLowerCase().split(/\s+/);
 
-      const [command, ...title] = text.split(" ");
-      if (command === "!clipstitle") {
-        setTitle(title.join(" "));
-      }
+      if (!userInfo.isMod && !userInfo.isBroadcaster) return;
+      if (command !== "!text") return;
+
+      setTitle(
+        raw
+          .trimStart()
+          .slice(command.length + 1)
+          .trim(),
+      );
     }, []),
   );
 
@@ -268,10 +273,10 @@ const ClipsPage: NextPage<InferGetStaticPropsType<typeof getStaticProps>> = ({
           <div className="relative flex aspect-video w-full items-center justify-center">
             <div className="absolute -inset-2 -z-10 rounded-xl bg-alveus-green shadow-lg" />
 
-            <Transition show={!!title.trim()}>
+            <Transition show={!!title}>
               {/* data-[leave]:duration-0 to ensure the text doesn't disappear before the box */}
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 -translate-y-full rounded-lg bg-black/25 px-4 py-2 text-white transition-opacity data-[closed]:opacity-0 data-[enter]:duration-700 data-[leave]:duration-0">
-                <p className="text-center text-3xl font-bold">{title.trim()}</p>
+                <p className="text-center text-3xl font-bold">{title}</p>
               </div>
             </Transition>
 
