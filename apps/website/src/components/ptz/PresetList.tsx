@@ -19,7 +19,7 @@ import IconZoomOut from "@/icons/IconZoomOut";
 
 type Command = RouterInputs["stream"]["runCommand"];
 
-const Card = ({
+const PresetCard = ({
   title,
   image,
   command,
@@ -78,6 +78,64 @@ const Card = ({
   </div>
 );
 
+const PresetTools = ({
+  camera,
+  zoom,
+  search,
+  onSearch,
+}: {
+  camera: Camera;
+  zoom: boolean;
+  search: string;
+  onSearch: (value: string) => void;
+}) => (
+  <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+    <Heading
+      level={3}
+      className="my-0 shrink-0 scroll-mt-14 text-2xl"
+      id={`presets:${camelToKebab(camera)}`}
+    >
+      {cameras[camera].title}
+      <span className="text-sm text-alveus-green-400 italic">
+        {` (${camera.toLowerCase()})`}
+      </span>
+    </Heading>
+
+    {isCameraPTZ(cameras[camera]) && (
+      <>
+        {zoom && (
+          <div className="flex items-center">
+            <RunCommandButton
+              command="ptzzoom"
+              args={[camera.toLowerCase(), "80"]}
+              tooltip={{ text: "Run zoom out command" }}
+              icon={IconZoomOut}
+            />
+
+            <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded bg-alveus-green-400" />
+
+            <RunCommandButton
+              command="ptzzoom"
+              args={[camera.toLowerCase(), "120"]}
+              tooltip={{ text: "Run zoom in command" }}
+              icon={IconZoomIn}
+            />
+          </div>
+        )}
+
+        <Input
+          type="text"
+          placeholder="Search presets..."
+          aria-label="Search presets"
+          value={search}
+          onChange={(e) => onSearch(e.target.value)}
+          className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
+        />
+      </>
+    )}
+  </div>
+);
+
 const PresetList = ({
   camera,
   zoom = false,
@@ -94,51 +152,12 @@ const PresetList = ({
 
   return (
     <>
-      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-        <Heading
-          level={3}
-          className="my-0 shrink-0 scroll-mt-14 text-2xl"
-          id={`presets:${camelToKebab(camera)}`}
-        >
-          {cameras[camera].title}
-          <span className="text-sm text-alveus-green-400 italic">
-            {` (${camera.toLowerCase()})`}
-          </span>
-        </Heading>
-
-        {isCameraPTZ(cameras[camera]) && (
-          <>
-            {zoom && (
-              <div className="flex items-center">
-                <RunCommandButton
-                  command="ptzzoom"
-                  args={[camera.toLowerCase(), "80"]}
-                  tooltip={{ text: "Run zoom out command" }}
-                  icon={IconZoomOut}
-                />
-
-                <div className="pointer-events-none -ml-0.5 h-0.5 w-4 rounded bg-alveus-green-400" />
-
-                <RunCommandButton
-                  command="ptzzoom"
-                  args={[camera.toLowerCase(), "120"]}
-                  tooltip={{ text: "Run zoom in command" }}
-                  icon={IconZoomIn}
-                />
-              </div>
-            )}
-
-            <Input
-              type="text"
-              placeholder="Search presets..."
-              aria-label="Search presets"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="grow rounded border border-alveus-green-200 bg-alveus-green-50/75 px-2 py-1 font-semibold shadow-md focus:ring-2 focus:ring-alveus-green focus:outline-none focus:ring-inset"
-            />
-          </>
-        )}
-      </div>
+      <PresetTools
+        camera={camera}
+        zoom={zoom}
+        search={search}
+        onSearch={setSearch}
+      />
 
       <div className="scrollbar-none shrink grow overflow-y-auto">
         <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
@@ -151,7 +170,7 @@ const PresetList = ({
                   preset.description.toLowerCase().includes(searchClean),
               )
               .map(([name, preset]) => (
-                <Card
+                <PresetCard
                   key={name}
                   title={name}
                   image={preset.image}
@@ -161,17 +180,17 @@ const PresetList = ({
                   }}
                 >
                   {preset.description}
-                </Card>
+                </PresetCard>
               ))}
 
           {isCameraMulti(cameras[camera]) && (
-            <Card
+            <PresetCard
               title={cameras[camera].multi.cameras.join(" + ")}
               image={cameras[camera].multi.image}
               className="col-span-2"
             >
               {cameras[camera].multi.description}
-            </Card>
+            </PresetCard>
           )}
         </div>
 
