@@ -99,8 +99,8 @@ const foxPresets: Record<string, Preset> = {
   den2t: {
     description: "den2t",
     image: den2t,
-    position: { pan: -4.42, tilt: 3.69, zoom: 1035 },
-    // modified: 2026-01-26T05:17:03.546Z
+    position: { pan: -4.41, tilt: 3.69, zoom: 1035 },
+    // modified: 2026-01-28T14:24:40.481Z
   },
   dirtpile: {
     description: "dirtpile",
