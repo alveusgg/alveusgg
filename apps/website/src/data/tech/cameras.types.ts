@@ -15,6 +15,9 @@ export interface CameraPTZ extends CameraCore {
   presets: Record<string, Preset>;
 }
 
+export const isCameraPTZ = (cam: CameraPTZ | CameraMulti): cam is CameraPTZ =>
+  "presets" in cam;
+
 export interface CameraMulti extends CameraCore {
   multi: {
     cameras: string[];
@@ -22,3 +25,7 @@ export interface CameraMulti extends CameraCore {
     image: StaticImageData;
   };
 }
+
+export const isCameraMulti = (
+  cam: CameraPTZ | CameraMulti,
+): cam is CameraMulti => "multi" in cam;
