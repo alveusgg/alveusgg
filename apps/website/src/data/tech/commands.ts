@@ -1162,18 +1162,6 @@ const commands = {
       },
     ],
   },
-  clipstitle: {
-    description: "Set, or clear, the title to be displayed on the clips player",
-    category: "Overlays",
-    args: [
-      {
-        type: "string",
-        name: "title",
-        required: false,
-        variadic: true,
-      },
-    ],
-  },
   disclaimer: {
     description: "Toggle the larger disclaimer text on stream",
     category: "Overlays",
