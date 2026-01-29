@@ -24,28 +24,6 @@ import {
 import { createImageUrl } from "@/utils/image";
 
 // If these types change, the extension schema MUST be updated as well
-type AmbassadorV3 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
-  image: Omit<AmbassadorImage, "src"> & { src: string };
-  species: Omit<Species, "iucn" | "class" | "lifespan" | "native"> & {
-    key: string;
-    iucn: Species["iucn"] & { title: string };
-    class: { key: string; title: string };
-    lifespan: {
-      source: string;
-      wild?: number | { min: number; max: number };
-      captivity?: number | { min: number; max: number };
-    };
-    native: {
-      text: string;
-      source: string;
-    };
-  };
-  enclosure: {
-    key: string;
-    title: string;
-  };
-};
-
 type AmbassadorV4 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
   image: Omit<AmbassadorImage, "src"> & { src: string };
   species: Omit<Species, "iucn" | "class"> & {
@@ -60,63 +38,8 @@ type AmbassadorV4 = Omit<ActiveAmbassador, "species" | "enclosure"> & {
 };
 
 export type AmbassadorsResponse = {
-  v3: Record<string, AmbassadorV3>;
   v4: Record<string, AmbassadorV4>;
 };
-
-const ambassadorsV3 = typeSafeObjectFromEntries(
-  typeSafeObjectEntries(allAmbassadors)
-    .filter(isActiveAmbassadorEntry)
-    .map<[string, AmbassadorV3]>(([key, val]) => {
-      const image = getAmbassadorImages(key)[0];
-      const species = getSpecies(val.species);
-
-      return [
-        key,
-        {
-          ...val,
-          image: {
-            ...image,
-            src: `${env.NEXT_PUBLIC_BASE_URL}${createImageUrl({
-              src: image.src.src,
-              width: 600,
-            })}`,
-          },
-          species: {
-            ...species,
-            key: val.species,
-            iucn: {
-              ...species.iucn,
-              title: getIUCNStatus(species.iucn.status),
-            },
-            class: {
-              key: species.class,
-              title: getClassification(species.class),
-            },
-            lifespan: {
-              wild:
-                typeof species.lifespan.wild === "string"
-                  ? undefined
-                  : species.lifespan.wild,
-              captivity:
-                typeof species.lifespan.captivity === "string"
-                  ? undefined
-                  : species.lifespan.captivity,
-              source: "",
-            },
-            native: {
-              text: species.native,
-              source: "",
-            },
-          },
-          enclosure: {
-            key: val.enclosure,
-            title: enclosures[val.enclosure].name,
-          },
-        },
-      ];
-    }),
-);
 
 const ambassadorsV4 = typeSafeObjectFromEntries(
   typeSafeObjectEntries(allAmbassadors)
@@ -169,7 +92,7 @@ const headers = {
 
 // API for extension
 export async function GET() {
-  const resp: AmbassadorsResponse = { v3: ambassadorsV3, v4: ambassadorsV4 };
+  const resp: AmbassadorsResponse = { v4: ambassadorsV4 };
   return Response.json(resp, { headers });
 }
 
