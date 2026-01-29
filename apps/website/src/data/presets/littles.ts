@@ -33,8 +33,8 @@ const littlesPresets: Record<string, Preset> = {
   awning: {
     description: "awning",
     image: awning,
-    position: { pan: 165.76, tilt: 0, zoom: 150 },
-    // modified: 2025-10-17T21:48:32.647Z
+    position: { pan: 169.92, tilt: 0, zoom: 150 },
+    // modified: 2026-01-28T23:23:07.770Z
   },
   bowll: {
     description: "bowll",
