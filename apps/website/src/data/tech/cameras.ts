@@ -193,12 +193,3 @@ const cameras = {
 
 export type Camera = keyof typeof cameras;
 export default cameras;
-
-export const isCameraPTZ = (
-  cam: Camera | CameraPTZ | CameraMulti,
-): cam is CameraPTZ =>
-  typeof cam === "string" ? "presets" in cameras[cam] : "presets" in cam;
-export const isCameraMulti = (
-  cam: Camera | CameraPTZ | CameraMulti,
-): cam is CameraMulti =>
-  typeof cam === "string" ? "multi" in cameras[cam] : "multi" in cam;

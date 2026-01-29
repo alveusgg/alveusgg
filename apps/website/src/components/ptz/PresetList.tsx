@@ -2,11 +2,8 @@ import { Input } from "@headlessui/react";
 import Image, { type StaticImageData } from "next/image";
 import { type ReactNode, useEffect, useState } from "react";
 
-import cameras, {
-  type Camera,
-  isCameraMulti,
-  isCameraPTZ,
-} from "@/data/tech/cameras";
+import cameras, { type Camera } from "@/data/tech/cameras";
+import { isCameraMulti, isCameraPTZ } from "@/data/tech/cameras.types";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
