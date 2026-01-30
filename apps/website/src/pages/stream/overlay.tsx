@@ -323,9 +323,19 @@ const OverlayPage: NextPage = () => {
                     // Don't overlap PiP borders with text
                     layout === "pipbl" && "left-1/3",
                     layout === "pipbr" && "right-1/3",
+                    // Don't overlap socials info with text
+                    (layout === "fullscreen" ||
+                      layout === "pipbr" ||
+                      layout.startsWith("pipt")) &&
+                      "pl-80",
+                    // Don't overlap sub count with text
+                    (layout === "fullscreen" ||
+                      layout === "pipbl" ||
+                      layout.startsWith("pipt")) &&
+                      "pr-80",
                     // When we have a fullscreen slot, center the text
                     (layout === "fullscreen" || layout.startsWith("pip")) &&
-                      "text-center",
+                      "pb-2 text-center",
                   )}
                 >
                   {disclaimerText}
@@ -339,6 +349,16 @@ const OverlayPage: NextPage = () => {
                     // Don't overlap PiP borders with text
                     layout === "pipbl" && "left-1/3",
                     layout === "pipbr" && "right-1/3",
+                    // Don't overlap socials info with text
+                    (layout === "fullscreen" ||
+                      layout === "pipbr" ||
+                      layout.startsWith("pipt")) &&
+                      "pl-80",
+                    // Don't overlap sub count with text
+                    (layout === "fullscreen" ||
+                      layout === "pipbl" ||
+                      layout.startsWith("pipt")) &&
+                      "pr-80",
                   )}
                 >
                   {text}
