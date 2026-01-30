@@ -1,6 +1,7 @@
 import backleftcorner from "@/assets/presets/fox/backleftcorner.png";
 import backrightcorner from "@/assets/presets/fox/backrightcorner.png";
 import belowleftplatform from "@/assets/presets/fox/belowleftplatform.png";
+import belowleftplatformr from "@/assets/presets/fox/belowleftplatformr.png";
 import den1 from "@/assets/presets/fox/den1.png";
 import den1r from "@/assets/presets/fox/den1r.png";
 import den1t from "@/assets/presets/fox/den1t.png";
@@ -59,6 +60,12 @@ const foxPresets: Record<string, Preset> = {
     image: belowleftplatform,
     position: { pan: -110.48, tilt: -3.78, zoom: 4432 },
     // modified: 2026-01-04T20:19:30.771Z
+  },
+  belowleftplatformr: {
+    description: "belowleftplatformr",
+    image: belowleftplatformr,
+    position: { pan: -107.63, tilt: -3.66, zoom: 1686 },
+    // modified: 2026-01-29T17:44:34.314Z
   },
   den1: {
     description: "den1",

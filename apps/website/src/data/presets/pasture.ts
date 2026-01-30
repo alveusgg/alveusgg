@@ -255,7 +255,7 @@ const pasturePresets: Record<string, Preset> = {
   middle: {
     description: "Middle",
     image: middle,
-    position: { pan: 5.23, tilt: -7.32, zoom: 1376 },
+    position: { pan: 5.23, tilt: -7.32, zoom: 420 },
     // modified: 2025-11-18T17:28:32.465Z
   },
   pen: {
