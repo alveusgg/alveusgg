@@ -39,7 +39,7 @@ const emuPresets: Record<string, Preset> = {
   foodleft: {
     description: "Food Left",
     image: foodleft,
-    position: { pan: -2.06, tilt: -15.16, zoom: 498 },
+    position: { pan: -2.06, tilt: -15.16, zoom: 1 },
     // modified: 2025-10-09T11:10:30.324Z
   },
   foodright: {
@@ -63,7 +63,7 @@ const emuPresets: Record<string, Preset> = {
   marmgate: {
     description: "Marmoset Gate",
     image: marmgate,
-    position: { pan: -152.35, tilt: -1.82, zoom: 1 },
+    position: { pan: 152.35, tilt: -1.82, zoom: 1 },
     // modified: 2025-10-09T11:10:30.328Z
   },
   pen1center: {

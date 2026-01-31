@@ -72,7 +72,7 @@ const macawsPresets: Record<string, Preset> = {
   window: {
     description: "Window",
     image: window,
-    position: { pan: 174.6, tilt: -11.17, zoom: 1689 },
+    position: { pan: 174.6, tilt: -11.17, zoom: 773 },
     // modified: 2025-10-31T16:33:29.976Z
   },
   winl: {
@@ -90,7 +90,7 @@ const macawsPresets: Record<string, Preset> = {
   winrf: {
     description: "winrf",
     image: winrf,
-    position: { pan: 179.33, tilt: -13.43, zoom: 585 },
+    position: { pan: 179.33, tilt: -13.43, zoom: 505 },
     // modified: 2025-12-15T21:35:47.893Z
   },
 };

@@ -232,7 +232,7 @@ const wolfPresets: Record<string, Preset> = {
   insidedoor: {
     description: "Inside Door",
     image: insidedoor,
-    position: { pan: -21.25, tilt: -61.06, zoom: 1 },
+    position: { pan: -31.11, tilt: -30.41, zoom: 1 },
     // modified: 2025-10-09T11:10:30.188Z
   },
   left: {

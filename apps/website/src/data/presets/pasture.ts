@@ -63,7 +63,7 @@ const pasturePresets: Record<string, Preset> = {
   angel: {
     description: "winnies begging spot",
     image: angel,
-    position: { pan: 46.68, tilt: -17.02, zoom: 1211 },
+    position: { pan: 46.68, tilt: -17.02, zoom: 100 },
     // modified: 2025-11-22T20:20:39.730Z
   },
   barn: {
@@ -93,7 +93,7 @@ const pasturePresets: Record<string, Preset> = {
   barn2w: {
     description: "Barn 2 wide",
     image: barn2w,
-    position: { pan: -24.25, tilt: -6.33, zoom: 1910 },
+    position: { pan: -24.25, tilt: -6.33, zoom: 1349 },
     // modified: 2025-11-20T23:26:26.452Z
   },
   barn2z: {
@@ -141,7 +141,7 @@ const pasturePresets: Record<string, Preset> = {
   downleft: {
     description: "downleft",
     image: downleft,
-    position: { pan: 83.89, tilt: -6.61, zoom: 2183 },
+    position: { pan: 83.89, tilt: -6.61, zoom: 1 },
     // modified: 2025-11-18T17:55:38.827Z
   },
   feeder: {
@@ -195,7 +195,7 @@ const pasturePresets: Record<string, Preset> = {
   grove2: {
     description: "grove of trees near roundpen",
     image: grove2,
-    position: { pan: 6.96, tilt: -4.71, zoom: 2431 },
+    position: { pan: 6.96, tilt: -4.71, zoom: 1600 },
     // modified: 2025-11-18T17:36:44.065Z
   },
   grove2l: {
@@ -261,19 +261,19 @@ const pasturePresets: Record<string, Preset> = {
   pen: {
     description: "Pen",
     image: pen,
-    position: { pan: 20.62, tilt: -3.61, zoom: 1739 },
+    position: { pan: 20.62, tilt: -3.61, zoom: 682 },
     // modified: 2025-11-12T14:02:16.520Z
   },
   penl: {
     description: "Pen Left",
     image: penl,
-    position: { pan: 13.69, tilt: -4.3, zoom: 2223 },
+    position: { pan: 13.69, tilt: -4.3, zoom: 1455 },
     // modified: 2025-11-18T17:34:09.378Z
   },
   penr: {
     description: "Pen Right",
     image: penr,
-    position: { pan: 26.73, tilt: -3.76, zoom: 2223 },
+    position: { pan: 26.73, tilt: -3.76, zoom: 1455 },
     // modified: 2025-11-18T17:34:53.883Z
   },
   pole: {
@@ -285,19 +285,19 @@ const pasturePresets: Record<string, Preset> = {
   pool: {
     description: "stompys pool",
     image: pool,
-    position: { pan: 42.69, tilt: -1.94, zoom: 2116 },
+    position: { pan: 42.69, tilt: -1.94, zoom: 1209 },
     // modified: 2025-11-18T17:30:17.114Z
   },
   pooll: {
     description: "Pool Left",
     image: pooll,
-    position: { pan: 32.52, tilt: -3.24, zoom: 2272 },
+    position: { pan: 32.52, tilt: -3.24, zoom: 1489 },
     // modified: 2025-11-18T17:32:45.969Z
   },
   poolr: {
     description: "Pool Right",
     image: poolr,
-    position: { pan: 52.85, tilt: -1.25, zoom: 2029 },
+    position: { pan: 52.85, tilt: -1.25, zoom: 1320 },
     // modified: 2025-11-18T17:32:02.136Z
   },
   purplebase: {
@@ -327,7 +327,7 @@ const pasturePresets: Record<string, Preset> = {
   right: {
     description: "Right",
     image: right,
-    position: { pan: 56.07, tilt: -1.23, zoom: 2229 },
+    position: { pan: 56.07, tilt: -1.23, zoom: 1441 },
     // modified: 2025-11-18T17:31:19.567Z
   },
   roundpen: {
@@ -339,7 +339,7 @@ const pasturePresets: Record<string, Preset> = {
   saltlick: {
     description: "Salt Lick",
     image: saltlick,
-    position: { pan: -24.56, tilt: -5.58, zoom: 99911 },
+    position: { pan: -24.56, tilt: -5.58, zoom: 9991 },
     // modified: 2025-12-04T15:37:59.905Z
   },
   sky: {

@@ -52,7 +52,7 @@ const wolfcornerPresets: Record<string, Preset> = {
   home: {
     description: "Home",
     image: home,
-    position: { pan: -17.37, tilt: -11.26, zoom: 10840 },
+    position: { pan: -17.37, tilt: -11.26, zoom: 1 },
     // modified: 2025-10-09T11:10:30.256Z
   },
   back: {
@@ -178,7 +178,7 @@ const wolfcornerPresets: Record<string, Preset> = {
   den2shadel: {
     description: "Den 2 shade left",
     image: den2shadel,
-    position: { pan: -8.31, tilt: -17.43, zoom: 500 },
+    position: { pan: -13.88, tilt: -18.01, zoom: 332 },
     // modified: 2025-11-30T18:56:30.540Z
   },
   den2t: {
