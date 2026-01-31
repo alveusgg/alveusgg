@@ -238,7 +238,6 @@ export const MapPickerField = ({
 
     // Clean up on component unmount
     return () => {
-      handleLocationClear();
       mapRef.current?.remove();
       mapRef.current = null;
     };
