@@ -249,8 +249,10 @@ export const MapPickerField = ({
       mapRef.current.on("mouseup", mouseupHandle);
 
       // To avoid setting post location on mouse dragging
-      mapRef.current.on("dragstart", () => (isDraggingRef.current = true));
-      mapRef.current.on("dragend", () => (isDraggingRef.current = false));
+      if (isNewMapInstance) {
+        mapRef.current.on("dragstart", () => (isDraggingRef.current = true));
+        mapRef.current.on("dragend", () => (isDraggingRef.current = false));
+      }
 
       if (isNewMapInstance && initialLocation?.location) {
         handleLocationSet(
