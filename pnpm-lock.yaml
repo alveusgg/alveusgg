@@ -264,8 +264,8 @@ importers:
         specifier: ^3.3.1
         version: 3.3.1
       fast-xml-parser:
-        specifier: ^5.3.3
-        version: 5.3.3
+        specifier: ^5.3.4
+        version: 5.3.4
       feed:
         specifier: ^5.2.0
         version: 5.2.0
@@ -4464,8 +4464,8 @@ packages:
     resolution: {integrity: sha512-pfX9uG9Ki0yekDHx2SiuRIyFdyAr1kMIMitPvb0YBo8SUfKvia7w7FIyd/l6av85pFYRhZscS75MwMnbvY+hcQ==}
     hasBin: true
 
-  fast-xml-parser@5.3.3:
-    resolution: {integrity: sha512-2O3dkPAAC6JavuMm8+4+pgTk+5hoAs+CjZ+sWcQLkX9+/tHRuTkQh/Oaifr8qDmZ8iEHb771Ea6G8CdwkrgvYA==}
+  fast-xml-parser@5.3.4:
+    resolution: {integrity: sha512-EFd6afGmXlCx8H8WTZHhAoDaWaGyuIBoZJ2mknrNxug+aZKjkp0a0dlars9Izl+jF+7Gu1/5f/2h68cQpe0IiA==}
     hasBin: true
 
   fastq@1.20.1:
@@ -11803,7 +11803,7 @@ snapshots:
     dependencies:
       strnum: 2.1.2
 
-  fast-xml-parser@5.3.3:
+  fast-xml-parser@5.3.4:
     dependencies:
       strnum: 2.1.2
 
