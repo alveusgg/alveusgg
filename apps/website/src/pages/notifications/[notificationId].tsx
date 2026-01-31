@@ -47,7 +47,11 @@ const NotificationPage: NextPage<
 
   useEffect(() => {
     if (link) {
-      window.location.href = link;
+      // Attempt to break out of the PWA view if we're in one
+      const standalone =
+        ("standalone" in navigator && !!navigator.standalone) ||
+        window.matchMedia("(display-mode: standalone)").matches;
+      window.open(link, standalone ? "_blank" : "_self");
     }
   }, [link]);
 
