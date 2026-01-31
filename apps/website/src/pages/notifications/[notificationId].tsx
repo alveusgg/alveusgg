@@ -50,10 +50,22 @@ const NotificationPage: NextPage<
 
   useEffect(() => {
     if (link) {
-      // Attempt to break out of the PWA view if we're in one
-      window.location.href = checkUserAgentIsInstalledAsPWA()
-        ? `x-safari-${link.replace(/^(?!(https?:)?\/\/)/, "//")}`
-        : link;
+      // If we're in an iOS PWA, try to break out of it with custom URL schemes
+      if (checkUserAgentIsInstalledAsPWA()) {
+        // Special handling for Twitch links in PWA
+        const twitch = link.match(
+          /^(?:https?:)?\/\/(?:www\.)?twitch\.tv\/(videos\/)?(.+)$/i,
+        );
+        if (twitch) {
+          window.location.href = `twitch://${twitch[1] ? "video" : "stream"}/${twitch[2]}`;
+          return;
+        }
+
+        window.location.href = `x-safari-${link.replace(/^(?!(https?:)?\/\/)/, "//")}`;
+        return;
+      }
+
+      window.location.href = link;
     }
   }, [link]);
 
