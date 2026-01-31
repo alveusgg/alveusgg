@@ -159,7 +159,7 @@ const marmoutPresets: Record<string, Preset> = {
   rightpost: {
     description: "rightpost",
     image: rightpost,
-    position: { pan: 150.45, tilt: -17.82, zoom: 748 },
+    position: { pan: 150.45, tilt: -17.82, zoom: 1 },
     // modified: 2025-12-27T13:43:27.137Z
   },
   table: {

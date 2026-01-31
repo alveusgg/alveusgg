@@ -57,7 +57,7 @@ const littlesPresets: Record<string, Preset> = {
   door: {
     description: "door",
     image: door,
-    position: { pan: 156.88, tilt: -6.47, zoom: 585 },
+    position: { pan: 156.88, tilt: -6.47, zoom: 137 },
     // modified: 2025-12-15T21:40:40.730Z
   },
   down: {
@@ -81,13 +81,13 @@ const littlesPresets: Record<string, Preset> = {
   left: {
     description: "Left",
     image: left,
-    position: { pan: 172.31, tilt: -8.86, zoom: 1152 },
+    position: { pan: 119.6, tilt: -12.56, zoom: 1 },
     // modified: 2025-10-13T20:59:44.329Z
   },
   leftb: {
     description: "Left Bottom",
     image: leftb,
-    position: { pan: 119.36, tilt: -35.42, zoom: 165 },
+    position: { pan: 119.36, tilt: -35.42, zoom: 1 },
     // modified: 2025-10-13T22:34:06.652Z
   },
   leftback: {
@@ -147,7 +147,7 @@ const littlesPresets: Record<string, Preset> = {
   winl: {
     description: "winl",
     image: winl,
-    position: { pan: 164.23, tilt: -6.2, zoom: 1905 },
+    position: { pan: 164.23, tilt: -6.2, zoom: 327 },
     // modified: 2025-10-16T14:57:01.624Z
   },
   wint: {

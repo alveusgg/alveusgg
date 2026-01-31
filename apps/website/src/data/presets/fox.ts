@@ -31,6 +31,7 @@ import rightcorner from "@/assets/presets/fox/rightcorner.png";
 import rightplatform from "@/assets/presets/fox/rightplatform.png";
 import rightramp from "@/assets/presets/fox/rightramp.png";
 import river from "@/assets/presets/fox/river.png";
+import rivert from "@/assets/presets/fox/rivert.png";
 import stump from "@/assets/presets/fox/stump.png";
 import timbertree from "@/assets/presets/fox/timbertree.png";
 
@@ -52,7 +53,7 @@ const foxPresets: Record<string, Preset> = {
   backrightcorner: {
     description: "backrightcorner",
     image: backrightcorner,
-    position: { pan: 13.51, tilt: -2.08, zoom: 601 },
+    position: { pan: 13.51, tilt: -2.08, zoom: 664 },
     // modified: 2025-12-23T20:58:43.156Z
   },
   belowleftplatform: {
@@ -65,7 +66,7 @@ const foxPresets: Record<string, Preset> = {
     description: "belowleftplatformr",
     image: belowleftplatformr,
     position: { pan: -107.63, tilt: -3.66, zoom: 1686 },
-    // modified: 2026-01-29T17:44:34.314Z
+    // modified: 2026-01-30T15:20:04.380Z
   },
   den1: {
     description: "den1",
@@ -107,7 +108,7 @@ const foxPresets: Record<string, Preset> = {
     description: "den2t",
     image: den2t,
     position: { pan: -4.41, tilt: 3.69, zoom: 1035 },
-    // modified: 2026-01-28T14:24:40.481Z
+    // modified: 2026-01-30T15:20:44.181Z
   },
   dirtpile: {
     description: "dirtpile",
@@ -166,13 +167,13 @@ const foxPresets: Record<string, Preset> = {
   insideleft: {
     description: "insideleft",
     image: insideleft,
-    position: { pan: 140.96, tilt: -14.89, zoom: 5608 },
+    position: { pan: 140.96, tilt: -14.89, zoom: 1 },
     // modified: 2025-12-14T20:09:15.410Z
   },
   insideright: {
     description: "insideright",
     image: insideright,
-    position: { pan: 96.94, tilt: -14.73, zoom: 5608 },
+    position: { pan: 96.94, tilt: -14.73, zoom: 1 },
     // modified: 2025-12-14T20:07:21.836Z
   },
   left: {
@@ -196,7 +197,7 @@ const foxPresets: Record<string, Preset> = {
   middleplatform: {
     description: "middleplatform",
     image: middleplatform,
-    position: { pan: -68.18, tilt: -1.45, zoom: 1 },
+    position: { pan: -68.18, tilt: -1.45, zoom: 931 },
     // modified: 2025-12-13T18:20:04.315Z
   },
   nearleft: {
@@ -226,7 +227,7 @@ const foxPresets: Record<string, Preset> = {
   rightramp: {
     description: "rightramp",
     image: rightramp,
-    position: { pan: -1.06, tilt: -0.76, zoom: 1 },
+    position: { pan: -1.06, tilt: -0.76, zoom: 638 },
     // modified: 2025-12-13T18:18:29.562Z
   },
   river: {
@@ -234,6 +235,12 @@ const foxPresets: Record<string, Preset> = {
     image: river,
     position: { pan: -42.21, tilt: -3.64, zoom: 1 },
     // modified: 2025-12-13T18:15:17.407Z
+  },
+  rivert: {
+    description: "rivert",
+    image: rivert,
+    position: { pan: -23.6, tilt: -0.06, zoom: 638 },
+    // modified: 2026-01-30T22:03:09.647Z
   },
   stump: {
     description: "stump",
