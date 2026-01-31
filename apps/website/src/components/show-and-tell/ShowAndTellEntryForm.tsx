@@ -644,7 +644,6 @@ export function ShowAndTellEntryForm({
             <MapPickerField
               name="postLocation"
               textToShow="Add post location"
-              antialias={true}
               maxZoom={8}
               onLocationChange={handlePostLocation}
               initialLocation={initialLocation}
