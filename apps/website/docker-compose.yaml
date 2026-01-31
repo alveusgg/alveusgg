@@ -5,6 +5,8 @@ services:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: alveusgg_secret
+    volumes:
+      - db:/var/lib/mysql
 
   s3:
     image: minio/minio:latest
@@ -23,4 +25,5 @@ services:
       - s3:/data
 
 volumes:
+  db:
   s3:
