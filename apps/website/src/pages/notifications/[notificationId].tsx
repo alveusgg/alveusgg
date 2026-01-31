@@ -9,7 +9,10 @@ import { useEffect } from "react";
 import { getNotificationById } from "@/server/db/notifications";
 
 import { formatDateTime } from "@/utils/datetime";
-import { getNotificationVod } from "@/utils/notifications";
+import {
+  checkUserAgentIsInstalledAsPWA,
+  getNotificationVod,
+} from "@/utils/notifications";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
@@ -48,10 +51,9 @@ const NotificationPage: NextPage<
   useEffect(() => {
     if (link) {
       // Attempt to break out of the PWA view if we're in one
-      const standalone =
-        ("standalone" in navigator && !!navigator.standalone) ||
-        window.matchMedia("(display-mode: standalone)").matches;
-      window.open(link, standalone ? "_blank" : "_self");
+      window.location.href = checkUserAgentIsInstalledAsPWA()
+        ? `x-safari-${link.replace(/^(?!(https?:)?\/\/)/, "//")}`
+        : link;
     }
   }, [link]);
 

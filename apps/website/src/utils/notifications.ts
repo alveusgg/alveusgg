@@ -26,7 +26,21 @@ export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
   }
 
   return (
-    !("standalone" in window.navigator) || window.navigator.standalone !== true
+    typeof window === "undefined" ||
+    !("standalone" in window.navigator) ||
+    window.navigator.standalone !== true
+  );
+}
+
+export function checkUserAgentIsInstalledAsPWA(): boolean {
+  if (!getIsSafari() || !getIsIos()) {
+    return false;
+  }
+
+  return (
+    typeof window !== "undefined" &&
+    "standalone" in window.navigator &&
+    window.navigator.standalone === true
   );
 }
 
