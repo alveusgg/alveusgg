@@ -284,7 +284,7 @@ export function ShowAndTellEntryForm({
 
   const [postLocation, setPostLocation] = useState(initialLocation);
   const handlePostLocation = useCallback(
-    (userSelectedLocation: MapLocation) => {
+    (userSelectedLocation?: MapLocation) => {
       setPostLocation(userSelectedLocation);
       markAsChanged();
     },

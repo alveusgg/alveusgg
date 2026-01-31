@@ -42,7 +42,7 @@ export type MapPickerFieldProps = {
   allowMultipleMarkers?: boolean;
   coordsPrecision?: number;
   initialLocation?: MapLocation;
-  onLocationChange: (userSelectedLocation: MapLocation) => void;
+  onLocationChange: (userSelectedLocation?: MapLocation) => void;
 };
 
 export type MapLocation = {
@@ -72,9 +72,7 @@ export const MapPickerField = ({
   onLocationChange,
 }: MapPickerFieldProps) => {
   const [showMap, setShowMap] = useState(!initiallyHidden);
-  const [postLocation, setPostLocation] = useState(
-    initialLocation || ({} as MapLocation),
-  );
+  const [postLocation, setPostLocation] = useState(initialLocation);
 
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map>(null);
@@ -85,10 +83,12 @@ export const MapPickerField = ({
    * Clears the markers and resets the location
    */
   const handleLocationClear = useCallback(() => {
-    setPostLocation({} as MapLocation);
+    setPostLocation(undefined);
+    onLocationChange(undefined);
+
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
-  }, []);
+  }, [onLocationChange]);
 
   /**
    * Main method that handles marker position and coordinate rounding
@@ -143,6 +143,28 @@ export const MapPickerField = ({
       if (!options.isInitialSet) onLocationChange(newPostLocation);
     },
     [coordsPrecision, allowMultipleMarkers, onLocationChange],
+  );
+
+  /**
+   * Toggles the map visibility and resets location if hiding
+   */
+  const handleShowMapChange = useCallback(
+    (newShowMap: boolean) => {
+      setShowMap(newShowMap);
+
+      if (newShowMap) {
+        if (initialLocation?.location) {
+          handleLocationSet(
+            initialLocation.latitude,
+            initialLocation.longitude,
+            initialLocation.location,
+          );
+        }
+      } else {
+        handleLocationClear();
+      }
+    },
+    [initialLocation, handleLocationSet, handleLocationClear],
   );
 
   useEffect(() => {
@@ -236,7 +258,7 @@ export const MapPickerField = ({
       <div className="flex items-center justify-between">
         <CheckboxField
           className="mr-2"
-          onChange={setShowMap}
+          onChange={handleShowMapChange}
           defaultSelected={showMap}
         >
           {textToShow}
@@ -244,10 +266,10 @@ export const MapPickerField = ({
 
         <div className="flex items-center">
           <IconWorld className="size-6"></IconWorld>
-          {showMap && postLocation.location
+          {showMap && postLocation?.location
             ? postLocation.location
             : "No post location set"}
-          {showMap && postLocation.location && (
+          {showMap && postLocation?.location && (
             <button
               className="px-2"
               type="button"
