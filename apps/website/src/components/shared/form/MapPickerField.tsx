@@ -179,6 +179,7 @@ export const MapPickerField = ({
     mapRef.current = null;
     geocoderRef.current = null;
     geolocateRef.current = null;
+    markersRef.current.forEach((marker) => marker.remove());
     markersRef.current = [];
   }, []);
 
