@@ -8,3 +8,9 @@ export function getIsSafari() {
 export function getIsIos() {
   return /iPhone|iPad|iPod/.test(window.navigator.userAgent);
 }
+
+export function getIsStandalone() {
+  return (
+    "standalone" in window.navigator && window.navigator.standalone === true
+  );
+}
