@@ -61,8 +61,11 @@ const NotificationPage: NextPage<
           return;
         }
 
-        window.location.href = `x-safari-${link.replace(/^(?!(https?:)?\/\/)/, "//")}`;
-        return;
+        // Send http(s) links, or links with no scheme, through x-safari-http(s)
+        if (/^https?:\/\//i.test(link) || /^(?!.+:\/\/)/i.test(link)) {
+          window.location.href = `x-safari-${link.replace(/^(?!https?:\/\/)/i, "https://")}`;
+          return;
+        }
       }
 
       window.location.href = link;
