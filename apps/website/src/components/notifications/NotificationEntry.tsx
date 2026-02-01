@@ -6,7 +6,10 @@ import type { Notification } from "@alveusgg/database";
 import { getNotificationCategory } from "@/data/notifications";
 
 import { formatDateTime } from "@/utils/datetime";
-import { getNotificationVod } from "@/utils/notifications";
+import {
+  checkUserAgentIsInstalledAsPWA,
+  getNotificationVod,
+} from "@/utils/notifications";
 
 import { NotificationIcon } from "@/components/notifications/NotificationIcon";
 
@@ -54,7 +57,7 @@ export function NotificationEntry({
     return (
       <Link
         href={`/notifications/${notification.id}`}
-        target="_blank"
+        target={checkUserAgentIsInstalledAsPWA() ? undefined : "_blank"}
         className="contents"
       >
         {content}

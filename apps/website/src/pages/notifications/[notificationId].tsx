@@ -9,7 +9,10 @@ import { useEffect } from "react";
 import { getNotificationById } from "@/server/db/notifications";
 
 import { formatDateTime } from "@/utils/datetime";
-import { getNotificationVod } from "@/utils/notifications";
+import {
+  checkUserAgentIsInstalledAsPWA,
+  getNotificationVod,
+} from "@/utils/notifications";
 
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
@@ -47,6 +50,24 @@ const NotificationPage: NextPage<
 
   useEffect(() => {
     if (link) {
+      // If we're in an iOS PWA, try to break out of it with custom URL schemes
+      if (checkUserAgentIsInstalledAsPWA()) {
+        // Special handling for Twitch links in PWA
+        const twitch = link.match(
+          /^(?:https?:)?\/\/(?:www\.)?twitch\.tv\/(videos\/)?(.+)$/i,
+        );
+        if (twitch) {
+          window.location.href = `twitch://${twitch[1] ? "video" : "stream"}/${twitch[2]}`;
+          return;
+        }
+
+        // Send http(s) links, or links with no scheme, through x-safari-http(s)
+        if (/^https?:\/\//i.test(link) || /^(?!.+:\/\/)/i.test(link)) {
+          window.location.href = `x-safari-${link.replace(/^(?!https?:\/\/)/i, "https://")}`;
+          return;
+        }
+      }
+
       window.location.href = link;
     }
   }, [link]);

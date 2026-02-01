@@ -2,7 +2,11 @@ import type { Notification } from "@alveusgg/database";
 
 import { welcomeMessage, welcomeTitle } from "@/data/notifications";
 
-import { getIsIos, getIsSafari } from "@/utils/browser-detection";
+import {
+  getIsIos,
+  getIsSafari,
+  getIsStandalone,
+} from "@/utils/browser-detection";
 import type { NotificationOptionsData } from "@/utils/notification-payload";
 
 // Weird test to make sure that the types are compatible
@@ -10,7 +14,7 @@ const assert = <_A, _B extends _A>() => {};
 assert<NotificationOptions, NotificationOptionsData>();
 
 export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
-  if (!getIsSafari() || !getIsIos()) {
+  if (typeof window === "undefined" || !getIsSafari() || !getIsIos()) {
     return false;
   }
 
@@ -25,9 +29,15 @@ export function checkUserAgentRequiresToBeInstalledAsPWA(): boolean {
     return false;
   }
 
-  return (
-    !("standalone" in window.navigator) || window.navigator.standalone !== true
-  );
+  return !getIsStandalone();
+}
+
+export function checkUserAgentIsInstalledAsPWA(): boolean {
+  if (typeof window === "undefined" || !getIsSafari() || !getIsIos()) {
+    return false;
+  }
+
+  return getIsStandalone();
 }
 
 export const notificationHelpEntries = {
