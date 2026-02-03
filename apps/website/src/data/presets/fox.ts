@@ -239,8 +239,8 @@ const foxPresets: Record<string, Preset> = {
   rivert: {
     description: "rivert",
     image: rivert,
-    position: { pan: -23.6, tilt: -0.06, zoom: 638 },
-    // modified: 2026-01-30T22:03:09.647Z
+    position: { pan: -25.21, tilt: -0.15, zoom: 638 },
+    // modified: 2026-02-02T13:30:55.354Z
   },
   stump: {
     description: "stump",
