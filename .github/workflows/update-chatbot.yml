@@ -25,7 +25,7 @@ jobs:
     if: github.repository == 'alveusgg/alveusgg' && github.ref == 'refs/heads/main'
     steps:
       - name: Update Chatbot SSH (Production)
-        uses: appleboy/ssh-action@823bd89e131d8d508129f9443cad5855e9ba96f0 # v1.2.4
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         with:
           envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA
           host: ${{ secrets.CHATBOT_HOST }}
@@ -47,7 +47,7 @@ jobs:
     if: github.ref == 'refs/heads/preview'
     steps:
       - name: Update Chatbot SSH (Preview)
-        uses: appleboy/ssh-action@823bd89e131d8d508129f9443cad5855e9ba96f0 # v1.2.4
+        uses: appleboy/ssh-action@0ff4204d59e8e51228ff73bce53f80d53301dee2 # v1.2.5
         with:
           envs: COMPOSE_PROJECT_NAME,CHATBOT_PATH,REF_NAME,REF_SHA
           host: ${{ secrets.CHATBOT_HOST }}
