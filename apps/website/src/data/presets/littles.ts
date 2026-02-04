@@ -1,3 +1,4 @@
+import abovedoor from "@/assets/presets/littles/abovedoor.png";
 import awning from "@/assets/presets/littles/awning.png";
 import bowll from "@/assets/presets/littles/bowll.png";
 import bowlm from "@/assets/presets/littles/bowlm.png";
@@ -14,7 +15,6 @@ import leftcorner from "@/assets/presets/littles/leftcorner.png";
 import macawsinside from "@/assets/presets/littles/macawsinside.png";
 import miasleep from "@/assets/presets/littles/miasleep.png";
 import right from "@/assets/presets/littles/right.png";
-import sirensleep from "@/assets/presets/littles/sirensleep.png";
 import water from "@/assets/presets/littles/water.png";
 import waterl from "@/assets/presets/littles/waterl.png";
 import window from "@/assets/presets/littles/window.png";
@@ -29,6 +29,12 @@ const littlesPresets: Record<string, Preset> = {
     image: home,
     position: { pan: 140.35, tilt: -15.2, zoom: 1 },
     // modified: 2025-10-13T22:33:28.935Z
+  },
+  abovedoor: {
+    description: "abovedoor",
+    image: abovedoor,
+    position: { pan: -179.34, tilt: -1.91, zoom: 754 },
+    // modified: 2026-02-03T18:24:12.492Z
   },
   awning: {
     description: "awning",
@@ -119,12 +125,6 @@ const littlesPresets: Record<string, Preset> = {
     image: right,
     position: { pan: 154.1, tilt: -12.56, zoom: 1 },
     // modified: 2025-10-13T20:59:11.661Z
-  },
-  sirensleep: {
-    description: "sirensleep",
-    image: sirensleep,
-    position: { pan: -177.88, tilt: -1.6, zoom: 3261 },
-    // modified: 2025-10-15T16:49:17.117Z
   },
   water: {
     description: "Water",
