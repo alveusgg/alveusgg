@@ -20,6 +20,7 @@ import den2r from "@/assets/presets/wolf/den2r.png";
 import den2rw from "@/assets/presets/wolf/den2rw.png";
 import den2t from "@/assets/presets/wolf/den2t.png";
 import den2w from "@/assets/presets/wolf/den2w.png";
+import den3 from "@/assets/presets/wolf/den3.png";
 import down from "@/assets/presets/wolf/down.png";
 import downright from "@/assets/presets/wolf/downright.png";
 import farcorner from "@/assets/presets/wolf/farcorner.png";
@@ -192,6 +193,12 @@ const wolfPresets: Record<string, Preset> = {
     image: den2w,
     position: { pan: 144.21, tilt: 0.36, zoom: 936 },
     // modified: 2025-10-09T11:10:30.184Z
+  },
+  den3: {
+    description: "den3",
+    image: den3,
+    position: { pan: 82.23, tilt: -4.16, zoom: 674 },
+    // modified: 2026-02-05T14:10:43.427Z
   },
   down: {
     description: "Down",
