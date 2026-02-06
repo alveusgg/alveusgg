@@ -1,12 +1,13 @@
 import { Input } from "@headlessui/react";
 import Image, { type StaticImageData } from "next/image";
-import { type ReactNode, useEffect, useState } from "react";
+import { type ReactNode, useEffect, useMemo, useState } from "react";
 
 import cameras, { type Camera } from "@/data/tech/cameras";
 import { isCameraMulti, isCameraPTZ } from "@/data/tech/cameras.types";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
+import { sortPresets } from "@/utils/ptz/sortPresets";
 import { camelToKebab } from "@/utils/string-case";
 import { type RouterInputs } from "@/utils/trpc";
 
@@ -150,6 +151,14 @@ const PresetList = ({
     setSearch("");
   }, [camera]);
 
+  const sortedPresets = useMemo(
+    () =>
+      isCameraPTZ(cameras[camera])
+        ? sortPresets(typeSafeObjectEntries(cameras[camera].presets))
+        : [],
+    [camera],
+  );
+
   return (
     <>
       <PresetTools
@@ -161,27 +170,26 @@ const PresetList = ({
 
       <div className="scrollbar-none shrink grow overflow-y-auto">
         <div className="mt-3 grid grid-cols-2 gap-4 @3xl:grid-cols-3 @5xl:grid-cols-4">
-          {isCameraPTZ(cameras[camera]) &&
-            typeSafeObjectEntries(cameras[camera].presets)
-              .filter(
-                ([name, preset]) =>
-                  !searchClean.length ||
-                  name.toLowerCase().includes(searchClean) ||
-                  preset.description.toLowerCase().includes(searchClean),
-              )
-              .map(([name, preset]) => (
-                <PresetCard
-                  key={name}
-                  title={name}
-                  image={preset.image}
-                  command={{
-                    command: "ptzload",
-                    args: [camera.toLowerCase(), name],
-                  }}
-                >
-                  {preset.description}
-                </PresetCard>
-              ))}
+          {sortedPresets
+            .filter(
+              ([name, preset]) =>
+                !searchClean.length ||
+                name.toLowerCase().includes(searchClean) ||
+                preset.description.toLowerCase().includes(searchClean),
+            )
+            .map(([name, preset]) => (
+              <PresetCard
+                key={name}
+                title={name}
+                image={preset.image}
+                command={{
+                  command: "ptzload",
+                  args: [camera.toLowerCase(), name],
+                }}
+              >
+                {preset.description}
+              </PresetCard>
+            ))}
 
           {isCameraMulti(cameras[camera]) && (
             <PresetCard
