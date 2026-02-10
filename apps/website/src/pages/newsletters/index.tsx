@@ -27,7 +27,7 @@ const NewslettersPage: NextPage = () => {
 
       <Section
         dark
-        containerClassName="flex flex-wrap gap-4 justify-between items-center"
+        containerClassName="flex flex-wrap gap-8 justify-between items-center"
       >
         <div>
           <Heading>Newsletter Archive</Heading>
@@ -43,30 +43,32 @@ const NewslettersPage: NextPage = () => {
       </Section>
 
       <Section containerClassName="flex">
-        <ul className="mx-auto grid grid-cols-auto-4 gap-y-1">
+        <ul className="mx-auto grid grid-cols-auto-2 gap-y-1 md:grid-cols-auto-4">
           {newsletters.map(({ date, subject, sender }) => (
             <li key={date} className="contents">
               <Link
                 href={`/newsletters/${date}`}
                 custom
-                className="group col-span-4 grid grid-cols-auto-3 items-center gap-x-2 gap-y-1 rounded bg-alveus-green-50/75 px-4 py-2 text-lg text-alveus-green-800 backdrop-blur-sm transition hover:bg-alveus-green-100/75 hover:shadow md:grid-cols-subgrid"
+                className="group col-span-full grid grid-cols-subgrid items-center gap-x-2 gap-y-1 rounded bg-alveus-green-50/75 px-4 py-2 text-lg text-alveus-green-800 backdrop-blur-sm transition hover:bg-alveus-green-100/75 hover:shadow"
               >
-                <span className="relative">
+                <span className="relative flex items-center gap-2 justify-self-start md:justify-self-auto">
                   <IconEnvelope
                     size={20}
                     className="mt-0.5 group-hover:opacity-0"
                   />
                   <IconEnvelopeOpen
                     size={20}
-                    className="absolute bottom-0.5 opacity-0 group-hover:opacity-100"
+                    className="absolute top-1/2 -mt-px -translate-y-1/2 opacity-0 group-hover:opacity-100"
                   />
+
+                  <span>{sender}</span>
                 </span>
 
-                <span>{sender}</span>
+                <span className="justify-self-end md:justify-self-auto">
+                  {formatDateTime(new Date(date), { style: "long" })}
+                </span>
 
-                <span>{formatDateTime(new Date(date), { style: "long" })}</span>
-
-                <span className="col-span-3 md:col-span-1">{subject}</span>
+                <span className="col-span-full md:col-span-1">{subject}</span>
               </Link>
             </li>
           ))}

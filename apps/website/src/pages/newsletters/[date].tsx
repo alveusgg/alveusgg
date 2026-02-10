@@ -68,7 +68,7 @@ const NewsletterDatePage: NextPage<NewsletterDatePageProps> = ({
 
       <Section
         dark
-        containerClassName="flex flex-wrap gap-4 justify-between items-start"
+        containerClassName="flex flex-wrap gap-8 justify-between items-start"
       >
         <div>
           <Heading>{newsletter.subject}</Heading>
