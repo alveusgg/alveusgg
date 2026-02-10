@@ -11,6 +11,7 @@ import Section from "@/components/content/Section";
 import Transparency from "@/components/content/Transparency";
 
 import IconEnvelope from "@/icons/IconEnvelope";
+import IconEnvelopeOpen from "@/icons/IconEnvelopeOpen";
 
 const NewslettersPage: NextPage = () => {
   return (
@@ -38,9 +39,18 @@ const NewslettersPage: NextPage = () => {
               <Link
                 href={`/newsletters/${date}`}
                 custom
-                className="col-span-4 grid grid-cols-auto-3 items-center gap-x-2 gap-y-1 rounded bg-alveus-green-50/75 px-4 py-2 text-lg text-alveus-green-800 backdrop-blur-sm transition hover:bg-alveus-green-100/75 hover:shadow md:grid-cols-subgrid"
+                className="group col-span-4 grid grid-cols-auto-3 items-center gap-x-2 gap-y-1 rounded bg-alveus-green-50/75 px-4 py-2 text-lg text-alveus-green-800 backdrop-blur-sm transition hover:bg-alveus-green-100/75 hover:shadow md:grid-cols-subgrid"
               >
-                <IconEnvelope size={20} className="mt-0.5" />
+                <span className="relative">
+                  <IconEnvelope
+                    size={20}
+                    className="mt-0.5 group-hover:opacity-0"
+                  />
+                  <IconEnvelopeOpen
+                    size={20}
+                    className="absolute bottom-0.5 opacity-0 group-hover:opacity-100"
+                  />
+                </span>
 
                 <span>{sender}</span>
 
