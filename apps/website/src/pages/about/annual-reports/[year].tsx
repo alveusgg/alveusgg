@@ -12,6 +12,7 @@ import {
 
 import { classes } from "@/utils/classes";
 
+import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Meta from "@/components/content/Meta";
@@ -19,6 +20,7 @@ import Section from "@/components/content/Section";
 import Transparency from "@/components/content/Transparency";
 
 import IconDownload from "@/icons/IconDownload";
+import IconLoading from "@/icons/IconLoading";
 
 type AboutAnnualReportYearPageProps = {
   year: ReportYear;
@@ -103,15 +105,22 @@ const AboutAnnualReportYearPage: NextPage<AboutAnnualReportYearPageProps> = ({
         </Button>
       </Section>
 
-      <Section containerClassName="space-y-16">
+      <Section containerClassName="flex flex-col gap-16 items-center">
         {graphic && (
-          <Image
-            src={report.image}
-            quality={100}
-            className="mx-auto h-auto w-full max-w-3xl bg-alveus-green"
-            alt="Report graphic"
-            aria-describedby="report"
-          />
+          <Box
+            dark
+            className="w-full max-w-3xl p-0"
+            ringClassName="ring-black/15"
+          >
+            <IconLoading className="absolute top-1/2 left-1/2 -z-10 -translate-1/2" />
+            <Image
+              src={report.image}
+              quality={100}
+              className="h-auto w-full"
+              alt="Report graphic"
+              aria-describedby="report"
+            />
+          </Box>
         )}
 
         <div className={classes("space-y-8", graphic && "sr-only")} id="report">
