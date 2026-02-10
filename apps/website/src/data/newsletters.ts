@@ -2,9 +2,9 @@ import { type ImageProps } from "next/image";
 
 import type { PartialDateString } from "@/utils/datetime-partial";
 
-import newsletter20251025 from "@/assets/newsletters/2025-10-25.png";
-import newsletter20251111 from "@/assets/newsletters/2025-11-11.png";
-import newsletter20260209 from "@/assets/newsletters/2026-02-09.png";
+import newsletter20251025 from "@/assets/newsletters/2025-10-25.jpg";
+import newsletter20251111 from "@/assets/newsletters/2025-11-11.jpg";
+import newsletter20260209 from "@/assets/newsletters/2026-02-09.jpg";
 
 type DateString = PartialDateString & `${number}-${number}-${number}`;
 
