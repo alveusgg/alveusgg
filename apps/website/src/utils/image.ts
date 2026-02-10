@@ -3,6 +3,7 @@ import type {
   ImageLoaderProps,
 } from "next/dist/shared/lib/image-config";
 import defaultLoader from "next/dist/shared/lib/image-loader";
+import type { ImageProps } from "next/image";
 
 // Based on https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L23-L25
 // and https://github.com/vercel/next.js/blob/e0e81ea049483aa877c8e366ce47e5f0c176b0ae/packages/next/src/client/image.tsx#L743-L748
@@ -27,4 +28,12 @@ export function createImageUrl(props: ImageLoaderProps) {
     config: imageConfig,
     width: resolvedWidth,
   });
+}
+
+export function getImageSrc(src: ImageProps["src"]): string {
+  if (typeof src === "string") {
+    return src;
+  }
+
+  return "default" in src ? src.default.src : src.src;
 }

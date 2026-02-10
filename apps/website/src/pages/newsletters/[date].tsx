@@ -7,6 +7,7 @@ import newsletters, { type Newsletter } from "@/data/newsletters";
 
 import { classes } from "@/utils/classes";
 import { formatDateTime } from "@/utils/datetime";
+import { getImageSrc } from "@/utils/image";
 
 import Box from "@/components/content/Box";
 import Button from "@/components/content/Button";
@@ -59,6 +60,7 @@ const NewsletterDatePage: NextPage<NewsletterDatePageProps> = ({
       <Meta
         title={`${dateFormatted} | Newsletter Archive`}
         description={newsletter.subject}
+        image={getImageSrc(newsletter.image)}
       />
 
       {/* Nav background */}
