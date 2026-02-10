@@ -136,10 +136,31 @@ const NewsletterDatePage: NextPage<NewsletterDatePageProps> = ({
         )}
 
         <div
-          className={classes("space-y-8", graphic && "sr-only")}
+          className={classes("flex flex-col gap-8", graphic && "sr-only")}
           id="newsletter"
         >
-          {newsletter.alt}
+          {newsletter.alt.map((paragraph, i) => (
+            <Box
+              key={i}
+              dark
+              className={classes(
+                "lg:max-w-2/3",
+                i % 2 === 0 && "lg:ml-auto",
+                paragraph === paragraph.toUpperCase()
+                  ? "mx-auto px-8 py-4"
+                  : "p-4 lg:w-full",
+              )}
+            >
+              <p
+                className={classes(
+                  paragraph === paragraph.toUpperCase() &&
+                    "text-center text-xl font-bold",
+                )}
+              >
+                {paragraph}
+              </p>
+            </Box>
+          ))}
         </div>
 
         <Button
