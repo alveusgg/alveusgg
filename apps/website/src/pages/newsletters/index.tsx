@@ -4,6 +4,7 @@ import newsletters from "@/data/newsletters";
 
 import { formatDateTime } from "@/utils/datetime";
 
+import Button from "@/components/content/Button";
 import Heading from "@/components/content/Heading";
 import Link from "@/components/content/Link";
 import Meta from "@/components/content/Meta";
@@ -24,12 +25,21 @@ const NewslettersPage: NextPage = () => {
       {/* Nav background */}
       <div className="-mt-40 hidden h-40 bg-alveus-green-900 lg:block" />
 
-      <Section dark>
-        <Heading>Newsletter Archive</Heading>
-        <p>
-          Read through the previous email newsletters we&apos;ve sent out to our
-          community.
-        </p>
+      <Section
+        dark
+        containerClassName="flex flex-wrap gap-4 justify-between items-center"
+      >
+        <div>
+          <Heading>Newsletter Archive</Heading>
+          <p>
+            Read through the previous email newsletters we&apos;ve sent out to
+            our community.
+          </p>
+        </div>
+
+        <Button href="/forms/announcements" dark>
+          Get future emails
+        </Button>
       </Section>
 
       <Section containerClassName="flex">
