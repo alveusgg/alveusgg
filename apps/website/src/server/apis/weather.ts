@@ -76,14 +76,21 @@ export async function getCurrentObservation<T extends boolean>(
 
   const response = await fetch(
     `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
+    {
+      headers: {
+        "User-Agent": "alveus.gg",
+      },
+    },
   );
 
-  const json = await response.json();
   if (response.status !== 200) {
-    console.error(json);
-    throw new Error("Could not get current observations!");
+    throw new Error(
+      `Error fetching weather data: ${response.status} ${response.statusText}`,
+      { cause: await response.text() },
+    );
   }
 
+  const json = await response.json();
   const data = await currentObservationsSchema(imperial).parseAsync(json);
   return data.observations[0] as CurrentObservation<T>;
 }
@@ -102,7 +109,6 @@ const getFeelsLike = (
 
 export async function getWeather() {
   invariant(env.WEATHER_STATION_ID, "WEATHER_STATION_ID is required");
-  invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
   const weather = await getCurrentObservation(env.WEATHER_STATION_ID, true);
   const feelsLike = getFeelsLike(
