@@ -2,6 +2,9 @@ packages:
   - "apps/*"
   - "apps/donations/*"
 
+optimisticRepeatInstall: true
+strictPeerDependencies: true
+
 peerDependencyRules:
   allowedVersions:
     "next-superjson-plugin>next": "^16.0"
