@@ -249,8 +249,8 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1(next@16.1.6(@babel/core@7.28.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4))(react@19.2.4)
       '@vercel/functions':
-        specifier: ^3.4.0
-        version: 3.4.0(@aws-sdk/credential-provider-web-identity@3.972.4)
+        specifier: ^3.4.1
+        version: 3.4.1(@aws-sdk/credential-provider-web-identity@3.972.4)
       '@xyflow/react':
         specifier: ^12.10.0
         version: 12.10.0(@types/react@19.2.13)(immer@10.2.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
@@ -3711,8 +3711,8 @@ packages:
       vue-router:
         optional: true
 
-  '@vercel/functions@3.4.0':
-    resolution: {integrity: sha512-lKWDWEhFcpt/zL3ueWqII8W5BY73MC5WUuZyudditbbya6mP8jCLQEuXBxJetpEKgnEn+5xCyK962rw4v1RSVA==}
+  '@vercel/functions@3.4.1':
+    resolution: {integrity: sha512-+wqs1fscC1l2NZYL8Ahxe/vba4YzcuhxTV99Kf8sNwNeATaxQ9rbR6BILksoGDmm99YiD0wc0hBJcYxVNwiNaw==}
     engines: {node: '>= 20'}
     peerDependencies:
       '@aws-sdk/credential-provider-web-identity': '*'
@@ -10865,7 +10865,7 @@ snapshots:
       next: 16.1.6(@babel/core@7.28.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       react: 19.2.4
 
-  '@vercel/functions@3.4.0(@aws-sdk/credential-provider-web-identity@3.972.4)':
+  '@vercel/functions@3.4.1(@aws-sdk/credential-provider-web-identity@3.972.4)':
     dependencies:
       '@vercel/oidc': 3.1.0
     optionalDependencies:
