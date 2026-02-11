@@ -2,7 +2,6 @@ import chickenmulti from "@/assets/presets/chickenmulti.png";
 import chinmulti from "@/assets/presets/chinmulti.png";
 import crowincrowout from "@/assets/presets/crowincrowout.png";
 import crowoutcrowin from "@/assets/presets/crowoutcrowin.png";
-import foxmulti from "@/assets/presets/foxmulti.png";
 import marmmulti from "@/assets/presets/marmmulti.png";
 import wolfcwolfin from "@/assets/presets/wolfcwolfin.png";
 import wolfden2multi from "@/assets/presets/wolfden2multi.png";
@@ -20,7 +19,6 @@ import crowin from "../presets/crowin";
 import crowout from "../presets/crowout";
 import emu from "../presets/emu";
 import fox from "../presets/fox";
-import foxcorner from "../presets/foxcorner";
 import garden from "../presets/garden";
 import georgie from "../presets/georgie";
 import georgiewater from "../presets/georgiewater";
@@ -97,16 +95,6 @@ const cameras = {
   },
   emu,
   fox,
-  foxcorner,
-  foxmulti: {
-    title: "Fox Multi-View",
-    group: "fox",
-    multi: {
-      cameras: ["fox", "foxcorner"],
-      image: foxmulti,
-      description: "Picture-in-picture of both fox cameras",
-    },
-  },
   garden,
   georgie,
   georgiewater,
