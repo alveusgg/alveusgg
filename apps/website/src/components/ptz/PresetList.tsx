@@ -7,7 +7,7 @@ import { isCameraMulti, isCameraPTZ } from "@/data/tech/cameras.types";
 
 import { classes } from "@/utils/classes";
 import { typeSafeObjectEntries } from "@/utils/helpers";
-import { sortPresets } from "@/utils/ptz/sortPresets";
+import { sortPresets } from "@/utils/sort-presets";
 import { camelToKebab } from "@/utils/string-case";
 import { type RouterInputs } from "@/utils/trpc";
 

@@ -6,7 +6,7 @@ import type { Preset } from "@/data/tech/cameras.types";
 
 import { typeSafeObjectEntries } from "@/utils/helpers";
 
-import { sortPresets } from "../sortPresets";
+import { sortPresets } from "../src/utils/sort-presets";
 
 describe("sortPresets", () => {
   it.each(Object.values(cameras).filter((data) => "presets" in data))(
