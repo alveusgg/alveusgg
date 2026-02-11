@@ -40,15 +40,14 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
  */
 export type MapPickerFieldProps = {
   name: string;
+  initialLocation?: MapLocation;
   initiallyHidden?: boolean;
   textToShow?: string;
-  initialZoom?: number;
   minZoom?: number;
   maxZoom?: number;
-  antialias?: boolean;
+  initialZoom?: number;
   allowMultipleMarkers?: boolean;
   coordsPrecision?: number;
-  initialLocation?: MapLocation;
   onLocationChange: (userSelectedLocation?: MapLocation) => void;
 };
 
