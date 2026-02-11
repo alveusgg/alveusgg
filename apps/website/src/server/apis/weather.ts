@@ -1,3 +1,4 @@
+import { Redis } from "@upstash/redis";
 import { z } from "zod";
 
 import { env } from "@/env";
@@ -74,6 +75,33 @@ export async function getCurrentObservation<T extends boolean>(
 ): Promise<CurrentObservation<T>> {
   invariant(env.WEATHER_API_KEY, "WEATHER_API_KEY is required");
 
+  // If we have Redis available, try to cache weather data for 1 minute to reduce API calls
+  const redis =
+    env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN
+      ? new Redis({
+          url: env.UPSTASH_REDIS_REST_URL,
+          token: env.UPSTASH_REDIS_REST_TOKEN,
+        })
+      : null;
+  const cache = `weather:${stationId}:${imperial ? "imperial" : "metric"}`;
+
+  // Try to get cached weather data from Redis
+  if (redis) {
+    const raw = await redis.get(cache);
+    if (typeof raw === "string") {
+      try {
+        const data = await currentObservationsSchema(imperial).parseAsync(
+          JSON.parse(raw),
+        );
+        return data.observations[0] as CurrentObservation<T>;
+      } catch (err) {
+        console.error("Error parsing cached weather data", err);
+        await redis.del(cache);
+      }
+    }
+  }
+
+  // If we didn't get valid cached data, fetch from the API
   const response = await fetch(
     `https://api.weather.com/v2/pws/observations/current?stationId=${encodeURIComponent(stationId)}&format=json&units=${imperial ? "e" : "m"}&numericPrecision=decimal&apiKey=${encodeURIComponent(env.WEATHER_API_KEY)}`,
     {
@@ -92,6 +120,16 @@ export async function getCurrentObservation<T extends boolean>(
 
   const json = await response.json();
   const data = await currentObservationsSchema(imperial).parseAsync(json);
+
+  // If we get valid data from the API, and have Redis available, cache it for 1 minute
+  if (redis) {
+    try {
+      await redis.set(cache, JSON.stringify(json), { ex: 60 });
+    } catch (err) {
+      console.error("Error caching weather data", err);
+    }
+  }
+
   return data.observations[0] as CurrentObservation<T>;
 }
 
