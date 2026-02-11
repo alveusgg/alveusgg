@@ -126,7 +126,7 @@
     "@types/react-dom": "^19.2.3",
     "@types/serviceworker": "^0.0.182",
     "@types/xml2js": "^0.4.14",
-    "eslint": "^9.39.2",
+    "eslint": "^10.0.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
     "eslint-plugin-import": "^2.32.0",
