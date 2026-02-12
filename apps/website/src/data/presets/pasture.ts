@@ -44,7 +44,6 @@ import purplebasel from "@/assets/presets/pasture/purplebasel.png";
 import purplebaser from "@/assets/presets/pasture/purplebaser.png";
 import purplenest from "@/assets/presets/pasture/purplenest.png";
 import right from "@/assets/presets/pasture/right.png";
-import roundpen from "@/assets/presets/pasture/roundpen.png";
 import saltlick from "@/assets/presets/pasture/saltlick.png";
 import sky from "@/assets/presets/pasture/sky.png";
 import stompyfood from "@/assets/presets/pasture/stompyfood.png";
@@ -329,12 +328,6 @@ const pasturePresets: Record<string, Preset> = {
     image: right,
     position: { pan: 56.07, tilt: -1.23, zoom: 1441 },
     // modified: 2025-11-18T17:31:19.567Z
-  },
-  roundpen: {
-    description: "Round Pen",
-    image: roundpen,
-    position: { pan: 20.97, tilt: -3.24, zoom: 1669 },
-    // modified: 2025-10-09T11:10:30.100Z
   },
   saltlick: {
     description: "Salt Lick",
