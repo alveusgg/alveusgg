@@ -4,6 +4,7 @@ import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import superjson, { parse } from "superjson";
+import * as Sentry from "@sentry/cloudflare";
 import { forwardWithoutRoutePrefix } from "./utils/url";
 
 export { DonationsManagerDurableObject } from "./managers/donations";
@@ -24,34 +25,39 @@ app.all("/pixels/*", async (c) => {
   return await manager.fetch(request);
 });
 
-export default {
-  fetch: app.fetch,
-  queue: async (batch, env) => {
-    const headers: Record<string, string> = {};
-    if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
-      headers["x-vercel-protection-bypass"] =
-        env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
-    }
+export default Sentry.withSentry<Env>(
+  (env) => ({
+    dsn: env.SENTRY_DSN,
+  }),
+  {
+    fetch: app.fetch,
+    queue: async (batch, env) => {
+      const headers: Record<string, string> = {};
+      if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
+        headers["x-vercel-protection-bypass"] =
+          env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
+      }
 
-    const api = createTRPCProxyClient<AppRouter>({
-      links: [
-        httpLink({
-          url: `${env.SITE_URL}/api/trpc`,
-          transformer: superjson,
-          headers: {
-            Authorization: `ApiKey ${env.SHARED_KEY}`,
-            ...headers,
-          },
-        }),
-      ],
-    });
+      const api = createTRPCProxyClient<AppRouter>({
+        links: [
+          httpLink({
+            url: `${env.SITE_URL}/api/trpc`,
+            transformer: superjson,
+            headers: {
+              Authorization: `ApiKey ${env.SHARED_KEY}`,
+              ...headers,
+            },
+          }),
+        ],
+      });
 
-    const donations: Donation[] = batch.messages.map((message) =>
-      parse(message.body),
-    );
-    await api.donations.createDonations.mutate({ donations });
+      const donations: Donation[] = batch.messages.map((message) =>
+        parse(message.body),
+      );
+      await api.donations.createDonations.mutate({ donations });
 
-    const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
-    await manager.process(donations);
-  },
-} satisfies ExportedHandler<Env, string>;
+      const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
+      await manager.process(donations);
+    },
+  } satisfies ExportedHandler<Env, string>,
+);

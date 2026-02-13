@@ -3,6 +3,7 @@ import { DurableObject } from "cloudflare:workers";
 
 import { Hono } from "hono";
 import { logger } from "hono/logger";
+import * as Sentry from "@sentry/cloudflare";
 import type { DonationProvider } from "../providers";
 import { PaypalDonationProvider } from "../providers/paypal/paypal";
 import {
@@ -12,7 +13,7 @@ import {
 } from "../providers/storage";
 import { TwitchDonationProvider } from "../providers/twitch/twitch";
 
-export class DonationsManagerDurableObject extends DurableObject<Env> {
+class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
   private providers?: Partial<Record<Providers, DonationProvider>>;
   private ready?: Promise<void>;
@@ -74,3 +75,11 @@ export class DonationsManagerDurableObject extends DurableObject<Env> {
     return this.router.fetch(request);
   }
 }
+
+export const DonationsManagerDurableObject =
+  Sentry.instrumentDurableObjectWithSentry(
+    (env: Env) => ({
+      dsn: env.SENTRY_DSN,
+    }),
+    DonationsManagerDurableObjectBase,
+  );

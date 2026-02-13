@@ -25,6 +25,7 @@
   "dependencies": {
     "@alveusgg/alveusgg-website": "workspace:*",
     "@alveusgg/donations-core": "workspace:*",
+    "@sentry/cloudflare": "^10.38.0",
     "@trpc/client": "^11.9.0",
     "@trpc/server": "^11.9.0",
     "hono": "^4.11.8",
