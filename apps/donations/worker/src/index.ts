@@ -13,6 +13,19 @@ export { PixelsManagerDurableObject } from "./managers/pixels";
 const app = new Hono<{ Bindings: Env }>();
 app.use(logger());
 
+app.all("*", async (c, next) => {
+  // Add metadata for Sentry
+  Sentry.setTags({
+    requestId: crypto.randomUUID(),
+    userAgent: c.req.header("user-agent"),
+    ray: c.req.header("cf-ray"),
+    country: c.req.raw.cf?.country,
+    colo: c.req.raw.cf?.colo,
+  });
+
+  await next();
+});
+
 app.all("/donations/*", async (c) => {
   const manager = c.env.DONATIONS_MANAGER.getByName("alveus");
   const request = forwardWithoutRoutePrefix(c);
