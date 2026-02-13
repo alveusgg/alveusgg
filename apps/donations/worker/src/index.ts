@@ -4,13 +4,18 @@ import { createTRPCProxyClient, httpLink } from "@trpc/client";
 import { Hono } from "hono";
 import { logger } from "hono/logger";
 import superjson, { parse } from "superjson";
+import * as Sentry from "@sentry/cloudflare";
 import { forwardWithoutRoutePrefix } from "./utils/url";
+import { getSentryConfig } from "./utils/sentry";
+import { setSentryTagsMiddleware } from "./utils/middleware";
 
 export { DonationsManagerDurableObject } from "./managers/donations";
 export { PixelsManagerDurableObject } from "./managers/pixels";
 
 const app = new Hono<{ Bindings: Env }>();
 app.use(logger());
+
+app.all("*", setSentryTagsMiddleware);
 
 app.all("/donations/*", async (c) => {
   const manager = c.env.DONATIONS_MANAGER.getByName("alveus");
@@ -24,8 +29,10 @@ app.all("/pixels/*", async (c) => {
   return await manager.fetch(request);
 });
 
-export default {
+export default Sentry.withSentry<Env>(getSentryConfig, {
   fetch: app.fetch,
+  // @ts-expect-error somewhere batch is getting typed as `MessageBatch<unknown>`
+  // instead of `MessageBatch<string>`
   queue: async (batch, env) => {
     const headers: Record<string, string> = {};
     if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
@@ -54,4 +61,4 @@ export default {
     const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
     await manager.process(donations);
   },
-} satisfies ExportedHandler<Env, string>;
+} satisfies ExportedHandler<Env, string>);
