@@ -32,7 +32,7 @@ const Event = ({ className, ...props }: HTMLProps<HTMLDivElement>) => {
   // Get the upcoming events and the first event ID
   // Refresh when the range changes
   const { data: events } = trpc.calendarEvents.getCalendarEvents.useQuery(
-    { start: upcomingRange?.[0], end: upcomingRange?.[1] },
+    { start: upcomingRange?.[0], end: upcomingRange?.[1], hasTime: true },
     { enabled: upcomingRange !== undefined, placeholderData: keepPreviousData },
   );
 
