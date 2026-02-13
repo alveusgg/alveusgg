@@ -277,13 +277,15 @@ export function Calendar({
       Record<string, CalendarEvent[]>
     >((acc, event) => {
       const dateKey = getDateKey(DateTime.fromJSDate(event.date), timeZone);
-      return { ...acc, [dateKey]: [...(acc[dateKey] || []), event] };
+      acc[dateKey] ??= [];
+      acc[dateKey].push(event);
+      return acc;
     }, {});
 
     return Object.fromEntries(
       Object.entries(grouped).map(([date, events]) => [
         date,
-        events.sort((a, b) => {
+        events.toSorted((a, b) => {
           // Hoisted events go first
           if (a.hoist && !b.hoist) return -1;
           if (!a.hoist && b.hoist) return 1;
