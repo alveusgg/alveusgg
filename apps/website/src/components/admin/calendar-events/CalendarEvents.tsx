@@ -26,6 +26,7 @@ export function CalendarEvents() {
       today &&
       events.data?.map((event) => ({
         date: event.startAt,
+        hoist: !event.hasTime,
         children: (
           <CalendarItem
             key={event.id}

@@ -197,6 +197,7 @@ const Day = ({ children, className }: DayProps) => (
 
 type CalendarEvent = {
   date: Date;
+  hoist: boolean;
   children: ReactNode;
 };
 
@@ -253,6 +254,7 @@ export function Calendar({
         )
           .startOf("day")
           .toJSDate(),
+        hoist: false,
         children: (
           <Transition key={day} appear show>
             <div
@@ -270,16 +272,28 @@ export function Calendar({
     });
   }, [selectedDateTime, daysInMonth, timeZone]);
 
-  const byDay = useMemo(
-    () =>
-      (loading ? placeholders : events)
-        .toSorted((a, b) => a.date.getTime() - b.date.getTime())
-        .reduce<Record<string, CalendarEvent[]>>((acc, event) => {
-          const dateKey = getDateKey(DateTime.fromJSDate(event.date), timeZone);
-          return { ...acc, [dateKey]: [...(acc[dateKey] || []), event] };
-        }, {}) || {},
-    [loading, placeholders, events, timeZone],
-  );
+  const byDay = useMemo(() => {
+    const grouped = (loading ? placeholders : events).reduce<
+      Record<string, CalendarEvent[]>
+    >((acc, event) => {
+      const dateKey = getDateKey(DateTime.fromJSDate(event.date), timeZone);
+      return { ...acc, [dateKey]: [...(acc[dateKey] || []), event] };
+    }, {});
+
+    return Object.fromEntries(
+      Object.entries(grouped).map(([date, events]) => [
+        date,
+        events.sort((a, b) => {
+          // Hoisted events go first
+          if (a.hoist && !b.hoist) return -1;
+          if (!a.hoist && b.hoist) return 1;
+
+          // Then sort by time
+          return a.date.getTime() - b.date.getTime();
+        }),
+      ]),
+    );
+  }, [loading, placeholders, events, timeZone]);
 
   const theme = useMemo(
     () => getCalendarTheme(selectedDateTime.month - 1),
