@@ -62,6 +62,7 @@ export function Schedule() {
         ?.filter((event) => !categories.size || categories.has(event.category))
         .map((event) => ({
           date: event.startAt,
+          hoist: !event.hasTime,
           children: (
             <CalendarItem
               key={event.id}

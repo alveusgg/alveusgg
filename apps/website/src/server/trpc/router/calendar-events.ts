@@ -7,7 +7,11 @@ export const calendarEventsRouter = router({
   getCalendarEvents: publicProcedure
     .input(
       z
-        .object({ start: z.date().optional(), end: z.date().optional() })
+        .object({
+          start: z.date().optional(),
+          end: z.date().optional(),
+          hasTime: z.boolean().optional(),
+        })
         .optional(),
     )
     .query(({ input }) => getCalendarEvents(input)),

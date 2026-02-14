@@ -35,6 +35,7 @@ export async function GET(
     const upcoming = await getCalendarEvents({
       start: now,
       end: next,
+      hasTime: true,
     }).then((events) => events.find(channels[channel].calendarEventFilter));
 
     const title =
