@@ -1,5 +1,12 @@
-import MaplibreGeocoder from "@maplibre/maplibre-gl-geocoder";
-import maplibregl, { GeolocateControl, Map, type Marker } from "maplibre-gl";
+import MaplibreGeocoder, {
+  type CarmenGeojsonFeature,
+} from "@maplibre/maplibre-gl-geocoder";
+import maplibregl, {
+  GeolocateControl,
+  Map,
+  type MapMouseEvent,
+  type Marker,
+} from "maplibre-gl";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import mapStyle from "@/data/map-style";
@@ -33,16 +40,15 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
  */
 export type MapPickerFieldProps = {
   name: string;
+  initialLocation?: MapLocation;
   initiallyHidden?: boolean;
   textToShow?: string;
-  initialZoom?: number;
   minZoom?: number;
   maxZoom?: number;
-  antialias?: boolean;
+  initialZoom?: number;
   allowMultipleMarkers?: boolean;
   coordsPrecision?: number;
-  initialLocation?: MapLocation;
-  onLocationChange: (userSelectedLocation: MapLocation) => void;
+  onLocationChange: (userSelectedLocation?: MapLocation) => void;
 };
 
 export type MapLocation = {
@@ -66,18 +72,16 @@ export const MapPickerField = ({
   minZoom = 1,
   maxZoom = 24,
   initialZoom = initialLocation?.location ? maxZoom : 1,
-  antialias = true,
   allowMultipleMarkers = false,
   coordsPrecision = 2, // 2 is around 1.1km precision
   onLocationChange,
 }: MapPickerFieldProps) => {
   const [showMap, setShowMap] = useState(!initiallyHidden);
-  const [postLocation, setPostLocation] = useState(
-    initialLocation || ({} as MapLocation),
-  );
+  const [postLocation, setPostLocation] = useState(initialLocation);
 
-  const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map>(null);
+  const geocoderRef = useRef<MaplibreGeocoder>(null);
+  const geolocateRef = useRef<GeolocateControl>(null);
   const markersRef = useRef<Marker[]>([]);
   const isDraggingRef = useRef(false);
 
@@ -85,10 +89,12 @@ export const MapPickerField = ({
    * Clears the markers and resets the location
    */
   const handleLocationClear = useCallback(() => {
-    setPostLocation({} as MapLocation);
+    setPostLocation(undefined);
+    onLocationChange(undefined);
+
     markersRef.current.forEach((m) => m.remove());
     markersRef.current = [];
-  }, []);
+  }, [onLocationChange]);
 
   /**
    * Main method that handles marker position and coordinate rounding
@@ -145,98 +151,141 @@ export const MapPickerField = ({
     [coordsPrecision, allowMultipleMarkers, onLocationChange],
   );
 
-  useEffect(() => {
-    // Ensure map container exists and map hasn't been initialized yet
-    if (!showMap || !mapContainerRef.current || mapRef.current) {
-      return;
-    }
+  /**
+   * Toggles the map visibility and resets location if hiding
+   */
+  const handleShowMapChange = useCallback(
+    (newShowMap: boolean) => {
+      setShowMap(newShowMap);
 
-    const map = new Map({
-      container: mapContainerRef.current,
-      style: mapStyle,
-      center: initialLocation?.location
-        ? [initialLocation.longitude, initialLocation.latitude]
-        : [0, 0],
-      zoom: initialZoom,
+      if (newShowMap) {
+        if (initialLocation?.location) {
+          handleLocationSet(
+            initialLocation.latitude,
+            initialLocation.longitude,
+            initialLocation.location,
+          );
+        }
+      } else {
+        handleLocationClear();
+      }
+    },
+    [initialLocation, handleLocationSet, handleLocationClear],
+  );
+
+  const mapContainerCleanup = useCallback(() => {
+    mapRef.current?.remove();
+    mapRef.current = null;
+    geocoderRef.current = null;
+    geolocateRef.current = null;
+    markersRef.current.forEach((marker) => marker.remove());
+    markersRef.current = [];
+  }, []);
+
+  const mapContainerRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (mapRef.current && node !== mapRef.current.getContainer()) {
+        mapContainerCleanup();
+      }
+
+      const isNewMapInstance = !mapRef.current;
+      mapRef.current ??= new Map({
+        container: node,
+        style: mapStyle,
+        center: initialLocation?.location
+          ? [initialLocation.longitude, initialLocation.latitude]
+          : [0, 0],
+        zoom: initialZoom,
+        canvasContextAttributes: {
+          antialias: true,
+        },
+      });
+      mapRef.current.setMinZoom(minZoom);
+      mapRef.current.setMaxZoom(maxZoom);
+
+      // Add, or update the callback for, the geocoder input
+      geocoderRef.current ??= new MaplibreGeocoder(geocoderApi, {
+        maplibregl,
+        marker: false,
+        showResultsWhileTyping: true,
+        showResultMarkers: {
+          color: "var(--color-alveus-tan-500)",
+        },
+        debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
+      });
+      const geocoderHandle = ({
+        result: { geometry, text },
+      }: {
+        result: CarmenGeojsonFeature;
+      }) => {
+        if (geometry.type !== "Point") return;
+
+        const [lon, lat] = geometry.coordinates;
+        if (typeof lat !== "number" || typeof lon !== "number") return;
+
+        handleLocationSet(lat, lon, text);
+      };
+      geocoderRef.current.on("result", geocoderHandle);
+      if (isNewMapInstance) mapRef.current.addControl(geocoderRef.current);
+
+      // Add, or update the callback for, the geolocate button
+      geolocateRef.current ??= new GeolocateControl({
+        showAccuracyCircle: false,
+        showUserLocation: false,
+      });
+      const geolocateHandle = ({ coords }: GeolocationPosition) => {
+        handleLocationSet(coords.latitude, coords.longitude);
+      };
+      geolocateRef.current.on("geolocate", geolocateHandle);
+      if (isNewMapInstance) mapRef.current.addControl(geolocateRef.current);
+
+      // Add, or update the callback for, mouse clicks on the map
+      const mouseupHandle = ({ lngLat: { lat, lng } }: MapMouseEvent) => {
+        // If the click is part of a click and drag to move around, ignore it.
+        if (isDraggingRef.current) return;
+        handleLocationSet(lat, lng);
+      };
+      mapRef.current.on("mouseup", mouseupHandle);
+
+      // To avoid setting post location on mouse dragging
+      if (isNewMapInstance) {
+        mapRef.current.on("dragstart", () => (isDraggingRef.current = true));
+        mapRef.current.on("dragend", () => (isDraggingRef.current = false));
+      }
+
+      if (isNewMapInstance && initialLocation?.location) {
+        handleLocationSet(
+          initialLocation.latitude,
+          initialLocation.longitude,
+          initialLocation.location,
+          { isInitialSet: true },
+        );
+      }
+
+      return () => {
+        geocoderRef.current?.off("result", geocoderHandle);
+        geolocateRef.current?.off("geolocate", geolocateHandle);
+        mapRef.current?.off("mouseup", mouseupHandle);
+      };
+    },
+    [
+      initialLocation,
+      initialZoom,
       minZoom,
       maxZoom,
-      canvasContextAttributes: {
-        antialias,
-      },
-    });
+      handleLocationSet,
+      mapContainerCleanup,
+    ],
+  );
 
-    const geocoder = new MaplibreGeocoder(geocoderApi, {
-      maplibregl,
-      marker: false,
-      showResultsWhileTyping: true,
-      showResultMarkers: {
-        color: "var(--color-alveus-tan-500)",
-      },
-      debounceSearch: 1000, // No heavy uses (an absolute maximum of 1 request per second) < https://operations.osmfoundation.org/policies/nominatim/.
-    });
-    geocoder.on("result", ({ result: { geometry, text } }) => {
-      if (geometry.type !== "Point") return;
-
-      const [lon, lat] = geometry.coordinates;
-      if (typeof lat !== "number" || typeof lon !== "number") return;
-
-      handleLocationSet(lat, lon, text);
-    });
-    map.addControl(geocoder);
-
-    // Add geolocation button
-    const geolocate = new GeolocateControl({
-      showAccuracyCircle: false,
-      showUserLocation: false,
-    });
-    geolocate.on("geolocate", ({ coords }) => {
-      handleLocationSet(coords.latitude, coords.longitude);
-    });
-    map.addControl(geolocate);
-
-    // When clicking on the map
-    map.on("mouseup", ({ lngLat: { lat, lng } }) => {
-      // If the click is part of a click and drag to move around, ignore it.
-      if (isDraggingRef.current) return;
-      handleLocationSet(lat, lng);
-    });
-    // To avoid setting post location on mouse Dragging.
-    map.on("dragstart", () => (isDraggingRef.current = true));
-    map.on("dragend", () => (isDraggingRef.current = false));
-
-    mapRef.current = map;
-    if (initialLocation?.location) {
-      handleLocationSet(
-        initialLocation.latitude,
-        initialLocation.longitude,
-        initialLocation.location,
-        { isInitialSet: true },
-      );
-    }
-
-    // Clean up on component unmount
-    return () => {
-      handleLocationClear();
-      mapRef.current?.remove();
-      mapRef.current = null;
-    };
-  }, [
-    antialias,
-    initialZoom,
-    maxZoom,
-    minZoom,
-    showMap,
-    initialLocation,
-    handleLocationClear,
-    handleLocationSet,
-  ]);
+  useEffect(() => () => mapContainerCleanup(), [mapContainerCleanup]);
 
   return (
     <>
       <div className="flex items-center justify-between">
         <CheckboxField
           className="mr-2"
-          onChange={setShowMap}
+          onChange={handleShowMapChange}
           defaultSelected={showMap}
         >
           {textToShow}
@@ -244,10 +293,10 @@ export const MapPickerField = ({
 
         <div className="flex items-center">
           <IconWorld className="size-6"></IconWorld>
-          {showMap && postLocation.location
+          {showMap && postLocation?.location
             ? postLocation.location
             : "No post location set"}
-          {showMap && postLocation.location && (
+          {showMap && postLocation?.location && (
             <button
               className="px-2"
               type="button"

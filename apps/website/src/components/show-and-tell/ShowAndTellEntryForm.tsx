@@ -284,7 +284,7 @@ export function ShowAndTellEntryForm({
 
   const [postLocation, setPostLocation] = useState(initialLocation);
   const handlePostLocation = useCallback(
-    (userSelectedLocation: MapLocation) => {
+    (userSelectedLocation?: MapLocation) => {
       setPostLocation(userSelectedLocation);
       markAsChanged();
     },
@@ -644,7 +644,6 @@ export function ShowAndTellEntryForm({
             <MapPickerField
               name="postLocation"
               textToShow="Add post location"
-              antialias={true}
               maxZoom={8}
               onLocationChange={handlePostLocation}
               initialLocation={initialLocation}
