@@ -41,6 +41,7 @@ app.all("/pixels/*", async (c) => {
 export default Sentry.withSentry<Env>(
   (env) => ({
     dsn: env.SENTRY_DSN,
+    env: env.SANDBOX ? "preview" : "production",
   }),
   {
     fetch: app.fetch,

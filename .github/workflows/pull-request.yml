@@ -92,6 +92,9 @@ jobs:
       - name: Prepare .env
         run: pnpm -rc exec "cp .env.example .env || true"
 
+      - name: Generate Worker Types
+        run: pnpm -rc exec "pnpm cf-typegen || true"
+
       - name: Check types
         run: pnpm -r run types
 
