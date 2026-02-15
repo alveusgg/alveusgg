@@ -9,7 +9,11 @@ import * as Sentry from "@sentry/cloudflare";
 import { stringify, SuperJSON } from "superjson";
 import { z } from "zod";
 import { SyncProvider } from "../live/SyncProvider";
-import { createSharedKeyMiddleware } from "../utils/middleware";
+import {
+  createSharedKeyMiddleware,
+  setSentryTagsMiddleware,
+} from "../utils/middleware";
+import { getSentryConfig } from "../utils/sentry";
 
 interface PixelsManagerState {
   pixels: Pixel[];
@@ -40,11 +44,12 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
 
   constructor(ctx: DurableObjectState, env: Env) {
     super(ctx, env);
-    this.muralId = env.MURAL_ID;
+    this.muralId = env.MURAL_ID!;
     const sharedKeyMiddleware = createSharedKeyMiddleware(env.SHARED_KEY);
 
     this.router = new Hono()
       .use(cors())
+      .use(setSentryTagsMiddleware)
       .use(async (_, next) => {
         await this.ctx.blockConcurrencyWhile(async () => {
           await this.ready();
@@ -114,13 +119,14 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
 
   private async getStateFromAPI() {
     if (!this.api) throw new Error("API not initialized");
-    const pixels: Omit<Pixel, "data">[] =
+    const pixels: Omit<Pixel, "data" | "muralId">[] =
       await this.api.donations.getPixels.query({ muralId: this.muralId });
 
     const pixelsWithImageData = pixels.map((pixel) => {
       if (!this.grid) throw new Error("Grid not initialized");
       return {
         ...pixel,
+        muralId: this.muralId,
         data: this.grid.squares[`${pixel.column}:${pixel.row}`],
       };
     });
@@ -254,9 +260,7 @@ class PixelsManagerDurableObjectBase extends DurableObject<Env> {
 
 export const PixelsManagerDurableObject =
   Sentry.instrumentDurableObjectWithSentry(
-    (env: Env) => ({
-      dsn: env.SENTRY_DSN,
-    }),
+    getSentryConfig,
     PixelsManagerDurableObjectBase,
   );
 

@@ -12,6 +12,8 @@ import {
   DurableObjectDonationStorage,
 } from "../providers/storage";
 import { TwitchDonationProvider } from "../providers/twitch/twitch";
+import { getSentryConfig } from "../utils/sentry";
+import { setSentryTagsMiddleware } from "../utils/middleware";
 
 class DonationsManagerDurableObjectBase extends DurableObject<Env> {
   private router: Hono;
@@ -23,6 +25,7 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
 
     this.router = new Hono()
       .use(logger())
+      .use(setSentryTagsMiddleware)
       .use(async (c, next) => {
         if (!this.ready) {
           this.ready = this.init();
@@ -78,8 +81,6 @@ class DonationsManagerDurableObjectBase extends DurableObject<Env> {
 
 export const DonationsManagerDurableObject =
   Sentry.instrumentDurableObjectWithSentry(
-    (env: Env) => ({
-      dsn: env.SENTRY_DSN,
-    }),
+    getSentryConfig,
     DonationsManagerDurableObjectBase,
   );

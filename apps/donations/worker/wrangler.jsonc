@@ -170,9 +170,4 @@
   },
 
   "placement": { "mode": "smart" },
-
-  // Expose the worker's version for the Sentry SDK
-  "version_metadata": {
-    "binding": "CF_VERSION_METADATA",
-  },
 }

@@ -1,4 +1,4 @@
-name: "Deploy"
+name: "Update Donations Worker"
 on:
   push:
     branches:
@@ -41,13 +41,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Deploy Donations Worker
+      - name: Deploy
+        working-directory: apps/donations/worker
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
-        run: cd apps/donations/worker && pnpm exec wrangler deploy --env=$ALVEUS_ENVIRONMENT --outdir dist --var SENTRY_DSN:$SENTRY_DSN --var SENTRY_RELEASE:${{ github.sha }}
+        run: pnpm exec wrangler deploy --env=$ALVEUS_ENVIRONMENT --outdir dist --var SENTRY_DSN:$SENTRY_DSN --var SENTRY_RELEASE:${{ github.sha }}
 
-      - name: Create Sentry release for Donations Worker
+      - name: Create Sentry Release
         uses: getsentry/action-release@dab6548b3c03c4717878099e43782cf5be654289 # v3.5.0
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}

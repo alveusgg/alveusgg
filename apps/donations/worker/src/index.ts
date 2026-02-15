@@ -6,6 +6,8 @@ import { logger } from "hono/logger";
 import superjson, { parse } from "superjson";
 import * as Sentry from "@sentry/cloudflare";
 import { forwardWithoutRoutePrefix } from "./utils/url";
+import { getSentryConfig } from "./utils/sentry";
+import { setSentryTagsMiddleware } from "./utils/middleware";
 
 export { DonationsManagerDurableObject } from "./managers/donations";
 export { PixelsManagerDurableObject } from "./managers/pixels";
@@ -13,18 +15,7 @@ export { PixelsManagerDurableObject } from "./managers/pixels";
 const app = new Hono<{ Bindings: Env }>();
 app.use(logger());
 
-app.all("*", async (c, next) => {
-  // Add metadata for Sentry
-  Sentry.setTags({
-    requestId: crypto.randomUUID(),
-    userAgent: c.req.header("user-agent"),
-    ray: c.req.header("cf-ray"),
-    country: c.req.raw.cf?.country,
-    colo: c.req.raw.cf?.colo,
-  });
-
-  await next();
-});
+app.all("*", setSentryTagsMiddleware);
 
 app.all("/donations/*", async (c) => {
   const manager = c.env.DONATIONS_MANAGER.getByName("alveus");
@@ -38,40 +29,36 @@ app.all("/pixels/*", async (c) => {
   return await manager.fetch(request);
 });
 
-export default Sentry.withSentry<Env>(
-  (env) => ({
-    dsn: env.SENTRY_DSN,
-    env: env.SANDBOX ? "preview" : "production",
-  }),
-  {
-    fetch: app.fetch,
-    queue: async (batch, env) => {
-      const headers: Record<string, string> = {};
-      if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
-        headers["x-vercel-protection-bypass"] =
-          env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
-      }
+export default Sentry.withSentry<Env>(getSentryConfig, {
+  fetch: app.fetch,
+  // @ts-expect-error somewhere batch is getting typed as `MessageBatch<unknown>`
+  // instead of `MessageBatch<string>`
+  queue: async (batch, env) => {
+    const headers: Record<string, string> = {};
+    if (env.OPTIONAL_VERCEL_PROTECTION_BYPASS) {
+      headers["x-vercel-protection-bypass"] =
+        env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
+    }
 
-      const api = createTRPCProxyClient<AppRouter>({
-        links: [
-          httpLink({
-            url: `${env.SITE_URL}/api/trpc`,
-            transformer: superjson,
-            headers: {
-              Authorization: `ApiKey ${env.SHARED_KEY}`,
-              ...headers,
-            },
-          }),
-        ],
-      });
+    const api = createTRPCProxyClient<AppRouter>({
+      links: [
+        httpLink({
+          url: `${env.SITE_URL}/api/trpc`,
+          transformer: superjson,
+          headers: {
+            Authorization: `ApiKey ${env.SHARED_KEY}`,
+            ...headers,
+          },
+        }),
+      ],
+    });
 
-      const donations: Donation[] = batch.messages.map((message) =>
-        parse(message.body),
-      );
-      await api.donations.createDonations.mutate({ donations });
+    const donations: Donation[] = batch.messages.map((message) =>
+      parse(message.body),
+    );
+    await api.donations.createDonations.mutate({ donations });
 
-      const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
-      await manager.process(donations);
-    },
-  } satisfies ExportedHandler<Env, string>,
-);
+    const manager = env.PIXELS_MANAGER.getByName(`alveus-${env.MURAL_ID}`);
+    await manager.process(donations);
+  },
+} satisfies ExportedHandler<Env, string>);

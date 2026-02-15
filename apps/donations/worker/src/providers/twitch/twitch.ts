@@ -29,9 +29,9 @@ export class TwitchDonationProvider implements DonationProvider {
     service: DonationStorage,
     env: Env,
   ): Promise<TwitchDonationProvider> {
-    const options = {
+    const options: TwitchDonationProviderOptions = {
       sandbox: env.SANDBOX === "true",
-      allowedCharityName: env.TWITCH_CHARITY_NAME,
+      allowedCharityName: env.TWITCH_CHARITY_NAME!,
     };
     const config =
       await service.config.get<TwitchDonationProviderConfig>("twitch");
@@ -42,8 +42,8 @@ export class TwitchDonationProvider implements DonationProvider {
           env.OPTIONAL_VERCEL_PROTECTION_BYPASS;
       }
       await setupTwitchSubscription(
-        env.SITE_URL,
-        env.SELF_URL,
+        env.SITE_URL!,
+        env.SELF_URL!,
         env.SHARED_KEY,
         env.TWITCH_SUBSCRIPTION_SECRET,
         headers,
