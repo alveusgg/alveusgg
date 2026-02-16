@@ -3,30 +3,17 @@ import { type ReactNode, useMemo } from "react";
 
 import { classes } from "@/utils/classes";
 
-import beanieNoodleImage from "@/assets/merch/beanie-noodle.png";
-import beaniePeepoImage from "@/assets/merch/beanie-peepo.png";
-import bottleFriendsImage from "@/assets/merch/bottle-friends.png";
-// import capNoodleImage from "@/assets/merch/cap-noodle.png";
-// import capPeepoImage from "@/assets/merch/cap-peepo.png";
-import hoodieKidsImage from "@/assets/merch/hoodie-kids.png";
-import hoodiePeepoRangerConnorImage from "@/assets/merch/hoodie-peepo-ranger-connor.png";
-import hoodiePeepoRangerImage from "@/assets/merch/hoodie-peepo-ranger.png";
-import hoodiePolaroidImage from "@/assets/merch/hoodie-polaroid.png";
-import mugCountryGirlsImage from "@/assets/merch/mug-country-girls.png";
-import mugDoodleImage from "@/assets/merch/mug-doodle.png";
-import mugFennReedImage from "@/assets/merch/mug-fenn-reed.png";
-import mugSirenImage from "@/assets/merch/mug-siren.png";
-import onesieViewerTrainingImage from "@/assets/merch/onesie-viewer-training.png";
-import sweaterProtectFriendsAmandaImage from "@/assets/merch/sweater-protect-friends-amanda.png";
-import sweaterProtectFriendsImage from "@/assets/merch/sweater-protect-friends.png";
-import sweaterWinnieLindsayImage from "@/assets/merch/sweater-winnie-lindsay.png";
-// import sweaterWinnieImage from "@/assets/merch/sweater-winnie.png";
-// import toteGalleryImage from "@/assets/merch/tote-gallery.png";
-// import toteMosaicImage from "@/assets/merch/tote-mosaic.png";
-import tshirtBugHuntImage from "@/assets/merch/tshirt-bug-hunt.png";
-import tshirtPatchyMayaImage from "@/assets/merch/tshirt-patchy-maya.png";
-import tshirtPatchyImage from "@/assets/merch/tshirt-patchy.png";
-import tshirtYouthImage from "@/assets/merch/tshirt-youth.png";
+import bottleWinnie from "@/assets/merch/bottle-winnie.png";
+import crewneckUvScorpion from "@/assets/merch/crewneck-uv-scorpion.png";
+import hatMartyParty from "@/assets/merch/hat-marty-party.png";
+import hoodieLivecams from "@/assets/merch/hoodie-livecams.png";
+import mugAmbassadors from "@/assets/merch/mug-ambassadors.png";
+import mugGeorgie from "@/assets/merch/mug-georgie.png";
+import posterPasturePals from "@/assets/merch/poster-pasture-pals.png";
+import totePushpop from "@/assets/merch/tote-pushpop.png";
+import tshirtAmbassadorFaces from "@/assets/merch/tshirt-ambassador-faces.png";
+import tshirtHankTheTank from "@/assets/merch/tshirt-hank-the-tank.png";
+import tshirtPushpopStory from "@/assets/merch/tshirt-pushpop-story.png";
 import georgieImage from "@/assets/plushies/georgie.png";
 import mayaImage from "@/assets/plushies/maya.png";
 import sirenImage from "@/assets/plushies/siren.png";
@@ -48,83 +35,49 @@ interface Item {
 
 const allItems = {
   merch: {
-    tshirtPatchyMaya: {
-      src: tshirtPatchyMayaImage,
-      alt: "Maya wearing the Patchy Tee",
+    tshirtAmbassadorFaces: {
+      src: tshirtAmbassadorFaces,
+      alt: "Lindsay wearing the Ambassador Faces T-Shirt",
     },
-    tshirtYouthPatchy: {
-      src: tshirtYouthImage,
-      alt: "Youth Tee",
-      pip: {
-        src: tshirtPatchyImage,
-        alt: "Patchy Tee",
-      },
+    posterPasturePals: {
+      src: posterPasturePals,
+      alt: "Connor holding the Pasture Pals Poster",
     },
-    mugSirenBarbara: {
-      src: mugSirenImage,
-      alt: "Siren's Yappers Club Mug",
-      pip: {
-        src: mugCountryGirlsImage,
-        alt: "Country Girls Make Do Mug",
-      },
+    bottleWinnie: {
+      src: bottleWinnie,
+      alt: "Jacob holding the Winnie The Moo Water Bottle",
     },
-    hoodiePeepoRangerConnor: {
-      src: hoodiePeepoRangerConnorImage,
-      alt: "Connor wearing the Peepo Ranger Hoodie",
+    crewneckUvScorpion: {
+      src: crewneckUvScorpion,
+      alt: "Maya wearing the UV Scorpion Crewneck",
     },
-    tshirtBugHuntSweater: {
-      src: tshirtBugHuntImage,
-      alt: "Bug Hunt Tee",
-      pip: {
-        src: sweaterProtectFriendsImage,
-        alt: "Protect Our Friends Crewneck",
-      },
+    tshirtHankTheTank: {
+      src: tshirtHankTheTank,
+      alt: "Sruti wearing the Hank The Tank T-Shirt",
     },
-    mugFeenReedDoodle: {
-      src: mugFennReedImage,
-      alt: "Fenn and Reed Mug",
-      pip: {
-        src: mugDoodleImage,
-        alt: "Doodle Mug",
-      },
+    mugAmbassadors: {
+      src: mugAmbassadors,
+      alt: "Daniel holding the Ambassadors Mug",
     },
-    hoodiePeepoRangerKids: {
-      src: hoodiePeepoRangerImage,
-      alt: "Peepo Ranger Hoodie",
-      pip: {
-        src: hoodieKidsImage,
-        alt: "Kids Hoodie",
-      },
+    totePushpop: {
+      src: totePushpop,
+      alt: "Rocky holding the Pushpop Tote Bag",
     },
-    bottleFriends: {
-      src: bottleFriendsImage,
-      alt: "Alveus Friends Water Bottle",
-      size: "w-2/3",
+    hoodieLivecams: {
+      src: hoodieLivecams,
+      alt: "Lindsay wearing the Livecams Hoodie",
     },
-    sweaterProtectFriendsAmanda: {
-      src: sweaterProtectFriendsAmandaImage,
-      alt: "Amanda wearing the Protect Our Friends Crewneck",
+    mugGeorgie: {
+      src: mugGeorgie,
+      alt: "Maya holding the Georgie Mug",
     },
-    beaniePeepoNoodle: {
-      src: beaniePeepoImage,
-      alt: "Peepo Beanie",
-      pip: {
-        src: beanieNoodleImage,
-        alt: "Noodle Beanie",
-        position: "top",
-      },
+    tshirtPushpopStory: {
+      src: tshirtPushpopStory,
+      alt: "Daniel wearing the Pushpop Story T-Shirt",
     },
-    hoodiePolaroidOnesieViewerTraining: {
-      src: hoodiePolaroidImage,
-      alt: "Polariod Hoodie",
-      pip: {
-        src: onesieViewerTrainingImage,
-        alt: "Viewer In Training Onesie",
-      },
-    },
-    sweaterWinnieLindsay: {
-      src: sweaterWinnieLindsayImage,
-      alt: "Lindsay wearing the Winnie The Moo Crew",
+    hatMartyParty: {
+      src: hatMartyParty,
+      alt: "Marty on the Marty Party Hat",
     },
   },
   plushies: {
@@ -203,7 +156,7 @@ const MerchCarousel = ({
                 draggable={false}
                 width={200}
                 className={classes(
-                  "mx-auto h-auto drop-shadow-sm",
+                  "mx-auto h-auto max-h-32 object-contain drop-shadow-sm",
                   size || "w-full",
                   pip?.position === "top" && "relative -right-2 -bottom-2",
                 )}
